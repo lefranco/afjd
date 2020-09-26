@@ -1,0 +1,17 @@
+== Réaliser des appariements ==
+
+Cliquer sur le bouton pour que la liste des parties apparaisse.
+
+== Choix de la partie ==
+
+Choisir une partie puis cliquer sur le bouton pour que l'interface qui permet de mettre ou retirer des joueurs des parties apparaisse.
+
+== Appariement ==
+
+Utiliser les flêches passer un joueur dans la partie (déplacement de gauche à droite) ou hors de la partie (déplacement de droite à gauche)
+
+L'arbitre de la partie ne peut pas être mis dans la partie (il est déjà dans le partie avec le rôle d'arbitre).
+
+Pour réaliser (ou défaire) un appariement il faut qu'une de ces deux conditionssot réalisées:
+	- être le joueur objet de l'appariement
+	- être l'arbitre de la partie objet de l'appariement  
