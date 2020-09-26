@@ -1,0 +1,7 @@
+@echo off
+
+
+python client_ihm_games.py
+if %errorlevel% NEQ 0 pause
+
+exit
