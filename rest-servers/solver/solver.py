@@ -1,0 +1,445 @@
+#!/usr/bin/env python3
+
+"""
+File : solver.py
+
+Calls the engine
+"""
+
+import typing
+import tempfile
+import os
+import shutil
+import subprocess
+import collections
+
+SEASON_NAME_TABLE = ["PRINTEMPS", "ETE", "AUTOMNE", "HIVER", "BILAN"]
+
+
+def build_variant_file(variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any]) -> typing.List[str]:
+    """ This will build the diplo.dat file """
+
+    result: typing.List[str] = list()
+
+    result.append("; -------")
+    result.append("; ANNEEZERO")
+    result.append("; -------")
+    year_zero = variant['year_zero']
+    result.append(f"ANNEEZERO {year_zero}")
+
+    result.append("; -------")
+    result.append("; PAYS")
+    result.append("; -------")
+    number_roles = int(variant['roles']['number'])
+    assert len(names['roles']) == number_roles + 1
+    for role_num in range(1, number_roles + 1):
+        name, adjective, letter = names['roles'][str(role_num)]
+        result.append(f"PAYS {name} x{letter} {adjective}")
+
+    result.append("; -------")
+    result.append("; REGIONS")
+    result.append("; -------")
+    region_names = [r for r in names['zones'].values() if r]
+    assert len(region_names) == len(variant['regions'])
+    result.append("; cotes")
+    for num_region, region in enumerate(region_names):
+        if variant['regions'][num_region] == 1:
+            result.append(f"REGION {region}")
+    result.append("; terre")
+    for num_region, region in enumerate(region_names):
+        if variant['regions'][num_region] == 2:
+            result.append(f"REGION {region}")
+    result.append("; mer")
+    for num_region, region in enumerate(region_names):
+        if variant['regions'][num_region] == 3:
+            result.append(f"REGION {region}")
+
+    result.append("; -------")
+    result.append("; CENTRES")
+    result.append("; -------")
+    for center_num in variant['centers']:
+        region_name = region_names[center_num - 1]
+        result.append(f"CENTRE {region_name}")
+
+    result.append("; -------")
+    result.append("; centres de depart")
+    result.append("; -------")
+    for role_num, centers in enumerate(variant['start_centers']):
+        for start_center_num in centers:
+            # role
+            role, _, _ = names['roles'][str(role_num + 1)]
+            # center
+            center_num = variant['centers'][start_center_num - 1]
+            region_name = region_names[center_num - 1]
+            result.append(f"CENTREDEPART {role} {region_name}")
+        result.append("")
+
+    result.append("; -------")
+    result.append("; ZONES")
+    result.append("; -------")
+    for num_region, region in enumerate(region_names):
+        if variant['regions'][num_region] == 1:
+            result.append(f"ZONE COTE {region}")
+    for num_region, coast_type_num in variant['coastal_zones']:
+        region = region_names[num_region - 1]
+        coast = names['coasts'][str(coast_type_num)]
+        result.append(f"ZONE COTE {region} {coast}")
+    for num_region, region in enumerate(region_names):
+        if variant['regions'][num_region] == 2:
+            result.append(f"ZONE TERRE {region}")
+    for num_region, region in enumerate(region_names):
+        if variant['regions'][num_region] == 3:
+            result.append(f"ZONE MER {region}")
+
+    assert len(names['zones']) == len(variant['regions']) + len(variant['coastal_zones'])
+    zone_names = [r for r in names['zones'].values() if r]
+    zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}" for r, c in variant['coastal_zones']]
+
+    result.append("; -------")
+    result.append("; voisinage par les armees")
+    result.append("; -------")
+    for zone_from, zones_to in variant['neighbouring'][0].items():
+        for zone_to in zones_to:
+            zone_from_name = zone_names[int(zone_from) - 1]
+            zone_to_name = zone_names[zone_to - 1]
+            result.append(f"ARMEEVOISIN {zone_from_name} {zone_to_name}")
+    result.append("; -------")
+    result.append("; voisinage par les flottes")
+    result.append("; -------")
+    for zone_from, zones_to in variant['neighbouring'][1].items():
+        for zone_to in zones_to:
+            zone_from_name = zone_names[int(zone_from) - 1]
+            zone_to_name = zone_names[zone_to - 1]
+            result.append(f"FLOTTEVOISIN {zone_from_name} {zone_to_name}")
+
+    result.append("; -------")
+    result.append("; ELOIGNEMENTS")
+    result.append("; -------")
+    for unit_type, distances_role in enumerate(variant['distancing']):
+        unit_name = "A" if unit_type == 0 else "F"
+        for role_num, distances in enumerate(distances_role):
+            role_name, _, _ = names['roles'][str(role_num + 1)]
+            for zone_num, distance in distances.items():
+                zone_name = zone_names[int(zone_num) - 1]
+                result.append(f"ELOIGNEMENT {unit_name} {role_name} {zone_name} {distance}")
+
+    result.append("")
+    return result
+
+
+def build_situation_file(advancement: int, situation: typing.Dict[str, typing.Any], variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any]) -> typing.List[str]:
+    """ This will build the situ.dat file """
+
+    result: typing.List[str] = list()
+
+    year_zero = variant['year_zero']
+    season = advancement % len(SEASON_NAME_TABLE)
+    season_name = SEASON_NAME_TABLE[season]
+    year = year_zero + 1 + advancement // len(SEASON_NAME_TABLE)
+    result.append(f"SAISON {season_name} {year}")
+    result.append(f"SAISONMODIF HIVER {year_zero}")  # not used actually
+
+    region_names = [r for r in names['zones'].values() if r]
+    zone_names = [r for r in names['zones'].values() if r]
+    zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}" for r, c in variant['coastal_zones']]
+
+    # build a table zone name -> regio name
+    region_table = dict()
+    for zone in names['zones'].values():
+        if zone:
+            region_table[zone] = zone
+    for region, coast in variant['coastal_zones']:
+        region_table[f"{names['zones'][str(region)]}{names['coasts'][str(coast)]}"] = f"{names['zones'][str(region)]}"
+
+    result.append("")
+    result.append("; LES POSSESSIONS")
+    result.append("")
+
+    for center_num, role_num in situation['ownerships'].items():
+        role_name, _, _ = names['roles'][str(role_num)]
+        center_num = variant['centers'][int(center_num) - 1]
+        region_name = region_names[center_num - 1]
+        result.append(f"POSSESSION {role_name} {region_name}")
+
+    result.append("")
+    result.append("; LES UNITES")
+    result.append("")
+
+    # normal units
+    result.append("; non delogees")
+    executioner_table = dict()
+    for role_num, units in situation['units'].items():
+        role_name, _, _ = names['roles'][str(role_num)]
+
+        for unit_type, zone_num in units:
+
+            unit_name = "A" if unit_type == 1 else "F"
+            zone_name = zone_names[int(zone_num) - 1]
+
+            # put line
+            result.append(f"UNITE {unit_name} {role_name} {zone_name}")
+
+            # keep a note for building retreat declaration
+            region = region_table[zone_name]
+            executioner_table[region] = (unit_name, role_name, zone_name)
+
+    # dislodged units
+    result.append("; delogees")
+    for role_num, dislodged_units in situation['dislodged_ones'].items():
+        role_name, _, _ = names['roles'][str(role_num)]
+
+        for unit_type, zone_num, region_from_num in dislodged_units:
+
+            unit_name = "A" if unit_type == 1 else "F"
+            zone_name = zone_names[int(zone_num) - 1]
+
+            # put line
+            result.append(f"UNITE {unit_name} {role_name} {zone_name}")
+
+    result.append("")
+    result.append("; LES DELOGEES")
+    result.append("")
+
+    for role_num, dislodged_units in situation['dislodged_ones'].items():
+        role_name, _, _ = names['roles'][str(role_num)]
+
+        for unit_type, zone_num, region_from_num in dislodged_units:
+
+            unit_name = "A" if unit_type == 1 else "F"
+            zone_name = zone_names[int(zone_num) - 1]
+
+            # executioner occupant of region not dislodged
+            region = region_table[zone_name]
+            unit_from_name, role_from_name, zone_from_name = executioner_table[region]
+
+            region_from_name = region_names[int(region_from_num) - 1]
+
+            # put line
+            result.append(f"DELOGEE {unit_name} {role_name} {zone_name} BOURREAU {unit_from_name} {role_from_name} {zone_from_name} ORIGINE {region_from_name}")
+
+    result.append("")
+    result.append("; LES INTERDITS")
+    result.append("")
+
+    for region_num in situation['forbiddens']:
+        region_name = region_names[region_num - 1]
+        result.append(f"INTERDIT {region_name}")
+
+    result.append("")
+    return result
+
+
+def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.Dict[str, typing.Any], variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any]) -> typing.List[str]:
+    """ This will build the orders.txt file """
+
+    result: typing.List[str] = list()
+
+    zone_names = [r for r in names['zones'].values() if r]
+    zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}" for r, c in variant['coastal_zones']]
+
+    unit_type_table = dict()
+    for _, units in situation['units'].items():
+        for unit_type, zone_num in units:
+            unit_name = "A" if unit_type == 1 else "F"
+            unit_type_table[zone_num] = unit_name
+
+    dislodged_unit_type_table = dict()
+    for _, dislodged_units in situation['dislodged_ones'].items():
+        for unit_type, zone_num, _ in dislodged_units:
+            unit_name = "A" if unit_type == 1 else "F"
+            dislodged_unit_type_table[zone_num] = unit_name
+
+    fake_unit_type_table = dict()
+    for _, fake_units in situation['fake_units'].items():
+        for unit_type, zone_num in fake_units:
+            fake_unit_name = "A" if unit_type == 1 else "F"
+            fake_unit_type_table[zone_num] = fake_unit_name
+
+    previous_role_name = None
+    for role_num, type_order, active_zone_num, passive_zone_num, dest_zone_num in orders:
+        role_name, _, _ = names['roles'][str(role_num)]
+        if role_name != previous_role_name:
+            result.append(role_name)
+            previous_role_name = role_name
+
+        if type_order in [8]:  # build
+            active_type = fake_unit_type_table[active_zone_num]
+        elif type_order in [6, 7]:  # retreat
+            active_type = dislodged_unit_type_table[active_zone_num]
+        else:  # not build nor retreat
+            active_type = unit_type_table[active_zone_num]
+
+        active_zone = zone_names[int(active_zone_num) - 1]
+
+        passive_zone = zone_names[int(passive_zone_num) - 1] if passive_zone_num else None
+        dest_zone = zone_names[int(dest_zone_num) - 1] if dest_zone_num else None
+
+        if type_order == 1:  # move
+            result.append(f"{active_type} {active_zone} - {dest_zone}")
+        if type_order == 2:  # offensive support
+            result.append(f"{active_type} {active_zone} S {passive_zone} - {dest_zone}")
+        if type_order == 3:  # defensive support
+            result.append(f"{active_type} {active_zone} S {passive_zone}")
+        if type_order == 4:  # hold
+            result.append(f"{active_type} {active_zone} H")
+        if type_order == 5:  # convoy
+            result.append(f"{active_type} {active_zone} C {passive_zone} - {dest_zone}")
+        if type_order == 6:  # retreat
+            result.append(f"{active_type} {active_zone} R {dest_zone}")
+        if type_order == 7:  # disband
+            result.append(f"{active_type} {active_zone} D")
+        if type_order == 8:  # build
+            result.append(f"+ {active_type} {active_zone}")
+        if type_order == 9:  # remove
+            result.append(f"- {active_type} {active_zone}")
+
+    result.append("")
+    return result
+
+
+def read_situation(situation_result_content: typing.List[str], variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+    """ This will read the situ_result.dat file """
+
+    region_names = [r.upper() for r in names['zones'].values() if r]
+    zone_names = [r.upper() for r in names['zones'].values() if r]
+    zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}".upper() for r, c in variant['coastal_zones']]
+    role_names = [d[0].upper() for d in names['roles'].values()]
+    center_table = variant['centers']
+    type_names = ["A", "F"]
+
+    ownership_dict: typing.Dict[str, typing.Any] = dict()
+    unit_dict = collections.defaultdict(list)
+    dislodged_unit_dict = collections.defaultdict(list)
+    forbidden_list: typing.List[int] = list()
+
+    for line in situation_result_content:
+
+        # remove endline
+        line = line.strip()
+
+        # ignore empty lines
+        if not line:
+            continue
+
+        # ignore comments
+        if line.startswith(";"):
+            continue
+
+        # split in list
+        tokens = line.split(" ")
+
+        if tokens[0] == "POSSESSION":
+            role_num = role_names.index(tokens[1].upper())
+            region_num = region_names.index(tokens[2].upper()) + 1
+            center_num = center_table.index(region_num) + 1
+            ownership_dict[str(center_num)] = role_num
+
+        if tokens[0] == "UNITE":
+            type_num = type_names.index(tokens[1].upper()) + 1
+            role_num = role_names.index(tokens[2].upper())
+            zone_num = zone_names.index(tokens[3].upper()) + 1
+            unit_dict[str(role_num)].append([type_num, zone_num])
+
+        if tokens[0] == "INTERDIT":
+            region_num = region_names.index(tokens[1].upper()) + 1
+            forbidden_list.append(region_num)
+
+        if tokens[0] == "DELOGEE":
+            type_num = type_names.index(tokens[1].upper()) + 1
+            role_num = role_names.index(tokens[2].upper())
+            zone_num = zone_names.index(tokens[3].upper()) + 1
+            assert tokens[4].upper() == "BOURREAU"
+            _ = type_names.index(tokens[5].upper()) + 1
+            _ = role_names.index(tokens[6].upper())
+            _ = zone_names.index(tokens[7].upper()) + 1
+            assert tokens[8].upper() == "ORIGINE"
+            region_dislodged_from_num = region_names.index(tokens[9].upper()) + 1
+            dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
+
+    # important : we remove units that are dislodged
+    for role_num_str, dislodged_units in dislodged_unit_dict.items():
+        for type_num, zone_num, region_dislodged_from_num in dislodged_units:
+            unit_dict[role_num_str].remove([type_num, zone_num])
+
+    return {
+        'ownerships': ownership_dict,
+        'dislodged_ones': dislodged_unit_dict,
+        'units': unit_dict,
+        'forbiddens': forbidden_list,
+    }
+
+
+def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], orders: typing.List[typing.List[int]], role: typing.Optional[int], names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[typing.Dict[str, typing.Any]], typing.Optional[str]]:
+    """ returns errorcode, stderr, stdout, sit-result(dict), ord-result(text) """
+
+    diplo_dat_content = build_variant_file(variant, names)
+    situation_content = build_situation_file(advancement, situation, variant, names)
+    orders_content = build_orders_file(orders, situation, variant, names)
+
+    with tempfile.TemporaryDirectory() as tmpdirname:
+
+        # make DIPLOCOM
+        os.mkdir(f"{tmpdirname}/DIPLOCOM")
+
+        # copy message file
+        shutil.copyfile("./messages/DIPLO.fr.TXT", f"{tmpdirname}/DIPLOCOM/DIPLO.fr.TXT")
+
+        # make DEFAULT
+        os.mkdir(f"{tmpdirname}/DIPLOCOM/DEFAULT")
+
+        # copy DATA
+        with open(f"{tmpdirname}/DIPLOCOM/DEFAULT/DIPLO.DAT", "w") as outfile:
+            outfile.write("\n".join(diplo_dat_content))
+
+        # copy situation
+        with open(f"{tmpdirname}/situation.dat", "w") as outfile:
+            outfile.write("\n".join(situation_content))
+
+        # copy orders
+        with open(f"{tmpdirname}/orders.txt", "w") as outfile:
+            outfile.write("\n".join(orders_content))
+
+        # affect env variable
+        os.putenv("DIPLOCOM", f"{tmpdirname}/DIPLOCOM")
+
+        # parameters used to cal the C language written solver
+        call_list = [
+            "./engine/solveur",
+            "-i", f"{tmpdirname}/situation.dat",
+            "-o", f"{tmpdirname}/orders.txt",
+            "-f", f"{tmpdirname}/situation_result.dat",
+            "-a", f"{tmpdirname}/orders_result.txt"
+        ]
+
+        # in case we are checking partial orders
+        if role is not None:
+            _, _, initial_role = names['roles'][str(role)]
+            call_list += [
+                f"-x{initial_role}",
+            ]
+
+        # run solver
+        result = subprocess.run(
+            call_list,
+            check=False,
+            capture_output=True)
+
+        if result.returncode != 0:
+            return result.returncode, result.stderr.decode(), result.stdout.decode(), None, None
+
+        # copy back situation
+        with open(f"{tmpdirname}/situation_result.dat", "r") as infile:
+            situation_result_content = infile.readlines()
+
+        situation_result = read_situation(situation_result_content, variant, names)
+
+        # copy back orders
+        with open(f"{tmpdirname}/orders_result.txt", "r") as infile:
+            orders_result_content = infile.readlines()
+            orders_result = ''.join(orders_result_content)
+
+        return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result
+
+
+if __name__ == '__main__':
+    assert False, "Do not run this script"
