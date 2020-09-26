@@ -1,0 +1,46 @@
+== Création de partie ==
+
+Le nom de la partie doit être différent des parties existant déjà.
+
+== Charger une partie ==
+
+Il est nécessaire d'être arbitre de la pairte pour réaliser des modifications.
+Certains champs ne sont pas directement modifiables.
+
+== Explication des champs ==
+
+Principaux
+	/Nom/ : le nom de la partie, assez court (pas d'accents)
+	/Description/ : un texte libre expliquant le contexte de la partie
+	/Variante/ : Ce champ n'est pas modificable pour le moment, la seule variante est "standard"
+	/Archive/ : Une partie archive est une partie qui a déjà été jouée et est transcrite ici pour être consultée à titre documentaire [défaut : non]
+	/Etat courant/ : Ce champ vaut 0 pour une partie en attente, 1 pour une partie en cours et 2 pour une partie terminée. 
+	
+Modalités
+	/Anonyme/ : on ne connait pas les identités des joueurs. [défaut : non]
+	/Silencieux/ : il est impossible aux jouer de communiquer (que ce soit en privé ou en public) sauf bien sûr avec l'arbitre. [défaut : non]
+	/Cumulable/ : un joueur pour avoir plusieurs rôles sur la partie (pour réaliser une partie duel par exemple). [défaut : non]
+	/Rapide/ : la partie n'a pas de date limite, la résolution se produit au plus tôt dès que tous les ordres sont présents (et l'état de rendu des ordres est public). [défaut : non]
+	
+Cadence de jeu:
+	/Date limite/ : date limite de rendu des ordres.
+	/Vitesse mouvements/ : nombre de jours entre entre résolution et date limite avant une phase de mouvements. [défaut : 2]
+	/D.C. possible sur mouvements/ : indique si en cas de retard le défaut d'ordre entraine un désordre civil, c'est à dire une résolution avec des ordres par défaut - quand une phase de mouvements est à jouer. [défaut : non]
+	/Vitesse retraites/ : nombre de jours entre entre résolution et date limite suivante avant une phase de retraites. [défaut : 1]
+	/D.C. possible sur retraites/ : indique si en cas de retard le défaut d'ordre entraine un désordre civil, c'est à dire une résolution avec des ordres par défaut - quand une phase de retraites est à jouer. [défaut : oui]
+	/Vitesse ajustements/ : nombre de jours entre entre résolution et date limite suivante avant une phase d'ajustements. [défaut : 1]
+	/D.C. possible sur constructions/ : indique si en cas de retard le défaut d'ordre entraine un désordre civil, c'est à dire une résolution avec des ordres par défaut pour une puissance qui devrait construire en phase d'ajustements - quand une phase d'ajustements est à jouer. [défaut : non]
+	/D.C. possible sur suppressions/ : indique si en cas de retard le défaut d'ordre entraine un désordre civil, c'est à dire une résolution avec des ordres par défaut  pour une puissance qui devrait supprimer en phase d'ajustements - quand une phase d'ajustements est à jouer. [défaut : oui]
+	/Jouée le week-end/ : indique si les date limites sont repoussées pour éviter les week-ends. [défaut : oui]
+	
+Accès et allocation
+	/Affectations manuelles/ : l'arbitre attribue les puissances (au lieu d'un tirage aléatoire) dans la partie - pour une partie de tournoi. [défaut : non]
+	/Code d'accès/ : il faut un code d'accès pour rejoindre la partie - la partie est en accès restreint. [défaut : non]
+	/Restriction fiabilité/ : il faut un certain niveau de fiabilité (pas de retard) pour rejoindre la partie. [défaut : aucune]
+	/Restriction régularité/ : il faut un certain niveau de régularité (beaucoup de parties) pour rejoindre la partie. [défaut : aucune]
+	/Restriction performance/ : il faut un certain niveau de performance (bons résultats) pour rejoindre la partie. [défaut : aucune]
+	
+Avancement
+	/Avancement courant/ : indique la session à jouer (cinq sessions dans un cycle). Commence à zéro.
+	/Nombre max. de cycles à jouer/ : le nombre d'années (de cycles) qui seront joués au plus.
+	/Victoire en centre/ : 18 pour diplomacy standard, peut être différent de la moitié des centres plus un dans certaines variantes.
