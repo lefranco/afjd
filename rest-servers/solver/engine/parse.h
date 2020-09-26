@@ -1,0 +1,36 @@
+#define NTOKENS 10
+#define NLIGNES 200
+
+#define CODE(a,b) ((a) * 256 + (b))
+
+typedef enum {
+	MOUVINIT = 100,
+	MOUV0,
+	MOUV1,
+	MOUV2,
+	MOUV3,
+	MOUV6,
+	MOUV7,
+	MOUV8,
+	MOUV9,
+	MOUV10,
+	MOUV11,
+	MOUVFIN
+} ETATAUTOMOUV;
+
+typedef enum {
+	RETRINIT = 200, RETR0, RETR1, RETR2, RETR3, RETR4, RETRFIN
+} ETATAUTORETR;
+
+typedef enum {
+	APPRINIT = 300, APPR0, APPR1, APPR2, APPR3, APPRFIN
+} ETATAUTOAPPR;
+
+typedef enum {
+	PRESAISON, PRESAISONMODIF, NORMAL
+} ETATAUTOSITU;
+
+typedef struct _LOOKAHEAD {
+	int n;
+	TOKEN t[NTOKENS];
+} LOOKAHEAD;

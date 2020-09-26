@@ -1,0 +1,233 @@
+typedef enum {
+	FALSE = 0, TRUE = 1
+} BOOL;
+
+typedef enum {
+	PRINTEMPS = 0, ETE = 1, AUTOMNE = 2, HIVER = 3, BILAN = 4
+} IDSAISON;
+
+typedef enum {
+	CARTE = 0,
+	ANNEXE,
+	SITUATION,
+	ORDRES,
+	UNITES,
+	CENTRES,
+	GEOGRAPHIE,
+	COULEURS,
+	CODES
+} FICHIERPARSE;
+
+typedef enum {
+	LEXICALE = 0, SYNTAXIQUE, LESREGLES, LACARTE, LASITUATION
+} TYPEERREURPARSE;
+
+typedef enum {
+	COHERENCE = 0, DUPLIQUE, MANQUANT, ENTREE
+} TYPEERREURVERIF;
+
+typedef enum {
+	ERRPARSE = 0, ERRVERIF, ERRVERIF2, ERRPARAMS, ERRSYSTEME
+} TYPEERREUR;
+
+/* Ici pour les prototypes pour que le module ploteur voie les fonctions */
+typedef enum {
+	UNPAYS,
+	UNEREGION,
+	UNCENTRE,
+	UNCENTREDEPART,
+	UNFLOTTEVOISIN,
+	UNARMEEVOISIN,
+	UNEZONE,
+	UNEMER,
+	UNECOTE,
+	UNETERRE,
+	UNEUNITE,
+	UNEPOSSESSION,
+	UNEARMEESUICIDE,
+	UNEFLOTTE,
+	UNSOUTIEN,
+	UNCONVOI,
+	UNSTAND,
+	UNERETRAITE,
+	UNREMOVE,
+	UNAJOUT,
+	UNEATTAQUESUPPRESSION,
+	UNSUICIDE,
+	UNOFFTHEBOARD,
+	UNINTERDIT,
+	UNEDISPARITION,
+	UNEDELOGEE,
+	UNEORIGINE,
+	UNBOURREAU,
+	UNEANNEEZERO,
+	UNESAISON,
+	UNESAISONMODIF,
+	UNPRINTEMPS,
+	UNETE,
+	UNAUTOMNE,
+	UNHIVER,
+	UNBILAN,
+	UNELOIGNEMENT,
+	UNECOULEUR,
+	UNCODE,
+	UNECOTESUD,
+	UNECOTENORD,
+	UNECOTEEST,
+	UNECOTEOUEST,
+	UNEOUVRANTE,
+	UNEFERMANTE,
+	UNSLASH,
+	UNEMINUSCULES,
+	UNEMAJUSCULES,
+	UNVIA,
+	UNCONVOY,
+	NOMBRE,
+	CHAINE,
+	FINLIGNE,
+	FINFICHIER
+} TOKENID;
+
+/* Idem */
+typedef struct _TOKEN {
+	char val[TAILLEMOT];
+	int val2;
+	TOKENID id;
+} TOKEN;
+
+typedef enum {
+	FLOTTE, ARMEE
+} TYPEUNITE;
+
+typedef enum {
+	COTE, TERRE, MER
+} TYPEZONE;
+
+typedef enum {
+	ATTAQUE, SOUTIENDEF, SOUTIENOFF, STAND, CONVOI
+} TYPEMOUVEMENT;
+
+typedef enum {
+	SUICIDE, FUITE
+} TYPERETRAITE;
+
+typedef enum {
+	AJOUTE, SUPPRIME
+} TYPEAJUSTEMENT;
+
+typedef char NOMPAYS[TAILLEMOT];
+typedef char NOMREGION[TAILLEMOT];
+typedef char SPECIFICITE[TAILLEMOT];
+
+typedef struct {
+	char initiale;
+	NOMPAYS nom, adjectif;
+} _PAYS;
+
+typedef struct {
+	NOMREGION nom, nom2;
+} _REGION;
+
+typedef struct {
+	_REGION *region;
+} _CENTRE;
+
+typedef struct {
+	_PAYS *pays;
+	_CENTRE *centre;
+} _CENTREDEPART;
+
+typedef struct {
+	SPECIFICITE specificite;
+	TYPEZONE typezone;
+	_REGION *region;
+	int rang; /* pour optimiser les calculs de voisinage */
+} _ZONE;
+
+typedef struct {
+	_ZONE *zone1, *zone2;
+} _ARMEEVOISIN;
+
+typedef struct {
+	_ZONE *zone1, *zone2;
+} _FLOTTEVOISIN;
+
+typedef struct {
+	TYPEUNITE typeunite;
+	_PAYS *pays;
+	_ZONE *zone;
+	int valeur;
+} _ELOIGNEMENT;
+
+typedef struct {
+	TYPEUNITE typeunite;
+	_ZONE *zone, *zonedepart;
+	_PAYS *pays;
+} _UNITE;
+
+typedef struct {
+	_CENTRE *centre;
+	_PAYS *pays;
+} _POSSESSION;
+
+typedef struct {
+	_UNITE *unite, *uniteorig;
+	_ZONE *zoneorig;
+} _DELOGEE;
+
+typedef struct {
+	_DELOGEE *delogee;
+} _ANEANTIE;
+
+typedef struct {
+	_REGION *region;
+} _INTERDIT;
+
+typedef struct {
+	_PAYS *pays;
+	int annee;
+} _DISPARITION;
+
+typedef struct {
+	int noligne;
+	TYPEMOUVEMENT typemouvement;
+	BOOL valable, dedaigne, coupe, paradoxe;
+	_UNITE *unite, *unitepass;
+	_ZONE *zonedest;
+} _MOUVEMENT;
+
+typedef struct {
+	int noligne;
+	TYPERETRAITE typeretraite;
+	BOOL valable;
+	_DELOGEE *delogee;
+	_ZONE *zonedest;
+} _RETRAITE;
+
+typedef struct {
+	int noligne;
+	TYPEAJUSTEMENT typeajustement;
+	_UNITE *unite;
+} _AJUSTEMENT;
+
+typedef LISTE(_PAYS,NPAYSS) TPAYS;
+typedef LISTE(_REGION,NREGIONS) TREGION;
+typedef LISTE(_CENTRE,NCENTRES) TCENTRE;
+typedef LISTE(_CENTREDEPART,NCENTREDEPARTS) TCENTREDEPART;
+typedef LISTE(_ZONE,NZONES) TZONE;
+typedef LISTE(_ARMEEVOISIN,NARMEEVOISINS) TARMEEVOISIN;
+typedef LISTE(_FLOTTEVOISIN,NFLOTTEVOISINS) TFLOTTEVOISIN;
+typedef LISTE(_ELOIGNEMENT,NELOIGNEMENTS) TELOIGNEMENT;
+typedef LISTE(_UNITE,NUNITES) TUNITE;
+typedef LISTE(_UNITE,NUNITEFUTURES) TUNITEFUTURE;
+typedef LISTE(_MOUVEMENT,NMOUVEMENTS) TMOUVEMENT;
+typedef LISTE(_RETRAITE,NRETRAITES) TRETRAITE;
+typedef LISTE(_AJUSTEMENT,NAJUSTEMENTS) TAJUSTEMENT;
+typedef LISTE(_INTERDIT,NINTERDITS) TINTERDIT;
+typedef LISTE(_DELOGEE,NDELOGEES) TDELOGEE;
+typedef LISTE(_ANEANTIE,NANEANTIES) TANEANTIE;
+typedef LISTE(_POSSESSION,NPOSSESSIONS) TPOSSESSION;
+typedef LISTE(_DISPARITION,NDISPARITIONS) TDISPARITION;
+
+typedef LISTE(_PAYS *,NPAYSS) TPAYSCLASSES;
+
