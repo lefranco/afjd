@@ -1,0 +1,1453 @@
+#!wing
+#!version=7.0
+##################################################################
+# Wing project file                                              #
+##################################################################
+[project attributes]
+console.toolbox = [{'autosave': False,
+                    'cmd': 'bash -norc',
+                    'env': ('project',
+                            ''),
+                    'id': 'cmd-yCHhlLdyFgB5IBpP',
+                    'io_encoding': None,
+                    'key_binding': None,
+                    'line_mode': True,
+                    'pseudo_tty': True,
+                    'pypath': ('project',
+                               []),
+                    'raise_panel': True,
+                    'rundir': ('project',
+                               ''),
+                    'title': u'Terminal 1'}]
+proj.file-list = [loc('canvas.py'),
+                  loc('client_ihm_play.py'),
+                  loc('data.py'),
+                  loc('font.py'),
+                  loc('forbiddens.py'),
+                  loc('orders.py'),
+                  loc('ownerships.py'),
+                  loc('renderer.py'),
+                  loc('units.py')]
+proj.file-type = 'normal'
+[user attributes]
+debug.err-values = {loc('client_ihm_diplo.py'): {}}
+edit.file-encoding = {loc('renderer.py'): 'UTF-8'}
+guimgr.overall-gui-state = {'windowing-policy': 'combined-window',
+                            'windows': [{'name': 'PAN7WeqRn4gmJoe9fTf0Cndv5U'\
+        'hNdQqd',
+        'size-state': '',
+        'type': 'dock',
+        'view': {'area': 'tall',
+                 'constraint': None,
+                 'current_pages': [0],
+                 'full-screen': False,
+                 'notebook_display': 'normal',
+                 'notebook_percent': 0.2931034482758621,
+                 'override_title': None,
+                 'pagelist': [('project',
+                               'tall',
+                               0,
+                               {'tree-state': {'file-sort-method': 'by name',
+        'list-files-first': False,
+        'tree-states': {'deep': {'expanded-nodes': [],
+                                 'selected-nodes': [(0,),
+        (1,),
+        (2,),
+        (3,),
+        (4,),
+        (5,),
+        (6,),
+        (7,),
+        (8,)],
+                                 'top-node': (0,)}},
+        'tree-style': 'deep'}}),
+                              ('source-assistant',
+                               'tall',
+                               2,
+                               {}),
+                              ('debug-stack',
+                               'tall',
+                               1,
+                               {'codeline-mode': 'below'}),
+                              ('browser',
+                               'tall',
+                               0,
+                               {'all_tree_states': {loc('../../Alice/prog1.py'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [[('function def',
+                             loc('../../Alice/prog1.py'),
+                             'tempspourdoubler')]],
+        'top-node': [('generic attribute',
+                      loc('../../Alice/prog1.py'),
+                      'bact')]},
+        loc('../../Alice/prog2.py'): {'expanded-nodes': [],
+                                      'selected-nodes': [],
+                                      'top-node': [('generic attribute',
+        loc('../../Alice/prog2.py'),
+        'i')]},
+        loc('../../Alice/prog3.py'): {'expanded-nodes': [],
+                                      'selected-nodes': [],
+                                      'top-node': [('generic attribute',
+        loc('../../Alice/prog3.py'),
+        'chaine1')]},
+        loc('../../Alice/prog4.py'): {'expanded-nodes': [],
+                                      'selected-nodes': [],
+                                      'top-node': None},
+        loc('../backup-dev-gaci-20200602/BENCH/myenv/Lib/site-packages/django/core/management/base.py'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('class def',
+                      loc('../backup-dev-gaci-20200602/BENCH/myenv/Lib/site-packages/django/core/management/base.py'),
+                      'AppCommand')]},
+        loc('../backup-dev-gaci-20200602/BENCH/myenv/Lib/site-packages/pip/_vendor/webencodings/__init__.py'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('function def',
+                      loc('../backup-dev-gaci-20200602/BENCH/myenv/Lib/site-packages/pip/_vendor/webencodings/__init__.py'),
+                      'ascii_lower')]},
+        loc('../backup-dev-gaci-20200602/BENCH/myenv/SHELL/gpio/simu/eden_gpio_server.py'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('class def',
+                      loc('../backup-dev-gaci-20200602/BENCH/myenv/SHELL/gpio/simu/eden_gpio_server.py'),
+                      'GpioData')]},
+        loc('../backup-dev-gaci-20200602/BENCH/myenv/SHELL/setup/ihm/eden_setup_ihm.py'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../backup-dev-gaci-20200602/BENCH/myenv/SHELL/setup/ihm/eden_setup_ihm.py'),
+                      'ACCEPTABLE_COLUMN_HEIGHT')]},
+        loc('../backup-dev-gaci-20200602/BENCH/myenv/SHELL/stats/ihm/eden_stats_ihm.py'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../backup-dev-gaci-20200602/BENCH/myenv/SHELL/stats/ihm/eden_stats_ihm.py'),
+                      'ACCEPTABLE_COLUMN_HEIGHT')]},
+        loc('../backup-dev-gaci-20200602/BENCH/myenv/UDPLIB/api/cliserv.py'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('class def',
+                      loc('../backup-dev-gaci-20200602/BENCH/myenv/UDPLIB/api/cliserv.py'),
+                      'ActionEnum')]},
+        loc('../backup-dev-gaci-20200602/BENCH/myenv/UDPLIB/api/udplib.py'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('class def',
+                      loc('../backup-dev-gaci-20200602/BENCH/myenv/UDPLIB/api/udplib.py'),
+                      'AcknowledgedInformationRecord')]},
+        loc('../backup-dev-gaci-20200602/BENCH/myenv/UDPLIB/c-api-complete/caller.pyx'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': None},
+        loc('../backup-dev-gaci-20200602/BENCH/myenv/UDPLIB/c-api-complete/udplib.py'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('class def',
+                      loc('../backup-dev-gaci-20200602/BENCH/myenv/UDPLIB/c-api-complete/udplib.py'),
+                      'AcknowledgedInformationRecord')]},
+        loc('../battledev/2014/jun/1/bd-2014-06-1.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2014/jun/1/bd-2014-06-1.py'),
+                      'allcards')]},
+        loc('../battledev/2017/mar/6/bd-2017-03-6.py'): {'expanded-nodes': [],
+        'selected-nodes': [[('generic attribute',
+                             loc('../battledev/2017/mar/6/bd-2017-03-6.py'),
+                             'INPUT')]],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2017/mar/6/bd-2017-03-6.py'),
+                      'alt')]},
+        loc('../battledev/2017/nov/6/bd-2017-11-6.py'): {'expanded-nodes': [],
+        'selected-nodes': [[('generic attribute',
+                             loc('../battledev/2017/nov/6/bd-2017-11-6.py'),
+                             'a')]],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2017/nov/6/bd-2017-11-6.py'),
+                      'a')]},
+        loc('../battledev/2019/mar/1/bd-2019-03-1.py'): {'expanded-nodes': [],
+        'selected-nodes': [[('generic attribute',
+                             loc('../battledev/2019/mar/1/bd-2019-03-1.py'),
+                             'place')]],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2019/mar/1/bd-2019-03-1.py'),
+                      'depart')]},
+        loc('../battledev/2019/mar/2/bd-2019-03-2.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2019/mar/2/bd-2019-03-2.py'),
+                      'cur')]},
+        loc('../battledev/2019/mar/5/bd-2019-03-5.py'): {'expanded-nodes': [],
+        'selected-nodes': [[('generic attribute',
+                             loc('../battledev/2019/mar/5/bd-2019-03-5.py'),
+                             'x')]],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2019/mar/5/bd-2019-03-5.py'),
+                      'best_pepete')]},
+        loc('../battledev/2019/mar/6/bd-2019-03-6.py'): {'expanded-nodes': [],
+        'selected-nodes': [[('generic attribute',
+                             loc('../battledev/2019/mar/6/bd-2019-03-6.py'),
+                             'word')]],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2019/mar/6/bd-2019-03-6.py'),
+                      'best')]},
+        loc('../battledev/2019/nov/1/bd-2019-03-1.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2019/nov/1/bd-2019-03-1.py'),
+                      'line')]},
+        loc('../battledev/2019/nov/1/bd-2019-11-1.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2019/nov/1/bd-2019-11-1.py'),
+                      'length')]},
+        loc('../battledev/2019/nov/2/bd-2019-11-1.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2019/nov/2/bd-2019-11-1.py'),
+                      'length')]},
+        loc('../battledev/2019/nov/2/bd-2019-11-2.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2019/nov/2/bd-2019-11-2.py'),
+                      'data')]},
+        loc('../battledev/2019/nov/3/bd-2019-11-3.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2019/nov/3/bd-2019-11-3.py'),
+                      'alloc')]},
+        loc('../battledev/2019/nov/4/bd-2019-11-4.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../battledev/2019/nov/4/bd-2019-11-4.py'),
+                      'avail')]},
+        loc('../battledev/2019/nov/5/bd-2019-11-5.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('function def',
+                      loc('../battledev/2019/nov/5/bd-2019-11-5.py'),
+                      'check')]},
+        loc('../battledev/2019/nov/5/untitled.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': None},
+        loc('api_castor.py'): {'expanded-nodes': [],
+                               'selected-nodes': [],
+                               'top-node': [('generic attribute',
+        loc('api_castor.py'),
+        'DATA')]},
+        loc('api_castor/api_castor.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('api_castor/api_castor.py'),
+                      'CENTERS')]},
+        loc('client_ihm_diplo.py'): {'expanded-nodes': [],
+                                     'selected-nodes': [[('generic attribute',
+        loc('client_ihm_diplo.py'),
+        'UNIT_DATA')]],
+                                     'top-node': [('class def',
+        loc('client_ihm_diplo.py'),
+        'AdjustmentOrderAutomaton')]},
+        loc('demo.py'): {'expanded-nodes': [],
+                         'selected-nodes': [],
+                         'top-node': None},
+        loc('diplo_client_ihm.py'): {'expanded-nodes': [],
+                                     'selected-nodes': [],
+                                     'top-node': None},
+        loc('diplomacy/convert/convert_neighbouring.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': None},
+        loc('display.py'): {'expanded-nodes': [],
+                            'selected-nodes': [],
+                            'top-node': [('generic attribute',
+        loc('display.py'),
+        'BACKGROUND_COLOR')]},
+        loc('standard/convert/convert_neighbouring.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('function def',
+                      loc('standard/convert/convert_neighbouring.py'),
+                      'main')]},
+        loc('../../pnethack/src/abstractlevel.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('class def',
+                      loc('../../pnethack/src/abstractlevel.py'),
+                      'AbstractLevel')]},
+        loc('../../pnethack/src/constants.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('generic attribute',
+                      loc('../../pnethack/src/constants.py'),
+                      'CONFIG')]},
+        loc('../../pnethack2/src/abstractlevel.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('class def',
+                      loc('../../pnethack2/src/abstractlevel.py'),
+                      'AbstractLevel')]},
+        loc('../../pnethack2/src/constants.py'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': None},
+        loc('../../../../media/lefranco/PHILIPS UFD/client-ihm-diplo/diplo_client_ihm.py'): {'e'\
+        'xpanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': [('class def',
+                      loc('../../../../media/lefranco/PHILIPS UFD/client-ihm-diplo/diplo_client_ihm.py'),
+                      'Application')]},
+        loc('unknown:<untitled> #10'): {'expanded-nodes': [],
+        'selected-nodes': [],
+        'top-node': None}},
+                                'browse_mode': u'Current Module',
+                                'follow-selection': False,
+                                'sort_mode': 'Alphabetically',
+                                'visibility_options': {u'Derived Classes': False,
+        u'Imported': False,
+        u'Modules': True}}),
+                              ('indent',
+                               'tall',
+                               2,
+                               {}),
+                              ('pylintpanel#02EFWRQK9X24',
+                               'tall',
+                               0,
+                               {})],
+                 'primary_view_state': {'area': 'wide',
+        'constraint': None,
+        'current_pages': [1,
+                          0],
+        'notebook_display': 'normal',
+        'notebook_percent': 0.3517587939698492,
+        'override_title': None,
+        'pagelist': [('batch-search',
+                      'wide',
+                      0,
+                      {'fScope': {'fFileSetName': 'Python Files',
+                                  'fLocation': '../..',
+                                  'fRecursive': True,
+                                  'fType': 'location'},
+                       'fSearchSpec': {'fEndPos': None,
+                                       'fIncludeLinenos': True,
+                                       'fInterpretBackslashes': False,
+                                       'fMatchCase': False,
+                                       'fOmitBinary': True,
+                                       'fRegexFlags': 42,
+                                       'fReplaceText': u'',
+                                       'fReverse': False,
+                                       'fSearchText': u'button_submit',
+                                       'fStartPos': 0,
+                                       'fStyle': 'text',
+                                       'fWholeWords': False,
+                                       'fWrap': True},
+                       'fUIOptions': {'fAutoBackground': True,
+                                      'fFilePrefix': 'short-file',
+                                      'fFindAfterReplace': True,
+                                      'fInSelection': False,
+                                      'fIncremental': True,
+                                      'fReplaceOnDisk': False,
+                                      'fShowFirstMatch': False,
+                                      'fShowLineno': True,
+                                      'fShowReplaceWidgets': False},
+                       'replace-entry-expanded': False,
+                       'search-entry-expanded': False}),
+                     ('interactive-search',
+                      'wide',
+                      0,
+                      {'fScope': {'fFileSetName': 'All Source Files',
+                                  'fLocation': None,
+                                  'fRecursive': True,
+                                  'fType': 'project-files'},
+                       'fSearchSpec': {'fEndPos': None,
+                                       'fIncludeLinenos': True,
+                                       'fInterpretBackslashes': False,
+                                       'fMatchCase': False,
+                                       'fOmitBinary': True,
+                                       'fRegexFlags': 42,
+                                       'fReplaceText': u'name',
+                                       'fReverse': False,
+                                       'fSearchText': u'determ',
+                                       'fStartPos': 0,
+                                       'fStyle': 'text',
+                                       'fWholeWords': False,
+                                       'fWrap': True},
+                       'fUIOptions': {'fAutoBackground': True,
+                                      'fFilePrefix': 'short-file',
+                                      'fFindAfterReplace': True,
+                                      'fInSelection': False,
+                                      'fIncremental': True,
+                                      'fReplaceOnDisk': False,
+                                      'fShowFirstMatch': False,
+                                      'fShowLineno': True,
+                                      'fShowReplaceWidgets': False}}),
+                     ('debug-data',
+                      'wide',
+                      0,
+                      {}),
+                     ('debug-exceptions',
+                      'wide',
+                      0,
+                      {}),
+                     ('debug-io',
+                      'wide',
+                      1,
+                      {}),
+                     ('python-shell',
+                      'wide',
+                      2,
+                      {'active-range': (None,
+        -1,
+        -1),
+                       'attrib-starts': [],
+                       'code-line': '',
+                       'first-line': 0L,
+                       'folded-linenos': [],
+                       'history': {},
+                       'launch-id': None,
+                       'sel-line': 3L,
+                       'sel-line-start': 130L,
+                       'selection_end': 130L,
+                       'selection_start': 130L,
+                       'zoom': 0L}),
+                     ('messages',
+                      'wide',
+                      2,
+                      {'current-domain': 0}),
+                     ('os-command',
+                      'wide',
+                      1,
+                      {'last-percent': 0.8,
+                       'toolbox-percent': 1.0,
+                       'toolbox-tree-sel': 'cmd-yCHhlLdyFgB5IBpP'})],
+        'primary_view_state': {'editor_states': ({'bookmarks': ([[loc('orders.py'),
+        {'attrib-starts': [('BagOrders|0|',
+                            289),
+                           ('BagOrders|0|.reinit|0|',
+                            297)],
+         'code-line': '\n',
+         'first-line': 289L,
+         'folded-linenos': [],
+         'sel-line': 302L,
+         'sel-line-start': 12313L,
+         'selection_end': 12313L,
+         'selection_start': 12313L,
+         'zoom': 0L},
+        1599404012.9066],
+        [loc('client_ihm_play.py'),
+         {'attrib-starts': [('Application|0|',
+                             94),
+                            ('Application|0|.determine_role|0|',
+                             496)],
+          'code-line': '        self.button_submit.config(state=tkinter.ACTI'\
+                       'VE)\n',
+          'first-line': 589L,
+          'folded-linenos': [],
+          'sel-line': 603L,
+          'sel-line-start': 25106L,
+          'selection_end': 25132L,
+          'selection_start': 25119L,
+          'zoom': 0L},
+         1599404012.910297],
+        [loc('client_ihm_play.py'),
+         {'attrib-starts': [('Application|0|',
+                             94),
+                            ('Application|0|.determine_role|0|',
+                             496)],
+          'code-line': '\n',
+          'first-line': 590L,
+          'folded-linenos': [],
+          'sel-line': 603L,
+          'sel-line-start': 25106L,
+          'selection_end': 25106L,
+          'selection_start': 25106L,
+          'zoom': 0L},
+         1599404022.018107],
+        [loc('client_ihm_play.py'),
+         {'attrib-starts': [('Application|0|',
+                             94),
+                            ('Application|0|.create_widgets|0|',
+                             118)],
+          'code-line': '        self.button_submit.config(state=tkinter.ACTI'\
+                       'VE)\n',
+          'first-line': 346L,
+          'folded-linenos': [],
+          'sel-line': 359L,
+          'sel-line-start': 14927L,
+          'selection_end': 14981L,
+          'selection_start': 14981L,
+          'zoom': 0L},
+         1599404033.242923],
+        [loc('orders.py'),
+         {'attrib-starts': [('BagOrders|0|',
+                             289),
+                            ('BagOrders|0|.reinit|0|',
+                             297)],
+          'code-line': '\n',
+          'first-line': 289L,
+          'folded-linenos': [],
+          'sel-line': 302L,
+          'sel-line-start': 12313L,
+          'selection_end': 12313L,
+          'selection_start': 12313L,
+          'zoom': 0L},
+         1599404033.244912],
+        [loc('orders.py'),
+         {'attrib-starts': [('BagOrders|0|',
+                             289),
+                            ('BagOrders|0|.add_update_order|0|',
+                             303)],
+          'code-line': '\n',
+          'first-line': 301L,
+          'folded-linenos': [],
+          'sel-line': 314L,
+          'sel-line-start': 12794L,
+          'selection_end': 12794L,
+          'selection_start': 12794L,
+          'zoom': 0L},
+         1599404068.019171],
+        [loc('client_ihm_play.py'),
+         {'attrib-starts': [('Application|0|',
+                             94),
+                            ('Application|0|.create_widgets|0|',
+                             118)],
+          'code-line': '        self.button_submit.config(state=tkinter.ACTI'\
+                       'VE)\n',
+          'first-line': 346L,
+          'folded-linenos': [],
+          'sel-line': 359L,
+          'sel-line-start': 14927L,
+          'selection_end': 14981L,
+          'selection_start': 14981L,
+          'zoom': 0L},
+         1599404068.022589],
+        [loc('client_ihm_play.py'),
+         {'attrib-starts': [('Application|0|',
+                             94),
+                            ('Application|0|.create_widgets|0|',
+                             118)],
+          'code-line': '        self.button_submit.config(state=tkinter.DISA'\
+                       'BLED)\n',
+          'first-line': 323L,
+          'folded-linenos': [],
+          'sel-line': 359L,
+          'sel-line-start': 14927L,
+          'selection_end': 14985L,
+          'selection_start': 14927L,
+          'zoom': 0L},
+         1599404084.429913],
+        [loc('orders.py'),
+         {'attrib-starts': [('BagOrders|0|',
+                             289),
+                            ('BagOrders|0|.add_update_order|0|',
+                             303)],
+          'code-line': '        assert zone_num is not None\n',
+          'first-line': 301L,
+          'folded-linenos': [],
+          'sel-line': 308L,
+          'sel-line-start': 12509L,
+          'selection_end': 12544L,
+          'selection_start': 12544L,
+          'zoom': 0L},
+         1599404087.073713],
+        [loc('client_ihm_play.py'),
+         {'attrib-starts': [('Application|0|',
+                             94),
+                            ('Application|0|.determine_role|0|',
+                             496)],
+          'code-line': '    def determine_role(self) -> None:\n',
+          'first-line': 476L,
+          'folded-linenos': [],
+          'sel-line': 496L,
+          'sel-line-start': 20930L,
+          'selection_end': 20944L,
+          'selection_start': 20938L,
+          'zoom': 0L},
+         1599404090.097498],
+        [loc('client_ihm_play.py'),
+         {'attrib-starts': [('Application|0|',
+                             94),
+                            ('Application|0|.determine_role|0|',
+                             496)],
+          'code-line': '        self.button_submit.config(state=tkinter.DISA'\
+                       'BLED)\n',
+          'first-line': 490L,
+          'folded-linenos': [],
+          'sel-line': 503L,
+          'sel-line-start': 21146L,
+          'selection_end': 21202L,
+          'selection_start': 21202L,
+          'zoom': 0L},
+         1599404276.343562],
+        [loc('canvas.py'),
+         {'attrib-starts': [('MyCanvas|0|',
+                             691),
+                            ('MyCanvas|0|.put_names|0|',
+                             743)],
+          'code-line': '            self.add_clickable_zone(clickable_zone)'\
+                       '\n',
+          'first-line': 739L,
+          'folded-linenos': [],
+          'sel-line': 760L,
+          'sel-line-start': 37545L,
+          'selection_end': 37557L,
+          'selection_start': 37557L,
+          'zoom': 0L},
+         1599404277.66228],
+        [loc('client_ihm_play.py'),
+         {'attrib-starts': [('Application|0|',
+                             94),
+                            ('Application|0|.determine_role|0|',
+                             496)],
+          'code-line': '        self.button_submit.config(state=tkinter.DISA'\
+                       'BLED)\n',
+          'first-line': 490L,
+          'folded-linenos': [],
+          'sel-line': 503L,
+          'sel-line-start': 21146L,
+          'selection_end': 21202L,
+          'selection_start': 21202L,
+          'zoom': 0L},
+         1599404277.665336],
+        [loc('units.py'),
+         {'attrib-starts': [('BagUnits|0|',
+                             454),
+                            ('BagUnits|0|.find_fake_unit|0|',
+                             563)],
+          'code-line': '                return fake_unit\n',
+          'first-line': 553L,
+          'folded-linenos': [],
+          'sel-line': 567L,
+          'sel-line-start': 18695L,
+          'selection_end': 18723L,
+          'selection_start': 18723L,
+          'zoom': 0L},
+         1599404277.668887],
+        [loc('data.py'),
+         {'attrib-starts': [('extract_names|0|',
+                             244)],
+          'code-line': "    coast_names = {int(c): str(COAST_DATA[c]['name']"\
+                       ") for c in COAST_DATA}\n",
+          'first-line': 242L,
+          'folded-linenos': [],
+          'sel-line': 249L,
+          'sel-line-start': 7545L,
+          'selection_end': 7560L,
+          'selection_start': 7560L,
+          'zoom': 0L},
+         1599404277.671739],
+        [loc('font.py'),
+         {'attrib-starts': [],
+          'code-line': '#!/usr/bin/env python3\n',
+          'first-line': 0L,
+          'folded-linenos': [],
+          'sel-line': 0L,
+          'sel-line-start': 0L,
+          'selection_end': 0L,
+          'selection_start': 0L,
+          'zoom': 0L},
+         1599404277.673548],
+        [loc('forbiddens.py'),
+         {'attrib-starts': [('BagForbiddens|0|',
+                             46),
+                            ('BagForbiddens|0|.save_json|0|',
+                             71)],
+          'code-line': '\n',
+          'first-line': 66L,
+          'folded-linenos': [],
+          'sel-line': 78L,
+          'sel-line-start': 2098L,
+          'selection_end': 2098L,
+          'selection_start': 2098L,
+          'zoom': 0L},
+         1599404277.675561],
+        [loc('orders.py'),
+         {'attrib-starts': [('BagOrders|0|',
+                             289),
+                            ('BagOrders|0|.add_update_order|0|',
+                             303)],
+          'code-line': '        assert zone_num is not None\n',
+          'first-line': 301L,
+          'folded-linenos': [],
+          'sel-line': 308L,
+          'sel-line-start': 12509L,
+          'selection_end': 12544L,
+          'selection_start': 12544L,
+          'zoom': 0L},
+         1599404277.677541],
+        [loc('ownerships.py'),
+         {'attrib-starts': [('CenterOwnership|0|',
+                             17),
+                            ('CenterOwnership|0|.render|0|',
+                             30)],
+          'code-line': '        color_tuple = (color_red, color_green, color'\
+                       '_blue)\n',
+          'first-line': 59L,
+          'folded-linenos': [],
+          'sel-line': 38L,
+          'sel-line-start': 855L,
+          'selection_end': 871L,
+          'selection_start': 871L,
+          'zoom': 0L},
+         1599404277.679776],
+        [loc('renderer.py'),
+         {'attrib-starts': [],
+          'code-line': '#!/usr/bin/env python3\n',
+          'first-line': 0L,
+          'folded-linenos': [],
+          'sel-line': 0L,
+          'sel-line-start': 0L,
+          'selection_end': 0L,
+          'selection_start': 0L,
+          'zoom': 0L},
+         1599404277.681578]],
+        20),
+        'current-loc': None,
+        'editor-state-list': [],
+        'has-focus': True,
+        'locked': False},
+        []),
+                               'open_files': []},
+        'saved_notebook_display': None,
+        'split_percents': {0: 0.7141242937853107},
+        'splits': 2,
+        'tab_location': 'top',
+        'traversal_pos': ((0,
+                           1),
+                          1599404088.02023),
+        'user_data': {}},
+                 'saved_notebook_display': None,
+                 'split_percents': {},
+                 'splits': 1,
+                 'tab_location': 'left',
+                 'traversal_pos': ((0,
+                                    0),
+                                   1596364810.997182),
+                 'user_data': {}},
+        'window-alloc': (51,
+                         64,
+                         1618,
+                         1020)}]}
+guimgr.recent-documents = [loc('data.py'),
+                           loc('client_ihm_play.py'),
+                           loc('orders.py'),
+                           loc('renderer.py'),
+                           loc('ownerships.py'),
+                           loc('forbiddens.py'),
+                           loc('font.py'),
+                           loc('units.py'),
+                           loc('canvas.py')]
+guimgr.visual-state = {loc('../../../../.wingpersonal7/pylintpanel.cfg'): {'a'\
+        'ttrib-starts': [],
+        'code-line': '#command =\n',
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 5L,
+        'sel-line-start': 67L,
+        'selection_end': 68L,
+        'selection_start': 68L,
+        'zoom': 0L},
+                       loc('../client-ihm-account/.mypy_cache/3.8/tkinter/messagebox.data.json'): {'a'\
+        'ttrib-starts': [],
+        'code-line': "{\".class\": \"MypyFile\", \"_fullname\": \"tkinter.me"\
+                     "ssagebox\", \"is_partial_stub_package\": false, \"is_s"\
+                     "tub\": true, \"names\": {\".class\": \"SymbolTable\", "\
+                     "\"ABORT\": {\".class\": \"SymbolTableNode\", \"kind\""\
+                     ": \"Gdef\", \"node\": {\".class\": \"Var\", \"flags\""\
+                     ": [\"is_ready\"], \"fullname\": \"tkinter.messagebox.A"\
+                     "BORT\", \"name\": \"ABORT\", \"type\": \"builtins.str"\
+                     "\"}}, \"ABORTRETRYIGNORE\": {\".class\": \"SymbolTable"\
+                     "Node\", \"kind\": \"Gdef\", \"node\": {\".class\": \""\
+                     "Var\", \"flags\": [\"is_ready\"], \"fullname\": \"tkin"\
+                     "ter.messagebox.ABORTRETRYIGNORE\", \"name\": \"ABORTRE"\
+                     "TRYIGNORE\", \"type\": \"builtins.str\"}}, \"Any\": {"\
+                     "\".class\": \"SymbolTableNode\", \"cross_ref\": \"typi"\
+                     "ng.Any\", \"kind\": \"Gdef\", \"module_hidden\": true,"\
+                     " \"module_public\": false}, \"CANCEL\": {\".class\": "\
+                     "\"SymbolTableNode\", \"kind\": \"Gdef\", \"node\": {\""\
+                     ".class\": \"Var\", \"flags\": [\"is_ready\"], \"fullna"\
+                     "me\": \"tkinter.messagebox.CANCEL\", \"name\": \"CANCE"\
+                     "L\", \"type\": \"builtins.str\"}}, \"Dialog\": {\".cla"\
+                     "ss\": \"SymbolTableNode\", \"cross_ref\": \"tkinter.co"\
+                     "mmondialog.Dialog\", \"kind\": \"Gdef\", \"module_hidd"\
+                     "en\": true, \"module_public\": false}, \"ERROR\": {\""\
+                     ".class\": \"SymbolTableNode\", \"kind\": \"Gdef\", \""\
+                     "node\": {\".class\": \"Var\", \"flags\": [\"is_ready\""\
+                     "], \"fullname\": \"tkinter.messagebox.ERROR\", \"name"\
+                     "\": \"ERROR\", \"type\": \"builtins.str\"}}, \"IGNORE"\
+                     "\": {\".class\": \"SymbolTableNode\", \"kind\": \"Gdef"\
+                     "\", \"node\": {\".class\": \"Var\", \"flags\": [\"is_r"\
+                     "eady\"], \"fullname\": \"tkinter.messagebox.IGNORE\", "\
+                     "\"name\": \"IGNORE\", \"type\": \"builtins.str\"}}, \""\
+                     "INFO\": {\".class\": \"SymbolTableNode\", \"kind\": \""\
+                     "Gdef\", \"node\": {\".class\": \"Var\", \"flags\": [\""\
+                     "is_ready\"], \"fullname\": \"tkinter.messagebox.INFO\""\
+                     ", \"name\": \"INFO\", \"type\": \"builtins.str\"}}, \""\
+                     "Message\": {\".class\": \"SymbolTableNode\", \"kind\""\
+                     ": \"Gdef\", \"node\": {\".class\": \"TypeInfo\", \"_pr"\
+                     "omote\": null, \"abstract_attributes\": [], \"bases\""\
+                     ": [\"tkinter.commondialog.Dialog\"], \"declared_metacl"\
+                     "ass\": null, \"defn\": {\".class\": \"ClassDef\", \"fu"\
+                     "llname\": \"tkinter.messagebox.Message\", \"name\": \""\
+                     "Message\", \"type_vars\": []}, \"flags\": [], \"fullna"\
+                     "me\": \"tkinter.messagebox.Message\", \"metaclass_type"\
+                     "\": null, \"metadata\": {}, \"module_name\": \"tkinter"\
+                     ".messagebox\", \"mro\": [\"tkinter.messagebox.Message"\
+                     "\", \"tkinter.commondialog.Dialog\", \"builtins.object"\
+                     "\"], \"names\": {\".class\": \"SymbolTable\", \"comman"\
+                     "d\": {\".class\": \"SymbolTableNode\", \"kind\": \"Mde"\
+                     "f\", \"node\": {\".class\": \"Var\", \"flags\": [\"is_"\
+                     "initialized_in_class\", \"is_ready\"], \"fullname\": "\
+                     "\"tkinter.messagebox.Message.command\", \"name\": \"co"\
+                     "mmand\", \"type\": \"builtins.str\"}}}, \"tuple_type\""\
+                     ": null, \"type_vars\": [], \"typeddict_type\": null}},"\
+                     " \"NO\": {\".class\": \"SymbolTableNode\", \"kind\": "\
+                     "\"Gdef\", \"node\": {\".class\": \"Var\", \"flags\": ["\
+                     "\"is_ready\"], \"fullname\": \"tkinter.messagebox.NO\""\
+                     ", \"name\": \"NO\", \"type\": \"builtins.str\"}}, \"OK"\
+                     "\": {\".class\": \"SymbolTableNode\", \"kind\": \"Gdef"\
+                     "\", \"node\": {\".class\": \"Var\", \"flags\": [\"is_r"\
+                     "eady\"], \"fullname\": \"tkinter.messagebox.OK\", \"na"\
+                     "me\": \"OK\", \"type\": \"builtins.str\"}}, \"OKCANCEL"\
+                     "\": {\".class\": \"SymbolTableNode\", \"kind\": \"Gdef"\
+                     "\", \"node\": {\".class\": \"Var\", \"flags\": [\"is_r"\
+                     "eady\"], \"fullname\": \"tkinter.messagebox.OKCANCEL\""\
+                     ", \"name\": \"OKCANCEL\", \"type\": \"builtins.str\"}}"\
+                     ", \"Optional\": {\".class\": \"SymbolTableNode\", \"cr"\
+                     "oss_ref\": \"typing.Optional\", \"kind\": \"Gdef\", \""\
+                     "module_hidden\": true, \"module_public\": false}, \"QU"\
+                     "ESTION\": {\".class\": \"SymbolTableNode\", \"kind\": "\
+                     "\"Gdef\", \"node\": {\".class\": \"Var\", \"flags\": ["\
+                     "\"is_ready\"], \"fullname\": \"tkinter.messagebox.QUES"\
+                     "TION\", \"name\": \"QUESTION\", \"type\": \"builtins.s"\
+                     "tr\"}}, \"RETRY\": {\".class\": \"SymbolTableNode\", "\
+                     "\"kind\": \"Gdef\", \"node\": {\".class\": \"Var\", \""\
+                     "flags\": [\"is_ready\"], \"fullname\": \"tkinter.messa"\
+                     "gebox.RETRY\", \"name\": \"RETRY\", \"type\": \"builti"\
+                     "ns.str\"}}, \"RETRYCANCEL\": {\".class\": \"SymbolTabl"\
+                     "eNode\", \"kind\": \"Gdef\", \"node\": {\".class\": \""\
+                     "Var\", \"flags\": [\"is_ready\"], \"fullname\": \"tkin"\
+                     "ter.messagebox.RETRYCANCEL\", \"name\": \"RETRYCANCEL"\
+                     "\", \"type\": \"builtins.str\"}}, \"WARNING\": {\".cla"\
+                     "ss\": \"SymbolTableNode\", \"kind\": \"Gdef\", \"node"\
+                     "\": {\".class\": \"Var\", \"flags\": [\"is_ready\"], "\
+                     "\"fullname\": \"tkinter.messagebox.WARNING\", \"name\""\
+                     ": \"WARNING\", \"type\": \"builtins.str\"}}, \"YES\": "\
+                     "{\".class\": \"SymbolTableNode\", \"kind\": \"Gdef\", "\
+                     "\"node\": {\".class\": \"Var\", \"flags\": [\"is_ready"\
+                     "\"], \"fullname\": \"tkinter.messagebox.YES\", \"name"\
+                     "\": \"YES\", \"type\": \"builtins.str\"}}, \"YESNO\": "\
+                     "{\".class\": \"SymbolTableNode\", \"kind\": \"Gdef\", "\
+                     "\"node\": {\".class\": \"Var\", \"flags\": [\"is_ready"\
+                     "\"], \"fullname\": \"tkinter.messagebox.YESNO\", \"nam"\
+                     "e\": \"YESNO\", \"type\": \"builtins.str\"}}, \"YESNOC"\
+                     "ANCEL\": {\".class\": \"SymbolTableNode\", \"kind\": "\
+                     "\"Gdef\", \"node\": {\".class\": \"Var\", \"flags\": ["\
+                     "\"is_ready\"], \"fullname\": \"tkinter.messagebox.YESN"\
+                     "OCANCEL\", \"name\": \"YESNOCANCEL\", \"type\": \"buil"\
+                     "tins.str\"}}, \"__doc__\": {\".class\": \"SymbolTableN"\
+                     "ode\", \"kind\": \"Gdef\", \"node\": {\".class\": \"Va"\
+                     "r\", \"flags\": [\"is_ready\"], \"fullname\": \"tkinte"\
+                     "r.messagebox.__doc__\", \"name\": \"__doc__\", \"type"\
+                     "\": \"builtins.str\"}}, \"__file__\": {\".class\": \""\
+                     "SymbolTableNode\", \"kind\": \"Gdef\", \"node\": {\".c"\
+                     "lass\": \"Var\", \"flags\": [\"is_ready\"], \"fullname"\
+                     "\": \"tkinter.messagebox.__file__\", \"name\": \"__fil"\
+                     "e__\", \"type\": \"builtins.str\"}}, \"__name__\": {\""\
+                     ".class\": \"SymbolTableNode\", \"kind\": \"Gdef\", \""\
+                     "node\": {\".class\": \"Var\", \"flags\": [\"is_ready\""\
+                     "], \"fullname\": \"tkinter.messagebox.__name__\", \"na"\
+                     "me\": \"__name__\", \"type\": \"builtins.str\"}}, \"__"\
+                     "package__\": {\".class\": \"SymbolTableNode\", \"kind"\
+                     "\": \"Gdef\", \"node\": {\".class\": \"Var\", \"flags"\
+                     "\": [\"is_ready\"], \"fullname\": \"tkinter.messagebox"\
+                     ".__package__\", \"name\": \"__package__\", \"type\": "\
+                     "\"builtins.str\"}}, \"askokcancel\": {\".class\": \"Sy"\
+                     "mbolTableNode\", \"kind\": \"Gdef\", \"node\": {\".cla"\
+                     "ss\": \"FuncDef\", \"arg_kinds\": [1, 1, 4], \"arg_nam"\
+                     "es\": [\"title\", \"message\", \"options\"], \"flags\""\
+                     ": [], \"fullname\": \"tkinter.messagebox.askokcancel\""\
+                     ", \"name\": \"askokcancel\", \"type\": {\".class\": \""\
+                     "CallableType\", \"arg_kinds\": [1, 1, 4], \"arg_names"\
+                     "\": [\"title\", \"message\", \"options\"], \"arg_types"\
+                     "\": [{\".class\": \"UnionType\", \"items\": [\"builtin"\
+                     "s.str\", {\".class\": \"NoneType\"}]}, {\".class\": \""\
+                     "UnionType\", \"items\": [\"builtins.str\", {\".class\""\
+                     ": \"NoneType\"}]}, {\".class\": \"AnyType\", \"missing"\
+                     "_import_name\": null, \"source_any\": null, \"type_of_"\
+                     "any\": 2}], \"bound_args\": [], \"def_extras\": {\"fir"\
+                     "st_arg\": null}, \"fallback\": \"builtins.function\", "\
+                     "\"implicit\": false, \"is_ellipsis_args\": false, \"na"\
+                     "me\": \"askokcancel\", \"ret_type\": \"builtins.bool\""\
+                     ", \"variables\": []}}}, \"askquestion\": {\".class\": "\
+                     "\"SymbolTableNode\", \"kind\": \"Gdef\", \"node\": {\""\
+                     ".class\": \"FuncDef\", \"arg_kinds\": [1, 1, 4], \"arg"\
+                     "_names\": [\"title\", \"message\", \"options\"], \"fla"\
+                     "gs\": [], \"fullname\": \"tkinter.messagebox.askquesti"\
+                     "on\", \"name\": \"askquestion\", \"type\": {\".class\""\
+                     ": \"CallableType\", \"arg_kinds\": [1, 1, 4], \"arg_na"\
+                     "mes\": [\"title\", \"message\", \"options\"], \"arg_ty"\
+                     "pes\": [{\".class\": \"UnionType\", \"items\": [\"buil"\
+                     "tins.str\", {\".class\": \"NoneType\"}]}, {\".class\""\
+                     ": \"UnionType\", \"items\": [\"builtins.str\", {\".cla"\
+                     "ss\": \"NoneType\"}]}, {\".class\": \"AnyType\", \"mis"\
+                     "sing_import_name\": null, \"source_any\": null, \"type"\
+                     "_of_any\": 2}], \"bound_args\": [], \"def_extras\": {"\
+                     "\"first_arg\": null}, \"fallback\": \"builtins.functio"\
+                     "n\", \"implicit\": false, \"is_ellipsis_args\": false,"\
+                     " \"name\": \"askquestion\", \"ret_type\": \"builtins.s"\
+                     "tr\", \"variables\": []}}}, \"askretrycancel\": {\".cl"\
+                     "ass\": \"SymbolTableNode\", \"kind\": \"Gdef\", \"node"\
+                     "\": {\".class\": \"FuncDef\", \"arg_kinds\": [1, 1, 4]"\
+                     ", \"arg_names\": [\"title\", \"message\", \"options\""\
+                     "], \"flags\": [], \"fullname\": \"tkinter.messagebox.a"\
+                     "skretrycancel\", \"name\": \"askretrycancel\", \"type"\
+                     "\": {\".class\": \"CallableType\", \"arg_kinds\": [1, "\
+                     "1, 4], \"arg_names\": [\"title\", \"message\", \"optio"\
+                     "ns\"], \"arg_types\": [{\".class\": \"UnionType\", \""\
+                     "items\": [\"builtins.str\", {\".class\": \"NoneType\""\
+                     "}]}, {\".class\": \"UnionType\", \"items\": [\"builtin"\
+                     "s.str\", {\".class\": \"NoneType\"}]}, {\".class\": \""\
+                     "AnyType\", \"missing_import_name\": null, \"source_any"\
+                     "\": null, \"type_of_any\": 2}], \"bound_args\": [], \""\
+                     "def_extras\": {\"first_arg\": null}, \"fallback\": \""\
+                     "builtins.function\", \"implicit\": false, \"is_ellipsi"\
+                     "s_args\": false, \"name\": \"askretrycancel\", \"ret_t"\
+                     "ype\": \"builtins.bool\", \"variables\": []}}}, \"asky"\
+                     "esno\": {\".class\": \"SymbolTableNode\", \"kind\": \""\
+                     "Gdef\", \"node\": {\".class\": \"FuncDef\", \"arg_kind"\
+                     "s\": [1, 1, 4], \"arg_names\": [\"title\", \"message\""\
+                     ", \"options\"], \"flags\": [], \"fullname\": \"tkinter"\
+                     ".messagebox.askyesno\", \"name\": \"askyesno\", \"type"\
+                     "\": {\".class\": \"CallableType\", \"arg_kinds\": [1, "\
+                     "1, 4], \"arg_names\": [\"title\", \"message\", \"optio"\
+                     "ns\"], \"arg_types\": [{\".class\": \"UnionType\", \""\
+                     "items\": [\"builtins.str\", {\".class\": \"NoneType\""\
+                     "}]}, {\".class\": \"UnionType\", \"items\": [\"builtin"\
+                     "s.str\", {\".class\": \"NoneType\"}]}, {\".class\": \""\
+                     "AnyType\", \"missing_import_name\": null, \"source_any"\
+                     "\": null, \"type_of_any\": 2}], \"bound_args\": [], \""\
+                     "def_extras\": {\"first_arg\": null}, \"fallback\": \""\
+                     "builtins.function\", \"implicit\": false, \"is_ellipsi"\
+                     "s_args\": false, \"name\": \"askyesno\", \"ret_type\""\
+                     ": \"builtins.bool\", \"variables\": []}}}, \"askyesnoc"\
+                     "ancel\": {\".class\": \"SymbolTableNode\", \"kind\": "\
+                     "\"Gdef\", \"node\": {\".class\": \"FuncDef\", \"arg_ki"\
+                     "nds\": [1, 1, 4], \"arg_names\": [\"title\", \"message"\
+                     "\", \"options\"], \"flags\": [], \"fullname\": \"tkint"\
+                     "er.messagebox.askyesnocancel\", \"name\": \"askyesnoca"\
+                     "ncel\", \"type\": {\".class\": \"CallableType\", \"arg"\
+                     "_kinds\": [1, 1, 4], \"arg_names\": [\"title\", \"mess"\
+                     "age\", \"options\"], \"arg_types\": [{\".class\": \"Un"\
+                     "ionType\", \"items\": [\"builtins.str\", {\".class\": "\
+                     "\"NoneType\"}]}, {\".class\": \"UnionType\", \"items\""\
+                     ": [\"builtins.str\", {\".class\": \"NoneType\"}]}, {\""\
+                     ".class\": \"AnyType\", \"missing_import_name\": null, "\
+                     "\"source_any\": null, \"type_of_any\": 2}], \"bound_ar"\
+                     "gs\": [], \"def_extras\": {\"first_arg\": null}, \"fal"\
+                     "lback\": \"builtins.function\", \"implicit\": false, "\
+                     "\"is_ellipsis_args\": false, \"name\": \"askyesnocance"\
+                     "l\", \"ret_type\": {\".class\": \"UnionType\", \"items"\
+                     "\": [\"builtins.bool\", {\".class\": \"NoneType\"}]}, "\
+                     "\"variables\": []}}}, \"showerror\": {\".class\": \"Sy"\
+                     "mbolTableNode\", \"kind\": \"Gdef\", \"node\": {\".cla"\
+                     "ss\": \"FuncDef\", \"arg_kinds\": [1, 1, 4], \"arg_nam"\
+                     "es\": [\"title\", \"message\", \"options\"], \"flags\""\
+                     ": [], \"fullname\": \"tkinter.messagebox.showerror\", "\
+                     "\"name\": \"showerror\", \"type\": {\".class\": \"Call"\
+                     "ableType\", \"arg_kinds\": [1, 1, 4], \"arg_names\": ["\
+                     "\"title\", \"message\", \"options\"], \"arg_types\": ["\
+                     "{\".class\": \"UnionType\", \"items\": [\"builtins.str"\
+                     "\", {\".class\": \"NoneType\"}]}, {\".class\": \"Union"\
+                     "Type\", \"items\": [\"builtins.str\", {\".class\": \""\
+                     "NoneType\"}]}, {\".class\": \"AnyType\", \"missing_imp"\
+                     "ort_name\": null, \"source_any\": null, \"type_of_any"\
+                     "\": 2}], \"bound_args\": [], \"def_extras\": {\"first_"\
+                     "arg\": null}, \"fallback\": \"builtins.function\", \""\
+                     "implicit\": false, \"is_ellipsis_args\": false, \"name"\
+                     "\": \"showerror\", \"ret_type\": \"builtins.str\", \""\
+                     "variables\": []}}}, \"showinfo\": {\".class\": \"Symbo"\
+                     "lTableNode\", \"kind\": \"Gdef\", \"node\": {\".class"\
+                     "\": \"FuncDef\", \"arg_kinds\": [1, 1, 4], \"arg_names"\
+                     "\": [\"title\", \"message\", \"options\"], \"flags\": "\
+                     "[], \"fullname\": \"tkinter.messagebox.showinfo\", \""\
+                     "name\": \"showinfo\", \"type\": {\".class\": \"Callabl"\
+                     "eType\", \"arg_kinds\": [1, 1, 4], \"arg_names\": [\""\
+                     "title\", \"message\", \"options\"], \"arg_types\": [{"\
+                     "\".class\": \"UnionType\", \"items\": [\"builtins.str"\
+                     "\", {\".class\": \"NoneType\"}]}, {\".class\": \"Union"\
+                     "Type\", \"items\": [\"builtins.str\", {\".class\": \""\
+                     "NoneType\"}]}, {\".class\": \"AnyType\", \"missing_imp"\
+                     "ort_name\": null, \"source_any\": null, \"type_of_any"\
+                     "\": 2}], \"bound_args\": [], \"def_extras\": {\"first_"\
+                     "arg\": null}, \"fallback\": \"builtins.function\", \""\
+                     "implicit\": false, \"is_ellipsis_args\": false, \"name"\
+                     "\": \"showinfo\", \"ret_type\": \"builtins.str\", \"va"\
+                     "riables\": []}}}, \"showwarning\": {\".class\": \"Symb"\
+                     "olTableNode\", \"kind\": \"Gdef\", \"node\": {\".class"\
+                     "\": \"FuncDef\", \"arg_kinds\": [1, 1, 4], \"arg_names"\
+                     "\": [\"title\", \"message\", \"options\"], \"flags\": "\
+                     "[], \"fullname\": \"tkinter.messagebox.showwarning\", "\
+                     "\"name\": \"showwarning\", \"type\": {\".class\": \"Ca"\
+                     "llableType\", \"arg_kinds\": [1, 1, 4], \"arg_names\""\
+                     ": [\"title\", \"message\", \"options\"], \"arg_types\""\
+                     ": [{\".class\": \"UnionType\", \"items\": [\"builtins."\
+                     "str\", {\".class\": \"NoneType\"}]}, {\".class\": \"Un"\
+                     "ionType\", \"items\": [\"builtins.str\", {\".class\": "\
+                     "\"NoneType\"}]}, {\".class\": \"AnyType\", \"missing_i"\
+                     "mport_name\": null, \"source_any\": null, \"type_of_an"\
+                     "y\": 2}], \"bound_args\": [], \"def_extras\": {\"first"\
+                     "_arg\": null}, \"fallback\": \"builtins.function\", \""\
+                     "implicit\": false, \"is_ellipsis_args\": false, \"name"\
+                     "\": \"showwarning\", \"ret_type\": \"builtins.str\", "\
+                     "\"variables\": []}}}}, \"path\": \"/usr/local/lib/pyth"\
+                     "on3.8/dist-packages/mypy/typeshed/stdlib/3/tkinter/mes"\
+                     "sagebox.pyi\"}",
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 0L,
+        'sel-line-start': 0L,
+        'selection_end': 5285L,
+        'selection_start': 5274L,
+        'zoom': 0L},
+                       loc('../client-ihm-account/client_ihm_account.py'): {'a'\
+        'ttrib-starts': [('Application|0|',
+                          96),
+                         ('Application|0|.callback_suppress_account|0|',
+                          721)],
+        'code-line': '        if not tkinter.messagebox.askyesno("Attention"'\
+                     ', "Confimez vous la suppression du compte ?"):\n',
+        'first-line': 721L,
+        'folded-linenos': [],
+        'sel-line': 733L,
+        'sel-line-start': 32341L,
+        'selection_end': 32461L,
+        'selection_start': 32341L,
+        'zoom': 0L},
+                       loc('../client-ihm-allocation/client_ihm_allocation.py'): {'a'\
+        'ttrib-starts': [],
+        'code-line': 'SERVER_CONFIG: typing.Dict[str, typing.Dict[str, typin'\
+                     'g.Any]] = collections.defaultdict(dict)\n',
+        'first-line': 61L,
+        'folded-linenos': [],
+        'sel-line': 70L,
+        'sel-line-start': 1797L,
+        'selection_end': 1797L,
+        'selection_start': 1797L,
+        'zoom': 0L},
+                       loc('../client-ihm-games/client_ihm_games.py'): {'att'\
+        'rib-starts': [],
+        'code-line': 'SERVER_CONFIG: typing.Dict[str, typing.Dict[str, typin'\
+                     'g.Any]] = collections.defaultdict(dict)\n',
+        'first-line': 79L,
+        'folded-linenos': [],
+        'sel-line': 88L,
+        'sel-line-start': 2089L,
+        'selection_end': 2089L,
+        'selection_start': 2089L,
+        'zoom': 0L},
+                       loc('.mypy_cache/3.8/canvas.data.json'): {'attrib-sta'\
+        'rts': [],
+        'code-line': '',
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 0L,
+        'sel-line-start': 0L,
+        'selection_end': 0L,
+        'selection_start': 0L,
+        'zoom': 0L},
+                       loc('canvas.py'): {'attrib-starts': [('MyCanvas|0|',
+        691),
+        ('MyCanvas|0|.put_names|0|',
+         743)],
+        'code-line': '            self.add_clickable_zone(clickable_zone)\n',
+        'first-line': 739L,
+        'folded-linenos': [],
+        'sel-line': 760L,
+        'sel-line-start': 37545L,
+        'selection_end': 37557L,
+        'selection_start': 37557L,
+        'zoom': 0L},
+                       loc('client_ihm_diplo.py'): {'attrib-starts': [],
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 0L,
+        'sel-line-start': 0L,
+        'selection_end': 0L,
+        'selection_start': 0L,
+        'zoom': 0L},
+                       loc('client_ihm_play.py'): {'attrib-starts': [('Appli'\
+        'cation|0|',
+        94),
+        ('Application|0|.determine_role|0|',
+         496)],
+        'code-line': '        self.button_submit.config(state=tkinter.DISABL'\
+                     'ED)\n',
+        'first-line': 490L,
+        'folded-linenos': [],
+        'sel-line': 503L,
+        'sel-line-start': 21146L,
+        'selection_end': 21202L,
+        'selection_start': 21202L,
+        'zoom': 0L},
+                       loc('data.py'): {'attrib-starts': [('extract_names|0|',
+        244)],
+        'code-line': "    coast_names = {int(c): str(COAST_DATA[c]['name']) "\
+                     "for c in COAST_DATA}\n",
+        'first-line': 242L,
+        'folded-linenos': [],
+        'sel-line': 249L,
+        'sel-line-start': 7545L,
+        'selection_end': 7560L,
+        'selection_start': 7560L,
+        'zoom': 0L},
+                       loc('display.py'): {'attrib-starts': [],
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 8L,
+        'sel-line-start': 132L,
+        'selection_end': 132L,
+        'selection_start': 132L,
+        'zoom': 0L},
+                       loc('font.py'): {'attrib-starts': [],
+        'code-line': '#!/usr/bin/env python3\n',
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 0L,
+        'sel-line-start': 0L,
+        'selection_end': 0L,
+        'selection_start': 0L,
+        'zoom': 0L},
+                       loc('forbiddens.py'): {'attrib-starts': [('BagForbidd'\
+        'ens|0|',
+        46),
+        ('BagForbiddens|0|.save_json|0|',
+         71)],
+        'code-line': '\n',
+        'first-line': 66L,
+        'folded-linenos': [],
+        'sel-line': 78L,
+        'sel-line-start': 2098L,
+        'selection_end': 2098L,
+        'selection_start': 2098L,
+        'zoom': 0L},
+                       loc('local_design/standard/stabbeur/zones.ini'): {'at'\
+        'trib-starts': [],
+        'code-line': 'x_name=325 \n',
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 6L,
+        'sel-line-start': 38L,
+        'selection_end': 48L,
+        'selection_start': 42L,
+        'zoom': 0L},
+                       loc('local_mapping/zones.ini'): {'attrib-starts': [],
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 0L,
+        'sel-line-start': 0L,
+        'selection_end': 0L,
+        'selection_start': 0L,
+        'zoom': 0L},
+                       loc('orders.py'): {'attrib-starts': [('BagOrders|0|',
+        289),
+        ('BagOrders|0|.add_update_order|0|',
+         303)],
+        'code-line': '        assert zone_num is not None\n',
+        'first-line': 301L,
+        'folded-linenos': [],
+        'sel-line': 308L,
+        'sel-line-start': 12509L,
+        'selection_end': 12544L,
+        'selection_start': 12544L,
+        'zoom': 0L},
+                       loc('ownerships.py'): {'attrib-starts': [('CenterOwne'\
+        'rship|0|',
+        17),
+        ('CenterOwnership|0|.render|0|',
+         30)],
+        'code-line': '        color_tuple = (color_red, color_green, color_b'\
+                     'lue)\n',
+        'first-line': 59L,
+        'folded-linenos': [],
+        'sel-line': 38L,
+        'sel-line-start': 855L,
+        'selection_end': 871L,
+        'selection_start': 871L,
+        'zoom': 0L},
+                       loc('renderer.py'): {'attrib-starts': [],
+        'code-line': '#!/usr/bin/env python3\n',
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 0L,
+        'sel-line-start': 0L,
+        'selection_end': 0L,
+        'selection_start': 0L,
+        'zoom': 0L},
+                       loc('work/convert/convert.py'): {'attrib-starts': [],
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 0L,
+        'sel-line-start': 0L,
+        'selection_end': 0L,
+        'selection_start': 0L,
+        'zoom': 0L},
+                       loc('work/convert/convert_uinits.py'): {'attrib-start'\
+        's': [],
+        'first-line': 15L,
+        'folded-linenos': [],
+        'sel-line': 0L,
+        'sel-line-start': 0L,
+        'selection_end': 0L,
+        'selection_start': 0L,
+        'zoom': 0L},
+                       loc('work/convert/convert_units.py'): {'attrib-starts': [('m'\
+        'ain',
+        26)],
+        'first-line': 60L,
+        'folded-linenos': [],
+        'sel-line': 80L,
+        'sel-line-start': 2664L,
+        'selection_end': 2715L,
+        'selection_start': 2715L,
+        'zoom': 0L},
+                       loc('../pnethack/src/pnethack.py'): {'attrib-starts': [('m'\
+        'ain',
+        261)],
+        'first-line': 253L,
+        'folded-linenos': [],
+        'sel-line': 264L,
+        'sel-line-start': 9245L,
+        'selection_end': 10094L,
+        'selection_start': 9245L,
+        'zoom': 0L},
+                       loc('../../rest-servers/games/allocations.py'): {'att'\
+        'rib-starts': [('Allocation|0|',
+                        13),
+                       ('Allocation|0|.list_by_game_id|0|',
+                        25)],
+        'code-line': '\n',
+        'first-line': 23L,
+        'folded-linenos': [],
+        'sel-line': 31L,
+        'sel-line-start': 957L,
+        'selection_end': 957L,
+        'selection_start': 957L,
+        'zoom': 0L},
+                       loc('../../rest-servers/games/forbiddens.py'): {'attr'\
+        'ib-starts': [('Forbidden|0|',
+                       13),
+                      ('Forbidden|0|.list_by_game_id|0|',
+                       17)],
+        'code-line': '\n',
+        'first-line': 15L,
+        'folded-linenos': [],
+        'sel-line': 23L,
+        'sel-line-start': 565L,
+        'selection_end': 565L,
+        'selection_start': 565L,
+        'zoom': 0L},
+                       loc('../../rest-servers/games/games.py'): {'attrib-st'\
+        'arts': [('Game|0|',
+                  23),
+                 ('Game|0|.find_by_name|0|',
+                  44)],
+        'code-line': '\n',
+        'first-line': 41L,
+        'folded-linenos': [],
+        'sel-line': 50L,
+        'sel-line-start': 1566L,
+        'selection_end': 1566L,
+        'selection_start': 1566L,
+        'zoom': 0L},
+                       loc('../../rest-servers/games/lowdata.py'): {'attrib-'\
+        'starts': [],
+        'code-line': 'SERVER_CONFIG: typing.Dict[str, typing.Dict[str, typin'\
+                     'g.Any]] = collections.defaultdict(dict)\n',
+        'first-line': 22L,
+        'folded-linenos': [],
+        'sel-line': 32L,
+        'sel-line-start': 1018L,
+        'selection_end': 1018L,
+        'selection_start': 1018L,
+        'zoom': 0L},
+                       loc('../../rest-servers/games/ownerships.py'): {'attr'\
+        'ib-starts': [('Ownership|0|',
+                       13)],
+        'code-line': '    @staticmethod\n',
+        'first-line': 14L,
+        'folded-linenos': [],
+        'sel-line': 24L,
+        'sel-line-start': 566L,
+        'selection_end': 566L,
+        'selection_start': 566L,
+        'zoom': 0L},
+                       loc('../../rest-servers/games/server.py'): {'attrib-s'\
+        'tarts': [('GameAdjudicationRessource|0|',
+                   787),
+                  ('GameAdjudicationRessource|0|.post|0|',
+                   790)],
+        'code-line': '        added_content = f"Changed on {date_desc}\\n"\n',
+        'first-line': 944L,
+        'folded-linenos': [],
+        'sel-line': 965L,
+        'sel-line-start': 40389L,
+        'selection_end': 40425L,
+        'selection_start': 40415L,
+        'zoom': 0L},
+                       loc('../../rest-servers/games/units.py'): {'attrib-st'\
+        'arts': [('Unit|0|',
+                  13),
+                 ('Unit|0|.list_by_game_id|0|',
+                  17)],
+        'code-line': '\n',
+        'first-line': 16L,
+        'folded-linenos': [],
+        'sel-line': 23L,
+        'sel-line-start': 545L,
+        'selection_end': 545L,
+        'selection_start': 545L,
+        'zoom': 0L},
+                       loc('../../rest-servers/players/lowdata.py'): {'attri'\
+        'b-starts': [],
+        'code-line': 'SERVER_CONFIG: typing.Dict[str, typing.Dict[str, typin'\
+                     'g.Any]] = collections.defaultdict(dict)\n',
+        'first-line': 22L,
+        'folded-linenos': [],
+        'sel-line': 31L,
+        'sel-line-start': 1017L,
+        'selection_end': 1017L,
+        'selection_start': 1017L,
+        'zoom': 0L},
+                       loc('../../rest-servers/players/players.py'): {'attri'\
+        'b-starts': [('Player|0|',
+                      24),
+                     ('Player|0|.find_by_pseudo|0|',
+                      45)],
+        'code-line': '        players_found = database.sql_execute("SELECT p'\
+                     'layer_data FROM players where pseudo = ?", (pseudo,), '\
+                     'need_result=True)\n',
+        'first-line': 42L,
+        'folded-linenos': [],
+        'sel-line': 47L,
+        'sel-line-start': 1444L,
+        'selection_end': 1569L,
+        'selection_start': 1569L,
+        'zoom': 0L},
+                       loc('../../rest-servers/solver/lowdata.py'): {'attrib'\
+        '-starts': [],
+        'code-line': 'SERVER_CONFIG: typing.Dict[str, typing.Dict[str, typin'\
+                     'g.Any]] = collections.defaultdict(dict)\n',
+        'first-line': 22L,
+        'folded-linenos': [],
+        'sel-line': 31L,
+        'sel-line-start': 1017L,
+        'selection_end': 1017L,
+        'selection_start': 1017L,
+        'zoom': 0L},
+                       loc('../../rest-servers/solver/solver.py'): {'attrib-'\
+        'starts': [],
+        'code-line': '\n',
+        'first-line': 4L,
+        'folded-linenos': [],
+        'sel-line': 17L,
+        'sel-line-start': 231L,
+        'selection_end': 231L,
+        'selection_start': 231L,
+        'zoom': 0L},
+                       loc('../../servers/users/emails.py'): {'attrib-starts': [('E'\
+        'mail|0|',
+        18),
+        ('Email|0|.find_by_value|0|',
+         22)],
+        'code-line': '\n',
+        'first-line': 20L,
+        'folded-linenos': [],
+        'sel-line': 28L,
+        'sel-line-start': 679L,
+        'selection_end': 679L,
+        'selection_start': 679L,
+        'zoom': 0L},
+                       loc('../../servers/users/lowdata.py'): {'attrib-start'\
+        's': [],
+        'code-line': 'SERVER_CONFIG: typing.Dict[str, typing.Dict[str, typin'\
+                     'g.Any]] = collections.defaultdict(dict)\n',
+        'first-line': 23L,
+        'folded-linenos': [],
+        'sel-line': 32L,
+        'sel-line-start': 1018L,
+        'selection_end': 1034L,
+        'selection_start': 1018L,
+        'zoom': 0L},
+                       loc('../../servers/users/server.py'): {'attrib-starts': [('l'\
+        'ogin_user|0|',
+        128)],
+        'code-line': '\n',
+        'first-line': 151L,
+        'folded-linenos': [],
+        'sel-line': 154L,
+        'sel-line-start': 4897L,
+        'selection_end': 4897L,
+        'selection_start': 4897L,
+        'zoom': 0L},
+                       loc('../../servers/users/users.py'): {'attrib-starts': [('U'\
+        'ser|0|',
+        18),
+        ('User|0|.find_by_name|0|',
+         22)],
+        'code-line': '\n',
+        'first-line': 19L,
+        'folded-linenos': [],
+        'sel-line': 28L,
+        'sel-line-start': 667L,
+        'selection_end': 667L,
+        'selection_start': 667L,
+        'zoom': 0L},
+                       loc('../../../../../../usr/lib/python3.8/tkinter/__init__.py'): {'a'\
+        'ttrib-starts': [('PhotoImage|0|',
+                          4052)],
+        'code-line': 'class PhotoImage(Image):\n',
+        'first-line': 4040L,
+        'folded-linenos': [],
+        'sel-line': 4052L,
+        'sel-line-start': 149943L,
+        'selection_end': 149959L,
+        'selection_start': 149949L,
+        'zoom': 0L},
+                       loc('../../../../../../usr/lib/wing-personal7/resources/typing/src/typing.py'): {'a'\
+        'ttrib-starts': [],
+        'code-line': 'import abc\n',
+        'first-line': 0L,
+        'folded-linenos': [],
+        'sel-line': 0L,
+        'sel-line-start': 0L,
+        'selection_end': 0L,
+        'selection_start': 0L,
+        'zoom': 0L}}
+proj.auto-rstrip-on-save = 'on-save'
+proj.build-cmd = {None: ('default',
+                         None)}
+proj.env-vars = {None: ('default',
+                        [u''])}
+proj.indent-style-policy = 'warn'
+proj.line-ending-policy = 'warn'
+proj.matplotlib-event-loop = False
+proj.preferred-indent-style = 'spaces-only'
+proj.pyexec = {None: ('custom',
+                      u'/usr/bin/python3')}
+proj.template-debugging = False
+search.replace-history = [u'name']
+search.search-history = [u'determ',
+                         u'button_submit',
+                         u'print(f"',
+                         u'else:',
+                         u'callback_adjudicate',
+                         u'print',
+                         u'ERROR from server  :',
+                         u'ERROR from server :',
+                         u'submit',
+                         u'subit',
+                         u'load_game',
+                         u'BEGIN',
+                         u'Log des',
+                         u'Logs des',
+                         u'Logs de',
+                         u'reports',
+                         u'report',
+                         u'text_orders',
+                         u'"Ordres"',
+                         u"'Orders'"]
+search.search-scope-history = [loc('../..'),
+                               loc('.'),
+                               loc('../Desktop/a reporter/backup-dev-gaci-20200602/BENCH/myenv/SHELL')]
