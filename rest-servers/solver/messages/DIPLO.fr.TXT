@@ -1,0 +1,466 @@
+decrit.c#1#Impossible de dumper la situation finale
+decrit.c#2# - Position des unités :
+decrit.c#3# - Sont interdits en retraite :
+decrit.c#4#Preparation des mouvements :
+decrit.c#5#Preparation des retraites :
+decrit.c#7# - Sont possedés :
+decrit.c#8#Préparation des ajustements :
+decrit.c#9# - Ajustements attendus :
+decrit.c#10#%1 centres %2 unités %3 centres libres
+decrit.c#11# => %1 constructions
+decrit.c#12#Compte rendu des mouvements :
+decrit.c#13#Compte rendu des retraites :
+decrit.c#14#Compte rendu des ajustements :
+decrit.c#15#Impossible de dumper le résultat
+decrit.c#16#;(échec)
+decrit.c#17#;(delogée)
+decrit.c#18#;(détruite)
+decrit.c#19#;(coupé)
+decrit.c#20#;PAR DEFAUT
+decrit.c#21#;(détruite)
+decrit.c#22#;(paradoxe)
+decrit.c#23#Impossible d'écrire archivage ordres : %1
+decrit.c#24#Impossible d'écrire bilan : %1
+decrit.c#25#%1 %2 centres / %3 ème  (%4 points)
+decrit.c#26#Impossible d'ouvrir le fichier pour prototypes: %1
+decrit.c#27#;Pas de mouvement à prevoir
+decrit.c#28#;Pas de retraite à prevoir
+decrit.c#29#;Pas d'ajustement à prevoir
+decrit.c#30#;Suppression toutes unités
+decrit.c#31#;Indiquer les unités à ajouter ou supprimer ("+ A PAR" pour construire ou "- F BRE" pour supprimer) (enlever des lignes pour décliner des constructions)
+decrit.c#32#;Indiquer les unités à supprimer (une par ligne après chaque -)
+decrit.c#33#Impossible d'ouvrir le fichier pour ordres sécurité : %1
+decrit.c#37#Impossible d'écrire ordres reconstitués : %1
+decrit.c#38#;Ordres reconstruits à partir d'archives
+decrit.c#39#;(invalide)
+decrit.c#40#;(invalide)
+decrit.c#41#;(invalide)
+decrit.c#42#Impossible d'ouvrir le fichier pour pays actifs : %1
+decrit.c#43#Impossible d'ouvrir le fichier pour pays vivants : %1
+erreurs.c#2#carte
+erreurs.c#3#annexe
+erreurs.c#4#situation
+erreurs.c#5#ordres
+erreurs.c#6#Problème avec le contenu d'un mot
+erreurs.c#7#Problème avec l'ordre des mots
+erreurs.c#8#Problème avec les règles du jeu
+erreurs.c#9#Problème avec la carte du jeu
+erreurs.c#10#Problème avec la situation courante de la partie
+erreurs.c#13#Ordre incohérent
+erreurs.c#14#Ordre dupliqué
+erreurs.c#15#Ordre manquant
+erreurs.c#16#Entrée incoherente
+erreurs.c#17#Analyse entrée
+erreurs.c#18#Vérification non localisable
+erreurs.c#19#Vérification localisable
+erreurs.c#21#Paramètres de l'appel
+erreurs.c#22#Appel au systeme d'exploitation
+erreurs.c#24#(début de la ligne)
+erreurs.c#25#<<<
+erreurs.c#26#à la fin de la ligne %1
+erreurs.c#27#en ligne %1
+erreurs.c#28#à la vérification
+erreurs.c#29#à la vérification
+erreurs.c#30#ERREUR
+erreurs.c#31#INFORMATION
+erreurs.c#32#AVERTISSEMENT
+erreurs.c#33#Mouvements printemps
+erreurs.c#35#Retraites été
+erreurs.c#37#Mouvements automne
+erreurs.c#39#Retraites automne
+erreurs.c#41#Ajustements
+erreurs.c#44#Inattendu : %1
+erreurs.c#45#centres
+erreurs.c#46#unités
+erreurs.c#47#géographie
+erreurs.c#48#couleurs
+erreurs.c#49#codes
+gestion.c#3#Le système utilise '%1' plutôt que '%2' pour ce pays passif en ligne %3
+gestion.c#4#Le système utilise '%1' plutôt que '%2' pour ce centre en ligne %3
+gestion.c#5#Le système utilise '%1' plutôt que '%2' pour ce centredepart en ligne %3
+gestion.c#6#Le système utilise '%1' plutôt que '%2' pour cette unité en ligne %3
+gestion.c#7#Le système utilise '%1' plutôt que '%2' pour cette delogée en ligne %3
+gestion.c#8#Le système utilise '%1' plutôt que '%2' pour cette province en ligne %3
+gestion.c#9#Le système utilise '%1' plutôt que '%2' pour cette unité en ligne %3
+gestion.c#10#Le système utilise '%1' plutôt que '%2' pour cette province (ou zone dans une province) en ligne %3
+heuris.c#4#Fin calculs pour %1
+heuris.c#5#%1%2 est voisin par flotte avec lui-même !
+heuris.c#6#%1%2 et %3%4 sont voisins par flotte !
+heuris.c#7#%1%2 est voisin par flotte de %3%4  mais pas l'opposé !
+heuris.c#8#%1%2 est voisin par armée avec lui-même !
+heuris.c#9#%1%2 et %3%4 sont voisins par armée !
+heuris.c#10#%1%2 est voisin par armée de %3%4  mais pas l'opposé !
+heuris.c#11#Il n'y a pas de voisinage d'une province (ou zone dans une province) avec elle-même,
+heuris.c#12#Les voisinages se font entre provinces (ou zone dans une province) compatibles,
+heuris.c#13#La symétrie des voisinages est respectée
+parse.c#1#Utiliser '-' plutôt que 'TO'
+parse.c#2#Utiliser 'H' plutôt que 'T'
+parse.c#3#La carte standard DIPLOMATIE n'a pas de côte ouest
+parse.c#4#La carte standard DIPLOMATIE n'a pas de côte ouest
+parse.c#5#Ne pas utiliser ce caractère non reconnu : '%1' (%2)
+parse.c#6#Trop de lignes
+parse.c#7#Mot trop long
+parse.c#8#Définition d'un pays
+parse.c#9#Manque fin de ligne après pays
+parse.c#10#Manque adjectif ou fin de ligne après pays
+parse.c#11#Il est préférable de ne pas utiliser de parenthèse pour les côtes
+parse.c#12#Problème définition d'une province
+parse.c#13#Manque fin de ligne après province
+parse.c#14#Manque deuxième nom ou fin de ligne après province
+parse.c#15#Ne pas utiliser la construction 'R A' (enlever le ('R')
+parse.c#16#Problème définition d'un centre sur la province
+parse.c#17#Province %1 non déclarée
+parse.c#18#Manque fin de ligne après centre
+parse.c#19#Problème définition d'un éloignement typeunité
+parse.c#20#Problème définition d'un centredepart sur le pays
+parse.c#21#Pays %1 non déclaré pour un centredepart
+parse.c#22#Problème définition d'un centredepart sur le centre
+parse.c#23#Centre %1 non déclaré sur un centredepart
+parse.c#24#Manque fin de ligne après centredepart
+parse.c#25#Il est préférable de ne pas utiliser de slash '/' pour les côtes
+parse.c#26#Problème définition d'une province (ou zone dans une province) sur le type
+parse.c#27#Problème définition d'une province (ou zone dans une province) sur la province
+parse.c#28#Province %1 non déclarée
+parse.c#29#Problème définition d'une province (ou zone dans une province) sur la specificite
+parse.c#30#Manque fin de ligne après province (ou zone dans une province) sur la carte
+parse.c#31#Utiliser 'H' plutôt que 'HOLD' ou 'HOLDS'
+parse.c#32#Problème définition d'un voisinarmée 1e province (ou zone dans une province)
+parse.c#33#Il est préférable d'accoler la côte à la province
+parse.c#34#Province (ou zone dans une province) %1 non déclarée
+parse.c#35#Problème définition d'un voisinarmée 2e province (ou zone dans une province)
+parse.c#36#Il est préférable d'accoler la côte à la province
+parse.c#37#Province (ou zone dans une province) %1 non déclarée
+parse.c#38#Manque fin de ligne après voisinarmée
+parse.c#39#Utiliser 'A' pour une retraite dispersion (hors du plateau) plutôt que 'R' et rien
+parse.c#40#Problème définition d'un voisinflotte 1e province (ou zone dans une province)
+parse.c#41#Il est préférable d'accoler la côte à la province
+parse.c#42#Province (ou zone dans une province) %1 non déclarée
+parse.c#43#Problème définition d'un voisinflotte 2e province (ou zone dans une province)
+parse.c#44#Il est préférable d'accoler la côte à la province
+parse.c#45#Province (ou zone dans une province) %1 non déclarée
+parse.c#46#Ne pas utiliser la construction '- H' (enlever le '-')
+parse.c#47#Problème de parenthèses
+parse.c#48#Problème définition d'un éloignement pays
+parse.c#49#Pays %1 non déclaré pour un éloignement
+parse.c#50#Problème définition d'un éloignement province
+parse.c#51#Province %1  non déclarée
+parse.c#52#Problème définition d'un éloignement valeur
+parse.c#53#Manque fin de ligne après éloignement
+parse.c#54#Manque fin de ligne après possession
+parse.c#55#Problème définition d'une unité sur le type
+parse.c#56#Problème définition d'une unité sur le pays
+parse.c#57#Pays %1 non déclaré pour une unité
+parse.c#58#Problème définition d'une unité sur la province (ou zone dans une province)
+parse.c#59#Il est préférable d'accoler la côte à la province
+parse.c#60#Province (ou zone dans une province) %1 non déclarée
+parse.c#61#Manque fin de ligne après unité
+parse.c#62#Attention : il s'agit d'une phase de retraites
+parse.c#63#Problème définition d'une possession sur le pays
+parse.c#64#Pays %1 non déclaré pour une possession
+parse.c#65#Problème définition d'une possession sur le centre
+parse.c#66#Centre %1 non déclaré sur une possession
+parse.c#67#Manque fin de ligne après voisinflotte
+parse.c#68#Trop de possessions
+parse.c#69#Problème définition unité délogée sur le type
+parse.c#70#Problème définition unité délogée sur le pays
+parse.c#71#Pays %1 non déclaré pour une délogée
+parse.c#72#Problème définition unité délogée sur la province (ou zone dans une province)
+parse.c#73#Il est préférable d'accoler la côte à la province
+parse.c#74#Province (ou zone dans une province) %1 non déclarée pour une délogée
+parse.c#75#unité %1 délogée inconnue
+parse.c#76#Manque 'BOURREAU' unité délogée
+parse.c#77#Problème définition unité délogeante sur le type
+parse.c#78#Problème définition unité délogeante sur le pays
+parse.c#79#Pays %1 non déclaré
+parse.c#80#Problème définition unité délogeante sur la province (ou zone dans une province) de l'unité d'origine
+parse.c#81#Il est préférable d'accoler la côte à la province
+parse.c#82#Province (ou zone dans une province) %1 non déclarée pour une délogeante
+parse.c#83#unité %1 délogeante inconnue
+parse.c#84#Manque 'ORIGINE' unité délogée
+parse.c#85#Problème définition unité délogeante sur la province (ou zone dans une province) d'origine
+parse.c#86#Il est préférable d'accoler la côte à la province
+parse.c#87#Province (ou zone dans une province) %1 non déclarée pour une origine de délogeage
+parse.c#88#Manque fin de ligne après délogée
+parse.c#89#Attention : un soutien fourni pour une cote est valable pour toutes les cotes de la region
+parse.c#90#Problème définition d'un interdit sur la province
+parse.c#91#Province interdite en retraite %1 non déclarée
+parse.c#92#Manque fin de ligne après interdit
+parse.c#93#Utiliser '-' plutôt que '–'
+parse.c#94#Problème définition d'une saison sur la saison elle même
+parse.c#95#Manque l'année pour la saison
+parse.c#96#%1 : année saison invraisemblable
+parse.c#97#Manque fin de ligne après saison
+parse.c#98#Problème définition d'une saisonmodif sur la saison elle même (HIVER)
+parse.c#99#Manque l'année pour la saisonmodif
+parse.c#100#%1 : année saison modif invraisemblable
+parse.c#101#Manque fin de ligne après saison modif
+parse.c#102#Impossible de lire la carte : %1
+parse.c#103#Elément inattendu à cet endroit
+parse.c#105#Elément inattendu à cet endroit
+parse.c#106#Impossible de lire la situation initiale : %1
+parse.c#107#Fin de fichier impromptue
+parse.c#108#Saison debutant la situation impromptue
+parse.c#109#Saisonmodif après la saison impronmptue
+parse.c#110#Oubli de saison ou saisonmodif (ou les deux) avant une unité
+parse.c#111#Oubli de saison ou saisonmodif (ou les deux) avant une possession
+parse.c#112#Oubli de saison ou saisonmodif (ou les deux) avant une délogée
+parse.c#113#unité délogée : pas la saison !
+parse.c#114#Oubli de saison ou saisonmodif (ou les deux) avant un interdit
+parse.c#115#Province (ou zone dans une province) interdite en retraite : pas la saison !
+parse.c#116#Elément inattendu à cet endroit
+parse.c#117#Impossible de lire les ordres de mouvement : %1
+parse.c#118#Mouvements : Pas d'ordre dans le fichier
+parse.c#119#Mouvements : pays %1 inconnu
+parse.c#120#Mouvements : nom de pays attendu
+parse.c#121#Mouvements : pays %1 déclaré mais sans ordres
+parse.c#122#Pays %1 inconnu ou mauvais debut d'ordre de mouvement (il faut commencer par un type d'unité)
+parse.c#123#Mouvements : pays %1 déclaré mais sans ordres
+parse.c#124#Type d'unité 'A' ou 'F' ou nom de pays attendu
+parse.c#125#Attend la désignation de l'unité recevant l'ordre de mouvement
+parse.c#126#Il est préférable d'accoler la côte à la province
+parse.c#127#Province (ou zone dans une province) %1 inconnue pour l'unité active
+parse.c#128#unité %1 active inconnue
+parse.c#129#unité %1 active pas du pays du donneur d'ordre
+parse.c#130#Ordre unité active soit '-', 'H', 'S' ou 'C' attendu
+parse.c#131#Province (ou zone dans une province) unité passive attendu
+parse.c#132#Il est préférable d'accoler la côte à la province
+parse.c#133#Province (ou zone dans une province) %1 inconnue pour la destination de l'unité active
+parse.c#135#Problème, manque la destination de l'unité convoyée
+parse.c#136#Ordre unité passive '-' ou fin de ligne attendu
+parse.c#138#Il est préférable d'accoler la côte à la province
+parse.c#139#Province (ou zone dans une province) %1 inconnue pour la destination de l'unité passive
+parse.c#140#Il est préférable d'accoler la côte à la province
+parse.c#141#Province (ou zone dans une province) %1 inconnue pour l'unité passive (ou problème avec son type ou le pays - mettre 'pays type zone', seule la zone est obligatoire)
+parse.c#142#unité %1 passive inconnue
+parse.c#143#Pas de d'unité possible en %1%2
+parse.c#144#Le pays précisé n'est pas celui de l'unité soutenue ou convoyee
+parse.c#145#Elements superflus dans un ordre de mouvement
+parse.c#146#Seules les flottes peuvent convoyer, utiliser un déplacement normal '-' pour une armée devant être convoyée
+parse.c#147#Seules les armées peuvent être convoyées
+parse.c#148#Seules les flottes en mer peuvent convoyer
+parse.c#149#Seules les armées en côte peuvent être convoyées
+parse.c#150#Pas de convoi possible de l'unité passive à la province (ou zone dans une province) destination
+parse.c#151#Attention : si la province a des côtes, il vaut mieux la spécifier pour la destination d'une flotte lors d'un soutien pour attaquer
+parse.c#152#L'unité passive du soutien ou du convoi n'est pas du type de celles qui peuvent acceder à la province (ou zone dans une province) destination du soutien
+parse.c#153#L'unité se soutient elle-même pour attaquer (!)
+parse.c#154#L'unité soutient pour s'attaquer elle même (!)
+parse.c#155#L'unité soutient pour faire du sur place (!)
+parse.c#156#La flotte active n'a pas accès à la province (ou zone dans une province) destination (doit être adjacente)
+parse.c#157#L'armée active n'a pas accès à la province (ou zone dans une province) destination (doit être adjacente)
+parse.c#158#L'unité passive n'a pas accès à la province (ou zone dans une province) destination  (doit être adjacente)
+parse.c#159#L'unité passive n'a pas accès à la province (ou zone dans une province) destination  (doit être adjacente ou convoi possible)
+parse.c#160#Attention : si la province a des côtes, il vaut mieux la spécifier pour la destination d'une flotte qui se déplace
+parse.c#161#L'unité active du mouvement n'est pas du type de celles qui peuvent acceder à la province (ou zone dans une province) destination de l'attaque
+parse.c#162#L'unité se déplaçant tente de faire du surplace (!)
+parse.c#163#L'unité n'a pas accès à la province (ou zone dans une province) (doit être adjacente)
+parse.c#164#L'unité n'a pas accès  à la province (ou zone dans une province) (doit être adjacente ou convoi possible)
+parse.c#165#L'unité se soutient elle-même pour se défendre (!)
+parse.c#166#La flotte n'a pas accès à la province (ou zone dans une province) de l'unité soutenue (doit être adjacente)
+parse.c#167#L'armée n'a pas accès à la province (ou zone dans une province) de l'unité soutenue (doit être adjacente)
+parse.c#168#Il s'agit pas d'une phase d'ajustements, n'entrer que des ordres de mouvement
+parse.c#169#Il s'agit pas d'une phase de retraites, n'entrer que des ordres de mouvement
+parse.c#170#Impossible de lire les ordres de retraite : %1
+parse.c#171#Retraite : pas d'ordre dans le fichier
+parse.c#172#Retraites : pays %1 inconnu
+parse.c#173#Retraites : nom de pays attendu
+parse.c#174#Retraites : pays %1 déclaré mais sans ordres
+parse.c#175#Pays %1 inconnu ou mauvais debut d'ordre de retraite (il faut commencer par un type d'unité)
+parse.c#176#Type d'unité 'A' ou 'F' ou nom de pays attendu
+parse.c#177#Attend la désignation de l'unité recevant l'ordre de retraite
+parse.c#178#Il est préférable d'accoler la côte à la province
+parse.c#179#Province (ou zone dans une province) %1 inconnue pour l'unité délogée
+parse.c#180#unité délogée %1 inconnue
+parse.c#181#Ordre unité en retraite 'R' ou 'A' attendu
+parse.c#182#Province (ou zone dans une province) destination retraite attendu
+parse.c#183#Il est préférable d'accoler la côte à la province
+parse.c#184#Province (ou zone dans une province) %1 inconnue pour l'unité délogée
+parse.c#185#Elements superflus dans un ordre de retraites
+parse.c#186#Attention : si la province a des côtes, il vaut mieux la spécifier pour la destination d'une flotte qui retraite
+parse.c#187#L'unité active de la retraite n'est pas du type de celles qui peuvent acceder province (ou zone dans une province) destination
+parse.c#188#La flotte n'a pas accès à la province (ou zone dans une province) (doit être adjacente)
+parse.c#189#L'armée n'a pas accès à la province (ou zone dans une province)  (doit être adjacente)
+parse.c#190#Interdit de retraiter dans la province d'où vient l'unité qui déloge (l'attaque)
+parse.c#191#Retraite dans une province occupée
+parse.c#192#Interdit de retraiter dans une province bloquée parce qu'il y a eu un stand-off lors de la résolution précédente
+parse.c#193#On ne peut pas construire en mer
+parse.c#194#Retirer le spécification de côte pour une armée
+parse.c#195#Impossible de lire les ordres d'ajustements : %1
+parse.c#196#Ajustements : fichier sans ordres
+parse.c#197#Pays %1 inconnu
+parse.c#198#Ajustements : nom de pays attendu
+parse.c#199#Ajustements : pays %1 déclaré mais sans ordres
+parse.c#200#Ajustements : pays %1 déclaré mais sans ordres
+parse.c#201#L'unité à ajouter n'est pas du type de celles qui peuvent être presentes sur la  province (ou zone dans une province) d'après le type fourni
+parse.c#202#Il est préférable d'utiliser '+' ou '-' en début d'ordre pour indiquer la construction ou suppression d'une unité
+parse.c#203#Type d'ajustement ('-' ou '+') ou nom de pays attendu
+parse.c#204#Ambiguité sur le type d'unité, il faut insérer le type de l'unité avant le nom de la province
+parse.c#205#L'unité à retirer n'est pas du tye de celles qui peuvent être présentes sur la  province (ou zone dans une province)
+parse.c#206#Il n'y a pas d'unité à cet endroit
+parse.c#207#Type d'unité 'A' ou 'F' attendu
+parse.c#208#Province (ou zone dans une province) de l'unité attendu
+parse.c#209#Il est préférable d'accoler la côte à la province
+parse.c#210#Province (ou zone dans une province) %1 inconnue pour la construction ou la suppression (ou mauvais nom de pays)
+parse.c#211#Elements superflus dans un ordre d'ajustements
+parse.c#212#unité %1 à supprimer inconnue
+parse.c#213#unité %1 à supprimer pas du pays du donneur d'ordres
+parse.c#214#Centre %1 pas centre de depart
+parse.c#215#Pas centre de depart du bon pays
+parse.c#216#Le pays ne possedé pas le centre
+parse.c#217#Attention : si la province a des côtes, il vaut mieux la spécifier lors de la construction d'une flotte
+parse.c#218#L'unité à ajouter n'est pas du type de celles qui peuvent être placées sur la  province (ou zone dans une province)
+parse.c#219#Il y a déjà une unité à cet endroit
+parse.c#220#Retraites : pays %1 déclaré mais sans ordres
+parse.c#221#Aller à la ligne après le nom de pays
+parse.c#222#Aller à la ligne après le nom de pays
+parse.c#223#Aller à la ligne après le nom de pays
+parse.c#224#Le 'H' sur un soutien passif est superflu
+parse.c#225#Initiale d'un pays
+parse.c#226#Taille de l'initiale d'un pays
+parse.c#227#Utiliser 'A' plutôt que 'D' pour une dispersion d'unité en phase de retraites
+parse.c#228#Ambiguite sur l'unité possible en %1%2, il faut insérer le type de l'unité avant le nom de la province
+parse.c#229#Attention : il s'agit d'une phase de retraites et non de mouvements
+parse.c#230#Il est préférable d'utiliser '+' plutôt que 'B' pour construire une unité
+parse.c#231#Il est préférable d'utiliser '-' plutôt que 'R' pour retirer une unité
+parse.c#232#Il est préférable d'utiliser 'R' plutôt que '-' pour retraiter une unité
+parse.c#233#La flotte n'a pas accès à l'armée qu'elle doit convoyer
+parse.c#234#Attention : si la province a des côtes, il vaut mieux la spécifier pour une flotte soutenue
+parse.c#235#Il est préférable d'utiliser '+' plutôt que 'BUILD' pour construire une unité
+parse.c#236#Il est préférable d'utiliser '-' plutôt que 'REMOVE' pour retirer une unité
+parse.c#237#Attention : si la province a des côtes, il vaut mieux la spécifier pour une flotte active dans un ordre de mouvement
+parse.c#238#Attention : si la province a des côtes, il vaut mieux la spécifier pour une flotte qui retraite
+parse.c#239#Attention : si la province a des côtes, il vaut mieux la spécifier pour une flotte à construire
+parse.c#240#Attend la désignation de l'unité soutenue pour attaquer ou pour se défendre
+parse.c#241#Attend la désignation de l'unité convoyée
+parse.c#242#Attend la désignation de la destination l'unité soutenue pour attaquer
+parse.c#243#Attend la désignation de la destination de l'unité convoyée
+parse.c#244#Attention : une unité ne peut aller d'une côte à une autre d'une même province
+parse.c#245#Attention : il faudrait préciser le type de l'unité à construire
+parse.c#246#Attention : si la province a des côtes, il vaut mieux la spécifier pour une flotte à supprimer
+parse.c#247#Une telle unité ne peut se trouver à cet endroit pour une unité active d'un ordre de mouvement
+parse.c#248#Une telle unité ne peut se trouver à cet endroit pour une unité active d'un ordre de retraite
+parse.c#249#Utiliser 'H' plutôt que 'XXX'
+parse.c#250#La flotte en %1 est inutile dans le convoi qu'elle veut fournir
+parse.c#251#La région %1 n'est pas un centre
+parse.c#252#Attention : il s'agit d'une phase d'ajustements, n'entrez ques des ordres d'ajustement
+parse.c#253#Utiliser 'A' plutôt que 'R OTB' pour une dispersion d'unité en retraite
+parse.c#254#Il s'agit pas d'une phase d'ajustements, n'entrer que des ordres de retraite
+parse.c#255#Manque '+' et '-', construction présumée
+parse.c#256#Manque '+' et '-', suppression présumée
+parse.c#257#Ne pas spécifier une route de convoi, le système la déterminera lui-même
+parse.c#258#La notation 'via convoy' est ignorée
+parse.c#259#Attention : si la province a des côtes, ne pas en spécifier pour une armée
+parse.c#260#L'unité retraitant tente de faire du surplace (!)
+parse.c#261#Problème de définition d'une disparition sur le pays
+parse.c#262#Pays %1 non declare pour une disparition
+parse.c#263#Manque l'annee pour la disparition
+parse.c#264#%1 : Annee disparition invraisemblable
+parse.c#265#Manque fin de ligne apres disparition
+parse.c#266#Oubli de saison ou saisonmodif (ou les deux) avant une disparition
+parse.c#267#Pays %1 disparu mais possède au moins un centre
+parse.c#268#Pays %1 sans centre mais pas disparu (rectifié)
+parse.c#269#Ne pas utiliser la construction 'R -' (enlever le ('-')
+parse.c#270#Manque l'anneezero
+parse.c#271#Manque fin de ligne après anneezero
+resoud.c#1#Manque l'ordre de mouvement de %1
+resoud.c#2#Doublon dans les ordres de mouvement sur %1
+resoud.c#3#L'unité %1 soutient une unité compatriote pour attaquer qui n'effectue pas le déplacement (=> annulé)
+resoud.c#4#L'unité %1 convoie une unité compatriote qui n'effectue pas le convoi (=> annulé)
+resoud.c#5#L'unité %1 soutient une unité compatriote pour se défendre qui se deplace (=> annulé)
+resoud.c#6#L'unité %1 soutient une unité pour attaquer qui requiert  le convoi de l'unité compatriote %2 (=> annulé)
+resoud.c#7#L'unité %1 convoie une unité qui requiert le convoi de l'unité compatriote %2 (=> annulé)
+resoud.c#8#L'unité %1 requiert pour son déplacement le convoi par l'unité compatriote %2 (=> annulé)
+resoud.c#9#Manque la retraite de %1
+resoud.c#10#Doublon dans les ordres de retraites sur %1
+resoud.c#11#Retraite de %1 en collision (=> annulé)
+resoud.c#12#Doublon dans les ajustements pour %1 et %2 : construction sur la même région
+resoud.c#13#Construction alors qu'une ou des suppressions sont attendues
+resoud.c#14#Suppression alors qu'une ou des constructions sont attendues
+resoud.c#15#Construction alors que rien n'est attendu
+resoud.c#16#Suppression alors que rien n'est attendu
+resoud.c#17#Ajustements %1 : encore %2 construction(s) autorisee(s)
+resoud.c#18#Ajustements : constructions : %1 : mauvais chiffre : (%2 unité(s), %3 centre(s), %4 centre(s) libre(s) => %5 ajustement(s))
+resoud.c#19#Ajustements : suppressions : %1 : mauvais chiffre : (%2 unité(s), %3 centre(s) => %4 ajustement(s))
+resoud.c#20#L'unité %1 soutient une unité pour attaquer qui requiert son propre convoi
+resoud.c#21#Le centre %1 change de proprietaire : %2 -> %3
+resoud.c#22#Le centre %1 à maintenant un proprietaire : %2
+resoud.c#23#La partie est finie, le joueur %1 est déclaré vainqueur
+resoud.c#24#La partie est bloquee, tous les joueurs survivants sont déclarés vainqueurs
+resoud.c#25#Le pays %1 vient de disparaitre de la partie
+resoud.c#26#L'unité %1 soutient une unité compatriote pour attaquer qui n'effectue pas exactement le même déplacement (différence de côte) (=> accepté)
+resoud.c#27#Suppression de %1 unité(s) attendue, presente moins de suppressions qu'attendu
+resoud.c#28#Suppression de %1 unité(s) attendue, presente plus de suppressions qu'attendu
+resoud.c#29#Construction de %1 unité(s) attendue, presente plus de constructions qu'attendu
+resoud.c#30#Construction de %1 unité(s) attendue, presente moins de constructions qu'attendu
+resoud.c#31#Doublon dans les ajustements pour %1 et %2 : suppression de la même unité
+resoud.c#32#Supprimer le (ou les) ordre(s) en double
+resoud.c#33#L'unité %1 attaque une unité compatriote immobile (erreur d'ordre très probable)
+resoud.c#44#Fin de la résolution passe %1
+resoud.c#45#Suppression des unités du pays %1
+resoud.c#46#L'unité %1 soutient une unité pour attaquer qui appartient à un autre joueur dont les intentions sont inconnues jusqu'à la résolution
+resoud.c#47#L'unité %1 convoie une unité qui appartient à un autre joueur dont les intentions sont inconnues jusqu'à la résolution
+resoud.c#48#L'unité %1 soutient une unité pour se défendre qui appartient à un autre joueur dont les intentions sont inconnues jusqu'à la résolution
+resoud.c#49#L'unité %1 requiert pour son déplacement le convoi de l'unité %2 qui appartient à un autre joueur dont les intentions sont inconnues jusqu'à la résolution
+resoud.c#50#L'unité %1 soutient une unité pour attaquer qui n'a pas eu le convoi de l'unité (peut-être pas seulement) %2 qui appartient à un autre joueur dont les intentions sont inconnues jusqu'à la résolution
+resoud.c#51#L'unité %1 convoie une unité qui n'a pas eu le convoi de l'unité (peut-être pas seulement) %2 qui appartient à un autre joueur dont les intentions sont inconnues jusqu'à la résolution
+resoud.c#52#Même ordre de mouvement dans les deux occurences pour l'unité %1
+resoud.c#53#Même ordre de retraite dans les deux occurences pour l'unité délogée %1
+resoud.c#54#Même ordre de construction dans les deux occurences pour %1
+resoud.c#55#Même ordre de suppression dans les deux occurences pour %1
+solveur.c#1#Options lors de l'appel du solveur DIPLO :
+solveur.c#2#-i <fic>	: Situation initiale lue dans <fic>)
+solveur.c#3#-o <fic>	: Ordres lus dans <fic>
+solveur.c#4#-f <fic>	: Situation finale dumpée dans <fic>
+solveur.c#6#-a <fic>	: Archivage des ordres dumpé dans <fic>
+solveur.c#8#-b <fic>	: Fournit le bilan de la partie dans <fic>
+solveur.c#9#-c <rep>	: Sous répertoire ou trouver la carte <rep>
+solveur.c#10#Pour les commandes suivantes on adopte la convention suivante :
+solveur.c#11#		: <n> sera le code à une lettre du pays
+solveur.c#12#-x<n>		: Fournit des ordres pour les pays autres que <n>
+solveur.c#13#-O<n> <fic>	: Récupère les ordres du pays <n> dans <fic>
+solveur.c#14#-p<n> <fic>	: crée des prototypes d'ordres du pays <n> dans <fic>
+solveur.c#15#-P<n> <fic>	: crée des ordres du pays <n> dans <fic> (les plus simples)
+solveur.c#16#-R		: Evite les destructions cas de défaut d'ordres de retraite
+solveur.c#17#-S		: La stabilite en centres entraine l'arret de la partie
+solveur.c#18#-E		: Calcule les éloignements (sortie standard)
+solveur.c#19#-C		: Verifie la carte
+solveur.c#20#-w		: Branche le mode bavard
+solveur.c#21#-v		: Affiche la version du programme
+solveur.c#22#Option -C et -E incompatibles
+solveur.c#23#Option -E et -C incompatibles
+solveur.c#24#Option x
+solveur.c#25#Option P/p
+solveur.c#26#Option O
+solveur.c#27#Pas de pays de tel code initiale
+solveur.c#29#Initiale pays
+solveur.c#31#Nom de fichier trop grand
+solveur.c#32#Plus d'un fichier d'ordres
+solveur.c#33#Trop de pays pour les prototypes
+solveur.c#34#Nom de fichier
+solveur.c#35#Fin ligne commmande
+solveur.c#39#Version basée sur le DATC
+solveur.c#41#Fin lecture carte
+solveur.c#44#Fin lecture situation initiale
+solveur.c#45#Option Px ou px inconnue
+solveur.c#46#Il s'agit de résolution de mouvements
+solveur.c#48#Fin lecture mouvements
+solveur.c#49#Fin résolution mouvements
+solveur.c#50#Il s'agit de résolution de retraites
+solveur.c#52#Fin lecture retraites été
+solveur.c#53#Fin résolution retraites été
+solveur.c#54#Il s'agit de résolution de retraites (puis modif possessions)
+solveur.c#55#résolution partielle sans %1
+solveur.c#56#Fin lecture retraites hiver
+solveur.c#57#Fin résolution retraites hiver
+solveur.c#58#Fin mise à jour possessions
+solveur.c#59#Il s'agit de résolution d'ajustements
+solveur.c#61#Fin lecture ajustements
+solveur.c#62#Fin résolution ajustements
+solveur.c#63#Option Ox inconnue
+solveur.c#64#Résolution ou validation d'ordres pour %1 %2
+solveur.c#65#-s		: Branche le mode silencieux
+solveur.c#66#-A <fic>	: Fournit les noms de pays actifs dans  <fic>
+solveur.c#67#résolution en %1 phase(s)
+solveur.c#69#Fin suppression pays eliminés
+solveur.c#70#-V <fic>	: Fournit les noms de pays vivants dans  <fic>
+solveur.c#71#-fr 	: Utilise les messages en francais
+solveur.c#72#-en 	: Utilise les messages en anglais

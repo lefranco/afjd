@@ -1,0 +1,466 @@
+decrit.c#1#Impossible to dump ending situation
+decrit.c#2# - Position of units :
+decrit.c#3# - Are forbidden to retreat :
+decrit.c#4#Preparation of moves :
+decrit.c#5#Preparation of retreats :
+decrit.c#7# - Are owned :
+decrit.c#8#Preparation of adjustments :
+decrit.c#9# - Adjustments expected :
+decrit.c#10#%1 centres %2 units %3 free centres
+decrit.c#11# => %1 builds
+decrit.c#12#Report of moves :
+decrit.c#13#Report of retreats :
+decrit.c#14#Report of adjustments :
+decrit.c#15#Impossible to dump result
+decrit.c#16#;(failed)
+decrit.c#17#;(dislodged)
+decrit.c#18#;(destroyed)
+decrit.c#19#;(cut)
+decrit.c#20#;BY DEFECT
+decrit.c#21#;(destroyed)
+decrit.c#22#;(paradox)
+decrit.c#23#Cannot write orders archiving : %1
+decrit.c#24#Cannot write summary : %1
+decrit.c#25#%1 %2 centres / %3 th  (%4 points)
+decrit.c#26#Cannot open prototypes file: %1
+decrit.c#27#;No foreseen move 
+decrit.c#28#;No foreseen retreat 
+decrit.c#29#;No foreseen adjustment
+decrit.c#30#;Removal of all units
+decrit.c#31#;Provide units to add or remove ("+ A PAR" to build or "- F BRE" to remove) (suppress lines to waive builds)
+decrit.c#32#;Provide units to remove (one per line after each -)
+decrit.c#33#Cannot write file for security orders  : %1
+decrit.c#37#Cannot write file for rebuilt orders : %1
+decrit.c#38#;Orders rebuilt from archives
+decrit.c#39#;(invalid)
+decrit.c#40#;(invalid)
+decrit.c#41#;(invalid)
+decrit.c#42#Cannot open file for active countries : %1
+decrit.c#43#Cannot open file for alive countries : %1
+erreurs.c#2#map
+erreurs.c#3#annex
+erreurs.c#4#situation
+erreurs.c#5#orders
+erreurs.c#6#Problem with some word content
+erreurs.c#7#Problem with the order of the words
+erreurs.c#8#Problem with the rules of the game
+erreurs.c#9#Problem with the map of the game
+erreurs.c#10#Problem with the current situation of the game
+erreurs.c#13#Incoherent order
+erreurs.c#14#Duplicated order
+erreurs.c#15#Missing order
+erreurs.c#16#Incoherent input
+erreurs.c#17#Input analysis
+erreurs.c#18#Checking not locatable
+erreurs.c#19#Checking locatable
+erreurs.c#21#Calling parameters
+erreurs.c#22#Call of the operating system
+erreurs.c#24#(beginning of line)
+erreurs.c#25#<<<
+erreurs.c#26#at the end of line %1
+erreurs.c#27#at line %1
+erreurs.c#28#at checking
+erreurs.c#29#at checking
+erreurs.c#30#ERROR
+erreurs.c#31#INFORMATION
+erreurs.c#32#WARNING
+erreurs.c#33#Spring moves
+erreurs.c#35#Spring retreats
+erreurs.c#37#Autumn moves
+erreurs.c#39#Autumn retreats
+erreurs.c#41#Adjustments
+erreurs.c#44#Unexpected : %1
+erreurs.c#45#centres
+erreurs.c#46#units
+erreurs.c#47#geography
+erreurs.c#48#colours
+erreurs.c#49#codes
+gestion.c#3#System uses '%1' rather than '%2' for this passive country at line %3
+gestion.c#4#System uses '%1' rather than '%2' for this centre at line %3
+gestion.c#5#System uses '%1' rather than '%2' for this startingcentre at line %3
+gestion.c#6#System uses '%1' rather than '%2' for this unit at line %3
+gestion.c#7#System uses '%1' rather than '%2' for this dislodged at line %3
+gestion.c#8#System uses '%1' rather than '%2' for this province at line %3
+gestion.c#9#System uses '%1' rather than '%2' for this unit at line %3
+gestion.c#10#System uses '%1' rather than '%2' for this province (or area within province) at line %3
+heuris.c#4#End calculations for %1
+heuris.c#5#%1%2 is neighbour by fleet with itself !
+heuris.c#6#%1%2 and %3%4 are neighbour by fleet !
+heuris.c#7#%1%2 is neighbour by fleet with %3%4  but not the other way round !
+heuris.c#8#%1%2 is neighbour by army with itself !
+heuris.c#9#%1%2 and %3%4 are neighbour by army !
+heuris.c#10#%1%2 is neighbour by army with %3%4  but not the other way round !
+heuris.c#11#There is no neighbouring of a province (or area within province) with itself,
+heuris.c#12#The neighbouring are between compatible province (or area within province),
+heuris.c#13#Symetry neighbouring is respected.
+parse.c#1#Use '-' rather than 'TO'
+parse.c#2#Use 'H' rather than 'T'
+parse.c#3#Standard DIPLOMACY map does not have a west coast
+parse.c#4#Standard DIPLOMACY map does not have a west coast
+parse.c#5#Do not use this unexpected caracter : '%1' (%2)
+parse.c#6#Too many lines
+parse.c#7#Too long word
+parse.c#8#Definition of a country
+parse.c#9#Missing end of line after country
+parse.c#10#Missing adjective name or end of line after country
+parse.c#11#It is preferable not to use parenthesis for coasts
+parse.c#12#Problem definition of a province
+parse.c#13#Missing end of line after province
+parse.c#14#Missing second name or end of line after province
+parse.c#15#Do not use the 'R A' construction (remove the 'R')
+parse.c#16#Problem definition of a centre on the province
+parse.c#17#Province %1 not declared
+parse.c#18#Missing end of line after centre
+parse.c#19#Problem definition of distance type of unit
+parse.c#20#Problem definition of a starting centre on the country
+parse.c#21#Country %1 not declared for a starting centre
+parse.c#22#Problem definition of a  starting centre on the centre
+parse.c#23#Centre %1 not declared on a  startingcentre
+parse.c#24#Missing end of line after startingcentre
+parse.c#25#It is preferable not to use slash '/' for coasts
+parse.c#26#Problem definition of a province (or area within province) on the type
+parse.c#27#Problem definition of a province (or area within province) on the province
+parse.c#28#Province %1 not declared
+parse.c#29#Problem definition of a province (or area within province) on the specificity
+parse.c#30#Missing end of line after province (or area within province) map
+parse.c#31#Use 'H' rather than 'HOLD' or 'HOLDS'
+parse.c#32#Problem definition of a  neigbourarmy on province (or area within province)
+parse.c#33#It is preferable to attach the coast to the province
+parse.c#34#Province (or area within province) %1 not declared
+parse.c#35#Problem definition of a neighbourarmy 2nd province (or area within province)
+parse.c#36#It is preferable to attach the coast to the province
+parse.c#37#Province (or area within province) %1 not declared
+parse.c#38#Missing end of line after neighbourarmy
+parse.c#39#Use 'A' for a dispersion retreat (off the board) rather than 'R' and nothing
+parse.c#40#Problem definition of a neighbourfleet on province (or area within province)
+parse.c#41#It is preferable to attach the coast to the province
+parse.c#42#Province (or area within province) %1 not declared
+parse.c#43#Problem definition of a neighbourfleet 2nd province (or area within province)
+parse.c#44#It is preferable to attach the coast to the province
+parse.c#45#Province (or area within province) %1 not declared
+parse.c#46#Do not use the '- H' construction (remove the '-')
+parse.c#47#Parenthesis problem
+parse.c#48#Problem definition of distance of country
+parse.c#49#Country %1 not declared for a distance
+parse.c#50#Problem definition of distance of province
+parse.c#51#Province %1  not declared
+parse.c#52#Problem definition of distance value
+parse.c#53#Missing end of line after distance
+parse.c#54#Missing end of line after ownership
+parse.c#55#Problem definition of a unit on the type
+parse.c#56#Problem definition of a unit on the country
+parse.c#57#Country %1 not declared for a unit
+parse.c#58#Problem definition of a unit on the province (or area within province)
+parse.c#59#It is preferable to attach the coast to the province
+parse.c#60#Province (or area within province) %1 not declared
+parse.c#61#Missing end of line after unit
+parse.c#62#Attention : this is a retreat phase
+parse.c#63#Probleme definition of an ownership on country
+parse.c#64#Country %1 not declare for an ownership
+parse.c#65#Probleme definition of an ownership on centre
+parse.c#66#Centre %1 not declared on an ownership
+parse.c#67#Missing end of line after neighbourfleet
+parse.c#68#Too many ownerships
+parse.c#69#Probleme definition unit dislodged on type
+parse.c#70#Probleme definition unit dislodged on country
+parse.c#71#Country %1 not declared for a dislodged
+parse.c#72#Problem definition unit dislodged on a province (or area within province)
+parse.c#73#It is preferable to attach the coast to the province
+parse.c#74#Province (or area within province) %1 not declared for a dislodged
+parse.c#75#Unit %1 dislodged unknown
+parse.c#76#Missing 'BOURREAU' unit dislodged
+parse.c#77#Problem definition unit dislodging on type
+parse.c#78#Problem definition unit dislodging on country
+parse.c#79#Country %1 not declared
+parse.c#80#Problem definition unit dislodging on province (or area within province) of origin unit
+parse.c#81#It is preferable to attach the coast to the province
+parse.c#82#Province (or area within province) %1 not declared for a dislodging
+parse.c#83#Unit %1 dislodging unknown
+parse.c#84#Missing 'ORIGINE' dislodged unit
+parse.c#85#Problem definition dislodging unit on origine province (or area within province) 
+parse.c#86#It is preferable to attach the coast to the province
+parse.c#87#Province (or area within province) %1 not declared for an origin of dislodging
+parse.c#88#Missing end of line after dislodged
+parse.c#89#Attention : a support given for a coast is valid for all coasts of the province
+parse.c#90#Problem definition of a forbidden on province
+parse.c#91#Province forbidden to retreat %1 not declared
+parse.c#92#Missing end of line after forbidden
+parse.c#93#Use '-' rather than '–'
+parse.c#94#Problem definition of a season on the season iself
+parse.c#95#Missing year for season
+parse.c#96#%1 : Incredible season year incredible
+parse.c#97#Missing end of line after season
+parse.c#98#Problem definition of a  seasonchanged on the season itself (WINTER)
+parse.c#99#Missing year for seasonchanged
+parse.c#100#%1 : Year seasonchanged incredible
+parse.c#101#Missing end of line after seasonchanged
+parse.c#102#Cannot read map : %1
+parse.c#103#Unexpected string at this point
+parse.c#105#Unexpected string at this point
+parse.c#106#Cannot read  initial situation  : %1
+parse.c#107#Unexpected end of file
+parse.c#108#Unexpected season begining situation 
+parse.c#109#Unexpected seasonchanged after season
+parse.c#110#Forgot season or seasonchanged (of both) before unit
+parse.c#111#Forgot season or seasonchanged (of both) before ownership
+parse.c#112#Forgot season or seasonchanged (of both) before dislodged
+parse.c#113#Dislodged unit : not the season !
+parse.c#114#Forgot season or seasonchanged (of both) before forbidden
+parse.c#115#Province (or area within province) forbidden to retreat : not the season !
+parse.c#116#Unexpected string at this point
+parse.c#117#Cannot read move orders : %1
+parse.c#118#Moves : No orders in file
+parse.c#119#Moves : country %1 unknown
+parse.c#120#Moves : country name expected
+parse.c#121#Moves : country %1 declared but without any orders
+parse.c#122#Country %1 unknown or bad beginning of move orders (it should start with a unit type)
+parse.c#123#Moves : country %1 declared yet without orders
+parse.c#124#Unit type 'A' or 'F' or country name expected
+parse.c#125#Expecting the designation of the unit to receive move order
+parse.c#126#It is preferable to attach the coast to the province
+parse.c#127#Province (or area within province) %1 unknown for active unit
+parse.c#128#Active unit %1 unknown
+parse.c#129#Active unit %1 not of the country of the order giver
+parse.c#130#Order of active unit either '-', 'H', 'S', or 'C' expected
+parse.c#131#Province (or area within province) of passive unit expected
+parse.c#132#It is preferable to attach the coast to the province
+parse.c#133#Province (or area within province) %1 unknown for the destination of active unit
+parse.c#135#Problem, missing convoyed unit destination
+parse.c#136#Order of passive unit '-' or end of line expected
+parse.c#138#It is preferable to attach the coast to the province
+parse.c#139#Province (or area within province) %1 unknown for the destination of the passive unit
+parse.c#140#It is preferable to attach the coast to the province
+parse.c#141#Province (or area within province) %1 unknown for passive unit (or problem with its type or country - put 'country type province', only province is mandatory)
+parse.c#142#Passive unit %1 unknown
+parse.c#143#No possible unit in %1%2
+parse.c#144#Provided country is not the one of supported or convoyed unit
+parse.c#145#Superfluous elements in a movement order
+parse.c#146#Only fleets may convoy, use a normal move '-' for an army to be convoyed
+parse.c#147#Only armies may be convoyed
+parse.c#148#Only fleets on sea may convoy
+parse.c#149#Only armies on coasts may be convoyed
+parse.c#150#No possible convoy  of passive unit to destination province (or area within province) 
+parse.c#151#Attention : if a province has split coasts, one should specify it for the destination of a fleet in a support to attack
+parse.c#152#Passive unit of support or convoy order is not of the type that may reach the support destination province (or area within province)
+parse.c#153#The unit is supporting itself to attack (!)
+parse.c#154#The unit is supporting to attack against itself (!)
+parse.c#155#The unit is supporting to stand still (!)
+parse.c#156#Active fleet has no access to destination province (or area within province) (should be adjacent)
+parse.c#157#Active army has no access to destination province (or area within province) (should be adjacent)
+parse.c#158#Passive unit has no access to destination province (or area within province) (should be adjacent)
+parse.c#159#Passive unit has no access to destination province (or area within province) (should be adjacent or potential convoy)
+parse.c#160#Attention : if a province has split coasts, one should specify it for the destination of a moving fleet
+parse.c#161#Active unit of move order is not of the type that may reach attack destination province (or area within province)
+parse.c#162#The moving unit is attempting to get to its own place (!)
+parse.c#163#The unit has no access to the province (or area within province) (should be adjacent)
+parse.c#164#The unit has no access to the province (or area within province)  (should be adjacent or potential convoy)
+parse.c#165#The unit is supporting itself to defend itself (!)
+parse.c#166#The fleet has no access to the province (or area within province) of the supported unit (should be adjacent)
+parse.c#167#The army has no access to the province (or area within province) of the supported unit (should be adjacent)
+parse.c#168#This not an adjustment phase, please enter move orders only
+parse.c#169#This not a retreat phase, please enter move orders only
+parse.c#170#Cannot read retreat orders : %1
+parse.c#171#Retreats : no orders in file
+parse.c#172#Retreats : country %1 unknown
+parse.c#173#Retreats : country name expected
+parse.c#174#Retreats : country %1 declared but with no orders
+parse.c#175#Country %1 unknown or bad beginning of retreat order (it should start with a unit type)
+parse.c#176#Unit type 'A' or 'F' or country name expected
+parse.c#177#Expecting the designation of the unit to receive retreat order
+parse.c#178#It is preferable to attach the coast to the province
+parse.c#179#Province (or area within province) %1 unknown for dislodged unit
+parse.c#180#Dislodged unit %1 unknown
+parse.c#181#Retreating unit order 'R' or 'A' expected
+parse.c#182#Retreat destination province (or area within province) expected
+parse.c#183#It is preferable to attach the coast to the province
+parse.c#184#Province (or area within province) %1 unknown for dislodged unit
+parse.c#185#Superfluous elements in an retreat order
+parse.c#186#Attention : if a province has split coasts, one should specify it for the destination of a retreating fleet
+parse.c#187#Active unit or retreat order is not of the type that may reach  destination province (or area within province) 
+parse.c#188#The fleet has no access to the province (or area within province) (should be adjacent)
+parse.c#189#The army has no access to the province (or area within province)  (should be adjacent)
+parse.c#190#Forbidden to retreat to the province which the dislodging unit (the attack) comes from
+parse.c#191#Retreat in a occupied province 
+parse.c#192#Forbidden to retreat in a province blocked because there was a stand off during the previous adjudication
+parse.c#193#One may not build in the sea
+parse.c#194#Remove coast specification for an army
+parse.c#195#Cannot read adjustment orders : %1
+parse.c#196#Adjusments : file without any orders
+parse.c#197#Country %1 unknown
+parse.c#198#Adjustments : country name expected
+parse.c#199#Adjustments : country %1 declared but with no orders
+parse.c#200#Adjustments : country %1 declared but with no orders
+parse.c#201#Unit to add is not of the type that may be present on the province (or area within province) from the type provided
+parse.c#202#It is preferable to use '+' or '-' at beginning of line for specifying build or removal of a unit
+parse.c#203#Adjustment type ('-' or '+') or country name expected
+parse.c#204#Ambiguity on unit type, please insert unit type before province name
+parse.c#205#Unit to remove is not of the type that may be present on the province (or area within province)
+parse.c#206#There is no unit at this place
+parse.c#207#Unit type 'A' or 'F' expected
+parse.c#208#Unit province (or area within province) expected
+parse.c#209#It is preferable to attach the coast to the province
+parse.c#210#Province (or area within province) %1 unknown for removal or build (or bad country name)
+parse.c#211#Superfluous  elements in an adjustment order
+parse.c#212#Unit %1 to suppress unknown
+parse.c#213#Unit %1 to suppress not of the country of the order giver
+parse.c#214#Centre %1 not starting centre
+parse.c#215#Not starting centre of the right country
+parse.c#216#The country does not own the centre
+parse.c#217#Attention : if a province has split coasts, one should specify it when building a fleet
+parse.c#218#Unit to add is not of the type that may be put on the province (or area within province)
+parse.c#219#There is already a unit at this place
+parse.c#220#Retreats : country %1 declared but with no order
+parse.c#221#Go to next line after country name
+parse.c#222#Go to next line after country name
+parse.c#223#Go to next line after country name
+parse.c#224#The 'H' on a passive support is superfluous
+parse.c#225#Initial of a country
+parse.c#226#Size of the initial of a country
+parse.c#227#Use 'A' rather than 'D' for the  dispersion of a unit at retreat phase
+parse.c#228#Ambiguity on the possible unit in %1%2, please insert unit type before province name
+parse.c#229#Attention : this is a retreat phase and not a movement phase
+parse.c#230#It is preferable to use '+' rather than 'B' to build a unit
+parse.c#231#It is preferable to use '-' rather than 'R' to remove a unit
+parse.c#232#It is preferable to use 'R' rather than '-' to retreat a unit
+parse.c#233#The fleet has no access to the army it has to convoy
+parse.c#234#Attention : if a province has split coasts, one should specify it for a supported fleet
+parse.c#235#It is preferable to use '+' rather than 'BUILD' to build a unit
+parse.c#236#It is preferable to use '-' rather than 'REMOVE' to remove a unit
+parse.c#237#Attention : if a province has split coasts, one should specify it for an active fleet in movement orders
+parse.c#238#Attention : if a province has split coasts, one should specify it for a retreating fleet
+parse.c#239#Attention : if a province has split coasts, one should specify it for a fleet to build
+parse.c#240#Expecting the designation of the unit supported to attack or to defend itself
+parse.c#241#Expecting the designation of the convoyed unit
+parse.c#242#Expecting the designation of the destination of the unit supported to attack
+parse.c#243#Expecting the designation of the destination of the convoyed unit
+parse.c#244#Attention : a unit cannot go from a coast to the other of a same province
+parse.c#245#Attention : one should precise the type of unit to build
+parse.c#246#Attention : if a province has split coasts, one should specify it for a fleet to remove
+parse.c#247#Such a unit may not appear at such a place for the active unit of a move order
+parse.c#248#Such a unit may not appear at such a place for the active unit of a retreat order
+parse.c#249#Use 'H' rather than 'XXX'
+parse.c#250#The fleet in %1 is useless in the convoy it wants to provide
+parse.c#251#Region %1 is not a centre
+parse.c#252#Attention : this is an adjustment phase, please enter adjustments orders only
+parse.c#253#Use 'A' rather than 'R OTB' for the  dispersion of a retreating unit
+parse.c#254#This not an adjustment phase, please enter retreat orders only
+parse.c#255#Missing '+' and '-', build presumed
+parse.c#256#Missing '+' and '-', removal presumed
+parse.c#257#Do not specify a convoy route, system will compute it itself
+parse.c#258#Notation 'via convoy' is ignored
+parse.c#259#Attention : if a province has split coasts, do not specify any for an army
+parse.c#260#The retreating unit is attempting to get to its own place (!)
+parse.c#261#Problem definition of a dissaperance on the country
+parse.c#262#Country %1 not declared for a disparition
+parse.c#263#Missing year for disparition
+parse.c#264#%1 : Year disparition incredible
+parse.c#265#Missing end of line after disparition
+parse.c#266#Forgot season or seasonchanged (of both) before disparition
+parse.c#267#Country %1 dissapeared but owns at least a centre
+parse.c#268#Country %1 without any centre but not dissapeared (rectified)
+parse.c#269#Do not use the 'R -' construction (remove the '-')
+parse.c#270#Missing anneezero
+parse.c#271#Missing end of line after anneezero
+resoud.c#1#Missing move order of %1
+resoud.c#2#Dublin in move orders on %1
+resoud.c#3#Unit %1 is supporting a compatriot unit to attack which does not perform the move (=> void)
+resoud.c#4#Unit %1 is convoying a compatriot unit which does not perform the convoy (=> void)
+resoud.c#5#Unit %1 is supporting a compatriot unit to defend itself that moves (=> void)
+resoud.c#6#Unit %1 is supporting a unit to move which requires the convoy of compatriot unit %2 (=> void)
+resoud.c#7#Unit %1 is convoying a unit to move which requires the convoy of compatriot unit %2 (=> void)
+resoud.c#8#Unit %1 requires for its moving the convoy of compatriot unit  %2 (=> void)
+resoud.c#9#Missing retreat of %1
+resoud.c#10#Dublin in the retreat order on %1
+resoud.c#11#Retreat of %1 colliding (=> void)
+resoud.c#12#Dublin in the adjustments for %1 and %2 : build on same region
+resoud.c#13#Build whereas one or several removals are expected
+resoud.c#14#Removal whereas one or several builds are expected
+resoud.c#15#Build whereas nothing is expected
+resoud.c#16#Removal whereas nothing is expected
+resoud.c#17#Adjustments %1 : another %2 build(s) allowed
+resoud.c#18#Adjustments : builds : %1 : bad number : (%2 unit(s), %3 centre(s), %4 free centre(s) => %5 ajustment(s))
+resoud.c#19#Adjustments : removals : %1 : bad number : (%2 unit(s), %3 centre(s) => %4 ajustment(s))
+resoud.c#20#Unit %1 is supporting a unit to attack which requires its own convoying
+resoud.c#21#Centre %1 has a new owner : %2 -> %3
+resoud.c#22#Centre %1 now has an owner : %2
+resoud.c#23#The game is over, player %1 is declared winner
+resoud.c#24#The game is blocked, all surviving players are declared winner
+resoud.c#25#Country %1 has just dissapeared from the game
+resoud.c#26#Unit %1 is supporting a compatriot unit to attack which does not perform exactly the move (difference of coasts) (=> accepted)
+resoud.c#27#Removal of %1 unit(s) expected, found fewer removals than expected
+resoud.c#28#Removal of %1 unit(s) expected, found more removals than expected
+resoud.c#29#Build of %1 unit(s) expected, found more builds than expected
+resoud.c#30#Build of %1 unit(s) expected, found fewer builds than expected
+resoud.c#31#Dublin in the adjustments for %1 : removal of same unit
+resoud.c#32#Remove duplicated order(s)
+resoud.c#33#Unit %1 is attacking a motionless compatriot unit (misorder very likely)
+resoud.c#44#End of resolution pass %1
+resoud.c#45#Removal of units of country %1
+resoud.c#46#Unit %1 is supporting a unit to attack that belongs to another player whose intentions are unknown until adjudication
+resoud.c#47#Unit %1 is convoying a unit that belongs to another player whose intentions are unknown until adjudication
+resoud.c#48#Unit %1 is supporting a unit to defend itself that belongs to another player whose intentions are unknown until adjudication
+resoud.c#49#Unit %1 requires for its moving the convoy of unit (perhaps not only) %2 that belongs to another player whose intentions are unknown until adjudication
+resoud.c#50#Unit %1 is supporting a unit to attack which did not get the convoy of unit %2 that belongs to another player whose intentions are unknown until adjudication
+resoud.c#51#Unit %1 is convoying a unit which did not get the convoy of unit (perhaps not only) %2 that belongs to another player whose intentions are unknown until adjudication
+resoud.c#52#Same move order on both occurences for unit %1
+resoud.c#53#Same retreat order on both occurences for dislodged unit %1
+resoud.c#54#Same build order on both occurences for %1
+resoud.c#55#Same removal order on both occurences for %1
+solveur.c#1#Options available when calling solveur DIPLO :
+solveur.c#2#-i <fic>	: Initial situation read in <fic>)
+solveur.c#3#-o <fic>	: Orders read in <fic>
+solveur.c#4#-f <fic>	: Ending situation dumped in <fic>
+solveur.c#6#-a <fic>	: Archiving of orders dumped in <fic>
+solveur.c#8#-b <fic>	: Provides the assessment of the game <fic>
+solveur.c#9#-c <rep>	: Sub directory where to find the map <rep>
+solveur.c#10#For the following commands this convention is adopted :
+solveur.c#11#		: <n> will be the one letter code of the country 
+solveur.c#12#-x<n>		: Provides orders for the countries other than <n>
+solveur.c#13#-O<n> <fic>	: Recovers orders of country <n> in <fic>
+solveur.c#14#-p<n> <fic>	: Creates prototypes orders of country <n> in <fic>
+solveur.c#15#-P<n> <fic>	: Creates orders of country <n> in <fic> (most simple ones)
+solveur.c#16#-R		: Avoids disbands should retreat orders be missing
+solveur.c#17#-S		: Stability in centres involves stop of the game
+solveur.c#18#-E		: Calculates distances (standard output)
+solveur.c#19#-C		: Checks the map
+solveur.c#20#-w		: Switches to verbose mode
+solveur.c#21#-v		: Displays program version
+solveur.c#22#Option -C and -E incompatible
+solveur.c#23#Option -E and -C incompatible
+solveur.c#24#Option x
+solveur.c#25#Option P/p
+solveur.c#26#Option O
+solveur.c#27#No country with such initial code 
+solveur.c#29#Initial country
+solveur.c#31#Name of file too big
+solveur.c#32#More than one order file
+solveur.c#33#Too many countries for the prototypes
+solveur.c#34#Name of file 
+solveur.c#35#End commmand line
+solveur.c#39#Version based on DATC
+solveur.c#41#End read of map
+solveur.c#44#End read initial situation 
+solveur.c#45#Option Px or px unknown
+solveur.c#46#This is moves adjudication
+solveur.c#48#End read moves
+solveur.c#49#End move adjudication
+solveur.c#50#This is retreats adjudication
+solveur.c#52#End read summer retreats
+solveur.c#53#End summer retreats adjudication
+solveur.c#54#This is retreats adjudication (then ownership update)
+solveur.c#55#Partial adjudication without %1
+solveur.c#56#End read winter retreats
+solveur.c#57#End winter retreats adjudication
+solveur.c#58#End ownership update
+solveur.c#59#This is adjustment adjudication
+solveur.c#61#End read adjustment 
+solveur.c#62#End ajustements adjudication
+solveur.c#63#Option Ox unknown
+solveur.c#64#Adjudication or orders validation for %1 %2
+solveur.c#65#-s		: Switches to silent mode 
+solveur.c#66#-A <fic>	: Provides active countries name in  <fic>
+solveur.c#67#Adjudication within %1 phase(s)
+solveur.c#69#End removal of eliminated countries
+solveur.c#70#-V <fic>	: Provides the names of alive countries in <fic>
+solveur.c#71#-fr 	: Uses messages en French
+solveur.c#72#-en 	: Uses messages en English
