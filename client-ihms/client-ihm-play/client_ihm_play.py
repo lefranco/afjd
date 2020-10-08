@@ -73,6 +73,7 @@ GAME_IDENTIFIER = -1
 GAME_NAME = ''
 ROLE_IDENTIFIER = -1
 
+
 def load_variant_data() -> None:
     """ load standard data from server """
 
@@ -378,18 +379,19 @@ class Application(tkinter.Frame):
         frame_public = tkinter.LabelFrame(paned_middle_east, text="Déclarations")
 
         # Create text widget
-        gazette = tkinter.scrolledtext.ScrolledText(frame_public, height=10, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
-        gazette.configure(state=tkinter.DISABLED)
-        gazette.grid(row=1, column=1, columnspan=2, sticky="ew")
+        self.gazette = tkinter.scrolledtext.ScrolledText(frame_public, height=10, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
+        self.gazette.configure(state=tkinter.DISABLED)
+        self.gazette.grid(row=1, column=1, columnspan=2, sticky="ew")
+        self.gazette.tag_configure('color-Blue', foreground='Blue')
 
-        content_express = tkinter.Text(frame_public, height=2)
-        content_express.grid(row=2, column=1)
+        self.content_express = tkinter.Text(frame_public, height=5)
+        self.content_express.grid(row=2, column=1)
 
         # Button to add stuff
-        button_express = tkinter.Button(frame_public, text="Publier")
-        button_express.config(state=tkinter.DISABLED)
-        button_express.grid(row=2, column=2)
-        button_express.bind("<Button-1>", self.callback_express)
+        self.button_express = tkinter.Button(frame_public, text="Publier")
+        self.button_express.config(state=tkinter.DISABLED)
+        self.button_express.grid(row=2, column=2)
+        self.button_express.bind("<Button-1>", self.callback_express)
         paned_middle_east.add(frame_public)  # type: ignore
 
         # Game master =======================
@@ -448,6 +450,9 @@ class Application(tkinter.Frame):
             if ROLE_IDENTIFIER != -1:
                 my_role = data.ROLE_DATA[str(ROLE_IDENTIFIER)]['name']
 
+        self.button_send = dict()  # pylint: disable=attribute-defined-outside-init
+        self.content_send = dict()  # pylint: disable=attribute-defined-outside-init
+
         for role_name in role_names:
 
             if role_name and role_name == my_role:
@@ -460,15 +465,17 @@ class Application(tkinter.Frame):
             mail.configure(state=tkinter.DISABLED)
             mail.grid(row=1, column=1, columnspan=2, sticky="ew")
 
-            content_send = tkinter.Text(frame_tab, height=2)
-            content_send.grid(row=2, column=1)
+            self.content_send[role_name] = tkinter.Text(frame_tab, height=5)
+            self.content_send[role_name].grid(row=2, column=1)
 
-            button_send = tkinter.Button(frame_tab, text="Envoyer")
-            button_send.config(state=tkinter.DISABLED)
-            button_send.grid(row=2, column=2)
-            button_send.bind("<Button-1>", self.callback_send)
+            self.button_send[role_name] = tkinter.Button(frame_tab, text="Envoyer")
+            self.button_send[role_name].config(state=tkinter.DISABLED)
+            self.button_send[role_name].grid(row=2, column=2)
+            self.button_send[role_name].bind("<Button-1>", self.callback_send)
 
             self.notebook_tab.add(frame_tab, text=role_name)  # type: ignore
+
+        self.invert_button_send = {v: k for k, v in self.button_send.items()}  # pylint: disable=attribute-defined-outside-init
 
     def set_season(self, advancement: int) -> None:
         """ store season """
@@ -501,9 +508,14 @@ class Application(tkinter.Frame):
         ROLE_IDENTIFIER = -1
         self.label_role.config(text="")
 
+        # make some buttons possible
         self.button_submit.config(state=tkinter.DISABLED)
         self.button_adjudicate.config(state=tkinter.DISABLED)
         self.button_rectify.config(state=tkinter.DISABLED)
+        self.button_reinit.config(state=tkinter.DISABLED)
+        for button in self.button_send.values():
+            button.config(state=tkinter.DISABLED)
+        self.button_express.config(state=tkinter.DISABLED)
 
         if GAME_IDENTIFIER == -1:
             return
@@ -601,8 +613,12 @@ class Application(tkinter.Frame):
         # make it visible
         self.canvas.refresh()
 
+        # make some buttons possible
         self.button_submit.config(state=tkinter.ACTIVE)
         self.button_reinit.config(state=tkinter.ACTIVE)
+        for button in self.button_send.values():
+            button.config(state=tkinter.ACTIVE)
+        self.button_express.config(state=tkinter.ACTIVE)
 
         if ROLE_IDENTIFIER == 0:
             # set buttons for gm
@@ -771,6 +787,34 @@ class Application(tkinter.Frame):
         for region_num in json_dict['forbiddens']:
             forbidden = forbiddens.Forbidden(self.canvas, region_num)
             self.canvas.bag_forbiddens.add_forbidden(forbidden)
+
+        # get this game - declarations (requires variant)
+        host = data.SERVER_CONFIG['GAME']['HOST']
+        port = data.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game_declarations/{GAME_IDENTIFIER}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            tkinter.messagebox.showerror("KO", f"Echec à la récupration des déclarations : {message}")
+            return
+
+        # update on screen
+        json_dict = req_result.json()
+        declarations_list = json_dict['declarations_list']
+
+        self.gazette.configure(state=tkinter.NORMAL)
+        self.gazette.delete('1.0', tkinter.END)
+
+        for _, date_declaration, author_declaration, content_declaration in declarations_list:
+            datetime_declaration = datetime.datetime.fromtimestamp(date_declaration)
+            date_desc = datetime_declaration.strftime('%Y-%m-%d %H:%M:%S')
+            role_desc = data.ROLE_DATA[str(author_declaration)]['name']
+            self.gazette.insert(tkinter.END, f"Le {date_desc} par {role_desc}:\n")
+            self.gazette.insert(tkinter.END, f"{content_declaration}\n", 'color-Blue')
+
+        self.gazette.see(tkinter.END)
+        self.gazette.configure(state=tkinter.DISABLED)
 
         # try to find out role from login and game
         self.determine_role()
@@ -978,6 +1022,12 @@ class Application(tkinter.Frame):
         if str(event.widget['state']) == 'disabled':
             return
 
+        dest = self.invert_button_send[event.widget]
+        print(dest)
+
+        said = self.content_send[dest].get(1.0, tkinter.END)
+        print(f"{said=}")
+
         # TODO : implement send message
         print("send message not implemented")
 
@@ -988,8 +1038,26 @@ class Application(tkinter.Frame):
         if str(event.widget['state']) == 'disabled':
             return
 
-        # TODO : implement express declaration
-        print("express declaration not implemented")
+        content = self.content_express.get(1.0, tkinter.END)
+
+        json_dict = {
+            'role_id': ROLE_IDENTIFIER,
+            'pseudo': self.login_var.get(),  # type: ignore
+            'content': content
+        }
+
+        # present the authentication token  (we are submitting orders)
+        host = data.SERVER_CONFIG['GAME']['HOST']
+        port = data.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game_declarations/{GAME_IDENTIFIER}"
+        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+        if req_result.status_code != 201:
+            print(f"ERROR from server  : {req_result.text}")
+            tkinter.messagebox.showerror("KO", f"Echec à l'expression : {message}")
+            return
+
+        tkinter.messagebox.showinfo("OK", f"Déclaration exprimée : {message}")
 
     def callback_switch_edit_centers(self, event: typing.Any) -> None:
         """ callback button pushed """
