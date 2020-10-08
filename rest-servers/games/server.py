@@ -28,6 +28,7 @@ import orders
 import forbiddens
 import reports
 import games
+import declarations
 import variants
 import database
 import lowdata
@@ -79,13 +80,13 @@ ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER.add_argument('role_id', type=int, required=True)
-SUBMISSION_PARSER.add_argument('pseudo', type=str, required=False)
+SUBMISSION_PARSER.add_argument('pseudo', type=str, required=True)
 SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
 SUBMISSION_PARSER.add_argument('names', type=str, required=True)
 
-RETRIEVE_PARSER = flask_restful.reqparse.RequestParser()
-RETRIEVE_PARSER.add_argument('role_id', type=int, required=True)
-RETRIEVE_PARSER.add_argument('pseudo', type=str, required=False)
+RETRIEVE_ORDERS_PARSER = flask_restful.reqparse.RequestParser()
+RETRIEVE_ORDERS_PARSER.add_argument('role_id', type=int, required=True)
+RETRIEVE_ORDERS_PARSER.add_argument('pseudo', type=str, required=False)
 
 ADJUDICATION_PARSER = flask_restful.reqparse.RequestParser()
 ADJUDICATION_PARSER.add_argument('pseudo', type=str, required=False)
@@ -96,6 +97,14 @@ RECTIFICATION_PARSER.add_argument('pseudo', type=str, required=False)
 RECTIFICATION_PARSER.add_argument('center_ownerships', type=str, required=True)
 RECTIFICATION_PARSER.add_argument('units', type=str, required=True)
 RECTIFICATION_PARSER.add_argument('forbiddens', type=str, required=True)
+
+DECLARATION_PARSER = flask_restful.reqparse.RequestParser()
+DECLARATION_PARSER.add_argument('role_id', type=int, required=True)
+DECLARATION_PARSER.add_argument('pseudo', type=str, required=False)
+DECLARATION_PARSER.add_argument('content', type=str, required=True)
+
+RETRIEVE_DECLARATIONS_PARSER = flask_restful.reqparse.RequestParser()
+RETRIEVE_DECLARATIONS_PARSER.add_argument('limit', type=int, required=False)
 
 
 @API.resource('/variants/<name>')
@@ -605,8 +614,8 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             ownership_dict[str(center_num)] = role_num
 
         # get units
-        unit_dict = collections.defaultdict(list)
-        dislodged_unit_dict = collections.defaultdict(list)
+        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         game_units = units.Unit.list_by_game_id(game_id)
         for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
             if fake:
@@ -734,9 +743,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # situation: get units
         game_units = units.Unit.list_by_game_id(game_id)
-        unit_dict = collections.defaultdict(list)
-        fake_unit_dict = collections.defaultdict(list)
-        dislodged_unit_dict = collections.defaultdict(list)
+        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
             if fake:
                 fake_unit_dict[str(role_num)].append([type_num, zone_num])
@@ -776,7 +785,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             'situation': situation_dict_json,
             'orders': orders_list_json,
             'names': names,
-            'role' : role_id,
+            'role': role_id,
         }
 
         # post to solver
@@ -800,9 +809,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # get list
         if int(role_id) != 0:
-            previous_orders =  orders.Order.list_by_game_id_role_num(int(game_id), role_id)
+            previous_orders = orders.Order.list_by_game_id_role_num(int(game_id), role_id)
         else:
-            previous_orders =  orders.Order.list_by_game_id(int(game_id))
+            previous_orders = orders.Order.list_by_game_id(int(game_id))
 
         # purge
         for (_, role_num, _, zone_num, _, _) in previous_orders:
@@ -826,7 +835,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """ called to retrieve orders """
 
-        args = RETRIEVE_PARSER.parse_args()
+        args = RETRIEVE_ORDERS_PARSER.parse_args()
         role_id = args['role_id']
         pseudo = args['pseudo']
 
@@ -957,9 +966,9 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # situation: get units
         game_units = units.Unit.list_by_game_id(game_id)
-        unit_dict = collections.defaultdict(list)
-        fake_unit_dict = collections.defaultdict(list)
-        dislodged_unit_dict = collections.defaultdict(list)
+        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
             if fake:
                 fake_unit_dict[str(role_num)].append([type_num, zone_num])
@@ -1010,7 +1019,6 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to adjudicate {message} : {adjudication_report}")
-
 
         # extract new position
         situation_result = req_result.json()['situation_result']
@@ -1085,6 +1093,89 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         data = {'msg': f"Ok adjudication performed and game updated : {adjudication_report}"}
         return data, 201
+
+
+@API.resource('/game_declarations/<game_id>')
+class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
+    """  lets you POST to add new game declarations """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """ called to insert declaration """
+
+        args = DECLARATION_PARSER.parse_args()
+        role_id = args['role_id']
+        pseudo = args['pseudo']
+        content = args['content']
+
+        mylogger.LOGGER.info("C of CRUD - post - creating new declaration %s/%s", game_id, role_id)
+
+        if pseudo == '':
+            flask_restful.abort(404, msg="Need a pseudo to submit orders in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify_user"
+        jwt_token = flask.request.headers.get('access_token')
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to submit orders (all the same)
+
+        # who is player for role ?
+        game = games.Game.find_by_identifier(game_id)
+        assert game is not None
+        game_master_id = game.get_role(0)
+        player_id = game.get_role(role_id)
+
+        # can be player of game master
+        if user_id not in [game_master_id, player_id]:
+            flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the player who is in charge")
+
+        # create declaration here
+        identifier = declarations.Declaration.free_identifier()
+        time_stamp = int(time.time())
+        declaration = declarations.Declaration(identifier, game_id, time_stamp, role_id, content)
+        declaration.update_database()
+
+        data = {'msg': f"Ok declaration inserted : {content}"}
+        return data, 201
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """ called to retrieve orders """
+
+        # not used for the moment
+        args = RETRIEVE_DECLARATIONS_PARSER.parse_args()
+        limit = args['limit']
+
+        mylogger.LOGGER.info("R of CRUD - get - getting back declarations %s", game_id)
+
+        # gather declarations
+        declarations_list = declarations.Declaration.list_by_game_id(game_id)
+        declarations_list_json = list()
+        num = 1
+        for _, _, declaration in sorted(declarations_list, key=lambda t: t[2].time_stamp, reverse=True):
+            declarations_list_json.append(declaration.export())
+            num += 1
+            if num == limit:
+                break
+
+        data = {'declarations_list': declarations_list_json}
+        return data, 200
 
 
 def main() -> None:
