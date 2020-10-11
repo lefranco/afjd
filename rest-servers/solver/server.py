@@ -33,14 +33,17 @@ SOLVER_PARSER.add_argument('names', type=str, required=True)
 
 @API.resource('/solve')
 class SolveRessource(flask_restful.Resource):  # type: ignore
-    """ perform an adjudication """
+    """ SolveRessource """
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ creater """
+        """
+        Performs an adjudication
+        EXPOSED (since there can be simulation)
+        """
+
+        mylogger.LOGGER.info("/solve - POST - solver called")
 
         args = SOLVER_PARSER.parse_args()
-
-        mylogger.LOGGER.info("C of CRUD - post - solving")
 
         variant_json = args['variant']
         variant = json.loads(variant_json)
@@ -63,10 +66,12 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
         returncode, stderr, stdout, situation_result, orders_result = solver.solve(variant, advancement, situation, orders, role, names)
 
         if returncode != 0:
+
             data_error = {
                 'stderr': stderr,
                 'stdout': stdout,
             }
+
             return data_error, 404
 
         data = {
@@ -75,6 +80,7 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
             'situation_result': situation_result,
             'orders_result': orders_result,
         }
+
         return data, 201
 
 
