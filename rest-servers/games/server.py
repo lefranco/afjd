@@ -109,12 +109,15 @@ RETRIEVE_DECLARATIONS_PARSER.add_argument('limit', type=int, required=False)
 
 @API.resource('/variants/<name>')
 class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
-    """ from name get identifier """
+    """ VariantIdentifierRessource """
 
     def get(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ getter """
+        """
+        Gets json file in database about a variant
+        EXPOSED
+        """
 
-        mylogger.LOGGER.info("R of CRUD - retrieving variant json file %s", name)
+        mylogger.LOGGER.info("/variants/<name> - GET - retrieving variant json file %s", name)
 
         if not name.isalnum():
             flask_restful.abort(400, msg=f"Variant {name} is incorrect as a name")
@@ -130,12 +133,15 @@ class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/game_identifiers/<name>')
 class GameIdentifierRessource(flask_restful.Resource):  # type: ignore
-    """ from name get identifier """
+    """ GameIdentifierRessource """
 
     def get(self, name: str) -> typing.Tuple[int, int]:  # pylint: disable=no-self-use
-        """ getter """
+        """
+        From name get identifier
+        EXPOSED
+        """
 
-        mylogger.LOGGER.info("R of CRUD - retrieving one game (just identifier) %s", name)
+        mylogger.LOGGER.info("/game_identifiers/<name> - GET - retrieving identifier of game name=%s", name)
 
         # find data
         game = games.Game.find_by_name(name)
@@ -148,12 +154,15 @@ class GameIdentifierRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/games/<name>')
 class GameRessource(flask_restful.Resource):  # type: ignore
-    """ shows a single game item and lets you delete a game item """
+    """ GameRessource """
 
     def get(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ getter """
+        """
+        Get all infoamtion about game
+        EXPOSED
+        """
 
-        mylogger.LOGGER.info("R of CRUD - retrieving one game %s", name)
+        mylogger.LOGGER.info("/games/<name> - GET- retrieving data of game name=%s", name)
 
         # find data
         game = games.Game.find_by_name(name)
@@ -166,9 +175,12 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
     def put(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ updater """
+        """
+        Updates information about a game
+        EXPOSED
+        """
 
-        mylogger.LOGGER.info("U of CRUD - put - updating a game %s", name)
+        mylogger.LOGGER.info("/games/<name> - PUT - updating game name=%s", name)
 
         args = GAME_PARSER.parse_args()
         pseudo = args['pseudo']
@@ -243,9 +255,12 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
     def delete(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ deleter """
+        """
+        Deletes a game
+        EXPOSED
+        """
 
-        mylogger.LOGGER.info("D of CRUD - delete  removing one game %s", name)
+        mylogger.LOGGER.info("/games/<name> - DELETE - deleting game name=%s", name)
 
         args = GAME_DELETE_PARSER.parse_args()
         pseudo = args['pseudo']
@@ -297,12 +312,15 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/games')
 class GameListRessource(flask_restful.Resource):  # type: ignore
-    """ shows a list of all games, and lets you POST to add new games """
+    """ GameListRessource """
 
     def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ lister """
+        """
+        Get list of all games (dictionary identifier -> name)
+        EXPOSED
+        """
 
-        mylogger.LOGGER.warning("get getting all games only name")
+        mylogger.LOGGER.warning("/games - GET - get getting all games names")
 
         games_list = games.Game.inventory()
         data = {str(g.identifier): g.name for g in games_list}
@@ -310,13 +328,19 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ creater """
+        """
+        Creates a new game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/games - POST - creating new game")
 
         args = GAME_PARSER.parse_args()
         name = args['name']
-        pseudo = args['pseudo']
 
-        mylogger.LOGGER.info("C of CRUD - post - creating new game %s", name)
+        mylogger.LOGGER.info("game name=%s", name)
+
+        pseudo = args['pseudo']
 
         game = games.Game.find_by_name(name)
         if game is not None:
@@ -365,10 +389,15 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/allocations')
 class AllocationListRessource(flask_restful.Resource):  # type: ignore
-    """ shows a list of all allocations, and lets you POST to add new allocations """
+    """ AllocationListRessource """
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ creater """
+        """
+        Creates an allocation (relation player-game)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/allocations - POST - creating new allocation")
 
         args = ALLOCATION_PARSER.parse_args()
         game_id = args['game_id']
@@ -376,7 +405,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         role_id = args['role_id']
         pseudo = args['pseudo']
 
-        mylogger.LOGGER.info("C of CRUD - post - creating new allocation %s/%s/%s", game_id, player_id, role_id)
+        mylogger.LOGGER.info("game_id=%s player_id=%s role_id=%s", game_id, player_id, role_id)
 
         if pseudo == '':
             flask_restful.abort(404, msg="Need a pseudo to join/put in game")
@@ -420,7 +449,12 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
     def delete(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ deleter """
+        """
+        Deletes an allocation (relation player-game)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/allocations - DELETE - deleting allocation")
 
         args = ALLOCATION_PARSER.parse_args()
         game_id = args['game_id']
@@ -428,7 +462,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         role_id = args['role_id']
         pseudo = args['pseudo']
 
-        mylogger.LOGGER.info("D of CRUD - delete - deleting allocation %s/%s", game_id, player_id)
+        mylogger.LOGGER.info("game_id=%s player_id=%s")
 
         if pseudo == '':
             flask_restful.abort(404, msg="Need a pseudo to quit/remove from game")
@@ -474,12 +508,15 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/allocations_games/<game_id>')
 class AllocationGameRessource(flask_restful.Resource):  # type: ignore
-    """ shows a list of all allocations, and lets you POST to add new allocations """
+    """ AllocationGameRessource """
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ lister """
+        """
+        Gets all allocations for the game
+        EXPOSED
+        """
 
-        mylogger.LOGGER.warning("get getting allocations for game %s", game_id)
+        mylogger.LOGGER.warning("/allocations_games/<game_id> - GET - get getting allocations for game id=%s", game_id)
 
         allocations_list = allocations.Allocation.list_by_game_id(game_id)
 
@@ -490,12 +527,16 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/allocations_players/<player_id>')
 class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
-    """ shows a list of all allocations, and lets you POST to add new allocations """
+    """ AllocationPlayerRessource """
 
     def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ lister """
+        """
+        Gets all allocations for the player
+        Note : here because data is in this database
+        EXPOSED
+        """
 
-        mylogger.LOGGER.warning("get getting allocations for player %s", player_id)
+        mylogger.LOGGER.warning("/allocations_players/<player_id> - GET - get getting allocations for player player_id=%s", player_id)
 
         allocations_list = allocations.Allocation.list_by_player_id(player_id)
 
@@ -506,10 +547,15 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/game_positions/<game_id>')
 class GamePositionRessource(flask_restful.Resource):  # type: ignore
-    """ shows a list of all allocations, and lets you POST to add new game position """
+    """ GamePositionRessource """
 
     def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ called to rectify position """
+        """
+        Changes position of a game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game_positions/<game_id> - POST - rectifying position game id=%s", game_id)
 
         args = RECTIFICATION_PARSER.parse_args()
         pseudo = args['pseudo']
@@ -520,8 +566,6 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         the_ownerships = json.loads(ownerships_submitted)
         the_units = json.loads(units_submitted)
         the_forbiddens = json.loads(forbiddens_submitted)
-
-        mylogger.LOGGER.info("U of CRUD - update - rectifying position %s", game_id)
 
         if pseudo == '':
             flask_restful.abort(404, msg="Need a pseudo to rectify position in game")
@@ -603,9 +647,12 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ lister """
+        """
+        Gets position of the game
+        EXPOSED
+        """
 
-        mylogger.LOGGER.warning("get getting position for game %s", game_id)
+        mylogger.LOGGER.warning("/game_positions/<game_id> - GET - getting position for game id=%s", game_id)
 
         # get ownerships
         ownership_dict = dict()
@@ -642,12 +689,15 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/game_reports/<game_id>')
 class GameReportRessource(flask_restful.Resource):  # type: ignore
-    """ get a game report """
+    """ GameReportRessource """
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ called to retrieve orders """
+        """
+        Gets the report of adjudication for the game
+        EXPOSED
+        """
 
-        mylogger.LOGGER.info("R of CRUD - get - getting game report  %s", game_id)
+        mylogger.LOGGER.info("/game_reports/<game_id> - GET - getting report game id=%s", game_id)
 
         report = reports.Report.find_by_identifier(game_id)
         assert report is not None
@@ -660,18 +710,24 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/game_orders/<game_id>')
 class GameOrderRessource(flask_restful.Resource):  # type: ignore
-    """ shows a list of all allocations, and lets you POST to add new game orders """
+    """ GameOrderRessource """
 
     def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ called to submit orders """
+        """
+        Submit orders
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game_orders/<game_id> - POST - submitting orders game id=%s", game_id)
 
         args = SUBMISSION_PARSER.parse_args()
         role_id = args['role_id']
+
+        mylogger.LOGGER.info("role_id=%s", role_id)
+
         pseudo = args['pseudo']
         names = args['names']
         orders_submitted = args['orders']
-
-        mylogger.LOGGER.info("C of CRUD - post - creating new orders %s/%s", game_id, role_id)
 
         if pseudo == '':
             flask_restful.abort(404, msg="Need a pseudo to submit orders in game")
@@ -833,14 +889,19 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ called to retrieve orders """
+        """
+        Gets orders
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game_orders/<game_id> - GET - getting back orders game id=%s", game_id)
 
         args = RETRIEVE_ORDERS_PARSER.parse_args()
         role_id = args['role_id']
+
+        mylogger.LOGGER.info("role_id=%s", role_id)
+
         pseudo = args['pseudo']
-
-        mylogger.LOGGER.info("R of CRUD - get - getting back orders %s/%s", game_id, role_id)
-
         if pseudo == '':
             flask_restful.abort(404, msg="Need a pseudo to retrieve orders in game")
 
@@ -900,16 +961,19 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/game_adjudications/<game_id>')
 class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
-    """ shows a list of all allocations, and lets you POST to add new game orders """
+    """ GameAdjudicationRessource """
 
     def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ creater """
+        """
+        Performs adjudication of game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game_adjudications/<game_id> - POST - adjudicating game id=%s", game_id)
 
         args = ADJUDICATION_PARSER.parse_args()
         pseudo = args['pseudo']
         names = args['names']
-
-        mylogger.LOGGER.info("C of CRUD - post - adjudicating %s", game_id)
 
         if pseudo == '':
             flask_restful.abort(404, msg="Need a pseudo to adjudicate in game")
@@ -1097,17 +1161,23 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/game_declarations/<game_id>')
 class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
-    """  lets you POST to add new game declarations """
+    """  GameDeclarationRessource """
 
     def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ called to insert declaration """
+        """
+        Insert declaration in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game_declarations/<game_id> - POST - creating new declaration game id=%s", game_id)
 
         args = DECLARATION_PARSER.parse_args()
         role_id = args['role_id']
+
+        mylogger.LOGGER.info("role_id=%s", role_id)
+
         pseudo = args['pseudo']
         content = args['content']
-
-        mylogger.LOGGER.info("C of CRUD - post - creating new declaration %s/%s", game_id, role_id)
 
         if pseudo == '':
             flask_restful.abort(404, msg="Need a pseudo to submit orders in game")
@@ -1156,13 +1226,16 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ called to retrieve orders """
+        """
+        Gets all or some declarations of game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game_declarations/<game_id> - GET - getting back declarations game id=%s", game_id)
 
         # not used for the moment
         args = RETRIEVE_DECLARATIONS_PARSER.parse_args()
         limit = args['limit']
-
-        mylogger.LOGGER.info("R of CRUD - get - getting back declarations %s", game_id)
 
         # gather declarations
         declarations_list = declarations.Declaration.list_by_game_id(game_id)

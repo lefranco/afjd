@@ -38,9 +38,12 @@ JWT = flask_jwt_extended.JWTManager(APP)
 
 @APP.route('/add_user', methods=['POST'])
 def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-    """ add an account """
+    """
+    add an user account
+    PROTECTED (called by players block)
+    """
 
-    mylogger.LOGGER.info("C of CRUD - post  adding one user")
+    mylogger.LOGGER.info("/add_user - POST - adding one user")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
@@ -66,9 +69,12 @@ def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 @APP.route('/remove_user', methods=['POST'])
 @flask_jwt_extended.jwt_required  # type: ignore
 def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-    """ remove an account """
+    """
+    remove an user account
+    PROTECTED (called by players block)
+    """
 
-    mylogger.LOGGER.info("D of CRUD - delete  removing one user")
+    mylogger.LOGGER.info("/remove_user - POST - removing one user")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
@@ -94,9 +100,12 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 @APP.route('/change_user', methods=['POST'])
 @flask_jwt_extended.jwt_required  # type: ignore
 def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-    """ change  an account password """
+    """
+    change password of an account
+    PROTECTED (called by players block)
+    """
 
-    mylogger.LOGGER.info("U of CRUD - update  updating one user")
+    mylogger.LOGGER.info("/change_user - POST - updating one user (change password)")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
@@ -126,9 +135,14 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 @APP.route('/login_user', methods=['POST'])
 def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-    """ Provide a method to create access tokens. The create_access_token()
-        function is used to actually generate the token, and you can return
-        it to the caller however you choose. """
+    """
+    Provide a method to create access tokens. The create_access_token()
+    function is used to actually generate the token, and you can return
+    it to the caller however you choose.
+    EXPOSED : called by all ihms that have a login/password input
+    """
+
+    mylogger.LOGGER.info("/login_user - POST - login in a user")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
@@ -156,8 +170,13 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 @APP.route('/verify_user', methods=['GET'])
 @flask_jwt_extended.jwt_required  # type: ignore
 def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-    """ Protect a view with jwt_required, which requires a valid access token
-        in the request to access. """
+    """
+    Protect a view with jwt_required, which requires a valid access token
+    in the request to access.
+    PROTECTED : not called directly, called by game and player blocks
+    """
+
+    mylogger.LOGGER.info("/verify_user - GET - verifying a user")
 
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
@@ -170,9 +189,12 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 @APP.route('/add_email', methods=['POST'])
 def add_email() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-    """ add an email """
+    """
+    add an email for a player
+    PROTECTED : called only by player block (account creation/email change)
+    """
 
-    mylogger.LOGGER.info("C/U of CRUD - post  adding/updating one email")
+    mylogger.LOGGER.info("/add_email - POST - adding/updating one email")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
@@ -181,9 +203,13 @@ def add_email() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if not email_value:
         return flask.jsonify({"msg": "Missing email_value parameter"}), 400
 
-    code = flask.request.json.get('code', None)
-    if not code:
+    code_str = flask.request.json.get('code', None)
+    if not code_str:
         return flask.jsonify({"msg": "Missing code parameter"}), 400
+    try:
+        code = int(code_str)
+    except:  # noqa: E722 pylint: disable=bare-except
+        return flask.jsonify({"msg": "Code is not integer"}), 400
 
     email = emails.Email(email_value, code)
     email.update_database()
@@ -192,7 +218,12 @@ def add_email() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 @APP.route('/verify_email', methods=['GET'])
 def verify_email() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-    """ Check if code is for email. """
+    """
+    Check if code is correct for email.
+    PROTECTED : called by block players
+    """
+
+    mylogger.LOGGER.info("/verify_email - GET - checking code for email")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400

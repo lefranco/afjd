@@ -49,12 +49,15 @@ PREVENT_MAIL_CHECKING = True
 
 @API.resource('/player_identifiers/<pseudo>')
 class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
-    """ from name get identifier """
+    """ PlayerIdentifierRessource """
 
     def get(self, pseudo: str) -> typing.Tuple[int, int]:  # pylint: disable=no-self-use
-        """ getter """
+        """
+        From name get identifier
+        EXPOSED
+        """
 
-        mylogger.LOGGER.info("R of CRUD - retrieving one player (just identifier) %s", pseudo)
+        mylogger.LOGGER.info("/player_identifiers/<pseudo> - GET - retrieving identifier from  player pseudo=%s", pseudo)
 
         # find data
         player = players.Player.find_by_pseudo(pseudo)
@@ -67,12 +70,15 @@ class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/players/<pseudo>')
 class PlayerRessource(flask_restful.Resource):  # type: ignore
-    """ shows a single player item and lets you delete a player item """
+    """ PlayerRessource """
 
     def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ getter """
+        """
+        Gets all info about a player
+        EXPOSED
+        """
 
-        mylogger.LOGGER.info("R of CRUD - retrieving one player %s", pseudo)
+        mylogger.LOGGER.info("/players/<pseudo> - GET - retrieving one player pseudo=%s", pseudo)
 
         # IMPORTANT : check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -95,11 +101,14 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
     def put(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ updater """
+        """
+        Updates all info about a player
+        EXPOSED
+        """
 
         args = PLAYER_PARSER.parse_args()
 
-        mylogger.LOGGER.info("U of CRUD - put - updating a player %s", pseudo)
+        mylogger.LOGGER.info("/players/<pseudo> - PUT - updating a player pseudo=%s", pseudo)
 
         # update player on users server if there is a password
         if args['password']:
@@ -140,6 +149,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
         email_after = player.email
         if email_after != email_before:
+
             player.email_confirmed = False
             code = random.randint(1000, 9999)
 
@@ -160,9 +170,12 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
     def delete(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ deleter """
+        """
+        Deletes a player
+        EXPOSED
+        """
 
-        mylogger.LOGGER.info("D of CRUD - delete  removing one player %s", pseudo)
+        mylogger.LOGGER.info("/players/<pseudo> - DELETE - removing one player pseudo=%s", pseudo)
 
         player = players.Player.find_by_pseudo(pseudo)
         if player is None:
@@ -205,12 +218,15 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/players')
 class PlayerListRessource(flask_restful.Resource):  # type: ignore
-    """ shows a list of all players, and lets you POST to add new players """
+    """ PlayerListRessource """
 
     def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ lister """
+        """
+        Provides list of all pseudo (all players)
+        EXPOSED
+        """
 
-        mylogger.LOGGER.warning("get getting all players only pseudo (rest is confidential)")
+        mylogger.LOGGER.warning("/players - GET - get getting all players only pseudo (rest is confidential)")
 
         players_list = players.Player.inventory()
         data = {str(p.identifier): p.pseudo for p in players_list}
@@ -218,12 +234,17 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ creater """
+        """
+        Creates a new player
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/players - POST - creating new player")
 
         args = PLAYER_PARSER.parse_args()
         pseudo = args['pseudo']
 
-        mylogger.LOGGER.info("C of CRUD - post - creating new player %s", pseudo)
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         player = players.Player.find_by_pseudo(pseudo)
         if player is not None:
@@ -267,13 +288,20 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/emails')
 class EmailRessource(flask_restful.Resource):  # type: ignore
-    """ checking an email """
+    """ EmailRessource """
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """ creater """
+        """
+        Checks a couple pseudo/code for email in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/emails - POST - checking pseudo/code")
 
         args = EMAIL_PARSER.parse_args()
         pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         player = players.Player.find_by_pseudo(pseudo)
         if player is None:
