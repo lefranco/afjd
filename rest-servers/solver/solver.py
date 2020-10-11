@@ -308,8 +308,8 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     type_names = ["A", "F"]
 
     ownership_dict: typing.Dict[str, typing.Any] = dict()
-    unit_dict = collections.defaultdict(list)
-    dislodged_unit_dict = collections.defaultdict(list)
+    unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+    dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
     forbidden_list: typing.List[int] = list()
 
     for line in situation_result_content:
