@@ -600,6 +600,43 @@ class Application(tkinter.Frame):
             tkinter.messagebox.showerror("KO", f"Echec à l'enregistrement de la visite : {message}")
             return
 
+        # get this game - declarations (requires variant)
+
+        # get from server
+        host = data.SERVER_CONFIG['GAME']['HOST']
+        port = data.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game_declarations/{GAME_IDENTIFIER}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            tkinter.messagebox.showerror("KO", f"Echec à la récupération des déclarations : {message}")
+            return
+
+        # update on screen
+        json_dict = req_result.json()
+        declarations_list = json_dict['declarations_list']
+
+        self.gazette.configure(state=tkinter.NORMAL)
+        self.gazette.delete('1.0', tkinter.END)
+
+        number_new_declarations = 0
+        for _, date_declaration, author_declaration, content_declaration in declarations_list:
+            datetime_declaration = datetime.datetime.fromtimestamp(date_declaration)
+            time_stamp_declaration = time.mktime(datetime_declaration.timetuple())
+
+            if author_declaration != ROLE_IDENTIFIER:
+                if time_stamp_declaration > my_last_visit:
+                    number_new_declarations += 1
+
+            date_desc = datetime_declaration.strftime('%Y-%m-%d %H:%M:%S')
+            role_desc = data.ROLE_DATA[str(author_declaration)]['name']
+            self.gazette.insert(tkinter.END, f"Le {date_desc} par {role_desc}:\n")
+            self.gazette.insert(tkinter.END, f"{content_declaration}\n", 'blue')
+
+        self.gazette.see("1.0")
+        self.gazette.configure(state=tkinter.DISABLED)
+
         # make widgets for negotations (dynamic from role)
         self.set_negotiation_widget()
 
@@ -657,7 +694,7 @@ class Application(tkinter.Frame):
                 self.messages_with[tab_role_name].insert(tkinter.END, f"{content_message}\n", 'blue')
 
         for tab_role_name in self.messages_with:
-            self.messages_with[tab_role_name].see(tkinter.END)
+            self.messages_with[tab_role_name].see("1.0")
             self.messages_with[tab_role_name].configure(state=tkinter.DISABLED)
 
         # get orders
@@ -728,8 +765,11 @@ class Application(tkinter.Frame):
             self.button_adjudicate.config(state=tkinter.DISABLED)
             self.button_rectify.config(state=tkinter.DISABLED)
 
+        if number_new_declarations:
+            tkinter.messagebox.showinfo("Attention", f"Il y a {number_new_declarations} nouvelle(s) declarations(s)")
+
         if number_new_messages:
-            tkinter.messagebox.showinfo("Attention", f"Vous avez {number_new_messages} nouveau(x) message(s) diplomatique(s) ")
+            tkinter.messagebox.showinfo("Attention", f"Vous avez {number_new_messages} nouveau(x) message(s) diplomatique(s)")
 
     def callback_load_games_from_server(self, event: typing.Any) -> None:
         """ Reloads games from server to here """
@@ -889,36 +929,6 @@ class Application(tkinter.Frame):
         for region_num in json_dict['forbiddens']:
             forbidden = forbiddens.Forbidden(self.canvas, region_num)
             self.canvas.bag_forbiddens.add_forbidden(forbidden)
-
-        # get this game - declarations (requires variant)
-
-        # get from server
-        host = data.SERVER_CONFIG['GAME']['HOST']
-        port = data.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game_declarations/{GAME_IDENTIFIER}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            tkinter.messagebox.showerror("KO", f"Echec à la récupération des déclarations : {message}")
-            return
-
-        # update on screen
-        json_dict = req_result.json()
-        declarations_list = json_dict['declarations_list']
-
-        self.gazette.configure(state=tkinter.NORMAL)
-        self.gazette.delete('1.0', tkinter.END)
-
-        for _, date_declaration, author_declaration, content_declaration in declarations_list:
-            datetime_declaration = datetime.datetime.fromtimestamp(date_declaration)
-            date_desc = datetime_declaration.strftime('%Y-%m-%d %H:%M:%S')
-            role_desc = data.ROLE_DATA[str(author_declaration)]['name']
-            self.gazette.insert(tkinter.END, f"Le {date_desc} par {role_desc}:\n")
-            self.gazette.insert(tkinter.END, f"{content_declaration}\n", 'blue')
-
-        self.gazette.see(tkinter.END)
-        self.gazette.configure(state=tkinter.DISABLED)
 
         # try to find out role from login and game
         self.determine_role()
