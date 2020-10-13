@@ -1166,12 +1166,15 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         orders_result = req_result.json()['orders_result']
         orders_result_simplified = orders_result
 
+        # date for database (actually unused)
+        time_stamp = int(time.time())
+
         # get current date
         date_now = datetime.datetime.now()
         date_desc = date_now.strftime('%Y-%m-%d %H:%M:%S')
 
         content = f"{date_desc}:\n\n{orders_result_simplified}"
-        report = reports.Report(int(game_id), content)
+        report = reports.Report(int(game_id), time_stamp, content)
         report.update_database()
 
         # update season

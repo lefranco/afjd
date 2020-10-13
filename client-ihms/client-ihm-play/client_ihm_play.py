@@ -635,18 +635,20 @@ class Application(tkinter.Frame):
             datetime_message = datetime.datetime.fromtimestamp(date_message)
             time_stamp_message = time.mktime(datetime_message.timetuple())
 
-            if time_stamp_message > my_last_visit:
-                number_new_messages += 1
-
             date_desc = datetime_message.strftime('%Y-%m-%d %H:%M:%S')
             role_author = data.ROLE_DATA[str(author_message)]['name']
             role_addressee = data.ROLE_DATA[str(addressee_message)]['name']
 
             # identify other and myself
             if author_message == ROLE_IDENTIFIER:
+                # sent
                 tab_role_name = role_addressee
             else:
+                # received
                 tab_role_name = role_author
+                # received and new
+                if time_stamp_message > my_last_visit:
+                    number_new_messages += 1
 
             self.messages_with[tab_role_name].insert(tkinter.END, f"Le {date_desc} par {role_author} pour {role_addressee}:\n")
             if author_message == ROLE_IDENTIFIER:
@@ -782,7 +784,7 @@ class Application(tkinter.Frame):
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            tkinter.messagebox.showerror("KO", f"Echec à la récupration du rapport : {message}")
+            tkinter.messagebox.showerror("KO", f"Echec à la récupération du rapport : {message}")
             return
 
         # update on screen
