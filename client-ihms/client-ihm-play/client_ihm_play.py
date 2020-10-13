@@ -382,7 +382,7 @@ class Application(tkinter.Frame):
         self.gazette = tkinter.scrolledtext.ScrolledText(frame_public, height=10, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
         self.gazette.configure(state=tkinter.DISABLED)
         self.gazette.grid(row=1, column=1, columnspan=2, sticky="ew")
-        self.gazette.tag_configure('color-Blue', foreground='Blue')
+        self.gazette.tag_configure('blue', foreground='Blue', font=("Courier", 8, "normal"))
 
         self.content_express = tkinter.Text(frame_public, height=5)
         self.content_express.grid(row=2, column=1)
@@ -450,6 +450,7 @@ class Application(tkinter.Frame):
             if ROLE_IDENTIFIER != -1:
                 my_role = data.ROLE_DATA[str(ROLE_IDENTIFIER)]['name']
 
+        self.messages_with = dict()  # pylint: disable=attribute-defined-outside-init
         self.button_send = dict()  # pylint: disable=attribute-defined-outside-init
         self.content_send = dict()  # pylint: disable=attribute-defined-outside-init
 
@@ -461,9 +462,11 @@ class Application(tkinter.Frame):
             frame_tab = tkinter.Frame(self.notebook_tab)
 
             # Create text widget
-            mail = tkinter.scrolledtext.ScrolledText(frame_tab, height=20, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
-            mail.configure(state=tkinter.DISABLED)
-            mail.grid(row=1, column=1, columnspan=2, sticky="ew")
+            self.messages_with[role_name] = tkinter.scrolledtext.ScrolledText(frame_tab, height=20, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
+            self.messages_with[role_name].configure(state=tkinter.DISABLED)
+            self.messages_with[role_name].grid(row=1, column=1, columnspan=2, sticky="ew")
+            self.messages_with[role_name].tag_configure('blue', foreground='Blue', font=("Courier", 8, "normal"))
+            self.messages_with[role_name].tag_configure('blue_italics', foreground='Blue', font=("Courier", 8, "italic"))
 
             self.content_send[role_name] = tkinter.Text(frame_tab, height=5)
             self.content_send[role_name].grid(row=2, column=1)
@@ -557,15 +560,67 @@ class Application(tkinter.Frame):
 
         # ok we have the player
 
-        # erase orders
-        self.canvas.bag_orders.reinit()
-        self.canvas.refresh()
-
-        self.set_negotiation_widget()
-
         role_name = data.ROLE_DATA[str(ROLE_IDENTIFIER)]['name']
         # apply role in game
         self.label_role.config(text=f"Vous jouez {role_name}")
+
+        self.set_negotiation_widget()
+
+        # get this game - messages (requires variant)
+
+        # get from server
+        json_dict = {
+            'role_id': ROLE_IDENTIFIER,
+            'pseudo': self.login_var.get(),  # type: ignore
+        }
+
+        host = data.SERVER_CONFIG['GAME']['HOST']
+        port = data.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game_messages/{GAME_IDENTIFIER}"
+        req_result = SESSION.get(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            tkinter.messagebox.showerror("KO", f"Echec à la récupération des messages : {message}")
+            return
+
+        # update on screen
+        json_dict = req_result.json()
+        messages_list = json_dict['messages_list']
+
+        for tab_role_name in self.messages_with:
+            self.messages_with[tab_role_name].configure(state=tkinter.NORMAL)
+            self.messages_with[tab_role_name].delete('1.0', tkinter.END)
+
+        for _, date_message, author_message, addressee_message, content_message in messages_list:
+
+            datetime_message = datetime.datetime.fromtimestamp(date_message)
+            date_desc = datetime_message.strftime('%Y-%m-%d %H:%M:%S')
+
+            role_author = data.ROLE_DATA[str(author_message)]['name']
+            role_addressee = data.ROLE_DATA[str(addressee_message)]['name']
+
+            # identify other and myself
+            if author_message == ROLE_IDENTIFIER:
+                tab_role_name = role_addressee
+            else:
+                tab_role_name = role_author
+
+            self.messages_with[tab_role_name].insert(tkinter.END, f"Le {date_desc} par {role_author} pour {role_addressee}:\n")
+            if author_message == ROLE_IDENTIFIER:
+                self.messages_with[tab_role_name].insert(tkinter.END, f"{content_message}\n", 'blue_italics')
+            else:
+                self.messages_with[tab_role_name].insert(tkinter.END, f"{content_message}\n", 'blue')
+
+        for tab_role_name in self.messages_with:
+            self.messages_with[tab_role_name].see(tkinter.END)
+            self.messages_with[tab_role_name].configure(state=tkinter.DISABLED)
+
+        # get orders
+
+        # erase orders
+        self.canvas.bag_orders.reinit()
+        self.canvas.refresh()
 
         json_dict = {
             'role_id': ROLE_IDENTIFIER,
@@ -789,6 +844,8 @@ class Application(tkinter.Frame):
             self.canvas.bag_forbiddens.add_forbidden(forbidden)
 
         # get this game - declarations (requires variant)
+
+        # get from server
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game_declarations/{GAME_IDENTIFIER}"
@@ -796,7 +853,7 @@ class Application(tkinter.Frame):
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            tkinter.messagebox.showerror("KO", f"Echec à la récupration des déclarations : {message}")
+            tkinter.messagebox.showerror("KO", f"Echec à la récupération des déclarations : {message}")
             return
 
         # update on screen
@@ -811,7 +868,7 @@ class Application(tkinter.Frame):
             date_desc = datetime_declaration.strftime('%Y-%m-%d %H:%M:%S')
             role_desc = data.ROLE_DATA[str(author_declaration)]['name']
             self.gazette.insert(tkinter.END, f"Le {date_desc} par {role_desc}:\n")
-            self.gazette.insert(tkinter.END, f"{content_declaration}\n", 'color-Blue')
+            self.gazette.insert(tkinter.END, f"{content_declaration}\n", 'blue')
 
         self.gazette.see(tkinter.END)
         self.gazette.configure(state=tkinter.DISABLED)
@@ -824,7 +881,7 @@ class Application(tkinter.Frame):
         self.button_edit_centers.config(state=tkinter.ACTIVE)
         self.button_edit_position.config(state=tkinter.ACTIVE)
 
-        msg = f"Rechargement depuis le serveur de la parte {GAME_NAME} "
+        msg = f"Rechargement depuis le serveur de la partie {GAME_NAME} "
         self.scroll_message(msg, 'info')
 
     def callback_login(self, event: typing.Any) -> None:
@@ -1023,13 +1080,36 @@ class Application(tkinter.Frame):
             return
 
         dest = self.invert_button_send[event.widget]
-        print(dest)
 
-        said = self.content_send[dest].get(1.0, tkinter.END)
-        print(f"{said=}")
+        content = self.content_send[dest].get(1.0, tkinter.END)
 
-        # TODO : implement send message
-        print("send message not implemented")
+        # retrieve number of dest
+        dest_id = None
+        for key, value in data.ROLE_DATA.items():
+            if value['name'] == dest:
+                dest_id = key
+                break
+        assert dest_id is not None
+
+        json_dict = {
+            'role_id': ROLE_IDENTIFIER,
+            'pseudo': self.login_var.get(),  # type: ignore
+            'dest_role_id': dest_id,
+            'content': content
+        }
+
+        # present the authentication token  (we are submitting orders)
+        host = data.SERVER_CONFIG['GAME']['HOST']
+        port = data.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game_messages/{GAME_IDENTIFIER}"
+        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+        if req_result.status_code != 201:
+            print(f"ERROR from server  : {req_result.text}")
+            tkinter.messagebox.showerror("KO", f"Echec à la rédaction : {message}")
+            return
+
+        tkinter.messagebox.showinfo("OK", f"Message envoyé : {message}")
 
     def callback_express(self, event: typing.Any) -> None:
         """ callback button pushed """

@@ -15,6 +15,7 @@ import forbiddens
 import allocations
 import reports
 import games
+import messages
 import declarations
 
 
@@ -53,6 +54,11 @@ def populate_declarations() -> None:
     declarations.Declaration.create_table()
 
 
+def populate_messages() -> None:
+    """ inserts these items in database """
+    messages.Message.create_table()
+
+
 def populate_allocations() -> None:
     """ inserts these items in database """
     allocations.Allocation.create_table()
@@ -71,6 +77,7 @@ def populate() -> None:
     populate_units()
     populate_forbiddens()
     populate_games()
+    populate_messages()
     populate_declarations()
     populate_allocations()
 
