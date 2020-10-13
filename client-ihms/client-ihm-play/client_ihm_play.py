@@ -725,10 +725,10 @@ class Application(tkinter.Frame):
         json_dict = req_result.json()
 
         # load the fake units
-        for _, unit_type, zone_num, _, _, _ in json_dict['fake_units']:
+        for _, unit_type, zone_num, role_num, _, _ in json_dict['fake_units']:
             unit_type_enum = data.TypeUnitEnum.decode(unit_type)
             assert unit_type_enum is not None
-            fake_unit = units.Unit(self.canvas, unit_type_enum, ROLE_IDENTIFIER, zone_num, None)
+            fake_unit = units.Unit(self.canvas, unit_type_enum, role_num, zone_num, None)
             self.canvas.bag_units.add_fake_unit(fake_unit)
 
         # load the orders
