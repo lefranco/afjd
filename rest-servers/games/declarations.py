@@ -2,7 +2,7 @@
 
 
 """
-File : games.py
+File : declarations.py
 
 Handles the declarations
 """
@@ -10,9 +10,6 @@ import sqlite3
 import typing
 
 import database
-
-# need to have a limit in sizes of fields
-LEN_NAME_MAX = 20
 
 
 class Declaration:

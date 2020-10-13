@@ -28,6 +28,7 @@ import orders
 import forbiddens
 import reports
 import games
+import messages
 import declarations
 import variants
 import database
@@ -105,6 +106,17 @@ DECLARATION_PARSER.add_argument('content', type=str, required=True)
 
 RETRIEVE_DECLARATIONS_PARSER = flask_restful.reqparse.RequestParser()
 RETRIEVE_DECLARATIONS_PARSER.add_argument('limit', type=int, required=False)
+
+MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
+MESSAGE_PARSER.add_argument('role_id', type=int, required=True)
+MESSAGE_PARSER.add_argument('pseudo', type=str, required=False)
+MESSAGE_PARSER.add_argument('dest_role_id', type=int, required=True)
+MESSAGE_PARSER.add_argument('content', type=str, required=True)
+
+RETRIEVE_MESSAGES_PARSER = flask_restful.reqparse.RequestParser()
+RETRIEVE_MESSAGES_PARSER.add_argument('limit', type=int, required=False)
+RETRIEVE_MESSAGES_PARSER.add_argument('role_id', type=int, required=True)
+RETRIEVE_MESSAGES_PARSER.add_argument('pseudo', type=str, required=False)
 
 
 @API.resource('/variants/<name>')
@@ -1159,6 +1171,146 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
+@API.resource('/game_messages/<game_id>')
+class GameMessageRessource(flask_restful.Resource):  # type: ignore
+    """  GameMessageRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Insert message in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game_messages/<game_id> - POST - creating new message game id=%s", game_id)
+
+        args = MESSAGE_PARSER.parse_args()
+        role_id = args['role_id']
+        dest_role_id = args['dest_role_id']
+
+        mylogger.LOGGER.info("role_id=%s dest_role_id=%s", role_id, dest_role_id)
+
+        pseudo = args['pseudo']
+        content = args['content']
+
+        if pseudo == '':
+            flask_restful.abort(404, msg="Need a pseudo to insert message in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify_user"
+        jwt_token = flask.request.headers.get('access_token')
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to submit orders (all the same)
+
+        # who is player for role ?
+        game = games.Game.find_by_identifier(game_id)
+        assert game is not None
+        game_master_id = game.get_role(0)
+        player_id = game.get_role(role_id)
+
+        # can be player of game master
+        if user_id not in [game_master_id, player_id]:
+            flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the player who is in charge")
+
+        # create message here
+        identifier = messages.Message.free_identifier()
+        time_stamp = int(time.time())
+        message = messages.Message(identifier, game_id, time_stamp, role_id, dest_role_id, content)
+        message.update_database()
+
+        data = {'msg': f"Ok message inserted : {content}"}
+        return data, 201
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Gets all or some messages of game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game_messages/<game_id> - GET - getting back messages game id=%s", game_id)
+
+        # not used for the moment
+        args = RETRIEVE_MESSAGES_PARSER.parse_args()
+        role_id = args['role_id']
+        mylogger.LOGGER.info("role_id=%s", role_id)
+
+        pseudo = args['pseudo']
+        if pseudo == '':
+            flask_restful.abort(404, msg="Need a pseudo to get messages in game")
+
+            # check authentication from user server
+            host = lowdata.SERVER_CONFIG['USER']['HOST']
+            port = lowdata.SERVER_CONFIG['USER']['PORT']
+            url = f"{host}:{port}/verify_user"
+            jwt_token = flask.request.headers.get('access_token')
+            req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
+            if req_result.status_code != 200:
+                mylogger.LOGGER.error("ERROR = %s", req_result.text)
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+            # get player identifier
+            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/player_identifiers/{pseudo}"
+            req_result = SESSION.get(url)
+            if req_result.status_code != 200:
+                print(f"ERROR from server  : {req_result.text}")
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+            user_id = req_result.json()
+
+            # check user has right to submit orders (all the same)
+
+            # who is player for role ?
+            game = games.Game.find_by_identifier(game_id)
+            assert game is not None
+            game_master_id = game.get_role(0)
+            player_id = game.get_role(role_id)
+
+            # can be player of game master
+            if user_id not in [game_master_id, player_id]:
+                flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the player who is in charge")
+
+        # ok now we can get messages
+        limit = args['limit']
+
+        # gather messages
+        messages_list = messages.Message.list_by_game_id(game_id)
+        messages_list_json = list()
+        num = 1
+        for _, _, message in sorted(messages_list, key=lambda t: t[2].time_stamp, reverse=True):
+
+            # must be author or addressee
+            if role_id not in [message.author_num, message.addressee_num]:
+                continue
+
+            messages_list_json.append(message.export())
+            num += 1
+            if num == limit:
+                break
+
+        data = {'messages_list': messages_list_json}
+        return data, 200
+
+
 @API.resource('/game_declarations/<game_id>')
 class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
     """  GameDeclarationRessource """
@@ -1180,7 +1332,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         content = args['content']
 
         if pseudo == '':
-            flask_restful.abort(404, msg="Need a pseudo to submit orders in game")
+            flask_restful.abort(404, msg="Need a pseudo to insert declaration in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
