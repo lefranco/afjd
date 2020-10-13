@@ -30,10 +30,13 @@ class Report:
         database.sql_execute("DROP TABLE IF EXISTS reports")
         database.sql_execute("CREATE TABLE reports (game_id INTEGER UNIQUE PRIMARY KEY, report_data report)")
 
-    def __init__(self, game_id: int, content: str) -> None:
+    def __init__(self, game_id: int,  time_stamp: int, content: str) -> None:
 
         assert isinstance(game_id, int), "game_id must be an int"
         self._game_id = game_id
+
+        assert isinstance(time_stamp, int), "time_stamp must be an int"
+        self._time_stamp = time_stamp
 
         assert isinstance(content, str), "content must be an str"
         self._content = content
@@ -57,12 +60,12 @@ class Report:
         self._content = content
 
     def __str__(self) -> str:
-        return f"game_id={self._game_id} content={self._content}"
+        return f"game_id={self._game_id} time_stamp={self._time_stamp} content={self._content}"
 
     def adapt_report(self) -> bytes:
         """ To put an object in database """
         compressed_content = database.compress_text(self._content)
-        return (f"{self._game_id}{database.STR_SEPARATOR}{compressed_content}").encode('ascii')
+        return (f"{self._game_id}{database.STR_SEPARATOR}{self._time_stamp}{database.STR_SEPARATOR}{compressed_content}").encode('ascii')
 
 
 def convert_report(buffer: bytes) -> Report:
@@ -70,11 +73,12 @@ def convert_report(buffer: bytes) -> Report:
 
     tab = buffer.split(database.BYTES_SEPARATOR)
     identifier = int(tab[0].decode())
+    time_stamp = int(tab[1].decode())
 
-    compressed_content = tab[1].decode()
+    compressed_content = tab[2].decode()
     content = database.uncompress_text(compressed_content)
 
-    report = Report(identifier, content)
+    report = Report(identifier, time_stamp, content)
     return report
 
 

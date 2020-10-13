@@ -378,6 +378,8 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
 
     with tempfile.TemporaryDirectory() as tmpdirname:
 
+        print("{tmpdirname=}")
+
         # make DIPLOCOM
         os.mkdir(f"{tmpdirname}/DIPLOCOM")
 

@@ -9,6 +9,7 @@ import typing
 import datetime
 import sys
 import json
+import time
 
 import tkinter
 import tkinter.ttk
@@ -560,10 +561,46 @@ class Application(tkinter.Frame):
 
         # ok we have the player
 
+        # display on console
         role_name = data.ROLE_DATA[str(ROLE_IDENTIFIER)]['name']
         # apply role in game
         self.label_role.config(text=f"Vous jouez {role_name}")
 
+        # retrieve last visit on server
+        json_dict = {
+            'role_id': ROLE_IDENTIFIER,
+            'pseudo': self.login_var.get(),  # type: ignore
+        }
+
+        host = data.SERVER_CONFIG['GAME']['HOST']
+        port = data.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game_visits/{GAME_IDENTIFIER}"
+        req_result = SESSION.get(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            tkinter.messagebox.showerror("KO", f"Echec à la récupération de la dernière visite : {message}")
+            return
+
+        my_last_visit = req_result.json()['time_stamp']
+
+        # log visit on server
+        json_dict = {
+            'role_id': ROLE_IDENTIFIER,
+            'pseudo': self.login_var.get(),  # type: ignore
+        }
+
+        host = data.SERVER_CONFIG['GAME']['HOST']
+        port = data.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game_visits/{GAME_IDENTIFIER}"
+        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        if req_result.status_code != 201:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            tkinter.messagebox.showerror("KO", f"Echec à l'enregistrement de la visite : {message}")
+            return
+
+        # make widgets for negotations (dynamic from role)
         self.set_negotiation_widget()
 
         # get this game - messages (requires variant)
@@ -592,11 +629,16 @@ class Application(tkinter.Frame):
             self.messages_with[tab_role_name].configure(state=tkinter.NORMAL)
             self.messages_with[tab_role_name].delete('1.0', tkinter.END)
 
+        number_new_messages = 0
         for _, date_message, author_message, addressee_message, content_message in messages_list:
 
             datetime_message = datetime.datetime.fromtimestamp(date_message)
-            date_desc = datetime_message.strftime('%Y-%m-%d %H:%M:%S')
+            time_stamp_message = time.mktime(datetime_message.timetuple())
 
+            if time_stamp_message > my_last_visit:
+                number_new_messages += 1
+
+            date_desc = datetime_message.strftime('%Y-%m-%d %H:%M:%S')
             role_author = data.ROLE_DATA[str(author_message)]['name']
             role_addressee = data.ROLE_DATA[str(addressee_message)]['name']
 
@@ -683,6 +725,9 @@ class Application(tkinter.Frame):
             # set buttons for player
             self.button_adjudicate.config(state=tkinter.DISABLED)
             self.button_rectify.config(state=tkinter.DISABLED)
+
+        if number_new_messages:
+            tkinter.messagebox.showinfo("Attention", f"Vous avez {number_new_messages} nouveau(x) message(s) diplomatique(s) ")
 
     def callback_load_games_from_server(self, event: typing.Any) -> None:
         """ Reloads games from server to here """
