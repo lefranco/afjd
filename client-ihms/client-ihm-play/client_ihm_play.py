@@ -189,7 +189,7 @@ class Application(tkinter.Frame):
         label_variant = tkinter.Label(frame_title, text="Partie :")
         label_variant.grid(row=1, column=5, sticky='w')
 
-        self.listbox_selectable_game_input = tkinter.Listbox(frame_title, width=30, height=4, exportselection=0)
+        self.listbox_selectable_game_input = tkinter.Listbox(frame_title, width=30, height=3, exportselection=0)
         self.listbox_selectable_game_input.grid(row=1, column=6, sticky='w')
         self.listbox_selectable_game_input.config(state=tkinter.DISABLED)
 
@@ -297,7 +297,7 @@ class Application(tkinter.Frame):
         # Below map 1 =======================
         frame_just_just_below_map = tkinter.LabelFrame(paned_middle_west, text="Dernier(s) rapport(s) de résolution")
         paned_middle_west.add(frame_just_just_below_map)  # type: ignore
-        self.text_report_information = tkinter.scrolledtext.ScrolledText(frame_just_just_below_map, height=8, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
+        self.text_report_information = tkinter.scrolledtext.ScrolledText(frame_just_just_below_map, height=6, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
         self.text_report_information.configure(state=tkinter.DISABLED)
         self.text_report_information.grid(row=1, column=1, sticky='w')
 
@@ -380,12 +380,12 @@ class Application(tkinter.Frame):
         frame_public = tkinter.LabelFrame(paned_middle_east, text="Déclarations")
 
         # Create text widget
-        self.gazette = tkinter.scrolledtext.ScrolledText(frame_public, height=10, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
+        self.gazette = tkinter.scrolledtext.ScrolledText(frame_public, height=6, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
         self.gazette.configure(state=tkinter.DISABLED)
         self.gazette.grid(row=1, column=1, columnspan=2, sticky="ew")
         self.gazette.tag_configure('blue', foreground='Blue', font=("Courier", 8, "normal"))
 
-        self.content_express = tkinter.Text(frame_public, height=5)
+        self.content_express = tkinter.Text(frame_public, height=4)
         self.content_express.grid(row=2, column=1)
 
         # Button to add stuff
@@ -420,7 +420,7 @@ class Application(tkinter.Frame):
         paned_middle_east.add(frame_logger)  # type: ignore
         paned_middle.add(paned_middle_east)  # type: ignore
 
-        self.scrolled_log = tkinter.scrolledtext.ScrolledText(frame_logger, height=10, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
+        self.scrolled_log = tkinter.scrolledtext.ScrolledText(frame_logger, height=8, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
         self.scrolled_log.configure(state=tkinter.DISABLED)
         self.scrolled_log.tag_config('info', foreground=COLOR_SCROLLED_INFO)
         self.scrolled_log.tag_config('warning', foreground=COLOR_SCROLLED_WARNING)
@@ -463,13 +463,13 @@ class Application(tkinter.Frame):
             frame_tab = tkinter.Frame(self.notebook_tab)
 
             # Create text widget
-            self.messages_with[role_name] = tkinter.scrolledtext.ScrolledText(frame_tab, height=20, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
+            self.messages_with[role_name] = tkinter.scrolledtext.ScrolledText(frame_tab, height=15, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
             self.messages_with[role_name].configure(state=tkinter.DISABLED)
             self.messages_with[role_name].grid(row=1, column=1, columnspan=2, sticky="ew")
             self.messages_with[role_name].tag_configure('blue', foreground='Blue', font=("Courier", 8, "normal"))
             self.messages_with[role_name].tag_configure('blue_italics', foreground='Blue', font=("Courier", 8, "italic"))
 
-            self.content_send[role_name] = tkinter.Text(frame_tab, height=5)
+            self.content_send[role_name] = tkinter.Text(frame_tab, height=6)
             self.content_send[role_name].grid(row=2, column=1)
 
             self.button_send[role_name] = tkinter.Button(frame_tab, text="Envoyer")
