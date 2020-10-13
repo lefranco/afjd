@@ -33,6 +33,7 @@ import declarations
 import variants
 import database
 import lowdata
+import visits
 
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
@@ -118,6 +119,13 @@ RETRIEVE_MESSAGES_PARSER.add_argument('limit', type=int, required=False)
 RETRIEVE_MESSAGES_PARSER.add_argument('role_id', type=int, required=True)
 RETRIEVE_MESSAGES_PARSER.add_argument('pseudo', type=str, required=False)
 
+VISIT_PARSER = flask_restful.reqparse.RequestParser()
+VISIT_PARSER.add_argument('role_id', type=int, required=True)
+VISIT_PARSER.add_argument('pseudo', type=str, required=False)
+
+RETRIEVE_VISIT_PARSER = flask_restful.reqparse.RequestParser()
+RETRIEVE_VISIT_PARSER.add_argument('role_id', type=int, required=True)
+RETRIEVE_VISIT_PARSER.add_argument('pseudo', type=str, required=False)
 
 @API.resource('/variants/<name>')
 class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
@@ -312,12 +320,15 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if game.get_role(0) != user_id:
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
-        # delete game
+        # delete allocations
+        game.delete_allocations()
+
+        # and position
+        game.delete_position()
+
+        # finally delete game
         assert game is not None
         game.delete_database()
-
-        # and allocations
-        game.delete_allocations()
 
         return {}, 200
 
@@ -1402,6 +1413,130 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         data = {'declarations_list': declarations_list_json}
         return data, 200
 
+
+@API.resource('/game_visits/<game_id>')
+class GameVisitRessource(flask_restful.Resource):  # type: ignore
+    """  GameVisitRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Insert visit in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game_visits/<game_id> - POST - creating new visit game id=%s", game_id)
+
+        args = VISIT_PARSER.parse_args()
+        role_id = args['role_id']
+
+        mylogger.LOGGER.info("role_id=%s", role_id)
+
+        pseudo = args['pseudo']
+
+        if pseudo == '':
+            flask_restful.abort(404, msg="Need a pseudo to insert visit in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify_user"
+        jwt_token = flask.request.headers.get('access_token')
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to submit orders (all the same)
+
+        # who is player for role ?
+        game = games.Game.find_by_identifier(game_id)
+        assert game is not None
+        player_id = game.get_role(role_id)
+
+        # can be player or game master
+        if user_id != player_id:
+            flask_restful.abort(403, msg="You do not seem to be the player or game master who is in charge")
+
+        # create visit here
+        time_stamp = int(time.time())
+        visit = visits.Visit(int(game_id), role_id, time_stamp)
+        visit.update_database()
+
+        data = {'msg': f"Ok visit inserted for game={game_id} role={role_id}"}
+        return data, 201
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Retrieve visit in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game_visits/<game_id> - GET - retrieving new visit game id=%s", game_id)
+
+        args = RETRIEVE_VISIT_PARSER.parse_args()
+        role_id = args['role_id']
+
+        mylogger.LOGGER.info("role_id=%s", role_id)
+
+        pseudo = args['pseudo']
+
+        if pseudo == '':
+            flask_restful.abort(404, msg="Need a pseudo to retrieve visit in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify_user"
+        jwt_token = flask.request.headers.get('access_token')
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to submit orders (all the same)
+
+        # who is player for role ?
+        game = games.Game.find_by_identifier(game_id)
+        assert game is not None
+        player_id = game.get_role(role_id)
+
+        # can be player or game master
+        if user_id != player_id:
+            flask_restful.abort(403, msg="You do not seem to be the player or game master who is in charge")
+
+        # retrieve visit here
+        time_stamp = int(time.time()) # serves as default timestamp
+        visits_list = visits.Visit.list_by_game_id_role_num(game_id, role_id)
+        if visits_list:
+            visit = visits_list[0]
+            _, _, time_stamp = visit
+
+        data = {'time_stamp': time_stamp}
+        return data, 200
 
 def main() -> None:
     """ main """

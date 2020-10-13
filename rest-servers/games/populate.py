@@ -12,11 +12,12 @@ import orders
 import ownerships
 import units
 import forbiddens
-import allocations
 import reports
 import games
 import messages
 import declarations
+import allocations
+import visits
 
 
 def populate_reports() -> None:
@@ -64,6 +65,11 @@ def populate_allocations() -> None:
     allocations.Allocation.create_table()
 
 
+def populate_visits() -> None:
+    """ inserts these items in database """
+    visits.Visit.create_table()
+
+
 def populate() -> None:
     """ inserts all items in database """
 
@@ -80,6 +86,7 @@ def populate() -> None:
     populate_messages()
     populate_declarations()
     populate_allocations()
+    populate_visits()
 
 
 if __name__ == '__main__':
