@@ -76,9 +76,7 @@ def populate() -> None:
     mylogger.LOGGER.warning("Populating...")
 
     populate_reports()
-
     populate_orders()
-
     populate_ownerships()
     populate_units()
     populate_forbiddens()

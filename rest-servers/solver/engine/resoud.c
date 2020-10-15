@@ -104,6 +104,8 @@ static void assert_decisions_made(_DECISION *);
 static void propagation(_DECISION *);
 static void resolution_paradoxes1(_DECISION *);
 static void resolution_paradoxes2(_DECISION *);
+static void creesuppressions(_PAYS *pays, int souhaites);
+static void creeconstructions(_PAYS *pays, int souhaites);
 
 static void decision_dump(_DECISION *);
 
@@ -199,6 +201,163 @@ static BOOL ajustementsidentiques(_AJUSTEMENT *ajust1, _AJUSTEMENT *ajust2) {
 	}
 
 	return TRUE;
+}
+
+static void creesuppressions(_PAYS *pays, int souhaites) {
+	int ajustements, el, elrec;
+	_UNITE *t, *trec;
+	_AJUSTEMENT *u, *v, *w;
+
+	u = AJUSTEMENT.t + AJUSTEMENT.n;
+	v = u;
+
+	ajustements = 0;
+	while (ajustements < souhaites) {
+
+		trec = NULL;
+		for (t = UNITE.t; t < UNITE.t + UNITE.n; t++) {
+
+			/* Pas du pays */
+			if (t->pays != pays)
+				continue;
+
+			/* Deja supprime */
+			for (w = v; w < AJUSTEMENT.t + AJUSTEMENT.n; w++)
+				if (w->unite == t)
+					break;
+			if (w != AJUSTEMENT.t + AJUSTEMENT.n)
+				continue;
+
+			/* Par defaut il est pris */
+			if (trec == NULL) {
+				trec = t;
+				continue;
+			}
+
+			el = eloignement(t->typeunite, t->zone, pays);
+			elrec = eloignement(trec->typeunite, trec->zone, pays);
+
+			/* Si plus loin il passe devant */
+			if (el > elrec) {
+				trec = t;
+				continue;
+			}
+
+			if (el == elrec) {
+
+				/* Si c'est une flotte et l'autre une armée il passe devant */
+				if (t->typeunite == FLOTTE && trec->typeunite == ARMEE) {
+					trec = t;
+					continue;
+				}
+
+				/* S'il est avant dans l'ordre alphabétique il passe devant */
+				if (t->typeunite == trec->typeunite) {
+					if (strcmp(t->zone->region->nom, trec->zone->region->nom)
+							< 0) {
+						trec = t;
+						continue;
+					}
+				}
+			}
+
+		} /* for */
+
+		/* On sort de la boucle avec trec = meilleur candidat a la suppression */
+		assert(trec != NULL);
+
+		u->typeajustement = SUPPRIME;
+		u->unite = trec;
+
+		u->noligne = 0;
+		AJUSTEMENT.n++;
+		u++;
+
+		ajustements++;
+
+	} /* while */
+}
+
+static void creeconstructions(_PAYS *pays, int souhaites) {
+
+	int ajustements;
+	TYPEUNITE typeunite;
+	TYPEAJUSTEMENT typeajustement;
+	_ZONE *zonedest;
+	_CENTREDEPART *p, *centredepart;
+	_UNITE *q, *unite;
+
+	/* on va se limiter a des armees */
+	typeajustement = AJOUTE;
+	typeunite = ARMEE;
+
+	ajustements = 0;
+	while (ajustements < souhaites) {
+
+		for (zonedest = ZONE.t; zonedest < ZONE.t + ZONE.n; zonedest++) {
+
+			/* la zone doit etre un centre */
+			centredepart = NULL;
+			for (p = CENTREDEPART.t; p < CENTREDEPART.t + CENTREDEPART.n; p++) {
+				if(p->centre->region == zonedest->region) {
+					centredepart = p;
+					break;
+				}
+			}
+			if(centredepart == NULL) {
+				continue;
+			}
+
+			/* la zone doit etre un centre du pays */
+			if (centredepart->pays != pays) {
+				continue;
+			}
+
+			/* la zone doit etre possede */
+			if (!possede(pays, centredepart->centre)) {
+				continue;
+			}
+
+			/* la zone doit etre compatible */
+			if (!compatibles(typeunite, zonedest)) {
+				continue;
+			}
+
+			/* la zone doit etre libre */
+			if (chercheoccupant(zonedest->region)) {
+				continue;
+			}
+
+			/* il ne doit pas deja y avoir une construction a cet endroit */
+			for (q = UNITEFUTURE.t; q < UNITEFUTURE.t + UNITEFUTURE.n; q++) {
+				if(q->zone->region == zonedest->region) {
+					break;
+				}
+			}
+			if(q != UNITEFUTURE.t + UNITEFUTURE.n) {
+				continue;
+			}
+
+			/* unite */
+			UNITEFUTURE.t[UNITEFUTURE.n].pays = pays;
+			UNITEFUTURE.t[UNITEFUTURE.n].typeunite = typeunite;
+			UNITEFUTURE.t[UNITEFUTURE.n].zone = zonedest;
+			UNITEFUTURE.t[UNITEFUTURE.n].zonedepart = zonedest;
+			unite = UNITEFUTURE.t + UNITEFUTURE.n;
+			assert(++UNITEFUTURE.n != NUNITEFUTURES);
+
+			/* construction */
+			AJUSTEMENT.t[AJUSTEMENT.n].typeajustement = typeajustement;
+			AJUSTEMENT.t[AJUSTEMENT.n].unite = unite;
+			AJUSTEMENT.t[AJUSTEMENT.n].noligne = noligne;
+			assert(++AJUSTEMENT.n != NAJUSTEMENTS);
+
+			ajustements++;
+			break;
+		}
+
+	} /* while */
+
 }
 
 void verifmouvements(void) {
@@ -778,80 +937,23 @@ void creeretraites(_PAYS *pays) {
 }
 
 void creeajustements(_PAYS *pays) {
-	_UNITE *t, *trec;
-	_AJUSTEMENT *u, *v, *w;
-	int el, elrec, possessions, unites, ajustements, possibles, souhaites;
-
-	u = AJUSTEMENT.t + AJUSTEMENT.n;
-	v = u;
+	int possessions, unites, possibles, souhaites;
 
 	lesajustements(pays, &possessions, &unites, &possibles);
-	souhaites = INF(possessions - unites, possibles);
 
-	ajustements = 0;
-	while (ajustements > souhaites) {
+	/* cas ou on supprime */
+	if(possessions < unites) {
+		souhaites = unites - possessions;
+		creesuppressions(pays, souhaites); 
+	}
 
-		trec = NULL;
-		for (t = UNITE.t; t < UNITE.t + UNITE.n; t++) {
-
-			/* Pas du pays */
-			if (t->pays != pays)
-				continue;
-
-			/* Deja supprime */
-			for (w = v; w < AJUSTEMENT.t + AJUSTEMENT.n; w++)
-				if (w->unite == t)
-					break;
-			if (w != AJUSTEMENT.t + AJUSTEMENT.n)
-				continue;
-
-			/* Par defaut il est pris */
-			if (trec == NULL) {
-				trec = t;
-				continue;
-			}
-
-			el = eloignement(t->typeunite, t->zone, pays);
-			elrec = eloignement(trec->typeunite, trec->zone, pays);
-
-			/* Si plus loin il passe devant */
-			if (el > elrec) {
-				trec = t;
-				continue;
-			}
-
-			if (el == elrec) {
-
-				/* Si c'est une flotte et l'autre une armée il passe devant */
-				if (t->typeunite == FLOTTE && trec->typeunite == ARMEE) {
-					trec = t;
-					continue;
-				}
-
-				/* S'il est avant dans l'ordre alphabétique il passe devant */
-				if (t->typeunite == trec->typeunite) {
-					if (strcmp(t->zone->region->nom, trec->zone->region->nom)
-							< 0) {
-						trec = t;
-						continue;
-					}
-				}
-			}
-
-		} /* for */
-
-		/* On sort de la boucle avec trec = meilleur candidat a la suppression */
-		assert(trec != NULL);
-
-		u->typeajustement = SUPPRIME;
-		u->unite = trec;
-		u->noligne = 0;
-		AJUSTEMENT.n++;
-		u++;
-		ajustements--;
-
-	} /* while */
+	/* cas ou on construit */
+	if(possessions > unites) {
+		souhaites = INF(possessions - unites, possibles);
+		creeconstructions(pays, souhaites); 
+	}
 }
+
 
 /**************************************************************************
  PHASE APRES RESOLUTION
