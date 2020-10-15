@@ -30,7 +30,7 @@ class Report:
         database.sql_execute("DROP TABLE IF EXISTS reports")
         database.sql_execute("CREATE TABLE reports (game_id INTEGER UNIQUE PRIMARY KEY, report_data report)")
 
-    def __init__(self, game_id: int,  time_stamp: int, content: str) -> None:
+    def __init__(self, game_id: int, time_stamp: int, content: str) -> None:
 
         assert isinstance(game_id, int), "game_id must be an int"
         self._game_id = game_id

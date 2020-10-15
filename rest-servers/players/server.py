@@ -226,7 +226,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.warning("/players - GET - get getting all players only pseudo (rest is confidential)")
+        mylogger.LOGGER.info("/players - GET - get getting all players only pseudo (rest is confidential)")
 
         players_list = players.Player.inventory()
         data = {str(p.identifier): p.pseudo for p in players_list}

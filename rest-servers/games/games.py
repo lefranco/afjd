@@ -340,6 +340,7 @@ class Game:
 
         # delete report
         report = reports.Report.find_by_identifier(game_id)
+        assert report is not None
         report.delete_database()
 
         # delete ownerships

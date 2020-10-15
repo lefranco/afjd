@@ -1126,8 +1126,43 @@ class Application(tkinter.Frame):
         if str(event.widget['state']) == 'disabled':
             return
 
-        # TODO : implement simulation
-        print("simulation not implemented")
+        assert data.VARIANT_NAME
+        variant_name = data.VARIANT_NAME
+
+        names_dict = data.extract_names()
+        names_dict_json = json.dumps(names_dict)
+
+        # ownerships
+        center_ownerships_list_dict = self.canvas.bag_centers.save_json()
+        center_ownerships_list_dict_json = json.dumps(center_ownerships_list_dict, indent=4)
+
+        # units
+        units_list_dict = self.canvas.bag_units.save_json()
+        units_list_dict_json = json.dumps(units_list_dict, indent=4)
+
+        # orders
+        orders_list_dict = self.canvas.bag_orders.save_json()
+        orders_list_dict_json = json.dumps(orders_list_dict, indent=4)
+
+        json_dict = {
+            'variant_name': variant_name,
+            'names': names_dict_json,
+            'center_ownerships': center_ownerships_list_dict_json,
+            'units': units_list_dict_json,
+            'orders': orders_list_dict_json,
+        }
+
+        host = data.SERVER_CONFIG['GAME']['HOST']
+        port = data.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/simulation"
+        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+        if req_result.status_code != 201:
+            print(f"ERROR from server  : {req_result.text}")
+            tkinter.messagebox.showerror("KO", f"Echec à la simulation : {message}")
+            return
+
+        tkinter.messagebox.showinfo("OK", f"Simulation réussie : {message}")
 
     def callback_send(self, event: typing.Any) -> None:
         """ callback button pushed """

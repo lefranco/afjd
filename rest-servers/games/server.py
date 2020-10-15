@@ -94,6 +94,13 @@ ADJUDICATION_PARSER = flask_restful.reqparse.RequestParser()
 ADJUDICATION_PARSER.add_argument('pseudo', type=str, required=False)
 ADJUDICATION_PARSER.add_argument('names', type=str, required=True)
 
+SIMULATION_PARSER = flask_restful.reqparse.RequestParser()
+SIMULATION_PARSER.add_argument('variant_name', type=str, required=True)
+SIMULATION_PARSER.add_argument('orders', type=str, required=True)
+SIMULATION_PARSER.add_argument('center_ownerships', type=str, required=True)
+SIMULATION_PARSER.add_argument('units', type=str, required=True)
+SIMULATION_PARSER.add_argument('names', type=str, required=True)
+
 RECTIFICATION_PARSER = flask_restful.reqparse.RequestParser()
 RECTIFICATION_PARSER.add_argument('pseudo', type=str, required=False)
 RECTIFICATION_PARSER.add_argument('center_ownerships', type=str, required=True)
@@ -126,6 +133,7 @@ VISIT_PARSER.add_argument('pseudo', type=str, required=False)
 RETRIEVE_VISIT_PARSER = flask_restful.reqparse.RequestParser()
 RETRIEVE_VISIT_PARSER.add_argument('role_id', type=int, required=True)
 RETRIEVE_VISIT_PARSER.add_argument('pseudo', type=str, required=False)
+
 
 @API.resource('/variants/<name>')
 class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
@@ -343,7 +351,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.warning("/games - GET - get getting all games names")
+        mylogger.LOGGER.info("/games - GET - get getting all games names")
 
         games_list = games.Game.inventory()
         data = {str(g.identifier): g.name for g in games_list}
@@ -539,7 +547,7 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.warning("/allocations_games/<game_id> - GET - get getting allocations for game id=%s", game_id)
+        mylogger.LOGGER.info("/allocations_games/<game_id> - GET - get getting allocations for game id=%s", game_id)
 
         allocations_list = allocations.Allocation.list_by_game_id(game_id)
 
@@ -559,7 +567,7 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.warning("/allocations_players/<player_id> - GET - get getting allocations for player player_id=%s", player_id)
+        mylogger.LOGGER.info("/allocations_players/<player_id> - GET - get getting allocations for player player_id=%s", player_id)
 
         allocations_list = allocations.Allocation.list_by_player_id(player_id)
 
@@ -675,7 +683,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.warning("/game_positions/<game_id> - GET - getting position for game id=%s", game_id)
+        mylogger.LOGGER.info("/game_positions/<game_id> - GET - getting position for game id=%s", game_id)
 
         # get ownerships
         ownership_dict = dict()
@@ -1185,6 +1193,112 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
+@API.resource('/simulation')
+class SimulationRessource(flask_restful.Resource):  # type: ignore
+    """ SimulationRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Performs a simulation
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/simulation - POST - simulation")
+
+        args = SIMULATION_PARSER.parse_args()
+        variant_name = args['variant_name']
+        names = args['names']
+        ownerships_submitted = args['center_ownerships']
+        units_submitted = args['units']
+        orders_submitted = args['orders']
+
+        # evaluate variant
+        variant_dict = variants.Variant.get_by_name(variant_name)
+        if variant_dict is None:
+            flask_restful.abort(404, msg=f"Variant {variant_name} doesn't exist")
+
+        variant_dict_json = json.dumps(variant_dict)
+
+        # evaluate situation
+        the_ownerships = json.loads(ownerships_submitted)
+        the_units = json.loads(units_submitted)
+
+        # situation: get ownerships
+        ownership_dict = dict()
+        for the_ownership in the_ownerships:
+            center_num = the_ownership['center_num']
+            role = the_ownership['role']
+            ownership_dict[str(center_num)] = role
+
+        # situation: get units
+        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        for the_unit in the_units:
+            type_num = the_unit['type_unit']
+            zone_num = the_unit['zone']
+            role_num = the_unit['role']
+            unit_dict[str(role_num)].append([type_num, zone_num])
+
+        # no fake unit at this point
+        fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = dict()
+
+        # no dislodged unit at this point
+        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = dict()
+
+        # no forbiddens at this point
+        forbidden_list: typing.List[int] = list()
+
+        # need to have one
+        game_fake_advancement = 0
+
+        situation_dict = {
+            'ownerships': ownership_dict,
+            'dislodged_ones': dislodged_unit_dict,
+            'units': unit_dict,
+            'fake_units': fake_unit_dict,
+            'forbiddens': forbidden_list,
+        }
+        situation_dict_json = json.dumps(situation_dict)
+
+        # evaluate orders
+        orders_list = list()
+        the_orders = json.loads(orders_submitted)
+        for the_order in the_orders:
+            order = orders.Order(0, 0, 0, 0, 0, 0)
+            order.load_json(the_order)
+            order_export = order.export()
+            orders_list.append(order_export)
+
+        orders_list_json = json.dumps(orders_list)
+
+        json_dict = {
+            'variant': variant_dict_json,
+            'advancement': game_fake_advancement,
+            'situation': situation_dict_json,
+            'orders': orders_list_json,
+            'names': names,
+        }
+
+        # post to solver
+        host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
+        port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
+        url = f"{host}:{port}/solve"
+        req_result = SESSION.post(url, data=json_dict)
+        adjudication_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
+
+        # adjudication failed
+        if req_result.status_code != 201:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to adjudicate {message} : {adjudication_report}")
+
+        # extract new report
+        orders_result = req_result.json()['orders_result']
+        orders_result_simplified = orders_result
+
+        data = {'msg': f"Ok adjudication performed : {adjudication_report}\n{orders_result_simplified}"}
+        return data, 201
+
+
 @API.resource('/game_messages/<game_id>')
 class GameMessageRessource(flask_restful.Resource):  # type: ignore
     """  GameMessageRessource """
@@ -1532,7 +1646,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be the player or game master who is in charge")
 
         # retrieve visit here
-        time_stamp = int(time.time()) # serves as default timestamp
+        time_stamp = int(time.time())  # serves as default timestamp
         visits_list = visits.Visit.list_by_game_id_role_num(game_id, role_id)
         if visits_list:
             visit = visits_list[0]
@@ -1540,6 +1654,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
 
         data = {'time_stamp': time_stamp}
         return data, 200
+
 
 def main() -> None:
     """ main """
