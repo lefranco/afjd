@@ -575,7 +575,7 @@ class Application(tkinter.Frame):
 
         host = SERVER_CONFIG['USER']['HOST']
         port = SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/login_user"
+        url = f"{host}:{port}/login-user"
         req_result = SESSION.post(url, json={'user_name': pseudo, 'password': password})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")

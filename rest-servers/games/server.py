@@ -161,7 +161,7 @@ class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
         return variant, 200
 
 
-@API.resource('/game_identifiers/<name>')
+@API.resource('/game-identifiers/<name>')
 class GameIdentifierRessource(flask_restful.Resource):  # type: ignore
     """ GameIdentifierRessource """
 
@@ -169,9 +169,10 @@ class GameIdentifierRessource(flask_restful.Resource):  # type: ignore
         """
         From name get identifier
         EXPOSED
+        Note : currently not used
         """
 
-        mylogger.LOGGER.info("/game_identifiers/<name> - GET - retrieving identifier of game name=%s", name)
+        mylogger.LOGGER.info("/game-identifiers/<name> - GET - retrieving identifier of game name=%s", name)
 
         # find data
         game = games.Game.find_by_name(name)
@@ -212,7 +213,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/games/<name> - PUT - updating game name=%s", name)
 
-        args = GAME_PARSER.parse_args()
+        args = GAME_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
 
         game = games.Game.find_by_name(name)
@@ -225,7 +226,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -292,7 +293,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/games/<name> - DELETE - deleting game name=%s", name)
 
-        args = GAME_DELETE_PARSER.parse_args()
+        args = GAME_DELETE_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
 
         # delete game from here
@@ -306,7 +307,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -368,7 +369,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/games - POST - creating new game")
 
-        args = GAME_PARSER.parse_args()
+        args = GAME_PARSER.parse_args(strict=True)
         name = args['name']
 
         mylogger.LOGGER.info("game name=%s", name)
@@ -385,7 +386,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -432,7 +433,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/allocations - POST - creating new allocation")
 
-        args = ALLOCATION_PARSER.parse_args()
+        args = ALLOCATION_PARSER.parse_args(strict=True)
         game_id = args['game_id']
         player_id = args['player_id']
         role_id = args['role_id']
@@ -446,7 +447,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -493,7 +494,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/allocations - DELETE - deleting allocation")
 
-        args = ALLOCATION_PARSER.parse_args()
+        args = ALLOCATION_PARSER.parse_args(strict=True)
         game_id = args['game_id']
         player_id = args['player_id']
         role_id = args['role_id']
@@ -507,7 +508,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -547,7 +548,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/allocations_games/<game_id>')
+@API.resource('/allocations-games/<game_id>')
 class AllocationGameRessource(flask_restful.Resource):  # type: ignore
     """ AllocationGameRessource """
 
@@ -557,7 +558,7 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/allocations_games/<game_id> - GET - get getting allocations for game id=%s", game_id)
+        mylogger.LOGGER.info("/allocations-games/<game_id> - GET - get getting allocations for game id=%s", game_id)
 
         allocations_list = allocations.Allocation.list_by_game_id(game_id)
 
@@ -566,7 +567,7 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/allocations_players/<player_id>')
+@API.resource('/allocations-players/<player_id>')
 class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
     """ AllocationPlayerRessource """
 
@@ -577,7 +578,7 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/allocations_players/<player_id> - GET - get getting allocations for player player_id=%s", player_id)
+        mylogger.LOGGER.info("/allocations-players/<player_id> - GET - get getting allocations for player player_id=%s", player_id)
 
         allocations_list = allocations.Allocation.list_by_player_id(player_id)
 
@@ -586,7 +587,7 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game_positions/<game_id>')
+@API.resource('/game-positions/<game_id>')
 class GamePositionRessource(flask_restful.Resource):  # type: ignore
     """ GamePositionRessource """
 
@@ -596,9 +597,9 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_positions/<game_id> - POST - rectifying position game id=%s", game_id)
+        mylogger.LOGGER.info("/game-positions/<game_id> - POST - rectifying position game id=%s", game_id)
 
-        args = RECTIFICATION_PARSER.parse_args()
+        args = RECTIFICATION_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
         ownerships_submitted = args['center_ownerships']
         units_submitted = args['units']
@@ -614,7 +615,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -693,7 +694,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_positions/<game_id> - GET - getting position for game id=%s", game_id)
+        mylogger.LOGGER.info("/game-positions/<game_id> - GET - getting position for game id=%s", game_id)
 
         # get ownerships
         ownership_dict = dict()
@@ -728,7 +729,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game_reports/<game_id>')
+@API.resource('/game-reports/<game_id>')
 class GameReportRessource(flask_restful.Resource):  # type: ignore
     """ GameReportRessource """
 
@@ -738,7 +739,7 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_reports/<game_id> - GET - getting report game id=%s", game_id)
+        mylogger.LOGGER.info("/game-reports/<game_id> - GET - getting report game id=%s", game_id)
 
         report = reports.Report.find_by_identifier(game_id)
         assert report is not None
@@ -749,7 +750,7 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game_orders/<game_id>')
+@API.resource('/game-orders/<game_id>')
 class GameOrderRessource(flask_restful.Resource):  # type: ignore
     """ GameOrderRessource """
 
@@ -759,9 +760,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_orders/<game_id> - POST - submitting orders game id=%s", game_id)
+        mylogger.LOGGER.info("/game-orders/<game_id> - POST - submitting orders game id=%s", game_id)
 
-        args = SUBMISSION_PARSER.parse_args()
+        args = SUBMISSION_PARSER.parse_args(strict=True)
         role_id = args['role_id']
 
         mylogger.LOGGER.info("role_id=%s", role_id)
@@ -780,7 +781,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -938,9 +939,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_orders/<game_id> - GET - getting back orders game id=%s", game_id)
+        mylogger.LOGGER.info("/game-orders/<game_id> - GET - getting back orders game id=%s", game_id)
 
-        args = RETRIEVE_ORDERS_PARSER.parse_args()
+        args = RETRIEVE_ORDERS_PARSER.parse_args(strict=True)
         role_id = args['role_id']
 
         mylogger.LOGGER.info("role_id=%s", role_id)
@@ -952,7 +953,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1005,7 +1006,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game_adjudications/<game_id>')
+@API.resource('/game-adjudications/<game_id>')
 class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
     """ GameAdjudicationRessource """
 
@@ -1015,9 +1016,9 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_adjudications/<game_id> - POST - adjudicating game id=%s", game_id)
+        mylogger.LOGGER.info("/game-adjudications/<game_id> - POST - adjudicating game id=%s", game_id)
 
-        args = ADJUDICATION_PARSER.parse_args()
+        args = ADJUDICATION_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
         names = args['names']
 
@@ -1027,7 +1028,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1104,8 +1105,8 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # evaluate orders
         orders_list = list()
-        game_orders = orders.Order.list_by_game_id(game_id)
-        for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in game_orders:
+        orders_from_game = orders.Order.list_by_game_id(game_id)
+        for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders_from_game:
             orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
         orders_list_json = json.dumps(orders_list)
 
@@ -1220,7 +1221,7 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/simulation - POST - simulation")
 
-        args = SIMULATION_PARSER.parse_args()
+        args = SIMULATION_PARSER.parse_args(strict=True)
         variant_name = args['variant_name']
         names = args['names']
         ownerships_submitted = args['center_ownerships']
@@ -1316,7 +1317,7 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
-@API.resource('/game_messages/<game_id>')
+@API.resource('/game-messages/<game_id>')
 class GameMessageRessource(flask_restful.Resource):  # type: ignore
     """  GameMessageRessource """
 
@@ -1326,9 +1327,9 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_messages/<game_id> - POST - creating new message game id=%s", game_id)
+        mylogger.LOGGER.info("/game-messages/<game_id> - POST - creating new message game id=%s", game_id)
 
-        args = MESSAGE_PARSER.parse_args()
+        args = MESSAGE_PARSER.parse_args(strict=True)
         role_id = args['role_id']
         dest_role_id = args['dest_role_id']
 
@@ -1343,7 +1344,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1391,10 +1392,10 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_messages/<game_id> - GET - getting back messages game id=%s", game_id)
+        mylogger.LOGGER.info("/game-messages/<game_id> - GET - getting back messages game id=%s", game_id)
 
         # not used for the moment
-        args = RETRIEVE_MESSAGES_PARSER.parse_args()
+        args = RETRIEVE_MESSAGES_PARSER.parse_args(strict=True)
         role_id = args['role_id']
         mylogger.LOGGER.info("role_id=%s", role_id)
 
@@ -1405,7 +1406,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1460,7 +1461,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game_declarations/<game_id>')
+@API.resource('/game-declarations/<game_id>')
 class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
     """  GameDeclarationRessource """
 
@@ -1470,9 +1471,9 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_declarations/<game_id> - POST - creating new declaration game id=%s", game_id)
+        mylogger.LOGGER.info("/game-declarations/<game_id> - POST - creating new declaration game id=%s", game_id)
 
-        args = DECLARATION_PARSER.parse_args()
+        args = DECLARATION_PARSER.parse_args(strict=True)
         role_id = args['role_id']
 
         mylogger.LOGGER.info("role_id=%s", role_id)
@@ -1486,7 +1487,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1534,10 +1535,10 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_declarations/<game_id> - GET - getting back declarations game id=%s", game_id)
+        mylogger.LOGGER.info("/game-declarations/<game_id> - GET - getting back declarations game id=%s", game_id)
 
         # not used for the moment
-        args = RETRIEVE_DECLARATIONS_PARSER.parse_args()
+        args = RETRIEVE_DECLARATIONS_PARSER.parse_args(strict=True)
         role_id = args['role_id']
         limit = args['limit']
 
@@ -1550,7 +1551,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1597,7 +1598,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game_visits/<game_id>')
+@API.resource('/game-visits/<game_id>')
 class GameVisitRessource(flask_restful.Resource):  # type: ignore
     """  GameVisitRessource """
 
@@ -1607,9 +1608,9 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_visits/<game_id> - POST - creating new visit game id=%s", game_id)
+        mylogger.LOGGER.info("/game-visits/<game_id> - POST - creating new visit game id=%s", game_id)
 
-        args = VISIT_PARSER.parse_args()
+        args = VISIT_PARSER.parse_args(strict=True)
         role_id = args['role_id']
 
         mylogger.LOGGER.info("role_id=%s", role_id)
@@ -1622,7 +1623,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1669,9 +1670,9 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game_visits/<game_id> - GET - retrieving new visit game id=%s", game_id)
+        mylogger.LOGGER.info("/game-visits/<game_id> - GET - retrieving new visit game id=%s", game_id)
 
-        args = RETRIEVE_VISIT_PARSER.parse_args()
+        args = RETRIEVE_VISIT_PARSER.parse_args(strict=True)
         role_id = args['role_id']
 
         mylogger.LOGGER.info("role_id=%s", role_id)
@@ -1684,7 +1685,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify_user"
+        url = f"{host}:{port}/verify-user"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
