@@ -36,14 +36,14 @@ JWT = flask_jwt_extended.JWTManager(APP)
 # users
 # ---------------------------------
 
-@APP.route('/add_user', methods=['POST'])
+@APP.route('/add-user', methods=['POST'])
 def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     add an user account
     PROTECTED (called by players block)
     """
 
-    mylogger.LOGGER.info("/add_user - POST - adding one user")
+    mylogger.LOGGER.info("/add-user - POST - adding one user")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
@@ -66,7 +66,7 @@ def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify({"msg": "User was added"}), 201
 
 
-@APP.route('/remove_user', methods=['POST'])
+@APP.route('/remove-user', methods=['POST'])
 @flask_jwt_extended.jwt_required  # type: ignore
 def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
@@ -74,7 +74,7 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     PROTECTED (called by players block)
     """
 
-    mylogger.LOGGER.info("/remove_user - POST - removing one user")
+    mylogger.LOGGER.info("/remove-user - POST - removing one user")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
@@ -97,7 +97,7 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify({"msg": "User was removed"}), 200
 
 
-@APP.route('/change_user', methods=['POST'])
+@APP.route('/change-user', methods=['POST'])
 @flask_jwt_extended.jwt_required  # type: ignore
 def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
@@ -105,7 +105,7 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     PROTECTED (called by players block)
     """
 
-    mylogger.LOGGER.info("/change_user - POST - updating one user (change password)")
+    mylogger.LOGGER.info("/change-user - POST - updating one user (change password)")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
@@ -133,7 +133,7 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify({"msg": "User was changed"}), 201
 
 
-@APP.route('/login_user', methods=['POST'])
+@APP.route('/login-user', methods=['POST'])
 def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     Provide a method to create access tokens. The create_access_token()
@@ -142,7 +142,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     EXPOSED : called by all ihms that have a login/password input
     """
 
-    mylogger.LOGGER.info("/login_user - POST - login in a user")
+    mylogger.LOGGER.info("/login-user - POST - login in a user")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
@@ -167,7 +167,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify(access_token=access_token), 200
 
 
-@APP.route('/verify_user', methods=['GET'])
+@APP.route('/verify-user', methods=['GET'])
 @flask_jwt_extended.jwt_required  # type: ignore
 def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
@@ -176,7 +176,7 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     PROTECTED : not called directly, called by game and player blocks
     """
 
-    mylogger.LOGGER.info("/verify_user - GET - verifying a user")
+    mylogger.LOGGER.info("/verify-user - GET - verifying a user")
 
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
@@ -187,14 +187,14 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 # ---------------------------------
 
 
-@APP.route('/add_email', methods=['POST'])
+@APP.route('/add-email', methods=['POST'])
 def add_email() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     add an email for a player
     PROTECTED : called only by player block (account creation/email change)
     """
 
-    mylogger.LOGGER.info("/add_email - POST - adding/updating one email")
+    mylogger.LOGGER.info("/add-email - POST - adding/updating one email")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
@@ -216,14 +216,14 @@ def add_email() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify({"msg": "Email was added or updated"}), 200
 
 
-@APP.route('/verify_email', methods=['GET'])
+@APP.route('/verify-email', methods=['GET'])
 def verify_email() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     Check if code is correct for email.
     PROTECTED : called by block players
     """
 
-    mylogger.LOGGER.info("/verify_email - GET - checking code for email")
+    mylogger.LOGGER.info("/verify-email - GET - checking code for email")
 
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400

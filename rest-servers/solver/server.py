@@ -43,7 +43,7 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/solve - POST - solver called")
 
-        args = SOLVER_PARSER.parse_args()
+        args = SOLVER_PARSER.parse_args(strict=True)
 
         variant_json = args['variant']
         variant = json.loads(variant_json)
