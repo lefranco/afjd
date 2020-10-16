@@ -1295,7 +1295,9 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
         orders_result = req_result.json()['orders_result']
         orders_result_simplified = orders_result
 
-        data = {'msg': f"Ok adjudication performed : {adjudication_report}\n{orders_result_simplified}"}
+        data = {
+            'msg': f"Ok adjudication performed : {adjudication_report}",
+            'result': f"{orders_result_simplified}"}
         return data, 201
 
 
