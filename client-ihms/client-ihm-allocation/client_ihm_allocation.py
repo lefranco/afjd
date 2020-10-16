@@ -323,7 +323,7 @@ class Application(tkinter.Frame):
         game_id = self.selectable_game_list[game_index_sel]
         host = SERVER_CONFIG['GAME']['HOST']
         port = SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/allocations-games/{game_id}"
+        url = f"{host}:{port}/game-allocations/{game_id}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -430,7 +430,7 @@ class Application(tkinter.Frame):
 
         host = SERVER_CONFIG['USER']['HOST']
         port = SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/login-user"
+        url = f"{host}:{port}/login"
         req_result = SESSION.post(url, json={'user_name': pseudo, 'password': password})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
