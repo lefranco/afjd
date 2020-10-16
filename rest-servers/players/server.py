@@ -179,7 +179,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
         player = players.Player.find_by_pseudo(pseudo)
         if player is None:
-            flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
+            flask_restful.abort(204, msg=f"Player {pseudo} doesn't exist")
 
         assert player is not None
         player_id = player.identifier

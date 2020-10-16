@@ -113,6 +113,8 @@ DECLARATION_PARSER.add_argument('pseudo', type=str, required=False)
 DECLARATION_PARSER.add_argument('content', type=str, required=True)
 
 RETRIEVE_DECLARATIONS_PARSER = flask_restful.reqparse.RequestParser()
+RETRIEVE_DECLARATIONS_PARSER.add_argument('role_id', type=int, required=True)
+RETRIEVE_DECLARATIONS_PARSER.add_argument('pseudo', type=str, required=False)
 RETRIEVE_DECLARATIONS_PARSER.add_argument('limit', type=int, required=False)
 
 MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
@@ -229,7 +231,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -296,7 +298,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # delete game from here
         game = games.Game.find_by_name(name)
         if game is None:
-            flask_restful.abort(404, msg=f"Game {name} doesn't exist")
+            flask_restful.abort(204, msg=f"Game {name} doesn't exist")
 
         if pseudo == '':
             flask_restful.abort(404, msg="Need a pseudo to delete game")
@@ -310,7 +312,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -389,7 +391,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -450,7 +452,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -463,7 +465,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to add allocation
+        # check user has right to add allocation - must be concerned user or game master
 
         # who is game master ?
         game = games.Game.find_by_identifier(game_id)
@@ -472,6 +474,10 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         if user_id not in [game_master_id, player_id]:
             flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the concerned player")
+
+        # TODO : change when replacement is implemented
+        if game.current_state != 0:
+            flask_restful.abort(400, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
 
         allocation = allocations.Allocation(game_id, player_id, role_id)
         allocation.update_database()
@@ -507,7 +513,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -520,7 +526,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to delete allocation
+        # check user has right to add allocation - must be concerned user or game master
 
         # who is game master ?
         game = games.Game.find_by_identifier(game_id)
@@ -529,6 +535,10 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         if user_id not in [game_master_id, player_id]:
             flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the concerned player")
+
+        # TODO : change when replacement is implemented
+        if game.current_state != 0:
+            flask_restful.abort(400, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
 
         allocation = allocations.Allocation(game_id, player_id, role_id)
         allocation.delete_database()
@@ -610,7 +620,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -623,7 +633,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to submit orders
+        # check user has right to change position - must be game master
 
         # who is player for role ?
         game = games.Game.find_by_identifier(game_id)
@@ -760,6 +770,10 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         names = args['names']
         orders_submitted = args['orders']
 
+        # TODO : change when usurpation is implemented
+        if role_id == 0:
+            flask_restful.abort(400, msg="Game master cannot submit orders in game - please usurp game player (not implemented)")
+
         if pseudo == '':
             flask_restful.abort(404, msg="Need a pseudo to submit orders in game")
 
@@ -772,7 +786,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -785,17 +799,16 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to submit orders
+        # check user has right to submit orders - must be player
 
         # who is player for role ?
         game = games.Game.find_by_identifier(game_id)
         assert game is not None
-        game_master_id = game.get_role(0)
         player_id = game.get_role(role_id)
 
-        # can be player of game master
-        if user_id not in [game_master_id, player_id]:
-            flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the player who is in charge")
+        # must be player (not game master)
+        if user_id != player_id:
+            flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # put in database fake units - units for build orders
         # we cannot remove all fake units since at this point we do not know if build will be successful
@@ -945,7 +958,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -958,17 +971,19 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to get orders
+        # check user has right to get orders - must be player or game master
 
         # who is player for role ?
         game = games.Game.find_by_identifier(game_id)
         assert game is not None
-        game_master_id = game.get_role(0)
-        player_id = game.get_role(role_id)
+        expected_id = game.get_role(role_id)
 
-        # can be player of game master
-        if user_id not in [game_master_id, player_id]:
-            flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the player who is in charge")
+        # can be player of game master but must correspond
+        if user_id != expected_id:
+            if role_id == 0:
+                flask_restful.abort(403, msg="You do not seem to be the game master")
+            else:
+                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # get orders
         if role_id:
@@ -1018,7 +1033,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1032,7 +1047,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         user_id = req_result.json()
 
-        # check user has right to adjudicate
+        # check user has right to adjudicate - must be game master
 
         # who is game master ?
         game = games.Game.find_by_identifier(game_id)
@@ -1334,7 +1349,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1347,17 +1362,19 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to submit orders (all the same)
+        # check user has right to post message - must be player of game master
 
         # who is player for role ?
         game = games.Game.find_by_identifier(game_id)
         assert game is not None
-        game_master_id = game.get_role(0)
-        player_id = game.get_role(role_id)
+        expected_id = game.get_role(role_id)
 
-        # can be player of game master
-        if user_id not in [game_master_id, player_id]:
-            flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the player who is in charge")
+        # can be player of game master but must correspond
+        if user_id != expected_id:
+            if role_id == 0:
+                flask_restful.abort(403, msg="You do not seem to be the game master")
+            else:
+                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # create message here
         identifier = messages.Message.free_identifier()
@@ -1385,39 +1402,41 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         if pseudo == '':
             flask_restful.abort(404, msg="Need a pseudo to get messages in game")
 
-            # check authentication from user server
-            host = lowdata.SERVER_CONFIG['USER']['HOST']
-            port = lowdata.SERVER_CONFIG['USER']['PORT']
-            url = f"{host}:{port}/verify_user"
-            jwt_token = flask.request.headers.get('access_token')
-            req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
-            if req_result.status_code != 200:
-                mylogger.LOGGER.error("ERROR = %s", req_result.text)
-                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify_user"
+        jwt_token = flask.request.headers.get('access_token')
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
-            # get player identifier
-            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-            url = f"{host}:{port}/player_identifiers/{pseudo}"
-            req_result = SESSION.get(url)
-            if req_result.status_code != 200:
-                print(f"ERROR from server  : {req_result.text}")
-                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-            user_id = req_result.json()
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
 
-            # check user has right to submit orders (all the same)
+        # check user has right to read message - must be player of game master
 
-            # who is player for role ?
-            game = games.Game.find_by_identifier(game_id)
-            assert game is not None
-            game_master_id = game.get_role(0)
-            player_id = game.get_role(role_id)
+        # who is player for role ?
+        game = games.Game.find_by_identifier(game_id)
+        assert game is not None
+        expected_id = game.get_role(role_id)
 
-            # can be player of game master
-            if user_id not in [game_master_id, player_id]:
-                flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the player who is in charge")
+        # can be player of game master but must correspond
+        if user_id != expected_id:
+            if role_id == 0:
+                flask_restful.abort(403, msg="You do not seem to be the game master")
+            else:
+                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # ok now we can get messages
         limit = args['limit']
@@ -1473,7 +1492,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1486,17 +1505,19 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to submit orders (all the same)
+        # check user has right to post declatation - must be player of game master
 
         # who is player for role ?
         game = games.Game.find_by_identifier(game_id)
         assert game is not None
-        game_master_id = game.get_role(0)
-        player_id = game.get_role(role_id)
+        expected_id = game.get_role(role_id)
 
-        # can be player of game master
-        if user_id not in [game_master_id, player_id]:
-            flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the player who is in charge")
+        # can be player of game master but must correspond
+        if user_id != expected_id:
+            if role_id == 0:
+                flask_restful.abort(403, msg="You do not seem to be the game master")
+            else:
+                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # create declaration here
         identifier = declarations.Declaration.free_identifier()
@@ -1517,7 +1538,50 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         # not used for the moment
         args = RETRIEVE_DECLARATIONS_PARSER.parse_args()
+        role_id = args['role_id']
         limit = args['limit']
+
+        mylogger.LOGGER.info("role_id=%s", role_id)
+        pseudo = args['pseudo']
+
+        if pseudo == '':
+            flask_restful.abort(404, msg="Need a pseudo to insert declaration in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify_user"
+        jwt_token = flask.request.headers.get('access_token')
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to read declaration - must be player of game master
+
+        # who is player for role ?
+        game = games.Game.find_by_identifier(game_id)
+        assert game is not None
+        expected_id = game.get_role(role_id)
+
+        # can be player of game master but must correspond
+        if user_id != expected_id:
+            if role_id == 0:
+                flask_restful.abort(403, msg="You do not seem to be the game master")
+            else:
+                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # gather declarations
         declarations_list = declarations.Declaration.list_by_game_id(game_id)
@@ -1564,7 +1628,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1577,16 +1641,19 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to submit orders (all the same)
+        # check user has right to post visit - must be player of game master
 
         # who is player for role ?
         game = games.Game.find_by_identifier(game_id)
         assert game is not None
-        player_id = game.get_role(role_id)
+        expected_id = game.get_role(role_id)
 
-        # can be player or game master
-        if user_id != player_id:
-            flask_restful.abort(403, msg="You do not seem to be the player or game master who is in charge")
+        # can be player of game master but must correspond
+        if user_id != expected_id:
+            if role_id == 0:
+                flask_restful.abort(403, msg="You do not seem to be the game master")
+            else:
+                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # create visit here
         time_stamp = int(time.time())
@@ -1623,7 +1690,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1636,16 +1703,19 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to submit orders (all the same)
+        # check user has right to read visit - must be player of game master
 
         # who is player for role ?
         game = games.Game.find_by_identifier(game_id)
         assert game is not None
-        player_id = game.get_role(role_id)
+        expected_id = game.get_role(role_id)
 
-        # can be player or game master
-        if user_id != player_id:
-            flask_restful.abort(403, msg="You do not seem to be the player or game master who is in charge")
+        # can be player of game master but must correspond
+        if user_id != expected_id:
+            if role_id == 0:
+                flask_restful.abort(403, msg="You do not seem to be the game master")
+            else:
+                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # retrieve visit here
         time_stamp = int(time.time())  # serves as default timestamp
