@@ -603,10 +603,16 @@ class Application(tkinter.Frame):
         # get this game - declarations (requires variant)
 
         # get from server
+        # log visit on server
+        json_dict = {
+            'role_id': ROLE_IDENTIFIER,
+            'pseudo': self.login_var.get(),  # type: ignore
+        }
+
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game_declarations/{GAME_IDENTIFIER}"
-        req_result = SESSION.get(url)
+        req_result = SESSION.get(url, data=json_dict, headers={'access_token': JWT_TOKEN})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -1435,7 +1441,7 @@ def main() -> None:
         style.configure('TNotebook.Tab', font=(font.FONT_USED, font.FONT_SIZE))
 
         # use description of first register as overall title
-        window_name = "Démonstrateur client IHM jeu - projet AJDS (Diplomatie)"
+        window_name = "Démonstrateur client IHM jeu - projet ANJD (Diplomatie)"
 
         root.title(window_name)
 
