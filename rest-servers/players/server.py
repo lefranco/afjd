@@ -153,11 +153,16 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             player.email_confirmed = False
             code = random.randint(1000, 9999)
 
+            json_dict = {
+                'email_value': email_after,
+                'code': code
+            }
+
             # store the email/code in secure server
-            host = lowdata.SERVER_CONFIG['USER']['HOST']
-            port = lowdata.SERVER_CONFIG['USER']['PORT']
-            url = f"{host}:{port}/add-email"
-            req_result = SESSION.post(url, json={'email_value': email_after, 'code': code})
+            host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+            port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+            url = f"{host}:{port}/emails"
+            req_result = SESSION.post(url, data=json_dict)
             if req_result.status_code != 200:
                 mylogger.LOGGER.error("ERROR = %s", req_result.text)
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -270,11 +275,16 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         email_after = player.email
         code = random.randint(1000, 9999)
 
+        json_dict = {
+            'email_value': email_after,
+            'code': code
+        }
+
         # store the email/code in secure server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/add-email"
-        req_result = SESSION.post(url, json={'email_value': email_after, 'code': code})
+        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/emails"
+        req_result = SESSION.post(url, data=json_dict)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -312,11 +322,16 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
 
         code = args['code']
 
+        json_dict = {
+            'email_value': email_player,
+            'code': code
+        }
+
         # check code from user server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-email"
-        req_result = SESSION.get(url, json={'email_value': email_player, 'code': code})
+        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/emails"
+        req_result = SESSION.get(url, data=json_dict)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
