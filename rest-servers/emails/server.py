@@ -48,7 +48,7 @@ class EmailsRessource(flask_restful.Resource):  # type: ignore
         email.update_database()
 
         data = {'msg': 'Email was added or updated'}
-        return data, 200
+        return data, 201
 
     def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
