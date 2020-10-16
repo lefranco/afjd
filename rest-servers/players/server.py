@@ -163,7 +163,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
             url = f"{host}:{port}/emails"
             req_result = SESSION.post(url, data=json_dict)
-            if req_result.status_code != 200:
+            if req_result.status_code != 201:
                 mylogger.LOGGER.error("ERROR = %s", req_result.text)
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                 flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
@@ -285,7 +285,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
         url = f"{host}:{port}/emails"
         req_result = SESSION.post(url, data=json_dict)
-        if req_result.status_code != 200:
+        if req_result.status_code != 201:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
