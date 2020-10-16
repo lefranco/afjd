@@ -17,7 +17,6 @@ import lowdata
 import mylogger
 import populate
 import users
-import emails
 import database
 
 
@@ -182,72 +181,6 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     logged_in_as = flask_jwt_extended.get_jwt_identity()
     return flask.jsonify(logged_in_as=logged_in_as), 200
 
-# ---------------------------------
-# emails
-# ---------------------------------
-
-
-@APP.route('/add-email', methods=['POST'])
-def add_email() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-    """
-    add an email for a player
-    PROTECTED : called only by player block (account creation/email change)
-    """
-
-    mylogger.LOGGER.info("/add-email - POST - adding/updating one email")
-
-    if not flask.request.is_json:
-        return flask.jsonify({"msg": "Missing JSON in request"}), 400
-
-    email_value = flask.request.json.get('email_value', None)
-    if not email_value:
-        return flask.jsonify({"msg": "Missing email_value parameter"}), 400
-
-    code_str = flask.request.json.get('code', None)
-    if not code_str:
-        return flask.jsonify({"msg": "Missing code parameter"}), 400
-    try:
-        code = int(code_str)
-    except:  # noqa: E722 pylint: disable=bare-except
-        return flask.jsonify({"msg": "Code is not integer"}), 400
-
-    email = emails.Email(email_value, code)
-    email.update_database()
-    return flask.jsonify({"msg": "Email was added or updated"}), 200
-
-
-@APP.route('/verify-email', methods=['GET'])
-def verify_email() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-    """
-    Check if code is correct for email.
-    PROTECTED : called by block players
-    """
-
-    mylogger.LOGGER.info("/verify-email - GET - checking code for email")
-
-    if not flask.request.is_json:
-        return flask.jsonify({"msg": "Missing JSON in request"}), 400
-
-    email_value = flask.request.json.get('email_value', None)
-    if not email_value:
-        return flask.jsonify({"msg": "Missing email parameter"}), 400
-
-    code_str = flask.request.json.get('code', None)
-    if not code_str:
-        return flask.jsonify({"msg": "Missing code parameter"}), 400
-    try:
-        code = int(code_str)
-    except:  # noqa: E722 pylint: disable=bare-except
-        return flask.jsonify({"msg": "Code is not integer"}), 400
-
-    email = emails.Email.find_by_value(email_value)
-    if email is None:
-        return {"msg": "Email does not exist"}, 404
-
-    if email.code != code:
-        return flask.jsonify({"msg": "Code is incorrect"}), 401
-
-    return flask.jsonify({"msg": "Email is correct"}), 200
 
 # ---------------------------------
 # main
