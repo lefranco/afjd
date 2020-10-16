@@ -83,7 +83,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # IMPORTANT : check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -115,7 +115,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.info("Special :  updating a password")
             host = lowdata.SERVER_CONFIG['USER']['HOST']
             port = lowdata.SERVER_CONFIG['USER']['PORT']
-            url = f"{host}:{port}/change-user"
+            url = f"{host}:{port}/change"
             jwt_token = flask.request.headers.get('access_token')
             req_result = SESSION.post(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo, 'password': args['password']})
             if req_result.status_code != 201:
@@ -128,7 +128,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -192,7 +192,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # get all allocations of the player
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
         port = lowdata.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/allocations-players/{player_id}"
+        url = f"{host}:{port}/player-allocations/{player_id}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -207,7 +207,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # delete player from users server (that will implicitly check we have rights)
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/remove'user"
+        url = f"{host}:{port}/remove"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.post(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -258,7 +258,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         # create player on users server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/add-user"
+        url = f"{host}:{port}/add"
         req_result = SESSION.post(url, json={'user_name': pseudo, 'password': args['password']})
         if req_result.status_code != 201:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)

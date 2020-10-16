@@ -226,7 +226,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -307,7 +307,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -386,7 +386,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -447,7 +447,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -508,7 +508,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -548,7 +548,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/allocations-games/<game_id>')
+@API.resource('/game-allocations/<game_id>')
 class AllocationGameRessource(flask_restful.Resource):  # type: ignore
     """ AllocationGameRessource """
 
@@ -558,7 +558,7 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/allocations-games/<game_id> - GET - get getting allocations for game id=%s", game_id)
+        mylogger.LOGGER.info("/game-allocations/<game_id> - GET - get getting allocations for game id=%s", game_id)
 
         allocations_list = allocations.Allocation.list_by_game_id(game_id)
 
@@ -567,7 +567,7 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/allocations-players/<player_id>')
+@API.resource('/player-allocations/<player_id>')
 class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
     """ AllocationPlayerRessource """
 
@@ -578,7 +578,7 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/allocations-players/<player_id> - GET - get getting allocations for player player_id=%s", player_id)
+        mylogger.LOGGER.info("/player-allocations/<player_id> - GET - get getting allocations for player player_id=%s", player_id)
 
         allocations_list = allocations.Allocation.list_by_player_id(player_id)
 
@@ -615,7 +615,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -781,7 +781,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -953,7 +953,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1028,7 +1028,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1344,7 +1344,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1406,7 +1406,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1487,7 +1487,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1551,7 +1551,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1623,7 +1623,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
@@ -1685,7 +1685,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify-user"
+        url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('access_token')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:

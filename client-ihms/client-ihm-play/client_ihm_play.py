@@ -543,7 +543,7 @@ class Application(tkinter.Frame):
         # get all allocations of the game
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/allocations-games/{GAME_IDENTIFIER}"
+        url = f"{host}:{port}/game-allocations/{GAME_IDENTIFIER}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -960,7 +960,7 @@ class Application(tkinter.Frame):
 
         host = data.SERVER_CONFIG['USER']['HOST']
         port = data.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/login-user"
+        url = f"{host}:{port}/login"
         req_result = SESSION.post(url, json={'user_name': pseudo, 'password': password})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
