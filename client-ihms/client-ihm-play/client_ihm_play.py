@@ -1163,6 +1163,9 @@ class Application(tkinter.Frame):
             return
 
         tkinter.messagebox.showinfo("OK", f"Simulation réussie : {message}")
+        if 'result' in req_result.json():
+            result = req_result.json()['result']
+            tkinter.messagebox.showinfo("OK", f"Compte-rendu :\n\n{result}")
 
     def callback_send(self, event: typing.Any) -> None:
         """ callback button pushed """
