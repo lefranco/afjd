@@ -197,7 +197,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"User removal failed!:{message}")
+            flask_restful.abort(400, msg=f"Allocation check failed!:{message}")
         json_dict = req_result.json()
         allocations_dict = json_dict
 
@@ -218,7 +218,8 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # delete player from here
         player.delete_database()
 
-        return {}, 200
+        data = {'pseudo': pseudo, 'msg': 'Ok removed'}
+        return DATA, 200
 
 
 @API.resource('/players')
