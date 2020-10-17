@@ -202,7 +202,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         allocations_dict = json_dict
 
         if allocations_dict:
-            flask_restful.abort(400, msg="Utilisateur encore dans une partie")
+            flask_restful.abort(400, msg="Player is still in a game")
 
         # delete player from users server (that will implicitly check we have rights)
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -254,7 +254,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
         player = players.Player.find_by_pseudo(pseudo)
         if player is not None:
-            flask_restful.abort(404, msg=f"Player {pseudo} already exists")
+            flask_restful.abort(400, msg=f"Player {pseudo} already exists")
 
         # create player on users server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -341,7 +341,8 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
         player.email_confirmed = True
         player.update_database()
 
-        return {}, 200
+        data = {'pseudo': pseudo, 'msg': 'Ok code is correct'}
+        return data, 200
 
 
 def main() -> None:
