@@ -82,17 +82,17 @@ ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER.add_argument('role_id', type=int, required=True)
-SUBMISSION_PARSER.add_argument('pseudo', type=str, required=True)
 SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
 SUBMISSION_PARSER.add_argument('names', type=str, required=True)
+SUBMISSION_PARSER.add_argument('pseudo', type=str, required=False)
 
 RETRIEVE_ORDERS_PARSER = flask_restful.reqparse.RequestParser()
 RETRIEVE_ORDERS_PARSER.add_argument('role_id', type=int, required=True)
 RETRIEVE_ORDERS_PARSER.add_argument('pseudo', type=str, required=False)
 
 ADJUDICATION_PARSER = flask_restful.reqparse.RequestParser()
-ADJUDICATION_PARSER.add_argument('pseudo', type=str, required=False)
 ADJUDICATION_PARSER.add_argument('names', type=str, required=True)
+ADJUDICATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 SIMULATION_PARSER = flask_restful.reqparse.RequestParser()
 SIMULATION_PARSER.add_argument('variant_name', type=str, required=True)
@@ -102,15 +102,15 @@ SIMULATION_PARSER.add_argument('units', type=str, required=True)
 SIMULATION_PARSER.add_argument('names', type=str, required=True)
 
 RECTIFICATION_PARSER = flask_restful.reqparse.RequestParser()
-RECTIFICATION_PARSER.add_argument('pseudo', type=str, required=False)
 RECTIFICATION_PARSER.add_argument('center_ownerships', type=str, required=True)
 RECTIFICATION_PARSER.add_argument('units', type=str, required=True)
 RECTIFICATION_PARSER.add_argument('forbiddens', type=str, required=True)
+RECTIFICATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 DECLARATION_PARSER = flask_restful.reqparse.RequestParser()
 DECLARATION_PARSER.add_argument('role_id', type=int, required=True)
-DECLARATION_PARSER.add_argument('pseudo', type=str, required=False)
 DECLARATION_PARSER.add_argument('content', type=str, required=True)
+DECLARATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 RETRIEVE_DECLARATIONS_PARSER = flask_restful.reqparse.RequestParser()
 RETRIEVE_DECLARATIONS_PARSER.add_argument('role_id', type=int, required=True)
@@ -119,9 +119,9 @@ RETRIEVE_DECLARATIONS_PARSER.add_argument('limit', type=int, required=False)
 
 MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
 MESSAGE_PARSER.add_argument('role_id', type=int, required=True)
-MESSAGE_PARSER.add_argument('pseudo', type=str, required=False)
 MESSAGE_PARSER.add_argument('dest_role_id', type=int, required=True)
 MESSAGE_PARSER.add_argument('content', type=str, required=True)
+MESSAGE_PARSER.add_argument('pseudo', type=str, required=False)
 
 RETRIEVE_MESSAGES_PARSER = flask_restful.reqparse.RequestParser()
 RETRIEVE_MESSAGES_PARSER.add_argument('limit', type=int, required=False)
@@ -901,7 +901,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to submit orders {message} : {submission_report}")
+            flask_restful.abort(400, msg=f"Failed to submit orders {message} : {submission_report}")
 
         # ok so orders are accepted
 
@@ -983,7 +983,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # can be player of game master but must correspond
         if user_id != expected_id:
             if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master")
+                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
             else:
                 flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
@@ -1130,7 +1130,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to adjudicate {message} : {adjudication_report}")
+            flask_restful.abort(400, msg=f"Failed to adjudicate {message} : {adjudication_report}")
 
         # extract new position
         situation_result = req_result.json()['situation_result']
@@ -1374,7 +1374,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # can be player of game master but must correspond
         if user_id != expected_id:
             if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master")
+                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
             else:
                 flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
@@ -1436,7 +1436,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # can be player of game master but must correspond
         if user_id != expected_id:
             if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master")
+                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
             else:
                 flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
@@ -1517,7 +1517,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # can be player of game master but must correspond
         if user_id != expected_id:
             if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master")
+                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
             else:
                 flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
@@ -1581,7 +1581,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # can be player of game master but must correspond
         if user_id != expected_id:
             if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master")
+                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
             else:
                 flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
@@ -1653,7 +1653,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         # can be player of game master but must correspond
         if user_id != expected_id:
             if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master")
+                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
             else:
                 flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
@@ -1662,7 +1662,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         visit = visits.Visit(int(game_id), role_id, time_stamp)
         visit.update_database()
 
-        data = {'msg': f"Ok visit inserted for game={game_id} role={role_id}"}
+        data = {'msg': f"Ok visit inserted"}
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
@@ -1681,7 +1681,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         pseudo = args['pseudo']
 
         if pseudo == '':
-            flask_restful.abort(401, msg="Need a pseudo to retrieve visit in game")
+            flask_restful.abort(401, msg="Need a pseudo to retrieve last visit in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1715,7 +1715,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         # can be player of game master but must correspond
         if user_id != expected_id:
             if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master")
+                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
             else:
                 flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
