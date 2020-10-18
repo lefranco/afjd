@@ -479,7 +479,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         # TODO : change when replacement is implemented
         if game.current_state != 0:
-            flask_restful.abort(400, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
+            flask_restful.abort(405, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
 
         allocation = allocations.Allocation(game_id, player_id, role_id)
         allocation.update_database()
@@ -540,7 +540,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         # TODO : change when replacement is implemented
         if game.current_state != 0:
-            flask_restful.abort(400, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
+            flask_restful.abort(405, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
 
         allocation = allocations.Allocation(game_id, player_id, role_id)
         allocation.delete_database()
