@@ -88,7 +88,7 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
     logged_in_as = flask_jwt_extended.get_jwt_identity()
     if logged_in_as != user_name:
-        return {"msg": "This is not you ! Good try !"}, 400
+        return {"msg": "This is not you ! Good try !"}, 405
 
     assert user is not None
     user.delete_database()
@@ -123,7 +123,7 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
     logged_in_as = flask_jwt_extended.get_jwt_identity()
     if logged_in_as != user_name:
-        return {"msg": "This is not you ! Good try !"}, 400
+        return {"msg": "This is not you ! Good try !"}, 405
 
     assert user is not None
     pwd_hash = werkzeug.security.generate_password_hash(password)
