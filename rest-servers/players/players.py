@@ -109,9 +109,7 @@ class Player:
             self._email = self._email[:LEN_EMAIL_MAX]
             changed = True
 
-        if 'email_confirmed' in json_dict and json_dict['email_confirmed'] is not None and json_dict['email_confirmed'] != self._email_confirmed:
-            self._email_confirmed = json_dict['email_confirmed']
-            changed = True
+        # email_confirmed cannot be set directly
 
         if 'telephone' in json_dict and json_dict['telephone'] is not None and json_dict['telephone'] != self._telephone:
             self._telephone = json_dict['telephone']

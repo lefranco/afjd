@@ -303,7 +303,7 @@ class Application(tkinter.Frame):
 
         self.country_code_list: typing.List[str] = list()
         self.listbox_country_input = tkinter.Listbox(frame_personal, width=40, exportselection=0)
-        with open("./static/country_list.csv", newline='', encoding="utf-8") as csvfile:
+        with open("./data/country_list.csv", newline='', encoding="utf-8") as csvfile:
             reader = csv.reader(csvfile, delimiter=',')
             for country_code, country_name in reader:
                 self.country_code_list.append(country_code)
@@ -318,7 +318,7 @@ class Application(tkinter.Frame):
 
         self.timezone_code_list: typing.List[str] = list()
         self.listbox_timezone_input = tkinter.Listbox(frame_personal, width=80, exportselection=0)
-        with open("./static/timezone_list.csv", newline='', encoding="utf-8") as csvfile:
+        with open("./data/timezone_list.csv", newline='', encoding="utf-8") as csvfile:
             reader = csv.reader(csvfile, delimiter=',')
             for timezone_code, timezone_cities in reader:
                 self.timezone_code_list.append(timezone_code)
