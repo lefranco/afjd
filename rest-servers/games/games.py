@@ -211,9 +211,7 @@ class Game:
             self._access_restriction_performance = json_dict['access_restriction_performance']
             changed = True
 
-        if 'current_advancement' in json_dict and json_dict['current_advancement'] is not None and json_dict['current_advancement'] != self._current_advancement:
-            self._current_advancement = json_dict['current_advancement']
-            changed = True
+        # current_advancement cannot be set directly
 
         if 'nb_max_cycles_to_play' in json_dict and json_dict['nb_max_cycles_to_play'] is not None and json_dict['nb_max_cycles_to_play'] != self._nb_max_cycles_to_play:
             self._nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play']
