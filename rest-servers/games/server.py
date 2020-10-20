@@ -220,7 +220,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             flask_restful.abort(404, msg=f"Game {name} does not exist")
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to modify game")
 
         # check authentication from user server
@@ -301,7 +301,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             flask_restful.abort(404, msg=f"Game {name} doesn't exist")
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to delete game")
 
         # check authentication from user server
@@ -381,7 +381,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         if game is not None:
             flask_restful.abort(400, msg=f"Game {name} already exists")
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to create game")
 
         # check authentication from user server
@@ -442,7 +442,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("game_id=%s player_id=%s role_id=%s", game_id, player_id, role_id)
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to join/put in game")
 
         # check authentication from user server
@@ -503,7 +503,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("game_id=%s player_id=%s")
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to quit/remove from game")
 
         # check authentication from user server
@@ -610,7 +610,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         the_units = json.loads(units_submitted)
         the_forbiddens = json.loads(forbiddens_submitted)
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to rectify position in game")
 
         # check authentication from user server
@@ -776,7 +776,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         if role_id == 0:
             flask_restful.abort(400, msg="Game master cannot submit orders in game - please usurp game player (not implemented)")
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
 
         # check authentication from user server
@@ -948,7 +948,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("role_id=%s", role_id)
 
         pseudo = args['pseudo']
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to retrieve orders in game")
 
         # check authentication from user server
@@ -1023,7 +1023,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         pseudo = args['pseudo']
         names = args['names']
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to adjudicate in game")
 
         # check authentication from user server
@@ -1339,7 +1339,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         pseudo = args['pseudo']
         content = args['content']
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to insert message in game")
 
         # check authentication from user server
@@ -1401,7 +1401,8 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("role_id=%s", role_id)
 
         pseudo = args['pseudo']
-        if pseudo == '':
+
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to get messages in game")
 
         # check authentication from user server
@@ -1482,7 +1483,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         pseudo = args['pseudo']
         content = args['content']
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to insert declaration in game")
 
         # check authentication from user server
@@ -1546,7 +1547,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("role_id=%s", role_id)
         pseudo = args['pseudo']
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to insert declaration in game")
 
         # check authentication from user server
@@ -1618,7 +1619,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = args['pseudo']
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to insert visit in game")
 
         # check authentication from user server
@@ -1680,7 +1681,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = args['pseudo']
 
-        if pseudo == '':
+        if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to retrieve last visit in game")
 
         # check authentication from user server
