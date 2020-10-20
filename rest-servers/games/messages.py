@@ -50,9 +50,9 @@ class Message:
         self._addressee_num = addressee_num
         self._content = content
 
-    def export(self) -> typing.Tuple[int, int, int, int, str]:
+    def export(self) -> typing.Tuple[int, int, int, str]:
         """ for passing to solver """
-        return self._game_id, self._time_stamp, self._author_num, self._addressee_num, self._content
+        return self._time_stamp, self._author_num, self._addressee_num, self._content
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """

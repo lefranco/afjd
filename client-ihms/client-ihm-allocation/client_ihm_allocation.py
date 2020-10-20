@@ -395,7 +395,6 @@ class Application(tkinter.Frame):
         json_dict = {
             'game_id': game_id,
             'player_id': player_id,
-            'role_id': -1,
             'pseudo': self.login_var.get()  # type: ignore
         }
 

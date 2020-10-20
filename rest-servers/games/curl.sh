@@ -1,33 +1,61 @@
 
 
 # format non REST
-# export TOKEN (into ACCESS)
-#curl http://localhost:5001/login -H "Content-Type: application/json" -d '{"user_name":"Tartempion", "password":"Tartempion"}' -X POST
+# get TOKEN
+#curl http://localhost:5001/login -H "Content-Type: application/json" -d '{"user_name":"two", "password":"two"}' -X POST
 
-ACCESS="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDMxODQyMDUsIm5iZiI6MTYwMzE4NDIwNSwianRpIjoiMDRhZGM1NmItNzI3NS00YzU3LTkxNDQtYzI5MDc3MTRlZWFmIiwiZXhwIjoxNjAzMTg1MTA1LCJpZGVudGl0eSI6IlRhcnRlbXBpb24iLCJmcmVzaCI6ZmFsc2UsInR5cGUiOiJhY2Nlc3MifQ.I-5L-VGfILqQPopxmjDH80g2sQfXidxUifPP-GrtH3w"
-
-#echo "ACCESS=$ACCESS"
+# get from reply
+ACCESS=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MDMyMjY3OTIsIm5iZiI6MTYwMzIyNjc5MiwianRpIjoiZmM5NzljZTQtZDhmYy00N2ExLTlmM2EtYmNlNTUyNzNiZmJiIiwiZXhwIjoxNjAzMjI3NjkyLCJpZGVudGl0eSI6InR3byIsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.q_IWMPqGWLb5SoqYCQlO5_Pnbm_sj0P0szUH5O09FLM
 
 #create a game 
-curl http://localhost:5004/games -d 'name=Raspoutine&description=test&variant=standard&archive=0&anonymous=0&silent=0&cumulate=0&fast=0&speed_moves=2&speed_retreats=1&speed_adjustments=1&play_weekend=0&manual=0&access_code=0&access_restriction_reliability=0&access_restriction_regularity=0&access_restriction_performance=0&nb_max_cycles_to_play=500' -H "Authorization: Bearer $ACCESS" -X POST
+#curl http://localhost:5004/games  -H "access_token: $ACCESS" -d 'name=Raspoutine&description=test&variant=standard&archive=0&anonymous=0&silent=0&cumulate=0&fast=0&speed_moves=2&speed_retreats=1&speed_adjustments=1&play_weekend=0&manual=0&access_code=0&access_restriction_reliability=0&access_restriction_regularity=0&access_restriction_performance=0&nb_max_cycles_to_play=500&pseudo=Tartempion' -X POST
 
-# get data of a game R
-#curl http://localhost:5004/games/Tartempion
-
-# update data a game U
-#curl http://localhost:5004/games -d 'name=Tartempion&current_state=2' -X PUT
-
-# delete game D
-#curl http://localhost:5004/games/Tartempion2 -X DELETE
-
-# get all games
-#curl http://localhost:5004/games  -X GET
 
 # create a pairing
-#curl http://localhost:5004/pairings -d 'game_id=1&player_id=1' -X POST
+#curl http://localhost:5004/allocations -H "access_token: $ACCESS" -d 'game_id=3&player_id=1&pseudo=Tartempion' -X POST
+#curl http://localhost:5004/allocations -H "access_token: $ACCESS" -d 'game_id=3&player_id=2&pseudo=Tartempion' -X POST
+#curl http://localhost:5004/allocations -H "access_token: $ACCESS" -d 'game_id=3&player_id=3&pseudo=Tartempion' -X POST
+#curl http://localhost:5004/allocations -H "access_token: $ACCESS" -d 'game_id=3&player_id=4&pseudo=Tartempion' -X POST
+#curl http://localhost:5004/allocations -H "access_token: $ACCESS" -d 'game_id=3&player_id=5&pseudo=Tartempion' -X POST
+#curl http://localhost:5004/allocations -H "access_token: $ACCESS" -d 'game_id=3&player_id=6&pseudo=Tartempion' -X POST
+#curl http://localhost:5004/allocations -H "access_token: $ACCESS" -d 'game_id=3&player_id=7&pseudo=Tartempion' -X POST
 
-# delete pairing
-#curl http://localhost:5004/pairings -d 'game_id=1&player_id=1' -X DELETE
+# start game
+#curl http://localhost:5004/games/Raspoutine -H "access_token: $ACCESS" -d 'current_state=1&pseudo=Tartempion' -X PUT
 
-# get all pairing
-#curl http://localhost:5004/pairings  -X GET
+
+ORDERS='[
+{"order_type":1, "active_unit":{"type_unit":2, "role":6, "zone":81}, "destination_zone":13 }, 
+{"order_type":1, "active_unit":{"type_unit":1, "role":6, "zone":39}, "destination_zone":69 }, 
+{"order_type":1, "active_unit":{"type_unit":2, "role":6, "zone":56}, "destination_zone":11 }, 
+{"order_type":1, "active_unit":{"type_unit":1, "role":6, "zone":73}, "destination_zone":25 }
+]'
+
+NAMES='{\
+"roles": {"0": ["Arbitre", "Arbitre", "M"], "1":["Angleterre", "anglais", "E"], "2":["France", "francais", "F"], "3":["Allemagne", "allemand", "G"],\ "4":["Italie", "italien", "I"], "5":["Autriche", "autrichien", "A"], "6":["Russie", "russe", "R"], "7":["Turquie", "turc", "T"] }, \
+"zones":{"1":"ADR", "2":"AEG", "3":"alb", "4":"ank", "5":"apu", "6":"arm", "7":"BAL", "8":"BAR", "9":"bel", "10":"ber", "11":"BLA", "12":"boh",\ "13":"BOT", "14":"bre", "15":"bud", "16":"bul", "17":"bur", "18":"cly", "19":"con", "20":"den", "21":"EAS", "22":"edi", "23":"ENG", "24":"fin",\ "25":"gal", "26":"gas", "27":"GOL", "28":"gre", "29":"HEL", "30":"hol", "31":"ION", "32":"IRI", "33":"kie", "34":"lon", "35":"lvn", "36":"lvp",\ "37":"mar", "38":"MID", "39":"mos", "40":"mun", "41":"naf", "42":"nap", "43":"NAT", "44":"NRG", "45":"NTH", "46":"nwy", "47":"par", "48":"pic",\ "49":"pie", "50":"por", "51":"pru", "52":"rom", "53":"ruh", "54":"rum", "55":"ser", "56":"sev", "57":"sil", "58":"SKA", "59":"smy", "60":"spa",\ "61":"stp", "62":"swe", "63":"syr", "64":"tri", "65":"tun", "66":"tus", "67":"TYN", "68":"tyr", "69":"ukr", "70":"ven", "71":"vie", "72":"wal",\ "73":"war", "74":"WES", "75":"yor", "76":"", "77":"", "78":"", "79":"", "80":"", "81":"" }, \
+"coasts":{"1":"ec", "2":"nc", "3":"sc" }\
+}'
+
+POST="role_id=6&names=$NAMES&orders=$ORDERS&pseudo=one"
+
+# submit orders
+# does not work
+#curl http://localhost:5004/game-orders/3 -H "access_token: $ACCESS" -d $POST -X POST
+
+# ask adjudication
+# does not work
+#curl http://localhost:5004/game-adjudications/3 -H "access_token: $ACCESS" -d "names=$NAMES&pseudo=Tartempion" -X POST
+
+# post message
+#curl http://localhost:5004/game-messages/3 -H "access_token: $ACCESS" -d 'role_id=6&dest_role_id=3&content=Time for attack&pseudo=one' -X POST
+
+# get messages
+#curl http://localhost:5004/game-messages/3 -H "access_token: $ACCESS" -d 'role_id=3&pseudo=two' -X GET
+
+# post declaration
+#curl http://localhost:5004/game-declarations/3 -H "access_token: $ACCESS" -d 'role_id=6&content=Hello world&pseudo=one' -X POST
+
+# get declarations
+#curl http://localhost:5004/game-declarations/3 -H "access_token: $ACCESS" -d 'role_id=6&pseudo=one' -X GET
+
