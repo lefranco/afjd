@@ -11,7 +11,7 @@
 # Register a login (exports a token)  - success good password
 #curl -H "Content-Type: application/json" -X POST   -d '{"user_name":"John","password":"Doe"}' http://localhost:5001/login_user
 
-# you must do export ACCESS= < result previous comand > to be grated access
+# you must do export ACCESS= < result previous comand > to be granted access
 
 # Change password account (need token)
 #curl -H "Content-Type: application/json" -H "Authorization: Bearer $ACCESS" -X POST -d '{"user_name":"John","password":"Didi"}' http://localhost:5001/change_user
