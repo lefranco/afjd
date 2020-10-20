@@ -627,7 +627,7 @@ class Application(tkinter.Frame):
         self.gazette.delete('1.0', tkinter.END)
 
         number_new_declarations = 0
-        for _, date_declaration, author_declaration, content_declaration in declarations_list:
+        for date_declaration, author_declaration, content_declaration in declarations_list:
             datetime_declaration = datetime.datetime.fromtimestamp(date_declaration)
             time_stamp_declaration = time.mktime(datetime_declaration.timetuple())
 
@@ -673,7 +673,7 @@ class Application(tkinter.Frame):
             self.messages_with[tab_role_name].delete('1.0', tkinter.END)
 
         number_new_messages = 0
-        for _, date_message, author_message, addressee_message, content_message in messages_list:
+        for date_message, author_message, addressee_message, content_message in messages_list:
 
             datetime_message = datetime.datetime.fromtimestamp(date_message)
             time_stamp_message = time.mktime(datetime_message.timetuple())

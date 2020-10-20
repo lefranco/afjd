@@ -43,7 +43,6 @@ APP = flask.Flask(__name__)
 API = flask_restful.Api(APP)
 
 GAME_PARSER = flask_restful.reqparse.RequestParser()
-GAME_PARSER.add_argument('name', type=str, required=True)
 GAME_PARSER.add_argument('description', type=str, required=False)
 GAME_PARSER.add_argument('variant', type=str, required=False)
 GAME_PARSER.add_argument('archive', type=int, required=False)
@@ -77,7 +76,6 @@ GAME_DELETE_PARSER.add_argument('pseudo', type=str, required=False)
 ALLOCATION_PARSER = flask_restful.reqparse.RequestParser()
 ALLOCATION_PARSER.add_argument('game_id', type=int, required=True)
 ALLOCATION_PARSER.add_argument('player_id', type=int, required=True)
-ALLOCATION_PARSER.add_argument('role_id', type=int, required=True)
 ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
@@ -437,10 +435,9 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         args = ALLOCATION_PARSER.parse_args(strict=True)
         game_id = args['game_id']
         player_id = args['player_id']
-        role_id = args['role_id']
         pseudo = args['pseudo']
 
-        mylogger.LOGGER.info("game_id=%s player_id=%s role_id=%s", game_id, player_id, role_id)
+        mylogger.LOGGER.info("game_id=%s player_id=%s", game_id, player_id)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to join/put in game")
@@ -481,6 +478,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         if game.current_state != 0:
             flask_restful.abort(405, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
 
+        role_id = -1
         allocation = allocations.Allocation(game_id, player_id, role_id)
         allocation.update_database()
 
@@ -498,7 +496,6 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         args = ALLOCATION_PARSER.parse_args(strict=True)
         game_id = args['game_id']
         player_id = args['player_id']
-        role_id = args['role_id']
         pseudo = args['pseudo']
 
         mylogger.LOGGER.info("game_id=%s player_id=%s")
@@ -919,7 +916,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         for (_, role_num, _, zone_num, _, _) in previous_orders:
             order = orders.Order(int(game_id), role_num, 0, zone_num, 0, 0)
             order.delete_database()
-            print(order)
 
         # insert new ones
         for the_order in the_orders:
