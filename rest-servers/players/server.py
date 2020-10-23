@@ -86,7 +86,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
         url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('access_token')
+        jwt_token = flask.request.headers.get('AccessToken')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
@@ -118,7 +118,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             host = lowdata.SERVER_CONFIG['USER']['HOST']
             port = lowdata.SERVER_CONFIG['USER']['PORT']
             url = f"{host}:{port}/change"
-            jwt_token = flask.request.headers.get('access_token')
+            jwt_token = flask.request.headers.get('AccessToken')
             req_result = SESSION.post(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo, 'password': args['password']})
             if req_result.status_code != 201:
                 mylogger.LOGGER.error("ERROR = %s", req_result.text)
@@ -131,7 +131,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
         url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('access_token')
+        jwt_token = flask.request.headers.get('AccessToken')
         req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
@@ -210,7 +210,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
         url = f"{host}:{port}/remove"
-        jwt_token = flask.request.headers.get('access_token')
+        jwt_token = flask.request.headers.get('AccessToken')
         req_result = SESSION.post(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)

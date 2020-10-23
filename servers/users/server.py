@@ -166,7 +166,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
     # Identity can be any data that is json serializable
     access_token = flask_jwt_extended.create_access_token(identity=user_name)
-    return flask.jsonify(access_token=access_token), 200
+    return flask.jsonify(AccessToken=access_token), 200
 
 
 @APP.route('/verify', methods=['GET'])
