@@ -575,7 +575,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-visits/{GAME_IDENTIFIER}"
-        req_result = SESSION.get(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.get(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -593,7 +593,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-visits/{GAME_IDENTIFIER}"
-        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.post(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -612,7 +612,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-declarations/{GAME_IDENTIFIER}"
-        req_result = SESSION.get(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.get(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -657,7 +657,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-messages/{GAME_IDENTIFIER}"
-        req_result = SESSION.get(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.get(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -720,7 +720,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-orders/{GAME_IDENTIFIER}"
-        req_result = SESSION.get(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.get(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -971,7 +971,7 @@ class Application(tkinter.Frame):
         # very important : extract token for authentication
         json_dict = req_result.json()
         global JWT_TOKEN
-        JWT_TOKEN = json_dict['access_token']
+        JWT_TOKEN = json_dict['AccessToken']
 
         # try to find out role from login and game
         self.determine_role()
@@ -1005,7 +1005,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-adjudications/{GAME_IDENTIFIER}"
-        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.post(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")
@@ -1059,7 +1059,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-positions/{GAME_IDENTIFIER}"
-        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.post(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -1112,7 +1112,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-orders/{GAME_IDENTIFIER}"
-        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.post(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")
@@ -1161,7 +1161,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/simulation"
-        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.post(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")
@@ -1203,7 +1203,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-messages/{GAME_IDENTIFIER}"
-        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.post(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")
@@ -1231,7 +1231,7 @@ class Application(tkinter.Frame):
         host = data.SERVER_CONFIG['GAME']['HOST']
         port = data.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-declarations/{GAME_IDENTIFIER}"
-        req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.post(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")

@@ -402,13 +402,13 @@ class Application(tkinter.Frame):
         port = SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/allocations"
         if put:
-            req_result = SESSION.post(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+            req_result = SESSION.post(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
             if req_result.status_code != 201:
                 print(f"ERROR from server  : {req_result.text}")
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                 return False, message
         else:
-            req_result = SESSION.delete(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+            req_result = SESSION.delete(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
             if req_result.status_code != 200:
                 print(f"ERROR from server  : {req_result.text}")
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -440,7 +440,7 @@ class Application(tkinter.Frame):
         # very important : extract token for authentication
         json_dict = req_result.json()
         global JWT_TOKEN
-        JWT_TOKEN = json_dict['access_token']
+        JWT_TOKEN = json_dict['AccessToken']
 
         tkinter.messagebox.showinfo("OK", "Identification réussie !")
 

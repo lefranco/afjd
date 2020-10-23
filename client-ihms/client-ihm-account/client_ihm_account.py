@@ -389,7 +389,7 @@ class Application(tkinter.Frame):
         port = SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players/{pseudo}"
         # present the authentication token (we are reading content of an account)
-        req_result = SESSION.get(url, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.get(url, headers={'AccessToken': JWT_TOKEN})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -476,7 +476,7 @@ class Application(tkinter.Frame):
             host = SERVER_CONFIG['PLAYER']['HOST']
             port = SERVER_CONFIG['PLAYER']['PORT']
             url = f"{host}:{port}/players/{pseudo}"
-            req_result = SESSION.put(url, data=json_dict, headers={'access_token': JWT_TOKEN})
+            req_result = SESSION.put(url, data=json_dict, headers={'AccessToken': JWT_TOKEN})
             if req_result.status_code != 200:
                 print(f"ERROR from server  : {req_result.text}")
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
@@ -586,7 +586,7 @@ class Application(tkinter.Frame):
         # very important : extract token for authentication
         json_dict = req_result.json()
         global JWT_TOKEN
-        JWT_TOKEN = json_dict['access_token']
+        JWT_TOKEN = json_dict['AccessToken']
 
         status, message = self.reload_from_server()
         if not status:
@@ -738,7 +738,7 @@ class Application(tkinter.Frame):
         host = SERVER_CONFIG['PLAYER']['HOST']
         port = SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players/{pseudo}"
-        req_result = SESSION.delete(url, headers={'access_token': JWT_TOKEN})
+        req_result = SESSION.delete(url, headers={'AccessToken': JWT_TOKEN})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
