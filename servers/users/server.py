@@ -8,10 +8,13 @@ The server
 """
 
 import typing
+import argparse
 
+import waitress
 import flask
 import flask_jwt_extended  # type: ignore
 import werkzeug.security
+import waitress
 
 import lowdata
 import mylogger
@@ -190,6 +193,10 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 def main() -> None:
     """ main """
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--debug', required=False, help='mode debug to test stuff', action='store_true')
+    args = parser.parse_args()
+
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
 
@@ -200,7 +207,11 @@ def main() -> None:
 
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['USER']['PORT']
-    APP.run(debug=True, port=port)
+
+    if args.debug:
+        APP.run(debug=True, port=port)
+    else:
+        waitress.serve(APP, port=port)
 
 
 if __name__ == '__main__':
