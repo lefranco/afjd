@@ -9,7 +9,9 @@ The server
 
 import typing
 import random
+import argparse
 
+import waitress
 import flask
 import flask_restful  # type: ignore
 import flask_restful.reqparse  # type: ignore
@@ -348,6 +350,10 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
 def main() -> None:
     """ main """
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--debug', required=False, help='mode debug to test stuff', action='store_true')
+    args = parser.parse_args()
+
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
     mailer.load_mail_config(APP)
@@ -359,7 +365,11 @@ def main() -> None:
 
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-    APP.run(debug=True, port=port)
+
+    if args.debug:
+        APP.run(debug=True, port=port)
+    else:
+        waitress.serve(APP, port=port)
 
 
 if __name__ == '__main__':
