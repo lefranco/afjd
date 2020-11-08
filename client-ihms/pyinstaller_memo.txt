@@ -1,3 +1,3 @@
 cd client-<xxx>
-pyinstaller --onefile --windowed <myscript.py> -i <icone.ico>
+pyinstaller --onefile --windowed <myscript.py> --icon <icone.ico>
 recuperer dans le repertoire dist
