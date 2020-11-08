@@ -45,6 +45,7 @@ APP = flask.Flask(__name__)
 API = flask_restful.Api(APP)
 
 GAME_PARSER = flask_restful.reqparse.RequestParser()
+GAME_PARSER.add_argument('name', type=str, required=True)
 GAME_PARSER.add_argument('description', type=str, required=False)
 GAME_PARSER.add_argument('variant', type=str, required=False)
 GAME_PARSER.add_argument('archive', type=int, required=False)
