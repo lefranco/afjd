@@ -12,7 +12,7 @@ import pathlib
 import unicodedata
 
 # File holding the SQLITE database
-FILE = "./db/users.db"
+FILE = "./db/emails.db"
 
 BYTES_SEPARATOR = b';'
 STR_SEPARATOR = ';'

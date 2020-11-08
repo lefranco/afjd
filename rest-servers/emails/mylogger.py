@@ -14,7 +14,7 @@ Debug : None (interfers with PIL)
 import logging
 import logging.handlers
 
-FILE = './logdir/users.log'
+FILE = './logdir/emails.log'
 
 # global
 LOGGER: logging.Logger = None  # type: ignore
