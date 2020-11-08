@@ -1,0 +1,24 @@
+region: eu
+authtoken: <a completer>
+tunnels:
+  user_server:
+    addr: 5001
+    proto: http
+    hostname: afjd1.eu.ngrok.io
+  email_server:
+    addr: 5002
+    proto: http
+    hostname: afjd2.eu.ngrok.io
+  player_server:
+    addr: 5003
+    proto: http
+    hostname: afjd3.eu.ngrok.io
+  game_server:
+    addr: 5004
+    proto: http
+    hostname: afjd4.eu.ngrok.io
+  solver_server:
+    addr: 5005
+    proto: http
+    hostname: afjd5.eu.ngrok.io
+
