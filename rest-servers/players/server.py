@@ -46,7 +46,7 @@ EMAIL_PARSER.add_argument('pseudo', type=str, required=True)
 EMAIL_PARSER.add_argument('code', type=str, required=True)
 
 # to avoid sending emails in debug phase
-PREVENT_MAIL_CHECKING = True
+PREVENT_MAIL_CHECKING = False
 
 
 @API.resource('/player_identifiers/<pseudo>')
