@@ -29,15 +29,6 @@ import canvas
 
 SESSION = requests.Session()
 
-SERVER_GAME = 'http://localhost'
-PORT_GAME = 5003
-
-SERVER_PLAYER = 'http://localhost'
-PORT_PLAYER = 5002
-
-SERVER_USER = 'http://localhost'
-PORT_USER = 5001
-
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
 HELP_FILE = "./help/help_content.txt"
