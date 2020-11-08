@@ -32,9 +32,7 @@ def start_logger(name: str) -> None:
     handler.setFormatter(formatter)
 
     # configure logging
-    # keep this to  INFO because :
-    # 1) DEBUG does not work at pythoanywhere for some reason
-    # 2) DEBUG introduces traces pollution by PILLOW
+    # Note : DEBUG does not work at pythonanywhere for some reason
     logging.basicConfig(level=logging.INFO)
 
     # link logging to handler
