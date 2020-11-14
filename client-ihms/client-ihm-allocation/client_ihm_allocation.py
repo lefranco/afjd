@@ -103,7 +103,7 @@ class Application(tkinter.Frame):
         self.selectable_output_player_list: typing.List[int] = list()
         self.selectable_game_list: typing.List[int] = list()
 
-        self.game_master_var = tkinter.StringVar()
+        self.players_in_game_var = tkinter.StringVar()
 
         # actual creation of widgets
         self.create_widgets(self)
@@ -257,22 +257,22 @@ class Application(tkinter.Frame):
         self.listbox_selectable_output_player.grid(row=2, column=3, rowspan=2, sticky='w')
         self.listbox_selectable_output_player.config(state=tkinter.DISABLED)
 
-        # GM Info =======================
+        # Game gm and players Info =======================
 
         # ACTION
         paned_downer = tkinter.PanedWindow(main_frame, orient=tkinter.HORIZONTAL)
         paned_downer.grid(row=5, column=1)
 
-        frame_game_master_info = tkinter.LabelFrame(paned_downer, text="Note")
-        paned_downer.add(frame_game_master_info)  # type: ignore
+        frame_game_info = tkinter.LabelFrame(paned_downer, text="Note")
+        paned_downer.add(frame_game_info)  # type: ignore
 
-        # game master
-        label_name = tkinter.Label(frame_game_master_info, text="Arbitre de la partie -->")
+        # player and game master information
+        label_name = tkinter.Label(frame_game_info, text="Arbitre et joueurs de la partie -->")
         label_name.grid(row=1, column=1, sticky='w')
 
-        self.fake_entry_gm_input = tkinter.Entry(frame_game_master_info, textvariable=self.game_master_var)
-        self.fake_entry_gm_input.grid(row=1, column=2)
-        self.fake_entry_gm_input.config(state=tkinter.DISABLED)
+        label_players = tkinter.Label(frame_game_info, textvariable=self.players_in_game_var, justify=tkinter.LEFT, height=10, width=40)
+        label_players.grid(row=1, column=2, sticky='w')
+        
 
     def load_games_from_server(self) -> typing.Tuple[bool, str]:
         """ Reloads games from server to here """
@@ -335,13 +335,16 @@ class Application(tkinter.Frame):
         # who goes left and who goes right
         addables = sorted(set(player_dict.keys()) - set(allocations_dict.keys()), key=lambda i: player_dict[i])
         removables = sorted([k for k, v in allocations_dict.items() if v == -1], key=lambda i: player_dict[i])
-        game_masters = sorted([k for k, v in allocations_dict.items() if v == 0], key=lambda i: player_dict[i])
-
-        if game_masters:
-            identifier = game_masters[0]
+        
+        # some useful information   
+        info = ""
+        playing_ones = {v:k for k, v in allocations_dict.items()}
+        for role in sorted(playing_ones):
+            identifier = playing_ones[role]
             pseudo = player_dict[identifier]
-            self.game_master_var.set(pseudo)  # type: ignore
-
+            info += f"Role {role} alloué à {pseudo}\n"
+        self.players_in_game_var.set(info)  # type: ignore
+           
         # show them for selection (input)
         self.selectable_input_player_list = list()
         previous_state = self.listbox_selectable_input_player.cget("state")  # type: ignore
