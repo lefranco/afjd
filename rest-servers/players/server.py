@@ -221,7 +221,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         player.delete_database()
 
         data = {'pseudo': pseudo, 'msg': 'Ok removed'}
-        return DATA, 200
+        return data, 200
 
 
 @API.resource('/players')
