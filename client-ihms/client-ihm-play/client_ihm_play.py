@@ -956,9 +956,6 @@ class Application(tkinter.Frame):
         json_dict = req_result.json()
         playing_ones = {v:k for k, v in json_dict.items()}
 
-
-
-
         # get all players
         host = data.SERVER_CONFIG['PLAYER']['HOST']
         port = data.SERVER_CONFIG['PLAYER']['PORT']
