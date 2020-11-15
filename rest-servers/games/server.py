@@ -542,7 +542,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         if game.current_state != 0:
             flask_restful.abort(405, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
 
-        allocation = allocations.Allocation(game_id, player_id, role_id)
+        allocation = allocations.Allocation(game_id, player_id, -1)
         allocation.delete_database()
 
         data = {'msg': 'Ok allocation deleted if present'}
@@ -1662,7 +1662,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         visit = visits.Visit(int(game_id), role_id, time_stamp)
         visit.update_database()
 
-        data = {'msg': f"Ok visit inserted"}
+        data = {'msg': "Ok visit inserted"}
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use

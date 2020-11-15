@@ -10,7 +10,6 @@ The server
 import typing
 import argparse
 
-import waitress
 import flask
 import flask_jwt_extended  # type: ignore
 import werkzeug.security
