@@ -112,7 +112,7 @@ class SelectorWidget(tkinter.Frame):
         tkinter.Frame.__init__(self, parent)
         self.radiobutton_inputs = list()
         for num, (value, text) in enumerate(type_info.items()):
-            radiobutton_input = tkinter.Radiobutton(self, variable=value_var, text=text, value=value, indicatoron=1)
+            radiobutton_input = tkinter.Radiobutton(self, variable=value_var, text=text, value=value, indicatoron=True)
             self.radiobutton_inputs.append(radiobutton_input)
             radiobutton_input.grid(row=1 + num, column=1, sticky='w')
 
@@ -144,7 +144,7 @@ class Application(tkinter.Frame):
         # game entry
         self.game_name_var = tkinter.StringVar()
         self.variant_name_var = tkinter.StringVar()
-        self.variant_name_var.set(DEFAULT_VARIANT)  # type: ignore
+        self.variant_name_var.set(DEFAULT_VARIANT)
         self.archive_var = tkinter.IntVar()
 
         self.current_state_var = tkinter.IntVar()
@@ -173,17 +173,17 @@ class Application(tkinter.Frame):
         self.nb_max_cycles_to_play_var = tkinter.IntVar()
         self.victory_centers_var = tkinter.IntVar()
 
-        self.speed_moves_var.set(DEFAULT_SPEED_MOVES)  # type: ignore
-        self.speed_retreats_var.set(DEFAULT_SPEED_OTHERS)  # type: ignore
-        self.speed_adjustments_var.set(DEFAULT_SPEED_OTHERS)  # type: ignore
+        self.speed_moves_var.set(DEFAULT_SPEED_MOVES)
+        self.speed_retreats_var.set(DEFAULT_SPEED_OTHERS)
+        self.speed_adjustments_var.set(DEFAULT_SPEED_OTHERS)
 
-        self.cd_possible_moves_var.set(DEFAULT_CD_POSSIBLE_MOVES_BUILDS)  # type: ignore
-        self.cd_possible_retreats_var.set(DEFAULT_CD_OTHERS)  # type: ignore
-        self.cd_possible_builds_var.set(DEFAULT_CD_POSSIBLE_MOVES_BUILDS)  # type: ignore
-        self.cd_possible_removals_var.set(DEFAULT_CD_OTHERS)  # type: ignore
+        self.cd_possible_moves_var.set(DEFAULT_CD_POSSIBLE_MOVES_BUILDS)
+        self.cd_possible_retreats_var.set(DEFAULT_CD_OTHERS)
+        self.cd_possible_builds_var.set(DEFAULT_CD_POSSIBLE_MOVES_BUILDS)
+        self.cd_possible_removals_var.set(DEFAULT_CD_OTHERS)
 
-        self.nb_max_cycles_to_play_var.set(DEFAULT_NB_CYCLES)  # type: ignore
-        self.victory_centers_var.set(DEFAULT_VICTORY_CENTERS)  # type: ignore
+        self.nb_max_cycles_to_play_var.set(DEFAULT_NB_CYCLES)
+        self.victory_centers_var.set(DEFAULT_VICTORY_CENTERS)
 
         # actual creation of widgets
         self.create_widgets(self)
@@ -201,7 +201,7 @@ class Application(tkinter.Frame):
                 help_text = tkinter.Text(help_window, wrap="word")
                 help_text.tag_configure("blue", foreground="blue")
                 help_text.grid()
-                help_text.insert("1.0", text)  # type: ignore
+                help_text.insert("1.0", text)
                 ok_button = tkinter.Button(help_window, text='OK', command=help_window.destroy)
                 ok_button.grid()
 
@@ -210,7 +210,7 @@ class Application(tkinter.Frame):
             tkinter.messagebox.showinfo("A propos", str(version_information))
 
         menu_bar = tkinter.Menu(main_frame)
-        menu_file = tkinter.Menu(menu_bar, tearoff=0)
+        menu_file = tkinter.Menu(menu_bar, tearoff=False)
 
         menu_file.add_separator()  # type: ignore
 
@@ -218,7 +218,7 @@ class Application(tkinter.Frame):
         menu_file.add_command(label="Sortie", command=self.on_closing)  # type: ignore
         menu_bar.add_cascade(label="Fichier", menu=menu_file)  # type: ignore
 
-        menu_help = tkinter.Menu(menu_bar, tearoff=0)
+        menu_help = tkinter.Menu(menu_bar, tearoff=False)
         menu_help.add_command(label="Un peu d'aide", command=some_help)  # type: ignore
         menu_help.add_command(label="A propos...", command=about)  # type: ignore
 
@@ -371,7 +371,8 @@ class Application(tkinter.Frame):
         values = list()
         for offset in range(10):
             new_deadline = today + datetime.timedelta(days=offset)
-            values.append(new_deadline)
+            new_deadline_str = str(new_deadline)
+            values.append(new_deadline_str)
         self.spin_deadline = tkinter.Spinbox(frame_parameters_c, values=values, width=10)
         self.spin_deadline.grid(row=1, column=2)
         self.spin_deadline.config(state=tkinter.DISABLED)
@@ -541,7 +542,7 @@ class Application(tkinter.Frame):
     def reload_from_server(self) -> typing.Tuple[bool, str]:
         """ Reloads everything from server to here """
 
-        name = self.game_name_var.get()  # type: ignore
+        name = self.game_name_var.get()
         host = SERVER_CONFIG['GAME']['HOST']
         port = SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/games/{name}"
@@ -554,21 +555,21 @@ class Application(tkinter.Frame):
         json_dict = req_result.json()
 
         # description: special
-        prev_state = self.text_description_input.cget("state")  # type: ignore
+        prev_state = self.text_description_input.cget("state")
         self.text_description_input.config(state=tkinter.NORMAL)
-        self.text_description_input.insert("1.0", json_dict['description'])  # type: ignore
+        self.text_description_input.insert("1.0", json_dict['description'])
         self.text_description_input.config(state=prev_state)
 
-        self.variant_name_var.set(json_dict['variant'])  # type: ignore
-        self.archive_var.set(json_dict['archive'])  # type: ignore
-        self.current_state_var.set(json_dict['current_state'])  # type: ignore
-        self.anonymous_var.set(json_dict['anonymous'])  # type: ignore
-        self.silent_var.set(json_dict['silent'])  # type: ignore
-        self.cumulate_var.set(json_dict['cumulate'])  # type: ignore
-        self.fast_var.set(json_dict['fast'])  # type: ignore
+        self.variant_name_var.set(json_dict['variant'])
+        self.archive_var.set(json_dict['archive'])
+        self.current_state_var.set(json_dict['current_state'])
+        self.anonymous_var.set(json_dict['anonymous'])
+        self.silent_var.set(json_dict['silent'])
+        self.cumulate_var.set(json_dict['cumulate'])
+        self.fast_var.set(json_dict['fast'])
 
         # deadline: special
-        prev_state = self.spin_deadline.cget("state")  # type: ignore
+        prev_state = self.spin_deadline.cget("state")
         self.spin_deadline.config(state=tkinter.NORMAL)
 
         deadline_str = json_dict['deadline']
@@ -577,68 +578,69 @@ class Application(tkinter.Frame):
         values = list()
         for offset in range(10):
             new_deadline = deadline + datetime.timedelta(days=offset)
-            values.append(new_deadline)
+            new_deadline_str = str(new_deadline)
+            values.append(new_deadline_str)
 
         self.spin_deadline.config(values=values)
         self.spin_deadline.config(state=prev_state)
 
-        self.speed_moves_var.set(json_dict['speed_moves'])  # type: ignore
-        self.cd_possible_moves_var.set(json_dict['cd_possible_moves'])  # type: ignore
-        self.speed_retreats_var.set(json_dict['speed_retreats'])  # type: ignore
-        self.cd_possible_retreats_var.set(json_dict['cd_possible_retreats'])  # type: ignore
-        self.speed_adjustments_var.set(json_dict['speed_adjustments'])  # type: ignore
-        self.cd_possible_builds_var.set(json_dict['cd_possible_builds'])  # type: ignore
-        self.cd_possible_removals_var.set(json_dict['cd_possible_removals'])  # type: ignore
-        self.play_weekend_var.set(json_dict['play_weekend'])  # type: ignore
-        self.manual_var.set(json_dict['manual'])  # type: ignore
-        self.access_code_var.set(json_dict['access_code'])  # type: ignore
-        self.access_restriction_reliability_var.set(json_dict['access_restriction_reliability'])  # type: ignore
-        self.access_restriction_regularity_var.set(json_dict['access_restriction_regularity'])  # type: ignore
-        self.access_restriction_performance_var.set(json_dict['access_restriction_performance'])  # type: ignore
-        self.current_advancement_var.set(json_dict['current_advancement'])  # type: ignore
-        self.nb_max_cycles_to_play_var.set(json_dict['nb_max_cycles_to_play'])  # type: ignore
-        self.victory_centers_var.set(json_dict['victory_centers'])  # type: ignore
+        self.speed_moves_var.set(json_dict['speed_moves'])
+        self.cd_possible_moves_var.set(json_dict['cd_possible_moves'])
+        self.speed_retreats_var.set(json_dict['speed_retreats'])
+        self.cd_possible_retreats_var.set(json_dict['cd_possible_retreats'])
+        self.speed_adjustments_var.set(json_dict['speed_adjustments'])
+        self.cd_possible_builds_var.set(json_dict['cd_possible_builds'])
+        self.cd_possible_removals_var.set(json_dict['cd_possible_removals'])
+        self.play_weekend_var.set(json_dict['play_weekend'])
+        self.manual_var.set(json_dict['manual'])
+        self.access_code_var.set(json_dict['access_code'])
+        self.access_restriction_reliability_var.set(json_dict['access_restriction_reliability'])
+        self.access_restriction_regularity_var.set(json_dict['access_restriction_regularity'])
+        self.access_restriction_performance_var.set(json_dict['access_restriction_performance'])
+        self.current_advancement_var.set(json_dict['current_advancement'])
+        self.nb_max_cycles_to_play_var.set(json_dict['nb_max_cycles_to_play'])
+        self.victory_centers_var.set(json_dict['victory_centers'])
 
         return True, ""
 
     def upload_on_server(self, new: bool) -> typing.Tuple[bool, str]:
         """ Uploads everything here to server """
 
-        name = self.game_name_var.get()  # type: ignore
+        name = self.game_name_var.get()
 
         json_dict = {
             'name': name,
             'description': self.text_description_input.get(1.0, tkinter.END),
-            'variant': self.variant_name_var.get(),  # type: ignore
-            'archive': self.archive_var.get(),  # type: ignore
-            'current_state': self.current_state_var.get(),  # type: ignore
+            'variant': self.variant_name_var.get(),
+            'archive': self.archive_var.get(),
+            'current_state': self.current_state_var.get(),
 
-            'anonymous': self.anonymous_var.get(),  # type: ignore
-            'silent': self.silent_var.get(),  # type: ignore
-            'cumulate': self.cumulate_var.get(),  # type: ignore
-            'fast': self.fast_var.get(),  # type: ignore
+            'anonymous': self.anonymous_var.get(),
+            'silent': self.silent_var.get(),
+            'cumulate': self.cumulate_var.get(),
+            'fast': self.fast_var.get(),
 
             'deadline': self.spin_deadline.get(),  # type: ignore
-            'speed_moves': self.speed_moves_var.get(),  # type: ignore
-            'cd_possible_moves': self.cd_possible_moves_var.get(),  # type: ignore
-            'speed_retreats': self.speed_retreats_var.get(),  # type: ignore
-            'cd_possible_retreats': self.cd_possible_retreats_var.get(),  # type: ignore
-            'speed_adjustments': self.speed_adjustments_var.get(),  # type: ignore
-            'cd_possible_builds': self.cd_possible_builds_var.get(),  # type: ignore
-            'cd_possible_removals': self.cd_possible_removals_var.get(),  # type: ignore
-            'play_weekend': self.play_weekend_var.get(),  # type: ignore
+            'speed_moves': self.speed_moves_var.get(),
+            'cd_possible_moves': self.cd_possible_moves_var.get(),
+            'speed_retreats': self.speed_retreats_var.get(),
+            'cd_possible_retreats': self.cd_possible_retreats_var.get(),
+            'speed_adjustments': self.speed_adjustments_var.get(),
+            'cd_possible_builds': self.cd_possible_builds_var.get(),
+            'cd_possible_removals': self.cd_possible_removals_var.get(),
+            'play_weekend': self.play_weekend_var.get(),
 
-            'manual': self.manual_var.get(),  # type: ignore
-            'access_code': self.access_code_var.get(),  # type: ignore
-            'access_restriction_reliability': self.access_restriction_reliability_var.get(),  # type: ignore
-            'access_restriction_regularity': self.access_restriction_regularity_var.get(),  # type: ignore
-            'access_restriction_performance': self.access_restriction_performance_var.get(),  # type: ignore
+            'manual': self.manual_var.get(),
+            'access_code': self.access_code_var.get(),
+            'access_restriction_reliability': self.access_restriction_reliability_var.get(),
+            'access_restriction_regularity': self.access_restriction_regularity_var.get(),
+            'access_restriction_performance': self.access_restriction_performance_var.get(),
 
-            'current_advancement': self.current_advancement_var.get(),  # type: ignore
-            'nb_max_cycles_to_play': self.nb_max_cycles_to_play_var.get(),  # type: ignore
-            'victory_centers': self.victory_centers_var.get(),  # type: ignore
+            'current_advancement': self.current_advancement_var.get(),
+            'nb_max_cycles_to_play': self.nb_max_cycles_to_play_var.get(),
+            'victory_centers': self.victory_centers_var.get(),
 
-            'pseudo': self.login_var.get()  # type: ignore
+            'pseudo': self.login_var.get()
         }
 
         if new:
@@ -670,8 +672,8 @@ class Application(tkinter.Frame):
             return
 
         # Now I get token
-        pseudo = self.login_var.get()  # type: ignore
-        password = self.password_var.get()  # type: ignore
+        pseudo = self.login_var.get()
+        password = self.password_var.get()
 
         host = SERVER_CONFIG['USER']['HOST']
         port = SERVER_CONFIG['USER']['PORT']
@@ -783,7 +785,7 @@ class Application(tkinter.Frame):
         self.checkbutton_cd_possible_removals.config(state=tkinter.NORMAL)
         self.checkbutton_play_weekends.config(state=tkinter.NORMAL)
 
-        state = self.current_state_var.get()  # type: ignore
+        state = self.current_state_var.get()
 
         if state == 0:
             self.checkbutton_manual.config(state=tkinter.NORMAL)
@@ -824,7 +826,7 @@ class Application(tkinter.Frame):
         if str(event.widget['state']) == 'disabled':
             return
 
-        name = self.game_name_var.get()  # type: ignore
+        name = self.game_name_var.get()
         if len(name) > MAX_LEN_NAME:
             tkinter.messagebox.showerror("KO", f"Votre nom de partie est trop long : {len(name)}")
             return
@@ -837,14 +839,14 @@ class Application(tkinter.Frame):
             tkinter.messagebox.showerror("KO", f"Il y a eu un problème : {message}")
             return
 
-        state = self.current_state_var.get()  # type: ignore
+        state = self.current_state_var.get()
         if state not in [0, 2]:
             tkinter.messagebox.showerror("KO", "La partie n'est pas en attente ou terminée")
             return
 
         # give pseudo to server to check rights
         json_dict = {
-            'pseudo': self.login_var.get()  # type: ignore
+            'pseudo': self.login_var.get()
         }
 
         host = SERVER_CONFIG['GAME']['HOST']

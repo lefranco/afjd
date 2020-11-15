@@ -133,7 +133,7 @@ class Application(tkinter.Frame):
                 help_text = tkinter.Text(help_window, wrap="word")
                 help_text.tag_configure("blue", foreground="blue")
                 help_text.grid()
-                help_text.insert("1.0", text)  # type: ignore
+                help_text.insert("1.0", text)
                 ok_button = tkinter.Button(help_window, text='OK', command=help_window.destroy)
                 ok_button.grid()
 
@@ -142,7 +142,7 @@ class Application(tkinter.Frame):
             tkinter.messagebox.showinfo("A propos", str(version_information))
 
         menu_bar = tkinter.Menu(main_frame)
-        menu_file = tkinter.Menu(menu_bar, tearoff=0)
+        menu_file = tkinter.Menu(menu_bar, tearoff=False)
 
         menu_file.add_separator()  # type: ignore
 
@@ -150,7 +150,7 @@ class Application(tkinter.Frame):
         menu_file.add_command(label="Sortie", command=self.on_closing)  # type: ignore
         menu_bar.add_cascade(label="Fichier", menu=menu_file)  # type: ignore
 
-        menu_help = tkinter.Menu(menu_bar, tearoff=0)
+        menu_help = tkinter.Menu(menu_bar, tearoff=False)
         menu_help.add_command(label="Un peu d'aide", command=some_help)  # type: ignore
         menu_help.add_command(label="A propos...", command=about)  # type: ignore
 
@@ -302,7 +302,7 @@ class Application(tkinter.Frame):
         label_country.grid(row=3, column=1, sticky='w')
 
         self.country_code_list: typing.List[str] = list()
-        self.listbox_country_input = tkinter.Listbox(frame_personal, width=40, exportselection=0)
+        self.listbox_country_input = tkinter.Listbox(frame_personal, width=40, exportselection=False)
         with open("./data/country_list.csv", newline='', encoding="utf-8") as csvfile:
             reader = csv.reader(csvfile, delimiter=',')
             for country_code, country_name in reader:
@@ -317,7 +317,7 @@ class Application(tkinter.Frame):
         label_time_zone.grid(row=4, column=1, sticky='w')
 
         self.timezone_code_list: typing.List[str] = list()
-        self.listbox_timezone_input = tkinter.Listbox(frame_personal, width=80, exportselection=0)
+        self.listbox_timezone_input = tkinter.Listbox(frame_personal, width=80, exportselection=False)
         with open("./data/timezone_list.csv", newline='', encoding="utf-8") as csvfile:
             reader = csv.reader(csvfile, delimiter=',')
             for timezone_code, timezone_cities in reader:
@@ -384,7 +384,7 @@ class Application(tkinter.Frame):
     def reload_from_server(self) -> typing.Tuple[bool, str]:
         """ Reloads everything from server to here """
 
-        pseudo = self.login_var.get()  # type: ignore
+        pseudo = self.login_var.get()
         host = SERVER_CONFIG['PLAYER']['HOST']
         port = SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players/{pseudo}"
@@ -397,25 +397,25 @@ class Application(tkinter.Frame):
 
         json_dict = req_result.json()
 
-        self.email_var.set(json_dict['email'])  # type: ignore
-        self.email_confirmed_var.set(json_dict['email_confirmed'])  # type: ignore
+        self.email_var.set(json_dict['email'])
+        self.email_confirmed_var.set(json_dict['email_confirmed'])
 
-        if not self.email_confirmed_var.get():  # type: ignore
+        if not self.email_confirmed_var.get():
             self.button_validate_account.config(state=tkinter.NORMAL)
             self.entry_email_confirmation_code_input.config(state=tkinter.NORMAL)
         else:
             self.button_validate_account.config(state=tkinter.DISABLED)
             self.entry_email_confirmation_code_input.config(state=tkinter.DISABLED)
 
-        self.telephone_var.set(json_dict['telephone'])  # type: ignore
-        self.replace_var.set(json_dict['replace'])  # type: ignore
-        self.family_name_var.set(json_dict['family_name'])  # type: ignore
-        self.first_name_var.set(json_dict['first_name'])  # type: ignore
+        self.telephone_var.set(json_dict['telephone'])
+        self.replace_var.set(json_dict['replace'])
+        self.family_name_var.set(json_dict['family_name'])
+        self.first_name_var.set(json_dict['first_name'])
 
         country = json_dict['country']
         country_code = self.country_code_list.index(country)
 
-        previous_state = self.listbox_country_input.cget("state")  # type: ignore
+        previous_state = self.listbox_country_input.cget("state")
         self.listbox_country_input.config(state=tkinter.NORMAL)
         self.listbox_country_input.selection_clear(0, tkinter.END)
         self.listbox_country_input.selection_set(country_code)
@@ -425,7 +425,7 @@ class Application(tkinter.Frame):
         time_zone = json_dict['time_zone']
         time_zone_code = self.timezone_code_list.index(time_zone)
 
-        previous_state = self.listbox_timezone_input.cget("state")  # type: ignore
+        previous_state = self.listbox_timezone_input.cget("state")
         self.listbox_timezone_input.config(state=tkinter.NORMAL)
         self.listbox_timezone_input.selection_clear(0, tkinter.END)
         self.listbox_timezone_input.selection_set(time_zone_code)
@@ -443,23 +443,23 @@ class Application(tkinter.Frame):
         time_zone_code, = self.listbox_timezone_input.curselection()  # type: ignore
         time_zone = self.timezone_code_list[time_zone_code]
 
-        pseudo = self.login_var.get()  # type: ignore
+        pseudo = self.login_var.get()
 
         json_dict = {
             'pseudo': pseudo,
             'password': "",
-            'email': self.email_var.get(),  # type: ignore
-            'email_confirmed': self.email_confirmed_var.get(),  # type: ignore
-            'telephone': self.telephone_var.get(),  # type: ignore
-            'replace': self.replace_var.get(),  # type: ignore
-            'family_name': self.family_name_var.get(),  # type: ignore
-            'first_name': self.first_name_var.get(),  # type: ignore
+            'email': self.email_var.get(),
+            'email_confirmed': self.email_confirmed_var.get(),
+            'telephone': self.telephone_var.get(),
+            'replace': self.replace_var.get(),
+            'family_name': self.family_name_var.get(),
+            'first_name': self.first_name_var.get(),
             'country': country,
             'time_zone': time_zone,
         }
 
         if new or password_change:
-            json_dict['password'] = self.new_password_var.get()  # type: ignore
+            json_dict['password'] = self.new_password_var.get()
 
         if new:
             # do not present the authentication token  (we are creating an account)
@@ -514,24 +514,24 @@ class Application(tkinter.Frame):
         if str(event.widget['state']) == 'disabled':
             return
 
-        pseudo = self.login_var.get()  # type: ignore
+        pseudo = self.login_var.get()
         if not pseudo:
             tkinter.messagebox.showerror("KO", "Vous n'avez pas indiqué de pseudo")
             return
         if len(pseudo) > MAX_LEN_PSEUDO:
             tkinter.messagebox.showerror("KO", "Votre pseudo est trop long")
             return
-        email = self.email_var.get()  # type: ignore
+        email = self.email_var.get()
         if not re.match(EMAIL_PATTERN, email):
             tkinter.messagebox.showerror("KO", "Votre adresse email est incorrecte")
             return
 
-        password = self.new_password_var.get()  # type: ignore
+        password = self.new_password_var.get()
         if not password:
             tkinter.messagebox.showerror("KO", "Vous n'avez pas indiqué de mot de passe")
             return
 
-        password_repeated = self.new_password_repeated_var.get()  # type: ignore
+        password_repeated = self.new_password_repeated_var.get()
         if not password_repeated:
             tkinter.messagebox.showerror("KO", "Vous n'avez pas indiqué de mot de passe répété")
             return
@@ -570,8 +570,8 @@ class Application(tkinter.Frame):
             return
 
         # Now I get token
-        pseudo = self.login_var.get()  # type: ignore
-        password = self.old_password_var.get()  # type: ignore
+        pseudo = self.login_var.get()
+        password = self.old_password_var.get()
 
         host = SERVER_CONFIG['USER']['HOST']
         port = SERVER_CONFIG['USER']['PORT']
@@ -598,7 +598,7 @@ class Application(tkinter.Frame):
         self.entry_new_password_repeated_input.config(state=tkinter.NORMAL)
 
         # erase password content
-        self.old_password_var.set("")  # type: ignore
+        self.old_password_var.set("")
 
         self.entry_email_input.config(state=tkinter.NORMAL)
         self.entry_phone_input.config(state=tkinter.NORMAL)
@@ -625,9 +625,9 @@ class Application(tkinter.Frame):
         if str(event.widget['state']) == 'disabled':
             return
 
-        pseudo = self.login_var.get()  # type: ignore
+        pseudo = self.login_var.get()
 
-        code_str = self.email_confirmation_code_var.get()  # type: ignore
+        code_str = self.email_confirmation_code_var.get()
         try:
             code = int(code_str)
         except:  # noqa: E722 pylint: disable=bare-except
@@ -654,7 +654,7 @@ class Application(tkinter.Frame):
             tkinter.messagebox.showerror("!?", f"Votre adresse email a été validée mais il y a un erreur : {message}")
             return
 
-        self.email_confirmation_code_var.set("")  # type: ignore
+        self.email_confirmation_code_var.set("")
         self.entry_email_confirmation_code_input.config(state=tkinter.DISABLED)
 
         tkinter.messagebox.showinfo("OK", "Félicitations, votre adresse email est validée !")
@@ -666,7 +666,7 @@ class Application(tkinter.Frame):
         if str(event.widget['state']) == 'disabled':
             return
 
-        email = self.email_var.get()  # type: ignore
+        email = self.email_var.get()
         if not re.match(EMAIL_PATTERN, email):
             tkinter.messagebox.showerror("KO", "Votre adresse email est incorrecte")
             return
@@ -690,7 +690,7 @@ class Application(tkinter.Frame):
         if str(event.widget['state']) == 'disabled':
             return
 
-        pseudo = self.login_var.get()  # type: ignore
+        pseudo = self.login_var.get()
         if not pseudo:
             tkinter.messagebox.showerror("KO", "Vous n'avez pas indiqué de pseudo")
             return
@@ -698,12 +698,12 @@ class Application(tkinter.Frame):
             tkinter.messagebox.showerror("KO", "Votre pseudo est trop long")
             return
 
-        password = self.new_password_var.get()  # type: ignore
+        password = self.new_password_var.get()
         if not password:
             tkinter.messagebox.showerror("KO", "Vous n'avez pas indiqué de mot de passe")
             return
 
-        password_repeated = self.new_password_repeated_var.get()  # type: ignore
+        password_repeated = self.new_password_repeated_var.get()
         if not password_repeated:
             tkinter.messagebox.showerror("KO", "Vous n'avez pas indiqué de mot de passe répété")
             return
@@ -726,7 +726,7 @@ class Application(tkinter.Frame):
         if str(event.widget['state']) == 'disabled':
             return
 
-        pseudo = self.login_var.get()  # type: ignore
+        pseudo = self.login_var.get()
         if len(pseudo) > MAX_LEN_PSEUDO:
             tkinter.messagebox.showerror("KO", f"Votre pseudo est trop long : {len(pseudo)}")
             return

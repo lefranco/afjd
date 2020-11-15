@@ -121,7 +121,7 @@ class Application(tkinter.Frame):
                 help_text = tkinter.Text(help_window, wrap="word")
                 help_text.tag_configure("blue", foreground="blue")
                 help_text.grid()
-                help_text.insert("1.0", text)  # type: ignore
+                help_text.insert("1.0", text)
                 ok_button = tkinter.Button(help_window, text='OK', command=help_window.destroy)
                 ok_button.grid()
 
@@ -130,7 +130,7 @@ class Application(tkinter.Frame):
             tkinter.messagebox.showinfo("A propos", str(version_information))
 
         menu_bar = tkinter.Menu(main_frame)
-        menu_file = tkinter.Menu(menu_bar, tearoff=0)
+        menu_file = tkinter.Menu(menu_bar, tearoff=False)
 
         menu_file.add_separator()  # type: ignore
 
@@ -138,7 +138,7 @@ class Application(tkinter.Frame):
         menu_file.add_command(label="Sortie", command=self.on_closing)  # type: ignore
         menu_bar.add_cascade(label="Fichier", menu=menu_file)  # type: ignore
 
-        menu_help = tkinter.Menu(menu_bar, tearoff=0)
+        menu_help = tkinter.Menu(menu_bar, tearoff=False)
         menu_help.add_command(label="Un peu d'aide", command=some_help)  # type: ignore
         menu_help.add_command(label="A propos...", command=about)  # type: ignore
 
@@ -210,7 +210,7 @@ class Application(tkinter.Frame):
         label_variant = tkinter.Label(frame_game_selection, text="Partie :")
         label_variant.grid(row=1, column=1, sticky='w')
 
-        self.listbox_selectable_game_input = tkinter.Listbox(frame_game_selection, width=40, exportselection=0)
+        self.listbox_selectable_game_input = tkinter.Listbox(frame_game_selection, width=40, exportselection=False)
         self.listbox_selectable_game_input.grid(row=2, column=1, sticky='w')
         self.listbox_selectable_game_input.config(state=tkinter.DISABLED)
 
@@ -233,7 +233,7 @@ class Application(tkinter.Frame):
         label_name = tkinter.Label(frame_actual_matching, text="Joueur à ajouter dans la partie:")
         label_name.grid(row=1, column=1, sticky='w')
 
-        self.listbox_selectable_input_player = tkinter.Listbox(frame_actual_matching, width=40, exportselection=0)
+        self.listbox_selectable_input_player = tkinter.Listbox(frame_actual_matching, width=40, exportselection=False)
         self.listbox_selectable_input_player.grid(row=2, column=1, rowspan=2, sticky='w')
         self.listbox_selectable_input_player.config(state=tkinter.DISABLED)
 
@@ -253,7 +253,7 @@ class Application(tkinter.Frame):
         label_name = tkinter.Label(frame_actual_matching, text="Joueur à retirer de la partie")
         label_name.grid(row=1, column=3, sticky='w')
 
-        self.listbox_selectable_output_player = tkinter.Listbox(frame_actual_matching, width=40, exportselection=0)
+        self.listbox_selectable_output_player = tkinter.Listbox(frame_actual_matching, width=40, exportselection=False)
         self.listbox_selectable_output_player.grid(row=2, column=3, rowspan=2, sticky='w')
         self.listbox_selectable_output_player.config(state=tkinter.DISABLED)
 
@@ -272,7 +272,6 @@ class Application(tkinter.Frame):
 
         label_players = tkinter.Label(frame_game_info, textvariable=self.players_in_game_var, justify=tkinter.LEFT, height=10, width=40)
         label_players.grid(row=1, column=2, sticky='w')
-        
 
     def load_games_from_server(self) -> typing.Tuple[bool, str]:
         """ Reloads games from server to here """
@@ -290,7 +289,7 @@ class Application(tkinter.Frame):
         # show them for selection
         self.selectable_game_list = list()
         json_dict = req_result.json()
-        previous_state = self.listbox_selectable_game_input.cget("state")  # type: ignore
+        previous_state = self.listbox_selectable_game_input.cget("state")
         self.listbox_selectable_game_input.config(state=tkinter.NORMAL)
         self.listbox_selectable_game_input.delete(0, tkinter.END)
         for identifier, name in json_dict.items():
@@ -335,19 +334,19 @@ class Application(tkinter.Frame):
         # who goes left and who goes right
         addables = sorted(set(player_dict.keys()) - set(allocations_dict.keys()), key=lambda i: player_dict[i])
         removables = sorted([k for k, v in allocations_dict.items() if v == -1], key=lambda i: player_dict[i])
-        
-        # some useful information   
+
+        # some useful information
         info = ""
-        playing_ones = {v:k for k, v in allocations_dict.items()}
+        playing_ones = {v: k for k, v in allocations_dict.items()}
         for role in sorted(playing_ones):
             identifier = playing_ones[role]
             pseudo = player_dict[identifier]
             info += f"Role {role} alloué à {pseudo}\n"
-        self.players_in_game_var.set(info)  # type: ignore
-           
+        self.players_in_game_var.set(info)
+
         # show them for selection (input)
         self.selectable_input_player_list = list()
-        previous_state = self.listbox_selectable_input_player.cget("state")  # type: ignore
+        previous_state = self.listbox_selectable_input_player.cget("state")
         self.listbox_selectable_input_player.config(state=tkinter.NORMAL)
         self.listbox_selectable_input_player.delete(0, tkinter.END)
         for identifier in addables:
@@ -359,7 +358,7 @@ class Application(tkinter.Frame):
 
         # show them for selection (output)
         self.selectable_output_player_list = list()
-        previous_state = self.listbox_selectable_output_player.cget("state")  # type: ignore
+        previous_state = self.listbox_selectable_output_player.cget("state")
         self.listbox_selectable_output_player.config(state=tkinter.NORMAL)
         self.listbox_selectable_output_player.delete(0, tkinter.END)
         for identifier in removables:
@@ -398,7 +397,7 @@ class Application(tkinter.Frame):
         json_dict = {
             'game_id': game_id,
             'player_id': player_id,
-            'pseudo': self.login_var.get()  # type: ignore
+            'pseudo': self.login_var.get()
         }
 
         host = SERVER_CONFIG['GAME']['HOST']
@@ -427,8 +426,8 @@ class Application(tkinter.Frame):
             return
 
         # Now I get token
-        pseudo = self.login_var.get()  # type: ignore
-        password = self.password_var.get()  # type: ignore
+        pseudo = self.login_var.get()
+        password = self.password_var.get()
 
         host = SERVER_CONFIG['USER']['HOST']
         port = SERVER_CONFIG['USER']['PORT']
