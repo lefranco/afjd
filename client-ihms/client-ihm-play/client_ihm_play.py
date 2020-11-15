@@ -109,7 +109,7 @@ class Application(tkinter.Frame):
         # actual creation of widgets
         self.create_widgets(self)
 
-    def create_widgets(self, main_frame: tkinter.Frame) -> None:
+    def create_widgets(self, frame: tkinter.Frame) -> None:
         """ create all widgets for application """
 
         def some_help() -> None:
@@ -130,7 +130,9 @@ class Application(tkinter.Frame):
             version_information = "Cette beta version est partiellement testée !"
             tkinter.messagebox.showinfo("A propos", str(version_information))
 
-        menu_bar = tkinter.Menu(main_frame)
+        self.main_frame = frame
+
+        menu_bar = tkinter.Menu(self.main_frame)
         menu_file = tkinter.Menu(menu_bar, tearoff=0)
 
         menu_file.add_command(label="Charger les centres", command=self.menu_load_ownerships)  # type: ignore
@@ -153,7 +155,7 @@ class Application(tkinter.Frame):
 
         self.master.configure(menu=menu_bar)
 
-        frame_title = tkinter.Frame(main_frame)
+        frame_title = tkinter.Frame(self.main_frame)
         frame_title.grid(row=1, column=1, sticky='we')
 
         # a logo
@@ -220,12 +222,12 @@ class Application(tkinter.Frame):
         button_login.bind("<Button-1>", self.callback_login)
         button_login.grid(row=1, column=15)
 
-        paned_middle = tkinter.PanedWindow(main_frame)
-        paned_middle.grid(row=2, column=1)
+        self.paned_middle = tkinter.PanedWindow(self.main_frame)
+        self.paned_middle.grid(row=2, column=1)
 
         # LEFT COLUMN
 
-        paned_middle_west = tkinter.PanedWindow(paned_middle, orient=tkinter.VERTICAL)
+        paned_middle_west = tkinter.PanedWindow(self.paned_middle, orient=tkinter.VERTICAL)
 
         # Above above map =======================
         frame_above_above_map = tkinter.LabelFrame(paned_middle_west, text="Partie")
@@ -288,7 +290,7 @@ class Application(tkinter.Frame):
         # Below map 1 =======================
         frame_just_just_below_map = tkinter.LabelFrame(paned_middle_west, text="Dernier(s) rapport(s) de résolution")
         paned_middle_west.add(frame_just_just_below_map)  # type: ignore
-        self.text_report_information = tkinter.scrolledtext.ScrolledText(frame_just_just_below_map, height=6, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
+        self.text_report_information = tkinter.scrolledtext.ScrolledText(frame_just_just_below_map, height=7, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
         self.text_report_information.configure(state=tkinter.DISABLED)
         self.text_report_information.grid(row=1, column=1, sticky='w')
 
@@ -308,30 +310,48 @@ class Application(tkinter.Frame):
         self.label_dynamic_information.grid(row=1, column=1, sticky='w')
 
         # Below map 3 =======================
-        frame_below_map_lower = tkinter.LabelFrame(paned_middle_west, text="Bac à sable")
-        paned_middle_west.add(frame_below_map_lower)  # type: ignore
 
-        self.button_simulate = tkinter.Button(frame_below_map_lower, text="Simuler")
-        self.button_simulate.config(state=tkinter.NORMAL)
-        self.button_simulate.bind("<Button-1>", self.callback_simulate)
-        self.button_simulate.grid(row=1, column=1)
+        frame_logger = tkinter.LabelFrame(paned_middle_west, text="Log des événements")
+        paned_middle_west.add(frame_logger)  # type: ignore
 
-        paned_middle.add(paned_middle_west)  # type: ignore
+        self.scrolled_log = tkinter.scrolledtext.ScrolledText(frame_logger, height=5, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
+        self.scrolled_log.configure(state=tkinter.DISABLED)
+        self.scrolled_log.tag_config('info', foreground=COLOR_SCROLLED_INFO)
+        self.scrolled_log.tag_config('warning', foreground=COLOR_SCROLLED_WARNING)
+        self.scrolled_log.tag_config('error', foreground=COLOR_SCROLLED_ERROR)
+        self.scrolled_log.grid(row=1, column=1, sticky='nsew')
+
+        # Button to erase
+        self.button_erase = tkinter.Button(frame_logger, text="Effacer")
+        self.button_erase.config(state=tkinter.DISABLED)
+        self.button_erase.grid(row=1, column=2)
+        self.button_erase.bind("<Button-1>", self.callback_erase_logs)
+
+        self.paned_middle.add(paned_middle_west)  # type: ignore
 
         # RIGHT COLUMN
 
-        paned_middle_east = tkinter.PanedWindow(paned_middle, orient=tkinter.VERTICAL)
+        self.paned_middle_east = tkinter.PanedWindow(self.paned_middle, orient=tkinter.VERTICAL)
 
         # Role =======================
-        frame_role = tkinter.LabelFrame(paned_middle_east, text="Rôle")
+        frame_role = tkinter.LabelFrame(self.paned_middle_east, text="Rôle")
 
         self.label_role = tkinter.Label(frame_role, text="", fg=COLOR_INFO, justify=tkinter.LEFT)
         self.label_role.grid(row=1, column=1, sticky='w')
 
-        paned_middle_east.add(frame_role)  # type: ignore
+        self.paned_middle_east.add(frame_role)  # type: ignore
+
+        # Status of players =======================
+        self.frame_players_status = tkinter.LabelFrame(self.paned_middle_east, text="Status des joueurs")
+
+        # will be filled later
+        self.fake = tkinter.Label(self.frame_players_status, text="")
+        self.fake.grid(row=1, column=1, sticky='w')
+
+        self.paned_middle_east.add(self.frame_players_status)  # type: ignore
 
         # Orders =======================
-        frame_orders = tkinter.LabelFrame(paned_middle_east, text="Ordres")
+        frame_orders = tkinter.LabelFrame(self.paned_middle_east, text="Ordres")
 
         # Create text widget
         self.text_orders = tkinter.scrolledtext.ScrolledText(frame_orders, height=8, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
@@ -348,24 +368,24 @@ class Application(tkinter.Frame):
         self.button_submit.grid(row=3, column=2, sticky="w")
         self.button_submit.bind("<Button-1>", self.callback_submit)
 
-        paned_middle_east.add(frame_orders)  # type: ignore
+        self.paned_middle_east.add(frame_orders)  # type: ignore
 
         # Messages =======================
 
         # will be filled later when variant is known
-        self.frame_private = tkinter.LabelFrame(paned_middle_east, text="Messages")
+        self.frame_private = tkinter.LabelFrame(self.paned_middle_east, text="Messages")
         self.notebook_tab = tkinter.ttk.Notebook(self.frame_private)
         self.notebook_tab.grid(row=1, column=1)
-        paned_middle_east.add(self.frame_private)  # type: ignore
+        self.paned_middle_east.add(self.frame_private)  # type: ignore
 
         # fake to reserve some room
         self.set_negotiation_widget()
 
         # Declarations =======================
-        frame_public = tkinter.LabelFrame(paned_middle_east, text="Déclarations")
+        frame_public = tkinter.LabelFrame(self.paned_middle_east, text="Déclarations")
 
         # Create text widget
-        self.gazette = tkinter.scrolledtext.ScrolledText(frame_public, height=6, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
+        self.gazette = tkinter.scrolledtext.ScrolledText(frame_public, height=7, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
         self.gazette.configure(state=tkinter.DISABLED)
         self.gazette.grid(row=1, column=1, columnspan=2, sticky="ew")
         self.gazette.tag_configure('blue', foreground='Blue', font=("Courier", 8, "normal"))
@@ -378,45 +398,38 @@ class Application(tkinter.Frame):
         self.button_express.config(state=tkinter.DISABLED)
         self.button_express.grid(row=2, column=2)
         self.button_express.bind("<Button-1>", self.callback_express)
-        paned_middle_east.add(frame_public)  # type: ignore
+        self.paned_middle_east.add(frame_public)  # type: ignore
 
         # Game master =======================
-        frame_master = tkinter.LabelFrame(paned_middle_east, text="Arbitrage")
+        frame_master = tkinter.LabelFrame(self.paned_middle_east, text="Arbitrage")
 
         self.button_adjudicate = tkinter.Button(frame_master, text="Résoudre")
         self.button_adjudicate.config(state=tkinter.DISABLED)
         self.button_adjudicate.grid(row=1, column=1)
         self.button_adjudicate.bind("<Button-1>", self.callback_adjudicate)
+        self.paned_middle_east.add(frame_master)  # type: ignore
 
         # put separator
         label_separator = tkinter.Label(frame_master, text=" " * SEPARATOR_SIZE)
         label_separator.grid(row=1, column=2)
 
+        # Rectify =======================
         self.button_rectify = tkinter.Button(frame_master, text="Rectifier")
         self.button_rectify.config(state=tkinter.DISABLED)
         self.button_rectify.grid(row=1, column=3)
         self.button_rectify.bind("<Button-1>", self.callback_rectify)
 
-        paned_middle_east.add(frame_master)  # type: ignore
+        # Sandbox =======================
+        frame_sandbox = tkinter.LabelFrame(self.paned_middle_east, text="Bac à sable")
 
-        # Log =======================
+        self.button_simulate = tkinter.Button(frame_sandbox, text="Simuler")
+        self.button_simulate.config(state=tkinter.NORMAL)
+        self.button_simulate.bind("<Button-1>", self.callback_simulate)
+        self.button_simulate.grid(row=1, column=1)
 
-        frame_logger = tkinter.LabelFrame(paned_middle_east, text="Log des événements")
-        paned_middle_east.add(frame_logger)  # type: ignore
-        paned_middle.add(paned_middle_east)  # type: ignore
+        self.paned_middle_east.add(frame_sandbox)  # type: ignore
+        self.paned_middle.add(self.paned_middle_east)  # type: ignore
 
-        self.scrolled_log = tkinter.scrolledtext.ScrolledText(frame_logger, height=8, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
-        self.scrolled_log.configure(state=tkinter.DISABLED)
-        self.scrolled_log.tag_config('info', foreground=COLOR_SCROLLED_INFO)
-        self.scrolled_log.tag_config('warning', foreground=COLOR_SCROLLED_WARNING)
-        self.scrolled_log.tag_config('error', foreground=COLOR_SCROLLED_ERROR)
-        self.scrolled_log.grid(row=1, column=1, sticky='nsew')
-
-        # Button to erase
-        self.button_erase = tkinter.Button(frame_logger, text="Effacer")
-        self.button_erase.config(state=tkinter.DISABLED)
-        self.button_erase.grid(row=1, column=2)
-        self.button_erase.bind("<Button-1>", self.callback_erase_logs)
 
     def set_negotiation_widget(self) -> None:
         """ This widget depends on variant (how many other players) """
@@ -448,13 +461,13 @@ class Application(tkinter.Frame):
             frame_tab = tkinter.Frame(self.notebook_tab)
 
             # Create text widget
-            self.messages_with[role_name] = tkinter.scrolledtext.ScrolledText(frame_tab, height=15, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
+            self.messages_with[role_name] = tkinter.scrolledtext.ScrolledText(frame_tab, height=16, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
             self.messages_with[role_name].configure(state=tkinter.DISABLED)
             self.messages_with[role_name].grid(row=1, column=1, columnspan=2, sticky="ew")
             self.messages_with[role_name].tag_configure('blue', foreground='Blue', font=("Courier", 8, "normal"))
             self.messages_with[role_name].tag_configure('blue_italics', foreground='Blue', font=("Courier", 8, "italic"))
 
-            self.content_send[role_name] = tkinter.Text(frame_tab, height=6)
+            self.content_send[role_name] = tkinter.Text(frame_tab, height=7)
             self.content_send[role_name].grid(row=2, column=1)
 
             self.button_send[role_name] = tkinter.Button(frame_tab, text="Envoyer")
@@ -929,6 +942,79 @@ class Application(tkinter.Frame):
         self.button_edit_centers.config(state=tkinter.ACTIVE)
         self.button_edit_position.config(state=tkinter.ACTIVE)
 
+        # now fill players status information
+
+        # get allocations of players in game
+        host = data.SERVER_CONFIG['GAME']['HOST']
+        port = data.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-allocations/{GAME_IDENTIFIER}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            return False, message
+        json_dict = req_result.json()
+        playing_ones = {v:k for k, v in json_dict.items()}
+
+
+
+
+        # get all players
+        host = data.SERVER_CONFIG['PLAYER']['HOST']
+        port = data.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/players"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            return False, message
+        json_dict = req_result.json()
+        player_dict = json_dict
+
+        # display information about players game
+
+        # housekeeping
+        for widget in self.frame_players_status.grid_slaves():
+            widget.destroy()
+
+        nb_roles = data.VARIANT_DATA['roles']['number']
+        for role_id in range(1, nb_roles+1):
+
+            # name of role
+            role_name = data.ROLE_DATA[str(role_id)]['name']
+            label_role_name = tkinter.Label(self.frame_players_status, text=f"{role_name}")
+            label_role_name.grid(row=1, column=role_id)
+
+            # player pseudo
+            player_id = playing_ones[role_id]
+            player_pseudo = player_dict[player_id]
+            label_pseudo = tkinter.Label(self.frame_players_status, text=f"{player_pseudo}", fg=COLOR_INFO)
+            label_pseudo.grid(row=2, column=role_id)
+
+            # active or not
+            active = "actif?"
+            label_active = tkinter.Label(self.frame_players_status, text=f"{active}", fg=COLOR_INFO)
+            label_active.grid(row=3, column=role_id)
+
+            # orders in or not
+            active = "ordres?"
+            label_active = tkinter.Label(self.frame_players_status, text=f"{active}", fg=COLOR_INFO)
+            label_active.grid(row=4, column=role_id)
+
+            self.button_civil_disorder = tkinter.Button(self.frame_players_status, text="Mettre en DC")
+            #self.button_civil_disorder.config(state=tkinter.DISABLED)
+            self.button_civil_disorder.bind("<Button-1>", lambda event, arg=role_id: self.callback_put_in_civil_disorder(event, arg))
+            self.button_civil_disorder.grid(row=5, column=role_id)
+
+            self.button_remove_from_game = tkinter.Button(self.frame_players_status, text="Ejecter")
+            #self.button_remove_from_game.config(state=tkinter.DISABLED)
+            self.button_remove_from_game.bind("<Button-1>", lambda event, arg=role_id:  self.callback_remove_from_game(event, arg))
+            self.button_remove_from_game.grid(row=6, column=role_id)
+
+        # redraw from upper level
+        self.main_frame.grid_remove()
+        self.main_frame.grid()
+
         msg = f"Rechargement depuis le serveur de la partie {GAME_NAME} "
         self.scroll_message(msg, 'info')
 
@@ -1055,6 +1141,26 @@ class Application(tkinter.Frame):
 
         msg = "Position rectifiée sur le serveur"
         self.scroll_message(msg, 'info')
+
+
+    def callback_put_in_civil_disorder(self, event: typing.Any, role_id: int) -> None:
+        """ callback button pushed """
+
+        # button disabled
+        if str(event.widget['state']) == 'disabled':
+            return
+
+        print(f"put {role_id} in civil disorder not implemented")
+
+    def callback_remove_from_game(self, event: typing.Any, role_id: int) -> None:
+        """ callback button pushed """
+
+        # button disabled
+        if str(event.widget['state']) == 'disabled':
+            return
+
+        print(f"remove {role_id} from game not implemented")
+
 
     def callback_reinit(self, event: typing.Any) -> None:
         """ callback button pushed """
