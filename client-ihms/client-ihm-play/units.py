@@ -10,7 +10,7 @@ import json
 import itertools
 
 import tkinter
-import tkinter.font  # type: ignore
+import tkinter.font
 
 import data
 import renderer
