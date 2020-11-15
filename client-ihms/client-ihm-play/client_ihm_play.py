@@ -122,7 +122,7 @@ class Application(tkinter.Frame):
                 help_text = tkinter.Text(help_window, wrap="word")
                 help_text.tag_configure("blue", foreground="blue")
                 help_text.grid()
-                help_text.insert("1.0", text)  # type: ignore
+                help_text.insert("1.0", text)
                 ok_button = tkinter.Button(help_window, text='OK', command=help_window.destroy)
                 ok_button.grid()
 
@@ -133,7 +133,7 @@ class Application(tkinter.Frame):
         self.main_frame = frame
 
         menu_bar = tkinter.Menu(self.main_frame)
-        menu_file = tkinter.Menu(menu_bar, tearoff=0)
+        menu_file = tkinter.Menu(menu_bar, tearoff=False)
 
         menu_file.add_command(label="Charger les centres", command=self.menu_load_ownerships)  # type: ignore
         menu_file.add_command(label="Sauver les centres", command=self.menu_save_ownerships)  # type: ignore
@@ -147,7 +147,7 @@ class Application(tkinter.Frame):
         menu_file.add_command(label="Sortie", command=self.on_closing)  # type: ignore
         menu_bar.add_cascade(label="Fichier", menu=menu_file)  # type: ignore
 
-        menu_help = tkinter.Menu(menu_bar, tearoff=0)
+        menu_help = tkinter.Menu(menu_bar, tearoff=False)
         menu_help.add_command(label="Un peu d'aide", command=some_help)  # type: ignore
         menu_help.add_command(label="A propos...", command=about)  # type: ignore
 
@@ -182,7 +182,7 @@ class Application(tkinter.Frame):
         label_variant = tkinter.Label(frame_title, text="Partie :")
         label_variant.grid(row=1, column=5, sticky='w')
 
-        self.listbox_selectable_game_input = tkinter.Listbox(frame_title, width=30, height=3, exportselection=0)
+        self.listbox_selectable_game_input = tkinter.Listbox(frame_title, width=30, height=3, exportselection=False)
         self.listbox_selectable_game_input.grid(row=1, column=6, sticky='w')
         self.listbox_selectable_game_input.config(state=tkinter.DISABLED)
 
@@ -430,7 +430,6 @@ class Application(tkinter.Frame):
         self.paned_middle_east.add(frame_sandbox)  # type: ignore
         self.paned_middle.add(self.paned_middle_east)  # type: ignore
 
-
     def set_negotiation_widget(self) -> None:
         """ This widget depends on variant (how many other players) """
 
@@ -522,7 +521,7 @@ class Application(tkinter.Frame):
         if GAME_IDENTIFIER == -1:
             return
 
-        pseudo = self.login_var.get()  # type: ignore
+        pseudo = self.login_var.get()
         if pseudo == '':
             return
 
@@ -567,7 +566,7 @@ class Application(tkinter.Frame):
         # retrieve last visit on server
         json_dict = {
             'role_id': ROLE_IDENTIFIER,
-            'pseudo': self.login_var.get(),  # type: ignore
+            'pseudo': self.login_var.get(),
         }
 
         host = data.SERVER_CONFIG['GAME']['HOST']
@@ -585,7 +584,7 @@ class Application(tkinter.Frame):
         # log visit on server
         json_dict = {
             'role_id': ROLE_IDENTIFIER,
-            'pseudo': self.login_var.get(),  # type: ignore
+            'pseudo': self.login_var.get(),
         }
 
         host = data.SERVER_CONFIG['GAME']['HOST']
@@ -604,7 +603,7 @@ class Application(tkinter.Frame):
         # log visit on server
         json_dict = {
             'role_id': ROLE_IDENTIFIER,
-            'pseudo': self.login_var.get(),  # type: ignore
+            'pseudo': self.login_var.get(),
         }
 
         host = data.SERVER_CONFIG['GAME']['HOST']
@@ -649,7 +648,7 @@ class Application(tkinter.Frame):
         # get from server
         json_dict = {
             'role_id': ROLE_IDENTIFIER,
-            'pseudo': self.login_var.get(),  # type: ignore
+            'pseudo': self.login_var.get(),
         }
 
         host = data.SERVER_CONFIG['GAME']['HOST']
@@ -709,7 +708,7 @@ class Application(tkinter.Frame):
 
         json_dict = {
             'role_id': ROLE_IDENTIFIER,
-            'pseudo': self.login_var.get(),  # type: ignore
+            'pseudo': self.login_var.get(),
         }
 
         # get the orders of the player only or all if game master
@@ -796,7 +795,7 @@ class Application(tkinter.Frame):
         # show them for selection
         self.selectable_game_list = list()
         json_dict = req_result.json()
-        previous_state = self.listbox_selectable_game_input.cget("state")  # type: ignore
+        previous_state = self.listbox_selectable_game_input.cget("state")
         self.listbox_selectable_game_input.config(state=tkinter.NORMAL)
         self.listbox_selectable_game_input.delete(0, tkinter.END)
         for identifier, name in json_dict.items():
@@ -952,9 +951,10 @@ class Application(tkinter.Frame):
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            return False, message
+            tkinter.messagebox.showerror("KO", f"Echec à la récupération des allocations de la partie : {message}")
+            return
         json_dict = req_result.json()
-        playing_ones = {v:k for k, v in json_dict.items()}
+        playing_ones = {v: k for k, v in json_dict.items()}
 
         # get all players
         host = data.SERVER_CONFIG['PLAYER']['HOST']
@@ -964,7 +964,8 @@ class Application(tkinter.Frame):
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            return False, message
+            tkinter.messagebox.showerror("KO", f"Echec à la récupération des joueurs : {message}")
+            return
         json_dict = req_result.json()
         player_dict = json_dict
 
@@ -975,7 +976,7 @@ class Application(tkinter.Frame):
             widget.destroy()
 
         nb_roles = data.VARIANT_DATA['roles']['number']
-        for role_id in range(1, nb_roles+1):
+        for role_id in range(1, nb_roles + 1):
 
             # name of role
             role_name = data.ROLE_DATA[str(role_id)]['name']
@@ -998,14 +999,12 @@ class Application(tkinter.Frame):
             label_active = tkinter.Label(self.frame_players_status, text=f"{active}", fg=COLOR_INFO)
             label_active.grid(row=4, column=role_id)
 
-            self.button_civil_disorder = tkinter.Button(self.frame_players_status, text="Mettre en DC")
-            #self.button_civil_disorder.config(state=tkinter.DISABLED)
+            self.button_civil_disorder = tkinter.Button(self.frame_players_status, text="Mettre en DC")  # pylint: disable=attribute-defined-outside-init
             self.button_civil_disorder.bind("<Button-1>", lambda event, arg=role_id: self.callback_put_in_civil_disorder(event, arg))
             self.button_civil_disorder.grid(row=5, column=role_id)
 
-            self.button_remove_from_game = tkinter.Button(self.frame_players_status, text="Ejecter")
-            #self.button_remove_from_game.config(state=tkinter.DISABLED)
-            self.button_remove_from_game.bind("<Button-1>", lambda event, arg=role_id:  self.callback_remove_from_game(event, arg))
+            self.button_remove_from_game = tkinter.Button(self.frame_players_status, text="Ejecter")  # pylint: disable=attribute-defined-outside-init
+            self.button_remove_from_game.bind("<Button-1>", lambda event, arg=role_id: self.callback_remove_from_game(event, arg))
             self.button_remove_from_game.grid(row=6, column=role_id)
 
         # redraw from upper level
@@ -1023,8 +1022,8 @@ class Application(tkinter.Frame):
             return
 
         # Now I get token
-        pseudo = self.login_var.get()  # type: ignore
-        password = self.password_var.get()  # type: ignore
+        pseudo = self.login_var.get()
+        password = self.password_var.get()
 
         host = data.SERVER_CONFIG['USER']['HOST']
         port = data.SERVER_CONFIG['USER']['PORT']
@@ -1065,7 +1064,7 @@ class Application(tkinter.Frame):
         names_dict_json = json.dumps(names_dict)
 
         json_dict = {
-            'pseudo': self.login_var.get(),  # type: ignore
+            'pseudo': self.login_var.get(),
             'names': names_dict_json
         }
 
@@ -1117,7 +1116,7 @@ class Application(tkinter.Frame):
         forbiddens_list_dict_json = json.dumps(forbiddens_list_dict, indent=4)
 
         json_dict = {
-            'pseudo': self.login_var.get(),  # type: ignore
+            'pseudo': self.login_var.get(),
             'center_ownerships': center_ownerships_list_dict_json,
             'units': units_list_dict_json,
             'forbiddens': forbiddens_list_dict_json,
@@ -1139,7 +1138,6 @@ class Application(tkinter.Frame):
         msg = "Position rectifiée sur le serveur"
         self.scroll_message(msg, 'info')
 
-
     def callback_put_in_civil_disorder(self, event: typing.Any, role_id: int) -> None:
         """ callback button pushed """
 
@@ -1157,7 +1155,6 @@ class Application(tkinter.Frame):
             return
 
         print(f"remove {role_id} from game not implemented")
-
 
     def callback_reinit(self, event: typing.Any) -> None:
         """ callback button pushed """
@@ -1191,7 +1188,7 @@ class Application(tkinter.Frame):
         orders_list_dict_json = json.dumps(orders_list_dict, indent=4)
         json_dict = {
             'role_id': ROLE_IDENTIFIER,
-            'pseudo': self.login_var.get(),  # type: ignore
+            'pseudo': self.login_var.get(),
             'orders': orders_list_dict_json,
             'names': names_dict_json
         }
@@ -1282,7 +1279,7 @@ class Application(tkinter.Frame):
 
         json_dict = {
             'role_id': ROLE_IDENTIFIER,
-            'pseudo': self.login_var.get(),  # type: ignore
+            'pseudo': self.login_var.get(),
             'dest_role_id': dest_id,
             'content': content
         }
@@ -1311,7 +1308,7 @@ class Application(tkinter.Frame):
 
         json_dict = {
             'role_id': ROLE_IDENTIFIER,
-            'pseudo': self.login_var.get(),  # type: ignore
+            'pseudo': self.login_var.get(),
             'content': content
         }
 
