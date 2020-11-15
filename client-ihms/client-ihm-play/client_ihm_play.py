@@ -343,12 +343,6 @@ class Application(tkinter.Frame):
         self.button_reinit.grid(row=1, column=2, sticky="w")
         self.button_reinit.bind("<Button-1>", self.callback_reinit)
 
-        label_anticipate_adjudication = tkinter.Label(frame_orders, text="Ne pas attendre ->")
-        label_anticipate_adjudication.grid(row=2, column=2, sticky='w')
-        bool_anticipate_adjudication = tkinter.BooleanVar
-        checkbutton_anticipate_adjudication = tkinter.Checkbutton(frame_orders, variable=bool_anticipate_adjudication)
-        checkbutton_anticipate_adjudication.grid(row=2, column=3, sticky='w')
-
         self.button_submit = tkinter.Button(frame_orders, text="Soumettre")
         self.button_submit.config(state=tkinter.DISABLED)
         self.button_submit.grid(row=3, column=2, sticky="w")
