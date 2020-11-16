@@ -222,12 +222,12 @@ class Application(tkinter.Frame):
         button_login.bind("<Button-1>", self.callback_login)
         button_login.grid(row=1, column=15)
 
-        self.paned_middle = tkinter.PanedWindow(self.main_frame)
-        self.paned_middle.grid(row=2, column=1)
+        paned_middle = tkinter.PanedWindow(self.main_frame)
+        paned_middle.grid(row=2, column=1)
 
         # LEFT COLUMN
 
-        paned_middle_west = tkinter.PanedWindow(self.paned_middle, orient=tkinter.VERTICAL)
+        paned_middle_west = tkinter.PanedWindow(paned_middle, orient=tkinter.VERTICAL)
 
         # Above above map =======================
         frame_above_above_map = tkinter.LabelFrame(paned_middle_west, text="Partie")
@@ -327,31 +327,31 @@ class Application(tkinter.Frame):
         self.button_erase.grid(row=1, column=2)
         self.button_erase.bind("<Button-1>", self.callback_erase_logs)
 
-        self.paned_middle.add(paned_middle_west)  # type: ignore
+        paned_middle.add(paned_middle_west)  # type: ignore
 
         # RIGHT COLUMN
 
-        self.paned_middle_east = tkinter.PanedWindow(self.paned_middle, orient=tkinter.VERTICAL)
+        paned_middle_east = tkinter.PanedWindow(paned_middle, orient=tkinter.VERTICAL)
 
         # Role =======================
-        frame_role = tkinter.LabelFrame(self.paned_middle_east, text="Rôle")
+        frame_role = tkinter.LabelFrame(paned_middle_east, text="Rôle")
 
         self.label_role = tkinter.Label(frame_role, text="", fg=COLOR_INFO, justify=tkinter.LEFT)
         self.label_role.grid(row=1, column=1, sticky='w')
 
-        self.paned_middle_east.add(frame_role)  # type: ignore
+        paned_middle_east.add(frame_role)  # type: ignore
 
         # Status of players =======================
-        self.frame_players_status = tkinter.LabelFrame(self.paned_middle_east, text="Status des joueurs")
+        self.frame_players_status = tkinter.LabelFrame(paned_middle_east, text="Status des joueurs")
 
         # will be filled later
         self.fake = tkinter.Label(self.frame_players_status, text="")
         self.fake.grid(row=1, column=1, sticky='w')
 
-        self.paned_middle_east.add(self.frame_players_status)  # type: ignore
+        paned_middle_east.add(self.frame_players_status)  # type: ignore
 
         # Orders =======================
-        frame_orders = tkinter.LabelFrame(self.paned_middle_east, text="Ordres")
+        frame_orders = tkinter.LabelFrame(paned_middle_east, text="Ordres")
 
         # Create text widget
         self.text_orders = tkinter.scrolledtext.ScrolledText(frame_orders, height=8, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
@@ -368,21 +368,21 @@ class Application(tkinter.Frame):
         self.button_submit.grid(row=3, column=2, sticky="w")
         self.button_submit.bind("<Button-1>", self.callback_submit)
 
-        self.paned_middle_east.add(frame_orders)  # type: ignore
+        paned_middle_east.add(frame_orders)  # type: ignore
 
         # Messages =======================
 
         # will be filled later when variant is known
-        self.frame_private = tkinter.LabelFrame(self.paned_middle_east, text="Messages")
+        self.frame_private = tkinter.LabelFrame(paned_middle_east, text="Messages")
         self.notebook_tab = tkinter.ttk.Notebook(self.frame_private)
         self.notebook_tab.grid(row=1, column=1)
-        self.paned_middle_east.add(self.frame_private)  # type: ignore
+        paned_middle_east.add(self.frame_private)  # type: ignore
 
         # fake to reserve some room
         self.set_negotiation_widget()
 
         # Declarations =======================
-        frame_public = tkinter.LabelFrame(self.paned_middle_east, text="Déclarations")
+        frame_public = tkinter.LabelFrame(paned_middle_east, text="Déclarations")
 
         # Create text widget
         self.gazette = tkinter.scrolledtext.ScrolledText(frame_public, height=7, background=TEXT_BACKGROUND, wrap=tkinter.WORD)
@@ -398,16 +398,16 @@ class Application(tkinter.Frame):
         self.button_express.config(state=tkinter.DISABLED)
         self.button_express.grid(row=2, column=2)
         self.button_express.bind("<Button-1>", self.callback_express)
-        self.paned_middle_east.add(frame_public)  # type: ignore
+        paned_middle_east.add(frame_public)  # type: ignore
 
         # Game master =======================
-        frame_master = tkinter.LabelFrame(self.paned_middle_east, text="Arbitrage")
+        frame_master = tkinter.LabelFrame(paned_middle_east, text="Arbitrage")
 
         self.button_adjudicate = tkinter.Button(frame_master, text="Résoudre")
         self.button_adjudicate.config(state=tkinter.DISABLED)
         self.button_adjudicate.grid(row=1, column=1)
         self.button_adjudicate.bind("<Button-1>", self.callback_adjudicate)
-        self.paned_middle_east.add(frame_master)  # type: ignore
+        paned_middle_east.add(frame_master)  # type: ignore
 
         # put separator
         label_separator = tkinter.Label(frame_master, text=" " * SEPARATOR_SIZE)
@@ -420,15 +420,15 @@ class Application(tkinter.Frame):
         self.button_rectify.bind("<Button-1>", self.callback_rectify)
 
         # Sandbox =======================
-        frame_sandbox = tkinter.LabelFrame(self.paned_middle_east, text="Bac à sable")
+        frame_sandbox = tkinter.LabelFrame(paned_middle_east, text="Bac à sable")
 
         self.button_simulate = tkinter.Button(frame_sandbox, text="Simuler")
         self.button_simulate.config(state=tkinter.NORMAL)
         self.button_simulate.bind("<Button-1>", self.callback_simulate)
         self.button_simulate.grid(row=1, column=1)
 
-        self.paned_middle_east.add(frame_sandbox)  # type: ignore
-        self.paned_middle.add(self.paned_middle_east)  # type: ignore
+        paned_middle_east.add(frame_sandbox)  # type: ignore
+        paned_middle.add(paned_middle_east)  # type: ignore
 
     def set_negotiation_widget(self) -> None:
         """ This widget depends on variant (how many other players) """
@@ -999,10 +999,12 @@ class Application(tkinter.Frame):
             label_active = tkinter.Label(self.frame_players_status, text=f"{active}", fg=COLOR_INFO)
             label_active.grid(row=4, column=role_id)
 
+            # put in Civil Disorder
             self.button_civil_disorder = tkinter.Button(self.frame_players_status, text="Mettre en DC")  # pylint: disable=attribute-defined-outside-init
             self.button_civil_disorder.bind("<Button-1>", lambda event, arg=role_id: self.callback_put_in_civil_disorder(event, arg))
             self.button_civil_disorder.grid(row=5, column=role_id)
 
+            # Remove from game
             self.button_remove_from_game = tkinter.Button(self.frame_players_status, text="Ejecter")  # pylint: disable=attribute-defined-outside-init
             self.button_remove_from_game.bind("<Button-1>", lambda event, arg=role_id: self.callback_remove_from_game(event, arg))
             self.button_remove_from_game.grid(row=6, column=role_id)
