@@ -12,6 +12,7 @@ import argparse
 
 import waitress
 import flask
+import flask_cors
 import flask_restful  # type: ignore
 import flask_restful.reqparse  # type: ignore
 
@@ -23,6 +24,7 @@ import database
 
 
 APP = flask.Flask(__name__)
+flask_cors.CORS(APP)
 API = flask_restful.Api(APP)
 
 EMAIL_PARSER = flask_restful.reqparse.RequestParser()

@@ -11,6 +11,7 @@ import typing
 import argparse
 
 import flask
+import flask_cors
 import flask_jwt_extended  # type: ignore
 import werkzeug.security
 import waitress
@@ -23,6 +24,7 @@ import database
 
 
 APP = flask.Flask(__name__)
+flask_cors.CORS(APP)
 
 # Setup the Flask-JWT-Extended extension
 SECRET_CONFIG = lowdata.ConfigFile('./config/secret.ini')
