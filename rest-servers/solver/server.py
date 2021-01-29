@@ -13,6 +13,7 @@ import argparse
 
 import waitress
 import flask
+import flask_cors
 import flask_restful  # type: ignore
 import flask_restful.reqparse  # type: ignore
 
@@ -21,6 +22,7 @@ import lowdata
 import solver
 
 APP = flask.Flask(__name__)
+flask_cors.CORS(APP)
 API = flask_restful.Api(APP)
 
 

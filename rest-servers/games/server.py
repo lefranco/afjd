@@ -16,6 +16,7 @@ import argparse
 
 import waitress
 import flask
+import flask_cors
 import flask_restful  # type: ignore
 import flask_restful.reqparse  # type: ignore
 import requests
@@ -42,6 +43,7 @@ DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 SESSION = requests.Session()
 
 APP = flask.Flask(__name__)
+flask_cors.CORS(APP)
 API = flask_restful.Api(APP)
 
 GAME_PARSER = flask_restful.reqparse.RequestParser()
