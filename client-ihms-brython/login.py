@@ -35,7 +35,12 @@ def login_callback(ev) -> None:
     port = config.SERVER_CONFIG['USER']['PORT']
     url = f"{host}:{port}/login"
 
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=2.0, data=json.dumps({'user_name': pseudo, 'password': password}), oncomplete=reply_callback, ontimeout=noreply_callback)
+    json_dict = {
+        'user_name': pseudo,
+        'password': password
+    }
+
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=2.0, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
 
 def forgot_callback(ev) -> None:
