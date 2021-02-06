@@ -1,4 +1,4 @@
-
+""" config """
 
 # config of servers
 
@@ -23,3 +23,6 @@ SERVER_CONFIG['GAME']['PORT'] = 443
 SERVER_CONFIG['SOLVER'] = dict()
 SERVER_CONFIG['SOLVER']['HOST'] = "https://afjd5.eu.ngrok.io"
 SERVER_CONFIG['SOLVER']['PORT'] = 443
+
+# timeout for messages
+REMOVE_AFTER = 5
