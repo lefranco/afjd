@@ -5,13 +5,18 @@
 <link rel="shortcut icon" href="#">
 <meta charset="utf-8">
 <script type="text/javascript" src="brython.js"></script>
-<script type="text/javascript" src="brython_stdlib.js"></script>
+
+<!-- <script type="text/javascript" src="brython_modules.js"></script> -->
+ <script type="text/javascript" src="brython_stdlib.js"></script>
+
 <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 
 <body onload="brython(1)">
 
-<! -- just calling python nothing more !!!! --> 
+<!-- just calling python nothing more !!!! -->
+<script type="text/python" src="config.py"></script>
+
 <script type="text/python" src="index.py"></script>
 <script type="text/python" src="home.py"></script>
 <script type="text/python" src="account.py"></script>
@@ -19,6 +24,7 @@
 <script type="text/python" src="submit.py"></script>
 <script type="text/python" src="negotiate.py"></script>
 <script type="text/python" src="master.py"></script>
+
 </body>
 
 </html>

@@ -8,7 +8,7 @@ import submit
 import negotiate
 import master
 
-TITLE = "Welcome on board"
+TITLE = "Welcome this demo interface Web client for playing Diplomacy on ANJD REST Server"
 OPTIONS = ['home', 'login', 'account', 'games', 'submit', 'negotiate', 'master']
 
 
