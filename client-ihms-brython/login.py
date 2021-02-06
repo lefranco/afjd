@@ -56,17 +56,16 @@ def login_callback(ev) -> None:
     ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=2.0, data=json.dumps({'user_name': pseudo, 'password': password}), oncomplete=reply_callback, ontimeout=noreply_callback)
 
 
+def forgot_callback(ev) -> None:
+    """ forgot_callback """
+    sorry = InfoDialog("Sorry", "Forgot password is not implemented yet", remove_after=config.REMOVE_AFTER)
+    form <= sorry
+
 
 input_login = html.INPUT(type="submit", value="login")
 input_login.bind("click", login_callback)
 form <= input_login
 form <= html.BR()
-
-
-def forgot_callback(ev) -> None:
-    """ forgot_callback """
-    sorry = InfoDialog("Sorry", "Forgot password is not implemented yet", remove_after=config.REMOVE_AFTER)
-    form <= sorry
 
 
 input_forgot = html.INPUT(type="submit", value="forgot password")
