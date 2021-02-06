@@ -8,13 +8,10 @@ import config
 import json
 
 
-my_panel = html.P()
-
-div = html.DIV(id="div")
-my_panel <= div
+my_panel = html.DIV(id="login")
 
 form = html.FORM()
-div <= form
+my_panel <= form
 
 legend_pseudo = html.LEGEND("pseudo")
 form <= legend_pseudo

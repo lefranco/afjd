@@ -30,14 +30,13 @@ overall_top <= overall
 
 # menu-left
 menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width:20%; vertical-align: top;'
+menu_left.attrs['style'] = 'display: table-cell; width:10%; vertical-align: top;'
 overall <= menu_left
 
 # menu-selection
 menu_selection = html.UL()
 menu_left <= menu_selection
 
-menu_items = dict()
 
 item_name_selected = OPTIONS[0]
 
@@ -73,7 +72,6 @@ def load_option(ev, item_name) -> None:
         button.bind("click", lambda ev, item_name=item_name: load_option(ev, item_name))
         menu_item = html.LI(button)
         menu_left <= menu_item
-        menu_items[item_name] = menu_item
 
 
 # panel-middle
