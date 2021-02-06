@@ -8,24 +8,6 @@ import config
 import json
 
 
-my_panel = html.DIV(id="login")
-
-form = html.FORM()
-my_panel <= form
-
-legend_pseudo = html.LEGEND("pseudo")
-form <= legend_pseudo
-input_pseudo = html.INPUT(type="text", value="")
-form <= input_pseudo
-form <= html.BR()
-
-legend_password = html.LEGEND("password")
-form <= legend_password
-input_password = html.INPUT(type="password", value="")
-form <= input_password
-form <= html.BR()
-
-
 def login_callback(ev) -> None:
     """ login_callback """
 
@@ -60,6 +42,24 @@ def forgot_callback(ev) -> None:
     """ forgot_callback """
     sorry = InfoDialog("Sorry", "Forgot password is not implemented yet", remove_after=config.REMOVE_AFTER)
     form <= sorry
+
+
+my_panel = html.DIV(id="login")
+
+form = html.FORM()
+my_panel <= form
+
+legend_pseudo = html.LEGEND("pseudo")
+form <= legend_pseudo
+input_pseudo = html.INPUT(type="text", value="")
+form <= input_pseudo
+form <= html.BR()
+
+legend_password = html.LEGEND("password")
+form <= legend_password
+input_password = html.INPUT(type="password", value="")
+form <= input_password
+form <= html.BR()
 
 
 input_login = html.INPUT(type="submit", value="login")
