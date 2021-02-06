@@ -1,3 +1,5 @@
+""" index """
+
 from browser import document, html, highlight
 
 import home
@@ -40,7 +42,8 @@ menu_items = dict()
 
 item_name_selected = OPTIONS[0]
 
-def load_option(ev, item_name):
+
+def load_option(ev, item_name) -> None:
     panel_middle.clear()
     if item_name == 'home':
         home.render(panel_middle)
@@ -70,14 +73,16 @@ def load_option(ev, item_name):
             item_name_bold_or_not = item_name
 
         button = html.BUTTON(item_name_bold_or_not)
-        button.bind("click", lambda ev, item_name=item_name : load_option(ev, item_name))
+        button.bind("click", lambda ev, item_name=item_name: load_option(ev, item_name))
         menu_item = html.LI(button)
         menu_left <= menu_item
         menu_items[item_name] = menu_item
 
+
 # panel-middle
 panel_middle = html.DIV(id='panel_middle')
 overall <= panel_middle
+
 
 # starts here
 load_option(None, item_name_selected)
