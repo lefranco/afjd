@@ -5,7 +5,7 @@ from browser import document, html
 my_panel = html.P()
 
 my_panel <= """
-  Here go widgets to submit orders in game
+  Here go widgets to play (submit orders, negotiate...) in game
 """
 
 

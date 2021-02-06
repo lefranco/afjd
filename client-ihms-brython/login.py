@@ -2,13 +2,11 @@
 
 from browser import document, html, ajax
 from browser.widgets.dialog import InfoDialog
+from browser.local_storage import storage
 
 import config
 import json
 
-
-# TODO : put in "database"
-JWT_TOKEN = ''
 
 my_panel = html.P()
 
@@ -45,8 +43,7 @@ def login_callback(ev) -> None:
             InfoDialog("KO", f"Il y a eu un problème : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
             return
         print(f"{req_result=}")
-        global JWT_TOKEN
-        JWT_TOKEN = req_result['AccessToken']
+        storage['JWT_TOKEN'] = req_result['AccessToken']
 
     def noreply_callback(req):
         print("noreply_callback")
@@ -61,7 +58,6 @@ def login_callback(ev) -> None:
 
     ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=2.0, data=json.dumps({'user_name': pseudo, 'password': password}), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    print(f"{JWT_TOKEN=}")
 
 
 input_login = html.INPUT(type="submit", value="login")
