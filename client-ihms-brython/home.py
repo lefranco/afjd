@@ -2,7 +2,7 @@
 
 from browser import document, html
 
-my_panel = html.P()
+my_panel = html.DIV(id="home")
 
 my_panel <= """
 Here some welcome information for the new comer

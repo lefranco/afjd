@@ -3,7 +3,7 @@
 from browser import document, html
 
 
-my_panel = html.P()
+my_panel = html.DIV(id="master")
 
 
 my_panel <= """
