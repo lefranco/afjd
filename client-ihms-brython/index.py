@@ -6,12 +6,11 @@ import home
 import login
 import account
 import games
-import submit
-import negotiate
+import play
 import master
 
 TITLE = "Welcome this demo interface Web client for playing Diplomacy on ANJD REST Server"
-OPTIONS = ['home', 'login', 'account', 'games', 'submit', 'negotiate', 'master']
+OPTIONS = ['home', 'login', 'account', 'games', 'play', 'master']
 
 
 # title
@@ -53,10 +52,8 @@ def load_option(ev, item_name) -> None:
         account.render(panel_middle)
     if item_name == 'games':
         games.render(panel_middle)
-    if item_name == 'submit':
-        submit.render(panel_middle)
-    if item_name == 'negotiate':
-        negotiate.render(panel_middle)
+    if item_name == 'play':
+        play.render(panel_middle)
     if item_name == 'master':
         master.render(panel_middle)
     global item_name_selected
