@@ -61,12 +61,10 @@ input_password = html.INPUT(type="password", value="")
 form <= input_password
 form <= html.BR()
 
-
 input_login = html.INPUT(type="submit", value="login")
 input_login.bind("click", login_callback)
 form <= input_login
 form <= html.BR()
-
 
 input_forgot = html.INPUT(type="submit", value="forgot password")
 input_forgot.bind("click", forgot_callback)
