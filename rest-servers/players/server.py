@@ -172,7 +172,8 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                 flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
             if not PREVENT_MAIL_CHECKING:
-                mailer.send_mail_checker(code, email_after)
+                if not mailer.send_mail_checker(code, email_after):
+                    flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
 
         player.update_database()
         data = {'pseudo': pseudo, 'msg': 'Ok updated'}
@@ -295,7 +296,8 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
         if not PREVENT_MAIL_CHECKING:
-            mailer.send_mail_checker(code, email_after)
+            if not mailer.send_mail_checker(code, email_after):
+                flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
 
         data = {'pseudo': pseudo, 'msg': 'Ok player created'}
         return data, 201
