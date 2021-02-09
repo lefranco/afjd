@@ -1,10 +1,12 @@
 """ account """
 
-from browser import document, html, ajax
-from browser.widgets.dialog import InfoDialog
+# pylint: disable=pointless-statement, expression-not-assigned
 
 import json
 import re
+
+from browser import html, ajax, alert  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 
 import config
 
@@ -15,11 +17,10 @@ MAX_LEN_PSEUDO = 12
 
 
 def create_account():
+    """ create_account """
 
-    def create_account_callback(ev) -> None:
+    def create_account_callback(_) -> None:
         """ create_account_callback """
-
-        print(f"create_account_callback")
 
         def reply_callback(req):
             print("reply_callback")
@@ -27,35 +28,39 @@ def create_account():
             req_result = json.loads(req.text)
             print(f"{req_result=}")
             if req.status != 200:
-                InfoDialog("KO", f"Problem : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+                alert(f"Problem : {req_result['msg']}")
                 return
             print(f"{req_result=}")
-            InfoDialog("OK", f"Problem : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Account created : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
-        def noreply_callback(req):
+        def noreply_callback(_):
             print("noreply_callback")
-            InfoDialog("OK", f"Account was created", remove_after=config.REMOVE_AFTER)
+            alert("Problem (no answer from server)")
 
         pseudo = input_pseudo.value
 
         if not pseudo:
-            InfoDialog("KO", f"Pseudo is missing", remove_after=config.REMOVE_AFTER)
+            alert("Pseudo is missing")
             return
         if len(pseudo) > MAX_LEN_PSEUDO:
-            InfoDialog("KO", f"Pseudo is too long", remove_after=config.REMOVE_AFTER)
+            alert("Pseudo is too long")
             return
 
         password = input_password.value
         if not password:
-            InfoDialog("KO", f"Password is missing", remove_after=config.REMOVE_AFTER)
+            alert("Password is missing")
             return
 
         password_again = input_password_again.value
         if password_again != password:
-            InfoDialog("KO", f"Passwords do not match", remove_after=config.REMOVE_AFTER)
+            alert("Passwords do not match")
             return
 
         email = input_email.value
+        if not re.match(EMAIL_PATTERN, email):
+            alert("email is incorrect")
+            return
+
         telephone = input_telephone.value
         replace = input_ok_replace.value
         family_name = input_family_name.value
@@ -137,18 +142,14 @@ def create_account():
     legend_country = html.LEGEND("country (not implemented)")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
-    #input_country.options.add("France")
-    #input_country.options.add("Belgique")
-    #input_country.options.add("Canada")
+    #  TODO : propose list of countries
     form <= input_country
     form <= html.BR()
 
     legend_time_zone = html.LEGEND("time zone (not implemented)")
     form <= legend_time_zone
     input_time_zone = html.SELECT(type="select-one", value="")
-    #input_time_zone.options.add("UTC+1")
-    #input_time_zone.options.add("UTC+2")
-    #input_time_zone.options.add("UTC+3")
+    #  TODO : propose list of timezones
     form <= input_time_zone
     form <= html.BR()
 
@@ -159,20 +160,31 @@ def create_account():
 
 
 def change_password():
+    """ change_password """
     dummy = html.P("change password")
     my_sub_panel <= dummy
 
+
 def confirm_email():
+    """ confirm_email """
+
     dummy = html.P("confirm email")
     my_sub_panel <= dummy
 
+
 def modify_data():
+    """ modify_data """
+
     dummy = html.P("modify data")
     my_sub_panel <= dummy
 
+
 def delete_account():
+    """ delete_account """
+
     dummy = html.P("delete account")
     my_sub_panel <= dummy
+
 
 my_panel = html.DIV(id="account")
 my_panel.attrs['style'] = 'display: table-row'
@@ -186,13 +198,16 @@ my_panel <= menu_left
 menu_selection = html.UL()
 menu_left <= menu_selection
 
-item_name_selected = OPTIONS[0]
+item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
 my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
 
-def load_option(ev, item_name) -> None:
+
+def load_option(_, item_name) -> None:
+    """ load_option """
+
     my_sub_panel.clear()
     if item_name == 'create account':
         create_account()
@@ -204,21 +219,21 @@ def load_option(ev, item_name) -> None:
         modify_data()
     if item_name == 'delete account':
         delete_account()
-    global item_name_selected
+    global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 
     menu_left.clear()
 
     # items in menu
-    for item_name in OPTIONS:
+    for possible_item_name in OPTIONS:
 
-        if item_name == item_name_selected:
-            item_name_bold_or_not = html.B(item_name)
+        if possible_item_name == item_name_selected:
+            item_name_bold_or_not = html.B(possible_item_name)
         else:
-            item_name_bold_or_not = item_name
+            item_name_bold_or_not = possible_item_name
 
         button = html.BUTTON(item_name_bold_or_not)
-        button.bind("click", lambda ev, item_name=item_name: load_option(ev, item_name))
+        button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_left <= menu_item
 
