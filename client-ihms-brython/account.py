@@ -1,14 +1,162 @@
 """ account """
 
-from browser import document, html
+from browser import document, html, ajax
+from browser.widgets.dialog import InfoDialog
+
+import json
+import re
+
+import config
 
 OPTIONS = ['create account', 'change password', 'confirm email', 'modify data', 'delete account']
 
+EMAIL_PATTERN = r'^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
+MAX_LEN_PSEUDO = 12
 
 
 def create_account():
-    dummy = html.P("create account")
-    my_sub_panel <= dummy
+
+    def create_account_callback(ev) -> None:
+        """ create_account_callback """
+
+        print(f"create_account_callback")
+
+        def reply_callback(req):
+            print("reply_callback")
+            print(f"{req=}")
+            req_result = json.loads(req.text)
+            print(f"{req_result=}")
+            if req.status != 200:
+                InfoDialog("KO", f"Problem : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+                return
+            print(f"{req_result=}")
+            InfoDialog("OK", f"Problem : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        def noreply_callback(req):
+            print("noreply_callback")
+            InfoDialog("OK", f"Account was created", remove_after=config.REMOVE_AFTER)
+
+        pseudo = input_pseudo.value
+
+        if not pseudo:
+            InfoDialog("KO", f"Pseudo is missing", remove_after=config.REMOVE_AFTER)
+            return
+        if len(pseudo) > MAX_LEN_PSEUDO:
+            InfoDialog("KO", f"Pseudo is too long", remove_after=config.REMOVE_AFTER)
+            return
+
+        password = input_password.value
+        if not password:
+            InfoDialog("KO", f"Password is missing", remove_after=config.REMOVE_AFTER)
+            return
+
+        password_again = input_password_again.value
+        if password_again != password:
+            InfoDialog("KO", f"Passwords do not match", remove_after=config.REMOVE_AFTER)
+            return
+
+        email = input_email.value
+        telephone = input_telephone.value
+        replace = input_ok_replace.value
+        family_name = input_family_name.value
+        first_name = input_first_name.value
+
+        # TODO : implement
+        country = "FRA"
+        time_zone = "UTC + 1"
+
+        json_dict = {
+            'pseudo': pseudo,
+            'password': password,
+            'email': email,
+            'telephone': telephone,
+            'replace': replace,
+            'family_name': family_name,
+            'first_name': first_name,
+            'country': country,
+            'time_zone': time_zone,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/players"
+
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    form = html.FORM()
+    my_sub_panel <= form
+
+    legend_pseudo = html.LEGEND("pseudo")
+    form <= legend_pseudo
+    input_pseudo = html.INPUT(type="text", value="")
+    form <= input_pseudo
+    form <= html.BR()
+
+    legend_password = html.LEGEND("password")
+    form <= legend_password
+    input_password = html.INPUT(type="password", value="")
+    form <= input_password
+    form <= html.BR()
+
+    legend_password_again = html.LEGEND("password again")
+    form <= legend_password_again
+    input_password_again = html.INPUT(type="password", value="")
+    form <= input_password_again
+    form <= html.BR()
+
+    legend_email = html.LEGEND("email")
+    form <= legend_email
+    input_email = html.INPUT(type="email", value="")
+    form <= input_email
+    form <= html.BR()
+
+    legend_telephone = html.LEGEND("telephone")
+    form <= legend_telephone
+    input_telephone = html.INPUT(type="tel", value="")
+    form <= input_telephone
+    form <= html.BR()
+
+    legend_ok_replace = html.LEGEND("ok to replace")
+    form <= legend_ok_replace
+    input_ok_replace = html.INPUT(type="checkbox", value="")
+    form <= input_ok_replace
+    form <= html.BR()
+
+    legend_family_name = html.LEGEND("family name")
+    form <= legend_family_name
+    input_family_name = html.INPUT(type="text", value="")
+    form <= input_family_name
+    form <= html.BR()
+
+    legend_first_name = html.LEGEND("first name")
+    form <= legend_first_name
+    input_first_name = html.INPUT(type="text", value="")
+    form <= input_first_name
+    form <= html.BR()
+
+    legend_country = html.LEGEND("country (not implemented)")
+    form <= legend_country
+    input_country = html.SELECT(type="select-one", value="")
+    #input_country.options.add("France")
+    #input_country.options.add("Belgique")
+    #input_country.options.add("Canada")
+    form <= input_country
+    form <= html.BR()
+
+    legend_time_zone = html.LEGEND("time zone (not implemented)")
+    form <= legend_time_zone
+    input_time_zone = html.SELECT(type="select-one", value="")
+    #input_time_zone.options.add("UTC+1")
+    #input_time_zone.options.add("UTC+2")
+    #input_time_zone.options.add("UTC+3")
+    form <= input_time_zone
+    form <= html.BR()
+
+    input_create_account = html.INPUT(type="submit", value="create account")
+    input_create_account.bind("click", create_account_callback)
+    form <= input_create_account
+    form <= html.BR()
+
 
 def change_password():
     dummy = html.P("change password")

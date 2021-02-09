@@ -4,9 +4,9 @@ from browser import document, html, ajax
 from browser.widgets.dialog import InfoDialog
 from browser.local_storage import storage
 
-import config
 import json
 
+import config
 
 def login_callback(ev) -> None:
     """ login_callback """
@@ -19,14 +19,15 @@ def login_callback(ev) -> None:
         req_result = json.loads(req.text)
         print(f"{req_result=}")
         if req.status != 200:
-            InfoDialog("KO", f"Il y a eu un problème : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("KO", f"Problem : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
             return
         print(f"{req_result=}")
         storage['JWT_TOKEN'] = req_result['AccessToken']
+        InfoDialog("OK", "Identification réussie !", remove_after=config.REMOVE_AFTER)
 
     def noreply_callback(req):
         print("noreply_callback")
-        InfoDialog("KO", f"Il y a eu un problème (pas de réponse du serveur)", remove_after=config.REMOVE_AFTER)
+        InfoDialog("KO", f"Problem (no answer from server)", remove_after=config.REMOVE_AFTER)
 
     pseudo = input_pseudo.value
     password = input_password.value
@@ -40,7 +41,7 @@ def login_callback(ev) -> None:
         'password': password
     }
 
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=2.0, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
 
 def forgot_callback(ev) -> None:
