@@ -11,6 +11,12 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 
 
+def noreply_callback(_):
+    """ noreply_callback """
+    print("noreply_callback")
+    alert("Problem (no answer from server)")
+
+
 def login_callback(_) -> None:
     """ login_callback """
 
@@ -25,12 +31,9 @@ def login_callback(_) -> None:
             alert(f"Problem : {req_result['msg']}")
             return
         print(f"{req_result=}")
+        storage['PSEUDO'] = pseudo
         storage['JWT_TOKEN'] = req_result['AccessToken']
-        InfoDialog("OK", "Login successful", remove_after=config.REMOVE_AFTER)
-
-    def noreply_callback(_):
-        print("noreply_callback")
-        alert("Problem (no answer from server)")
+        InfoDialog("OK", f"Successful login as {pseudo}", remove_after=config.REMOVE_AFTER)
 
     pseudo = input_pseudo.value
     password = input_password.value

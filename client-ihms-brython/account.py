@@ -7,13 +7,20 @@ import re
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
+from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 
-OPTIONS = ['create account', 'change password', 'confirm email', 'modify data', 'delete account']
+OPTIONS = ['create account', 'change password', 'validate account',  'edit account', 'delete account']
 
 EMAIL_PATTERN = r'^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
 MAX_LEN_PSEUDO = 12
+
+
+def noreply_callback(_):
+    """ noreply_callback """
+    print("noreply_callback")
+    alert("Problem (no answer from server)")
 
 
 def create_account():
@@ -23,19 +30,15 @@ def create_account():
         """ create_account_callback """
 
         def reply_callback(req):
-            print("reply_callback")
+            print("reply_callback create account")
             print(f"{req=}")
             req_result = json.loads(req.text)
             print(f"{req_result=}")
-            if req.status != 200:
+            if req.status != 201:
                 alert(f"Problem : {req_result['msg']}")
                 return
             print(f"{req_result=}")
             InfoDialog("OK", f"Account created : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
-
-        def noreply_callback(_):
-            print("noreply_callback")
-            alert("Problem (no answer from server)")
 
         pseudo = input_pseudo.value
 
@@ -161,21 +164,143 @@ def create_account():
 
 def change_password():
     """ change_password """
-    dummy = html.P("change password")
-    my_sub_panel <= dummy
+
+    def change_password_callback(_) -> None:
+        """ change_password_callback """
+
+        def reply_callback(req):
+            print("reply_callback change password")
+            print(f"{req=}")
+            req_result = json.loads(req.text)
+            print(f"{req_result=}")
+            if req.status != 200:
+                alert(f"Problem : {req_result['msg']}")
+                return
+            print(f"{req_result=}")
+            InfoDialog("OK", f"Password changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        old_password = input_old_password.value
+        if not old_password:
+            alert("Old password is missing")
+            return
+
+        new_password = input_new_password.value
+        if not new_password:
+            alert("New password is missing")
+            return
+
+        new_password_again = input_new_password_again.value
+        if new_password_again != new_password:
+            alert("Passwords do not match")
+            return
+
+        pseudo = storage['PSEUDO']
+
+        json_dict = {
+            'pseudo': pseudo,
+            'password': new_password,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/players/{pseudo}"
+
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    form = html.FORM()
+    my_sub_panel <= form
+
+    legend_old_password = html.LEGEND("old password")
+    form <= legend_old_password
+    input_old_password = html.INPUT(type="password", value="")
+    form <= input_old_password
+    form <= html.BR()
+
+    legend_new_password = html.LEGEND("new password")
+    form <= legend_new_password
+    input_new_password = html.INPUT(type="password", value="")
+    form <= input_new_password
+    form <= html.BR()
+
+    legend_new_password_again = html.LEGEND("new_password again")
+    form <= legend_new_password_again
+    input_new_password_again = html.INPUT(type="password", value="")
+    form <= input_new_password_again
+    form <= html.BR()
+
+    input_change_password = html.INPUT(type="submit", value="change password")
+    input_change_password.bind("click", change_password_callback)
+    form <= input_change_password
+    form <= html.BR()
 
 
-def confirm_email():
-    """ confirm_email """
+def validate_account():
+    """ validate_account """
 
-    dummy = html.P("confirm email")
-    my_sub_panel <= dummy
+    def validate_account_callback(_) -> None:
+        """ validate_account_callback """
+
+        def reply_callback(req):
+            print("reply_callback validate account")
+            print(f"{req=}")
+            req_result = json.loads(req.text)
+            print(f"{req_result=}")
+            if req.status != 200:
+                alert(f"Problem : {req_result['msg']}")
+                return
+            print(f"{req_result=}")
+            InfoDialog("OK", f"Congratulations, your account was validated : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        confirmation_code = int(input_confirmation_code.value)
+
+        if not confirmation_code:
+            alert("Confirmation code is missing")
+            return
+
+        try:
+            confirmation_code_int = int(confirmation_code)
+        except:
+            alert("Confirmation code is incorrect")
+            return
+
+        print(f"{confirmation_code_int=}")
+
+        if not (1000 <= confirmation_code_int <= 9999):
+            alert("Confirmation code should use 4 digits")
+            return
+
+        pseudo = storage['PSEUDO']
+
+        json_dict = {
+            'pseudo': pseudo,
+            'code': confirmation_code_int,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/emails"
+
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    form = html.FORM()
+    my_sub_panel <= form
+
+    legend_confirmation_code = html.LEGEND("confirmation code")
+    form <= legend_confirmation_code
+    input_confirmation_code = html.INPUT(type="number", value="", required=True)
+    form <= input_confirmation_code
+    form <= html.BR()
+
+    input_validate_account = html.INPUT(type="submit", value="validate account")
+    input_validate_account.bind("click", validate_account_callback)
+    form <= input_validate_account
+    form <= html.BR()
 
 
-def modify_data():
+def edit_account():
     """ modify_data """
 
-    dummy = html.P("modify data")
+    dummy = html.P("edit account")
     my_sub_panel <= dummy
 
 
@@ -213,10 +338,10 @@ def load_option(_, item_name) -> None:
         create_account()
     if item_name == 'change password':
         change_password()
-    if item_name == 'confirm email':
-        confirm_email()
-    if item_name == 'modify data':
-        modify_data()
+    if item_name == 'validate account':
+        validate_account()
+    if item_name == 'edit account':
+        edit_account()
     if item_name == 'delete account':
         delete_account()
     global item_name_selected  # pylint: disable=invalid-name
