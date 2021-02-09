@@ -1,14 +1,17 @@
 """ login """
 
-from browser import document, html, ajax
-from browser.widgets.dialog import InfoDialog
-from browser.local_storage import storage
+# pylint: disable=pointless-statement, expression-not-assigned
 
 import json
 
+from browser import html, ajax, alert  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
+from browser.local_storage import storage  # pylint: disable=import-error
+
 import config
 
-def login_callback(ev) -> None:
+
+def login_callback(_) -> None:
     """ login_callback """
 
     print(f"login_callback {input_pseudo.value=} {input_password.value=}")
@@ -19,15 +22,15 @@ def login_callback(ev) -> None:
         req_result = json.loads(req.text)
         print(f"{req_result=}")
         if req.status != 200:
-            InfoDialog("KO", f"Problem : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            alert(f"Problem : {req_result['msg']}")
             return
         print(f"{req_result=}")
         storage['JWT_TOKEN'] = req_result['AccessToken']
-        InfoDialog("OK", "Identification réussie !", remove_after=config.REMOVE_AFTER)
+        InfoDialog("OK", "Login successful", remove_after=config.REMOVE_AFTER)
 
-    def noreply_callback(req):
+    def noreply_callback(_):
         print("noreply_callback")
-        InfoDialog("KO", f"Problem (no answer from server)", remove_after=config.REMOVE_AFTER)
+        alert("Problem (no answer from server)")
 
     pseudo = input_pseudo.value
     password = input_password.value
@@ -44,9 +47,9 @@ def login_callback(ev) -> None:
     ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
 
-def forgot_callback(ev) -> None:
+def forgot_callback(_) -> None:
     """ forgot_callback """
-    sorry = InfoDialog("Sorry", "Forgot password is not implemented yet", remove_after=config.REMOVE_AFTER)
+    sorry = alert("Sorry: Forgot password is not implemented yet")
     form <= sorry
 
 

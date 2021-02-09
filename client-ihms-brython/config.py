@@ -24,8 +24,8 @@ SERVER_CONFIG['SOLVER'] = dict()
 SERVER_CONFIG['SOLVER']['HOST'] = "https://afjd5.eu.ngrok.io"
 SERVER_CONFIG['SOLVER']['PORT'] = 443
 
-# timeout for messages
-REMOVE_AFTER = 5.
-
 # timeout for server requests
-TIMEOUT_SERVER = 2.
+TIMEOUT_SERVER = 2
+
+# timeout for message when OK
+REMOVE_AFTER = 5

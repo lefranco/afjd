@@ -1,6 +1,8 @@
 """ index """
 
-from browser import document, html, highlight
+# pylint: disable=pointless-statement, expression-not-assigned
+
+from browser import document, html  # pylint: disable=import-error
 
 import home
 import login
@@ -8,6 +10,7 @@ import account
 import games
 import play
 import master
+
 
 TITLE = "Welcome this demo interface Web client for playing Diplomacy on ANJD REST Server"
 OPTIONS = ['home', 'login', 'account', 'games', 'play', 'master']
@@ -38,10 +41,12 @@ menu_selection = html.UL()
 menu_left <= menu_selection
 
 
-item_name_selected = OPTIONS[0]
+item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
 
-def load_option(ev, item_name) -> None:
+def load_option(_, item_name) -> None:
+    """ load_option """
+
     panel_middle.clear()
     if item_name == 'home':
         home.render(panel_middle)
@@ -55,21 +60,21 @@ def load_option(ev, item_name) -> None:
         play.render(panel_middle)
     if item_name == 'master':
         master.render(panel_middle)
-    global item_name_selected
+    global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 
     menu_left.clear()
 
     # items in menu
-    for item_name in OPTIONS:
+    for possible_item_name in OPTIONS:
 
-        if item_name == item_name_selected:
-            item_name_bold_or_not = html.B(item_name)
+        if possible_item_name == item_name_selected:
+            item_name_bold_or_not = html.B(possible_item_name)
         else:
-            item_name_bold_or_not = item_name
+            item_name_bold_or_not = possible_item_name
 
         button = html.BUTTON(item_name_bold_or_not)
-        button.bind("click", lambda ev, item_name=item_name: load_option(ev, item_name))
+        button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_left <= menu_item
 
