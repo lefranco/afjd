@@ -52,9 +52,7 @@ def login_callback(_) -> None:
 
 def forgot_callback(_) -> None:
     """ forgot_callback """
-    sorry = alert("Sorry: Forgot password is not implemented yet")
-    form <= sorry
-
+    alert("Sorry: Forgot password is not implemented yet")
 
 my_panel = html.DIV(id="login")
 

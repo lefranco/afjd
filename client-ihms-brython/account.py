@@ -268,10 +268,9 @@ def validate_account():
 
         print(f"{confirmation_code_int=}")
 
-        if not (1000 <= confirmation_code_int <= 9999):
+        if not 1000 <= confirmation_code_int <= 9999:
             alert("Confirmation code should use 4 digits")
             return
-
 
         json_dict = {
             'pseudo': pseudo,
