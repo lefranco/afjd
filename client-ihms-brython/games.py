@@ -15,11 +15,13 @@ def create_game():
     dummy = html.P("create game")
     my_sub_panel <= dummy
 
+
 def join_game():
     """ join_game """
 
     dummy = html.P("join game")
     my_sub_panel <= dummy
+
 
 def put_player_in_game():
     """ put_player_in_game """
@@ -27,11 +29,13 @@ def put_player_in_game():
     dummy = html.P("put player in game")
     my_sub_panel <= dummy
 
+
 def remove_player_from_game():
     """ remove_player_from_game """
 
     dummy = html.P("remove player from game")
     my_sub_panel <= dummy
+
 
 def edit_game():
     """ edit game """
@@ -39,12 +43,12 @@ def edit_game():
     dummy = html.P("edit game")
     my_sub_panel <= dummy
 
+
 def delete_game():
     """ delete_game """
 
     dummy = html.P("delete game")
     my_sub_panel <= dummy
-
 
 
 my_panel = html.DIV(id="account")
@@ -101,9 +105,9 @@ def load_option(_, item_name) -> None:
         menu_left <= menu_item
 
 
-
 # starts here
 load_option(None, item_name_selected)
+
 
 def render(panel_middle) -> None:
     """ render """

@@ -24,17 +24,20 @@ my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
 
+
 def submit_orders():
     """ submit_orders """
 
     dummy = html.P("submit orders")
     my_sub_panel <= dummy
 
+
 def negotiate():
     """ negotiate """
 
     dummy = html.P("negotiate")
     my_sub_panel <= dummy
+
 
 def load_option(_, item_name) -> None:
     """ load_option """
@@ -65,7 +68,6 @@ def load_option(_, item_name) -> None:
 
 # starts here
 load_option(None, item_name_selected)
-
 
 
 def render(panel_middle) -> None:

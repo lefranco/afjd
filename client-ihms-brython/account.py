@@ -259,7 +259,7 @@ def validate_account():
 
         try:
             confirmation_code_int = int(confirmation_code)
-        except:
+        except:  # noqa: E722 pylint: disable=bare-except
             alert("Confirmation code is incorrect")
             return
 
@@ -307,8 +307,35 @@ def edit_account():
 def delete_account():
     """ delete_account """
 
-    dummy = html.P("delete account")
-    my_sub_panel <= dummy
+    def delete_account_callback(_) -> None:
+        """ delete_account_callback """
+
+        def reply_callback(req):
+            print("reply_callback delete account")
+            print(f"{req=}")
+            req_result = json.loads(req.text)
+            print(f"{req_result=}")
+            if req.status != 200:
+                alert(f"Problem : {req_result['msg']}")
+                return
+            print(f"{req_result=}")
+            InfoDialog("OK", f"Your account was deleted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        pseudo = storage['PSEUDO']
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/{pseudo}"
+
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    form = html.FORM()
+    my_sub_panel <= form
+
+    input_delete_account = html.INPUT(type="submit", value="delete account")
+    input_delete_account.bind("click", delete_account_callback)
+    form <= input_delete_account
+    form <= html.BR()
 
 
 my_panel = html.DIV(id="account")
