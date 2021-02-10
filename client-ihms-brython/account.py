@@ -179,11 +179,6 @@ def change_password():
             print(f"{req_result=}")
             InfoDialog("OK", f"Password changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
-        old_password = input_old_password.value
-        if not old_password:
-            alert("Old password is missing")
-            return
-
         new_password = input_new_password.value
         if not new_password:
             alert("New password is missing")
@@ -212,12 +207,6 @@ def change_password():
 
     form = html.FORM()
     my_sub_panel <= form
-
-    legend_old_password = html.LEGEND("old password")
-    form <= legend_old_password
-    input_old_password = html.INPUT(type="password", value="")
-    form <= input_old_password
-    form <= html.BR()
 
     legend_new_password = html.LEGEND("new password")
     form <= legend_new_password
@@ -335,7 +324,7 @@ def delete_account():
 
     pseudo = storage['PSEUDO']
     if not pseudo:
-        alert("Please login beforhand")
+        alert("Please login beforehand")
         return
 
     form = html.FORM()
