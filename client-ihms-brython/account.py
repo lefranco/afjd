@@ -194,8 +194,6 @@ def change_password():
             alert("Passwords do not match")
             return
 
-        pseudo = storage['PSEUDO']
-
         json_dict = {
             'pseudo': pseudo,
             'password': new_password,
@@ -206,6 +204,11 @@ def change_password():
         url = f"{host}:{port}/players/{pseudo}"
 
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    pseudo = storage['PSEUDO']
+    if not pseudo:
+        alert("Please login beforhand")
+        return
 
     form = html.FORM()
     my_sub_panel <= form
@@ -269,7 +272,6 @@ def validate_account():
             alert("Confirmation code should use 4 digits")
             return
 
-        pseudo = storage['PSEUDO']
 
         json_dict = {
             'pseudo': pseudo,
@@ -281,6 +283,11 @@ def validate_account():
         url = f"{host}:{port}/emails"
 
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    pseudo = storage['PSEUDO']
+    if not pseudo:
+        alert("Please login beforhand")
+        return
 
     form = html.FORM()
     my_sub_panel <= form
@@ -321,13 +328,16 @@ def delete_account():
             print(f"{req_result=}")
             InfoDialog("OK", f"Your account was deleted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
-        pseudo = storage['PSEUDO']
-
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/{pseudo}"
 
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    pseudo = storage['PSEUDO']
+    if not pseudo:
+        alert("Please login beforhand")
+        return
 
     form = html.FORM()
     my_sub_panel <= form
