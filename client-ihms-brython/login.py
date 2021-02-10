@@ -54,33 +54,39 @@ def forgot_callback(_) -> None:
     """ forgot_callback """
     alert("Sorry: Forgot password is not implemented yet")
 
+
 my_panel = html.DIV(id="login")
 
-form = html.FORM()
-my_panel <= form
+form1 = html.FORM()
 
 legend_pseudo = html.LEGEND("pseudo")
-form <= legend_pseudo
+form1 <= legend_pseudo
 input_pseudo = html.INPUT(type="text", value="")
-form <= input_pseudo
-form <= html.BR()
+form1 <= input_pseudo
+form1 <= html.BR()
 
 legend_password = html.LEGEND("password")
-form <= legend_password
+form1 <= legend_password
 input_password = html.INPUT(type="password", value="")
-form <= input_password
-form <= html.BR()
+form1 <= input_password
+form1 <= html.BR()
 
 input_login = html.INPUT(type="submit", value="login")
 input_login.bind("click", login_callback)
-form <= input_login
-form <= html.BR()
+form1 <= input_login
+form1 <= html.BR()
+
+my_panel <= form1
+my_panel <= html.BR()
+
+form2 = html.FORM()
 
 input_forgot = html.INPUT(type="submit", value="forgot password")
 input_forgot.bind("click", forgot_callback)
-form <= input_forgot
-form <= html.BR()
+form2 <= input_forgot
+form2 <= html.BR()
 
+my_panel <= form2
 
 def render(panel_middle) -> None:
     """ render """
