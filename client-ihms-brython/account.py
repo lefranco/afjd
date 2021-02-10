@@ -11,7 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 
-OPTIONS = ['create account', 'change password', 'validate account',  'edit account', 'delete account']
+OPTIONS = ['create', 'change password', 'validate', 'edit', 'delete']
 
 EMAIL_PATTERN = r'^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
 MAX_LEN_PSEUDO = 12
@@ -334,15 +334,15 @@ def load_option(_, item_name) -> None:
     """ load_option """
 
     my_sub_panel.clear()
-    if item_name == 'create account':
+    if item_name == 'create':
         create_account()
     if item_name == 'change password':
         change_password()
-    if item_name == 'validate account':
+    if item_name == 'validate':
         validate_account()
-    if item_name == 'edit account':
+    if item_name == 'edit':
         edit_account()
-    if item_name == 'delete account':
+    if item_name == 'delete':
         delete_account()
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
