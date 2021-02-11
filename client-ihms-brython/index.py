@@ -11,10 +11,10 @@ import account
 import games
 import play
 import master
-
+import sandbox
 
 TITLE = "Welcome this demo interface Web client for playing Diplomacy on ANJD REST Server"
-OPTIONS = ['home', 'login', 'players', 'account', 'games', 'play', 'master']
+OPTIONS = ['home', 'login', 'players', 'account', 'games', 'play', 'master', 'sandbox']
 
 
 # title
@@ -63,6 +63,8 @@ def load_option(_, item_name) -> None:
         play.render(panel_middle)
     if item_name == 'master':
         master.render(panel_middle)
+    if item_name == 'sandbox':
+        sandbox.render(panel_middle)
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 
