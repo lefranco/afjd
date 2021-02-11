@@ -19,7 +19,6 @@ MAX_LEN_PSEUDO = 12
 
 def noreply_callback(_):
     """ noreply_callback """
-    print("noreply_callback")
     alert("Problem (no answer from server)")
 
 
@@ -30,14 +29,10 @@ def create_account():
         """ create_account_callback """
 
         def reply_callback(req):
-            print("reply_callback create account")
-            print(f"{req=}")
             req_result = json.loads(req.text)
-            print(f"{req_result=}")
             if req.status != 201:
                 alert(f"Problem : {req_result['msg']}")
                 return
-            print(f"{req_result=}")
             InfoDialog("OK", f"Account created : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         pseudo = input_pseudo.value
@@ -169,14 +164,10 @@ def change_password():
         """ change_password_callback """
 
         def reply_callback(req):
-            print("reply_callback change password")
-            print(f"{req=}")
             req_result = json.loads(req.text)
-            print(f"{req_result=}")
             if req.status != 200:
                 alert(f"Problem : {req_result['msg']}")
                 return
-            print(f"{req_result=}")
             InfoDialog("OK", f"Password changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         new_password = input_new_password.value
@@ -233,14 +224,10 @@ def validate_account():
         """ validate_account_callback """
 
         def reply_callback(req):
-            print("reply_callback validate account")
-            print(f"{req=}")
             req_result = json.loads(req.text)
-            print(f"{req_result=}")
             if req.status != 200:
                 alert(f"Problem : {req_result['msg']}")
                 return
-            print(f"{req_result=}")
             InfoDialog("OK", f"Congratulations, your account was validated : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         confirmation_code = int(input_confirmation_code.value)
@@ -254,8 +241,6 @@ def validate_account():
         except:  # noqa: E722 pylint: disable=bare-except
             alert("Confirmation code is incorrect")
             return
-
-        print(f"{confirmation_code_int=}")
 
         if not 1000 <= confirmation_code_int <= 9999:
             alert("Confirmation code should use 4 digits")
@@ -306,14 +291,10 @@ def delete_account():
         """ delete_account_callback """
 
         def reply_callback(req):
-            print("reply_callback delete account")
-            print(f"{req=}")
             req_result = json.loads(req.text)
-            print(f"{req_result=}")
             if req.status != 200:
                 alert(f"Problem : {req_result['msg']}")
                 return
-            print(f"{req_result=}")
             InfoDialog("OK", f"Your account was deleted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']

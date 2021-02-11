@@ -15,24 +15,17 @@ import config
 
 def noreply_callback(_):
     """ noreply_callback """
-    print("noreply_callback")
     alert("Problem (no answer from server)")
 
 
 def login_callback(_) -> None:
     """ login_callback """
 
-    print(f"login_callback {input_pseudo.value=} {input_password.value=}")
-
     def reply_callback(req):
-        print("reply_callback")
-        print(f"{req=}")
         req_result = json.loads(req.text)
-        print(f"{req_result=}")
         if req.status != 200:
             alert(f"Problem : {req_result['msg']}")
             return
-        print(f"{req_result=}")
         storage['PSEUDO'] = pseudo
         storage['JWT_TOKEN'] = req_result['AccessToken']
         storage['LOGIN_TIME'] = str(time.time())
@@ -121,8 +114,6 @@ my_panel <= form3
 
 def show_login():
     """  show_login """
-
-    print("show_login")
 
     if 'PSEUDO' in storage:
         log_message = f"Logged as {storage['PSEUDO']}"
