@@ -3,8 +3,10 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
+import time
+import datetime
 
-from browser import html, ajax, alert  # pylint: disable=import-error
+from browser import document, html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -33,8 +35,9 @@ def login_callback(_) -> None:
         print(f"{req_result=}")
         storage['PSEUDO'] = pseudo
         storage['JWT_TOKEN'] = req_result['AccessToken']
-        storage['LOGIN_TIME'] = time.time()
+        storage['LOGIN_TIME'] = str(time.time())
         InfoDialog("OK", f"Successful login as {pseudo}", remove_after=config.REMOVE_AFTER)
+        show_login()
 
     pseudo = input_pseudo.value
     password = input_password.value
@@ -62,14 +65,15 @@ def logout_callback(_) -> None:
     if 'PSEUDO' in storage:
         del storage['PSEUDO']
         effective = True
-    if 'JWT_TOKEN'in storage:
+    if 'JWT_TOKEN' in storage:
         del storage['JWT_TOKEN']
         effective = True
-    if 'LOGIN_TIME'in storage:
+    if 'LOGIN_TIME' in storage:
         del storage['LOGIN_TIME']
         effective = True
     if effective:
-        InfoDialog("OK", f"Successful logout", remove_after=config.REMOVE_AFTER)
+        InfoDialog("OK", "Successful logout", remove_after=config.REMOVE_AFTER)
+        show_login()
 
 
 my_panel = html.DIV(id="login")
@@ -114,6 +118,32 @@ form3 <= input_logout
 form3 <= html.BR()
 
 my_panel <= form3
+
+def show_login():
+    """  show_login """
+
+    print("show_login")
+
+    if 'PSEUDO' in storage:
+        log_message = f"Logged as {storage['PSEUDO']}"
+    else:
+        log_message = "Visiting..."
+
+    if 'LOGIN_TIME' in storage:
+        date_desc = datetime.datetime.fromtimestamp(float(storage['LOGIN_TIME']))
+        log_message = f"{log_message} since {date_desc}"
+
+    show_login_panel = html.DIV(id="show_login")
+    show_login_panel.attrs['style'] = 'text-align: left'
+    show_login_panel <= html.BR()
+    show_login_panel <= html.BR()
+    show_login_panel <= html.B(log_message)
+
+    if "show_login" in document:
+        del document["show_login"]
+
+    document <= show_login_panel
+
 
 def render(panel_middle) -> None:
     """ render """

@@ -89,3 +89,5 @@ overall <= panel_middle
 
 # starts here
 load_option(None, item_name_selected)
+
+login.show_login()
