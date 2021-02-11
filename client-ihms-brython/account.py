@@ -318,9 +318,11 @@ def delete_account():
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/{pseudo}"
+        url = f"{host}:{port}/players/{pseudo}"
 
-        json_dict = dict()
+        json_dict = {
+            'pseudo': pseudo,
+        }
 
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
