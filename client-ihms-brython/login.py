@@ -33,6 +33,7 @@ def login_callback(_) -> None:
         print(f"{req_result=}")
         storage['PSEUDO'] = pseudo
         storage['JWT_TOKEN'] = req_result['AccessToken']
+        storage['LOGIN_TIME'] = time.time()
         InfoDialog("OK", f"Successful login as {pseudo}", remove_after=config.REMOVE_AFTER)
 
     pseudo = input_pseudo.value
@@ -53,6 +54,22 @@ def login_callback(_) -> None:
 def forgot_callback(_) -> None:
     """ forgot_callback """
     alert("Sorry: Forgot password is not implemented yet")
+
+def logout_callback(_) -> None:
+    """ logout_callback """
+
+    effective = False
+    if 'PSEUDO' in storage:
+        del storage['PSEUDO']
+        effective = True
+    if 'JWT_TOKEN'in storage:
+        del storage['JWT_TOKEN']
+        effective = True
+    if 'LOGIN_TIME'in storage:
+        del storage['LOGIN_TIME']
+        effective = True
+    if effective:
+        InfoDialog("OK", f"Successful logout", remove_after=config.REMOVE_AFTER)
 
 
 my_panel = html.DIV(id="login")
@@ -87,6 +104,16 @@ form2 <= input_forgot
 form2 <= html.BR()
 
 my_panel <= form2
+my_panel <= html.BR()
+
+form3 = html.FORM()
+
+input_logout = html.INPUT(type="submit", value="logout")
+input_logout.bind("click", logout_callback)
+form3 <= input_logout
+form3 <= html.BR()
+
+my_panel <= form3
 
 def render(panel_middle) -> None:
     """ render """
