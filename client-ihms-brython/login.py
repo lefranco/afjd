@@ -117,15 +117,16 @@ my_panel <= form3
 def show_login():
     """  show_login """
 
+    log_message = html.DIV()
     if 'PSEUDO' in storage:
-        login_name = storage['PSEUDO']
-        log_message = f"Logged in as {login_name}"
+        log_message <= f"Logged in as "
+        log_message <= html.B(storage['PSEUDO'])
     else:
-        log_message = "Visiting..."
+        log_message <= "Visiting..."
 
     if 'LOGIN_TIME' in storage:
         date_desc = datetime.datetime.fromtimestamp(float(storage['LOGIN_TIME']))
-        log_message = f"{log_message}, since {date_desc}"
+        log_message <= f", since {date_desc}"
 
     show_login_panel = html.DIV(id="show_login")
     show_login_panel.attrs['style'] = 'text-align: left'
