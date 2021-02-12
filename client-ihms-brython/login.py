@@ -119,7 +119,7 @@ def show_login():
 
     log_message = html.DIV()
     if 'PSEUDO' in storage:
-        log_message <= f"Logged in as "
+        log_message <= "Logged in as "
         log_message <= html.B(storage['PSEUDO'])
     else:
         log_message <= "Visiting..."
