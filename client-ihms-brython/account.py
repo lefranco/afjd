@@ -336,7 +336,7 @@ def edit_account():
             email_loaded = req_result['email']
             email_confirmed_loaded = req_result['email_confirmed']
             telephone_loaded = req_result['telephone']
-            replace_loaded =  req_result['replace']
+            replace_loaded = req_result['replace']
             family_name_loaded = req_result['family_name']
             first_name_loaded = req_result['first_name']
 
@@ -383,7 +383,7 @@ def edit_account():
             'pseudo': pseudo,
             'email': email,
             'telephone': telephone,
-            'replace': int(replace=='true'),
+            'replace': int(replace == 'true'),
             'family_name': family_name,
             'first_name': first_name,
             'country': country,
