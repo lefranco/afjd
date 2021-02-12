@@ -11,7 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 
-OPTIONS = ['create', 'change password', 'validate', 'edit', 'delete']
+OPTIONS = ['create', 'change password', 'validate email', 'edit', 'delete']
 
 MAX_LEN_PSEUDO = 12
 
@@ -246,18 +246,18 @@ def change_password():
     form <= html.BR()
 
 
-def validate_account():
-    """ validate_account """
+def validate_email():
+    """ validate_email """
 
-    def validate_account_callback(_) -> None:
-        """ validate_account_callback """
+    def validate_email_callback(_) -> None:
+        """ validate_email_callback """
 
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
                 alert(f"Problem : {req_result['msg']}")
                 return
-            InfoDialog("OK", f"Congratulations, your account was validated : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Congratulations, your account/email was validated : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         confirmation_code = int(input_confirmation_code.value)
 
@@ -303,9 +303,9 @@ def validate_account():
 
     form <= html.BR()
 
-    input_validate_account = html.INPUT(type="submit", value="validate account")
-    input_validate_account.bind("click", validate_account_callback)
-    form <= input_validate_account
+    input_validate_email = html.INPUT(type="submit", value="validate email")
+    input_validate_email.bind("click", validate_email_callback)
+    form <= input_validate_email
     form <= html.BR()
 
 
@@ -579,8 +579,8 @@ def load_option(_, item_name) -> None:
         create_account()
     if item_name == 'change password':
         change_password()
-    if item_name == 'validate':
-        validate_account()
+    if item_name == 'validate email':
+        validate_email()
     if item_name == 'edit':
         edit_account()
     if item_name == 'delete':
