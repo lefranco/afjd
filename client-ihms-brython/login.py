@@ -51,6 +51,7 @@ def forgot_callback(_) -> None:
     """ forgot_callback """
     alert("Sorry: Forgot password is not implemented yet")
 
+
 def logout_callback(_) -> None:
     """ logout_callback """
 
@@ -111,6 +112,7 @@ form3 <= input_logout
 form3 <= html.BR()
 
 my_panel <= form3
+
 
 def show_login():
     """  show_login """
