@@ -60,7 +60,7 @@ def create_account():
             return
 
         telephone = input_telephone.value
-        replace = input_ok_replace.value
+        replace = input_replace.value
         family_name = input_family_name.value
         first_name = input_first_name.value
 
@@ -119,10 +119,10 @@ def create_account():
     form <= input_telephone
     form <= html.BR()
 
-    legend_ok_replace = html.LEGEND("ok to replace")
-    form <= legend_ok_replace
-    input_ok_replace = html.INPUT(type="checkbox", value="")
-    form <= input_ok_replace
+    legend_replace = html.LEGEND("ok to replace")
+    form <= legend_replace
+    input_replace = html.INPUT(type="checkbox", value="")
+    form <= input_replace
     form <= html.BR()
 
     legend_family_name = html.LEGEND("family name")
@@ -191,10 +191,11 @@ def change_password():
 
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    pseudo = storage['PSEUDO']
-    if not pseudo:
-        alert("Please login beforhand")
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
         return
+
+    pseudo = storage['PSEUDO']
 
     form = html.FORM()
     my_sub_panel <= form
@@ -257,10 +258,11 @@ def validate_account():
 
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    pseudo = storage['PSEUDO']
-    if not pseudo:
-        alert("Please login beforhand")
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
         return
+
+    pseudo = storage['PSEUDO']
 
     form = html.FORM()
     my_sub_panel <= form
@@ -278,10 +280,178 @@ def validate_account():
 
 
 def edit_account():
-    """ modify_data """
+    """ edit_account """
 
-    dummy = html.P("edit account")
-    my_sub_panel <= dummy
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    # declare the values
+    email_loaded = None
+    email_confirmed_loaded = None
+    telephone_loaded = None
+    replace_loaded = None
+    family_name_loaded = None
+    first_name_loaded = None
+    country_loaded = None
+    time_zone_loaded = None
+
+    def edit_account_reload():
+        """ edit_account_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
+
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal email_loaded
+            nonlocal email_confirmed_loaded
+            nonlocal telephone_loaded
+            nonlocal replace_loaded
+            nonlocal family_name_loaded
+            nonlocal first_name_loaded
+            nonlocal country_loaded
+            nonlocal time_zone_loaded
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                alert(f"Problem loading account: {req_result['msg']}")
+                status = False
+                return
+
+            pseudo_loaded = req_result['pseudo']
+            if pseudo_loaded != pseudo:
+                alert("Wierd. Pseudo is different !")
+                status = False
+                return
+
+            email_loaded = req_result['email']
+            email_confirmed_loaded = req_result['email_confirmed']
+            telephone_loaded = req_result['telephone']
+            replace_loaded =  req_result['replace']
+            family_name_loaded = req_result['family_name']
+            first_name_loaded = req_result['first_name']
+
+            # TODO : handle
+            country_loaded = req_result['country']
+            time_zone_loaded = req_result['time_zone']
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/players/{pseudo}"
+
+        # present the authentication token (we are reading content of an account)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_account_callback(_) -> None:
+        """ change_account_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                alert(f"Problem : {req_result['msg']}")
+                return
+            InfoDialog("OK", f"Account changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        email = input_email.value
+        if not re.match(EMAIL_PATTERN, email):
+            alert("email is incorrect")
+            return
+
+        telephone = input_telephone.value
+        replace = input_replace.value
+        family_name = input_family_name.value
+        first_name = input_first_name.value
+
+        # TODO : implement
+        country = "FRA"
+        time_zone = "UTC + 1"
+
+        json_dict = {
+            'pseudo': pseudo,
+            'email': email,
+            'telephone': telephone,
+            'replace': int(replace=='true'),
+            'family_name': family_name,
+            'first_name': first_name,
+            'country': country,
+            'time_zone': time_zone,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/players/{pseudo}"
+
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    status = edit_account_reload()
+    if not status:
+        return
+
+    form = html.FORM()
+    my_sub_panel <= form
+
+    legend_email = html.LEGEND("email")
+    form <= legend_email
+
+    input_email = html.INPUT(type="email", value=email_loaded)
+    form <= input_email
+    form <= html.BR()
+
+    legend_telephone = html.LEGEND("telephone")
+    form <= legend_telephone
+    input_telephone = html.INPUT(type="tel", value=telephone_loaded)
+    form <= input_telephone
+    form <= html.BR()
+
+    legend_replace = html.LEGEND("ok to replace")
+    form <= legend_replace
+    input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
+    form <= input_replace
+    form <= html.BR()
+
+    legend_family_name = html.LEGEND("family name")
+    form <= legend_family_name
+    input_family_name = html.INPUT(type="text", value=family_name_loaded)
+    form <= input_family_name
+    form <= html.BR()
+
+    legend_first_name = html.LEGEND("first name")
+    form <= legend_first_name
+    input_first_name = html.INPUT(type="text", value=first_name_loaded)
+    form <= input_first_name
+    form <= html.BR()
+
+    legend_country = html.LEGEND("country (not implemented)")
+    form <= legend_country
+    input_country = html.SELECT(type="select-one", value="")
+    #  TODO : propose list of countries
+    form <= input_country
+    form <= html.BR()
+
+    legend_time_zone = html.LEGEND("time zone (not implemented)")
+    form <= legend_time_zone
+    input_time_zone = html.SELECT(type="select-one", value="")
+    #  TODO : propose list of timezones
+    form <= input_time_zone
+    form <= html.BR()
+
+    input_create_account = html.INPUT(type="submit", value="change account")
+    input_create_account.bind("click", change_account_callback)
+    form <= input_create_account
+    form <= html.BR()
 
 
 def delete_account():
