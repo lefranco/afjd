@@ -118,7 +118,8 @@ def show_login():
     """  show_login """
 
     if 'PSEUDO' in storage:
-        log_message = f"Logged as {storage['PSEUDO']}"
+        login_name = html.BR(storage['PSEUDO'])
+        log_message = f"Logged as {login_name}"
     else:
         log_message = "Visiting..."
 
@@ -130,7 +131,7 @@ def show_login():
     show_login_panel.attrs['style'] = 'text-align: left'
     show_login_panel <= html.BR()
     show_login_panel <= html.BR()
-    show_login_panel <= html.B(log_message)
+    show_login_panel <= log_message
 
     if "show_login" in document:
         del document["show_login"]
