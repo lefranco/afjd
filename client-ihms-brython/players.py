@@ -46,6 +46,7 @@ def get_player_list():
         "border": "solid",
     }
 
+    # TODO : make it possible to sort etc...
     for pseudo in sorted(players_dict.values()):
         row = html.TR()
         row.style = {
@@ -63,7 +64,6 @@ def get_player_list():
 def render(panel_middle) -> None:
     """ render """
 
-    # TODO : make it possible to sort etc...
+    my_panel.clear()
     my_panel <= get_player_list()
-
     panel_middle <= my_panel
