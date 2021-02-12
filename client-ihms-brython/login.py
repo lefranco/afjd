@@ -86,6 +86,8 @@ input_password = html.INPUT(type="password", value="")
 form1 <= input_password
 form1 <= html.BR()
 
+form1 <= html.BR()
+
 input_login = html.INPUT(type="submit", value="login")
 input_login.bind("click", login_callback)
 form1 <= input_login
