@@ -61,6 +61,7 @@ def get_player_list():
 
     return players_table
 
+
 def render(panel_middle) -> None:
     """ render """
 

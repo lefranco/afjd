@@ -3,7 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
-import re
+import csv
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -13,8 +13,21 @@ import config
 
 OPTIONS = ['create', 'change password', 'validate', 'edit', 'delete']
 
-EMAIL_PATTERN = r'^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
 MAX_LEN_PSEUDO = 12
+
+COUNTRY_CODE_TABLE = dict()
+COUNTRY_VALUE_TABLE = dict()
+with open("./data/country_list.csv", newline='', encoding="utf-8") as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    for code, name in reader:
+        COUNTRY_CODE_TABLE[name] = code
+
+TIMEZONE_CODE_TABLE = dict()
+TIMEZONE_VALUE_TABLE = dict()
+with open("./data/timezone_list.csv", newline='', encoding="utf-8") as csvfile:
+    reader = csv.reader(csvfile, delimiter=',')
+    for code, name in reader:
+        TIMEZONE_CODE_TABLE[f"{code} ({name})"] = code
 
 
 def noreply_callback(_):
@@ -55,8 +68,11 @@ def create_account():
             return
 
         email = input_email.value
-        if not re.match(EMAIL_PATTERN, email):
-            alert("email is incorrect")
+        if not email:
+            alert("email is missing")
+            return
+        if email.find('@') == -1:
+            alert("@ in email is missing")
             return
 
         telephone = input_telephone.value
@@ -64,9 +80,8 @@ def create_account():
         family_name = input_family_name.value
         first_name = input_first_name.value
 
-        # TODO : implement
-        country = "FRA"
-        time_zone = "UTC + 1"
+        country_code = COUNTRY_CODE_TABLE[input_country.value]
+        timezone_code = TIMEZONE_CODE_TABLE[input_timezone.value]
 
         json_dict = {
             'pseudo': pseudo,
@@ -76,9 +91,11 @@ def create_account():
             'replace': replace,
             'family_name': family_name,
             'first_name': first_name,
-            'country': country,
-            'time_zone': time_zone,
+            'country': country_code,
+            'time_zone': timezone_code,
         }
+
+        print(f"{json_dict=}")
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -137,24 +154,33 @@ def create_account():
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country (not implemented)")
+    legend_country = html.LEGEND("country")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
-    #  TODO : propose list of countries
+
+    for country_name in COUNTRY_CODE_TABLE:
+        option = html.OPTION(country_name)
+        input_country <= option
+
     form <= input_country
     form <= html.BR()
 
-    legend_time_zone = html.LEGEND("time zone (not implemented)")
-    form <= legend_time_zone
-    input_time_zone = html.SELECT(type="select-one", value="")
-    #  TODO : propose list of timezones
-    form <= input_time_zone
+    legend_timezone = html.LEGEND("time zone")
+    form <= legend_timezone
+    input_timezone = html.SELECT(type="select-one", value="")
+
+    for timezone_cities, timezone_code in TIMEZONE_CODE_TABLE.items():
+        option = html.OPTION(timezone_cities)
+        input_timezone <= option
+
+    form <= input_timezone
+    form <= html.BR()
+
     form <= html.BR()
 
     input_create_account = html.INPUT(type="submit", value="create account")
     input_create_account.bind("click", create_account_callback)
     form <= input_create_account
-    form <= html.BR()
 
 
 def change_password():
@@ -210,6 +236,8 @@ def change_password():
     form <= legend_new_password_again
     input_new_password_again = html.INPUT(type="password", value="")
     form <= input_new_password_again
+    form <= html.BR()
+
     form <= html.BR()
 
     input_change_password = html.INPUT(type="submit", value="change password")
@@ -273,6 +301,8 @@ def validate_account():
     form <= input_confirmation_code
     form <= html.BR()
 
+    form <= html.BR()
+
     input_validate_account = html.INPUT(type="submit", value="validate account")
     input_validate_account.bind("click", validate_account_callback)
     form <= input_validate_account
@@ -295,8 +325,8 @@ def edit_account():
     replace_loaded = None
     family_name_loaded = None
     first_name_loaded = None
-    country_loaded = None
-    time_zone_loaded = None
+    country_loaded_code = None
+    timezone_loaded_code = None
 
     def edit_account_reload():
         """ edit_account_reload """
@@ -318,8 +348,8 @@ def edit_account():
             nonlocal replace_loaded
             nonlocal family_name_loaded
             nonlocal first_name_loaded
-            nonlocal country_loaded
-            nonlocal time_zone_loaded
+            nonlocal country_loaded_code
+            nonlocal timezone_loaded_code
 
             req_result = json.loads(req.text)
             if req.status != 200:
@@ -333,6 +363,8 @@ def edit_account():
                 status = False
                 return
 
+            print(f"loaded {req_result=}")
+
             email_loaded = req_result['email']
             email_confirmed_loaded = req_result['email_confirmed']
             telephone_loaded = req_result['telephone']
@@ -340,9 +372,8 @@ def edit_account():
             family_name_loaded = req_result['family_name']
             first_name_loaded = req_result['first_name']
 
-            # TODO : handle
-            country_loaded = req_result['country']
-            time_zone_loaded = req_result['time_zone']
+            country_loaded_code = req_result['country']
+            timezone_loaded_code = req_result['time_zone']
 
         json_dict = dict()
 
@@ -366,8 +397,11 @@ def edit_account():
             InfoDialog("OK", f"Account changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         email = input_email.value
-        if not re.match(EMAIL_PATTERN, email):
-            alert("email is incorrect")
+        if not email:
+            alert("email is missing")
+            return
+        if email.find('@') == -1:
+            alert("@ in email is missing")
             return
 
         telephone = input_telephone.value
@@ -375,9 +409,8 @@ def edit_account():
         family_name = input_family_name.value
         first_name = input_first_name.value
 
-        # TODO : implement
-        country = "FRA"
-        time_zone = "UTC + 1"
+        country_code = COUNTRY_CODE_TABLE[input_country.value]
+        timezone_code = TIMEZONE_CODE_TABLE[input_timezone.value]
 
         json_dict = {
             'pseudo': pseudo,
@@ -386,9 +419,11 @@ def edit_account():
             'replace': int(replace == 'true'),
             'family_name': family_name,
             'first_name': first_name,
-            'country': country,
-            'time_zone': time_zone,
+            'country': country_code,
+            'time_zone': timezone_code,
         }
+
+        print(f"uploading {json_dict=}")
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -403,9 +438,14 @@ def edit_account():
     form = html.FORM()
     my_sub_panel <= form
 
+    legend_pseudo = html.LEGEND("pseudo")
+    form <= legend_pseudo
+    input_pseudo = html.INPUT(type="text", readonly=True, value=pseudo)
+    form <= input_pseudo
+    form <= html.BR()
+
     legend_email = html.LEGEND("email")
     form <= legend_email
-
     input_email = html.INPUT(type="email", value=email_loaded)
     form <= input_email
     form <= html.BR()
@@ -434,18 +474,32 @@ def edit_account():
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country (not implemented)")
+    legend_country = html.LEGEND("country")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
-    #  TODO : propose list of countries
+
+    for country_name in COUNTRY_CODE_TABLE:
+        option = html.OPTION(country_name)
+        if COUNTRY_CODE_TABLE[country_name] == country_loaded_code:
+            option.selected = True
+        input_country <= option
+
     form <= input_country
     form <= html.BR()
 
-    legend_time_zone = html.LEGEND("time zone (not implemented)")
-    form <= legend_time_zone
-    input_time_zone = html.SELECT(type="select-one", value="")
-    #  TODO : propose list of timezones
-    form <= input_time_zone
+    legend_timezone = html.LEGEND("time zone")
+    form <= legend_timezone
+    input_timezone = html.SELECT(type="select-one", value="")
+
+    for timezone_cities, timezone_code in TIMEZONE_CODE_TABLE.items():
+        option = html.OPTION(timezone_cities)
+        if TIMEZONE_CODE_TABLE[timezone_cities] == timezone_loaded_code:
+            option.selected = True
+        input_timezone <= option
+
+    form <= input_timezone
+    form <= html.BR()
+
     form <= html.BR()
 
     input_create_account = html.INPUT(type="submit", value="change account")
@@ -456,6 +510,12 @@ def edit_account():
 
 def delete_account():
     """ delete_account """
+
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
 
     def delete_account_callback(_) -> None:
         """ delete_account_callback """
@@ -476,10 +536,6 @@ def delete_account():
         }
 
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
-
-    if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
-        return
 
     form = html.FORM()
     my_sub_panel <= form
