@@ -450,6 +450,12 @@ def edit_account():
     form <= input_email
     form <= html.BR()
 
+    legend_email_confirmed = html.LEGEND("email confirmed")
+    form <= legend_email_confirmed
+    input_email_confirmed = html.INPUT(type="checkbox", readonly=True, checked=email_confirmed_loaded)
+    form <= input_email_confirmed
+    form <= html.BR()
+
     legend_telephone = html.LEGEND("telephone")
     form <= legend_telephone
     input_telephone = html.INPUT(type="tel", value=telephone_loaded)
