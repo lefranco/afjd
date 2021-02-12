@@ -477,8 +477,7 @@ def delete_account():
 
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    pseudo = storage['PSEUDO']
-    if not pseudo:
+    if 'PSEUDO' not in storage:
         alert("Please login beforehand")
         return
 
