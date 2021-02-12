@@ -118,14 +118,14 @@ def show_login():
     """  show_login """
 
     if 'PSEUDO' in storage:
-        login_name = html.BR(storage['PSEUDO'])
-        log_message = f"Logged as {login_name}"
+        login_name = storage['PSEUDO']
+        log_message = f"Logged in as {login_name}"
     else:
         log_message = "Visiting..."
 
     if 'LOGIN_TIME' in storage:
         date_desc = datetime.datetime.fromtimestamp(float(storage['LOGIN_TIME']))
-        log_message = f"{log_message} since {date_desc}"
+        log_message = f"{log_message}, since {date_desc}"
 
     show_login_panel = html.DIV(id="show_login")
     show_login_panel.attrs['style'] = 'text-align: left'
