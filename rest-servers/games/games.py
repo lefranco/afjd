@@ -135,7 +135,7 @@ class Game:
             self._variant = self._variant[:LEN_NAME_MAX]
             changed = True
 
-        if 'archive' in json_dict and json_dict['archive'] is not None and json_dict['archive'] != self._cumulate:
+        if 'archive' in json_dict and json_dict['archive'] is not None and json_dict['archive'] != self._archive:
             self._archive = json_dict['archive']
             changed = True
 
