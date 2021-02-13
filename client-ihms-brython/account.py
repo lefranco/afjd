@@ -35,6 +35,16 @@ def noreply_callback(_):
     alert("Problem (no answer from server)")
 
 
+def information_about_account():
+    """ information_about_account """
+
+    information = html.DIV()
+    information <= "Fields with (*) are private and will not be shown"
+    information <= html.BR()
+    information <= "Fields with (**) are public"
+    return information
+
+
 def create_account():
     """ create_account """
 
@@ -95,8 +105,6 @@ def create_account():
             'time_zone': timezone_code,
         }
 
-        print(f"{json_dict=}")
-
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players"
@@ -104,9 +112,11 @@ def create_account():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     form = html.FORM()
-    my_sub_panel <= form
 
-    legend_pseudo = html.LEGEND("pseudo")
+    form <= information_about_account()
+    form <= html.BR()
+
+    legend_pseudo = html.LEGEND("pseudo (*)")
     form <= legend_pseudo
     input_pseudo = html.INPUT(type="text", value="")
     form <= input_pseudo
@@ -124,37 +134,37 @@ def create_account():
     form <= input_password_again
     form <= html.BR()
 
-    legend_email = html.LEGEND("email")
+    legend_email = html.LEGEND("email (*)")
     form <= legend_email
     input_email = html.INPUT(type="email", value="")
     form <= input_email
     form <= html.BR()
 
-    legend_telephone = html.LEGEND("telephone")
+    legend_telephone = html.LEGEND("telephone (*)")
     form <= legend_telephone
     input_telephone = html.INPUT(type="tel", value="")
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok to replace")
+    legend_replace = html.LEGEND("ok to replace (**)")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", value="")
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("family name")
+    legend_family_name = html.LEGEND("family name (**)")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value="")
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("first name")
+    legend_first_name = html.LEGEND("first name (**)")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value="")
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country")
+    legend_country = html.LEGEND("country (*)")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
 
@@ -165,7 +175,7 @@ def create_account():
     form <= input_country
     form <= html.BR()
 
-    legend_timezone = html.LEGEND("time zone")
+    legend_timezone = html.LEGEND("time zone (*)")
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
@@ -181,6 +191,8 @@ def create_account():
     input_create_account = html.INPUT(type="submit", value="create account")
     input_create_account.bind("click", create_account_callback)
     form <= input_create_account
+
+    my_sub_panel <= form
 
 
 def change_password():
@@ -224,7 +236,6 @@ def change_password():
     pseudo = storage['PSEUDO']
 
     form = html.FORM()
-    my_sub_panel <= form
 
     legend_new_password = html.LEGEND("new password")
     form <= legend_new_password
@@ -245,6 +256,7 @@ def change_password():
     form <= input_change_password
     form <= html.BR()
 
+    my_sub_panel <= form
 
 def validate_email():
     """ validate_email """
@@ -293,7 +305,6 @@ def validate_email():
     pseudo = storage['PSEUDO']
 
     form = html.FORM()
-    my_sub_panel <= form
 
     legend_confirmation_code = html.LEGEND("confirmation code")
     form <= legend_confirmation_code
@@ -308,6 +319,7 @@ def validate_email():
     form <= input_validate_email
     form <= html.BR()
 
+    my_sub_panel <= form
 
 def edit_account():
     """ edit_account """
@@ -362,8 +374,6 @@ def edit_account():
                 alert("Wierd. Pseudo is different !")
                 status = False
                 return
-
-            print(f"loaded {req_result=}")
 
             email_loaded = req_result['email']
             email_confirmed_loaded = req_result['email_confirmed']
@@ -423,8 +433,6 @@ def edit_account():
             'time_zone': timezone_code,
         }
 
-        print(f"uploading {json_dict=}")
-
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players/{pseudo}"
@@ -436,51 +444,53 @@ def edit_account():
         return
 
     form = html.FORM()
-    my_sub_panel <= form
 
-    legend_pseudo = html.LEGEND("pseudo")
+    form <= information_about_account()
+    form <= html.BR()
+
+    legend_pseudo = html.LEGEND("pseudo (for recall)")
     form <= legend_pseudo
     input_pseudo = html.INPUT(type="text", readonly=True, value=pseudo)
     form <= input_pseudo
     form <= html.BR()
 
-    legend_email = html.LEGEND("email")
+    legend_email = html.LEGEND("email (*)")
     form <= legend_email
     input_email = html.INPUT(type="email", value=email_loaded)
     form <= input_email
     form <= html.BR()
 
-    legend_email_confirmed = html.LEGEND("email confirmed")
+    legend_email_confirmed = html.LEGEND("email confirmed (for information)")
     form <= legend_email_confirmed
     input_email_confirmed = html.INPUT(type="checkbox", readonly=True, checked=email_confirmed_loaded)
     form <= input_email_confirmed
     form <= html.BR()
 
-    legend_telephone = html.LEGEND("telephone")
+    legend_telephone = html.LEGEND("telephone (*)")
     form <= legend_telephone
     input_telephone = html.INPUT(type="tel", value=telephone_loaded)
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok to replace")
+    legend_replace = html.LEGEND("ok to replace (**)")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("family name")
+    legend_family_name = html.LEGEND("family name (**)")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value=family_name_loaded)
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("first name")
+    legend_first_name = html.LEGEND("first name (**)")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value=first_name_loaded)
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country")
+    legend_country = html.LEGEND("country (*)")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
 
@@ -493,7 +503,7 @@ def edit_account():
     form <= input_country
     form <= html.BR()
 
-    legend_timezone = html.LEGEND("time zone")
+    legend_timezone = html.LEGEND("time zone (*)")
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
@@ -511,8 +521,8 @@ def edit_account():
     input_create_account = html.INPUT(type="submit", value="change account")
     input_create_account.bind("click", change_account_callback)
     form <= input_create_account
-    form <= html.BR()
 
+    my_sub_panel <= form
 
 def delete_account():
     """ delete_account """
