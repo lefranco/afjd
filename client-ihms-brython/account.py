@@ -42,6 +42,8 @@ def information_about_account():
     information <= "Fields with (*) are private and will not be shown"
     information <= html.BR()
     information <= "Fields with (**) are public"
+    information <= html.BR()
+    information <= "Hover the titles for more details"
     return information
 
 
@@ -116,55 +118,55 @@ def create_account():
     form <= information_about_account()
     form <= html.BR()
 
-    legend_pseudo = html.LEGEND("pseudo (*)")
+    legend_pseudo = html.LEGEND("pseudo (*)", title="Your identifier on the site")
     form <= legend_pseudo
     input_pseudo = html.INPUT(type="text", value="")
     form <= input_pseudo
     form <= html.BR()
 
-    legend_password = html.LEGEND("password")
+    legend_password = html.LEGEND("password", title="To prevent others from playing for you ;-)")
     form <= legend_password
     input_password = html.INPUT(type="password", value="")
     form <= input_password
     form <= html.BR()
 
-    legend_password_again = html.LEGEND("password again")
+    legend_password_again = html.LEGEND("password again", title="So you do not mistype password")
     form <= legend_password_again
     input_password_again = html.INPUT(type="password", value="")
     form <= input_password_again
     form <= html.BR()
 
-    legend_email = html.LEGEND("email (*)")
+    legend_email = html.LEGEND("email (*)", title="The site will use it notify you of events")
     form <= legend_email
     input_email = html.INPUT(type="email", value="")
     form <= input_email
     form <= html.BR()
 
-    legend_telephone = html.LEGEND("telephone (*)")
+    legend_telephone = html.LEGEND("telephone (*)", title="To reach you in case of emergency")
     form <= legend_telephone
     input_telephone = html.INPUT(type="tel", value="")
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok to replace (**)")
+    legend_replace = html.LEGEND("ok to replace (**)", title="Can we drag you in a game ?")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", value="")
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("family name (**)")
+    legend_family_name = html.LEGEND("family name (**)", title="To know you in real life")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value="")
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("first name (**)")
+    legend_first_name = html.LEGEND("first name (**)", title="To know you in real life")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value="")
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country (*)")
+    legend_country = html.LEGEND("country (*)", title="To know you in real life")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
 
@@ -175,7 +177,7 @@ def create_account():
     form <= input_country
     form <= html.BR()
 
-    legend_timezone = html.LEGEND("time zone (*)")
+    legend_timezone = html.LEGEND("time zone (*)", title="To understand better when you are awake")
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
@@ -448,49 +450,49 @@ def edit_account():
     form <= information_about_account()
     form <= html.BR()
 
-    legend_pseudo = html.LEGEND("pseudo (for recall)")
+    legend_pseudo = html.LEGEND("pseudo", title="(for recall)")
     form <= legend_pseudo
     input_pseudo = html.INPUT(type="text", readonly=True, value=pseudo)
     form <= input_pseudo
     form <= html.BR()
 
-    legend_email = html.LEGEND("email (*)")
+    legend_email = html.LEGEND("email (*)", title="The site will use it notify you of events")
     form <= legend_email
     input_email = html.INPUT(type="email", value=email_loaded)
     form <= input_email
     form <= html.BR()
 
-    legend_email_confirmed = html.LEGEND("email confirmed (for information)")
+    legend_email_confirmed = html.LEGEND("email confirmed", title="(for information)")
     form <= legend_email_confirmed
     input_email_confirmed = html.INPUT(type="checkbox", readonly=True, checked=email_confirmed_loaded)
     form <= input_email_confirmed
     form <= html.BR()
 
-    legend_telephone = html.LEGEND("telephone (*)")
+    legend_telephone = html.LEGEND("telephone (*)", title="To reach you in case of emergency")
     form <= legend_telephone
     input_telephone = html.INPUT(type="tel", value=telephone_loaded)
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok to replace (**)")
+    legend_replace = html.LEGEND("ok to replace (**)", title="Can we drag you in a game ?")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("family name (**)")
+    legend_family_name = html.LEGEND("family name (**)", title="To know you in real life")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value=family_name_loaded)
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("first name (**)")
+    legend_first_name = html.LEGEND("first name (**)", title="To know you in real life")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value=first_name_loaded)
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country (*)")
+    legend_country = html.LEGEND("country (*)", title="To know you in real life")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
 
@@ -503,7 +505,7 @@ def edit_account():
     form <= input_country
     form <= html.BR()
 
-    legend_timezone = html.LEGEND("time zone (*)")
+    legend_timezone = html.LEGEND("time zone (*)", title="To understand better when you are awake")
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
