@@ -181,7 +181,7 @@ def create_account():
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
-    for timezone_cities, timezone_code in TIMEZONE_CODE_TABLE.items():
+    for timezone_cities in TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
         input_timezone <= option
 
@@ -260,6 +260,7 @@ def change_password():
 
     my_sub_panel <= form
 
+
 def validate_email():
     """ validate_email """
 
@@ -322,6 +323,7 @@ def validate_email():
     form <= html.BR()
 
     my_sub_panel <= form
+
 
 def edit_account():
     """ edit_account """
@@ -509,7 +511,7 @@ def edit_account():
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
-    for timezone_cities, timezone_code in TIMEZONE_CODE_TABLE.items():
+    for timezone_cities in TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
         if TIMEZONE_CODE_TABLE[timezone_cities] == timezone_loaded_code:
             option.selected = True
@@ -525,6 +527,7 @@ def edit_account():
     form <= input_create_account
 
     my_sub_panel <= form
+
 
 def delete_account():
     """ delete_account """
