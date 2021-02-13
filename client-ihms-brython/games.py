@@ -34,6 +34,10 @@ def information_about_game():
     """ information_about_account """
 
     information = html.DIV()
+    information <= "Fields with (*) cannot be changed afterwards"
+    information <= html.BR()
+    information <= "Fields with (**) cannot be changed after game is started"
+    information <= html.BR()
     information <= "Hover the titles for more details"
     return information
 
@@ -183,25 +187,25 @@ def create_game():
     }
     form <= legend_title_main
 
-    legend_name = html.LEGEND("name")
+    legend_name = html.LEGEND("name (*)")
     form <= legend_name
     input_name = html.INPUT(type="text", value="", title="Name of the game (keep it short and simple)")
     form <= input_name
     form <= html.BR()
 
-    legend_variant = html.LEGEND("variant", title="(imposed for the moment)")
+    legend_variant = html.LEGEND("variant (*)", title="(imposed for the moment)")
     form <= legend_variant
     input_variant = html.INPUT(type="select-one", readonly=True, value=DEFAULT_VARIANT)
     form <= input_variant
     form <= html.BR()
 
-    legend_archive = html.LEGEND("archive", title="Is this game for archiving - not played - not implemented")
+    legend_archive = html.LEGEND("archive (*)", title="Is this game for archiving - not played - not implemented")
     form <= legend_archive
     input_archive = html.INPUT(type="checkbox", value="")
     form <= input_archive
     form <= html.BR()
 
-    legend_manual = html.LEGEND("manual pairing", title="Game master allocates roles in the game")
+    legend_manual = html.LEGEND("manual pairing (*)", title="Game master allocates roles in the game")
     form <= legend_manual
     input_manual = html.INPUT(type="checkbox", value="")
     form <= input_manual
@@ -213,25 +217,25 @@ def create_game():
     }
     form <= legend_title_terms
 
-    legend_cumulate = html.LEGEND("cumulate", title="Can a player use more than one role - not implemented")
+    legend_cumulate = html.LEGEND("cumulate (*)", title="Can a player use more than one role - not implemented")
     form <= legend_cumulate
     input_cumulate = html.INPUT(type="checkbox", value="")
     form <= input_cumulate
     form <= html.BR()
 
-    legend_anonymous = html.LEGEND("anonymous", title="Are the identitities of the players hidden - not implemented")
+    legend_anonymous = html.LEGEND("anonymous (*)", title="Are the identitities of the players hidden - not implemented")
     form <= legend_anonymous
     input_anonymous = html.INPUT(type="checkbox", value="")
     form <= input_anonymous
     form <= html.BR()
 
-    legend_silent = html.LEGEND("silent", title="Can the players send messages - not implemented")
+    legend_silent = html.LEGEND("silent (*)", title="Can the players send messages - not implemented")
     form <= legend_silent
     input_silent = html.INPUT(type="checkbox", value="")
     form <= input_silent
     form <= html.BR()
 
-    legend_fast = html.LEGEND("fast", title="Are adjudication done as soon as all orders are in - not implemented")
+    legend_fast = html.LEGEND("fast (*)", title="Are adjudication done as soon as all orders are in - not implemented")
     form <= legend_fast
     input_fast = html.INPUT(type="checkbox", value="")
     form <= input_fast
@@ -309,25 +313,25 @@ def create_game():
     }
     form <= legend_title_access
 
-    legend_access_code = html.LEGEND("access code", title="Access code to the game")
+    legend_access_code = html.LEGEND("access code (**)", title="Access code to the game")
     form <= legend_access_code
     input_access_code = html.INPUT(type="number", value="")
     form <= input_access_code
     form <= html.BR()
 
-    legend_access_restriction_reliability = html.LEGEND("reliability restriction", title="How reliable you need to be to play in the game - punctual players")
+    legend_access_restriction_reliability = html.LEGEND("reliability restriction (**)", title="How reliable you need to be to play in the game - punctual players")
     form <= legend_access_restriction_reliability
     input_access_restriction_reliability = html.INPUT(type="number", value="")
     form <= input_access_restriction_reliability
     form <= html.BR()
 
-    legend_access_restriction_regularity = html.LEGEND("regularity restriction", title="How regular you need to be to play in the game - heavy players")
+    legend_access_restriction_regularity = html.LEGEND("regularity restriction (**)", title="How regular you need to be to play in the game - heavy players")
     form <= legend_access_restriction_regularity
     input_access_restriction_regularity = html.INPUT(type="number", value="")
     form <= input_access_restriction_regularity
     form <= html.BR()
 
-    legend_access_restriction_performance = html.LEGEND("performance restriction", title="How performant you need to be to play in the game - good players")
+    legend_access_restriction_performance = html.LEGEND("performance restriction (**)", title="How performant you need to be to play in the game - good players")
     form <= legend_access_restriction_performance
     input_access_restriction_performance = html.INPUT(type="number", value="")
     form <= input_access_restriction_performance
