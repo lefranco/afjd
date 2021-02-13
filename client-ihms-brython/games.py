@@ -6,7 +6,7 @@ from browser import html  # pylint: disable=import-error
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['create', 'join', 'add player', 'remove player', 'edit', 'delete']
+OPTIONS = ['create', 'join', 'add or remove player', 'edit parameters', 'delete']
 
 
 def create_game():
@@ -23,24 +23,17 @@ def join_game():
     my_sub_panel <= dummy
 
 
-def put_player_in_game():
-    """ put_player_in_game """
+def add_or_remove_player_in_game():
+    """ add_or_remove_player_in_game """
 
-    dummy = html.P("put player in game")
+    dummy = html.P("add or remove player in game")
     my_sub_panel <= dummy
 
 
-def remove_player_from_game():
-    """ remove_player_from_game """
+def edit_game_parameters():
+    """ edit_game_parameters """
 
-    dummy = html.P("remove player from game")
-    my_sub_panel <= dummy
-
-
-def edit_game():
-    """ edit game """
-
-    dummy = html.P("edit game")
+    dummy = html.P("edit game parameters")
     my_sub_panel <= dummy
 
 
@@ -78,10 +71,8 @@ def load_option(_, item_name) -> None:
         create_game()
     if item_name == 'join':
         join_game()
-    if item_name == 'add player':
-        put_player_in_game()
-    if item_name == 'remove player':
-        remove_player_from_game()
+    if item_name == 'add or remove player':
+        add_or_remove_player_in_game()
     if item_name == 'edit':
         edit_game()
     if item_name == 'delete':
