@@ -12,7 +12,7 @@ import config
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['create', 'change description', 'change deadline', 'change access parameters','change pace parameters', 'delete']
+OPTIONS = ['create', 'select', 'change description', 'change deadline', 'change access parameters','change pace parameters', 'display all parameters', 'delete']
 
 MAX_LEN_NAME = 30
 
@@ -181,61 +181,61 @@ def create_game():
     form <= information_about_game()
     form <= html.BR()
 
-    legend_title_main = html.LEGEND("Main parameters of the game")
+    legend_title_main = html.LEGEND("Main parameters of the game (*)")
     legend_title_main.style = {
         'color': 'red',
     }
     form <= legend_title_main
 
-    legend_name = html.LEGEND("name (*)")
+    legend_name = html.LEGEND("name")
     form <= legend_name
     input_name = html.INPUT(type="text", value="", title="Name of the game (keep it short and simple)")
     form <= input_name
     form <= html.BR()
 
-    legend_variant = html.LEGEND("variant (*)", title="(imposed for the moment)")
+    legend_variant = html.LEGEND("variant", title="(imposed for the moment)")
     form <= legend_variant
     input_variant = html.INPUT(type="select-one", readonly=True, value=DEFAULT_VARIANT)
     form <= input_variant
     form <= html.BR()
 
-    legend_archive = html.LEGEND("archive (*)", title="Is this game for archiving - not played - not implemented")
+    legend_archive = html.LEGEND("archive", title="Is this game for archiving - not played - not implemented")
     form <= legend_archive
     input_archive = html.INPUT(type="checkbox", value="")
     form <= input_archive
     form <= html.BR()
 
-    legend_manual = html.LEGEND("manual pairing (*)", title="Game master allocates roles in the game")
+    legend_manual = html.LEGEND("manual pairing", title="Game master allocates roles in the game")
     form <= legend_manual
     input_manual = html.INPUT(type="checkbox", value="")
     form <= input_manual
     form <= html.BR()
 
-    legend_title_terms = html.LEGEND("Terms of the game")
+    legend_title_terms = html.LEGEND("Terms of the game (*)")
     legend_title_terms.style = {
         'color': 'red',
     }
     form <= legend_title_terms
 
-    legend_cumulate = html.LEGEND("cumulate (*)", title="Can a player use more than one role - not implemented")
+    legend_cumulate = html.LEGEND("cumulate", title="Can a player use more than one role - not implemented")
     form <= legend_cumulate
     input_cumulate = html.INPUT(type="checkbox", value="")
     form <= input_cumulate
     form <= html.BR()
 
-    legend_anonymous = html.LEGEND("anonymous (*)", title="Are the identitities of the players hidden - not implemented")
+    legend_anonymous = html.LEGEND("anonymous", title="Are the identitities of the players hidden - not implemented")
     form <= legend_anonymous
     input_anonymous = html.INPUT(type="checkbox", value="")
     form <= input_anonymous
     form <= html.BR()
 
-    legend_silent = html.LEGEND("silent (*)", title="Can the players send messages - not implemented")
+    legend_silent = html.LEGEND("silent", title="Can the players send messages - not implemented")
     form <= legend_silent
     input_silent = html.INPUT(type="checkbox", value="")
     form <= input_silent
     form <= html.BR()
 
-    legend_fast = html.LEGEND("fast (*)", title="Are adjudication done as soon as all orders are in - not implemented")
+    legend_fast = html.LEGEND("fast", title="Are adjudication done as soon as all orders are in - not implemented")
     form <= legend_fast
     input_fast = html.INPUT(type="checkbox", value="")
     form <= input_fast
@@ -307,37 +307,37 @@ def create_game():
     form <= input_play_weekend
     form <= html.BR()
 
-    legend_title_access = html.LEGEND("Access to the game")
+    legend_title_access = html.LEGEND("Access to the game (**)")
     legend_title_access.style = {
         'color': 'red',
     }
     form <= legend_title_access
 
-    legend_access_code = html.LEGEND("access code (**)", title="Access code to the game")
+    legend_access_code = html.LEGEND("access code", title="Access code to the game")
     form <= legend_access_code
     input_access_code = html.INPUT(type="number", value="")
     form <= input_access_code
     form <= html.BR()
 
-    legend_access_restriction_reliability = html.LEGEND("reliability restriction (**)", title="How reliable you need to be to play in the game - punctual players")
+    legend_access_restriction_reliability = html.LEGEND("reliability restriction", title="How reliable you need to be to play in the game - punctual players")
     form <= legend_access_restriction_reliability
     input_access_restriction_reliability = html.INPUT(type="number", value="")
     form <= input_access_restriction_reliability
     form <= html.BR()
 
-    legend_access_restriction_regularity = html.LEGEND("regularity restriction (**)", title="How regular you need to be to play in the game - heavy players")
+    legend_access_restriction_regularity = html.LEGEND("regularity restriction", title="How regular you need to be to play in the game - heavy players")
     form <= legend_access_restriction_regularity
     input_access_restriction_regularity = html.INPUT(type="number", value="")
     form <= input_access_restriction_regularity
     form <= html.BR()
 
-    legend_access_restriction_performance = html.LEGEND("performance restriction (**)", title="How performant you need to be to play in the game - good players")
+    legend_access_restriction_performance = html.LEGEND("performance restriction", title="How performant you need to be to play in the game - good players")
     form <= legend_access_restriction_performance
     input_access_restriction_performance = html.INPUT(type="number", value="")
     form <= input_access_restriction_performance
     form <= html.BR()
 
-    legend_title_access = html.LEGEND("Advancement of the game")
+    legend_title_access = html.LEGEND("Advancement of the game (*)")
     legend_title_access.style = {
         'color': 'red',
     }
@@ -363,6 +363,12 @@ def create_game():
 
     my_sub_panel <= form
 
+
+def select_game():
+    """ select_game """
+
+    dummy = html.P("select game")
+    my_sub_panel <= dummy
 
 def change_description_game():
     """ change_description_game """
@@ -440,6 +446,13 @@ def change_deadline_game():
     my_sub_panel <= form
 
 
+def display_all_parameters_game():
+    """ display_all_parameters_game """
+
+    dummy = html.P("display all parameters game")
+    my_sub_panel <= dummy
+
+
 def delete_game():
     """ delete_game """
 
@@ -472,6 +485,8 @@ def load_option(_, item_name) -> None:
     my_sub_panel.clear()
     if item_name == 'create':
         create_game()
+    if item_name == 'select':
+        select_game()
     if item_name == 'change description':
         change_description_game()
     if item_name == 'change deadline':
@@ -480,6 +495,8 @@ def load_option(_, item_name) -> None:
         change_access_parameters_game()
     if item_name == 'change pace parameters':
         change_pace_parameters_game()
+    if item_name == 'display all parameters':
+        display_all_parameters_game()
     if item_name == 'delete':
         delete_game()
     global item_name_selected  # pylint: disable=invalid-name
