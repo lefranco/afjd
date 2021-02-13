@@ -12,7 +12,7 @@ import config
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['create', 'change description', 'change deadline', 'change access parameters','change pace parameters', 'join', 'add or remove player', 'delete']
+OPTIONS = ['create', 'change description', 'change deadline', 'change access parameters','change pace parameters', 'delete']
 
 MAX_LEN_NAME = 30
 
@@ -436,20 +436,6 @@ def change_deadline_game():
     my_sub_panel <= form
 
 
-def join_game():
-    """ join_game """
-
-    dummy = html.P("join game")
-    my_sub_panel <= dummy
-
-
-def add_or_remove_player_in_game():
-    """ add_or_remove_player_in_game """
-
-    dummy = html.P("add or remove player in game")
-    my_sub_panel <= dummy
-
-
 def delete_game():
     """ delete_game """
 
@@ -457,7 +443,7 @@ def delete_game():
     my_sub_panel <= dummy
 
 
-my_panel = html.DIV(id="account")
+my_panel = html.DIV(id="games")
 my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
@@ -490,10 +476,6 @@ def load_option(_, item_name) -> None:
         change_access_parameters_game()
     if item_name == 'change pace parameters':
         change_pace_parameters_game()
-    if item_name == 'join':
-        join_game()
-    if item_name == 'add or remove player':
-        add_or_remove_player_in_game()
     if item_name == 'delete':
         delete_game()
     global item_name_selected  # pylint: disable=invalid-name
