@@ -419,7 +419,7 @@ def edit_account():
             return
 
         telephone = input_telephone.value
-        replace = input_replace.value
+        replace = int(input_replace.value == 'true')
         family_name = input_family_name.value
         first_name = input_first_name.value
 
@@ -430,7 +430,7 @@ def edit_account():
             'pseudo': pseudo,
             'email': email,
             'telephone': telephone,
-            'replace': int(replace == 'true'),
+            'replace': replace,
             'family_name': family_name,
             'first_name': first_name,
             'country': country_code,
