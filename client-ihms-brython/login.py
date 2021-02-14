@@ -49,6 +49,7 @@ def login_callback(_):
 
 def forgot_callback(_):
     """ forgot_callback """
+
     alert("Sorry: Forgot password is not implemented yet")
 
 
