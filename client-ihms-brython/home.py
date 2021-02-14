@@ -11,6 +11,6 @@ Here some welcome information for the new comer
 """
 
 
-def render(panel_middle) -> None:
+def render(panel_middle):
     """ render """
     panel_middle <= my_panel

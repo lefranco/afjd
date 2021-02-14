@@ -39,7 +39,7 @@ def negotiate():
     my_sub_panel <= dummy
 
 
-def load_option(_, item_name) -> None:
+def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
@@ -70,6 +70,6 @@ def load_option(_, item_name) -> None:
 load_option(None, item_name_selected)
 
 
-def render(panel_middle) -> None:
+def render(panel_middle):
     """ render """
     panel_middle <= my_panel

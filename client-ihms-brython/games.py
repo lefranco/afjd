@@ -45,7 +45,7 @@ def information_about_game():
 def create_game():
     """ create_game """
 
-    def create_game_callback(_) -> None:
+    def create_game_callback(_):
         """ create_game_callback """
 
         def reply_callback(req):
@@ -473,7 +473,7 @@ my_sub_panel = html.DIV(id="sub")
 my_panel <= my_sub_panel
 
 
-def load_option(_, item_name) -> None:
+def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
@@ -514,6 +514,6 @@ def load_option(_, item_name) -> None:
 load_option(None, item_name_selected)
 
 
-def render(panel_middle) -> None:
+def render(panel_middle):
     """ render """
     panel_middle <= my_panel

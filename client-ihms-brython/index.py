@@ -47,7 +47,7 @@ menu_left <= menu_selection
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
 
-def load_option(_, item_name) -> None:
+def load_option(_, item_name):
     """ load_option """
 
     panel_middle.clear()
