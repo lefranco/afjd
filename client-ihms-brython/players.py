@@ -39,6 +39,15 @@ def get_player_list():
 
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
+    return players_dict
+
+def show_player_list():
+
+    players_dict = get_player_list()
+
+    if not players_dict:
+        return
+
     players_table = html.TABLE()
     players_table.style = {
         "padding": "5px",
@@ -59,12 +68,16 @@ def get_player_list():
         row <= col
         players_table <= row
 
-    return players_table
 
+    return players_table
 
 def render(panel_middle) -> None:
     """ render """
 
     my_panel.clear()
-    my_panel <= get_player_list()
+
+    my_panel <= html.B("List of players on the site")
+    my_panel <= html.BR()
+    my_panel <= show_player_list()
+
     panel_middle <= my_panel
