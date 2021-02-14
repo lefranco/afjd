@@ -9,7 +9,7 @@ import login
 import players
 import account
 import games
-import select
+import selection
 import pairing
 import play
 import master
@@ -61,8 +61,8 @@ def load_option(_, item_name) -> None:
         account.render(panel_middle)
     if item_name == 'edit games':
         games.render(panel_middle)
-    if item_name == 'select games':
-        select.render(panel_middle)
+    if item_name == 'select game':
+        selection.render(panel_middle)
     if item_name == 'pairing':
         pairing.render(panel_middle)
     if item_name == 'play game':
