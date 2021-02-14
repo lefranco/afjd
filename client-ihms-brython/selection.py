@@ -47,7 +47,7 @@ def get_game_list():
 def select_game():
     """ select_game """
 
-    def select_game_callback():
+    def select_game_callback(_):
         # TODO
         pass
 

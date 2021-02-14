@@ -368,7 +368,7 @@ def change_description_game():
     """ change_description_game """
 
     # TODO
-    def change_description_game_callback():
+    def change_description_game_callback(_):
         pass
 
     form = html.FORM()
@@ -417,7 +417,7 @@ def change_deadline_game():
     """ change_deadline_game """
 
     # TODO
-    def change_deadline_game_callback():
+    def change_deadline_game_callback(_):
         pass
 
     form = html.FORM()
