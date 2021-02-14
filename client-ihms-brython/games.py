@@ -369,6 +369,12 @@ def change_description_game():
     def change_description_game_callback(_):
         pass
 
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
+
     form = html.FORM()
 
     form <= information_about_game()
@@ -382,6 +388,8 @@ def change_description_game():
     form <= input_description
     form <= html.BR()
 
+    form <= html.BR()
+
     input_create_game = html.INPUT(type="submit", value="change game description")
     input_create_game.bind("click", change_description_game_callback)
     form <= input_create_game
@@ -391,6 +399,12 @@ def change_description_game():
 
 def change_access_parameters_game():
     """ change_access_parameters_game """
+
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
 
     form = html.FORM()
 
@@ -402,6 +416,12 @@ def change_access_parameters_game():
 
 def change_pace_parameters_game():
     """ change_pace_parameters_game """
+
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
 
     form = html.FORM()
 
@@ -417,6 +437,12 @@ def change_deadline_game():
     # TODO
     def change_deadline_game_callback(_):
         pass
+
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
 
     form = html.FORM()
 
@@ -441,12 +467,22 @@ def change_deadline_game():
 def display_all_parameters_game():
     """ display_all_parameters_game """
 
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
+
     dummy = html.P("display all parameters game")
     my_sub_panel <= dummy
 
 
 def delete_game():
     """ delete_game """
+
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
 
     dummy = html.P("delete game")
     my_sub_panel <= dummy
@@ -457,7 +493,7 @@ my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
 menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width:20%; vertical-align: top;'
+menu_left.attrs['style'] = 'display: table-cell; width:25%; vertical-align: top;'
 my_panel <= menu_left
 
 # menu-selection
