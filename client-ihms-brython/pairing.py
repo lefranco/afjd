@@ -2,7 +2,6 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -12,7 +11,7 @@ import config
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = [ 'join', 'add or remove player']
+OPTIONS = ['join', 'add or remove player']
 
 
 def noreply_callback(_):
@@ -32,7 +31,6 @@ def add_or_remove_player_in_game():
 
     dummy = html.P("add or remove player in game")
     my_sub_panel <= dummy
-
 
 
 my_panel = html.DIV(id="pairing")

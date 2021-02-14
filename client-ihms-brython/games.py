@@ -12,7 +12,7 @@ import config
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['create', 'select', 'change description', 'change deadline', 'change access parameters','change pace parameters', 'display all parameters', 'delete']
+OPTIONS = ['create', 'change description', 'change deadline', 'change access parameters', 'change pace parameters', 'display all parameters', 'delete']
 
 MAX_LEN_NAME = 30
 
@@ -364,12 +364,6 @@ def create_game():
     my_sub_panel <= form
 
 
-def select_game():
-    """ select_game """
-
-    dummy = html.P("select game")
-    my_sub_panel <= dummy
-
 def change_description_game():
     """ change_description_game """
 
@@ -485,8 +479,6 @@ def load_option(_, item_name) -> None:
     my_sub_panel.clear()
     if item_name == 'create':
         create_game()
-    if item_name == 'select':
-        select_game()
     if item_name == 'change description':
         change_description_game()
     if item_name == 'change deadline':
