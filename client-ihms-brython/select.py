@@ -47,20 +47,47 @@ def get_game_list():
 def select_game():
     """ select_game """
 
+    def select_game_callback():
+        # TODO
+        pass
+
     games_dict = get_game_list()
 
     if not games_dict:
-        return
+        return None
 
     print(f"{games_dict=}")
 
-    dummy = html.P("select game")
-    my_panel <= dummy
+    form = html.FORM()
+
+    legend_game = html.LEGEND("country", title="Game select")
+    form <= legend_game
+
+    input_game = html.SELECT(type="select-one", value="")
+    for game_name in games_dict:
+        option = html.OPTION(game_name)
+        input_game <= option
+
+    form <= input_game
+    form <= html.BR()
+
+    input_select_game = html.INPUT(type="submit", value="select game")
+    input_select_game.bind("click", select_game_callback)
+    form <= input_select_game
+
+    return form
 
 
 def render(panel_middle) -> None:
     """ render """
 
-    select_game()
+    my_panel.clear()
+
+    my_sub_panel = select_game()
+
+    if my_sub_panel:
+        my_panel <= html.B("Select the game to interact with on the site")
+        my_panel <= html.BR()
+        my_panel <= my_sub_panel
 
     panel_middle <= my_panel
