@@ -56,8 +56,6 @@ def select_game():
 
     games_dict = get_game_list()
 
-    print(f"{games_dict=}")
-
     if not games_dict:
         return None
 
