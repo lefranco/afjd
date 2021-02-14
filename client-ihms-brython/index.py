@@ -16,7 +16,7 @@ import master
 import sandbox
 
 TITLE = "Welcome this demo interface Web client for playing Diplomacy on ANJD REST Server"
-OPTIONS = ['home', 'login', 'list players', 'my account', 'edit games', 'select game', 'pairing', 'play game', 'master game', 'use sandbox']
+OPTIONS = ['home', 'login', 'select game', 'list players', 'my account', 'edit games', 'pairing', 'play game', 'master game', 'use sandbox']
 
 
 # title
@@ -53,6 +53,8 @@ def load_option(_, item_name):
     panel_middle.clear()
     if item_name == 'home':
         home.render(panel_middle)
+    if item_name == 'select game':
+        selection.render(panel_middle)
     if item_name == 'login':
         login.render(panel_middle)
     if item_name == 'list players':
@@ -61,8 +63,6 @@ def load_option(_, item_name):
         account.render(panel_middle)
     if item_name == 'edit games':
         games.render(panel_middle)
-    if item_name == 'select game':
-        selection.render(panel_middle)
     if item_name == 'pairing':
         pairing.render(panel_middle)
     if item_name == 'play game':
