@@ -41,12 +41,14 @@ def get_player_list():
 
     return players_dict
 
+
 def show_player_list():
+    """ show_player_list """
 
     players_dict = get_player_list()
 
     if not players_dict:
-        return
+        return None
 
     players_table = html.TABLE()
     players_table.style = {
@@ -68,8 +70,8 @@ def show_player_list():
         row <= col
         players_table <= row
 
-
     return players_table
+
 
 def render(panel_middle) -> None:
     """ render """
