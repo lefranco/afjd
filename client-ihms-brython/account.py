@@ -50,7 +50,7 @@ def information_about_account():
 def create_account():
     """ create_account """
 
-    def create_account_callback(_) -> None:
+    def create_account_callback(_):
         """ create_account_callback """
 
         def reply_callback(req):
@@ -200,7 +200,7 @@ def create_account():
 def change_password():
     """ change_password """
 
-    def change_password_callback(_) -> None:
+    def change_password_callback(_):
         """ change_password_callback """
 
         def reply_callback(req):
@@ -264,7 +264,7 @@ def change_password():
 def validate_email():
     """ validate_email """
 
-    def validate_email_callback(_) -> None:
+    def validate_email_callback(_):
         """ validate_email_callback """
 
         def reply_callback(req):
@@ -400,7 +400,7 @@ def edit_account():
 
         return status
 
-    def change_account_callback(_) -> None:
+    def change_account_callback(_):
         """ change_account_callback """
 
         def reply_callback(req):
@@ -538,7 +538,7 @@ def delete_account():
 
     pseudo = storage['PSEUDO']
 
-    def delete_account_callback(_) -> None:
+    def delete_account_callback(_):
         """ delete_account_callback """
 
         def reply_callback(req):
@@ -586,7 +586,7 @@ my_sub_panel = html.DIV(id="sub")
 my_panel <= my_sub_panel
 
 
-def load_option(_, item_name) -> None:
+def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
@@ -623,6 +623,6 @@ def load_option(_, item_name) -> None:
 load_option(None, item_name_selected)
 
 
-def render(panel_middle) -> None:
+def render(panel_middle):
     """ render """
     panel_middle <= my_panel

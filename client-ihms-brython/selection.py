@@ -64,11 +64,13 @@ def select_game():
     form <= legend_game
 
     input_game = html.SELECT(type="select-one", value="")
-    for game_name in games_dict:
+    for game_name in sorted(games_dict.values()):
         option = html.OPTION(game_name)
         input_game <= option
 
     form <= input_game
+    form <= html.BR()
+
     form <= html.BR()
 
     input_select_game = html.INPUT(type="submit", value="select game")
@@ -78,7 +80,7 @@ def select_game():
     return form
 
 
-def render(panel_middle) -> None:
+def render(panel_middle):
     """ render """
 
     my_panel.clear()

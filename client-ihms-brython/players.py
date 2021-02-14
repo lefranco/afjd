@@ -73,7 +73,7 @@ def show_player_list():
     return players_table
 
 
-def render(panel_middle) -> None:
+def render(panel_middle):
     """ render """
 
     my_panel.clear()

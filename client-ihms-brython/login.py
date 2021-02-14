@@ -18,7 +18,7 @@ def noreply_callback(_):
     alert("Problem (no answer from server)")
 
 
-def login_callback(_) -> None:
+def login_callback(_):
     """ login_callback """
 
     def reply_callback(req):
@@ -47,12 +47,12 @@ def login_callback(_) -> None:
     ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
 
-def forgot_callback(_) -> None:
+def forgot_callback(_):
     """ forgot_callback """
     alert("Sorry: Forgot password is not implemented yet")
 
 
-def logout_callback(_) -> None:
+def logout_callback(_):
     """ logout_callback """
 
     effective = False
@@ -142,6 +142,6 @@ def show_login():
     document <= show_login_panel
 
 
-def render(panel_middle) -> None:
+def render(panel_middle):
     """ render """
     panel_middle <= my_panel
