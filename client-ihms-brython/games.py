@@ -162,8 +162,6 @@ def create_game():
             'pseudo': pseudo
         }
 
-        print(f"{json_dict=}")
-
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/games"
