@@ -48,15 +48,18 @@ def select_game():
     """ select_game """
 
     def select_game_callback(_):
-        # TODO
-        pass
+        """ select_game_callback """
+
+        game = input_game.value
+        storage['GAME'] = game
+        InfoDialog("OK", f"Game selected : {game}", remove_after=config.REMOVE_AFTER)
 
     games_dict = get_game_list()
 
+    print(f"{games_dict=}")
+
     if not games_dict:
         return None
-
-    print(f"{games_dict=}")
 
     form = html.FORM()
 
@@ -64,8 +67,11 @@ def select_game():
     form <= legend_game
 
     input_game = html.SELECT(type="select-one", value="")
-    for game_name in sorted(games_dict.values()):
-        option = html.OPTION(game_name)
+    for game in sorted(games_dict.values()):
+        option = html.OPTION(game)
+        if 'GAME' in storage:
+            if storage['GAME'] == game:
+                option.selected = True
         input_game <= option
 
     form <= input_game
