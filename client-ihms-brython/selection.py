@@ -4,7 +4,7 @@
 
 import json
 
-from browser import html, ajax, alert  # pylint: disable=import-error
+from browser import document, html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -53,6 +53,7 @@ def select_game():
         game = input_game.value
         storage['GAME'] = game
         InfoDialog("OK", f"Game selected : {game}", remove_after=config.REMOVE_AFTER)
+        show_game_selected()
 
     games_dict = get_game_list()
 
@@ -82,6 +83,28 @@ def select_game():
     form <= input_select_game
 
     return form
+
+
+def show_game_selected():
+    """  show_game_selected """
+
+    print("show_game_selected")
+
+    log_message = html.DIV()
+    if 'GAME' in storage:
+        log_message <= "Game selected is "
+        log_message <= html.B(storage['GAME'])
+    else:
+        log_message <= "No game selected..."
+
+    show_game_selected_panel = html.DIV(id="show_game_selected")
+    show_game_selected_panel.attrs['style'] = 'text-align: left'
+    show_game_selected_panel <= log_message
+
+    if "show_game_selected" in document:
+        del document["show_game_selected"]
+
+    document <= show_game_selected_panel
 
 
 def render(panel_middle):

@@ -138,8 +138,6 @@ def show_login():
 
     show_login_panel = html.DIV(id="show_login")
     show_login_panel.attrs['style'] = 'text-align: left'
-    show_login_panel <= html.BR()
-    show_login_panel <= html.BR()
     show_login_panel <= log_message
 
     if "show_login" in document:
@@ -150,4 +148,5 @@ def show_login():
 
 def render(panel_middle):
     """ render """
+
     panel_middle <= my_panel

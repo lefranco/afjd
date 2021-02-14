@@ -98,4 +98,9 @@ overall <= panel_middle
 # starts here
 load_option(None, item_name_selected)
 
+
+document <= html.BR()
+document <= html.BR()
+
 login.show_login()
+selection.show_game_selected()
