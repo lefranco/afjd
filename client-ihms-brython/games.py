@@ -75,31 +75,35 @@ def create_game():
             alert("Variant is too long")
             return
 
-        manual = int(input_manual.value == 'true')
-
-        archive = int(input_archive.value == 'true')
-        anonymous = int(input_anonymous.value == 'true')
-        silent = int(input_silent.value == 'true')
-        cumulate = int(input_cumulate.value == 'true')
-        fast = int(input_fast.value == 'true')
+        archive = int(input_archive.checked)
+        manual = int(input_manual.checked)
+        anonymous = int(input_anonymous.checked)
+        silent = int(input_silent.checked)
+        cumulate = int(input_cumulate.checked)
+        fast = int(input_fast.checked)
 
         try:
             speed_moves = int(input_speed_moves.value)
         except:  # noqa: E722 pylint: disable=bare-except
             speed_moves = None
 
-        cd_possible_moves = int(input_cd_possible_moves.value == 'true')
-        speed_retreats = int(input_speed_retreats.value == 'true')
-        cd_possible_retreats = int(input_cd_possible_retreats.value == 'true')
+        cd_possible_moves = int(input_cd_possible_moves.checked)
+
+        try:
+            speed_retreats = int(input_speed_retreats.value)
+        except:  # noqa: E722 pylint: disable=bare-except
+            speed_retreats = None
+
+        cd_possible_retreats = int(input_cd_possible_retreats.checked)
 
         try:
             speed_adjustments = int(input_speed_adjustments.value)
         except:  # noqa: E722 pylint: disable=bare-except
             speed_adjustments = None
 
-        cd_possible_builds = int(input_cd_possible_builds.value == 'true')
-        cd_possible_removals = int(input_cd_possible_removals.value == 'true')
-        play_weekend = int(input_play_weekend.value == 'true')
+        cd_possible_builds = int(input_cd_possible_builds.checked)
+        cd_possible_removals = int(input_cd_possible_removals.checked)
+        play_weekend = int(input_play_weekend.checked)
 
         try:
             access_code = int(input_access_code.value)
@@ -199,13 +203,13 @@ def create_game():
 
     legend_archive = html.LEGEND("archive", title="Is this game for archiving - not played - not implemented")
     form <= legend_archive
-    input_archive = html.INPUT(type="checkbox", value="")
+    input_archive = html.INPUT(type="checkbox", checked=False)
     form <= input_archive
     form <= html.BR()
 
     legend_manual = html.LEGEND("manual pairing", title="Game master allocates roles in the game")
     form <= legend_manual
-    input_manual = html.INPUT(type="checkbox", value="")
+    input_manual = html.INPUT(type="checkbox", checked=False)
     form <= input_manual
     form <= html.BR()
 
@@ -217,25 +221,25 @@ def create_game():
 
     legend_cumulate = html.LEGEND("cumulate", title="Can a player use more than one role - not implemented")
     form <= legend_cumulate
-    input_cumulate = html.INPUT(type="checkbox", value="")
+    input_cumulate = html.INPUT(type="checkbox", checked=False)
     form <= input_cumulate
     form <= html.BR()
 
     legend_anonymous = html.LEGEND("anonymous", title="Are the identitities of the players hidden - not implemented")
     form <= legend_anonymous
-    input_anonymous = html.INPUT(type="checkbox", value="")
+    input_anonymous = html.INPUT(type="checkbox", checked=False)
     form <= input_anonymous
     form <= html.BR()
 
     legend_silent = html.LEGEND("silent", title="Can the players send messages - not implemented")
     form <= legend_silent
-    input_silent = html.INPUT(type="checkbox", value="")
+    input_silent = html.INPUT(type="checkbox", checked=False)
     form <= input_silent
     form <= html.BR()
 
     legend_fast = html.LEGEND("fast", title="Are adjudication done as soon as all orders are in - not implemented")
     form <= legend_fast
-    input_fast = html.INPUT(type="checkbox", value="")
+    input_fast = html.INPUT(type="checkbox", checked=False)
     form <= input_fast
     form <= html.BR()
 
@@ -255,7 +259,7 @@ def create_game():
 
     legend_cd_possible_moves = html.LEGEND("cd possible moves", title="Civil disorder possible for move adjudication")
     form <= legend_cd_possible_moves
-    input_cd_possible_moves = html.INPUT(type="checkbox", value="")
+    input_cd_possible_moves = html.INPUT(type="checkbox", checked=False)
     form <= input_cd_possible_moves
     form <= html.BR()
 
@@ -269,7 +273,7 @@ def create_game():
 
     legend_cd_possible_retreats = html.LEGEND("cd possible retreats", title="Civil disorder possible for move adjudication")
     form <= legend_cd_possible_retreats
-    input_cd_possible_retreats = html.INPUT(type="checkbox", value="")
+    input_cd_possible_retreats = html.INPUT(type="checkbox", checked=False)
     form <= input_cd_possible_retreats
     form <= html.BR()
 
@@ -285,7 +289,7 @@ def create_game():
 
     legend_cd_possible_builds = html.LEGEND("cd possible builds", title="Civil disorder possible for build adjudication")
     form <= legend_cd_possible_builds
-    input_cd_possible_builds = html.INPUT(type="checkbox", value="")
+    input_cd_possible_builds = html.INPUT(type="checkbox", checked=False)
     form <= input_cd_possible_builds
     form <= html.BR()
 
@@ -293,7 +297,7 @@ def create_game():
 
     legend_cd_possible_removals = html.LEGEND("cd possible removals", title="Civil disorder possible for removal adjudication")
     form <= legend_cd_possible_removals
-    input_cd_possible_removals = html.INPUT(type="checkbox", value="")
+    input_cd_possible_removals = html.INPUT(type="checkbox", checked=False)
     form <= input_cd_possible_removals
     form <= html.BR()
 
@@ -301,7 +305,7 @@ def create_game():
 
     legend_play_weekend = html.LEGEND("play weekend", title="Does the game play during week end ?")
     form <= legend_play_weekend
-    input_play_weekend = html.INPUT(type="checkbox", value="")
+    input_play_weekend = html.INPUT(type="checkbox", checked=False)
     form <= input_play_weekend
     form <= html.BR()
 
@@ -365,15 +369,82 @@ def create_game():
 def change_description_game():
     """ change_description_game """
 
-    # TODO
-    def change_description_game_callback(_):
-        pass
-
     if 'GAME' not in storage:
         alert("Please select game beforehand")
         return
 
     game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    # declare the values
+    description_loaded = None
+
+    def change_description_reload():
+        """ change_description_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
+
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal description_loaded
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                alert(f"Problem loading description: {req_result['msg']}")
+                status = False
+                return
+
+            description_loaded = req_result['description']
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_description_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                alert(f"Problem : {req_result['msg']}")
+                return
+            InfoDialog("OK", f"Description changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        description = input_description.value
+
+        json_dict = {
+            'pseudo': pseudo,
+            'name': game,
+            'description': description,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+
+    status = change_description_reload()
+    if not status:
+        return
 
     form = html.FORM()
 
@@ -383,8 +454,8 @@ def change_description_game():
     legend_description = html.LEGEND("description", title="You can make tghis long. 'A game between scholars of the ESTIAM' for instance")
     form <= legend_description
 
-    # TODO : more than one line
-    input_description = html.INPUT(type="text", value="")
+    input_description = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_description <= description_loaded
     form <= input_description
     form <= html.BR()
 
@@ -406,6 +477,12 @@ def change_access_parameters_game():
 
     game = storage['GAME']
 
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
+
     form = html.FORM()
 
     form <= information_about_game()
@@ -422,6 +499,12 @@ def change_pace_parameters_game():
         return
 
     game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
 
     form = html.FORM()
 
@@ -443,6 +526,12 @@ def change_deadline_game():
         return
 
     game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
 
     form = html.FORM()
 
@@ -472,9 +561,74 @@ def display_all_parameters_game():
         return
 
     game = storage['GAME']
+    parameters_loaded = None
 
-    dummy = html.P("display all parameters game")
-    my_sub_panel <= dummy
+    def display_all_parameters_reload():
+        """ change_description_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
+
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal parameters_loaded
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                alert(f"Problem loading all parameters: {req_result['msg']}")
+                status = False
+                return
+
+            parameters_loaded = req_result
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    status = display_all_parameters_reload()
+    if not status:
+        return
+
+    game_params_table = html.TABLE()
+    game_params_table.style = {
+        "padding": "5px",
+        "backgroundColor": "#aaaaaa",
+        "border": "solid",
+    }
+    for key, value in parameters_loaded.items():
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+
+        col1 = html.TD(key)
+        col1.style = {
+            "border": "solid",
+        }
+        row <= col1
+
+        col2 = html.TD(value)
+        col2.style = {
+            "border": "solid",
+        }
+        row <= col2
+
+        game_params_table <= row
+
+
+    my_sub_panel <= game_params_table
 
 
 def delete_game():

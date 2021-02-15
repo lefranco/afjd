@@ -150,7 +150,7 @@ def create_account():
 
     legend_replace = html.LEGEND("ok to replace (**)", title="Can we drag you in a game ?")
     form <= legend_replace
-    input_replace = html.INPUT(type="checkbox", value="")
+    input_replace = html.INPUT(type="checkbox", checked=False)
     form <= input_replace
     form <= html.BR()
 
@@ -419,7 +419,7 @@ def edit_account():
             return
 
         telephone = input_telephone.value
-        replace = int(input_replace.value == 'true')
+        replace = int(input_replace.checked)
         family_name = input_family_name.value
         first_name = input_first_name.value
 
