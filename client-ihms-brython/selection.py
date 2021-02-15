@@ -88,8 +88,6 @@ def select_game():
 def show_game_selected():
     """  show_game_selected """
 
-    print("show_game_selected")
-
     log_message = html.DIV()
     if 'GAME' in storage:
         log_message <= "Game selected is "
