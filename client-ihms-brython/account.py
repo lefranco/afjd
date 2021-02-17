@@ -41,8 +41,6 @@ def information_about_account():
     information = html.DIV()
     information <= "Fields with (*) are private and will not be shown"
     information <= html.BR()
-    information <= "Fields with (**) are public"
-    information <= html.BR()
     information <= "Hover the titles for more details"
     return information
 
@@ -118,7 +116,7 @@ def create_account():
     form <= information_about_account()
     form <= html.BR()
 
-    legend_pseudo = html.LEGEND("pseudo (*)", title="Your identifier on the site")
+    legend_pseudo = html.LEGEND("pseudo", title="Your identifier on the site")
     form <= legend_pseudo
     input_pseudo = html.INPUT(type="text", value="")
     form <= input_pseudo
@@ -148,25 +146,25 @@ def create_account():
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok to replace (**)", title="Can we drag you in a game ?")
+    legend_replace = html.LEGEND("ok to replace", title="Can we drag you in a game ?")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=False)
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("family name (**)", title="To know you in real life")
+    legend_family_name = html.LEGEND("family name", title="To know you in real life")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value="")
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("first name (**)", title="To know you in real life")
+    legend_first_name = html.LEGEND("first name", title="To know you in real life")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value="")
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country (*)", title="To know you in real life")
+    legend_country = html.LEGEND("country", title="To know you in real life")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
 
@@ -177,7 +175,7 @@ def create_account():
     form <= input_country
     form <= html.BR()
 
-    legend_timezone = html.LEGEND("time zone (*)", title="To understand better when you are awake")
+    legend_timezone = html.LEGEND("time zone", title="To understand better when you are awake")
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
@@ -464,7 +462,7 @@ def edit_account():
     form <= input_email
     form <= html.BR()
 
-    legend_email_confirmed = html.LEGEND("email confirmed", title="(for information)")
+    legend_email_confirmed = html.LEGEND("email confirmed (*)", title="(for information)")
     form <= legend_email_confirmed
     input_email_confirmed = html.INPUT(type="checkbox", readonly=True, checked=email_confirmed_loaded)
     form <= input_email_confirmed
@@ -476,25 +474,25 @@ def edit_account():
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok to replace (**)", title="Can we drag you in a game ?")
+    legend_replace = html.LEGEND("ok to replace", title="Can we drag you in a game ?")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("family name (**)", title="To know you in real life")
+    legend_family_name = html.LEGEND("family name", title="To know you in real life")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value=family_name_loaded)
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("first name (**)", title="To know you in real life")
+    legend_first_name = html.LEGEND("first name", title="To know you in real life")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value=first_name_loaded)
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country (*)", title="To know you in real life")
+    legend_country = html.LEGEND("country", title="To know you in real life")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
 
@@ -507,7 +505,7 @@ def edit_account():
     form <= input_country
     form <= html.BR()
 
-    legend_timezone = html.LEGEND("time zone (*)", title="To understand better when you are awake")
+    legend_timezone = html.LEGEND("time zone", title="To understand better when you are awake")
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
