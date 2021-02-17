@@ -78,11 +78,11 @@ form1 = html.FORM()
 legend_pseudo = html.LEGEND("pseudo")
 form1 <= legend_pseudo
 
-proposed_pseudo = ""
+PROPOSED_PSEUDO = ""
 if 'PSEUDO' in storage:
-    proposed_pseudo = storage['PSEUDO']
+    PROPOSED_PSEUDO = storage['PSEUDO']
 
-input_pseudo = html.INPUT(type="text", value=proposed_pseudo)
+input_pseudo = html.INPUT(type="text", value=PROPOSED_PSEUDO)
 form1 <= input_pseudo
 form1 <= html.BR()
 
