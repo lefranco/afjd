@@ -12,7 +12,7 @@ import config
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['create', 'change description', 'change deadline', 'change access parameters', 'change pace parameters', 'display all parameters', 'delete']
+OPTIONS = ['create', 'change description', 'change deadline', 'change access parameters', 'change pace parameters', 'delete']
 
 MAX_LEN_NAME = 30
 
@@ -441,7 +441,6 @@ def change_description_game():
 
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-
     status = change_description_reload()
     if not status:
         return
@@ -553,84 +552,6 @@ def change_deadline_game():
     my_sub_panel <= form
 
 
-def display_all_parameters_game():
-    """ display_all_parameters_game """
-
-    if 'GAME' not in storage:
-        alert("Please select game beforehand")
-        return
-
-    game = storage['GAME']
-    parameters_loaded = None
-
-    def display_all_parameters_reload():
-        """ change_description_reload """
-
-        status = True
-
-        def local_noreply_callback(_):
-            """ noreply_callback """
-            nonlocal status
-            alert("Problem (no answer from server)")
-            status = False
-
-        def reply_callback(req):
-            """ reply_callback """
-            nonlocal status
-            nonlocal parameters_loaded
-
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                alert(f"Problem loading all parameters: {req_result['msg']}")
-                status = False
-                return
-
-            parameters_loaded = req_result
-
-        json_dict = dict()
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        return status
-
-    status = display_all_parameters_reload()
-    if not status:
-        return
-
-    game_params_table = html.TABLE()
-    game_params_table.style = {
-        "padding": "5px",
-        "backgroundColor": "#aaaaaa",
-        "border": "solid",
-    }
-    for key, value in parameters_loaded.items():
-        row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
-
-        col1 = html.TD(key)
-        col1.style = {
-            "border": "solid",
-        }
-        row <= col1
-
-        col2 = html.TD(value)
-        col2.style = {
-            "border": "solid",
-        }
-        row <= col2
-
-        game_params_table <= row
-
-
-    my_sub_panel <= game_params_table
-
-
 def delete_game():
     """ delete_game """
 
@@ -638,8 +559,43 @@ def delete_game():
         alert("Please select game beforehand")
         return
 
-    dummy = html.P("delete game")
-    my_sub_panel <= dummy
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    def delete_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            print(f"{req_result=}")
+            if req.status != 200:
+                alert(f"Problem : {req_result['msg']}")
+                return
+            InfoDialog("OK", f"Game deleted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        json_dict = {
+            'pseudo': pseudo
+        }
+
+        print(f"{json_dict=}")
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    form = html.FORM()
+
+    input_delete_game = html.INPUT(type="submit", value="delete game")
+    input_delete_game.bind("click", delete_game_callback)
+    form <= input_delete_game
+
+    my_sub_panel <= form
 
 
 my_panel = html.DIV(id="games")
@@ -675,8 +631,6 @@ def load_option(_, item_name):
         change_access_parameters_game()
     if item_name == 'change pace parameters':
         change_pace_parameters_game()
-    if item_name == 'display all parameters':
-        display_all_parameters_game()
     if item_name == 'delete':
         delete_game()
     global item_name_selected  # pylint: disable=invalid-name
