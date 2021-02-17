@@ -11,7 +11,7 @@ import config
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['join game', 'move player in game']
+OPTIONS = ['join game', 'move player in game', 'game masters']
 
 
 def noreply_callback(_):
@@ -31,6 +31,14 @@ def move_player_in_game():
 
     dummy = html.P("move_player_in_game")
     my_sub_panel <= dummy
+
+
+def game_masters():
+    """ join_game """
+
+    dummy = html.P("game masters")
+    my_sub_panel <= dummy
+
 
 
 my_panel = html.DIV(id="pairing")
@@ -60,6 +68,9 @@ def load_option(_, item_name):
         join_game()
     if item_name == 'move player in game':
         move_player_in_game()
+    if item_name == 'game masters':
+        game_masters()
+
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 
