@@ -89,11 +89,15 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['USER']['PORT']
         url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('AccessToken')
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Not allowed for retrieve!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
 
         # find data
         player = players.Player.find_by_pseudo(pseudo)
@@ -134,11 +138,15 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['USER']['PORT']
         url = f"{host}:{port}/verify"
         jwt_token = flask.request.headers.get('AccessToken')
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}, json={'user_name': pseudo})
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Not allowed for update!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
 
         player = players.Player.find_by_pseudo(pseudo)
         if player is None:
