@@ -40,7 +40,6 @@ def game_masters():
     my_sub_panel <= dummy
 
 
-
 my_panel = html.DIV(id="pairing")
 my_panel.attrs['style'] = 'display: table-row'
 
