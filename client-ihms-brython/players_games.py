@@ -49,8 +49,6 @@ def show_players_data():
 
     players_dict = get_players_data()
 
-    print(f"{players_dict=}")
-
     if not players_dict:
         return
 
@@ -62,7 +60,7 @@ def show_players_data():
     }
 
     # TODO : make it possible to sort etc...
-    fields = ['pseudo', 'first name', 'last name', 'advancement', 'state']
+    fields = ['pseudo', 'first_name', 'family_name', 'country', 'time_zone']
 
     # header
     thead = html.THEAD()
