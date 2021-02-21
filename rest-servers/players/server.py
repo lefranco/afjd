@@ -215,7 +215,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         allocations_dict = json_dict
 
         if allocations_dict:
-            flask_restful.abort(400, msg=f"Player is still in a game")
+            flask_restful.abort(400, msg="Player is still in a game")
 
         # delete player from users server (that will implicitly check we have rights)
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -245,10 +245,10 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/players - GET - get getting all players only pseudo (rest is confidential)")
+        mylogger.LOGGER.info("/players - GET - get getting all players only pseudo (email and telephone are confidential)")
 
         players_list = players.Player.inventory()
-        data = {str(p.identifier): p.pseudo for p in players_list}
+        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'country': p.country, 'time_zone': p.time_zone} for p in players_list}
 
         return data, 200
 
