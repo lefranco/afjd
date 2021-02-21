@@ -46,7 +46,7 @@ def get_players_data():
 
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return players_dict
+    return dict(players_dict)
 
 
 def show_players_data():
@@ -123,7 +123,7 @@ def get_games_data():
 
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return games_dict
+    return dict(games_dict)
 
 
 def show_games_data():
@@ -200,7 +200,7 @@ def get_game_masters_data():
 
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return game_masters_dict
+    return list(game_masters_dict)
 
 
 def show_game_masters_data():
