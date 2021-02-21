@@ -433,6 +433,19 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 class AllocationListRessource(flask_restful.Resource):  # type: ignore
     """ AllocationListRessource """
 
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Get list of all allocations only game master (dictionary identifier -> name)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/allocations - GET - get getting all allocations")
+
+        allocations_list = allocations.Allocation.inventory()
+        data = [{'game': a.game, 'player': a.player, 'role': a.role} for a in allocations_list]
+
+        return data, 200
+
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         Creates an allocation (relation player-game)

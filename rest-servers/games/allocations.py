@@ -31,6 +31,15 @@ class Allocation:
         return allocations_found
 
     @staticmethod
+    def inventory() -> typing.List['Allocation']:
+        """ class inventory : gives a list of all objects in database """
+        allocations_found = database.sql_execute("SELECT allocation_data FROM allocations", need_result=True)
+        if not allocations_found:
+            return []
+        allocations_list = [a[0] for a in allocations_found]
+        return allocations_list
+
+    @staticmethod
     def create_table() -> None:
         """ creation of table from scratch """
 

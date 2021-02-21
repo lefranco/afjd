@@ -6,7 +6,7 @@ from browser import document, html  # pylint: disable=import-error
 
 import home
 import login
-import players_games
+import lists
 import account
 import games
 import selection
@@ -17,7 +17,7 @@ import position
 import sandbox
 
 TITLE = "Welcome this demo interface Web client for playing Diplomacy on ANJD REST Server"
-OPTIONS = ['home', 'login', 'select game', 'players & games', 'my account', 'my games', 'pairing', 'play game', 'master game', 'edit position', 'use sandbox']
+OPTIONS = ['home', 'login', 'select game', 'lists', 'my account', 'my games', 'pairing', 'play game', 'master game', 'edit position', 'use sandbox']
 
 
 # title
@@ -58,8 +58,8 @@ def load_option(_, item_name):
         selection.render(panel_middle)
     if item_name == 'login':
         login.render(panel_middle)
-    if item_name == 'players & games':
-        players_games.render(panel_middle)
+    if item_name == 'lists':
+        lists.render(panel_middle)
     if item_name == 'my account':
         account.render(panel_middle)
     if item_name == 'my games':
