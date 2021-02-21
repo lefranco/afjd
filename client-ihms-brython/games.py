@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
+import datetime
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -140,6 +141,11 @@ def create_game():
         except:  # noqa: E722 pylint: disable=bare-except
             victory_centers = None
 
+        # these are automatic
+        today = datetime.date.today()
+        description = f"game created at {today} by {pseudo} variant {variant}"
+        deadline = today.strftime("%Y-%m-%d")
+
         json_dict = {
             'name': name,
             'variant': variant,
@@ -167,6 +173,9 @@ def create_game():
 
             'nb_max_cycles_to_play': nb_max_cycles_to_play,
             'victory_centers': victory_centers,
+
+            'description': description,
+            'deadline': deadline,
 
             'pseudo': pseudo
         }
@@ -475,25 +484,11 @@ def change_description_game():
 
     form <= html.BR()
 
-    input_create_game = html.INPUT(type="submit", value="change game description")
-    input_create_game.bind("click", change_description_game_callback)
-    form <= input_create_game
+    input_change_description_game = html.INPUT(type="submit", value="change game description")
+    input_change_description_game.bind("click", change_description_game_callback)
+    form <= input_change_description_game
 
     my_sub_panel <= form
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def change_access_parameters_game():
@@ -631,26 +626,122 @@ def change_access_parameters_game():
 
     form <= html.BR()
 
-    input_create_game = html.INPUT(type="submit", value="change game access parameters")
-    input_create_game.bind("click", change_access_parameters_game_callback)
-    form <= input_create_game
+    input_change_access_game = html.INPUT(type="submit", value="change game access parameters")
+    input_change_access_game.bind("click", change_access_parameters_game_callback)
+    form <= input_change_access_game
 
     my_sub_panel <= form
 
 
+def change_deadline_game():
+    """ change_deadline_game """
 
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
 
+    game = storage['GAME']
 
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
 
+    pseudo = storage['PSEUDO']
 
+    # declare the values
+    deadline_loaded = None
 
+    def change_deadline_reload():
+        """ change_deadline_reload """
 
+        status = True
 
+        def local_noreply_callback(_):
+            """ noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
 
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal deadline_loaded
 
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error loading game description: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem loading game description: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                status = False
+                return
 
+            deadline_loaded = req_result['deadline']
 
+        json_dict = dict()
 
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_deadline_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error changing game description: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem changing game description: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            InfoDialog("OK", f"Description changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        deadline = input_deadline.value
+
+        json_dict = {
+            'pseudo': pseudo,
+            'name': game,
+            'deadline': deadline,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    status = change_deadline_reload()
+    if not status:
+        return
+
+    form = html.FORM()
+
+    form <= information_about_game()
+    form <= html.BR()
+
+    legend_deadline = html.LEGEND("deadline", title="Deadline. Last day allowed for submitting orders. After player is late.")
+    form <= legend_deadline
+
+    input_deadline = html.INPUT(type="date", value=deadline_loaded)
+    input_deadline <= deadline_loaded
+    form <= input_deadline
+    form <= html.BR()
+
+    form <= html.BR()
+
+    input_change_deadline_game = html.INPUT(type="submit", value="change game deadline")
+    input_change_deadline_game.bind("click", change_deadline_game_callback)
+    form <= input_change_deadline_game
+
+    my_sub_panel <= form
 
 
 def change_pace_parameters_game():
@@ -668,49 +759,199 @@ def change_pace_parameters_game():
 
     pseudo = storage['PSEUDO']
 
+    # declare the values
+    speed_moves_loaded = None
+    cd_possible_moves_loaded = None
+    speed_retreats_loaded = None
+    cd_possible_retreats_loaded = None
+    speed_adjustments_loaded = None
+    cd_possible_builds_loaded = None
+    cd_possible_removals_loaded = None
+    play_weekend_loaded = None
+
+    def change_pace_parameters_reload():
+        """ change_pace_parameters_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
+
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal speed_moves_loaded
+            nonlocal cd_possible_moves_loaded
+            nonlocal speed_retreats_loaded
+            nonlocal cd_possible_retreats_loaded
+            nonlocal speed_adjustments_loaded
+            nonlocal cd_possible_builds_loaded
+            nonlocal cd_possible_removals_loaded
+            nonlocal play_weekend_loaded
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error loading game access parameters: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem loading game access parameters: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                status = False
+                return
+
+            speed_moves_loaded = req_result['speed_moves']
+            cd_possible_moves_loaded = req_result['cd_possible_moves']
+            speed_retreats_loaded = req_result['speed_retreats']
+            cd_possible_retreats_loaded = req_result['cd_possible_retreats']
+            speed_adjustments_loaded = req_result['speed_adjustments']
+            cd_possible_builds_loaded = req_result['cd_possible_builds']
+            cd_possible_removals_loaded = req_result['cd_possible_removals']
+            play_weekend_loaded = req_result['play_weekend']
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_pace_parameters_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error changing game access parameters: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem changing game access parameters: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            InfoDialog("OK", f"Description changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        try:
+            speed_moves = int(input_speed_moves.value)
+        except:  # noqa: E722 pylint: disable=bare-except
+            speed_moves = None
+
+        cd_possible_moves = int(input_cd_possible_moves.checked)
+
+        try:
+            speed_retreats = int(input_speed_retreats.value)
+        except:  # noqa: E722 pylint: disable=bare-except
+            speed_retreats = None
+
+        cd_possible_retreats = int(input_cd_possible_retreats.checked)
+
+        try:
+            speed_adjustments = int(input_speed_adjustments.value)
+        except:  # noqa: E722 pylint: disable=bare-except
+            speed_adjustments = None
+
+        cd_possible_builds = int(input_cd_possible_builds.checked)
+        cd_possible_removals = int(input_cd_possible_removals.checked)
+        play_weekend = int(input_play_weekend.checked)
+
+        json_dict = {
+            'pseudo': pseudo,
+            'name': game,
+            'speed_moves': speed_moves,
+            'cd_possible_moves': cd_possible_moves,
+            'speed_retreats': speed_retreats,
+            'cd_possible_retreats': cd_possible_retreats,
+            'speed_adjustments': speed_adjustments,
+            'cd_possible_builds': cd_possible_builds,
+            'cd_possible_removals': cd_possible_removals,
+            'play_weekend': play_weekend,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    status = change_pace_parameters_reload()
+    if not status:
+        return
+
     form = html.FORM()
 
     form <= information_about_game()
     form <= html.BR()
 
-    my_sub_panel <= form
+    # moves
 
-
-def change_deadline_game():
-    """ change_deadline_game """
-
-    # TODO
-    def change_deadline_game_callback(_):
-        pass
-
-    if 'GAME' not in storage:
-        alert("Please select game beforehand")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    form = html.FORM()
-
-    form <= information_about_game()
+    legend_speed_moves = html.LEGEND("speed moves", title="Days before move adjudication deadline")
+    form <= legend_speed_moves
+    input_speed_moves = html.INPUT(type="number", value=speed_moves_loaded)
+    form <= input_speed_moves
     form <= html.BR()
 
-    legend_deadline = html.LEGEND("deadline", title="Deadline of the game")
-    form <= legend_deadline
-    input_deadline = html.INPUT(type="date", value="")
-    form <= input_deadline
+    legend_cd_possible_moves = html.LEGEND("cd possible moves", title="Civil disorder possible for move adjudication")
+    form <= legend_cd_possible_moves
+    input_cd_possible_moves = html.INPUT(type="checkbox", checked=cd_possible_moves_loaded)
+    form <= input_cd_possible_moves
+    form <= html.BR()
+
+    # retreats
+
+    legend_speed_retreats = html.LEGEND("speed retreats", title="Days before retreats adjudication deadline")
+    form <= legend_speed_retreats
+    input_speed_retreats = html.INPUT(type="number", value=speed_retreats_loaded)
+    form <= input_speed_retreats
+    form <= html.BR()
+
+    legend_cd_possible_retreats = html.LEGEND("cd possible retreats", title="Civil disorder possible for move adjudication")
+    form <= legend_cd_possible_retreats
+    input_cd_possible_retreats = html.INPUT(type="checkbox", checked=cd_possible_retreats_loaded)
+    form <= input_cd_possible_retreats
+    form <= html.BR()
+
+    # adjustments
+
+    legend_speed_adjustments = html.LEGEND("speed adjustments", title="Days before adjustments adjudication deadline")
+    form <= legend_speed_adjustments
+    input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments_loaded)
+    form <= input_speed_adjustments
+    form <= html.BR()
+
+    # builds
+
+    legend_cd_possible_builds = html.LEGEND("cd possible builds", title="Civil disorder possible for build adjudication")
+    form <= legend_cd_possible_builds
+    input_cd_possible_builds = html.INPUT(type="checkbox", checked=cd_possible_builds_loaded)
+    form <= input_cd_possible_builds
+    form <= html.BR()
+
+    # removals
+
+    legend_cd_possible_removals = html.LEGEND("cd possible removals", title="Civil disorder possible for removal adjudication")
+    form <= legend_cd_possible_removals
+    input_cd_possible_removals = html.INPUT(type="checkbox", checked=cd_possible_removals_loaded)
+    form <= input_cd_possible_removals
+    form <= html.BR()
+
+    # ---
+
+    legend_play_weekend = html.LEGEND("play weekend", title="Does the game play during week end ?")
+    form <= legend_play_weekend
+    input_play_weekend = html.INPUT(type="checkbox", checked=play_weekend_loaded)
+    form <= input_play_weekend
     form <= html.BR()
 
     form <= html.BR()
 
-    input_create_game = html.INPUT(type="submit", value="change deadline")
-    input_create_game.bind("click", change_deadline_game_callback)
-    form <= input_create_game
+    input_change_pace_game = html.INPUT(type="submit", value="change game pace parameters")
+    input_change_pace_game.bind("click", change_pace_parameters_game_callback)
+    form <= input_change_pace_game
 
     my_sub_panel <= form
 
