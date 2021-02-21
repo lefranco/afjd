@@ -172,13 +172,6 @@ def show_games_data():
     my_sub_panel <= games_table
 
 
-
-
-
-
-
-
-
 def get_game_masters_data():
     """ get_game_masters_data """
 
@@ -213,9 +206,20 @@ def get_game_masters_data():
 def show_game_masters_data():
     """ show_game_masters_data """
 
-    game_masters_list = get_game_masters_data()
+    # get the games
+    games_dict = get_games_data()
 
-    print(f"{game_masters_list=}")
+    if not games_dict:
+        return
+
+    # get the players (masters)
+    players_dict = get_players_data()
+
+    if not players_dict:
+        return
+
+    # get the link (allocations) of gamle masters
+    game_masters_list = get_game_masters_data()
 
     if not game_masters_list:
         return
@@ -228,7 +232,7 @@ def show_game_masters_data():
     }
 
     # TODO : make it possible to sort etc...
-    fields = ['game', 'pseudo']
+    fields = ['game', 'master']
 
     # header
     thead = html.THEAD()
@@ -241,13 +245,19 @@ def show_game_masters_data():
         thead <= col
     game_masters_table <= thead
 
-    for data in sorted(game_masters_list, key=lambda g: g['name']):
+    for data in game_masters_list:
         row = html.TR()
         row.style = {
             "border": "solid",
         }
         for field in fields:
-            value = data[field]
+            value_index = str(data[field])
+            if field == 'game':
+                value_data = games_dict[value_index]
+                value = value_data['name']
+            if field == 'master':
+                value_data = players_dict[value_index]
+                value = value_data['pseudo']
             col = html.TD(value)
             col.style = {
                 "border": "solid",
@@ -256,17 +266,6 @@ def show_game_masters_data():
         game_masters_table <= row
 
     my_sub_panel <= game_masters_table
-
-
-
-
-
-
-
-
-
-
-
 
 
 my_panel = html.DIV(id="players_games")
