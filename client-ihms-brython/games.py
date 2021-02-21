@@ -465,7 +465,7 @@ def change_description_game():
     form <= information_about_game()
     form <= html.BR()
 
-    legend_description = html.LEGEND("description", title="You can make tghis long. 'A game between scholars of the ESTIAM' for instance")
+    legend_description = html.LEGEND("description", title="You can make this long. 'A game between scholars of the ESTIAM' for instance")
     form <= legend_description
 
     input_description = html.TEXTAREA(type="text", rows=5, cols=80)
@@ -480,6 +480,20 @@ def change_description_game():
     form <= input_create_game
 
     my_sub_panel <= form
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def change_access_parameters_game():
@@ -497,12 +511,146 @@ def change_access_parameters_game():
 
     pseudo = storage['PSEUDO']
 
+    # declare the values
+    access_code_loaded = None
+    access_restriction_reliability_loaded = None
+    access_restriction_regularity_loaded = None
+    access_restriction_performance_loaded = None
+
+    def change_access_parameters_reload():
+        """ change_access_parameters_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
+
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal access_code_loaded
+            nonlocal access_restriction_reliability_loaded
+            nonlocal access_restriction_regularity_loaded
+            nonlocal access_restriction_performance_loaded
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error loading game access parameters: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem loading game access parameters: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                status = False
+                return
+
+            access_code_loaded = req_result['access_code']
+            access_restriction_reliability_loaded = req_result['access_restriction_reliability']
+            access_restriction_regularity_loaded = req_result['access_restriction_regularity']
+            access_restriction_performance_loaded = req_result['access_restriction_performance']
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_access_parameters_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error changing game access parameters: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem changing game access parameters: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            InfoDialog("OK", f"Description changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        access_code = input_access_code.value
+        access_restriction_reliability = input_access_restriction_reliability.value
+        access_restriction_regularity = input_access_restriction_regularity.value
+        access_restriction_performance = input_access_restriction_performance.value
+
+        json_dict = {
+            'pseudo': pseudo,
+            'name': game,
+            'access_code': access_code,
+            'access_restriction_reliability': access_restriction_reliability,
+            'access_restriction_regularity': access_restriction_regularity,
+            'access_restriction_performance': access_restriction_performance,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    status = change_access_parameters_reload()
+    if not status:
+        return
+
     form = html.FORM()
 
     form <= information_about_game()
     form <= html.BR()
 
+    legend_access_code = html.LEGEND("access code", title="Access code to the game")
+    form <= legend_access_code
+    input_access_code = html.INPUT(type="number", value=access_code_loaded)
+    form <= input_access_code
+    form <= html.BR()
+
+    legend_access_restriction_reliability = html.LEGEND("reliability restriction", title="How reliable you need to be to play in the game - punctual players")
+    form <= legend_access_restriction_reliability
+    input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability_loaded)
+    form <= input_access_restriction_reliability
+    form <= html.BR()
+
+    legend_access_restriction_regularity = html.LEGEND("regularity restriction", title="How regular you need to be to play in the game - heavy players")
+    form <= legend_access_restriction_regularity
+    input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity_loaded)
+    form <= input_access_restriction_regularity
+    form <= html.BR()
+
+    legend_access_restriction_performance = html.LEGEND("performance restriction", title="How performant you need to be to play in the game - good players")
+    form <= legend_access_restriction_performance
+    input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance_loaded)
+    form <= input_access_restriction_performance
+    form <= html.BR()
+
+    form <= html.BR()
+
+    input_create_game = html.INPUT(type="submit", value="change game access parameters")
+    input_create_game.bind("click", change_access_parameters_game_callback)
+    form <= input_create_game
+
     my_sub_panel <= form
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def change_pace_parameters_game():
