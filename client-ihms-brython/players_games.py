@@ -18,8 +18,8 @@ def noreply_callback(_):
     alert("Problem (no answer from server)")
 
 
-def get_player_list():
-    """ get_player_list """
+def get_players_data():
+    """ get_players_data """
 
     players_dict = None
 
@@ -44,10 +44,10 @@ def get_player_list():
     return players_dict
 
 
-def show_player_list():
-    """ show_player_list """
+def show_players_data():
+    """ show_players_data """
 
-    players_dict = get_player_list()
+    players_dict = get_players_data()
 
     if not players_dict:
         return
@@ -60,12 +60,12 @@ def show_player_list():
     }
 
     # TODO : make it possible to sort etc...
-    for pseudo in sorted(players_dict.values()):
+    for data in sorted(players_dict.values()):
         row = html.TR()
         row.style = {
             "border": "solid",
         }
-        col = html.TD(pseudo)
+        col = html.TD(data)
         col.style = {
             "border": "solid",
         }
@@ -76,8 +76,8 @@ def show_player_list():
     my_sub_panel <= players_table
 
 
-def get_game_list():
-    """ get_game_list """
+def get_games_data():
+    """ get_games_data """
 
     games_dict = None
 
@@ -102,10 +102,10 @@ def get_game_list():
     return games_dict
 
 
-def show_game_list():
-    """ show_game_list """
+def show_games_data():
+    """ show_games_data """
 
-    games_dict = get_game_list()
+    games_dict = get_games_data()
 
     if not games_dict:
         return
@@ -118,12 +118,12 @@ def show_game_list():
     }
 
     # TODO : make it possible to sort etc...
-    for game_name in sorted(games_dict.values()):
+    for data in sorted(games_dict.values()):
         row = html.TR()
         row.style = {
             "border": "solid",
         }
-        col = html.TD(game_name)
+        col = html.TD(data)
         col.style = {
             "border": "solid",
         }
@@ -157,9 +157,9 @@ def load_option(_, item_name):
 
     my_sub_panel.clear()
     if item_name == 'players':
-        show_player_list()
+        show_players_data()
     if item_name == 'games':
-        show_game_list()
+        show_games_data()
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
