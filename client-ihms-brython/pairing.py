@@ -2,7 +2,6 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -87,7 +86,6 @@ def load_option(_, item_name):
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_left <= menu_item
-
 
 
 def render(panel_middle):
