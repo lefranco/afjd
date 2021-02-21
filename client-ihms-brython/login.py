@@ -24,7 +24,12 @@ def login_callback(_):
     def reply_callback(req):
         req_result = json.loads(req.text)
         if req.status != 200:
-            alert(f"Problem : {req_result['msg']}")
+            if 'message' in req_result:
+                alert("Error logging in: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem logging in: {req_result['msg']}")
+            else:
+                alert(f"Undocumented issue from server")
             return
         storage['PSEUDO'] = pseudo
         storage['JWT_TOKEN'] = req_result['AccessToken']
