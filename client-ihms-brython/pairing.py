@@ -89,10 +89,8 @@ def load_option(_, item_name):
         menu_left <= menu_item
 
 
-# starts here
-load_option(None, item_name_selected)
-
 
 def render(panel_middle):
     """ render """
+    load_option(None, item_name_selected)
     panel_middle <= my_panel

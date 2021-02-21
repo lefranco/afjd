@@ -58,8 +58,8 @@ def forgot_callback(_):
     alert("Sorry: Forgot password is not implemented yet")
 
 
-def logout_callback(_):
-    """ logout_callback """
+def logout():
+    """ logout """
 
     effective = False
     if 'PSEUDO' in storage:
@@ -73,8 +73,13 @@ def logout_callback(_):
         effective = True
     if effective:
         InfoDialog("OK", "Successful logout", remove_after=config.REMOVE_AFTER)
-        show_login()
+    return effective
 
+def logout_callback(_):
+    """ logout_callback """
+    effective = logout()
+    if effective:
+        show_login()
 
 my_panel = html.DIV(id="login")
 

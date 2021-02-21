@@ -10,6 +10,7 @@ from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
+import selection
 
 my_panel = html.DIV(id="games")
 
@@ -984,6 +985,7 @@ def delete_game():
                     alert("Undocumented issue from server")
                 return
             InfoDialog("OK", f"Game deleted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            selection.un_select_game()
 
         json_dict = {
             'pseudo': pseudo
@@ -1058,10 +1060,7 @@ def load_option(_, item_name):
         menu_left <= menu_item
 
 
-# starts here
-load_option(None, item_name_selected)
-
-
 def render(panel_middle):
     """ render """
+    load_option(None, item_name_selected)
     panel_middle <= my_panel
