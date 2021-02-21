@@ -54,7 +54,13 @@ class Allocation:
         assert isinstance(player_id, int), "player_id must be an int"
         self._player_id = player_id
 
+        assert isinstance(role_id, int), "role_id must be an int"
         self._role_id = role_id
+
+    @property
+    def role_id(self) -> int:
+        """ property """
+        return self._role_id
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """
