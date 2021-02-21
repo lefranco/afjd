@@ -541,9 +541,9 @@ def edit_account():
 
     form <= html.BR()
 
-    input_create_account = html.INPUT(type="submit", value="change account")
-    input_create_account.bind("click", change_account_callback)
-    form <= input_create_account
+    input_change_account = html.INPUT(type="submit", value="change account")
+    input_change_account.bind("click", change_account_callback)
+    form <= input_change_account
 
     my_sub_panel <= form
 
