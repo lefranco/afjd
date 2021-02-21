@@ -10,7 +10,7 @@ import config
 
 my_panel = html.DIV(id="players")
 
-OPTIONS = ['players', 'games']
+OPTIONS = ['players', 'games', 'game masters']
 
 
 def noreply_callback(_):
@@ -27,7 +27,12 @@ def get_players_data():
         nonlocal players_dict
         req_result = json.loads(req.text)
         if req.status != 200:
-            alert(f"Problem : {req_result['msg']}")
+            if 'message' in req_result:
+                alert(f"Error getting players list: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting players list: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
             return
 
         req_result = json.loads(req.text)
@@ -99,7 +104,12 @@ def get_games_data():
         nonlocal games_dict
         req_result = json.loads(req.text)
         if req.status != 200:
-            alert(f"Problem : {req_result['msg']}")
+            if 'message' in req_result:
+                alert(f"Error getting games list: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting games list: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
             return
 
         req_result = json.loads(req.text)
@@ -162,6 +172,103 @@ def show_games_data():
     my_sub_panel <= games_table
 
 
+
+
+
+
+
+
+
+def get_game_masters_data():
+    """ get_game_masters_data """
+
+    game_masters_dict = None
+
+    def reply_callback(req):
+        nonlocal game_masters_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting game/game masters list: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting game/game masters list: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        req_result = json.loads(req.text)
+        game_masters_dict = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/allocations"
+
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return game_masters_dict
+
+
+def show_game_masters_data():
+    """ show_game_masters_data """
+
+    game_masters_dict = get_game_masters_data()
+
+    print(f"{game_masters_dict=}")
+
+    if not game_masters_dict:
+        return
+
+    game_masters_table = html.TABLE()
+    game_masters_table.style = {
+        "padding": "5px",
+        "backgroundColor": "#aaaaaa",
+        "border": "solid",
+    }
+
+    # TODO : make it possible to sort etc...
+    fields = ['name', 'pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        col = html.TD(field)
+        col.style = {
+            "border": "solid",
+            "font-weight": "bold",
+        }
+        thead <= col
+    game_masters_table <= thead
+
+    for data in sorted(games_dict.values(), key=lambda g: g['name']):
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+        for field in fields:
+            value = data[field]
+            col = html.TD(value)
+            col.style = {
+                "border": "solid",
+            }
+            row <= col
+        game_masters_table <= row
+
+    my_sub_panel <= game_masters_table
+
+
+
+
+
+
+
+
+
+
+
+
+
 my_panel = html.DIV(id="players_games")
 my_panel.attrs['style'] = 'display: table-row'
 
@@ -189,6 +296,8 @@ def load_option(_, item_name):
         show_players_data()
     if item_name == 'games':
         show_games_data()
+    if item_name == 'game masters':
+        show_game_masters_data()
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
