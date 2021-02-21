@@ -213,11 +213,11 @@ def get_game_masters_data():
 def show_game_masters_data():
     """ show_game_masters_data """
 
-    game_masters_dict = get_game_masters_data()
+    game_masters_list = get_game_masters_data()
 
-    print(f"{game_masters_dict=}")
+    print(f"{game_masters_list=}")
 
-    if not game_masters_dict:
+    if not game_masters_list:
         return
 
     game_masters_table = html.TABLE()
@@ -228,7 +228,7 @@ def show_game_masters_data():
     }
 
     # TODO : make it possible to sort etc...
-    fields = ['name', 'pseudo']
+    fields = ['game', 'pseudo']
 
     # header
     thead = html.THEAD()
@@ -241,7 +241,7 @@ def show_game_masters_data():
         thead <= col
     game_masters_table <= thead
 
-    for data in sorted(games_dict.values(), key=lambda g: g['name']):
+    for data in sorted(game_masters_list, key=lambda g: g['name']):
         row = html.TR()
         row.style = {
             "border": "solid",
