@@ -586,7 +586,6 @@ def delete_game():
 
         def reply_callback(req):
             req_result = json.loads(req.text)
-            print(f"{req_result=}")
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Error deleting game: {req_result['message']}")
@@ -600,8 +599,6 @@ def delete_game():
         json_dict = {
             'pseudo': pseudo
         }
-
-        print(f"{json_dict=}")
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
