@@ -4,6 +4,8 @@
 
 from browser import document, html  # pylint: disable=import-error
 
+import config
+
 import home
 import login
 import lists
