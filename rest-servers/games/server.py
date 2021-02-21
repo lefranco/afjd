@@ -361,7 +361,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/games - GET - get getting all games names")
 
         games_list = games.Game.inventory()
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'deadline': g.deadline} for g in games_list}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'deadline': g.deadline, 'advancement': g.current_advancement, 'state': g.current_state} for g in games_list}
 
         return data, 200
 
