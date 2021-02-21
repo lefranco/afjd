@@ -18,8 +18,8 @@ def noreply_callback(_):
     alert("Problem (no answer from server)")
 
 
-def get_game_list():
-    """ get_game_list """
+def get_game_data():
+    """ get_game_data """
 
     games_dict = None
 
@@ -55,18 +55,18 @@ def select_game():
         InfoDialog("OK", f"Game selected : {game}", remove_after=config.REMOVE_AFTER)
         show_game_selected()
 
-    games_dict = get_game_list()
+    games_data = get_game_data()
 
-    if not games_dict:
+    if not games_data:
         return None
 
     form = html.FORM()
 
-    legend_game = html.LEGEND("country", title="Game select")
+    legend_game = html.LEGEND("game", title="Game select")
     form <= legend_game
 
     input_game = html.SELECT(type="select-one", value="")
-    for game in sorted(games_dict.values()):
+    for game in sorted([g['name'] for g in games_data.values()]):
         option = html.OPTION(game)
         if 'GAME' in storage:
             if storage['GAME'] == game:
