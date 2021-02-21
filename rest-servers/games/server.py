@@ -439,10 +439,10 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/allocations - GET - get getting all allocations")
+        mylogger.LOGGER.info("/allocations - GET - get getting all game master allocations")
 
         allocations_list = allocations.Allocation.inventory()
-        data = [{'game': a[0], 'player': a[1]} for a in allocations_list if a[2] == 0]
+        data = [{'game': a[0], 'master': a[1]} for a in allocations_list if a[2] == 0]
 
         return data, 200
 
