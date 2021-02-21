@@ -90,6 +90,13 @@ def select_game():
     return form
 
 
+def un_select_game():
+    """ un_select_game """
+    if 'GAME' in storage:
+        del storage['GAME']
+        show_game_selected()
+
+
 def show_game_selected():
     """  show_game_selected """
 

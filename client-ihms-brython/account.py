@@ -9,6 +9,7 @@ from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
+import login
 
 OPTIONS = ['create', 'change password', 'validate email', 'edit', 'delete']
 
@@ -570,6 +571,7 @@ def delete_account():
                     alert("Undocumented issue from server")
                 return
             InfoDialog("OK", f"Your account was deleted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            login.logout()
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -643,9 +645,9 @@ def load_option(_, item_name):
 
 
 # starts here
-load_option(None, item_name_selected)
 
 
 def render(panel_middle):
     """ render """
+    load_option(None, item_name_selected)
     panel_middle <= my_panel
