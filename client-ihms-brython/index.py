@@ -13,6 +13,7 @@ import selection
 import pairing
 import play
 import master
+import position
 import sandbox
 
 TITLE = "Welcome this demo interface Web client for playing Diplomacy on ANJD REST Server"
