@@ -34,7 +34,7 @@ def information_about_game():
     """ information_about_account """
 
     information = html.DIV()
-    information <= "Fields with (*) cannot be changed afterwards"
+    information <= "Fields with (*) cannot be changed after game is created"
     information <= html.BR()
     information <= "Fields with (**) cannot be changed after game is started"
     information <= html.BR()
