@@ -215,7 +215,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         allocations_dict = json_dict
 
         if allocations_dict:
-            flask_restful.abort(400, msg=f"Player is still games {allocations_dict}")
+            flask_restful.abort(400, msg=f"Player is still in a game")
 
         # delete player from users server (that will implicitly check we have rights)
         host = lowdata.SERVER_CONFIG['USER']['HOST']
