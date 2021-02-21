@@ -75,9 +75,6 @@ GAME_PARSER.add_argument('victory_centers', type=int, required=False)
 GAME_PARSER.add_argument('current_state', type=int, required=False)
 GAME_PARSER.add_argument('pseudo', type=str, required=False)
 
-GAME_DELETE_PARSER = flask_restful.reqparse.RequestParser()
-GAME_DELETE_PARSER.add_argument('pseudo', type=str, required=False)
-
 ALLOCATION_PARSER = flask_restful.reqparse.RequestParser()
 ALLOCATION_PARSER.add_argument('game_id', type=int, required=True)
 ALLOCATION_PARSER.add_argument('player_id', type=int, required=True)
@@ -300,9 +297,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/games/<name> - DELETE - deleting game name=%s", name)
 
-        args = GAME_DELETE_PARSER.parse_args(strict=True)
-        pseudo = args['pseudo']
-
         # delete game from here
         game = games.Game.find_by_name(name)
         if game is None:
@@ -323,8 +317,9 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        # we do not check pseudo, we read it from token
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
