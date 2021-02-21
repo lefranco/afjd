@@ -16,7 +16,7 @@ import argparse
 
 import waitress
 import flask
-import flask_cors
+import flask_cors  # type: ignore
 import flask_restful  # type: ignore
 import flask_restful.reqparse  # type: ignore
 import requests
@@ -642,7 +642,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         jwt_token = flask.request.headers.get('AccessToken')
         if not jwt_token:
             flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"}})
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
