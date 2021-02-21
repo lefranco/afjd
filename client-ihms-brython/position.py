@@ -5,11 +5,11 @@
 from browser import html  # pylint: disable=import-error
 
 
-my_panel = html.DIV(id="sandbox")
+my_panel = html.DIV(id="position")
 
 
 my_panel <= """
-  Here go widgets simulate orders in a fake game
+  Here go widgets to edit a position (either for sandbox or for alterating position by a game master)
 """
 
 
