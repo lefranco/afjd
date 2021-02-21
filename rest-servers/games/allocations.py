@@ -36,7 +36,6 @@ class Allocation:
         allocations_found = database.sql_execute("SELECT * FROM allocations", need_result=True)
         if not allocations_found:
             return []
-        print(f"{allocations_found=}")
         allocations_list = [a for a in allocations_found]
         return allocations_list
 
@@ -57,11 +56,6 @@ class Allocation:
 
         assert isinstance(role_id, int), "role_id must be an int"
         self._role_id = role_id
-
-    @property
-    def role_id(self) -> int:
-        """ property """
-        return self._role_id
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """
