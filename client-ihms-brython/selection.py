@@ -28,11 +28,11 @@ def get_game_data():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert("Error getting games data: {req_result['message']}")
+                alert(f"Error getting games data: {req_result['message']}")
             elif 'msg' in req_result:
                 alert(f"Problem getting games data: {req_result['msg']}")
             else:
-                alert(f"Undocumented issue from server")
+                alert("Undocumented issue from server")
             return
 
         req_result = json.loads(req.text)

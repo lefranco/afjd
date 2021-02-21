@@ -54,11 +54,11 @@ def create_game():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert("Error creating game: {req_result['message']}")
+                    alert(f"Error creating game: {req_result['message']}")
                 elif 'msg' in req_result:
                     alert(f"Problem creating game: {req_result['msg']}")
                 else:
-                    alert(f"Undocumented issue from server")
+                    alert("Undocumented issue from server")
                 return
             InfoDialog("OK", f"Game created : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
@@ -408,11 +408,11 @@ def change_description_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert("Error loading game description: {req_result['message']}")
+                    alert(f"Error loading game description: {req_result['message']}")
                 elif 'msg' in req_result:
                     alert(f"Problem loading game description: {req_result['msg']}")
                 else:
-                    alert(f"Undocumented issue from server")
+                    alert("Undocumented issue from server")
                 status = False
                 return
 
@@ -434,11 +434,11 @@ def change_description_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert("Error changing game description: {req_result['message']}")
+                    alert(f"Error changing game description: {req_result['message']}")
                 elif 'msg' in req_result:
                     alert(f"Problem changing game description: {req_result['msg']}")
                 else:
-                    alert(f"Undocumented issue from server")
+                    alert("Undocumented issue from server")
                 return
             InfoDialog("OK", f"Description changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
@@ -589,11 +589,11 @@ def delete_game():
             print(f"{req_result=}")
             if req.status != 200:
                 if 'message' in req_result:
-                    alert("Error deleting game: {req_result['message']}")
+                    alert(f"Error deleting game: {req_result['message']}")
                 elif 'msg' in req_result:
                     alert(f"Problem deleting game: {req_result['msg']}")
                 else:
-                    alert(f"Undocumented issue from server")
+                    alert("Undocumented issue from server")
                 return
             InfoDialog("OK", f"Game deleted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 

@@ -73,11 +73,11 @@ def display_parameters():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert("Error loading all parameters: {req_result['message']}")
+                    alert(f"Error loading all parameters: {req_result['message']}")
                 elif 'msg' in req_result:
                     alert(f"Problem loading all parameters: {req_result['msg']}")
                 else:
-                    alert(f"Undocumented issue from server")
+                    alert("Undocumented issue from server")
                 status = False
                 return
 

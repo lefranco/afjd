@@ -68,12 +68,12 @@ def show_players_data():
         col = html.TD(field)
         col.style = {
             "border": "solid",
-            "font-weight":"bold",
+            "font-weight": "bold",
         }
         thead <= col
     players_table <= thead
 
-    for data in sorted(players_dict.values(), key=lambda g:g['pseudo']):
+    for data in sorted(players_dict.values(), key=lambda g: g['pseudo']):
         row = html.TR()
         row.style = {
             "border": "solid",
@@ -140,12 +140,12 @@ def show_games_data():
         col = html.TD(field)
         col.style = {
             "border": "solid",
-            "font-weight":"bold",
+            "font-weight": "bold",
         }
         thead <= col
     games_table <= thead
 
-    for data in sorted(games_dict.values(), key=lambda g:g['name']):
+    for data in sorted(games_dict.values(), key=lambda g: g['name']):
         row = html.TR()
         row.style = {
             "border": "solid",
@@ -158,7 +158,6 @@ def show_games_data():
             }
             row <= col
         games_table <= row
-
 
     my_sub_panel <= games_table
 
@@ -180,6 +179,7 @@ item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
+
 
 def load_option(_, item_name):
     """ load_option """
