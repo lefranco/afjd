@@ -65,14 +65,10 @@ def logout():
     if 'PSEUDO' in storage:
         del storage['PSEUDO']
         effective = True
-    if 'JWT_TOKEN' in storage:
-        del storage['JWT_TOKEN']
-        effective = True
     if 'LOGIN_TIME' in storage:
         del storage['LOGIN_TIME']
         effective = True
-    if effective:
-        InfoDialog("OK", "Successful logout", remove_after=config.REMOVE_AFTER)
+    show_login()
     return effective
 
 
@@ -80,7 +76,7 @@ def logout_callback(_):
     """ logout_callback """
     effective = logout()
     if effective:
-        show_login()
+        InfoDialog("OK", "Successful logout", remove_after=config.REMOVE_AFTER)
 
 
 my_panel = html.DIV(id="login")
