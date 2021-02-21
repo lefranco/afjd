@@ -174,6 +174,26 @@ class Player:
         return self._pseudo
 
     @property
+    def family_name(self) -> str:
+        """ property """
+        return self._family_name
+
+    @property
+    def first_name(self) -> str:
+        """ property """
+        return self._first_name
+
+    @property
+    def country(self) -> str:
+        """ property """
+        return self._country
+
+    @property
+    def time_zone(self) -> str:
+        """ property """
+        return self._time_zone
+
+    @property
     def email(self) -> str:
         """ property """
         return self._email

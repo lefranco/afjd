@@ -49,6 +49,8 @@ def show_players_data():
 
     players_dict = get_players_data()
 
+    print(f"{players_dict=}")
+
     if not players_dict:
         return
 
@@ -60,18 +62,32 @@ def show_players_data():
     }
 
     # TODO : make it possible to sort etc...
-    for data in sorted(players_dict.values()):
+    fields = ['pseudo', 'first name', 'last name', 'advancement', 'state']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        col = html.TD(field)
+        col.style = {
+            "border": "solid",
+            "font-weight":"bold",
+        }
+        thead <= col
+    players_table <= thead
+
+    for data in sorted(players_dict.values(), key=lambda g:g['pseudo']):
         row = html.TR()
         row.style = {
             "border": "solid",
         }
-        col = html.TD(data)
-        col.style = {
-            "border": "solid",
-        }
-        row <= col
+        for field in fields:
+            value = data[field]
+            col = html.TD(value)
+            col.style = {
+                "border": "solid",
+            }
+            row <= col
         players_table <= row
-
 
     my_sub_panel <= players_table
 
@@ -118,16 +134,31 @@ def show_games_data():
     }
 
     # TODO : make it possible to sort etc...
-    for data in sorted(games_dict.values()):
+    fields = ['name', 'variant', 'deadline', 'advancement', 'state']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        col = html.TD(field)
+        col.style = {
+            "border": "solid",
+            "font-weight":"bold",
+        }
+        thead <= col
+    games_table <= thead
+
+    for data in sorted(games_dict.values(), key=lambda g:g['name']):
         row = html.TR()
         row.style = {
             "border": "solid",
         }
-        col = html.TD(data)
-        col.style = {
-            "border": "solid",
-        }
-        row <= col
+        for field in fields:
+            value = data[field]
+            col = html.TD(value)
+            col.style = {
+                "border": "solid",
+            }
+            row <= col
         games_table <= row
 
 
