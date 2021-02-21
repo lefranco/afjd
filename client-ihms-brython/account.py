@@ -3,7 +3,6 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
-import csv
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -15,19 +14,15 @@ OPTIONS = ['create', 'change password', 'validate email', 'edit', 'delete']
 
 MAX_LEN_PSEUDO = 12
 
-COUNTRY_CODE_TABLE = dict()
-COUNTRY_VALUE_TABLE = dict()
-with open("./data/country_list.csv", newline='', encoding="utf-8") as csvfile:
-    reader = csv.reader(csvfile, delimiter=',')
-    for code, name in reader:
-        COUNTRY_CODE_TABLE[name] = code
 
-TIMEZONE_CODE_TABLE = dict()
-TIMEZONE_VALUE_TABLE = dict()
-with open("./data/timezone_list.csv", newline='', encoding="utf-8") as csvfile:
-    reader = csv.reader(csvfile, delimiter=',')
-    for code, name in reader:
-        TIMEZONE_CODE_TABLE[f"{code} ({name})"] = code
+# load country list from json data file
+with open("./data/country_list.json", "r") as read_file:
+    COUNTRY_CODE_TABLE = json.load(read_file)
+
+
+# load timezone list from json data file
+with open("./data/timezone_list.json", "r") as read_file:
+    TIMEZONE_CODE_TABLE = json.load(read_file)
 
 
 def noreply_callback(_):
