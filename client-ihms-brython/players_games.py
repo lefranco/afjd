@@ -50,7 +50,7 @@ def show_player_list():
     players_dict = get_player_list()
 
     if not players_dict:
-        return None
+        return
 
     players_table = html.TABLE()
     players_table.style = {
@@ -75,11 +75,66 @@ def show_player_list():
 
     my_sub_panel <= players_table
 
+
+def get_game_list():
+    """ get_game_list """
+
+    games_dict = None
+
+    def reply_callback(req):
+        nonlocal games_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            alert(f"Problem : {req_result['msg']}")
+            return
+
+        req_result = json.loads(req.text)
+        games_dict = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/games"
+
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return games_dict
+
+
 def show_game_list():
-    my_sub_panel <= "TODO game list"
+    """ show_game_list """
+
+    games_dict = get_game_list()
+
+    if not games_dict:
+        return
+
+    games_table = html.TABLE()
+    games_table.style = {
+        "padding": "5px",
+        "backgroundColor": "#aaaaaa",
+        "border": "solid",
+    }
+
+    # TODO : make it possible to sort etc...
+    for game_name in sorted(games_dict.values()):
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+        col = html.TD(game_name)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+        games_table <= row
 
 
-my_panel = html.DIV(id="games")
+    my_sub_panel <= games_table
+
+
+my_panel = html.DIV(id="players_games")
 my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
