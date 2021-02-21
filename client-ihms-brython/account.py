@@ -54,7 +54,12 @@ def create_account():
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 201:
-                alert(f"Problem : {req_result['msg']}")
+                if 'message' in req_result:
+                    alert("Error creating account: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem creating account : {req_result['msg']}")
+                else:
+                    alert(f"Undocumented issue from server")
                 return
             InfoDialog("OK", f"Account created : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
@@ -204,7 +209,12 @@ def change_password():
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
-                alert(f"Problem : {req_result['msg']}")
+                if 'message' in req_result:
+                    alert("Error changing password: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem changing password: {req_result['msg']}")
+                else:
+                    alert(f"Undocumented issue from server")
                 return
             InfoDialog("OK", f"Password changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
@@ -268,7 +278,12 @@ def validate_email():
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
-                alert(f"Problem : {req_result['msg']}")
+                if 'message' in req_result:
+                    alert("Error validating email: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem validating email: {req_result['msg']}")
+                else:
+                    alert(f"Undocumented issue from server")
                 return
             InfoDialog("OK", f"Congratulations, your account/email was validated : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
@@ -367,7 +382,12 @@ def edit_account():
 
             req_result = json.loads(req.text)
             if req.status != 200:
-                alert(f"Problem loading account: {req_result['msg']}")
+                if 'message' in req_result:
+                    alert("Error loading account: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem loading account: {req_result['msg']}")
+                else:
+                    alert(f"Undocumented issue from server")
                 status = False
                 return
 
@@ -404,7 +424,12 @@ def edit_account():
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
-                alert(f"Problem : {req_result['msg']}")
+                if 'message' in req_result:
+                    alert("Error changing account: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem changing account: {req_result['msg']}")
+                else:
+                    alert(f"Undocumented issue from server")
                 return
             InfoDialog("OK", f"Account changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
@@ -542,7 +567,12 @@ def delete_account():
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
-                alert(f"Problem : {req_result['msg']}")
+                if 'message' in req_result:
+                    alert("Error deleting account: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem deleting account: {req_result['msg']}")
+                else:
+                    alert(f"Undocumented issue from server")
                 return
             InfoDialog("OK", f"Your account was deleted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
