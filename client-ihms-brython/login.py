@@ -75,11 +75,13 @@ def logout():
         InfoDialog("OK", "Successful logout", remove_after=config.REMOVE_AFTER)
     return effective
 
+
 def logout_callback(_):
     """ logout_callback """
     effective = logout()
     if effective:
         show_login()
+
 
 my_panel = html.DIV(id="login")
 
