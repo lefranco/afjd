@@ -12,7 +12,7 @@ import config
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['create', 'change description', 'change deadline', 'change access parameters', 'change pace parameters', 'delete']
+OPTIONS = ['create', 'change description', 'change access parameters', 'change deadline', 'change pace parameters', 'delete']
 
 MAX_LEN_NAME = 30
 
@@ -625,10 +625,10 @@ def load_option(_, item_name):
         create_game()
     if item_name == 'change description':
         change_description_game()
-    if item_name == 'change deadline':
-        change_deadline_game()
     if item_name == 'change access parameters':
         change_access_parameters_game()
+    if item_name == 'change deadline':
+        change_deadline_game()
     if item_name == 'change pace parameters':
         change_pace_parameters_game()
     if item_name == 'delete':
