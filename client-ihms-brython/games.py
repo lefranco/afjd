@@ -14,7 +14,7 @@ import selection
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['create', 'change description', 'change access parameters', 'change deadline', 'change pace parameters', 'delete']
+OPTIONS = ['create', 'change description', 'change access parameters', 'change deadline', 'change pace parameters', 'change state', 'delete']
 
 MAX_LEN_NAME = 30
 
@@ -26,6 +26,8 @@ DEFAULT_CD_OTHERS = 1
 DEFAULT_VICTORY_CENTERS = 18
 DEFAULT_NB_CYCLES = 99
 
+
+STATE_CODE_TABLE = {'waiting': 0, 'ongoing': 1, 'finished': 2}
 
 def noreply_callback(_):
     """ noreply_callback """
@@ -146,6 +148,7 @@ def create_game():
         today = datetime.date.today()
         description = f"game created at {today} by {pseudo} variant {variant}"
         deadline = today.strftime("%Y-%m-%d")
+        state = 0
 
         json_dict = {
             'name': name,
@@ -177,6 +180,7 @@ def create_game():
 
             'description': description,
             'deadline': deadline,
+            'current_state' : state,
 
             'pseudo': pseudo
         }
@@ -570,7 +574,7 @@ def change_access_parameters_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Description changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Access parameters changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         access_code = input_access_code.value
         access_restriction_reliability = input_access_restriction_reliability.value
@@ -671,9 +675,9 @@ def change_deadline_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error loading game description: {req_result['message']}")
+                    alert(f"Error loading game deadline: {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem loading game description: {req_result['msg']}")
+                    alert(f"Problem loading game deadline: {req_result['msg']}")
                 else:
                     alert("Undocumented issue from server")
                 status = False
@@ -697,13 +701,13 @@ def change_deadline_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error changing game description: {req_result['message']}")
+                    alert(f"Error changing game deadline: {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem changing game description: {req_result['msg']}")
+                    alert(f"Problem changing game deadline: {req_result['msg']}")
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Description changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Deadline changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         deadline = input_deadline.value
 
@@ -732,7 +736,6 @@ def change_deadline_game():
     form <= legend_deadline
 
     input_deadline = html.INPUT(type="date", value=deadline_loaded)
-    input_deadline <= deadline_loaded
     form <= input_deadline
     form <= html.BR()
 
@@ -835,7 +838,7 @@ def change_pace_parameters_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Description changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Pace parameters changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         try:
             speed_moves = int(input_speed_moves.value)
@@ -957,6 +960,152 @@ def change_pace_parameters_game():
     my_sub_panel <= form
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def change_state_game():
+    """ change_state_game """
+
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    # declare the values
+    state_loaded = None
+
+    def change_state_reload():
+        """ change_state_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
+
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal state_loaded
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error loading game state: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem loading game state: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                status = False
+                return
+
+            state_loaded = req_result['current_state']
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_state_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error changing game state: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem changing game state: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            InfoDialog("OK", f"State changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        state = STATE_CODE_TABLE[input_state.value]
+
+        json_dict = {
+            'pseudo': pseudo,
+            'name': game,
+            'current_state': state,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    status = change_state_reload()
+    if not status:
+        return
+
+    form = html.FORM()
+
+    form <= information_about_game()
+    form <= html.BR()
+
+    legend_state = html.LEGEND("state", title="State of the game : waiting, ongoing, finished.")
+    form <= legend_state
+
+    input_state = html.SELECT(type="select-one", value="")
+    for possible_state in STATE_CODE_TABLE:
+        option = html.OPTION(possible_state)
+        if STATE_CODE_TABLE[possible_state] == state_loaded:
+            option.selected = True
+        input_state <= option
+    form <= input_state
+    form <= html.BR()
+
+    form <= html.BR()
+
+    input_change_state_game = html.INPUT(type="submit", value="change game state")
+    input_change_state_game.bind("click", change_state_game_callback)
+    form <= input_change_state_game
+
+    my_sub_panel <= form
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def delete_game():
     """ delete_game """
 
@@ -1039,6 +1188,8 @@ def load_option(_, item_name):
         change_deadline_game()
     if item_name == 'change pace parameters':
         change_pace_parameters_game()
+    if item_name == 'change state':
+        change_state_game()
     if item_name == 'delete':
         delete_game()
     global item_name_selected  # pylint: disable=invalid-name
