@@ -512,6 +512,11 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
+        # TODO  : probably a huge problem here
+        # because a DELETE request may not have a body
+        # so cannot pass game_id, player_id and pseudo
+        # note : pseudo can be easily relmoved, deducted from AccessToken
+
         mylogger.LOGGER.info("/allocations - DELETE - deleting allocation")
 
         args = ALLOCATION_PARSER.parse_args(strict=True)
