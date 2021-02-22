@@ -292,7 +292,8 @@ class Application(tkinter.Frame):
         previous_state = self.listbox_selectable_game_input.cget("state")
         self.listbox_selectable_game_input.config(state=tkinter.NORMAL)
         self.listbox_selectable_game_input.delete(0, tkinter.END)
-        for identifier, name in json_dict.items():
+        for identifier, data in json_dict.items():
+            name = data['name']
             self.selectable_game_list.append(identifier)
             self.listbox_selectable_game_input.insert(tkinter.END, name)  # type: ignore
         self.listbox_selectable_game_input.selection_set(0)  # First
@@ -315,7 +316,7 @@ class Application(tkinter.Frame):
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             return False, message
         json_dict = req_result.json()
-        player_dict = json_dict
+        player_dict = {k:v['pseudo'] for k,v in json_dict.items()}
 
         # get all allocations of the game
         game_index_sel, = self.listbox_selectable_game_input.curselection()  # type: ignore
