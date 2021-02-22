@@ -19,6 +19,7 @@ def noreply_callback(_):
     """ noreply_callback """
     alert("Problem (no answer from server)")
 
+
 def get_player_id(pseudo):
     """ get_player_id """
 
@@ -77,6 +78,67 @@ def get_game_id(name):
     return game_id
 
 
+def get_players():
+    """ get_players """
+
+    players_dict = None
+
+    def reply_callback(req):
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting players: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting players: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+        req_result = json.loads(req.text)
+        nonlocal players_dict
+        players_dict = {v['pseudo']: int(k) for k, v in req_result.items()}
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/players"
+
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return players_dict
+
+
+
+def get_game_allocated_players(game_id):
+    """ get_available_players """
+
+    players_dict = None
+
+    def reply_callback(req):
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting game allocated players: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting game allocated players: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+        req_result = json.loads(req.text)
+        nonlocal players_dict
+        players_dict = [int(k) for k, v in req_result.items() if v != 0]
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-allocations/{game_id}"
+
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return players_dict
+
+
 def join_game():
     """ join_game """
 
@@ -127,7 +189,6 @@ def join_game():
 
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-
     form = html.FORM()
 
     input_join_game = html.INPUT(type="submit", value="join game")
@@ -135,6 +196,7 @@ def join_game():
     form <= input_join_game
 
     my_sub_panel <= form
+
 
 def quit_game():
     """ quit_game """
@@ -187,7 +249,6 @@ def quit_game():
         # should be a delete but body in delete requests is more or less forbidden
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-
     form = html.FORM()
 
     input_quit_game = html.INPUT(type="submit", value="quit game")
@@ -197,23 +258,168 @@ def quit_game():
     my_sub_panel <= form
 
 
-
-
-
-
-
-
-
-
-
-
-
 def move_players_in_game():
     """ move_players_in_game """
 
-    dummy = html.P("move_players_in_game")
-    my_sub_panel <= dummy
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
 
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    def put_in_game_callback(_):
+        """ put_in_game_callback """
+
+        def reply_callback(req):
+            """ reply_callback """
+
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error putting player in game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem putting player in game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            InfoDialog("OK", f"Player was put in game: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        player_pseudo = input_incomer.value
+        player_id = get_player_id(player_pseudo)
+        if player_id is None:
+            return
+
+        game_id = get_game_id(game)
+        if game_id is None:
+            return
+
+        json_dict = {
+            'game_id': game_id,
+            'player_id': player_id,
+            'pseudo': pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/allocations"
+
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+
+    def remove_from_game_callback(_):
+        print("remove_from_game_callback")
+
+        def reply_callback(req):
+            """ reply_callback """
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error removing player from game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem removing player from game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            InfoDialog("OK", f"Player was removed from game: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        player_pseudo = input_outcomer.value
+        player_id = get_player_id(player_pseudo)
+        if player_id is None:
+            return
+
+        game_id = get_game_id(game)
+        if game_id is None:
+            return
+
+        json_dict = {
+            'game_id': game_id,
+            'player_id': player_id,
+            'pseudo': pseudo,
+            'delete': 1
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/allocations"
+
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+
+    players_dict = get_players()
+    if players_dict is None:
+        return
+
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
+    game_id = get_game_id(game)
+    if game_id is None:
+        return
+
+    players_allocated_id_list = get_game_allocated_players(game_id)
+    if players_allocated_id_list is None:
+        return
+
+    players_allocated_list = [id2pseudo[i] for i in list(players_allocated_id_list)]
+
+    form = html.FORM()
+
+    # ---
+
+    legend_incomer = html.LEGEND("Incoming", title="Select player to put in game")
+    legend_incomer.style = {
+        'color': 'red',
+    }
+    form <= legend_incomer
+
+    possible_incomers = set(players_dict.keys()) - set(players_allocated_list)
+
+    input_incomer = html.SELECT(type="select-one", value="")
+    for play_pseudo in sorted(possible_incomers):
+        option = html.OPTION(play_pseudo)
+        input_incomer <= option
+
+    form <= input_incomer
+    form <= html.BR()
+
+    form <= html.BR()
+
+    input_put_in_game = html.INPUT(type="submit", value="put in game")
+    input_put_in_game.bind("click", put_in_game_callback)
+    form <= input_put_in_game
+
+    # ---
+    form <= html.BR()
+    form <= html.BR()
+
+    legend_outcomer = html.LEGEND("Outcoming", title="Select player to remove from game")
+    legend_outcomer.style = {
+        'color': 'red',
+    }
+    form <= legend_outcomer
+
+    input_outcomer = html.SELECT(type="select-one", value="")
+    for play_pseudo in sorted(players_allocated_list):
+        option = html.OPTION(play_pseudo)
+        input_outcomer <= option
+
+    form <= input_outcomer
+    form <= html.BR()
+
+    form <= html.BR()
+
+    input_remove_from_game = html.INPUT(type="submit", value="remove from game")
+    input_remove_from_game.bind("click", remove_from_game_callback)
+    form <= input_remove_from_game
+
+    my_sub_panel <= form
 
 
 my_panel = html.DIV(id="pairing")
