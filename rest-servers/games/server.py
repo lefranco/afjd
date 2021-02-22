@@ -78,6 +78,7 @@ GAME_PARSER.add_argument('pseudo', type=str, required=False)
 ALLOCATION_PARSER = flask_restful.reqparse.RequestParser()
 ALLOCATION_PARSER.add_argument('game_id', type=int, required=True)
 ALLOCATION_PARSER.add_argument('player_id', type=int, required=True)
+ALLOCATION_PARSER.add_argument('delete', type=int, required=True)
 ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
@@ -452,17 +453,18 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/allocations - POST - creating new allocation")
+        mylogger.LOGGER.info("/allocations - POST - creating/deleting new allocation")
 
         args = ALLOCATION_PARSER.parse_args(strict=True)
         game_id = args['game_id']
         player_id = args['player_id']
         pseudo = args['pseudo']
+        delete = args['delete']
 
-        mylogger.LOGGER.info("game_id=%s player_id=%s", game_id, player_id)
+        mylogger.LOGGER.info("game_id=%s player_id=%s delete=%s", game_id, player_id, delete)
 
         if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to join/put in game")
+            flask_restful.abort(401, msg="Need a pseudo to join/put or quit/remolve in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -504,80 +506,21 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         if game.current_state != 0:
             flask_restful.abort(405, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
 
-        role_id = -1
-        allocation = allocations.Allocation(game_id, player_id, role_id)
-        allocation.update_database()
+        if not delete:
+            role_id = -1
+            allocation = allocations.Allocation(game_id, player_id, role_id)
+            allocation.update_database()
+        else:
+            allocation = allocations.Allocation(game_id, player_id, -1)
+            allocation.delete_database()
 
-        data = {'msg': 'Ok allocation updated or created'}
-        return data, 201
+        if not delete:
+            data = {'msg': 'Ok allocation updated or created'}
+        else:
+            data = {'msg': 'Ok allocation deleted if present'}
 
-    def delete(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """
-        Deletes an allocation (relation player-game)
-        EXPOSED
-        """
-
-        # TODO  : probably a huge problem here
-        # because a DELETE request may not have a body
-        # so cannot pass game_id, player_id and pseudo
-        # note : pseudo can be easily relmoved, deducted from AccessToken
-
-        mylogger.LOGGER.info("/allocations - DELETE - deleting allocation")
-
-        args = ALLOCATION_PARSER.parse_args(strict=True)
-        game_id = args['game_id']
-        player_id = args['player_id']
-        pseudo = args['pseudo']
-
-        mylogger.LOGGER.info("game_id=%s player_id=%s")
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to quit/remove from game")
-
-        # check authentication from user server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
-
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        user_id = req_result.json()
-
-        # check user has right to add allocation - must be concerned user or game master
-
-        # who is game master ?
-        game = games.Game.find_by_identifier(game_id)
-        assert game is not None
-        game_master_id = game.get_role(0)
-
-        if user_id not in [game_master_id, player_id]:
-            flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the concerned player")
-
-        # TODO : change when replacement is implemented
-        if game.current_state != 0:
-            flask_restful.abort(405, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
-
-        allocation = allocations.Allocation(game_id, player_id, -1)
-        allocation.delete_database()
-
-        data = {'msg': 'Ok allocation deleted if present'}
+        if not delete:
+            return data, 201
         return data, 200
 
 
