@@ -798,7 +798,8 @@ class Application(tkinter.Frame):
         previous_state = self.listbox_selectable_game_input.cget("state")
         self.listbox_selectable_game_input.config(state=tkinter.NORMAL)
         self.listbox_selectable_game_input.delete(0, tkinter.END)
-        for identifier, name in json_dict.items():
+        for identifier, data2 in json_dict.items():
+            name = data2['name']
             self.selectable_game_list.append((identifier, name))
             self.listbox_selectable_game_input.insert(tkinter.END, name)  # type: ignore
         self.listbox_selectable_game_input.selection_set(0)  # First
@@ -967,7 +968,7 @@ class Application(tkinter.Frame):
             tkinter.messagebox.showerror("KO", f"Echec à la récupération des joueurs : {message}")
             return
         json_dict = req_result.json()
-        player_dict = json_dict
+        player_dict = {k:v['pseudo'] for k,v in json_dict.items()}
 
         # display information about players game
 
