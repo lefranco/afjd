@@ -51,7 +51,7 @@ EMAIL_PARSER.add_argument('code', type=str, required=True)
 PREVENT_MAIL_CHECKING = False
 
 
-@API.resource('/player_identifiers/<pseudo>')
+@API.resource('/player-identifiers/<pseudo>')
 class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
     """ PlayerIdentifierRessource """
 
@@ -61,7 +61,7 @@ class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/player_identifiers/<pseudo> - GET - retrieving identifier from  player pseudo=%s", pseudo)
+        mylogger.LOGGER.info("/player-identifiers/<pseudo> - GET - retrieving identifier from  player pseudo=%s", pseudo)
 
         # find data
         player = players.Player.find_by_pseudo(pseudo)

@@ -241,7 +241,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -321,7 +321,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -405,7 +405,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -482,7 +482,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -552,7 +552,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -663,7 +663,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -833,7 +833,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -1008,7 +1008,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -1087,7 +1087,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -1407,7 +1407,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -1474,7 +1474,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -1559,7 +1559,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -1627,7 +1627,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -1703,7 +1703,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
@@ -1769,7 +1769,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
