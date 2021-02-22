@@ -12,7 +12,7 @@ import config
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['join game', 'quit game', 'move player in game']
+OPTIONS = ['join game', 'quit game', 'move players in game']
 
 
 def noreply_callback(_):
@@ -136,20 +136,6 @@ def join_game():
 
     my_sub_panel <= form
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def quit_game():
     """ quit_game """
 
@@ -222,11 +208,10 @@ def quit_game():
 
 
 
+def move_players_in_game():
+    """ move_players_in_game """
 
-def move_player_in_game():
-    """ move_player_in_game """
-
-    dummy = html.P("move_player_in_game")
+    dummy = html.P("move_players_in_game")
     my_sub_panel <= dummy
 
 
@@ -258,7 +243,7 @@ def load_option(_, item_name):
         join_game()
     if item_name == 'quit game':
         quit_game()
-    if item_name == 'move player in game':
+    if item_name == 'move players in game':
         move_player_in_game()
 
     global item_name_selected  # pylint: disable=invalid-name
