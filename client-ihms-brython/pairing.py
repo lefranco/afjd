@@ -244,7 +244,7 @@ def load_option(_, item_name):
     if item_name == 'quit game':
         quit_game()
     if item_name == 'move players in game':
-        move_player_in_game()
+        move_players_in_game()
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
