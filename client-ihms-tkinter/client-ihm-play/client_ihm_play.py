@@ -528,7 +528,7 @@ class Application(tkinter.Frame):
         # get player identifier
         host = data.SERVER_CONFIG['PLAYER']['HOST']
         port = data.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player_identifiers/{pseudo}"
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
