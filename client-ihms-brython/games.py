@@ -29,6 +29,7 @@ DEFAULT_NB_CYCLES = 99
 
 STATE_CODE_TABLE = {'waiting': 0, 'ongoing': 1, 'finished': 2}
 
+
 def noreply_callback(_):
     """ noreply_callback """
     alert("Problem (no answer from server)")
@@ -180,7 +181,7 @@ def create_game():
 
             'description': description,
             'deadline': deadline,
-            'current_state' : state,
+            'current_state': state,
 
             'pseudo': pseudo
         }
@@ -960,24 +961,6 @@ def change_pace_parameters_game():
     my_sub_panel <= form
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def change_state_game():
     """ change_state_game """
 
@@ -1091,19 +1074,6 @@ def change_state_game():
     form <= input_change_state_game
 
     my_sub_panel <= form
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def delete_game():
