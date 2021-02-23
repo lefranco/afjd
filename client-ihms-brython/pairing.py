@@ -108,7 +108,6 @@ def get_players():
     return players_dict
 
 
-
 def get_game_allocated_players(game_id):
     """ get_available_players """
 
@@ -289,6 +288,8 @@ def move_players_in_game():
                     alert("Undocumented issue from server")
                 return
             InfoDialog("OK", f"Player was put in game: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            # back to where we started
+            move_players_in_game()
 
         player_pseudo = input_incomer.value
         player_id = get_player_id(player_pseudo)
@@ -312,9 +313,8 @@ def move_players_in_game():
 
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-
     def remove_from_game_callback(_):
-        print("remove_from_game_callback")
+        """remove_from_game_callback"""
 
         def reply_callback(req):
             """ reply_callback """
@@ -329,6 +329,8 @@ def move_players_in_game():
                     alert("Undocumented issue from server")
                 return
             InfoDialog("OK", f"Player was removed from game: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            # back to where we started
+            move_players_in_game()
 
         player_pseudo = input_outcomer.value
         player_id = get_player_id(player_pseudo)
@@ -351,7 +353,6 @@ def move_players_in_game():
         url = f"{host}:{port}/allocations"
 
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
-
 
     players_dict = get_players()
     if players_dict is None:
@@ -419,6 +420,7 @@ def move_players_in_game():
     input_remove_from_game.bind("click", remove_from_game_callback)
     form <= input_remove_from_game
 
+    my_sub_panel.clear()
     my_sub_panel <= form
 
 
