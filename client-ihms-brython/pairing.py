@@ -109,9 +109,10 @@ def get_players():
 
 
 def get_game_allocated_players(game_id):
-    """ get_available_players """
+    """ get_available_players returns a tuple game_master + players """
 
-    players_dict = None
+    game_master_id = None
+    players_list = None
 
     def reply_callback(req):
         req_result = json.loads(req.text)
@@ -124,8 +125,11 @@ def get_game_allocated_players(game_id):
                 alert("Undocumented issue from server")
             return
         req_result = json.loads(req.text)
-        nonlocal players_dict
-        players_dict = [int(k) for k, v in req_result.items() if v != 0]
+        nonlocal game_master_id
+        game_masters_list = [int(k) for k, v in req_result.items() if v == 0]
+        game_master_id = game_masters_list.pop()
+        nonlocal players_list
+        players_list = [int(k) for k, v in req_result.items() if v != 0]
 
     json_dict = dict()
 
@@ -135,7 +139,7 @@ def get_game_allocated_players(game_id):
 
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return players_dict
+    return game_master_id, players_list
 
 
 def join_game():
@@ -364,9 +368,10 @@ def move_players_in_game():
     if game_id is None:
         return
 
-    players_allocated_id_list = get_game_allocated_players(game_id)
-    if players_allocated_id_list is None:
+    allocated = get_game_allocated_players(game_id)
+    if allocated is None:
         return
+    game_master_id, players_allocated_id_list = allocated
 
     players_allocated_list = [id2pseudo[i] for i in list(players_allocated_id_list)]
 
@@ -380,7 +385,17 @@ def move_players_in_game():
     }
     form <= legend_incomer
 
-    possible_incomers = set(players_dict.keys()) - set(players_allocated_list)
+    # all players can come in
+    possible_incomers = set(players_dict.keys())
+
+    # not those already in
+    possible_incomers -= set(players_allocated_list)
+
+    # not the operator
+    possible_incomers -= set([pseudo])
+
+    # not the gm of the game
+    possible_incomers -= set([game_master_id])
 
     input_incomer = html.SELECT(type="select-one", value="")
     for play_pseudo in sorted(possible_incomers):
