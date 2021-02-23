@@ -502,6 +502,15 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         if user_id not in [game_master_id, player_id]:
             flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the concerned player")
 
+        # game master of game can neither be added (changed) not removed
+
+        if not delete:
+            if game_master_id == player_id:
+                flask_restful.abort(400, msg="You cannot put the game master as a player in the game")
+        else:
+            if game_master_id == player_id:
+                flask_restful.abort(400, msg="You cannot remove the game master from the game")
+
         # TODO : change when replacement is implemented
         if game.current_state != 0:
             flask_restful.abort(405, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
