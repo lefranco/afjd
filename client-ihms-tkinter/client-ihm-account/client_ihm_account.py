@@ -53,7 +53,7 @@ JWT_TOKEN = ''
 
 # for checking input
 EMAIL_PATTERN = r'^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
-MAX_LEN_PSEUDO = 12
+MAX_LEN_PSEUDO = 20
 
 COUNTRY_CODE_DEFAULT = 66  # France
 TIME_ZONE_CODE_DEFAULT = 14  # Paris

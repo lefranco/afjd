@@ -13,7 +13,7 @@ import login
 
 OPTIONS = ['create', 'change password', 'validate email', 'edit', 'delete']
 
-MAX_LEN_PSEUDO = 12
+MAX_LEN_PSEUDO = 20
 
 
 # load country list from json data file
