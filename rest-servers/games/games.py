@@ -34,6 +34,7 @@ MIN_VICTORY_CENTERS = 10
 # for the moment
 IMPOSED_VARIANT = 'standard'
 
+
 class Game:
     """ Class for handling a game """
 
