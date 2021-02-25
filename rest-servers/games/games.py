@@ -31,6 +31,8 @@ MIN_CYCLES_TO_PLAY = 10
 # for safety
 MIN_VICTORY_CENTERS = 10
 
+# for the moment
+IMPOSED_VARIANT = 'standard'
 
 class Game:
     """ Class for handling a game """
@@ -139,6 +141,11 @@ class Game:
             self._variant = json_dict['variant']
             self._variant = database.sanitize_field(self._variant)
             self._variant = self._variant[:LEN_NAME_MAX]
+
+            # TODO : change later
+            if self._variant != IMPOSED_VARIANT:
+                self._variant = IMPOSED_VARIANT
+
             changed = True
 
         if 'archive' in json_dict and json_dict['archive'] is not None and json_dict['archive'] != self._archive:
@@ -163,6 +170,10 @@ class Game:
 
         if 'deadline' in json_dict and json_dict['deadline'] is not None and json_dict['deadline'] != self._deadline:
             self._deadline = json_dict['deadline']
+
+            # safety
+            # TODO
+
             changed = True
 
         if 'speed_moves' in json_dict and json_dict['speed_moves'] is not None and json_dict['speed_moves'] != self._speed_moves:
