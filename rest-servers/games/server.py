@@ -256,14 +256,19 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if game.get_role(0) != user_id:
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
+        # keep a note of game state before
         current_state_before = game.current_state
+
         assert game is not None
         changed = game.load_json(args)
         if not changed:
             data = {'name': name, 'msg': 'Ok but no change !'}
             return data, 200
 
-        # some additional changes
+        # pay more attention to deadline
+        print(f"{game.deadline=}")
+
+        # special : game changed state
         if game.current_state != current_state_before:
 
             if current_state_before == 0 and game.current_state == 1:
