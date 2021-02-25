@@ -262,11 +262,11 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         print(f"{entered_deadline=}")
 
         try:
-            deadline_date = datetime.strptime(entered_deadline, "%m-%d-%Y")
+            deadline_date = datetime.datetime.strptime(entered_deadline, "%m-%d-%Y")
         except ValueError:
             flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
 
-        if deadline_date > datetime.now():
+        if deadline_date > datetime.datetime.now():
             flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
 
         # keep a note of game state before
