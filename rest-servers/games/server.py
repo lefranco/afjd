@@ -77,7 +77,7 @@ GAME_PARSER.add_argument('pseudo', type=str, required=False)
 
 ALLOCATION_PARSER = flask_restful.reqparse.RequestParser()
 ALLOCATION_PARSER.add_argument('game_id', type=int, required=True)
-ALLOCATION_PARSER.add_argument('player_id', type=int, required=True)
+ALLOCATION_PARSER.add_argument('player_pseudo', type=str, required=True)
 ALLOCATION_PARSER.add_argument('delete', type=int, required=True)
 ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 
@@ -463,11 +463,11 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         args = ALLOCATION_PARSER.parse_args(strict=True)
         game_id = args['game_id']
-        player_id = args['player_id']
+        player_pseudo = args['player_pseudo']
         pseudo = args['pseudo']
         delete = args['delete']
 
-        mylogger.LOGGER.info("game_id=%s player_id=%s delete=%s", game_id, player_id, delete)
+        mylogger.LOGGER.info("game_id=%s player_pseudo=%s delete=%s", game_id, player_pseudo, delete)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to join/put or quit/remolve in game")
@@ -499,6 +499,17 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         user_id = req_result.json()
 
         # check user has right to add allocation - must be concerned user or game master
+
+        # find the player
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{player_pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from player_pseudo {message}")
+        player_id = req_result.json()
 
         # find the game
         game = games.Game.find_by_identifier(game_id)
