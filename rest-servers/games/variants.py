@@ -13,7 +13,7 @@ import os
 
 import mylogger
 
-LOCATION = './data/variants'
+LOCATION = './variants'
 EXTENSION = '.json'
 
 
