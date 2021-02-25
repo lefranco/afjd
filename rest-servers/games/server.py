@@ -303,6 +303,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             flask_restful.abort(404, msg=f"Game {name} doesn't exist")
 
+        assert game is not None
         if game.current_state != 2:
             flask_restful.abort(400, msg=f"Game {name} is not terminated")
 
@@ -440,7 +441,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 class AllocationListRessource(flask_restful.Resource):  # type: ignore
     """ AllocationListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.List[typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
         """
         Get list of all allocations only game master (dictionary identifier -> name)
         EXPOSED
