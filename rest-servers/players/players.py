@@ -25,7 +25,6 @@ LEN_TIMEZONE_MAX = 10
 
 LOCATION = './data'
 EXTENSION = '.json'
-
 def check_country(country: str) -> bool:
     """ check country is ok """
 
@@ -35,8 +34,18 @@ def check_country(country: str) -> bool:
     with open(full_name_file, 'r') as file_ptr:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check countries is not a dict"
-    print(f"{json_data=}")
     return country in json_data.values()
+
+def check_timezone(timezone: str) -> bool:
+    """ check timezone is ok """
+
+    name = "timezone_list"
+    full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
+    assert full_name_file.exists(), "Missing file to check timezones"
+    with open(full_name_file, 'r') as file_ptr:
+        json_data = json.load(file_ptr)
+    assert isinstance(json_data, dict), "File to check timezones is not a dict"
+    return timezone in json_data.values()
 
 
 class Player:
