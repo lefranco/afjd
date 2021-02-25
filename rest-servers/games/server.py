@@ -525,21 +525,17 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         if game.current_state != 0:
             flask_restful.abort(405, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
 
+        role_id = -1
+
         if not delete:
-            role_id = -1
             allocation = allocations.Allocation(game_id, player_id, role_id)
             allocation.update_database()
-        else:
-            allocation = allocations.Allocation(game_id, player_id, -1)
-            allocation.delete_database()
-
-        if not delete:
             data = {'msg': 'Ok allocation updated or created'}
-        else:
-            data = {'msg': 'Ok allocation deleted if present'}
-
-        if not delete:
             return data, 201
+
+        allocation = allocations.Allocation(game_id, player_id, role_id)
+        allocation.delete_database()
+        data = {'msg': 'Ok allocation deleted if present'}
         return data, 200
 
 
