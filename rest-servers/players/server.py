@@ -152,6 +152,11 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if player is None:
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
+        if args['country']:
+            country_provided = args['country']
+            if not players.check_country(country_provided):
+                flask_restful.abort(404, msg=f"Country {country_provided} does not exist")
+
         assert player is not None
         email_before = player.email
         changed = player.load_json(args)
