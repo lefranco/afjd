@@ -497,8 +497,12 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to add allocation - must be concerned user or game master
 
-        # who is game master ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is game master ?
         assert game is not None
         game_master_id = game.get_role(0)
 
@@ -628,8 +632,12 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to change position - must be game master
 
-        # who is player for role ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
         assert game is not None
         game_master_id = game.get_role(0)
 
@@ -733,9 +741,13 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-reports/<game_id> - GET - getting report game id=%s", game_id)
 
+        # find the game
         report = reports.Report.find_by_identifier(game_id)
-        assert report is not None
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
+        # extract report
+        assert report is not None
         content = report.content
         data = {'content': content}
 
@@ -798,8 +810,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to submit orders - must be player
 
-        # who is player for role ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
         assert game is not None
         player_id = game.get_role(role_id)
 
@@ -973,8 +989,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to get orders - must be player or game master
 
-        # who is player for role ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
         assert game is not None
         expected_id = game.get_role(role_id)
 
@@ -1053,8 +1073,12 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to adjudicate - must be game master
 
-        # who is game master ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is game master ?
         assert game is not None
         game_master_id = game.get_role(0)
 
@@ -1372,8 +1396,12 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to post message - must be player of game master
 
-        # who is player for role ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
         assert game is not None
         expected_id = game.get_role(role_id)
 
@@ -1439,8 +1467,12 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to read message - must be player of game master
 
-        # who is player for role ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
         assert game is not None
         expected_id = game.get_role(role_id)
 
@@ -1524,8 +1556,12 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to post declatation - must be player of game master
 
-        # who is player for role ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
         assert game is not None
         expected_id = game.get_role(role_id)
 
@@ -1592,8 +1628,12 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to read declaration - must be player of game master
 
-        # who is player for role ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
         assert game is not None
         expected_id = game.get_role(role_id)
 
@@ -1668,8 +1708,12 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to post visit - must be player of game master
 
-        # who is player for role ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
         assert game is not None
         expected_id = game.get_role(role_id)
 
@@ -1734,8 +1778,12 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to read visit - must be player of game master
 
-        # who is player for role ?
+        # find the game
         game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
         assert game is not None
         expected_id = game.get_role(role_id)
 
