@@ -155,7 +155,12 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if args['country']:
             country_provided = args['country']
             if not players.check_country(country_provided):
-                flask_restful.abort(404, msg=f"Country {country_provided} does not exist")
+                flask_restful.abort(404, msg=f"Country '{country_provided}' is not a valid country code")
+
+        if args['timezone']:
+            timezone_provided = args['timezone']
+            if not players.check_timezone(timezone_provided):
+                flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
 
         assert player is not None
         email_before = player.email
@@ -273,6 +278,16 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         player = players.Player.find_by_pseudo(pseudo)
         if player is not None:
             flask_restful.abort(400, msg=f"Player {pseudo} already exists")
+
+        if args['country']:
+            country_provided = args['country']
+            if not players.check_country(country_provided):
+                flask_restful.abort(404, msg=f"Country '{country_provided}' is not a valid country code")
+
+        if args['timezone']:
+            timezone_provided = args['timezone']
+            if not players.check_timezone(timezone_provided):
+                flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
 
         # create player on users server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
