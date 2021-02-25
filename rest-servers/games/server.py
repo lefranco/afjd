@@ -262,7 +262,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         print(f"{entered_deadline=}")
 
         try:
-            deadline_date = datetime.datetime.strptime(entered_deadline, "%m-%d-%Y")
+            deadline_date = datetime.datetime.strptime(entered_deadline, "%Y-%m-%d")
         except ValueError:
             flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
 
