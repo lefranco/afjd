@@ -25,6 +25,11 @@ LEN_NAME_MAX = 20
 # a little welcome message to new games
 WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'ANJD"
 
+# for safety
+MIN_CYCLES_TO_PLAY = 10
+
+# for safety
+MIN_VICTORY_CENTERS = 10
 
 class Game:
     """ Class for handling a game """
@@ -161,6 +166,9 @@ class Game:
 
         if 'speed_moves' in json_dict and json_dict['speed_moves'] is not None and json_dict['speed_moves'] != self._speed_moves:
             self._speed_moves = json_dict['speed_moves']
+            # safety
+            if self._speed_moves < 0:
+                self._speed_moves = 0
             changed = True
 
         if 'cd_possible_moves' in json_dict and json_dict['cd_possible_moves'] is not None and json_dict['cd_possible_moves'] != self._cd_possible_moves:
@@ -169,6 +177,9 @@ class Game:
 
         if 'speed_retreats' in json_dict and json_dict['speed_retreats'] is not None and json_dict['speed_retreats'] != self._speed_retreats:
             self._speed_retreats = json_dict['speed_retreats']
+            # safety
+            if self._speed_retreats < 0:
+                self._speed_retreats = 0
             changed = True
 
         if 'cd_possible_retreats' in json_dict and json_dict['cd_possible_retreats'] is not None and json_dict['cd_possible_retreats'] != self._cd_possible_retreats:
@@ -177,6 +188,9 @@ class Game:
 
         if 'speed_adjustments' in json_dict and json_dict['speed_adjustments'] is not None and json_dict['speed_adjustments'] != self._speed_adjustments:
             self._speed_adjustments = json_dict['speed_adjustments']
+            # safety
+            if self._speed_adjustments < 0:
+                self._speed_adjustments = 0
             changed = True
 
         if 'cd_possible_builds' in json_dict and json_dict['cd_possible_builds'] is not None and json_dict['cd_possible_builds'] != self._cd_possible_builds:
@@ -197,32 +211,53 @@ class Game:
 
         if 'access_code' in json_dict and json_dict['access_code'] is not None and json_dict['access_code'] != self._access_code:
             self._access_code = json_dict['access_code']
+            # safety
+            if self._access_code < 0:
+                self._access_code = abs(self._access_code)
             changed = True
 
         if 'access_restriction_reliability' in json_dict and json_dict['access_restriction_reliability'] is not None and json_dict['access_restriction_reliability'] != self._access_restriction_reliability:
             self._access_restriction_reliability = json_dict['access_restriction_reliability']
+            # safety
+            if self._access_restriction_reliability < 0:
+                self._access_restriction_reliability = 0
             changed = True
 
         if 'access_restriction_regularity' in json_dict and json_dict['access_restriction_regularity'] is not None and json_dict['access_restriction_regularity'] != self._access_restriction_regularity:
             self._access_restriction_regularity = json_dict['access_restriction_regularity']
+            # safety
+            if self._access_restriction_regularity < 0:
+                self._access_restriction_regularity = 0
             changed = True
 
         if 'access_restriction_performance' in json_dict and json_dict['access_restriction_performance'] is not None and json_dict['access_restriction_performance'] != self._access_restriction_performance:
             self._access_restriction_performance = json_dict['access_restriction_performance']
+            # safety
+            if self._access_restriction_performance < 0:
+                self._access_restriction_performance = 0
             changed = True
 
         # current_advancement cannot be set directly
 
         if 'nb_max_cycles_to_play' in json_dict and json_dict['nb_max_cycles_to_play'] is not None and json_dict['nb_max_cycles_to_play'] != self._nb_max_cycles_to_play:
             self._nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play']
+            # safety
+            if self._nb_max_cycles_to_play < MIN_CYCLES_TO_PLAY:
+                self._nb_max_cycles_to_play = MIN_CYCLES_TO_PLAY
             changed = True
 
         if 'victory_centers' in json_dict and json_dict['victory_centers'] is not None and json_dict['victory_centers'] != self._victory_centers:
             self._victory_centers = json_dict['victory_centers']
+            # safety
+            if self._victory_centers < MIN_VICTORY_CENTERS:
+                self._victory_centers = MIN_VICTORY_CENTERS
             changed = True
 
         if 'current_state' in json_dict and json_dict['current_state'] is not None and json_dict['current_state'] != self._current_state:
             self._current_state = json_dict['current_state']
+            # safety
+            if self._current_state not in [0, 1, 2]:
+                self._current_state = 0
             changed = True
 
         return changed
