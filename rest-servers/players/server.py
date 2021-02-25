@@ -279,7 +279,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         if player is not None:
             flask_restful.abort(400, msg=f"Player {pseudo} already exists")
 
-        if not isidentifier(pseudo):
+        if not pseudo.isidentifier():
             flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is not a valid pseudo")
 
         if args['country']:
