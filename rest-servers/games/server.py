@@ -751,10 +751,15 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-reports/<game_id> - GET - getting report game id=%s", game_id)
 
+        # check the game exists
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
         # find the game
         report = reports.Report.find_by_identifier(game_id)
         if game is None:
-            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+            flask_restful.abort(404, msg=f"Report happens to be missing for {game_id}")
 
         # extract report
         assert report is not None
