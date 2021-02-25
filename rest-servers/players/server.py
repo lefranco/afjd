@@ -157,8 +157,8 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             if not players.check_country(country_provided):
                 flask_restful.abort(404, msg=f"Country '{country_provided}' is not a valid country code")
 
-        if args['timezone']:
-            timezone_provided = args['timezone']
+        if args['time_zone']:
+            timezone_provided = args['time_zone']
             if not players.check_timezone(timezone_provided):
                 flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
 
@@ -284,8 +284,8 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
             if not players.check_country(country_provided):
                 flask_restful.abort(404, msg=f"Country '{country_provided}' is not a valid country code")
 
-        if args['timezone']:
-            timezone_provided = args['timezone']
+        if args['time_zone']:
+            timezone_provided = args['time_zone']
             if not players.check_timezone(timezone_provided):
                 flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
 
