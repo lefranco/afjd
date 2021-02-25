@@ -150,7 +150,7 @@ class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/variants/<name> - GET - retrieving variant json file %s", name)
 
-        if not name.isalnum():
+        if not name.isidentifier():
             flask_restful.abort(400, msg=f"Variant {name} is incorrect as a name")
 
         # find data
@@ -384,6 +384,9 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         game = games.Game.find_by_name(name)
         if game is not None:
             flask_restful.abort(400, msg=f"Game {name} already exists")
+
+        if not name.isidentifier():
+            flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to create game")
