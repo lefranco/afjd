@@ -31,6 +31,7 @@ MIN_CYCLES_TO_PLAY = 10
 # for safety
 MIN_VICTORY_CENTERS = 10
 
+
 class Game:
     """ Class for handling a game """
 

@@ -36,8 +36,7 @@ class Allocation:
         allocations_found = database.sql_execute("SELECT * FROM allocations", need_result=True)
         if not allocations_found:
             return []
-        allocations_list = [a for a in allocations_found]
-        return allocations_list
+        return allocations_found
 
     @staticmethod
     def create_table() -> None:
