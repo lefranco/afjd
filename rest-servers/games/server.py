@@ -303,6 +303,9 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             flask_restful.abort(404, msg=f"Game {name} doesn't exist")
 
+        if game.current_state != 2:
+            flask_restful.abort(400, msg=f"Game {name} is not terminated")
+
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
