@@ -142,7 +142,7 @@ def show_games_data():
     }
 
     # TODO : make it possible to sort etc...
-    fields = ['name', 'variant', 'deadline', 'advancement', 'state']
+    fields = ['name', 'variant', 'deadline', 'current_advancement', 'current_state']
 
     # header
     thead = html.THEAD()
