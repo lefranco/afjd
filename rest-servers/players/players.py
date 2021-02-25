@@ -21,6 +21,21 @@ LEN_FIRST_NAME_MAX = 20
 LEN_COUNTRY_MAX = 5
 LEN_TIMEZONE_MAX = 10
 
+LOCATION = './data'
+EXTENSION = '.json'
+
+def check_country(country: str) -> bool:
+    """ check country is ok """
+
+    name = "country_list"
+    full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
+    assert full_name_file.exists(), "Missing file to check countries"
+    with open(full_name_file, 'r') as file_ptr:
+        json_data = json.load(file_ptr)
+    assert isinstance(json_data, dict), "File to check countries is not a dict"
+    print(f"{json_data=}")
+    return country in json_data.keys()
+
 
 class Player:
     """ Class for handling a player """
