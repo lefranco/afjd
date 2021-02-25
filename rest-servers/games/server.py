@@ -256,6 +256,19 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if game.get_role(0) != user_id:
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
+        # pay more attention to deadline
+        entered_deadline = args['deadline']
+
+        print(f"{entered_deadline=}")
+
+        try:
+            deadline_date = datetime.strptime(entered_deadline, "%m-%d-%Y")
+        except ValueError:
+            flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
+
+        if deadline_date > datetime.now():
+            flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
+
         # keep a note of game state before
         current_state_before = game.current_state
 
@@ -265,8 +278,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             data = {'name': name, 'msg': 'Ok but no change !'}
             return data, 200
 
-        # pay more attention to deadline
-        print(f"{game.deadline=}")
 
         # special : game changed state
         if game.current_state != current_state_before:
