@@ -278,7 +278,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             data = {'name': name, 'msg': 'Ok but no change !'}
             return data, 200
 
-
         # special : game changed state
         if game.current_state != current_state_before:
 
