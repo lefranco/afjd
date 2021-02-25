@@ -8,6 +8,7 @@ Handles the players
 """
 import typing
 import sqlite3
+import pathlib
 
 import database
 
