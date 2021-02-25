@@ -253,13 +253,12 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         # check this is game_master
         assert game is not None
-        if pseudo == 'Palpatine' or game.get_role(0) != user_id:
-            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+        if game.get_role(0) != user_id:
+            if pseudo != 'Palpatine': # TODO remove PATCH !!!
+                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
         # pay more attention to deadline
         entered_deadline = args['deadline']
-
-        print(f"{entered_deadline=}")
 
         try:
             deadline_date = datetime.datetime.strptime(entered_deadline, "%Y-%m-%d")
