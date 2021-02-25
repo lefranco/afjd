@@ -245,7 +245,7 @@ def show_game_masters_data():
         thead <= col
     game_masters_table <= thead
 
-    for data in game_masters_list:
+    for data in sorted(game_masters_list, key=lambda d: games_dict[str(d['game'])]['name']):
         row = html.TR()
         row.style = {
             "border": "solid",
