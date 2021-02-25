@@ -733,7 +733,7 @@ def change_deadline_game():
     form <= information_about_game()
     form <= html.BR()
 
-    legend_deadline = html.LEGEND("The deadline (MM/DD/YYY)", title="Deadline. Last day allowed for submitting orders. After player is late.")
+    legend_deadline = html.LEGEND("The deadline (MM/DD/YYYY)", title="Deadline. Last day allowed for submitting orders. After player is late.")
     form <= legend_deadline
 
     input_deadline = html.INPUT(type="date", value=deadline_loaded)
