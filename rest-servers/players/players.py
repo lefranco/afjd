@@ -34,7 +34,7 @@ def check_country(country: str) -> bool:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check countries is not a dict"
     print(f"{json_data=}")
-    return country in json_data.keys()
+    return country in json_data.values()
 
 
 class Player:
