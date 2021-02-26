@@ -173,7 +173,7 @@ class Game:
             self._deadline = json_dict['deadline']
 
             # safety
-            # TODO
+            # already done at server level
 
             changed = True
 

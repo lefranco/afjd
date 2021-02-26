@@ -260,7 +260,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # pay more attention to deadline
         entered_deadline = args['deadline']
 
-        if entered_deadline:
+        if entered_deadline is not None:
 
             try:
                 deadline_date = datetime.datetime.strptime(entered_deadline, "%Y-%m-%d")
@@ -440,7 +440,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         # pay more attention to deadline
         entered_deadline = args['deadline']
 
-        if entered_deadline:
+        if entered_deadline is not None:
 
             # check it
             try:
