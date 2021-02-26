@@ -267,7 +267,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             except ValueError:
                 flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
 
-            if deadline_date < datetime.datetime.now():
+            if deadline_date < datetime.datetime.today():
                 flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
 
         # keep a note of game state before
@@ -448,13 +448,13 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             except ValueError:
                 flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
 
-            if deadline_date < datetime.datetime.now():
+            if deadline_date < datetime.datetime.today():
                 flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
 
         else:
 
             # create it
-            today = datetime.today()
+            today = datetime.datetime.today()
             forced_deadline = today.strftime('%Y-%m-%d')
             args['deadline'] = forced_deadline
 
