@@ -260,13 +260,15 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # pay more attention to deadline
         entered_deadline = args['deadline']
 
-        try:
-            deadline_date = datetime.datetime.strptime(entered_deadline, "%Y-%m-%d")
-        except ValueError:
-            flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
+        if entered_deadline:
 
-        if deadline_date < datetime.datetime.now():
-            flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
+            try:
+                deadline_date = datetime.datetime.strptime(entered_deadline, "%Y-%m-%d")
+            except ValueError:
+                flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
+
+            if deadline_date < datetime.datetime.now():
+                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
 
         # keep a note of game state before
         current_state_before = game.current_state
@@ -434,6 +436,27 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
+
+        # pay more attention to deadline
+        entered_deadline = args['deadline']
+
+        if entered_deadline:
+
+            # check it
+            try:
+                deadline_date = datetime.datetime.strptime(entered_deadline, "%Y-%m-%d")
+            except ValueError:
+                flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
+
+            if deadline_date < datetime.datetime.now():
+                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
+
+        else:
+
+            # create it
+            today = datetime.today()
+            forced_deadline = today.strftime('%Y-%m-%d')
+            args['deadline'] = forced_deadline
 
         # create game here
         identifier = games.Game.free_identifier()
