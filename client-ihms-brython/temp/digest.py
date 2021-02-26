@@ -275,7 +275,10 @@ class Variant:
             number = num + 1
             zone = Zone(region, None)
             self._zones[number] = zone
+
+        # need an offset
         offset = max(self._zones.keys())
+
         # the the special coast zones
         for num, (region_num, coast_type_num) in enumerate(self._raw_variant_content['coastal_zones']):
             number = num + 1
@@ -288,9 +291,9 @@ class Variant:
         for num, role_start_units in enumerate(self._raw_variant_content['start_units']):
             number = num + 1
             role = self._roles[number]
-            for code_str, role_start_units2 in role_start_units.items():
-                code = int(code_str)
-                unit_type = UnitTypeEnum.from_code(code)
+            for unit_type_code_str, role_start_units2 in role_start_units.items():
+                unit_type_code = int(unit_type_code_str)
+                unit_type = UnitTypeEnum.from_code(unit_type_code)
                 assert unit_type is not None
                 for zone_num in role_start_units2:
                     zone = self._zones[zone_num]
@@ -305,10 +308,10 @@ class Variant:
             number = num + 1
             unit_type = UnitTypeEnum.from_code(number)
             assert unit_type is not None
-            for from_zone_num_str, neighbours in neighbourings.items():
+            for from_zone_num_str, zone_neighbours_list in neighbourings.items():
                 from_zone_num = int(from_zone_num_str)
                 from_zone = self._zones[from_zone_num]
-                for to_zone_num in neighbours:
+                for to_zone_num in zone_neighbours_list:
                     to_zone = self._zones[to_zone_num]
                     from_zone.neighbours[unit_type].append(to_zone)
 
