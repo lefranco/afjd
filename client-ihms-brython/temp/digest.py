@@ -3,7 +3,6 @@
 import json
 import enum
 import typing
-import collections
 
 
 @enum.unique
@@ -13,8 +12,6 @@ class RegionTypeEnum(enum.Enum):
     LAND_REGION = enum.auto()
     COAST_REGION = enum.auto()
     SEA_REGION = enum.auto()
-
-    name_table: typing.Dict['RegionTypeEnum', str] = dict()
 
     @staticmethod
     def from_code(code: int) -> typing.Optional['RegionTypeEnum']:
@@ -113,12 +110,12 @@ class Center:
     """ A Center """
 
     def __init__(self, region: 'Region') -> None:
-        self._region = region
-        self._owner_start: typing.Optional['Role'] = None
 
-    def is_start_center(self) -> bool:
-        """ is_start_center """
-        return self.owner_start is not None
+        # the region in which is the center
+        self._region = region
+
+        # the owner at start of the game
+        self._owner_start: typing.Optional['Role'] = None
 
     @property
     def owner_start(self) -> typing.Optional['Role']:
@@ -142,7 +139,11 @@ class Region:
     """ A region """
 
     def __init__(self, region_type: RegionTypeEnum) -> None:
-        self._type = region_type
+
+        # the type of the regio: land, coast or sea
+        self._region_type = region_type
+
+        # if the region has a center
         self._center: typing.Optional[Center] = None
 
     @property
@@ -160,8 +161,14 @@ class Zone:
     """ A zone """
 
     def __init__(self, region: Region, coast_type: typing.Optional[CoastType]) -> None:
+
+        # most of the time zone = region
         self._region = region
+
+        # for the special zones that have a specific coast
         self._coast_type = coast_type
+
+        # other zones one may access by fleet and army
         self._neighbours: typing.Dict[UnitTypeEnum, typing.List['Zone']] = {u: list() for u in UnitTypeEnum}
 
     @property
@@ -178,11 +185,10 @@ class Zone:
 class Role:
     """ a Role """
 
-    def __init__(self, number: int) -> None:
-        self._number = number
+    def __init__(self) -> None:
+
+        # start centers the role have
         self._start_centers: typing.List[Center] = list()
-        self._start_units: typing.List[Unit] = list()
-        self._distances: typing.Dict[Zone, int] = collections.defaultdict(int)
 
     @property
     def start_centers(self) -> typing.List[Center]:
@@ -193,25 +199,6 @@ class Role:
     def start_centers(self, start_centers: typing.List[Center]) -> None:
         """ setter """
         self._start_centers = start_centers
-
-    @property
-    def start_units(self) -> typing.List['Unit']:
-        """ property """
-        return self._start_units
-
-    @start_units.setter
-    def start_units(self, start_units: typing.List['Unit']) -> None:
-        """ setter """
-        self._start_units = start_units
-
-
-class Unit:
-    """ A unit """
-
-    def __init__(self, unit_type: UnitTypeEnum, owner: Role, zone: Zone) -> None:
-        self._unit_type = unit_type
-        self._owner = owner
-        self._zone = zone
 
 
 class Variant:
@@ -245,7 +232,7 @@ class Variant:
         self._roles: typing.Dict[int, Role] = dict()
         for num in range(self._raw_variant_content['roles']['number']):
             number = num + 1
-            role = Role(number)
+            role = Role()
             self._roles[number] = role
 
         assert len(self._raw_variant_content['start_centers']) == len(self._roles)
@@ -297,8 +284,6 @@ class Variant:
                 assert unit_type is not None
                 for zone_num in role_start_units2:
                     zone = self._zones[zone_num]
-                    start_unit = Unit(unit_type, role, zone)
-                    role.start_units.append(start_unit)
 
         # load the year zero
         self._year_zero = self._raw_variant_content['year_zero']
@@ -328,22 +313,25 @@ class Variant:
         self._legend_coordinates_table: typing.Dict[typing.Any, typing.Tuple[int, int]] = dict()
 
         # load the regions type names
-        for code_str, data_dict in self._raw_parameters_content['regions'].items():
-            code = int(code_str)
-            name = data_dict['name']
-            region_type = RegionTypeEnum.from_code(code)
+        assert len(self._raw_parameters_content['regions']) == len(RegionTypeEnum)
+        for region_type_code_str, data_dict in self._raw_parameters_content['regions'].items():
+            region_type_code = int(region_type_code_str)
+            region_type = RegionTypeEnum.from_code(region_type_code)
             assert region_type is not None
+            name = data_dict['name']
             self._name_table[region_type] = name
 
         # load the units type names
-        for code_str, data_dict in self._raw_parameters_content['units'].items():
-            code = int(code_str)
-            name = data_dict['name']
-            unit_type = UnitTypeEnum.from_code(code)
+        assert len(self._raw_parameters_content['units']) == len(UnitTypeEnum)
+        for unit_type_code_str, data_dict in self._raw_parameters_content['units'].items():
+            unit_type_code = int(unit_type_code_str)
+            unit_type = UnitTypeEnum.from_code(unit_type_code)
             assert unit_type is not None
+            name = data_dict['name']
             self._name_table[unit_type] = name
 
         # load the roles names and colours
+        assert len(self._raw_parameters_content['roles']) == len(self._roles) + 1
         for role_num_str, data_dict in self._raw_parameters_content['roles'].items():
             role_num = int(role_num_str)
             if role_num == 0:  # gm
@@ -358,6 +346,7 @@ class Variant:
             self._colour_table[role] = colour
 
         # load the zones names and localisations
+        assert len(self._raw_parameters_content['zones']) == len(self._zones)
         for zone_num_str, data_dict in self._raw_parameters_content['zones'].items():
             zone_num = int(zone_num_str)
             zone = self._zones[zone_num]
@@ -371,6 +360,7 @@ class Variant:
             self._coordinates_table[zone] = (x_pos, y_pos)
 
         # load the centers localisations
+        assert len(self._raw_parameters_content['centers']) == len(self._centers)
         for center_num_str, data_dict in self._raw_parameters_content['centers'].items():
             center_num = int(center_num_str)
             center = self._centers[center_num]
@@ -379,19 +369,22 @@ class Variant:
             self._coordinates_table[center] = (x_pos, y_pos)
 
         # load coasts types names
+        assert len(self._raw_parameters_content['coasts']) == len(self._coast_types)
         for coast_type_num_str, data_dict in self._raw_parameters_content['coasts'].items():
             coast_type_num = int(coast_type_num_str)
             coast_type = self._coast_types[coast_type_num]
             self._name_table[coast_type] = name
 
         # load seasons names
+        assert len(self._raw_parameters_content['seasons']) == len(SeasonEnum)
         for season_num_str, data_dict in self._raw_parameters_content['seasons'].items():
             season_num = int(season_num_str)
             season = SeasonEnum.from_code(season_num)
             assert season is not None
             self._name_table[season] = name
 
-        # load seasons names
+        # load orders types names
+        assert len(self._raw_parameters_content['orders']) == len(OrderTypeEnum)
         for order_type_num_str, data_dict in self._raw_parameters_content['orders'].items():
             order_type_num = int(order_type_num_str)
             order_type = OrderTypeEnum.from_code(order_type_num)
