@@ -15,6 +15,8 @@ OPTIONS = ['create', 'change password', 'validate email', 'edit', 'delete']
 
 MAX_LEN_PSEUDO = 20
 
+DEFAULT_COUNTRY_CODE = "FRA"
+DEFAULT_TIMEZONE_CODE = "UTC+01:00"
 
 # load country list from json data file
 with open("./data/country_list.json", "r") as read_file:
@@ -135,9 +137,9 @@ def create_account():
     form <= input_password_again
     form <= html.BR()
 
-    legend_email = html.LEGEND("email (*)", title="The site will use it notify you of events")
+    legend_email = html.LEGEND("email (*)", title="The site will use it to notify you of events")
     form <= legend_email
-    input_email = html.INPUT(type="email", value="")
+    input_email = html.INPUT(type="email", value="", size="40")
     form <= input_email
     form <= html.BR()
 
@@ -171,6 +173,8 @@ def create_account():
 
     for country_name in COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
+        if COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
+            option.selected = True
         input_country <= option
 
     form <= input_country
@@ -182,6 +186,8 @@ def create_account():
 
     for timezone_cities in TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
+        if TIMEZONE_CODE_TABLE[timezone_cities] == DEFAULT_TIMEZONE_CODE:
+            option.selected = True
         input_timezone <= option
 
     form <= input_timezone
@@ -477,9 +483,9 @@ def edit_account():
     form <= input_pseudo
     form <= html.BR()
 
-    legend_email = html.LEGEND("email (*)", title="The site will use it notify you of events")
+    legend_email = html.LEGEND("email (*)", title="The site will use it to notify you of events")
     form <= legend_email
-    input_email = html.INPUT(type="email", value=email_loaded)
+    input_email = html.INPUT(type="email", value=email_loaded, size="40")
     form <= input_email
     form <= html.BR()
 
