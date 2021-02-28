@@ -33,7 +33,8 @@ def login_callback(_):
             return
         storage['PSEUDO'] = pseudo
         storage['JWT_TOKEN'] = req_result['AccessToken']
-        storage['LOGIN_TIME'] = str(time.time())
+        time_stamp = time.time()
+        storage['LOGIN_TIME'] = str(time_stamp)
         InfoDialog("OK", f"Successful login as {pseudo}", remove_after=config.REMOVE_AFTER)
         show_login()
 
@@ -141,7 +142,9 @@ def show_login():
         log_message <= "Visiting..."
 
     if 'LOGIN_TIME' in storage:
-        date_desc = datetime.datetime.fromtimestamp(float(storage['LOGIN_TIME']))
+        # this is local time
+        time_stamp = float(storage['LOGIN_TIME'])
+        date_desc = datetime.datetime.fromtimestamp(time_stamp)
         log_message <= f", since {date_desc}"
 
     show_login_panel = html.DIV(id="show_login")
