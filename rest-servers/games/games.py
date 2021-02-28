@@ -9,7 +9,6 @@ Handles the games
 import typing
 import sqlite3
 import random
-import time
 
 import database
 import allocations
@@ -17,13 +16,9 @@ import ownerships
 import units
 import forbiddens
 import variants
-import reports
 
 # need to have a limit in sizes of fields
 LEN_NAME_MAX = 20
-
-# a little welcome message to new games
-WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'ANJD"
 
 # for safety
 MIN_CYCLES_TO_PLAY = 10
@@ -374,20 +369,10 @@ class Game:
                     unit.update_database()
             role_num += 1
 
-        # add a little report
-        time_stamp = int(time.time())
-        report = reports.Report(game_id, time_stamp, WELCOME_TO_GAME)
-        report.update_database()
-
     def delete_position(self) -> None:
         """ delete position for game in database """
 
         game_id = self.identifier
-
-        # delete report
-        report = reports.Report.find_by_identifier(game_id)
-        assert report is not None
-        report.delete_database()
 
         # delete ownerships
         game_ownerships = ownerships.Ownership.list_by_game_id(game_id)
