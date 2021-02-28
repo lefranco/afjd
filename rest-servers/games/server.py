@@ -35,8 +35,11 @@ import messages
 import declarations
 import variants
 import database
-import lowdata
 import visits
+import lowdata
+
+# a little welcome message to new games
+WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'ANJD"
 
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
@@ -254,7 +257,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # check this is game_master
         assert game is not None
         if game.get_role(0) != user_id:
-            if pseudo != 'Palpatine': # TODO remove PATCH !!!
+            if pseudo != 'Palpatine':  # TODO remove PATCH !!!
                 flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
         # pay more attention to deadline
@@ -267,7 +270,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             except ValueError:
                 flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
 
-            if deadline_date < datetime.datetime.today() - datetime.timedelta(days=1):
+            if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
                 flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
 
         # keep a note of game state before
@@ -361,6 +364,12 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # and position
         game.delete_position()
 
+        # and report
+        game_id = game.identifier
+        report = reports.Report.find_by_identifier(game_id)
+        assert report is not None
+        report.delete_database()
+
         # finally delete game
         assert game is not None
         game.delete_database()
@@ -448,14 +457,14 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             except ValueError:
                 flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
 
-            if deadline_date < datetime.datetime.today() - datetime.timedelta(days=1):
+            if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
                 flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
 
         else:
 
             # create it
-            today = datetime.datetime.today()
-            forced_deadline = today.strftime('%Y-%m-%d')
+            deadline_date = datetime.datetime.now(tz=datetime.timezone.utc)
+            forced_deadline = deadline_date.strftime('%Y-%m-%d')
             args['deadline'] = forced_deadline
 
         # create game here
@@ -466,6 +475,12 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         # make position for game
         game.create_position()
+
+        # add a little report
+        game_id = game.identifier
+        time_stamp = int(time.time())
+        report = reports.Report(game_id, time_stamp, WELCOME_TO_GAME)
+        report.update_database()
 
         # allocate game master to game
         game.put_role(user_id, 0)
@@ -559,7 +574,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         game_master_id = game.get_role(0)
 
         if user_id not in [game_master_id, player_id]:
-            if pseudo != 'Palpatine': # TODO remove PATCH !!!
+            if pseudo != 'Palpatine':  # TODO remove PATCH !!!
                 flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the concerned player")
 
         # game master of game can neither be added (changed) not removed
@@ -1849,7 +1864,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # retrieve visit here
-        time_stamp = int(time.time())  # serves as default timestamp
+        time_stamp = int(time.time())  # serves as default
         visits_list = visits.Visit.list_by_game_id_role_num(game_id, role_id)
         if visits_list:
             visit = visits_list[0]
