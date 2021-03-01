@@ -694,11 +694,7 @@ def change_deadline_game():
             datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
             deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
 
-            print(f"{deadline_loaded_day=}")
-
             deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
-
-            print(f"{deadline_loaded_hour=}")
 
         json_dict = dict()
 
@@ -726,21 +722,11 @@ def change_deadline_game():
 
         # convert this human entered deadline to the deadline the server understands
         deadline_day_part = input_deadline_day.value
-        print(f"{deadline_day_part=}")
         deadline_hour_part = input_deadline_hour.value
-        print(f"{deadline_hour_part=}")
-
         deadline_datetime_str = f"{deadline_day_part} {deadline_hour_part}"
-        print(f"{deadline_datetime_str=}")
-
         deadline_datetime = datetime.datetime.strptime(deadline_datetime_str, "%Y-%m-%d %H:%M")
-
-        print(f"{deadline_datetime=}")
-
         timestamp = deadline_datetime.replace(tzinfo=datetime.timezone.utc).timestamp()
         deadline = int(timestamp)
-
-        print(f"{deadline=}")
 
         json_dict = {
             'pseudo': pseudo,
