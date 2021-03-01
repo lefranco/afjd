@@ -12,7 +12,7 @@ import config
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['join game', 'quit game', 'move players in game']
+OPTIONS = ['join game', 'quit game', 'move players in game', 'show players in game']
 
 
 def noreply_callback(_):
@@ -458,6 +458,112 @@ my_sub_panel = html.DIV(id="sub")
 my_panel <= my_sub_panel
 
 
+def get_game_players_data(game_id):
+    """ get_game_players_data """
+
+    game_players_dict = None
+
+    def reply_callback(req):
+        nonlocal game_players_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting game/game players list: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting game/game players list: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        req_result = json.loads(req.text)
+        game_players_dict = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-allocations/{game_id}"
+
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return game_players_dict
+
+
+def show_players_in_game():
+    """ show_game_players_data """
+
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
+
+    game_id = get_game_id(game)
+    if game_id is None:
+        return
+
+    # get the players of the game
+    game_players_dict = get_game_players_data(game_id)
+
+    if not game_players_dict:
+        return
+
+    # get the players (all players)
+    players_dict = get_players()
+
+    if not players_dict:
+        return
+
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
+    game_players_table = html.TABLE()
+    game_players_table.style = {
+        "padding": "5px",
+        "backgroundColor": "#aaaaaa",
+        "border": "solid",
+    }
+
+    # TODO : make it possible to sort etc...
+    fields = ['player', 'role']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        col = html.TD(field)
+        col.style = {
+            "border": "solid",
+            "font-weight": "bold",
+        }
+        thead <= col
+    game_players_table <= thead
+
+    for player_id_str, role_id in game_players_dict.items():
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+
+        # player
+        player_id = int(player_id_str)
+        pseudo = id2pseudo[player_id]
+        col = html.TD(pseudo)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        # role
+        col = html.TD(role_id)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        game_players_table <= row
+
+    my_sub_panel <= game_players_table
+
+
 def load_option(_, item_name):
     """ load_option """
 
@@ -468,6 +574,8 @@ def load_option(_, item_name):
         quit_game()
     if item_name == 'move players in game':
         move_players_in_game()
+    if item_name == 'show players in game':
+        show_players_in_game()
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
