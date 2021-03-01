@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
+import datetime
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 
@@ -142,7 +143,7 @@ def show_games_data():
     }
 
     # TODO : make it possible to sort etc...
-    fields = ['name', 'variant', 'deadline', 'current_advancement', 'current_state']
+    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement']
 
     # header
     thead = html.THEAD()
@@ -162,6 +163,20 @@ def show_games_data():
         }
         for field in fields:
             value = data[field]
+            if field == 'deadline':
+                deadline_loaded = value
+                datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
+                deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+                deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
+                deadline_loaded = f"{deadline_loaded_day} {deadline_loaded_hour}"
+                value = deadline_loaded
+            if field == 'current_state':
+                state_loaded = value
+                for possible_state in config.STATE_CODE_TABLE:
+                    if config.STATE_CODE_TABLE[possible_state] == state_loaded:
+                        state_loaded = possible_state
+                        break
+                value = state_loaded
             col = html.TD(value)
             col.style = {
                 "border": "solid",
