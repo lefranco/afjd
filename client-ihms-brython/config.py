@@ -9,6 +9,9 @@ TIMEOUT_SERVER = 2
 # timeout for message when OK
 REMOVE_AFTER = 5
 
+# to display state of a game
+STATE_CODE_TABLE = {'waiting': 0, 'ongoing': 1, 'finished': 2}
+
 # load servers list from json data file
 with open("./config/servers.json", "r") as read_file:
     SERVER_CONFIG = json.load(read_file)
