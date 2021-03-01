@@ -75,7 +75,7 @@ class Game:
         database.sql_execute("CREATE TABLE games (identifier INT UNIQUE PRIMARY KEY, name STR, game_data game)")
         database.sql_execute("CREATE UNIQUE INDEX name_game ON  games (name)")
 
-    def __init__(self, identifier: int, name: str, description: str, variant: str, archive: bool, anonymous: bool, silent: bool, cumulate: bool, fast: bool, deadline: str, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, cd_possible_removals: bool, play_weekend: bool, manual: bool, access_code: int, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, victory_centers: int, current_state: int) -> None:
+    def __init__(self, identifier: int, name: str, description: str, variant: str, archive: bool, anonymous: bool, silent: bool, cumulate: bool, fast: bool, deadline: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, cd_possible_removals: bool, play_weekend: bool, manual: bool, access_code: int, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, victory_centers: int, current_state: int) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -455,7 +455,7 @@ class Game:
         return self._variant
 
     @property
-    def deadline(self) -> str:
+    def deadline(self) -> int:
         """ property """
         return self._deadline
 
@@ -484,7 +484,7 @@ def convert_game(buffer: bytes) -> Game:
     silent = bool(int(tab[6].decode()))
     cumulate = bool(int(tab[7].decode()))
     fast = bool(int(tab[8].decode()))
-    deadline = tab[9].decode()
+    deadline = int(tab[9].decode())
     speed_moves = int(tab[10].decode())
     cd_possible_moves = bool(int(tab[11].decode()))
     speed_retreats = int(tab[12].decode())

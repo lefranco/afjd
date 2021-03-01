@@ -58,7 +58,7 @@ GAME_PARSER.add_argument('anonymous', type=int, required=False)
 GAME_PARSER.add_argument('silent', type=int, required=False)
 GAME_PARSER.add_argument('cumulate', type=int, required=False)
 GAME_PARSER.add_argument('fast', type=int, required=False)
-GAME_PARSER.add_argument('deadline', type=str, required=False)
+GAME_PARSER.add_argument('deadline', type=int, required=False)
 GAME_PARSER.add_argument('speed_moves', type=int, required=False)
 GAME_PARSER.add_argument('cd_possible_moves', type=int, required=False)
 GAME_PARSER.add_argument('speed_retreats', type=int, required=False)
@@ -265,13 +265,12 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         if entered_deadline is not None:
 
-            try:
-                deadline_date = datetime.datetime.strptime(entered_deadline, "%Y-%m-%d")
-            except ValueError:
-                flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
+            # check it
+            deadline_date = datetime.datetime.utcfromtimestamp(entered_deadline)
 
+            # cannot be in past
             if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
-                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
+                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{deadline_date}' (GMT)")
 
         # keep a note of game state before
         current_state_before = game.current_state
@@ -452,24 +451,22 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         if entered_deadline is not None:
 
             # check it
-            try:
-                deadline_date = datetime.datetime.strptime(entered_deadline, "%Y-%m-%d")
-            except ValueError:
-                flask_restful.abort(400, msg=f"This seems to be incorrect as a deadline '{entered_deadline}'")
+            deadline_date = datetime.datetime.utcfromtimestamp(entered_deadline)
 
+            # cannot be in past
             if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
-                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}'")
+                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}' (GMT)")
 
         else:
 
             # create it
-            deadline_date = datetime.datetime.now(tz=datetime.timezone.utc)
-            forced_deadline = deadline_date.strftime('%Y-%m-%d')
+            time_stamp = time.time()
+            forced_deadline = int(time_stamp)
             args['deadline'] = forced_deadline
 
         # create game here
         identifier = games.Game.free_identifier()
-        game = games.Game(identifier, '', '', '', False, False, False, False, False, '', 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0, 0)
+        game = games.Game(identifier, '', '', '', False, False, False, False, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0, 0)
         _ = game.load_json(args)
         game.update_database()
 
