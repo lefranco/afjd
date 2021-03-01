@@ -25,6 +25,8 @@ LEN_TIMEZONE_MAX = 10
 
 LOCATION = './data'
 EXTENSION = '.json'
+
+
 def check_country(country: str) -> bool:
     """ check country is ok """
 
@@ -35,6 +37,7 @@ def check_country(country: str) -> bool:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check countries is not a dict"
     return country in json_data.values()
+
 
 def check_timezone(timezone: str) -> bool:
     """ check timezone is ok """
