@@ -743,7 +743,9 @@ def change_deadline_game():
         print(f"{deadline_datetime=}")
 
         timestamp = deadline_datetime.replace(tzinfo=datetime.timezone.utc).timestamp()
-        deadline = timestamp
+        deadline = int(timestamp)
+
+        print(f"{deadline=}")
 
         # TODO TEST REMOVE ASAP
         deadline = "2021-03-15"
