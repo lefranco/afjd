@@ -30,8 +30,6 @@ DEFAULT_NB_CYCLES = 99
 # game created at now + this
 DEADLINE_DELAY_SEC = 10 * 60
 
-STATE_CODE_TABLE = {'waiting': 0, 'ongoing': 1, 'finished': 2}
-
 
 def noreply_callback(_):
     """ noreply_callback """
@@ -150,7 +148,7 @@ def create_game():
 
         # these are automatic
         time_stamp = time.time()
-        time_creation = datetime.datetime.utcfromtimestamp(time_stamp)
+        time_creation = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
         time_creation_str = datetime.datetime.strftime(time_creation, "%d/%m/%Y %H:%M:%S")
         description = f"game created at {time_creation_str} (gmt time) by {pseudo} variant {variant}"
         deadline = int(time_stamp) + DEADLINE_DELAY_SEC
@@ -691,13 +689,9 @@ def change_deadline_game():
                 status = False
                 return
 
+            # convert deadline from server to humand editable deadline
             deadline_loaded = req_result['deadline']
-
-            # TODO TEST REMOVE ASAP
-            deadline_loaded = 1614593707
-
-            datetime_deadline_loaded = datetime.datetime.utcfromtimestamp(deadline_loaded)
-
+            datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
             deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
 
             print(f"{deadline_loaded_day=}")
@@ -730,6 +724,7 @@ def change_deadline_game():
                 return
             InfoDialog("OK", f"Deadline changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
+        # convert this human entered deadline to the deadline the server understands
         deadline_day_part = input_deadline_day.value
         print(f"{deadline_day_part=}")
         deadline_hour_part = input_deadline_hour.value
@@ -746,9 +741,6 @@ def change_deadline_game():
         deadline = int(timestamp)
 
         print(f"{deadline=}")
-
-        # TODO TEST REMOVE ASAP
-        deadline = "2021-03-15"
 
         json_dict = {
             'pseudo': pseudo,
@@ -776,7 +768,7 @@ def change_deadline_game():
 
     # get GMT date and time
     time_stamp = time.time()
-    date_now_gmt = datetime.datetime.utcfromtimestamp(time_stamp)
+    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d/%m/%Y %H:%M:%S")
 
     special_legend = html.LEGEND(f"For information, current GMT time now is {date_now_gmt_str}")
@@ -1091,7 +1083,7 @@ def change_state_game():
                 return
             InfoDialog("OK", f"State changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
-        state = STATE_CODE_TABLE[input_state.value]
+        state = config.STATE_CODE_TABLE[input_state.value]
 
         json_dict = {
             'pseudo': pseudo,
@@ -1120,7 +1112,7 @@ def change_state_game():
     input_state = html.SELECT(type="select-one", value="")
     for possible_state in STATE_CODE_TABLE:
         option = html.OPTION(possible_state)
-        if STATE_CODE_TABLE[possible_state] == state_loaded:
+        if config.STATE_CODE_TABLE[possible_state] == state_loaded:
             option.selected = True
         input_state <= option
     form <= input_state

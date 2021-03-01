@@ -266,7 +266,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if entered_deadline is not None:
 
             # check it
-            deadline_date = datetime.datetime.utcfromtimestamp(entered_deadline)
+            deadline_date = datetime.datetime.fromtimestamp(entered_deadline, datetime.timezone.utc)
 
             # cannot be in past
             if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
@@ -451,7 +451,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         if entered_deadline is not None:
 
             # check it
-            deadline_date = datetime.datetime.utcfromtimestamp(entered_deadline)
+            deadline_date = datetime.datetime.fromtimestamp(entered_deadline, datetime.timezone.utc)
 
             # cannot be in past
             if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
