@@ -155,19 +155,19 @@ def create_account():
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("family name", title="To know you in real life")
+    legend_family_name = html.LEGEND("family name", title="To know you in real life - beware diacritics will be removed")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value="")
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("first name", title="To know you in real life")
+    legend_first_name = html.LEGEND("first name", title="To know you in real life - beware diacritics will be removed")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value="")
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country", title="To know you in real life")
+    legend_country = html.LEGEND("country", title="Undecided yet if nationality or residence - choose in list")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
 
@@ -180,7 +180,7 @@ def create_account():
     form <= input_country
     form <= html.BR()
 
-    legend_timezone = html.LEGEND("time zone", title="To understand better when you are awake")
+    legend_timezone = html.LEGEND("time zone", title="To understand better when you are awake - choose in list")
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
