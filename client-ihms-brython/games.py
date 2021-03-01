@@ -4,6 +4,7 @@
 
 import json
 import datetime
+import time
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -26,6 +27,8 @@ DEFAULT_CD_OTHERS = 1
 DEFAULT_VICTORY_CENTERS = 18
 DEFAULT_NB_CYCLES = 99
 
+# game created at now + this
+DEADLINE_DELAY_SEC = 10 * 60
 
 STATE_CODE_TABLE = {'waiting': 0, 'ongoing': 1, 'finished': 2}
 
@@ -146,9 +149,11 @@ def create_game():
             victory_centers = None
 
         # these are automatic
-        today = datetime.date.today()
-        description = f"game created at {today} by {pseudo} variant {variant}"
-        deadline = today.strftime("%Y-%m-%d")
+        time_stamp = time.time()
+        time_creation = datetime.datetime.utcfromtimestamp(time_stamp)
+        time_creation_str = datetime.datetime.strftime(time_creation, "%d/%m/%Y %H:%M:%S")
+        description = f"game created at {time_creation_str} (gmt time) by {pseudo} variant {variant}"
+        deadline = int(time_stamp) + DEADLINE_DELAY_SEC
         state = 0
 
         json_dict = {
@@ -655,7 +660,8 @@ def change_deadline_game():
     pseudo = storage['PSEUDO']
 
     # declare the values
-    deadline_loaded = None
+    deadline_loaded_day = None
+    deadline_loaded_hour = None
 
     def change_deadline_reload():
         """ change_deadline_reload """
@@ -671,7 +677,8 @@ def change_deadline_game():
         def reply_callback(req):
             """ reply_callback """
             nonlocal status
-            nonlocal deadline_loaded
+            nonlocal deadline_loaded_day
+            nonlocal deadline_loaded_hour
 
             req_result = json.loads(req.text)
             if req.status != 200:
@@ -685,6 +692,19 @@ def change_deadline_game():
                 return
 
             deadline_loaded = req_result['deadline']
+
+            # TODO TEST REMOVE ASAP
+            deadline_loaded = 1614593707
+
+            datetime_deadline_loaded = datetime.datetime.utcfromtimestamp(deadline_loaded)
+
+            deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+
+            print(f"{deadline_loaded_day=}")
+
+            deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
+
+            print(f"{deadline_loaded_hour=}")
 
         json_dict = dict()
 
@@ -710,7 +730,23 @@ def change_deadline_game():
                 return
             InfoDialog("OK", f"Deadline changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
-        deadline = input_deadline.value
+        deadline_day_part = input_deadline_day.value
+        print(f"{deadline_day_part=}")
+        deadline_hour_part = input_deadline_hour.value
+        print(f"{deadline_hour_part=}")
+
+        deadline_datetime_str = f"{deadline_day_part} {deadline_hour_part}"
+        print(f"{deadline_datetime_str=}")
+
+        deadline_datetime = datetime.datetime.strptime(deadline_datetime_str, "%Y-%m-%d %H:%M")
+
+        print(f"{deadline_datetime=}")
+
+        timestamp = deadline_datetime.replace(tzinfo=datetime.timezone.utc).timestamp()
+        deadline = timestamp
+
+        # TODO TEST REMOVE ASAP
+        deadline = "2021-03-15"
 
         json_dict = {
             'pseudo': pseudo,
@@ -733,11 +769,32 @@ def change_deadline_game():
     form <= information_about_game()
     form <= html.BR()
 
-    legend_deadline = html.LEGEND("The deadline (MM/DD/YYYY)", title="Deadline. Last day allowed for submitting orders. After player is late.")
-    form <= legend_deadline
+    special_legend = html.LEGEND("BEWARE : you must enter a deadline in GMT Time")
+    form <= special_legend
 
-    input_deadline = html.INPUT(type="date", value=deadline_loaded)
-    form <= input_deadline
+    # get GMT date and time
+    time_stamp = time.time()
+    date_now_gmt = datetime.datetime.utcfromtimestamp(time_stamp)
+    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d/%m/%Y %H:%M:%S")
+
+    special_legend = html.LEGEND(f"For information, current GMT time now is {date_now_gmt_str}")
+    form <= special_legend
+    form <= html.BR()
+
+    form <= html.BR()
+
+    legend_deadline_day = html.LEGEND("The deadline day (MM/DD/YYYY)", title="Deadline. Last day allowed for submitting orders. After player is late.")
+    form <= legend_deadline_day
+
+    input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day)
+    form <= input_deadline_day
+    form <= html.BR()
+
+    legend_deadline_hour = html.LEGEND("The deadline hour (hh:mm:AM/PM)")
+    form <= legend_deadline_hour
+
+    input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour)
+    form <= input_deadline_hour
     form <= html.BR()
 
     form <= html.BR()
