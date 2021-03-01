@@ -57,11 +57,10 @@ class Player:
     @staticmethod
     def free_identifier() -> int:
         """ class free identifier : finds an new identifier from database to use for this object """
-        highest_identifier_found = database.sql_execute("SELECT MAX(identifier) AS max_identifier FROM players", None, need_result=True)
-        highest_identifier = highest_identifier_found[0][0]  # type: ignore
-        if highest_identifier is None:
-            return 1
-        return highest_identifier + 1  # type: ignore
+        database.sql_execute("UPDATE players_counter SET value = value + 1", None, need_result=True)
+        counter_found = database.sql_execute("SELECT value FROM players_counter", None, need_result=True)
+        counter = counter_found[0][0]  # type: ignore
+        return counter  # type: ignore
 
     @staticmethod
     def find_by_identifier(identifier: int) -> typing.Optional['Player']:
@@ -92,6 +91,12 @@ class Player:
     def create_table() -> None:
         """ creation of table from scratch """
 
+        # create counter
+        database.sql_execute("DROP TABLE IF EXISTS players_counter")
+        database.sql_execute("CREATE TABLE players_counter (value INT)")
+        database.sql_execute("INSERT INTO players_counter (value) VALUES (?)", (0,))
+
+        # create actual table
         database.sql_execute("DROP TABLE IF EXISTS players")
         database.sql_execute("CREATE TABLE players (identifier INT UNIQUE PRIMARY KEY, pseudo STR, player_data player)")
         database.sql_execute("CREATE UNIQUE INDEX pseudo_player ON  players (pseudo)")
