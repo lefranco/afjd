@@ -35,12 +35,11 @@ class Game:
 
     @staticmethod
     def free_identifier() -> int:
-        """ class free identifier : finds an new identifier from database to use for this object """
-        highest_identifier_found = database.sql_execute("SELECT MAX(identifier) AS max_identifier FROM games", None, need_result=True)
-        highest_identifier = highest_identifier_found[0][0]  # type: ignore
-        if highest_identifier is None:
-            return 1
-        return highest_identifier + 1  # type: ignore
+        """ finds an new identifier from database to use for this object """
+        database.sql_execute("UPDATE games_counter SET value = value + 1", None, need_result=False)
+        counter_found = database.sql_execute("SELECT value FROM games_counter", None, need_result=True)
+        counter = counter_found[0][0]  # type: ignore
+        return counter  # type: ignore
 
     @staticmethod
     def find_by_identifier(identifier: int) -> typing.Optional['Game']:
@@ -71,9 +70,15 @@ class Game:
     def create_table() -> None:
         """ creation of table from scratch """
 
+        # create counter
+        database.sql_execute("DROP TABLE IF EXISTS games_counter")
+        database.sql_execute("CREATE TABLE games_counter (value INT)")
+        database.sql_execute("INSERT INTO games_counter (value) VALUES (?)", (0,))
+
+        # create actual table
         database.sql_execute("DROP TABLE IF EXISTS games")
         database.sql_execute("CREATE TABLE games (identifier INT UNIQUE PRIMARY KEY, name STR, game_data game)")
-        database.sql_execute("CREATE UNIQUE INDEX name_game ON  games (name)")
+        database.sql_execute("CREATE UNIQUE INDEX name_game ON games (name)")
 
     def __init__(self, identifier: int, name: str, description: str, variant: str, archive: bool, anonymous: bool, silent: bool, cumulate: bool, fast: bool, deadline: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, cd_possible_removals: bool, play_weekend: bool, manual: bool, access_code: int, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, victory_centers: int, current_state: int) -> None:
 
