@@ -218,7 +218,7 @@ def show_game_masters_data():
     if not players_dict:
         return
 
-    # get the link (allocations) of gamle masters
+    # get the link (allocations) of game masters
     game_masters_list = get_game_masters_data()
 
     if not game_masters_list:
