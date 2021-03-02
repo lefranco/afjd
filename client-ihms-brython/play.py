@@ -11,7 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import mapping
 
-OPTIONS = ['submit orders', 'negotiate', 'display parameters', 'show players in game']
+OPTIONS = ['submit orders', 'negotiate', 'show game parameters', 'show players in game']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -271,8 +271,8 @@ def negotiate():
     my_sub_panel <= dummy
 
 
-def display_parameters():
-    """ display_parameters """
+def show_game_parameters():
+    """ show_game_parameters """
 
     if 'GAME' not in storage:
         alert("Please select game beforehand")
@@ -515,8 +515,8 @@ def load_option(_, item_name):
         submit_orders()
     if item_name == 'negotiate':
         negotiate()
-    if item_name == 'display parameters':
-        display_parameters()
+    if item_name == 'show game parameters':
+        show_game_parameters()
     if item_name == 'show players in game':
         show_players_in_game()
 
