@@ -106,14 +106,14 @@
     "zones": {
         "1": {
             "name": "ADR",
-            "x_legend_pos": 325,
+            "x_legend_pos": 318,
             "y_legend_pos": 409,
             "x_pos": 342,
             "y_pos": 429
         },
         "2": {
             "name": "AEG",
-            "x_legend_pos": 439,
+            "x_legend_pos": 430,
             "y_legend_pos": 476,
             "x_pos": 440,
             "y_pos": 509
@@ -127,8 +127,8 @@
         },
         "4": {
             "name": "ank",
-            "x_legend_pos": 548,
-            "y_legend_pos": 432,
+            "x_legend_pos": 540,
+            "y_legend_pos": 436,
             "x_pos": 571,
             "y_pos": 440
         },
@@ -141,7 +141,7 @@
         },
         "6": {
             "name": "arm",
-            "x_legend_pos": 620,
+            "x_legend_pos": 608,
             "y_legend_pos": 403,
             "x_pos": 613,
             "y_pos": 425
@@ -149,27 +149,27 @@
         "7": {
             "name": "BAL",
             "x_legend_pos": 329,
-            "y_legend_pos": 225,
+            "y_legend_pos": 228,
             "x_pos": 334,
             "y_pos": 209
         },
         "8": {
             "name": "BAR",
-            "x_legend_pos": 406,
+            "x_legend_pos": 390,
             "y_legend_pos": 11,
             "x_pos": 431,
             "y_pos": 11
         },
         "9": {
             "name": "bel",
-            "x_legend_pos": 210,
+            "x_legend_pos": 208,
             "y_legend_pos": 275,
             "x_pos": 222,
             "y_pos": 296
         },
         "10": {
             "name": "ber",
-            "x_legend_pos": 291,
+            "x_legend_pos": 283,
             "y_legend_pos": 250,
             "x_pos": 295,
             "y_pos": 262
@@ -183,42 +183,42 @@
         },
         "12": {
             "name": "boh",
-            "x_legend_pos": 311,
+            "x_legend_pos": 300,
             "y_legend_pos": 319,
             "x_pos": 326,
             "y_pos": 319
         },
         "13": {
             "name": "BOT",
-            "x_legend_pos": 346,
+            "x_legend_pos": 335,
             "y_legend_pos": 149,
             "x_pos": 356,
-            "y_pos": 159
+            "y_pos": 170
         },
         "14": {
             "name": "bre",
-            "x_legend_pos": 158,
+            "x_legend_pos": 148,
             "y_legend_pos": 340,
             "x_pos": 145,
             "y_pos": 319
         },
         "15": {
             "name": "bud",
-            "x_legend_pos": 392,
+            "x_legend_pos": 383,
             "y_legend_pos": 358,
             "x_pos": 412,
             "y_pos": 368
         },
         "16": {
             "name": "bul",
-            "x_legend_pos": 421,
+            "x_legend_pos": 416,
             "y_legend_pos": 437,
             "x_pos": 428,
             "y_pos": 420
         },
         "17": {
             "name": "bur",
-            "x_legend_pos": 220,
+            "x_legend_pos": 208,
             "y_legend_pos": 323,
             "x_pos": 210,
             "y_pos": 343
@@ -232,43 +232,43 @@
         },
         "19": {
             "name": "con",
-            "x_legend_pos": 465,
+            "x_legend_pos": 446,
             "y_legend_pos": 463,
             "x_pos": 487,
             "y_pos": 461
         },
         "20": {
             "name": "den",
-            "x_legend_pos": 269,
-            "y_legend_pos": 209,
-            "x_pos": 276,
+            "x_legend_pos": 260,
+            "y_legend_pos": 213,
+            "x_pos": 285,
             "y_pos": 215
         },
         "21": {
             "name": "EAS",
-            "x_legend_pos": 521,
+            "x_legend_pos": 517,
             "y_legend_pos": 517,
             "x_pos": 493,
             "y_pos": 526
         },
         "22": {
             "name": "edi",
-            "x_legend_pos": 196,
+            "x_legend_pos": 182,
             "y_legend_pos": 159,
             "x_pos": 179,
             "y_pos": 171
         },
         "23": {
             "name": "ENG",
-            "x_legend_pos": 120,
-            "y_legend_pos": 285,
+            "x_legend_pos": 112,
+            "y_legend_pos": 290,
             "x_pos": 143,
             "y_pos": 286
         },
         "24": {
             "name": "fin",
             "x_legend_pos": 392,
-            "y_legend_pos": 101,
+            "y_legend_pos": 110,
             "x_pos": 374,
             "y_pos": 131
         },
@@ -281,7 +281,7 @@
         },
         "26": {
             "name": "gas",
-            "x_legend_pos": 156,
+            "x_legend_pos": 152,
             "y_legend_pos": 364,
             "x_pos": 161,
             "y_pos": 379
@@ -291,25 +291,25 @@
             "x_legend_pos": 201,
             "y_legend_pos": 421,
             "x_pos": 201,
-            "y_pos": 441
+            "y_pos": 438
         },
         "28": {
             "name": "gre",
-            "x_legend_pos": 399,
+            "x_legend_pos": 390,
             "y_legend_pos": 468,
             "x_pos": 400,
             "y_pos": 494
         },
         "29": {
             "name": "HEL",
-            "x_legend_pos": 243,
-            "y_legend_pos": 223,
+            "x_legend_pos": 240,
+            "y_legend_pos": 215,
             "x_pos": 248,
             "y_pos": 228
         },
         "30": {
             "name": "hol",
-            "x_legend_pos": 220,
+            "x_legend_pos": 214,
             "y_legend_pos": 256,
             "x_pos": 238,
             "y_pos": 273
@@ -323,28 +323,28 @@
         },
         "32": {
             "name": "IRI",
-            "x_legend_pos": 82,
+            "x_legend_pos": 78,
             "y_legend_pos": 249,
             "x_pos": 102,
             "y_pos": 259
         },
         "33": {
             "name": "kie",
-            "x_legend_pos": 250,
+            "x_legend_pos": 246,
             "y_legend_pos": 256,
-            "x_pos": 262,
+            "x_pos": 265,
             "y_pos": 263
         },
         "34": {
             "name": "lon",
-            "x_legend_pos": 174,
-            "y_legend_pos": 245,
+            "x_legend_pos": 169,
+            "y_legend_pos": 249,
             "x_pos": 184,
             "y_pos": 255
         },
         "35": {
             "name": "lvn",
-            "x_legend_pos": 399,
+            "x_legend_pos": 392,
             "y_legend_pos": 184,
             "x_pos": 390,
             "y_pos": 207
@@ -379,8 +379,8 @@
         },
         "40": {
             "name": "mun",
-            "x_legend_pos": 270,
-            "y_legend_pos": 324,
+            "x_legend_pos": 260,
+            "y_legend_pos": 335,
             "x_pos": 282,
             "y_pos": 304
         },
@@ -421,21 +421,21 @@
         },
         "46": {
             "name": "nwy",
-            "x_legend_pos": 285,
+            "x_legend_pos": 281,
             "y_legend_pos": 128,
             "x_pos": 260,
             "y_pos": 148
         },
         "47": {
             "name": "par",
-            "x_legend_pos": 181,
+            "x_legend_pos": 176,
             "y_legend_pos": 338,
             "x_pos": 179,
             "y_pos": 320
         },
         "48": {
             "name": "pic",
-            "x_legend_pos": 186,
+            "x_legend_pos": 178,
             "y_legend_pos": 285,
             "x_pos": 198,
             "y_pos": 295
@@ -449,8 +449,8 @@
         },
         "50": {
             "name": "por",
-            "x_legend_pos": 57,
-            "y_legend_pos": 396,
+            "x_legend_pos": 45,
+            "y_legend_pos": 398,
             "x_pos": 43,
             "y_pos": 412
         },
@@ -464,20 +464,20 @@
         "52": {
             "name": "rom",
             "x_legend_pos": 277,
-            "y_legend_pos": 431,
+            "y_legend_pos": 427,
             "x_pos": 294,
             "y_pos": 441
         },
         "53": {
             "name": "ruh",
-            "x_legend_pos": 252,
-            "y_legend_pos": 299,
+            "x_legend_pos": 243,
+            "y_legend_pos": 300,
             "x_pos": 245,
             "y_pos": 321
         },
         "54": {
             "name": "rum",
-            "x_legend_pos": 450,
+            "x_legend_pos": 437,
             "y_legend_pos": 362,
             "x_pos": 446,
             "y_pos": 381
@@ -485,7 +485,7 @@
         "55": {
             "name": "ser",
             "x_legend_pos": 386,
-            "y_legend_pos": 409,
+            "y_legend_pos": 404,
             "x_pos": 391,
             "y_pos": 419
         },
@@ -498,14 +498,14 @@
         },
         "57": {
             "name": "sil",
-            "x_legend_pos": 313,
+            "x_legend_pos": 310,
             "y_legend_pos": 295,
             "x_pos": 330,
             "y_pos": 295
         },
         "58": {
             "name": "SKA",
-            "x_legend_pos": 283,
+            "x_legend_pos": 272,
             "y_legend_pos": 181,
             "x_pos": 273,
             "y_pos": 191
@@ -533,8 +533,8 @@
         },
         "62": {
             "name": "swe",
-            "x_legend_pos": 318,
-            "y_legend_pos": 128,
+            "x_legend_pos": 308,
+            "y_legend_pos": 148,
             "x_pos": 305,
             "y_pos": 187
         },
@@ -548,20 +548,20 @@
         "64": {
             "name": "tri",
             "x_legend_pos": 343,
-            "y_legend_pos": 390,
+            "y_legend_pos": 388,
             "x_pos": 353,
             "y_pos": 402
         },
         "65": {
             "name": "tun",
             "x_legend_pos": 224,
-            "y_legend_pos": 513,
+            "y_legend_pos": 506,
             "x_pos": 242,
             "y_pos": 523
         },
         "66": {
             "name": "tus",
-            "x_legend_pos": 258,
+            "x_legend_pos": 250,
             "y_legend_pos": 405,
             "x_pos": 277,
             "y_pos": 411
@@ -575,7 +575,7 @@
         },
         "68": {
             "name": "tyr",
-            "x_legend_pos": 311,
+            "x_legend_pos": 304,
             "y_legend_pos": 359,
             "x_pos": 287,
             "y_pos": 361
@@ -589,28 +589,28 @@
         },
         "70": {
             "name": "ven",
-            "x_legend_pos": 277,
+            "x_legend_pos": 272,
             "y_legend_pos": 380,
             "x_pos": 287,
             "y_pos": 390
         },
         "71": {
             "name": "vie",
-            "x_legend_pos": 334,
+            "x_legend_pos": 329,
             "y_legend_pos": 340,
             "x_pos": 349,
             "y_pos": 341
         },
         "72": {
             "name": "wal",
-            "x_legend_pos": 152,
+            "x_legend_pos": 148,
             "y_legend_pos": 242,
             "x_pos": 148,
             "y_pos": 263
         },
         "73": {
             "name": "war",
-            "x_legend_pos": 380,
+            "x_legend_pos": 373,
             "y_legend_pos": 275,
             "x_pos": 390,
             "y_pos": 295
@@ -624,28 +624,28 @@
         },
         "75": {
             "name": "yor",
-            "x_legend_pos": 190,
+            "x_legend_pos": 182,
             "y_legend_pos": 212,
             "x_pos": 182,
             "y_pos": 231
         },
         "76": {
             "name": "",
-            "x_legend_pos": 478,
+            "x_legend_pos": 464,
             "y_legend_pos": 428,
             "x_pos": 457,
             "y_pos": 419
         },
         "77": {
             "name": "",
-            "x_legend_pos": 439,
-            "y_legend_pos": 453,
+            "x_legend_pos": 432,
+            "y_legend_pos": 458,
             "x_pos": 436,
             "y_pos": 441
         },
         "78": {
             "name": "",
-            "x_legend_pos": 110,
+            "x_legend_pos": 100,
             "y_legend_pos": 384,
             "x_pos": 73,
             "y_pos": 371
@@ -668,7 +668,7 @@
             "name": "",
             "x_legend_pos": 429,
             "y_legend_pos": 146,
-            "x_pos": 425,
+            "x_pos": 428,
             "y_pos": 176
         }
     },
