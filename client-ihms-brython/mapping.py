@@ -6,11 +6,12 @@
 import json
 import enum
 import typing
-import itertools
 import abc
 import math
 
 # pylint: disable=pointless-statement, expression-not-assigned, multiple-statements
+# noqa: E702
+
 
 class Renderable:
     """ Renderable """
@@ -85,6 +86,7 @@ class SeasonEnum(enum.Enum):
     def __str__(self) -> str:
         return f"{self.name}"
 
+
 @enum.unique
 class OrderTypeEnum(enum.Enum):
     """ OrderTypeEnum """
@@ -125,6 +127,7 @@ class OrderTypeEnum(enum.Enum):
     def __str__(self) -> str:
         return f"{self.name}"
 
+
 class Center:
     """ A Center """
 
@@ -153,6 +156,7 @@ class CoastType:
     def __init__(self, code: int) -> None:
         self._code = code
 
+
 class Region:
     """ A region """
 
@@ -164,6 +168,9 @@ class Region:
         # if the region has a center
         self._center: typing.Optional[Center] = None
 
+        # the zone (for localisation)
+        self._zone: typing.Optional[Zone] = None
+
     @property
     def center(self) -> typing.Optional[Center]:
         """ property """
@@ -173,6 +180,16 @@ class Region:
     def center(self, center: Center) -> None:
         """ setter """
         self._center = center
+
+    @property
+    def zone(self) -> typing.Optional['Zone']:
+        """ property """
+        return self._zone
+
+    @zone.setter
+    def zone(self, zone: 'Zone') -> None:
+        """ setter """
+        self._zone = zone
 
 
 class Zone:
@@ -223,6 +240,7 @@ class Role:
         """ setter """
         self._start_centers = start_centers
 
+
 class ColourRecord(typing.NamedTuple):
     """ A colour """
     red: int
@@ -232,17 +250,19 @@ class ColourRecord(typing.NamedTuple):
     def outline_colour(self) -> 'ColourRecord':
         """ outline_colour """
         if self.red + self.green + self.blue < (256 + 256 + 256) // 2:
-            return ColourRecord(red=256//2, green=256//2, blue=256//2)
+            return ColourRecord(red=256 // 2, green=256 // 2, blue=256 // 2)
         return ColourRecord(red=0, green=0, blue=0)
 
     def str_value(self) -> str:
         """ str_value """
         return f"rgb({self.red}, {self.green}, {self.blue})"
 
+
 class PositionRecord(typing.NamedTuple):
     """ A position """
     x_pos: int
     y_pos: int
+
 
 class Variant(Renderable):
     """ A variant """
@@ -308,6 +328,7 @@ class Variant(Renderable):
         for num, region in enumerate(self._regions.values()):
             number = num + 1
             zone = Zone(region, None)
+            region.zone = zone
             self._zones[number] = zone
 
         # need an offset
@@ -498,7 +519,8 @@ class Point:
     def __str__(self) -> str:
         return f"x={self.x} y={self.y}"
 
-class Unit(Renderable): # pylint: disable=abstract-method
+
+class Unit(Renderable):  # pylint: disable=abstract-method
     """ A unit """
 
     def __init__(self, variant: Variant, role: Role, zone: Zone) -> None:
@@ -556,7 +578,7 @@ class Army(Unit):
         p3[0].x = x - 2; p3[0].y = y - 7
         p3[1].x = x + 4; p3[1].y = y - 15
         p3[2].x = x + 5; p3[2].y = y - 13
-        p3[3].x = x;  p3[3].y = y - 7
+        p3[3].x = x; p3[3].y = y - 7
         ctx.beginPath()
         for n, p in enumerate(p3):  # pylint: disable=invalid-name
             if not n:
@@ -567,12 +589,12 @@ class Army(Unit):
 
         # cercle autour roue exterieure
         # simplified
-        ctx.arc(x, y, 6, 0, 2*math.pi, False)
+        ctx.arc(x, y, 6, 0, 2 * math.pi, False)
         ctx.fill(); ctx.stroke()
 
         # roue interieure
         # simplified
-        ctx.arc(x, y, 2, 0, 2*math.pi, False)
+        ctx.arc(x, y, 2, 0, 2 * math.pi, False)
         ctx.fill(); ctx.stroke()
 
         # exterieur coin
@@ -585,13 +607,14 @@ class Army(Unit):
                 ctx.moveTo(p.x, p.y)
             else:
                 ctx.lineTo(p.x, p.y)
-        ctx.closePath();  ctx.stroke() # no fill
+        ctx.closePath(); ctx.stroke()  # no fill
 
         # temporary
-        #legend = self._variant.name_table[self._zone]
-        #debug_colour = ColourRecord(255, 0, 0)
-        #ctx.fillStyle = debug_colour.str_value()
-        #ctx.fillText(legend, x, y)
+        #  legend = self._variant.name_table[self._zone]
+        #  debug_colour = ColourRecord(255, 0, 0)
+        #  ctx.fillStyle = debug_colour.str_value()
+        #  ctx.fillText(legend, x, y)
+
 
 class Fleet(Unit):
     """ An fleet """
@@ -654,14 +677,14 @@ class Fleet(Unit):
 
         # hublots
         for i in range(5):
-            ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2*math.pi, False)
+            ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2 * math.pi, False)
             ctx.stroke()  # no fill
 
         # temporary
-        #legend = self._variant.name_table[self._zone]
-        #debug_colour = ColourRecord(255, 0, 0)
-        #ctx.fillStyle = debug_colour.str_value()
-        #ctx.fillText(legend, x, y)
+        #  legend = self._variant.name_table[self._zone]
+        #  debug_colour = ColourRecord(255, 0, 0)
+        #  ctx.fillStyle = debug_colour.str_value()
+        #  ctx.fillText(legend, x, y)
 
 
 class Ownership(Renderable):
@@ -684,27 +707,34 @@ class Ownership(Renderable):
         position = self._variant.position_table[self._region]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
-        ctx.fillRect(x-4, y-4, 8, 8)
-        ctx.strokeRect(x-4, y-4, 8, 8)
+        ctx.beginPath()
+        ctx.fillRect(x - 4, y - 4, 8, 8)
+        ctx.strokeRect(x - 4, y - 4, 8, 8)
+        ctx.closePath(); ctx.fill(); ctx.stroke()
 
-def render_all(variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
-    """ fill the map """
 
-    # put the background map first
-    ctx.drawImage(img, 0, 0)
+class Forbidden(Renderable):
+    """ Forbidden """
 
-    # put the legends
-    variant.render(ctx)
+    def __init__(self, variant: Variant, region: Region) -> None:
+        self._variant = variant
+        self._region = region
 
-    n = 1
-    for center in variant._centers.values():
+    def render(self, ctx: typing.Any) -> None:
+        """put me on screen """
 
-        role = variant._roles[n]
+        outline_colour = ColourRecord(red=255, green=0, blue=0)
+        ctx.strokeStyle = outline_colour.str_value()
 
-        # display it
-        ownershp = Ownership(variant, role, center)
-        ownershp.render(ctx)
+        region = self._region
+        zone = region.zone
+        position = self._variant.position_table[zone]
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
-        n+=1
-        if n==8:
-            n=1
+        ctx.beginPath()
+        ctx.moveTo(x + 6, y + 6)
+        ctx.lineTo(x - 6, y - 6)
+        ctx.moveTo(x + 6, y - 6)
+        ctx.lineTo(x - 6, y + 6)
+        ctx.closePath(); ctx.stroke()
+
