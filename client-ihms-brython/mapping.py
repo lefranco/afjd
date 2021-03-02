@@ -1,4 +1,7 @@
-""" xxx """
+""" mapping """
+
+# pylint: disable=pointless-statement, expression-not-assigned
+
 
 import json
 import enum
