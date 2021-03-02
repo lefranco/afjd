@@ -106,7 +106,7 @@
     "zones": {
         "1": {
             "name": "ADR",
-            "x_legend_pos": 318,
+            "x_legend_pos": 310,
             "y_legend_pos": 409,
             "x_pos": 342,
             "y_pos": 429
@@ -120,7 +120,7 @@
         },
         "3": {
             "name": "alb",
-            "x_legend_pos": 363,
+            "x_legend_pos": 370,
             "y_legend_pos": 439,
             "x_pos": 375,
             "y_pos": 449
@@ -134,7 +134,7 @@
         },
         "5": {
             "name": "apu",
-            "x_legend_pos": 321,
+            "x_legend_pos": 324,
             "y_legend_pos": 435,
             "x_pos": 340,
             "y_pos": 445
@@ -170,7 +170,7 @@
         "10": {
             "name": "ber",
             "x_legend_pos": 283,
-            "y_legend_pos": 250,
+            "y_legend_pos": 253,
             "x_pos": 295,
             "y_pos": 262
         },
@@ -232,7 +232,7 @@
         },
         "19": {
             "name": "con",
-            "x_legend_pos": 446,
+            "x_legend_pos": 455,
             "y_legend_pos": 463,
             "x_pos": 487,
             "y_pos": 461
@@ -442,8 +442,8 @@
         },
         "49": {
             "name": "pie",
-            "x_legend_pos": 247,
-            "y_legend_pos": 375,
+            "x_legend_pos": 243,
+            "y_legend_pos": 380,
             "x_pos": 250,
             "y_pos": 390
         },
@@ -484,7 +484,7 @@
         },
         "55": {
             "name": "ser",
-            "x_legend_pos": 386,
+            "x_legend_pos": 388,
             "y_legend_pos": 404,
             "x_pos": 391,
             "y_pos": 419
@@ -561,7 +561,7 @@
         },
         "66": {
             "name": "tus",
-            "x_legend_pos": 250,
+            "x_legend_pos": 247,
             "y_legend_pos": 405,
             "x_pos": 277,
             "y_pos": 411
@@ -590,14 +590,14 @@
         "70": {
             "name": "ven",
             "x_legend_pos": 272,
-            "y_legend_pos": 380,
+            "y_legend_pos": 384,
             "x_pos": 287,
             "y_pos": 390
         },
         "71": {
             "name": "vie",
             "x_legend_pos": 329,
-            "y_legend_pos": 340,
+            "y_legend_pos": 343,
             "x_pos": 349,
             "y_pos": 341
         },
