@@ -34,23 +34,24 @@ my_panel <= my_sub_panel
 def submit_orders():
     """ submit_orders """
 
+    def callback_load(_):
+        """ callback_load """
+        mapping.render_all(variant, img, ctx)
+
     # load variant
     variant = mapping.Variant("./temp/standard.json", "./variants/standard/stabbeur/parameters.json")
     map_size = variant.map_size
 
-    canvas = html.CANVAS(id="canvas", height=map_size.x_pos, width = map_size.y_pos)
-    ctx = canvas.getContext('2d')
+    # create canvas
+    canvas = html.CANVAS(id="map_canvas", height=map_size.x_pos, width = map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Please use a more recent navigator")
+        return
 
+    # put background
     img = html.IMG(src="./variants/standard/stabbeur/map.png")
-    img.bind('load', lambda ev: ctx.drawImage(img, 0, 0))
-
-    # make a test army
-    role = variant._roles[1]
-    zone = variant._zones[1]
-    army = mapping.Army(variant, role, zone)
-
-    # display it
-    army.render(ctx)
+    img.bind('load', callback_load)
 
     my_sub_panel <= canvas
     additional = html.P("additional stuff under the map")
