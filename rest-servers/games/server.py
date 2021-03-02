@@ -270,7 +270,8 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
             # cannot be in past
             if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
-                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{deadline_date}' (GMT)")
+                date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
+                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{date_desc}' (GMT)")
 
         # keep a note of game state before
         current_state_before = game.current_state
@@ -455,7 +456,8 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
             # cannot be in past
             if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
-                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{entered_deadline}' (GMT)")
+                date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
+                flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{date_desc}' (GMT)")
 
         else:
 
