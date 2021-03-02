@@ -339,6 +339,13 @@ class Variant:
         self._position_table: typing.Dict[typing.Any, PositionRecord] = dict()
         self._legend_position_table: typing.Dict[typing.Any, PositionRecord] = dict()
 
+        # load the map size
+        data_dict = self._raw_parameters_content['map']
+        width = data_dict['width']
+        height = data_dict['height']
+        map_size = PositionRecord(x_pos=width, y_pos=height)
+        self._map_size = map_size
+
         # load the regions type names
         assert len(self._raw_parameters_content['regions']) == len(RegionTypeEnum)
         for region_type_code_str, data_dict in self._raw_parameters_content['regions'].items():
@@ -367,7 +374,6 @@ class Variant:
             name = data_dict['name']
             self._name_table[role] = name
             red = data_dict['red']
-            assert isinstance(red, int)
             green = data_dict['green']
             blue = data_dict['blue']
             colour = ColourRecord(red=red, green=green, blue=blue)
@@ -380,8 +386,8 @@ class Variant:
             zone = self._zones[zone_num]
             name = data_dict['name']
             self._name_table[zone] = name
-            x_pos = data_dict['x_name']  # TODO : rename into x_legend_pos
-            y_pos = data_dict['y_name']  # TODO : rename into y_legend_pos
+            x_pos = data_dict['x_legend_pos']
+            y_pos = data_dict['y_legend_pos']
             legend_position = PositionRecord(x_pos=x_pos, y_pos=y_pos)
             self._legend_position_table[zone] = legend_position
             x_pos = data_dict['x_pos']
@@ -421,6 +427,11 @@ class Variant:
             order_type = OrderTypeEnum.from_code(order_type_num)
             assert order_type is not None
             self._name_table[order_type] = name
+
+    @property
+    def map_size(self) -> PositionRecord:
+        """ property """
+        return self._map_size
 
     @property
     def name_table(self) -> typing.Dict[typing.Any, str]:
@@ -482,7 +493,14 @@ class Army(Unit):
         p1[1].x = x - 15; p1[1].y = y + 9
         p1[2].x = x + 6; p1[2].y = y + 9
         p1[3].x = x + 6; p1[3].y = y + 6
-        canvas.create_polygon(*(itertools.chain(*[[p.x, p.y] for p in p1])), fill=fill_color.str_value(), outline=outline_colour.str_value())
+        ctx.fillStyle = fill_color.str_value()
+        ctx.strokeStyle = outline_colour.str_value()
+        ctx.beginPath()
+        for p in p1:  # pylint: disable=invalid-name
+            ctx.lineTo(p.x, p.y)
+        ctx.closePath()
+
+        return # TODO REMOVE
 
         # coin
         p2 = [Point() for _ in range(3)]  # pylint: disable=invalid-name

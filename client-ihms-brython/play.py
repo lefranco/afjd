@@ -34,14 +34,15 @@ my_panel <= my_sub_panel
 def submit_orders():
     """ submit_orders """
 
-    canvas = html.CANVAS(id="canvas")
-    ctx = canvas.getContext('2d')
-
-    img = html.IMG("./variants/standard/stabbeur/map.jpng")
-    img.bind('load', lambda ev: ctx.drawImage(img))
-
     # load variant
     variant = mapping.Variant("./temp/standard.json", "./variants/standard/stabbeur/parameters.json")
+    map_size = variant.map_size
+
+    canvas = html.CANVAS(id="canvas", height=map_size.x_pos, width = map_size.y_pos)
+    ctx = canvas.getContext('2d')
+
+    img = html.IMG(src="./variants/standard/stabbeur/map.png")
+    img.bind('load', lambda ev: ctx.drawImage(img, 0, 0))
 
     # make a test army
     role = variant._roles[1]
@@ -52,6 +53,8 @@ def submit_orders():
     army.render(ctx)
 
     my_sub_panel <= canvas
+    additional = html.P("additional stuff under the map")
+    my_sub_panel <= additional
 
 
 def negotiate():
