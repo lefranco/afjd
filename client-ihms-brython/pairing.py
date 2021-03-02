@@ -171,17 +171,13 @@ def join_game():
                 return
             InfoDialog("OK", f"Game joined : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
-        player_id = get_player_id(pseudo)
-        if player_id is None:
-            return
-
         game_id = get_game_id(game)
         if game_id is None:
             return
 
         json_dict = {
             'game_id': game_id,
-            'player_id': player_id,
+            'player_pseudo': pseudo,
             'pseudo': pseudo,
             'delete': 0
         }
@@ -230,17 +226,13 @@ def quit_game():
                 return
             InfoDialog("OK", f"Game quitted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
-        player_id = get_player_id(pseudo)
-        if player_id is None:
-            return
-
         game_id = get_game_id(game)
         if game_id is None:
             return
 
         json_dict = {
             'game_id': game_id,
-            'player_id': player_id,
+            'player_pseudo': pseudo,
             'pseudo': pseudo,
             'delete': 1
         }
