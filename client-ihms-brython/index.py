@@ -16,7 +16,7 @@ import master
 import position
 import sandbox
 
-TITLE = "Welcome this demo interface Web client for playing Diplomacy on ANJD REST Server"
+TITLE = "Welcome this demo interface Web client for playing Diplomacy on AFJD REST Server"
 OPTIONS = ['home', 'login', 'select game', 'lists', 'my account', 'my games', 'pairing', 'play game', 'master game', 'edit position', 'use sandbox']
 
 
