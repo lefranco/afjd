@@ -213,7 +213,7 @@ class ColourRecord(typing.NamedTuple):
         return ColourRecord(red=0, green=0, blue=0)
 
     def str_value(self) -> str:
-        return "#%02x%02x%02x" % (self.red, self.green, self.blue)
+        return f"rgb({self.red}, {self.green}, {self.blue})"
 
 class PositionRecord(typing.NamedTuple):
     """ A position """
@@ -367,6 +367,7 @@ class Variant:
             name = data_dict['name']
             self._name_table[role] = name
             red = data_dict['red']
+            assert isinstance(red, int)
             green = data_dict['green']
             blue = data_dict['blue']
             colour = ColourRecord(red=red, green=green, blue=blue)
@@ -466,7 +467,7 @@ class Army(Unit):
     # no init : use init from parent class
 
 
-    def render(self, canvas: typing.Any) -> None:
+    def render(self, ctx: typing.Any) -> None:
         """put me on screen """
 
         fill_color = self._variant.colour_table[self._role]
@@ -510,21 +511,4 @@ class Army(Unit):
         canvas.create_line(x - 7, y + 3, x - 9, y + 6, fill=fill_color.str_value())
 
 
-def main() -> None:
-    """ main """
 
-    # load variant
-    variant = Variant("./standard.json", "./parameters.json")
-
-    # make a test army
-    role = variant._roles[1]
-    zone = variant._zones[1]
-    army = Army(variant, role, zone)
-
-    # display it
-    army.render()
-
-
-if __name__ == '__main__':
-    main()
-    #  assert False, "Do not run this script"
