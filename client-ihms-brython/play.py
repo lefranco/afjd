@@ -36,7 +36,7 @@ def submit_orders():
 
     def callback_load(_):
         """ callback_load """
-        print("TODO")
+        mapping.display(variant, img, ctx)
 
     # load variant
     variant = mapping.Variant("./temp/standard.json", "./variants/standard/stabbeur/parameters.json")

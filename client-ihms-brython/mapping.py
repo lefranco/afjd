@@ -738,3 +738,13 @@ class Forbidden(Renderable):
         ctx.lineTo(x - 6, y + 6)
         ctx.closePath(); ctx.stroke()
 
+
+def display(variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
+    """ fill the map """
+
+    # put the background map first
+    ctx.drawImage(img, 0, 0)
+
+    # put the legends
+    variant.render(ctx)
+
