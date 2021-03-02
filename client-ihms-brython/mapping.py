@@ -556,7 +556,7 @@ class Army(Unit):
 
         # cercle autour roue exterieure
         # simplified
-        ctx.arc(x, y, 7, 0, 2*math.pi, False)
+        ctx.arc(x, y, 6, 0, 2*math.pi, False)
         ctx.fill(); ctx.stroke()
 
         # roue interieure
