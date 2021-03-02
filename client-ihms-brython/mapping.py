@@ -82,6 +82,8 @@ class SeasonEnum(enum.Enum):
             return SeasonEnum.ADJUST_SEASON
         return None
 
+    def __str__(self) -> str:
+        return f"{self.name}"
 
 @enum.unique
 class OrderTypeEnum(enum.Enum):
@@ -120,6 +122,8 @@ class OrderTypeEnum(enum.Enum):
             return OrderTypeEnum.REMOVE_ORDER
         return None
 
+    def __str__(self) -> str:
+        return f"{self.name}"
 
 class Center:
     """ A Center """
@@ -149,13 +153,12 @@ class CoastType:
     def __init__(self, code: int) -> None:
         self._code = code
 
-
 class Region:
     """ A region """
 
     def __init__(self, region_type: RegionTypeEnum) -> None:
 
-        # the type of the regio: land, coast or sea
+        # the type of the region land, coast or sea
         self._region_type = region_type
 
         # if the region has a center
@@ -185,6 +188,11 @@ class Zone:
 
         # other zones one may access by fleet and army
         self._neighbours: typing.Dict[UnitTypeEnum, typing.List['Zone']] = {u: list() for u in UnitTypeEnum}
+
+    @property
+    def coast_type(self) -> typing.Optional[CoastType]:
+        """ property """
+        return self._coast_type
 
     @property
     def neighbours(self) -> typing.Dict[UnitTypeEnum, typing.List['Zone']]:
@@ -293,7 +301,7 @@ class Variant(Renderable):
             coast_type = CoastType(number)
             self._coast_types[number] = coast_type
 
-        # load the coast zones
+        # load the zones
 
         # first the standard zones
         self._zones: typing.Dict[int, Zone] = dict()
@@ -305,7 +313,7 @@ class Variant(Renderable):
         # need an offset
         offset = max(self._zones.keys())
 
-        # the the special coast zones
+        # then the special coast zones
         for num, (region_num, coast_type_num) in enumerate(self._raw_variant_content['coastal_zones']):
             number = num + 1
             region = self._regions[region_num]
@@ -395,12 +403,26 @@ class Variant(Renderable):
             colour = ColourRecord(red=red, green=green, blue=blue)
             self._colour_table[role] = colour
 
+        # load coasts types names
+        assert len(self._raw_parameters_content['coasts']) == len(self._coast_types)
+        for coast_type_num_str, data_dict in self._raw_parameters_content['coasts'].items():
+            coast_type_num = int(coast_type_num_str)
+            coast_type = self._coast_types[coast_type_num]
+            self._name_table[coast_type] = data_dict['name']
+
         # load the zones names and localisations
         assert len(self._raw_parameters_content['zones']) == len(self._zones)
         for zone_num_str, data_dict in self._raw_parameters_content['zones'].items():
             zone_num = int(zone_num_str)
             zone = self._zones[zone_num]
-            name = data_dict['name']
+
+            # special zones have a special name
+            if zone.coast_type:
+                coast_type = zone.coast_type
+                name = self._name_table[coast_type]
+            else:
+                name = data_dict['name']
+
             self._name_table[zone] = name
             x_pos = data_dict['x_legend_pos']
             y_pos = data_dict['y_legend_pos']
@@ -420,13 +442,6 @@ class Variant(Renderable):
             y_pos = data_dict['y_pos']
             center_position = PositionRecord(x_pos=x_pos, y_pos=y_pos)
             self._position_table[center] = center_position
-
-        # load coasts types names
-        assert len(self._raw_parameters_content['coasts']) == len(self._coast_types)
-        for coast_type_num_str, data_dict in self._raw_parameters_content['coasts'].items():
-            coast_type_num = int(coast_type_num_str)
-            coast_type = self._coast_types[coast_type_num]
-            self._name_table[coast_type] = name
 
         # load seasons names
         assert len(self._raw_parameters_content['seasons']) == len(SeasonEnum)
@@ -472,10 +487,6 @@ class Variant(Renderable):
     def position_table(self) -> typing.Dict[typing.Any, PositionRecord]:
         """ property """
         return self._position_table
-
-
-    def __str__(self) -> str:
-        return "TODO"
 
 
 class Point:
@@ -576,6 +587,11 @@ class Army(Unit):
                 ctx.lineTo(p.x, p.y)
         ctx.closePath();  ctx.stroke() # no fill
 
+        # temporary
+        legend = self._variant.name_table[self._zone]
+        debug_colour = ColourRecord(255, 0, 0)
+        ctx.fillStyle = debug_colour.str_value()
+        ctx.fillText(legend, x, y)
 
 class Fleet(Unit):
     """ An fleet """
@@ -638,9 +654,14 @@ class Fleet(Unit):
 
         # hublots
         for i in range(5):
-            #canvas.create_oval(x - 8 + 5 * i, y + 1, x - 8 + 5 * i + 2, y + 2, outline=outline_color)
             ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2*math.pi, False)
             ctx.stroke()  # no fill
+
+        # temporary
+        legend = self._variant.name_table[self._zone]
+        debug_colour = ColourRecord(255, 0, 0)
+        ctx.fillStyle = debug_colour.str_value()
+        ctx.fillText(legend, x, y)
 
 
 def render_all(variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
@@ -654,16 +675,15 @@ def render_all(variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
 
     # make a test army
     role = variant._roles[1]
-    zone = variant._zones[1]
-    army = Army(variant, role, zone)
+    for zone in variant._zones.values():
 
-    # display it
-    army.render(ctx)
+        z=variant.name_table[zone]
 
-    # make a test fleet
-    role = variant._roles[2]
-    zone = variant._zones[2]
-    fleet = Fleet(variant, role, zone)
+        army = Army(variant, role, zone)
 
-    # display it
-    fleet.render(ctx)
+        # display it
+        army.render(ctx)
+
+        break
+
+
