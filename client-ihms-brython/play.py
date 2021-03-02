@@ -8,6 +8,7 @@ from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
+import mapping
 
 OPTIONS = ['submit orders', 'negotiate', 'display parameters']
 
@@ -33,8 +34,24 @@ my_panel <= my_sub_panel
 def submit_orders():
     """ submit_orders """
 
-    dummy = html.P("submit orders")
-    my_sub_panel <= dummy
+    canvas = html.CANVAS(id="canvas")
+    ctx = canvas.getContext('2d')
+
+    img = html.IMG("./variants/standard/stabbeur/map.jpng")
+    img.bind('load', lambda ev: ctx.drawImage(img))
+
+    # load variant
+    variant = mapping.Variant("./temp/standard.json", "./variants/standard/stabbeur/parameters.json")
+
+    # make a test army
+    role = variant._roles[1]
+    zone = variant._zones[1]
+    army = mapping.Army(variant, role, zone)
+
+    # display it
+    army.render(ctx)
+
+    my_sub_panel <= canvas
 
 
 def negotiate():
@@ -158,5 +175,6 @@ def load_option(_, item_name):
 
 def render(panel_middle):
     """ render """
+
     load_option(None, item_name_selected)
     panel_middle <= my_panel
