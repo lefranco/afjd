@@ -1096,7 +1096,7 @@ def change_state_game():
     form <= legend_state
 
     input_state = html.SELECT(type="select-one", value="")
-    for possible_state in STATE_CODE_TABLE:
+    for possible_state in config.STATE_CODE_TABLE:
         option = html.OPTION(possible_state)
         if config.STATE_CODE_TABLE[possible_state] == state_loaded:
             option.selected = True
