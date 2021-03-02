@@ -1,5 +1,5 @@
 {
-	
+
 	"map": {
 		"width": 630,
 		"height": 535
@@ -544,7 +544,7 @@
         "65": {
             "name": "tun",
             "x_legend_pos": 224,
-            "y_legend_pos": 13,
+            "y_legend_pos": 513,
             "x_pos": 42,
             "y_pos": 23
         },
