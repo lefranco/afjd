@@ -4,6 +4,17 @@ import json
 import enum
 import typing
 import itertools
+import abc
+import math
+
+# pylint: disable=pointless-statement, expression-not-assigned, multiple-statements
+
+class Renderable:
+    """ Renderable """
+
+    @abc.abstractmethod
+    def render(self, ctx: typing.Any) -> None:
+        """ render = display """
 
 
 @enum.unique
@@ -208,11 +219,13 @@ class ColourRecord(typing.NamedTuple):
     blue: int
 
     def outline_colour(self) -> 'ColourRecord':
+        """ outline_colour """
         if self.red + self.green + self.blue < (256 + 256 + 256) // 2:
             return ColourRecord(red=256//2, green=256//2, blue=256//2)
         return ColourRecord(red=0, green=0, blue=0)
 
     def str_value(self) -> str:
+        """ str_value """
         return f"rgb({self.red}, {self.green}, {self.blue})"
 
 class PositionRecord(typing.NamedTuple):
@@ -220,7 +233,7 @@ class PositionRecord(typing.NamedTuple):
     x_pos: int
     y_pos: int
 
-class Variant:
+class Variant(Renderable):
     """ A variant """
 
     def __init__(self, variant_file_name: str, parameters_file_name: str) -> None:
@@ -428,6 +441,15 @@ class Variant:
             assert order_type is not None
             self._name_table[order_type] = name
 
+    def render(self, ctx: typing.Any) -> None:
+        """ render the legends only """
+        for zone in self._zones.values():
+            position = self._legend_position_table[zone]
+            x_pos = position.x_pos
+            y_pos = position.y_pos
+            legend = self._name_table[zone]
+            ctx.fillText(legend, x_pos, y_pos)
+
     @property
     def map_size(self) -> PositionRecord:
         """ property """
@@ -448,11 +470,6 @@ class Variant:
         """ property """
         return self._position_table
 
-    @property
-    def legend_position_table(self) -> typing.Dict[typing.Any, PositionRecord]:
-        """ property """
-        return self._legend_position_table
-
 
     def __str__(self) -> str:
         return "TODO"
@@ -464,7 +481,10 @@ class Point:
         self.x = 0  # pylint: disable=invalid-name
         self.y = 0  # pylint: disable=invalid-name
 
-class Unit:
+    def __str__(self) -> str:
+        return f"x={self.x} y={self.y}"
+
+class Unit(Renderable): # pylint: disable=abstract-method
     """ A unit """
 
     def __init__(self, variant: Variant, role: Role, zone: Zone) -> None:
@@ -474,15 +494,18 @@ class Unit:
 
 
 class Army(Unit):
+    """ An army """
 
     # no init : use init from parent class
-
 
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
 
         fill_color = self._variant.colour_table[self._role]
+        ctx.fillStyle = fill_color.str_value()
+
         outline_colour = fill_color.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
 
         position = self._variant.position_table[self._zone]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
@@ -493,21 +516,26 @@ class Army(Unit):
         p1[1].x = x - 15; p1[1].y = y + 9
         p1[2].x = x + 6; p1[2].y = y + 9
         p1[3].x = x + 6; p1[3].y = y + 6
-        ctx.fillStyle = fill_color.str_value()
-        ctx.strokeStyle = outline_colour.str_value()
         ctx.beginPath()
-        for p in p1:  # pylint: disable=invalid-name
-            ctx.lineTo(p.x, p.y)
-        ctx.closePath()
-
-        return # TODO REMOVE
+        for n, p in enumerate(p1):  # pylint: disable=invalid-name
+            if not n:
+                ctx.moveTo(x, y)
+            else:
+                ctx.lineTo(p.x, p.y)
+        ctx.closePath(); ctx.fill(); ctx.stroke()
 
         # coin
         p2 = [Point() for _ in range(3)]  # pylint: disable=invalid-name
         p2[0].x = x - 9; p2[0].y = y + 6
         p2[1].x = x - 4; p2[1].y = y + 6
         p2[2].x = x - 7; p2[2].y = y + 3
-        canvas.create_polygon(*(itertools.chain(*[[p.x, p.y] for p in p2])), fill=fill_color.str_value(), outline=outline_colour.str_value())
+        ctx.beginPath()
+        for n, p in enumerate(p2):  # pylint: disable=invalid-name
+            if not n:
+                ctx.moveTo(x, y)
+            else:
+                ctx.lineTo(p.x, p.y)
+        ctx.closePath(); ctx.fill(); ctx.stroke()
 
         # canon
         p3 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
@@ -515,18 +543,124 @@ class Army(Unit):
         p3[1].x = x + 4; p3[1].y = y - 15
         p3[2].x = x + 5; p3[2].y = y - 13
         p3[3].x = x;  p3[3].y = y - 7
-        canvas.create_polygon(*(itertools.chain(*[[p.x, p.y] for p in p3])), fill=fill_color.str_value(), outline=outline_colour.str_value())
+        ctx.beginPath()
+        for n, p in enumerate(p3):  # pylint: disable=invalid-name
+            if not n:
+                ctx.moveTo(x, y)
+            else:
+                ctx.lineTo(p.x, p.y)
+        ctx.closePath(); ctx.fill(); ctx.stroke()
 
         # cercle autour roue exterieure
         # simplified
-        canvas.create_oval(x - 6, y - 6, x + 5, y + 5, fill=fill_color.str_value(), outline=outline_colour.str_value())
+        ctx.arc(x, y, 6, 0, 2*math.pi, False)
+        ctx.fill(); ctx.stroke()
 
         # roue interieure
         # simplified
-        canvas.create_oval(x - 1, y - 1, x + 1, y + 1, fill=fill_color.str_value(), outline=outline_colour.str_value())
+        ctx.arc(x, y, 1, 0, 2*math.pi, False)
+        ctx.fill(); ctx.stroke()
 
         # exterieur coin
-        canvas.create_line(x - 7, y + 3, x - 9, y + 6, fill=fill_color.str_value())
+        p4 = [Point() for _ in range(2)]  # pylint: disable=invalid-name
+        p4[0].x = x - 7; p4[0].y = y + 3
+        p4[1].x = x - 9; p4[1].y = y + 6
+        ctx.beginPath()
+        for n, p in enumerate(p4):  # pylint: disable=invalid-name
+            if not n:
+                ctx.moveTo(x, y)
+            else:
+                ctx.lineTo(p.x, p.y)
+        ctx.closePath();  ctx.stroke() # no fill
 
 
+class Fleet(Unit):
+    """ An fleet """
 
+    # no init : use init from parent class
+
+    def render(self, ctx: typing.Any) -> None:
+        """put me on screen """
+
+        fill_color = self._variant.colour_table[self._role]
+        ctx.fillStyle = fill_color.str_value()
+
+        outline_colour = fill_color.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+
+        position = self._variant.position_table[self._zone]
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        # gros oeuvre
+        p1 = [Point() for _ in range(32)]  # pylint: disable=invalid-name
+        p1[0].x = x - 15; p1[0].y = y + 4
+        p1[1].x = x + 16; p1[1].y = y + 4
+        p1[2].x = x + 15; p1[2].y = y
+        p1[3].x = x + 10; p1[3].y = y
+        p1[4].x = x + 10; p1[4].y = y - 3
+        p1[5].x = x + 7; p1[5].y = y - 3
+        p1[6].x = x + 7; p1[6].y = y - 2
+        p1[7].x = x + 4; p1[7].y = y - 2
+        p1[8].x = x + 4; p1[8].y = y - 9
+        p1[9].x = x + 3; p1[9].y = y - 9
+        p1[10].x = x + 3; p1[10].y = y - 6
+        p1[11].x = x - 1; p1[11].y = y - 6
+        p1[12].x = x - 1; p1[12].y = y - 9
+        p1[13].x = x - 2; p1[13].y = y - 9
+        p1[14].x = x - 2; p1[14].y = y - 13
+        p1[15].x = x - 3; p1[15].y = y - 13
+        p1[16].x = x - 3; p1[16].y = y - 6
+        p1[17].x = x - 6; p1[17].y = y - 6
+        p1[18].x = x - 6; p1[18].y = y - 5
+        p1[19].x = x - 3; p1[19].y = y - 5
+        p1[20].x = x - 3; p1[20].y = y - 4
+        p1[21].x = x - 4; p1[21].y = y - 3
+        p1[22].x = x - 4; p1[22].y = y - 2
+        p1[23].x = x - 5; p1[23].y = y - 2
+        p1[24].x = x - 5; p1[24].y = y - 3
+        p1[25].x = x - 9; p1[25].y = y - 3
+        p1[26].x = x - 9; p1[26].y = y
+        p1[27].x = x - 12; p1[27].y = y
+        p1[28].x = x - 12; p1[28].y = y - 1
+        p1[29].x = x - 13; p1[29].y = y - 1
+        p1[30].x = x - 13; p1[30].y = y
+        p1[31].x = x - 12; p1[31].y = y
+        ctx.beginPath()
+        for n, p in enumerate(p1):  # pylint: disable=invalid-name
+            if not n:
+                ctx.moveTo(x, y)
+            else:
+                ctx.lineTo(p.x, p.y)
+        ctx.closePath(); ctx.fill(); ctx.stroke()
+
+        # hublots
+        for i in range(5):
+            #canvas.create_oval(x - 8 + 5 * i, y + 1, x - 8 + 5 * i + 2, y + 2, outline=outline_color)
+            ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2*math.pi, False)
+            ctx.stroke()  # no fill
+
+
+def render_all(variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
+    """ fill the map """
+
+    # put the background map first
+    ctx.drawImage(img, 0, 0)
+
+    # put the legends
+    variant.render(ctx)
+
+    # make a test army
+    role = variant._roles[1]
+    zone = variant._zones[1]
+    army = Army(variant, role, zone)
+
+    # display it
+    army.render(ctx)
+
+    # make a test fleet
+    role = variant._roles[2]
+    zone = variant._zones[2]
+    fleet = Fleet(variant, role, zone)
+
+    # display it
+    fleet.render(ctx)
