@@ -32,29 +32,234 @@ my_sub_panel = html.DIV(id="sub")
 my_panel <= my_sub_panel
 
 
+def noreply_callback(_):
+    """ noreply_callback """
+    alert("Problem (no answer from server)")
+
+def get_game_id(name):
+    """ get_game_id """
+
+    game_id = None
+
+    def reply_callback(req):
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting game identifier: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting game identifier: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+        nonlocal game_id
+        game_id = int(req_result)
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-identifiers/{name}"
+
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return game_id
+
+
+def get_display_from_variant(variant):
+    """ get_display_from_variant """
+
+    # TODO : make it possible to choose
+    assert variant == 'standard'
+    return "stabbeur"
+
 def submit_orders():
     """ submit_orders """
 
+    status = None
+    variant_name_loaded = None
+    variant_content_loaded = None
+    variant_data = None
+    position_loaded = None
+
+    def game_variant_name_reload():
+        """ game_variant_name_reload """
+
+        nonlocal status
+        status = True
+
+        def local_noreply_callback(_):
+            """ noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
+
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal variant_name_loaded
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error loading game variant name: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem loading game variant name: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                status = False
+                return
+
+            variant_name_loaded = req_result['variant']
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+    def game_variant_content_reload():
+        """ game_variant_content_reload """
+
+        nonlocal status
+        status = True
+
+        def local_noreply_callback(_):
+            """ noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
+
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal variant_content_loaded
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error loading game variant content: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem loading game variant content: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                status = False
+                return
+
+            variant_content_loaded = req_result
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/variants/{variant_name_loaded}"
+
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+    def game_position_reload():
+        """ game_position_reload """
+
+        nonlocal status
+        status = True
+
+        def local_noreply_callback(_):
+            """ noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
+
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal position_loaded
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error loading game position: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem loading game position: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                status = False
+                return
+
+            position_loaded = req_result
+
+        game_id = get_game_id(game)
+        if game_id is None:
+            return
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-positions/{game_id}"
+
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return
+
     def callback_load(_):
         """ callback_load """
-        mapping.display(variant, img, ctx)
+        mapping.display(position_loaded, variant_data, img, ctx)
 
-    # load variant
-    variant = mapping.Variant("./temp/standard.json", "./variants/standard/stabbeur/parameters.json")
-    map_size = variant.map_size
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
+
+    # from game name get variant name
+
+    game_variant_name_reload()
+    if not status:
+        return
+
+    # now get variant content
+
+    game_variant_content_reload()
+    if not status:
+        return
+
+    # should be a user choice
+    display_chosen = get_display_from_variant(variant_name_loaded)
+
+    # get parameters from display chose
+
+    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+    with open(parameters_file_name, "r") as read_file:
+        parameters_read = json.load(read_file)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+
+    # now the position
+
+    game_position_reload()
+    if not status:
+        return
+
+    print(f"{position_loaded=}")
+
+    # now we can display
+
+    map_size = variant_data.map_size
 
     # create canvas
-    canvas = html.CANVAS(id="map_canvas", width = map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Please use a more recent navigator")
         return
 
     # put background
-    img = html.IMG(src="./variants/standard/stabbeur/map.png")
+    img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
     img.bind('load', callback_load)
 
     my_sub_panel <= canvas
+
     additional = html.P("additional stuff under the map")
     my_sub_panel <= additional
 
