@@ -588,10 +588,10 @@ class Army(Unit):
         ctx.closePath();  ctx.stroke() # no fill
 
         # temporary
-        legend = self._variant.name_table[self._zone]
-        debug_colour = ColourRecord(255, 0, 0)
-        ctx.fillStyle = debug_colour.str_value()
-        ctx.fillText(legend, x, y)
+        #legend = self._variant.name_table[self._zone]
+        #debug_colour = ColourRecord(255, 0, 0)
+        #ctx.fillStyle = debug_colour.str_value()
+        #ctx.fillText(legend, x, y)
 
 class Fleet(Unit):
     """ An fleet """
@@ -658,11 +658,34 @@ class Fleet(Unit):
             ctx.stroke()  # no fill
 
         # temporary
-        legend = self._variant.name_table[self._zone]
-        debug_colour = ColourRecord(255, 0, 0)
-        ctx.fillStyle = debug_colour.str_value()
-        ctx.fillText(legend, x, y)
+        #legend = self._variant.name_table[self._zone]
+        #debug_colour = ColourRecord(255, 0, 0)
+        #ctx.fillStyle = debug_colour.str_value()
+        #ctx.fillText(legend, x, y)
 
+
+class Ownership(Renderable):
+    """ OwnerShip """
+
+    def __init__(self, variant: Variant, role: Role, region: Region) -> None:
+        self._variant = variant
+        self._role = role
+        self._region = region
+
+    def render(self, ctx: typing.Any) -> None:
+        """put me on screen """
+
+        fill_color = self._variant.colour_table[self._role]
+        ctx.fillStyle = fill_color.str_value()
+
+        outline_colour = fill_color.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+
+        position = self._variant.position_table[self._region]
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        ctx.fillRect(x-4, y-4, 8, 8)
+        ctx.strokeRect(x-4, y-4, 8, 8)
 
 def render_all(variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
     """ fill the map """
@@ -673,17 +696,15 @@ def render_all(variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
     # put the legends
     variant.render(ctx)
 
-    # make a test army
-    role = variant._roles[1]
-    for zone in variant._zones.values():
+    n = 1
+    for center in variant._centers.values():
 
-        z=variant.name_table[zone]
-
-        army = Army(variant, role, zone)
+        role = variant._roles[n]
 
         # display it
-        army.render(ctx)
+        ownershp = Ownership(variant, role, center)
+        ownershp.render(ctx)
 
-        break
-
-
+        n+=1
+        if n==8:
+            n=1
