@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
+import datetime
 
 from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -135,6 +136,22 @@ def display_parameters():
             "border": "solid",
         }
         row <= col1
+
+        if key == 'deadline':
+            deadline_loaded = value
+            datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
+            deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+            deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
+            deadline_loaded = f"{deadline_loaded_day} {deadline_loaded_hour}"
+            value = deadline_loaded
+
+        if key == 'current_state':
+            state_loaded = value
+            for possible_state in config.STATE_CODE_TABLE:
+                if config.STATE_CODE_TABLE[possible_state] == state_loaded:
+                    state_loaded = possible_state
+                    break
+            value = state_loaded
 
         col2 = html.TD(value)
         col2.style = {
