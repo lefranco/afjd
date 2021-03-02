@@ -3,7 +3,6 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 
-import json
 import enum
 import typing
 import abc
@@ -46,7 +45,7 @@ class UnitTypeEnum(enum.Enum):
     """ UnitTypeEnum """
 
     ARMY_UNIT = enum.auto()
-    FLOAT_UNIT = enum.auto()
+    FLEET_UNIT = enum.auto()
 
     @staticmethod
     def from_code(code: int) -> typing.Optional['UnitTypeEnum']:
@@ -54,7 +53,7 @@ class UnitTypeEnum(enum.Enum):
         if code == 1:
             return UnitTypeEnum.ARMY_UNIT
         if code == 2:
-            return UnitTypeEnum.FLOAT_UNIT
+            return UnitTypeEnum.FLEET_UNIT
         return None
 
 
@@ -267,15 +266,14 @@ class PositionRecord(typing.NamedTuple):
 class Variant(Renderable):
     """ A variant """
 
-    def __init__(self, variant_file_name: str, parameters_file_name: str) -> None:
+    def __init__(self, raw_variant_content: typing.Dict[str, typing.Any], raw_parameters_content: typing.Dict[str, typing.Any]) -> None:
 
         # =================
         # from variant file
         # =================
 
-        # load the variant file
-        with open(variant_file_name, "r") as read_file:
-            self._raw_variant_content = json.load(read_file)
+        # load the variant from dict
+        self._raw_variant_content = raw_variant_content
 
         # load the regions
         self._regions: typing.Dict[int, Region] = dict()
@@ -375,9 +373,8 @@ class Variant(Renderable):
         # from parameters file
         # =================
 
-        # load the parameters file
-        with open(parameters_file_name, "r") as read_file:
-            self._raw_parameters_content = json.load(read_file)
+        # load the parameters content
+        self._raw_parameters_content = raw_parameters_content
 
         self._name_table: typing.Dict[typing.Any, str] = dict()
         self._colour_table: typing.Dict[typing.Any, ColourRecord] = dict()
@@ -739,7 +736,7 @@ class Forbidden(Renderable):
         ctx.closePath(); ctx.stroke()
 
 
-def display(variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
+def display(position: typing.Dict[str, typing.Any], variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
     """ fill the map """
 
     # put the background map first
@@ -747,4 +744,35 @@ def display(variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
 
     # put the legends
     variant.render(ctx)
+
+    # TODO : probably we should not just display but rather store
+    # than display so to be able to use to enter orders
+
+    ownerships = position['ownerships']
+    for center_num_str, role_num in ownerships.items():
+        center_num = int(center_num_str)
+        center = variant._centers[center_num]
+        role = variant._roles[role_num]
+        ownership = Ownership(variant, role, center)
+        ownership.render(ctx)
+
+    units = position['units']
+    for role_num_str, role_units in units.items():
+        role_num = int(role_num_str)
+        role = variant._roles[role_num]
+        for type_unit_code, zone_number in role_units:
+            type_unit = UnitTypeEnum.from_code(type_unit_code)
+            zone = variant._zones[zone_number]
+            if type_unit is UnitTypeEnum.ARMY_UNIT:
+                unit = Army(variant, role, zone)
+            if type_unit is UnitTypeEnum.FLEET_UNIT:
+                unit = Fleet(variant, role, zone)
+            unit.render(ctx)
+
+
+    # TODO
+    forbiddens = position['forbiddens']
+
+    # TODO
+    dislodged_ones = position['dislodged_ones']
 
