@@ -296,9 +296,6 @@ def move_players_in_game():
             move_players_in_game()
 
         player_pseudo = input_incomer.value
-        player_id = get_player_id(player_pseudo)
-        if player_id is None:
-            return
 
         game_id = get_game_id(game)
         if game_id is None:
@@ -306,7 +303,7 @@ def move_players_in_game():
 
         json_dict = {
             'game_id': game_id,
-            'player_id': player_id,
+            'player_pseudo': player_pseudo,
             'pseudo': pseudo,
             'delete': 0
         }
@@ -337,9 +334,6 @@ def move_players_in_game():
             move_players_in_game()
 
         player_pseudo = input_outcomer.value
-        player_id = get_player_id(player_pseudo)
-        if player_id is None:
-            return
 
         game_id = get_game_id(game)
         if game_id is None:
@@ -347,7 +341,7 @@ def move_players_in_game():
 
         json_dict = {
             'game_id': game_id,
-            'player_id': player_id,
+            'player_pseudo': player_pseudo,
             'pseudo': pseudo,
             'delete': 1
         }
