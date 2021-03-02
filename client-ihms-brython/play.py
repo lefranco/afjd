@@ -17,7 +17,7 @@ my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
 menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width:25%; vertical-align: top;'
+menu_left.attrs['style'] = 'display: table-cell; width:15%; vertical-align: top;'
 my_panel <= menu_left
 
 # menu-selection
@@ -43,7 +43,7 @@ def submit_orders():
     map_size = variant.map_size
 
     # create canvas
-    canvas = html.CANVAS(id="map_canvas", height=map_size.x_pos, width = map_size.y_pos, alt="Map of the game")
+    canvas = html.CANVAS(id="map_canvas", width = map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Please use a more recent navigator")
