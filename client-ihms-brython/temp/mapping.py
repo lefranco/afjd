@@ -3,6 +3,7 @@
 import json
 import enum
 import typing
+import itertools
 
 
 @enum.unique
@@ -200,11 +201,33 @@ class Role:
         """ setter """
         self._start_centers = start_centers
 
+class ColourRecord(typing.NamedTuple):
+    """ A colour """
+    red: int
+    green: int
+    blue: int
+
+    def outline_colour(self) -> 'ColourRecord':
+        if self.red + self.green + self.blue < (256 + 256 + 256) // 2:
+            return ColourRecord(red=256//2, green=256//2, blue=256//2)
+        return ColourRecord(red=0, green=0, blue=0)
+
+    def str_value(self) -> str:
+        return "#%02x%02x%02x" % (self.red, self.green, self.blue)
+
+class PositionRecord(typing.NamedTuple):
+    """ A position """
+    x_pos: int
+    y_pos: int
 
 class Variant:
     """ A variant """
 
     def __init__(self, variant_file_name: str, parameters_file_name: str) -> None:
+
+        # =================
+        # from variant file
+        # =================
 
         # load the variant file
         with open(variant_file_name, "r") as read_file:
@@ -303,14 +326,18 @@ class Variant:
         # load the distancing
         # not needed
 
+        # =================
+        # from parameters file
+        # =================
+
         # load the parameters file
         with open(parameters_file_name, "r") as read_file:
             self._raw_parameters_content = json.load(read_file)
 
         self._name_table: typing.Dict[typing.Any, str] = dict()
-        self._colour_table: typing.Dict[typing.Any, typing.Tuple[int, int, int]] = dict()
-        self._coordinates_table: typing.Dict[typing.Any, typing.Tuple[int, int]] = dict()
-        self._legend_coordinates_table: typing.Dict[typing.Any, typing.Tuple[int, int]] = dict()
+        self._colour_table: typing.Dict[typing.Any, ColourRecord] = dict()
+        self._position_table: typing.Dict[typing.Any, PositionRecord] = dict()
+        self._legend_position_table: typing.Dict[typing.Any, PositionRecord] = dict()
 
         # load the regions type names
         assert len(self._raw_parameters_content['regions']) == len(RegionTypeEnum)
@@ -338,11 +365,11 @@ class Variant:
                 continue
             role = self._roles[role_num]
             name = data_dict['name']
+            self._name_table[role] = name
             red = data_dict['red']
             green = data_dict['green']
             blue = data_dict['blue']
-            colour = (red, green, blue)
-            self._name_table[role] = name
+            colour = ColourRecord(red=red, green=green, blue=blue)
             self._colour_table[role] = colour
 
         # load the zones names and localisations
@@ -351,13 +378,15 @@ class Variant:
             zone_num = int(zone_num_str)
             zone = self._zones[zone_num]
             name = data_dict['name']
-            x_legend_pos = data_dict['x_name']  # TODO : rename into x_legend_pos
-            y_legend_pos = data_dict['y_name']  # TODO : rename into y_legend_pos
+            self._name_table[zone] = name
+            x_pos = data_dict['x_name']  # TODO : rename into x_legend_pos
+            y_pos = data_dict['y_name']  # TODO : rename into y_legend_pos
+            legend_position = PositionRecord(x_pos=x_pos, y_pos=y_pos)
+            self._legend_position_table[zone] = legend_position
             x_pos = data_dict['x_pos']
             y_pos = data_dict['y_pos']
-            self._name_table[zone] = name
-            self._legend_coordinates_table[zone] = (x_legend_pos, y_legend_pos)
-            self._coordinates_table[zone] = (x_pos, y_pos)
+            unit_position = PositionRecord(x_pos=x_pos, y_pos=y_pos)
+            self._position_table[zone] = unit_position
 
         # load the centers localisations
         assert len(self._raw_parameters_content['centers']) == len(self._centers)
@@ -366,7 +395,8 @@ class Variant:
             center = self._centers[center_num]
             x_pos = data_dict['x_pos']
             y_pos = data_dict['y_pos']
-            self._coordinates_table[center] = (x_pos, y_pos)
+            center_position = PositionRecord(x_pos=x_pos, y_pos=y_pos)
+            self._position_table[center] = center_position
 
         # load coasts types names
         assert len(self._raw_parameters_content['coasts']) == len(self._coast_types)
@@ -391,15 +421,108 @@ class Variant:
             assert order_type is not None
             self._name_table[order_type] = name
 
+    @property
+    def name_table(self) -> typing.Dict[typing.Any, str]:
+        """ property """
+        return self._name_table
+
+    @property
+    def colour_table(self) -> typing.Dict[typing.Any, ColourRecord]:
+        """ property """
+        return self._colour_table
+
+    @property
+    def position_table(self) -> typing.Dict[typing.Any, PositionRecord]:
+        """ property """
+        return self._position_table
+
+    @property
+    def legend_position_table(self) -> typing.Dict[typing.Any, PositionRecord]:
+        """ property """
+        return self._legend_position_table
+
+
     def __str__(self) -> str:
         return "TODO"
+
+
+class Point:
+    """ Point for easier compatbility with old C software (do not use a record here) """
+    def __init__(self) -> None:
+        self.x = 0  # pylint: disable=invalid-name
+        self.y = 0  # pylint: disable=invalid-name
+
+class Unit:
+    """ A unit """
+
+    def __init__(self, variant: Variant, role: Role, zone: Zone) -> None:
+        self._variant = variant
+        self._role = role
+        self._zone = zone
+
+
+class Army(Unit):
+
+    # no init : use init from parent class
+
+
+    def render(self, canvas: typing.Any) -> None:
+        """put me on screen """
+
+        fill_color = self._variant.colour_table[self._role]
+        outline_colour = fill_color.outline_colour()
+
+        position = self._variant.position_table[self._zone]
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        # socle
+        p1 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
+        p1[0].x = x - 15; p1[0].y = y + 6
+        p1[1].x = x - 15; p1[1].y = y + 9
+        p1[2].x = x + 6; p1[2].y = y + 9
+        p1[3].x = x + 6; p1[3].y = y + 6
+        canvas.create_polygon(*(itertools.chain(*[[p.x, p.y] for p in p1])), fill=fill_color.str_value(), outline=outline_colour.str_value())
+
+        # coin
+        p2 = [Point() for _ in range(3)]  # pylint: disable=invalid-name
+        p2[0].x = x - 9; p2[0].y = y + 6
+        p2[1].x = x - 4; p2[1].y = y + 6
+        p2[2].x = x - 7; p2[2].y = y + 3
+        canvas.create_polygon(*(itertools.chain(*[[p.x, p.y] for p in p2])), fill=fill_color.str_value(), outline=outline_colour.str_value())
+
+        # canon
+        p3 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
+        p3[0].x = x - 2; p3[0].y = y - 7
+        p3[1].x = x + 4; p3[1].y = y - 15
+        p3[2].x = x + 5; p3[2].y = y - 13
+        p3[3].x = x;  p3[3].y = y - 7
+        canvas.create_polygon(*(itertools.chain(*[[p.x, p.y] for p in p3])), fill=fill_color.str_value(), outline=outline_colour.str_value())
+
+        # cercle autour roue exterieure
+        # simplified
+        canvas.create_oval(x - 6, y - 6, x + 5, y + 5, fill=fill_color.str_value(), outline=outline_colour.str_value())
+
+        # roue interieure
+        # simplified
+        canvas.create_oval(x - 1, y - 1, x + 1, y + 1, fill=fill_color.str_value(), outline=outline_colour.str_value())
+
+        # exterieur coin
+        canvas.create_line(x - 7, y + 3, x - 9, y + 6, fill=fill_color.str_value())
 
 
 def main() -> None:
     """ main """
 
+    # load variant
     variant = Variant("./standard.json", "./parameters.json")
-    print(variant)
+
+    # make a test army
+    role = variant._roles[1]
+    zone = variant._zones[1]
+    army = Army(variant, role, zone)
+
+    # display it
+    army.render()
 
 
 if __name__ == '__main__':
