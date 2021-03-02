@@ -519,7 +519,7 @@ class Army(Unit):
         ctx.beginPath()
         for n, p in enumerate(p1):  # pylint: disable=invalid-name
             if not n:
-                ctx.moveTo(x, y)
+                ctx.moveTo(p.x, p.y)
             else:
                 ctx.lineTo(p.x, p.y)
         ctx.closePath(); ctx.fill(); ctx.stroke()
@@ -532,7 +532,7 @@ class Army(Unit):
         ctx.beginPath()
         for n, p in enumerate(p2):  # pylint: disable=invalid-name
             if not n:
-                ctx.moveTo(x, y)
+                ctx.moveTo(p.x, p.y)
             else:
                 ctx.lineTo(p.x, p.y)
         ctx.closePath(); ctx.fill(); ctx.stroke()
@@ -546,19 +546,19 @@ class Army(Unit):
         ctx.beginPath()
         for n, p in enumerate(p3):  # pylint: disable=invalid-name
             if not n:
-                ctx.moveTo(x, y)
+                ctx.moveTo(p.x, p.y)
             else:
                 ctx.lineTo(p.x, p.y)
         ctx.closePath(); ctx.fill(); ctx.stroke()
 
         # cercle autour roue exterieure
         # simplified
-        ctx.arc(x, y, 6, 0, 2*math.pi, False)
+        ctx.arc(x, y, 7, 0, 2*math.pi, False)
         ctx.fill(); ctx.stroke()
 
         # roue interieure
         # simplified
-        ctx.arc(x, y, 1, 0, 2*math.pi, False)
+        ctx.arc(x, y, 2, 0, 2*math.pi, False)
         ctx.fill(); ctx.stroke()
 
         # exterieur coin
@@ -568,7 +568,7 @@ class Army(Unit):
         ctx.beginPath()
         for n, p in enumerate(p4):  # pylint: disable=invalid-name
             if not n:
-                ctx.moveTo(x, y)
+                ctx.moveTo(p.x, p.y)
             else:
                 ctx.lineTo(p.x, p.y)
         ctx.closePath();  ctx.stroke() # no fill
@@ -628,7 +628,7 @@ class Fleet(Unit):
         ctx.beginPath()
         for n, p in enumerate(p1):  # pylint: disable=invalid-name
             if not n:
-                ctx.moveTo(x, y)
+                ctx.moveTo(p.x, p.y)
             else:
                 ctx.lineTo(p.x, p.y)
         ctx.closePath(); ctx.fill(); ctx.stroke()
