@@ -791,7 +791,7 @@ class Position(Renderable):
             center_num = int(center_num_str)
             center = variant._centers[center_num]
             role = variant._roles[role_num]
-            ownership = Ownership(variant, role, center)
+            ownership = Ownership(self, role, center)
             self._ownerships.append(ownership)
 
         # units
@@ -804,10 +804,10 @@ class Position(Renderable):
                 type_unit = UnitTypeEnum.from_code(type_unit_code)
                 zone = variant._zones[zone_number]
                 if type_unit is UnitTypeEnum.ARMY_UNIT:
-                    army = Army(variant, role, zone, None)
+                    army = Army(self, role, zone, None)
                     self._units.append(army)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:
-                    fleet = Fleet(variant, role, zone, None)
+                    fleet = Fleet(self, role, zone, None)
                     self._units.append(fleet)
 
         # forbiddens
@@ -815,7 +815,7 @@ class Position(Renderable):
         self._forbiddens: typing.List[Forbidden] = list()
         for region_num in forbiddens:
             region = variant._regions[region_num]
-            forbidden = Forbidden(variant, region)
+            forbidden = Forbidden(self, region)
             self._forbiddens.append(forbidden)
 
         # dislodged_units
@@ -829,10 +829,10 @@ class Position(Renderable):
                 zone = variant._zones[zone_number]
                 dislodger_region = variant._regions[dislodger_region_number]
                 if type_unit is UnitTypeEnum.ARMY_UNIT:
-                    dislodged_army = Army(variant, role, zone, dislodger_region)
+                    dislodged_army = Army(self, role, zone, dislodger_region)
                     self._dislodged_units.append(dislodged_army)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:
-                    dislodged_fleet = Fleet(variant, role, zone, dislodger_region)
+                    dislodged_fleet = Fleet(self, role, zone, dislodger_region)
                     self._dislodged_units.append(dislodged_fleet)
 
     def render(self, ctx: typing.Any) -> None:
