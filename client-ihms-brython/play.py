@@ -9,6 +9,7 @@ from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
+import common
 import mapping
 
 OPTIONS = ['submit orders', 'negotiate', 'show game parameters', 'show players in game']
@@ -31,39 +32,6 @@ my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
 
-
-def noreply_callback(_):
-    """ noreply_callback """
-    alert("Problem (no answer from server)")
-
-
-def get_game_id(name):
-    """ get_game_id """
-
-    game_id = None
-
-    def reply_callback(req):
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Error getting game identifier: {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problem getting game identifier: {req_result['msg']}")
-            else:
-                alert("Undocumented issue from server")
-            return
-        nonlocal game_id
-        game_id = int(req_result)
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-identifiers/{name}"
-
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
-
-    return game_id
 
 
 def get_display_from_variant(variant):
@@ -92,7 +60,7 @@ def submit_orders():
         status = True
 
         def local_noreply_callback(_):
-            """ noreply_callback """
+            """ local_noreply_callback """
             nonlocal status
             alert("Problem (no answer from server)")
             status = False
@@ -130,7 +98,7 @@ def submit_orders():
         status = True
 
         def local_noreply_callback(_):
-            """ noreply_callback """
+            """ local_noreply_callback """
             nonlocal status
             alert("Problem (no answer from server)")
             status = False
@@ -168,7 +136,7 @@ def submit_orders():
         status = True
 
         def local_noreply_callback(_):
-            """ noreply_callback """
+            """ local_noreply_callback """
             nonlocal status
             alert("Problem (no answer from server)")
             status = False
@@ -191,7 +159,7 @@ def submit_orders():
 
             position_loaded = req_result
 
-        game_id = get_game_id(game)
+        game_id = common.get_game_id(game)
         if game_id is None:
             return
 
@@ -300,7 +268,7 @@ def show_game_parameters():
         status = True
 
         def local_noreply_callback(_):
-            """ noreply_callback """
+            """ local_noreply_callback """
             nonlocal status
             alert("Problem (no answer from server)")
             status = False
@@ -408,7 +376,7 @@ def get_players():
     url = f"{host}:{port}/players"
 
     # getting player list : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return players_dict
 
@@ -439,7 +407,7 @@ def get_game_players_data(game_id):
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/game-allocations/{game_id}"
 
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return game_players_dict
 
@@ -453,7 +421,7 @@ def show_players_in_game():
 
     game = storage['GAME']
 
-    game_id = get_game_id(game)
+    game_id = common.get_game_id(game)
     if game_id is None:
         return
 

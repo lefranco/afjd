@@ -8,16 +8,11 @@ import datetime
 from browser import html, ajax, alert  # pylint: disable=import-error
 
 import config
+import common
 
 my_panel = html.DIV(id="players")
 
 OPTIONS = ['players', 'games', 'game masters']
-
-
-def noreply_callback(_):
-    """ noreply_callback """
-    alert("Problem (no answer from server)")
-
 
 def get_players_data():
     """ get_players_data """
@@ -45,7 +40,7 @@ def get_players_data():
     port = config.SERVER_CONFIG['PLAYER']['PORT']
     url = f"{host}:{port}/players"
 
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict(players_dict)
 
@@ -122,7 +117,7 @@ def get_games_data():
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/games"
 
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict(games_dict)
 
@@ -213,7 +208,7 @@ def get_game_masters_data():
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/allocations"
 
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return list(game_masters_dict)
 

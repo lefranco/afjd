@@ -9,15 +9,11 @@ from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
+import common
 
 my_panel = html.DIV(id="games")
 
 OPTIONS = ['join game', 'quit game', 'move players in game']
-
-
-def noreply_callback(_):
-    """ noreply_callback """
-    alert("Problem (no answer from server)")
 
 
 def get_player_id(pseudo):
@@ -45,38 +41,9 @@ def get_player_id(pseudo):
     url = f"{host}:{port}/player-identifiers/{pseudo}"
 
     # get player id : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return player_id
-
-
-def get_game_id(name):
-    """ get_game_id """
-
-    game_id = None
-
-    def reply_callback(req):
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Error getting game identifier: {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problem getting game identifier: {req_result['msg']}")
-            else:
-                alert("Undocumented issue from server")
-            return
-        nonlocal game_id
-        game_id = int(req_result)
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-identifiers/{name}"
-
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
-
-    return game_id
 
 
 def get_players():
@@ -104,7 +71,7 @@ def get_players():
     port = config.SERVER_CONFIG['PLAYER']['PORT']
     url = f"{host}:{port}/players"
 
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return players_dict
 
@@ -139,7 +106,7 @@ def get_game_allocated_players(game_id):
     url = f"{host}:{port}/game-allocations/{game_id}"
 
     # get players allocated to game : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return game_master_id, players_list
 
@@ -173,7 +140,7 @@ def join_game():
                 return
             InfoDialog("OK", f"Game joined : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
-        game_id = get_game_id(game)
+        game_id = common.get_game_id(game)
         if game_id is None:
             return
 
@@ -188,7 +155,7 @@ def join_game():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/allocations"
 
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     form = html.FORM()
 
@@ -228,7 +195,7 @@ def quit_game():
                 return
             InfoDialog("OK", f"Game quitted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
-        game_id = get_game_id(game)
+        game_id = common.get_game_id(game)
         if game_id is None:
             return
 
@@ -245,7 +212,7 @@ def quit_game():
 
         # should be a delete but body in delete requests is more or less forbidden
         # quitting a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     form = html.FORM()
 
@@ -292,7 +259,7 @@ def move_players_in_game():
 
         player_pseudo = input_incomer.value
 
-        game_id = get_game_id(game)
+        game_id = common.get_game_id(game)
         if game_id is None:
             return
 
@@ -308,7 +275,7 @@ def move_players_in_game():
         url = f"{host}:{port}/allocations"
 
         # putting a player in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def remove_from_game_callback(_):
         """remove_from_game_callback"""
@@ -331,7 +298,7 @@ def move_players_in_game():
 
         player_pseudo = input_outcomer.value
 
-        game_id = get_game_id(game)
+        game_id = common.get_game_id(game)
         if game_id is None:
             return
 
@@ -347,7 +314,7 @@ def move_players_in_game():
         url = f"{host}:{port}/allocations"
 
         # removing a player from a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     players_dict = get_players()
     if players_dict is None:
@@ -355,7 +322,7 @@ def move_players_in_game():
 
     id2pseudo = {v: k for k, v in players_dict.items()}
 
-    game_id = get_game_id(game)
+    game_id = common.get_game_id(game)
     if game_id is None:
         return
 

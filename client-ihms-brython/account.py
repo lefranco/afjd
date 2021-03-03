@@ -9,6 +9,7 @@ from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
+import common
 import login
 
 OPTIONS = ['create', 'change password', 'validate email', 'edit', 'delete']
@@ -26,11 +27,6 @@ with open("./data/country_list.json", "r") as read_file:
 # load timezone list from json data file
 with open("./data/timezone_list.json", "r") as read_file:
     TIMEZONE_CODE_TABLE = json.load(read_file)
-
-
-def noreply_callback(_):
-    """ noreply_callback """
-    alert("Problem (no answer from server)")
 
 
 def information_about_account():
@@ -112,7 +108,7 @@ def create_account():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players"
 
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     form = html.FORM()
 
@@ -240,7 +236,7 @@ def change_password():
         url = f"{host}:{port}/players/{pseudo}"
 
         # changing password : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'PSEUDO' not in storage:
         alert("Please login beforehand")
@@ -315,7 +311,7 @@ def validate_email():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/emails"
 
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'PSEUDO' not in storage:
         alert("Please login beforehand")
@@ -366,7 +362,7 @@ def edit_account():
         status = True
 
         def local_noreply_callback(_):
-            """ noreply_callback """
+            """ local_noreply_callback """
             nonlocal status
             alert("Problem (no answer from server)")
             status = False
@@ -468,7 +464,7 @@ def edit_account():
         url = f"{host}:{port}/players/{pseudo}"
 
         # updating data about account : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     status = edit_account_reload()
     if not status:
@@ -590,7 +586,7 @@ def delete_account():
         }
 
         # deleting account : need token
-        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     form = html.FORM()
     my_sub_panel <= form
