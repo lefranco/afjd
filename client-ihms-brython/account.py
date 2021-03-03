@@ -108,6 +108,7 @@ def create_account():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players"
 
+        # adding a player : no need for token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     form = html.FORM()
@@ -311,6 +312,7 @@ def validate_email():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/emails"
 
+        # adding an email : no need for token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'PSEUDO' not in storage:

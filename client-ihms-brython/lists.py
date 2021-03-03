@@ -14,6 +14,7 @@ my_panel = html.DIV(id="players")
 
 OPTIONS = ['players', 'games', 'game masters']
 
+
 def get_players_data():
     """ get_players_data """
 
@@ -40,6 +41,7 @@ def get_players_data():
     port = config.SERVER_CONFIG['PLAYER']['PORT']
     url = f"{host}:{port}/players"
 
+    # getting players list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict(players_dict)
@@ -91,41 +93,10 @@ def show_players_data():
     my_sub_panel <= players_table
 
 
-def get_games_data():
-    """ get_games_data """
-
-    games_dict = None
-
-    def reply_callback(req):
-        nonlocal games_dict
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Error getting games list: {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problem getting games list: {req_result['msg']}")
-            else:
-                alert("Undocumented issue from server")
-            return
-
-        req_result = json.loads(req.text)
-        games_dict = req_result
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games"
-
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return dict(games_dict)
-
-
 def show_games_data():
     """ show_games_data """
 
-    games_dict = get_games_data()
+    games_dict = common.get_games_data()
 
     if not games_dict:
         return
@@ -208,6 +179,7 @@ def get_game_masters_data():
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/allocations"
 
+    # getting allocations : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return list(game_masters_dict)
@@ -217,7 +189,7 @@ def show_game_masters_data():
     """ show_game_masters_data """
 
     # get the games
-    games_dict = get_games_data()
+    games_dict = common.get_games_data()
 
     if not games_dict:
         return

@@ -2,9 +2,7 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
-
-from browser import document, html, ajax, alert  # pylint: disable=import-error
+from browser import document, html  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -12,37 +10,6 @@ import config
 import common
 
 my_panel = html.DIV(id="select")
-
-
-def get_game_data():
-    """ get_game_data """
-
-    games_dict = None
-
-    def reply_callback(req):
-        nonlocal games_dict
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Error getting games data: {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problem getting games data: {req_result['msg']}")
-            else:
-                alert("Undocumented issue from server")
-            return
-
-        req_result = json.loads(req.text)
-        games_dict = req_result
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games"
-
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return games_dict
 
 
 def select_game():
@@ -56,7 +23,7 @@ def select_game():
         InfoDialog("OK", f"Game selected : {game}", remove_after=config.REMOVE_AFTER)
         show_game_selected()
 
-    games_data = get_game_data()
+    games_data = common.get_games_data()
 
     if not games_data:
         return None

@@ -46,36 +46,6 @@ def get_player_id(pseudo):
     return player_id
 
 
-def get_players():
-    """ get_players """
-
-    players_dict = None
-
-    def reply_callback(req):
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Error getting players: {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problem getting players: {req_result['msg']}")
-            else:
-                alert("Undocumented issue from server")
-            return
-        req_result = json.loads(req.text)
-        nonlocal players_dict
-        players_dict = {v['pseudo']: int(k) for k, v in req_result.items()}
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/players"
-
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return players_dict
-
-
 def get_game_allocated_players(game_id):
     """ get_available_players returns a tuple game_master + players """
 
@@ -155,6 +125,7 @@ def join_game():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/allocations"
 
+        # adding allocation : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     form = html.FORM()
@@ -316,7 +287,7 @@ def move_players_in_game():
         # removing a player from a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    players_dict = get_players()
+    players_dict = common.get_players()
     if players_dict is None:
         return
 
