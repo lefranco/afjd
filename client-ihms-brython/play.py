@@ -203,7 +203,7 @@ def submit_orders():
 
     def callback_load(_):
         """ callback_load """
-        mapping.display(position_loaded, variant_data, img, ctx)
+        mapping.render(position_loaded, variant_data, img, ctx)
 
     if 'GAME' not in storage:
         alert("Please select game beforehand")

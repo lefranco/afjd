@@ -736,7 +736,7 @@ class Forbidden(Renderable):
         ctx.closePath(); ctx.stroke()
 
 
-def display(position: typing.Dict[str, typing.Any], variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
+def render(position: typing.Dict[str, typing.Any], variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
     """ fill the map """
 
     # put the background map first
@@ -769,9 +769,12 @@ def display(position: typing.Dict[str, typing.Any], variant: Variant, img: typin
                 unit = Fleet(variant, role, zone)
             unit.render(ctx)
 
-
-    # TODO
     forbiddens = position['forbiddens']
+    for region_num in forbiddens:
+        region = variant._regions[region_num]
+        forbidden = Forbidden(variant, region)
+        forbidden.render(ctx)
+
 
     # TODO
     dislodged_ones = position['dislodged_ones']
