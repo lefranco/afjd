@@ -36,6 +36,7 @@ def noreply_callback(_):
     """ noreply_callback """
     alert("Problem (no answer from server)")
 
+
 def get_game_id(name):
     """ get_game_id """
 
@@ -68,9 +69,11 @@ def get_game_id(name):
 def get_display_from_variant(variant):
     """ get_display_from_variant """
 
-    # TODO : make it possible to choose
+    # TODO : make it possible to choose which display users wants (descartes/hasbro)
+    # At least test it
     assert variant == 'standard'
     return "stabbeur"
+
 
 def submit_orders():
     """ submit_orders """
@@ -369,7 +372,6 @@ def show_game_parameters():
     my_sub_panel <= game_params_table
 
 
-
 def get_players():
     """ get_players """
 
@@ -504,7 +506,6 @@ def show_players_in_game():
         game_players_table <= row
 
     my_sub_panel <= game_players_table
-
 
 
 def load_option(_, item_name):
