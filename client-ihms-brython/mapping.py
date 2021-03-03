@@ -777,57 +777,91 @@ class Forbidden(Renderable):
         ctx.closePath(); ctx.stroke()
 
 
-def render(position: typing.Dict[str, typing.Any], variant: Variant, img: typing.Any, ctx: typing.Any) -> None:
-    """ fill the map """
+class Position(Renderable):
+    """ A position that can be displayed """
 
-    # put the background map first
-    ctx.drawImage(img, 0, 0)
+    def __init__(self, server_dict: typing.Dict[str, typing.Any], variant: Variant) -> None:
 
-    # put the legends
-    variant.render(ctx)
+        # ownerships
+        ownerships = server_dict['ownerships']
+        self._ownerships: typing.List[Ownership] = list()
+        for center_num_str, role_num in ownerships.items():
+            center_num = int(center_num_str)
+            center = variant._centers[center_num]
+            role = variant._roles[role_num]
+            ownership = Ownership(variant, role, center)
+            self._ownerships.append(ownership)
 
-    # TODO : probably we should not just display but rather store
-    # than display so to be able to use to enter orders
+        # units
+        units = server_dict['units']
+        self._units: typing.List[Unit] = list()
+        for role_num_str, role_units in units.items():
+            role_num = int(role_num_str)
+            role = variant._roles[role_num]
+            for type_unit_code, zone_number in role_units:
+                type_unit = UnitTypeEnum.from_code(type_unit_code)
+                zone = variant._zones[zone_number]
+                if type_unit is UnitTypeEnum.ARMY_UNIT:
+                    army = Army(variant, role, zone, None)
+                    self._units.append(army)
+                if type_unit is UnitTypeEnum.FLEET_UNIT:
+                    fleet = Fleet(variant, role, zone, None)
+                    self._units.append(fleet)
 
-    ownerships = position['ownerships']
-    for center_num_str, role_num in ownerships.items():
-        center_num = int(center_num_str)
-        center = variant._centers[center_num]
-        role = variant._roles[role_num]
-        ownership = Ownership(variant, role, center)
-        ownership.render(ctx)
+        # forbiddens
+        forbiddens = server_dict['forbiddens']
+        self._forbiddens: typing.List[Forbidden] = list()
+        for region_num in forbiddens:
+            region = variant._regions[region_num]
+            forbidden = Forbidden(variant, region)
+            self._forbiddens.append(forbidden)
 
-    units = position['units']
-    for role_num_str, role_units in units.items():
-        role_num = int(role_num_str)
-        role = variant._roles[role_num]
-        for type_unit_code, zone_number in role_units:
-            type_unit = UnitTypeEnum.from_code(type_unit_code)
-            zone = variant._zones[zone_number]
-            if type_unit is UnitTypeEnum.ARMY_UNIT:
-                army = Army(variant, role, zone, None)
-                army.render(ctx)
-            if type_unit is UnitTypeEnum.FLEET_UNIT:
-                fleet = Fleet(variant, role, zone, None)
-                fleet.render(ctx)
+        # dislodged_units
+        dislodged_ones = server_dict['dislodged_ones']
+        self._dislodged_units: typing.List[Unit] = list()
+        for role_num_str, role_units in dislodged_ones.items():
+            role_num = int(role_num_str)
+            role = variant._roles[role_num]
+            for type_unit_code, zone_number, dislodger_region_number in role_units:
+                type_unit = UnitTypeEnum.from_code(type_unit_code)
+                zone = variant._zones[zone_number]
+                dislodger_region = variant._regions[dislodger_region_number]
+                if type_unit is UnitTypeEnum.ARMY_UNIT:
+                    dislodged_army = Army(variant, role, zone, dislodger_region)
+                    self._dislodged_units.append(dislodged_army)
+                if type_unit is UnitTypeEnum.FLEET_UNIT:
+                    dislodged_fleet = Fleet(variant, role, zone, dislodger_region)
+                    self._dislodged_units.append(dislodged_fleet)
 
-    forbiddens = position['forbiddens']
-    for region_num in forbiddens:
-        region = variant._regions[region_num]
-        forbidden = Forbidden(variant, region)
-        forbidden.render(ctx)
+    def render(self, ctx: typing.Any) -> None:
+        """put me on screen """
 
-    dislodged_ones = position['dislodged_ones']
-    for role_num_str, role_units in dislodged_ones.items():
-        role_num = int(role_num_str)
-        role = variant._roles[role_num]
-        for type_unit_code, zone_number, dislodger_region_number in role_units:
-            type_unit = UnitTypeEnum.from_code(type_unit_code)
-            zone = variant._zones[zone_number]
-            dislodger_region = variant._regions[dislodger_region_number]
-            if type_unit is UnitTypeEnum.ARMY_UNIT:
-                dislodged_army = Army(variant, role, zone, dislodger_region)
-                dislodged_army.render(ctx)
-            if type_unit is UnitTypeEnum.FLEET_UNIT:
-                dislodged_fleet = Fleet(variant, role, zone, dislodger_region)
-                dislodged_fleet.render(ctx)
+        # ownerships
+        for ownership in self._ownerships:
+            ownership.render(ctx)
+
+        # units
+        for unit in self._units:
+            unit.render(ctx)
+
+        # forbiddens
+        for forbidden in self._forbiddens:
+            forbidden.render(ctx)
+
+        # dislodged_units
+        for dislodged_unit in self._dislodged_units:
+            dislodged_unit.render(ctx)
+
+
+
+class OrdersSet(Renderable):
+    """ A set of orders that can be displayed """
+
+    def __init__(self, server_dict: typing.Dict[str, typing.Any], variant: Variant) -> None:
+
+        # TODO
+
+    def render(self, ctx: typing.Any) -> None:
+        """put me on screen """
+
+        # TODO

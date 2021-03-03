@@ -83,6 +83,7 @@ def submit_orders():
     variant_content_loaded = None
     variant_data = None
     position_loaded = None
+    position_data = None
 
     def game_variant_name_reload():
         """ game_variant_name_reload """
@@ -206,7 +207,15 @@ def submit_orders():
 
     def callback_load(_):
         """ callback_load """
-        mapping.render(position_loaded, variant_data, img, ctx)
+
+        # put the background map first
+        ctx.drawImage(img, 0, 0)
+
+        # put the legends
+        variant_data.render(ctx)
+
+        # put the position
+        position_data.render(ctx)
 
     if 'GAME' not in storage:
         alert("Please select game beforehand")
@@ -245,6 +254,9 @@ def submit_orders():
         return
 
     print(f"{position_loaded=}")
+
+    # digest the position
+    position_data = mapping.Position(position_loaded, variant_data)
 
     # now we can display
 
