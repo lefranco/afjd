@@ -534,7 +534,6 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         # because we know names of zones but not of regions
         zone_dislodger = self._dislodged_origin.zone
         dislodger_legend = self._position.variant.name_table[zone_dislodger]
-        print(f"{dislodger_legend=}")
 
         # dislodger
         dislodger_colour = ColourRecord(255, 127, 0)  # orange-ish
