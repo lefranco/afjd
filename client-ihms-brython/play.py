@@ -253,8 +253,6 @@ def submit_orders():
     if not status:
         return
 
-    print(f"{position_loaded=}")
-
     # digest the position
     position_data = mapping.Position(position_loaded, variant_data)
 
