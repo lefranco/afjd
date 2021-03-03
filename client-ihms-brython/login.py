@@ -11,12 +11,7 @@ from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
-
-
-def noreply_callback(_):
-    """ noreply_callback """
-    alert("Problem (no answer from server)")
-
+import common
 
 def login_callback(_):
     """ login_callback """
@@ -50,7 +45,7 @@ def login_callback(_):
         'password': password
     }
 
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
 def forgot_callback(_):

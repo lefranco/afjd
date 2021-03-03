@@ -9,13 +9,9 @@ from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
+import common
 
 my_panel = html.DIV(id="select")
-
-
-def noreply_callback(_):
-    """ noreply_callback """
-    alert("Problem (no answer from server)")
 
 
 def get_game_data():
@@ -44,7 +40,7 @@ def get_game_data():
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/games"
 
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return games_dict
 
