@@ -33,7 +33,6 @@ my_sub_panel = html.DIV(id="sub")
 my_panel <= my_sub_panel
 
 
-
 def get_display_from_variant(variant):
     """ get_display_from_variant """
 
@@ -89,6 +88,7 @@ def submit_orders():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/games/{game}"
 
+        # getting game data : do not need a token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
 
     def game_variant_content_reload():
@@ -127,6 +127,7 @@ def submit_orders():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/variants/{variant_name_loaded}"
 
+        # getting variant : do not need a token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
 
     def game_position_reload():
@@ -169,6 +170,7 @@ def submit_orders():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-positions/{game_id}"
 
+        # getting game position : do not need a token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
 
         return
@@ -297,6 +299,7 @@ def show_game_parameters():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/games/{game}"
 
+        # getting game data : do not need a token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
 
         return status
@@ -350,37 +353,6 @@ def show_game_parameters():
     my_sub_panel <= game_params_table
 
 
-def get_players():
-    """ get_players """
-
-    players_dict = None
-
-    def reply_callback(req):
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Error getting players: {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problem getting players: {req_result['msg']}")
-            else:
-                alert("Undocumented issue from server")
-            return
-        req_result = json.loads(req.text)
-        nonlocal players_dict
-        players_dict = {v['pseudo']: int(k) for k, v in req_result.items()}
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/players"
-
-    # getting player list : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return players_dict
-
-
 def get_game_players_data(game_id):
     """ get_game_players_data """
 
@@ -407,6 +379,7 @@ def get_game_players_data(game_id):
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/game-allocations/{game_id}"
 
+    # getting game allocation : do not need a token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return game_players_dict
@@ -432,7 +405,7 @@ def show_players_in_game():
         return
 
     # get the players (all players)
-    players_dict = get_players()
+    players_dict = common.get_players()
 
     if not players_dict:
         return

@@ -248,7 +248,7 @@ class ColourRecord(typing.NamedTuple):
 
     def outline_colour(self) -> 'ColourRecord':
         """ outline_colour """
-        return ColourRecord(red=self.red//2, green=self.green//2, blue=-self.blue//2)
+        return ColourRecord(red=self.red // 2, green=self.green // 2, blue=-self.blue // 2)
 
     def str_value(self) -> str:
         """ str_value """
