@@ -520,8 +520,8 @@ class Point:
 class Unit(Renderable):  # pylint: disable=abstract-method
     """ A unit """
 
-    def __init__(self, variant: Variant, role: Role, zone: Zone, dislodged_origin: typing.Optional[Region]) -> None:
-        self._variant = variant
+    def __init__(self, position: 'Position', role: Role, zone: Zone, dislodged_origin: typing.Optional[Region]) -> None:
+        self._position = position
         self._role = role
         self._zone = zone
         self._dislodged_origin: typing.Optional[Region] = dislodged_origin
@@ -533,7 +533,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
 
         # because we know names of zones but not of regions
         zone_dislodger = self._dislodged_origin.zone
-        dislodger_legend = self._variant.name_table[zone_dislodger]
+        dislodger_legend = self._position.variant.name_table[zone_dislodger]
         print(f"{dislodger_legend=}")
 
         # dislodger
@@ -557,13 +557,13 @@ class Army(Unit):
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
 
-        fill_color = self._variant.colour_table[self._role]
+        fill_color = self._position.variant.colour_table[self._role]
         ctx.fillStyle = fill_color.str_value()
 
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
-        position = self._variant.position_table[self._zone]
+        position = self._position.variant.position_table[self._zone]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         # shift for dislodged units
@@ -653,13 +653,13 @@ class Fleet(Unit):
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
 
-        fill_color = self._variant.colour_table[self._role]
+        fill_color = self._position.variant.colour_table[self._role]
         ctx.fillStyle = fill_color.str_value()
 
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
-        position = self._variant.position_table[self._zone]
+        position = self._position.variant.position_table[self._zone]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         # shift for dislodged units
@@ -728,21 +728,21 @@ class Fleet(Unit):
 class Ownership(Renderable):
     """ OwnerShip """
 
-    def __init__(self, variant: Variant, role: Role, center: Center) -> None:
-        self._variant = variant
+    def __init__(self, position: 'Position', role: Role, center: Center) -> None:
+        self._position = position
         self._role = role
         self._center = center
 
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
 
-        fill_color = self._variant.colour_table[self._role]
+        fill_color = self._position.variant.colour_table[self._role]
         ctx.fillStyle = fill_color.str_value()
 
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
-        position = self._variant.position_table[self._center]
+        position = self._position.variant.position_table[self._center]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         ctx.beginPath()
@@ -754,8 +754,8 @@ class Ownership(Renderable):
 class Forbidden(Renderable):
     """ Forbidden """
 
-    def __init__(self, variant: Variant, region: Region) -> None:
-        self._variant = variant
+    def __init__(self, position: 'Position', region: Region) -> None:
+        self._position = position
         self._region = region
 
     def render(self, ctx: typing.Any) -> None:
@@ -766,7 +766,7 @@ class Forbidden(Renderable):
 
         region = self._region
         zone = region.zone
-        position = self._variant.position_table[zone]
+        position = self._position.variant.position_table[zone]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         ctx.beginPath()
@@ -781,6 +781,8 @@ class Position(Renderable):
     """ A position that can be displayed """
 
     def __init__(self, server_dict: typing.Dict[str, typing.Any], variant: Variant) -> None:
+
+        self._variant = variant
 
         # ownerships
         ownerships = server_dict['ownerships']
@@ -852,16 +854,21 @@ class Position(Renderable):
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
 
+    @property
+    def variant(self) -> Variant:
+        """ property """
+        return self._variant
 
 
 class OrdersSet(Renderable):
-    """ A set of orders that can be displayed """
+    """ A set of orders that can be displayed / requires position """
 
-    def __init__(self, server_dict: typing.Dict[str, typing.Any], variant: Variant) -> None:
+    def __init__(self, server_dict: typing.Dict[str, typing.Any], position: Position) -> None:
 
+        self._position = position
         # TODO
 
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
 
-        # TODO
+        pass  # TODO
