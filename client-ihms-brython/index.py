@@ -15,9 +15,10 @@ import play
 import master
 import position
 import sandbox
+import technical
 
 TITLE = "Welcome this demo interface Web client for playing Diplomacy on AFJD REST Server"
-OPTIONS = ['home', 'login', 'select game', 'lists', 'my account', 'my games', 'pairing', 'play game', 'master game', 'edit position', 'use sandbox']
+OPTIONS = ['home', 'login', 'select game', 'lists', 'my account', 'my games', 'pairing', 'play game', 'master game', 'edit position', 'use sandbox', 'technical corner']
 
 
 # title
@@ -74,6 +75,8 @@ def load_option(_, item_name):
         position.render(panel_middle)
     if item_name == 'use sandbox':
         sandbox.render(panel_middle)
+    if item_name == 'technical corner':
+        technical.render(panel_middle)
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 
