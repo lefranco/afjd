@@ -687,10 +687,10 @@ class Fleet(Unit):
 class Ownership(Renderable):
     """ OwnerShip """
 
-    def __init__(self, variant: Variant, role: Role, region: Region) -> None:
+    def __init__(self, variant: Variant, role: Role, center: Center) -> None:
         self._variant = variant
         self._role = role
-        self._region = region
+        self._center = center
 
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
@@ -701,7 +701,7 @@ class Ownership(Renderable):
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
-        position = self._variant.position_table[self._region]
+        position = self._variant.position_table[self._center]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         ctx.beginPath()
@@ -764,10 +764,11 @@ def render(position: typing.Dict[str, typing.Any], variant: Variant, img: typing
             type_unit = UnitTypeEnum.from_code(type_unit_code)
             zone = variant._zones[zone_number]
             if type_unit is UnitTypeEnum.ARMY_UNIT:
-                unit = Army(variant, role, zone)
+                army = Army(variant, role, zone)
+                army.render(ctx)
             if type_unit is UnitTypeEnum.FLEET_UNIT:
-                unit = Fleet(variant, role, zone)
-            unit.render(ctx)
+                fleet = Fleet(variant, role, zone)
+                fleet.render(ctx)
 
     forbiddens = position['forbiddens']
     for region_num in forbiddens:
@@ -775,7 +776,5 @@ def render(position: typing.Dict[str, typing.Any], variant: Variant, img: typing
         forbidden = Forbidden(variant, region)
         forbidden.render(ctx)
 
-
-    # TODO
+    # TODO : display the dislodged
     dislodged_ones = position['dislodged_ones']
-
