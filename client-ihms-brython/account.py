@@ -239,6 +239,7 @@ def change_password():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players/{pseudo}"
 
+        # changing password : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     if 'PSEUDO' not in storage:
@@ -415,7 +416,7 @@ def edit_account():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players/{pseudo}"
 
-        # present the authentication token (we are reading content of an account)
+        # reading data about account : need token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
 
         return status
@@ -466,6 +467,7 @@ def edit_account():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players/{pseudo}"
 
+        # updating data about account : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     status = edit_account_reload()
@@ -587,6 +589,7 @@ def delete_account():
             'pseudo': pseudo,
         }
 
+        # deleting account : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     form = html.FORM()

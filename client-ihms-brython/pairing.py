@@ -44,7 +44,8 @@ def get_player_id(pseudo):
     port = config.SERVER_CONFIG['PLAYER']['PORT']
     url = f"{host}:{port}/player-identifiers/{pseudo}"
 
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    # get player id : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return player_id
 
@@ -137,7 +138,8 @@ def get_game_allocated_players(game_id):
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/game-allocations/{game_id}"
 
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    # get players allocated to game : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return game_master_id, players_list
 
@@ -242,6 +244,7 @@ def quit_game():
         url = f"{host}:{port}/allocations"
 
         # should be a delete but body in delete requests is more or less forbidden
+        # quitting a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     form = html.FORM()
@@ -304,6 +307,7 @@ def move_players_in_game():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/allocations"
 
+        # putting a player in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     def remove_from_game_callback(_):
@@ -342,6 +346,7 @@ def move_players_in_game():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/allocations"
 
+        # removing a player from a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     players_dict = get_players()
