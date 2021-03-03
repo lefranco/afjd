@@ -520,16 +520,39 @@ class Point:
 class Unit(Renderable):  # pylint: disable=abstract-method
     """ A unit """
 
-    def __init__(self, variant: Variant, role: Role, zone: Zone) -> None:
+    def __init__(self, variant: Variant, role: Role, zone: Zone, dislodged_origin: typing.Optional[Region]) -> None:
         self._variant = variant
         self._role = role
         self._zone = zone
+        self._dislodged_origin: typing.Optional[Region] = dislodged_origin
+
+    def render_as_dislodged(self, x_pos: int, y_pos: int, ctx: typing.Any) -> None:
+        """ render additional stuff when dislodged """
+
+        assert self._dislodged_origin is not None
+
+        # because we know names of zones but not of regions
+        zone_dislodger = self._dislodged_origin.zone
+        dislodger_legend = self._variant.name_table[zone_dislodger]
+        print(f"{dislodger_legend=}")
+
+        # dislodger
+        dislodger_colour = ColourRecord(255, 127, 0)  # orange-ish
+        ctx.fillStyle = dislodger_colour.str_value()
+        ctx.fillText(dislodger_legend, x_pos + 12, y_pos - 9)
+
+        # circle
+        ctx.beginPath()
+        circle_colour = ColourRecord(255, 127, 0)  # orange-ish
+        ctx.strokeStyle = circle_colour.str_value()
+        ctx.arc(x_pos, y_pos, 15, 0, 2 * math.pi, False)
+        ctx.closePath(); ctx.stroke()  # no fill
 
 
 class Army(Unit):
     """ An army """
 
-    # no init : use init from parent class
+    # use init from parent class
 
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
@@ -542,6 +565,11 @@ class Army(Unit):
 
         position = self._variant.position_table[self._zone]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        # shift for dislodged units
+        if self._dislodged_origin is not None:
+            x -= 5  # pylint: disable=invalid-name
+            y -= 5  # pylint: disable=invalid-name
 
         # socle
         p1 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
@@ -606,6 +634,10 @@ class Army(Unit):
                 ctx.lineTo(p.x, p.y)
         ctx.closePath(); ctx.stroke()  # no fill
 
+        # more stuff if dislodged
+        if self._dislodged_origin is not None:
+            self.render_as_dislodged(x, y, ctx)
+
         # temporary
         #  legend = self._variant.name_table[self._zone]
         #  debug_colour = ColourRecord(255, 0, 0)
@@ -616,7 +648,7 @@ class Army(Unit):
 class Fleet(Unit):
     """ An fleet """
 
-    # no init : use init from parent class
+    # use init from parent class
 
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
@@ -629,6 +661,11 @@ class Fleet(Unit):
 
         position = self._variant.position_table[self._zone]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        # shift for dislodged units
+        if self._dislodged_origin is not None:
+            x -= 5  # pylint: disable=invalid-name
+            y -= 5  # pylint: disable=invalid-name
 
         # gros oeuvre
         p1 = [Point() for _ in range(32)]  # pylint: disable=invalid-name
@@ -676,6 +713,10 @@ class Fleet(Unit):
         for i in range(5):
             ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2 * math.pi, False)
             ctx.stroke()  # no fill
+
+        # more stuff if dislodged
+        if self._dislodged_origin is not None:
+            self.render_as_dislodged(x, y, ctx)
 
         # temporary
         #  legend = self._variant.name_table[self._zone]
@@ -764,10 +805,10 @@ def render(position: typing.Dict[str, typing.Any], variant: Variant, img: typing
             type_unit = UnitTypeEnum.from_code(type_unit_code)
             zone = variant._zones[zone_number]
             if type_unit is UnitTypeEnum.ARMY_UNIT:
-                army = Army(variant, role, zone)
+                army = Army(variant, role, zone, None)
                 army.render(ctx)
             if type_unit is UnitTypeEnum.FLEET_UNIT:
-                fleet = Fleet(variant, role, zone)
+                fleet = Fleet(variant, role, zone, None)
                 fleet.render(ctx)
 
     forbiddens = position['forbiddens']
@@ -776,5 +817,17 @@ def render(position: typing.Dict[str, typing.Any], variant: Variant, img: typing
         forbidden = Forbidden(variant, region)
         forbidden.render(ctx)
 
-    # TODO : display the dislodged
     dislodged_ones = position['dislodged_ones']
+    for role_num_str, role_units in dislodged_ones.items():
+        role_num = int(role_num_str)
+        role = variant._roles[role_num]
+        for type_unit_code, zone_number, dislodger_region_number in role_units:
+            type_unit = UnitTypeEnum.from_code(type_unit_code)
+            zone = variant._zones[zone_number]
+            dislodger_region = variant._regions[dislodger_region_number]
+            if type_unit is UnitTypeEnum.ARMY_UNIT:
+                dislodged_army = Army(variant, role, zone, dislodger_region)
+                dislodged_army.render(ctx)
+            if type_unit is UnitTypeEnum.FLEET_UNIT:
+                dislodged_fleet = Fleet(variant, role, zone, dislodger_region)
+                dislodged_fleet.render(ctx)
