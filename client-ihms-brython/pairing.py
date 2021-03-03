@@ -443,6 +443,7 @@ my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
 
+
 def load_option(_, item_name):
     """ load_option """
 
@@ -453,7 +454,6 @@ def load_option(_, item_name):
         quit_game()
     if item_name == 'move players in game':
         move_players_in_game()
-
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
