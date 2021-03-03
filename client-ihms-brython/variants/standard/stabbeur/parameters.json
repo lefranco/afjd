@@ -134,8 +134,8 @@
         },
         "5": {
             "name": "apu",
-            "x_legend_pos": 324,
-            "y_legend_pos": 435,
+            "x_legend_pos": 328,
+            "y_legend_pos": 433,
             "x_pos": 340,
             "y_pos": 445
         },
@@ -162,7 +162,7 @@
         },
         "9": {
             "name": "bel",
-            "x_legend_pos": 208,
+            "x_legend_pos": 207,
             "y_legend_pos": 275,
             "x_pos": 222,
             "y_pos": 296
@@ -239,7 +239,7 @@
         },
         "20": {
             "name": "den",
-            "x_legend_pos": 260,
+            "x_legend_pos": 258,
             "y_legend_pos": 213,
             "x_pos": 285,
             "y_pos": 215
@@ -282,7 +282,7 @@
         "26": {
             "name": "gas",
             "x_legend_pos": 152,
-            "y_legend_pos": 364,
+            "y_legend_pos": 365,
             "x_pos": 161,
             "y_pos": 379
         },
@@ -302,7 +302,7 @@
         },
         "29": {
             "name": "HEL",
-            "x_legend_pos": 240,
+            "x_legend_pos": 238,
             "y_legend_pos": 215,
             "x_pos": 248,
             "y_pos": 228
@@ -730,8 +730,8 @@
             "y_pos": 223
         },
         "15": {
-            "x_pos": 216,
-            "y_pos": 404
+            "x_pos": 217,
+            "y_pos": 405
         },
         "16": {
             "x_pos": 503,
