@@ -248,9 +248,7 @@ class ColourRecord(typing.NamedTuple):
 
     def outline_colour(self) -> 'ColourRecord':
         """ outline_colour """
-        if self.red + self.green + self.blue < (256 + 256 + 256) // 2:
-            return ColourRecord(red=256 // 2, green=256 // 2, blue=256 // 2)
-        return ColourRecord(red=0, green=0, blue=0)
+        return ColourRecord(red=self.red//2, green=self.green//2, blue=-self.blue//2)
 
     def str_value(self) -> str:
         """ str_value """
@@ -613,13 +611,15 @@ class Army(Unit):
 
         # cercle autour roue exterieure
         # simplified
+        ctx.beginPath()
         ctx.arc(x, y, 6, 0, 2 * math.pi, False)
-        ctx.fill(); ctx.stroke()
+        ctx.closePath(); ctx.fill(); ctx.stroke()
 
         # roue interieure
         # simplified
+        ctx.beginPath()
         ctx.arc(x, y, 2, 0, 2 * math.pi, False)
-        ctx.fill(); ctx.stroke()
+        ctx.closePath(); ctx.fill(); ctx.stroke()
 
         # exterieur coin
         p4 = [Point() for _ in range(2)]  # pylint: disable=invalid-name
@@ -710,8 +710,9 @@ class Fleet(Unit):
 
         # hublots
         for i in range(5):
+            ctx.beginPath()
             ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2 * math.pi, False)
-            ctx.stroke()  # no fill
+            ctx.closePath(); ctx.stroke()  # no fill
 
         # more stuff if dislodged
         if self._dislodged_origin is not None:
