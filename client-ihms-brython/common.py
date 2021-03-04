@@ -104,3 +104,106 @@ def get_games_data():
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return dict(games_dict)
+
+
+def game_variant_name_reload(game):
+    """ game_variant_name_reload """
+
+    variant_name_loaded = None
+
+    def reply_callback(req):
+        """ reply_callback """
+        nonlocal variant_name_loaded
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error loading game variant name: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem loading game variant name: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        variant_name_loaded = req_result['variant']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/games/{game}"
+
+    # getting game data : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return variant_name_loaded
+
+
+def game_variant_content_reload(variant_name):
+    """ game_variant_content_reload """
+
+    variant_content_loaded = None
+
+    def reply_callback(req):
+        """ reply_callback """
+        nonlocal variant_content_loaded
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error loading game variant content: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem loading game variant content: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        variant_content_loaded = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/variants/{variant_name}"
+
+    # getting variant : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return variant_content_loaded
+
+
+def game_position_reload(game):
+    """ game_position_reload """
+
+    position_loaded = None
+
+    def reply_callback(req):
+        """ reply_callback """
+        nonlocal position_loaded
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error loading game position: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem loading game position: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        position_loaded = req_result
+
+    game_id = get_game_id(game)
+    if game_id is None:
+        return None
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-positions/{game_id}"
+
+    # getting game position : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return position_loaded
