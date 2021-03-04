@@ -69,6 +69,52 @@ def get_display_from_variant(variant):
     return "stabbeur"
 
 
+def game_orders_reload(game):
+    """ game_report_reload """
+
+    orders_loaded = None
+
+    def local_noreply_callback(_):
+        """ local_noreply_callback """
+        alert("Problem (no answer from server)")
+        status = False
+
+    def reply_callback(req):
+        """ reply_callback """
+        nonlocal orders_loaded
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error loading game orders: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem loading game orders: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        orders_loaded = dict(req_result)
+
+    game_id = get_game_id(game)
+    if game_id is None:
+        return None
+
+    json_dict = {
+        'role_id': ROLE_IDENTIFIER,
+        'pseudo': self.login_var.get(),
+    }
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-orders/{game_id}"
+
+    # getting orders : need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+    return orders_loaded
+
+
+
 def show_position():
     """ show_position """
 
