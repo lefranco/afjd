@@ -12,7 +12,7 @@ import math
 # noqa: E702
 
 
-def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx: typing.Any):
+def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx: typing.Any) -> None:
     """ low level draw an arrow """
 
     # the ctx.strokeStyle and ctx.fillStyle should be defined
