@@ -45,135 +45,11 @@ def get_display_from_variant(variant):
 def submit_orders():
     """ submit_orders """
 
-    status = None
     variant_name_loaded = None
     variant_content_loaded = None
     variant_data = None
     position_loaded = None
     position_data = None
-
-    def game_variant_name_reload():
-        """ game_variant_name_reload """
-
-        nonlocal status
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problem (no answer from server)")
-            status = False
-
-        def reply_callback(req):
-            """ reply_callback """
-            nonlocal status
-            nonlocal variant_name_loaded
-
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Error loading game variant name: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problem loading game variant name: {req_result['msg']}")
-                else:
-                    alert("Undocumented issue from server")
-                status = False
-                return
-
-            variant_name_loaded = req_result['variant']
-
-        json_dict = dict()
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : do not need a token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-    def game_variant_content_reload():
-        """ game_variant_content_reload """
-
-        nonlocal status
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problem (no answer from server)")
-            status = False
-
-        def reply_callback(req):
-            """ reply_callback """
-            nonlocal status
-            nonlocal variant_content_loaded
-
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Error loading game variant content: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problem loading game variant content: {req_result['msg']}")
-                else:
-                    alert("Undocumented issue from server")
-                status = False
-                return
-
-            variant_content_loaded = req_result
-
-        json_dict = dict()
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/variants/{variant_name_loaded}"
-
-        # getting variant : do not need a token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-    def game_position_reload():
-        """ game_position_reload """
-
-        nonlocal status
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problem (no answer from server)")
-            status = False
-
-        def reply_callback(req):
-            """ reply_callback """
-            nonlocal status
-            nonlocal position_loaded
-
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Error loading game position: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problem loading game position: {req_result['msg']}")
-                else:
-                    alert("Undocumented issue from server")
-                status = False
-                return
-
-            position_loaded = req_result
-
-        game_id = common.get_game_id(game)
-        if game_id is None:
-            return
-
-        json_dict = dict()
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-positions/{game_id}"
-
-        # getting game position : do not need a token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        return
 
     def callback_load(_):
         """ callback_load """
@@ -195,14 +71,14 @@ def submit_orders():
 
     # from game name get variant name
 
-    game_variant_name_reload()
-    if not status:
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
         return
 
     # now get variant content
 
-    game_variant_content_reload()
-    if not status:
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
         return
 
     # should be a user choice
@@ -219,8 +95,8 @@ def submit_orders():
 
     # now the position
 
-    game_position_reload()
-    if not status:
+    position_loaded = common.game_position_reload(game)
+    if not position_loaded:
         return
 
     # digest the position
