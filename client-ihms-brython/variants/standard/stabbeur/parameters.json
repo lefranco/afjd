@@ -351,15 +351,15 @@
         },
         "36": {
             "name": "lvp",
-            "x_legend_pos": 147,
-            "y_legend_pos": 196,
+            "x_legend_pos": 136,
+            "y_legend_pos": 199,
             "x_pos": 157,
             "y_pos": 208
         },
         "37": {
             "name": "mar",
             "x_legend_pos": 182,
-            "y_legend_pos": 397,
+            "y_legend_pos": 400,
             "x_pos": 219,
             "y_pos": 387
         },
@@ -682,7 +682,7 @@
             "y_pos": 282
         },
         "3": {
-            "x_pos": 293,
+            "x_pos": 294,
             "y_pos": 276
         },
         "4": {
@@ -726,7 +726,7 @@
             "y_pos": 268
         },
         "14": {
-            "x_pos": 166,
+            "x_pos": 167,
             "y_pos": 223
         },
         "15": {
