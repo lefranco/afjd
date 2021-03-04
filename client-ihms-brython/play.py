@@ -118,8 +118,13 @@ def show_position():
 
     my_sub_panel <= canvas
 
-    additional = html.P("additional stuff under the map")
+    report_loaded = common.game_report_reload(game)
+    if report_loaded is None:
+        return
+
+    additional = html.P(report_loaded)
     my_sub_panel <= additional
+
 
 def submit_orders():
     """ submit_orders """
@@ -205,6 +210,10 @@ def submit_orders():
 
     additional = html.P("additional stuff under the map")
     my_sub_panel <= additional
+
+    # TODO : from pseudo get role
+    # TODO : from  role get orders
+    # TODO : display orders
 
 
 def negotiate():
