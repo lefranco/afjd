@@ -122,7 +122,9 @@ def show_position():
     if report_loaded is None:
         return
 
-    additional = html.P(report_loaded)
+    report_loaded_html = "<br>".join(report_loaded.split('\n'))
+
+    additional = html.P(report_loaded_html)
     my_sub_panel <= additional
 
 
