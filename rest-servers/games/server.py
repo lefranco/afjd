@@ -1051,7 +1051,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # get the role
         assert game is not None
-        role_id = game.get_role(player_id)
+        role_id = game.find_role(player_id)
         if role_id is None:
             flask_restful.abort(404, msg=f"You do not seem play or master game {game_id}")
 
