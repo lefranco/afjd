@@ -54,13 +54,17 @@ class EmailsRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': 'Email was added or updated'}
         return data, 201
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+@API.resource('/check-email')
+class CheckEmailRessource(flask_restful.Resource):  # type: ignore
+    """ CheckEmailRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         Check if code is correct for email.
         PROTECTED : called by block players
         """
 
-        mylogger.LOGGER.info("/emails - GET - checking code for email")
+        mylogger.LOGGER.info("/check-email - POST - checking code for email")
 
         args = EMAIL_PARSER.parse_args(strict=True)
         email_value = args['email_value']
