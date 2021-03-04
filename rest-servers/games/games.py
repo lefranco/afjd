@@ -330,20 +330,30 @@ class Game:
             allocation.delete_database()
 
     def put_role(self, user_id: int, role: int) -> None:
-        """ put game master in game """
+        """ put player/game master in game """
 
         game_id = self.identifier
         allocation = allocations.Allocation(game_id, user_id, role)
         allocation.update_database()
 
     def get_role(self, role: int) -> typing.Optional[int]:
-        """ retrieves game master id of game """
+        """ retrieves player/game master id of role in game """
 
         game_id = self.identifier
         allocations_list = allocations.Allocation.list_by_game_id(game_id)
         for _, player_id, role_id in allocations_list:
             if role_id == role:
                 return player_id
+        return None
+
+    def find_role(self, user: int) -> typing.Optional[int]:
+        """ retrieves role of player id in game """
+
+        game_id = self.identifier
+        allocations_list = allocations.Allocation.list_by_game_id(game_id)
+        for _, player_id, role_id in allocations_list:
+            if player_id == user:
+                return role_id
         return None
 
     def create_position(self) -> None:

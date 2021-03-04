@@ -90,10 +90,6 @@ SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
 SUBMISSION_PARSER.add_argument('names', type=str, required=True)
 SUBMISSION_PARSER.add_argument('pseudo', type=str, required=False)
 
-RETRIEVE_ORDERS_PARSER = flask_restful.reqparse.RequestParser()
-RETRIEVE_ORDERS_PARSER.add_argument('role_id', type=int, required=True)
-RETRIEVE_ORDERS_PARSER.add_argument('pseudo', type=str, required=False)
-
 ADJUDICATION_PARSER = flask_restful.reqparse.RequestParser()
 ADJUDICATION_PARSER.add_argument('names', type=str, required=True)
 ADJUDICATION_PARSER.add_argument('pseudo', type=str, required=False)
@@ -1020,15 +1016,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-orders/<game_id> - GET - getting back orders game id=%s", game_id)
 
-        args = RETRIEVE_ORDERS_PARSER.parse_args(strict=True)
-        role_id = args['role_id']
-
-        mylogger.LOGGER.info("role_id=%s", role_id)
-
-        pseudo = args['pseudo']
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to retrieve orders in game")
-
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -1041,8 +1028,8 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1053,31 +1040,27 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        user_id = req_result.json()
+        player_id = req_result.json()
 
         # check user has right to get orders - must be player or game master
 
-        # find the game
+        # check there is a game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # who is player for role ?
+        # get the role
         assert game is not None
-        expected_id = game.get_role(role_id)
-
-        # can be player of game master but must correspond
-        if user_id != expected_id:
-            if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
-            else:
-                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
+        role_id = game.get_role(player_id)
+        if role_id is None:
+            flask_restful.abort(404, msg=f"You do not seem play or master game {game_id}")
 
         # get orders
-        if role_id:
-            orders_list = orders.Order.list_by_game_id_role_num(game_id, role_id)
-        else:
+        assert role_id is not None
+        if role_id == 0:
             orders_list = orders.Order.list_by_game_id(game_id)
+        else:
+            orders_list = orders.Order.list_by_game_id_role_num(game_id, role_id)
 
         # get fake units
         if role_id:
