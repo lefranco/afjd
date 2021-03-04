@@ -17,14 +17,21 @@ import position
 import sandbox
 import technical
 
-TITLE = "Welcome this demo interface Web client for playing Diplomacy on AFJD REST Server"
-OPTIONS = ['home', 'login', 'select game', 'lists', 'my account', 'my games', 'pairing', 'play game', 'master game', 'edit position', 'use sandbox', 'technical corner']
 
-
-# title
-title = html.H1(TITLE, id='title')
+# TITLE
+TITLE = "Generic front end to AFJD REST Diplomacy Server"
+title = html.TITLE(TITLE, id='title')
 title.attrs['style'] = 'text-align: center'
 document <= title
+
+
+# H2
+H2 = "Welcome interface for playing Diplomacy (will be translated in French soon)"
+h2 = html.H2(H2, id='h2')
+h2.attrs['style'] = 'text-align: center'
+document <= h2
+
+OPTIONS = ['home', 'login', 'select game', 'lists', 'my account', 'my games', 'pairing', 'play game', 'master game', 'edit position', 'use sandbox', 'technical corner']
 
 # overall_top
 overall_top = html.DIV()
