@@ -368,8 +368,8 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
         # check code from user server
         host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
         port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
-        url = f"{host}:{port}/emails"
-        req_result = SESSION.get(url, data=json_dict)
+        url = f"{host}:{port}/check-email"
+        req_result = SESSION.post(url, data=json_dict)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
