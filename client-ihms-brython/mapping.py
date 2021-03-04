@@ -12,6 +12,32 @@ import math
 # noqa: E702
 
 
+def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx: typing.Any):
+    """ low level draw an arrow """
+
+    # the ctx.strokeStyle and ctx.fillStyle should be defined
+
+    # first draw the arrow line
+    ctx.beginPath()
+    ctx.moveTo(x_start, y_start)
+    ctx.lineTo(x_dest, y_dest)
+    ctx.closePath(); ctx.stroke()
+
+    # first draw the arrow head
+    ctx.save()
+
+    ctx.translate(x_dest, y_dest)
+    angle = - math.atan2(x_start - x_dest, y_start - y_dest)
+    ctx.rotate(angle)
+    ctx.beginPath()
+    ctx.moveTo(0, 0)
+    ctx.lineTo(-3, 6)
+    ctx.lineTo(3, 6)
+    ctx.closePath(); ctx.fill()
+
+    ctx.restore()
+
+
 class Renderable:
     """ Renderable """
 
@@ -853,6 +879,13 @@ class Position(Renderable):
         # dislodged_units
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
+
+        # just a test to remove
+        fill_color = ColourRecord(red=255, green=0, blue=0)
+        outline_colour = fill_color
+        ctx.fillStyle = fill_color.str_value()
+        ctx.strokeStyle = outline_colour.str_value()
+        draw_arrow(20, 10, 50, 80, ctx)
 
     @property
     def variant(self) -> Variant:
