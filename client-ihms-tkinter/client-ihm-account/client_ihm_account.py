@@ -806,7 +806,7 @@ def main() -> None:
         style.configure('TNotebook.Tab', font=(font.FONT_USED, font.FONT_SIZE))
 
         # use description of first register as overall title
-        window_name = "Démonstrateur client IHM création de compte - projet ANJD (Diplomatie)"
+        window_name = "Démonstrateur client IHM création de compte - projet AFJD (Diplomatie)"
 
         root.title(window_name)
 
