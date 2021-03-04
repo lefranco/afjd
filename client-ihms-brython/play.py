@@ -123,7 +123,6 @@ def show_position():
         return
 
     report_loaded_html = "<br>".join(report_loaded.split('\n'))
-
     additional = html.P(report_loaded_html)
     my_sub_panel <= additional
 
@@ -210,13 +209,21 @@ def submit_orders():
 
     my_sub_panel <= canvas
 
-    additional = html.P("additional stuff under the map")
+    report_loaded = common.game_report_reload(game)
+    if report_loaded is None:
+        return
+
+    report_loaded_html = "<br>".join(report_loaded.split('\n'))
+    additional = html.P(report_loaded_html)
     my_sub_panel <= additional
 
-    # TODO : from pseudo get role
-    # TODO : from  role get orders
-    # TODO : display orders
+    # get the orders from server
+    orders_loaded = common.game_orders_reload(game)
+    if not orders_loaded:
+        return
 
+    # TODO : display orders
+    print(f"{orders_loaded=}")
 
 def negotiate():
     """ negotiate """

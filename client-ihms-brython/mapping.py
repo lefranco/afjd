@@ -276,7 +276,7 @@ class ColourRecord(typing.NamedTuple):
         """ outline_colour """
         the_sum = self.red + self.green + self.blue
         if the_sum < (3 * 255) // 10:
-            return ColourRecord(red=255, green=255, blue=255)
+            return ColourRecord(red=255 // 2, green=255 // 2, blue=255 // 2)
         return ColourRecord(red=0, green=0, blue=0)
 
     def str_value(self) -> str:
