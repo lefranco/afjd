@@ -12,7 +12,7 @@ import config
 import common
 import mapping
 
-OPTIONS = ['submit orders', 'negotiate', 'show game parameters', 'show players in game']
+OPTIONS = ['show position', 'submit orders', 'negotiate', 'show game parameters', 'show players in game']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -42,8 +42,8 @@ def get_display_from_variant(variant):
     return "stabbeur"
 
 
-def submit_orders():
-    """ submit_orders """
+def show_position():
+    """ show_position """
 
     variant_name_loaded = None
     variant_content_loaded = None
@@ -75,16 +75,16 @@ def submit_orders():
     if not variant_name_loaded:
         return
 
-    # now get variant content
+    # from variant name get variant content
 
     variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
     if not variant_content_loaded:
         return
 
-    # should be a user choice
+    # select display (should be a user choice)
     display_chosen = get_display_from_variant(variant_name_loaded)
 
-    # get parameters from display chose
+    # from display chose get display parameters
 
     parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
     with open(parameters_file_name, "r") as read_file:
@@ -93,8 +93,7 @@ def submit_orders():
     # build variant data
     variant_data = mapping.Variant(variant_content_loaded, parameters_read)
 
-    # now the position
-
+    # get the position from server
     position_loaded = common.game_position_reload(game)
     if not position_loaded:
         return
@@ -113,7 +112,92 @@ def submit_orders():
         alert("Please use a more recent navigator")
         return
 
-    # put background
+    # put background (this will call the callback that display the whole map)
+    img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
+    img.bind('load', callback_load)
+
+    my_sub_panel <= canvas
+
+    additional = html.P("additional stuff under the map")
+    my_sub_panel <= additional
+
+def submit_orders():
+    """ submit_orders """
+
+    variant_name_loaded = None
+    variant_content_loaded = None
+    variant_data = None
+    position_loaded = None
+    position_data = None
+
+    def callback_load(_):
+        """ callback_load """
+
+        # put the background map first
+        ctx.drawImage(img, 0, 0)
+
+        # put the legends
+        variant_data.render(ctx)
+
+        # put the position
+        position_data.render(ctx)
+
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    # from game name get variant name
+
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+
+    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+    with open(parameters_file_name, "r") as read_file:
+        parameters_read = json.load(read_file)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+
+    # get the position from server
+    position_loaded = common.game_position_reload(game)
+    if not position_loaded:
+        return
+
+    # digest the position
+    position_data = mapping.Position(position_loaded, variant_data)
+
+    # now we can display
+
+    map_size = variant_data.map_size
+
+    # create canvas
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Please use a more recent navigator")
+        return
+
+    # put background (this will call the callback that display the whole map)
     img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
     img.bind('load', callback_load)
 
@@ -340,6 +424,8 @@ def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
+    if item_name == 'show position':
+        show_position()
     if item_name == 'submit orders':
         submit_orders()
     if item_name == 'negotiate':
