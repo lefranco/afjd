@@ -50,8 +50,6 @@ class PositionRecord(typing.NamedTuple):
 def get_direction(p_from: PositionRecord, p_to: PositionRecord) -> DirectionEnum:
     """ two points give a vector and we get the direction """
 
-    print(f"{p_from=} {p_to=}")
-
     if p_to.y_pos < p_from.y_pos:
         if p_to.x_pos < p_from.x_pos:
             return DirectionEnum.NORTH_WEST
