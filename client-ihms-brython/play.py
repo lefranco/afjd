@@ -33,6 +33,33 @@ my_sub_panel = html.DIV(id="sub")
 my_panel <= my_sub_panel
 
 
+def make_report_window(report_loaded):
+    """ make_report_window """
+
+    lines = report_loaded.split('\n')
+    split_size = (len(lines) + 3) // 3
+    report_table = html.TABLE()
+    report_table.style = {
+        "border": "solid",
+    }
+    report_row = html.TR()
+    report_row.style = {
+        "border": "solid",
+    }
+    report_table <= report_row
+    for chunk_num in range(3):
+        report_col = html.TD()
+        report_col.style = {
+            "border": "solid",
+        }
+        chunk_content = lines[chunk_num * split_size: (chunk_num + 1) * split_size]
+        for line in chunk_content:
+            report_col <= line
+            report_col <= html.BR()
+        report_row <= report_col
+    return report_table
+
+
 def get_display_from_variant(variant):
     """ get_display_from_variant """
 
@@ -122,9 +149,9 @@ def show_position():
     if report_loaded is None:
         return
 
-    report_loaded_html = "<br>".join(report_loaded.split('\n'))
-    additional = html.P(report_loaded_html)
-    my_sub_panel <= additional
+    print(f"{report_loaded=}")
+    report_window = make_report_window(report_loaded)
+    my_sub_panel <= report_window
 
 
 def submit_orders():
@@ -148,6 +175,9 @@ def submit_orders():
         # put the position
         position_data.render(ctx)
 
+        # put the orders
+        orders_data.render(ctx)
+
     if 'GAME' not in storage:
         alert("Please select game beforehand")
         return
@@ -157,8 +187,6 @@ def submit_orders():
     if 'PSEUDO' not in storage:
         alert("Please login beforehand")
         return
-
-    pseudo = storage['PSEUDO']
 
     # from game name get variant name
 
@@ -203,6 +231,14 @@ def submit_orders():
         alert("Please use a more recent navigator")
         return
 
+    # get the orders from server
+    orders_loaded = common.game_orders_reload(game)
+    if not orders_loaded:
+        return
+
+    # digest the orders
+    orders_data = mapping.Orders(orders_loaded, position_data)
+
     # put background (this will call the callback that display the whole map)
     img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
     img.bind('load', callback_load)
@@ -213,17 +249,9 @@ def submit_orders():
     if report_loaded is None:
         return
 
-    report_loaded_html = "<br>".join(report_loaded.split('\n'))
-    additional = html.P(report_loaded_html)
-    my_sub_panel <= additional
+    report_window = make_report_window(report_loaded)
+    my_sub_panel <= report_window
 
-    # get the orders from server
-    orders_loaded = common.game_orders_reload(game)
-    if not orders_loaded:
-        return
-
-    # TODO : display orders
-    print(f"{orders_loaded=}")
 
 def negotiate():
     """ negotiate """
