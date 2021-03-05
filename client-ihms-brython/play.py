@@ -149,7 +149,6 @@ def show_position():
     if report_loaded is None:
         return
 
-    print(f"{report_loaded=}")
     report_window = make_report_window(report_loaded)
     my_sub_panel <= report_window
 
