@@ -563,7 +563,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         ctx.beginPath()
         circle_colour = ColourRecord(255, 127, 0)  # orange-ish
         ctx.strokeStyle = circle_colour.str_value()
-        ctx.arc(x_pos, y_pos, 15, 0, 2 * math.pi, False)
+        ctx.arc(x_pos, y_pos, 12, 0, 2 * math.pi, False)
         ctx.closePath(); ctx.stroke()  # no fill
 
     @property
@@ -902,6 +902,7 @@ class Order(Renderable):
             # red color : attack
             stroke_color = ColourRecord(red=255, green=0, blue=0)
             ctx.strokeStyle = stroke_color.str_value()
+            ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
             # an arrow (move)
             from_point = self._position.variant.position_table[self._active_unit.zone]
@@ -918,6 +919,7 @@ class Order(Renderable):
             # red color : support to attack
             stroke_color = ColourRecord(red=255, green=0, blue=0)
             ctx.strokeStyle = stroke_color.str_value()
+            ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
             # a dashed arrow (passive move)
             from_point = self._position.variant.position_table[self._passive_unit.zone]
@@ -946,7 +948,7 @@ class Order(Renderable):
             center_point = self._position.variant.position_table[self._passive_unit.zone]
             ctx.setLineDash([4, 2])
             ctx.beginPath()
-            ctx.arc(center_point.x_pos, center_point.y_pos, 6, 0, 2 * math.pi, False)
+            ctx.arc(center_point.x_pos, center_point.y_pos, 12, 0, 2 * math.pi, False)
             ctx.closePath(); ctx.stroke(); ctx.setLineDash([])
 
             # put a line (support)
@@ -967,7 +969,7 @@ class Order(Renderable):
 
             # put a circle (stand) around unit
             ctx.beginPath()
-            ctx.arc(center_point.x_pos, center_point.y_pos, 6, 0, 2 * math.pi, False)
+            ctx.arc(center_point.x_pos, center_point.y_pos, 12, 0, 2 * math.pi, False)
             ctx.closePath(); ctx.stroke()
 
         if self._order_type is OrderTypeEnum.CONVOY_ORDER:
@@ -978,6 +980,7 @@ class Order(Renderable):
             # blue for convoy
             stroke_color = ColourRecord(red=0, green=0, blue=255)
             ctx.strokeStyle = stroke_color.str_value()
+            ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
             # a dashed arrow (passive move)
             from_point = self._position.variant.position_table[self._passive_unit.zone]
@@ -1003,6 +1006,7 @@ class Order(Renderable):
             # orange for retreat
             stroke_color = ColourRecord(255, 127, 0)  # orange-ish
             ctx.strokeStyle = stroke_color.str_value()
+            ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
             # put an arrow (move/retreat)
             from_point = self._position.variant.position_table[self._active_unit.zone]
