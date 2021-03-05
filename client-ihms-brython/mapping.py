@@ -11,6 +11,7 @@ import math
 # pylint: disable=pointless-statement, expression-not-assigned, multiple-statements
 # noqa: E702
 
+import geometry
 
 
 def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx: typing.Any) -> None:
@@ -267,6 +268,7 @@ class ColourRecord(typing.NamedTuple):
         """ str_value """
         return f"rgb({self.red}, {self.green}, {self.blue})"
 
+
 # position
 DISLODGED_COLOUR = ColourRecord(red=25, green=255, blue=25)  # orange
 
@@ -277,14 +279,6 @@ CONVOY_COLOUR = ColourRecord(red=25, green=25, blue=255)  # blue
 RETREAT_COLOUR = ColourRecord(red=255, green=127, blue=0)  # orange
 ADJUSTMENT_COLOUR = ColourRecord(red=127, green=127, blue=127)  # grey
 
-class PositionRecord(typing.NamedTuple):
-    """ A position """
-    x_pos: int
-    y_pos: int
-
-    def shift(self) -> 'PositionRecord':
-        """ shift """
-        return PositionRecord(x_pos=self.x_pos + 4, y_pos=self.y_pos + 4)
 
 class Variant(Renderable):
     """ A variant """
@@ -401,14 +395,14 @@ class Variant(Renderable):
 
         self._name_table: typing.Dict[typing.Any, str] = dict()
         self._colour_table: typing.Dict[typing.Any, ColourRecord] = dict()
-        self._position_table: typing.Dict[typing.Any, PositionRecord] = dict()
-        self._legend_position_table: typing.Dict[typing.Any, PositionRecord] = dict()
+        self._position_table: typing.Dict[typing.Any, geometry.PositionRecord] = dict()
+        self._legend_position_table: typing.Dict[typing.Any, geometry.PositionRecord] = dict()
 
         # load the map size
         data_dict = self._raw_parameters_content['map']
         width = data_dict['width']
         height = data_dict['height']
-        map_size = PositionRecord(x_pos=width, y_pos=height)
+        map_size = geometry.PositionRecord(x_pos=width, y_pos=height)
         self._map_size = map_size
 
         # load the regions type names
@@ -467,11 +461,11 @@ class Variant(Renderable):
             self._name_table[zone] = name
             x_pos = data_dict['x_legend_pos']
             y_pos = data_dict['y_legend_pos']
-            legend_position = PositionRecord(x_pos=x_pos, y_pos=y_pos)
+            legend_position = geometry.PositionRecord(x_pos=x_pos, y_pos=y_pos)
             self._legend_position_table[zone] = legend_position
             x_pos = data_dict['x_pos']
             y_pos = data_dict['y_pos']
-            unit_position = PositionRecord(x_pos=x_pos, y_pos=y_pos)
+            unit_position = geometry.PositionRecord(x_pos=x_pos, y_pos=y_pos)
             self._position_table[zone] = unit_position
 
         # load the centers localisations
@@ -481,7 +475,7 @@ class Variant(Renderable):
             center = self._centers[center_num]
             x_pos = data_dict['x_pos']
             y_pos = data_dict['y_pos']
-            center_position = PositionRecord(x_pos=x_pos, y_pos=y_pos)
+            center_position = geometry.PositionRecord(x_pos=x_pos, y_pos=y_pos)
             self._position_table[center] = center_position
 
         # load seasons names
@@ -510,7 +504,7 @@ class Variant(Renderable):
             ctx.fillText(legend, x_pos, y_pos)
 
     @property
-    def map_size(self) -> PositionRecord:
+    def map_size(self) -> geometry.PositionRecord:
         """ property """
         return self._map_size
 
@@ -525,7 +519,7 @@ class Variant(Renderable):
         return self._colour_table
 
     @property
-    def position_table(self) -> typing.Dict[typing.Any, PositionRecord]:
+    def position_table(self) -> typing.Dict[typing.Any, geometry.PositionRecord]:
         """ property """
         return self._position_table
 
@@ -895,7 +889,9 @@ class Position(Renderable):
         """ property """
         return self._variant
 
+
 DASH_PATTERN = [4, 4]
+
 
 class Order(Renderable):
     """ Order """
@@ -940,9 +936,13 @@ class Order(Renderable):
 
             # a dashed arrow (passive move)
             from_point = self._position.variant.position_table[self._passive_unit.zone]
-            from_point_shifted = from_point.shift()
             dest_point = self._position.variant.position_table[self._destination_zone]
-            dest_point_shifted = dest_point.shift()
+            direction = geometry.get_direction(from_point, dest_point)
+            print(self._position.variant.name_table[self._passive_unit.zone])
+            print(f"{direction=}")
+            next_direction = direction.perpendicular()
+            from_point_shifted = from_point.shift(next_direction)
+            dest_point_shifted = dest_point.shift(next_direction)
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos, ctx)
 
             # put back
@@ -950,7 +950,7 @@ class Order(Renderable):
 
             # a line (support)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
-            dest_point2 = PositionRecord((from_point_shifted.x_pos + dest_point_shifted.x_pos) // 2, (from_point_shifted.y_pos + dest_point_shifted.y_pos) // 2)
+            dest_point2 = geometry.PositionRecord((from_point_shifted.x_pos + dest_point_shifted.x_pos) // 2, (from_point_shifted.y_pos + dest_point_shifted.y_pos) // 2)
             ctx.beginPath()
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
             ctx.lineTo(dest_point2.x_pos, dest_point2.y_pos)
@@ -1019,9 +1019,11 @@ class Order(Renderable):
 
             # a dashed arrow (passive move)
             from_point = self._position.variant.position_table[self._passive_unit.zone]
-            from_point_shifted = from_point.shift()
             dest_point = self._position.variant.position_table[self._destination_zone]
-            dest_point_shifted = dest_point.shift()
+            direction = geometry.get_direction(from_point, dest_point)
+            next_direction = direction.perpendicular()
+            from_point_shifted = from_point.shift(next_direction)
+            dest_point_shifted = dest_point.shift(next_direction)
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos, ctx)
 
             # put back
@@ -1029,7 +1031,7 @@ class Order(Renderable):
 
             # put a line (convoy)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
-            dest_point2 = PositionRecord((from_point_shifted.x_pos + dest_point_shifted.x_pos) // 2, (from_point_shifted.y_pos + dest_point_shifted.y_pos) // 2)
+            dest_point2 = geometry.PositionRecord((from_point_shifted.x_pos + dest_point_shifted.x_pos) // 2, (from_point_shifted.y_pos + dest_point_shifted.y_pos) // 2)
             ctx.beginPath()
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
             ctx.lineTo(dest_point2.x_pos, dest_point2.y_pos)
