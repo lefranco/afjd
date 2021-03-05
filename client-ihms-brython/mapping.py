@@ -57,12 +57,9 @@ class RegionTypeEnum(enum.Enum):
     @staticmethod
     def from_code(code: int) -> typing.Optional['RegionTypeEnum']:
         """ from_code """
-        if code == 1:
-            return RegionTypeEnum.COAST_REGION
-        if code == 2:
-            return RegionTypeEnum.LAND_REGION
-        if code == 3:
-            return RegionTypeEnum.SEA_REGION
+        for region_type in RegionTypeEnum:
+            if region_type.value == code:
+                return region_type
         return None
 
 
@@ -76,10 +73,9 @@ class UnitTypeEnum(enum.Enum):
     @staticmethod
     def from_code(code: int) -> typing.Optional['UnitTypeEnum']:
         """ from_code """
-        if code == 1:
-            return UnitTypeEnum.ARMY_UNIT
-        if code == 2:
-            return UnitTypeEnum.FLEET_UNIT
+        for unit_type in UnitTypeEnum:
+            if unit_type.value == code:
+                return unit_type
         return None
 
 
@@ -96,16 +92,9 @@ class SeasonEnum(enum.Enum):
     @staticmethod
     def from_code(code: int) -> typing.Optional['SeasonEnum']:
         """ from_code """
-        if code == 1:
-            return SeasonEnum.SPRING_SEASON
-        if code == 2:
-            return SeasonEnum.SUMMER_SEASON
-        if code == 3:
-            return SeasonEnum.AUTUMN_SEASON
-        if code == 4:
-            return SeasonEnum.WINTER_SEASON
-        if code == 5:
-            return SeasonEnum.ADJUST_SEASON
+        for season in SeasonEnum:
+            if season.value == code:
+                return season
         return None
 
     def __str__(self) -> str:
@@ -129,24 +118,9 @@ class OrderTypeEnum(enum.Enum):
     @staticmethod
     def from_code(code: int) -> typing.Optional['OrderTypeEnum']:
         """ from_code """
-        if code == 1:
-            return OrderTypeEnum.ATTACK_ORDER
-        if code == 2:
-            return OrderTypeEnum.OFF_SUPPORT_ORDER
-        if code == 3:
-            return OrderTypeEnum.DEF_SUPPORT_ORDER
-        if code == 4:
-            return OrderTypeEnum.HOLD_ORDER
-        if code == 5:
-            return OrderTypeEnum.CONVOY_ORDER
-        if code == 6:
-            return OrderTypeEnum.RETREAT_ORDER
-        if code == 7:
-            return OrderTypeEnum.DISBAND_ORDER
-        if code == 8:
-            return OrderTypeEnum.BUILD_ORDER
-        if code == 9:
-            return OrderTypeEnum.REMOVE_ORDER
+        for order_type in OrderTypeEnum:
+            if order_type.value == code:
+                return order_type
         return None
 
     def __str__(self) -> str:
@@ -196,6 +170,9 @@ class Region:
         # the zone (for localisation)
         self._zone: typing.Optional[Zone] = None
 
+        # the unit occupying the region (for identifying units)
+        self._occupant: typing.Optional['Unit'] = None
+
     @property
     def center(self) -> typing.Optional[Center]:
         """ property """
@@ -235,6 +212,11 @@ class Zone:
     def coast_type(self) -> typing.Optional[CoastType]:
         """ property """
         return self._coast_type
+
+    @property
+    def region(self) -> Region:
+        """ property """
+        return self._region
 
     @property
     def neighbours(self) -> typing.Dict[UnitTypeEnum, typing.List['Zone']]:
@@ -533,6 +515,15 @@ class Variant(Renderable):
         """ property """
         return self._position_table
 
+    @property
+    def zones(self) -> typing.Dict[int, Zone]:
+        """ property """
+        return self._zones
+
+    @property
+    def roles(self) -> typing.Dict[int, Role]:
+        """ property """
+        return self._roles
 
 class Point:
     """ Point for easier compatbility with old C software (do not use a record here) """
@@ -574,6 +565,10 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         ctx.arc(x_pos, y_pos, 15, 0, 2 * math.pi, False)
         ctx.closePath(); ctx.stroke()  # no fill
 
+    @property
+    def zone(self) -> Zone:
+        """ property """
+        return self._zone
 
 class Army(Unit):
     """ An army """
@@ -666,12 +661,6 @@ class Army(Unit):
         if self._dislodged_origin is not None:
             self.render_as_dislodged(x, y, ctx)
 
-        # temporary
-        #  legend = self._variant.name_table[self._zone]
-        #  debug_colour = ColourRecord(255, 0, 0)
-        #  ctx.fillStyle = debug_colour.str_value()
-        #  ctx.fillText(legend, x, y)
-
 
 class Fleet(Unit):
     """ An fleet """
@@ -747,12 +736,6 @@ class Fleet(Unit):
         if self._dislodged_origin is not None:
             self.render_as_dislodged(x, y, ctx)
 
-        # temporary
-        #  legend = self._variant.name_table[self._zone]
-        #  debug_colour = ColourRecord(255, 0, 0)
-        #  ctx.fillStyle = debug_colour.str_value()
-        #  ctx.fillText(legend, x, y)
-
 
 class Ownership(Renderable):
     """ OwnerShip """
@@ -823,6 +806,9 @@ class Position(Renderable):
             ownership = Ownership(self, role, center)
             self._ownerships.append(ownership)
 
+        # dict that says which unit is on a region
+        self._occupant: typing.Dict[Region, Unit] = dict()
+
         # units
         units = server_dict['units']
         self._units: typing.List[Unit] = list()
@@ -833,11 +819,12 @@ class Position(Renderable):
                 type_unit = UnitTypeEnum.from_code(type_unit_code)
                 zone = variant._zones[zone_number]
                 if type_unit is UnitTypeEnum.ARMY_UNIT:
-                    army = Army(self, role, zone, None)
-                    self._units.append(army)
+                    unit = Army(self, role, zone, None)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:
-                    fleet = Fleet(self, role, zone, None)
-                    self._units.append(fleet)
+                    unit = Fleet(self, role, zone, None)  # type: ignore
+                self._units.append(unit)
+                region = zone.region
+                self._occupant[region] = unit
 
         # forbiddens
         forbiddens = server_dict['forbiddens']
@@ -858,11 +845,13 @@ class Position(Renderable):
                 zone = variant._zones[zone_number]
                 dislodger_region = variant._regions[dislodger_region_number]
                 if type_unit is UnitTypeEnum.ARMY_UNIT:
-                    dislodged_army = Army(self, role, zone, dislodger_region)
-                    self._dislodged_units.append(dislodged_army)
+                    dislodged_unit = Army(self, role, zone, dislodger_region)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:
-                    dislodged_fleet = Fleet(self, role, zone, dislodger_region)
-                    self._dislodged_units.append(dislodged_fleet)
+                    dislodged_unit = Fleet(self, role, zone, dislodger_region)  # type: ignore
+                self._dislodged_units.append(dislodged_unit)
+                # the dislodger occupying the region is forgotten
+                region = zone.region
+                self._occupant[region] = unit
 
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
@@ -896,15 +885,71 @@ class Position(Renderable):
         return self._variant
 
 
-class OrdersSet(Renderable):
+class Order(Renderable):
+    """ Order """
+
+    def __init__(self, position: 'Position', order_type: OrderTypeEnum, active_unit: Unit, passive_unit: typing.Optional[Unit], destination_zone: typing.Optional[Zone]) -> None:
+        self._position = position
+        self._order_type = order_type
+        self._active_unit = active_unit
+        self._passive_unit = passive_unit
+        self._destination_zone = destination_zone
+
+    def render(self, ctx: typing.Any) -> None:
+        """put me on screen """
+
+        # TODO
+        print(f"{self._position.variant.name_table[self._active_unit.zone]}")
+
+
+class Orders(Renderable):
     """ A set of orders that can be displayed / requires position """
 
     def __init__(self, server_dict: typing.Dict[str, typing.Any], position: Position) -> None:
 
         self._position = position
-        # TODO
+
+        # fake units - they must go first
+        fake_units = server_dict['fake_units']
+        self._fake_units: typing.List[Unit] = list()
+        for _, unit_type_num, zone_num, role_num, _, _ in fake_units:
+            unit_type = UnitTypeEnum.from_code(unit_type_num)
+            zone = self._position.variant.zones[zone_num]
+            role = self._position.variant.roles[role_num]
+            if unit_type is UnitTypeEnum.ARMY_UNIT:
+                fake_unit = Army(self._position, role, zone, None)
+            if unit_type is UnitTypeEnum.FLEET_UNIT:
+                fake_unit = Fleet(self._position, role, zone, None)  # type: ignore
+            self._fake_units.append(fake_unit)
+
+        # orders
+        orders = server_dict['orders']
+        self._orders: typing.List[Order] = list()
+        for _, _, order_type_num, active_unit_num, passive_unit_num, destination_zone_num in orders:
+
+            order_type = OrderTypeEnum.from_code(order_type_num)
+            assert order_type is not None
+
+            zone_active_unit = self._position.variant.zones[active_unit_num]
+            region_active_unit = zone_active_unit.region
+            active_unit = self._position._occupant[region_active_unit]
+
+            passive_unit = None
+            if passive_unit_num != 0:
+                zone_passive_unit = self._position.variant.zones[passive_unit_num]
+                region_passive_unit = zone_passive_unit.region
+                passive_unit = self._position._occupant[region_passive_unit]
+
+            destination_zone = None
+            if destination_zone_num != 0:
+                destination_zone = self._position.variant.zones[destination_zone_num]
+
+            order = Order(self._position, order_type, active_unit, passive_unit, destination_zone)
+            self._orders.append(order)
 
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
 
-        pass  # TODO
+        # orders
+        for order in self._orders:
+            order.render(ctx)
