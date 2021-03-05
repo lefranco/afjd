@@ -938,8 +938,6 @@ class Order(Renderable):
             from_point = self._position.variant.position_table[self._passive_unit.zone]
             dest_point = self._position.variant.position_table[self._destination_zone]
             direction = geometry.get_direction(from_point, dest_point)
-            print(self._position.variant.name_table[self._passive_unit.zone])
-            print(f"{direction=}")
             next_direction = direction.perpendicular()
             from_point_shifted = from_point.shift(next_direction)
             dest_point_shifted = dest_point.shift(next_direction)
