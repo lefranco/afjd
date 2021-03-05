@@ -525,6 +525,7 @@ class Variant(Renderable):
         """ property """
         return self._roles
 
+
 class Point:
     """ Point for easier compatbility with old C software (do not use a record here) """
     def __init__(self) -> None:
@@ -569,6 +570,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
     def zone(self) -> Zone:
         """ property """
         return self._zone
+
 
 class Army(Unit):
     """ An army """
@@ -872,13 +874,6 @@ class Position(Renderable):
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
 
-        # just a test to remove
-        fill_color = ColourRecord(red=255, green=0, blue=0)
-        outline_colour = fill_color
-        ctx.fillStyle = fill_color.str_value()
-        ctx.strokeStyle = outline_colour.str_value()
-        draw_arrow(20, 10, 50, 80, ctx)
-
     @property
     def variant(self) -> Variant:
         """ property """
@@ -898,8 +893,61 @@ class Order(Renderable):
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
 
-        # TODO
-        print(f"{self._position.variant.name_table[self._active_unit.zone]}")
+        # -- moves --
+
+        if self._order_type is OrderTypeEnum.ATTACK_ORDER:
+            stroke_color = ColourRecord(red=255, green=0, blue=0)
+            ctx.strokeStyle = stroke_color.str_value()
+            from_point = self._position.variant.position_table[self._active_unit.zone]
+            dest_point = self._position.variant.position_table[self._destination_zone]
+            draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
+            ctx.stroke()
+
+        if self._order_type is OrderTypeEnum.OFF_SUPPORT_ORDER:
+            ctx.setLineDash([4, 2]);
+            stroke_color = ColourRecord(red=255, green=0, blue=0)
+            ctx.strokeStyle = stroke_color.str_value()
+
+            from_point = self._position.variant.position_table[self._passive_unit.zone]
+            dest_point = self._position.variant.position_table[self._destination_zone]
+            draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
+            ctx.stroke()
+
+            middle_point = PositionRecord((from_point.x_pos + dest_point.x_pos) // 2, (from_point.y_pos + dest_point.y_pos) // 2)
+            from_point2 = self._position.variant.position_table[self._active_unit.zone]
+            draw_arrow(from_point2.x_pos, from_point2.y_pos, middle_point.x_pos, middle_point.y_pos, ctx)
+            ctx.stroke()
+
+        if self._order_type is OrderTypeEnum.DEF_SUPPORT_ORDER:
+            ctx.setLineDash([4, 2]);
+            stroke_color = ColourRecord(red=0, green=255, blue=0)
+            ctx.strokeStyle = stroke_color.str_value()
+
+            from_point = self._position.variant.position_table[self._passive_unit.zone]
+            dest_point = self._position.variant.position_table[self._destination_zone]
+            draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
+            ctx.stroke()
+
+            middle_point = PositionRecord((from_point.x_pos + dest_point.x_pos) // 2, (from_point.y_pos + dest_point.y_pos) // 2)
+            from_point2 = self._position.variant.position_table[self._active_unit.zone]
+            draw_arrow(from_point2.x_pos, from_point2.y_pos, middle_point.x_pos, middle_point.y_pos, ctx)
+            ctx.stroke()
+
+        # TODO : others
+
+        # -- retreats --
+
+        if self._order_type is OrderTypeEnum.RETREAT_ORDER:
+            stroke_color = ColourRecord(red=255, green=0, blue=0)
+            ctx.strokeStyle = stroke_color.str_value()
+            from_point = self._position.variant.position_table[self._active_unit.zone]
+            dest_point = self._position.variant.position_table[self._destination_zone]
+            draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
+            ctx.stroke()
+        # TODO : others
+
+        # -- builds --
+        # TODO : others
 
 
 class Orders(Renderable):
