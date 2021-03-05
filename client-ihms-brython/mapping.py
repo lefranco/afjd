@@ -908,7 +908,7 @@ class Order(Renderable):
             dest_point = self._position.variant.position_table[self._destination_zone]
             ctx.beginPath()
             draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
-            ctx.endPath(); ctx.stroke()
+            ctx.closePath(); ctx.stroke()
 
         if self._order_type is OrderTypeEnum.OFF_SUPPORT_ORDER:
 
@@ -924,7 +924,7 @@ class Order(Renderable):
             dest_point = self._position.variant.position_table[self._destination_zone]
             ctx.setLineDash([4, 2]); ctx.beginPath()
             draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
-            ctx.endPath(); ctx.stroke(); ctx.setLineDash([])
+            ctx.closePath(); ctx.stroke(); ctx.setLineDash([])
 
             # a line (support)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
@@ -932,7 +932,7 @@ class Order(Renderable):
             ctx.beginPath()
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
             ctx.lineTo(dest_point2.x_pos, dest_point2.y_pos, ctx)
-            ctx.endPath(); ctx.stroke()
+            ctx.closePath(); ctx.stroke()
 
         if self._order_type is OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -947,7 +947,7 @@ class Order(Renderable):
             ctx.setLineDash([4, 2])
             ctx.beginPath()
             ctx.arc(center_point.x_pos, center_point.y_pos, 6, 0, 2 * math.pi, False)
-            ctx.endPath(); ctx.stroke(); ctx.setLineDash([])
+            ctx.closePath(); ctx.stroke(); ctx.setLineDash([])
 
             # put a line (support)
             from_point = self._position.variant.position_table[self._active_unit.zone]
@@ -955,7 +955,7 @@ class Order(Renderable):
             ctx.beginPath()
             ctx.moveTo(from_point.x_pos, from_point.y_pos)
             ctx.lineTo(dest_point.x_pos, dest_point.y_pos)
-            ctx.endPath(); ctx.stroke()
+            ctx.closePath(); ctx.stroke()
 
         if self._order_type is OrderTypeEnum.HOLD_ORDER:
 
@@ -968,7 +968,7 @@ class Order(Renderable):
             # put a circle (stand) around unit
             ctx.beginPath()
             ctx.arc(center_point.x_pos, center_point.y_pos, 6, 0, 2 * math.pi, False)
-            ctx.endPath(); ctx.stroke()
+            ctx.closePath(); ctx.stroke()
 
         if self._order_type is OrderTypeEnum.CONVOY_ORDER:
 
@@ -984,7 +984,7 @@ class Order(Renderable):
             dest_point = self._position.variant.position_table[self._destination_zone]
             ctx.setLineDash([4, 2]); ctx.beginPath()
             draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
-            ctx.endPath(); ctx.stroke(); ctx.setLineDash([])
+            ctx.closePath(); ctx.stroke(); ctx.setLineDash([])
 
             # put a line (convoy)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
@@ -992,7 +992,7 @@ class Order(Renderable):
             ctx.beginPath()
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
             ctx.lineTo(dest_point2.x_pos, dest_point2.y_pos)
-            ctx.endPath(); ctx.stroke()
+            ctx.closePath(); ctx.stroke()
 
         # -- retreats --
 
@@ -1009,7 +1009,7 @@ class Order(Renderable):
             dest_point = self._position.variant.position_table[self._destination_zone]
             ctx.beginPath()
             draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
-            ctx.endPath(); ctx.stroke()
+            ctx.closePath(); ctx.stroke()
 
         if self._order_type is OrderTypeEnum.DISBAND_ORDER:
 
@@ -1024,7 +1024,7 @@ class Order(Renderable):
             ctx.lineTo(cross_center_point.x_pos - 8, cross_center_point.y_pos + 8)
             ctx.moveTo(cross_center_point.x_pos - 8, cross_center_point.y_pos - 8)
             ctx.lineTo(cross_center_point.x_pos + 8, cross_center_point.y_pos + 8)
-            ctx.endPath(); ctx.stroke()
+            ctx.closePath(); ctx.stroke()
 
         # -- builds --
 
@@ -1041,7 +1041,7 @@ class Order(Renderable):
             cross_center_point = self._position.variant.position_table[self._active_unit.zone]
             ctx.beginPath()
             ctx.rect(cross_center_point.x_pos - 8, cross_center_point.y_pos - 8, 16, 16)
-            ctx.endPath(); ctx.stroke()
+            ctx.closePath(); ctx.stroke()
 
         if self._order_type is OrderTypeEnum.REMOVE_ORDER:
 
@@ -1056,7 +1056,7 @@ class Order(Renderable):
             ctx.lineTo(cross_center_point.x_pos - 8, cross_center_point.y_pos + 8)
             ctx.moveTo(cross_center_point.x_pos - 8, cross_center_point.y_pos - 8)
             ctx.lineTo(cross_center_point.x_pos + 8, cross_center_point.y_pos + 8)
-            ctx.endPath(); ctx.stroke()
+            ctx.closePath(); ctx.stroke()
 
 
 class Orders(Renderable):
