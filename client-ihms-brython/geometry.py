@@ -54,7 +54,6 @@ def get_direction(p_from: PositionRecord, p_to: PositionRecord) -> DirectionEnum
         if p_to.x_pos < p_from.x_pos:
             return DirectionEnum.NORTH_WEST
         return DirectionEnum.NORTH_EAST
-    else:
-        if p_to.x_pos < p_from.x_pos:
-            return DirectionEnum.SOUTH_WEST
+    if p_to.x_pos < p_from.x_pos:
+        return DirectionEnum.SOUTH_WEST
     return DirectionEnum.SOUTH_EAST

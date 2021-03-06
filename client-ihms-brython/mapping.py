@@ -270,14 +270,15 @@ class ColourRecord(typing.NamedTuple):
 
 
 # position
-DISLODGED_COLOUR = ColourRecord(red=25, green=255, blue=25)  # orange
+DISLODGED_COLOUR = ColourRecord(255, 127, 0)  # orange
+DISLODGED_SHIFT = -5
 
 # orders
 ATTACK_COLOUR = ColourRecord(red=255, green=25, blue=25)  # red
 SUPPORT_COLOUR = ColourRecord(red=25, green=255, blue=25)  # green
 CONVOY_COLOUR = ColourRecord(red=25, green=25, blue=255)  # blue
-RETREAT_COLOUR = ColourRecord(red=255, green=127, blue=0)  # orange
-ADJUSTMENT_COLOUR = ColourRecord(red=127, green=127, blue=127)  # grey
+RETREAT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
+ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 
 class Variant(Renderable):
@@ -563,16 +564,21 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         dislodger_legend = self._position.variant.name_table[zone_dislodger]
 
         # dislodger
-        dislodger_colour = ColourRecord(255, 127, 0)  # orange-ish
+        dislodger_colour = DISLODGED_COLOUR
         ctx.fillStyle = dislodger_colour.str_value()
         ctx.fillText(dislodger_legend, x_pos + 12, y_pos - 9)
 
+        ctx.lineWidth = 2
+
         # circle
         ctx.beginPath()
-        circle_colour = ColourRecord(255, 127, 0)  # orange-ish
+        circle_colour = DISLODGED_COLOUR
         ctx.strokeStyle = circle_colour.str_value()
         ctx.arc(x_pos, y_pos, 12, 0, 2 * math.pi, False)
         ctx.stroke(); ctx.closePath()  # no fill
+
+        # put back
+        ctx.lineWidth = 1
 
     @property
     def zone(self) -> Zone:
@@ -599,8 +605,8 @@ class Army(Unit):
 
         # shift for dislodged units
         if self._dislodged_origin is not None:
-            x -= 5  # pylint: disable=invalid-name
-            y -= 5  # pylint: disable=invalid-name
+            x += DISLODGED_SHIFT  # pylint: disable=invalid-name
+            y += DISLODGED_SHIFT  # pylint: disable=invalid-name
 
         # socle
         p1 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
@@ -691,11 +697,11 @@ class Fleet(Unit):
 
         # shift for dislodged units
         if self._dislodged_origin is not None:
-            x -= 5  # pylint: disable=invalid-name
-            y -= 5  # pylint: disable=invalid-name
+            x += DISLODGED_SHIFT  # pylint: disable=invalid-name
+            y += DISLODGED_SHIFT  # pylint: disable=invalid-name
 
         # gros oeuvre
-        p1 = [Point() for _ in range(32)]  # pylint: disable=invalid-name
+        p1 = [Point() for _ in range(33)]  # pylint: disable=invalid-name
         p1[0].x = x - 15; p1[0].y = y + 4
         p1[1].x = x + 16; p1[1].y = y + 4
         p1[2].x = x + 15; p1[2].y = y
@@ -728,6 +734,7 @@ class Fleet(Unit):
         p1[29].x = x - 13; p1[29].y = y - 1
         p1[30].x = x - 13; p1[30].y = y
         p1[31].x = x - 12; p1[31].y = y
+        p1[32].x = x - 15; p1[32].y = y + 4
         ctx.beginPath()
         for n, p in enumerate(p1):  # pylint: disable=invalid-name
             if not n:
@@ -819,7 +826,7 @@ class Position(Renderable):
             self._ownerships.append(ownership)
 
         # dict that says which unit is on a region
-        self._occupant: typing.Dict[Region, Unit] = dict()
+        self._occupant_table: typing.Dict[Region, Unit] = dict()
 
         # units
         units = server_dict['units']
@@ -836,7 +843,7 @@ class Position(Renderable):
                     unit = Fleet(self, role, zone, None)  # type: ignore
                 self._units.append(unit)
                 region = zone.region
-                self._occupant[region] = unit
+                self._occupant_table[region] = unit
 
         # forbiddens
         forbiddens = server_dict['forbiddens']
@@ -863,7 +870,7 @@ class Position(Renderable):
                 self._dislodged_units.append(dislodged_unit)
                 # the dislodger occupying the region is forgotten
                 region = zone.region
-                self._occupant[region] = unit
+                self._occupant_table[region] = dislodged_unit
 
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
@@ -888,6 +895,11 @@ class Position(Renderable):
     def variant(self) -> Variant:
         """ property """
         return self._variant
+
+    @property
+    def occupant_table(self) -> typing.Dict[Region, Unit]:
+        """ property """
+        return self._occupant_table
 
 
 DASH_PATTERN = [4, 4]
@@ -1047,10 +1059,10 @@ class Order(Renderable):
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
             # put an arrow (move/retreat)
-            from_point = self._position.variant.position_table[self._active_unit.zone]
+            unit_position = self._position.variant.position_table[self._active_unit.zone]
+            from_point = geometry.PositionRecord(x_pos=unit_position.x_pos + DISLODGED_SHIFT, y_pos=unit_position.y_pos + DISLODGED_SHIFT)
             dest_point = self._position.variant.position_table[self._destination_zone]
-            ctx.beginPath()
-            draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
+            draw_arrow(from_point.x_pos + DISLODGED_SHIFT, from_point.y_pos + DISLODGED_SHIFT, dest_point.x_pos, dest_point.y_pos, ctx)
 
         if self._order_type is OrderTypeEnum.DISBAND_ORDER:
 
@@ -1058,14 +1070,20 @@ class Order(Renderable):
             stroke_color = RETREAT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
 
+            ctx.lineWidth = 2
+
             # put a cross over unit
-            cross_center_point = self._position.variant.position_table[self._active_unit.zone]
+            unit_position = self._position.variant.position_table[self._active_unit.zone]
+            cross_center_point = geometry.PositionRecord(x_pos=unit_position.x_pos + DISLODGED_SHIFT, y_pos=unit_position.y_pos + DISLODGED_SHIFT)
             ctx.beginPath()
             ctx.moveTo(cross_center_point.x_pos + 8, cross_center_point.y_pos - 8)
             ctx.lineTo(cross_center_point.x_pos - 8, cross_center_point.y_pos + 8)
             ctx.moveTo(cross_center_point.x_pos - 8, cross_center_point.y_pos - 8)
             ctx.lineTo(cross_center_point.x_pos + 8, cross_center_point.y_pos + 8)
             ctx.stroke(); ctx.closePath()
+
+            # put back
+            ctx.lineWidth = 1
 
         # -- builds --
 
@@ -1078,17 +1096,24 @@ class Order(Renderable):
             stroke_color = ADJUSTMENT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
 
+            ctx.lineWidth = 2
+
             # put a square around unit
             square_center_point = self._position.variant.position_table[self._active_unit.zone]
             ctx.beginPath()
             ctx.rect(square_center_point.x_pos - 8, square_center_point.y_pos - 8, 16, 16)
             ctx.stroke(); ctx.closePath()
 
+            # put back
+            ctx.lineWidth = 1
+
         if self._order_type is OrderTypeEnum.REMOVE_ORDER:
 
             # grey for builds
             stroke_color = ADJUSTMENT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
+
+            ctx.lineWidth = 2
 
             # put a cross over unit
             cross_center_point = self._position.variant.position_table[self._active_unit.zone]
@@ -1099,6 +1124,8 @@ class Order(Renderable):
             ctx.lineTo(cross_center_point.x_pos + 8, cross_center_point.y_pos + 8)
             ctx.stroke(); ctx.closePath()
 
+            # put back
+            ctx.lineWidth = 1
 
 class Orders(Renderable):
     """ A set of orders that can be displayed / requires position """
@@ -1109,7 +1136,7 @@ class Orders(Renderable):
 
         # fake units - they must go first
         fake_units = server_dict['fake_units']
-        self._fake_units: typing.List[Unit] = list()
+        self._fake_units: typing.Dict[int, Unit] = dict()
         for _, unit_type_num, zone_num, role_num, _, _ in fake_units:
             unit_type = UnitTypeEnum.from_code(unit_type_num)
             zone = self._position.variant.zones[zone_num]
@@ -1118,25 +1145,28 @@ class Orders(Renderable):
                 fake_unit = Army(self._position, role, zone, None)
             if unit_type is UnitTypeEnum.FLEET_UNIT:
                 fake_unit = Fleet(self._position, role, zone, None)  # type: ignore
-            self._fake_units.append(fake_unit)
+            self._fake_units[zone_num] = fake_unit
 
         # orders
         orders = server_dict['orders']
         self._orders: typing.List[Order] = list()
-        for _, _, order_type_num, active_unit_num, passive_unit_num, destination_zone_num in orders:
+        for _, _, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders:
 
             order_type = OrderTypeEnum.from_code(order_type_num)
             assert order_type is not None
 
-            zone_active_unit = self._position.variant.zones[active_unit_num]
-            region_active_unit = zone_active_unit.region
-            active_unit = self._position._occupant[region_active_unit]
+            if order_type is OrderTypeEnum.BUILD_ORDER:
+                active_unit = self._fake_units[active_unit_zone_num]
+            else:
+                zone_active_unit = self._position.variant.zones[active_unit_zone_num]
+                region_active_unit = zone_active_unit.region
+                active_unit = self._position.occupant_table[region_active_unit]
 
             passive_unit = None
-            if passive_unit_num != 0:
-                zone_passive_unit = self._position.variant.zones[passive_unit_num]
+            if passive_unit_zone_num != 0:
+                zone_passive_unit = self._position.variant.zones[passive_unit_zone_num]
                 region_passive_unit = zone_passive_unit.region
-                passive_unit = self._position._occupant[region_passive_unit]
+                passive_unit = self._position.occupant_table[region_passive_unit]
 
             destination_zone = None
             if destination_zone_num != 0:
