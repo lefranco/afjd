@@ -12,15 +12,19 @@ import configparser
 import sys
 import pathlib
 import time
+import smtplib
 
 import flask
 import flask_mail  # type: ignore
 
 
-INTERVAL = 5
+INTERVAL = 2
 
 SUBJECT = "2021 L'année pour jouer à Diplomacy"
-SENDER = "palpatine.darksedious@gmail.com"
+
+SENDER = "jeremie.lefrancois@orange.fr"
+#SENDER = "palpatine.darksedious@gmail.com"
+
 BODY_FILE = "./body_NewsLetter2.html"
 
 MAILER = None
@@ -113,9 +117,13 @@ def main():
                     print("NO : Have already spammed that one !")
                     continue
 
-                send_mail(dest)
+                try:
+                    send_mail(dest)
+                except smtplib.SMTPRecipientsRefused:
+                    print("=================== FAILED!")
+                else:
+                    print("DONE!")
 
-                print("... DONE!")
                 already_spammed.add(dest)
 
                 time.sleep(INTERVAL)
