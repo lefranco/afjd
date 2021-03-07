@@ -114,7 +114,7 @@ def main():
 
                 # check we do not send twice to same
                 if dest in already_spammed:
-                    print("NO : Have already spammed that one !")
+                    print("=================== ALREADY SPAMMED!")
                     continue
 
                 try:
