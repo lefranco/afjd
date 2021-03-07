@@ -22,8 +22,7 @@ INTERVAL = 2
 
 SUBJECT = "2021 L'année pour jouer à Diplomacy"
 
-SENDER = "jeremie.lefrancois@orange.fr"
-#SENDER = "palpatine.darksedious@gmail.com"
+SENDER = "afjdiplo@gmail.com"
 
 BODY_FILE = "./body_NewsLetter2.html"
 
@@ -65,6 +64,8 @@ def load_mail_config(app: typing.Any) -> None:
         app.config['MAIL_USE_SSL'] = bool(int(mail_data['MAIL_USE_SSL']))
         app.config['MAIL_USERNAME'] = mail_data['MAIL_USERNAME']
         app.config['MAIL_PASSWORD'] = mail_data['MAIL_PASSWORD']
+
+        assert app.config['MAIL_USERNAME'] == SENDER, "Use from same as sender to avoid being tagged as spam"
 
     global MAILER
     MAILER = flask_mail.Mail(app)
