@@ -1041,6 +1041,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             if pseudo != 'Palpatine':  # TODO remove PATCH !!!
                 flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+            role_id = 0  # TODO remove PATCH !!!
 
         # get orders
         assert role_id is not None
