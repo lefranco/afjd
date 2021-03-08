@@ -642,9 +642,20 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         units_submitted = args['units']
         forbiddens_submitted = args['forbiddens']
 
-        the_ownerships = json.loads(ownerships_submitted)
-        the_units = json.loads(units_submitted)
-        the_forbiddens = json.loads(forbiddens_submitted)
+        try:
+            the_ownerships = json.loads(ownerships_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert ownerships from json to text ?")
+
+        try:
+            the_units = json.loads(units_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert units from json to text ?")
+
+        try:
+            the_forbiddens = json.loads(forbiddens_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert forbiddens from json to text ?")
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to rectify position in game")
@@ -875,7 +886,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # put in database fake units - units for build orders
         # we cannot remove all fake units since at this point we do not know if build will be successful
-        the_orders = json.loads(orders_submitted)
+
+        try:
+            the_orders = json.loads(orders_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert orders from json to text ?")
+
         for the_order in the_orders:
             if the_order['order_type'] == 8:
                 type_num = the_order['active_unit']['type_unit']
@@ -933,7 +949,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         situation_dict_json = json.dumps(situation_dict)
 
         orders_list = list()
-        the_orders = json.loads(orders_submitted)
         for the_order in the_orders:
             order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
             order.load_json(the_order)
@@ -1302,8 +1317,16 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
         variant_dict_json = json.dumps(variant_dict)
 
         # evaluate situation
-        the_ownerships = json.loads(ownerships_submitted)
-        the_units = json.loads(units_submitted)
+
+        try:
+            the_ownerships = json.loads(ownerships_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert ownerships from json to text ?")
+
+        try:
+            the_units = json.loads(units_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert units from json to text ?")
 
         # situation: get ownerships
         ownership_dict = dict()
@@ -1343,7 +1366,12 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
 
         # evaluate orders
         orders_list = list()
-        the_orders = json.loads(orders_submitted)
+
+        try:
+            the_orders = json.loads(orders_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert orders from json to text ?")
+
         for the_order in the_orders:
             order = orders.Order(0, 0, 0, 0, 0, 0)
             order.load_json(the_order)
