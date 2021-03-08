@@ -49,23 +49,39 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
 
         args = SOLVER_PARSER.parse_args(strict=True)
 
-        variant_json = args['variant']
-        variant = json.loads(variant_json)
+        variant_submitted = args['variant']
+
+        try:
+            variant = json.loads(variant_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert variant from json to text ?")
 
         advancement = int(args['advancement'])
 
-        situation_json = args['situation']
-        situation = json.loads(situation_json)
+        situation_submitted = args['situation']
 
-        orders_json = args['orders']
-        orders = json.loads(orders_json)
+        try:
+            situation = json.loads(situation_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert situation from json to text ?")
+
+        orders_submitted = args['orders']
+
+        try:
+            orders = json.loads(orders_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert orders from json to text ?")
 
         role = None
         if args['role'] is not None and args['role'] != 0:
             role = int(args['role'])
 
-        names_json = args['names']
-        names = json.loads(names_json)
+        names_submitted = args['names']
+
+        try:
+            names = json.loads(names_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert names from json to text ?")
 
         returncode, stderr, stdout, situation_result, orders_result = solver.solve(variant, advancement, situation, orders, role, names)
 
