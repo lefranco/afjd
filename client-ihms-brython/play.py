@@ -39,8 +39,10 @@ my_panel <= my_sub_panel
 class AutomatonStateEnum(enum.Enum):
     """ AutomatonStateEnum """
 
-    INITIAL_STATE = enum.auto()
+    SELECT_ACTIVE_STATE = enum.auto()
     SELECT_ORDER_STATE = enum.auto()
+    SELECT_PASSIVE_UNIT_STATE = enum.auto()
+    SELECT_DESTINATION_STATE = enum.auto()
 
 
 def make_report_window(report_loaded):
@@ -171,29 +173,116 @@ def submit_orders():
     variant_data = None
     position_loaded = None
     position_data = None
-    automaton_state = AutomatonStateEnum.INITIAL_STATE
+
+    selected_active_unit = None
+    selected_passive_unit = None
+    selected_dest_zone = None
+    selected_order_type = None
+    automaton_state = None
 
     def submit_orders_callback(_):
         """ submit_orders_callback """
-        print(f"submit_orders_callback TODO ;-)")
+        print("submit_orders_callback TODO ;-)")
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
-        print(f"select_order_type_callback {order_type.name} ")
 
-    def callback_click(event):
-        """ callback_click """
-        print(f"callback_click {event=} {event.buttons=} {event.button=}  {event.x=} {event.y=}")
+        print("select_order_type_callback")
 
-        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        nonlocal automaton_state
 
-        if automaton_state == AutomatonStateEnum.INITIAL_STATE:
-            unit = position_data.closest_unit(pos)
+        if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
 
             nonlocal buttons_right
+            nonlocal selected_order_type
+
+            selected_order_type = order_type
+
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+            if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
+
+                legend_selected_destination = html.LEGEND("Select destination of attack")
+                buttons_right <= legend_selected_destination
+
+                automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
+
+                legend_selected_passive = html.LEGEND("Select offensively suported unit")
+                buttons_right <= legend_selected_passive
+
+                automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
+
+                legend_selected_passive = html.LEGEND("Select defensively supported unit")
+                buttons_right <= legend_selected_passive
+
+                automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
+
+                # TODO insert order
+                print("insert order")
+
+                legend_select_unit = html.LEGEND("Click on unit to order")
+                buttons_right <= legend_select_unit
+
+                my_sub_panel2 <= buttons_right
+                my_sub_panel <= my_sub_panel2
+
+                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
+
+                legend_selected_passive = html.LEGEND("Select convoyed unit")
+                buttons_right <= legend_selected_passive
+
+                automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
+
+            my_sub_panel2 <= buttons_right
+            my_sub_panel <= my_sub_panel2
+
+    def callback_click(event):
+        """ callback_click """
+
+        print("callback_click")
+
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+
+        nonlocal automaton_state
+
+        if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
+
+            nonlocal selected_active_unit
+            nonlocal buttons_right
+
+            selected_active_unit = position_data.closest_unit(pos)
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+            legend_selected_unit = html.LEGEND(f"Selected active unit is {selected_active_unit}")
+            buttons_right <= legend_selected_unit
 
             for order_type in mapping.OrderTypeEnum:
                 input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
@@ -204,7 +293,71 @@ def submit_orders():
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
 
-            automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE
+            automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+
+        if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
+
+            nonlocal selected_dest_zone
+            nonlocal buttons_right
+
+            selected_dest_zone = variant_data.closest_zone(pos)
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+            # TODO insert order
+            print("insert order")
+
+            legend_select_unit = html.LEGEND("Click on unit to order")
+            buttons_right <= legend_select_unit
+
+            my_sub_panel2 <= buttons_right
+            my_sub_panel <= my_sub_panel2
+
+            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+        if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
+
+            nonlocal selected_passive_unit
+            nonlocal buttons_right
+
+            selected_passive_unit = position_data.closest_unit(pos)
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+            if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
+
+                # TODO insert order
+                print("insert order")
+
+                legend_select_unit = html.LEGEND("Click on unit to order")
+                buttons_right <= legend_select_unit
+
+                my_sub_panel2 <= buttons_right
+                my_sub_panel <= my_sub_panel2
+
+                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+                return
+
+            if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
+                legend_selected_passive = html.LEGEND(f"Selected offensively supported unit is {selected_passive_unit}")
+            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+                legend_selected_passive = html.LEGEND(f"Selected convoyed unit is {selected_passive_unit}")
+            buttons_right <= legend_selected_passive
+
+            if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
+                legend_select_destination = html.LEGEND("Select destination of supported attack")
+            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+                legend_select_destination = html.LEGEND("Select destination of convoy")
+            buttons_right <= legend_select_destination
+
+            my_sub_panel2 <= buttons_right
+            my_sub_panel <= my_sub_panel2
+
+            automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
 
     def callback_dblclick(event):
         """ callback_dblclick """
@@ -313,8 +466,10 @@ def submit_orders():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-    legend_select_unit = html.LEGEND("Click on unit to order", id='select_unit')
+    legend_select_unit = html.LEGEND("Click on unit to order")
     buttons_right <= legend_select_unit
+
+    automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     # overall
     my_sub_panel2 = html.DIV()
