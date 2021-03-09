@@ -500,7 +500,7 @@ class Variant(Renderable):
 
         closest_zone: typing.Optional[Zone] = None
         distance_closest = None
-        for zone in self._zones:
+        for zone in self._zones.values():
             zone_pos = self.position_table[zone]
             distance = designated_pos.distance(zone_pos)
             if distance_closest is None or distance < distance_closest:
@@ -599,6 +599,17 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         """ property """
         return self._zone
 
+    def __str__(self) -> str:
+        variant = self._position.variant
+        zone = self._zone
+        name = variant
+        name = variant.name_table[zone]
+        if isinstance(self, Army):
+            type_name = variant.name_table[UnitTypeEnum.ARMY_UNIT]
+        if isinstance(self, Fleet):
+            type_name = variant.name_table[UnitTypeEnum.FLEET_UNIT]
+        type_name_initial = type_name[0]
+        return f"{type_name_initial} {name}"
 
 class Army(Unit):
     """ An army """
