@@ -496,7 +496,7 @@ class Variant(Renderable):
             self._name_table[order_type] = name
 
     def closest_zone(self, designated_pos: geometry.PositionRecord) -> typing.Optional[Zone]:
-        """ closest_unit """
+        """ closest_zone """
 
         closest_zone: typing.Optional[Zone] = None
         distance_closest = None
