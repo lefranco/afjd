@@ -10,6 +10,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 import common
+import geometry
 import mapping
 
 OPTIONS = ['show position', 'submit orders', 'negotiate', 'show game parameters', 'show players in game']
@@ -168,7 +169,14 @@ def submit_orders():
 
     def callback_click(event):
         """ callback_click """
-        print(f"click {event=} {event.buttons=} {event.button=}  {event.x=} {event.y=}")
+        print(f"click {event=} {event.buttons=} {event.button=}  {event.clientX=} {event.clientY=}")
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        print(f"{pos=}")
+        unit = position_data.closest_unit(pos)
+        print(f"{unit=}")
+        zone = variant_data.closest_zone(pos)
+        zone_name = variant_data.name_table[zone]
+        print(f"{zone_name=}")
 
     def callback_dblclick(event):
         """ callback_dblclick """
