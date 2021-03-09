@@ -2,6 +2,7 @@
 
 import enum
 import typing
+import math
 
 
 @enum.unique
@@ -40,6 +41,10 @@ class PositionRecord(typing.NamedTuple):
     """ A position """
     x_pos: int
     y_pos: int
+
+    def distance(self, other: 'PositionRecord') -> float:
+        """ euclidian distance """
+        return math.sqrt((other.x_pos - self.x_pos) ** 2 + (other.y_pos - self.y_pos) ** 2)
 
     def shift(self, direction: DirectionEnum) -> 'PositionRecord':
         """ shift """
