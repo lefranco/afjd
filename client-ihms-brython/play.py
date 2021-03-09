@@ -14,7 +14,7 @@ import common
 import geometry
 import mapping
 
-OPTIONS = ['show position', 'submit orders', 'negotiate', 'show game parameters', 'show players in game']
+OPTIONS = ['game status', 'game position', 'submit orders', 'negotiate', 'all game parameters', 'players in game']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -80,6 +80,10 @@ def get_display_from_variant(variant):
     assert variant == 'standard'
     return "stabbeur"
 
+def show_status():
+    """ show_status """
+
+    my_sub_panel <= "TODO need name description deadline season(from current_advancement) current_state"
 
 def show_position():
     """ show_position """
@@ -697,15 +701,17 @@ def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
-    if item_name == 'show position':
+    if item_name == 'game status':
+        show_status()
+    if item_name == 'game position':
         show_position()
     if item_name == 'submit orders':
         submit_orders()
     if item_name == 'negotiate':
         negotiate()
-    if item_name == 'show game parameters':
+    if item_name == 'all game parameters':
         show_game_parameters()
-    if item_name == 'show players in game':
+    if item_name == 'players in game':
         show_players_in_game()
 
     global item_name_selected  # pylint: disable=invalid-name
