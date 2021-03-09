@@ -4,6 +4,7 @@
 
 import json
 import datetime
+import enum
 
 from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -32,6 +33,14 @@ item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
+
+
+@enum.unique
+class AutomatonStateEnum(enum.Enum):
+    """ AutomatonStateEnum """
+
+    INITIAL_STATE = enum.auto()
+    SELECT_ORDER_STATE = enum.auto()
 
 
 def make_report_window(report_loaded):
@@ -162,25 +171,44 @@ def submit_orders():
     variant_data = None
     position_loaded = None
     position_data = None
+    automaton_state = AutomatonStateEnum.INITIAL_STATE
 
-    def debug_callback(_):
-        """ debug_callback """
-        print(f"debug_callback")
+    def submit_orders_callback(_):
+        """ submit_orders_callback """
+        print(f"submit_orders_callback TODO ;-)")
+
+    def select_order_type_callback(_, order_type):
+        """ select_order_type_callback """
+        print(f"select_order_type_callback {order_type.name} ")
 
     def callback_click(event):
         """ callback_click """
-        print(f"click {event=} {event.buttons=} {event.button=}  {event.clientX=} {event.clientY=}")
+        print(f"callback_click {event=} {event.buttons=} {event.button=}  {event.x=} {event.y=}")
+
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        print(f"{pos=}")
-        unit = position_data.closest_unit(pos)
-        print(f"{unit=}")
-        zone = variant_data.closest_zone(pos)
-        zone_name = variant_data.name_table[zone]
-        print(f"{zone_name=}")
+
+        if automaton_state == AutomatonStateEnum.INITIAL_STATE:
+            unit = position_data.closest_unit(pos)
+
+            nonlocal buttons_right
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+            for order_type in mapping.OrderTypeEnum:
+                input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                buttons_right <= html.BR()
+                buttons_right <= input_debug
+
+            my_sub_panel2 <= buttons_right
+            my_sub_panel <= my_sub_panel2
+
+            automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE
 
     def callback_dblclick(event):
         """ callback_dblclick """
-        print(f"dblclick {event=} {event.buttons=} {event.button=}  {event.x=} {event.y=}")
+        print(f"callback_dblclick {event=} {event.buttons=} {event.button=}  {event.x=} {event.y=}")
 
     def callback_render(_):
         """ callback_render """
@@ -272,24 +300,30 @@ def submit_orders():
 
     report_window = make_report_window(report_loaded)
 
-    input_debug = html.INPUT(type="submit", value="debug")
-    input_debug.bind("click", debug_callback)
+    # left side
 
-    # left hand side
-    display_left = html.TD()
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
     display_left <= canvas
     display_left <= report_window
 
-    # right hand side
-    buttons_right = html.TD()
-    buttons_right <= input_debug
+    # right side
 
-    my_table_row = html.TR()
-    my_table_row <= display_left
-    my_table_row <= buttons_right
-    my_table = html.TABLE()
-    my_table <= my_table_row
-    my_sub_panel <= my_table
+    buttons_right = html.DIV(id='buttons_right')
+    buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+    legend_select_unit = html.LEGEND("Click on unit to order", id='select_unit')
+    buttons_right <= legend_select_unit
+
+    # overall
+    my_sub_panel2 = html.DIV()
+    my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left
+    my_sub_panel2 <= buttons_right
+
+    my_sub_panel <= my_sub_panel2
+
 
 def negotiate():
     """ negotiate """

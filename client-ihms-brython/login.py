@@ -148,8 +148,8 @@ def show_login():
     show_login_panel.attrs['style'] = 'text-align: left'
     show_login_panel <= log_message
 
-    if "show_login" in document:
-        del document["show_login"]
+    if 'show_login' in document:
+        del document['show_login']
 
     document <= show_login_panel
 

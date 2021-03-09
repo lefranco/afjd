@@ -74,8 +74,8 @@ def show_game_selected():
     show_game_selected_panel.attrs['style'] = 'text-align: left'
     show_game_selected_panel <= log_message
 
-    if "show_game_selected" in document:
-        del document["show_game_selected"]
+    if 'show_game_selected' in document:
+        del document['show_game_selected']
 
     document <= show_game_selected_panel
 

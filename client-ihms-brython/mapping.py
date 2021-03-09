@@ -100,9 +100,6 @@ class SeasonEnum(enum.Enum):
                 return season
         return None
 
-    def __str__(self) -> str:
-        return f"{self.name}"
-
 
 @enum.unique
 class OrderTypeEnum(enum.Enum):
@@ -125,9 +122,6 @@ class OrderTypeEnum(enum.Enum):
             if order_type.value == code:
                 return order_type
         return None
-
-    def __str__(self) -> str:
-        return f"{self.name}"
 
 
 class Center:
@@ -485,7 +479,7 @@ class Variant(Renderable):
             season_num = int(season_num_str)
             season = SeasonEnum.from_code(season_num)
             assert season is not None
-            self._name_table[season] = name
+            self._name_table[season] = data_dict['name']
 
         # load orders types names
         assert len(self._raw_parameters_content['orders']) == len(OrderTypeEnum)
@@ -493,7 +487,7 @@ class Variant(Renderable):
             order_type_num = int(order_type_num_str)
             order_type = OrderTypeEnum.from_code(order_type_num)
             assert order_type is not None
-            self._name_table[order_type] = name
+            self._name_table[order_type] =  data_dict['name']
 
     def closest_zone(self, designated_pos: geometry.PositionRecord) -> typing.Optional[Zone]:
         """ closest_zone """
@@ -555,9 +549,6 @@ class Point:
         self.x = 0  # pylint: disable=invalid-name
         self.y = 0  # pylint: disable=invalid-name
 
-    def __str__(self) -> str:
-        return f"x={self.x} y={self.y}"
-
 
 class Unit(Renderable):  # pylint: disable=abstract-method
     """ A unit """
@@ -610,6 +601,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
             type_name = variant.name_table[UnitTypeEnum.FLEET_UNIT]
         type_name_initial = type_name[0]
         return f"{type_name_initial} {name}"
+
 
 class Army(Unit):
     """ An army """
