@@ -495,6 +495,20 @@ class Variant(Renderable):
             assert order_type is not None
             self._name_table[order_type] = name
 
+    def closest_zone(self, designated_pos: geometry.PositionRecord) -> typing.Optional[Zone]:
+        """ closest_unit """
+
+        closest_zone: typing.Optional[Zone] = None
+        distance_closest = None
+        for zone in self._zones:
+            zone_pos = self.position_table[zone]
+            distance = designated_pos.distance(zone_pos)
+            if distance_closest is None or distance < distance_closest:
+                closest_zone = zone
+                distance_closest = distance
+
+        return closest_zone
+
     def render(self, ctx: typing.Any) -> None:
         """ render the legends only """
         for zone in self._zones.values():
@@ -891,6 +905,21 @@ class Position(Renderable):
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
 
+    def closest_unit(self, designated_pos: geometry.PositionRecord) -> typing.Optional[Unit]:
+        """ closest_unit """
+
+        closest_unit: typing.Optional[Unit] = None
+        distance_closest = None
+        for unit in self._units:
+            zone = unit.zone
+            unit_pos = self._variant.position_table[zone]
+            distance = designated_pos.distance(unit_pos)
+            if distance_closest is None or distance < distance_closest:
+                closest_unit = unit
+                distance_closest = distance
+
+        return closest_unit
+
     @property
     def variant(self) -> Variant:
         """ property """
@@ -1126,6 +1155,7 @@ class Order(Renderable):
 
             # put back
             ctx.lineWidth = 1
+
 
 class Orders(Renderable):
     """ A set of orders that can be displayed / requires position """
