@@ -78,8 +78,8 @@ def show_position():
     position_loaded = None
     position_data = None
 
-    def callback_load(_):
-        """ callback_load """
+    def callback_render(_):
+        """ callback_render """
 
         # put the background map first
         ctx.drawImage(img, 0, 0)
@@ -141,7 +141,7 @@ def show_position():
 
     # put background (this will call the callback that display the whole map)
     img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
-    img.bind('load', callback_load)
+    img.bind('load', callback_render)
 
     my_sub_panel <= canvas
 
@@ -162,8 +162,16 @@ def submit_orders():
     position_loaded = None
     position_data = None
 
-    def callback_load(_):
-        """ callback_load """
+    def callback_click(event):
+        """ callback_click """
+        print(f"click {event=} {event.buttons=} {event.button=}  {event.x=} {event.y=}")
+
+    def callback_dblclick(event):
+        """ callback_dblclick """
+        print(f"dblclick {event=} {event.buttons=} {event.button=}  {event.x=} {event.y=}")
+
+    def callback_render(_):
+        """ callback_render """
 
         # put the background map first
         ctx.drawImage(img, 0, 0)
@@ -176,6 +184,10 @@ def submit_orders():
 
         # put the orders
         orders_data.render(ctx)
+
+        # put the clickable zones
+        canvas.bind("click", callback_click)
+        canvas.bind("dblclick", callback_dblclick)
 
     if 'GAME' not in storage:
         alert("Please select game beforehand")
@@ -240,7 +252,7 @@ def submit_orders():
 
     # put background (this will call the callback that display the whole map)
     img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
-    img.bind('load', callback_load)
+    img.bind('load', callback_render)
 
     my_sub_panel <= canvas
 
