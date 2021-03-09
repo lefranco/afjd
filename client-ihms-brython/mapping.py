@@ -487,7 +487,7 @@ class Variant(Renderable):
             order_type_num = int(order_type_num_str)
             order_type = OrderTypeEnum.from_code(order_type_num)
             assert order_type is not None
-            self._name_table[order_type] =  data_dict['name']
+            self._name_table[order_type] = data_dict['name']
 
     def closest_zone(self, designated_pos: geometry.PositionRecord) -> typing.Optional[Zone]:
         """ closest_zone """
