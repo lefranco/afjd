@@ -162,6 +162,10 @@ def submit_orders():
     position_loaded = None
     position_data = None
 
+    def debug_callback(_):
+        """ debug_callback """
+        print(f"debug_callback")
+
     def callback_click(event):
         """ callback_click """
         print(f"click {event=} {event.buttons=} {event.button=}  {event.x=} {event.y=}")
@@ -254,15 +258,30 @@ def submit_orders():
     img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
     img.bind('load', callback_render)
 
-    my_sub_panel <= canvas
-
     report_loaded = common.game_report_reload(game)
     if report_loaded is None:
         return
 
     report_window = make_report_window(report_loaded)
-    my_sub_panel <= report_window
 
+    input_debug = html.INPUT(type="submit", value="debug")
+    input_debug.bind("click", debug_callback)
+
+    # left hand side
+    display_left = html.TD()
+    display_left <= canvas
+    display_left <= report_window
+
+    # right hand side
+    buttons_right = html.TD()
+    buttons_right <= input_debug
+
+    my_table_row = html.TR()
+    my_table_row <= display_left
+    my_table_row <= buttons_right
+    my_table = html.TABLE()
+    my_table <= my_table_row
+    my_sub_panel <= my_table
 
 def negotiate():
     """ negotiate """
