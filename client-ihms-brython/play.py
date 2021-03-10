@@ -186,7 +186,8 @@ def submit_orders():
 
     def submit_orders_callback(_):
         """ submit_orders_callback """
-        print("submit_orders_callback TODO ;-)")
+
+        print("submit_orders_callback TODO")
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
@@ -242,7 +243,7 @@ def submit_orders():
                 # TODO insert order
                 print("insert order")
 
-                legend_select_unit = html.LEGEND("Click on unit to order")
+                legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -313,7 +314,7 @@ def submit_orders():
             # TODO insert order
             print("insert order")
 
-            legend_select_unit = html.LEGEND("Click on unit to order")
+            legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
             buttons_right <= legend_select_unit
 
             my_sub_panel2 <= buttons_right
@@ -337,7 +338,7 @@ def submit_orders():
                 # TODO insert order
                 print("insert order")
 
-                legend_select_unit = html.LEGEND("Click on unit to order")
+                legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -365,7 +366,25 @@ def submit_orders():
 
     def callback_dblclick(event):
         """ callback_dblclick """
-        print(f"callback_dblclick {event=} {event.buttons=} {event.button=}  {event.x=} {event.y=}")
+
+        print("callback_dblclick")
+
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+
+        nonlocal buttons_right
+
+        selected_erase_unit = position_data.closest_unit(pos)
+
+        # TODO remove order
+        print(f"remove order for {selected_erase_unit}")
+
+        legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+        buttons_right <= legend_select_unit
+
+        my_sub_panel2 <= buttons_right
+        my_sub_panel <= my_sub_panel2
+
+        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     def callback_render(_):
         """ callback_render """
@@ -470,7 +489,7 @@ def submit_orders():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-    legend_select_unit = html.LEGEND("Click on unit to order")
+    legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
     buttons_right <= legend_select_unit
 
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
