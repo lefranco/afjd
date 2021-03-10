@@ -212,21 +212,6 @@ def show_status():
 
         game_params_table <= row
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     my_sub_panel <= game_params_table
 
 
