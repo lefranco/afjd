@@ -45,6 +45,7 @@ class AutomatonStateEnum(enum.Enum):
     SELECT_ORDER_STATE = enum.auto()
     SELECT_PASSIVE_UNIT_STATE = enum.auto()
     SELECT_DESTINATION_STATE = enum.auto()
+    SELECT_BUILD_UNIT_TYPE_STATE = enum.auto()
 
 
 def make_report_window(report_loaded):
@@ -374,10 +375,34 @@ def submit_orders():
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_passive = html.LEGEND("Select convoyed unit")
-                buttons_right <= legend_selected_passive
+                legend_select_passive = html.LEGEND("Select convoyed unit")
+                buttons_right <= legend_select_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
+
+                legend_select_active = html.LEGEND("Select unit type to build")
+                buttons_right <= legend_select_active
+
+                automaton_state = AutomatonStateEnum.SELECT_BUILD_UNIT_TYPE_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.REMOVE_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
+
+                legend_select_active = html.LEGEND("Select unit to remove")
+                buttons_right <= legend_select_active
+
+                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
             stack_orders(buttons_right)
 
@@ -405,8 +430,13 @@ def submit_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-            legend_selected_unit = html.LEGEND(f"Selected active unit is {selected_active_unit}")
-            buttons_right <= legend_selected_unit
+            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+
+                legend_selected_unit = html.LEGEND(f"Selected active unit is {selected_active_unit}")
+                buttons_right <= legend_selected_unit
+
+            legend_select_order = html.LEGEND(f"Select order")
+            buttons_right <= legend_select_order
 
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
@@ -414,6 +444,13 @@ def submit_orders():
                     input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
                     buttons_right <= input_debug
+
+            if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, None)
+                orders_data.insert_order(order)
+
+                # update map
+                callback_render(None)
 
             stack_orders(buttons_right)
 
@@ -523,15 +560,27 @@ def submit_orders():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-        legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
-        buttons_right <= legend_select_unit
+        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+            legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+            buttons_right <= legend_select_unit
+            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+            legend_select_order = html.LEGEND("Select order")
+            buttons_right <= legend_select_order
+            for order_type in mapping.OrderTypeEnum:
+                if order_type.compatible(advancement_season):
+                    input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                    input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                    buttons_right <= html.BR()
+                    buttons_right <= input_debug
+            automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
         stack_orders(buttons_right)
 
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
 
-        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     def callback_render(_):
         """ callback_render """
@@ -636,7 +685,6 @@ def submit_orders():
     img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
     img.bind('load', callback_render)
 
-
     report_loaded = common.game_report_reload(game)
     if report_loaded is None:
         return
@@ -656,12 +704,23 @@ def submit_orders():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-    legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
-    buttons_right <= legend_select_unit
+    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+        legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+        buttons_right <= legend_select_unit
+        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+    if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+        legend_select_order = html.LEGEND("Select order")
+        buttons_right <= legend_select_order
+        for order_type in mapping.OrderTypeEnum:
+            if order_type.compatible(advancement_season):
+                input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                buttons_right <= html.BR()
+                buttons_right <= input_debug
+        automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
     stack_orders(buttons_right)
-
-    automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     # overall
     my_sub_panel2 = html.DIV()
