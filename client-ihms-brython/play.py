@@ -99,17 +99,8 @@ def show_status():
     def display_main_parameters_reload():
         """ display_main_parameters_reload """
 
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problem (no answer from server)")
-            status = False
-
         def reply_callback(req):
             """ reply_callback """
-            nonlocal status
             nonlocal parameters_loaded
 
             req_result = json.loads(req.text)
@@ -120,10 +111,9 @@ def show_status():
                     alert(f"Problem loading main parameters: {req_result['msg']}")
                 else:
                     alert("Undocumented issue from server")
-                status = False
                 return
 
-            parameters_loaded = req_result
+            parameters_loaded = dict(req_result)
 
         json_dict = dict()
 
@@ -132,9 +122,9 @@ def show_status():
         url = f"{host}:{port}/games/{game}"
 
         # getting game data : do not need a token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-        return status
+        return parameters_loaded
 
     if 'GAME' not in storage:
         alert("Please select game beforehand")
@@ -167,11 +157,16 @@ def show_status():
     # build variant data
     variant_data = mapping.Variant(variant_content_loaded, parameters_read)
 
-    status = display_main_parameters_reload()
-    if not status:
+    parameters_loaded = display_main_parameters_reload()
+    if not parameters_loaded:
         return
 
     game_params_data = html.DIV()
+
+    # name
+    name_loaded = parameters_loaded['name']
+    game_params_data <= f"Game {name_loaded}"
+    game_params_data <= html.BR()
 
     # state
     state_loaded = parameters_loaded['current_state']
@@ -198,23 +193,7 @@ def show_status():
     game_params_data <= f"Game deadline is {deadline_readable} GMT time"
     game_params_data <= html.BR()
 
-
     my_sub_panel <= game_params_data
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def show_position():
@@ -501,6 +480,8 @@ def submit_orders():
 
         print("callback_dblclick")
 
+        nonlocal automaton_state
+
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         nonlocal buttons_right
@@ -654,22 +635,12 @@ def show_game_parameters():
         return
 
     game = storage['GAME']
-    parameters_loaded = None
 
     def display_all_parameters_reload():
         """ change_description_reload """
 
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problem (no answer from server)")
-            status = False
-
         def reply_callback(req):
             """ reply_callback """
-            nonlocal status
             nonlocal parameters_loaded
 
             req_result = json.loads(req.text)
@@ -680,10 +651,9 @@ def show_game_parameters():
                     alert(f"Problem loading all parameters: {req_result['msg']}")
                 else:
                     alert("Undocumented issue from server")
-                status = False
                 return
 
-            parameters_loaded = req_result
+            parameters_loaded = dict(req_result)
 
         json_dict = dict()
 
@@ -692,12 +662,12 @@ def show_game_parameters():
         url = f"{host}:{port}/games/{game}"
 
         # getting game data : do not need a token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-        return status
+        return parameters_loaded
 
-    status = display_all_parameters_reload()
-    if not status:
+    parameters_loaded = display_all_parameters_reload()
+    if not parameters_loaded:
         return
 
     game_params_table = html.TABLE()
