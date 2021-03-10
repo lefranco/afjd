@@ -303,11 +303,10 @@ def submit_orders():
         print("select_order_type_callback")
 
         nonlocal automaton_state
+        nonlocal buttons_right
+        nonlocal selected_order_type
 
         if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
-
-            nonlocal buttons_right
-            nonlocal selected_order_type
 
             selected_order_type = order_type
 
@@ -348,8 +347,9 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
 
-                # TODO insert order
-                print("insert order")
+                # insert hold order
+                order = mapping.Order(position_data, order_type, selected_active_unit, None, None)
+                orders_data.insert_order(order)
 
                 legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
                 buttons_right <= legend_select_unit
@@ -371,6 +371,8 @@ def submit_orders():
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
 
+            stack_orders(buttons_right)
+
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
 
@@ -382,11 +384,12 @@ def submit_orders():
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         nonlocal automaton_state
+        nonlocal selected_active_unit
+        nonlocal selected_passive_unit
+        nonlocal selected_dest_zone
+        nonlocal buttons_right
 
         if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
-
-            nonlocal selected_active_unit
-            nonlocal buttons_right
 
             selected_active_unit = position_data.closest_unit(pos)
 
@@ -404,6 +407,8 @@ def submit_orders():
                     buttons_right <= html.BR()
                     buttons_right <= input_debug
 
+            stack_orders(buttons_right)
+
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
 
@@ -411,20 +416,23 @@ def submit_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
 
-            nonlocal selected_dest_zone
-            nonlocal buttons_right
-
             selected_dest_zone = variant_data.closest_zone(pos)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-            # TODO insert order
-            print("insert order")
+            # insert attack, off support or convoy order
+            if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
+                order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
+            else:
+                order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
+            orders_data.insert_order(order)
 
             legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
             buttons_right <= legend_select_unit
+
+            stack_orders(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -432,9 +440,6 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
-
-            nonlocal selected_passive_unit
-            nonlocal buttons_right
 
             selected_passive_unit = position_data.closest_unit(pos)
 
@@ -444,14 +449,17 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
-                # TODO insert order
-                print("insert order")
+                # insert def support order
+                order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, None)
+                orders_data.insert_order(order)
 
                 legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
                 my_sub_panel <= my_sub_panel2
+
+                stack_orders(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
                 return
@@ -467,6 +475,8 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
                 legend_select_destination = html.LEGEND("Select destination of convoy")
             buttons_right <= legend_select_destination
+
+            stack_orders(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -486,8 +496,8 @@ def submit_orders():
 
         selected_erase_unit = position_data.closest_unit(pos)
 
-        # TODO remove order
-        print(f"remove order for {selected_erase_unit}")
+        # remove order
+        orders_data.remove_order(selected_erase_unit)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
@@ -495,6 +505,8 @@ def submit_orders():
 
         legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
         buttons_right <= legend_select_unit
+
+        stack_orders(buttons_right)
 
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
@@ -519,6 +531,15 @@ def submit_orders():
         # put the clickable zones
         canvas.bind("click", callback_click)
         canvas.bind("dblclick", callback_dblclick)
+
+    def stack_orders(buttons_right):
+        buttons_right <= html.P()
+        lines = str(orders_data).split('\n')
+        orders = html.DIV()
+        for line in lines:
+            orders <= line
+            orders <= html.BR()
+        buttons_right <= orders
 
     if 'GAME' not in storage:
         alert("Please select game beforehand")
@@ -617,8 +638,7 @@ def submit_orders():
     legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
     buttons_right <= legend_select_unit
 
-    buttons_right <= html.P()
-    buttons_right <= str(orders_data)
+    stack_orders(buttons_right)
 
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
