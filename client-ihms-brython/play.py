@@ -378,6 +378,10 @@ def submit_orders():
         # TODO remove order
         print(f"remove order for {selected_erase_unit}")
 
+        my_sub_panel2.removeChild(buttons_right)
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
         legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
         buttons_right <= legend_select_unit
 
