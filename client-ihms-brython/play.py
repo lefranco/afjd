@@ -161,49 +161,73 @@ def show_status():
     if not parameters_loaded:
         return
 
-    game_params_data = html.DIV()
+    game_params_table = html.TABLE()
+    game_params_table.style = {
+        "padding": "5px",
+        "backgroundColor": "#aaaaaa",
+        "border": "solid",
+    }
+    for key in ['name', 'description', 'variant', 'current_state', 'deadline']:
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
 
-    # name
-    name_loaded = parameters_loaded['name']
-    game_params_data <= f"Game {name_loaded}"
-    game_params_data <= html.BR()
+        col1 = html.TD(key)
+        col1.style = {
+            "border": "solid",
+        }
+        row <= col1
 
-    # description
-    description_loaded = parameters_loaded['description']
-    game_params_data <= f"Description : {description_loaded}"
-    game_params_data <= html.BR()
+        if key == 'name':
+            value = parameters_loaded['name']
 
-    # variant
-    variant_loaded = parameters_loaded['variant']
-    game_params_data <= f"Variant : {variant_loaded}"
-    game_params_data <= html.BR()
+        if key == 'description':
+            value = parameters_loaded['description']
 
-    # state
-    state_loaded = parameters_loaded['current_state']
-    for possible_state in config.STATE_CODE_TABLE:
-        if config.STATE_CODE_TABLE[possible_state] == state_loaded:
-            state_readable = possible_state
-            break
-    game_params_data <= f"State : {state_readable}"
-    game_params_data <= html.BR()
+        if key == 'variant':
+            value = parameters_loaded['variant']
 
-    # advancement
-    advancement_loaded = parameters_loaded['current_advancement']
-    advancement_season, advancement_year = get_season(advancement_loaded, variant_data)
-    advancement_season_readable = variant_data.name_table[advancement_season]
-    game_params_data <= f"Season : {advancement_season_readable} {advancement_year}"
-    game_params_data <= html.BR()
+        if key == 'current_state':
+            state_loaded = parameters_loaded['current_state']
+            for possible_state in config.STATE_CODE_TABLE:
+                if config.STATE_CODE_TABLE[possible_state] == state_loaded:
+                    state_readable = possible_state
+                    break
+            value = state_readable
 
-    # deadline
-    deadline_loaded = parameters_loaded['deadline']
-    datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
-    deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-    deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
-    deadline_readable = f"{deadline_loaded_day} {deadline_loaded_hour}"
-    game_params_data <= f"Deadline : {deadline_readable} GMT time"
-    game_params_data <= html.BR()
+        if key == 'deadline':
+            deadline_loaded = parameters_loaded['deadline']
+            datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
+            deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+            deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
+            deadline_readable = f"{deadline_loaded_day} {deadline_loaded_hour}"
+            value = f"Deadline : {deadline_readable} GMT time"
 
-    my_sub_panel <= game_params_data
+        col2 = html.TD(value)
+        col2.style = {
+            "border": "solid",
+        }
+        row <= col2
+
+        game_params_table <= row
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    my_sub_panel <= game_params_table
 
 
 def show_position():
