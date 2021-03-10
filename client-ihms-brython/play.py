@@ -398,10 +398,11 @@ def submit_orders():
             buttons_right <= legend_selected_unit
 
             for order_type in mapping.OrderTypeEnum:
-                input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
-                input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
-                buttons_right <= html.BR()
-                buttons_right <= input_debug
+                if order_type.compatible(advancement_season):
+                    input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                    input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                    buttons_right <= html.BR()
+                    buttons_right <= input_debug
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -553,6 +554,16 @@ def submit_orders():
     # build variant data
     variant_data = mapping.Variant(variant_content_loaded, parameters_read)
 
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
+    advancement_loaded = game_parameters_loaded['current_advancement']
+    advancement_season, _ = get_season(advancement_loaded, variant_data)
+
     # get the position from server
     position_loaded = common.game_position_reload(game)
     if not position_loaded:
@@ -605,6 +616,9 @@ def submit_orders():
 
     legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
     buttons_right <= legend_select_unit
+
+    buttons_right <= html.P()
+    buttons_right <= str(orders_data)
 
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
