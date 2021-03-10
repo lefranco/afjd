@@ -96,36 +96,6 @@ def get_season(advancement, variant) -> None:
 def show_status():
     """ show_status """
 
-    def display_main_parameters_reload():
-        """ display_main_parameters_reload """
-
-        def reply_callback(req):
-            """ reply_callback """
-            nonlocal parameters_loaded
-
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Error loading main parameters: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problem loading main parameters: {req_result['msg']}")
-                else:
-                    alert("Undocumented issue from server")
-                return
-
-            parameters_loaded = dict(req_result)
-
-        json_dict = dict()
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : do not need a token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        return parameters_loaded
-
     if 'GAME' not in storage:
         alert("Please select game beforehand")
         return
@@ -157,7 +127,7 @@ def show_status():
     # build variant data
     variant_data = mapping.Variant(variant_content_loaded, parameters_read)
 
-    parameters_loaded = display_main_parameters_reload()
+    parameters_loaded = common.game_parameters_reload(game)
     if not parameters_loaded:
         return
 
@@ -180,16 +150,16 @@ def show_status():
         row <= col1
 
         if key == 'name':
-            value = parameters_loaded['name']
+            value = parameters_loaded[key]
 
         if key == 'description':
-            value = parameters_loaded['description']
+            value = parameters_loaded[key]
 
         if key == 'variant':
-            value = parameters_loaded['variant']
+            value = parameters_loaded[key]
 
         if key == 'current_state':
-            state_loaded = parameters_loaded['current_state']
+            state_loaded = parameters_loaded[key]
             for possible_state in config.STATE_CODE_TABLE:
                 if config.STATE_CODE_TABLE[possible_state] == state_loaded:
                     state_readable = possible_state
@@ -197,13 +167,13 @@ def show_status():
             value = state_readable
 
         if key == 'current_advancement':
-            advancement_loaded = parameters_loaded['current_advancement']
+            advancement_loaded = parameters_loaded[key]
             advancement_season, advancement_year = get_season(advancement_loaded, variant_data)
             advancement_season_readable = variant_data.name_table[advancement_season]
             value = f"Season : {advancement_season_readable} {advancement_year}"
 
         if key == 'deadline':
-            deadline_loaded = parameters_loaded['deadline']
+            deadline_loaded = parameters_loaded[key]
             datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
             deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
             deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
@@ -661,37 +631,7 @@ def show_game_parameters():
 
     game = storage['GAME']
 
-    def display_all_parameters_reload():
-        """ change_description_reload """
-
-        def reply_callback(req):
-            """ reply_callback """
-            nonlocal parameters_loaded
-
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Error loading all parameters: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problem loading all parameters: {req_result['msg']}")
-                else:
-                    alert("Undocumented issue from server")
-                return
-
-            parameters_loaded = dict(req_result)
-
-        json_dict = dict()
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : do not need a token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        return parameters_loaded
-
-    parameters_loaded = display_all_parameters_reload()
+    parameters_loaded = common.game_parameters_reload(game)
     if not parameters_loaded:
         return
 
