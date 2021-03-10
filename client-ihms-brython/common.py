@@ -290,7 +290,7 @@ def game_parameters_reload(game):
 
     def reply_callback(req):
         """ reply_callback """
-        nonlocal parameters_loaded
+        nonlocal game_parameters_loaded
 
         req_result = json.loads(req.text)
         if req.status != 200:

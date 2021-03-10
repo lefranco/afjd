@@ -101,7 +101,6 @@ def show_status():
         return
 
     game = storage['GAME']
-    parameters_loaded = None
 
     # from game name get variant name
 
@@ -127,9 +126,12 @@ def show_status():
     # build variant data
     variant_data = mapping.Variant(variant_content_loaded, parameters_read)
 
-    parameters_loaded = common.game_parameters_reload(game)
-    if not parameters_loaded:
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
         return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
 
     game_params_table = html.TABLE()
     game_params_table.style = {
@@ -150,16 +152,16 @@ def show_status():
         row <= col1
 
         if key == 'name':
-            value = parameters_loaded[key]
+            value = game_parameters_loaded[key]
 
         if key == 'description':
-            value = parameters_loaded[key]
+            value = game_parameters_loaded[key]
 
         if key == 'variant':
-            value = parameters_loaded[key]
+            value = game_parameters_loaded[key]
 
         if key == 'current_state':
-            state_loaded = parameters_loaded[key]
+            state_loaded = game_parameters_loaded[key]
             for possible_state in config.STATE_CODE_TABLE:
                 if config.STATE_CODE_TABLE[possible_state] == state_loaded:
                     state_readable = possible_state
@@ -167,13 +169,13 @@ def show_status():
             value = state_readable
 
         if key == 'current_advancement':
-            advancement_loaded = parameters_loaded[key]
+            advancement_loaded = game_parameters_loaded[key]
             advancement_season, advancement_year = get_season(advancement_loaded, variant_data)
             advancement_season_readable = variant_data.name_table[advancement_season]
             value = f"Season : {advancement_season_readable} {advancement_year}"
 
         if key == 'deadline':
-            deadline_loaded = parameters_loaded[key]
+            deadline_loaded = game_parameters_loaded[key]
             datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
             deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
             deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
@@ -631,8 +633,8 @@ def show_game_parameters():
 
     game = storage['GAME']
 
-    parameters_loaded = common.game_parameters_reload(game)
-    if not parameters_loaded:
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
         return
 
     game_params_table = html.TABLE()
@@ -641,7 +643,7 @@ def show_game_parameters():
         "backgroundColor": "#aaaaaa",
         "border": "solid",
     }
-    for key, value in parameters_loaded.items():
+    for key, value in game_parameters_loaded.items():
         row = html.TR()
         row.style = {
             "border": "solid",
