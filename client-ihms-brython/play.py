@@ -139,23 +139,6 @@ def show_status():
     if not variant_name_loaded:
         return
 
-    # from variant name get variant content
-
-    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-    if not variant_content_loaded:
-        return
-
-    # select display (should be a user choice)
-    display_chosen = get_display_from_variant(variant_name_loaded)
-
-    # from display chose get display parameters
-
-    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file:
-        parameters_read = json.load(read_file)
-
-    # build variant data
-    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
 
     parameters_loaded = display_main_parameters_reload()
     if not parameters_loaded:
@@ -762,6 +745,31 @@ def show_players_in_game():
 
     game = storage['GAME']
 
+    # from game name get variant name
+
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+
+    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+    with open(parameters_file_name, "r") as read_file:
+        parameters_read = json.load(read_file)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+
+    # game id now
     game_id = common.get_game_id(game)
     if game_id is None:
         return
@@ -817,7 +825,15 @@ def show_players_in_game():
         row <= col
 
         # role
-        col = html.TD(role_id)
+        if role_id == -1:
+            role_name = "NOT ALLOCATED"
+        elif role_id == 0:
+            role_name = "GAME MASTER"
+        else:
+            role = variant_data.roles[role_id]
+            role_name = variant_data.name_table[role]
+
+        col = html.TD(role_name)
         col.style = {
             "border": "solid",
         }
