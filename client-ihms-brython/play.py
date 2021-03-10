@@ -139,6 +139,23 @@ def show_status():
     if not variant_name_loaded:
         return
 
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+
+    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+    with open(parameters_file_name, "r") as read_file:
+        parameters_read = json.load(read_file)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
 
     parameters_loaded = display_main_parameters_reload()
     if not parameters_loaded:
@@ -150,7 +167,7 @@ def show_status():
         "backgroundColor": "#aaaaaa",
         "border": "solid",
     }
-    for key in ['name', 'description', 'variant', 'current_state', 'deadline']:
+    for key in ['name', 'description', 'variant', 'current_state', 'current_advancement', 'deadline']:
         row = html.TR()
         row.style = {
             "border": "solid",
@@ -178,6 +195,12 @@ def show_status():
                     state_readable = possible_state
                     break
             value = state_readable
+
+        if key == 'current_advancement':
+            advancement_loaded = parameters_loaded['current_advancement']
+            advancement_season, advancement_year = get_season(advancement_loaded, variant_data)
+            advancement_season_readable = variant_data.name_table[advancement_season]
+            value = f"Season : {advancement_season_readable} {advancement_year}"
 
         if key == 'deadline':
             deadline_loaded = parameters_loaded['deadline']
