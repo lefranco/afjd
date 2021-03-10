@@ -286,7 +286,7 @@ def game_orders_reload(game):
 def game_parameters_reload(game):
     """ display_main_parameters_reload """
 
-    parameters_loaded = None
+    game_parameters_loaded = None
 
     def reply_callback(req):
         """ reply_callback """
@@ -302,7 +302,7 @@ def game_parameters_reload(game):
                 alert("Undocumented issue from server")
             return
 
-        parameters_loaded = dict(req_result)
+        game_parameters_loaded = dict(req_result)
 
     json_dict = dict()
 
@@ -313,4 +313,4 @@ def game_parameters_reload(game):
     # getting game data : do not need a token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return parameters_loaded
+    return game_parameters_loaded
