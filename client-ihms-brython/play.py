@@ -14,6 +14,8 @@ import common
 import geometry
 import mapping
 
+DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
+
 OPTIONS = ['game status', 'game position', 'submit orders', 'negotiate', 'all game parameters', 'players in game']
 
 my_panel = html.DIV(id="play")
@@ -80,10 +82,140 @@ def get_display_from_variant(variant):
     assert variant == 'standard'
     return "stabbeur"
 
+
+def get_season(advancement, variant) -> None:
+    """ store season """
+
+    len_season_cycle = len(DIPLOMACY_SEASON_CYCLE)
+    advancement_season_num = advancement % len_season_cycle + 1
+    advancement_season = mapping.SeasonEnum.from_code(advancement_season_num)
+    advancement_year = (advancement // len_season_cycle) + 1 + variant.year_zero
+    return advancement_season, advancement_year
+
+
 def show_status():
     """ show_status """
 
-    my_sub_panel <= "TODO need name description deadline season(from current_advancement) current_state"
+    def display_main_parameters_reload():
+        """ display_main_parameters_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ local_noreply_callback """
+            nonlocal status
+            alert("Problem (no answer from server)")
+            status = False
+
+        def reply_callback(req):
+            """ reply_callback """
+            nonlocal status
+            nonlocal parameters_loaded
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error loading main parameters: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem loading main parameters: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                status = False
+                return
+
+            parameters_loaded = req_result
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # getting game data : do not need a token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
+    parameters_loaded = None
+
+    # from game name get variant name
+
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+
+    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+    with open(parameters_file_name, "r") as read_file:
+        parameters_read = json.load(read_file)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+
+    status = display_main_parameters_reload()
+    if not status:
+        return
+
+    game_params_data = html.DIV()
+
+    # state
+    state_loaded = parameters_loaded['current_state']
+    for possible_state in config.STATE_CODE_TABLE:
+        if config.STATE_CODE_TABLE[possible_state] == state_loaded:
+            state_readable = possible_state
+            break
+    game_params_data <= f"Game state is {state_readable}"
+    game_params_data <= html.BR()
+
+    # advancement
+    advancement_loaded = parameters_loaded['current_advancement']
+    advancement_season, advancement_year = get_season(advancement_loaded, variant_data)
+    advancement_season_readable = variant_data.name_table[advancement_season]
+    game_params_data <= f"Game season is {advancement_season_readable} {advancement_year}"
+    game_params_data <= html.BR()
+
+    # deadline
+    deadline_loaded = parameters_loaded['deadline']
+    datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
+    deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+    deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
+    deadline_readable = f"{deadline_loaded_day} {deadline_loaded_hour}"
+    game_params_data <= f"Game deadline is {deadline_readable} GMT time"
+    game_params_data <= html.BR()
+
+
+    my_sub_panel <= game_params_data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def show_position():
     """ show_position """
