@@ -129,9 +129,10 @@ class OrderTypeEnum(enum.Enum):
             return self in [OrderTypeEnum.ATTACK_ORDER, OrderTypeEnum.OFF_SUPPORT_ORDER, OrderTypeEnum.DEF_SUPPORT_ORDER, OrderTypeEnum.HOLD_ORDER, OrderTypeEnum.CONVOY_ORDER]
         if advancement_season in [SeasonEnum.SUMMER_SEASON, SeasonEnum.WINTER_SEASON]:
             return self in [OrderTypeEnum.RETREAT_ORDER, OrderTypeEnum.DISBAND_ORDER]
-        if advancement_season in SeasonEnum.ADJUST_SEASON:
+        if advancement_season is SeasonEnum.ADJUST_SEASON:
             return self in [OrderTypeEnum.BUILD_ORDER, OrderTypeEnum.REMOVE_ORDER]
         return False
+
 
 class Center:
     """ A Center """
@@ -607,7 +608,6 @@ class Unit(Renderable):  # pylint: disable=abstract-method
     def __str__(self) -> str:
         variant = self._position.variant
         zone = self._zone
-        name = variant
         name = variant.name_table[zone]
         if isinstance(self, Army):
             type_name = variant.name_table[UnitTypeEnum.ARMY_UNIT]
@@ -1173,6 +1173,39 @@ class Order(Renderable):
             # put back
             ctx.lineWidth = 1
 
+    @property
+    def active_unit(self) -> Unit:
+        """ property """
+        return self._active_unit
+
+    def __str__(self) -> str:
+
+        variant = self._position.variant
+
+        if self._order_type is OrderTypeEnum.ATTACK_ORDER:
+            dest_zone_name = variant.name_table[self._destination_zone]
+            return f"{self._active_unit} - {dest_zone_name}"
+        if self._order_type is OrderTypeEnum.OFF_SUPPORT_ORDER:
+            dest_zone_name = variant.name_table[self._destination_zone]
+            return f"{self._active_unit} S {self._passive_unit} - {dest_zone_name}"
+        if self._order_type is OrderTypeEnum.DEF_SUPPORT_ORDER:
+            return f"{self._active_unit} S {self._passive_unit}"
+        if self._order_type is OrderTypeEnum.HOLD_ORDER:
+            return f"{self._active_unit} H"
+        if self._order_type is OrderTypeEnum.CONVOY_ORDER:
+            dest_zone_name = variant.name_table[self._destination_zone]
+            return f"{self._active_unit} C {self._passive_unit} - {dest_zone_name}"
+        if self._order_type is OrderTypeEnum.RETREAT_ORDER:
+            dest_zone_name = variant.name_table[self._destination_zone]
+            return f"{self._active_unit} R {dest_zone_name}"
+        if self._order_type is OrderTypeEnum.DISBAND_ORDER:
+            return f"{self._active_unit} A"
+        if self._order_type is OrderTypeEnum.BUILD_ORDER:
+            return f"+ {self._active_unit}"
+        if self._order_type is OrderTypeEnum.REMOVE_ORDER:
+            return f"- {self._active_unit}"
+        return ""
+
 
 class Orders(Renderable):
     """ A set of orders that can be displayed / requires position """
@@ -1222,9 +1255,27 @@ class Orders(Renderable):
             order = Order(self._position, order_type, active_unit, passive_unit, destination_zone)
             self._orders.append(order)
 
+    def insert_order(self, order):
+        """ insert_order """
+        found = [o for o in self._orders if o.active_unit == order.active_unit]
+        if found:
+            prev_order = found.pop()
+            self._orders.remove(prev_order)
+        self._orders.append(order)
+
+    def remove_order(self, unit):
+        """ remove_order """
+        found = [o for o in self._orders if o.active_unit == unit]
+        assert found
+        prev_order = found.pop()
+        self._orders.remove(prev_order)
+
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
 
         # orders
         for order in self._orders:
             order.render(ctx)
+
+    def __str__(self) -> str:
+        return '\n'.join([str(o) for o in self._orders])
