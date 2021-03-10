@@ -284,6 +284,8 @@ CONVOY_COLOUR = ColourRecord(red=25, green=25, blue=255)  # blue
 RETREAT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
+# legend
+LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 class Variant(Renderable):
     """ A variant """
@@ -515,6 +517,11 @@ class Variant(Renderable):
 
     def render(self, ctx: typing.Any) -> None:
         """ render the legends only """
+
+        # colour
+        legend_colour = LEGEND_COLOUR
+        ctx.fillStyle = legend_colour.str_value()
+
         for zone in self._zones.values():
             position = self._legend_position_table[zone]
             x_pos = position.x_pos

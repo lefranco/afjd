@@ -351,6 +351,9 @@ def submit_orders():
                 order = mapping.Order(position_data, order_type, selected_active_unit, None, None)
                 orders_data.insert_order(order)
 
+                # update map
+                callback_render(None)
+
                 legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
                 buttons_right <= legend_select_unit
 
@@ -429,6 +432,9 @@ def submit_orders():
                 order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
             orders_data.insert_order(order)
 
+            # update map
+            callback_render(None)
+
             legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
             buttons_right <= legend_select_unit
 
@@ -452,6 +458,9 @@ def submit_orders():
                 # insert def support order
                 order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, None)
                 orders_data.insert_order(order)
+
+                # update map
+                callback_render(None)
 
                 legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
                 buttons_right <= legend_select_unit
@@ -498,6 +507,9 @@ def submit_orders():
 
         # remove order
         orders_data.remove_order(selected_erase_unit)
+
+        # update map
+        callback_render(None)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
