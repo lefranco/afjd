@@ -282,6 +282,7 @@ def game_orders_reload(game):
 
     return orders_loaded
 
+
 def game_parameters_reload(game):
     """ display_main_parameters_reload """
 
