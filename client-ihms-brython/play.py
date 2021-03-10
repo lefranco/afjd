@@ -325,7 +325,6 @@ def submit_orders():
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
-                print(f"A {automaton_state=}")
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
@@ -338,7 +337,6 @@ def submit_orders():
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
-                print(f"B {automaton_state=}")
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -351,7 +349,6 @@ def submit_orders():
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
-                print(f"C {automaton_state=}")
 
             if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
 
@@ -369,7 +366,6 @@ def submit_orders():
                 my_sub_panel <= my_sub_panel2
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-                print(f"D {automaton_state=}")
 
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
@@ -382,7 +378,6 @@ def submit_orders():
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
-                print(f"E {automaton_state=}")
 
             stack_orders(buttons_right)
 
@@ -426,7 +421,6 @@ def submit_orders():
             my_sub_panel <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
-            print(f"F {automaton_state=}")
             return
 
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
@@ -456,7 +450,6 @@ def submit_orders():
             my_sub_panel <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-            print(f"G {automaton_state=}")
             return
 
         if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
@@ -485,7 +478,6 @@ def submit_orders():
                 stack_orders(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-                print(f"H {automaton_state=}")
                 return
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
@@ -506,7 +498,6 @@ def submit_orders():
             my_sub_panel <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
-            print(f"I {automaton_state=}")
             return
 
     def callback_dblclick(event):
@@ -541,7 +532,6 @@ def submit_orders():
         my_sub_panel <= my_sub_panel2
 
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-        print(f"J {automaton_state=}")
 
     def callback_render(_):
         """ callback_render """
@@ -672,7 +662,6 @@ def submit_orders():
     stack_orders(buttons_right)
 
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-    print(f"K {automaton_state=}")
 
     # overall
     my_sub_panel2 = html.DIV()
