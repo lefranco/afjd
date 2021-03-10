@@ -325,6 +325,7 @@ def submit_orders():
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
+                print(f"A {automaton_state=}")
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
@@ -337,13 +338,20 @@ def submit_orders():
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
+                print(f"B {automaton_state=}")
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
 
                 legend_selected_passive = html.LEGEND("Select defensively supported unit")
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
+                print(f"C {automaton_state=}")
 
             if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
 
@@ -361,6 +369,7 @@ def submit_orders():
                 my_sub_panel <= my_sub_panel2
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+                print(f"D {automaton_state=}")
 
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
@@ -373,6 +382,7 @@ def submit_orders():
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
+                print(f"E {automaton_state=}")
 
             stack_orders(buttons_right)
 
@@ -416,6 +426,8 @@ def submit_orders():
             my_sub_panel <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+            print(f"F {automaton_state=}")
+            return
 
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
 
@@ -444,6 +456,8 @@ def submit_orders():
             my_sub_panel <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+            print(f"G {automaton_state=}")
+            return
 
         if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
 
@@ -471,6 +485,7 @@ def submit_orders():
                 stack_orders(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+                print(f"H {automaton_state=}")
                 return
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
@@ -491,6 +506,8 @@ def submit_orders():
             my_sub_panel <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
+            print(f"I {automaton_state=}")
+            return
 
     def callback_dblclick(event):
         """ callback_dblclick """
@@ -524,6 +541,7 @@ def submit_orders():
         my_sub_panel <= my_sub_panel2
 
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+        print(f"J {automaton_state=}")
 
     def callback_render(_):
         """ callback_render """
@@ -540,9 +558,6 @@ def submit_orders():
         # put the orders
         orders_data.render(ctx)
 
-        # put the clickable zones
-        canvas.bind("click", callback_click)
-        canvas.bind("dblclick", callback_dblclick)
 
     def stack_orders(buttons_right):
         buttons_right <= html.P()
@@ -611,6 +626,9 @@ def submit_orders():
 
     # create canvas
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    canvas.bind("click", callback_click)
+    canvas.bind("dblclick", callback_dblclick)
+
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Please use a more recent navigator")
@@ -627,6 +645,7 @@ def submit_orders():
     # put background (this will call the callback that display the whole map)
     img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
     img.bind('load', callback_render)
+
 
     report_loaded = common.game_report_reload(game)
     if report_loaded is None:
@@ -653,6 +672,7 @@ def submit_orders():
     stack_orders(buttons_right)
 
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+    print(f"K {automaton_state=}")
 
     # overall
     my_sub_panel2 = html.DIV()
