@@ -1273,7 +1273,7 @@ class Orders(Renderable):
     def remove_order(self, unit):
         """ remove_order """
         found = [o for o in self._orders if o.active_unit == unit]
-        assert found
+        assert found, "No unit to remove"
         prev_order = found.pop()
         self._orders.remove(prev_order)
 
