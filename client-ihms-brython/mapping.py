@@ -542,6 +542,11 @@ class Variant(Renderable):
         """ property """
         return self._roles
 
+    @property
+    def year_zero(self) -> int:
+        """ property """
+        return self._year_zero
+
 
 class Point:
     """ Point for easier compatbility with old C software (do not use a record here) """
