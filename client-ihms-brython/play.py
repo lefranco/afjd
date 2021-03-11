@@ -298,6 +298,26 @@ def submit_orders():
 
         print("submit_orders_callback TODO")
 
+    def select_built_unit_type_callback(_, order_type):
+        """ select_built_unit_type_callback """
+
+        print("select_built_unit_type_callback")
+
+        nonlocal automaton_state
+        nonlocal buttons_right
+
+        if automaton_state == AutomatonStateEnum.SELECT_BUILD_UNIT_TYPE_STATE:
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+            legend_select_active = html.LEGEND("Select zone where to build")
+            buttons_right <= legend_select_active
+
+            automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
+            return
+
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
 
@@ -382,13 +402,14 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER:
 
-                order_name = variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
-                buttons_right <= legend_selected_order
-                buttons_right <= html.BR()
-
                 legend_select_active = html.LEGEND("Select unit type to build")
                 buttons_right <= legend_select_active
+
+                for unit_type in mapping.UnitTypeEnum:
+                    input_debug = html.INPUT(type="submit", value=variant_data.name_table[unit_type])
+                    input_debug.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
+                    buttons_right <= html.BR()
+                    buttons_right <= input_debug
 
                 automaton_state = AutomatonStateEnum.SELECT_BUILD_UNIT_TYPE_STATE
 
