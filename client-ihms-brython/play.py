@@ -896,7 +896,7 @@ def show_players_in_game():
     }
 
     # TODO : make it possible to sort etc...
-    fields = ['player', 'role']
+    fields = ['player', 'role', 'flag']
 
     # header
     thead = html.THEAD()
@@ -924,7 +924,7 @@ def show_players_in_game():
         }
         row <= col
 
-        # role
+        # role name
         if role_id == -1:
             role_name = "NOT ALLOCATED"
         elif role_id == 0:
@@ -938,6 +938,24 @@ def show_players_in_game():
             "border": "solid",
         }
         row <= col
+
+        # role flag
+        if role_id == -1:
+            role_icon_img = None
+        elif role_id == 0:
+            role_icon_img = None
+        else:
+            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+
+        if role_icon_img:
+            col = html.TD(role_icon_img)
+        else:
+            col = html.TD()
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
 
         game_players_table <= row
 
