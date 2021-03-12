@@ -278,6 +278,9 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 if nb_players_allocated < number_players_expected:
                     data = {'name': name, 'msg': 'Not enough players !'}
                     return data, 400
+                if nb_players_allocated > number_players_expected:
+                    data = {'name': name, 'msg': 'Too many players !'}
+                    return data, 400
 
                 game.start()
 
