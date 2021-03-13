@@ -1185,10 +1185,16 @@ class Application(tkinter.Frame):
             return
 
         names_dict = data.extract_names()
+        print(f"{names_dict=}")
         names_dict_json = json.dumps(names_dict)
+        print(f"{names_dict_json=}")
 
         orders_list_dict = self.canvas.bag_orders.save_json()
+        print(f"{orders_list_dict=}")
+
         orders_list_dict_json = json.dumps(orders_list_dict, indent=4)
+        print(f"{orders_list_dict_json=}")
+
         json_dict = {
             'role_id': ROLE_IDENTIFIER,
             'pseudo': self.login_var.get(),
