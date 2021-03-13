@@ -314,7 +314,7 @@ def submit_orders():
             req_result = json.loads(req.text)
             nonlocal role_id
             # TODO : consider if ap player has more than one role
-            role_id = req_result[str(player_id)]
+            role_id = req_result[str(player_id)] if str(player_id) in req_result else None
 
         json_dict = dict()
 
@@ -826,6 +826,7 @@ def submit_orders():
 
     role_id = get_role_allocated_to_player(game_id, player_id)
     if role_id is None:
+        alert("You do not appear to play of master this game")
         return
 
     # from game name get variant name
