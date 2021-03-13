@@ -286,7 +286,7 @@ def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.D
             active_type = unit_type_table[active_zone_num]
 
         if int(active_zone_num) - 1 not in zone_names:
-            flask_restful.abort(400, msg=f"ERROR - active_zone_num is wrong")
+            flask_restful.abort(400, msg=f"ERROR - active_zone_num {active_zone_num} is wrong")
         active_zone = zone_names[int(active_zone_num) - 1]
 
         if passive_zone_num:
