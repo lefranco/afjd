@@ -970,8 +970,11 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
         url = f"{host}:{port}/solve"
         req_result = SESSION.post(url, data=json_dict)
-        print(f"{req_result.json()=}")
-        submission_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
+
+        if 'msg' in req_result.json():
+            submission_report = req_result.json()['msg']
+        else:
+            submission_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
 
         # adjudication failed
         if req_result.status_code != 201:
@@ -1204,7 +1207,11 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
         url = f"{host}:{port}/solve"
         req_result = SESSION.post(url, data=json_dict)
-        adjudication_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
+
+        if 'msg' in req_result.json():
+            adjudication_report = req_result.json()['msg']
+        else:
+            adjudication_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
 
         # adjudication failed
         if req_result.status_code != 201:
@@ -1393,7 +1400,11 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
         url = f"{host}:{port}/solve"
         req_result = SESSION.post(url, data=json_dict)
-        adjudication_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
+
+        if 'msg' in req_result.json():
+            adjudication_report = req_result.json()['msg']
+        else:
+            adjudication_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
 
         # adjudication failed
         if req_result.status_code != 201:
