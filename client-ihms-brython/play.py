@@ -327,11 +327,10 @@ def submit_orders():
 
         return role_id
 
-
     def submit_orders_callback(_):
         """ submit_orders_callback """
 
-        print("submit_orders_callback")
+        #  print("submit_orders_callback")
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -349,6 +348,12 @@ def submit_orders():
         if game_id is None:
             return
 
+        names_dict = variant_data.extract_names()
+        names_dict_json = json.dumps(names_dict)
+
+        orders_list_dict = orders_data.save_json()
+        orders_list_dict_json = json.dumps(orders_list_dict)
+
         json_dict = {
             'role_id': role_id,
             'pseudo': pseudo,
@@ -358,11 +363,10 @@ def submit_orders():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-orders/{game}"
+        url = f"{host}:{port}/game-orders/{game_id}"
 
         # submitting orders : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
 
     def select_built_unit_type_callback(_, build_unit_type):
         """ select_built_unit_type_callback """
@@ -625,9 +629,9 @@ def submit_orders():
                         order = mapping.Order(position_data, selected_order_type, fake_unit, None, None)
                         orders_data.insert_order(order)
                     else:
-                        alert(f"No one can build on that center")
+                        alert("No one can build on that center")
                 else:
-                    alert(f"No center there")
+                    alert("No center there")
 
             # update map
             callback_render(None)
@@ -806,23 +810,17 @@ def submit_orders():
     if game_id is None:
         return
 
-    print(f"{game_id=}")
-
     # from pseudo get player id
 
     player_id = common.get_player_id(pseudo)
     if player_id is None:
         return
 
-    print(f"{player_id=}")
-
     # from game id and player id get role_id of player
 
     role_id = get_role_allocated_to_player(game_id, player_id)
     if role_id is None:
         return
-
-    print(f"{role_id=}")
 
     # from game name get variant name
 
