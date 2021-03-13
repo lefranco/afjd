@@ -256,42 +256,70 @@ def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.D
             fake_unit_type_table[zone_num] = fake_unit_name
 
     previous_role_name = None
-    for role_num, type_order, active_zone_num, passive_zone_num, dest_zone_num in orders:
+    for order in orders:
+        if len(order) != 5:
+            flask_restful.abort(400, msg="ERROR - need 5 elements in order")
+        role_num, type_order, active_zone_num, passive_zone_num, dest_zone_num = order
+        if 'roles' not in names:
+            flask_restful.abort(400, msg="ERROR - 'roles' missing in names[]")
+        if str(role_num) not in names['roles']:
+            flask_restful.abort(400, msg=f"ERROR - {role_num} missing in names['roles']")
         role_name, _, _ = names['roles'][str(role_num)]
         if role_name != previous_role_name:
             result.append(role_name)
             previous_role_name = role_name
 
         if type_order in [8]:  # build
+            if active_zone_num not in fake_unit_type_table:
+                flask_restful.abort(400, msg=f"ERROR - active_zone_num (build) is wrong")
             active_type = fake_unit_type_table[active_zone_num]
         elif type_order in [6, 7]:  # retreat
+            if active_zone_num not in dislodged_unit_type_table:
+                flask_restful.abort(400, msg=f"ERROR - active_zone_num (retreat) is wrong")
             active_type = dislodged_unit_type_table[active_zone_num]
         else:  # not build nor retreat
+            if active_zone_num not in unit_type_table:
+                flask_restful.abort(400, msg=f"ERROR - active_zone_num (not build nor retreat) is wrong")
             active_type = unit_type_table[active_zone_num]
 
+        if int(active_zone_num) - 1 not in zone_names:
+            flask_restful.abort(400, msg=f"ERROR - active_zone_num is wrong")
         active_zone = zone_names[int(active_zone_num) - 1]
 
-        passive_zone = zone_names[int(passive_zone_num) - 1] if passive_zone_num else None
-        dest_zone = zone_names[int(dest_zone_num) - 1] if dest_zone_num else None
+        if passive_zone_num:
+            if int(passive_zone_num) - 1 not in zone_names:
+                flask_restful.abort(400, msg=f"ERROR - passive_zone_num is wrong")
+            passive_zone = zone_names[int(passive_zone_num) - 1]
+        else:
+            passive_zone = None
+
+        if dest_zone_num:
+            if int(dest_zone_num) - 1 not in zone_names:
+                flask_restful.abort(400, msg=f"ERROR - dest_zone_num is wrong")
+            dest_zone = zone_names[int(dest_zone_num) - 1]
+        else:
+            dest_zone = None
 
         if type_order == 1:  # move
             result.append(f"{active_type} {active_zone} - {dest_zone}")
-        if type_order == 2:  # offensive support
+        elif type_order == 2:  # offensive support
             result.append(f"{active_type} {active_zone} S {passive_zone} - {dest_zone}")
-        if type_order == 3:  # defensive support
+        elif type_order == 3:  # defensive support
             result.append(f"{active_type} {active_zone} S {passive_zone}")
-        if type_order == 4:  # hold
+        elif type_order == 4:  # hold
             result.append(f"{active_type} {active_zone} H")
-        if type_order == 5:  # convoy
+        elif type_order == 5:  # convoy
             result.append(f"{active_type} {active_zone} C {passive_zone} - {dest_zone}")
-        if type_order == 6:  # retreat
+        elif type_order == 6:  # retreat
             result.append(f"{active_type} {active_zone} R {dest_zone}")
-        if type_order == 7:  # disband
+        elif type_order == 7:  # disband
             result.append(f"{active_type} {active_zone} D")
-        if type_order == 8:  # build
+        elif type_order == 8:  # build
             result.append(f"+ {active_type} {active_zone}")
-        if type_order == 9:  # remove
+        elif type_order == 9:  # remove
             result.append(f"- {active_type} {active_zone}")
+        else:
+            flask_restful.abort(400, msg=f"ERROR - type_order is wrong")
 
     result.append("")
     return result
