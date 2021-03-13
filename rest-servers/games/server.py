@@ -970,6 +970,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
         url = f"{host}:{port}/solve"
         req_result = SESSION.post(url, data=json_dict)
+        print(f"{req_result.json()=}")
         submission_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
 
         # adjudication failed
