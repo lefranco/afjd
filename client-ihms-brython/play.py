@@ -303,7 +303,7 @@ def submit_orders():
     def select_built_unit_type_callback(_, build_unit_type):
         """ select_built_unit_type_callback """
 
-        print("select_built_unit_type_callback")
+        #  print("select_built_unit_type_callback")
 
         nonlocal selected_build_unit_type
         nonlocal automaton_state
@@ -332,7 +332,7 @@ def submit_orders():
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
 
-        print("select_order_type_callback")
+        #  print("select_order_type_callback")
 
         nonlocal automaton_state
         nonlocal buttons_right
@@ -411,6 +411,35 @@ def submit_orders():
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
 
+            if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
+
+                legend_selected_destination = html.LEGEND("Select destination of retreat")
+                buttons_right <= legend_selected_destination
+
+                automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.DISBAND_ORDER:
+
+                # insert disband order
+                order = mapping.Order(position_data, order_type, selected_active_unit, None, None)
+                orders_data.insert_order(order)
+
+                # update map
+                callback_render(None)
+
+                legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+                buttons_right <= legend_select_unit
+
+                my_sub_panel2 <= buttons_right
+                my_sub_panel <= my_sub_panel2
+
+                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
             if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER:
 
                 legend_select_active = html.LEGEND("Select unit type to build")
@@ -444,7 +473,7 @@ def submit_orders():
     def callback_click(event):
         """ callback_click """
 
-        print("callback_click")
+        #  print("callback_click")
 
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
@@ -510,6 +539,9 @@ def submit_orders():
                 orders_data.insert_order(order)
             if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
                 order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
+                orders_data.insert_order(order)
+            if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
+                order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
                 orders_data.insert_order(order)
             if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER:
                 # create fake unit
@@ -605,7 +637,7 @@ def submit_orders():
     def callback_dblclick(event):
         """ callback_dblclick """
 
-        print("callback_dblclick")
+        #  print("callback_dblclick")
 
         nonlocal automaton_state
 
