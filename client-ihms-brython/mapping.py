@@ -287,6 +287,7 @@ ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 # legend
 LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
+
 class Variant(Renderable):
     """ A variant """
 
