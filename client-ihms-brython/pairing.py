@@ -16,36 +16,6 @@ my_panel = html.DIV(id="games")
 OPTIONS = ['join game', 'quit game', 'move players in game']
 
 
-def get_player_id(pseudo):
-    """ get_player_id """
-
-    player_id = None
-
-    def reply_callback(req):
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Error getting player identifier: {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problem getting player identifier: {req_result['msg']}")
-            else:
-                alert("Undocumented issue from server")
-            return
-        nonlocal player_id
-        player_id = int(req_result)
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/player-identifiers/{pseudo}"
-
-    # get player id : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return player_id
-
-
 def get_game_allocated_players(game_id):
     """ get_available_players returns a tuple game_master + players """
 
