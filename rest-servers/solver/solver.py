@@ -13,6 +13,9 @@ import shutil
 import subprocess
 import collections
 
+
+import flask_restful
+
 SEASON_NAME_TABLE = ["PRINTEMPS", "ETE", "AUTOMNE", "HIVER", "BILAN"]
 
 
