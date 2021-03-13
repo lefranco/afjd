@@ -839,10 +839,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         names = args['names']
         orders_submitted = args['orders']
 
-        # TODO : change when usurpation is implemented
-        if role_id == 0:
-            flask_restful.abort(400, msg="Game master cannot submit orders in game - please usurp game player (not implemented)")
-
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
 
