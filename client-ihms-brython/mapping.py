@@ -146,6 +146,11 @@ class Center:
         self._owner_start: typing.Optional['Role'] = None
 
     @property
+    def region(self) -> 'Region':
+        """ property """
+        return self._region
+
+    @property
     def owner_start(self) -> typing.Optional['Role']:
         """ property """
         return self._owner_start
@@ -153,7 +158,7 @@ class Center:
     @owner_start.setter
     def owner_start(self, owner_start: 'Role') -> None:
         """ setter """
-        self._owner_starts = owner_start
+        self._owner_start = owner_start
 
 
 class CoastType:
@@ -332,8 +337,8 @@ class Variant(Renderable):
         for num, role_start_centers in enumerate(self._raw_variant_content['start_centers']):
             number = num + 1
             role = self._roles[number]
-            for num_center in role_start_centers:
-                start_center = self._centers[num_center]
+            for number_center in role_start_centers:
+                start_center = self._centers[number_center]
                 start_center.owner_start = role
                 role.start_centers.append(start_center)
 
