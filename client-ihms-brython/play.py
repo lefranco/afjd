@@ -291,6 +291,8 @@ def submit_orders():
     selected_passive_unit = None
     selected_dest_zone = None
     selected_order_type = None
+    selected_build_unit_type = None
+    selected_build_zone = None
     automaton_state = None
 
     def submit_orders_callback(_):
@@ -298,15 +300,18 @@ def submit_orders():
 
         print("submit_orders_callback TODO")
 
-    def select_built_unit_type_callback(_, order_type):
+    def select_built_unit_type_callback(_, build_unit_type):
         """ select_built_unit_type_callback """
 
         print("select_built_unit_type_callback")
 
+        nonlocal selected_build_unit_type
         nonlocal automaton_state
         nonlocal buttons_right
 
         if automaton_state == AutomatonStateEnum.SELECT_BUILD_UNIT_TYPE_STATE:
+
+            selected_build_unit_type = build_unit_type
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -315,6 +320,12 @@ def submit_orders():
             legend_select_active = html.LEGEND("Select zone where to build")
             buttons_right <= legend_select_active
 
+            stack_orders(buttons_right)
+
+            my_sub_panel2 <= buttons_right
+            my_sub_panel <= my_sub_panel2
+
+            # it is a zone we need now
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
 
@@ -441,6 +452,7 @@ def submit_orders():
         nonlocal selected_active_unit
         nonlocal selected_passive_unit
         nonlocal selected_dest_zone
+        nonlocal selected_build_zone
         nonlocal buttons_right
 
         if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
@@ -456,7 +468,7 @@ def submit_orders():
                 legend_selected_unit = html.LEGEND(f"Selected active unit is {selected_active_unit}")
                 buttons_right <= legend_selected_unit
 
-            legend_select_order = html.LEGEND(f"Select order")
+            legend_select_order = html.LEGEND("Select order")
             buttons_right <= legend_select_order
 
             for order_type in mapping.OrderTypeEnum:
@@ -483,7 +495,10 @@ def submit_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
 
-            selected_dest_zone = variant_data.closest_zone(pos)
+            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+                selected_dest_zone = variant_data.closest_zone(pos)
+            if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                selected_build_zone = variant_data.closest_zone(pos)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -492,22 +507,51 @@ def submit_orders():
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
                 order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
-            else:
+                orders_data.insert_order(order)
+            if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
                 order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
-            orders_data.insert_order(order)
+                orders_data.insert_order(order)
+            if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER:
+                # create fake unit
+                region = selected_build_zone.region
+                center = region.center
+                if center is not None:
+                    deducted_role = center.owner_start
+                    if deducted_role is not None:
+                        if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
+                            fake_unit = mapping.Army(position_data, deducted_role, selected_build_zone, None)
+                        if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                            fake_unit = mapping.Fleet(position_data, deducted_role, selected_build_zone, None)
+                        # create order
+                        order = mapping.Order(position_data, selected_order_type, fake_unit, None, None)
+                        orders_data.insert_order(order)
 
             # update map
             callback_render(None)
 
-            legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
-            buttons_right <= legend_select_unit
+            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+                legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+                buttons_right <= legend_select_unit
+            if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                legend_select_unit = html.LEGEND("Select order")
+                buttons_right <= legend_select_unit
+                for order_type in mapping.OrderTypeEnum:
+                    if order_type.compatible(advancement_season):
+                        input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                        input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                        buttons_right <= html.BR()
+                        buttons_right <= input_debug
 
             stack_orders(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
 
-            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+            if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+
             return
 
         if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
@@ -602,7 +646,6 @@ def submit_orders():
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
 
-
     def callback_render(_):
         """ callback_render """
 
@@ -617,7 +660,6 @@ def submit_orders():
 
         # put the orders
         orders_data.render(ctx)
-
 
     def stack_orders(buttons_right):
         buttons_right <= html.P()
@@ -955,7 +997,6 @@ def show_players_in_game():
             "border": "solid",
         }
         row <= col
-
 
         game_players_table <= row
 
