@@ -994,12 +994,13 @@ class Position(Renderable):
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
 
-    def closest_unit(self, designated_pos: geometry.PositionRecord) -> typing.Optional[Unit]:
+    def closest_unit(self, designated_pos: geometry.PositionRecord, dislodged: bool) -> typing.Optional[Unit]:
         """ closest_unit """
 
         closest_unit: typing.Optional[Unit] = None
         distance_closest = None
-        for unit in self._units:
+        search_list = self._dislodged_units if dislodged else self._units
+        for unit in search_list:
             zone = unit.zone
             unit_pos = self._variant.position_table[zone]
             distance = designated_pos.distance(unit_pos)
@@ -1175,6 +1176,8 @@ class Order(Renderable):
             stroke_color = RETREAT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
+
+            # TODO error here
 
             # put an arrow (move/retreat)
             unit_position = self._position.variant.position_table[self._active_unit.zone]

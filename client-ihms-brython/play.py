@@ -556,7 +556,10 @@ def submit_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
 
-            selected_active_unit = position_data.closest_unit(pos)
+            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
+                selected_active_unit = position_data.closest_unit(pos, False)
+            if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON] :
+                selected_active_unit = position_data.closest_unit(pos, True)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -664,7 +667,7 @@ def submit_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
 
-            selected_passive_unit = position_data.closest_unit(pos)
+            selected_passive_unit = position_data.closest_unit(pos, False)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -723,7 +726,10 @@ def submit_orders():
 
         nonlocal buttons_right
 
-        selected_erase_unit = position_data.closest_unit(pos)
+        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
+            selected_erase_unit = position_data.closest_unit(pos, False)
+        if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON] :
+            selected_erase_unit = position_data.closest_unit(pos, True)
 
         # remove order
         orders_data.remove_order(selected_erase_unit)
