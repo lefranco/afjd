@@ -240,8 +240,6 @@ def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.D
     zone_names = [r for r in names['zones'].values() if r]
     zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}" for r, c in variant['coastal_zones']]
 
-    print(f"{zone_names=}")
-
     unit_type_table = dict()
     for _, units in situation['units'].items():
         for unit_type, zone_num in units:
@@ -287,19 +285,19 @@ def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.D
                 flask_restful.abort(400, msg=f"ERROR - active_zone_num (not build nor retreat) is wrong")
             active_type = unit_type_table[active_zone_num]
 
-        if int(active_zone_num) - 1 not in zone_names:
+        if not int(active_zone_num) - 1 < len(zone_names):
             flask_restful.abort(400, msg=f"ERROR - active_zone_num is wrong")
         active_zone = zone_names[int(active_zone_num) - 1]
 
         if passive_zone_num:
-            if int(passive_zone_num) - 1 not in zone_names:
+            if not int(passive_zone_num) - 1 < len(zone_names):
                 flask_restful.abort(400, msg=f"ERROR - passive_zone_num is wrong")
             passive_zone = zone_names[int(passive_zone_num) - 1]
         else:
             passive_zone = None
 
         if dest_zone_num:
-            if int(dest_zone_num) - 1 not in zone_names:
+            if not int(dest_zone_num) - 1 < len(zone_names):
                 flask_restful.abort(400, msg=f"ERROR - dest_zone_num is wrong")
             dest_zone = zone_names[int(dest_zone_num) - 1]
         else:
