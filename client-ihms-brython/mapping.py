@@ -376,7 +376,7 @@ class Variant(Renderable):
                     zone = self._zones[zone_num]
 
         # load the year zero
-        self._year_zero = self._raw_variant_content['year_zero']
+        self._year_zero = int(self._raw_variant_content['year_zero'])
 
         # load the neighbouring
         for num, neighbourings in enumerate(self._raw_variant_content['neighbouring']):
@@ -1262,7 +1262,7 @@ class Orders(Renderable):
             order = Order(self._position, order_type, active_unit, passive_unit, destination_zone)
             self._orders.append(order)
 
-    def insert_order(self, order):
+    def insert_order(self, order: Order) -> None:
         """ insert_order """
         found = [o for o in self._orders if o.active_unit == order.active_unit]
         if found:
@@ -1270,7 +1270,7 @@ class Orders(Renderable):
             self._orders.remove(prev_order)
         self._orders.append(order)
 
-    def remove_order(self, unit):
+    def remove_order(self, unit: Unit) -> None:
         """ remove_order """
         found = [o for o in self._orders if o.active_unit == unit]
         assert found, "No unit to remove"
