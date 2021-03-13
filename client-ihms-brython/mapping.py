@@ -388,7 +388,7 @@ class Variant(Renderable):
             number = num + 1
             region = self._regions[region_num]
             coast_type = self._coast_types[coast_type_num]
-            zone = Zone(number, region, coast_type)
+            zone = Zone(offset + number, region, coast_type)
             self._zones[offset + number] = zone
 
         # load the start units
@@ -491,8 +491,9 @@ class Variant(Renderable):
 
             # special zones have a special name
             if zone.coast_type:
-                coast_type = zone.coast_type
-                name = ''
+                region_name = self._name_table[zone.region.zone]
+                coast_name = self._name_table[zone.coast_type]
+                name = f"{region_name}{coast_name}"
             else:
                 name = data_dict['name']
 
