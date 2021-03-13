@@ -567,13 +567,19 @@ class Variant(Renderable):
     def extract_names(self) -> typing.Dict[str, typing.Dict[int, typing.Any]]:
         """ extract the names we are using to pass them to adjudicator """
 
-        def extract_role(role):
-            """ extract_role """
+        def extract_role_data(role):
+            """ extract_role_data """
             additional = self._role_add_table[role]
             return [self._name_table[role], additional[0], additional[1]]
 
-        role_names = {k: extract_role(v) for k, v in self._roles.items()}
-        zone_names = {k: self._name_table[v] for k, v in self._zones.items()}
+        def extract_zone_data(zone):
+            """ extract_zone_data """
+            if zone.coast_type:
+                return ''
+            return self._name_table[zone]
+
+        role_names = {k: extract_role_data(v) for k, v in self._roles.items()}
+        zone_names = {k: extract_zone_data(v) for k, v in self._zones.items()}
         coast_names = {k: self._name_table[v] for k, v in self._coast_types.items()}
 
         return {'roles': role_names, 'zones': zone_names, 'coasts': coast_names}
