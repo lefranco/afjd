@@ -334,8 +334,8 @@ class Variant(Renderable):
             role = self._roles[number]
             for num_center in role_start_centers:
                 start_center = self._centers[num_center]
-                role.start_centers.append(start_center)
                 start_center.owner_start = role
+                role.start_centers.append(start_center)
 
         # load the coast types
         self._coast_types: typing.Dict[int, CoastType] = dict()
