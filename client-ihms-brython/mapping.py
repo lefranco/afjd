@@ -1283,6 +1283,10 @@ class Orders(Renderable):
         prev_order = found.pop()
         self._orders.remove(prev_order)
 
+    def empty(self) -> bool:
+        """ empty """
+        return not self._orders
+
     def render(self, ctx: typing.Any) -> None:
         """put me on screen """
 

@@ -7,6 +7,7 @@ import datetime
 import enum
 
 from browser import html, ajax, alert   # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -295,10 +296,73 @@ def submit_orders():
     selected_build_zone = None
     automaton_state = None
 
+    def get_role_allocated_to_player(game_id, player_id):
+        """ get_role the player has in the game """
+
+        role_id = None
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error getting role allocated to player: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem getting role allocated to player: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            req_result = json.loads(req.text)
+            nonlocal role_id
+            # TODO : consider if ap player has more than one role
+            role_id = req_result[str(player_id)]
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-allocations/{game_id}"
+
+        # get players allocated to game : do not need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return role_id
+
+
     def submit_orders_callback(_):
         """ submit_orders_callback """
 
-        print("submit_orders_callback TODO")
+        print("submit_orders_callback")
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error submitting orders: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem submitting orders: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            InfoDialog("OK", f"Orders submitted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': pseudo,
+            'orders': orders_list_dict_json,
+            'names': names_dict_json
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-orders/{game}"
+
+        # submitting orders : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
 
     def select_built_unit_type_callback(_, build_unit_type):
         """ select_built_unit_type_callback """
@@ -321,6 +385,7 @@ def submit_orders():
             buttons_right <= legend_select_active
 
             stack_orders(buttons_right)
+            put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -466,6 +531,7 @@ def submit_orders():
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
             stack_orders(buttons_right)
+            put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -515,6 +581,7 @@ def submit_orders():
                 callback_render(None)
 
             stack_orders(buttons_right)
+            put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -557,6 +624,10 @@ def submit_orders():
                         # create order
                         order = mapping.Order(position_data, selected_order_type, fake_unit, None, None)
                         orders_data.insert_order(order)
+                    else:
+                        alert(f"No one can build on that center")
+                else:
+                    alert(f"No center there")
 
             # update map
             callback_render(None)
@@ -575,6 +646,7 @@ def submit_orders():
                         buttons_right <= input_debug
 
             stack_orders(buttons_right)
+            put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -610,6 +682,7 @@ def submit_orders():
                 my_sub_panel <= my_sub_panel2
 
                 stack_orders(buttons_right)
+                put_submit(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
                 return
@@ -627,6 +700,7 @@ def submit_orders():
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
+            put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -674,6 +748,7 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
         stack_orders(buttons_right)
+        put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
@@ -694,13 +769,24 @@ def submit_orders():
         orders_data.render(ctx)
 
     def stack_orders(buttons_right):
+        """ stack_orders """
+
         buttons_right <= html.P()
         lines = str(orders_data).split('\n')
         orders = html.DIV()
         for line in lines:
-            orders <= line
+            orders <= html.B(line)
             orders <= html.BR()
         buttons_right <= orders
+
+    def put_submit(buttons_right):
+        """ put_submit """
+
+        if not orders_data.empty():
+            input_submit = html.INPUT(type="submit", value="submit these orders")
+            input_submit.bind("click", submit_orders_callback)
+            buttons_right <= html.BR()
+            buttons_right <= input_submit
 
     if 'GAME' not in storage:
         alert("Please select game beforehand")
@@ -711,6 +797,32 @@ def submit_orders():
     if 'PSEUDO' not in storage:
         alert("Please login beforehand")
         return
+
+    pseudo = storage['PSEUDO']
+
+    # from game name get game id
+
+    game_id = common.get_game_id(game)
+    if game_id is None:
+        return
+
+    print(f"{game_id=}")
+
+    # from pseudo get player id
+
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        return
+
+    print(f"{player_id=}")
+
+    # from game id and player id get role_id of player
+
+    role_id = get_role_allocated_to_player(game_id, player_id)
+    if role_id is None:
+        return
+
+    print(f"{role_id=}")
 
     # from game name get variant name
 
@@ -816,6 +928,7 @@ def submit_orders():
         automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
     stack_orders(buttons_right)
+    put_submit(buttons_right)
 
     # overall
     my_sub_panel2 = html.DIV()
