@@ -826,7 +826,7 @@ def submit_orders():
 
     role_id = get_role_allocated_to_player(game_id, player_id)
     if role_id is None:
-        alert("You do not appear to play of master this game")
+        alert("You do not appear to play or master this game")
         return
 
     # from game name get variant name
