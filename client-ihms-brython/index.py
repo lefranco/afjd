@@ -12,7 +12,6 @@ import games
 import selection
 import pairing
 import play
-import master
 import position
 import sandbox
 import technical
@@ -31,7 +30,7 @@ h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
 
-OPTIONS = ['home', 'login', 'select game', 'lists', 'my account', 'my games', 'pairing', 'play game', 'master game', 'edit position', 'use sandbox', 'technical corner']
+OPTIONS = ['home', 'login', 'select game', 'lists', 'my account', 'my games', 'pairing', 'play game', 'edit position', 'use sandbox', 'technical corner']
 
 # overall_top
 overall_top = html.DIV()
