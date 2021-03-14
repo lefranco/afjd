@@ -12,7 +12,7 @@ import common
 
 my_panel = html.DIV(id="players")
 
-OPTIONS = ['players', 'games', 'game masters']
+OPTIONS = ['my games', 'all players', 'all games', 'all game masters']
 
 
 def get_players_data():
@@ -46,6 +46,14 @@ def get_players_data():
 
     return dict(players_dict)
 
+
+def show_my_games_data():
+    """ show_my_games_data """
+
+    my_sub_panel <= """
+    will display a list of all games I play in with info
+    season year/orders in or not/deadline/messages uread/ decalarations unread
+    """
 
 def show_players_data():
     """ show_players_data """
@@ -273,11 +281,13 @@ def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
-    if item_name == 'players':
+    if item_name == 'my games':
+        show_my_games_data()
+    if item_name == 'all players':
         show_players_data()
-    if item_name == 'games':
+    if item_name == 'all games':
         show_games_data()
-    if item_name == 'game masters':
+    if item_name == 'all game masters':
         show_game_masters_data()
 
     global item_name_selected  # pylint: disable=invalid-name
