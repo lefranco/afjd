@@ -76,8 +76,6 @@ def load_option(_, item_name):
         pairing.render(panel_middle)
     if item_name == 'play game':
         play.render(panel_middle)
-    if item_name == 'master game':
-        master.render(panel_middle)
     if item_name == 'edit position':
         position.render(panel_middle)
     if item_name == 'use sandbox':

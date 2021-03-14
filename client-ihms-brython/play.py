@@ -17,7 +17,7 @@ import mapping
 
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
-OPTIONS = ['game status', 'game position', 'submit orders', 'negotiate', 'all game parameters', 'players in game']
+OPTIONS = ['game status', 'game position', 'submit orders', 'negotiate', 'game master', 'all game parameters', 'players in game']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -951,6 +951,13 @@ def negotiate():
     my_sub_panel <= dummy
 
 
+def game_master():
+    """ game_master """
+
+    dummy = html.P("game_master")
+    my_sub_panel <= dummy
+
+
 def show_game_parameters():
     """ show_game_parameters """
 
@@ -1163,6 +1170,8 @@ def load_option(_, item_name):
         submit_orders()
     if item_name == 'negotiate':
         negotiate()
+    if item_name == 'game master':
+        game_master()
     if item_name == 'all game parameters':
         show_game_parameters()
     if item_name == 'players in game':
