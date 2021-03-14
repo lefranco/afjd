@@ -142,7 +142,7 @@ def show_login():
         # this is local time
         time_stamp = float(storage['LOGIN_TIME'])
         date_desc = datetime.datetime.fromtimestamp(time_stamp)
-        log_message <= f", since {date_desc}"
+        log_message <= f", since {date_desc} (local time)"
 
     show_login_panel = html.DIV(id="show_login")
     show_login_panel.attrs['style'] = 'text-align: left'
