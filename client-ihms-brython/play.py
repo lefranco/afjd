@@ -49,6 +49,38 @@ class AutomatonStateEnum(enum.Enum):
     SELECT_BUILD_UNIT_TYPE_STATE = enum.auto()
 
 
+def get_role_allocated_to_player(game_id, player_id):
+    """ get_role the player has in the game """
+
+    role_id = None
+
+    def reply_callback(req):
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting role allocated to player: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting role allocated to player: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+        req_result = json.loads(req.text)
+        nonlocal role_id
+        # TODO : consider if ap player has more than one role
+        role_id = req_result[str(player_id)] if str(player_id) in req_result else None
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-allocations/{game_id}"
+
+    # get players allocated to game : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return role_id
+
+
 def make_report_window(report_loaded):
     """ make_report_window """
 
@@ -296,37 +328,6 @@ def submit_orders():
     selected_build_zone = None
     automaton_state = None
 
-    def get_role_allocated_to_player(game_id, player_id):
-        """ get_role the player has in the game """
-
-        role_id = None
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Error getting role allocated to player: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problem getting role allocated to player: {req_result['msg']}")
-                else:
-                    alert("Undocumented issue from server")
-                return
-            req_result = json.loads(req.text)
-            nonlocal role_id
-            # TODO : consider if ap player has more than one role
-            role_id = req_result[str(player_id)] if str(player_id) in req_result else None
-
-        json_dict = dict()
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-allocations/{game_id}"
-
-        # get players allocated to game : do not need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        return role_id
-
     def submit_orders_callback(_):
         """ submit_orders_callback """
 
@@ -558,7 +559,7 @@ def submit_orders():
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
                 selected_active_unit = position_data.closest_unit(pos, False)
-            if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON] :
+            if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 selected_active_unit = position_data.closest_unit(pos, True)
 
             my_sub_panel2.removeChild(buttons_right)
@@ -728,7 +729,7 @@ def submit_orders():
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
             selected_erase_unit = position_data.closest_unit(pos, False)
-        if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON] :
+        if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             selected_erase_unit = position_data.closest_unit(pos, True)
 
         # remove order
@@ -947,15 +948,107 @@ def submit_orders():
 def negotiate():
     """ negotiate """
 
-    dummy = html.P("negotiate")
+    dummy = html.P("Sorry, negotiate is not implemented here yet...")
     my_sub_panel <= dummy
 
 
 def game_master():
     """ game_master """
 
-    dummy = html.P("game_master")
-    my_sub_panel <= dummy
+    def adjudicate_callback(_):
+        """ adjudicate_callback """
+
+        #  print("adjudicate_callback")
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error adjudicating: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem adjudicating: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            InfoDialog("OK", f"Adjudication performed submitted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        names_dict = variant_data.extract_names()
+        names_dict_json = json.dumps(names_dict)
+
+        json_dict = {
+            'pseudo': pseudo,
+            'names': names_dict_json
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-adjudications/{game_id}"
+
+        # asking adjudication : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    if 'GAME' not in storage:
+        alert("Please select game beforehand")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Please login beforehand")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    # from game name get game id
+
+    game_id = common.get_game_id(game)
+    if game_id is None:
+        return
+
+    # from pseudo get player id
+
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        return
+
+    # from game id and player id get role_id of player
+
+    role_id = get_role_allocated_to_player(game_id, player_id)
+    if role_id != 0:
+        alert("You do not appear master this game")
+        return
+
+    # from game name get variant name
+
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+
+    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+    with open(parameters_file_name, "r") as read_file:
+        parameters_read = json.load(read_file)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+
+    input_adjudicate = html.INPUT(type="submit", value="adjudicate now!")
+    input_adjudicate.bind("click", adjudicate_callback)
+    my_sub_panel <= input_adjudicate
 
 
 def show_game_parameters():
