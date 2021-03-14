@@ -1119,8 +1119,6 @@ def show_players_in_game():
         # role name
         if role_id == -1:
             role_name = "NOT ALLOCATED"
-        elif role_id == 0:
-            role_name = "GAME MASTER"
         else:
             role = variant_data.roles[role_id]
             role_name = variant_data.name_table[role]
