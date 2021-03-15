@@ -1017,6 +1017,10 @@ class Position(Renderable):
 
         return closest_unit
 
+    def has_dislodged(self) -> bool:
+        """ has_dislodged """
+        return bool(self._dislodged_units)
+
     @property
     def variant(self) -> Variant:
         """ property """
@@ -1183,8 +1187,6 @@ class Order(Renderable):
             stroke_color = RETREAT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
-
-            # TODO error here
 
             # put an arrow (move/retreat)
             unit_position = self._position.variant.position_table[self._active_unit.zone]
