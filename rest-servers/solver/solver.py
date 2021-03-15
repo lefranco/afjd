@@ -343,8 +343,6 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
     forbidden_list: typing.List[int] = list()
 
-    print(f"read_situation() (from engine)  {role_names=}")
-
     for line in situation_result_content:
 
         # remove endline
@@ -362,7 +360,6 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
         tokens = line.split(" ")
 
         if tokens[0] == "POSSESSION":
-            print(f"{tokens=}")
             role_num = role_names.index(tokens[1].upper()) + 1
             region_num = region_names.index(tokens[2].upper()) + 1
             center_num = center_table.index(region_num) + 1
@@ -425,9 +422,6 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         with open(f"{tmpdirname}/DIPLOCOM/DEFAULT/DIPLO.DAT", "w") as outfile:
             outfile.write("\n".join(diplo_dat_content))
 
-        print(f"solver engine input : {situation_content=}")
-        print(f"solver engine input : {orders_content=}")
-
         # copy situation
         with open(f"{tmpdirname}/situation.dat", "w") as outfile:
             outfile.write("\n".join(situation_content))
@@ -474,9 +468,6 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         with open(f"{tmpdirname}/orders_result.txt", "r") as infile:
             orders_result_content = infile.readlines()
             orders_result = ''.join(orders_result_content)
-
-        print(f"solver engine output : {situation_result=}")
-        print(f"solver engine output : {orders_result=}")
 
         return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result
 
