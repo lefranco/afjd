@@ -316,7 +316,7 @@ def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.D
         elif type_order == 6:  # retreat
             result.append(f"{active_type} {active_zone} R {dest_zone}")
         elif type_order == 7:  # disband
-            result.append(f"{active_type} {active_zone} D")
+            result.append(f"{active_type} {active_zone} A")
         elif type_order == 8:  # build
             result.append(f"+ {active_type} {active_zone}")
         elif type_order == 9:  # remove
