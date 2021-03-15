@@ -362,10 +362,11 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
         tokens = line.split(" ")
 
         if tokens[0] == "POSSESSION":
+            print(f"{tokens=}")
             role_num = role_names.index(tokens[1].upper()) + 1
             region_num = region_names.index(tokens[2].upper()) + 1
             center_num = center_table.index(region_num) + 1
-            ownership_dict[str(center_num)] = role_num + 1
+            ownership_dict[str(center_num)] = role_num
 
         if tokens[0] == "UNITE":
             type_num = type_names.index(tokens[1].upper()) + 1
