@@ -34,6 +34,8 @@ APP.config['JWT_SECRET_KEY'] = SECRET_DATA['key']
 # Seems JWT variable is not used in this implementation but could be later on...
 JWT = flask_jwt_extended.JWTManager(APP)
 
+# default is 15 minutes - put it to one hour
+JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(minutes=60)
 
 # ---------------------------------
 # users
