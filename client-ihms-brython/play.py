@@ -548,12 +548,23 @@ def submit_orders():
 
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
+        nonlocal selected_order_type
         nonlocal automaton_state
         nonlocal selected_active_unit
         nonlocal selected_passive_unit
         nonlocal selected_dest_zone
         nonlocal selected_build_zone
         nonlocal buttons_right
+
+        # this is a shortcut
+        if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
+
+            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+                selected_order_type = mapping.OrderTypeEnum.ATTACK_ORDER
+            if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+                selected_order_type = mapping.OrderTypeEnum.RETREAT_ORDER
+            automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
+            # passthru
 
         if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
 
@@ -571,7 +582,7 @@ def submit_orders():
                 legend_selected_unit = html.LEGEND(f"Selected active unit is {selected_active_unit}")
                 buttons_right <= legend_selected_unit
 
-            legend_select_order = html.LEGEND("Select order")
+            legend_select_order = html.LEGEND("Select order (or directly destination)")
             buttons_right <= legend_select_order
 
             for order_type in mapping.OrderTypeEnum:
@@ -644,7 +655,7 @@ def submit_orders():
                 legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
                 buttons_right <= legend_select_unit
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                legend_select_unit = html.LEGEND("Select order")
+                legend_select_unit = html.LEGEND("Select adjustment order")
                 buttons_right <= legend_select_unit
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
@@ -748,7 +759,7 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.LEGEND("Select order")
+            legend_select_order = html.LEGEND("Select adjustment order")
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
@@ -923,7 +934,7 @@ def submit_orders():
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-        legend_select_order = html.LEGEND("Select order")
+        legend_select_order = html.LEGEND("Select adjustment order")
         buttons_right <= legend_select_order
         for order_type in mapping.OrderTypeEnum:
             if order_type.compatible(advancement_season):
