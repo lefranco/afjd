@@ -99,8 +99,8 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
 
             return data_error, 404
 
-        print(" solve output : {situation_result=}")
-        print(" solve output : {orders_result=}")
+        print(f" solve output : {situation_result=}")
+        print(f" solve output : {orders_result=}")
 
         data = {
             'stderr': stderr,
