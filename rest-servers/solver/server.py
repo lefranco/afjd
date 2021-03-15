@@ -84,9 +84,9 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg="Did you convert names from json to text ?")
 
 
-        print(" solve input : {situation=}")
-        print(" solve input : {orders=}")
-        print(" solve input : {names=}")
+        print(f" solve input : {situation=}")
+        print(f" solve input : {orders=}")
+        print(f" solve input : {names=}")
 
         returncode, stderr, stdout, situation_result, orders_result = solver.solve(variant, advancement, situation, orders, role, names)
 
