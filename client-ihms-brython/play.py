@@ -42,6 +42,7 @@ my_panel <= my_sub_panel
 class AutomatonStateEnum(enum.Enum):
     """ AutomatonStateEnum """
 
+    IDLE_STATE = enum.auto()
     SELECT_ACTIVE_STATE = enum.auto()
     SELECT_ORDER_STATE = enum.auto()
     SELECT_PASSIVE_UNIT_STATE = enum.auto()
@@ -577,27 +578,30 @@ def submit_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+            # can be None if no retreating unit on board
+            if selected_active_unit is not None:
 
-                legend_selected_unit = html.LEGEND(f"Selected active unit is {selected_active_unit}")
-                buttons_right <= legend_selected_unit
+                if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
 
-            legend_select_order = html.LEGEND("Select order (or directly destination)")
-            buttons_right <= legend_select_order
+                    legend_selected_unit = html.LEGEND(f"Selected active unit is {selected_active_unit}")
+                    buttons_right <= legend_selected_unit
 
-            for order_type in mapping.OrderTypeEnum:
-                if order_type.compatible(advancement_season):
-                    input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
-                    input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
-                    buttons_right <= html.BR()
-                    buttons_right <= input_debug
+                legend_select_order = html.LEGEND("Select order (or directly destination)")
+                buttons_right <= legend_select_order
 
-            if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, None)
-                orders_data.insert_order(order)
+                for order_type in mapping.OrderTypeEnum:
+                    if order_type.compatible(advancement_season):
+                        input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                        input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                        buttons_right <= html.BR()
+                        buttons_right <= input_debug
 
-                # update map
-                callback_render(None)
+                if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                    order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, None)
+                    orders_data.insert_order(order)
+
+                    # update map
+                    callback_render(None)
 
             stack_orders(buttons_right)
             put_submit(buttons_right)
@@ -605,7 +609,10 @@ def submit_orders():
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
 
-            automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+            # can be None if no retreating unit on board
+            if selected_active_unit is not None:
+                automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+
             return
 
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
@@ -928,10 +935,18 @@ def submit_orders():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
         legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+    if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+        if position_data.has_dislodged():
+            legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+            buttons_right <= legend_select_unit
+            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+        else:
+            automaton_state = AutomatonStateEnum.IDLE_STATE
 
     if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
         legend_select_order = html.LEGEND("Select adjustment order")
