@@ -334,7 +334,7 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     region_names = [r.upper() for r in names['zones'].values() if r]
     zone_names = [r.upper() for r in names['zones'].values() if r]
     zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}".upper() for r, c in variant['coastal_zones']]
-    role_names = [d[0].upper() for d in names['roles'].values() if d]
+    role_names = [v[0].upper() for k,v in names['roles'].items() if int(k)]
     center_table = variant['centers']
     type_names = ["A", "F"]
 
