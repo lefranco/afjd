@@ -343,6 +343,8 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
     forbidden_list: typing.List[int] = list()
 
+    print(f"read_situation() (from engine)  {role_names=}")
+
     for line in situation_result_content:
 
         # remove endline
@@ -360,14 +362,14 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
         tokens = line.split(" ")
 
         if tokens[0] == "POSSESSION":
-            role_num = role_names.index(tokens[1].upper())
+            role_num = role_names.index(tokens[1].upper()) + 1
             region_num = region_names.index(tokens[2].upper()) + 1
             center_num = center_table.index(region_num) + 1
-            ownership_dict[str(center_num)] = role_num
+            ownership_dict[str(center_num)] = role_num + 1
 
         if tokens[0] == "UNITE":
             type_num = type_names.index(tokens[1].upper()) + 1
-            role_num = role_names.index(tokens[2].upper())
+            role_num = role_names.index(tokens[2].upper()) + 1
             zone_num = zone_names.index(tokens[3].upper()) + 1
             unit_dict[str(role_num)].append([type_num, zone_num])
 
@@ -377,11 +379,11 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
 
         if tokens[0] == "DELOGEE":
             type_num = type_names.index(tokens[1].upper()) + 1
-            role_num = role_names.index(tokens[2].upper())
+            role_num = role_names.index(tokens[2].upper()) + 1
             zone_num = zone_names.index(tokens[3].upper()) + 1
             assert tokens[4].upper() == "BOURREAU"
             _ = type_names.index(tokens[5].upper()) + 1
-            _ = role_names.index(tokens[6].upper())
+            _ = role_names.index(tokens[6].upper()) + 1
             _ = zone_names.index(tokens[7].upper()) + 1
             assert tokens[8].upper() == "ORIGINE"
             region_dislodged_from_num = region_names.index(tokens[9].upper()) + 1
@@ -421,6 +423,9 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         # copy DATA
         with open(f"{tmpdirname}/DIPLOCOM/DEFAULT/DIPLO.DAT", "w") as outfile:
             outfile.write("\n".join(diplo_dat_content))
+
+        print(f"solver engine input : {situation_content=}")
+        print(f"solver engine input : {orders_content=}")
 
         # copy situation
         with open(f"{tmpdirname}/situation.dat", "w") as outfile:
@@ -468,6 +473,9 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         with open(f"{tmpdirname}/orders_result.txt", "r") as infile:
             orders_result_content = infile.readlines()
             orders_result = ''.join(orders_result_content)
+
+        print(f"solver engine output : {situation_result=}")
+        print(f"solver engine output : {orders_result=}")
 
         return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result
 

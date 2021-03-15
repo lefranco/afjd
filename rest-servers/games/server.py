@@ -1098,6 +1098,9 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         pseudo = args['pseudo']
         names = args['names']
 
+        print(f"post games adjudications : {names=}")
+
+
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to adjudicate in game")
 
@@ -1186,6 +1189,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             'forbiddens': forbidden_list,
         }
         situation_dict_json = json.dumps(situation_dict)
+        print(f"post games adjudications : {situation_dict_json=}")
 
         # evaluate orders
         orders_list = list()
@@ -1193,6 +1197,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders_from_game:
             orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
         orders_list_json = json.dumps(orders_list)
+        print(f"post games adjudications : {orders_list_json=}")
 
         json_dict = {
             'variant': variant_dict_json,
