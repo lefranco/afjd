@@ -55,9 +55,6 @@ menu_left <= menu_selection
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
 
-OPTIONS = ['', 'login', '', 'listes', '', 's', '', 'jouer', 'boite à outils', 'bac à sable', 'coin technique']
-
-
 def load_option(_, item_name):
     """ load_option """
 
