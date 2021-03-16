@@ -76,7 +76,8 @@ def show_players_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        col = html.TD(field)
+        field_fr = {'pseudo':'pseudo', 'first_name':'prénom', 'family_name':'nom', 'country':'pays', 'time_zone':'fuseau horaire'}[field]
+        col = html.TD(field_fr)
         col.style = {
             "border": "solid",
             "font-weight": "bold",
@@ -122,7 +123,8 @@ def show_games_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        col = html.TD(field)
+        field_fr = {'name':'nom', 'variant':'variante', 'deadline':'date limite', 'current_state':'état', 'current_advancement':'avancement'}[field]
+        col = html.TD(field_fr)
         col.style = {
             "border": "solid",
             "font-weight": "bold",
@@ -227,7 +229,8 @@ def show_game_masters_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        col = html.TD(field)
+        field_fr = {'game':'partie', 'master':'arbitre'}[field]
+        col = html.TD(field_fr)
         col.style = {
             "border": "solid",
             "font-weight": "bold",

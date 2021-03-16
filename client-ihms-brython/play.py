@@ -132,7 +132,7 @@ def show_status():
     """ show_status """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
@@ -250,7 +250,7 @@ def show_position():
         position_data.render(ctx)
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
@@ -295,7 +295,7 @@ def show_position():
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
     ctx = canvas.getContext("2d")
     if ctx is None:
-        alert("Please use a more recent navigator")
+        alert("Il faudrait utiliser un navigateur plus récent !")
         return
 
     # put background (this will call the callback that display the whole map)
@@ -344,7 +344,7 @@ def submit_orders():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Orders submitted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Vous avez soumis les ordres : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -387,7 +387,7 @@ def submit_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-            legend_select_active = html.LEGEND("Select zone where to build")
+            legend_select_active = html.LEGEND("Selectioner la zone où construire")
             buttons_right <= legend_select_active
 
             stack_orders(buttons_right)
@@ -420,11 +420,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
                 order_name = variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.LEGEND("Select destination of attack")
+                legend_selected_destination = html.LEGEND("Sélectionner la destination de l'attaque")
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -432,11 +432,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
                 order_name = variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_passive = html.LEGEND("Select offensively suported unit")
+                legend_selected_passive = html.LEGEND("Sélectionner l'unité supportée offensivement")
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -444,11 +444,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
                 order_name = variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_passive = html.LEGEND("Select defensively supported unit")
+                legend_selected_passive = html.LEGEND("Sélectionner l'unité supportée defensivement")
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -462,7 +462,7 @@ def submit_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -473,11 +473,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
                 order_name = variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_select_passive = html.LEGEND("Select convoyed unit")
+                legend_select_passive = html.LEGEND("Sélectionner l'unité convoyée")
                 buttons_right <= legend_select_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -485,11 +485,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
 
                 order_name = variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.LEGEND("Select destination of retreat")
+                legend_selected_destination = html.LEGEND("Sélectionner la destination de la retraite")
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -503,7 +503,7 @@ def submit_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -513,7 +513,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER:
 
-                legend_select_active = html.LEGEND("Select unit type to build")
+                legend_select_active = html.LEGEND("Sélectionner le type d'unité à construire")
                 buttons_right <= legend_select_active
 
                 for unit_type in mapping.UnitTypeEnum:
@@ -527,11 +527,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.REMOVE_ORDER:
 
                 order_name = variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"Selected order is {order_name}")
+                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_select_active = html.LEGEND("Select unit to remove")
+                legend_select_active = html.LEGEND("Sélectionner l'unité à retirer")
                 buttons_right <= legend_select_active
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -583,10 +583,10 @@ def submit_orders():
 
                 if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
 
-                    legend_selected_unit = html.LEGEND(f"Selected active unit is {selected_active_unit}")
+                    legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
                     buttons_right <= legend_selected_unit
 
-                legend_select_order = html.LEGEND("Select order (or directly destination)")
+                legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
                 buttons_right <= legend_select_order
 
                 for order_type in mapping.OrderTypeEnum:
@@ -651,18 +651,18 @@ def submit_orders():
                         order = mapping.Order(position_data, selected_order_type, fake_unit, None, None)
                         orders_data.insert_order(order)
                     else:
-                        alert("No one can build on that center")
+                        alert("On ne peut pas construire sur ce centre")
                 else:
-                    alert("No center there")
+                    alert("Pas de centre à cet endroit")
 
             # update map
             callback_render(None)
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
                 buttons_right <= legend_select_unit
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                legend_select_unit = html.LEGEND("Select adjustment order")
+                legend_select_unit = html.LEGEND("Selectioner l'ordre d'adjustment")
                 buttons_right <= legend_select_unit
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
@@ -701,7 +701,7 @@ def submit_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -714,15 +714,15 @@ def submit_orders():
                 return
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_selected_passive = html.LEGEND(f"Selected offensively supported unit is {selected_passive_unit}")
+                legend_selected_passive = html.LEGEND(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_selected_passive = html.LEGEND(f"Selected convoyed unit is {selected_passive_unit}")
+                legend_selected_passive = html.LEGEND(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
             buttons_right <= legend_selected_passive
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_select_destination = html.LEGEND("Select destination of supported attack")
+                legend_select_destination = html.LEGEND("Sélectionner la destination de l'attaque soutenue")
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_select_destination = html.LEGEND("Select destination of convoy")
+                legend_select_destination = html.LEGEND("Sélectionner la destination du convoi")
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
@@ -761,12 +761,12 @@ def submit_orders():
         buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-            legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.LEGEND("Select adjustment order")
+            legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement")
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
@@ -812,19 +812,19 @@ def submit_orders():
         """ put_submit """
 
         if not orders_data.empty():
-            input_submit = html.INPUT(type="submit", value="submit these orders")
+            input_submit = html.INPUT(type="submit", value="soumettre ces ordres")
             input_submit.bind("click", submit_orders_callback)
             buttons_right <= html.BR()
             buttons_right <= input_submit
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -845,7 +845,7 @@ def submit_orders():
 
     role_id = get_role_allocated_to_player(game_id, player_id)
     if role_id is None:
-        alert("You do not appear to play or master this game")
+        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
 
     # from game name get variant name
@@ -901,7 +901,7 @@ def submit_orders():
 
     ctx = canvas.getContext("2d")
     if ctx is None:
-        alert("Please use a more recent navigator")
+        alert("Il faudrait utiliser un navigateur plus récent !")
         return
 
     # get the orders from server
@@ -936,20 +936,20 @@ def submit_orders():
     buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
     if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
-        legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
         if position_data.has_dislodged():
-            legend_select_unit = html.LEGEND("Click on unit to order (double-click to erase)")
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
         else:
             automaton_state = AutomatonStateEnum.IDLE_STATE
 
     if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-        legend_select_order = html.LEGEND("Select adjustment order")
+        legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement")
         buttons_right <= legend_select_order
         for order_type in mapping.OrderTypeEnum:
             if order_type.compatible(advancement_season):
@@ -974,7 +974,7 @@ def submit_orders():
 def negotiate():
     """ negotiate """
 
-    dummy = html.P("Sorry, negotiate is not implemented here yet...")
+    dummy = html.P("Sorry, negotiate is non implémenté here yet...")
     my_sub_panel <= dummy
 
 
@@ -996,7 +996,7 @@ def game_master():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Adjudication performed submitted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"La résolution a été réalisée : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -1018,13 +1018,13 @@ def game_master():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -1045,7 +1045,7 @@ def game_master():
 
     role_id = get_role_allocated_to_player(game_id, player_id)
     if role_id != 0:
-        alert("You do not appear master this game")
+        alert("Vous ne semblez pas être l'arbitre de cette partie")
         return
 
     # from game name get variant name
@@ -1072,7 +1072,7 @@ def game_master():
     # build variant data
     variant_data = mapping.Variant(variant_content_loaded, parameters_read)
 
-    input_adjudicate = html.INPUT(type="submit", value="adjudicate now!")
+    input_adjudicate = html.INPUT(type="submit", value="résoudre maintenant !")
     input_adjudicate.bind("click", adjudicate_callback)
     my_sub_panel <= input_adjudicate
 
@@ -1081,7 +1081,7 @@ def show_game_parameters():
     """ show_game_parameters """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
@@ -1158,7 +1158,7 @@ def show_players_in_game():
     """ show_game_players_data """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
@@ -1219,7 +1219,8 @@ def show_players_in_game():
     # header
     thead = html.THEAD()
     for field in fields:
-        col = html.TD(field)
+        field_fr = {'player':'joueur', 'role':'role', 'flag':'drapeau'}[field]
+        col = html.TD(field_fr)
         col.style = {
             "border": "solid",
             "font-weight": "bold",

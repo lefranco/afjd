@@ -31,7 +31,7 @@ def login_callback(_):
         storage['JWT_TOKEN'] = req_result['AccessToken']
         time_stamp = time.time()
         storage['LOGIN_TIME'] = str(time_stamp)
-        InfoDialog("OK", f"Successful login as {pseudo}", remove_after=config.REMOVE_AFTER)
+        InfoDialog("OK", f"Logué avec succèe en tant que {pseudo}", remove_after=config.REMOVE_AFTER)
         show_login()
 
     pseudo = input_pseudo.value
@@ -53,7 +53,7 @@ def login_callback(_):
 def forgot_callback(_):
     """ forgot_callback """
 
-    alert("Sorry: Forgot password is not implemented yet")
+    alert("Désolé: la récupération du mot de passe n'est pas encore implémentée")
 
 
 def logout():
@@ -74,7 +74,7 @@ def logout_callback(_):
     """ logout_callback """
     effective = logout()
     if effective:
-        InfoDialog("OK", "Successful logout", remove_after=config.REMOVE_AFTER)
+        InfoDialog("OK", "Délogué avec succès", remove_after=config.REMOVE_AFTER)
 
 
 my_panel = html.DIV(id="login")
@@ -110,7 +110,7 @@ my_panel <= html.BR()
 
 form2 = html.FORM()
 
-input_forgot = html.INPUT(type="submit", value="forgot password")
+input_forgot = html.INPUT(type="submit", value="mot de passe oublié")
 input_forgot.bind("click", forgot_callback)
 form2 <= input_forgot
 form2 <= html.BR()
@@ -133,16 +133,16 @@ def show_login():
 
     log_message = html.DIV()
     if 'PSEUDO' in storage:
-        log_message <= "Logged in as "
+        log_message <= "Logué en tant que "
         log_message <= html.B(storage['PSEUDO'])
     else:
-        log_message <= "Visiting..."
+        log_message <= "En visite..."
 
     if 'LOGIN_TIME' in storage:
         # this is local time
         time_stamp = float(storage['LOGIN_TIME'])
         date_desc = datetime.datetime.fromtimestamp(time_stamp)
-        log_message <= f", since {date_desc} (local time)"
+        log_message <= f", depuis {date_desc} (temps local)"
 
     show_login_panel = html.DIV(id="show_login")
     show_login_panel.attrs['style'] = 'text-align: left'
