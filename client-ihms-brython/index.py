@@ -12,7 +12,7 @@ import games
 import selection
 import pairing
 import play
-import position
+import tools
 import sandbox
 import technical
 
