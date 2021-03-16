@@ -7,14 +7,14 @@ from browser import html  # pylint: disable=import-error
 
 my_panel = html.DIV(id="home")
 
-title1 = html.H2("Useful link")
+title1 = html.H2("Liens utiles")
 my_panel <= title1
 
 link1 = html.A(href="http://www.diplomania.fr")
 link1 <= "Le site officiel pour jouer de l'Association Française des Joueurs de Diplomatie"
 my_panel <= link1
 
-my_panel <= html.H2("Below rules of the games (simplified)")
+my_panel <= html.H2("Une version simplifiée des règles du Jeu")
 
 my_panel <= html.BR()
 my_panel <= html.BR()

@@ -18,14 +18,14 @@ import technical
 
 
 # TITLE
-TITLE = "Generic front end to AFJD REST Diplomacy Server"
+TITLE = "Front end générique Serveurs REST AJFD"
 title = html.TITLE(TITLE, id='title')
 title.attrs['style'] = 'text-align: center'
 document <= title
 
 
 # H2
-H2 = "Welcome interface for playing Diplomacy (will be translated in French soon)"
+H2 = "Preuve de concept de l'interface de jeu Diplomacy"
 h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2

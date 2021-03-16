@@ -20,7 +20,7 @@ def select_game():
 
         game = input_game.value
         storage['GAME'] = game
-        InfoDialog("OK", f"Game selected : {game}", remove_after=config.REMOVE_AFTER)
+        InfoDialog("OK", f"Partie sélectionnée : {game}", remove_after=config.REMOVE_AFTER)
         show_game_selected()
 
     games_data = common.get_games_data()
@@ -30,7 +30,7 @@ def select_game():
 
     form = html.FORM()
 
-    legend_game = html.LEGEND("game", title="Game select")
+    legend_game = html.LEGEND("Partie", title="Sélection de la partie")
     form <= legend_game
 
     input_game = html.SELECT(type="select-one", value="")
@@ -46,7 +46,7 @@ def select_game():
 
     form <= html.BR()
 
-    input_select_game = html.INPUT(type="submit", value="select game")
+    input_select_game = html.INPUT(type="submit", value="sélectionner la partie")
     input_select_game.bind("click", select_game_callback)
     form <= input_select_game
 
@@ -65,10 +65,10 @@ def show_game_selected():
 
     log_message = html.DIV()
     if 'GAME' in storage:
-        log_message <= "Game selected is "
+        log_message <= "La partie sélectionnée est "
         log_message <= html.B(storage['GAME'])
     else:
-        log_message <= "No game selected..."
+        log_message <= "Pas de partie sélectionnée..."
 
     show_game_selected_panel = html.DIV(id="show_game_selected")
     show_game_selected_panel.attrs['style'] = 'text-align: left'
@@ -88,7 +88,7 @@ def render(panel_middle):
     my_sub_panel = select_game()
 
     if my_sub_panel:
-        my_panel <= html.B("Select the game to interact with on the site")
+        my_panel <= html.B("Sélectionnez la partie du site avec laquelle vous souhaitez interagir")
         my_panel <= html.BR()
         my_panel <= my_sub_panel
 

@@ -36,11 +36,11 @@ def information_about_game():
     """ information_about_account """
 
     information = html.DIV()
-    information <= "Fields with (*) cannot be changed after game is created"
+    information <= "Les champs avec (*) ne peuvent plus être changés la partie créée"
     information <= html.BR()
-    information <= "Fields with (**) cannot be changed after game is started"
+    information <= "Les champs avec (**) ne peuvent plus être changés la partie démarrée"
     information <= html.BR()
-    information <= "Hover the titles for more details"
+    information <= "Survolez les titres pour pour plus de détails"
     return information
 
 
@@ -62,24 +62,24 @@ def create_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Game created : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"La partie a été créé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         name = input_name.value
 
         if not name:
-            alert("Name is missing")
+            alert("Nom manquant")
             return
         if len(name) > MAX_LEN_NAME:
-            alert("Name is too long")
+            alert("Nom trop long")
             return
 
         variant = input_variant.value
 
         if not variant:
-            alert("Variant is missing")
+            alert("Variante manquante")
             return
         if len(variant) > MAX_LEN_NAME:
-            alert("Variant is too long")
+            alert("Variante trop longue")
             return
 
         archive = int(input_archive.checked)
@@ -193,7 +193,7 @@ def create_game():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -203,67 +203,67 @@ def create_game():
     form <= information_about_game()
     form <= html.BR()
 
-    legend_title_main = html.LEGEND("Main parameters of the game (*)")
+    legend_title_main = html.LEGEND("Paramètres principaux de la partie (*)")
     legend_title_main.style = {
         'color': 'red',
     }
     form <= legend_title_main
 
-    legend_name = html.LEGEND("name")
+    legend_name = html.LEGEND("nom")
     form <= legend_name
-    input_name = html.INPUT(type="text", value="", title="Name of the game (keep it short and simple)")
+    input_name = html.INPUT(type="text", value="", title="Nom de la partie (faites court et simple)")
     form <= input_name
     form <= html.BR()
 
-    legend_variant = html.LEGEND("variant", title="(imposed for the moment)")
+    legend_variant = html.LEGEND("variante", title="(imposée pour me moment)")
     form <= legend_variant
     input_variant = html.INPUT(type="select-one", readonly=True, value=DEFAULT_VARIANT)
     form <= input_variant
     form <= html.BR()
 
-    legend_archive = html.LEGEND("archive", title="Is this game for archiving - not played - not implemented")
+    legend_archive = html.LEGEND("archive", title="Partie pour les archives - non jouée - non implémenté")
     form <= legend_archive
     input_archive = html.INPUT(type="checkbox", checked=False)
     form <= input_archive
     form <= html.BR()
 
-    legend_manual = html.LEGEND("manual pairing", title="Game master allocates roles in the game")
+    legend_manual = html.LEGEND("casting manuel", title="L'arbitre attribue les rôles dans la partie")
     form <= legend_manual
     input_manual = html.INPUT(type="checkbox", checked=False)
     form <= input_manual
     form <= html.BR()
 
-    legend_title_terms = html.LEGEND("Terms of the game (*)")
+    legend_title_terms = html.LEGEND("Modalités de la partie (*)")
     legend_title_terms.style = {
         'color': 'red',
     }
     form <= legend_title_terms
 
-    legend_cumulate = html.LEGEND("cumulate", title="Can a player use more than one role - not implemented")
+    legend_cumulate = html.LEGEND("cumulation possible", title="Un joueur peut cumuler plusieurs rôles - non implémenté")
     form <= legend_cumulate
     input_cumulate = html.INPUT(type="checkbox", checked=False)
     form <= input_cumulate
     form <= html.BR()
 
-    legend_anonymous = html.LEGEND("anonymous", title="Are the identitities of the players hidden - not implemented")
+    legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées - non implémenté")
     form <= legend_anonymous
     input_anonymous = html.INPUT(type="checkbox", checked=False)
     form <= input_anonymous
     form <= html.BR()
 
-    legend_silent = html.LEGEND("silent", title="Can the players send messages - not implemented")
+    legend_silent = html.LEGEND("silencieuse", title="Les joueurs ne peuvent pas communiquer - non implémenté")
     form <= legend_silent
     input_silent = html.INPUT(type="checkbox", checked=False)
     form <= input_silent
     form <= html.BR()
 
-    legend_fast = html.LEGEND("fast", title="Are adjudication done as soon as all orders are in - not implemented")
+    legend_fast = html.LEGEND("rapide", title="Les résolutions se font aussi vite que possible - non implémenté")
     form <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=False)
     form <= input_fast
     form <= html.BR()
 
-    legend_title_pace = html.LEGEND("Pace of the game")
+    legend_title_pace = html.LEGEND("Cadence de la partie")
     legend_title_pace.style = {
         'color': 'red',
     }
@@ -271,13 +271,13 @@ def create_game():
 
     # moves
 
-    legend_speed_moves = html.LEGEND("speed moves", title="Days before move adjudication deadline")
+    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours avant la date limite de mouvements")
     form <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=DEFAULT_SPEED_MOVES)
     form <= input_speed_moves
     form <= html.BR()
 
-    legend_cd_possible_moves = html.LEGEND("cd possible moves", title="Civil disorder possible for move adjudication")
+    legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
     form <= legend_cd_possible_moves
     input_cd_possible_moves = html.INPUT(type="checkbox", checked=False)
     form <= input_cd_possible_moves
@@ -285,13 +285,13 @@ def create_game():
 
     # retreats
 
-    legend_speed_retreats = html.LEGEND("speed retreats", title="Days before retreats adjudication deadline")
+    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours avant la date limite de retraites")
     form <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=DEFAULT_SPEED_OTHERS)
     form <= input_speed_retreats
     form <= html.BR()
 
-    legend_cd_possible_retreats = html.LEGEND("cd possible retreats", title="Civil disorder possible for move adjudication")
+    legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
     form <= legend_cd_possible_retreats
     input_cd_possible_retreats = html.INPUT(type="checkbox", checked=False)
     form <= input_cd_possible_retreats
@@ -299,7 +299,7 @@ def create_game():
 
     # adjustments
 
-    legend_speed_adjustments = html.LEGEND("speed adjustments", title="Days before adjustments adjudication deadline")
+    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours avant la date limite d'ajustements")
     form <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=DEFAULT_SPEED_OTHERS)
     form <= input_speed_adjustments
@@ -307,7 +307,7 @@ def create_game():
 
     # builds
 
-    legend_cd_possible_builds = html.LEGEND("cd possible builds", title="Civil disorder possible for build adjudication")
+    legend_cd_possible_builds = html.LEGEND("DC possible constructions", title="Désordre civil possible pour une résolution d'ajustements - constructions")
     form <= legend_cd_possible_builds
     input_cd_possible_builds = html.INPUT(type="checkbox", checked=False)
     form <= input_cd_possible_builds
@@ -315,7 +315,7 @@ def create_game():
 
     # removals
 
-    legend_cd_possible_removals = html.LEGEND("cd possible removals", title="Civil disorder possible for removal adjudication")
+    legend_cd_possible_removals = html.LEGEND("DC possible suppressions", title="Désordre civil possible pour une résolution d'ajustements - suppressions")
     form <= legend_cd_possible_removals
     input_cd_possible_removals = html.INPUT(type="checkbox", checked=False)
     form <= input_cd_possible_removals
@@ -323,55 +323,55 @@ def create_game():
 
     # ---
 
-    legend_play_weekend = html.LEGEND("play weekend", title="Does the game play during week end ?")
+    legend_play_weekend = html.LEGEND("jeu weekend", title="La partie est jouée en fin de semaine")
     form <= legend_play_weekend
     input_play_weekend = html.INPUT(type="checkbox", checked=False)
     form <= input_play_weekend
     form <= html.BR()
 
-    legend_title_access = html.LEGEND("Access to the game (**)")
+    legend_title_access = html.LEGEND("Accès à la partie (**)")
     legend_title_access.style = {
         'color': 'red',
     }
     form <= legend_title_access
 
-    legend_access_code = html.LEGEND("access code", title="Access code to the game")
+    legend_access_code = html.LEGEND("code accès", title="Code d'accès à la partie")
     form <= legend_access_code
     input_access_code = html.INPUT(type="number", value="")
     form <= input_access_code
     form <= html.BR()
 
-    legend_access_restriction_reliability = html.LEGEND("reliability restriction", title="How reliable you need to be to play in the game - punctual players")
+    legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
     form <= legend_access_restriction_reliability
     input_access_restriction_reliability = html.INPUT(type="number", value="")
     form <= input_access_restriction_reliability
     form <= html.BR()
 
-    legend_access_restriction_regularity = html.LEGEND("regularity restriction", title="How regular you need to be to play in the game - heavy players")
+    legend_access_restriction_regularity = html.LEGEND("restriction régularité", title="Sélectionne les joueurs sur leur régularité")
     form <= legend_access_restriction_regularity
     input_access_restriction_regularity = html.INPUT(type="number", value="")
     form <= input_access_restriction_regularity
     form <= html.BR()
 
-    legend_access_restriction_performance = html.LEGEND("performance restriction", title="How performant you need to be to play in the game - good players")
+    legend_access_restriction_performance = html.LEGEND("restriction performance", title="Sélectionne les joueurs sur leur niveau de performance")
     form <= legend_access_restriction_performance
     input_access_restriction_performance = html.INPUT(type="number", value="")
     form <= input_access_restriction_performance
     form <= html.BR()
 
-    legend_title_access = html.LEGEND("Advancement of the game (*)")
+    legend_title_access = html.LEGEND("Advancement de la partie (*)")
     legend_title_access.style = {
         'color': 'red',
     }
     form <= legend_title_access
 
-    legend_nb_max_cycles_to_play = html.LEGEND("maximum cycles", title="How many game years to play at most ?")
+    legend_nb_max_cycles_to_play = html.LEGEND("maximum de cycles", title="Combien d'années à jouer au plus ?")
     form <= legend_nb_max_cycles_to_play
     input_nb_max_cycles_to_play = html.INPUT(type="number", value=DEFAULT_NB_CYCLES)
     form <= input_nb_max_cycles_to_play
     form <= html.BR()
 
-    legend_victory_centers = html.LEGEND("victory centers", title="How many centers to win ?")
+    legend_victory_centers = html.LEGEND("victoire en centres", title="Combien de centres sont nécessaires pour gagner ?")
     form <= legend_victory_centers
     input_victory_centers = html.INPUT(type="number", value=DEFAULT_VICTORY_CENTERS)
     form <= input_victory_centers
@@ -379,7 +379,7 @@ def create_game():
 
     form <= html.BR()
 
-    input_create_game = html.INPUT(type="submit", value="create game")
+    input_create_game = html.INPUT(type="submit", value="créer la partie")
     input_create_game.bind("click", create_game_callback)
     form <= input_create_game
 
@@ -390,13 +390,13 @@ def change_description_game():
     """ change_description_game """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -456,7 +456,7 @@ def change_description_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Description changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"La description a été modifiée : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         description = input_description.value
 
@@ -482,7 +482,7 @@ def change_description_game():
     form <= information_about_game()
     form <= html.BR()
 
-    legend_description = html.LEGEND("description", title="You can make this long. 'A game between scholars of the ESTIAM' for instance")
+    legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'une partie entre étudiants de l'ETIAM'")
     form <= legend_description
 
     input_description = html.TEXTAREA(type="text", rows=5, cols=80)
@@ -492,7 +492,7 @@ def change_description_game():
 
     form <= html.BR()
 
-    input_change_description_game = html.INPUT(type="submit", value="change game description")
+    input_change_description_game = html.INPUT(type="submit", value="changer la description de la partie")
     input_change_description_game.bind("click", change_description_game_callback)
     form <= input_change_description_game
 
@@ -503,13 +503,13 @@ def change_access_parameters_game():
     """ change_access_parameters_game """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -578,7 +578,7 @@ def change_access_parameters_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Access parameters changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Les paramètres d'accès ont été modifiés : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         access_code = input_access_code.value
         access_restriction_reliability = input_access_restriction_reliability.value
@@ -610,25 +610,25 @@ def change_access_parameters_game():
     form <= information_about_game()
     form <= html.BR()
 
-    legend_access_code = html.LEGEND("access code", title="Access code to the game")
+    legend_access_code = html.LEGEND("code accès", title="Code d'accès à la partie")
     form <= legend_access_code
     input_access_code = html.INPUT(type="number", value=access_code_loaded)
     form <= input_access_code
     form <= html.BR()
 
-    legend_access_restriction_reliability = html.LEGEND("reliability restriction", title="How reliable you need to be to play in the game - punctual players")
+    legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
     form <= legend_access_restriction_reliability
     input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability_loaded)
     form <= input_access_restriction_reliability
     form <= html.BR()
 
-    legend_access_restriction_regularity = html.LEGEND("regularity restriction", title="How regular you need to be to play in the game - heavy players")
+    legend_access_restriction_regularity = html.LEGEND("restriction régularité", title="Sélectionne les joueurs sur leur régularité")
     form <= legend_access_restriction_regularity
     input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity_loaded)
     form <= input_access_restriction_regularity
     form <= html.BR()
 
-    legend_access_restriction_performance = html.LEGEND("performance restriction", title="How performant you need to be to play in the game - good players")
+    legend_access_restriction_performance = html.LEGEND("restriction performance", title="Sélectionne les joueurs sur leur niveau de performance")
     form <= legend_access_restriction_performance
     input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance_loaded)
     form <= input_access_restriction_performance
@@ -636,7 +636,7 @@ def change_access_parameters_game():
 
     form <= html.BR()
 
-    input_change_access_game = html.INPUT(type="submit", value="change game access parameters")
+    input_change_access_game = html.INPUT(type="submit", value="changer les paramètres d'accès à la partie")
     input_change_access_game.bind("click", change_access_parameters_game_callback)
     form <= input_change_access_game
 
@@ -647,13 +647,13 @@ def change_deadline_game():
     """ change_deadline_game """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -720,7 +720,7 @@ def change_deadline_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Deadline changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"La date limite a été modifiée : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         # convert this human entered deadline to the deadline the server understands
         deadline_day_part = input_deadline_day.value
@@ -752,7 +752,8 @@ def change_deadline_game():
     form <= information_about_game()
     form <= html.BR()
 
-    special_legend = html.LEGEND("BEWARE : you must enter a deadline in GMT Time")
+    dl_gmt = html.B("ATTENTION : vous devez entrer une date limite en temps GMT")
+    special_legend = html.LEGEND(dl_gmt)
     form <= special_legend
 
     # get GMT date and time
@@ -760,20 +761,22 @@ def change_deadline_game():
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d/%m/%Y %H:%M:%S")
 
-    special_legend = html.LEGEND(f"For information, current GMT time now is {date_now_gmt_str}")
+    special_legend = html.LEGEND(f"Pour information, le temps GMT en ce moment est {date_now_gmt_str}")
     form <= special_legend
     form <= html.BR()
 
     form <= html.BR()
 
-    legend_deadline_day = html.LEGEND("The deadline day (DD/MM/YYYY - or according to browser settings)", title="Deadline. Last day allowed for submitting orders. After player is late.")
+    legend_deadline_day = html.LEGEND("Jour de la date limite (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
     form <= legend_deadline_day
 
     input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day)
     form <= input_deadline_day
     form <= html.BR()
 
-    legend_deadline_hour = html.LEGEND("The deadline hour (hh:mm or according to browser settings)")
+    form <= html.BR()
+
+    legend_deadline_hour = html.LEGEND("Heure de la date limite (hh:mm ou selon les réglages du navigateur)")
     form <= legend_deadline_hour
 
     input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour)
@@ -782,7 +785,7 @@ def change_deadline_game():
 
     form <= html.BR()
 
-    input_change_deadline_game = html.INPUT(type="submit", value="change game deadline")
+    input_change_deadline_game = html.INPUT(type="submit", value="changer la date limite de la partie")
     input_change_deadline_game.bind("click", change_deadline_game_callback)
     form <= input_change_deadline_game
 
@@ -793,13 +796,13 @@ def change_pace_parameters_game():
     """ change_pace_parameters_game """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -880,7 +883,7 @@ def change_pace_parameters_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Pace parameters changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Les paramètres de cadence ont été modifiés : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         try:
             speed_moves = int(input_speed_moves.value)
@@ -936,13 +939,13 @@ def change_pace_parameters_game():
 
     # moves
 
-    legend_speed_moves = html.LEGEND("speed moves", title="Days before move adjudication deadline")
+    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours avant la date limite de mouvements")
     form <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=speed_moves_loaded)
     form <= input_speed_moves
     form <= html.BR()
 
-    legend_cd_possible_moves = html.LEGEND("cd possible moves", title="Civil disorder possible for move adjudication")
+    legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
     form <= legend_cd_possible_moves
     input_cd_possible_moves = html.INPUT(type="checkbox", checked=cd_possible_moves_loaded)
     form <= input_cd_possible_moves
@@ -950,13 +953,13 @@ def change_pace_parameters_game():
 
     # retreats
 
-    legend_speed_retreats = html.LEGEND("speed retreats", title="Days before retreats adjudication deadline")
+    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours avant la date limite de retraites")
     form <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=speed_retreats_loaded)
     form <= input_speed_retreats
     form <= html.BR()
 
-    legend_cd_possible_retreats = html.LEGEND("cd possible retreats", title="Civil disorder possible for move adjudication")
+    legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
     form <= legend_cd_possible_retreats
     input_cd_possible_retreats = html.INPUT(type="checkbox", checked=cd_possible_retreats_loaded)
     form <= input_cd_possible_retreats
@@ -964,7 +967,7 @@ def change_pace_parameters_game():
 
     # adjustments
 
-    legend_speed_adjustments = html.LEGEND("speed adjustments", title="Days before adjustments adjudication deadline")
+    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours avant la date limite d'ajustements")
     form <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments_loaded)
     form <= input_speed_adjustments
@@ -972,7 +975,7 @@ def change_pace_parameters_game():
 
     # builds
 
-    legend_cd_possible_builds = html.LEGEND("cd possible builds", title="Civil disorder possible for build adjudication")
+    legend_cd_possible_builds = html.LEGEND("DC possible constructions", title="Désordre civil possible pour une résolution d'ajustements - constructions")
     form <= legend_cd_possible_builds
     input_cd_possible_builds = html.INPUT(type="checkbox", checked=cd_possible_builds_loaded)
     form <= input_cd_possible_builds
@@ -980,7 +983,7 @@ def change_pace_parameters_game():
 
     # removals
 
-    legend_cd_possible_removals = html.LEGEND("cd possible removals", title="Civil disorder possible for removal adjudication")
+    legend_cd_possible_removals = html.LEGEND("DC possible suppressions", title="Désordre civil possible pour une résolution d'ajustements - suppressions")
     form <= legend_cd_possible_removals
     input_cd_possible_removals = html.INPUT(type="checkbox", checked=cd_possible_removals_loaded)
     form <= input_cd_possible_removals
@@ -988,7 +991,7 @@ def change_pace_parameters_game():
 
     # ---
 
-    legend_play_weekend = html.LEGEND("play weekend", title="Does the game play during week end ?")
+    legend_play_weekend = html.LEGEND("jeu weekend", title="La partie est jouée en fin de semaine")
     form <= legend_play_weekend
     input_play_weekend = html.INPUT(type="checkbox", checked=play_weekend_loaded)
     form <= input_play_weekend
@@ -996,7 +999,7 @@ def change_pace_parameters_game():
 
     form <= html.BR()
 
-    input_change_pace_game = html.INPUT(type="submit", value="change game pace parameters")
+    input_change_pace_game = html.INPUT(type="submit", value="changer le rythme de la partie")
     input_change_pace_game.bind("click", change_pace_parameters_game_callback)
     form <= input_change_pace_game
 
@@ -1007,13 +1010,13 @@ def change_state_game():
     """ change_state_game """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -1073,7 +1076,7 @@ def change_state_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"State changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"L'état de la partie a été modifié : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         state = config.STATE_CODE_TABLE[input_state.value]
 
@@ -1099,7 +1102,7 @@ def change_state_game():
     form <= information_about_game()
     form <= html.BR()
 
-    legend_state = html.LEGEND("state", title="State of the game : waiting, ongoing, finished.")
+    legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours, terminé.")
     form <= legend_state
 
     input_state = html.SELECT(type="select-one", value="")
@@ -1113,7 +1116,7 @@ def change_state_game():
 
     form <= html.BR()
 
-    input_change_state_game = html.INPUT(type="submit", value="change game state")
+    input_change_state_game = html.INPUT(type="submit", value="changer l'état de la partie")
     input_change_state_game.bind("click", change_state_game_callback)
     form <= input_change_state_game
 
@@ -1124,13 +1127,13 @@ def delete_game():
     """ delete_game """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -1147,7 +1150,7 @@ def delete_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Game deleted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"La partie a été supprimée : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
             selection.un_select_game()
 
         json_dict = {

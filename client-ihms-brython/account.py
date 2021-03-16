@@ -33,9 +33,9 @@ def information_about_account():
     """ information_about_account """
 
     information = html.DIV()
-    information <= "Fields with (*) are private and will not be shown"
+    information <= "Les champs avec (*) sont privés et ne seront pas montrés sur le site"
     information <= html.BR()
-    information <= "Hover the titles for more details"
+    information <= "Survolez les titres pour plus de détails"
     return information
 
 
@@ -55,33 +55,33 @@ def create_account():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Account created : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Votre compte a été créé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         pseudo = input_pseudo.value
 
         if not pseudo:
-            alert("Pseudo is missing")
+            alert("Pseudo manquant")
             return
         if len(pseudo) > MAX_LEN_PSEUDO:
-            alert("Pseudo is too long")
+            alert("Pseudo trop long")
             return
 
         password = input_password.value
         if not password:
-            alert("Password is missing")
+            alert("Mot de passe manquant")
             return
 
         password_again = input_password_again.value
         if password_again != password:
-            alert("Passwords do not match")
+            alert("Les mots de passe ne correspondent pas")
             return
 
         email = input_email.value
         if not email:
-            alert("email is missing")
+            alert("email manquant")
             return
         if email.find('@') == -1:
-            alert("@ in email is missing")
+            alert("@ dans email manquant")
             return
 
         telephone = input_telephone.value
@@ -116,55 +116,55 @@ def create_account():
     form <= information_about_account()
     form <= html.BR()
 
-    legend_pseudo = html.LEGEND("pseudo", title="Your identifier on the site")
+    legend_pseudo = html.LEGEND("pseudo", title="Votre identifiant sur le site")
     form <= legend_pseudo
     input_pseudo = html.INPUT(type="text", value="")
     form <= input_pseudo
     form <= html.BR()
 
-    legend_password = html.LEGEND("password", title="To prevent others from playing for you ;-)")
+    legend_password = html.LEGEND("mot de passe", title="Pour empêcher les autres de jouer à votre place;-)")
     form <= legend_password
     input_password = html.INPUT(type="password", value="")
     form <= input_password
     form <= html.BR()
 
-    legend_password_again = html.LEGEND("password again", title="So you do not mistype password")
+    legend_password_again = html.LEGEND("mot de passe encore", title="Pour éviter une faute de frappe sur le mot de passe")
     form <= legend_password_again
     input_password_again = html.INPUT(type="password", value="")
     form <= input_password_again
     form <= html.BR()
 
-    legend_email = html.LEGEND("email (*)", title="The site will use it to notify you of events")
+    legend_email = html.LEGEND("email (*)", title="Le site vous notifiera des événements")
     form <= legend_email
     input_email = html.INPUT(type="email", value="", size="40")
     form <= input_email
     form <= html.BR()
 
-    legend_telephone = html.LEGEND("telephone (*)", title="To reach you in case of emergency")
+    legend_telephone = html.LEGEND("téléphone (*)", title="En cas d'urgence")
     form <= legend_telephone
     input_telephone = html.INPUT(type="tel", value="")
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok to replace", title="Can we drag you in a game ?")
+    legend_replace = html.LEGEND("ok pour remplacer", title="Pouvons nous vous mettre dans une partie ?")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=False)
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("family name", title="To know you in real life - beware diacritics will be removed")
+    legend_family_name = html.LEGEND("nom", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value="")
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("first name", title="To know you in real life - beware diacritics will be removed")
+    legend_first_name = html.LEGEND("prénom", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value="")
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country", title="Undecided yet if nationality or residence - choose in list")
+    legend_country = html.LEGEND("pays", title="Mettez votre nationalité ou lieu de résidence")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
 
@@ -177,7 +177,7 @@ def create_account():
     form <= input_country
     form <= html.BR()
 
-    legend_timezone = html.LEGEND("time zone", title="To understand better when you are awake - choose in list")
+    legend_timezone = html.LEGEND("fuseau horaire", title="Pour mieux comprendre vos heures d'éveil")
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
@@ -192,7 +192,7 @@ def create_account():
 
     form <= html.BR()
 
-    input_create_account = html.INPUT(type="submit", value="create account")
+    input_create_account = html.INPUT(type="submit", value="créer le compte")
     input_create_account.bind("click", create_account_callback)
     form <= input_create_account
 
@@ -215,16 +215,16 @@ def change_password():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Password changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Votre mot de passe a été changé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         new_password = input_new_password.value
         if not new_password:
-            alert("New password is missing")
+            alert("Nouveau mot de passe manquant")
             return
 
         new_password_again = input_new_password_again.value
         if new_password_again != new_password:
-            alert("Passwords do not match")
+            alert("Les mots de passe ne correspondent pas")
             return
 
         json_dict = {
@@ -240,20 +240,20 @@ def change_password():
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
 
     form = html.FORM()
 
-    legend_new_password = html.LEGEND("new password")
+    legend_new_password = html.LEGEND("nouveau mot de passe")
     form <= legend_new_password
     input_new_password = html.INPUT(type="password", value="")
     form <= input_new_password
     form <= html.BR()
 
-    legend_new_password_again = html.LEGEND("new_password again")
+    legend_new_password_again = html.LEGEND("nouveau mot de passe encore")
     form <= legend_new_password_again
     input_new_password_again = html.INPUT(type="password", value="")
     form <= input_new_password_again
@@ -261,7 +261,7 @@ def change_password():
 
     form <= html.BR()
 
-    input_change_password = html.INPUT(type="submit", value="change password")
+    input_change_password = html.INPUT(type="submit", value="changer le mot de passe")
     input_change_password.bind("click", change_password_callback)
     form <= input_change_password
     form <= html.BR()
@@ -285,22 +285,22 @@ def validate_email():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Congratulations, your account/email was validated : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Félicitations, votre email a été validé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         confirmation_code = int(input_confirmation_code.value)
 
         if not confirmation_code:
-            alert("Confirmation code is missing")
+            alert("Code de confirmation manquant")
             return
 
         try:
             confirmation_code_int = int(confirmation_code)
         except:  # noqa: E722 pylint: disable=bare-except
-            alert("Confirmation code is incorrect")
+            alert("Code de confirmation incorrect")
             return
 
         if not 1000 <= confirmation_code_int <= 9999:
-            alert("Confirmation code should use 4 digits")
+            alert("Le code de confirmation doit utiliser 4 chiffres")
             return
 
         json_dict = {
@@ -316,14 +316,14 @@ def validate_email():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
 
     form = html.FORM()
 
-    legend_confirmation_code = html.LEGEND("confirmation code")
+    legend_confirmation_code = html.LEGEND("code de confirmation")
     form <= legend_confirmation_code
     input_confirmation_code = html.INPUT(type="number", value="", required=True)
     form <= input_confirmation_code
@@ -331,7 +331,7 @@ def validate_email():
 
     form <= html.BR()
 
-    input_validate_email = html.INPUT(type="submit", value="validate email")
+    input_validate_email = html.INPUT(type="submit", value="valider l'email")
     input_validate_email.bind("click", validate_email_callback)
     form <= input_validate_email
     form <= html.BR()
@@ -343,7 +343,7 @@ def edit_account():
     """ edit_account """
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -394,7 +394,7 @@ def edit_account():
 
             pseudo_loaded = req_result['pseudo']
             if pseudo_loaded != pseudo:
-                alert("Wierd. Pseudo is different !")
+                alert("Etrange. Le pseudo est différent !")
                 status = False
                 return
 
@@ -432,14 +432,14 @@ def edit_account():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Account changed : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Votre compte a été changé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         email = input_email.value
         if not email:
-            alert("email is missing")
+            alert("email manquant")
             return
         if email.find('@') == -1:
-            alert("@ in email is missing")
+            alert("@ dans email manquant")
             return
 
         telephone = input_telephone.value
@@ -477,49 +477,49 @@ def edit_account():
     form <= information_about_account()
     form <= html.BR()
 
-    legend_pseudo = html.LEGEND("pseudo", title="(for recall)")
+    legend_pseudo = html.LEGEND("pseudo", title="(pour rappel)")
     form <= legend_pseudo
     input_pseudo = html.INPUT(type="text", readonly=True, value=pseudo)
     form <= input_pseudo
     form <= html.BR()
 
-    legend_email = html.LEGEND("email (*)", title="The site will use it to notify you of events")
+    legend_email = html.LEGEND("email (*)", title="Le site vous notifiera des événements")
     form <= legend_email
     input_email = html.INPUT(type="email", value=email_loaded, size="40")
     form <= input_email
     form <= html.BR()
 
-    legend_email_confirmed = html.LEGEND("email confirmed (*)", title="(for information)")
+    legend_email_confirmed = html.LEGEND("email confirmé (*)", title="(pour information)")
     form <= legend_email_confirmed
     input_email_confirmed = html.INPUT(type="checkbox", readonly=True, checked=email_confirmed_loaded)
     form <= input_email_confirmed
     form <= html.BR()
 
-    legend_telephone = html.LEGEND("telephone (*)", title="To reach you in case of emergency")
+    legend_telephone = html.LEGEND("téléphone (*)", title="En cas d'urgence")
     form <= legend_telephone
     input_telephone = html.INPUT(type="tel", value=telephone_loaded)
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok to replace", title="Can we drag you in a game ?")
+    legend_replace = html.LEGEND("ok pour remplacer", title="Pouvons nous vous mettre dans une partie ?")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("family name", title="To know you in real life")
+    legend_family_name = html.LEGEND("nom", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value=family_name_loaded)
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("first name", title="To know you in real life")
+    legend_first_name = html.LEGEND("prénom", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value=first_name_loaded)
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("country", title="To know you in real life")
+    legend_country = html.LEGEND("pays", title="Mettez votre nationalité ou lieu de résidence")
     form <= legend_country
     input_country = html.SELECT(type="select-one", value="")
 
@@ -532,7 +532,7 @@ def edit_account():
     form <= input_country
     form <= html.BR()
 
-    legend_timezone = html.LEGEND("time zone", title="To understand better when you are awake")
+    legend_timezone = html.LEGEND("fuseau horaire", title="Pour mieux comprendre vos heures d'éveil")
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
@@ -547,7 +547,7 @@ def edit_account():
 
     form <= html.BR()
 
-    input_change_account = html.INPUT(type="submit", value="change account")
+    input_change_account = html.INPUT(type="submit", value="changer le compte")
     input_change_account.bind("click", change_account_callback)
     form <= input_change_account
 
@@ -558,7 +558,7 @@ def delete_account():
     """ delete_account """
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -576,7 +576,7 @@ def delete_account():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Your account was deleted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Votre compte a été supprimé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
             login.logout()
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -593,7 +593,7 @@ def delete_account():
     form = html.FORM()
     my_sub_panel <= form
 
-    input_delete_account = html.INPUT(type="submit", value="delete account")
+    input_delete_account = html.INPUT(type="submit", value="supprimer le compte")
     input_delete_account.bind("click", delete_account_callback)
     form <= input_delete_account
     form <= html.BR()

@@ -55,13 +55,13 @@ def join_game():
     """ join_game """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -78,7 +78,7 @@ def join_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Game joined : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Vous avez rejoint la partie : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -100,7 +100,7 @@ def join_game():
 
     form = html.FORM()
 
-    input_join_game = html.INPUT(type="submit", value="join game")
+    input_join_game = html.INPUT(type="submit", value="rejoindre la partie")
     input_join_game.bind("click", join_game_callback)
     form <= input_join_game
 
@@ -111,13 +111,13 @@ def quit_game():
     """ quit_game """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -134,7 +134,7 @@ def quit_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Game quitted : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Vous avez quitté la partie : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -157,7 +157,7 @@ def quit_game():
 
     form = html.FORM()
 
-    input_quit_game = html.INPUT(type="submit", value="quit game")
+    input_quit_game = html.INPUT(type="submit", value="quitter la partie")
     input_quit_game.bind("click", quit_game_callback)
     form <= input_quit_game
 
@@ -168,13 +168,13 @@ def move_players_in_game():
     """ move_players_in_game """
 
     if 'GAME' not in storage:
-        alert("Please select game beforehand")
+        alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Please login beforehand")
+        alert("Il faut se loguer au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -194,7 +194,7 @@ def move_players_in_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Player was put in game: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Le joueur a été mis dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
             # back to where we started
             move_players_in_game()
 
@@ -233,7 +233,7 @@ def move_players_in_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Player was removed from game: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Le joueur a été retiré de la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
             # back to where we started
             move_players_in_game()
 
@@ -278,7 +278,7 @@ def move_players_in_game():
 
     # ---
 
-    legend_incomer = html.LEGEND("Incoming", title="Select player to put in game")
+    legend_incomer = html.LEGEND("Entrant", title="Sélectionner le joueur à mettre dans la partie")
     legend_incomer.style = {
         'color': 'red',
     }
@@ -306,7 +306,7 @@ def move_players_in_game():
 
     form <= html.BR()
 
-    input_put_in_game = html.INPUT(type="submit", value="put in game")
+    input_put_in_game = html.INPUT(type="submit", value="mettre dans la partie")
     input_put_in_game.bind("click", put_in_game_callback)
     form <= input_put_in_game
 
@@ -314,7 +314,7 @@ def move_players_in_game():
     form <= html.BR()
     form <= html.BR()
 
-    legend_outcomer = html.LEGEND("Outcoming", title="Select player to remove from game")
+    legend_outcomer = html.LEGEND("Sortant", title="Sélectionner le joueur à retirer de la partie")
     legend_outcomer.style = {
         'color': 'red',
     }
@@ -330,7 +330,7 @@ def move_players_in_game():
 
     form <= html.BR()
 
-    input_remove_from_game = html.INPUT(type="submit", value="remove from game")
+    input_remove_from_game = html.INPUT(type="submit", value="retirer de la partie")
     input_remove_from_game.bind("click", remove_from_game_callback)
     form <= input_remove_from_game
 
