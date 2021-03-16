@@ -11,9 +11,9 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import common
 
-my_panel = html.DIV(id="games")
+my_panel = html.DIV(id="pairing")
 
-OPTIONS = ['join game', 'quit game', 'move players in game']
+OPTIONS = ['rejoindre une partie', 'quitter une partie', 'déplacer des joueurs']
 
 
 def get_game_allocated_players(game_id):
@@ -356,16 +356,15 @@ my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
 
-
 def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
-    if item_name == 'join game':
+    if item_name == 'rejoindre une partie':
         join_game()
-    if item_name == 'quit game':
+    if item_name == 'quitter une partie':
         quit_game()
-    if item_name == 'move players in game':
+    if item_name == 'déplacer des joueurs':
         move_players_in_game()
 
     global item_name_selected  # pylint: disable=invalid-name

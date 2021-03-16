@@ -12,7 +12,7 @@ import config
 import common
 import login
 
-OPTIONS = ['create', 'change password', 'validate email', 'edit', 'delete']
+OPTIONS = ['créer', 'mot de passe', 'valider mon email', 'editer', 'supprimer']
 
 MAX_LEN_PSEUDO = 20
 
@@ -617,20 +617,19 @@ my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
 
-
 def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
-    if item_name == 'create':
+    if item_name == 'créer':
         create_account()
-    if item_name == 'change password':
+    if item_name == 'mot de passe':
         change_password()
-    if item_name == 'validate email':
+    if item_name == 'valider mon email':
         validate_email()
-    if item_name == 'edit':
+    if item_name == 'editer':
         edit_account()
-    if item_name == 'delete':
+    if item_name == 'supprimer':
         delete_account()
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
