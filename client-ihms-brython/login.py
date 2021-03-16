@@ -92,7 +92,7 @@ input_pseudo = html.INPUT(type="text", value=PROPOSED_PSEUDO)
 form1 <= input_pseudo
 form1 <= html.BR()
 
-legend_password = html.LEGEND("password")
+legend_password = html.LEGEND("mot de passe")
 form1 <= legend_password
 input_password = html.INPUT(type="password", value="")
 form1 <= input_password
