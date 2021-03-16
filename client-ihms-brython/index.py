@@ -30,7 +30,7 @@ h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
 
-OPTIONS = ['home', 'login', 'select game', 'lists', 'my account', 'edit games', 'pairing', 'play game', 'edit position', 'use sandbox', 'technical corner']
+OPTIONS = ['accueil', 'login', 'selection partie', 'listes', 'mon compte', 'editer parties', 'appariement', 'jouer', 'editer position', 'bac à sable', 'coin technique']
 
 # overall_top
 overall_top = html.DIV()
@@ -55,31 +55,34 @@ menu_left <= menu_selection
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
 
+OPTIONS = ['', 'login', '', 'listes', '', 's', '', 'jouer', 'boite à outils', 'bac à sable', 'coin technique']
+
+
 def load_option(_, item_name):
     """ load_option """
 
     panel_middle.clear()
-    if item_name == 'home':
+    if item_name == 'accueil':
         home.render(panel_middle)
-    if item_name == 'select game':
-        selection.render(panel_middle)
     if item_name == 'login':
         login.render(panel_middle)
-    if item_name == 'lists':
+    if item_name == 'selection partie':
+        selection.render(panel_middle)
+    if item_name == 'listes':
         lists.render(panel_middle)
-    if item_name == 'my account':
+    if item_name == 'mon compte':
         account.render(panel_middle)
-    if item_name == 'edit games':
+    if item_name == 'editer parties':
         games.render(panel_middle)
-    if item_name == 'pairing':
+    if item_name == 'appariement':
         pairing.render(panel_middle)
-    if item_name == 'play game':
+    if item_name == 'jouer':
         play.render(panel_middle)
-    if item_name == 'edit position':
-        position.render(panel_middle)
-    if item_name == 'use sandbox':
+    if item_name == 'boite à outils':
+        tools.render(panel_middle)
+    if item_name == 'bac à sable':
         sandbox.render(panel_middle)
-    if item_name == 'technical corner':
+    if item_name == 'coin technique':
         technical.render(panel_middle)
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
