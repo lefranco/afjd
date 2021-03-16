@@ -5,7 +5,7 @@
 from browser import html  # pylint: disable=import-error
 
 
-my_panel = html.DIV(id="position")
+my_panel = html.DIV(id="tools")
 
 
 my_panel <= """

@@ -17,7 +17,7 @@ import mapping
 
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
-OPTIONS = ['game status', 'game position', 'submit orders', 'negotiate', 'game master', 'all game parameters', 'players in game']
+OPTIONS = ['game status', 'position', 'soumettre', 'négocier', 'arbitrer', 'paramètres', 'joueurs']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -1284,17 +1284,17 @@ def load_option(_, item_name):
     my_sub_panel.clear()
     if item_name == 'game status':
         show_status()
-    if item_name == 'game position':
+    if item_name == 'position':
         show_position()
-    if item_name == 'submit orders':
+    if item_name == 'soumettre':
         submit_orders()
-    if item_name == 'negotiate':
+    if item_name == 'négocier':
         negotiate()
-    if item_name == 'game master':
+    if item_name == 'arbitrer':
         game_master()
-    if item_name == 'all game parameters':
+    if item_name == 'paramètres':
         show_game_parameters()
-    if item_name == 'players in game':
+    if item_name == 'joueurs':
         show_players_in_game()
 
     global item_name_selected  # pylint: disable=invalid-name

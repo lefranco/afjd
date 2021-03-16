@@ -30,7 +30,7 @@ h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
 
-OPTIONS = ['accueil', 'login', 'selection partie', 'listes', 'mon compte', 'editer parties', 'appariement', 'jouer', 'editer position', 'bac à sable', 'coin technique']
+OPTIONS = ['accueil', 'login', 'sélectionner partie', 'listes', 'mon compte', 'éditer parties', 'appariement', 'jouer', 'boîte à outils', 'bac à sable', 'coin technique']
 
 # overall_top
 overall_top = html.DIV()
@@ -63,19 +63,19 @@ def load_option(_, item_name):
         home.render(panel_middle)
     if item_name == 'login':
         login.render(panel_middle)
-    if item_name == 'selection partie':
+    if item_name == 'sélectionner partie':
         selection.render(panel_middle)
     if item_name == 'listes':
         lists.render(panel_middle)
     if item_name == 'mon compte':
         account.render(panel_middle)
-    if item_name == 'editer parties':
+    if item_name == 'éditer parties':
         games.render(panel_middle)
     if item_name == 'appariement':
         pairing.render(panel_middle)
     if item_name == 'jouer':
         play.render(panel_middle)
-    if item_name == 'boite à outils':
+    if item_name == 'boîte à outils':
         tools.render(panel_middle)
     if item_name == 'bac à sable':
         sandbox.render(panel_middle)

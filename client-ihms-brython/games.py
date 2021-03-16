@@ -16,7 +16,7 @@ import selection
 
 my_panel = html.DIV(id="games")
 
-OPTIONS = ['create', 'change description', 'change access parameters', 'change deadline', 'change pace parameters', 'change state', 'delete']
+OPTIONS = ['créer', 'changer description', 'changer paramètres accès', 'changer date limite', 'changer paramètre cadence', 'changer état', 'supprimer']
 
 MAX_LEN_NAME = 30
 
@@ -1191,24 +1191,23 @@ my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
 
-
 def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
-    if item_name == 'create':
+    if item_name == 'créer':
         create_game()
-    if item_name == 'change description':
+    if item_name == 'changer description':
         change_description_game()
-    if item_name == 'change access parameters':
+    if item_name == 'changer paramètres accès':
         change_access_parameters_game()
-    if item_name == 'change deadline':
+    if item_name == 'changer date limite':
         change_deadline_game()
-    if item_name == 'change pace parameters':
+    if item_name == 'changer paramètre cadence':
         change_pace_parameters_game()
-    if item_name == 'change state':
+    if item_name == 'changer état':
         change_state_game()
-    if item_name == 'delete':
+    if item_name == 'supprimer':
         delete_game()
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
