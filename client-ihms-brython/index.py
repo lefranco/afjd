@@ -15,6 +15,7 @@ import play
 import tools
 import sandbox
 import technical
+import admin
 
 
 # TITLE
@@ -30,7 +31,7 @@ h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
 
-OPTIONS = ['accueil', 'login', 'sélectionner partie', 'listes', 'mon compte', 'éditer parties', 'appariement', 'jouer', 'boîte à outils', 'bac à sable', 'coin technique']
+OPTIONS = ['accueil', 'login', 'sélectionner partie', 'listes', 'mon compte', 'éditer parties', 'appariement', 'jouer', 'boîte à outils', 'bac à sable', 'coin technique', 'administration']
 
 # overall_top
 overall_top = html.DIV()
@@ -81,6 +82,8 @@ def load_option(_, item_name):
         sandbox.render(panel_middle)
     if item_name == 'coin technique':
         technical.render(panel_middle)
+    if item_name == 'administration':
+        admin.render(panel_middle)
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 
