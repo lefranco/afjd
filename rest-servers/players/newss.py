@@ -16,13 +16,12 @@ class News:
     """ Class for handling a news """
 
     @staticmethod
-    def inventory() -> typing.List['News']:
-        """ class inventory : gives a list of all objects in database """
-        newss_found = database.sql_execute("SELECT content FROM newss", need_result=True)
-        if not newss_found:
-            return []
-        newss_list = [n[0] for n in newss_found]
-        return newss_list
+    def content() -> str:
+        """ get content """
+
+        content_found = database.sql_execute("SELECT contyent FROM newss", None, need_result=True)
+        content = content_found[0][0]  # type: ignore
+        return content  # type: ignore
 
     @staticmethod
     def create_table() -> None:

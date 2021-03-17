@@ -400,9 +400,9 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/news - GET - get the latest news")
 
-        newss_list = newss.News.inventory()
-        print(f"{newss_list=}")
-        data = newss_list[0]
+        news_content = newss.News.content()
+        print(f"{news_content=}")
+        data = news_content
 
         return data, 200
 
