@@ -18,7 +18,7 @@ my_panel <= link1
 title2 = html.H2("Dernières nouvelles")
 my_panel <= title2
 
-news_content = common.get_news_content()
+news_content = common.get_news_content()  # pylint: disable=invalid-name
 if news_content is not None:
     for line in news_content.split("\n"):
         my_panel <= html.EM(line)
