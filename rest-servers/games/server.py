@@ -1082,7 +1082,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 @API.resource('/game-orders-submitted/<game_id>')
-class GameOrderRessource(flask_restful.Resource):  # type: ignore
+class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
     """ GameOrderRessource """
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
