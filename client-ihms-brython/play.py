@@ -1041,8 +1041,6 @@ def game_master():
         # put role : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-
-
     def get_roles_submitted_orders():
         """ get_roles_submitted_orders """
 
