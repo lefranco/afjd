@@ -997,12 +997,10 @@ def game_master():
                     alert("Undocumented issue from server")
                 return
 
-        # find player pseudo (should not be needed actually)
-
         json_dict = {
             'game_id': game_id,
             'role_id': role_id,
-            'player_pseudo': player_pseudo,
+            'player_pseudo': pseudo_removed,
             'delete': 1,
             'pseudo': pseudo,
         }
@@ -1021,7 +1019,7 @@ def game_master():
 
         def reply_callback(req):
             req_result = json.loads(req.text)
-            if req.status != 200:
+            if req.status != 201:
                 if 'message' in req_result:
                     alert(f"Error allocating role to game: {req_result['message']}")
                 elif 'msg' in req_result:
@@ -1046,6 +1044,37 @@ def game_master():
 
         # put role : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def get_list_pseudo_allocatable_game(id2pseudo):
+        """ get_list_pseudo_allocatable_game """
+
+        pseudo_list = None
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error getting list pseudo allocatable game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem getting list pseudo allocatable game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            req_result = json.loads(req.text)
+            nonlocal pseudo_list
+            pseudo_list = [id2pseudo[int(k)] for k,v in req_result.items() if v == -1]
+            return pseudo_list
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-allocations/{game_id}"
+
+        # get roles that are allocated to game : do not need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return pseudo_list
 
     def get_roles_submitted_orders():
         """ get_roles_submitted_orders """
@@ -1212,9 +1241,14 @@ def game_master():
     role2pseudo = {v: k for k, v in game_players_dict.items()}
 
     submitted_roles_list = get_roles_submitted_orders()
+    if submitted_roles_list is None:
+        return
 
     # just to avoid a warning
     submitted_roles_list = list(submitted_roles_list)
+
+    # who can I put in this role
+    possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
 
     for role_id in variant_data.roles:
 
@@ -1235,9 +1269,12 @@ def game_master():
         row <= col
 
         # player
-        player_id_str = role2pseudo[role_id]
-        player_id = int(player_id_str)
-        pseudo_there = id2pseudo[player_id]
+        if role_id in role2pseudo:
+            player_id_str = role2pseudo[role_id]
+            player_id = int(player_id_str)
+            pseudo_there = id2pseudo[player_id]
+        else:
+            pseudo_there = " "
         col = html.TD(pseudo_there)
         col.style = {
             "border": "solid",
@@ -1271,9 +1308,6 @@ def game_master():
         row <= col
 
         form = html.FORM()
-
-        # TODO
-        possible_given_role = ["alpha", "beta", "gamma"]
 
         input_for_role = html.SELECT(type="select-one", value="", display='inline')
         for play_role_pseudo in sorted(possible_given_role):
