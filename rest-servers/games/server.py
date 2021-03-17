@@ -86,6 +86,7 @@ ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 ROLE_ALLOCATION_PARSER = flask_restful.reqparse.RequestParser()
 ROLE_ALLOCATION_PARSER.add_argument('game_id', type=int, required=True)
+ROLE_ALLOCATION_PARSER.add_argument('player_pseudo', type=str, required=True)
 ROLE_ALLOCATION_PARSER.add_argument('role_id', type=int, required=True)
 ROLE_ALLOCATION_PARSER.add_argument('delete', type=int, required=True)
 ROLE_ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
@@ -509,8 +510,8 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         args = ALLOCATION_PARSER.parse_args(strict=True)
         game_id = args['game_id']
         player_pseudo = args['player_pseudo']
-        pseudo = args['pseudo']
         delete = args['delete']
+        pseudo = args['pseudo']
 
         mylogger.LOGGER.info("game_id=%s player_pseudo=%s delete=%s", game_id, player_pseudo, delete)
 
@@ -622,11 +623,12 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
 
         args = ROLE_ALLOCATION_PARSER.parse_args(strict=True)
         game_id = args['game_id']
+        player_pseudo = args['player_pseudo']
         role_id = args['role_id']
-        pseudo = args['pseudo']
         delete = args['delete']
+        pseudo = args['pseudo']
 
-        mylogger.LOGGER.info("game_id=%s player_pseudo=%s delete=%s", game_id, player_pseudo, delete)
+        mylogger.LOGGER.info("game_id=%s role_id=%s player_pseudo=%s delete=%s", role_id, game_id, player_pseudo, delete)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to move role in game")

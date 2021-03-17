@@ -1509,10 +1509,10 @@ def show_players_in_game():
         my_sub_panel <= html.BR()
         my_sub_panel <= html.EM("Les pseudos suivants sont alloués à la partie sans rôle:")
         for dangling_player_id_str in dangling_players:
+            my_sub_panel <= html.BR()
             dangling_player_id = int(dangling_player_id_str)
             dangling_player = id2pseudo[dangling_player_id]
-            my_sub_panel <= html.B(html.B(dangling_player))
-            my_sub_panel <= " "
+            my_sub_panel <= html.B(html.EM(dangling_player))
 
 
 def show_history():
