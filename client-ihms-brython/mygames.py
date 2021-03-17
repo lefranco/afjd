@@ -77,12 +77,12 @@ def my_games():
         "border": "solid",
     }
 
-    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played']
+    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played', 'orders_submitted']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played':'rôle joué'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played':'rôle joué', 'orders_submitted':'ordres soumis'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
@@ -123,6 +123,10 @@ def my_games():
             return
         data['role_played'] = role_id
 
+        submitted_roles_list = common.get_roles_submitted_orders(game_id)
+        if submitted_roles_list is None:
+            return
+
         row = html.TR()
         row.style = {
             "border": "solid",
@@ -151,13 +155,21 @@ def my_games():
                 value = f"{advancement_season_readable} {advancement_year}"
 
             if field == 'role_played':
-                role_id = value
                 if role_id == -1:
                     value = "Affecté"
                 elif role_id == 0:
                     value = "Arbitre"
                 else:
                     value = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+
+            if field == 'orders_submitted':
+                if role_id > 0:
+                    if role_id in submitted_roles_list:
+                        value = html.IMG(src="./data/orders_are_in.gif")
+                    else:
+                        value = html.IMG(src="./data/orders_are_not_in.gif")
+                else:
+                    value = "Non applicable"
 
             col = html.TD(value)
             col.style = {
