@@ -1102,7 +1102,7 @@ def change_state_game():
     form <= information_about_game()
     form <= html.BR()
 
-    legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours, terminé.")
+    legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours ou terminée.")
     form <= legend_state
 
     input_state = html.SELECT(type="select-one", value="")

@@ -10,7 +10,7 @@ TIMEOUT_SERVER = 2
 REMOVE_AFTER = 5
 
 # to display state of a game
-STATE_CODE_TABLE = {'waiting': 0, 'ongoing': 1, 'finished': 2}
+STATE_CODE_TABLE = {'en attente': 0, 'en cours': 1, 'terminée': 2}
 
 # load servers list from json data file
 with open("./config/servers.json", "r") as read_file:
