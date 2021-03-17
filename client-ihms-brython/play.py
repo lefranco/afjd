@@ -981,10 +981,10 @@ def game_master():
 
         alert("Désolé: la mise en désordre civil n'est pas implémentée - vous pouvez passer les ordres à la place du joueur en tant qu'arbitre en attendant...")
 
-    def unallocate_role_callback(_, role_id):
+    def unallocate_role_callback(_, pseudo_removed, role_id):
         """ unallocate_role_callback """
 
-        print(f"unallocate_role_callback {role_id}")
+        print(f"unallocate_role_callback {pseudo_removed} {role_id}")
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -997,11 +997,14 @@ def game_master():
                     alert("Undocumented issue from server")
                 return
 
+        # find player pseudo (should not be needed actually)
+
         json_dict = {
             'game_id': game_id,
             'role_id': role_id,
+            'player_pseudo': player_pseudo,
+            'delete': 1,
             'pseudo': pseudo,
-            'delete': 1
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -1027,11 +1030,14 @@ def game_master():
                     alert("Undocumented issue from server")
                 return
 
+        player_pseudo = input_for_role.value
+
         json_dict = {
             'game_id': game_id,
             'role_id': role_id,
+            'player_pseudo': player_pseudo,
+            'delete': 0,
             'pseudo': pseudo,
-            'delete': 0
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -1257,7 +1263,7 @@ def game_master():
         row <= col
 
         input_unallocate_role = html.INPUT(type="submit", value="retirer le rôle")
-        input_unallocate_role.bind("click", lambda e, r=role_id: unallocate_role_callback(e, r))
+        input_unallocate_role.bind("click", lambda e, p=pseudo_there, r=role_id: unallocate_role_callback(e, p, r))
         col = html.TD(input_unallocate_role)
         col.style = {
             "border": "solid",
