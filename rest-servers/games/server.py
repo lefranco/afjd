@@ -572,7 +572,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         # abort if has a role
         raw_allocations = allocations.Allocation.list_by_game_id(game_id)
-        if player_id in [r[2] for r in raw_allocations if r[2] != -1]:
+        if player_id in [r[1] for r in raw_allocations if r[2] != -1]:
             flask_restful.abort(400, msg="You cannot remove or put in the game someone already assigned a role")
 
         dangling_role_id = -1
