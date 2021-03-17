@@ -1255,7 +1255,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         # TODO : change for fast games when players can know
         # if player : can only know about his own orders
         if role_id != 0:
-            roles_list = [r for r in role_id if r == role_id]
+            roles_list = [r for r in roles_list if r == role_id]
 
         data = roles_list
         return data, 200
