@@ -13,6 +13,36 @@ def noreply_callback(_):
     alert("Problem (no answer from server)")
 
 
+def get_news_content():
+    """ get_news_content """
+
+    news_content = None
+
+    def reply_callback(req):
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting news content: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting news content: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+        nonlocal news_content
+        news_content = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/news"
+
+    # get news : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return news_content
+
+
 def get_player_id(pseudo):
     """ get_player_id """
 

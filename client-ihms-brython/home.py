@@ -4,6 +4,7 @@
 
 from browser import html  # pylint: disable=import-error
 
+import common
 
 my_panel = html.DIV(id="home")
 
@@ -17,7 +18,9 @@ my_panel <= link1
 title2 = html.H2("Dernières nouvelles")
 my_panel <= title2
 
-my_panel <= "xxx"
+news_content = common.get_news_content()
+if news_content is not None:
+    my_panel <= html.EM(news_content)
 
 my_panel <= html.H2("Une version simplifiée des règles du Jeu")
 
