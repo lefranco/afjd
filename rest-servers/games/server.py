@@ -593,19 +593,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-@API.resource('/role-allocations')
+@API.resource('/role-allocations/<game_id>')
 class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
     """ AllocationListRessource """
 
@@ -716,22 +704,6 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         # report
         data = {'msg': 'Ok role-allocation deleted if present'}
         return data, 200
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 @API.resource('/game-allocations/<game_id>')
