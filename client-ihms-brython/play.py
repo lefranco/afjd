@@ -976,7 +976,7 @@ def negotiate():
 def game_master():
     """ game_master """
 
-    def civil_disorder_callback(_, role_id):
+    def civil_disorder_callback(_, __):
         """ civil_disorder_callback """
 
         alert("Désolé: la mise en désordre civil n'est pas implémentée - vous pouvez passer les ordres à la place du joueur en tant qu'arbitre en attendant...")
@@ -997,12 +997,12 @@ def game_master():
                     alert("Undocumented issue from server")
                 return
 
-            json_dict = {
-                'game_id': game_id,
-                'role_id': role_id,
-                'pseudo': pseudo,
-                'delete': 1
-            }
+        json_dict = {
+            'game_id': game_id,
+            'role_id': role_id,
+            'pseudo': pseudo,
+            'delete': 1
+        }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -1027,12 +1027,12 @@ def game_master():
                     alert("Undocumented issue from server")
                 return
 
-            json_dict = {
-                'game_id': game_id,
-                'role_id': role_id,
-                'pseudo': pseudo,
-                'delete': 0
-            }
+        json_dict = {
+            'game_id': game_id,
+            'role_id': role_id,
+            'pseudo': pseudo,
+            'delete': 0
+        }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -1207,8 +1207,10 @@ def game_master():
 
     role2pseudo = {v: k for k, v in game_players_dict.items()}
 
-
     submitted_roles_list = get_roles_submitted_orders()
+
+    # just to avoid a warning
+    submitted_roles_list = list(submitted_roles_list)
 
     for role_id in variant_data.roles:
 
@@ -1420,6 +1422,9 @@ def show_players_in_game():
     if not game_players_dict:
         return
 
+    # just to avoid a warning
+    game_players_dict = dict(game_players_dict)
+
     # get the players (all players)
     players_dict = common.get_players()
 
@@ -1504,7 +1509,7 @@ def show_players_in_game():
     my_sub_panel <= game_players_table
 
     # add the non allocated players
-    dangling_players = [p for p in game_players_dict if game_players_dict[p] == - 1]
+    dangling_players = [p for p in game_players_dict.keys() if game_players_dict[p] == - 1]
     if dangling_players:
         my_sub_panel <= html.BR()
         my_sub_panel <= html.EM("Les pseudos suivants sont alloués à la partie sans rôle:")
