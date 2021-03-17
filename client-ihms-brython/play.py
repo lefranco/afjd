@@ -991,6 +991,36 @@ def game_master():
 
         print(f"allocate_role_callback {input_for_role.value} {role_id}")
 
+    def get_roles_submitted_orders():
+        """ get_roles_submitted_orders """
+
+        roles_list = None
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error getting roles submitted orders: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem getting roles submitted orders: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+            req_result = json.loads(req.text)
+            nonlocal roles_list
+            roles_list = req_result
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-orders-submitted/{game_id}"
+
+        # get roles that submitted orders : need token (but may change)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return roles_list
+
     def adjudicate_callback(_):
         """ adjudicate_callback """
 
@@ -1125,6 +1155,9 @@ def game_master():
 
     role2pseudo = {v: k for k, v in game_players_dict.items()}
 
+
+    submitted_roles_list = get_roles_submitted_orders()
+
     for role_id in variant_data.roles:
 
         # discard game master
@@ -1153,8 +1186,10 @@ def game_master():
         }
         row <= col
 
-        # TODO : consider open/close whethor orders are in or not
-        order_status_icon_img = html.IMG(src="./data/orders_are_not_in.gif")
+        if role_id in submitted_roles_list:
+            order_status_icon_img = html.IMG(src="./data/orders_are_in.gif")
+        else:
+            order_status_icon_img = html.IMG(src="./data/orders_are_not_in.gif")
         col = html.TD(order_status_icon_img)
         col.style = {
             "border": "solid",

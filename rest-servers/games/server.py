@@ -1087,7 +1087,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
-        Gets list of roles which have sublmitted orders
+        Gets list of roles which have submitted orders
         EXPOSED
         """
 
