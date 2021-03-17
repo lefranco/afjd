@@ -1006,7 +1006,7 @@ def game_master():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/role-allocations/{game_id}"
+        url = f"{host}:{port}/role-allocations"
 
         # put role : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -1036,7 +1036,7 @@ def game_master():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/role-allocations/{game_id}"
+        url = f"{host}:{port}/role-allocations"
 
         # put role : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)

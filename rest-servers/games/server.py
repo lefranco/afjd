@@ -593,7 +593,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/role-allocations/<game_id>')
+@API.resource('/role-allocations')
 class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
     """ AllocationListRessource """
 
