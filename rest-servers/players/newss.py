@@ -39,7 +39,7 @@ class News:
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO newss (content) VALUES (?,)", (self._content,))
+        database.sql_execute("INSERT OR REPLACE INTO newss (content) VALUES (?)", (self._content,))
 
     def __str__(self) -> str:
         return f"content={self._content}"
