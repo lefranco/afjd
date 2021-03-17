@@ -947,7 +947,7 @@ def submit_orders():
 def negotiate():
     """ negotiate """
 
-    dummy = html.P("Sorry, negotiate is not implemented here yet...")
+    dummy = html.P("Sorry, negotiate is not implemented yet...")
     my_sub_panel <= dummy
 
 
@@ -1269,7 +1269,7 @@ def show_players_in_game():
 def show_history():
     """ show_history """
 
-    dummy = html.P("Sorry, history is not implemented here yet...")
+    dummy = html.P("Sorry, history is not implemented yet...")
     my_sub_panel <= dummy
 
 
