@@ -979,7 +979,7 @@ def game_master():
     def civil_disorder_callback(_, role_id):
         """ civil_disorder_callback """
 
-        print(f"civil_disorder_callback {role_id}")
+        alert("Désolé: la mise en désordre civil n'est pas implémentée - vous pouvez passer les ordres à la place du joueur en tant qu'arbitre en attendant...")
 
     def eject_game_callback(_, role_id):
         """ eject_game_callback """
