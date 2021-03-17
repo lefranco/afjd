@@ -275,8 +275,8 @@ def move_players_in_game():
         return
     game_master_id, players_allocated_ids_list, players_assigned_ids_list = allocated
 
-    players_allocated_list = [id2pseudo[i] for i in players_allocated_ids_list]
-    players_assigned_list = [id2pseudo[i] for i in players_assigned_ids_list]
+    players_allocated_list = [id2pseudo[i] for i in list(players_allocated_ids_list)]
+    players_assigned_list = [id2pseudo[i] for i in list(players_assigned_ids_list)]
 
     form = html.FORM()
 
