@@ -484,7 +484,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 class AllocationListRessource(flask_restful.Resource):  # type: ignore
     """ AllocationListRessource """
 
-    # an allocation is a game-role-pseudo relation where role is <> -1
+    # an allocation is a game-role-pseudo relation where role is -1
 
     def get(self) -> typing.Tuple[typing.List[typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
         """
@@ -579,15 +579,15 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             if game_master_id == player_id:
                 flask_restful.abort(400, msg="You cannot remove the game master from the game")
 
-        role_id = -1
+        dangling_role_id = -1
 
         if not delete:
-            allocation = allocations.Allocation(game_id, player_id, role_id)
+            allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
             allocation.update_database()
             data = {'msg': 'Ok allocation updated or created'}
             return data, 201
 
-        allocation = allocations.Allocation(game_id, player_id, role_id)
+        allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
         allocation.delete_database()
         data = {'msg': 'Ok allocation deleted if present'}
         return data, 200

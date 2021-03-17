@@ -20,9 +20,13 @@ def get_game_allocated_players(game_id):
     """ get_available_players returns a tuple game_master + players """
 
     game_master_id = None
-    players_list = None
+    players_allocated_list = None
+    players_assigned_list = None
 
     def reply_callback(req):
+        nonlocal game_master_id
+        nonlocal players_allocated_list
+        nonlocal players_assigned_list
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -33,11 +37,10 @@ def get_game_allocated_players(game_id):
                 alert("Undocumented issue from server")
             return
         req_result = json.loads(req.text)
-        nonlocal game_master_id
         game_masters_list = [int(k) for k, v in req_result.items() if v == 0]
         game_master_id = game_masters_list.pop()
-        nonlocal players_list
-        players_list = [int(k) for k, v in req_result.items() if v != 0]
+        players_allocated_list = [int(k) for k, v in req_result.items() if v == -1]
+        players_assigned_list = [int(k) for k, v in req_result.items() if v > 0]
 
     json_dict = dict()
 
@@ -48,7 +51,7 @@ def get_game_allocated_players(game_id):
     # get players allocated to game : do not need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    return game_master_id, players_list
+    return game_master_id, players_allocated_list, players_assigned_list
 
 
 def join_game():
@@ -270,9 +273,10 @@ def move_players_in_game():
     allocated = get_game_allocated_players(game_id)
     if allocated is None:
         return
-    game_master_id, players_allocated_id_list = allocated
+    game_master_id, players_allocated_ids_list, players_assigned_ids_list = allocated
 
-    players_allocated_list = [id2pseudo[i] for i in list(players_allocated_id_list)]
+    players_allocated_list = [id2pseudo[i] for i in players_allocated_ids_list]
+    players_assigned_list = [id2pseudo[i] for i in players_assigned_ids_list]
 
     form = html.FORM()
 
@@ -289,6 +293,7 @@ def move_players_in_game():
 
     # not those already in
     possible_incomers -= set(players_allocated_list)
+    possible_incomers -= set(players_assigned_list)
 
     # not the operator
     possible_incomers -= set([pseudo])
@@ -320,8 +325,11 @@ def move_players_in_game():
     }
     form <= legend_outcomer
 
+    # players can come out are the ones not assigned
+    possible_outcomers = players_allocated_list
+
     input_outcomer = html.SELECT(type="select-one", value="")
-    for play_pseudo in sorted(players_allocated_list):
+    for play_pseudo in sorted(possible_outcomers):
         option = html.OPTION(play_pseudo)
         input_outcomer <= option
 
