@@ -126,6 +126,7 @@ def my_games():
         submitted_roles_list = common.get_roles_submitted_orders(game_id)
         if submitted_roles_list is None:
             return
+        data['orders_submitted'] = (role_id in submitted_roles_list) if role_id > 0 else None
 
         row = html.TR()
         row.style = {
@@ -163,12 +164,11 @@ def my_games():
                     value = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
 
             if field == 'orders_submitted':
-                if role_id > 0:
-                    if role_id in submitted_roles_list:
-                        value = html.IMG(src="./data/orders_are_in.gif")
-                    else:
-                        value = html.IMG(src="./data/orders_are_not_in.gif")
-                else:
+                if value is True:
+                    value = html.IMG(src="./data/orders_are_in.gif")
+                elif value is False:
+                    value = html.IMG(src="./data/orders_are_not_in.gif")
+                elif value is None:
                     value = "Non applicable"
 
             col = html.TD(value)
