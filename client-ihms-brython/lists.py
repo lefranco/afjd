@@ -55,6 +55,7 @@ def show_my_games_data():
     season year/orders in or not/deadline/messages uread/ decalarations unread
     """
 
+
 def show_players_data():
     """ show_players_data """
 
@@ -76,7 +77,7 @@ def show_players_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo':'pseudo', 'first_name':'prénom', 'family_name':'nom', 'country':'pays', 'time_zone':'fuseau horaire'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'country': 'pays', 'time_zone': 'fuseau horaire'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
@@ -123,7 +124,7 @@ def show_games_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name':'nom', 'variant':'variante', 'deadline':'date limite', 'current_state':'état', 'current_advancement':'avancement'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'avancement'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
@@ -229,7 +230,7 @@ def show_game_masters_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'game':'partie', 'master':'arbitre'}[field]
+        field_fr = {'game': 'partie', 'master': 'arbitre'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
@@ -278,6 +279,7 @@ item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
+
 
 def load_option(_, item_name):
     """ load_option """
