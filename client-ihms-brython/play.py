@@ -1219,7 +1219,7 @@ def show_players_in_game():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'player':'joueur', 'role':'role', 'flag':'drapeau'}[field]
+        field_fr = {'player': 'joueur', 'role': 'role', 'flag': 'drapeau'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
