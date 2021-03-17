@@ -8,7 +8,14 @@ Data : populate database
 """
 
 import mylogger
+import newss
 import players
+
+
+def populate_newss() -> None:
+    """ inserts these items in database """
+
+    newss.News.create_table()
 
 
 def populate_players() -> None:
@@ -22,6 +29,7 @@ def populate() -> None:
 
     mylogger.LOGGER.warning("Populating...")
 
+    populate_newss()
     populate_players()
 
 
