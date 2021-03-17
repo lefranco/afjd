@@ -570,19 +570,10 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             if pseudo != 'Palpatine':  # TODO remove PATCH !!!
                 flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the concerned player")
 
-        # game master of game can neither be added (changed) not removed
-
-        if not delete:
-            if game_master_id == player_id:
-                flask_restful.abort(400, msg="You cannot put the game master as a player in the game")
-        else:
-            if game_master_id == player_id:
-                flask_restful.abort(400, msg="You cannot remove the game master from the game")
-
         # abort if has a role
-        allocated_already = allocations.Allocation.list_by_game_id(game_id)
-        print(f"{allocated_already}")
-
+        raw_allocations = allocations.Allocation.list_by_game_id(game_id)
+        if player_id in [r[2] for r in raw_allocations if r[2] != -1]:
+            flask_restful.abort(400, msg="You cannot remove or put in the game someone already assigned a role")
 
         dangling_role_id = -1
 
