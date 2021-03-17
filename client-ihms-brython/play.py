@@ -17,7 +17,7 @@ import mapping
 
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
-OPTIONS = ['position', 'soumettre', 'négocier', 'arbitrer', 'paramètres', 'joueurs']
+OPTIONS = ['position', 'soumettre', 'négocier', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -841,6 +841,17 @@ def submit_orders():
     # just to prevent a erroneous pylint warning
     game_parameters_loaded = dict(game_parameters_loaded)
 
+    # game needs to be ongoing
+    if game_parameters_loaded['current_state'] == 0:
+        alert("La partie n'est pas encore démarée")
+        return
+    if game_parameters_loaded['current_state'] == 2:
+        alert("La partie est déjà terminée")
+        return
+
+    game_status = get_game_status(variant_data, game_parameters_loaded)
+    my_sub_panel <= game_status
+
     advancement_loaded = game_parameters_loaded['current_advancement']
     advancement_season, _ = get_season(advancement_loaded, variant_data)
 
@@ -936,7 +947,7 @@ def submit_orders():
 def negotiate():
     """ negotiate """
 
-    dummy = html.P("Sorry, negotiate is non implémenté here yet...")
+    dummy = html.P("Sorry, negotiate is not implemented here yet...")
     my_sub_panel <= dummy
 
 
@@ -1033,6 +1044,21 @@ def game_master():
 
     # build variant data
     variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # game needs to be ongoing
+    if game_parameters_loaded['current_state'] == 0:
+        alert("La partie n'est pas encore démarée")
+        return
+    if game_parameters_loaded['current_state'] == 2:
+        alert("La partie est déjà terminée")
+        return
+
+    game_status = get_game_status(variant_data, game_parameters_loaded)
+    my_sub_panel <= game_status
 
     input_adjudicate = html.INPUT(type="submit", value="résoudre maintenant !")
     input_adjudicate.bind("click", adjudicate_callback)
@@ -1240,6 +1266,14 @@ def show_players_in_game():
     my_sub_panel <= game_players_table
 
 
+def show_history():
+    """ show_history """
+
+    dummy = html.P("Sorry, history is not implemented here yet...")
+    my_sub_panel <= dummy
+
+
+
 def load_option(_, item_name):
     """ load_option """
 
@@ -1256,6 +1290,8 @@ def load_option(_, item_name):
         show_game_parameters()
     if item_name == 'joueurs':
         show_players_in_game()
+    if item_name == 'historique':
+        show_history()
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
