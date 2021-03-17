@@ -349,6 +349,8 @@ def submit_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
+            stack_role_flag(buttons_right)
+
             legend_select_active = html.LEGEND("Selectioner la zone où construire")
             buttons_right <= legend_select_active
 
@@ -378,6 +380,8 @@ def submit_orders():
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+            stack_role_flag(buttons_right)
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
@@ -540,6 +544,8 @@ def submit_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
+            stack_role_flag(buttons_right)
+
             # can be None if no retreating unit on board
             if selected_active_unit is not None:
 
@@ -587,6 +593,8 @@ def submit_orders():
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+            stack_role_flag(buttons_right)
 
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
@@ -653,6 +661,8 @@ def submit_orders():
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+            stack_role_flag(buttons_right)
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -722,6 +732,8 @@ def submit_orders():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
+        stack_role_flag(buttons_right)
+
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
             buttons_right <= legend_select_unit
@@ -758,6 +770,14 @@ def submit_orders():
 
         # put the orders
         orders_data.render(ctx)
+
+    def stack_role_flag(buttons_right):
+        """ stack_role_flag """
+        # role flag
+        if role_id > 0:
+            print(f"icone {role_id}")
+            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+            buttons_right <= role_icon_img
 
     def stack_orders(buttons_right):
         """ stack_orders """
@@ -908,6 +928,8 @@ def submit_orders():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
+    stack_role_flag(buttons_right)
+
     if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
         legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
         buttons_right <= legend_select_unit
@@ -953,6 +975,21 @@ def negotiate():
 
 def game_master():
     """ game_master """
+
+    def civil_disorder_callback(_, role_id):
+        """ civil_disorder_callback """
+
+        print(f"civil_disorder_callback {role_id}")
+
+    def eject_game_callback(_, role_id):
+        """ eject_game_callback """
+
+        print(f"eject_game_callback {role_id}")
+
+    def allocate_role_callback(_, input_for_role, role_id):
+        """ allocate_role_callback """
+
+        print(f"allocate_role_callback {input_for_role.value} {role_id}")
 
     def adjudicate_callback(_):
         """ adjudicate_callback """
@@ -1049,6 +1086,9 @@ def game_master():
     if not game_parameters_loaded:
         return
 
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
     # game needs to be ongoing
     if game_parameters_loaded['current_state'] == 0:
         alert("La partie n'est pas encore démarée")
@@ -1060,7 +1100,114 @@ def game_master():
     game_status = get_game_status(variant_data, game_parameters_loaded)
     my_sub_panel <= game_status
 
-    input_adjudicate = html.INPUT(type="submit", value="résoudre maintenant !")
+    my_sub_panel <= html.BR()
+
+    # get the players of the game
+    game_players_dict = get_game_players_data(game_id)
+
+    if not game_players_dict:
+        return
+
+    # get the players (all players)
+    players_dict = common.get_players()
+
+    if not players_dict:
+        return
+
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
+    game_admin_table = html.TABLE()
+    game_admin_table.style = {
+        "padding": "5px",
+        "backgroundColor": "#aaaaaa",
+        "border": "solid",
+    }
+
+    role2pseudo = {v: k for k, v in game_players_dict.items()}
+
+    for role_id in variant_data.roles:
+
+        # discard game master
+        if role_id == 0:
+            continue
+
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+        col = html.TD(role_icon_img)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        # player
+        player_id_str = role2pseudo[role_id]
+        player_id = int(player_id_str)
+        pseudo_there = id2pseudo[player_id]
+        col = html.TD(pseudo_there)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        # TODO : consider open/close whethor orders are in or not
+        order_status_icon_img = html.IMG(src="./data/orders_are_not_in.gif")
+        col = html.TD(order_status_icon_img)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        input_civil_disorder = html.INPUT(type="submit", value="mettre en désordre civil")
+        input_civil_disorder.bind("click", lambda e, r=role_id: civil_disorder_callback(e, r))
+        col = html.TD(input_civil_disorder)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        input_eject_game = html.INPUT(type="submit", value="éjecter de la partie")
+        input_eject_game.bind("click", lambda e, r=role_id: eject_game_callback(e, r))
+        col = html.TD(input_eject_game)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        form = html.FORM()
+
+        # TODO
+        possible_given_role = ["alpha", "beta", "gamma"]
+
+        input_for_role = html.SELECT(type="select-one", value="", display='inline')
+        for play_role_pseudo in sorted(possible_given_role):
+            option = html.OPTION(play_role_pseudo)
+            input_for_role <= option
+
+        form <= input_for_role
+        form <= " "
+
+        input_put_in_role = html.INPUT(type="submit", value="attribuer le rôle", display='inline')
+        input_put_in_role.bind("click", lambda e, i=input_for_role, r=role_id: allocate_role_callback(e, i, r))
+
+        form <= input_put_in_role
+
+        col = html.TD(form)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        game_admin_table <= row
+
+    my_sub_panel <= game_admin_table
+
+    my_sub_panel <= html.BR()
+
+    input_adjudicate = html.INPUT(type="submit", value="déclencher la résolution")
     input_adjudicate.bind("click", adjudicate_callback)
     my_sub_panel <= input_adjudicate
 
@@ -1201,13 +1348,12 @@ def show_players_in_game():
         "border": "solid",
     }
 
-    # TODO : make it possible to sort etc...
-    fields = ['player', 'role', 'flag']
+    fields = ['flag', 'role', 'player']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'player': 'joueur', 'role': 'role', 'flag': 'drapeau'}[field]
+        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'role'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
@@ -1216,16 +1362,25 @@ def show_players_in_game():
         thead <= col
     game_players_table <= thead
 
-    for player_id_str, role_id in game_players_dict.items():
+    role2pseudo = {v: k for k, v in game_players_dict.items()}
+
+    for role_id in variant_data.roles:
+
         row = html.TR()
         row.style = {
             "border": "solid",
         }
 
-        # player
-        player_id = int(player_id_str)
-        pseudo = id2pseudo[player_id]
-        col = html.TD(pseudo)
+        # role flag
+        if role_id <= 0:
+            role_icon_img = None
+        else:
+            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+
+        if role_icon_img:
+            col = html.TD(role_icon_img)
+        else:
+            col = html.TD()
         col.style = {
             "border": "solid",
         }
@@ -1233,7 +1388,7 @@ def show_players_in_game():
 
         # role name
         if role_id == -1:
-            role_name = "NOT ALLOCATED"
+            role_name = ""
         else:
             role = variant_data.roles[role_id]
             role_name = variant_data.name_table[role]
@@ -1244,18 +1399,11 @@ def show_players_in_game():
         }
         row <= col
 
-        # role flag
-        if role_id == -1:
-            role_icon_img = None
-        elif role_id == 0:
-            role_icon_img = None
-        else:
-            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
-
-        if role_icon_img:
-            col = html.TD(role_icon_img)
-        else:
-            col = html.TD()
+        # player
+        player_id_str = role2pseudo[role_id]
+        player_id = int(player_id_str)
+        pseudo_there = id2pseudo[player_id]
+        col = html.TD(pseudo_there)
         col.style = {
             "border": "solid",
         }
