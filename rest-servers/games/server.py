@@ -1246,14 +1246,16 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
-        if role_id != 0:
-            flask_restful.abort(403, msg=f"Currently you need to master game {game_id} to know if orders are submitted")
-
         # get orders
         assert role_id is not None
         orders_list = orders.Order.list_by_game_id(game_id)
 
         roles_list = list(set([o[1] for o in orders_list]))
+
+        # TODO : change for fast games when players can know
+        # if player : can only know about his own orders
+        if role_id != 0:
+            roles_list = [r for r in role_id if r == role_id]
 
         data = roles_list
         return data, 200
