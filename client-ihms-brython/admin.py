@@ -40,6 +40,8 @@ def change_news():
             alert("Contenu nouvelles manquant")
             return
 
+        print(f"putting {news_content=}")
+
         json_dict = {
             'pseudo': pseudo,
             'content': news_content,
@@ -79,9 +81,9 @@ def change_news():
 
     form <= html.BR()
 
-    input_news_content = html.INPUT(type="submit", value="mettre à jour")
-    input_news_content.bind("click", change_news_callback)
-    form <= input_news_content
+    input_change_news_content = html.INPUT(type="submit", value="mettre à jour")
+    input_change_news_content.bind("click", change_news_callback)
+    form <= input_change_news_content
     form <= html.BR()
 
     my_sub_panel <= form
