@@ -23,6 +23,7 @@ import lowdata
 import populate
 import mailer
 import players
+import newss
 import database
 
 SESSION = requests.Session()
@@ -46,6 +47,11 @@ PLAYER_PARSER.add_argument('time_zone', type=str, required=False)
 EMAIL_PARSER = flask_restful.reqparse.RequestParser()
 EMAIL_PARSER.add_argument('pseudo', type=str, required=True)
 EMAIL_PARSER.add_argument('code', type=str, required=True)
+
+NEWS_PARSER = flask_restful.reqparse.RequestParser()
+NEWS_PARSER.add_argument('pseudo', type=str, required=True)
+NEWS_PARSER.add_argument('content', type=str, required=True)
+
 
 # to avoid sending emails in debug phase
 PREVENT_MAIL_CHECKING = False
@@ -95,7 +101,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Not allowed for retrieve!:{message}")
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
         if req_result.json()['logged_in_as'] != pseudo:
             flask_restful.abort(403, msg="Wrong authentication!")
 
@@ -144,7 +150,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Not allowed for update!:{message}")
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
         if req_result.json()['logged_in_as'] != pseudo:
             flask_restful.abort(403, msg="Wrong authentication!")
 
@@ -380,6 +386,67 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
 
         data = {'pseudo': pseudo, 'msg': 'Ok code is correct'}
         return data, 200
+
+
+@API.resource('/news')
+class NewsRessource(flask_restful.Resource):  # type: ignore
+    """ NewsRessource """
+
+    def get(self) -> typing.Tuple[typing.Any, int]:  # pylint: disable=no-self-use
+        """
+        Provides the latest news
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/news - GET - get the latest news")
+
+        newss_list = newss.News.inventory()
+        data = newss_list[0]
+
+        return data, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Creates a new news
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/news - POST - changing the news")
+
+        args = NEWS_PARSER.parse_args(strict=True)
+        pseudo = args['pseudo']
+
+        # check from user server user is pseudo
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        player = players.Player.find_by_pseudo(pseudo)
+        if player is None:
+            flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
+
+        # TODO improve this with read admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg=f"You are not allowed to change news!")
+
+        content = args['content']
+
+        # create news here
+        news = newss.News(content)
+        news.update_database()
+
+        data = {'msg': 'Ok news created'}
+        return data, 201
 
 
 def main() -> None:
