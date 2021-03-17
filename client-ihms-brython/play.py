@@ -984,8 +984,6 @@ def game_master():
     def unallocate_role_callback(_, pseudo_removed, role_id):
         """ unallocate_role_callback """
 
-        print(f"unallocate_role_callback {pseudo_removed} {role_id}")
-
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
@@ -996,6 +994,7 @@ def game_master():
                 else:
                     alert("Undocumented issue from server")
                 return
+            InfoDialog("OK", f"Le joueur s'est vu retirer le rôle dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         json_dict = {
             'game_id': game_id,
@@ -1015,8 +1014,6 @@ def game_master():
     def allocate_role_callback(_, input_for_role, role_id):
         """ allocate_role_callback """
 
-        print(f"allocate_role_callback {input_for_role.value} {role_id}")
-
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 201:
@@ -1027,6 +1024,7 @@ def game_master():
                 else:
                     alert("Undocumented issue from server")
                 return
+            InfoDialog("OK", f"Le joueur s'est vu attribuer le rôle dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
         player_pseudo = input_for_role.value
 
@@ -1059,10 +1057,10 @@ def game_master():
                     alert(f"Problem getting list pseudo allocatable game: {req_result['msg']}")
                 else:
                     alert("Undocumented issue from server")
-                return
+                return None
             req_result = json.loads(req.text)
             nonlocal pseudo_list
-            pseudo_list = [id2pseudo[int(k)] for k,v in req_result.items() if v == -1]
+            pseudo_list = [id2pseudo[int(k)] for k, v in req_result.items() if v == -1]
             return pseudo_list
 
         json_dict = dict()
@@ -1274,8 +1272,8 @@ def game_master():
             player_id = int(player_id_str)
             pseudo_there = id2pseudo[player_id]
         else:
-            pseudo_there = " "
-        col = html.TD(pseudo_there)
+            pseudo_there = None
+        col = html.TD(pseudo_there if pseudo_there else "")
         col.style = {
             "border": "solid",
         }
@@ -1299,30 +1297,39 @@ def game_master():
         }
         row <= col
 
-        input_unallocate_role = html.INPUT(type="submit", value="retirer le rôle")
-        input_unallocate_role.bind("click", lambda e, p=pseudo_there, r=role_id: unallocate_role_callback(e, p, r))
-        col = html.TD(input_unallocate_role)
+        if pseudo_there is not None:
+            input_unallocate_role = html.INPUT(type="submit", value="retirer le rôle")
+            input_unallocate_role.bind("click", lambda e, p=pseudo_there, r=role_id: unallocate_role_callback(e, p, r))
+        else:
+            input_unallocate_role = None
+        col = html.TD(input_unallocate_role if input_unallocate_role else "")
         col.style = {
             "border": "solid",
         }
         row <= col
 
-        form = html.FORM()
+        if pseudo_there is None:
 
-        input_for_role = html.SELECT(type="select-one", value="", display='inline')
-        for play_role_pseudo in sorted(possible_given_role):
-            option = html.OPTION(play_role_pseudo)
-            input_for_role <= option
+            form = html.FORM()
 
-        form <= input_for_role
-        form <= " "
+            input_for_role = html.SELECT(type="select-one", value="", display='inline')
+            for play_role_pseudo in sorted(possible_given_role):
+                option = html.OPTION(play_role_pseudo)
+                input_for_role <= option
 
-        input_put_in_role = html.INPUT(type="submit", value="attribuer le rôle", display='inline')
-        input_put_in_role.bind("click", lambda e, i=input_for_role, r=role_id: allocate_role_callback(e, i, r))
+            form <= input_for_role
+            form <= " "
 
-        form <= input_put_in_role
+            input_put_in_role = html.INPUT(type="submit", value="attribuer le rôle", display='inline')
+            input_put_in_role.bind("click", lambda e, i=input_for_role, r=role_id: allocate_role_callback(e, i, r))
 
-        col = html.TD(form)
+            form <= input_put_in_role
+
+        else:
+
+            form = None
+
+        col = html.TD(form if form else "")
         col.style = {
             "border": "solid",
         }
@@ -1535,8 +1542,8 @@ def show_players_in_game():
             player_id = int(player_id_str)
             pseudo_there = id2pseudo[player_id]
         else:
-            pseudo_there = " "
-        col = html.TD(pseudo_there)
+            pseudo_there = None
+        col = html.TD(pseudo_there if pseudo_there else "")
         col.style = {
             "border": "solid",
         }
