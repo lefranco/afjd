@@ -31,7 +31,7 @@ def login_callback(_):
         storage['JWT_TOKEN'] = req_result['AccessToken']
         time_stamp = time.time()
         storage['LOGIN_TIME'] = str(time_stamp)
-        InfoDialog("OK", f"Logué avec succèe en tant que {pseudo}", remove_after=config.REMOVE_AFTER)
+        InfoDialog("OK", f"Logué avec succès en tant que {pseudo}", remove_after=config.REMOVE_AFTER)
         show_login()
 
     pseudo = input_pseudo.value
