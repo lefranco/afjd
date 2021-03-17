@@ -84,6 +84,12 @@ ALLOCATION_PARSER.add_argument('player_pseudo', type=str, required=True)
 ALLOCATION_PARSER.add_argument('delete', type=int, required=True)
 ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 
+ROLE_ALLOCATION_PARSER = flask_restful.reqparse.RequestParser()
+ROLE_ALLOCATION_PARSER.add_argument('game_id', type=int, required=True)
+ROLE_ALLOCATION_PARSER.add_argument('role_id', type=int, required=True)
+ROLE_ALLOCATION_PARSER.add_argument('delete', type=int, required=True)
+ROLE_ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
+
 SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER.add_argument('role_id', type=int, required=True)
 SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
@@ -477,6 +483,8 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 class AllocationListRessource(flask_restful.Resource):  # type: ignore
     """ AllocationListRessource """
 
+    # an allocation is a game-role-pseudo relation where role is <> -1
+
     def get(self) -> typing.Tuple[typing.List[typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
         """
         Get list of all allocations only game master (dictionary identifier -> name)
@@ -492,7 +500,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
-        Creates an allocation (relation player-game)
+        Creates or deletes an allocation (a relation player-role-game)
         EXPOSED
         """
 
@@ -570,10 +578,6 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             if game_master_id == player_id:
                 flask_restful.abort(400, msg="You cannot remove the game master from the game")
 
-        # TODO : change when replacement is implemented
-        if game.current_state != 0:
-            flask_restful.abort(405, msg="This game is not in the proper state - please proceed to replacement (not implemented yet)")
-
         role_id = -1
 
         if not delete:
@@ -586,6 +590,135 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         allocation.delete_database()
         data = {'msg': 'Ok allocation deleted if present'}
         return data, 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@API.resource('/role-allocations')
+class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
+    """ AllocationListRessource """
+
+    # a role-allocation is a game-role-pseudo relation where role is <> -1
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Creates or deletes an role allocation (a relation player-role-game)
+        creates : There should be a single -1 role allacation
+        deletes : That will creare a -1 role allacation
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/role-allocations - POST - creating/deleting new role-allocation")
+
+        args = ROLE_ALLOCATION_PARSER.parse_args(strict=True)
+        game_id = args['game_id']
+        role_id = args['role_id']
+        pseudo = args['pseudo']
+        delete = args['delete']
+
+        mylogger.LOGGER.info("game_id=%s player_pseudo=%s delete=%s", game_id, player_pseudo, delete)
+
+        if pseudo is None:
+            flask_restful.abort(401, msg="Need a pseudo to move role in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to add allocation - must game master
+
+        # find the game
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is game master ?
+        assert game is not None
+        game_master_id = game.get_role(0)
+
+        if user_id != game_master_id:
+            if pseudo != 'Palpatine':  # TODO remove PATCH !!!
+                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+
+        # game master of game can neither be added (changed) not removed
+
+        if not delete:
+            if game_master_id == player_id:
+                flask_restful.abort(400, msg="You cannot put the game master as a player in the game")
+        else:
+            if game_master_id == player_id:
+                flask_restful.abort(400, msg="You cannot remove the game master from the game")
+
+        if not delete:
+            # delete dangling
+            dangling_role_id = -1
+            allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
+            allocation.delete_database()
+            # put role
+            allocation = allocations.Allocation(game_id, player_id, role_id)
+            allocation.update_database()
+            # report
+            data = {'msg': 'Ok role-allocation updated or created'}
+            return data, 201
+
+        # delete role
+        allocation = allocations.Allocation(game_id, player_id, role_id)
+        allocation.delete_database()
+        # put dangling
+        dangling_role_id = -1
+        allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
+        allocation.update_database()
+        # report
+        data = {'msg': 'Ok role-allocation deleted if present'}
+        return data, 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @API.resource('/game-allocations/<game_id>')
