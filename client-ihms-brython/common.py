@@ -6,6 +6,7 @@ from browser import ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
+import mapping
 
 
 def noreply_callback(_):
@@ -374,3 +375,57 @@ def game_parameters_reload(game):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return game_parameters_loaded
+
+
+def get_display_from_variant(variant):
+    """ get_display_from_variant """
+
+    # TODO : make it possible to choose which display users wants (descartes/hasbro)
+    # At least test it
+    assert variant == 'standard'
+    return "stabbeur"
+
+
+DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
+
+
+def get_season(advancement, variant) -> None:
+    """ store season """
+
+    len_season_cycle = len(DIPLOMACY_SEASON_CYCLE)
+    advancement_season_num = advancement % len_season_cycle + 1
+    advancement_season = mapping.SeasonEnum.from_code(advancement_season_num)
+    advancement_year = (advancement // len_season_cycle) + 1 + variant.year_zero
+    return advancement_season, advancement_year
+
+
+def get_role_allocated_to_player(game_id, player_id):
+    """ get_role the player has in the game """
+
+    role_id = None
+
+    def reply_callback(req):
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting role allocated to player: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting role allocated to player: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+        req_result = json.loads(req.text)
+        nonlocal role_id
+        # TODO : consider if a player has more than one role
+        role_id = req_result[str(player_id)] if str(player_id) in req_result else None
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-allocations/{game_id}"
+
+    # get players allocated to game : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return role_id

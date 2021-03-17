@@ -40,8 +40,6 @@ def change_news():
             alert("Contenu nouvelles manquant")
             return
 
-        print(f"putting {news_content=}")
-
         json_dict = {
             'pseudo': pseudo,
             'content': news_content,

@@ -10,6 +10,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
 import config
+import mapping
 
 my_panel = html.DIV(id="my_games")
 
@@ -65,13 +66,9 @@ def my_games():
     if player_games is None:
         return
 
-    print(f"{player_games=}")
-
     games_dict = common.get_games_data()
     if games_dict is None:
         return
-
-    print(f"{games_dict=}")
 
     games_table = html.TABLE()
     games_table.style = {
@@ -80,12 +77,12 @@ def my_games():
         "border": "solid",
     }
 
-    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement']
+    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'avancement'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played':'rôle joué'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
@@ -96,14 +93,35 @@ def my_games():
 
     games_id_player = [int(n) for n in player_games.keys()]
 
-    print(f"{games_id_player=}")
-
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
 
         game_id = int(game_id_str)
-        print(f"{game_id=}")
         if game_id not in games_id_player:
             continue
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+        if not variant_content_loaded:
+            return
+
+        # select display (should be a user choice)
+        display_chosen = common.get_display_from_variant(variant_name_loaded)
+
+        # from display chose get display parameters
+        parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+        with open(parameters_file_name, "r") as read_file:
+            parameters_read = json.load(read_file)
+
+        # build variant data
+        variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+
+        role_id = common.get_role_allocated_to_player(game_id, player_id)
+        if role_id is None:
+            return
+        data['role_played'] = role_id
 
         row = html.TR()
         row.style = {
@@ -125,6 +143,22 @@ def my_games():
                         state_loaded = possible_state
                         break
                 value = state_loaded
+
+            if field == 'current_advancement':
+                advancement_loaded = value
+                advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
+                advancement_season_readable = variant_data.name_table[advancement_season]
+                value = f"{advancement_season_readable} {advancement_year}"
+
+            if field == 'role_played':
+                role_id = value
+                if role_id == -1:
+                    value = "Affecté"
+                elif role_id == 0:
+                    value = "Arbitre"
+                else:
+                    value = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+
             col = html.TD(value)
             col.style = {
                 "border": "solid",
