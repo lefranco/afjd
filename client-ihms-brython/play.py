@@ -180,6 +180,7 @@ def get_game_status(variant_data, game_parameters_loaded):
     game_status_table <= row
     return game_status_table
 
+
 def show_position():
     """ show_position """
 
@@ -1576,7 +1577,6 @@ def show_history():
 
     dummy = html.P("Sorry, history is not implemented yet...")
     my_sub_panel <= dummy
-
 
 
 def load_option(_, item_name):
