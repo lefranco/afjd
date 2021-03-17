@@ -995,6 +995,9 @@ def game_master():
                     alert("Undocumented issue from server")
                 return
             InfoDialog("OK", f"Le joueur s'est vu retirer le rôle dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            # back to where we started
+            my_sub_panel.clear()
+            game_master()
 
         json_dict = {
             'game_id': game_id,
@@ -1025,6 +1028,9 @@ def game_master():
                     alert("Undocumented issue from server")
                 return
             InfoDialog("OK", f"Le joueur s'est vu attribuer le rôle dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            # back to where we started
+            my_sub_panel.clear()
+            game_master()
 
         player_pseudo = input_for_role.value
 
