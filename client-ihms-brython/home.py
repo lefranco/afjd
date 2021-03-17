@@ -20,7 +20,9 @@ my_panel <= title2
 
 news_content = common.get_news_content()
 if news_content is not None:
-    my_panel <= html.EM(news_content)
+    for line in news_content.split("\n"):
+        my_panel <= html.EM(line)
+        my_panel <= html.BR()
 
 my_panel <= html.H2("Une version simplifiée des règles du Jeu")
 
