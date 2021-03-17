@@ -1081,6 +1081,72 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         }
         return data, 200
 
+@API.resource('/game-orders-submitted/<game_id>')
+class GameOrderRessource(flask_restful.Resource):  # type: ignore
+    """ GameOrderRessource """
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Gets list of roles which have sublmitted orders
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-orders-submitted/<game_id> - GET - getting which orders submitted game id=%s", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        # check user has right to get orders - must game master
+
+        # check there is a game
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # get the role
+        assert game is not None
+        role_id = game.find_role(player_id)
+        if role_id is None:
+            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+
+        if role_id != 0:
+            flask_restful.abort(403, msg=f"Currently you need to master game {game_id} to know if orders are submitted")
+
+        # get orders
+        assert role_id is not None
+        orders_list = orders.Order.list_by_game_id(game_id)
+
+        print(f"{orders_list=}")
+
+        roles_list = list(set([o[1] for o in orders_list]))
+
+        print(f"{roles_list=}")
+
+        data = roles_list
+        return data, 200
 
 @API.resource('/game-adjudications/<game_id>')
 class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
