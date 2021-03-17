@@ -19,7 +19,7 @@ class News:
     def content() -> str:
         """ get content """
 
-        content_found = database.sql_execute("SELECT contyent FROM newss", None, need_result=True)
+        content_found = database.sql_execute("SELECT content FROM newss", None, need_result=True)
         content = content_found[0][0]  # type: ignore
         return content  # type: ignore
 
