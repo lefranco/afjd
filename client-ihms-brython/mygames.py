@@ -116,7 +116,7 @@ def my_games():
                 datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
                 deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
                 deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
-                deadline_loaded = f"{deadline_loaded_day} {deadline_loaded_hour}"
+                deadline_loaded = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
                 value = deadline_loaded
             if field == 'current_state':
                 state_loaded = value
