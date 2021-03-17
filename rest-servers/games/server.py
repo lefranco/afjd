@@ -580,7 +580,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(400, msg="You cannot remove the game master from the game")
 
         # abort if has a role
-        allocated_already = allocations.Allocations.list_by_game_id(game_id)
+        allocated_already = allocations.Allocation.list_by_game_id(game_id)
         print(f"{allocated_already}")
 
 
