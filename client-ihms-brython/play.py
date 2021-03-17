@@ -17,7 +17,7 @@ import mapping
 
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
-OPTIONS = ['game status', 'position', 'soumettre', 'négocier', 'arbitrer', 'paramètres', 'joueurs']
+OPTIONS = ['position', 'soumettre', 'négocier', 'arbitrer', 'paramètres', 'joueurs']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -67,7 +67,7 @@ def get_role_allocated_to_player(game_id, player_id):
             return
         req_result = json.loads(req.text)
         nonlocal role_id
-        # TODO : consider if ap player has more than one role
+        # TODO : consider if a player has more than one role
         role_id = req_result[str(player_id)] if str(player_id) in req_result else None
 
     json_dict = dict()
@@ -128,104 +128,31 @@ def get_season(advancement, variant) -> None:
     return advancement_season, advancement_year
 
 
-def show_status():
-    """ show_status """
+def get_game_status(variant_data, game_parameters_loaded):
+    """ get_game__status """
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
+    game_name = game_parameters_loaded['name']
 
-    game = storage['GAME']
+    game_variant = game_parameters_loaded['variant']
 
-    # from game name get variant name
+    state_loaded = game_parameters_loaded['current_state']
+    for possible_state in config.STATE_CODE_TABLE:
+        if config.STATE_CODE_TABLE[possible_state] == state_loaded:
+            game_state_readable = possible_state
+            break
 
-    variant_name_loaded = common.game_variant_name_reload(game)
-    if not variant_name_loaded:
-        return
+    advancement_loaded = game_parameters_loaded['current_advancement']
+    advancement_season, advancement_year = get_season(advancement_loaded, variant_data)
+    advancement_season_readable = variant_data.name_table[advancement_season]
+    game_season = f"{advancement_season_readable} {advancement_year}"
 
-    # from variant name get variant content
+    deadline_loaded = game_parameters_loaded['deadline']
+    datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
+    deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+    deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
+    game_deadline = f"{deadline_loaded_day} {deadline_loaded_hour}"
 
-    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-    if not variant_content_loaded:
-        return
-
-    # select display (should be a user choice)
-    display_chosen = get_display_from_variant(variant_name_loaded)
-
-    # from display chose get display parameters
-
-    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file:
-        parameters_read = json.load(read_file)
-
-    # build variant data
-    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
-
-    game_parameters_loaded = common.game_parameters_reload(game)
-    if not game_parameters_loaded:
-        return
-
-    # just to prevent a erroneous pylint warning
-    game_parameters_loaded = dict(game_parameters_loaded)
-
-    game_params_table = html.TABLE()
-    game_params_table.style = {
-        "padding": "5px",
-        "backgroundColor": "#aaaaaa",
-        "border": "solid",
-    }
-    for key in ['name', 'description', 'variant', 'current_state', 'current_advancement', 'deadline']:
-        row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
-
-        col1 = html.TD(key)
-        col1.style = {
-            "border": "solid",
-        }
-        row <= col1
-
-        if key == 'name':
-            value = game_parameters_loaded[key]
-
-        if key == 'description':
-            value = game_parameters_loaded[key]
-
-        if key == 'variant':
-            value = game_parameters_loaded[key]
-
-        if key == 'current_state':
-            state_loaded = game_parameters_loaded[key]
-            for possible_state in config.STATE_CODE_TABLE:
-                if config.STATE_CODE_TABLE[possible_state] == state_loaded:
-                    state_readable = possible_state
-                    break
-            value = state_readable
-
-        if key == 'current_advancement':
-            advancement_loaded = game_parameters_loaded[key]
-            advancement_season, advancement_year = get_season(advancement_loaded, variant_data)
-            advancement_season_readable = variant_data.name_table[advancement_season]
-            value = f"Season : {advancement_season_readable} {advancement_year}"
-
-        if key == 'deadline':
-            deadline_loaded = game_parameters_loaded[key]
-            datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
-            deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-            deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
-            deadline_readable = f"{deadline_loaded_day} {deadline_loaded_hour}"
-            value = f"Deadline : {deadline_readable} GMT time"
-
-        col2 = html.TD(value)
-        col2.style = {
-            "border": "solid",
-        }
-        row <= col2
-
-        game_params_table <= row
-
-    my_sub_panel <= game_params_table
+    return f"Partie {game_name} ({game_variant}) état {game_state_readable} saison {game_season} DL {game_deadline} GMT"
 
 
 def show_position():
@@ -1282,8 +1209,6 @@ def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
-    if item_name == 'game status':
-        show_status()
     if item_name == 'position':
         show_position()
     if item_name == 'soumettre':
