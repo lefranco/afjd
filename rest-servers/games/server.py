@@ -1139,11 +1139,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         assert role_id is not None
         orders_list = orders.Order.list_by_game_id(game_id)
 
-        print(f"{orders_list=}")
-
         roles_list = list(set([o[1] for o in orders_list]))
-
-        print(f"{roles_list=}")
 
         data = roles_list
         return data, 200
