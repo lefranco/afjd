@@ -1435,9 +1435,12 @@ def show_players_in_game():
         row <= col
 
         # player
-        player_id_str = role2pseudo[role_id]
-        player_id = int(player_id_str)
-        pseudo_there = id2pseudo[player_id]
+        if role_id in role2pseudo:
+            player_id_str = role2pseudo[role_id]
+            player_id = int(player_id_str)
+            pseudo_there = id2pseudo[player_id]
+        else:
+            pseudo_there = " "
         col = html.TD(pseudo_there)
         col.style = {
             "border": "solid",
