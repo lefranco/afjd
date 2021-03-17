@@ -981,15 +981,67 @@ def game_master():
 
         alert("Désolé: la mise en désordre civil n'est pas implémentée - vous pouvez passer les ordres à la place du joueur en tant qu'arbitre en attendant...")
 
-    def eject_game_callback(_, role_id):
-        """ eject_game_callback """
+    def unallocate_role_callback(_, role_id):
+        """ unallocate_role_callback """
 
-        print(f"eject_game_callback {role_id}")
+        print(f"unallocate_role_callback {role_id}")
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error allocating role to game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem allocating role to game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            json_dict = {
+                'game_id': game_id,
+                'role_id': role_id,
+                'pseudo': pseudo,
+                'delete': 1
+            }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/role-allocations/{game_id}"
+
+        # put role : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def allocate_role_callback(_, input_for_role, role_id):
         """ allocate_role_callback """
 
         print(f"allocate_role_callback {input_for_role.value} {role_id}")
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error allocating role to game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem allocating role to game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            json_dict = {
+                'game_id': game_id,
+                'role_id': role_id,
+                'pseudo': pseudo,
+                'delete': 0
+            }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/role-allocations/{game_id}"
+
+        # put role : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
 
     def get_roles_submitted_orders():
         """ get_roles_submitted_orders """
@@ -1204,9 +1256,9 @@ def game_master():
         }
         row <= col
 
-        input_eject_game = html.INPUT(type="submit", value="éjecter de la partie")
-        input_eject_game.bind("click", lambda e, r=role_id: eject_game_callback(e, r))
-        col = html.TD(input_eject_game)
+        input_unallocate_role = html.INPUT(type="submit", value="retirer le rôle")
+        input_unallocate_role.bind("click", lambda e, r=role_id: unallocate_role_callback(e, r))
+        col = html.TD(input_unallocate_role)
         col.style = {
             "border": "solid",
         }
@@ -1450,6 +1502,17 @@ def show_players_in_game():
         game_players_table <= row
 
     my_sub_panel <= game_players_table
+
+    # add the non allocated players
+    dangling_players = [p for p in game_players_dict if game_players_dict[p] == - 1]
+    if dangling_players:
+        my_sub_panel <= html.BR()
+        my_sub_panel <= html.EM("Les pseudos suivants sont alloués à la partie sans rôle:")
+        for dangling_player_id_str in dangling_players:
+            dangling_player_id = int(dangling_player_id_str)
+            dangling_player = id2pseudo[dangling_player_id]
+            my_sub_panel <= html.B(html.B(dangling_player))
+            my_sub_panel <= " "
 
 
 def show_history():
