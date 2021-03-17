@@ -152,8 +152,33 @@ def get_game_status(variant_data, game_parameters_loaded):
     deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
     game_deadline = f"{deadline_loaded_day} {deadline_loaded_hour}"
 
-    return f"Partie {game_name} ({game_variant}) état {game_state_readable} saison {game_season} DL {game_deadline} GMT"
+    game_status_table = html.TABLE()
 
+    row = html.TR()
+
+    col = html.TD(f"Partie {game_name} ({game_variant})")
+    col.style = {
+        "border": "solid",
+    }
+    row <= col
+    col = html.TD(f"Etat {game_state_readable}")
+    col.style = {
+        "border": "solid",
+    }
+    row <= col
+    col = html.TD(f"Saison {game_season}")
+    col.style = {
+        "border": "solid",
+    }
+    row <= col
+    col = html.TD(f"DL {game_deadline} GMT")
+    col.style = {
+        "border": "solid",
+    }
+    row <= col
+
+    game_status_table <= row
+    return game_status_table
 
 def show_position():
     """ show_position """
@@ -210,6 +235,16 @@ def show_position():
     position_loaded = common.game_position_reload(game)
     if not position_loaded:
         return
+
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
+    game_status = get_game_status(variant_data, game_parameters_loaded)
+    my_sub_panel <= game_status
 
     # digest the position
     position_data = mapping.Position(position_loaded, variant_data)
