@@ -356,6 +356,7 @@ my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
 
+
 def load_option(_, item_name):
     """ load_option """
 
