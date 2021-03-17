@@ -30,6 +30,7 @@ class News:
         # create actual table
         database.sql_execute("DROP TABLE IF EXISTS newss")
         database.sql_execute("CREATE TABLE newss (content str)")
+        database.sql_execute("INSERT INTO newss (content) VALUES (?)", (" ",))
 
     def __init__(self, content: str) -> None:
 
