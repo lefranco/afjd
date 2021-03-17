@@ -661,6 +661,17 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to add allocation - must game master
 
+        # find the player
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{player_pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from player_pseudo {message}")
+        player_id = req_result.json()
+
         # find the game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
