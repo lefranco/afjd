@@ -1,7 +1,6 @@
 """ geometry """
 
 import enum
-import typing
 import math
 
 
@@ -25,7 +24,7 @@ class DirectionEnum(enum.Enum):
         # if self is DirectionEnum.SOUTH_EAST:
         return DirectionEnum.NORTH_EAST
 
-    def xy_shift(self) -> typing.Tuple[int, int]:
+    def xy_shift(self):
         """ x_shift """
         if self is DirectionEnum.NORTH_EAST:
             return 3, -3
@@ -36,11 +35,12 @@ class DirectionEnum(enum.Enum):
         #  if self is DirectionEnum.SOUTH_EAST:
         return 3, 3
 
-
-class PositionRecord(typing.NamedTuple):
+class PositionRecord:
     """ A position """
-    x_pos: int
-    y_pos: int
+
+    def __init__(self, x_pos, y_pos) -> None:
+        self.x_pos = x_pos
+        self.y_pos = y_pos
 
     def distance(self, other: 'PositionRecord') -> float:
         """ euclidian distance """

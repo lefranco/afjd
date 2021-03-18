@@ -4,7 +4,6 @@
 
 
 import enum
-import typing
 import abc
 import math
 
@@ -14,7 +13,7 @@ import math
 import geometry
 
 
-def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx: typing.Any) -> None:
+def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx) -> None:
     """ low level draw an arrow """
 
     # the ctx.strokeStyle and ctx.fillStyle should be defined
@@ -45,7 +44,7 @@ class Renderable:
     """ Renderable """
 
     @abc.abstractmethod
-    def render(self, ctx: typing.Any) -> None:
+    def render(self, ctx) -> None:
         """ render = display """
 
 
@@ -58,7 +57,7 @@ class RegionTypeEnum(enum.Enum):
     SEA_REGION = enum.auto()
 
     @staticmethod
-    def from_code(code: int) -> typing.Optional['RegionTypeEnum']:
+    def from_code(code: int):
         """ from_code """
         for region_type in RegionTypeEnum:
             if region_type.value == code:
@@ -74,7 +73,7 @@ class UnitTypeEnum(enum.Enum):
     FLEET_UNIT = enum.auto()
 
     @staticmethod
-    def from_code(code: int) -> typing.Optional['UnitTypeEnum']:
+    def from_code(code: int):
         """ from_code """
         for unit_type in UnitTypeEnum:
             if unit_type.value == code:
@@ -93,7 +92,7 @@ class SeasonEnum(enum.Enum):
     ADJUST_SEASON = enum.auto()
 
     @staticmethod
-    def from_code(code: int) -> typing.Optional['SeasonEnum']:
+    def from_code(code: int):
         """ from_code """
         for season in SeasonEnum:
             if season.value == code:
@@ -116,7 +115,7 @@ class OrderTypeEnum(enum.Enum):
     REMOVE_ORDER = enum.auto()
 
     @staticmethod
-    def from_code(code: int) -> typing.Optional['OrderTypeEnum']:
+    def from_code(code: int):
         """ from_code """
         for order_type in OrderTypeEnum:
             if order_type.value == code:
@@ -143,7 +142,7 @@ class Center:
         self._region = region
 
         # the owner at start of the game
-        self._owner_start: typing.Optional['Role'] = None
+        self._owner_start = None
 
     @property
     def region(self) -> 'Region':
@@ -151,7 +150,7 @@ class Center:
         return self._region
 
     @property
-    def owner_start(self) -> typing.Optional['Role']:
+    def owner_start(self):
         """ property """
         return self._owner_start
 
@@ -179,13 +178,13 @@ class Region:
         self._region_type = region_type
 
         # if the region has a center
-        self._center: typing.Optional[Center] = None
+        self._center = None
 
         # the zone (for localisation)
-        self._zone: typing.Optional[Zone] = None
+        self._zone = None
 
         # the unit occupying the region (for identifying units)
-        self._occupant: typing.Optional['Unit'] = None
+        self._occupant = None
 
     @property
     def identifier(self) -> int:
@@ -193,7 +192,7 @@ class Region:
         return self._identifier
 
     @property
-    def center(self) -> typing.Optional[Center]:
+    def center(self):
         """ property """
         return self._center
 
@@ -203,7 +202,7 @@ class Region:
         self._center = center
 
     @property
-    def zone(self) -> typing.Optional['Zone']:
+    def zone(self):
         """ property """
         return self._zone
 
@@ -216,7 +215,7 @@ class Region:
 class Zone:
     """ A zone """
 
-    def __init__(self, identifier: int, region: Region, coast_type: typing.Optional[CoastType]) -> None:
+    def __init__(self, identifier: int, region: Region, coast_type) -> None:
 
         self._identifier = identifier
 
@@ -227,7 +226,7 @@ class Zone:
         self._coast_type = coast_type
 
         # other zones one may access by fleet and army
-        self._neighbours: typing.Dict[UnitTypeEnum, typing.List['Zone']] = {u: list() for u in UnitTypeEnum}
+        self._neighbours = {u: list() for u in UnitTypeEnum}
 
     @property
     def identifier(self) -> int:
@@ -235,7 +234,7 @@ class Zone:
         return self._identifier
 
     @property
-    def coast_type(self) -> typing.Optional[CoastType]:
+    def coast_type(self):
         """ property """
         return self._coast_type
 
@@ -245,12 +244,12 @@ class Zone:
         return self._region
 
     @property
-    def neighbours(self) -> typing.Dict[UnitTypeEnum, typing.List['Zone']]:
+    def neighbours(self):
         """ property """
         return self._neighbours
 
     @neighbours.setter
-    def neighbours(self, neighbours: typing.Dict[UnitTypeEnum, typing.List['Zone']]) -> None:
+    def neighbours(self, neighbours) -> None:
         """ setter """
         self._neighbours = neighbours
 
@@ -263,7 +262,7 @@ class Role:
         self._identifier = identifier
 
         # start centers the role have
-        self._start_centers: typing.List[Center] = list()
+        self._start_centers = list()
 
     @property
     def identifier(self) -> int:
@@ -271,21 +270,23 @@ class Role:
         return self._identifier
 
     @property
-    def start_centers(self) -> typing.List[Center]:
+    def start_centers(self):
         """ property """
         return self._start_centers
 
     @start_centers.setter
-    def start_centers(self, start_centers: typing.List[Center]) -> None:
+    def start_centers(self, start_centers) -> None:
         """ setter """
         self._start_centers = start_centers
 
 
-class ColourRecord(typing.NamedTuple):
+class ColourRecord:
     """ A colour """
-    red: int
-    green: int
-    blue: int
+
+    def __init__(self, red, green, blue) -> None:
+        self.red = red
+        self.green = green
+        self.blue = blue
 
     def outline_colour(self) -> 'ColourRecord':
         """ outline_colour """
@@ -317,7 +318,7 @@ LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 class Variant(Renderable):
     """ A variant """
 
-    def __init__(self, raw_variant_content: typing.Dict[str, typing.Any], raw_parameters_content: typing.Dict[str, typing.Any]) -> None:
+    def __init__(self, raw_variant_content, raw_parameters_content) -> None:
 
         # =================
         # from variant file
@@ -327,7 +328,7 @@ class Variant(Renderable):
         self._raw_variant_content = raw_variant_content
 
         # load the regions
-        self._regions: typing.Dict[int, Region] = dict()
+        self._regions = dict()
         for num, code in enumerate(self._raw_variant_content['regions']):
             number = num + 1
             region_type = RegionTypeEnum.from_code(code)
@@ -336,7 +337,7 @@ class Variant(Renderable):
             self._regions[number] = region
 
         # load the centers
-        self._centers: typing.Dict[int, Center] = dict()
+        self._centers = dict()
         for num, num_region in enumerate(self._raw_variant_content['centers']):
             number = num + 1
             region = self._regions[num_region]
@@ -345,7 +346,7 @@ class Variant(Renderable):
             self._centers[number] = center
 
         # load the roles (starts at zero)
-        self._roles: typing.Dict[int, Role] = dict()
+        self._roles = dict()
         for num in range(self._raw_variant_content['roles']['number']):
             number = num + 1
             role = Role(number)
@@ -354,7 +355,7 @@ class Variant(Renderable):
         assert len(self._raw_variant_content['start_centers']) == len(self._roles)
 
         # load start centers
-        self._start_centers: typing.Dict[int, Center] = dict()
+        self._start_centers = dict()
         for num, role_start_centers in enumerate(self._raw_variant_content['start_centers']):
             number = num + 1
             role = self._roles[number]
@@ -364,7 +365,7 @@ class Variant(Renderable):
                 role.start_centers.append(start_center)
 
         # load the coast types
-        self._coast_types: typing.Dict[int, CoastType] = dict()
+        self._coast_types = dict()
         for num in range(self._raw_variant_content['type_coasts']['number']):
             number = num + 1
             coast_type = CoastType(number)
@@ -373,7 +374,7 @@ class Variant(Renderable):
         # load the zones
 
         # first the standard zones
-        self._zones: typing.Dict[int, Zone] = dict()
+        self._zones = dict()
         for num, region in enumerate(self._regions.values()):
             number = num + 1
             zone = Zone(number, region, None)
@@ -427,11 +428,11 @@ class Variant(Renderable):
         # load the parameters content
         self._raw_parameters_content = raw_parameters_content
 
-        self._name_table: typing.Dict[typing.Any, str] = dict()
-        self._colour_table: typing.Dict[typing.Any, ColourRecord] = dict()
-        self._position_table: typing.Dict[typing.Any, geometry.PositionRecord] = dict()
-        self._legend_position_table: typing.Dict[typing.Any, geometry.PositionRecord] = dict()
-        self._role_add_table: typing.Dict[Role, typing.Tuple[str, str]] = dict()
+        self._name_table = dict()
+        self._colour_table = dict()
+        self._position_table = dict()
+        self._legend_position_table = dict()
+        self._role_add_table = dict()
 
         # load the map size
         data_dict = self._raw_parameters_content['map']
@@ -533,10 +534,10 @@ class Variant(Renderable):
             assert order_type is not None
             self._name_table[order_type] = data_dict['name']
 
-    def closest_zone(self, designated_pos: geometry.PositionRecord) -> typing.Optional[Zone]:
+    def closest_zone(self, designated_pos: geometry.PositionRecord):
         """ closest_zone """
 
-        closest_zone: typing.Optional[Zone] = None
+        closest_zone = None
         distance_closest = None
         for zone in self._zones.values():
             zone_pos = self.position_table[zone]
@@ -547,7 +548,7 @@ class Variant(Renderable):
 
         return closest_zone
 
-    def render(self, ctx: typing.Any) -> None:
+    def render(self, ctx) -> None:
         """ render the legends only """
 
         # colour
@@ -564,7 +565,7 @@ class Variant(Renderable):
                 legend = self._name_table[zone]
             ctx.fillText(legend, x_pos, y_pos)
 
-    def extract_names(self) -> typing.Dict[str, typing.Dict[int, typing.Any]]:
+    def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
 
         def extract_role_data(role):
@@ -590,27 +591,27 @@ class Variant(Renderable):
         return self._map_size
 
     @property
-    def name_table(self) -> typing.Dict[typing.Any, str]:
+    def name_table(self):
         """ property """
         return self._name_table
 
     @property
-    def colour_table(self) -> typing.Dict[typing.Any, ColourRecord]:
+    def colour_table(self):
         """ property """
         return self._colour_table
 
     @property
-    def position_table(self) -> typing.Dict[typing.Any, geometry.PositionRecord]:
+    def position_table(self):
         """ property """
         return self._position_table
 
     @property
-    def zones(self) -> typing.Dict[int, Zone]:
+    def zones(self):
         """ property """
         return self._zones
 
     @property
-    def roles(self) -> typing.Dict[int, Role]:
+    def roles(self):
         """ property """
         return self._roles
 
@@ -630,13 +631,13 @@ class Point:
 class Unit(Renderable):  # pylint: disable=abstract-method
     """ A unit """
 
-    def __init__(self, position: 'Position', role: Role, zone: Zone, dislodged_origin: typing.Optional[Region]) -> None:
+    def __init__(self, position: 'Position', role: Role, zone: Zone, dislodged_origin) -> None:
         self._position = position
         self._role = role
         self._zone = zone
-        self._dislodged_origin: typing.Optional[Region] = dislodged_origin
+        self._dislodged_origin = dislodged_origin
 
-    def render_as_dislodged(self, x_pos: int, y_pos: int, ctx: typing.Any) -> None:
+    def render_as_dislodged(self, x_pos: int, y_pos: int, ctx) -> None:
         """ render additional stuff when dislodged """
 
         assert self._dislodged_origin is not None
@@ -662,7 +663,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         # put back
         ctx.lineWidth = 1
 
-    def save_json(self) -> typing.Dict[str, typing.Any]:
+    def save_json(self):
         """ Save to  dict """
 
         if isinstance(self, Fleet):
@@ -701,7 +702,7 @@ class Army(Unit):
 
     # use init from parent class
 
-    def render(self, ctx: typing.Any) -> None:
+    def render(self, ctx) -> None:
         """put me on screen """
 
         fill_color = self._position.variant.colour_table[self._role]
@@ -793,7 +794,7 @@ class Fleet(Unit):
 
     # use init from parent class
 
-    def render(self, ctx: typing.Any) -> None:
+    def render(self, ctx) -> None:
         """put me on screen """
 
         fill_color = self._position.variant.colour_table[self._role]
@@ -872,7 +873,7 @@ class Ownership(Renderable):
         self._role = role
         self._center = center
 
-    def render(self, ctx: typing.Any) -> None:
+    def render(self, ctx) -> None:
         """put me on screen """
 
         fill_color = self._position.variant.colour_table[self._role]
@@ -897,7 +898,7 @@ class Forbidden(Renderable):
         self._position = position
         self._region = region
 
-    def render(self, ctx: typing.Any) -> None:
+    def render(self, ctx) -> None:
         """put me on screen """
 
         outline_colour = ColourRecord(red=255, green=0, blue=0)
@@ -921,13 +922,13 @@ class Forbidden(Renderable):
 class Position(Renderable):
     """ A position that can be displayed """
 
-    def __init__(self, server_dict: typing.Dict[str, typing.Any], variant: Variant) -> None:
+    def __init__(self, server_dict, variant: Variant) -> None:
 
         self._variant = variant
 
         # ownerships
         ownerships = server_dict['ownerships']
-        self._ownerships: typing.List[Ownership] = list()
+        self._ownerships = list()
         for center_num_str, role_num in ownerships.items():
             center_num = int(center_num_str)
             center = variant._centers[center_num]
@@ -936,11 +937,11 @@ class Position(Renderable):
             self._ownerships.append(ownership)
 
         # dict that says which unit is on a region
-        self._occupant_table: typing.Dict[Region, Unit] = dict()
+        self._occupant_table = dict()
 
         # units
         units = server_dict['units']
-        self._units: typing.List[Unit] = list()
+        self._units = list()
         for role_num_str, role_units in units.items():
             role_num = int(role_num_str)
             role = variant._roles[role_num]
@@ -957,7 +958,7 @@ class Position(Renderable):
 
         # forbiddens
         forbiddens = server_dict['forbiddens']
-        self._forbiddens: typing.List[Forbidden] = list()
+        self._forbiddens = list()
         for region_num in forbiddens:
             region = variant._regions[region_num]
             forbidden = Forbidden(self, region)
@@ -965,7 +966,7 @@ class Position(Renderable):
 
         # dislodged_units
         dislodged_ones = server_dict['dislodged_ones']
-        self._dislodged_units: typing.List[Unit] = list()
+        self._dislodged_units = list()
         for role_num_str, role_units in dislodged_ones.items():
             role_num = int(role_num_str)
             role = variant._roles[role_num]
@@ -982,7 +983,7 @@ class Position(Renderable):
                 region = zone.region
                 self._occupant_table[region] = dislodged_unit
 
-    def render(self, ctx: typing.Any) -> None:
+    def render(self, ctx) -> None:
         """put me on screen """
 
         # ownerships
@@ -1001,10 +1002,10 @@ class Position(Renderable):
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
 
-    def closest_unit(self, designated_pos: geometry.PositionRecord, dislodged: bool) -> typing.Optional[Unit]:
+    def closest_unit(self, designated_pos: geometry.PositionRecord, dislodged: bool):
         """ closest_unit """
 
-        closest_unit: typing.Optional[Unit] = None
+        closest_unit = None
         distance_closest = None
         search_list = self._dislodged_units if dislodged else self._units
         for unit in search_list:
@@ -1027,7 +1028,7 @@ class Position(Renderable):
         return self._variant
 
     @property
-    def occupant_table(self) -> typing.Dict[Region, Unit]:
+    def occupant_table(self):
         """ property """
         return self._occupant_table
 
@@ -1038,14 +1039,14 @@ DASH_PATTERN = [4, 4]
 class Order(Renderable):
     """ Order """
 
-    def __init__(self, position: 'Position', order_type: OrderTypeEnum, active_unit: Unit, passive_unit: typing.Optional[Unit], destination_zone: typing.Optional[Zone]) -> None:
+    def __init__(self, position: 'Position', order_type: OrderTypeEnum, active_unit: Unit, passive_unit, destination_zone) -> None:
         self._position = position
         self._order_type = order_type
         self._active_unit = active_unit
         self._passive_unit = passive_unit
         self._destination_zone = destination_zone
 
-    def render(self, ctx: typing.Any) -> None:
+    def render(self, ctx) -> None:
         """put me on screen """
 
         # -- moves --
@@ -1257,7 +1258,7 @@ class Order(Renderable):
             # put back
             ctx.lineWidth = 1
 
-    def save_json(self) -> typing.Dict[str, typing.Any]:
+    def save_json(self):
         """ Save to  dict """
 
         json_dict = dict()
@@ -1308,13 +1309,13 @@ class Order(Renderable):
 class Orders(Renderable):
     """ A set of orders that can be displayed / requires position """
 
-    def __init__(self, server_dict: typing.Dict[str, typing.Any], position: Position) -> None:
+    def __init__(self, server_dict, position: Position) -> None:
 
         self._position = position
 
         # fake units - they must go first
         fake_units = server_dict['fake_units']
-        self._fake_units: typing.Dict[int, Unit] = dict()
+        self._fake_units = dict()
         for _, unit_type_num, zone_num, role_num, _, _ in fake_units:
             unit_type = UnitTypeEnum.from_code(unit_type_num)
             zone = self._position.variant.zones[zone_num]
@@ -1327,7 +1328,7 @@ class Orders(Renderable):
 
         # orders
         orders = server_dict['orders']
-        self._orders: typing.List[Order] = list()
+        self._orders = list()
         for _, _, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders:
 
             order_type = OrderTypeEnum.from_code(order_type_num)
@@ -1372,14 +1373,14 @@ class Orders(Renderable):
         """ empty """
         return not self._orders
 
-    def render(self, ctx: typing.Any) -> None:
+    def render(self, ctx) -> None:
         """put me on screen """
 
         # orders
         for order in self._orders:
             order.render(ctx)
 
-    def save_json(self) -> typing.List[typing.Dict[str, typing.Any]]:
+    def save_json(self):
         """ export as list of dict """
         json_data = list()
         for order in self._orders:
