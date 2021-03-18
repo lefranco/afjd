@@ -1,5 +1,8 @@
 """ index """
 
+import time
+start = time.time()
+
 # pylint: disable=pointless-statement, expression-not-assigned
 
 from browser import document, html  # pylint: disable=import-error
@@ -120,3 +123,6 @@ document <= html.BR()
 
 login.show_login()
 selection.show_game_selected()
+
+end = time.time()
+document <= f"Inital page loaded in {(end-start)} sec"
