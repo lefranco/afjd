@@ -11,3 +11,7 @@ The default port is 8000. To specify another port:
 Then load http://localhost:<port>/demo.html in the browser address bar.
 
 For more information please visit http://brython.info.
+
+ADDITIONAL / IMPORTANT 
+to install do not forget to run :
+brython-cli --modules
