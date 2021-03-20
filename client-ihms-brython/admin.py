@@ -14,7 +14,7 @@ import common
 
 my_panel = html.DIV(id="admin")
 
-OPTIONS = ['changer nouvelles']
+OPTIONS = ['changer nouvelles', 'forcer mot de passe']
 
 
 def change_news():
@@ -87,6 +87,12 @@ def change_news():
     my_sub_panel <= form
 
 
+def force_password():
+    """ force_password """
+
+    print("TODO")
+
+
 my_panel = html.DIV(id="admin")
 my_panel.attrs['style'] = 'display: table-row'
 
@@ -112,6 +118,8 @@ def load_option(_, item_name):
     my_sub_panel.clear()
     if item_name == 'changer nouvelles':
         change_news()
+    if item_name == 'forcer mot de passe':
+        force_password()
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 
