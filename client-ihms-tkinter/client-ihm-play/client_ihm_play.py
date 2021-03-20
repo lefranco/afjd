@@ -1148,16 +1148,12 @@ class Application(tkinter.Frame):
         if str(event.widget['state']) == 'disabled':
             return
 
-        print(f"put {role_id} in civil disorder not implemented")
-
     def callback_remove_from_game(self, event: typing.Any, role_id: int) -> None:
         """ callback button pushed """
 
         # button disabled
         if str(event.widget['state']) == 'disabled':
             return
-
-        print(f"remove {role_id} from game not implemented")
 
     def callback_reinit(self, event: typing.Any) -> None:
         """ callback button pushed """
