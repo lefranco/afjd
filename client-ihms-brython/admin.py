@@ -8,6 +8,7 @@ from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import debug
 import config
 import common
 
@@ -15,6 +16,16 @@ import common
 my_panel = html.DIV(id="admin")
 
 OPTIONS = ['changer nouvelles', 'forcer mot de passe']
+
+def check_admin(pseudo):
+    """ check_admin """
+
+    # TODO a revoir
+    if pseudo != "Palpatine":
+        alert("Pas le bon compte (pas admin)")
+        return False
+
+    return True
 
 
 def change_news():
@@ -54,13 +65,11 @@ def change_news():
 
     if 'PSEUDO' not in storage:
         alert("Il faut se loguer au préalable")
-        return
+        return False
 
     pseudo = storage['PSEUDO']
 
-    # TODO a revoir
-    if pseudo != "Palpatine":
-        alert("Pas le bon compte (pas admin)")
+    if not check_admin(pseudo):
         return
 
     news_content_loaded = common.get_news_content()
@@ -90,7 +99,49 @@ def change_news():
 def force_password():
     """ force_password """
 
-    print("TODO")
+    def force_password_callback(_):
+        """ force_password_callback """
+        # TODO
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se loguer au préalable")
+        return False
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        return
+
+    form = html.FORM()
+
+    legend_incomer = html.LEGEND("Usurpé", title="Sélectionner le joueur à usurper")
+    legend_incomer.style = {
+        'color': 'red',
+    }
+    form <= legend_incomer
+
+    players_dict = common.get_players()
+    if players_dict is None:
+        return
+
+    # all players can be usurped
+    possible_usurped = set(players_dict.keys())
+
+    input_usurped = html.SELECT(type="select-one", value="")
+    for usurped_pseudo in sorted(possible_usurped):
+        option = html.OPTION(usurped_pseudo)
+        input_usurped <= option
+
+    form <= input_usurped
+    form <= html.BR()
+
+    form <= html.BR()
+
+    input_select_player = html.INPUT(type="submit", value="forcer mot de passe")
+    input_select_player.bind("click", force_password_callback)
+    form <= input_select_player
+
+    my_sub_panel <= form
 
 
 my_panel = html.DIV(id="admin")

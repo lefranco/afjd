@@ -19,12 +19,27 @@ title2 = html.H2("Dernières nouvelles")
 my_panel <= title2
 
 news_content = common.get_news_content()  # pylint: disable=invalid-name
+new_content = html.DIV()
 if news_content is not None:
     for line in news_content.split("\n"):
-        my_panel <= html.EM(line)
-        my_panel <= html.BR()
+        new_content <= html.EM(line)
+        new_content <= html.BR()
+my_panel <= news_content
 
-my_panel <= html.H2("Une version simplifiée des règles du Jeu")
+title3 = html.H2("Support")
+my_panel <= title3
+
+text1 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la DL est ce soir ? Vous pouvez envoyer un mél à l'adresse ce dessous.")
+my_panel <= text1
+
+emails_support_img = html.IMG(src="./data/email_support.png")
+my_panel <= emails_support_img
+
+text2 = html.P("N'oubliez de bien préciser une procédure pour reproduire le problème, la différence entre le résultat obtenu et le résultat attendu...")
+my_panel <= text2
+
+title4 = html.H2("Une version simplifiée des règles du Jeu")
+my_panel <= title4
 
 my_panel <= html.BR()
 
