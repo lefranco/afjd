@@ -29,7 +29,7 @@ my_panel <= news_content
 title3 = html.H2("Support")
 my_panel <= title3
 
-text1 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la DL est ce soir ? Vous pouvez envoyer un mél à l'adresse ce dessous.")
+text1 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la DL est ce soir ? Vous pouvez envoyer un mél à l'adresse ci-dessous.")
 my_panel <= text1
 
 emails_support_img = html.IMG(src="./data/email_support.png")
