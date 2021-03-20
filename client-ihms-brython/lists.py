@@ -12,7 +12,7 @@ import common
 
 my_panel = html.DIV(id="players")
 
-OPTIONS = ['mes parties', 'tous les joueurs', 'toutes les parties', 'tous les arbitres']
+OPTIONS = ['les joueurs', 'les parties', 'les arbitres']
 
 
 def get_players_data():
@@ -276,11 +276,11 @@ def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
-    if item_name == 'tous les joueurs':
+    if item_name == 'les joueurs':
         show_players_data()
-    if item_name == 'toutes les parties':
+    if item_name == 'les parties':
         show_games_data()
-    if item_name == 'tous les arbitres':
+    if item_name == 'les arbitres':
         show_game_masters_data()
 
     global item_name_selected  # pylint: disable=invalid-name
