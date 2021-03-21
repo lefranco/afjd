@@ -1252,10 +1252,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         roles_list = list(set([o[1] for o in orders_list]))
 
-        # TODO : change for fast games when players can know
-        # if player : can only know about his own orders
-        if role_id != 0:
-            roles_list = [r for r in roles_list if r == role_id]
+        # TODO : change if we docide to hide this information
 
         data = roles_list
         return data, 200
