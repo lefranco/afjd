@@ -8,7 +8,6 @@ from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-import debug
 import config
 import common
 
@@ -65,7 +64,7 @@ def change_news():
 
     if 'PSEUDO' not in storage:
         alert("Il faut se loguer au préalable")
-        return False
+        return
 
     pseudo = storage['PSEUDO']
 
@@ -105,7 +104,7 @@ def usurp():
 
     if 'PSEUDO' not in storage:
         alert("Il faut se loguer au préalable")
-        return False
+        return
 
     pseudo = storage['PSEUDO']
 
