@@ -6,8 +6,6 @@ File : newss.py
 
 Handles the news
 """
-import typing
-import sqlite3
 
 import database
 
