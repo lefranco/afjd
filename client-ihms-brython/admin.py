@@ -15,7 +15,7 @@ import common
 
 my_panel = html.DIV(id="admin")
 
-OPTIONS = ['changer nouvelles', 'forcer mot de passe']
+OPTIONS = ['changer nouvelles', 'usurper']
 
 def check_admin(pseudo):
     """ check_admin """
@@ -96,11 +96,11 @@ def change_news():
     my_sub_panel <= form
 
 
-def force_password():
-    """ force_password """
+def usurp():
+    """ usurp """
 
-    def force_password_callback(_):
-        """ force_password_callback """
+    def usurp_callback(_):
+        """ usurp_callback """
         # TODO
 
     if 'PSEUDO' not in storage:
@@ -137,8 +137,8 @@ def force_password():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="forcer mot de passe")
-    input_select_player.bind("click", force_password_callback)
+    input_select_player = html.INPUT(type="submit", value="usurper")
+    input_select_player.bind("click", usurp_callback)
     form <= input_select_player
 
     my_sub_panel <= form
@@ -169,8 +169,8 @@ def load_option(_, item_name):
     my_sub_panel.clear()
     if item_name == 'changer nouvelles':
         change_news()
-    if item_name == 'forcer mot de passe':
-        force_password()
+    if item_name == 'usurper':
+        usurp()
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 
