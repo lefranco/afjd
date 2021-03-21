@@ -309,7 +309,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
                 port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
                 url = f"{host}:{port}/mail-players"
-                req_result = SESSION.post(url, data=json_dict)
+                req_result = SESSION.post(url, headers={'Authorization': f"Bearer {jwt_token}"}, data=json_dict)
                 if req_result.status_code != 200:
                     print(f"ERROR from server  : {req_result.text}")
                     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
