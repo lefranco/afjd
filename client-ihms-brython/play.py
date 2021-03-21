@@ -16,7 +16,7 @@ import geometry
 import mapping
 
 
-OPTIONS = ['position', 'soumettre', 'négocier', 'arbitrer', 'paramètres', 'joueurs', 'historique']
+OPTIONS = ['position', 'ordonner', 'négocier', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -101,8 +101,14 @@ def get_game_status(variant_data, game_parameters_loaded):
     game_deadline = f"{deadline_loaded_day} {deadline_loaded_hour}"
 
     game_status_table = html.TABLE()
+    game_status_table.style = {
+        "border": "solid",
+    }
 
     row = html.TR()
+    row.style = {
+        "border": "solid",
+    }
 
     col = html.TD(f"Partie {game_name} ({game_variant})")
     col.style = {
@@ -1402,6 +1408,26 @@ def show_players_in_game():
 
     id2pseudo = {v: k for k, v in players_dict.items()}
 
+    submitted_roles_list = None
+
+    # if user identified ?
+    if 'PSEUDO' in storage:
+        pseudo = storage['PSEUDO']
+
+        # from pseudo get player id
+        player_id = common.get_player_id(pseudo)
+        if player_id is not  None:
+
+            # is player in game ?
+            role_id = common.get_role_allocated_to_player(game_id, player_id)
+            if role_id is not None:
+
+                # you will at least get your own role
+                submitted_roles_list = common.get_roles_submitted_orders(game_id)
+
+                # just to avoid a warning
+                submitted_roles_list = list(submitted_roles_list)
+
     game_players_table = html.TABLE()
     game_players_table.style = {
         "padding": "5px",
@@ -1409,12 +1435,12 @@ def show_players_in_game():
         "border": "solid",
     }
 
-    fields = ['flag', 'role', 'player']
+    fields = ['flag', 'role', 'player', 'orders']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'role'}[field]
+        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'role', 'orders': 'ordres'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
@@ -1473,6 +1499,19 @@ def show_players_in_game():
         }
         row <= col
 
+        # orders are in
+        order_status_icon_img = None
+        if submitted_roles_list is not None:
+            if role_id in submitted_roles_list:
+                order_status_icon_img = html.IMG(src="./data/orders_are_in.gif")
+            else:
+                order_status_icon_img = html.IMG(src="./data/orders_are_not_in.gif")
+        col = html.TD(order_status_icon_img if order_status_icon_img is not None else "")
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
         game_players_table <= row
 
     my_sub_panel <= game_players_table
@@ -1502,7 +1541,7 @@ def load_option(_, item_name):
     my_sub_panel.clear()
     if item_name == 'position':
         show_position()
-    if item_name == 'soumettre':
+    if item_name == 'ordonner':
         submit_orders()
     if item_name == 'négocier':
         negotiate()
