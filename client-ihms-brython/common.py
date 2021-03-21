@@ -101,7 +101,7 @@ def get_game_id(name):
     # getting a game identifier : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return int(game_id)
+    return game_id
 
 
 def get_players():
@@ -132,7 +132,7 @@ def get_players():
     # getting players list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return dict(players_dict)
+    return players_dict
 
 
 def get_games_data():
@@ -153,7 +153,7 @@ def get_games_data():
             return
 
         req_result = json.loads(req.text)
-        games_dict = req_result
+        games_dict = dict(req_result)
 
     json_dict = dict()
 
@@ -164,7 +164,7 @@ def get_games_data():
     # getting games list : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return dict(games_dict)
+    return games_dict
 
 
 def game_variant_name_reload(game):
@@ -252,7 +252,7 @@ def game_position_reload(game):
                 alert("Undocumented issue from server")
             return
 
-        position_loaded = req_result
+        position_loaded = dict(req_result)
 
     game_id = get_game_id(game)
     if game_id is None:
