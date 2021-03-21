@@ -35,6 +35,7 @@ class DirectionEnum(enum.Enum):
         #  if self is DirectionEnum.SOUTH_EAST:
         return 3, 3
 
+
 class PositionRecord:
     """ A position """
 
