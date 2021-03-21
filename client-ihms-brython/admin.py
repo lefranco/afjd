@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
+import time
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -10,7 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 import common
-
+import login
 
 my_panel = html.DIV(id="admin")
 
@@ -101,7 +102,41 @@ def usurp():
 
     def usurp_callback(_):
         """ usurp_callback """
-        # TODO
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error usurping: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem usurping: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            storage['PSEUDO'] = usurped_user_name
+            storage['JWT_TOKEN'] = req_result['AccessToken']
+            time_stamp = time.time()
+            storage['LOGIN_TIME'] = str(time_stamp)
+            InfoDialog("OK", f"Vous usurpez maintenant : {usurped_user_name}", remove_after=config.REMOVE_AFTER)
+            login.show_login()
+
+        usurped_user_name = input_usurped.value
+        if not usurped_user_name:
+            alert("User name usurpé manquant")
+            return
+
+        json_dict = {
+            'usurped_user_name': usurped_user_name,
+        }
+
+        host = config.SERVER_CONFIG['USER']['HOST']
+        port = config.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/usurp"
+
+        # usurping : need token
+        # note : since we access directly to the user server, we present the token in a slightly different way
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'PSEUDO' not in storage:
         alert("Il faut se loguer au préalable")
@@ -114,11 +149,8 @@ def usurp():
 
     form = html.FORM()
 
-    legend_incomer = html.LEGEND("Usurpé", title="Sélectionner le joueur à usurper")
-    legend_incomer.style = {
-        'color': 'red',
-    }
-    form <= legend_incomer
+    legend_usurped = html.LEGEND("Usurpé", title="Sélectionner le joueur à usurper")
+    form <= legend_usurped
 
     players_dict = common.get_players()
     if players_dict is None:
