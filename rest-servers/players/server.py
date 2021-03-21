@@ -48,6 +48,12 @@ EMAIL_PARSER = flask_restful.reqparse.RequestParser()
 EMAIL_PARSER.add_argument('pseudo', type=str, required=True)
 EMAIL_PARSER.add_argument('code', type=str, required=True)
 
+SENDMAIL_PARSER = flask_restful.reqparse.RequestParser()
+SENDMAIL_PARSER.add_argument('pseudo', type=str, required=True)
+SENDMAIL_PARSER.add_argument('addressees', type=str, required=True)
+SENDMAIL_PARSER.add_argument('subject', type=str, required=True)
+SENDMAIL_PARSER.add_argument('body', type=str, required=True)
+
 NEWS_PARSER = flask_restful.reqparse.RequestParser()
 NEWS_PARSER.add_argument('pseudo', type=str, required=True)
 NEWS_PARSER.add_argument('content', type=str, required=True)
@@ -338,6 +344,61 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
         data = {'pseudo': pseudo, 'msg': 'Ok player created'}
         return data, 201
+
+
+@API.resource('/mail-players')
+class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
+    """ MailPlayersListRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Sends an email to a list of players
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/mail-players - POST - sending emails to a list of players")
+
+        SENDMAIL_PARSER.add_argument('addressees', type=str, required=True)
+        SENDMAIL_PARSER.add_argument('subject', type=str, required=True)
+        SENDMAIL_PARSER.add_argument('body', type=str, required=True)
+
+        args = SENDMAIL_PARSER.parse_args(strict=True)
+        pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
+
+        # check from user server user is pseudo
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        subject = args['subject']
+        body = args['body']
+
+        recipients: typing.List[str] = list()
+        for dest_id in map(int,  args['body'].split()):
+            pseudo_dest = players.Player.find_by_identifier(dest_id)
+            if pseudo_dest is None:
+                flask_restful.abort(404, msg=f"Failed to find pseudo with id={dest_id}")
+            pseudo_dest_email = pseudo_dest.email
+            recipients.append(pseudo_dest_email)
+
+        status = mailer.send_mail(subject, body, recipients)
+        if not status:
+            flask_restful.abort(400, msg="Failed to send!")
+
+        data = {'msg': 'Ok emails sent'}
+        return data, 200
 
 
 @API.resource('/emails')
