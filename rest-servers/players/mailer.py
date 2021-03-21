@@ -14,9 +14,7 @@ import flask_mail  # type: ignore
 
 import lowdata
 
-SUBJECT = "Ceci est un email pour vérifier votre adresse email"
-BODY_1 = "Le code de conformation à utiliser pour valider votre adresse email est :"
-BODY_2 = "Ne pas répondre à ce message !"
+NOREPLY = "Ne pas répondre à ce message !"
 SENDER = "jeremie.lefrancois@laposte.net"
 
 MAILER = None
@@ -43,10 +41,18 @@ def load_mail_config(app: typing.Any) -> None:
 
 
 def send_mail_checker(code: int, email_dest: str) -> bool:
-    """ send email """
+    """ send_mail_checker """
 
-    msg = flask_mail.Message(SUBJECT, sender=SENDER, recipients=[email_dest])
-    msg.body = f"{BODY_1}\n{code}\n{BODY_2}"
+    subject = "Ceci est un email pour vérifier votre adresse email"
+    msg = flask_mail.Message(subject, sender=SENDER, recipients=[email_dest])
+    msg.body = ""
+    msg.body += "Le code de confirmation à utiliser (sur le site) pour valider votre adresse email est :"
+    msg.body += "\n"
+    msg.body += str(code)
+    msg.body += "\n"
+    msg.body += "\n"
+    msg.body += "\n"
+    msg.body += "Ne pas répondre à ce message !"
 
     assert MAILER is not None
     try:
