@@ -391,6 +391,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
             pseudo_dest = players.Player.find_by_identifier(dest_id)
             if pseudo_dest is None:
                 flask_restful.abort(404, msg=f"Failed to find pseudo with id={dest_id}")
+            assert pseudo_dest is not None
             pseudo_dest_email = pseudo_dest.email
             recipients.append(pseudo_dest_email)
 
@@ -499,7 +500,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         # TODO improve this with read admin account
         if pseudo != 'Palpatine':
-            flask_restful.abort(403, msg=f"You are not allowed to change news!")
+            flask_restful.abort(403, msg="You are not allowed to change news!")
 
         content = args['content']
 
