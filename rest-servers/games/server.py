@@ -289,6 +289,32 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
                 game.start()
 
+                # notify players
+
+                subject = f"La partie {game.name} a démarré !"
+                game_id = game.identifier
+                allocations_list = allocations.Allocation.list_by_game_id(game_id)
+                addressees = list()
+                for _, player_id, __ in allocations_list:
+                    addressees.append(player_id)
+                body = "Vous pouvez commencer à jouer dans cette partie !"
+
+                json_dict = {
+                    'pseudo': pseudo,
+                    'addressees': " ".join([str(a) for a in addressees]),
+                    'subject': subject,
+                    'body': body,
+                }
+
+                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                url = f"{host}:{port}/mail-players"
+                req_result = SESSION.post(url, data=json_dict)
+                if req_result.status_code != 200:
+                    print(f"ERROR from server  : {req_result.text}")
+                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                    flask_restful.abort(400, msg=f"Failed send notification emails {message}")
+
             if current_state_before == 1 and game.current_state == 2:
 
                 # no check ?
@@ -1189,11 +1215,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         }
         return data, 200
 
+
 @API.resource('/game-orders-submitted/<game_id>')
 class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
     """ GameOrderRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int) -> typing.Tuple[typing.List[int], int]:  # pylint: disable=no-self-use
         """
         Gets list of roles which have submitted orders
         EXPOSED
@@ -1244,12 +1271,13 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         assert role_id is not None
         orders_list = orders.Order.list_by_game_id(game_id)
 
-        roles_list = list(set([o[1] for o in orders_list]))
+        roles_list = list({[o[1] for o in orders_list]})
 
-        # TODO : change if we docide to hide this information
+        # TODO : change if we decide to hide this information
 
         data = roles_list
         return data, 200
+
 
 @API.resource('/game-adjudications/<game_id>')
 class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
