@@ -120,6 +120,11 @@ my_panel = html.DIV(id="login")
 
 form1 = html.FORM()
 
+
+form1 <= html.B("Pas de compte ? Crééz-le à partir du menu 'mon compte'...")
+form1 <= html.BR()
+form1 <= html.BR()
+
 legend_pseudo = html.LEGEND("pseudo")
 form1 <= legend_pseudo
 
