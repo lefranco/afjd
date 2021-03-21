@@ -23,7 +23,6 @@ import requests
 
 import mylogger
 import populate
-import mailer
 import allocations
 import ownerships
 import units
@@ -182,7 +181,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
     def get(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
-        Get all infoamtion about game
+        Get all information about game
         EXPOSED
         """
 
@@ -2024,7 +2023,6 @@ def main() -> None:
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
-    mailer.load_mail_config(APP)
 
     # emergency
     if not database.db_present():
