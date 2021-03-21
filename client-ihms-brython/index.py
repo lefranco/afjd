@@ -123,6 +123,7 @@ load_option(None, item_name_selected)
 document <= html.BR()
 document <= html.BR()
 
+login.check_token()
 login.show_login()
 selection.show_game_selected()
 

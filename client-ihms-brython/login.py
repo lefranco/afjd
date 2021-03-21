@@ -14,6 +14,45 @@ import config
 import common
 
 
+def check_token():
+    """ check_token """
+
+    status = True
+
+    def reply_callback(req):
+        """ reply_callback """
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error checking token: {req_result['message']}")
+            elif 'msg' in req_result:
+                #alert(f"Problem checking token: {req_result['msg']}")
+                InfoDialog("OK", f"Votre jeton d'authentification a expiré.\nVous devez juste vous loguer à nouveau {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            else:
+                alert("Undocumented issue from server")
+            logout()
+            nonlocal status
+            status = False
+
+    if 'PSEUDO' not in storage:
+        return
+
+    if 'JWT_TOKEN' not in storage:
+        # should not happen
+        return
+
+    # check authentication from user server
+    host = config.SERVER_CONFIG['USER']['HOST']
+    port = config.SERVER_CONFIG['USER']['PORT']
+    url = f"{host}:{port}/verify"
+
+    json_dict = dict()
+
+    # check token : need token
+    # note : since we access directly to the user server, we present the token in a slightly different way
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
 def login_callback(_):
     """ login_callback """
 
