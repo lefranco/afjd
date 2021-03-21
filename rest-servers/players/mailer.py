@@ -40,15 +40,11 @@ def load_mail_config(app: typing.Any) -> None:
     MAILER = flask_mail.Mail(app)
 
 
-def send_mail_checker(code: int, email_dest: str) -> bool:
+def send_mail(subject: str, body: str, recipients: typing.List[str]) -> bool:
     """ send_mail_checker """
 
-    subject = "Ceci est un email pour vérifier votre adresse email"
-    msg = flask_mail.Message(subject, sender=SENDER, recipients=[email_dest])
-    msg.body = ""
-    msg.body += "Le code de confirmation à utiliser (sur le site) pour valider votre adresse email est :"
-    msg.body += "\n"
-    msg.body += str(code)
+    msg = flask_mail.Message(subject, sender=SENDER, recipients=recipients)
+    msg.body = body
     msg.body += "\n"
     msg.body += "\n"
     msg.body += "\n"
@@ -61,6 +57,18 @@ def send_mail_checker(code: int, email_dest: str) -> bool:
         return False
 
     return True
+
+
+def send_mail_checker(code: int, email_dest: str) -> bool:
+    """ send_mail_checker """
+
+    subject = "Ceci est un email pour vérifier votre adresse email"
+    body = ""
+    body += "Le code de confirmation à utiliser (sur le site) pour valider votre adresse email est :"
+    body += "\n"
+    body += str(code)
+
+    return send_mail(subject, body, [email_dest])
 
 
 if __name__ == '__main__':
