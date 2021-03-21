@@ -556,12 +556,20 @@ def submit_orders():
 
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
+                # little shortcut if dest = origin
+                if selected_dest_zone == selected_active_unit.zone:
+                    selected_order_type = mapping.OrderTypeEnum.HOLD_ORDER
+                    selected_dest_zone = None
                 order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
                 orders_data.insert_order(order)
             if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
                 order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
                 orders_data.insert_order(order)
             if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
+                # little shortcut if dest = origin
+                if selected_dest_zone == selected_active_unit.zone:
+                    selected_order_type = mapping.OrderTypeEnum.DISBAND_ORDER
+                    selected_dest_zone = None
                 order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
                 orders_data.insert_order(order)
             if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER:
