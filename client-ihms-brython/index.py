@@ -1,25 +1,27 @@
 """ index """
 
+# pylint: disable=pointless-statement, expression-not-assigned
+# pylint: disable=wrong-import-position
+
 import time
 start = time.time()
 
-# pylint: disable=pointless-statement, expression-not-assigned
+from browser import document, html  # pylint: disable=import-error # noqa: E402
 
-from browser import document, html  # pylint: disable=import-error
 
-import home
-import login
-import lists
-import account
-import mygames
-import games
-import selection
-import pairing
-import play
-import tools
-import sandbox
-import technical
-import admin
+import home    # noqa: E402
+import login    # noqa: E402
+import lists    # noqa: E402
+import account    # noqa: E402
+import mygames    # noqa: E402
+import games    # noqa: E402
+import selection    # noqa: E402
+import pairing    # noqa: E402
+import play    # noqa: E402
+import tools    # noqa: E402
+import sandbox    # noqa: E402
+import technical    # noqa: E402
+import admin    # noqa: E402
 
 
 # TITLE
