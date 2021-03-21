@@ -196,6 +196,9 @@ def show_game_masters_data():
     if not games_dict:
         return
 
+    # to avoid a warning
+    games_dict = dict(games_dict)
+
     # get the players (masters)
     players_dict = get_players_data()
 
