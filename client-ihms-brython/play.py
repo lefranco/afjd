@@ -14,7 +14,7 @@ import config
 import common
 import geometry
 import mapping
-
+import login
 
 OPTIONS = ['position', 'ordonner', 'négocier', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
@@ -231,6 +231,9 @@ def show_position():
 
 def submit_orders():
     """ submit_orders """
+
+    # because we do not want the token stale in the middle of the process
+    login.check_token()
 
     variant_name_loaded = None
     variant_content_loaded = None
@@ -922,6 +925,9 @@ def submit_orders():
 
 def negotiate():
     """ negotiate """
+
+    # because we do not want the token stale in the middle of the process
+    login.check_token()
 
     dummy = html.P("Sorry, negotiate is not implemented yet...")
     my_sub_panel <= dummy
