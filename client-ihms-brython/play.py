@@ -1416,7 +1416,7 @@ def show_players_in_game():
 
         # from pseudo get player id
         player_id = common.get_player_id(pseudo)
-        if player_id is not  None:
+        if player_id is not None:
 
             # is player in game ?
             role_id = common.get_role_allocated_to_player(game_id, player_id)
