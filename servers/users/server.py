@@ -39,6 +39,9 @@ APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 JWT = flask_jwt_extended.JWTManager(APP)
 
 
+# The only accountg allowed to usurp
+USURPING_PSEUDO = 'Palpatine'
+
 # ---------------------------------
 # users
 # ---------------------------------
@@ -189,6 +192,54 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
     return flask.jsonify(logged_in_as=logged_in_as), 200
+
+
+
+
+
+
+
+
+
+
+
+@APP.route('/usurp', methods=['POST'])
+@flask_jwt_extended.jwt_required  # type: ignore
+def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    """
+    Protect a view with jwt_required, which requires a valid access token
+    in the request to access.
+    EXPOSED : For an account to get token of another account
+    """
+
+    mylogger.LOGGER.info("/usurp - POST - usurping a user")
+
+    # Access the identity of the current user with get_jwt_identity
+    logged_in_as = flask_jwt_extended.get_jwt_identity()
+    if logged_in_as != USURPING_PSEUDO:
+        return {"msg": "Wrong user_name to perform operation"}, 403
+
+    usurped_user_name = flask.request.json.get('usurped_user_name', None)
+    if not usurped_user_name:
+        return {"msg": "Missing usurped_user_name parameter"}, 400
+
+    user = users.User.find_by_name(usurped_user_name)
+    if user is None:
+        return flask.jsonify({"msg": "Bad usurped_user_name"}), 401
+
+
+    # Identity can be any data that is json serializable
+    access_token = flask_jwt_extended.create_access_token(identity=usurped_user_name)
+    return flask.jsonify(AccessToken=access_token), 200
+
+
+
+
+
+
+
+
+
 
 
 # ---------------------------------
