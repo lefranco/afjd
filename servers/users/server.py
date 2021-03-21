@@ -180,7 +180,8 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     Protect a view with jwt_required, which requires a valid access token
     in the request to access.
-    PROTECTED : not called directly, called by game and player blocks
+    EXPOSED : generally not called directly, called by game and player blocks
+       BUT may be called to check validity of token...
     """
 
     mylogger.LOGGER.info("/verify - GET - verifying a user")
