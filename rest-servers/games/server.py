@@ -245,8 +245,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # check this is game_master
         assert game is not None
         if game.get_role(0) != user_id:
-            if pseudo != 'Palpatine':  # TODO remove PATCH !!!
-                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
         # pay more attention to deadline
         entered_deadline = args['deadline']
@@ -566,8 +565,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         game_master_id = game.get_role(0)
 
         if user_id not in [game_master_id, player_id]:
-            if pseudo != 'Palpatine':  # TODO remove PATCH !!!
-                flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the concerned player")
+            flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the concerned player")
 
         # abort if has a role
         raw_allocations = allocations.Allocation.list_by_game_id(game_id)
@@ -665,8 +663,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         game_master_id = game.get_role(0)
 
         if user_id != game_master_id:
-            if pseudo != 'Palpatine':  # TODO remove PATCH !!!
-                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
         # game master of game can neither be added (changed) not removed
 
@@ -1170,9 +1167,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
         role_id = game.find_role(player_id)
         if role_id is None:
-            if pseudo != 'Palpatine':  # TODO remove PATCH !!!
-                flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
-            role_id = 0  # TODO remove PATCH !!!
+            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
         # get orders
         assert role_id is not None
