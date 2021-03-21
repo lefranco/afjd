@@ -16,6 +16,7 @@ my_panel = html.DIV(id="admin")
 
 OPTIONS = ['changer nouvelles', 'usurper']
 
+
 def check_admin(pseudo):
     """ check_admin """
 
