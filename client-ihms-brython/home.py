@@ -18,12 +18,12 @@ my_panel <= link1
 title2 = html.H2("Dernières nouvelles")
 my_panel <= title2
 
-news_content = common.get_news_content()  # pylint: disable=invalid-name
-new_content = html.DIV()
-if news_content is not None:
-    for line in news_content.split("\n"):
-        new_content <= html.EM(line)
-        new_content <= html.BR()
+news_content_loaded = common.get_news_content()  # pylint: disable=invalid-name
+news_content = html.DIV()
+if news_content_loaded is not None:
+    for line in news_content_loaded.split("\n"):
+        news_content <= html.EM(line)
+        news_content <= html.BR()
 my_panel <= news_content
 
 title3 = html.H2("Support")
