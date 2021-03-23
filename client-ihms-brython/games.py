@@ -1166,7 +1166,7 @@ def delete_game():
 
     form = html.FORM()
 
-    input_delete_game = html.INPUT(type="submit", value="delete game")
+    input_delete_game = html.INPUT(type="submit", value="supprimer la partie")
     input_delete_game.bind("click", delete_game_callback)
     form <= input_delete_game
 
