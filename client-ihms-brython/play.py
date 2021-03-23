@@ -1538,12 +1538,14 @@ def show_players_in_game():
 
         # orders are in
         order_status_icon_img = None
-        if submitted_roles_list is not None:
+        if role_id > 0 and submitted_roles_list is not None:
             if role_id in submitted_roles_list:
                 order_status_icon_img = html.IMG(src="./data/orders_are_in.gif")
             else:
                 order_status_icon_img = html.IMG(src="./data/orders_are_not_in.gif")
-        col = html.TD(order_status_icon_img if order_status_icon_img is not None else "")
+        else:
+            order_status_icon_img = "Non applicable"
+        col = html.TD(order_status_icon_img)
         col.style = {
             "border": "solid",
         }
