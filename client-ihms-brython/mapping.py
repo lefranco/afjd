@@ -1060,10 +1060,15 @@ class Order(Renderable):
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
+            ctx.lineWidth = 2
+
             # an arrow (move)
             from_point = self._position.variant.position_table[self._active_unit.zone]
             dest_point = self._position.variant.position_table[self._destination_zone]
             draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
+
+            # put back
+            ctx.lineWidth = 1
 
         if self._order_type is OrderTypeEnum.OFF_SUPPORT_ORDER:
 
@@ -1075,6 +1080,7 @@ class Order(Renderable):
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
+            ctx.lineWidth = 2
             ctx.setLineDash(DASH_PATTERN)
 
             # a dashed arrow (passive move)
@@ -1087,6 +1093,7 @@ class Order(Renderable):
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos, ctx)
 
             # put back
+            ctx.lineWidth = 1
             ctx.setLineDash([])
 
             # a line (support)
@@ -1132,7 +1139,7 @@ class Order(Renderable):
             stroke_color = SUPPORT_COLOUR
             ctx.strokeStyle = stroke_color.str_value()
 
-            ctx.lineWidth = 2
+            ctx.lineWidth = 3
             ctx.setLineDash(DASH_PATTERN)
 
             center_point = self._position.variant.position_table[self._active_unit.zone]
@@ -1156,6 +1163,7 @@ class Order(Renderable):
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
+            ctx.lineWidth = 2
             ctx.setLineDash(DASH_PATTERN)
 
             # a dashed arrow (passive move)
@@ -1168,6 +1176,7 @@ class Order(Renderable):
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos, ctx)
 
             # put back
+            ctx.lineWidth = 1
             ctx.setLineDash([])
 
             # put a line (convoy)
@@ -1189,11 +1198,16 @@ class Order(Renderable):
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
+            ctx.lineWidth = 2
+
             # put an arrow (move/retreat)
             unit_position = self._position.variant.position_table[self._active_unit.zone]
             from_point = geometry.PositionRecord(x_pos=unit_position.x_pos + DISLODGED_SHIFT, y_pos=unit_position.y_pos + DISLODGED_SHIFT)
             dest_point = self._position.variant.position_table[self._destination_zone]
             draw_arrow(from_point.x_pos + DISLODGED_SHIFT, from_point.y_pos + DISLODGED_SHIFT, dest_point.x_pos, dest_point.y_pos, ctx)
+
+            # put back
+            ctx.lineWidth = 1
 
         if self._order_type is OrderTypeEnum.DISBAND_ORDER:
 
