@@ -309,7 +309,7 @@ def submit_orders():
 
             stack_role_flag(buttons_right)
 
-            legend_select_active = html.LEGEND("Selectioner la zone où construire")
+            legend_select_active = html.LEGEND("Sélectionner la zone où construire")
             buttons_right <= legend_select_active
 
             stack_orders(buttons_right)
@@ -598,7 +598,7 @@ def submit_orders():
                 legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
                 buttons_right <= legend_select_unit
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                legend_select_unit = html.LEGEND("Selectioner l'ordre d'adjustment")
+                legend_select_unit = html.LEGEND("Sélectionner l'ordre d'adjustement")
                 buttons_right <= legend_select_unit
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
@@ -683,13 +683,36 @@ def submit_orders():
 
         nonlocal buttons_right
 
+        selected_erase_unit = None
+
+        # easy cases
+
+        # moves : select unit
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
             selected_erase_unit = position_data.closest_unit(pos, False)
+
+        # retreat : select dislodged unit
         if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             selected_erase_unit = position_data.closest_unit(pos, True)
 
+        # tough case : builds
+        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+
+            # first look for a build to cancel
+            selected_erase_unit = orders_data.closest_unit(pos)
+
+            # if failed, look for a removal to cancel
+            if selected_erase_unit is None:
+
+                selected_erase_unit = position_data.closest_unit(pos, False)
+
+                # does this unit has a removal order ?
+                if not orders_data.is_ordered(selected_erase_unit):
+                    selected_erase_unit = None
+
         # remove order
-        orders_data.remove_order(selected_erase_unit)
+        if selected_erase_unit is not None:
+            orders_data.remove_order(selected_erase_unit)
 
         # update map
         callback_render(None)

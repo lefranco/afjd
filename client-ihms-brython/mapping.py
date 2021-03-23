@@ -1277,6 +1277,11 @@ class Order(Renderable):
         """ property """
         return self._active_unit
 
+    @property
+    def order_type(self) -> OrderTypeEnum:
+        """ property """
+        return self._order_type
+
     def __str__(self) -> str:
 
         variant = self._position.variant
@@ -1313,9 +1318,12 @@ class Orders(Renderable):
 
         self._position = position
 
-        # fake units - they must go first
-        fake_units = server_dict['fake_units']
+        # these fake units are local here - they belong to orders, not the position
         self._fake_units = dict()
+
+        # fake units - they must go first
+        #  (they serve for our handling of ihm)
+        fake_units = server_dict['fake_units']
         for _, unit_type_num, zone_num, role_num, _, _ in fake_units:
             unit_type = UnitTypeEnum.from_code(unit_type_num)
             zone = self._position.variant.zones[zone_num]
@@ -1356,22 +1364,60 @@ class Orders(Renderable):
 
     def insert_order(self, order: Order) -> None:
         """ insert_order """
-        found = [o for o in self._orders if o.active_unit == order.active_unit]
+
+        # go to region so a build in stp cancels a build in stp sc
+        found = [o for o in self._orders if o.active_unit.zone.region == order.active_unit.zone.region]
         if found:
             prev_order = found.pop()
             self._orders.remove(prev_order)
         self._orders.append(order)
 
+        # build : add fake unit (they serve for our handling of ihm)
+        if order.order_type is OrderTypeEnum.BUILD_ORDER:
+            active_unit = order.active_unit
+            active_unit_zone_num = active_unit.zone.identifier
+            self._fake_units[active_unit_zone_num] = active_unit
+
     def remove_order(self, unit: Unit) -> None:
         """ remove_order """
+
         found = [o for o in self._orders if o.active_unit == unit]
         assert found, "No unit to remove"
         prev_order = found.pop()
         self._orders.remove(prev_order)
 
+        # build : remove fake unit (they serve for our handling of ihm)
+        if prev_order.order_type is OrderTypeEnum.BUILD_ORDER:
+            active_unit = prev_order.active_unit
+            active_unit_zone_num = active_unit.zone.identifier
+            del self._fake_units[active_unit_zone_num]
+
     def empty(self) -> bool:
         """ empty """
         return not self._orders
+
+    def is_ordered(self, unit: Unit) -> bool:
+        """ is_ordered """
+        for order in self._orders:
+            if order.active_unit == unit:
+                return True
+        return False
+
+    def closest_unit(self, designated_pos: geometry.PositionRecord):
+        """ closest_unit """
+
+        closest_unit = None
+        distance_closest = None
+        search_list = self._fake_units.values()
+        for unit in search_list:
+            zone = unit.zone
+            unit_pos = self._position.variant.position_table[zone]
+            distance = designated_pos.distance(unit_pos)
+            if distance_closest is None or distance < distance_closest:
+                closest_unit = unit
+                distance_closest = distance
+
+        return closest_unit
 
     def render(self, ctx) -> None:
         """put me on screen """
@@ -1382,6 +1428,7 @@ class Orders(Renderable):
 
     def save_json(self):
         """ export as list of dict """
+        # Note : we do not export fake units
         json_data = list()
         for order in self._orders:
             json_data.append(order.save_json())
