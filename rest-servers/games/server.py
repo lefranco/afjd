@@ -1016,26 +1016,36 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
         player_id = game.get_role(role_id)
 
-        # must be player (not game master)
+        # must be player or game master
         if user_id != player_id:
-            flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
+            flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
 
         # put in database fake units - units for build orders
-        # we cannot remove all fake units since at this point we do not know if build will be successful
 
         try:
             the_orders = json.loads(orders_submitted)
         except json.JSONDecodeError:
             flask_restful.abort(400, msg="Did you convert orders from json to text ?")
 
+        # first we copy the fake units of the role already present and remove them
+        game_units = units.Unit.list_by_game_id(game_id)
+        prev_fake_unit_list: typing.List[typing.List[typing.List[int]]] = list()
+        for _, type_num, zone_num, role_num, _, fake in game_units:
+            if not fake:
+                continue
+            if not (role_id == 0 or role_num == int(role_id)):
+                continue
+            prev_fake_unit_list.append([type_num, zone_num, role_num])
+            fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
+            fake_unit.delete_database()
+
+        # then we put the incoming ones in the database
         for the_order in the_orders:
             if the_order['order_type'] == 8:
                 type_num = the_order['active_unit']['type_unit']
                 role_num = the_order['active_unit']['role']
                 zone_num = the_order['active_unit']['zone']
                 fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
-                # remove if present already
-                fake_unit.delete_database()
                 # insert
                 fake_unit.update_database()
 
@@ -1115,6 +1125,13 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # adjudication failed
         if req_result.status_code != 201:
+
+            # we restore the backed up fake units
+            for type_num, zone_num, role_num in prev_fake_unit_list:
+                prev_fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
+                # insert
+                prev_fake_unit.update_database()
+
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Failed to submit orders {message} : {submission_report}")
