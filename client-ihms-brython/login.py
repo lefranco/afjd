@@ -26,7 +26,7 @@ def check_token():
             if 'message' in req_result:
                 alert(f"Error checking token: {req_result['message']}")
             elif 'msg' in req_result:
-                #alert(f"Problem checking token: {req_result['msg']}")
+                #  alert(f"Problem checking token: {req_result['msg']}")
                 InfoDialog("OK", f"Votre jeton d'authentification a expiré.\nVous devez juste vous loguer à nouveau {req_result['msg']}", remove_after=config.REMOVE_AFTER)
             else:
                 alert("Undocumented issue from server")
