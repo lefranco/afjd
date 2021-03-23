@@ -1029,7 +1029,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # first we copy the fake units of the role already present and remove them
         game_units = units.Unit.list_by_game_id(game_id)
-        prev_fake_unit_list: typing.List[typing.List[typing.List[int]]] = list()
+        prev_fake_unit_list: typing.List[typing.List[int]] = list()
         for _, type_num, zone_num, role_num, _, fake in game_units:
             if not fake:
                 continue
@@ -1040,7 +1040,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             fake_unit.delete_database()
 
         # then we put the incoming ones in the database
-        inserted_fake_unit_list: typing.List[typing.List[typing.List[int]]] = list()
+        inserted_fake_unit_list: typing.List[typing.List[int]] = list()
         for the_order in the_orders:
             if the_order['order_type'] == 8:
                 type_num = the_order['active_unit']['type_unit']
