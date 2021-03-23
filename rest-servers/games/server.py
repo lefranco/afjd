@@ -1040,11 +1040,13 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             fake_unit.delete_database()
 
         # then we put the incoming ones in the database
+        inserted_fake_unit_list: typing.List[typing.List[typing.List[int]]] = list()
         for the_order in the_orders:
             if the_order['order_type'] == 8:
                 type_num = the_order['active_unit']['type_unit']
                 role_num = the_order['active_unit']['role']
                 zone_num = the_order['active_unit']['zone']
+                inserted_fake_unit_list.append([type_num, zone_num, role_num])
                 fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
                 # insert
                 fake_unit.update_database()
@@ -1125,6 +1127,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # adjudication failed
         if req_result.status_code != 201:
+
+            # we remove the inserted fake units
+            for type_num, zone_num, role_num in inserted_fake_unit_list:
+                inserted_fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
+                # remove
+                inserted_fake_unit.delete_database()
 
             # we restore the backed up fake units
             for type_num, zone_num, role_num in prev_fake_unit_list:
