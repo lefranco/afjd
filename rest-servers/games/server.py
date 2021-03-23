@@ -1130,15 +1130,15 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
             # we remove the inserted fake units
             for type_num, zone_num, role_num in inserted_fake_unit_list:
-                inserted_fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
+                fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
                 # remove
-                inserted_fake_unit.delete_database()
+                fake_unit.delete_database()
 
             # we restore the backed up fake units
             for type_num, zone_num, role_num in prev_fake_unit_list:
-                prev_fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
+                fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
                 # insert
-                prev_fake_unit.update_database()
+                fake_unit.update_database()
 
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
