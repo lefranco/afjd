@@ -49,7 +49,7 @@ class Transition:
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO transitions (game_id, advancement, transition_data) VALUES (?, ?)", (self._game_id, self._advancement, self))
+        database.sql_execute("INSERT OR REPLACE INTO transitions (game_id, advancement, transition_data) VALUES (?, ?, ?)", (self._game_id, self._advancement, self))
 
     def delete_database(self) -> None:
         """ Removes object from database """
