@@ -1804,7 +1804,11 @@ def show_history():
         display_left <= canvas
         display_left <= report_window
 
+        nonlocal my_sub_panel2
+
         # overall
+        my_sub_panel.removeChild(my_sub_panel2)
+
         my_sub_panel2 = html.DIV()
         my_sub_panel2.attrs['style'] = 'display:table-row'
         my_sub_panel2 <= display_left
@@ -1873,23 +1877,9 @@ def show_history():
     # build variant data
     variant_data = mapping.Variant(variant_content_loaded, parameters_read)
 
-    # left side
-    # display_left will be filled in callback
-
-    # right side
-
-    buttons_right = html.DIV(id='buttons_right')
-    buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
-
-    input_previous = html.INPUT(type="submit", value="Résolution précédente")
-    input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
-    buttons_right <= html.BR()
-    buttons_right <= input_previous
-
-    input_next = html.INPUT(type="submit", value="Résolution suivante")
-    input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
-    buttons_right <= html.BR()
-    buttons_right <= input_next
+    # put it there to remove it at first display
+    my_sub_panel2 = html.DIV()
+    my_sub_panel <= my_sub_panel2
 
     # initiates callback
     transition_display_callback(None, advancement_selected)
