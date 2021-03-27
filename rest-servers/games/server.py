@@ -1591,7 +1591,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         # important : need to be same as when getting situation
         position_transition_dict_json = json.dumps(position_transition_dict)
         orders_transition_list_json = json.dumps(orders_transition_list)
-        transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_dict_json, report_txt)
+        transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_list_json, report_txt)
         transition.update_database()
 
         # update season
