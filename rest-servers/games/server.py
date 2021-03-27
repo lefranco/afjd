@@ -1514,6 +1514,15 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # orders for transition vv ====
         orders_transition_list = orders.Order.list_by_game_id(game_id)
+
+        units_transition_list = units.Unit.list_by_game_id(game_id)
+        fake_units_transition_list = [u for u in units_transition_list if u[5]]
+
+        orders_transition_dict = {
+            'orders': orders_transition_list,
+            'fake_units': fake_units_transition_list,
+        }
+
         # orders for transition ^^ ====
 
         # extract new position
@@ -1590,8 +1599,8 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         # put transition in database
         # important : need to be same as when getting situation
         position_transition_dict_json = json.dumps(position_transition_dict)
-        orders_transition_list_json = json.dumps(orders_transition_list)
-        transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_list_json, report_txt)
+        orders_transition_dict_json = json.dumps(orders_transition_dict)
+        transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_dict_json, report_txt)
         transition.update_database()
 
         # update season
