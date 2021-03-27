@@ -28,7 +28,7 @@ class Transition:
         """ creation of table from scratch """
 
         database.sql_execute("DROP TABLE IF EXISTS transitions")
-        database.sql_execute("CREATE TABLE transitions (game_id INTEGER, advancement INTERGER, transition_data transition, PRIMARY KEY(game_id, advancement))")
+        database.sql_execute("CREATE TABLE transitions (game_id INTEGER, advancement INTEGER, transition_data transition, PRIMARY KEY(game_id, advancement))")
 
     def __init__(self, game_id: int, advancement: int, situation_json: str, orders_json: str, report_txt: str) -> None:
 
