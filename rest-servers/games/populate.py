@@ -13,11 +13,17 @@ import ownerships
 import units
 import forbiddens
 import reports
+import transitions
 import games
 import messages
 import declarations
 import allocations
 import visits
+
+
+def populate_transitions() -> None:
+    """ inserts these items in database """
+    transitions.Transition.create_table()
 
 
 def populate_reports() -> None:
@@ -75,6 +81,7 @@ def populate() -> None:
 
     mylogger.LOGGER.warning("Populating...")
 
+    populate_transitions()
     populate_reports()
     populate_orders()
     populate_ownerships()
