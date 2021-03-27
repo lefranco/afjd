@@ -1559,7 +1559,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             'orders': orders_list_json,
             'fake_units': fake_unit_dict,
         }
-        orders_transition_dict_json = json.dump(orders_transition_dict)
+        orders_transition_dict_json = json.dumps(orders_transition_dict)
         transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_dict_json, report_txt)
         transition.update_database()
 
