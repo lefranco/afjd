@@ -1547,7 +1547,20 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         report.update_database()
 
         # put transition in database
-        transition = transitions.Transition(int(game_id), game.current_advancement, situation_dict_json, orders_list_json, report_txt)
+        # important : move fake_units from situation to orders
+        position_transition_dict = {
+            'ownerships': ownership_dict,
+            'dislodged_ones': dislodged_unit_dict,
+            'units': unit_dict,
+            'forbiddens': forbidden_list,
+        }
+        position_transition_dict_json = json.dumps(position_transition_dict)
+        orders_transition_dict = {
+            'orders': orders_list_json,
+            'fake_units': fake_unit_dict,
+        }
+        orders_transition_dict_json = json.dump(orders_transition_dict)
+        transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_dict_json, report_txt)
         transition.update_database()
 
         # update season
