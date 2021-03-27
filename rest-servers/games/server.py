@@ -28,6 +28,7 @@ import ownerships
 import units
 import orders
 import forbiddens
+import transitions
 import reports
 import games
 import messages
