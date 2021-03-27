@@ -119,7 +119,7 @@ def convert_transition(buffer: bytes) -> Transition:
 
 
 # Interfaces between python and database
-sqlite3.register_adapter(transition, Transition.adapt_transition)
+sqlite3.register_adapter(Transition, Transition.adapt_transition)
 sqlite3.register_converter('transition', convert_transition)
 
 
