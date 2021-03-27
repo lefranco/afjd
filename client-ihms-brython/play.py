@@ -16,7 +16,6 @@ import geometry
 import mapping
 import login
 
-import debug
 
 OPTIONS = ['position', 'ordonner', 'négocier', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
@@ -326,6 +325,7 @@ def submit_orders():
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
                     input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                    buttons_right <= html.BR()
                     input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
                     buttons_right <= input_debug
@@ -613,6 +613,7 @@ def submit_orders():
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
                         input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                        buttons_right <= html.BR()
                         input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
                         buttons_right <= input_debug
@@ -703,6 +704,7 @@ def submit_orders():
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
                         input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                        buttons_right <= html.BR()
                         input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
                         buttons_right <= input_debug
@@ -847,6 +849,7 @@ def submit_orders():
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
                     input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                    buttons_right <= html.BR()
                     input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
                     buttons_right <= input_debug
@@ -1072,6 +1075,7 @@ def submit_orders():
         for order_type in mapping.OrderTypeEnum:
             if order_type.compatible(advancement_season):
                 input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                buttons_right <= html.BR()
                 input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                 buttons_right <= html.BR()
                 buttons_right <= input_debug
@@ -1724,8 +1728,6 @@ def show_history():
 
             # put the orders
             orders_data.render(ctx)
-
-        print(f"called with {advancement_selected=}")
 
         advancement_selected_season, advancement_selected_year = common.get_season(advancement_selected, variant_data)
         advancement_selected_season_readable = variant_data.name_table[advancement_selected_season]
