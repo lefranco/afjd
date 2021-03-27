@@ -63,7 +63,7 @@ class Transition:
     @property
     def orders_json(self) -> str:
         """ property """
-        return self.orders_json
+        return self._orders_json
 
     @property
     def report_txt(self) -> str:
