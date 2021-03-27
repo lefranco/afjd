@@ -534,6 +534,7 @@ def submit_orders():
 
                 for unit_type in mapping.UnitTypeEnum:
                     input_debug = html.INPUT(type="submit", value=variant_data.name_table[unit_type])
+                    buttons_right <= html.BR()
                     input_debug.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
                     buttons_right <= html.BR()
                     buttons_right <= input_debug
