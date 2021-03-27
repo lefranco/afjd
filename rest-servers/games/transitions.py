@@ -60,30 +60,15 @@ class Transition:
         """ property """
         return self._situation_json
 
-    @situation_json.setter
-    def situation_json(self, situation_json: str) -> None:
-        """ setter """
-        self._situation_json = situation_json
-
     @property
     def orders_json(self) -> str:
         """ property """
         return self.orders_json
 
-    @orders_json.setter
-    def orders_json(self, orders_json: str) -> None:
-        """ setter """
-        self._orders_json = orders_json
-
     @property
     def report_txt(self) -> str:
         """ property """
         return self._report_txt
-
-    @report_txt.setter
-    def report_txt(self, report_txt: str) -> None:
-        """ setter """
-        self._report_txt = report_txt
 
     def __str__(self) -> str:
         return f"game_id={self._game_id} advancement={self._advancement} situation_json={self._situation_json} orders_json={self._orders_json} report_txt={self._report_txt}"
