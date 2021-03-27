@@ -1725,7 +1725,9 @@ def show_history():
             # put the orders
             orders_data.render(ctx)
 
-        advancement_selected_season, _ = common.get_season(advancement_selected, variant_data)
+        print(f"called with {advancement_selected=}")
+
+        advancement_selected_season, advancement_selected_year = common.get_season(advancement_selected, variant_data)
         advancement_selected_season_readable = variant_data.name_table[advancement_selected_season]
 
         transition_loaded = common.game_transition_reload(game, advancement_selected)
@@ -1771,9 +1773,34 @@ def show_history():
         display_left = html.DIV(id='display_left')
         display_left.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-        display_left <= html.B(advancement_selected_season_readable)
-        display_left <= html.BR()
+        game_name = game_parameters_loaded['name']
+        game_variant = game_parameters_loaded['variant']
+        game_season = f"{advancement_selected_season_readable} {advancement_selected_year}"
 
+        game_status_table = html.TABLE()
+        game_status_table.style = {
+            "border": "solid",
+        }
+
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+
+        col = html.TD(f"Partie {game_name} ({game_variant})")
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+        col = html.TD(f"Saison {game_season}")
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        game_status_table <= row
+
+        display_left <= game_status_table
         display_left <= canvas
         display_left <= report_window
 
@@ -1781,10 +1808,25 @@ def show_history():
         my_sub_panel2 = html.DIV()
         my_sub_panel2.attrs['style'] = 'display:table-row'
         my_sub_panel2 <= display_left
+
+        # new buttons right
+
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+        input_previous = html.INPUT(type="submit", value="Résolution précédente")
+        input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
+        buttons_right <= html.BR()
+        buttons_right <= input_previous
+
+        input_next = html.INPUT(type="submit", value="Résolution suivante")
+        input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
+        buttons_right <= html.BR()
+        buttons_right <= input_next
+
         my_sub_panel2 <= buttons_right
 
         my_sub_panel <= my_sub_panel2
-
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -1839,12 +1881,12 @@ def show_history():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-    input_previous = html.INPUT(type="submit", value="Transition précédente")
+    input_previous = html.INPUT(type="submit", value="Résolution précédente")
     input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
     buttons_right <= html.BR()
     buttons_right <= input_previous
 
-    input_next = html.INPUT(type="submit", value="Transition suivante")
+    input_next = html.INPUT(type="submit", value="Résolution suivante")
     input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
     buttons_right <= html.BR()
     buttons_right <= input_next
