@@ -16,6 +16,8 @@ import geometry
 import mapping
 import login
 
+import debug
+
 OPTIONS = ['position', 'ordonner', 'négocier', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
 my_panel = html.DIV(id="play")
@@ -343,8 +345,6 @@ def submit_orders():
     def submit_orders_callback(_):
         """ submit_orders_callback """
 
-        #  print("submit_orders_callback")
-
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 201:
@@ -384,8 +384,6 @@ def submit_orders():
     def select_built_unit_type_callback(_, build_unit_type):
         """ select_built_unit_type_callback """
 
-        #  print("select_built_unit_type_callback")
-
         nonlocal selected_build_unit_type
         nonlocal automaton_state
         nonlocal buttons_right
@@ -420,8 +418,6 @@ def submit_orders():
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
-
-        #  print("select_order_type_callback")
 
         nonlocal automaton_state
         nonlocal buttons_right
@@ -569,8 +565,6 @@ def submit_orders():
 
     def callback_click(event):
         """ callback_click """
-
-        #  print("callback_click")
 
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
@@ -795,8 +789,6 @@ def submit_orders():
 
     def callback_dblclick(event):
         """ callback_dblclick """
-
-        #  print("callback_dblclick")
 
         nonlocal automaton_state
 
@@ -1221,8 +1213,6 @@ def game_master():
 
     def adjudicate_callback(_):
         """ adjudicate_callback """
-
-        #  print("adjudicate_callback")
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1718,8 +1708,149 @@ def show_players_in_game():
 def show_history():
     """ show_history """
 
-    dummy = html.P("Sorry, history is not implemented yet...")
-    my_sub_panel <= dummy
+    def transition_display_callback(_, advancement_selected: int):
+
+        def callback_render(_):
+            """ callback_render """
+
+            # put the background map first
+            ctx.drawImage(img, 0, 0)
+
+            # put the legends
+            variant_data.render(ctx)
+
+            # put the position
+            position_data.render(ctx)
+
+            # put the orders
+            orders_data.render(ctx)
+
+        advancement_selected_season, _ = common.get_season(advancement_selected, variant_data)
+        advancement_selected_season_readable = variant_data.name_table[advancement_selected_season]
+
+        transition_loaded = common.game_transition_reload(game, advancement_selected)
+        if transition_loaded is None:
+            return
+
+        # clears a pylint warning
+        transition_loaded = dict(transition_loaded)
+
+        position_loaded_json = transition_loaded['situation_json']
+        orders_loaded_json = transition_loaded['orders_json']
+        report_loaded = transition_loaded['report_txt']
+
+        position_loaded = json.loads(position_loaded_json)
+        orders_loaded = json.loads(orders_loaded_json)
+
+        # digest the position
+        position_data = mapping.Position(position_loaded, variant_data)
+
+        # digest the orders
+        orders_data = mapping.Orders(orders_loaded, position_data)
+
+        # now we can display
+
+        map_size = variant_data.map_size
+
+        # create canvas
+        canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+
+        ctx = canvas.getContext("2d")
+        if ctx is None:
+            alert("Il faudrait utiliser un navigateur plus récent !")
+            return
+
+        # put background (this will call the callback that display the whole map)
+        img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
+        img.bind('load', callback_render)
+
+        report_window = make_report_window(report_loaded)
+
+        # left side
+
+        display_left = html.DIV(id='display_left')
+        display_left.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+        display_left <= html.B(advancement_selected_season_readable)
+        display_left <= html.BR()
+
+        display_left <= canvas
+        display_left <= report_window
+
+        # overall
+        my_sub_panel2 = html.DIV()
+        my_sub_panel2.attrs['style'] = 'display:table-row'
+        my_sub_panel2 <= display_left
+        my_sub_panel2 <= buttons_right
+
+        my_sub_panel <= my_sub_panel2
+
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
+    advancement_loaded = game_parameters_loaded['current_advancement']
+    last_advancement = advancement_loaded - 1
+    if not last_advancement >= 0:
+        alert("Rien pour le moment !")
+        return
+
+    advancement_selected = last_advancement
+
+    # from game name get variant name
+
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = common.get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+
+    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+    with open(parameters_file_name, "r") as read_file:
+        parameters_read = json.load(read_file)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+
+    # left side
+    # display_left will be filled in callback
+
+    # right side
+
+    buttons_right = html.DIV(id='buttons_right')
+    buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+
+    input_previous = html.INPUT(type="submit", value="Transition précédente")
+    input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
+    buttons_right <= html.BR()
+    buttons_right <= input_previous
+
+    input_next = html.INPUT(type="submit", value="Transition suivante")
+    input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
+    buttons_right <= html.BR()
+    buttons_right <= input_next
+
+    # initiates callback
+    transition_display_callback(None, advancement_selected)
 
 
 def load_option(_, item_name):

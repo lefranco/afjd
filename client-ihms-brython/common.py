@@ -307,6 +307,43 @@ def game_report_reload(game):
     return report_loaded
 
 
+def game_transition_reload(game, advancement):
+    """ game_transition_reload """
+
+    transition_loaded = None
+
+    def reply_callback(req):
+        """ reply_callback """
+        nonlocal transition_loaded
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error loading game transition: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem loading game transition: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        transition_loaded = req_result
+
+    game_id = get_game_id(game)
+    if game_id is None:
+        return None
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-transitions/{game_id}/{advancement}"
+
+    # getting variant : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return transition_loaded
+
+
 def game_orders_reload(game):
     """ game_orders_reload """
 
