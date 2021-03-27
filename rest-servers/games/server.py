@@ -1419,10 +1419,12 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         game_units = units.Unit.list_by_game_id(game_id)
         unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        fake_unit_transition_list = list()
         dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
             if fake:
                 fake_unit_dict[str(role_num)].append([type_num, zone_num])
+                fake_unit_transition_list.append([type_num, zone_num])
             elif region_dislodged_from_num:
                 dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
             else:
@@ -1445,10 +1447,13 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # evaluate orders
         orders_list = list()
+        orders_list_transition = list()
         orders_from_game = orders.Order.list_by_game_id(game_id)
-        for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders_from_game:
+        for game_num, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders_from_game:
             orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
+            orders_list_transition.append([game_num, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
         orders_list_json = json.dumps(orders_list)
+        orders_list_transition_json = json.dumps(orders_list_transition)
 
         json_dict = {
             'variant': variant_dict_json,
@@ -1556,8 +1561,8 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         }
         position_transition_dict_json = json.dumps(position_transition_dict)
         orders_transition_dict = {
-            'orders': orders_list_json,
-            'fake_units': fake_unit_dict,
+            'orders': orders_list_transition_json,
+            'fake_units': fake_unit_transition_list,
         }
         orders_transition_dict_json = json.dumps(orders_transition_dict)
         transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_dict_json, report_txt)
