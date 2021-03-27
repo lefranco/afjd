@@ -321,7 +321,7 @@ def game_transition_reload(game, advancement):
             if 'message' in req_result:
                 alert(f"Error loading game transition: {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem loading game transition: {req_result['msg']}")
+                alert(f"Résolution introuvable: {req_result['msg']}")
             else:
                 alert("Undocumented issue from server")
             return
