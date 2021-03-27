@@ -982,8 +982,8 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
         assert transition is not None
         situation_json = transition.situation_json
         orders_json = transition.orders_json
-        report_text = transition.report_text
-        data = {'situation_json': situation_json, 'orders_json': orders_json, 'report': report_txt}
+        report_txt = transition.report_txt
+        data = {'situation_json': situation_json, 'orders_json': orders_json, 'report_txt': report_txt}
 
         return data, 200
 
