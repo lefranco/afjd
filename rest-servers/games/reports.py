@@ -54,11 +54,6 @@ class Report:
         """ property """
         return self._content
 
-    @content.setter
-    def content(self, content: str) -> None:
-        """ setter """
-        self._content = content
-
     def __str__(self) -> str:
         return f"game_id={self._game_id} time_stamp={self._time_stamp} content={self._content}"
 

@@ -943,15 +943,47 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # find the game
+        # find the report
         report = reports.Report.find_by_identifier(game_id)
-        if game is None:
+        if report is None:
             flask_restful.abort(404, msg=f"Report happens to be missing for {game_id}")
 
-        # extract report
+        # extract report data
         assert report is not None
         content = report.content
         data = {'content': content}
+
+        return data, 200
+
+
+@API.resource('/game-transitions/<game_id>/<advancement>')
+class GameTransitionRessource(flask_restful.Resource):  # type: ignore
+    """ GameTransitionRessource """
+
+    def get(self, game_id: int, advancement: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Gets the full report  (transition : postions + orders + report) of adjudication for the game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-transitions/<game_id>/<advancement> - GET - getting transition game id=%s advancement=%s", game_id, advancement)
+
+        # check the game exists
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # find the transition
+        transition = transitions.Transition.find_by_identifier_advancement(game_id, advancement)
+        if transition is None:
+            flask_restful.abort(404, msg=f"Transition happens to be missing for {game_id} / {advancement}")
+
+        # extract transition data
+        assert transition is not None
+        situation_json = transition.situation_json
+        orders_json = transition.orders_json
+        report_text = transition.report_text
+        data = {'situation_json': situation_json, 'orders_json': orders_json, 'report': report_txt}
 
         return data, 200
 
