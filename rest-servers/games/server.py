@@ -1419,12 +1419,10 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         game_units = units.Unit.list_by_game_id(game_id)
         unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        fake_unit_transition_list = list()
         dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
             if fake:
                 fake_unit_dict[str(role_num)].append([type_num, zone_num])
-                fake_unit_transition_list.append([type_num, zone_num])
             elif region_dislodged_from_num:
                 dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
             else:
@@ -1447,13 +1445,10 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # evaluate orders
         orders_list = list()
-        orders_list_transition = list()
         orders_from_game = orders.Order.list_by_game_id(game_id)
         for game_num, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders_from_game:
             orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
-            orders_list_transition.append([game_num, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
         orders_list_json = json.dumps(orders_list)
-        orders_list_transition_json = json.dumps(orders_list_transition)
 
         json_dict = {
             'variant': variant_dict_json,
@@ -1479,6 +1474,47 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Failed to adjudicate {message} : {adjudication_report}")
+
+        # adjudication successful : backup for transition archive
+
+        # position for transition vv ====
+
+        # get ownerships
+        ownership_dict = dict()
+        game_ownerships = ownerships.Ownership.list_by_game_id(game_id)
+        for _, center_num, role_num in game_ownerships:
+            ownership_dict[str(center_num)] = role_num
+
+        # get units
+        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        game_units = units.Unit.list_by_game_id(game_id)
+        for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+            if fake:
+                pass  # this is confidential
+            elif region_dislodged_from_num:
+                dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
+            else:
+                unit_dict[str(role_num)].append([type_num, zone_num])
+
+        # get forbiddens
+        forbidden_list = list()
+        game_forbiddens = forbiddens.Forbidden.list_by_game_id(game_id)
+        for _, region_num in game_forbiddens:
+            forbidden_list.append(region_num)
+
+        position_transition_dict = {
+            'ownerships': ownership_dict,
+            'dislodged_ones': dislodged_unit_dict,
+            'units': unit_dict,
+            'forbiddens': forbidden_list,
+        }
+
+        # position for transition ^^ ====
+
+        # orders for transition vv ====
+        orders_transition_list = orders.Order.list_by_game_id(game_id)
+        # orders for transition ^^ ====
 
         # extract new position
         situation_result = req_result.json()['situation_result']
@@ -1552,19 +1588,9 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         report.update_database()
 
         # put transition in database
-        # important : move fake_units from situation to orders
-        position_transition_dict = {
-            'ownerships': ownership_dict,
-            'dislodged_ones': dislodged_unit_dict,
-            'units': unit_dict,
-            'forbiddens': forbidden_list,
-        }
+        # important : need to be same as when getting situation
         position_transition_dict_json = json.dumps(position_transition_dict)
-        orders_transition_dict = {
-            'orders': orders_list_transition_json,
-            'fake_units': fake_unit_transition_list,
-        }
-        orders_transition_dict_json = json.dumps(orders_transition_dict)
+        orders_transition_list_json = json.dumps(orders_transition_list)
         transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_dict_json, report_txt)
         transition.update_database()
 
