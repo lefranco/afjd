@@ -1124,22 +1124,30 @@ class Order(Renderable):
             ctx.lineWidth = 2
             ctx.setLineDash(DASH_PATTERN)
 
+            # prepare the line
+            from_point = self._position.variant.position_table[self._active_unit.zone]
+            dest_point = self._position.variant.position_table[self._passive_unit.zone]
+            direction = geometry.get_direction(from_point, dest_point)
+            next_direction = direction.perpendicular()
+            dest_point_shifted = dest_point.shift(next_direction)
+
+
             # put a dashed circle (stand) over unit
             center_point = self._position.variant.position_table[self._passive_unit.zone]
+            center_point_shifted = center_point.shift(next_direction)
             ctx.beginPath()
-            ctx.arc(center_point.x_pos, center_point.y_pos, 12, 0, 2 * math.pi, False)
+            ctx.arc(center_point_shifted.x_pos, center_point_shifted.y_pos, 12, 0, 2 * math.pi, False)
             ctx.stroke(); ctx.closePath()
 
             # put back
             ctx.lineWidth = 1
             ctx.setLineDash([])
 
-            # put a line (support)
-            from_point = self._position.variant.position_table[self._active_unit.zone]
-            dest_point = self._position.variant.position_table[self._passive_unit.zone]
+            # put the prepared line (support)
+
             ctx.beginPath()
             ctx.moveTo(from_point.x_pos, from_point.y_pos)
-            ctx.lineTo(dest_point.x_pos, dest_point.y_pos)
+            ctx.lineTo(dest_point_shifted.x_pos, dest_point_shifted.y_pos)
             ctx.stroke(); ctx.closePath()
 
         if self._order_type is OrderTypeEnum.HOLD_ORDER:
