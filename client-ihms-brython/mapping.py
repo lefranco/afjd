@@ -685,6 +685,11 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         """ property """
         return self._zone
 
+    @property
+    def role(self) -> Role:
+        """ property """
+        return self._role
+
     def __str__(self) -> str:
         variant = self._position.variant
         zone = self._zone
@@ -1021,6 +1026,10 @@ class Position(Renderable):
     def has_dislodged(self) -> bool:
         """ has_dislodged """
         return bool(self._dislodged_units)
+
+    def units_list(self):
+        """ units_list """
+        return self._units
 
     @property
     def variant(self) -> Variant:
@@ -1433,8 +1442,31 @@ class Orders(Renderable):
 
         return closest_unit
 
+    def erase_orders(self) -> None:
+        """ erase all orders """
+
+        self._orders = list()
+        self._fake_units = dict()
+
+    def rest_hold(self, role_id) -> None:
+        """ set the unordered units orders to hold """
+
+        # should be in season for move orders - not checked here
+
+        units_in_position = set(self._position.units_list())
+
+        # if within a role restrict to that role
+        if role_id is not None:
+            units_in_position = {u for u in units_in_position if u.role.identifier == role_id}
+
+        ordered_units = {o.active_unit for o in self._orders}
+        unordered_units = units_in_position - ordered_units
+        for unordered_unit in unordered_units:
+            order = Order(self._position, OrderTypeEnum.HOLD_ORDER, unordered_unit, None, None)
+            self.insert_order(order)
+
     def render(self, ctx) -> None:
-        """put me on screen """
+        """ put me on screen """
 
         # orders
         for order in self._orders:
