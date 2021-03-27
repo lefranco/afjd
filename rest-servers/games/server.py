@@ -1514,13 +1514,8 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         report = reports.Report(int(game_id), time_stamp, report_txt)
         report.update_database()
 
-        # make transition
-
-        situation_json = "TBD - situation"
-        orders_json = "TBD - orders"
-
         # put transition in database
-        transition = transitions.Transition(int(game_id), game.current_advancement, situation_json, orders_json, report_txt)
+        transition = transitions.Transition(int(game_id), game.current_advancement, situation_dict_json, orders_list_json, report_txt)
         transition.update_database()
 
         # update season
