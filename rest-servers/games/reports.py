@@ -4,7 +4,7 @@
 """
 File : reports.py
 
-Handles the ulatest report of the game
+Handles the latest report of the game
 """
 import typing
 import sqlite3
