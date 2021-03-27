@@ -1504,13 +1504,23 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         # date for database (actually unused)
         time_stamp = int(time.time())
 
-        # get current date
+        # make report
         date_now = datetime.datetime.now()
         date_desc = date_now.strftime('%Y-%m-%d %H:%M:%S')
+        report_txt = f"{date_desc}:\n{orders_result_simplified}"
 
-        content = f"{date_desc}:\n\n{orders_result_simplified}"
-        report = reports.Report(int(game_id), time_stamp, content)
+        # put report in database
+        report = reports.Report(int(game_id), time_stamp, report_txt)
         report.update_database()
+
+        # make transition
+
+        situation_json = "TBD - situation"
+        orders_json = "TBD - orders"
+
+        # put transition in database
+        transition = transitions.Transition(int(game_id), game.current_advancement, situation_json, orders_json, report_txt)
+        transition.update_database()
 
         # update season
         game.advance()
