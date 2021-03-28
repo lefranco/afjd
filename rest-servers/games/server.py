@@ -1543,6 +1543,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # purge previous units
         for (_, type_num, role_num, zone_num, region_dislodged_from_num, fake) in units.Unit.list_by_game_id(int(game_id)):
+            print(f"{fake=}")
             unit = units.Unit(int(game_id), type_num, role_num, zone_num, region_dislodged_from_num, fake)
             unit.delete_database()
 
