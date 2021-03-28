@@ -1821,11 +1821,13 @@ def show_history():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
+        buttons_right <= html.BR()
         input_previous = html.INPUT(type="submit", value="Résolution précédente")
         input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
         buttons_right <= html.BR()
         buttons_right <= input_previous
 
+        buttons_right <= html.BR()
         input_next = html.INPUT(type="submit", value="Résolution suivante")
         input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
         buttons_right <= html.BR()
