@@ -301,6 +301,7 @@ class ColourRecord:
 
 
 # position
+DISLODGED_TEXT_BACKGROUND_COLOUR = ColourRecord(255, 255, 255)  # white
 DISLODGED_COLOUR = ColourRecord(255, 127, 0)  # orange
 DISLODGED_SHIFT = -5
 
@@ -647,6 +648,13 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         dislodger_legend = self._position.variant.name_table[zone_dislodger]
 
         # dislodger
+
+
+        dislodger_back_colour = DISLODGED_TEXT_BACKGROUND_COLOUR
+        ctx.fillStyle = dislodger_back_colour.str_value()
+        ctx.rect(x_pos + 10, y_pos - 17, 20, 10)
+        ctx.fill()
+
         dislodger_colour = DISLODGED_COLOUR
         ctx.fillStyle = dislodger_colour.str_value()
         ctx.fillText(dislodger_legend, x_pos + 12, y_pos - 9)
