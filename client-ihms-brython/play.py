@@ -77,11 +77,11 @@ def make_report_window(report_loaded):
     return report_table
 
 
-def get_game_status(variant_data, game_parameters_loaded):
+def get_game_status(variant_data, game_parameters_loaded, full):
     """ get_game__status """
 
     game_name = game_parameters_loaded['name']
-
+    game_description = game_parameters_loaded['description']
     game_variant = game_parameters_loaded['variant']
 
     state_loaded = game_parameters_loaded['current_state']
@@ -116,17 +116,66 @@ def get_game_status(variant_data, game_parameters_loaded):
         "border": "solid",
     }
     row <= col
-    col = html.TD(f"Etat {game_state_readable}")
-    col.style = {
-        "border": "solid",
-    }
-    row <= col
+    if full:
+        col = html.TD(f"Etat {game_state_readable}")
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
     col = html.TD(f"Saison {game_season}")
     col.style = {
         "border": "solid",
     }
     row <= col
     col = html.TD(f"DL {game_deadline} GMT")
+    col.style = {
+        "border": "solid",
+    }
+    row <= col
+    game_status_table <= row
+
+    if full:
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+
+        col = html.TD(game_description, colspan="4")
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+        game_status_table <= row
+
+    return game_status_table
+
+
+def get_game_status_histo(variant_data, game_parameters_loaded, advancement_selected):
+    """ get_game_status_histo """
+
+    advancement_selected_season, advancement_selected_year = common.get_season(advancement_selected, variant_data)
+    advancement_selected_season_readable = variant_data.name_table[advancement_selected_season]
+
+    game_name = game_parameters_loaded['name']
+    game_variant = game_parameters_loaded['variant']
+    game_season = f"{advancement_selected_season_readable} {advancement_selected_year}"
+
+    game_status_table = html.TABLE()
+    game_status_table.style = {
+        "border": "solid",
+    }
+
+    row = html.TR()
+    row.style = {
+        "border": "solid",
+    }
+
+    col = html.TD(f"Partie {game_name} ({game_variant})")
+    col.style = {
+        "border": "solid",
+    }
+    row <= col
+    col = html.TD(f"Saison {game_season}")
     col.style = {
         "border": "solid",
     }
@@ -199,7 +248,7 @@ def show_position():
     # just to prevent a erroneous pylint warning
     game_parameters_loaded = dict(game_parameters_loaded)
 
-    game_status = get_game_status(variant_data, game_parameters_loaded)
+    game_status = get_game_status(variant_data, game_parameters_loaded, True)
     my_sub_panel <= game_status
 
     # digest the position
@@ -996,7 +1045,7 @@ def submit_orders():
         alert("La partie est déjà terminée")
         return
 
-    game_status = get_game_status(variant_data, game_parameters_loaded)
+    game_status = get_game_status(variant_data, game_parameters_loaded, False)
     my_sub_panel <= game_status
 
     advancement_loaded = game_parameters_loaded['current_advancement']
@@ -1320,7 +1369,7 @@ def game_master():
         alert("La partie est déjà terminée")
         return
 
-    game_status = get_game_status(variant_data, game_parameters_loaded)
+    game_status = get_game_status(variant_data, game_parameters_loaded, False)
     my_sub_panel <= game_status
 
     my_sub_panel <= html.BR()
@@ -1730,9 +1779,6 @@ def show_history():
             # put the orders
             orders_data.render(ctx)
 
-        advancement_selected_season, advancement_selected_year = common.get_season(advancement_selected, variant_data)
-        advancement_selected_season_readable = variant_data.name_table[advancement_selected_season]
-
         transition_loaded = common.game_transition_reload(game, advancement_selected)
         if transition_loaded is None:
             return
@@ -1776,34 +1822,9 @@ def show_history():
         display_left = html.DIV(id='display_left')
         display_left.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
-        game_name = game_parameters_loaded['name']
-        game_variant = game_parameters_loaded['variant']
-        game_season = f"{advancement_selected_season_readable} {advancement_selected_year}"
+        game_status = get_game_status_histo(variant_data, game_parameters_loaded, advancement_selected)
 
-        game_status_table = html.TABLE()
-        game_status_table.style = {
-            "border": "solid",
-        }
-
-        row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
-
-        col = html.TD(f"Partie {game_name} ({game_variant})")
-        col.style = {
-            "border": "solid",
-        }
-        row <= col
-        col = html.TD(f"Saison {game_season}")
-        col.style = {
-            "border": "solid",
-        }
-        row <= col
-
-        game_status_table <= row
-
-        display_left <= game_status_table
+        display_left <= game_status
         display_left <= canvas
         display_left <= report_window
 
