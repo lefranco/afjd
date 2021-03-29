@@ -315,6 +315,9 @@ ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 # legend
 LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
+# center
+CENTER_COLOUR = ColourRecord(red=225, green=225, blue=225)  # light grey
+
 
 class Variant(Renderable):
     """ A variant """
@@ -556,6 +559,7 @@ class Variant(Renderable):
         legend_colour = LEGEND_COLOUR
         ctx.fillStyle = legend_colour.str_value()
 
+        # put legends
         for zone in self._zones.values():
             position = self._legend_position_table[zone]
             x_pos = position.x_pos
@@ -565,6 +569,23 @@ class Variant(Renderable):
             else:
                 legend = self._name_table[zone]
             ctx.fillText(legend, x_pos, y_pos)
+
+        # put centers
+
+        fill_color = CENTER_COLOUR
+        ctx.fillStyle = fill_color.str_value()
+
+        outline_colour = fill_color.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+
+        for center in self._centers.values():
+
+            position = self._position_table[center]
+            x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+            ctx.beginPath()
+            ctx.arc(x, y, 4, 0, 2 * math.pi, False)
+            ctx.fill(); ctx.stroke(); ctx.closePath()
 
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
@@ -648,7 +669,6 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         dislodger_legend = self._position.variant.name_table[zone_dislodger]
 
         # dislodger
-
 
         dislodger_back_colour = DISLODGED_TEXT_BACKGROUND_COLOUR
         ctx.fillStyle = dislodger_back_colour.str_value()
@@ -899,8 +919,7 @@ class Ownership(Renderable):
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         ctx.beginPath()
-        ctx.fillRect(x - 4, y - 4, 8, 8)
-        ctx.strokeRect(x - 4, y - 4, 8, 8)
+        ctx.arc(x, y, 4, 0, 2 * math.pi, False)
         ctx.fill(); ctx.stroke(); ctx.closePath()
 
 
@@ -1138,7 +1157,6 @@ class Order(Renderable):
             direction = geometry.get_direction(from_point, dest_point)
             next_direction = direction.perpendicular()
             dest_point_shifted = dest_point.shift(next_direction)
-
 
             # put a dashed circle (stand) over unit
             center_point = self._position.variant.position_table[self._passive_unit.zone]

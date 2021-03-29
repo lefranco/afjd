@@ -79,9 +79,9 @@
             "name": "Russie",
             "adjective_name": "russe",
             "letter_name": "R",
-            "red": 230,
-            "green": 230,
-            "blue": 230
+            "red": 255,
+            "green": 255,
+            "blue": 255
         },
         "7": {
             "name": "Turquie",
@@ -225,7 +225,7 @@
         },
         "18": {
             "name": "cly",
-            "x_legend_pos": 154,
+            "x_legend_pos": 153,
             "y_legend_pos": 157,
             "x_pos": 152,
             "y_pos": 173
@@ -233,7 +233,7 @@
         "19": {
             "name": "con",
             "x_legend_pos": 455,
-            "y_legend_pos": 463,
+            "y_legend_pos": 465,
             "x_pos": 487,
             "y_pos": 461
         },
@@ -246,14 +246,14 @@
         },
         "21": {
             "name": "EAS",
-            "x_legend_pos": 517,
+            "x_legend_pos": 515,
             "y_legend_pos": 517,
             "x_pos": 493,
             "y_pos": 526
         },
         "22": {
             "name": "edi",
-            "x_legend_pos": 182,
+            "x_legend_pos": 183,
             "y_legend_pos": 159,
             "x_pos": 179,
             "y_pos": 171
@@ -351,15 +351,15 @@
         },
         "36": {
             "name": "lvp",
-            "x_legend_pos": 136,
-            "y_legend_pos": 199,
+            "x_legend_pos": 138,
+            "y_legend_pos": 225,
             "x_pos": 157,
             "y_pos": 208
         },
         "37": {
             "name": "mar",
             "x_legend_pos": 182,
-            "y_legend_pos": 400,
+            "y_legend_pos": 398,
             "x_pos": 219,
             "y_pos": 387
         },
@@ -463,7 +463,7 @@
         },
         "52": {
             "name": "rom",
-            "x_legend_pos": 277,
+            "x_legend_pos": 275,
             "y_legend_pos": 424,
             "x_pos": 294,
             "y_pos": 441
@@ -589,7 +589,7 @@
         },
         "70": {
             "name": "ven",
-            "x_legend_pos": 272,
+            "x_legend_pos": 268,
             "y_legend_pos": 384,
             "x_pos": 287,
             "y_pos": 390
