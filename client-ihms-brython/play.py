@@ -1843,16 +1843,28 @@ def show_history():
         buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
         buttons_right <= html.BR()
-        input_previous = html.INPUT(type="submit", value="Résolution précédente")
+        input_first = html.INPUT(type="submit", value="Première résolution")
+        input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
+        buttons_right <= html.BR()
+        buttons_right <= input_first
+
+        buttons_right <= html.BR()
+        input_previous = html.INPUT(type="submit", value="Précédente résolution")
         input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
         buttons_right <= html.BR()
         buttons_right <= input_previous
 
         buttons_right <= html.BR()
-        input_next = html.INPUT(type="submit", value="Résolution suivante")
+        input_next = html.INPUT(type="submit", value="Suivante résolution")
         input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
         buttons_right <= html.BR()
         buttons_right <= input_next
+
+        buttons_right <= html.BR()
+        input_last = html.INPUT(type="submit", value="Dernière résolution")
+        input_last.bind("click", lambda e, a=last_advancement: transition_display_callback(e, a))
+        buttons_right <= html.BR()
+        buttons_right <= input_last
 
         my_sub_panel2 <= buttons_right
 
@@ -1876,8 +1888,6 @@ def show_history():
     if not last_advancement >= 0:
         alert("Rien pour le moment !")
         return
-
-    advancement_selected = last_advancement
 
     # from game name get variant name
 
@@ -1908,7 +1918,7 @@ def show_history():
     my_sub_panel <= my_sub_panel2
 
     # initiates callback
-    transition_display_callback(None, advancement_selected)
+    transition_display_callback(None, last_advancement)
 
 
 def load_option(_, item_name):
