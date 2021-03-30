@@ -50,6 +50,40 @@ class AutomatonStateEnum(enum.Enum):
     SELECT_BUILD_UNIT_TYPE_STATE = enum.auto()
 
 
+def make_rating_colours_window(ratings, colours):
+    """ make_rating_window """
+
+    rating_table = html.TABLE()
+    rating_table.style = {
+        "border": "solid",
+    }
+    rating_row = html.TR()
+    rating_row.style = {
+        "border": "solid",
+    }
+    rating_table <= rating_row
+    for role_name, ncenters in ratings.items():
+        rating_col = html.TD()
+        rating_col.style = {
+            "border": "solid",
+        }
+
+        canvas = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
+        ctx = canvas.getContext("2d")
+
+        colour = colours[role_name]
+        ctx.fillStyle = colour.str_value()
+        outline_colour = colour.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+        ctx.rect(0, 0, 15, 15)
+        ctx.stroke; ctx.fill()
+
+        rating_col <= canvas
+        rating_col <= f"{role_name} {ncenters}"
+        rating_row <= rating_col
+
+    return rating_table
+
 def make_report_window(report_loaded):
     """ make_report_window """
 
@@ -271,11 +305,17 @@ def show_position():
 
     my_sub_panel <= canvas
 
+    ratings = position_data.role_ratings()
+    colours = position_data.role_colours()
+    rating_colours_window = make_rating_colours_window(ratings, colours)
+
     report_loaded = common.game_report_reload(game)
     if report_loaded is None:
         return
 
     report_window = make_report_window(report_loaded)
+
+    my_sub_panel <= rating_colours_window
     my_sub_panel <= report_window
 
 
@@ -1085,6 +1125,10 @@ def submit_orders():
     img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
     img.bind('load', callback_render)
 
+    ratings = position_data.role_ratings()
+    colours = position_data.role_colours()
+    rating_colours_window = make_rating_colours_window(ratings, colours)
+
     report_loaded = common.game_report_reload(game)
     if report_loaded is None:
         return
@@ -1097,6 +1141,7 @@ def submit_orders():
     display_left.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
     display_left <= canvas
+    display_left <= rating_colours_window
     display_left <= report_window
 
     # right side
@@ -1815,6 +1860,11 @@ def show_history():
         img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
         img.bind('load', callback_render)
 
+        ratings = position_data.role_ratings()
+        colours = position_data.role_colours()
+        rating_colours_window = make_rating_colours_window(ratings, colours)
+        my_sub_panel <= rating_colours_window
+
         report_window = make_report_window(report_loaded)
 
         # left side
@@ -1826,6 +1876,7 @@ def show_history():
 
         display_left <= game_status
         display_left <= canvas
+        display_left <= rating_colours_window
         display_left <= report_window
 
         nonlocal my_sub_panel2
