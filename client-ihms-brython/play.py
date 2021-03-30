@@ -72,11 +72,16 @@ def make_rating_colours_window(ratings, colours):
         ctx = canvas.getContext("2d")
 
         colour = colours[role_name]
-        ctx.fillStyle = colour.str_value()
+
         outline_colour = colour.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
-        ctx.rect(0, 0, 15, 15)
-        ctx.stroke; ctx.fill()
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.rect(0, 0, 14, 14)
+        ctx.stroke(); ctx.closePath()  # no fill
+
+        ctx.fillStyle = colour.str_value()
+        ctx.fillRect(1, 1, 13, 13)
 
         rating_col <= canvas
         rating_col <= f"{role_name} {ncenters}"
