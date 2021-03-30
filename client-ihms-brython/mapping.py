@@ -906,6 +906,11 @@ class Ownership(Renderable):
         self._role = role
         self._center = center
 
+    @property
+    def role(self) -> Role:
+        """ property """
+        return self._role
+
     def render(self, ctx) -> None:
         """put me on screen """
 
@@ -1057,6 +1062,15 @@ class Position(Renderable):
     def units_list(self):
         """ units_list """
         return self._units
+
+    def role_ratings(self):
+        """ a rating of roles """
+        raw_dict = {self._variant.name_table[r]: len([o for o in self._ownerships if o.role == r]) for r in {o.role for o in self._ownerships}}
+        return {r: raw_dict[r] for r in sorted(raw_dict.keys(), key=lambda r: raw_dict[r], reverse=True)}
+
+    def role_colours(self):
+        """ a rating of roles """
+        return {self._variant.name_table[r]: self._variant.colour_table[r] for r in {o.role for o in self._ownerships}}
 
     @property
     def variant(self) -> Variant:
