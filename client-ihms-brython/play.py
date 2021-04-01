@@ -16,7 +16,6 @@ import geometry
 import mapping
 import login
 
-
 OPTIONS = ['position', 'ordonner', 'négocier', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
 my_panel = html.DIV(id="play")
@@ -1836,12 +1835,9 @@ def show_history():
         # clears a pylint warning
         transition_loaded = dict(transition_loaded)
 
-        position_loaded_json = transition_loaded['situation_json']
-        orders_loaded_json = transition_loaded['orders_json']
+        position_loaded = transition_loaded['situation']
+        orders_loaded = transition_loaded['orders']
         report_loaded = transition_loaded['report_txt']
-
-        position_loaded = json.loads(position_loaded_json)
-        orders_loaded = json.loads(orders_loaded_json)
 
         # digest the position
         position_data = mapping.Position(position_loaded, variant_data)
