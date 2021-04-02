@@ -39,6 +39,39 @@ def information_about_account():
     return information
 
 
+def information_about_emails():
+    """ information_about_emails """
+
+    information = html.DIV()
+
+    information <= "Vous recevrez un email :"
+
+    case_envoi_email = html.UL()
+
+    cas1 = html.LI("pour confimer votre adresse mail")
+    cas1.style = {
+        "list-style-type": "disc",
+    }
+    case_envoi_email <= cas1
+
+    cas2 = html.LI("au démarrage des parties dans lesquelles vous jouez")
+    cas2.style = {
+        "list-style-type": "disc",
+    }
+    case_envoi_email <= cas2
+
+    cas3 = html.LI("à l'arrêt des parties dans lesquelles vous jouez")
+    cas3.style = {
+        "list-style-type": "disc",
+    }
+    case_envoi_email <= cas3
+
+    information <= case_envoi_email
+    information <=  "Rien de plus !"
+
+    return information
+
+
 def create_account():
     """ create_account """
 
@@ -195,6 +228,10 @@ def create_account():
     input_create_account = html.INPUT(type="submit", value="créer le compte")
     input_create_account.bind("click", create_account_callback)
     form <= input_create_account
+
+    form <= html.BR()
+    form <= html.BR()
+    form <= information_about_emails()
 
     my_sub_panel <= form
 
