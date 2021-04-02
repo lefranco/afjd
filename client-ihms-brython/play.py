@@ -16,7 +16,7 @@ import geometry
 import mapping
 import login
 
-OPTIONS = ['position', 'ordonner', 'négocier', 'arbitrer', 'paramètres', 'joueurs', 'historique']
+OPTIONS = ['position', 'ordonner', 'négocier', 'voter', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -1207,6 +1207,15 @@ def negotiate():
     my_sub_panel <= dummy
 
 
+def vote():
+    """ vote """
+
+    # because we do not want the token stale in the middle of the process
+    login.check_token()
+
+    dummy = html.P("Sorry, votes is not implemented yet...")
+    my_sub_panel <= dummy
+
 def game_master():
     """ game_master """
 
@@ -1983,6 +1992,8 @@ def load_option(_, item_name):
         submit_orders()
     if item_name == 'négocier':
         negotiate()
+    if item_name == 'voter':
+        vote()
     if item_name == 'arbitrer':
         game_master()
     if item_name == 'paramètres':
