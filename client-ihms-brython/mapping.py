@@ -1007,10 +1007,11 @@ class Position(Renderable):
         for role_num_str, role_units in dislodged_ones.items():
             role_num = int(role_num_str)
             role = variant._roles[role_num]
-            for type_unit_code, zone_number, dislodger_region_number in role_units:
+            for type_unit_code, zone_number, dislodger_zone_number in role_units:
                 type_unit = UnitTypeEnum.from_code(type_unit_code)
                 zone = variant._zones[zone_number]
-                dislodger_region = variant._regions[dislodger_region_number]
+                dislodger_zone = variant._zones[dislodger_zone_number]
+                dislodger_region = dislodger_zone.region
                 if type_unit is UnitTypeEnum.ARMY_UNIT:
                     dislodged_unit = Army(self, role, zone, dislodger_region)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:

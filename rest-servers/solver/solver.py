@@ -14,7 +14,7 @@ import subprocess
 import collections
 
 
-import flask_restful
+import flask_restful  # type: ignore
 
 SEASON_NAME_TABLE = ["PRINTEMPS", "ETE", "AUTOMNE", "HIVER", "BILAN"]
 
@@ -191,7 +191,7 @@ def build_situation_file(advancement: int, situation: typing.Dict[str, typing.An
     for role_num, dislodged_units in situation['dislodged_ones'].items():
         role_name, _, _ = names['roles'][str(role_num)]
 
-        for unit_type, zone_num, region_from_num in dislodged_units:
+        for unit_type, zone_num, _ in dislodged_units:
 
             unit_name = "A" if unit_type == 1 else "F"
             zone_name = zone_names[int(zone_num) - 1]
@@ -206,7 +206,7 @@ def build_situation_file(advancement: int, situation: typing.Dict[str, typing.An
     for role_num, dislodged_units in situation['dislodged_ones'].items():
         role_name, _, _ = names['roles'][str(role_num)]
 
-        for unit_type, zone_num, region_from_num in dislodged_units:
+        for unit_type, zone_num, zone_from_num in dislodged_units:
 
             unit_name = "A" if unit_type == 1 else "F"
             zone_name = zone_names[int(zone_num) - 1]
@@ -215,10 +215,10 @@ def build_situation_file(advancement: int, situation: typing.Dict[str, typing.An
             region = region_table[zone_name]
             unit_from_name, role_from_name, zone_from_name = executioner_table[region]
 
-            region_from_name = region_names[int(region_from_num) - 1]
+            origin_zone_from_name = zone_names[int(zone_from_num) - 1]
 
             # put line
-            result.append(f"DELOGEE {unit_name} {role_name} {zone_name} BOURREAU {unit_from_name} {role_from_name} {zone_from_name} ORIGINE {region_from_name}")
+            result.append(f"DELOGEE {unit_name} {role_name} {zone_name} BOURREAU {unit_from_name} {role_from_name} {zone_from_name} ORIGINE {origin_zone_from_name}")
 
     result.append("")
     result.append("; LES INTERDITS")
@@ -274,31 +274,31 @@ def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.D
 
         if type_order in [8]:  # build
             if active_zone_num not in fake_unit_type_table:
-                flask_restful.abort(400, msg=f"ERROR - active_zone_num (build) is wrong")
+                flask_restful.abort(400, msg="ERROR - active_zone_num (build) is wrong")
             active_type = fake_unit_type_table[active_zone_num]
         elif type_order in [6, 7]:  # retreat
             if active_zone_num not in dislodged_unit_type_table:
-                flask_restful.abort(400, msg=f"ERROR - active_zone_num (retreat) is wrong")
+                flask_restful.abort(400, msg="ERROR - active_zone_num (retreat) is wrong")
             active_type = dislodged_unit_type_table[active_zone_num]
         else:  # not build nor retreat
             if active_zone_num not in unit_type_table:
-                flask_restful.abort(400, msg=f"ERROR - active_zone_num (not build nor retreat) is wrong")
+                flask_restful.abort(400, msg="ERROR - active_zone_num (not build nor retreat) is wrong")
             active_type = unit_type_table[active_zone_num]
 
         if not int(active_zone_num) - 1 < len(zone_names):
-            flask_restful.abort(400, msg=f"ERROR - active_zone_num is wrong")
+            flask_restful.abort(400, msg="ERROR - active_zone_num is wrong")
         active_zone = zone_names[int(active_zone_num) - 1]
 
         if passive_zone_num:
             if not int(passive_zone_num) - 1 < len(zone_names):
-                flask_restful.abort(400, msg=f"ERROR - passive_zone_num is wrong")
+                flask_restful.abort(400, msg="ERROR - passive_zone_num is wrong")
             passive_zone = zone_names[int(passive_zone_num) - 1]
         else:
             passive_zone = None
 
         if dest_zone_num:
             if not int(dest_zone_num) - 1 < len(zone_names):
-                flask_restful.abort(400, msg=f"ERROR - dest_zone_num is wrong")
+                flask_restful.abort(400, msg="ERROR - dest_zone_num is wrong")
             dest_zone = zone_names[int(dest_zone_num) - 1]
         else:
             dest_zone = None
@@ -322,7 +322,7 @@ def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.D
         elif type_order == 9:  # remove
             result.append(f"- {active_type} {active_zone}")
         else:
-            flask_restful.abort(400, msg=f"ERROR - type_order is wrong")
+            flask_restful.abort(400, msg="ERROR - type_order is wrong")
 
     result.append("")
     return result
@@ -334,7 +334,7 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     region_names = [r.upper() for r in names['zones'].values() if r]
     zone_names = [r.upper() for r in names['zones'].values() if r]
     zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}".upper() for r, c in variant['coastal_zones']]
-    role_names = [v[0].upper() for k,v in names['roles'].items() if int(k)]
+    role_names = [v[0].upper() for k, v in names['roles'].items() if int(k)]
     center_table = variant['centers']
     type_names = ["A", "F"]
 
@@ -384,12 +384,12 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
             _ = role_names.index(tokens[6].upper()) + 1
             _ = zone_names.index(tokens[7].upper()) + 1
             assert tokens[8].upper() == "ORIGINE"
-            region_dislodged_from_num = region_names.index(tokens[9].upper()) + 1
-            dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
+            zone_dislodged_from_num = zone_names.index(tokens[9].upper()) + 1
+            dislodged_unit_dict[str(role_num)].append([type_num, zone_num, zone_dislodged_from_num])
 
     # important : we remove units that are dislodged
     for role_num_str, dislodged_units in dislodged_unit_dict.items():
-        for type_num, zone_num, region_dislodged_from_num in dislodged_units:
+        for type_num, zone_num, _ in dislodged_units:
             unit_dict[role_num_str].remove([type_num, zone_num])
 
     return {
@@ -400,12 +400,12 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     }
 
 
-def read_actives(active_roles_content: typing.List[str], names: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+def read_actives(active_roles_content: typing.List[str], names: typing.Dict[str, typing.Any]) -> typing.List[int]:
     """ This will read the situ_result.dat file """
 
-    active_list:typing.List[int] = list()
+    active_list: typing.List[int] = list()
 
-    role_names = [v[0].upper() for k,v in names['roles'].items() if int(k)]
+    role_names = [v[0].upper() for k, v in names['roles'].items() if int(k)]
 
     for line in active_roles_content:
 
@@ -429,7 +429,6 @@ def read_actives(active_roles_content: typing.List[str], names: typing.Dict[str,
             active_list.append(role_num)
 
     return active_list
-
 
 
 def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], orders: typing.List[typing.List[int]], role: typing.Optional[int], names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[typing.Dict[str, typing.Any]], typing.Optional[str], typing.Optional[typing.List[int]]]:

@@ -1293,7 +1293,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
     """ GameOrderRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.List[int], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[int]], int]:  # pylint: disable=no-self-use
         """
         Gets list of roles which have submitted orders, orders are missing, orders are not needed
         EXPOSED
@@ -1505,16 +1505,16 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             ownership_dict[str(center_num)] = role_num
 
         # get units
-        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        unit_dict2: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        dislodged_unit_dict2: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         game_units = units.Unit.list_by_game_id(game_id)
-        for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+        for _, type_num, zone_num, role_num, zone_dislodged_from_num, fake in game_units:
             if fake:
                 pass  # this is confidential
-            elif region_dislodged_from_num:
-                dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
+            elif zone_dislodged_from_num:
+                dislodged_unit_dict2[str(role_num)].append([type_num, zone_num, zone_dislodged_from_num])
             else:
-                unit_dict[str(role_num)].append([type_num, zone_num])
+                unit_dict2[str(role_num)].append([type_num, zone_num])
 
         # get forbiddens
         forbidden_list = list()
@@ -1524,8 +1524,8 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         position_transition_dict = {
             'ownerships': ownership_dict,
-            'dislodged_ones': dislodged_unit_dict,
-            'units': unit_dict,
+            'dislodged_ones': dislodged_unit_dict2,
+            'units': unit_dict2,
             'forbiddens': forbidden_list,
         }
 
@@ -1564,8 +1564,8 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             ownership.delete_database()
 
         # purge previous units
-        for (_, type_num, role_num, zone_num, region_dislodged_from_num, fake) in units.Unit.list_by_game_id(int(game_id)):
-            unit = units.Unit(int(game_id), type_num, role_num, zone_num, region_dislodged_from_num, fake)
+        for (_, type_num, role_num, zone_num, zone_dislodged_from_num, fake) in units.Unit.list_by_game_id(int(game_id)):
+            unit = units.Unit(int(game_id), type_num, role_num, zone_num, zone_dislodged_from_num, fake)
             unit.delete_database()
 
         # purge previous forbiddens
@@ -1593,8 +1593,8 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # insert new dislodged units
         for role_num, the_unit_role in the_dislodged_units.items():
-            for type_num, zone_num, region_dislodged_from_num in the_unit_role:
-                unit = units.Unit(int(game_id), type_num, zone_num, int(role_num), region_dislodged_from_num, 0)
+            for type_num, zone_num, zone_dislodged_from_num in the_unit_role:
+                unit = units.Unit(int(game_id), type_num, zone_num, int(role_num), zone_dislodged_from_num, 0)
                 unit.update_database()
 
         # insert new forbiddens
