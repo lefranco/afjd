@@ -475,6 +475,7 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
             with open(f"{tmpdirname}/active_roles.txt", "r") as infile:
                 active_roles_content = infile.readlines()
                 active_roles = ''.join(active_roles_content)
+        active_roles = ""
 
         return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result, active_roles
 
