@@ -21,6 +21,7 @@ OPTIONS = ['changer nouvelles', 'usurper']
 def check_admin(pseudo):
     """ check_admin """
 
+    # TODO improve this with real admin account
     # TODO a revoir
     if pseudo != "Palpatine":
         alert("Pas le bon compte (pas admin)")
