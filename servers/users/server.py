@@ -39,6 +39,7 @@ APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 JWT = flask_jwt_extended.JWTManager(APP)
 
 
+# TODO improve this with real admin account
 # The only accountg allowed to usurp
 USURPING_PSEUDO = 'Palpatine'
 
