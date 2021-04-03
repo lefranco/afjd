@@ -418,11 +418,11 @@ def submit_orders():
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
-                    input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                    input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
                     buttons_right <= html.BR()
-                    input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                    input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
-                    buttons_right <= input_debug
+                    buttons_right <= input_select
             automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
         stack_orders(buttons_right)
@@ -627,11 +627,11 @@ def submit_orders():
                 buttons_right <= legend_select_active
 
                 for unit_type in mapping.UnitTypeEnum:
-                    input_debug = html.INPUT(type="submit", value=variant_data.name_table[unit_type])
+                    input_select = html.INPUT(type="submit", value=variant_data.name_table[unit_type])
                     buttons_right <= html.BR()
-                    input_debug.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
+                    input_select.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
                     buttons_right <= html.BR()
-                    buttons_right <= input_debug
+                    buttons_right <= input_select
 
                 automaton_state = AutomatonStateEnum.SELECT_BUILD_UNIT_TYPE_STATE
 
@@ -707,11 +707,11 @@ def submit_orders():
 
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
-                        input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                        input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
                         buttons_right <= html.BR()
-                        input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                        input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
-                        buttons_right <= input_debug
+                        buttons_right <= input_select
 
                 if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                     order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, None)
@@ -798,11 +798,11 @@ def submit_orders():
                 buttons_right <= legend_select_unit
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
-                        input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                        input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
                         buttons_right <= html.BR()
-                        input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                        input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
-                        buttons_right <= input_debug
+                        buttons_right <= input_select
 
             stack_orders(buttons_right)
             if not orders_data.empty():
@@ -943,11 +943,11 @@ def submit_orders():
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
-                    input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                    input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
                     buttons_right <= html.BR()
-                    input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                    input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
-                    buttons_right <= input_debug
+                    buttons_right <= input_select
             automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
         stack_orders(buttons_right)
@@ -1174,11 +1174,11 @@ def submit_orders():
         buttons_right <= legend_select_order
         for order_type in mapping.OrderTypeEnum:
             if order_type.compatible(advancement_season):
-                input_debug = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
                 buttons_right <= html.BR()
-                input_debug.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                 buttons_right <= html.BR()
-                buttons_right <= input_debug
+                buttons_right <= input_select
         automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
     stack_orders(buttons_right)
