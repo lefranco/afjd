@@ -400,7 +400,39 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     }
 
 
-def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], orders: typing.List[typing.List[int]], role: typing.Optional[int], names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[typing.Dict[str, typing.Any]], typing.Optional[str], typing.Optional[str]]:
+def read_actives(active_roles_content: typing.List[str], names: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+    """ This will read the situ_result.dat file """
+
+    active_list:typing.List[int] = list()
+
+    role_names = [v[0].upper() for k,v in names['roles'].items() if int(k)]
+
+    for line in active_roles_content:
+
+        # remove endline
+        line = line.strip()
+
+        # ignore empty lines
+        if not line:
+            continue
+
+        # ignore comments
+        if line.startswith(";"):
+            continue
+
+        # split in list
+        tokens = line.split(" ")
+
+        # extract active countries/roles
+        for token in tokens:
+            role_num = role_names.index(token.upper()) + 1
+            active_list.append(role_num)
+
+    return active_list
+
+
+
+def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], orders: typing.List[typing.List[int]], role: typing.Optional[int], names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[typing.Dict[str, typing.Any]], typing.Optional[str], typing.Optional[typing.List[int]]]:
     """ returns errorcode, stderr, stdout, sit-result(dict), ord-result(text), actives-roles(text/list?) """
 
     diplo_dat_content = build_variant_file(variant, names)
@@ -462,7 +494,6 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         # copy back situation
         with open(f"{tmpdirname}/situation_result.dat", "r") as infile:
             situation_result_content = infile.readlines()
-
         situation_result = read_situation(situation_result_content, variant, names)
 
         # copy back orders
@@ -473,9 +504,9 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         # copy back actives
         with open(f"{tmpdirname}/active_roles.txt", "r") as infile:
             active_roles_content = infile.readlines()
-            active_roles = ''.join(active_roles_content)
+        active_roles_list = read_actives(active_roles_content, names)
 
-        return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result, active_roles
+        return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result, active_roles_list
 
 
 if __name__ == '__main__':

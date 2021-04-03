@@ -1539,8 +1539,8 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         the_forbiddens = situation_result['forbiddens']
 
         # extract actives
-        active_roles = req_result.json()['active_roles']
-        print(f"{active_roles=}")
+        the_active_roles = req_result.json()['active_roles']
+        print(f"{the_active_roles=}")
 
         # store new position in database
 
@@ -1591,8 +1591,9 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             forbidden.update_database()
 
         # insert new actives
-        # TODO
-
+        for role_num in the_active_roles:
+            active = actives.Active(int(game_id), int(role_num))
+            active.update_database()
 
         # remove orders
         for (_, role_id, _, zone_num, _, _) in orders.Order.list_by_game_id(game_id):
