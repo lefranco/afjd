@@ -12,7 +12,7 @@ import argparse
 
 import waitress
 import flask
-import flask_cors
+import flask_cors  # type: ignore
 import flask_restful  # type: ignore
 import flask_restful.reqparse  # type: ignore
 
@@ -53,6 +53,7 @@ class EmailsRessource(flask_restful.Resource):  # type: ignore
 
         data = {'msg': 'Email was added or updated'}
         return data, 201
+
 
 @API.resource('/check-email')
 class CheckEmailRessource(flask_restful.Resource):  # type: ignore
