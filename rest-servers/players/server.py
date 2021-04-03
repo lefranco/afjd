@@ -498,7 +498,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
         if player is None:
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
-        # TODO improve this with read admin account
+        # TODO improve this with real admin account
         if pseudo != 'Palpatine':
             flask_restful.abort(403, msg="You are not allowed to change news!")
 
