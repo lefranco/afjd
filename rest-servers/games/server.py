@@ -509,7 +509,6 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         # add that all players are active (those who own a center - that will do)
         game_ownerships = ownerships.Ownership.list_by_game_id(game_id)
         active_roles = {o[2] for o in game_ownerships}
-        print(f"{active_roles=}")
         for role_num in active_roles:
             active = actives.Active(int(game_id), role_num)
             active.update_database()
