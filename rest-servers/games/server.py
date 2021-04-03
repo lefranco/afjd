@@ -499,11 +499,18 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         # make position for game
         game.create_position()
 
-        # add a little report
         game_id = game.identifier
+
+        # add a little report
         time_stamp = int(time.time())
         report = reports.Report(game_id, time_stamp, WELCOME_TO_GAME)
         report.update_database()
+
+        # add that all players are active
+        allocations_list = allocations.Allocation.list_by_game_id(game_id)
+        for _, _, role_num in allocations_list:
+            active = actives.Active(int(game_id), role_num)
+            active.update_database()
 
         # allocate game master to game
         game.put_role(user_id, 0)
