@@ -400,8 +400,8 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     }
 
 
-def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], orders: typing.List[typing.List[int]], role: typing.Optional[int], names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[typing.Dict[str, typing.Any]], typing.Optional[str]]:
-    """ returns errorcode, stderr, stdout, sit-result(dict), ord-result(text) """
+def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], orders: typing.List[typing.List[int]], role: typing.Optional[int], names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[typing.Dict[str, typing.Any]], typing.Optional[str], typing.Optional[str]]:
+    """ returns errorcode, stderr, stdout, sit-result(dict), ord-result(text), actives-roles(text/list?) """
 
     diplo_dat_content = build_variant_file(variant, names)
     situation_content = build_situation_file(advancement, situation, variant, names)
@@ -440,6 +440,7 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
             "-o", f"{tmpdirname}/orders.txt",
             "-f", f"{tmpdirname}/situation_result.dat",
             "-a", f"{tmpdirname}/orders_result.txt"
+            "-A", f"{tmpdirname}/active_roles.txt"
         ]
 
         # in case we are checking partial orders
@@ -456,7 +457,7 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
             capture_output=True)
 
         if result.returncode != 0:
-            return result.returncode, result.stderr.decode(), result.stdout.decode(), None, None
+            return result.returncode, result.stderr.decode(), result.stdout.decode(), None, None, None
 
         # copy back situation
         with open(f"{tmpdirname}/situation_result.dat", "r") as infile:
@@ -469,7 +470,12 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
             orders_result_content = infile.readlines()
             orders_result = ''.join(orders_result_content)
 
-        return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result
+        # copy back actives
+        with open(f"{tmpdirname}/active_roles.txt", "r") as infile:
+            active_roles_content = infile.readlines()
+            active_roles = ''.join(active_roles_content)
+
+        return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result, active_roles
 
 
 if __name__ == '__main__':

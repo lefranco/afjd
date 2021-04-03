@@ -1538,6 +1538,10 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         the_dislodged_units = situation_result['dislodged_ones']
         the_forbiddens = situation_result['forbiddens']
 
+        # extract actives
+        the_actives = situation_result['active_roles']
+        print("{the_actives=}")
+
         # store new position in database
 
         # purge
@@ -1556,6 +1560,11 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         for (_, center_num) in forbiddens.Forbidden.list_by_game_id(int(game_id)):
             forbidden = forbiddens.Forbidden(int(game_id), center_num)
             forbidden.delete_database()
+
+        # purge actives
+        for (_, role_num) in actives.Active.list_by_game_id(int(game_id)):
+            active = actives.Active(int(game_id), role_num)
+            active.delete_database()
 
         # insert
 
@@ -1580,6 +1589,10 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         for region_num in the_forbiddens:
             forbidden = forbiddens.Forbidden(int(game_id), region_num)
             forbidden.update_database()
+
+        # insert new actives
+        # TODO
+
 
         # remove orders
         for (_, role_id, _, zone_num, _, _) in orders.Order.list_by_game_id(game_id):

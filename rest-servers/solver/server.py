@@ -83,7 +83,7 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
         except json.JSONDecodeError:
             flask_restful.abort(400, msg="Did you convert names from json to text ?")
 
-        returncode, stderr, stdout, situation_result, orders_result = solver.solve(variant, advancement, situation, orders, role, names)
+        returncode, stderr, stdout, situation_result, orders_result, active_roles = solver.solve(variant, advancement, situation, orders, role, names)
 
         if returncode != 0:
 
@@ -99,6 +99,7 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
             'stdout': stdout,
             'situation_result': situation_result,
             'orders_result': orders_result,
+            'active_roles': active_roles,
         }
 
         return data, 201
