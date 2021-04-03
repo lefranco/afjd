@@ -1700,7 +1700,7 @@ def show_players_in_game():
 
     id2pseudo = {v: k for k, v in players_dict.items()}
 
-    submitted_roles_list = None
+    submitted_data = None
 
     # if user identified ?
     if 'PSEUDO' in storage:
@@ -1794,12 +1794,15 @@ def show_players_in_game():
         row <= col
 
         # orders are in
-        submitted_roles_list = submitted_data['submitted']
-        needed_roles_list = submitted_data['needed']
-        if role_id in submitted_roles_list:
-            flag = html.IMG(src="./data/orders_are_in.gif")
-        elif role_id in needed_roles_list:
-            flag = html.IMG(src="./data/orders_are_not_in.gif")
+        if submitted_data is not None:
+            submitted_roles_list = submitted_data['submitted']
+            needed_roles_list = submitted_data['needed']
+            if role_id in submitted_roles_list:
+                flag = html.IMG(src="./data/orders_are_in.gif")
+            elif role_id in needed_roles_list:
+                flag = html.IMG(src="./data/orders_are_not_in.gif")
+            else:
+                flag = ""
         else:
             flag = ""
         col = html.TD(flag)
