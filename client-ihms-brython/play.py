@@ -89,6 +89,7 @@ def make_rating_colours_window(ratings, colours):
 
     return rating_table
 
+
 def make_report_window(report_loaded):
     """ make_report_window """
 
@@ -1217,6 +1218,7 @@ def vote():
     dummy = html.P("Sorry, votes is not implemented yet...")
     my_sub_panel <= dummy
 
+
 def game_master():
     """ game_master """
 
@@ -1504,7 +1506,7 @@ def game_master():
         elif role_id in needed_roles_list:
             flag = html.IMG(src="./data/orders_are_not_in.gif")
         else:
-            flag  = ""
+            flag = ""
         col = html.TD(flag)
         col.style = {
             "border": "solid",
