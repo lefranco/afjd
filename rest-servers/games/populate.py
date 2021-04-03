@@ -8,6 +8,7 @@ Data : populate database
 """
 
 import mylogger
+import actives
 import orders
 import ownerships
 import units
@@ -29,6 +30,11 @@ def populate_transitions() -> None:
 def populate_reports() -> None:
     """ inserts these items in database """
     reports.Report.create_table()
+
+
+def populate_actives() -> None:
+    """ inserts these items in database """
+    actives.Active.create_table()
 
 
 def populate_orders() -> None:
@@ -83,6 +89,7 @@ def populate() -> None:
 
     populate_transitions()
     populate_reports()
+    populate_actives()
     populate_orders()
     populate_ownerships()
     populate_units()

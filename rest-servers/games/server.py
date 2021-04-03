@@ -1331,16 +1331,13 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         #if role_id != 0:
             #flask_restful.abort(403, msg=f"You do not seem to master game {game_id}")
 
-        # get orders from game
-        assert role_id is not None
-        orders_list = orders.Order.list_by_game_id(game_id)
-
         # submitted list : those who submitted orders
+        orders_list = orders.Order.list_by_game_id(game_id)
         submitted_list = list(set([o[1] for o in orders_list]))
 
         # needed list : those who need to submit orders
-        # TODO
-        needed_list = []
+        actives_list = actives.Active.list_by_game_id(game_id)
+        needed_list = [o[1] for o in actives_list if o[2]]
 
         data = {'submitted': submitted_list, 'needed': needed_list}
         return data, 200
