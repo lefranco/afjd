@@ -471,7 +471,7 @@ def get_role_allocated_to_player(game_id, player_id):
 def get_roles_submitted_orders(game_id):
     """ get_roles_submitted_orders """
 
-    roles_list = None
+    submitted_data = None
 
     def reply_callback(req):
         req_result = json.loads(req.text)
@@ -484,8 +484,8 @@ def get_roles_submitted_orders(game_id):
                 alert("Undocumented issue from server")
             return
         req_result = json.loads(req.text)
-        nonlocal roles_list
-        roles_list = req_result
+        nonlocal submitted_data
+        submitted_data = req_result
 
     json_dict = dict()
 
@@ -496,4 +496,4 @@ def get_roles_submitted_orders(game_id):
     # get roles that submitted orders : need token (but may change)
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return roles_list
+    return submitted_data

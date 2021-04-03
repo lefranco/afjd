@@ -123,11 +123,12 @@ def my_games():
             return
         data['role_played'] = role_id
 
-        submitted_roles_list = common.get_roles_submitted_orders(game_id)
-        if submitted_roles_list is None:
+        submitted_data = common.get_roles_submitted_orders(game_id)
+        if submitted_data is None:
             return
         # just to avoid a warning
-        submitted_roles_list = list(submitted_roles_list)
+        submitted_data = dict(submitted_data)
+        submitted_roles_list = submitted_data['submitted']
         data['orders_submitted'] = (role_id in submitted_roles_list) if role_id > 0 else None
 
         row = html.TR()

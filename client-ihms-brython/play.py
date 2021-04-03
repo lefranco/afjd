@@ -77,7 +77,8 @@ def make_rating_colours_window(ratings, colours):
         ctx.lineWidth = 2
         ctx.beginPath()
         ctx.rect(0, 0, 14, 14)
-        ctx.stroke(); ctx.closePath()  # no fill
+        ctx.stroke()
+        ctx.closePath()  # no fill
 
         ctx.fillStyle = colour.str_value()
         ctx.fillRect(1, 1, 13, 13)
@@ -1455,12 +1456,12 @@ def game_master():
 
     role2pseudo = {v: k for k, v in game_players_dict.items()}
 
-    submitted_roles_list = common.get_roles_submitted_orders(game_id)
-    if submitted_roles_list is None:
+    submitted_data = common.get_roles_submitted_orders(game_id)
+    if submitted_data is None:
         return
 
     # just to avoid a warning
-    submitted_roles_list = list(submitted_roles_list)
+    submitted_data = dict(submitted_data)
 
     # who can I put in this role
     possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
@@ -1496,6 +1497,7 @@ def game_master():
         }
         row <= col
 
+        submitted_roles_list = submitted_data['submitted']
         if role_id in submitted_roles_list:
             order_status_icon_img = html.IMG(src="./data/orders_are_in.gif")
         else:
@@ -1710,10 +1712,12 @@ def show_players_in_game():
             if role_id is not None:
 
                 # you will at least get your own role
-                submitted_roles_list = common.get_roles_submitted_orders(game_id)
+                submitted_data = common.get_roles_submitted_orders(game_id)
+                if submitted_data is None:
+                    return
 
                 # just to avoid a warning
-                submitted_roles_list = list(submitted_roles_list)
+                submitted_data = dict(submitted_data)
 
     game_players_table = html.TABLE()
     game_players_table.style = {
@@ -1788,6 +1792,7 @@ def show_players_in_game():
 
         # orders are in
         order_status_icon_img = None
+        submitted_roles_list = submitted_data['submitted']
         if role_id > 0 and submitted_roles_list is not None:
             if role_id in submitted_roles_list:
                 order_status_icon_img = html.IMG(src="./data/orders_are_in.gif")
