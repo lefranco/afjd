@@ -1498,11 +1498,14 @@ def game_master():
         row <= col
 
         submitted_roles_list = submitted_data['submitted']
+        needed_roles_list = submitted_data['needed']
         if role_id in submitted_roles_list:
-            order_status_icon_img = html.IMG(src="./data/orders_are_in.gif")
+            flag = html.IMG(src="./data/orders_are_in.gif")
+        elif role_id in needed_roles_list:
+            flag = html.IMG(src="./data/orders_are_not_in.gif")
         else:
-            order_status_icon_img = html.IMG(src="./data/orders_are_not_in.gif")
-        col = html.TD(order_status_icon_img)
+            flag  = ""
+        col = html.TD(flag)
         col.style = {
             "border": "solid",
         }
@@ -1791,16 +1794,15 @@ def show_players_in_game():
         row <= col
 
         # orders are in
-        order_status_icon_img = None
         submitted_roles_list = submitted_data['submitted']
-        if role_id > 0 and submitted_roles_list is not None:
-            if role_id in submitted_roles_list:
-                order_status_icon_img = html.IMG(src="./data/orders_are_in.gif")
-            else:
-                order_status_icon_img = html.IMG(src="./data/orders_are_not_in.gif")
+        needed_roles_list = submitted_data['needed']
+        if role_id in submitted_roles_list:
+            flag = html.IMG(src="./data/orders_are_in.gif")
+        elif role_id in needed_roles_list:
+            flag = html.IMG(src="./data/orders_are_not_in.gif")
         else:
-            order_status_icon_img = "Non applicable"
-        col = html.TD(order_status_icon_img)
+            flag = ""
+        col = html.TD(flag)
         col.style = {
             "border": "solid",
         }
