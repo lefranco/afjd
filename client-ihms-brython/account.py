@@ -67,7 +67,7 @@ def information_about_emails():
     case_envoi_email <= cas3
 
     information <= case_envoi_email
-    information <=  "Rien de plus !"
+    information <= "Rien de plus !"
 
     return information
 
