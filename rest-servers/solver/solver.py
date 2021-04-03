@@ -440,7 +440,7 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
             "-o", f"{tmpdirname}/orders.txt",
             "-f", f"{tmpdirname}/situation_result.dat",
             "-a", f"{tmpdirname}/orders_result.txt"
-            "-A", f"{tmpdirname}/active_roles.txt"
+#            "-A", f"{tmpdirname}/active_roles.txt"
         ]
 
         # in case we are checking partial orders
@@ -471,9 +471,10 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
             orders_result = ''.join(orders_result_content)
 
         # copy back actives
-        with open(f"{tmpdirname}/active_roles.txt", "r") as infile:
-            active_roles_content = infile.readlines()
-            active_roles = ''.join(active_roles_content)
+        if 0:
+            with open(f"{tmpdirname}/active_roles.txt", "r") as infile:
+                active_roles_content = infile.readlines()
+                active_roles = ''.join(active_roles_content)
 
         return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result, active_roles
 
