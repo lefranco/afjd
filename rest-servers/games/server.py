@@ -506,11 +506,11 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         report = reports.Report(game_id, time_stamp, WELCOME_TO_GAME)
         report.update_database()
 
-        # add that all players are active
-        allocations_list = allocations.Allocation.list_by_game_id(game_id)
-        print(f"{allocations_list=}")
-        for _, _, role_num in allocations_list:
-            print(f"active {role_num=}")
+        # add that all players are active (those who own a center - that will do)
+        game_ownerships = ownerships.Ownership.list_by_game_id(game_id)
+        active_roles = {o[2] for o in game_ownerships}
+        print(f"{active_roles=}")
+        for role_num in active_roles:
             active = actives.Active(int(game_id), role_num)
             active.update_database()
 
