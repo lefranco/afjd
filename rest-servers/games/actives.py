@@ -29,7 +29,7 @@ class Active:
         database.sql_execute("DROP TABLE IF EXISTS actives")
         database.sql_execute("CREATE TABLE actives (game_id INTEGER, role_num INTEGER)")
 
-    def __init__(self, game_id: int, role_num: int, time_stamp: int) -> None:
+    def __init__(self, game_id: int, role_num: int) -> None:
 
         assert isinstance(game_id, int), "game_id must be an int"
         self._game_id = game_id
