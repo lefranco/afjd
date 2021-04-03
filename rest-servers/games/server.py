@@ -1338,7 +1338,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         # needed list : those who need to submit orders
         actives_list = actives.Active.list_by_game_id(game_id)
-        needed_list = [o[1] for o in actives_list if o[2]]
+        needed_list = [o[1] for o in actives_list]
 
         data = {'submitted': submitted_list, 'needed': needed_list}
         return data, 200

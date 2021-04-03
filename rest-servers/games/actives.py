@@ -27,7 +27,7 @@ class Active:
         """ creation of table from scratch """
 
         database.sql_execute("DROP TABLE IF EXISTS actives")
-        database.sql_execute("CREATE TABLE actives (game_id INTEGER, role_num INTEGER, active INTEGER)")
+        database.sql_execute("CREATE TABLE actives (game_id INTEGER, role_num INTEGER)")
 
     def __init__(self, game_id: int, role_num: int, time_stamp: int) -> None:
 
@@ -36,9 +36,6 @@ class Active:
 
         assert isinstance(role_num, int), "role_num must be an int"
         self._role_num = role_num
-
-        assert isinstance(active, int), "active must be an int"
-        self._active = active
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """
