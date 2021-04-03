@@ -128,8 +128,8 @@ def my_games():
             return
         # just to avoid a warning
         submitted_data = dict(submitted_data)
-        submitted_roles_list = submitted_data['submitted']
-        data['orders_submitted'] = (role_id in submitted_roles_list) if role_id > 0 else None
+
+        data['orders_submitted'] = None
 
         row = html.TR()
         row.style = {
@@ -167,12 +167,15 @@ def my_games():
                     value = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
 
             if field == 'orders_submitted':
-                if value is True:
-                    value = html.IMG(src="./data/orders_are_in.gif")
-                elif value is False:
-                    value = html.IMG(src="./data/orders_are_not_in.gif")
-                elif value is None:
-                    value = "Non applicable"
+                submitted_roles_list = submitted_data['submitted']
+                needed_roles_list = submitted_data['needed']
+                if role_id in submitted_roles_list:
+                    flag = html.IMG(src="./data/orders_are_in.gif")
+                elif role_id in needed_roles_list:
+                    flag = html.IMG(src="./data/orders_are_not_in.gif")
+                else:
+                    flag = ""
+                value = flag
 
             col = html.TD(value)
             col.style = {
