@@ -15,7 +15,7 @@ class Active:
     """ Class for handling an active """
 
     @staticmethod
-    def list_by_game_id(game_id: int) -> typing.List[typing.Tuple[int, int, int]]:
+    def list_by_game_id(game_id: int) -> typing.List[typing.Tuple[int, int]]:
         """ class lookup : finds the object in database from fame id """
         actives_found = database.sql_execute("SELECT * FROM actives where game_id = ?", (game_id,), need_result=True)
         if not actives_found:
@@ -45,13 +45,8 @@ class Active:
         """ Removes object from database """
         database.sql_execute("DELETE FROM actives WHERE game_id = ? AND role_num = ?", (self._game_id, self._role_num))
 
-    @property
-    def active(self) -> int:
-        """ property """
-        return self._active
-
     def __str__(self) -> str:
-        return f"game_id={self._game_id} role_num={self._role_num} active={self._active}"
+        return f"game_id={self._game_id} role_num={self._role_num}"
 
 
 if __name__ == '__main__':
