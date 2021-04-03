@@ -508,7 +508,9 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         # add that all players are active
         allocations_list = allocations.Allocation.list_by_game_id(game_id)
+        print(f"{allocations_list=}")
         for _, _, role_num in allocations_list:
+            print(f"active {role_num=}")
             active = actives.Active(int(game_id), role_num)
             active.update_database()
 
