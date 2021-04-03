@@ -1281,11 +1281,11 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
     def get(self, game_id: int) -> typing.Tuple[typing.List[int], int]:  # pylint: disable=no-self-use
         """
-        Gets list of roles which have submitted orders
+        Gets list of roles which have submitted orders, orders are missing, orders are not needed
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-orders-submitted/<game_id> - GET - getting which orders submitted game id=%s", game_id)
+        mylogger.LOGGER.info("/game-orders-submitted/<game_id> - GET - getting which orders submitted, missing, not needed for game id=%s", game_id)
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1313,7 +1313,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         player_id = req_result.json()
 
-        # check user has right to get orders - must game master
+        # check user has right to get status of orders - must be game master or player in game
 
         # check there is a game
         game = games.Game.find_by_identifier(game_id)
@@ -1326,15 +1326,23 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
-        # get orders
+        # TODO : change if we decide to hide this information
+        # we could restrict to game master from here
+        #if role_id != 0:
+            #flask_restful.abort(403, msg=f"You do not seem to master game {game_id}")
+
+        # get orders from game
         assert role_id is not None
         orders_list = orders.Order.list_by_game_id(game_id)
 
-        roles_list = list(set([o[1] for o in orders_list]))
+        # submitted list : those who submitted orders
+        submitted_list = list(set([str(o[1]) for o in orders_list]))
 
-        # TODO : change if we decide to hide this information
+        # needed list : those who need to submit orders
+        # TODO
+        needed_list = []
 
-        data = roles_list
+        data = {'submitted': submitted_list, 'needed': needed_list}
         return data, 200
 
 
