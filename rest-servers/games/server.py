@@ -389,6 +389,11 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         assert report is not None
         report.delete_database()
 
+        # and actives
+        for (_, role_num) in actives.Active.list_by_game_id(int(game_id)):
+            active = actives.Active(int(game_id), role_num)
+            active.delete_database()
+
         # finally delete game
         assert game is not None
         game.delete_database()
