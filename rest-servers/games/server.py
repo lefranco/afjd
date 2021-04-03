@@ -1545,7 +1545,6 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # extract actives
         the_active_roles = req_result.json()['active_roles']
-        print(f"{the_active_roles=}")
 
         # store new position in database
 
