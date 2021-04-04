@@ -161,10 +161,9 @@ def my_games():
             if field == 'role_played':
                 if role_id == -1:
                     value = "Affecté"
-                elif role_id == 0:
-                    value = "Arbitre"
                 else:
-                    value = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+                    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+                    value = role_icon_img
 
             if field == 'orders_submitted':
                 submitted_roles_list = submitted_data['submitted']

@@ -16,7 +16,9 @@ import geometry
 import mapping
 import login
 
-OPTIONS = ['position', 'ordonner', 'négocier', 'voter', 'arbitrer', 'paramètres', 'joueurs', 'historique']
+import debug
+
+OPTIONS = ['position', 'ordonner', 'négocier', 'déclarer', 'voter', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -327,9 +329,6 @@ def show_position():
 
 def submit_orders():
     """ submit_orders """
-
-    # because we do not want the token stale in the middle of the process
-    login.check_token()
 
     variant_name_loaded = None
     variant_content_loaded = None
@@ -980,9 +979,8 @@ def submit_orders():
     def stack_role_flag(buttons_right):
         """ stack_role_flag """
         # role flag
-        if role_id > 0:
-            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
-            buttons_right <= role_icon_img
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+        buttons_right <= role_icon_img
 
     def stack_orders(buttons_right):
         """ stack_orders """
@@ -1032,6 +1030,9 @@ def submit_orders():
         return
 
     pseudo = storage['PSEUDO']
+
+    # because we do not want the token stale in the middle of the process
+    login.check_token()
 
     # from game name get game id
 
@@ -1209,6 +1210,203 @@ def negotiate():
     my_sub_panel <= dummy
 
 
+def declare():
+    """ negotiate """
+
+    def add_declaration_callback(_):
+        """ add_declaration_callback """
+
+        def reply_callback(req):
+            """ reply_callback """
+
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error adding declaration in game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem adding declaration in game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            InfoDialog("OK", "La déclaration a été faite !", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            declare()
+
+        content = input_declaration.value
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': pseudo,
+            'content': content
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-declarations/{game_id}"
+
+        # adding a declaration in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def declarations_reload(game_id):
+        """ reload_declarations """
+
+        declarations = None
+
+        def reply_callback(req):
+            """ reply_callback """
+
+            nonlocal declarations
+
+            req_result = json.loads(req.text)
+
+            declarations = req_result['declarations_list']
+
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error extracting declarations from game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem extracting declarations in game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': pseudo,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-declarations/{game_id}"
+
+        # extracting declarations from a game : need token (or not?)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return declarations
+
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se loguer au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    # because we do not want the token stale in the middle of the process
+    login.check_token()
+
+    game_id = common.get_game_id(game)
+    if game_id is None:
+        return
+
+    # from pseudo get player id
+
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        return
+
+    # from game id and player id get role_id of player
+
+    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    if role_id is None:
+        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
+        return
+
+    form = html.FORM()
+
+    legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer ?")
+    form <= legend_declaration
+    form <= html.BR()
+
+    input_declaration = html.TEXTAREA(type="text", rows=5, cols=80)
+    form <= input_declaration
+    form <= html.BR()
+
+    form <= html.BR()
+    input_declare_in_game = html.INPUT(type="submit", value="déclarer dans la partie")
+    input_declare_in_game.bind("click", add_declaration_callback)
+    form <= input_declare_in_game
+
+    declarations = declarations_reload(game_id)
+    if declarations is None:
+        return
+
+    # to avoid warning
+    declarations = list(declarations)
+
+    declarations_table = html.TABLE()
+    declarations_table.style = {
+        "border": "solid",
+    }
+
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = common.get_display_from_variant(variant_name_loaded)
+
+    for time_stamp, role_id_msg, content in declarations:
+
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+
+        date_desc = datetime.datetime.fromtimestamp(time_stamp)
+        col = html.TD(f"{date_desc}")
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id_msg}.jpg")
+        col = html.TD(role_icon_img)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        col = html.TD()
+        col.style = {
+            "border": "solid",
+        }
+
+        for line in content.split('\n'):
+            col <= line
+            col <= html.BR()
+
+        row <= col
+
+        declarations_table <= row
+
+    my_sub_panel.clear()
+
+    # role
+    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+    my_sub_panel <= role_icon_img
+
+    # form
+    my_sub_panel <= form
+    form <= html.BR()
+    form <= html.BR()
+
+    # declarations already
+    my_sub_panel <= declarations_table
+
+
 def vote():
     """ vote """
 
@@ -1240,7 +1438,9 @@ def game_master():
                 else:
                     alert("Undocumented issue from server")
                 return
+
             InfoDialog("OK", f"Le joueur s'est vu retirer le rôle dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
             # back to where we started
             my_sub_panel.clear()
             game_master()
@@ -1273,7 +1473,9 @@ def game_master():
                 else:
                     alert("Undocumented issue from server")
                 return
+
             InfoDialog("OK", f"Le joueur s'est vu attribuer le rôle dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
             # back to where we started
             my_sub_panel.clear()
             game_master()
@@ -1339,7 +1541,12 @@ def game_master():
                 else:
                     alert("Undocumented issue from server")
                 return
+
             InfoDialog("OK", f"La résolution a été réalisée : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            my_sub_panel.clear()
+            game_master()
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -1755,7 +1962,7 @@ def show_players_in_game():
         }
 
         # role flag
-        if role_id <= 0:
+        if role_id < 0:
             role_icon_img = None
         else:
             role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
@@ -2004,6 +2211,8 @@ def load_option(_, item_name):
         submit_orders()
     if item_name == 'négocier':
         negotiate()
+    if item_name == 'déclarer':
+        declare()
     if item_name == 'voter':
         vote()
     if item_name == 'arbitrer':
