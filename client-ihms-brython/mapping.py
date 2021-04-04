@@ -12,6 +12,20 @@ import math
 
 import geometry
 
+def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
+    """ shorten the segment a little bit (returns new x_dest, y_dest) """
+    epsilon = 5
+
+    delta_x = x_dest - x_start
+    delta_y = y_dest - y_start
+    dist = math.sqrt(delta_x**2 +delta_y**2)
+    if dist < 2 * epsilon:
+        return x_dest, y_dest
+    new_dist = dist - epsilon
+    ratio = new_dist / dist
+    new_x_dest = x_start + ratio * delta_x
+    new_y_dest = y_start + ratio * delta_y
+    return new_x_dest, new_y_dest
 
 def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx) -> None:
     """ low level draw an arrow """
@@ -1116,7 +1130,8 @@ class Order(Renderable):
             # an arrow (move)
             from_point = self._position.variant.position_table[self._active_unit.zone]
             dest_point = self._position.variant.position_table[self._destination_zone]
-            draw_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos, ctx)
+            dest_point_closer_x, dest_point_closer_y = shorten_arrow(from_point.x_pos, from_point.y_pos, dest_point.x_pos, dest_point.y_pos)
+            draw_arrow(from_point.x_pos, from_point.y_pos, dest_point_closer_x, dest_point_closer_y, ctx)
 
             # put back
             ctx.lineWidth = 1
@@ -1141,7 +1156,8 @@ class Order(Renderable):
             next_direction = direction.perpendicular()
             from_point_shifted = from_point.shift(next_direction)
             dest_point_shifted = dest_point.shift(next_direction)
-            draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos, ctx)
+            dest_point_shifted_closer_x, dest_point_shifted_closer_y = shorten_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos)
+            draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
             # put back
             ctx.lineWidth = 1
@@ -1231,7 +1247,8 @@ class Order(Renderable):
             next_direction = direction.perpendicular()
             from_point_shifted = from_point.shift(next_direction)
             dest_point_shifted = dest_point.shift(next_direction)
-            draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos, ctx)
+            dest_point_shifted_closer_x, dest_point_shifted_closer_y = shorten_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos)
+            draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
             # put back
             ctx.lineWidth = 1
