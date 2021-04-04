@@ -6,7 +6,7 @@ import json
 import datetime
 import enum
 
-from browser import html, ajax, alert   # pylint: disable=import-error
+from browser import document, html, ajax, alert   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -16,7 +16,6 @@ import geometry
 import mapping
 import login
 
-import debug
 
 OPTIONS = ['position', 'ordonner', 'négocier', 'déclarer', 'voter', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
@@ -709,6 +708,8 @@ def submit_orders():
 
                 legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
                 buttons_right <= legend_select_order
+                legend_select_order2 = html.I("Raccourcis clavier :(a)ttaquer/soutenir(o)ffensivement/soutenir (d)éfensivement/(t)enir/(c)onvoyer")
+                buttons_right <= legend_select_order2
 
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
@@ -966,6 +967,15 @@ def submit_orders():
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
 
+    def callback_keypress(event):
+        """ callback_keypress """
+
+        char = chr(event.charCode).lower()
+        selected_order = mapping.OrderTypeEnum.shortcut(char)
+        if selected_order is None:
+            return
+        select_order_type_callback(event, selected_order)
+
     def callback_render(_):
         """ callback_render """
 
@@ -1119,6 +1129,9 @@ def submit_orders():
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
     canvas.bind("click", callback_click)
     canvas.bind("dblclick", callback_dblclick)
+
+    # to catch keyboard
+    document.bind("keypress", callback_keypress)
 
     ctx = canvas.getContext("2d")
     if ctx is None:

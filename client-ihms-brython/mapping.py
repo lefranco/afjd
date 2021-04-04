@@ -136,6 +136,21 @@ class OrderTypeEnum(enum.Enum):
                 return order_type
         return None
 
+    @staticmethod
+    def shortcut(char: str):
+        """ shortcut """
+        if char == 'a':
+            return OrderTypeEnum.ATTACK_ORDER
+        if char == 'o':
+            return OrderTypeEnum.OFF_SUPPORT_ORDER
+        if char == 'd':
+            return OrderTypeEnum.DEF_SUPPORT_ORDER
+        if char == 't':
+            return OrderTypeEnum.HOLD_ORDER
+        if char == 'c':
+            return OrderTypeEnum.CONVOY_ORDER
+        return None
+
     def compatible(self, advancement_season: SeasonEnum) -> bool:
         """ type order compatble with season """
         if advancement_season in [SeasonEnum.SPRING_SEASON, SeasonEnum.AUTUMN_SEASON]:
