@@ -113,7 +113,12 @@ def make_report_window(report_loaded):
         }
         chunk_content = lines[chunk_num * split_size: (chunk_num + 1) * split_size]
         for line in chunk_content:
-            report_col <= line
+            if line.find("(échec)") != -1 or line.find("(coupé)") != -1 or line.find("(délogée)") != -1 or line.find("(détruite)") != -1 or line.find("(invalide)") != -1:
+                report_col <= html.B(html.CODE(line, style={'color':'red'}))
+            elif line.find(":") != -1:
+                report_col <= html.B(html.CODE(line, style={'color':'blue'}))
+            else:
+                report_col <= html.B(html.CODE(line, style={'color':'black'}))
             report_col <= html.BR()
         report_row <= report_col
     return report_table
