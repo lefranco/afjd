@@ -2116,8 +2116,8 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
 
         for _, _, message in sorted(messages_list, key=lambda t: t[2].time_stamp, reverse=True):
 
-            # must be author or addressee
-            if role_id != message.addressee_num:
+            # must addressee
+            if int(role_id) != message.addressee_num:
                 continue
 
             time_stamp, _, _ = message.export()
