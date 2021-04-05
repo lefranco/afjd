@@ -497,3 +497,66 @@ def get_roles_submitted_orders(game_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return submitted_data
+
+
+def last_visit_load(game_id, visit_type):
+    """ last_visit_load """
+
+    time_stamp = None
+
+    def reply_callback(req):
+        """ reply_callback """
+
+        nonlocal time_stamp
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting last visit in game (declaration): {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting last visit in game (declaration): {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        time_stamp = req_result['time_stamp']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-visits/{game_id}/{visit_type}"
+
+    # getting last visit in a game : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return time_stamp
+
+
+def last_visit_update(game_id, pseudo, role_id, visit_type):
+    """ last_visit_update """
+
+    def reply_callback(req):
+        """ reply_callback """
+
+        req_result = json.loads(req.text)
+        if req.status != 201:
+            if 'message' in req_result:
+                alert(f"Error putting last visit in game: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem putting last visit in game: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+    json_dict = {
+        'role_id': role_id,
+        'pseudo': pseudo,
+    }
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-visits/{game_id}/{visit_type}"
+
+    # putting visit in a game : need token
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
