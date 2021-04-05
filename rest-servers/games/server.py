@@ -2258,7 +2258,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
 
         # create visit here
         time_stamp = int(time.time())
-        visit = visits.Visit(int(game_id), role_id, visit_type, time_stamp)
+        visit = visits.Visit(int(game_id), role_id, int(visit_type), time_stamp)
         visit.update_database()
 
         data = {'msg': "Ok visit inserted"}
