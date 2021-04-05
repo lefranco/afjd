@@ -2316,7 +2316,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         visits_list = visits.Visit.list_by_game_id_role_num(game_id, role_id, visit_type)
         if visits_list:
             visit = visits_list[0]
-            _, _, time_stamp = visit
+            _, _, _, time_stamp = visit
 
         data = {'time_stamp': time_stamp}
         return data, 200
