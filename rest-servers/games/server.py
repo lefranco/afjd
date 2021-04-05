@@ -1616,7 +1616,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         orders_result = req_result.json()['orders_result']
         orders_result_simplified = orders_result
 
-        # date for database (actually unused)
+        # date for report in database (actually unused)
         time_stamp = int(time.time())
 
         # make report
@@ -1838,7 +1838,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # create message here
         identifier = messages.Message.free_identifier()
-        time_stamp = int(time.time())
+        time_stamp = int(time.time()) # now
         message = messages.Message(identifier, game_id, time_stamp, role_id, dest_role_id, content)
         message.update_database()
 
@@ -1983,7 +1983,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         # create declaration here
         identifier = declarations.Declaration.free_identifier()
-        time_stamp = int(time.time())
+        time_stamp = int(time.time()) # now
         declaration = declarations.Declaration(identifier, game_id, time_stamp, role_id, content)
         declaration.update_database()
 
@@ -2107,7 +2107,7 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
         if role_id_found != role_id:
             flask_restful.abort(403, msg=f"You do not seem to have role {role_id} in game  {game_id}")
 
-        # serves as default value
+        # serves as default value (log time ago)
         time_stamp = 0.
 
         # gather messages
@@ -2177,7 +2177,7 @@ class DateLastGameDeclarationRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
-        # serves as default value
+        # serves as default value (log time ago)
         time_stamp = 0.
 
         # gather declarations
@@ -2310,9 +2310,11 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
+        # serves as default (very long time ago)
+        time_stamp = 0.
+
         # retrieve visit here
         assert role_id is not None
-        time_stamp = int(time.time())  # serves as default
         visits_list = visits.Visit.list_by_game_id_role_num(game_id, role_id, visit_type)
         if visits_list:
             visit = visits_list[0]
