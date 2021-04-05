@@ -49,7 +49,7 @@ class Visit:
     def update_database(self) -> None:
         """ Pushes changes from object to database """
         database.sql_execute("DELETE FROM visits WHERE game_id = ? AND role_num = ? AND visit_type = ?", (self._game_id, self._role_num, self._visit_type))
-        database.sql_execute("INSERT OR REPLACE INTO visits (game_id, role_num, visit_type, time_stamp) VALUES (?, ?, ?)", (self._game_id, self._role_num, self._visit_type, self._time_stamp))
+        database.sql_execute("INSERT OR REPLACE INTO visits (game_id, role_num, visit_type, time_stamp) VALUES (?, ?, ?, ?)", (self._game_id, self._role_num, self._visit_type, self._time_stamp))
 
     def delete_database(self) -> None:
         """ Removes object from database """
