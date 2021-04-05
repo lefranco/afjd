@@ -2157,7 +2157,7 @@ def show_history():
         buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
 
         buttons_right <= html.BR()
-        input_first = html.INPUT(type="submit", value="<<|")
+        input_first = html.INPUT(type="submit", value="||<<")
         input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
         buttons_right <= html.BR()
         buttons_right <= input_first
@@ -2175,7 +2175,7 @@ def show_history():
         buttons_right <= input_next
 
         buttons_right <= html.BR()
-        input_last = html.INPUT(type="submit", value=">>|")
+        input_last = html.INPUT(type="submit", value=">>||")
         input_last.bind("click", lambda e, a=last_advancement: transition_display_callback(e, a))
         buttons_right <= html.BR()
         buttons_right <= input_last
