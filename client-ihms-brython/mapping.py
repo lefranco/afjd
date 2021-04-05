@@ -12,13 +12,14 @@ import math
 
 import geometry
 
+
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
     """ shorten the segment a little bit (returns new x_dest, y_dest) """
     epsilon = 5
 
     delta_x = x_dest - x_start
     delta_y = y_dest - y_start
-    dist = math.sqrt(delta_x**2 +delta_y**2)
+    dist = math.sqrt(delta_x**2 + delta_y**2)
     if dist < 2 * epsilon:
         return x_dest, y_dest
     new_dist = dist - epsilon
@@ -26,6 +27,7 @@ def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
     new_x_dest = x_start + ratio * delta_x
     new_y_dest = y_start + ratio * delta_y
     return new_x_dest, new_y_dest
+
 
 def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx) -> None:
     """ low level draw an arrow """
