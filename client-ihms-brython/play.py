@@ -113,11 +113,11 @@ def make_report_window(report_loaded):
         chunk_content = lines[chunk_num * split_size: (chunk_num + 1) * split_size]
         for line in chunk_content:
             if line.find("(échec)") != -1 or line.find("(coupé)") != -1 or line.find("(délogée)") != -1 or line.find("(détruite)") != -1 or line.find("(invalide)") != -1:
-                report_col <= html.B(html.CODE(line, style={'color':'red'}))
+                report_col <= html.B(html.CODE(line, style={'color': 'red'}))
             elif line.find(":") != -1:
-                report_col <= html.B(html.CODE(line, style={'color':'blue'}))
+                report_col <= html.B(html.CODE(line, style={'color': 'blue'}))
             else:
-                report_col <= html.B(html.CODE(line, style={'color':'black'}))
+                report_col <= html.B(html.CODE(line, style={'color': 'black'}))
             report_col <= html.BR()
         report_row <= report_col
     return report_table
@@ -708,7 +708,7 @@ def submit_orders():
 
                 legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
                 buttons_right <= legend_select_order
-                legend_select_order2 = html.I("Raccourcis clavier :(a)ttaquer/soutenir(o)ffensivement/soutenir (d)éfensivement/(t)enir/(c)onvoyer")
+                legend_select_order2 = html.I("Raccourcis clavier :(a)ttaquer/soutenir(o)ffensivement/soutenir (d)éfensivement/(t)enir/(c)onvoyer/(x)supprimer l'ordre")
                 buttons_right <= legend_select_order2
 
                 for order_type in mapping.OrderTypeEnum:
@@ -890,7 +890,7 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
 
-    def callback_dblclick(event):
+    def callback_dblclick(event, selected_erase_unit):
         """ callback_dblclick """
 
         nonlocal automaton_state
@@ -899,32 +899,31 @@ def submit_orders():
 
         nonlocal buttons_right
 
-        selected_erase_unit = None
-
         # easy cases
+        if selected_erase_unit is None:
 
-        # moves : select unit
-        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
-            selected_erase_unit = position_data.closest_unit(pos, False)
-
-        # retreat : select dislodged unit
-        if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-            selected_erase_unit = position_data.closest_unit(pos, True)
-
-        # tough case : builds
-        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-
-            # first look for a build to cancel
-            selected_erase_unit = orders_data.closest_unit(pos)
-
-            # if failed, look for a removal to cancel
-            if selected_erase_unit is None:
-
+            # moves : select unit
+            if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
                 selected_erase_unit = position_data.closest_unit(pos, False)
 
-                # does this unit has a removal order ?
-                if not orders_data.is_ordered(selected_erase_unit):
-                    selected_erase_unit = None
+            # retreat : select dislodged unit
+            if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+                selected_erase_unit = position_data.closest_unit(pos, True)
+
+            # tough case : builds
+            if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+
+                # first look for a build to cancel
+                selected_erase_unit = orders_data.closest_unit(pos)
+
+                # if failed, look for a removal to cancel
+                if selected_erase_unit is None:
+
+                    selected_erase_unit = position_data.closest_unit(pos, False)
+
+                    # does this unit has a removal order ?
+                    if not orders_data.is_ordered(selected_erase_unit):
+                        selected_erase_unit = None
 
         # remove order
         if selected_erase_unit is not None:
@@ -971,9 +970,28 @@ def submit_orders():
         """ callback_keypress """
 
         char = chr(event.charCode).lower()
+
+        # order removal
+        if char == 'x':
+
+            # check there is a selected unit
+            if selected_active_unit is None:
+                if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                    alert("Impossible d'annuler une constrution de cette manière")
+                return
+
+            if not orders_data.is_ordered(selected_active_unit):
+                return
+
+            # pass to double click
+            callback_dblclick(event, selected_active_unit)
+            return
+
+        # order shortcut
         selected_order = mapping.OrderTypeEnum.shortcut(char)
         if selected_order is None:
             return
+
         select_order_type_callback(event, selected_order)
 
     def callback_render(_):
@@ -1128,7 +1146,7 @@ def submit_orders():
     # create canvas
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
     canvas.bind("click", callback_click)
-    canvas.bind("dblclick", callback_dblclick)
+    canvas.bind("dblclick", lambda e: callback_dblclick(e, None))
 
     # to catch keyboard
     document.bind("keypress", callback_keypress)
@@ -1294,7 +1312,6 @@ def declare():
                     alert("Undocumented issue from server")
                 return
 
-
         json_dict = {
             'role_id': role_id,
             'pseudo': pseudo,
@@ -1308,7 +1325,6 @@ def declare():
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return declarations
-
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
