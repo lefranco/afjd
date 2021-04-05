@@ -95,7 +95,7 @@ def make_report_window(report_loaded):
     """ make_report_window """
 
     lines = report_loaded.split('\n')
-    split_size = (len(lines) + 2) // 2
+    split_size = (len(lines) + 3) // 3
     report_table = html.TABLE()
     report_table.style = {
         "border": "solid",
@@ -105,7 +105,7 @@ def make_report_window(report_loaded):
         "border": "solid",
     }
     report_table <= report_row
-    for chunk_num in range(2):
+    for chunk_num in range(3):
         report_col = html.TD()
         report_col.style = {
             "border": "solid",
