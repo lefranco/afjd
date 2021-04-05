@@ -2105,7 +2105,7 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # check the role
         if role_id_found != role_id:
-            flask_restful.abort(403, msg=f"You do not seem to have role {role_id} in game  {game_id}")
+            flask_restful.abort(403, msg=f"You do not seem to have role {role_id} in game {game_id} (you have {role_id_found})")
 
         # serves as default value (log time ago)
         time_stamp = 0.

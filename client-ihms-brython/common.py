@@ -9,6 +9,10 @@ import config
 import mapping
 
 
+DECLARATIONS_TYPE = 0
+MESSAGES_TYPE = 1
+
+
 def noreply_callback(_):
     """ noreply_callback """
     alert("Problem (no answer from server)")
@@ -512,9 +516,9 @@ def last_visit_load(game_id, visit_type):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting last visit in game (declaration): {req_result['message']}")
+                alert(f"Error getting last visit in game ({visit_type}): {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting last visit in game (declaration): {req_result['msg']}")
+                alert(f"Problem getting last visit in game ({visit_type=}): {req_result['msg']}")
             else:
                 alert("Undocumented issue from server")
             return
@@ -560,3 +564,71 @@ def last_visit_update(game_id, pseudo, role_id, visit_type):
 
     # putting visit in a game : need token
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+
+def last_game_declaration(game_id):
+    """ last_game_declaration """
+
+    time_stamp = None
+
+    def reply_callback(req):
+        """ reply_callback """
+
+        nonlocal time_stamp
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting last game declaration: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting last game declaration: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        time_stamp = req_result['time_stamp']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/date-last-game-declaration/{game_id}"
+
+    # getting last game declaration : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return time_stamp
+
+
+def last_game_message(game_id, role_id):
+    """ last_game_message """
+
+    time_stamp = None
+
+    def reply_callback(req):
+        """ reply_callback """
+
+        nonlocal time_stamp
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting last game message : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting last game message: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        time_stamp = req_result['time_stamp']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/date-last-game-message/{game_id}/{role_id}"
+
+    # getting last game message role : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return time_stamp

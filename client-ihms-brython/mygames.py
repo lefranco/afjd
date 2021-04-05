@@ -77,12 +77,12 @@ def my_games():
         "border": "solid",
     }
 
-    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played', 'orders_submitted']
+    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played', 'orders_submitted', 'new_declarations', 'new_messages']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'ordres soumis'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'ordres soumis', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
@@ -130,13 +130,17 @@ def my_games():
         submitted_data = dict(submitted_data)
 
         data['orders_submitted'] = None
+        data['new_declarations'] = None
+        data['new_messages'] = None
 
         row = html.TR()
         row.style = {
             "border": "solid",
         }
         for field in fields:
+
             value = data[field]
+
             if field == 'deadline':
                 deadline_loaded = value
                 datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
@@ -144,6 +148,7 @@ def my_games():
                 deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
                 deadline_loaded = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
                 value = deadline_loaded
+
             if field == 'current_state':
                 state_loaded = value
                 for possible_state in config.STATE_CODE_TABLE:
@@ -175,6 +180,30 @@ def my_games():
                 else:
                     flag = ""
                 value = flag
+
+            if field == 'new_declarations':
+
+                # get time stamp of last visit of declarations
+                time_stamp_last_visit = common.last_visit_load(game_id, common.DECLARATIONS_TYPE)
+                time_stamp_last_event = common.last_game_declaration(game_id)
+
+                # popup if new
+                popup = ""
+                if time_stamp_last_event > time_stamp_last_visit:
+                    popup = html.IMG(src="./data/new.gif")
+                value = popup
+
+            if field == 'new_messages':
+
+                # get time stamp of last visit of declarations
+                time_stamp_last_visit = common.last_visit_load(game_id, common.MESSAGES_TYPE)
+                time_stamp_last_event = common.last_game_message(game_id, role_id)
+
+                # popup if new
+                popup = ""
+                if time_stamp_last_event > time_stamp_last_visit:
+                    popup = html.IMG(src="./data/new.gif")
+                value = popup
 
             col = html.TD(value)
             col.style = {

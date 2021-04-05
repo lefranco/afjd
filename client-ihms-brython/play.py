@@ -16,9 +16,6 @@ import geometry
 import mapping
 import login
 
-DECLARATIONS_TYPE = 0
-MESSAGES_TYPE = 1
-
 
 OPTIONS = ['position', 'ordonner', 'négocier', 'déclarer', 'voter', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
@@ -1242,15 +1239,266 @@ def submit_orders():
 def negotiate():
     """ negotiate """
 
+    def add_message_callback(_):
+        """ add_message_callback """
+
+        def reply_callback(req):
+            """ reply_callback """
+
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error adding message in game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem adding message in game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            InfoDialog("OK", "Le message a été envoyé !", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            negotiate()
+
+        for role_num, button in selected.items():
+            if button.checked:
+                dest_role_id = role_num
+                break
+
+        content = input_message.value
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        json_dict = {
+            'dest_role_id': dest_role_id,
+            'role_id': role_id,
+            'pseudo': pseudo,
+            'content': content
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-messages/{game_id}"
+
+        # adding a message in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def messages_reload(game_id):
+        """ messages_reload """
+
+        messages = None
+
+        def reply_callback(req):
+            """ reply_callback """
+
+            nonlocal messages
+
+            req_result = json.loads(req.text)
+
+            messages = req_result['messages_list']
+
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error extracting messages from game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem extracting messages in game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': pseudo,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-messages/{game_id}"
+
+        # extracting messages from a game : need token (or not?)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return messages
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se loguer au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
     # because we do not want the token stale in the middle of the process
     login.check_token()
 
-    dummy = html.P("Sorry, negotiate is not implemented yet...")
-    my_sub_panel <= dummy
+    game_id = common.get_game_id(game)
+    if game_id is None:
+        return
+
+    # from pseudo get player id
+
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        return
+
+    # from game id and player id get role_id of player
+
+    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    if role_id is None:
+        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
+        return
+
+    # get time stamp of last visit of declarations
+    time_stamp_last_visit = common.last_visit_load(game_id, common.MESSAGES_TYPE)
+
+    # put time stamp of last visit of declarations as now
+    common.last_visit_update(game_id, pseudo, role_id, common.MESSAGES_TYPE)
+
+    # get variant name
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # to avoid a warning
+    variant_content_loaded = dict(variant_content_loaded)
+
+    # select display (should be a user choice)
+    display_chosen = common.get_display_from_variant(variant_name_loaded)
+
+    form = html.FORM()
+
+    legend_declaration = html.LEGEND("Votre message", title="Qu'avez vous à lui dire ?")
+    form <= legend_declaration
+    form <= html.BR()
+
+    input_message = html.TEXTAREA(type="text", rows=5, cols=80)
+    form <= input_message
+    form <= html.BR()
+
+    table = html.TABLE()
+    row = html.TR()
+    selected = dict()
+    for role_id_dest in range(variant_content_loaded['roles']['number'] + 1):
+
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id_dest}.jpg")
+
+        # the alternative
+        input_dest = html.INPUT(type="radio", id=str(role_id_dest), name="destinee", checked=(role_id_dest == 0))
+        col = html.TD()
+        col <= input_dest
+
+        # necessary to link flag with button
+        label_dest = html.LABEL(role_icon_img, for_=str(role_id_dest))
+        col <= label_dest
+
+        row <= col
+
+        # add a separator
+        col = html.TD()
+        row <= col
+
+        selected[role_id_dest] = input_dest
+
+    table <= row
+    form <= table
+
+    form <= html.BR()
+    input_declare_in_game = html.INPUT(type="submit", value="envoyer le message")
+    input_declare_in_game.bind("click", add_message_callback)
+    form <= input_declare_in_game
+
+    messages = messages_reload(game_id)
+    if messages is None:
+        return
+
+    # to avoid warning
+    messages = list(messages)
+
+    messages_table = html.TABLE()
+    messages_table.style = {
+        "border": "solid",
+    }
+
+    thead = html.THEAD()
+    for title in ['Date', 'Auteur', 'Destinataire', 'Contenu']:
+        col = html.TD(html.B(title))
+        col.style = {
+            "border": "solid",
+        }
+        thead <= col
+    messages_table <= thead
+
+    for time_stamp, from_role_id_msg, dest_role_id_msg, content in messages:
+
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+
+        date_desc = datetime.datetime.fromtimestamp(time_stamp)
+        col = html.TD(f"{date_desc}")
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{from_role_id_msg}.jpg")
+        col = html.TD(role_icon_img)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{dest_role_id_msg}.jpg")
+        col = html.TD(role_icon_img)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+
+        col = html.TD()
+        col.style = {
+            "border": "solid",
+        }
+
+        for line in content.split('\n'):
+            # new so put in bold
+            if time_stamp > time_stamp_last_visit:
+                line = html.B(line)
+            col <= line
+            col <= html.BR()
+
+        row <= col
+
+        messages_table <= row
+
+    my_sub_panel.clear()
+
+    # role
+    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+    my_sub_panel <= role_icon_img
+
+    # form
+    my_sub_panel <= form
+    form <= html.BR()
+    form <= html.BR()
+
+    # declarations already
+    my_sub_panel <= messages_table
 
 
 def declare():
-    """ negotiate """
+    """ declare """
 
     def add_declaration_callback(_):
         """ add_declaration_callback """
@@ -1293,7 +1541,7 @@ def declare():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def declarations_reload(game_id):
-        """ reload_declarations """
+        """ declarations_reload """
 
         declarations = None
 
@@ -1362,10 +1610,18 @@ def declare():
         return
 
     # get time stamp of last visit of declarations
-    time_stamp_last_visit = common.last_visit_load(game_id, DECLARATIONS_TYPE)
+    time_stamp_last_visit = common.last_visit_load(game_id, common.DECLARATIONS_TYPE)
 
     # put time stamp of last visit of declarations as now
-    common.last_visit_update(game_id, pseudo, role_id, DECLARATIONS_TYPE)
+    common.last_visit_update(game_id, pseudo, role_id, common.DECLARATIONS_TYPE)
+
+    # get variant name
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = common.get_display_from_variant(variant_name_loaded)
 
     form = html.FORM()
 
@@ -1394,12 +1650,14 @@ def declare():
         "border": "solid",
     }
 
-    variant_name_loaded = common.game_variant_name_reload(game)
-    if not variant_name_loaded:
-        return
-
-    # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
+    thead = html.THEAD()
+    for title in ['Date', 'Auteur', 'Contenu']:
+        col = html.TD(html.B(title))
+        col.style = {
+            "border": "solid",
+        }
+        thead <= col
+    declarations_table <= thead
 
     for time_stamp, role_id_msg, content in declarations:
 
