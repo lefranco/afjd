@@ -2100,7 +2100,7 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
         # get the role
         assert game is not None
         role_id_found_str = game.find_role(player_id)
-        if role_id_found is None:
+        if role_id_found_str is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
         # check the role
