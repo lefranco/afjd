@@ -309,7 +309,7 @@ def render(panel_middle):
     """ render """
 
     # always back to top
-    global item_name_selected
+    global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
     load_option(None, item_name_selected)
