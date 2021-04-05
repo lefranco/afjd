@@ -994,10 +994,10 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
 
         # extract transition data
         assert transition is not None
-        situation = json.loads(transition.situation_json)
-        orders = json.loads(transition.orders_json)
+        the_situation = json.loads(transition.situation_json)
+        the_orders = json.loads(transition.orders_json)
         report_txt = transition.report_txt
-        data = {'situation': situation, 'orders': orders, 'report_txt': report_txt}
+        data = {'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
 
         return data, 200
 
@@ -1342,12 +1342,12 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         # TODO : change if we decide to hide this information
         # we could restrict to game master from here
-        #if role_id != 0:
-            #flask_restful.abort(403, msg=f"You do not seem to master game {game_id}")
+        #  if role_id != 0:
+            #  flask_restful.abort(403, msg=f"You do not seem to master game {game_id}")
 
         # submitted list : those who submitted orders
         orders_list = orders.Order.list_by_game_id(game_id)
-        submitted_list = list(set([o[1] for o in orders_list]))
+        submitted_list = list({[o[1] for o in orders_list]})
 
         # needed list : those who need to submit orders
         actives_list = actives.Active.list_by_game_id(game_id)
@@ -1465,7 +1465,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         # evaluate orders
         orders_list = list()
         orders_from_game = orders.Order.list_by_game_id(game_id)
-        for game_num, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders_from_game:
+        for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders_from_game:
             orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
         orders_list_json = json.dumps(orders_list)
 
@@ -2040,7 +2040,6 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         limit = None
 
         # gather declarations
-        assert role_id is not None
         declarations_list = declarations.Declaration.list_by_game_id(game_id)
         declarations_list_json = list()
         num = 1
@@ -2054,17 +2053,154 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game-visits/<game_id>')
+@API.resource('/date-last-game-message/<game_id>/<role_id>')
+class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
+    """  DateLastGameMessageRessource """
+
+    def get(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Gets date of last messages sent to role of game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/date-last-game-message/<game_id>/<role_id> - GET - getting date last received messages game id=%s role_id=%s", game_id, role_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        # check user has right to read message - must be player of game master
+
+        # check there is a game
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # get the role
+        assert game is not None
+        role_id_found = game.find_role(player_id)
+        if role_id_found is None:
+            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+
+        # check the role
+        if role_id_found != role_id:
+            flask_restful.abort(403, msg=f"You do not seem to have role {role_id} in game  {game_id}")
+
+        # serves as default value
+        time_stamp = 0.
+
+        # gather messages
+        assert role_id is not None
+        messages_list = messages.Message.list_by_game_id(game_id)
+
+        for _, _, message in sorted(messages_list, key=lambda t: t[2].time_stamp, reverse=True):
+
+            # must be author or addressee
+            if role_id != message.addressee_num:
+                continue
+
+            time_stamp, _, _ = message.export()
+            break
+
+        data = {'time_stamp': time_stamp}
+        return data, 200
+
+
+@API.resource('/date-last-game-declaration/<game_id>')
+class DateLastGameDeclarationRessource(flask_restful.Resource):  # type: ignore
+    """  DateLastGameDeclarationRessource """
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Gets date of last declarations of game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/date-last-game-declaration/<game_id> - GET - getting date last game declarations game id=%s", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        # check user has right to read declaration - must be player of game master
+
+        # check there is a game
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # get the role
+        assert game is not None
+        role_id = game.find_role(player_id)
+        if role_id is None:
+            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+
+        # serves as default value
+        time_stamp = 0.
+
+        # gather declarations
+        declarations_list = declarations.Declaration.list_by_game_id(game_id)
+        for _, _, declaration in sorted(declarations_list, key=lambda t: t[2].time_stamp, reverse=True):
+            time_stamp, _, _ = declaration.export()
+            break
+
+        data = {'time_stamp': time_stamp}
+        return data, 200
+
+
+@API.resource('/game-visits/<game_id>/<visit_type>')
 class GameVisitRessource(flask_restful.Resource):  # type: ignore
     """  GameVisitRessource """
 
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self, game_id: int, visit_type: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         Insert visit in database
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-visits/<game_id> - POST - creating new visit game id=%s", game_id)
+        mylogger.LOGGER.info("/game-visits/<game_id>/<visit_type> - POST - creating new visit game id=%s visit_type=%s", game_id, visit_type)
 
         args = VISIT_PARSER.parse_args(strict=True)
         role_id = args['role_id']
@@ -2122,19 +2258,19 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
 
         # create visit here
         time_stamp = int(time.time())
-        visit = visits.Visit(int(game_id), role_id, time_stamp)
+        visit = visits.Visit(int(game_id), role_id, visit_type, time_stamp)
         visit.update_database()
 
         data = {'msg': "Ok visit inserted"}
         return data, 201
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int, visit_type: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         Retrieve visit in database
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-visits/<game_id> - GET - retrieving new visit game id=%s", game_id)
+        mylogger.LOGGER.info("/game-visits/<game_id> - GET - retrieving new visit game id=%s visit_type=%s", game_id, visit_type)
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -2177,7 +2313,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         # retrieve visit here
         assert role_id is not None
         time_stamp = int(time.time())  # serves as default
-        visits_list = visits.Visit.list_by_game_id_role_num(game_id, role_id)
+        visits_list = visits.Visit.list_by_game_id_role_num(game_id, role_id, visit_type)
         if visits_list:
             visit = visits_list[0]
             _, _, time_stamp = visit
