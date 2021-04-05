@@ -2120,7 +2120,7 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
             if int(role_id) != message.addressee_num:
                 continue
 
-            time_stamp, _, _ = message.export()
+            time_stamp, _, _, _ = message.export()
             break
 
         data = {'time_stamp': time_stamp}
