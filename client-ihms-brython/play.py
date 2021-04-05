@@ -1289,6 +1289,67 @@ def declare():
         # adding a declaration in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    def last_declaration_visit_load(game_id):
+        """ last_declaration_visit_load """
+
+        time_stamp = None
+
+        def reply_callback(req):
+            """ reply_callback """
+
+            nonlocal time_stamp
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error getting last visit in game (declaration): {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem getting last visit in game (declaration): {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            time_stamp = req_result['time_stamp']
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-visits/{game_id}/0"
+
+        # getting last declaration visit in a game : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return time_stamp
+
+    def last_declaration_visit_update(game_id):
+        """ last_declaration_visit_update """
+
+        def reply_callback(req):
+            """ reply_callback """
+
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error putting last declaration visit in game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem putting last declaration visit in game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': pseudo,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-visits/{game_id}/0"
+
+        # getting last declaration visit in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     def declarations_reload(game_id):
         """ reload_declarations """
 
@@ -1358,6 +1419,12 @@ def declare():
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
 
+    # get time stamp of last visit of declarations
+    time_stamp_last_visit = last_declaration_visit_load(game_id)
+
+    # put time stamp of last visit of declarations as now
+    last_declaration_visit_update(game_id)
+
     form = html.FORM()
 
     legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer ?")
@@ -1419,6 +1486,9 @@ def declare():
         }
 
         for line in content.split('\n'):
+            # new so put in bold
+            if time_stamp > time_stamp_last_visit:
+                line = html.B(line)
             col <= line
             col <= html.BR()
 
