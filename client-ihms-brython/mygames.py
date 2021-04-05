@@ -126,6 +126,7 @@ def my_games():
         submitted_data = common.get_roles_submitted_orders(game_id)
         if submitted_data is None:
             return
+
         # just to avoid a warning
         submitted_data = dict(submitted_data)
 
@@ -185,7 +186,11 @@ def my_games():
 
                 # get time stamp of last visit of declarations
                 time_stamp_last_visit = common.last_visit_load(game_id, common.DECLARATIONS_TYPE)
+                if time_stamp_last_visit is None:
+                    return
                 time_stamp_last_event = common.last_game_declaration(game_id)
+                if time_stamp_last_event is None:
+                    return
 
                 # popup if new
                 popup = ""
@@ -197,7 +202,11 @@ def my_games():
 
                 # get time stamp of last visit of declarations
                 time_stamp_last_visit = common.last_visit_load(game_id, common.MESSAGES_TYPE)
+                if time_stamp_last_visit is None:
+                    return
                 time_stamp_last_event = common.last_game_message(game_id, role_id)
+                if time_stamp_last_event is None:
+                    return
 
                 # popup if new
                 popup = ""
