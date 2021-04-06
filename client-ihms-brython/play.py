@@ -708,8 +708,16 @@ def submit_orders():
 
                 legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
                 buttons_right <= legend_select_order
-                legend_select_order2 = html.I("Raccourcis clavier :(a)ttaquer/soutenir(o)ffensivement/soutenir (d)éfensivement/(t)enir/(c)onvoyer/(x)supprimer l'ordre")
-                buttons_right <= legend_select_order2
+                buttons_right <= html.BR()
+
+                legend_select_order21 = html.I("Raccourcis clavier :")
+                buttons_right <= legend_select_order21
+                buttons_right <= html.BR()
+
+                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                    legend_select_order22 = html.I(info)
+                    buttons_right <= legend_select_order22
+                    buttons_right <= html.BR()
 
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
@@ -1181,7 +1189,7 @@ def submit_orders():
     # left side
 
     display_left = html.DIV(id='display_left')
-    display_left.attrs['style'] = 'display: table-cell; width=50%; vertical-align: top;'
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
     display_left <= canvas
     display_left <= rating_colours_window
@@ -2403,7 +2411,7 @@ def show_history():
         # left side
 
         display_left = html.DIV(id='display_left')
-        display_left.attrs['style'] = 'display: table-cell; width:50%; vertical-align: top;'
+        display_left.attrs['style'] = 'display: table-cell; width:500px; vertical-align: top; table-layout: fixed;'
 
         game_status = get_game_status_histo(variant_data, game_parameters_loaded, advancement_selected)
 
@@ -2451,7 +2459,7 @@ def show_history():
         buttons_right <= html.BR()
         buttons_right <= input_last
 
-        for adv_sample in range(4, last_advancement, 5) :
+        for adv_sample in range(4, last_advancement, 5):
 
             adv_sample_season, adv_sample_year = common.get_season(adv_sample, variant_data)
             adv_sample_season_readable = variant_data.name_table[adv_sample_season]
