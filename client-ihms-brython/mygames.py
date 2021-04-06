@@ -12,7 +12,6 @@ import common
 import config
 import mapping
 
-import debug
 
 my_panel = html.DIV(id="my_games")
 
