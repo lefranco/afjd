@@ -365,7 +365,7 @@ def submit_orders():
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
         stack_role_flag(buttons_right)
 
@@ -400,7 +400,7 @@ def submit_orders():
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
         stack_role_flag(buttons_right)
 
@@ -492,7 +492,7 @@ def submit_orders():
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
-            buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
 
@@ -527,7 +527,7 @@ def submit_orders():
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
-            buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
 
@@ -694,7 +694,7 @@ def submit_orders():
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
-            buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
 
@@ -752,7 +752,7 @@ def submit_orders():
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
-            buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
 
@@ -834,7 +834,7 @@ def submit_orders():
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
-            buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
 
@@ -934,7 +934,7 @@ def submit_orders():
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
         stack_role_flag(buttons_right)
 
@@ -1181,7 +1181,7 @@ def submit_orders():
     # left side
 
     display_left = html.DIV(id='display_left')
-    display_left.attrs['style'] = 'display: table-cell; vertical-align: top;'
+    display_left.attrs['style'] = 'display: table-cell; width=50%; vertical-align: top;'
 
     display_left <= canvas
     display_left <= rating_colours_window
@@ -1190,7 +1190,7 @@ def submit_orders():
     # right side
 
     buttons_right = html.DIV(id='buttons_right')
-    buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+    buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
     stack_role_flag(buttons_right)
 
@@ -2403,7 +2403,7 @@ def show_history():
         # left side
 
         display_left = html.DIV(id='display_left')
-        display_left.attrs['style'] = 'display: table-cell; vertical-align: top;'
+        display_left.attrs['style'] = 'display: table-cell; width:50%; vertical-align: top;'
 
         game_status = get_game_status_histo(variant_data, game_parameters_loaded, advancement_selected)
 
@@ -2424,7 +2424,8 @@ def show_history():
         # new buttons right
 
         buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; vertical-align: top;'
+        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
 
         buttons_right <= html.BR()
         input_first = html.INPUT(type="submit", value="||<<")
