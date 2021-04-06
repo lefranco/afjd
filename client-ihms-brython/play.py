@@ -2450,6 +2450,17 @@ def show_history():
         buttons_right <= html.BR()
         buttons_right <= input_last
 
+        for adv_sample in range(4, last_advancement, 5) :
+
+            adv_sample_season, adv_sample_year = common.get_season(adv_sample, variant_data)
+            adv_sample_season_readable = variant_data.name_table[adv_sample_season]
+
+            buttons_right <= html.BR()
+            input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}")
+            input_last.bind("click", lambda e, a=adv_sample: transition_display_callback(e, a))
+            buttons_right <= html.BR()
+            buttons_right <= input_last
+
         my_sub_panel2 <= buttons_right
 
         my_sub_panel <= my_sub_panel2
