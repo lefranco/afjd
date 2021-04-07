@@ -1076,7 +1076,7 @@ void decritvivants(char *nomfic)
 	(void) fclose(fd);
 }
 
-void infospreajustements(FILE *fd) 
+void infospreajustements(FILE *fd)
 {
 	_PAYS **p;
 	int nappr, ncent, nunit, najustementsposs;
@@ -1090,8 +1090,13 @@ void infospreajustements(FILE *fd)
 
 		nappr = INF(najustementsposs, ncent - nunit);
 
-		sprintf(buf, "%s: %d centres, %d unités, %d emplacements : %s%d", (*p)->nom, ncent, nunit, najustementsposs, (nappr > 0 ? "+" : "-"), abs(nappr));
+		if (nappr != 0) {
+			sprintf(buf, "%s: %d centres, %d unités, %d emplacements : %s%d", (*p)->nom, ncent, nunit, najustementsposs, (nappr > 0 ? "+" : "-"), abs(nappr));
+		}
+		else
+		{
+			sprintf(buf, "%s: %d centres, %d unités, %d emplacements", (*p)->nom, ncent, nunit, najustementsposs);
+		}
 		(void) fprintf(fd, "%s\n", buf);
 	}
 }
-
