@@ -638,6 +638,11 @@ class Variant(Renderable):
 
         return {'roles': role_names, 'zones': zone_names, 'coasts': coast_names}
 
+    def role_adjective(self, role: Role):
+        """ role_adjective """
+        role_info = self._role_add_table[role]
+        return role_info[0]
+
     @property
     def map_size(self) -> geometry.PositionRecord:
         """ property """
@@ -1397,14 +1402,17 @@ class Order(Renderable):
             return f"{self._active_unit} - {dest_zone_name}"
         if self._order_type is OrderTypeEnum.OFF_SUPPORT_ORDER:
             dest_zone_name = variant.name_table[self._destination_zone]
-            return f"{self._active_unit} S {self._passive_unit} - {dest_zone_name}"
+            foreign = variant.role_adjective(self._passive_unit.role) if self._passive_unit.role != self._active_unit.role else ""
+            return f"{self._active_unit} S {foreign} {self._passive_unit} - {dest_zone_name}"
         if self._order_type is OrderTypeEnum.DEF_SUPPORT_ORDER:
-            return f"{self._active_unit} S {self._passive_unit}"
+            foreign = variant.role_adjective(self._passive_unit.role) if self._passive_unit.role != self._active_unit.role else ""
+            return f"{self._active_unit} S {foreign} {self._passive_unit}"
         if self._order_type is OrderTypeEnum.HOLD_ORDER:
             return f"{self._active_unit} H"
         if self._order_type is OrderTypeEnum.CONVOY_ORDER:
             dest_zone_name = variant.name_table[self._destination_zone]
-            return f"{self._active_unit} C {self._passive_unit} - {dest_zone_name}"
+            foreign = variant.role_adjective(self._passive_unit.role) if self._passive_unit.role != self._active_unit.role else ""
+            return f"{self._active_unit} C {foreign} {self._passive_unit} - {dest_zone_name}"
         if self._order_type is OrderTypeEnum.RETREAT_ORDER:
             dest_zone_name = variant.name_table[self._destination_zone]
             return f"{self._active_unit} R {dest_zone_name}"
