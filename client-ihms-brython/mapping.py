@@ -1520,9 +1520,14 @@ class Orders(Renderable):
     def closest_unit(self, designated_pos: geometry.PositionRecord):
         """ closest_unit """
 
+        # search units from position (make a copy)
+        search_list = list(self._position.units_list())
+
+        # add units from build orders
+        search_list += list(self._fake_units.values())
+
         closest_unit = None
         distance_closest = None
-        search_list = self._fake_units.values()
         for unit in search_list:
             zone = unit.zone
             unit_pos = self._position.variant.position_table[zone]
