@@ -5,6 +5,7 @@
 import json
 import datetime
 import enum
+import time
 
 from browser import document, html, ajax, alert   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -16,6 +17,9 @@ import geometry
 import mapping
 import login
 
+LONG_DURATION_LIMIT_SEC = 1.0
+
+import debug
 
 OPTIONS = ['position', 'ordonner', 'négocier', 'déclarer', 'voter', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
@@ -348,6 +352,9 @@ def submit_orders():
     selected_build_zone = None
     automaton_state = None
 
+    stored_event = None
+    down_click_time = None
+
     def rest_hold_callback(_):
         """ rest_hold_callback """
 
@@ -370,7 +377,7 @@ def submit_orders():
         stack_role_flag(buttons_right)
 
         # we are in spring or autumn
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
         buttons_right <= legend_select_unit
 
         my_sub_panel2 <= buttons_right
@@ -380,6 +387,7 @@ def submit_orders():
 
         if not orders_data.empty():
             put_erase_all(buttons_right)
+
         # do not put all hold
         if not orders_data.empty():
             put_submit(buttons_right)
@@ -405,13 +413,13 @@ def submit_orders():
         stack_role_flag(buttons_right)
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             if position_data.has_dislodged():
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
                 buttons_right <= legend_select_unit
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
             else:
@@ -576,7 +584,7 @@ def submit_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -617,7 +625,7 @@ def submit_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -663,7 +671,7 @@ def submit_orders():
             my_sub_panel <= my_sub_panel2
 
     def callback_click(event):
-        """ callback_click """
+        """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
 
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
@@ -805,7 +813,7 @@ def submit_orders():
             callback_render(None)
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
                 buttons_right <= legend_select_unit
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 legend_select_unit = html.LEGEND("Sélectionner l'ordre d'adjustement")
@@ -855,7 +863,7 @@ def submit_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -898,27 +906,32 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
 
-    def callback_dblclick(event, selected_erase_unit):
-        """ callback_dblclick """
+    def callback_longclick(event, selected_erase_unit):
+        """
+        called when there is a click down then a click up separated by more than 'LONG_DURATION_LIMIT_SEC' sec
+        or when pressing 'x' in which cas a 'selected_erase_unit is passed
+        """
 
         nonlocal automaton_state
-
-        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-
         nonlocal buttons_right
 
-        # easy cases
+        # should be either cases
+        assert event is not None or selected_erase_unit is not None
+
+        # from click (not x that provides unit)
         if selected_erase_unit is None:
 
-            # moves : select unit
+            pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+
+            # moves : select unit : easy case
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
                 selected_erase_unit = position_data.closest_unit(pos, False)
 
-            # retreat : select dislodged unit
+            # retreat : select dislodged unit : easy case
             if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 selected_erase_unit = position_data.closest_unit(pos, True)
 
-            # tough case : builds
+            #  builds : tough case
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
 
                 # first look for a build to cancel
@@ -933,9 +946,12 @@ def submit_orders():
                     if not orders_data.is_ordered(selected_erase_unit):
                         selected_erase_unit = None
 
+        # unit must be selected must have an order
+        if selected_erase_unit is None or not orders_data.is_ordered(selected_erase_unit):
+            return
+
         # remove order
-        if selected_erase_unit is not None:
-            orders_data.remove_order(selected_erase_unit)
+        orders_data.remove_order(selected_erase_unit)
 
         # update map
         callback_render(None)
@@ -947,7 +963,7 @@ def submit_orders():
         stack_role_flag(buttons_right)
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -974,12 +990,28 @@ def submit_orders():
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
 
+    def callback_mousedown(event):
+        """ callback_mousedow """
+        nonlocal down_click_time
+        nonlocal stored_event
+        down_click_time = time.time()
+        stored_event = event
+
+    def callback_mouseup(_):
+        """ callback_mouseup """
+        up_click_time = time.time()
+        click_duration = up_click_time - down_click_time
+        if click_duration > LONG_DURATION_LIMIT_SEC:
+            callback_longclick(stored_event, None)
+            return
+        callback_click(stored_event)
+
     def callback_keypress(event):
         """ callback_keypress """
 
         char = chr(event.charCode).lower()
 
-        # order removal
+        # order removal : special
         if char == 'x':
 
             # check there is a selected unit
@@ -988,11 +1020,8 @@ def submit_orders():
                     alert("Impossible d'annuler une constrution de cette manière")
                 return
 
-            if not orders_data.is_ordered(selected_active_unit):
-                return
-
             # pass to double click
-            callback_dblclick(event, selected_active_unit)
+            callback_longclick(None, selected_active_unit)
             return
 
         # order shortcut
@@ -1153,8 +1182,10 @@ def submit_orders():
 
     # create canvas
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
-    canvas.bind("click", callback_click)
-    canvas.bind("dblclick", lambda e: callback_dblclick(e, None))
+
+    # now we need to be more clever and handle the state of the mouse (up or down)
+    canvas.bind("mouseup", callback_mouseup)
+    canvas.bind("mousedown", callback_mousedown)
 
     # to catch keyboard
     document.bind("keypress", callback_keypress)
@@ -1203,13 +1234,13 @@ def submit_orders():
     stack_role_flag(buttons_right)
 
     if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
         if position_data.has_dislodged():
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (double-clic pour effacer)")
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
         else:
