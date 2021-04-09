@@ -23,6 +23,9 @@ import sandbox    # noqa: E402
 import technical    # noqa: E402
 import admin    # noqa: E402
 
+# remove at some point
+import debug
+
 
 # TITLE
 TITLE = "Front end générique Serveurs REST AJFD"

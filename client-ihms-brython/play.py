@@ -19,8 +19,6 @@ import login
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-import debug
-
 OPTIONS = ['position', 'ordonner', 'négocier', 'déclarer', 'voter', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
 my_panel = html.DIV(id="play")
@@ -98,8 +96,10 @@ def make_rating_colours_window(ratings, colours):
 def make_report_window(report_loaded):
     """ make_report_window """
 
+    columns = 3
+
     lines = report_loaded.split('\n')
-    split_size = (len(lines) + 3) // 3
+    split_size = (len(lines) + columns) // columns
     report_table = html.TABLE()
     report_table.style = {
         "border": "solid",
@@ -109,7 +109,7 @@ def make_report_window(report_loaded):
         "border": "solid",
     }
     report_table <= report_row
-    for chunk_num in range(3):
+    for chunk_num in range(columns):
         report_col = html.TD()
         report_col.style = {
             "border": "solid",
@@ -670,7 +670,7 @@ def submit_orders():
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
 
-    def callback_click(event):
+    def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
 
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
@@ -906,21 +906,22 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
 
-    def callback_longclick(event, selected_erase_unit):
+    def callback_canvas_long_click(event):
         """
         called when there is a click down then a click up separated by more than 'LONG_DURATION_LIMIT_SEC' sec
-        or when pressing 'x' in which cas a 'selected_erase_unit is passed
+        or when pressing 'x' in which case a None is passed
         """
 
         nonlocal automaton_state
         nonlocal buttons_right
 
-        # should be either cases
-        assert event is not None or selected_erase_unit is not None
+        # the aim is to give this variable a value
+        selected_erase_unit = None
 
-        # from click (not x that provides unit)
-        if selected_erase_unit is None:
+        # first : take from event
+        if event:
 
+            # where is the click
             pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
             # moves : select unit : easy case
@@ -931,22 +932,15 @@ def submit_orders():
             if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 selected_erase_unit = position_data.closest_unit(pos, True)
 
-            #  builds : tough case
+            #  builds : tougher case : we take the build units into account
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-
-                # first look for a build to cancel
                 selected_erase_unit = orders_data.closest_unit(pos)
 
-                # if failed, look for a removal to cancel
-                if selected_erase_unit is None:
+        # event is None when coming from x pressed, then take 'selected_active_unit' (that can be None)
+        if selected_erase_unit is None:
+            selected_erase_unit = selected_active_unit
 
-                    selected_erase_unit = position_data.closest_unit(pos, False)
-
-                    # does this unit has a removal order ?
-                    if not orders_data.is_ordered(selected_erase_unit):
-                        selected_erase_unit = None
-
-        # unit must be selected must have an order
+        # unit must be selected and must have an order
         if selected_erase_unit is None or not orders_data.is_ordered(selected_erase_unit):
             return
 
@@ -990,21 +984,28 @@ def submit_orders():
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
 
-    def callback_mousedown(event):
-        """ callback_mousedow """
+    def callback_canvas_mousedown(event):
+        """ callback_mousedow : store event"""
+
         nonlocal down_click_time
         nonlocal stored_event
         down_click_time = time.time()
         stored_event = event
 
-    def callback_mouseup(_):
-        """ callback_mouseup """
+    def callback_canvas_mouseup(_):
+        """ callback_mouseup : retrieve event and pass it"""
+
+        # get click duration
         up_click_time = time.time()
         click_duration = up_click_time - down_click_time
+
+        # slow : call
         if click_duration > LONG_DURATION_LIMIT_SEC:
-            callback_longclick(stored_event, None)
+            callback_canvas_long_click(stored_event)
             return
-        callback_click(stored_event)
+
+        # normal : call s
+        callback_canvas_click(stored_event)
 
     def callback_keypress(event):
         """ callback_keypress """
@@ -1013,15 +1014,8 @@ def submit_orders():
 
         # order removal : special
         if char == 'x':
-
-            # check there is a selected unit
-            if selected_active_unit is None:
-                if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                    alert("Impossible d'annuler une constrution de cette manière")
-                return
-
             # pass to double click
-            callback_longclick(None, selected_active_unit)
+            callback_canvas_long_click(None)
             return
 
         # order shortcut
@@ -1184,8 +1178,8 @@ def submit_orders():
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
 
     # now we need to be more clever and handle the state of the mouse (up or down)
-    canvas.bind("mouseup", callback_mouseup)
-    canvas.bind("mousedown", callback_mousedown)
+    canvas.bind("mouseup", callback_canvas_mouseup)
+    canvas.bind("mousedown", callback_canvas_mousedown)
 
     # to catch keyboard
     document.bind("keypress", callback_keypress)
@@ -2464,7 +2458,6 @@ def show_history():
 
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
-
 
         buttons_right <= html.BR()
         input_first = html.INPUT(type="submit", value="||<<")
