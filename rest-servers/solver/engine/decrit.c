@@ -578,7 +578,7 @@ static void decritpossessions(FILE *fd, _PAYS *pays, BOOL affpays) {
 		return;
 
 	if (affpays)
-		(void) fprintf(fd, "%s : ", pays->nom);
+		(void) fprintf(fd, "%s: ", pays->nom);
 
 	premier = TRUE;
 	for (p = POSSESSION.t; p < POSSESSION.t + POSSESSION.n; p++)
