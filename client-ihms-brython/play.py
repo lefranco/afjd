@@ -238,6 +238,8 @@ def get_game_status_histo(variant_data, game_parameters_loaded, advancement_sele
 def show_position():
     """ show_position """
 
+    hovering_message = "(informations sur l'unité survoléee par la souris sur la carte)"
+
     variant_name_loaded = None
     variant_content_loaded = None
     variant_data = None
@@ -255,6 +257,18 @@ def show_position():
 
         # put the position
         position_data.render(ctx)
+
+    def callback_canvas_mouse_move(event):
+        """ callback_canvas_mouse_move """
+
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+
+        selected_hovered_unit = position_data.closest_unit(pos, False)
+        hover_info.text = selected_hovered_unit.description()
+
+    def callback_canvas_mouse_leave(_):
+        """ callback_canvas_mouse_leave """
+        hover_info.text = hovering_message
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -315,10 +329,20 @@ def show_position():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
 
+    # give some information sometimes
+    canvas.bind("mousemove", callback_canvas_mouse_move)
+    canvas.bind("mouseleave", callback_canvas_mouse_leave)
+
     # put background (this will call the callback that display the whole map)
     img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
     img.bind('load', callback_render)
 
+    hover_info = html.DIV(hovering_message)
+    hover_info.style = {
+        'color': 'blue',
+    }
+
+    my_sub_panel <= hover_info
     my_sub_panel <= canvas
 
     ratings = position_data.role_ratings()
@@ -673,8 +697,6 @@ def submit_orders():
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
 
-        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-
         nonlocal selected_order_type
         nonlocal automaton_state
         nonlocal selected_active_unit
@@ -682,6 +704,8 @@ def submit_orders():
         nonlocal selected_dest_zone
         nonlocal selected_build_zone
         nonlocal buttons_right
+
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         # this is a shortcut
         if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
@@ -989,6 +1013,7 @@ def submit_orders():
 
         nonlocal down_click_time
         nonlocal stored_event
+
         down_click_time = time.time()
         stored_event = event
 
@@ -1042,6 +1067,7 @@ def submit_orders():
 
     def stack_role_flag(buttons_right):
         """ stack_role_flag """
+
         # role flag
         role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
         buttons_right <= role_icon_img
@@ -1176,6 +1202,10 @@ def submit_orders():
 
     # create canvas
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return
 
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
@@ -2416,7 +2446,6 @@ def show_history():
 
         # create canvas
         canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
-
         ctx = canvas.getContext("2d")
         if ctx is None:
             alert("Il faudrait utiliser un navigateur plus récent !")
