@@ -744,6 +744,33 @@ class Unit(Renderable):  # pylint: disable=abstract-method
             json_dict.update({"dislodged_origin": self._dislodged_origin.identifier})
         return json_dict
 
+    def description(self):
+        """ description for when hovering """
+
+        variant = self._position.variant
+
+        # unit type
+        if isinstance(self, Army):
+            type_name = variant.name_table[UnitTypeEnum.ARMY_UNIT].lower()
+        if isinstance(self, Fleet):
+            type_name = variant.name_table[UnitTypeEnum.FLEET_UNIT].lower()
+
+        # role
+        adjective = self._position.variant.role_adjective(self._role)
+
+        # zone
+        zone = self._zone
+        zone_name = variant.name_table[zone]
+
+        # dislodger - actually not used since called on standard units
+        dislodged_info = ""
+        if self._dislodged_origin is not None:
+            zone_dislodger = self._dislodged_origin.zone
+            dislodger_legend = self._position.variant.name_table[zone_dislodger]
+            dislodged_info = f"- delogée par une unité venue de la région {dislodger_legend}"
+
+        return f"Une {type_name} apartenant au joueur {adjective} positionnée en {zone_name} {dislodged_info}"
+
     @property
     def zone(self) -> Zone:
         """ property """
