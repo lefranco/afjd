@@ -84,9 +84,6 @@ def sandbox():
 
         if not orders_data.empty():
             put_erase_all(buttons_right)
-
-        # do not put all hold
-        if not orders_data.empty():
             put_submit(buttons_right)
 
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -114,7 +111,6 @@ def sandbox():
         stack_orders(buttons_right)
 
         # do not put erase all
-        put_rest_hold(buttons_right)
         if not orders_data.empty():
             put_submit(buttons_right)
 
@@ -265,8 +261,6 @@ def sandbox():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
-            put_rest_hold(buttons_right)
-            if not orders_data.empty():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -329,8 +323,6 @@ def sandbox():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
-            put_rest_hold(buttons_right)
-            if not orders_data.empty():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -371,8 +363,6 @@ def sandbox():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
-            put_rest_hold(buttons_right)
-            if not orders_data.empty():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -408,8 +398,6 @@ def sandbox():
                 stack_orders(buttons_right)
                 if not orders_data.empty():
                     put_erase_all(buttons_right)
-                put_rest_hold(buttons_right)
-                if not orders_data.empty():
                     put_submit(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -430,8 +418,6 @@ def sandbox():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
-            put_rest_hold(buttons_right)
-            if not orders_data.empty():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -494,8 +480,6 @@ def sandbox():
         stack_orders(buttons_right)
         if not orders_data.empty():
             put_erase_all(buttons_right)
-        put_rest_hold(buttons_right)
-        if not orders_data.empty():
             put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
@@ -582,15 +566,6 @@ def sandbox():
         input_erase_all.bind("click", erase_all_callback)
         buttons_right <= html.BR()
         buttons_right <= input_erase_all
-        buttons_right <= html.BR()
-
-    def put_rest_hold(buttons_right):
-        """ put_rest_hold """
-
-        input_rest_hold = html.INPUT(type="submit", value="tout le reste tient")
-        input_rest_hold.bind("click", rest_hold_callback)
-        buttons_right <= html.BR()
-        buttons_right <= input_rest_hold
         buttons_right <= html.BR()
 
     def put_submit(buttons_right):
@@ -808,8 +783,6 @@ def sandbox():
     stack_orders(buttons_right)
     if not orders_data.empty():
         put_erase_all(buttons_right)
-    put_rest_hold(buttons_right)
-    if not orders_data.empty():
         put_submit(buttons_right)
 
     # overall
