@@ -964,8 +964,12 @@ def submit_orders():
         if selected_erase_unit is None:
             selected_erase_unit = selected_active_unit
 
-        # unit must be selected and must have an order
-        if selected_erase_unit is None or not orders_data.is_ordered(selected_erase_unit):
+        # unit must be selected
+        if selected_erase_unit is None:
+            return
+
+        # unit must have an order
+        if not orders_data.is_ordered(selected_erase_unit):
             return
 
         # remove order
