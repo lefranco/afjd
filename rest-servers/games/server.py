@@ -105,7 +105,6 @@ ADJUDICATION_PARSER.add_argument('pseudo', type=str, required=False)
 SIMULATION_PARSER = flask_restful.reqparse.RequestParser()
 SIMULATION_PARSER.add_argument('variant_name', type=str, required=True)
 SIMULATION_PARSER.add_argument('orders', type=str, required=True)
-SIMULATION_PARSER.add_argument('center_ownerships', type=str, required=True)
 SIMULATION_PARSER.add_argument('units', type=str, required=True)
 SIMULATION_PARSER.add_argument('names', type=str, required=True)
 
@@ -1658,7 +1657,6 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
         args = SIMULATION_PARSER.parse_args(strict=True)
         variant_name = args['variant_name']
         names = args['names']
-        ownerships_submitted = args['center_ownerships']
         units_submitted = args['units']
         orders_submitted = args['orders']
 
@@ -1672,21 +1670,12 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
         # evaluate situation
 
         try:
-            the_ownerships = json.loads(ownerships_submitted)
-        except json.JSONDecodeError:
-            flask_restful.abort(400, msg="Did you convert ownerships from json to text ?")
-
-        try:
             the_units = json.loads(units_submitted)
         except json.JSONDecodeError:
             flask_restful.abort(400, msg="Did you convert units from json to text ?")
 
         # situation: get ownerships
         ownership_dict = dict()
-        for the_ownership in the_ownerships:
-            center_num = the_ownership['center_num']
-            role = the_ownership['role']
-            ownership_dict[str(center_num)] = role
 
         # situation: get units
         unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
