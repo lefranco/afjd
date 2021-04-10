@@ -1255,8 +1255,8 @@ class Order(Renderable):
             dest_point = self._position.variant.position_table[self._destination_zone]
             direction = geometry.get_direction(from_point, dest_point)
             next_direction = direction.perpendicular()
-            from_point_shifted = from_point.shift(next_direction)
-            dest_point_shifted = dest_point.shift(next_direction)
+            from_point_shifted = from_point.shift(next_direction, 3)
+            dest_point_shifted = dest_point.shift(next_direction, 3)
             dest_point_shifted_closer_x, dest_point_shifted_closer_y = shorten_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos)
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
@@ -1288,11 +1288,11 @@ class Order(Renderable):
             dest_point = self._position.variant.position_table[self._passive_unit.zone]
             direction = geometry.get_direction(from_point, dest_point)
             next_direction = direction.perpendicular()
-            dest_point_shifted = dest_point.shift(next_direction)
+            dest_point_shifted = dest_point.shift(next_direction, 3)
 
             # put a dashed circle (stand) over unit
             center_point = self._position.variant.position_table[self._passive_unit.zone]
-            center_point_shifted = center_point.shift(next_direction)
+            center_point_shifted = center_point.shift(next_direction, 3)
             ctx.beginPath()
             ctx.arc(center_point_shifted.x_pos, center_point_shifted.y_pos, 12, 0, 2 * math.pi, False)
             ctx.stroke(); ctx.closePath()
@@ -1346,8 +1346,8 @@ class Order(Renderable):
             dest_point = self._position.variant.position_table[self._destination_zone]
             direction = geometry.get_direction(from_point, dest_point)
             next_direction = direction.perpendicular()
-            from_point_shifted = from_point.shift(next_direction)
-            dest_point_shifted = dest_point.shift(next_direction)
+            from_point_shifted = from_point.shift(next_direction, 6)
+            dest_point_shifted = dest_point.shift(next_direction, 6)
             dest_point_shifted_closer_x, dest_point_shifted_closer_y = shorten_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos)
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
