@@ -13,7 +13,7 @@ decrit.c#13#Compte rendu des retraites :
 decrit.c#14#Compte rendu des ajustements :
 decrit.c#15#Impossible de dumper le résultat
 decrit.c#16#;(échec)
-decrit.c#17#;(delogée)
+decrit.c#17#;(délogée)
 decrit.c#18#;(détruite)
 decrit.c#19#;(coupé)
 decrit.c#20#;PAR DEFAUT
@@ -79,7 +79,7 @@ gestion.c#3#Le système utilise '%1' plutôt que '%2' pour ce pays passif en lig
 gestion.c#4#Le système utilise '%1' plutôt que '%2' pour ce centre en ligne %3
 gestion.c#5#Le système utilise '%1' plutôt que '%2' pour ce centredepart en ligne %3
 gestion.c#6#Le système utilise '%1' plutôt que '%2' pour cette unité en ligne %3
-gestion.c#7#Le système utilise '%1' plutôt que '%2' pour cette delogée en ligne %3
+gestion.c#7#Le système utilise '%1' plutôt que '%2' pour cette délogée en ligne %3
 gestion.c#8#Le système utilise '%1' plutôt que '%2' pour cette province en ligne %3
 gestion.c#9#Le système utilise '%1' plutôt que '%2' pour cette unité en ligne %3
 gestion.c#10#Le système utilise '%1' plutôt que '%2' pour cette province (ou zone dans une province) en ligne %3
