@@ -671,7 +671,7 @@ def make_rating_colours_window(ratings, colours):
         ctx.fillRect(1, 1, 13, 13)
 
         rating_col <= canvas
-        rating_col <= f"{role_name} {ncenters}"
+        rating_col <= f" {role_name} {ncenters}"
         rating_row <= rating_col
 
     return rating_table
