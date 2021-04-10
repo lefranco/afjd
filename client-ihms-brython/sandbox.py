@@ -57,37 +57,6 @@ def sandbox():
     stored_event = None
     down_click_time = None
 
-    def rest_hold_callback(_):
-        """ rest_hold_callback """
-
-        nonlocal automaton_state
-        nonlocal buttons_right
-
-        # complete orders
-        orders_data.rest_hold(None)
-
-        # update displayed map
-        callback_render(None)
-
-        my_sub_panel2.removeChild(buttons_right)
-        buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
-
-        # we are in spring or autumn
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
-        buttons_right <= legend_select_unit
-
-        my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
-
-        stack_orders(buttons_right)
-
-        if not orders_data.empty():
-            put_erase_all(buttons_right)
-            put_submit(buttons_right)
-
-        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-
     def erase_all_callback(_):
         """ erase_all_callback """
 
@@ -96,6 +65,9 @@ def sandbox():
 
         # erase orders
         orders_data.erase_orders()
+
+        # erase units
+        position_data.erase_units()
 
         # update displayed map
         callback_render(None)
@@ -185,7 +157,7 @@ def sandbox():
         nonlocal buttons_right
         nonlocal selected_order_type
 
-        if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
+        if automaton_state is AutomatonStateEnum.SELECT_ORDER_STATE:
 
             selected_order_type = order_type
 
@@ -259,8 +231,9 @@ def sandbox():
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
 
             stack_orders(buttons_right)
-            if not orders_data.empty():
+            if not position_data.empty():
                 put_erase_all(buttons_right)
+            if not orders_data.empty():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -279,7 +252,7 @@ def sandbox():
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         # this is a shortcut
-        if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
+        if automaton_state is AutomatonStateEnum.SELECT_ORDER_STATE:
 
             selected_order_type = mapping.OrderTypeEnum.ATTACK_ORDER
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -321,8 +294,9 @@ def sandbox():
                         buttons_right <= input_select
 
             stack_orders(buttons_right)
-            if not orders_data.empty():
+            if not position_data.empty():
                 put_erase_all(buttons_right)
+            if not orders_data.empty():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -361,8 +335,9 @@ def sandbox():
             buttons_right <= legend_select_unit
 
             stack_orders(buttons_right)
-            if not orders_data.empty():
+            if not position_data.empty():
                 put_erase_all(buttons_right)
+            if not orders_data.empty():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -396,8 +371,9 @@ def sandbox():
                 my_sub_panel <= my_sub_panel2
 
                 stack_orders(buttons_right)
-                if not orders_data.empty():
+                if not position_data.empty():
                     put_erase_all(buttons_right)
+                if not orders_data.empty():
                     put_submit(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -416,8 +392,9 @@ def sandbox():
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
-            if not orders_data.empty():
+            if not position_data.empty():
                 put_erase_all(buttons_right)
+            if not orders_data.empty():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -478,8 +455,9 @@ def sandbox():
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         stack_orders(buttons_right)
-        if not orders_data.empty():
+        if not position_data.empty():
             put_erase_all(buttons_right)
+        if not orders_data.empty():
             put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
@@ -601,6 +579,9 @@ def sandbox():
         la zone.
         """
 
+        nonlocal automaton_state
+        nonlocal buttons_right
+
         # récupère les données stockées dans drag_start (l'id de l'objet déplacé)
         src_id = event.dataTransfer.getData("text")
         elt = document[src_id]
@@ -617,6 +598,14 @@ def sandbox():
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
         selected_drop_zone = variant_data.closest_zone(pos)
 
+        # prevent putting armies in sea and fleets inland
+        if not type_unit.can_go(selected_drop_zone.region.region_type):
+            alert(f"On ne peut pas mettre une telle unité à un tel endroit !")
+            return
+
+        # prevent putting fleets in coasst with specific coast
+        # TODO
+
         # create unit
         if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
             new_unit = mapping.Army(position_data, role, selected_drop_zone, None)
@@ -624,18 +613,39 @@ def sandbox():
             new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None)
 
         # remove previous occupant if applicable
-        zone = new_unit.zone
-        region = zone.region
+        selected_drop_region = selected_drop_zone.region
 
-        if region in position_data.occupant_table:
-            previous_unit = position_data.occupant_table[region]
+        if selected_drop_region in position_data.occupant_table:
+            previous_unit = position_data.occupant_table[selected_drop_region]
             position_data.remove_unit(previous_unit)
+
+            # and the order too
+            if orders_data.is_ordered(previous_unit):
+                orders_data.remove_order(previous_unit)
 
         # add to position
         position_data.add_unit(new_unit)
 
         # refresh
         callback_render(ctx)
+
+        my_sub_panel2.removeChild(buttons_right)
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
+        buttons_right <= legend_select_unit
+        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+        stack_orders(buttons_right)
+        if not position_data.empty():
+            put_erase_all(buttons_right)
+        if not orders_data.empty():
+            put_submit(buttons_right)
+
+        my_sub_panel2 <= buttons_right
+        my_sub_panel <= my_sub_panel2
+
 
     # starts here
 
@@ -785,8 +795,9 @@ def sandbox():
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     stack_orders(buttons_right)
-    if not orders_data.empty():
+    if not position_data.empty():
         put_erase_all(buttons_right)
+    if not orders_data.empty():
         put_submit(buttons_right)
 
     # overall
