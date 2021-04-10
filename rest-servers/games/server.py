@@ -322,6 +322,33 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 # no check ?
                 game.terminate()
 
+                # notify players
+
+                subject = f"La partie {game.name} s'est terminée !"
+                game_id = game.identifier
+                allocations_list = allocations.Allocation.list_by_game_id(game_id)
+                addressees = list()
+                for _, player_id, __ in allocations_list:
+                    addressees.append(player_id)
+                body = "Vous ne pouvez plus jouer dans cette partie !"
+
+                json_dict = {
+                    'pseudo': pseudo,
+                    'addressees': " ".join([str(a) for a in addressees]),
+                    'subject': subject,
+                    'body': body,
+                }
+
+                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                url = f"{host}:{port}/mail-players"
+                # for a rest API headers are presented differently
+                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                if req_result.status_code != 200:
+                    print(f"ERROR from server  : {req_result.text}")
+                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                    flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
         game.update_database()
 
         data = {'name': name, 'msg': 'Ok updated'}
