@@ -230,9 +230,6 @@ def build_situation_file(advancement: int, situation: typing.Dict[str, typing.An
 
     result.append("")
 
-    # DEBUG
-    print("\n".join(result))
-
     return result
 
 
