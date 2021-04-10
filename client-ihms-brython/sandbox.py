@@ -78,7 +78,7 @@ def sandbox():
         buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
         # we are in spring or autumn
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
         buttons_right <= legend_select_unit
 
         my_sub_panel2 <= buttons_right
@@ -111,7 +111,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -125,20 +125,22 @@ def sandbox():
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
 
-    def submit_orders_callback(_):
-        """ submit_orders_callback """
+    def submit_callback(_):
+        """ submit_callback """
 
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error submitting orders: {req_result['message']}")
+                    alert(f"Error submitting simulation situation and orders: {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem submitting orders: {req_result['msg']}")
+                    alert(f"Problem submitting simulation situation and orders: {req_result['msg']}")
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Vous avez soumis les ordres : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Vous avez soumis les ordres et la situation pour une simulation : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+        variant_name = variant_name_loaded
 
         names_dict = variant_data.extract_names()
         names_dict_json = json.dumps(names_dict)
@@ -146,9 +148,22 @@ def sandbox():
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
 
+        names_dict = variant_data.extract_names()
+        names_dict_json = json.dumps(names_dict)
+
+        # units
+        units_list_dict = position_data.save_json()
+        units_list_dict_json = json.dumps(units_list_dict)
+
+        # orders
+        orders_list_dict = orders_data.save_json()
+        orders_list_dict_json = json.dumps(orders_list_dict)
+
         json_dict = {
+            'variant_name': variant_name,
+            'names': names_dict_json,
+            'units': units_list_dict_json,
             'orders': orders_list_dict_json,
-            'names': names_dict_json
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -218,7 +233,7 @@ def sandbox():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -289,7 +304,7 @@ def sandbox():
                 buttons_right <= legend_select_order21
                 buttons_right <= html.BR()
 
-                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre/l'unité"]:
                     legend_select_order22 = html.I(info)
                     buttons_right <= legend_select_order22
                     buttons_right <= html.BR()
@@ -341,7 +356,7 @@ def sandbox():
             # update map
             callback_render(None)
 
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
             buttons_right <= legend_select_unit
 
             stack_orders(buttons_right)
@@ -375,7 +390,7 @@ def sandbox():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -463,7 +478,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -572,8 +587,8 @@ def sandbox():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="soumettre ces ordres")
-        input_submit.bind("click", submit_orders_callback)
+        input_submit = html.INPUT(type="submit", value="soumettre ces ordres dans cette position au simulateur")
+        input_submit.bind("click", submit_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
 
@@ -615,8 +630,6 @@ def sandbox():
         # définit les nouvelles coordonnées de l'objet déplacé
         elt.style.left = f"{event.x - m0[0]}px"
         elt.style.top = f"{event.y - m0[1]}px"
-        # ne plus déplacer l'objet
-        # elt.draggable = False
         # enlever la fonction associée à mouseover
         elt.unbind("mouseover")
         elt.style.cursor = "auto"
@@ -724,10 +737,18 @@ def sandbox():
 
         reserve_table <= row
 
+    reserve_table <= row
+
     display_very_left = html.DIV(id='display_very_left')
     display_very_left.attrs['style'] = 'display: table-cell; width=40px; vertical-align: top; table-layout: fixed;'
 
     display_very_left <= reserve_table
+
+    display_very_left <= html.BR()
+
+    display_very_left <= html.LEGEND("Glissez/déposez")
+    display_very_left <= html.LEGEND("ces unités")
+    display_very_left <= html.LEGEND("sur la carte")
 
     map_size = variant_data.map_size
 
@@ -776,7 +797,7 @@ def sandbox():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-    legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+    legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
     buttons_right <= legend_select_unit
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -797,11 +818,13 @@ def sandbox():
     my_sub_panel <= my_sub_panel2
 
 
-already = False
+already = False  # pylint: disable=invalid-name
+
 
 def render(panel_middle):
     """ render """
-    global already
+
+    global already  # pylint: disable=invalid-name
 
     panel_middle <= my_panel
 

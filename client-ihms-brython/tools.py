@@ -9,7 +9,7 @@ my_panel = html.DIV(id="tools")
 
 
 my_panel <= """
-  Here go widgets to edit a position (either for sandbox or for alterating position by a game master)
+  Here go widgets to select interface (stabbeurfou / diplomatie-online / diplomania)
 """
 
 
