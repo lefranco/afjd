@@ -55,7 +55,6 @@ def sandbox():
     automaton_state = None
 
     stored_event = None
-    stored_units_event = None
     down_click_time = None
 
     # coordonnées de la souris relativement au bord supérieur gauche de l'objet
@@ -578,6 +577,7 @@ def sandbox():
 
     def dragstart(ev):
         """Fonction appelée quand l'utilisateur commence à déplacer l'objet."""
+
         nonlocal m0
         # calcul des coordonnées de la souris
         # ev.x et ev.y sont les coordonnées de la souris quand l'événement est déclenché
@@ -590,6 +590,9 @@ def sandbox():
         # permet à l'object d'être déplacé dans l'objet destination
         ev.dataTransfer.effectAllowed = "move"
 
+    def dragover(ev):
+        ev.data.dropEffect = 'move'
+        ev.preventDefault()
 
     def drop(ev):
         """Fonction attachée à la zone de destination.
@@ -597,12 +600,13 @@ def sandbox():
         quand l'utilisateur relâche la souris alors que l'objet est au-dessus de
         la zone.
         """
+
         # récupère les données stockées dans drag_start (l'id de l'objet déplacé)
         src_id = ev.dataTransfer.getData("text")
         elt = document[src_id]
         # définit les nouvelles coordonnées de l'objet déplacé
-        elt.style.left = "{}px".format(ev.x - m0[0])
-        elt.style.top = "{}px".format(ev.y - m0[1])
+        elt.style.left = f"{ev.x - m0[0]}px"
+        elt.style.top = f"{ev.y - m0[1]}px"
         # ne plus déplacer l'objet
         elt.draggable = False
         # enlever la fonction associée à mouseover
@@ -610,6 +614,12 @@ def sandbox():
         elt.style.cursor = "auto"
         ev.preventDefault()
 
+        # put unit there
+        # TODO
+        (type_unit, role) = unit_info_table[src_id]
+        x = variant_data.name_table[type_unit]
+        y = variant_data.name_table[role]
+        print(f"{x} {y}")
 
     # starts here
 
@@ -641,11 +651,15 @@ def sandbox():
 
     # now we can display
 
+    # finds data about the dragged unit
+    unit_info_table = dict()
+
     reserve_table = html.TABLE()
     reserve_table.style = {
         "border": "solid",
     }
 
+    num = 1
     for role in variant_data.roles.values():
 
         row = html.TR()
@@ -665,7 +679,10 @@ def sandbox():
             if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
                 unit = mapping.Fleet(position_data, role, None, None)
 
-            unit_canvas = html.CANVAS(id="rect", width=32, height=32, alt="Draguez moi!")
+            identifier = f"unit_{num}"
+            unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Draguez moi!")
+            unit_info_table[identifier] = (type_unit, role)
+            num += 1
 
             unit_canvas.draggable = True
             unit_canvas.bind("mouseover", mouseover)
@@ -697,6 +714,7 @@ def sandbox():
     canvas.bind("mouseup", callback_canvas_mouseup)
     canvas.bind("mousedown", callback_canvas_mousedown)
 
+    canvas.bind('dragover', dragover)
     canvas.bind("drop", drop)
 
     # to catch keyboard
