@@ -245,11 +245,6 @@ def sandbox():
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
 
-    def callback_reserve_canvas_click(event):
-        """ called when there is a click down then a click up  """
-
-        print("callback_canvas_units_click")
-
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
 
@@ -471,18 +466,6 @@ def sandbox():
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
 
-    def callback_reserve_canvas_mousedown(event):
-        """ callback_mousedow : store event"""
-
-        nonlocal stored_units_event
-        stored_units_event = event
-
-    def callback_reserve_canvas_mouseup(_):
-        """ callback_mouseup : retrieve event and pass it"""
-
-        # normal : call
-        callback_reserve_canvas_click(stored_units_event)
-
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
 
@@ -495,16 +478,22 @@ def sandbox():
     def callback_canvas_mouseup(_):
         """ callback_mouseup : retrieve event and pass it"""
 
+        nonlocal down_click_time
+
+        if down_click_time is None:
+            return
+
         # get click duration
         up_click_time = time.time()
         click_duration = up_click_time - down_click_time
+        down_click_time = None
 
         # slow : call
         if click_duration > LONG_DURATION_LIMIT_SEC:
             callback_canvas_long_click(stored_event)
             return
 
-        # normal : call s
+        # normal : call
         callback_canvas_click(stored_event)
 
     def callback_keypress(event):
