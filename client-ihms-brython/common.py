@@ -1,8 +1,10 @@
 """ common """
 
+# pylint: disable=pointless-statement, expression-not-assigned
+
 import json
 
-from browser import ajax, alert  # pylint: disable=import-error
+from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -632,3 +634,78 @@ def last_game_message(game_id, role_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return time_stamp
+
+
+def make_rating_colours_window(ratings, colours):
+    """ make_rating_window """
+
+    rating_table = html.TABLE()
+    rating_table.style = {
+        "border": "solid",
+    }
+    rating_row = html.TR()
+    rating_row.style = {
+        "border": "solid",
+    }
+    rating_table <= rating_row
+    for role_name, ncenters in ratings.items():
+        rating_col = html.TD()
+        rating_col.style = {
+            "border": "solid",
+        }
+
+        canvas = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
+        ctx = canvas.getContext("2d")
+
+        colour = colours[role_name]
+
+        outline_colour = colour.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.rect(0, 0, 14, 14)
+        ctx.stroke()
+        ctx.closePath()  # no fill
+
+        ctx.fillStyle = colour.str_value()
+        ctx.fillRect(1, 1, 13, 13)
+
+        rating_col <= canvas
+        rating_col <= f"{role_name} {ncenters}"
+        rating_row <= rating_col
+
+    return rating_table
+
+
+def make_report_window(report_loaded):
+    """ make_report_window """
+
+    columns = 3
+
+    lines = report_loaded.split('\n')
+    split_size = (len(lines) + columns) // columns
+    report_table = html.TABLE()
+    report_table.style = {
+        "border": "solid",
+    }
+    report_row = html.TR()
+    report_row.style = {
+        "border": "solid",
+    }
+    report_table <= report_row
+    for chunk_num in range(columns):
+        report_col = html.TD()
+        report_col.style = {
+            "border": "solid",
+        }
+        chunk_content = lines[chunk_num * split_size: (chunk_num + 1) * split_size]
+        for line in chunk_content:
+            if line.find("(échec)") != -1 or line.find("(coupé)") != -1 or line.find("(délogée)") != -1 or line.find("(détruite)") != -1 or line.find("(invalide)") != -1:
+                report_col <= html.B(html.CODE(line, style={'color': 'red'}))
+            elif line.find(":") != -1:
+                report_col <= html.B(html.CODE(line, style={'color': 'blue'}))
+            else:
+                report_col <= html.B(html.CODE(line, style={'color': 'black'}))
+            report_col <= html.BR()
+        report_row <= report_col
+    return report_table

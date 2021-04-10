@@ -57,10 +57,6 @@ def sandbox():
     stored_event = None
     down_click_time = None
 
-    # coordonnées de la souris relativement au bord supérieur gauche de l'objet
-    # déplacé quand le glissement commence
-    m0 = [None, None]
-
     def rest_hold_callback(_):
         """ rest_hold_callback """
 
@@ -129,6 +125,9 @@ def sandbox():
         """ submit_callback """
 
         def reply_callback(req):
+
+            nonlocal report_window
+
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -139,6 +138,16 @@ def sandbox():
                     alert("Undocumented issue from server")
                 return
             InfoDialog("OK", f"Vous avez soumis les ordres et la situation pour une simulation : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            if 'result' in req_result:
+
+                # remove previous
+                display_left.removeChild(report_window)
+
+                # put new
+                report_loaded = req_result['result']
+                report_window = common.make_report_window(report_loaded)
+                display_left <= report_window
 
         variant_name = variant_name_loaded
 
@@ -601,13 +610,6 @@ def sandbox():
     def dragstart(event):
         """Fonction appelée quand l'utilisateur commence à déplacer l'objet."""
 
-        nonlocal m0
-        # calcul des coordonnées de la souris
-        # ev.x et ev.y sont les coordonnées de la souris quand l'événement est déclenché
-        # ev.target est l'objet déplacé. Ses attributs "left" et "top" sont des entiers,
-        # la distance par rapport aux bords gauche et supérieur du document
-
-        m0 = [event.x - event.target.abs_left, event.y - event.target.abs_top]
         # associer une donnée au processus de glissement
         event.dataTransfer.setData("text", event.target.id)
         # permet à l'object d'être déplacé dans l'objet destination
@@ -627,9 +629,7 @@ def sandbox():
         # récupère les données stockées dans drag_start (l'id de l'objet déplacé)
         src_id = event.dataTransfer.getData("text")
         elt = document[src_id]
-        # définit les nouvelles coordonnées de l'objet déplacé
-        elt.style.left = f"{event.x - m0[0]}px"
-        elt.style.top = f"{event.y - m0[1]}px"
+
         # enlever la fonction associée à mouseover
         elt.unbind("mouseover")
         elt.style.cursor = "auto"
@@ -791,6 +791,10 @@ def sandbox():
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
     display_left <= canvas
+
+    # need to be one there
+    report_window = common.make_report_window("")
+    display_left <= report_window
 
     # right side
 

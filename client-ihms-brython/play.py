@@ -52,81 +52,6 @@ class AutomatonStateEnum(enum.Enum):
     SELECT_BUILD_UNIT_TYPE_STATE = enum.auto()
 
 
-def make_rating_colours_window(ratings, colours):
-    """ make_rating_window """
-
-    rating_table = html.TABLE()
-    rating_table.style = {
-        "border": "solid",
-    }
-    rating_row = html.TR()
-    rating_row.style = {
-        "border": "solid",
-    }
-    rating_table <= rating_row
-    for role_name, ncenters in ratings.items():
-        rating_col = html.TD()
-        rating_col.style = {
-            "border": "solid",
-        }
-
-        canvas = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
-        ctx = canvas.getContext("2d")
-
-        colour = colours[role_name]
-
-        outline_colour = colour.outline_colour()
-        ctx.strokeStyle = outline_colour.str_value()
-        ctx.lineWidth = 2
-        ctx.beginPath()
-        ctx.rect(0, 0, 14, 14)
-        ctx.stroke()
-        ctx.closePath()  # no fill
-
-        ctx.fillStyle = colour.str_value()
-        ctx.fillRect(1, 1, 13, 13)
-
-        rating_col <= canvas
-        rating_col <= f"{role_name} {ncenters}"
-        rating_row <= rating_col
-
-    return rating_table
-
-
-def make_report_window(report_loaded):
-    """ make_report_window """
-
-    columns = 3
-
-    lines = report_loaded.split('\n')
-    split_size = (len(lines) + columns) // columns
-    report_table = html.TABLE()
-    report_table.style = {
-        "border": "solid",
-    }
-    report_row = html.TR()
-    report_row.style = {
-        "border": "solid",
-    }
-    report_table <= report_row
-    for chunk_num in range(columns):
-        report_col = html.TD()
-        report_col.style = {
-            "border": "solid",
-        }
-        chunk_content = lines[chunk_num * split_size: (chunk_num + 1) * split_size]
-        for line in chunk_content:
-            if line.find("(échec)") != -1 or line.find("(coupé)") != -1 or line.find("(délogée)") != -1 or line.find("(détruite)") != -1 or line.find("(invalide)") != -1:
-                report_col <= html.B(html.CODE(line, style={'color': 'red'}))
-            elif line.find(":") != -1:
-                report_col <= html.B(html.CODE(line, style={'color': 'blue'}))
-            else:
-                report_col <= html.B(html.CODE(line, style={'color': 'black'}))
-            report_col <= html.BR()
-        report_row <= report_col
-    return report_table
-
-
 def get_game_status(variant_data, game_parameters_loaded, full):
     """ get_game__status """
 
@@ -347,13 +272,13 @@ def show_position():
 
     ratings = position_data.role_ratings()
     colours = position_data.role_colours()
-    rating_colours_window = make_rating_colours_window(ratings, colours)
+    rating_colours_window = common.make_rating_colours_window(ratings, colours)
 
     report_loaded = common.game_report_reload(game)
     if report_loaded is None:
         return
 
-    report_window = make_report_window(report_loaded)
+    report_window = common.make_report_window(report_loaded)
 
     my_sub_panel <= rating_colours_window
     my_sub_panel <= report_window
@@ -1243,13 +1168,13 @@ def submit_orders():
 
     ratings = position_data.role_ratings()
     colours = position_data.role_colours()
-    rating_colours_window = make_rating_colours_window(ratings, colours)
+    rating_colours_window = common.make_rating_colours_window(ratings, colours)
 
     report_loaded = common.game_report_reload(game)
     if report_loaded is None:
         return
 
-    report_window = make_report_window(report_loaded)
+    report_window = common.make_report_window(report_loaded)
 
     # left side
 
@@ -2467,10 +2392,10 @@ def show_history():
 
         ratings = position_data.role_ratings()
         colours = position_data.role_colours()
-        rating_colours_window = make_rating_colours_window(ratings, colours)
+        rating_colours_window = common.make_rating_colours_window(ratings, colours)
         my_sub_panel <= rating_colours_window
 
-        report_window = make_report_window(report_loaded)
+        report_window = common.make_report_window(report_loaded)
 
         # left side
 
