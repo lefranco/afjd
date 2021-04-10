@@ -678,6 +678,10 @@ def sandbox():
     num = 1
     for role in variant_data.roles.values():
 
+        # ignore GM
+        if role.identifier == 0:
+            continue
+
         row = html.TR()
         row.style = {
             "border": "solid",
