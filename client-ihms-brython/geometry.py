@@ -24,16 +24,16 @@ class DirectionEnum(enum.Enum):
         # if self is DirectionEnum.SOUTH_EAST:
         return DirectionEnum.NORTH_EAST
 
-    def xy_shift(self):
+    def xy_shift(self, amplitude: int):
         """ x_shift """
         if self is DirectionEnum.NORTH_EAST:
-            return 3, -3
+            return amplitude, -amplitude
         if self is DirectionEnum.NORTH_WEST:
-            return - 3, - 3
+            return - amplitude, - amplitude
         if self is DirectionEnum.SOUTH_WEST:
-            return - 3, 3
+            return - amplitude, amplitude
         #  if self is DirectionEnum.SOUTH_EAST:
-        return 3, 3
+        return amplitude, amplitude
 
 
 class PositionRecord:
@@ -47,9 +47,9 @@ class PositionRecord:
         """ euclidian distance """
         return math.sqrt((other.x_pos - self.x_pos) ** 2 + (other.y_pos - self.y_pos) ** 2)
 
-    def shift(self, direction: DirectionEnum) -> 'PositionRecord':
+    def shift(self, direction: DirectionEnum, amplitude: int) -> 'PositionRecord':
         """ shift """
-        x_shift, y_shift = direction.xy_shift()
+        x_shift, y_shift = direction.xy_shift(amplitude)
         return PositionRecord(x_pos=self.x_pos + x_shift, y_pos=self.y_pos + y_shift)
 
 
