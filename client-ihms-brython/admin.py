@@ -15,7 +15,7 @@ import login
 
 my_panel = html.DIV(id="admin")
 
-OPTIONS = ['changer nouvelles', 'usurper']
+OPTIONS = ['changer nouvelles', 'usurper', 'envoyer un mail']
 
 
 def check_admin(pseudo):
@@ -177,6 +177,96 @@ def usurp():
     my_sub_panel <= form
 
 
+def sendmail():
+    """ sendmail """
+
+    def sendmail_callback(_):
+        """ sendmail_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error sending email: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem sending email: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            InfoDialog("OK", f"Message émis vers : {addressed_user_name}", remove_after=config.REMOVE_AFTER)
+
+        addressed_user_name = input_addressed.value
+        if not addressed_user_name:
+            alert("User name destinataire manquant")
+            return
+
+        subject = "Message de la part de l'administrateur du site www.diplomania.fr (AFJD)"
+        body = input_message.value
+
+        addressed_id = players_dict[addressed_user_name]
+        addressees = [addressed_id]
+
+        json_dict = {
+            'pseudo': pseudo,
+            'addressees': " ".join([str(a) for a in addressees]),
+            'subject': subject,
+            'body': body,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+
+        # sending email : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se loguer au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        return
+
+    form = html.FORM()
+
+    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter")
+    form <= legend_addressee
+
+    players_dict = common.get_players()
+    if players_dict is None:
+        return
+
+    # all players can be usurped
+    possible_addressed = set(players_dict.keys())
+
+    input_addressed = html.SELECT(type="select-one", value="")
+    for addressee_pseudo in sorted(possible_addressed):
+        option = html.OPTION(addressee_pseudo)
+        input_addressed <= option
+
+    form <= input_addressed
+    form <= html.BR()
+
+    form <= html.BR()
+
+    legend_message = html.LEGEND("Votre message", title="Qu'avez vous à lui dire ?")
+    form <= legend_message
+    form <= html.BR()
+
+    input_message = html.TEXTAREA(type="text", rows=5, cols=80)
+    form <= input_message
+    form <= html.BR()
+
+    input_select_player = html.INPUT(type="submit", value="contacter")
+    input_select_player.bind("click", sendmail_callback)
+    form <= input_select_player
+
+    my_sub_panel <= form
+
+
 my_panel = html.DIV(id="admin")
 my_panel.attrs['style'] = 'display: table-row'
 
@@ -204,6 +294,9 @@ def load_option(_, item_name):
         change_news()
     if item_name == 'usurper':
         usurp()
+    if item_name == 'envoyer un mail':
+        sendmail()
+
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 

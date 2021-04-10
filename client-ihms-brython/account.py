@@ -169,7 +169,7 @@ def create_account():
 
     legend_email = html.LEGEND("email (*)", title="Le site vous notifiera des événements")
     form <= legend_email
-    input_email = html.INPUT(type="email", value="", size="40")
+    input_email = html.INPUT(type="email", value="", size="80")
     form <= input_email
     form <= html.BR()
 
