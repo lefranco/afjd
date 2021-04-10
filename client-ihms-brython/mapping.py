@@ -1146,6 +1146,18 @@ class Position(Renderable):
         """ a rating of roles """
         return {self._variant.name_table[r]: self._variant.colour_table[r] for r in {o.role for o in self._ownerships}}
 
+    def add_unit(self, unit: Unit):
+        """ add_unit (sandbox)"""
+        self._units.append(unit)
+        region = unit.zone.region
+        self._occupant_table[region] = unit
+
+    def remove_unit(self, unit: Unit):
+        """ remove_unit (sandbox)"""
+        region = unit.zone.region
+        del self._occupant_table[region]
+        self._units.remove(unit)
+
     @property
     def variant(self) -> Variant:
         """ property """
