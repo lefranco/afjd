@@ -68,8 +68,8 @@ class Renderable:
 class RegionTypeEnum(enum.Enum):
     """ RegionTypeEnum """
 
-    LAND_REGION = enum.auto()
     COAST_REGION = enum.auto()
+    LAND_REGION = enum.auto()
     SEA_REGION = enum.auto()
 
     @staticmethod
@@ -95,6 +95,14 @@ class UnitTypeEnum(enum.Enum):
             if unit_type.value == code:
                 return unit_type
         return None
+
+    def can_go(self, region_type: RegionTypeEnum) -> bool:
+        """ can_go """
+        if self is UnitTypeEnum.ARMY_UNIT:
+            return region_type in [RegionTypeEnum.COAST_REGION, RegionTypeEnum.LAND_REGION]
+        if self is UnitTypeEnum.FLEET_UNIT:
+            return region_type in [RegionTypeEnum.SEA_REGION, RegionTypeEnum.COAST_REGION]
+        return False
 
 
 @enum.unique
@@ -216,6 +224,11 @@ class Region:
 
         # the unit occupying the region (for identifying units)
         self._occupant = None
+
+    @property
+    def region_type(self) -> RegionTypeEnum:
+        """ property """
+        return self._region_type
 
     @property
     def identifier(self) -> int:
@@ -792,8 +805,10 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         type_name_initial = type_name[0]
         return f"{type_name_initial} {name}"
 
+
 # position for units in reserve table
 dummy_position = geometry.PositionRecord(x_pos=15, y_pos=15)
+
 
 class Army(Unit):
     """ An army """
@@ -1094,6 +1109,10 @@ class Position(Renderable):
                 region = zone.region
                 self._occupant_table[region] = dislodged_unit
 
+    def erase_units(self) -> None:
+        """ erase all units """
+        self._units = list()
+
     def render(self, ctx) -> None:
         """put me on screen """
 
@@ -1164,6 +1183,10 @@ class Position(Renderable):
         region = unit.zone.region
         del self._occupant_table[region]
         self._units.remove(unit)
+
+    def empty(self) -> bool:
+        """ empty """
+        return not self._units
 
     @property
     def variant(self) -> Variant:
