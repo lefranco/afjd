@@ -1020,9 +1020,15 @@ def submit_orders():
     def callback_canvas_mouseup(_):
         """ callback_mouseup : retrieve event and pass it"""
 
+        nonlocal down_click_time
+
+        if down_click_time is None:
+            return
+
         # get click duration
         up_click_time = time.time()
         click_duration = up_click_time - down_click_time
+        down_click_time = None
 
         # slow : call
         if click_duration > LONG_DURATION_LIMIT_SEC:
