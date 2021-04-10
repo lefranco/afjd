@@ -146,7 +146,7 @@ def build_situation_file(advancement: int, situation: typing.Dict[str, typing.An
     zone_names = [r for r in names['zones'].values() if r]
     zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}" for r, c in variant['coastal_zones']]
 
-    # build a table zone name -> regio name
+    # build a table zone name -> region name
     region_table = dict()
     for zone in names['zones'].values():
         if zone:
@@ -229,6 +229,10 @@ def build_situation_file(advancement: int, situation: typing.Dict[str, typing.An
         result.append(f"INTERDIT {region_name}")
 
     result.append("")
+
+    # DEBUG
+    print("\n".join(result))
+
     return result
 
 
