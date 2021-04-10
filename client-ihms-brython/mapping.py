@@ -792,6 +792,8 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         type_name_initial = type_name[0]
         return f"{type_name_initial} {name}"
 
+# position for units in reserve table
+dummy_position = geometry.PositionRecord(x_pos=18, y_pos=18)
 
 class Army(Unit):
     """ An army """
@@ -807,7 +809,11 @@ class Army(Unit):
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
-        position = self._position.variant.position_table[self._zone]
+        if self._zone:
+            position = self._position.variant.position_table[self._zone]
+        else:
+            position = dummy_position
+
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         # shift for dislodged units
@@ -899,7 +905,11 @@ class Fleet(Unit):
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
-        position = self._position.variant.position_table[self._zone]
+        if self._zone:
+            position = self._position.variant.position_table[self._zone]
+        else:
+            position = dummy_position
+
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         # shift for dislodged units
