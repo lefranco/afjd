@@ -571,11 +571,11 @@ def sandbox():
 
     # callbacks pour le glisser / deposer
 
-    def mouseover(ev):
+    def mouseover(event):
         """Quand la souris passe sur l'objet déplaçable, changer le curseur."""
-        ev.target.style.cursor = "pointer"
+        event.target.style.cursor = "pointer"
 
-    def dragstart(ev):
+    def dragstart(event):
         """Fonction appelée quand l'utilisateur commence à déplacer l'objet."""
 
         nonlocal m0
@@ -584,17 +584,17 @@ def sandbox():
         # ev.target est l'objet déplacé. Ses attributs "left" et "top" sont des entiers,
         # la distance par rapport aux bords gauche et supérieur du document
 
-        m0 = [ev.x - ev.target.abs_left, ev.y - ev.target.abs_top]
+        m0 = [event.x - event.target.abs_left, event.y - event.target.abs_top]
         # associer une donnée au processus de glissement
-        ev.dataTransfer.setData("text", ev.target.id)
+        event.dataTransfer.setData("text", event.target.id)
         # permet à l'object d'être déplacé dans l'objet destination
-        ev.dataTransfer.effectAllowed = "move"
+        event.dataTransfer.effectAllowed = "move"
 
-    def dragover(ev):
-        ev.data.dropEffect = 'move'
-        ev.preventDefault()
+    def dragover(event):
+        event.data.dropEffect = 'move'
+        event.preventDefault()
 
-    def drop(ev):
+    def drop(event):
         """Fonction attachée à la zone de destination.
         Elle définit ce qui se passe quand l'objet est déposé, c'est-à-dire
         quand l'utilisateur relâche la souris alors que l'objet est au-dessus de
@@ -602,24 +602,33 @@ def sandbox():
         """
 
         # récupère les données stockées dans drag_start (l'id de l'objet déplacé)
-        src_id = ev.dataTransfer.getData("text")
+        src_id = event.dataTransfer.getData("text")
         elt = document[src_id]
         # définit les nouvelles coordonnées de l'objet déplacé
-        elt.style.left = f"{ev.x - m0[0]}px"
-        elt.style.top = f"{ev.y - m0[1]}px"
+        elt.style.left = f"{event.x - m0[0]}px"
+        elt.style.top = f"{event.y - m0[1]}px"
         # ne plus déplacer l'objet
-        elt.draggable = False
+        # elt.draggable = False
         # enlever la fonction associée à mouseover
         elt.unbind("mouseover")
         elt.style.cursor = "auto"
-        ev.preventDefault()
+        event.preventDefault()
 
         # put unit there
-        # TODO
+        # get unit dragged
         (type_unit, role) = unit_info_table[src_id]
-        x = variant_data.name_table[type_unit]
-        y = variant_data.name_table[role]
-        print(f"{x} {y}")
+        # get zone
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        selected_drop_zone = variant_data.closest_zone(pos)
+
+        # create unit
+        if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+            new_unit = mapping.Army(position_data, role, selected_drop_zone, None)
+        if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+            new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None)
+        # add to position
+        position_data.add_unit(new_unit)
+        position_data.render(ctx)
 
     # starts here
 
@@ -675,9 +684,9 @@ def sandbox():
             }
 
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
-                unit = mapping.Army(position_data, role, None, None)
+                draggable_unit = mapping.Army(position_data, role, None, None)
             if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-                unit = mapping.Fleet(position_data, role, None, None)
+                draggable_unit = mapping.Fleet(position_data, role, None, None)
 
             identifier = f"unit_{num}"
             unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Draguez moi!")
@@ -689,7 +698,7 @@ def sandbox():
             unit_canvas.bind("dragstart", dragstart)
 
             ctx = unit_canvas.getContext("2d")
-            unit.render(ctx)
+            draggable_unit.render(ctx)
 
             col <= unit_canvas
             row <= col
@@ -714,6 +723,7 @@ def sandbox():
     canvas.bind("mouseup", callback_canvas_mouseup)
     canvas.bind("mousedown", callback_canvas_mousedown)
 
+    # dragging related events
     canvas.bind('dragover', dragover)
     canvas.bind("drop", drop)
 
@@ -768,7 +778,14 @@ def sandbox():
     my_sub_panel <= my_sub_panel2
 
 
+already = False
+
 def render(panel_middle):
     """ render """
+    global already
+
     panel_middle <= my_panel
-    sandbox()
+
+    if not already:
+        sandbox()
+        already = True
