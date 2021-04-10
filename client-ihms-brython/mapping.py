@@ -793,7 +793,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         return f"{type_name_initial} {name}"
 
 # position for units in reserve table
-dummy_position = geometry.PositionRecord(x_pos=18, y_pos=18)
+dummy_position = geometry.PositionRecord(x_pos=15, y_pos=15)
 
 class Army(Unit):
     """ An army """

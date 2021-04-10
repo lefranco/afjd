@@ -58,6 +58,10 @@ def sandbox():
     stored_units_event = None
     down_click_time = None
 
+    # coordonnées de la souris relativement au bord supérieur gauche de l'objet
+    # déplacé quand le glissement commence
+    m0 = [None, None]
+
     def rest_hold_callback(_):
         """ rest_hold_callback """
 
@@ -566,6 +570,46 @@ def sandbox():
         buttons_right <= html.BR()
         buttons_right <= input_submit
 
+    # callbacks pour le glisser / deposer
+
+    def mouseover(ev):
+        """Quand la souris passe sur l'objet déplaçable, changer le curseur."""
+        ev.target.style.cursor = "pointer"
+
+    def dragstart(ev):
+        """Fonction appelée quand l'utilisateur commence à déplacer l'objet."""
+        nonlocal m0
+        # calcul des coordonnées de la souris
+        # ev.x et ev.y sont les coordonnées de la souris quand l'événement est déclenché
+        # ev.target est l'objet déplacé. Ses attributs "left" et "top" sont des entiers,
+        # la distance par rapport aux bords gauche et supérieur du document
+
+        m0 = [ev.x - ev.target.abs_left, ev.y - ev.target.abs_top]
+        # associer une donnée au processus de glissement
+        ev.dataTransfer.setData("text", ev.target.id)
+        # permet à l'object d'être déplacé dans l'objet destination
+        ev.dataTransfer.effectAllowed = "move"
+
+
+    def drop(ev):
+        """Fonction attachée à la zone de destination.
+        Elle définit ce qui se passe quand l'objet est déposé, c'est-à-dire
+        quand l'utilisateur relâche la souris alors que l'objet est au-dessus de
+        la zone.
+        """
+        # récupère les données stockées dans drag_start (l'id de l'objet déplacé)
+        src_id = ev.dataTransfer.getData("text")
+        elt = document[src_id]
+        # définit les nouvelles coordonnées de l'objet déplacé
+        elt.style.left = "{}px".format(ev.x - m0[0])
+        elt.style.top = "{}px".format(ev.y - m0[1])
+        # ne plus déplacer l'objet
+        elt.draggable = False
+        # enlever la fonction associée à mouseover
+        elt.unbind("mouseover")
+        elt.style.cursor = "auto"
+        ev.preventDefault()
+
 
     # starts here
 
@@ -621,7 +665,12 @@ def sandbox():
             if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
                 unit = mapping.Fleet(position_data, role, None, None)
 
-            unit_canvas = html.CANVAS(id="rect", width=35, height=35, alt="Draguez moi!")
+            unit_canvas = html.CANVAS(id="rect", width=32, height=32, alt="Draguez moi!")
+
+            unit_canvas.draggable = True
+            unit_canvas.bind("mouseover", mouseover)
+            unit_canvas.bind("dragstart", dragstart)
+
             ctx = unit_canvas.getContext("2d")
             unit.render(ctx)
 
@@ -647,6 +696,8 @@ def sandbox():
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
     canvas.bind("mousedown", callback_canvas_mousedown)
+
+    canvas.bind("drop", drop)
 
     # to catch keyboard
     document.bind("keypress", callback_keypress)
