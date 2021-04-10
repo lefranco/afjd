@@ -1113,6 +1113,13 @@ class Position(Renderable):
         for dislodged_unit in self._dislodged_units:
             dislodged_unit.render(ctx)
 
+    def save_json(self) -> str:
+        """ export as list of dict """
+        json_data = list()
+        for unit in self._units:
+            json_data.append(unit.save_json())
+        return json_data
+
     def closest_unit(self, designated_pos: geometry.PositionRecord, dislodged: bool):
         """ closest_unit """
 
