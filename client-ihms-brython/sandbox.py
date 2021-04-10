@@ -55,6 +55,7 @@ def sandbox():
     automaton_state = None
 
     stored_event = None
+    stored_units_event = None
     down_click_time = None
 
     def rest_hold_callback(_):
@@ -243,6 +244,11 @@ def sandbox():
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
+
+    def callback_reserve_canvas_click(event):
+        """ called when there is a click down then a click up  """
+
+        print("callback_canvas_units_click")
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -465,6 +471,18 @@ def sandbox():
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
 
+    def callback_reserve_canvas_mousedown(event):
+        """ callback_mousedow : store event"""
+
+        nonlocal stored_units_event
+        stored_units_event = event
+
+    def callback_reserve_canvas_mouseup(_):
+        """ callback_mouseup : retrieve event and pass it"""
+
+        # normal : call
+        callback_reserve_canvas_click(stored_units_event)
+
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
 
@@ -559,6 +577,9 @@ def sandbox():
         buttons_right <= html.BR()
         buttons_right <= input_submit
 
+
+    # starts here
+
     variant_name_loaded = VARIANT_NAME
 
     # from variant name get variant content
@@ -586,6 +607,44 @@ def sandbox():
     position_data = mapping.Position(position_loaded, variant_data)
 
     # now we can display
+
+    reserve_table = html.TABLE()
+    reserve_table.style = {
+        "border": "solid",
+    }
+
+    for role in variant_data.roles.values():
+
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+
+        for type_unit in mapping.UnitTypeEnum:
+
+            col = html.TD()
+            col.style = {
+                "border": "solid",
+            }
+
+            if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+                unit = mapping.Army(position_data, role, None, None)
+            if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+                unit = mapping.Fleet(position_data, role, None, None)
+
+            unit_canvas = html.CANVAS(id="rect", width=35, height=35, alt="Draguez moi!")
+            ctx = unit_canvas.getContext("2d")
+            unit.render(ctx)
+
+            col <= unit_canvas
+            row <= col
+
+        reserve_table <= row
+
+    display_very_left = html.DIV(id='display_very_left')
+    display_very_left.attrs['style'] = 'display: table-cell; width=40px; vertical-align: top; table-layout: fixed;'
+
+    display_very_left <= reserve_table
 
     map_size = variant_data.map_size
 
@@ -644,6 +703,7 @@ def sandbox():
     # overall
     my_sub_panel2 = html.DIV()
     my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_very_left
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
