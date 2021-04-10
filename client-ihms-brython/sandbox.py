@@ -441,12 +441,20 @@ def sandbox():
         if selected_erase_unit is None:
             selected_erase_unit = selected_active_unit
 
-        # unit must be selected and must have an order
-        if selected_erase_unit is None or not orders_data.is_ordered(selected_erase_unit):
+        # unit must be selected
+        if selected_erase_unit is None:
             return
 
-        # remove order
-        orders_data.remove_order(selected_erase_unit)
+        # if unit does not have an order... remove unit
+        if not orders_data.is_ordered(selected_erase_unit):
+
+            # remove unit
+            position_data.remove_unit(selected_erase_unit)
+
+        else:
+
+            # remove order
+            orders_data.remove_order(selected_erase_unit)
 
         # update map
         callback_render(None)
@@ -626,9 +634,20 @@ def sandbox():
             new_unit = mapping.Army(position_data, role, selected_drop_zone, None)
         if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
             new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None)
+
+        # remove previous occupant if applicable
+        zone = new_unit.zone
+        region = zone.region
+
+        if region in position_data.occupant_table:
+            previous_unit = position_data.occupant_table[region]
+            position_data.remove_unit(previous_unit)
+
         # add to position
         position_data.add_unit(new_unit)
-        position_data.render(ctx)
+
+        # refresh
+        callback_render(ctx)
 
     # starts here
 
