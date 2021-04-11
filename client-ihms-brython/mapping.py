@@ -162,7 +162,7 @@ class OrderTypeEnum(enum.Enum):
         return None
 
     def compatible(self, advancement_season: SeasonEnum) -> bool:
-        """ type order compatble with season """
+        """ type order compatible with season """
         if advancement_season in [SeasonEnum.SPRING_SEASON, SeasonEnum.AUTUMN_SEASON]:
             return self in [OrderTypeEnum.ATTACK_ORDER, OrderTypeEnum.OFF_SUPPORT_ORDER, OrderTypeEnum.DEF_SUPPORT_ORDER, OrderTypeEnum.HOLD_ORDER, OrderTypeEnum.CONVOY_ORDER]
         if advancement_season in [SeasonEnum.SUMMER_SEASON, SeasonEnum.WINTER_SEASON]:
