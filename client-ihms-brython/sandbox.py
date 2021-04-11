@@ -600,7 +600,7 @@ def sandbox():
 
         # prevent putting armies in sea and fleets inland
         if not type_unit.can_go(selected_drop_zone.region.region_type):
-            alert(f"On ne peut pas mettre une telle unité à un tel endroit !")
+            alert("On ne peut pas mettre une telle unité à un tel endroit !")
             return
 
         # prevent putting fleets in coasst with specific coast
@@ -645,7 +645,6 @@ def sandbox():
 
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
-
 
     # starts here
 
