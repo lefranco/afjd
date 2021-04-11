@@ -1245,9 +1245,10 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             # this was done before submitting
             # we tolerate that some extra fake unit may persist from previous submission
 
-        # insert this submisssion
-        submission = submissions.Submission(int(game_id), int(role_id))
-        submission.update_database()
+        # insert this submisssion (if not game master)
+        if role_id != 0:
+            submission = submissions.Submission(int(game_id), int(role_id))
+            submission.update_database()
 
         data = {'msg': f"Ok orders submitted {submission_report}"}
         return data, 201
