@@ -27,6 +27,7 @@ import allocations
 import ownerships
 import units
 import actives
+import submissions
 import orders
 import forbiddens
 import transitions
@@ -1136,7 +1137,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # evaluate situation
 
         # situation: get ownerships
-        ownership_dict = dict()
+        ownership_dict: typing.Dict[str, int] = dict()
         game_ownerships = ownerships.Ownership.list_by_game_id(game_id)
         for _, center_num, role_num in game_ownerships:
             ownership_dict[str(center_num)] = role_num
@@ -1243,6 +1244,10 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             # special case : build : create a fake unit
             # this was done before submitting
             # we tolerate that some extra fake unit may persist from previous submission
+
+        # insert this submisssion
+        submission = submissions.Submission(int(game_id), int(role_id))
+        submission.update_database()
 
         data = {'msg': f"Ok orders submitted {submission_report}"}
         return data, 201
@@ -1371,9 +1376,9 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         #  if role_id != 0:
             #  flask_restful.abort(403, msg=f"You do not seem to master game {game_id}")
 
-        # submitted list : those who submitted orders
-        orders_list = orders.Order.list_by_game_id(game_id)
-        submitted_list = list({o[1] for o in orders_list})
+        # submissions_list : those who submitted orders
+        submissions_list = submissions.Submission.list_by_game_id(game_id)
+        submitted_list = [o[1] for o in submissions_list]
 
         # needed list : those who need to submit orders
         actives_list = actives.Active.list_by_game_id(game_id)
@@ -1522,7 +1527,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # adjudication successful : backup for transition archive
 
-        # position for transition vv ====
+        # position for transition
 
         # get ownerships
         ownership_dict = dict()
@@ -1555,9 +1560,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             'forbiddens': forbidden_list,
         }
 
-        # position for transition ^^ ====
-
-        # orders for transition vv ====
+        # orders for transition
         orders_transition_list = orders.Order.list_by_game_id(game_id)
 
         units_transition_list = units.Unit.list_by_game_id(game_id)
@@ -1567,8 +1570,6 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             'orders': orders_transition_list,
             'fake_units': fake_units_transition_list,
         }
-
-        # orders for transition ^^ ====
 
         # extract new position
         situation_result = req_result.json()['situation_result']
@@ -1603,6 +1604,11 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         for (_, role_num) in actives.Active.list_by_game_id(int(game_id)):
             active = actives.Active(int(game_id), role_num)
             active.delete_database()
+
+        # purge submissions
+        for (_, role_num) in submissions.Submission.list_by_game_id(int(game_id)):
+            submission = submissions.Submission(int(game_id), role_num)
+            submission.delete_database()
 
         # insert
 
@@ -1702,7 +1708,7 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg="Did you convert units from json to text ?")
 
         # situation: get ownerships
-        ownership_dict = dict()
+        ownership_dict: typing.Dict[str, int] = dict()
 
         # situation: get units
         unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
@@ -1854,7 +1860,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # create message here
         identifier = messages.Message.free_identifier()
-        time_stamp = int(time.time()) # now
+        time_stamp = int(time.time())  # now
         message = messages.Message(identifier, game_id, time_stamp, role_id, dest_role_id, content)
         message.update_database()
 
@@ -1999,7 +2005,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         # create declaration here
         identifier = declarations.Declaration.free_identifier()
-        time_stamp = int(time.time()) # now
+        time_stamp = int(time.time())  # now
         declaration = declarations.Declaration(identifier, game_id, time_stamp, role_id, content)
         declaration.update_database()
 
