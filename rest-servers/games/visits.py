@@ -18,7 +18,7 @@ class Visit:
     """ Class for handling an visit """
 
     @staticmethod
-    def list_by_game_id_role_num(game_id: int, role_num: int, visit_type: int) -> typing.List[typing.Tuple[int, int, int]]:
+    def list_by_game_id_role_num(game_id: int, role_num: int, visit_type: int) -> typing.List[typing.Tuple[int, int, int, int]]:
         """ class lookup : finds the object in database from fame id """
         visits_found = database.sql_execute("SELECT * FROM visits where game_id = ? and role_num = ? and visit_type = ?", (game_id, role_num, visit_type), need_result=True)
         if not visits_found:
