@@ -1090,12 +1090,18 @@ void infospreajustements(FILE *fd)
 
 		nappr = INF(najustementsposs, ncent - nunit);
 
-		if (nappr != 0) {
-			sprintf(buf, "%s: %d centres, %d unités, %d emplacements : %s%d", (*p)->nom, ncent, nunit, najustementsposs, (nappr > 0 ? "+" : "-"), abs(nappr));
+		/* le gars construit */
+		if (nappr > 0) {
+			sprintf(buf, "%s: %d centres, %d unités, %d emplacements : %d", (*p)->nom, ncent, nunit, najustementsposs, nappr);
 		}
+		/* le gars detruit */
+		else if (nappr < 0) {
+			sprintf(buf, "%s: %d centres, %d unités : %d", (*p)->nom, ncent, nunit, nappr);
+		}
+		/* le gars fait rien */
 		else
 		{
-			sprintf(buf, "%s: %d centres, %d unités, %d emplacements", (*p)->nom, ncent, nunit, najustementsposs);
+			sprintf(buf, "%s: %d centres, %d unités", (*p)->nom, ncent, nunit);
 		}
 		(void) fprintf(fd, "%s\n", buf);
 	}
