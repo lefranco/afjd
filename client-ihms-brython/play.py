@@ -336,9 +336,7 @@ def submit_orders():
 
         if not orders_data.empty():
             put_erase_all(buttons_right)
-
-        # do not put all hold
-        if not orders_data.empty():
+        if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             put_submit(buttons_right)
 
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -391,7 +389,7 @@ def submit_orders():
         # do not put erase all
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
             put_rest_hold(buttons_right)
-        if not orders_data.empty():
+        if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
@@ -461,7 +459,7 @@ def submit_orders():
                 put_erase_all(buttons_right)
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
-            if not orders_data.empty():
+            if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -613,7 +611,7 @@ def submit_orders():
                 put_erase_all(buttons_right)
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
-            if not orders_data.empty():
+            if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -696,7 +694,7 @@ def submit_orders():
                 put_erase_all(buttons_right)
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
-            if not orders_data.empty():
+            if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -780,7 +778,7 @@ def submit_orders():
                 put_erase_all(buttons_right)
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
-            if not orders_data.empty():
+            if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -823,7 +821,7 @@ def submit_orders():
                     put_erase_all(buttons_right)
                 if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                     put_rest_hold(buttons_right)
-                if not orders_data.empty():
+                if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                     put_submit(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -846,7 +844,7 @@ def submit_orders():
                 put_erase_all(buttons_right)
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
-            if not orders_data.empty():
+            if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -931,7 +929,7 @@ def submit_orders():
             put_erase_all(buttons_right)
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
             put_rest_hold(buttons_right)
-        if not orders_data.empty():
+        if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
@@ -1222,7 +1220,7 @@ def submit_orders():
         put_erase_all(buttons_right)
     if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
         put_rest_hold(buttons_right)
-    if not orders_data.empty():
+    if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
         put_submit(buttons_right)
 
     # overall
