@@ -603,7 +603,7 @@ def sandbox():
             alert("On ne peut pas mettre une telle unité à un tel endroit !")
             return
 
-        # prevent putting fleets in coasst with specific coast
+        # prevent putting fleets in coasts with specific coast
         # TODO
 
         # create unit
