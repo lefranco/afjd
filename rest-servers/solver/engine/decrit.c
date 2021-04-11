@@ -1092,11 +1092,11 @@ void infospreajustements(FILE *fd)
 
 		/* le gars construit */
 		if (nappr > 0) {
-			sprintf(buf, "%s: %d centres, %d unités, %d emplacements : %d", (*p)->nom, ncent, nunit, najustementsposs, nappr);
+			sprintf(buf, "%s: %d centres, %d unités, %d emplacements : %d construction(s)", (*p)->nom, ncent, nunit, najustementsposs, nappr);
 		}
 		/* le gars detruit */
 		else if (nappr < 0) {
-			sprintf(buf, "%s: %d centres, %d unités : %d", (*p)->nom, ncent, nunit, nappr);
+			sprintf(buf, "%s: %d centres, %d unités : %d suppression(s)", (*p)->nom, ncent, nunit, abs(nappr));
 		}
 		/* le gars fait rien */
 		else
