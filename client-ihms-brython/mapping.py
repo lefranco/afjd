@@ -96,6 +96,7 @@ class UnitTypeEnum(enum.Enum):
                 return unit_type
         return None
 
+
 @enum.unique
 class SeasonEnum(enum.Enum):
     """ SeasonEnum """
@@ -357,7 +358,9 @@ CENTER_COLOUR = ColourRecord(red=225, green=225, blue=225)  # light grey
 class Variant(Renderable):
     """ A variant """
 
-    def __init__(self, raw_variant_content, raw_parameters_content) -> None:
+    def __init__(self, name: str, raw_variant_content, raw_parameters_content) -> None:
+
+        self._name = name
 
         # =================
         # from variant file
@@ -646,6 +649,11 @@ class Variant(Renderable):
         """ role_adjective """
         role_info = self._role_add_table[role]
         return role_info[0]
+
+    @property
+    def name(self) -> str:
+        """ property """
+        return self._name
 
     @property
     def map_size(self) -> geometry.PositionRecord:
