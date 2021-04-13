@@ -96,15 +96,6 @@ class UnitTypeEnum(enum.Enum):
                 return unit_type
         return None
 
-    def can_go(self, region_type: RegionTypeEnum) -> bool:
-        """ can_go """
-        if self is UnitTypeEnum.ARMY_UNIT:
-            return region_type in [RegionTypeEnum.COAST_REGION, RegionTypeEnum.LAND_REGION]
-        if self is UnitTypeEnum.FLEET_UNIT:
-            return region_type in [RegionTypeEnum.SEA_REGION, RegionTypeEnum.COAST_REGION]
-        return False
-
-
 @enum.unique
 class SeasonEnum(enum.Enum):
     """ SeasonEnum """

@@ -76,7 +76,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -210,7 +210,7 @@ def sandbox():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -331,7 +331,7 @@ def sandbox():
             # update map
             callback_render(None)
 
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
             buttons_right <= legend_select_unit
 
             stack_orders(buttons_right)
@@ -364,7 +364,7 @@ def sandbox():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -450,7 +450,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -598,13 +598,27 @@ def sandbox():
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
         selected_drop_zone = variant_data.closest_zone(pos)
 
-        # prevent putting armies in sea and fleets inland
-        if not type_unit.can_go(selected_drop_zone.region.region_type):
-            alert("On ne peut pas mettre une telle unité à un tel endroit !")
-            return
+        # get region
+        selected_drop_region = selected_drop_zone.region
 
-        # prevent putting fleets in coasts with specific coast
-        # TODO
+        # prevent putting armies in sea
+        if type_unit is mapping.UnitTypeEnum.ARMY_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.SEA_REGION:
+            type_unit = mapping.UnitTypeEnum.FLEET_UNIT
+
+        # prevent putting fleets inland
+        if type_unit is mapping.UnitTypeEnum.FLEET_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION:
+            type_unit = mapping.UnitTypeEnum.ARMY_UNIT
+
+        if selected_drop_zone.coast_type is not None:
+            # prevent putting army on specific coasts
+            if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+                type_unit = mapping.UnitTypeEnum.FLEET_UNIT
+        else:
+            # we are not on a specific cosat
+            if len([z for z in variant_data.zones.values() if z.region == selected_drop_region]) > 1:
+                # prevent putting fleet on non specific coasts if exists
+                if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+                    type_unit = mapping.UnitTypeEnum.ARMY_UNIT
 
         # create unit
         if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
@@ -613,8 +627,6 @@ def sandbox():
             new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None)
 
         # remove previous occupant if applicable
-        selected_drop_region = selected_drop_zone.region
-
         if selected_drop_region in position_data.occupant_table:
             previous_unit = position_data.occupant_table[selected_drop_region]
             position_data.remove_unit(previous_unit)
@@ -633,7 +645,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -789,7 +801,7 @@ def sandbox():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-    legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité)")
+    legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
     buttons_right <= legend_select_unit
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
