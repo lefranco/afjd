@@ -223,7 +223,7 @@ def show_position():
         parameters_read = json.load(read_file)
 
     # build variant data
-    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
     # get the position from server
     position_loaded = common.game_position_reload(game)
@@ -1098,7 +1098,7 @@ def submit_orders():
         parameters_read = json.load(read_file)
 
     # build variant data
-    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
     game_parameters_loaded = common.game_parameters_reload(game)
     if not game_parameters_loaded:
@@ -1920,7 +1920,7 @@ def game_master():
         parameters_read = json.load(read_file)
 
     # build variant data
-    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
     game_parameters_loaded = common.game_parameters_reload(game)
     if not game_parameters_loaded:
@@ -2185,7 +2185,7 @@ def show_players_in_game():
         parameters_read = json.load(read_file)
 
     # build variant data
-    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
     # game id now
     game_id = common.get_game_id(game)
@@ -2501,7 +2501,7 @@ def show_history():
         parameters_read = json.load(read_file)
 
     # build variant data
-    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
     # put it there to remove it at first display
     my_sub_panel2 = html.DIV()

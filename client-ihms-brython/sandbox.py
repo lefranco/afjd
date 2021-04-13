@@ -678,7 +678,7 @@ def sandbox():
         parameters_read = json.load(read_file)
 
     # build variant data
-    variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
     # get the position from server
     position_loaded = initial_position

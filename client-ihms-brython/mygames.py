@@ -117,7 +117,7 @@ def my_games():
             parameters_read = json.load(read_file)
 
         # build variant data
-        variant_data = mapping.Variant(variant_content_loaded, parameters_read)
+        variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
         role_id = common.get_role_allocated_to_player(game_id, player_id)
         if role_id is None:
