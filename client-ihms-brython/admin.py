@@ -239,6 +239,9 @@ def sendmail():
     if players_dict is None:
         return
 
+    # clears a warnng
+    players_dict = dict(players_dict)
+
     # all players can be usurped
     possible_addressed = set(players_dict.keys())
 
