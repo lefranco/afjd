@@ -826,6 +826,7 @@ class Army(Unit):
             x += DISLODGED_SHIFT  # pylint: disable=invalid-name
             y += DISLODGED_SHIFT  # pylint: disable=invalid-name
 
+#        unit_design.dol_army(x, y, ctx)
         unit_design.stabbeur_army(x, y, ctx)
 
         # more stuff if dislodged
@@ -859,6 +860,7 @@ class Fleet(Unit):
             x += DISLODGED_SHIFT  # pylint: disable=invalid-name
             y += DISLODGED_SHIFT  # pylint: disable=invalid-name
 
+#        unit_design.dol_fleet(x, y, ctx)
         unit_design.stabbeur_fleet(x, y, ctx)
 
         # more stuff if dislodged
