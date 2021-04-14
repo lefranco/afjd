@@ -162,10 +162,7 @@ def get_players_data():
         req_result = json.loads(req.text)
         players_dict = req_result
 
-    json_dict = {
-        'selection' : "1 2 3 4 5 6 7 8"
-    }
-#    json_dict = dict()
+    json_dict = dict()
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -198,10 +195,7 @@ def get_games_data():
         req_result = json.loads(req.text)
         games_dict = dict(req_result)
 
-    json_dict = {
-        'selection' : "32 33 34 35 36 37"
-    }
-#    json_dict = dict()
+    json_dict = dict()
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
