@@ -327,7 +327,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
         # create player here
         identifier = players.Player.free_identifier()
-        player = players.Player(identifier, '', '', False, '', False, '', '', '', '')
+        player = players.Player(identifier, '', '', False, '', False, '', '', '', '', '')
         _ = player.load_json(args)
         player.update_database()
 
