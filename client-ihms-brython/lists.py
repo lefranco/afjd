@@ -63,12 +63,12 @@ def show_players_data():
     }
 
     # TODO : make it possible to sort etc...
-    fields = ['pseudo', 'first_name', 'family_name', 'country', 'time_zone']
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'country': 'pays', 'time_zone': 'fuseau horaire'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence','nationality': 'nationalité', 'time_zone': 'fuseau horaire'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
