@@ -275,15 +275,8 @@ def convert_player(buffer: bytes) -> Player:
     replace = bool(int(tab[5].decode()))
     family_name = tab[6].decode()
     first_name = tab[7].decode()
-
-    residence = tab[8].decode() # TODO change
-    nationality = tab[9].decode() # TODO change
-
-#    country = tab[8].decode() # TODO change
-#    residence = country # TODO PATCH remove
-#    nationality = country # TODO PATCH remove
-    #time_zone = tab[9].decode()
-
+    residence = tab[8].decode() 
+    nationality = tab[9].decode()
     time_zone = tab[10].decode()
 
     player = Player(identifier, pseudo, email, email_confirmed, telephone, replace, family_name, first_name, residence, nationality, time_zone)
@@ -295,11 +288,5 @@ sqlite3.register_adapter(Player, Player.adapt_player)
 sqlite3.register_converter('player', convert_player)
 
 
-def patch():
-    for player in Player.inventory():
-        print(player)
-        #player.update_database()
-
 if __name__ == '__main__':
-    patch()
-#    assert False, "Do not run this script"
+    assert False, "Do not run this script"
