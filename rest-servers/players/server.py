@@ -373,9 +373,7 @@ class PlayerPseudoListRessource(flask_restful.Resource):  # type: ignore
         """
 
         args = PLAYER_PSEUDOS_PARSER.parse_args(strict=True)
-        selection_submitted = args['selection']
-
-        selection = json.loads(selection_submitted)
+        selection = args['selection']
 
         print(f"{selection=}")
 
