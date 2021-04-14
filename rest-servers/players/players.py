@@ -275,7 +275,7 @@ def convert_player(buffer: bytes) -> Player:
     replace = bool(int(tab[5].decode()))
     family_name = tab[6].decode()
     first_name = tab[7].decode()
-    residence = tab[8].decode() 
+    residence = tab[8].decode()
     nationality = tab[9].decode()
     time_zone = tab[10].decode()
 
