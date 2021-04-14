@@ -45,8 +45,8 @@ PLAYER_PARSER.add_argument('residence', type=str, required=False)
 PLAYER_PARSER.add_argument('nationality', type=str, required=False)
 PLAYER_PARSER.add_argument('time_zone', type=str, required=False)
 
-PLAYER_PSEUDOS_PARSER = flask_restful.reqparse.RequestParser()
-PLAYER_PSEUDOS_PARSER.add_argument('selection', type=str, required=True)
+PLAYERS_PSEUDO_PARSER = flask_restful.reqparse.RequestParser()
+PLAYERS_PSEUDO_PARSER.add_argument('selection', type=str, required=True)
 
 EMAIL_PARSER = flask_restful.reqparse.RequestParser()
 EMAIL_PARSER.add_argument('pseudo', type=str, required=True)
@@ -360,7 +360,6 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
-
 @API.resource('/players-pseudo')
 class PlayerPseudoListRessource(flask_restful.Resource):  # type: ignore
     """ PlayerPseudoListRessource """
@@ -369,15 +368,13 @@ class PlayerPseudoListRessource(flask_restful.Resource):  # type: ignore
         """
         Provides list of some pseudo ( selected by identifier)
         Should be a get but has parameters
-        paramleter is a space separated string of ints
+        parameter is a space separated string of ints
         EXPOSED
         """
 
-        args = PLAYER_PSEUDOS_PARSER.parse_args(strict=True)
+        args = PLAYERS_PSEUDO_PARSER.parse_args(strict=True)
         selection_submitted = args['selection']
         selection_list = list(map(int, selection_submitted.split()))
-
-        print(f"{selection_list=}")
 
         mylogger.LOGGER.info("/players-pseudo - POST - get getting some players only pseudo (email and telephone are confidential)")
 
