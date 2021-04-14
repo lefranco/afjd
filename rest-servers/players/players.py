@@ -101,7 +101,7 @@ class Player:
         database.sql_execute("CREATE TABLE players (identifier INT UNIQUE PRIMARY KEY, pseudo STR, player_data player)")
         database.sql_execute("CREATE UNIQUE INDEX pseudo_player ON  players (pseudo)")
 
-    def __init__(self, identifier: int, pseudo: str, email: str, email_confirmed: bool, telephone: str, replace: bool, family_name: str, first_name: str, country: str, time_zone: str) -> None:
+    def __init__(self, identifier: int, pseudo: str, email: str, email_confirmed: bool, telephone: str, replace: bool, family_name: str, first_name: str, residence: str, nationality: str, time_zone: str) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -115,7 +115,8 @@ class Player:
         self._replace = replace
         self._first_name = first_name
         self._family_name = family_name
-        self._country = country
+        self._residence = residence
+        self._nationality = nationality
         self._time_zone = time_zone
 
     def update_database(self) -> None:
@@ -167,10 +168,16 @@ class Player:
             self._first_name = self._first_name[:LEN_FIRST_NAME_MAX]
             changed = True
 
-        if 'country' in json_dict and json_dict['country'] is not None and json_dict['country'] != self._country:
-            self._country = json_dict['country']
-            self._country = database.sanitize_field(self._country)
-            self._country = self._country[:LEN_COUNTRY_MAX]
+        if 'residence' in json_dict and json_dict['residence'] is not None and json_dict['residence'] != self._residence:
+            self._residence = json_dict['residence']
+            self._residence = database.sanitize_field(self._residence)
+            self._residence = self._residence[:LEN_COUNTRY_MAX]
+            changed = True
+
+        if 'nationality' in json_dict and json_dict['nationality'] is not None and json_dict['nationality'] != self._nationality:
+            self._nationality = json_dict['nationality']
+            self._nationality = database.sanitize_field(self._nationality)
+            self._nationality = self._nationality[:LEN_COUNTRY_MAX]
             changed = True
 
         if 'time_zone' in json_dict and json_dict['time_zone'] is not None and json_dict['time_zone'] != self._time_zone:
@@ -192,7 +199,8 @@ class Player:
             'replace': self._replace,
             'family_name': self._family_name,
             'first_name': self._first_name,
-            'country': self._country,
+            'residence': self._residence,
+            'nationality': self._nationality,
             'time_zone': self._time_zone,
         }
         return json_dict
@@ -218,9 +226,14 @@ class Player:
         return self._first_name
 
     @property
-    def country(self) -> str:
+    def residence(self) -> str:
         """ property """
-        return self._country
+        return self._residence
+
+    @property
+    def nationality(self) -> str:
+        """ property """
+        return self._nationality
 
     @property
     def time_zone(self) -> str:
@@ -243,11 +256,11 @@ class Player:
         self._email_confirmed = email_confirmed
 
     def __str__(self) -> str:
-        return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} telephone={self._telephone} replace={self._replace} family_name={self._family_name} first_name={self._first_name} country={self._country} time_zone={self._time_zone}"
+        return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} telephone={self._telephone} replace={self._replace} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality} time_zone={self._time_zone}"
 
     def adapt_player(self) -> bytes:
         """ To put an object in database """
-        return (f"{self._identifier}{database.STR_SEPARATOR}{self._pseudo}{database.STR_SEPARATOR}{self._email}{database.STR_SEPARATOR}{int(bool(self._email_confirmed))}{database.STR_SEPARATOR}{self._telephone}{database.STR_SEPARATOR}{int(bool(self._replace))}{database.STR_SEPARATOR}{self._family_name}{database.STR_SEPARATOR}{self._first_name}{database.STR_SEPARATOR}{self._country}{database.STR_SEPARATOR}{self._time_zone}").encode('ascii')
+        return (f"{self._identifier}{database.STR_SEPARATOR}{self._pseudo}{database.STR_SEPARATOR}{self._email}{database.STR_SEPARATOR}{int(bool(self._email_confirmed))}{database.STR_SEPARATOR}{self._telephone}{database.STR_SEPARATOR}{int(bool(self._replace))}{database.STR_SEPARATOR}{self._family_name}{database.STR_SEPARATOR}{self._first_name}{database.STR_SEPARATOR}{self._residence}{database.STR_SEPARATOR}{self._nationality}{database.STR_SEPARATOR}{self._time_zone}").encode('ascii')
 
 
 def convert_player(buffer: bytes) -> Player:
@@ -262,9 +275,18 @@ def convert_player(buffer: bytes) -> Player:
     replace = bool(int(tab[5].decode()))
     family_name = tab[6].decode()
     first_name = tab[7].decode()
-    country = tab[8].decode()
-    time_zone = tab[9].decode()
-    player = Player(identifier, pseudo, email, email_confirmed, telephone, replace, family_name, first_name, country, time_zone)
+
+    residence = tab[8].decode() # TODO change
+    nationality = tab[9].decode() # TODO change
+
+#    country = tab[8].decode() # TODO change
+#    residence = country # TODO PATCH remove
+#    nationality = country # TODO PATCH remove
+    #time_zone = tab[9].decode()
+
+    time_zone = tab[10].decode()
+
+    player = Player(identifier, pseudo, email, email_confirmed, telephone, replace, family_name, first_name, residence, nationality, time_zone)
     return player
 
 
@@ -273,5 +295,11 @@ sqlite3.register_adapter(Player, Player.adapt_player)
 sqlite3.register_converter('player', convert_player)
 
 
+def patch():
+    for player in Player.inventory():
+        print(player)
+        #player.update_database()
+
 if __name__ == '__main__':
-    assert False, "Do not run this script"
+    patch()
+#    assert False, "Do not run this script"
