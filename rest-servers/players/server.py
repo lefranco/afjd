@@ -41,7 +41,8 @@ PLAYER_PARSER.add_argument('telephone', type=str, required=False)
 PLAYER_PARSER.add_argument('replace', type=str, required=False)
 PLAYER_PARSER.add_argument('first_name', type=str, required=False)
 PLAYER_PARSER.add_argument('family_name', type=str, required=False)
-PLAYER_PARSER.add_argument('country', type=str, required=False)
+PLAYER_PARSER.add_argument('residence', type=str, required=False)
+PLAYER_PARSER.add_argument('nationality', type=str, required=False)
 PLAYER_PARSER.add_argument('time_zone', type=str, required=False)
 
 EMAIL_PARSER = flask_restful.reqparse.RequestParser()
@@ -164,10 +165,15 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if player is None:
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
-        if args['country']:
-            country_provided = args['country']
-            if not players.check_country(country_provided):
-                flask_restful.abort(404, msg=f"Country '{country_provided}' is not a valid country code")
+        if args['residence']:
+            residence_provided = args['residence']
+            if not players.check_country(residence_provided):
+                flask_restful.abort(404, msg=f"Residence '{residence_provided}' is not a valid country code")
+
+        if args['nationality']:
+            nationality_provided = args['nationality']
+            if not players.check_country(nationality_provided):
+                flask_restful.abort(404, msg=f"Nationality '{nationality_provided}' is not a valid country code")
 
         if args['time_zone']:
             timezone_provided = args['time_zone']
@@ -270,7 +276,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/players - GET - get getting all players only pseudo (email and telephone are confidential)")
 
         players_list = players.Player.inventory()
-        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'country': p.country, 'time_zone': p.time_zone} for p in players_list}
+        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone} for p in players_list}
 
         return data, 200
 
@@ -294,10 +300,15 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         if not pseudo.isidentifier():
             flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is not a valid pseudo")
 
-        if args['country']:
-            country_provided = args['country']
-            if not players.check_country(country_provided):
-                flask_restful.abort(404, msg=f"Country '{country_provided}' is not a valid country code")
+        if args['residence']:
+            residence_provided = args['residence']
+            if not players.check_country(residence_provided):
+                flask_restful.abort(404, msg=f"Residence '{residence_provided}' is not a valid country code")
+
+        if args['nationality']:
+            nationality_provided = args['nationality']
+            if not players.check_country(nationality_provided):
+                flask_restful.abort(404, msg=f"Nationality '{nationality_provided}' is not a valid country code")
 
         if args['time_zone']:
             timezone_provided = args['time_zone']
