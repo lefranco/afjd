@@ -568,7 +568,6 @@ class GameNameListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/games-name - POST - get getting some games only name")
 
-
         games_list = games.Game.inventory()
         data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state} for g in games_list if g.identifier in selection_list}
 
