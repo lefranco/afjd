@@ -369,18 +369,20 @@ class PlayerPseudoListRessource(flask_restful.Resource):  # type: ignore
         """
         Provides list of some pseudo ( selected by identifier)
         Should be a get but has parameters
+        paramleter is a space separated string of ints
         EXPOSED
         """
 
         args = PLAYER_PSEUDOS_PARSER.parse_args(strict=True)
-        selection = args['selection']
+        selection_submitted = args['selection']
+        selection_list = list(map(int, selection_submitted.split()))
 
-        print(f"{selection=}")
+        print(f"{selection_list=}")
 
         mylogger.LOGGER.info("/players-pseudo - POST - get getting some players only pseudo (email and telephone are confidential)")
 
         players_list = players.Player.inventory()
-        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone} for p in players_list if p.identifier in selection}
+        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone} for p in players_list if p.identifier in selection_list}
 
         return data, 200
 
