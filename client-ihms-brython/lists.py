@@ -15,42 +15,11 @@ my_panel = html.DIV(id="players")
 OPTIONS = ['les joueurs', 'les parties', 'les arbitres']
 
 
-def get_players_data():
-    """ get_players_data """
-
-    players_dict = None
-
-    def reply_callback(req):
-        nonlocal players_dict
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Error getting players list: {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problem getting players list: {req_result['msg']}")
-            else:
-                alert("Undocumented issue from server")
-            return
-
-        req_result = json.loads(req.text)
-        players_dict = req_result
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/players"
-
-    # getting players list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return dict(players_dict)
-
 
 def show_players_data():
     """ show_players_data """
 
-    players_dict = get_players_data()
+    players_dict = common.get_players_data()
 
     if not players_dict:
         return
@@ -200,7 +169,7 @@ def show_game_masters_data():
     games_dict = dict(games_dict)
 
     # get the players (masters)
-    players_dict = get_players_data()
+    players_dict = common.get_players_data()
 
     if not players_dict:
         return

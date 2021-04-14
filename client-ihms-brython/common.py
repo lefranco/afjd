@@ -141,6 +141,43 @@ def get_players():
     return players_dict
 
 
+
+def get_players_data():
+    """ get_players_data """
+
+    players_dict = None
+
+    def reply_callback(req):
+        nonlocal players_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting players list: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting players list: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        req_result = json.loads(req.text)
+        players_dict = req_result
+
+    json_dict = {
+        'selection' : "1 2 3 4 5 6 7 8"
+    }
+#    json_dict = dict()
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/players-pseudo"
+
+    # getting players list : no need for token
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return dict(players_dict)
+
+
+
 def get_games_data():
     """ get_games_data """
 
@@ -161,14 +198,17 @@ def get_games_data():
         req_result = json.loads(req.text)
         games_dict = dict(req_result)
 
-    json_dict = dict()
+    json_dict = {
+        'selection' : "32 33 34 35 36 37"
+    }
+#    json_dict = dict()
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games"
+    url = f"{host}:{port}/games-name"
 
     # getting games list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return games_dict
 
