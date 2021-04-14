@@ -122,7 +122,8 @@ def create_account():
         family_name = input_family_name.value
         first_name = input_first_name.value
 
-        country_code = COUNTRY_CODE_TABLE[input_country.value]
+        residence_code = COUNTRY_CODE_TABLE[input_residence.value]
+        nationality_code = COUNTRY_CODE_TABLE[input_nationality.value]
         timezone_code = TIMEZONE_CODE_TABLE[input_timezone.value]
 
         json_dict = {
@@ -133,7 +134,8 @@ def create_account():
             'replace': replace,
             'family_name': family_name,
             'first_name': first_name,
-            'country': country_code,
+            'residence': residence_code,
+            'nationality': nationality_code,
             'time_zone': timezone_code,
         }
 
@@ -197,17 +199,30 @@ def create_account():
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("pays", title="Mettez votre nationalité ou lieu de résidence")
-    form <= legend_country
-    input_country = html.SELECT(type="select-one", value="")
+    legend_residence = html.LEGEND("résidence", title="Mettez votre lieu de résidence")
+    form <= legend_residence
+    input_residence = html.SELECT(type="select-one", value="")
 
     for country_name in COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
         if COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
             option.selected = True
-        input_country <= option
+        input_residence <= option
 
-    form <= input_country
+    form <= input_residence
+    form <= html.BR()
+
+    legend_nationality = html.LEGEND("nationalité", title="Mettez votre nationalité")
+    form <= legend_nationality
+    input_nationality = html.SELECT(type="select-one", value="")
+
+    for country_name in COUNTRY_CODE_TABLE:
+        option = html.OPTION(country_name)
+        if COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
+            option.selected = True
+        input_nationality <= option
+
+    form <= input_nationality
     form <= html.BR()
 
     legend_timezone = html.LEGEND("fuseau horaire", title="Pour mieux comprendre vos heures d'éveil")
@@ -392,7 +407,8 @@ def edit_account():
     replace_loaded = None
     family_name_loaded = None
     first_name_loaded = None
-    country_loaded_code = None
+    residence_loaded_code = None
+    nationality_loaded_code = None
     timezone_loaded_code = None
 
     def edit_account_reload():
@@ -415,7 +431,8 @@ def edit_account():
             nonlocal replace_loaded
             nonlocal family_name_loaded
             nonlocal first_name_loaded
-            nonlocal country_loaded_code
+            nonlocal residence_loaded_code
+            nonlocal nationality_loaded_code
             nonlocal timezone_loaded_code
 
             req_result = json.loads(req.text)
@@ -442,7 +459,8 @@ def edit_account():
             family_name_loaded = req_result['family_name']
             first_name_loaded = req_result['first_name']
 
-            country_loaded_code = req_result['country']
+            residence_loaded_code = req_result['residence']
+            nationality_loaded_code = req_result['nationality']
             timezone_loaded_code = req_result['time_zone']
 
         json_dict = dict()
@@ -484,7 +502,8 @@ def edit_account():
         family_name = input_family_name.value
         first_name = input_first_name.value
 
-        country_code = COUNTRY_CODE_TABLE[input_country.value]
+        residence_code = COUNTRY_CODE_TABLE[input_residence.value]
+        nationality_code = COUNTRY_CODE_TABLE[input_nationality.value]
         timezone_code = TIMEZONE_CODE_TABLE[input_timezone.value]
 
         json_dict = {
@@ -494,7 +513,8 @@ def edit_account():
             'replace': replace,
             'family_name': family_name,
             'first_name': first_name,
-            'country': country_code,
+            'residence': residence_code,
+            'nationality': nationality_code,
             'time_zone': timezone_code,
         }
 
@@ -556,19 +576,31 @@ def edit_account():
     form <= input_first_name
     form <= html.BR()
 
-    legend_country = html.LEGEND("pays", title="Mettez votre nationalité ou lieu de résidence")
-    form <= legend_country
-    input_country = html.SELECT(type="select-one", value="")
+    legend_residence = html.LEGEND("résidence", title="Mettez votre lieu de résidence")
+    form <= legend_residence
+    input_residence = html.SELECT(type="select-one", value="")
 
     for country_name in COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if COUNTRY_CODE_TABLE[country_name] == country_loaded_code:
+        if COUNTRY_CODE_TABLE[country_name] == residence_loaded_code:
             option.selected = True
-        input_country <= option
+        input_residence <= option
 
-    form <= input_country
+    form <= input_residence
     form <= html.BR()
 
+    legend_nationality = html.LEGEND("nationalité", title="Mettez votre nationalité")
+    form <= legend_nationality
+    input_nationality = html.SELECT(type="select-one", value="")
+
+    for country_name in COUNTRY_CODE_TABLE:
+        option = html.OPTION(country_name)
+        if COUNTRY_CODE_TABLE[country_name] == nationality_loaded_code:
+            option.selected = True
+        input_nationality <= option
+
+    form <= input_nationality
+    form <= html.BR()
     legend_timezone = html.LEGEND("fuseau horaire", title="Pour mieux comprendre vos heures d'éveil")
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
