@@ -45,6 +45,9 @@ PLAYER_PARSER.add_argument('residence', type=str, required=False)
 PLAYER_PARSER.add_argument('nationality', type=str, required=False)
 PLAYER_PARSER.add_argument('time_zone', type=str, required=False)
 
+PLAYER_PSEUDOS_PARSER = flask_restful.reqparse.RequestParser()
+PLAYER_PSEUDOS_PARSER.add_argument('selection', type=str, required=True)
+
 EMAIL_PARSER = flask_restful.reqparse.RequestParser()
 EMAIL_PARSER.add_argument('pseudo', type=str, required=True)
 EMAIL_PARSER.add_argument('code', type=str, required=True)
@@ -357,6 +360,33 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
+
+@API.resource('/players-pseudo')
+class PlayerPseudoListRessource(flask_restful.Resource):  # type: ignore
+    """ PlayerPseudoListRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Provides list of some pseudo ( selected by identifier)
+        Should be a get but has parameters
+        EXPOSED
+        """
+
+        args = PLAYER_PSEUDOS_PARSER.parse_args(strict=True)
+        selection_submitted = args['selection']
+
+        selection = json.loads(selection_submitted)
+
+        print(f"{selection=}")
+
+        mylogger.LOGGER.info("/players-pseudo - POST - get getting some players only pseudo (email and telephone are confidential)")
+
+        players_list = players.Player.inventory()
+        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone} for p in players_list if p.identifier in selection}
+
+        return data, 200
+
+
 @API.resource('/mail-players')
 class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
     """ MailPlayersListRessource """
@@ -368,10 +398,6 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         """
 
         mylogger.LOGGER.info("/mail-players - POST - sending emails to a list of players")
-
-        SENDMAIL_PARSER.add_argument('addressees', type=str, required=True)
-        SENDMAIL_PARSER.add_argument('subject', type=str, required=True)
-        SENDMAIL_PARSER.add_argument('body', type=str, required=True)
 
         args = SENDMAIL_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
