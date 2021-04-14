@@ -570,7 +570,7 @@ class GameNameListRessource(flask_restful.Resource):  # type: ignore
 
 
         games_list = games.Game.inventory()
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state} for g in games_list if p.identifier in selection_list}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state} for g in games_list if g.identifier in selection_list}
 
         return data, 200
 
