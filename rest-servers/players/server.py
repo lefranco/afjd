@@ -45,8 +45,8 @@ PLAYER_PARSER.add_argument('residence', type=str, required=False)
 PLAYER_PARSER.add_argument('nationality', type=str, required=False)
 PLAYER_PARSER.add_argument('time_zone', type=str, required=False)
 
-PLAYERS_PSEUDO_PARSER = flask_restful.reqparse.RequestParser()
-PLAYERS_PSEUDO_PARSER.add_argument('selection', type=str, required=True)
+PLAYERS_SELECT_PARSER = flask_restful.reqparse.RequestParser()
+PLAYERS_SELECT_PARSER.add_argument('selection', type=str, required=True)
 
 EMAIL_PARSER = flask_restful.reqparse.RequestParser()
 EMAIL_PARSER.add_argument('pseudo', type=str, required=True)
@@ -360,9 +360,9 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
-@API.resource('/players-pseudo')
-class PlayerPseudoListRessource(flask_restful.Resource):  # type: ignore
-    """ PlayerPseudoListRessource """
+@API.resource('/players-select')
+class PlayerSelectListRessource(flask_restful.Resource):  # type: ignore
+    """ PlayerSelectListRessource """
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
@@ -372,11 +372,11 @@ class PlayerPseudoListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        args = PLAYERS_PSEUDO_PARSER.parse_args(strict=True)
+        args = PLAYERS_SELECT_PARSER.parse_args(strict=True)
         selection_submitted = args['selection']
         selection_list = list(map(int, selection_submitted.split()))
 
-        mylogger.LOGGER.info("/players-pseudo - POST - get getting some players only pseudo (email and telephone are confidential)")
+        mylogger.LOGGER.info("/players-select - POST - get getting some players only pseudo (email and telephone are confidential)")
 
         players_list = players.Player.inventory()
         data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone} for p in players_list if p.identifier in selection_list}

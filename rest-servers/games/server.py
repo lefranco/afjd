@@ -80,8 +80,8 @@ GAME_PARSER.add_argument('victory_centers', type=int, required=False)
 GAME_PARSER.add_argument('current_state', type=int, required=False)
 GAME_PARSER.add_argument('pseudo', type=str, required=False)
 
-GAMES_NAME_PARSER = flask_restful.reqparse.RequestParser()
-GAMES_NAME_PARSER.add_argument('selection', type=str, required=True)
+GAMES_SELECT_PARSER = flask_restful.reqparse.RequestParser()
+GAMES_SELECT_PARSER.add_argument('selection', type=str, required=True)
 
 ALLOCATION_PARSER = flask_restful.reqparse.RequestParser()
 ALLOCATION_PARSER.add_argument('game_id', type=int, required=True)
@@ -550,9 +550,9 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
-@API.resource('/games-name')
-class GameNameListRessource(flask_restful.Resource):  # type: ignore
-    """ GameNameListRessource """
+@API.resource('/games-select')
+class GameSelectListRessource(flask_restful.Resource):  # type: ignore
+    """ GameSelectListRessource """
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
@@ -562,11 +562,11 @@ class GameNameListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        args = GAMES_NAME_PARSER.parse_args(strict=True)
+        args = GAMES_SELECT_PARSER.parse_args(strict=True)
         selection_submitted = args['selection']
         selection_list = list(map(int, selection_submitted.split()))
 
-        mylogger.LOGGER.info("/games-name - POST - get getting some games only name")
+        mylogger.LOGGER.info("/games-select - POST - get getting some games only name")
 
         games_list = games.Game.inventory()
         data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state} for g in games_list if g.identifier in selection_list}
