@@ -421,13 +421,18 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         subject = args['subject']
         body = args['body']
-        addressees = args['addressees']
+        addressees_submitted = args['addressees']
+
+        try:
+            addressees_list = list(map(int, addressees_submitted.split()))
+        except:
+            flask_restful.abort(400, msg=f"Bad addressees. Use a space separated list of numbers")
 
         recipients: typing.List[str] = list()
-        for dest_id in map(int, addressees.split()):
-            pseudo_dest = players.Player.find_by_identifier(dest_id)
+        for addressee_id in addressees_list:
+            pseudo_dest = players.Player.find_by_identifier(addressee_id)
             if pseudo_dest is None:
-                flask_restful.abort(404, msg=f"Failed to find pseudo with id={dest_id}")
+                flask_restful.abort(404, msg=f"Failed to find pseudo with id={addressee_id}")
             assert pseudo_dest is not None
             pseudo_dest_email = pseudo_dest.email
             recipients.append(pseudo_dest_email)
