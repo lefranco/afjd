@@ -374,7 +374,10 @@ class PlayerSelectListRessource(flask_restful.Resource):  # type: ignore
 
         args = PLAYERS_SELECT_PARSER.parse_args(strict=True)
         selection_submitted = args['selection']
-        selection_list = list(map(int, selection_submitted.split()))
+        try:
+            selection_list = list(map(int, selection_submitted.split()))
+        except:
+            flask_restful.abort(400, msg=f"Bad selection. Use a space separated list of numbers")
 
         mylogger.LOGGER.info("/players-select - POST - get getting some players only pseudo (email and telephone are confidential)")
 

@@ -564,7 +564,10 @@ class GameSelectListRessource(flask_restful.Resource):  # type: ignore
 
         args = GAMES_SELECT_PARSER.parse_args(strict=True)
         selection_submitted = args['selection']
-        selection_list = list(map(int, selection_submitted.split()))
+        try:
+            selection_list = list(map(int, selection_submitted.split()))
+        except:
+            flask_restful.abort(400, msg=f"Bad selection. Use a space separated list of numbers")
 
         mylogger.LOGGER.info("/games-select - POST - get getting some games only name")
 
