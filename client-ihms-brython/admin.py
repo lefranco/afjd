@@ -46,7 +46,9 @@ def change_news():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Les nouvelles ont été changées : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Les nouvelles ont été changées : {messages}", remove_after=config.REMOVE_AFTER)
 
         news_content = input_news_content.value
         if not news_content:
@@ -119,6 +121,7 @@ def usurp():
             storage['JWT_TOKEN'] = req_result['AccessToken']
             time_stamp = time.time()
             storage['LOGIN_TIME'] = str(time_stamp)
+
             InfoDialog("OK", f"Vous usurpez maintenant : {usurped_user_name}", remove_after=config.REMOVE_AFTER)
             login.show_login()
 

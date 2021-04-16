@@ -408,7 +408,9 @@ def submit_orders():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Vous avez soumis les ordres : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez soumis les ordres : {messages}", remove_after=config.REMOVE_AFTER)
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -1251,7 +1253,8 @@ def negotiate():
                     alert("Undocumented issue from server")
                 return
 
-            InfoDialog("OK", "Le message a été envoyé !", remove_after=config.REMOVE_AFTER)
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le message a été envoyé ! {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
             negotiate()
@@ -1512,7 +1515,8 @@ def declare():
                     alert("Undocumented issue from server")
                 return
 
-            InfoDialog("OK", "La déclaration a été faite !", remove_after=config.REMOVE_AFTER)
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La déclaration a été faite ! {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
             declare()
@@ -1739,6 +1743,7 @@ def game_master():
                     alert("Undocumented issue from server")
                 return
 
+            messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Le joueur s'est vu retirer le rôle dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
@@ -1774,7 +1779,8 @@ def game_master():
                     alert("Undocumented issue from server")
                 return
 
-            InfoDialog("OK", f"Le joueur s'est vu attribuer le rôle dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur s'est vu attribuer le rôle dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
             my_sub_panel.clear()
@@ -1842,7 +1848,8 @@ def game_master():
                     alert("Undocumented issue from server")
                 return
 
-            InfoDialog("OK", f"La résolution a été réalisée : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La résolution a été réalisée : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
             my_sub_panel.clear()

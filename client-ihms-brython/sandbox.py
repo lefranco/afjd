@@ -105,7 +105,9 @@ def sandbox():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Vous avez soumis les ordres et la situation pour une simulation : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez soumis les ordres et la situation pour une simulation : {messages}", remove_after=config.REMOVE_AFTER)
 
             if 'result' in req_result:
 

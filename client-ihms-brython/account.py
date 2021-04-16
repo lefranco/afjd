@@ -88,7 +88,9 @@ def create_account():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Votre compte a été créé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Votre compte a été créé : {messages}", remove_after=config.REMOVE_AFTER)
 
         pseudo = input_pseudo.value
 
@@ -267,7 +269,9 @@ def change_password():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Votre mot de passe a été changé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Votre mot de passe a été changé : {messages}", remove_after=config.REMOVE_AFTER)
 
         new_password = input_new_password.value
         if not new_password:
@@ -337,7 +341,9 @@ def validate_email():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Félicitations, votre email a été validé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Félicitations, votre email a été validé : {messages}", remove_after=config.REMOVE_AFTER)
 
         confirmation_code = int(input_confirmation_code.value)
 
@@ -487,7 +493,9 @@ def edit_account():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Votre compte a été changé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Votre compte a été changé : {messages}", remove_after=config.REMOVE_AFTER)
 
         email = input_email.value
         if not email:
@@ -645,7 +653,9 @@ def delete_account():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Votre compte a été supprimé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Votre compte a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
             login.logout()
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']

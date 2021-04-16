@@ -81,7 +81,9 @@ def join_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Vous avez rejoint la partie : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez rejoint la partie : {messages}", remove_after=config.REMOVE_AFTER)
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -137,7 +139,9 @@ def quit_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Vous avez quitté la partie : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez quitté la partie : {messages}", remove_after=config.REMOVE_AFTER)
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -197,7 +201,10 @@ def move_players_in_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Le joueur a été mis dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur a été mis dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
+
             # back to where we started
             move_players_in_game()
 
@@ -236,7 +243,10 @@ def move_players_in_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Le joueur a été retiré de la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur a été retiré de la partie: {messages}", remove_after=config.REMOVE_AFTER)
+
             # back to where we started
             move_players_in_game()
 
