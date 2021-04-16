@@ -62,7 +62,9 @@ def create_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"La partie a été créé : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La partie a été créé : {messages}", remove_after=config.REMOVE_AFTER)
 
         name = input_name.value
 
@@ -456,7 +458,9 @@ def change_description_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"La description a été modifiée : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La description a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
 
         description = input_description.value
 
@@ -578,7 +582,9 @@ def change_access_parameters_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Les paramètres d'accès ont été modifiés : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Les paramètres d'accès ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
 
         access_code = input_access_code.value
         access_restriction_reliability = input_access_restriction_reliability.value
@@ -720,7 +726,9 @@ def change_deadline_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"La date limite a été modifiée : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La date limite a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
 
         # convert this human entered deadline to the deadline the server understands
         deadline_day_part = input_deadline_day.value
@@ -883,7 +891,9 @@ def change_pace_parameters_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"Les paramètres de cadence ont été modifiés : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Les paramètres de cadence ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
 
         try:
             speed_moves = int(input_speed_moves.value)
@@ -1076,7 +1086,9 @@ def change_state_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"L'état de la partie a été modifié : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"L'état de la partie a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
 
         state = config.STATE_CODE_TABLE[input_state.value]
 
@@ -1150,7 +1162,9 @@ def delete_game():
                 else:
                     alert("Undocumented issue from server")
                 return
-            InfoDialog("OK", f"La partie a été supprimée : {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La partie a été supprimée : {messages}", remove_after=config.REMOVE_AFTER)
             selection.un_select_game()
 
         json_dict = {
