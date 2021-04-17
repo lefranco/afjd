@@ -2110,7 +2110,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         declarations_list_json = list()
         num = 1
-        for _game_id, author_num, _content_id, _identifier, _game_id2, _xxx, content in sorted(declarations_list, key=lambda t: content.time_stamp, reverse=True):
+        for _game_id, author_num, _content_id, _identifier, _game_id2, content in declarations_list:
             declarations_list_json.append(content.export())
             num += 1
             if limit is not None and num == limit:

@@ -29,7 +29,7 @@ class Content:
         """ creation of table from scratch """
 
         database.sql_execute("DROP TABLE IF EXISTS contents")
-        database.sql_execute("CREATE TABLE contents (identifier INT UNIQUE PRIMARY KEY, game_id2 INT, content_data content)")
+        database.sql_execute("CREATE TABLE contents (identifier INT UNIQUE PRIMARY KEY, game_id2 INT, time_stamp INT, content_data content)")
 
     def __init__(self, identifier: int, game_id: int, time_stamp: int, payload: str) -> None:
 
@@ -47,7 +47,7 @@ class Content:
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO contents (identifier, game_id2, content_data) VALUES (?, ?, ?)", (self._identifier, self._game_id, self))
+        database.sql_execute("INSERT OR REPLACE INTO contents (identifier, game_id2, time_stamp, content_data) VALUES (?, ?, ?, ?)", (self._identifier, self._game_id, self._time_stamp, self))
 
     def delete_database(self) -> None:
         """ Removes object from database """
@@ -69,7 +69,7 @@ class Content:
         return self._payload
 
     def __str__(self) -> str:
-        return f"identifier={self._identifier}  game_id={self._game_id} time_stamp={self._time_stamp}  payload={self._payload}"
+        return f"identifier={self._identifier} game_id={self._game_id} time_stamp={self._time_stamp} payload={self._payload}"
 
     def adapt_content(self) -> bytes:
         """ To put an object in database """
