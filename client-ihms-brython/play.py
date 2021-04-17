@@ -1322,8 +1322,8 @@ def negotiate():
                     alert("Undocumented issue from server")
                 return
 
-            messages_dict = messages['messages_dict']
-            messages_to_dict = messages['messages_to_dict']
+            messages_dict = req_result['messages_dict']
+            messages_to_dict = req_result['messages_to_dict']
 
         json_dict = {
             'role_id': role_id,
