@@ -7,7 +7,6 @@ File : contents.py
 Handles the contents of messages and declarations
 """
 import sqlite3
-import typing
 
 import database
 
@@ -44,10 +43,6 @@ class Content:
 
         assert isinstance(payload, str), "payload must be an str"
         self._payload = payload
-
-    def export(self) -> typing.Tuple[int, int, int, str]:
-        """ for passing to solver """
-        return self._time_stamp, self._payload
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """

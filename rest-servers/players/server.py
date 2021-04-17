@@ -376,8 +376,8 @@ class PlayerSelectListRessource(flask_restful.Resource):  # type: ignore
         selection_submitted = args['selection']
         try:
             selection_list = list(map(int, selection_submitted.split()))
-        except:
-            flask_restful.abort(400, msg=f"Bad selection. Use a space separated list of numbers")
+        except:  # noqa: E722 pylint: disable=bare-except
+            flask_restful.abort(400, msg="Bad selection. Use a space separated list of numbers")
 
         mylogger.LOGGER.info("/players-select - POST - get getting some players only pseudo (email and telephone are confidential)")
 
@@ -425,7 +425,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         try:
             addressees_list = list(map(int, addressees_submitted.split()))
-        except:
+        except:  # noqa: E722 pylint: disable=bare-except
             flask_restful.abort(400, msg=f"Bad addressees. Use a space separated list of numbers")
 
         recipients: typing.List[str] = list()

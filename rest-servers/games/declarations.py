@@ -6,7 +6,6 @@ File : declarations.py
 
 Handles the declarations
 """
-import sqlite3
 import typing
 
 import contents
