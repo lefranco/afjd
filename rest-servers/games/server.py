@@ -126,7 +126,7 @@ DECLARATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
 MESSAGE_PARSER.add_argument('role_id', type=int, required=True)
-MESSAGE_PARSER.add_argument('dest_role_id', type=int, required=True)
+MESSAGE_PARSER.add_argument('dest_role_ids', type=str, required=True)
 MESSAGE_PARSER.add_argument('content', type=str, required=True)
 MESSAGE_PARSER.add_argument('pseudo', type=str, required=False)
 
@@ -1836,9 +1836,9 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         args = MESSAGE_PARSER.parse_args(strict=True)
         role_id = args['role_id']
-        dest_role_id = args['dest_role_id']
+        dest_role_ids_submitted = args['dest_role_ids']
 
-        mylogger.LOGGER.info("role_id=%s dest_role_id=%s", role_id, dest_role_id)
+        mylogger.LOGGER.info("role_id=%s dest_role_ids=%s", role_id, dest_role_ids_submitted)
 
         pseudo = args['pseudo']
         payload = args['content']
@@ -1899,10 +1899,17 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         content.update_database()
 
         # create a message linked to the content
-        message = messages.Message(int(game_id), role_id, dest_role_id, identifier)
-        message.update_database()
+        try:
+            dest_role_ids = list(map(int, dest_role_ids_submitted.split()))
+        except:  # noqa: E722 pylint: disable=bare-except
+            flask_restful.abort(400, msg="Bad list of addresses identifiers. Use a space separated list of numbers")
 
-        data = {'msg': f"Ok message inserted : {content}"}
+        for dest_role_id in dest_role_ids:
+            message = messages.Message(int(game_id), role_id, dest_role_id, identifier)
+            message.update_database()
+
+        nb_addressees = len(dest_role_ids)
+        data = {'msg': f"Ok {nb_addressees} message(s) inserted"}
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
@@ -2181,7 +2188,7 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
         assert role_id is not None
 
         # gather messages
-        messages_list = declarations.Declaration.list_with_content_by_game_id(game_id)
+        messages_list = messages.Message.list_with_content_by_game_id(game_id)
         for _, _, addressee_num, time_stamp_found, _ in messages_list:
 
             # must be addressee

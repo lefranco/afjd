@@ -1259,10 +1259,11 @@ def negotiate():
             # back to where we started
             negotiate()
 
-        for role_num, button in selected.items():
-            if button.checked:
-                dest_role_id = role_num
-                break
+        dest_role_ids = ' '.join([str(role_num) for (role_num, button) in selected.items() if button.checked])
+
+        if not dest_role_ids:
+            alert("Pas de destinataire pour ce message !")
+            return
 
         content = input_message.value
 
@@ -1271,7 +1272,7 @@ def negotiate():
             return
 
         json_dict = {
-            'dest_role_id': dest_role_id,
+            'dest_role_ids': dest_role_ids,
             'role_id': role_id,
             'pseudo': pseudo,
             'content': content
@@ -1376,7 +1377,7 @@ def negotiate():
 
     form = html.FORM()
 
-    legend_declaration = html.LEGEND("Votre message", title="Qu'avez vous à lui dire ?")
+    legend_declaration = html.LEGEND("Votre message", title="Qu'avez vous à lui/leur dire ?")
     form <= legend_declaration
     form <= html.BR()
 
@@ -1392,7 +1393,7 @@ def negotiate():
         role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id_dest}.jpg")
 
         # the alternative
-        input_dest = html.INPUT(type="radio", id=str(role_id_dest), name="destinee", checked=(role_id_dest == 0))
+        input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), name="destinees")
         col = html.TD()
         col <= input_dest
 
