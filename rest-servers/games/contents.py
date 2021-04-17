@@ -27,7 +27,7 @@ class Content:
     @staticmethod
     def list_by_game_id(game_id: int) -> typing.List[typing.Tuple[int, int, int, int]]:
         """ class lookup : finds the object in database from fame id """
-        contents_found = database.sql_execute("SELECT * FROM contents where game_id = ?", (game_id,), need_result=True)
+        contents_found = database.sql_execute("SELECT * FROM contents where game_id2 = ?", (game_id,), need_result=True)
         if not contents_found:
             return []
         return contents_found
