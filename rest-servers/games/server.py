@@ -1963,7 +1963,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         for _, author_num, addressee_num, time_stamp, content in messages_list:
 
             # must be author or addressee
-            if role_id not in [author_num, message.addressee_num]:
+            if role_id not in [author_num, addressee_num]:
                 continue
 
             messages_list_json.append((author_num, addressee_num, time_stamp, content.payload))
