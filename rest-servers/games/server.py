@@ -1970,9 +1970,6 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
                 messages_dict_mess[identifier] = author_num, time_stamp, content
             messages_dict_dest[identifier].append(addressee_num)
 
-        print(f"{messages_dict_mess=}")
-        print(f"{messages_dict_dest=}")
-
         # extract the ones not concerned
         messages_list: typing.List[typing.Tuple[int, int, typing.List[int], str]] = list()
         for identifier in messages_dict_mess:
