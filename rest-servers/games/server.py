@@ -2110,8 +2110,8 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         declarations_list_json = list()
         num = 1
-        for _game_id, author_num, _content_id, _identifier, _game_id2, time_stamp, content in declarations_list:
-            declarations_list_json.append(content.export())
+        for game_id, author_num, time_stamp, content in declarations_list:
+            declarations_list_json.append((author_num, time_stamp, content.payload))
             num += 1
             if limit is not None and num == limit:
                 break
@@ -2249,8 +2249,7 @@ class DateLastGameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         # gather declarations
         declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
-        for _, _, declaration in sorted(declarations_list, key=lambda t: t[2].time_stamp, reverse=True):
-            time_stamp, _, _ = declaration.export()
+        for _, _, time_stamp, _ in declarations_list:
             break
 
         data = {'time_stamp': time_stamp}
