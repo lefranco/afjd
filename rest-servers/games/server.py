@@ -1964,7 +1964,6 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         messages_dict: typing.Dict[int, typing.Tuple[int, int, str]] = dict()
         messages_to_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
-        id2num: typing.Dict[int, int] = dict()
 
         for _, author_num, addressee_num, identifier, time_stamp, content in messages_list:
 
