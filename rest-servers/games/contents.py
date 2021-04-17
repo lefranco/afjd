@@ -7,6 +7,7 @@ File : contents.py
 Handles the contents of messages and declarations
 """
 import sqlite3
+import typing
 
 import database
 
@@ -22,6 +23,14 @@ class Content:
         if highest_identifier is None:
             return 1
         return highest_identifier + 1  # type: ignore
+
+    @staticmethod
+    def list_by_game_id(game_id: int) -> typing.List[typing.Tuple[int, int, int, int]]:
+        """ class lookup : finds the object in database from fame id """
+        contents_found = database.sql_execute("SELECT * FROM contents where game_id = ?", (game_id,), need_result=True)
+        if not contents_found:
+            return []
+        return contents_found
 
     @staticmethod
     def create_table() -> None:

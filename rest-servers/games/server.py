@@ -425,6 +425,21 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             active = actives.Active(int(game_id), role_num)
             active.delete_database()
 
+        # delete contents
+        for (identifier, _, _, _) in contents.Content.list_by_game_id(int(game_id)):
+            content = contents.Content(identifier, 0, 0, '')
+            content.delete_database()
+
+        # delete declarations
+        for (_, _, content_id) in declarations.Declaration.list_by_game_id(int(game_id)):
+            declaration = declarations.Declaration(0, 0, content_id)
+            declaration.delete_database()
+
+        # delete messages
+        for (_, _, _, content_id) in messages.Message.list_by_game_id(int(game_id)):
+            message = messages.Message(0, 0, 0, content_id)
+            message.delete_database()
+
         # finally delete game
         assert game is not None
         game.delete_database()

@@ -24,6 +24,14 @@ class Message:
         return messages_found
 
     @staticmethod
+    def list_by_game_id(game_id: int) -> typing.List[typing.Tuple[int, int, int, int]]:
+        """ class lookup : finds the object in database from fame id """
+        messages_found = database.sql_execute("SELECT * FROM messages where game_id = ?", (game_id,), need_result=True)
+        if not messages_found:
+            return []
+        return messages_found
+
+    @staticmethod
     def create_table() -> None:
         """ creation of table from scratch """
 
