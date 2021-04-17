@@ -39,7 +39,7 @@ class Message:
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO messages (game_id, author_num, addressee_num, content_id) VALUES (?, ?, ?)", (self._game_id, self._author_num, self._addressee_num, self._content_id))
+        database.sql_execute("INSERT OR REPLACE INTO messages (game_id, author_num, addressee_num, content_id) VALUES (?, ?, ?, ?)", (self._game_id, self._author_num, self._addressee_num, self._content_id))
 
     def delete_database(self) -> None:
         """ Removes object from database """
