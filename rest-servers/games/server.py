@@ -33,8 +33,9 @@ import forbiddens
 import transitions
 import reports
 import games
-import messages
+import contents
 import declarations
+import messages
 import variants
 import database
 import visits
@@ -1985,7 +1986,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("role_id=%s", role_id)
 
         pseudo = args['pseudo']
-        content = args['content']
+        payload = args['content']
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to insert declaration in game")
@@ -2035,9 +2036,15 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # create declaration here
-        identifier = declarations.Declaration.free_identifier()
+
+        # create a content
+        identifier = contents.Content.free_identifier()
         time_stamp = int(time.time())  # now
-        declaration = declarations.Declaration(identifier, game_id, time_stamp, role_id, content)
+        content = contents.Content(identifier, game_id, time_stamp, payload)
+        content.update_database()
+
+        # create a declaration linked to the content
+        declaration = declarations.Declaration( game_id, role_id, identifier)
         declaration.update_database()
 
         data = {'msg': f"Ok declaration inserted : {content}"}
@@ -2092,12 +2099,19 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # TODO : find a way to pass a limit
         limit = None
 
+        # TODO a revoir... jointure sur deux tables
+
         # gather declarations
-        declarations_list = declarations.Declaration.list_by_game_id(game_id)
+        declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
+
+        print("DEBUG:")
+        print("declarations_list=")
+        print(declarations_list)
+
         declarations_list_json = list()
         num = 1
-        for _, _, declaration in sorted(declarations_list, key=lambda t: t[2].time_stamp, reverse=True):
-            declarations_list_json.append(declaration.export())
+        for _, _, _, content in sorted(declarations_list, key=lambda t: content.time_stamp, reverse=True):
+            declarations_list_json.append(content.export())
             num += 1
             if limit is not None and num == limit:
                 break
