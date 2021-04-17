@@ -19,7 +19,7 @@ class Declaration:
     @staticmethod
     def list_with_content_by_game_id(game_id: int) -> typing.List[typing.Tuple[int, int, int, contents.Content]]:
         """ class lookup : finds the object in database from fame id """
-        declarations_found = database.sql_execute("SELECT game_id,author_num,time_stamp,content FROM declarations INNER JOIN contents ON contents.identifier = declarations.content_id where game_id = ? ORDER BY time_stamp DESC", (game_id,), need_result=True)
+        declarations_found = database.sql_execute("SELECT game_id, author_num, time_stamp, content_data FROM declarations INNER JOIN contents ON contents.identifier = declarations.content_id where game_id = ? ORDER BY time_stamp DESC", (game_id,), need_result=True)
         if not declarations_found:
             return []
         return declarations_found
