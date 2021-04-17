@@ -1963,15 +1963,21 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         messages_extracted_list = messages.Message.list_with_content_by_game_id(game_id)
 
         # get all message
-        messages_dict_full: typing.Dict[typing.Tuple[int, int, contents.Content], typing.List[int]] = collections.defaultdict(list)
-        for _, author_num, addressee_num, time_stamp, content in messages_extracted_list:
-            messages_dict_full[(author_num, time_stamp, content)].append(addressee_num)
+        messages_dict_mess: typing.Dict[int, typing.Tuple[int, int, contents.Content]] = dict()
+        messages_dict_dest: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
+        for _, identifier, author_num, addressee_num, time_stamp, content in messages_extracted_list:
+            if identifier not in messages_dict_mess:
+                messages_dict_mess[identifier] = author_num, time_stamp, content
+            messages_dict_dest[identifier].append(addressee_num)
 
-        print(f"{messages_dict_full=}")
+        print(f"{messages_dict_mess=}")
+        print(f"{messages_dict_dest=}")
 
         # extract the ones not concerned
         messages_list: typing.List[typing.Tuple[int, int, typing.List[int], str]] = list()
-        for (author_num, time_stamp, content), addressees_num in messages_dict_full.items():
+        for identifier in messages_dict_mess:
+            author_num, time_stamp, content = messages_dict_mess[identifier]
+            addressees_num = messages_dict_dest[identifier]
             if role_id == author_num or role_id in addressees_num:
                 messages_list.append((author_num, time_stamp, addressees_num, content.payload))
 
@@ -2181,7 +2187,7 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # gather messages
         messages_list = messages.Message.list_with_content_by_game_id(game_id)
-        for _, _, addressee_num, time_stamp_found, _ in messages_list:
+        for _, _, _, addressee_num, time_stamp_found, _ in messages_list:
 
             # must be addressee
             if addressee_num != int(role_id):
