@@ -29,7 +29,7 @@ def check_token():
 
                 #  alert(f"Problem checking token: {req_result['msg']}")
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                InfoDialog("OK", f"Votre jeton d'authentification a expiré.<br>Vous devez juste vous loguer à nouveau {message}", remove_after=config.REMOVE_AFTER)
+                InfoDialog("OK", f"Votre jeton d'authentification a expiré.<br>Vous devez juste vous loguer à nouveau {messages}", remove_after=config.REMOVE_AFTER)
             else:
                 alert("Undocumented issue from server")
             logout()
