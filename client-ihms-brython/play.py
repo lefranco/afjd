@@ -1233,6 +1233,7 @@ def submit_orders():
 
     my_sub_panel <= my_sub_panel2
 
+content_backup = None  # pylint: disable=invalid-name
 
 def negotiate():
     """ negotiate """
@@ -1257,15 +1258,28 @@ def negotiate():
             InfoDialog("OK", f"Le message a été envoyé ! {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
+            global content_backup
+            content_backup = None
             negotiate()
+            return
 
         dest_role_ids = ' '.join([str(role_num) for (role_num, button) in selected.items() if button.checked])
 
-        if not dest_role_ids:
-            alert("Pas de destinataire pour ce message !")
+        content = input_message.value
+
+        # keep a backup
+        global content_backup  # pylint: disable=invalid-name
+        content_backup = content
+
+        if not content:
+            alert("Pas de contenu pour ce message !")
+            negotiate()
             return
 
-        content = input_message.value
+        if not dest_role_ids:
+            alert("Pas de destinataire pour ce message !")
+            negotiate()
+            return
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -1297,7 +1311,7 @@ def negotiate():
 
             req_result = json.loads(req.text)
 
-            messages = req_result['messages_list']
+            messages = req_result['messages_dict']
 
             if req.status != 200:
                 if 'message' in req_result:
@@ -1382,6 +1396,8 @@ def negotiate():
     form <= html.BR()
 
     input_message = html.TEXTAREA(type="text", rows=5, cols=80)
+    if content_backup is not None:
+        input_message <= content_backup
     form <= input_message
     form <= html.BR()
 
@@ -1422,7 +1438,9 @@ def negotiate():
         return
 
     # to avoid warning
-    messages = list(messages)
+    messages = dict(messages)
+
+    print(f"{messages=}")
 
     messages_table = html.TABLE()
     messages_table.style = {
@@ -1521,8 +1539,14 @@ def declare():
 
             # back to where we started
             declare()
+            return
 
         content = input_declaration.value
+
+        if not content:
+            alert("Pas de contenu pour cette déclaration !")
+            declare()
+            return
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -1745,7 +1769,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur s'est vu retirer le rôle dans la partie: {req_result['msg']}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Le joueur s'est vu retirer le rôle dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
             my_sub_panel.clear()
