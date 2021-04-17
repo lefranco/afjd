@@ -165,15 +165,15 @@ def dol_fleet(x: int, y: int, ctx):  # pylint: disable=invalid-name
     """ display a fleet the diplomatie-online way """
 
     p1 = [Point() for _ in range(9)]  # pylint: disable=invalid-name
-    p1[0].x = x - 4; p1[0].y = y;
-    p1[1].x = x - 16; p1[1].y = y;
-    p1[2].x = x - 10; p1[2].y = y + 12;
-    p1[3].x = x + 10; p1[3].y = y + 12;
-    p1[4].x = x + 18; p1[4].y = y;
-    p1[5].x = x + 10; p1[5].y = y;
-    p1[6].x = x + 10; p1[6].y = y - 10;
-    p1[7].x = x + 6; p1[7].y = y - 10;
-    p1[8].x = x + 6; p1[8].y = y - 8;
+    p1[0].x = x - 4; p1[0].y = y
+    p1[1].x = x - 16; p1[1].y = y
+    p1[2].x = x - 10; p1[2].y = y + 12
+    p1[3].x = x + 10; p1[3].y = y + 12
+    p1[4].x = x + 18; p1[4].y = y
+    p1[5].x = x + 10; p1[5].y = y
+    p1[6].x = x + 10; p1[6].y = y - 10
+    p1[7].x = x + 6; p1[7].y = y - 10
+    p1[8].x = x + 6; p1[8].y = y - 8
 
     ctx.beginPath()
     for n, p in enumerate(p1):  # pylint: disable=invalid-name
