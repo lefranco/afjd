@@ -1960,7 +1960,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         messages_list_json = list()
         num = 0
-        for _, author_num, addressee_num, time_stamp, content in declarations_list:
+        for _, author_num, addressee_num, time_stamp, content in messages_list:
 
             # must be author or addressee
             if role_id not in [author_num, message.addressee_num]:
@@ -2054,7 +2054,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         declaration = declarations.Declaration(int(game_id), role_id, identifier)
         declaration.update_database()
 
-        data = {'msg': f"Ok declaration inserted."}
+        data = {'msg': "Ok declaration inserted."}
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
@@ -2244,10 +2244,6 @@ class DateLastGameDeclarationRessource(flask_restful.Resource):  # type: ignore
         role_id_found = game.find_role(player_id)
         if role_id_found is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
-
-        # check the role
-        if role_id_found != int(role_id):
-            flask_restful.abort(403, msg=f"You do not seem to have role {role_id} in game {game_id}")
 
         # serves as default value (long time ago)
         time_stamp = 0

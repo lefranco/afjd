@@ -1437,7 +1437,7 @@ def negotiate():
         thead <= col
     messages_table <= thead
 
-    for time_stamp, from_role_id_msg, dest_role_id_msg, content in messages:
+    for from_role_id_msg, dest_role_id_msg, time_stamp, content in messages:
 
         row = html.TR()
         row.style = {
