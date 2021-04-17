@@ -567,8 +567,8 @@ class GameSelectListRessource(flask_restful.Resource):  # type: ignore
         selection_submitted = args['selection']
         try:
             selection_list = list(map(int, selection_submitted.split()))
-        except:
-            flask_restful.abort(400, msg=f"Bad selection. Use a space separated list of numbers")
+        except:  # noqa: E722 pylint: disable=bare-except
+            flask_restful.abort(400, msg="Bad selection. Use a space separated list of numbers")
 
         mylogger.LOGGER.info("/games-select - POST - get getting some games only name")
 
@@ -2099,14 +2099,12 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # TODO : find a way to pass a limit
         limit = None
 
-        # TODO a revoir... jointure sur deux tables
-
         # gather declarations
         declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
 
         declarations_list_json = list()
         num = 0
-        for game_id, author_num, time_stamp, content in declarations_list:
+        for _, author_num, time_stamp, content in declarations_list:
             declarations_list_json.append((author_num, time_stamp, content.payload))
             num += 1
             if limit is not None and num == limit:

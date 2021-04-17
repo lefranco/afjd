@@ -1659,7 +1659,7 @@ def declare():
         thead <= col
     declarations_table <= thead
 
-    for time_stamp, role_id_msg, content in declarations:
+    for role_id_msg, time_stamp, content in declarations:
 
         row = html.TR()
         row.style = {
