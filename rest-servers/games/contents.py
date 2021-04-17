@@ -25,19 +25,11 @@ class Content:
         return highest_identifier + 1  # type: ignore
 
     @staticmethod
-    def list_by_game_id(game_id: int) -> typing.List[typing.Tuple[int, int, 'Content']]:
-        """ class lookup : finds the object in database from game id """
-        contents_found = database.sql_execute("SELECT * FROM contents where game_id = ?", (game_id,), need_result=True)
-        if not contents_found:
-            return []
-        return contents_found
-
-    @staticmethod
     def create_table() -> None:
         """ creation of table from scratch """
 
         database.sql_execute("DROP TABLE IF EXISTS contents")
-        database.sql_execute("CREATE TABLE contents (identifier INT UNIQUE PRIMARY KEY, game_id INT, content_data content)")
+        database.sql_execute("CREATE TABLE contents (identifier INT UNIQUE PRIMARY KEY, game_id2 INT, content_data content)")
 
     def __init__(self, identifier: int, game_id: int, time_stamp: int, payload: str) -> None:
 
@@ -55,7 +47,7 @@ class Content:
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO contents (identifier, game_id, content_data) VALUES (?, ?, ?)", (self._identifier, self._game_id, self))
+        database.sql_execute("INSERT OR REPLACE INTO contents (identifier, game_id2, content_data) VALUES (?, ?, ?)", (self._identifier, self._game_id, self))
 
     def delete_database(self) -> None:
         """ Removes object from database """
