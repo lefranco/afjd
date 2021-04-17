@@ -1958,17 +1958,15 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
-        # TODO : find a way to pass a limit
-        limit = None
-
         # gather messages
         assert role_id is not None
         messages_list = messages.Message.list_with_content_by_game_id(game_id)
 
         messages_dict: typing.Dict[int, typing.Tuple[int, int, str]] = dict()
         messages_to_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
+        id2num: typing.Dict[int, int] = dict()
 
-        num = 0
+        fake_num = 0
         for _, author_num, addressee_num, identifier, time_stamp, content in messages_list:
 
             # must be author or addressee
@@ -1976,16 +1974,16 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
                 continue
 
             if identifier not in messages_dict:
-                messages_dict[identifier] = (author_num, time_stamp, content.payload)
-            messages_to_dict[identifier].append(addressee_num)
+                messages_dict[fake_num] = (author_num, time_stamp, content.payload)
+                id2num[identifier] = fake_num
+                fake_num += 1
 
-            num += 1
-            if limit is not None and num == limit:
-                break
+            num = id2num[identifier]
+            messages_to_dict[num].append(addressee_num)
 
         data = {
-            'messages': messages_dict,
-            'messages_to': messages_to_dict,
+            'messages_dict': messages_dict,
+            'messages_to_dict': messages_to_dict,
         }
         return data, 200
 
@@ -2118,19 +2116,12 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
-        # TODO : find a way to pass a limit
-        limit = None
-
         # gather declarations
         declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
 
         declarations_list_ret = list()
-        num = 0
         for _, author_num, time_stamp, content in declarations_list:
             declarations_list_ret.append((author_num, time_stamp, content.payload))
-            num += 1
-            if limit is not None and num == limit:
-                break
 
         data = {'declarations_list': declarations_list_ret}
         return data, 200
