@@ -1975,7 +1975,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             if identifier not in messages_dict:
                 messages_dict[identifier] = (author_num, time_stamp, content.payload)
 
-            messages_to_dict[num].append(addressee_num)
+            messages_to_dict[identifier].append(addressee_num)
 
         data = {
             'messages_dict': messages_dict,
