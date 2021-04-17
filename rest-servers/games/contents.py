@@ -45,6 +45,10 @@ class Content:
         assert isinstance(payload, str), "payload must be an str"
         self._payload = payload
 
+    def export(self) -> typing.Tuple[int, int, int, str]:
+        """ for passing to solver """
+        return self._time_stamp, self._payload
+
     def update_database(self) -> None:
         """ Pushes changes from object to database """
         database.sql_execute("INSERT OR REPLACE INTO contents (identifier, game_id2, time_stamp, content_data) VALUES (?, ?, ?, ?)", (self._identifier, self._game_id, self._time_stamp, self))
