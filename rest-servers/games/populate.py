@@ -17,8 +17,9 @@ import forbiddens
 import reports
 import transitions
 import games
-import messages
+import contents
 import declarations
+import messages
 import allocations
 import visits
 
@@ -67,6 +68,10 @@ def populate_games() -> None:
     """ inserts these items in database """
     games.Game.create_table()
 
+
+def populate_contents() -> None:
+    """ inserts these items in database """
+    contents.Content.create_table()
 
 def populate_declarations() -> None:
     """ inserts these items in database """
