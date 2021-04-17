@@ -24,6 +24,14 @@ class Declaration:
         return declarations_found
 
     @staticmethod
+    def list_by_game_id(game_id: int) -> typing.List[typing.Tuple[int, int, int]]:
+        """ class lookup : finds the object in database from fame id """
+        declarations_found = database.sql_execute("SELECT * FROM declarations where game_id = ?", (game_id,), need_result=True)
+        if not declarations_found:
+            return []
+        return declarations_found
+
+    @staticmethod
     def create_table() -> None:
         """ creation of table from scratch """
 

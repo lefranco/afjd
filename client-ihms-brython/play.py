@@ -1440,8 +1440,6 @@ def negotiate():
     # to avoid warning
     messages = list(messages)
 
-    print(f"{messages=}")
-
     messages_table = html.TABLE()
     messages_table.style = {
         "border": "solid",
