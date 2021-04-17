@@ -1966,7 +1966,6 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         messages_to_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
         id2num: typing.Dict[int, int] = dict()
 
-        fake_num = 0
         for _, author_num, addressee_num, identifier, time_stamp, content in messages_list:
 
             # must be author or addressee
@@ -1974,11 +1973,8 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
                 continue
 
             if identifier not in messages_dict:
-                messages_dict[fake_num] = (author_num, time_stamp, content.payload)
-                id2num[identifier] = fake_num
-                fake_num += 1
+                messages_dict[identifier] = (author_num, time_stamp, content.payload)
 
-            num = id2num[identifier]
             messages_to_dict[num].append(addressee_num)
 
         data = {
