@@ -2104,12 +2104,8 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # gather declarations
         declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
 
-        print("DEBUG:")
-        print("declarations_list=")
-        print(declarations_list)
-
         declarations_list_json = list()
-        num = 1
+        num = 0
         for game_id, author_num, time_stamp, content in declarations_list:
             declarations_list_json.append((author_num, time_stamp, content.payload))
             num += 1
@@ -2244,12 +2240,13 @@ class DateLastGameDeclarationRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
-        # serves as default value (log time ago)
-        time_stamp = 0.
+        # serves as default value (long time ago)
+        time_stamp = 0
 
         # gather declarations
         declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
-        for _, _, time_stamp, _ in declarations_list:
+        for _, _, time_stamp_found, _ in declarations_list:
+            time_stamp = time_stamp_found
             break
 
         data = {'time_stamp': time_stamp}
