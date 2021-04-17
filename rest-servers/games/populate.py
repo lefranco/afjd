@@ -73,6 +73,7 @@ def populate_contents() -> None:
     """ inserts these items in database """
     contents.Content.create_table()
 
+
 def populate_declarations() -> None:
     """ inserts these items in database """
     declarations.Declaration.create_table()
