@@ -1302,16 +1302,16 @@ def negotiate():
     def messages_reload(game_id):
         """ messages_reload """
 
-        messages = None
+        messages_dict = None
+        messages_to_dict = None
 
         def reply_callback(req):
             """ reply_callback """
 
-            nonlocal messages
+            nonlocal messages_dict
+            nonlocal messages_to_dict
 
             req_result = json.loads(req.text)
-
-            messages = req_result
 
             if req.status != 200:
                 if 'message' in req_result:
@@ -1321,6 +1321,9 @@ def negotiate():
                 else:
                     alert("Undocumented issue from server")
                 return
+
+            messages_dict = messages['messages_dict']
+            messages_to_dict = messages['messages_to_dict']
 
         json_dict = {
             'role_id': role_id,
@@ -1334,7 +1337,7 @@ def negotiate():
         # extracting messages from a game : need token (or not?)
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-        return messages
+        return messages_dict, messages_to_dict
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -1433,17 +1436,16 @@ def negotiate():
     input_declare_in_game.bind("click", add_message_callback)
     form <= input_declare_in_game
 
-    messages = messages_reload(game_id)
-    if messages is None:
+    messages_dict, messages_to_dict = messages_reload(game_id)
+    if messages_dict is None:
         return
 
     # to avoid warning
-    messages = dict(messages)
+    messages_dict = dict(messages_dict)
+    messages_to_dict = dict(messages_to_dict)
 
-    print(f"{messages=}")
-
-    messages_dict = messages['messages_dict']
-    messages_to_dict = messages['messages_to_dict']
+    print(f"{messages_dict=}")
+    print(f"{messages_to_dict=}")
 
     messages_table = html.TABLE()
     messages_table.style = {
@@ -1451,7 +1453,7 @@ def negotiate():
     }
 
     thead = html.THEAD()
-    for title in ['Date', 'Auteur', 'Destinataire', 'Contenu']:
+    for title in ['Date', 'Auteur', 'Destinataire(s)', 'Contenu']:
         col = html.TD(html.B(title))
         col.style = {
             "border": "solid",
