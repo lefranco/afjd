@@ -1311,7 +1311,7 @@ def negotiate():
 
             req_result = json.loads(req.text)
 
-            messages = req_result['messages_dict']
+            messages = req_result
 
             if req.status != 200:
                 if 'message' in req_result:
@@ -1442,6 +1442,9 @@ def negotiate():
 
     print(f"{messages=}")
 
+    messages_dict = messages['messages_dict']
+    messages_to_dict = messages['messages_to_dict']
+
     messages_table = html.TABLE()
     messages_table.style = {
         "border": "solid",
@@ -1456,7 +1459,7 @@ def negotiate():
         thead <= col
     messages_table <= thead
 
-    for from_role_id_msg, dest_role_id_msg, time_stamp, content in messages:
+    for num, (from_role_id_msg, time_stamp, content) in messages_dict.items():
 
         row = html.TR()
         row.style = {
@@ -1477,11 +1480,15 @@ def negotiate():
         }
         row <= col
 
-        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{dest_role_id_msg}.jpg")
-        col = html.TD(role_icon_img)
+        col = html.TD()
         col.style = {
             "border": "solid",
         }
+
+        dest_role_id_msgs = messages_to_dict[num]
+        for dest_role_id_msg in dest_role_id_msgs:
+            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{dest_role_id_msg}.jpg")
+            col <= role_icon_img
         row <= col
 
         col = html.TD()
