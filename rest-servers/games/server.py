@@ -2047,7 +2047,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         declaration = declarations.Declaration(int(game_id), role_id, identifier)
         declaration.update_database()
 
-        data = {'msg': f"Ok declaration inserted : {content}"}
+        data = {'msg': f"Ok declaration inserted."}
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
