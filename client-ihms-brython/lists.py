@@ -37,7 +37,7 @@ def show_players_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence','nationality': 'nationalité', 'time_zone': 'fuseau horaire'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
