@@ -2040,11 +2040,11 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # create a content
         identifier = contents.Content.free_identifier()
         time_stamp = int(time.time())  # now
-        content = contents.Content(identifier, game_id, time_stamp, payload)
+        content = contents.Content(identifier, int(game_id), time_stamp, payload)
         content.update_database()
 
         # create a declaration linked to the content
-        declaration = declarations.Declaration( game_id, role_id, identifier)
+        declaration = declarations.Declaration(int(game_id), role_id, identifier)
         declaration.update_database()
 
         data = {'msg': f"Ok declaration inserted : {content}"}
@@ -2248,7 +2248,7 @@ class DateLastGameDeclarationRessource(flask_restful.Resource):  # type: ignore
         time_stamp = 0.
 
         # gather declarations
-        declarations_list = declarations.Declaration.list_by_game_id(game_id)
+        declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
         for _, _, declaration in sorted(declarations_list, key=lambda t: t[2].time_stamp, reverse=True):
             time_stamp, _, _ = declaration.export()
             break
