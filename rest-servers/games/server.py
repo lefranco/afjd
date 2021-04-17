@@ -1841,7 +1841,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("role_id=%s dest_role_id=%s", role_id, dest_role_id)
 
         pseudo = args['pseudo']
-        content = args['content']
+        payload = args['content']
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to insert message in game")
@@ -1891,9 +1891,15 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
         # create message here
-        identifier = messages.Message.free_identifier()
+
+        # create a content
+        identifier = contents.Content.free_identifier()
         time_stamp = int(time.time())  # now
-        message = messages.Message(identifier, game_id, time_stamp, role_id, dest_role_id, content)
+        content = contents.Content(identifier, int(game_id), time_stamp, payload)
+        content.update_database()
+
+        # create a message linked to the content
+        message = messages.Message(int(game_id), role_id, dest_role_id, identifier)
         message.update_database()
 
         data = {'msg': f"Ok message inserted : {content}"}
@@ -1950,16 +1956,17 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # gather messages
         assert role_id is not None
-        messages_list = messages.Message.list_by_game_id(game_id)
+        messages_list = messages.Message.list_with_content_by_game_id(game_id)
+
         messages_list_json = list()
-        num = 1
-        for _, _, message in sorted(messages_list, key=lambda t: t[2].time_stamp, reverse=True):
+        num = 0
+        for _, author_num, addressee_num, time_stamp, content in declarations_list:
 
             # must be author or addressee
-            if role_id not in [message.author_num, message.addressee_num]:
+            if role_id not in [author_num, message.addressee_num]:
                 continue
 
-            messages_list_json.append(message.export())
+            messages_list_json.append((author_num, addressee_num, time_stamp, content.payload))
             num += 1
             if limit is not None and num == limit:
                 break
@@ -2166,22 +2173,22 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # check the role
         if role_id_found != int(role_id):
-            flask_restful.abort(403, msg=f"You do not seem to have role {role_id} in game {game_id} {role_id_found}")
+            flask_restful.abort(403, msg=f"You do not seem to have role {role_id} in game {game_id}")
 
-        # serves as default value (log time ago)
-        time_stamp = 0.
+        # serves as default value (long time ago)
+        time_stamp = 0
+
+        assert role_id is not None
 
         # gather messages
-        assert role_id is not None
-        messages_list = messages.Message.list_by_game_id(game_id)
+        messages_list = declarations.Declaration.list_with_content_by_game_id(game_id)
+        for _, _, addressee_num, time_stamp_found, _ in messages_list:
 
-        for _, _, message in sorted(messages_list, key=lambda t: t[2].time_stamp, reverse=True):
-
-            # must addressee
-            if int(role_id) != message.addressee_num:
+            # must be addressee
+            if addressee_num != int(role_id):
                 continue
 
-            time_stamp, _, _, _ = message.export()
+            time_stamp = time_stamp_found
             break
 
         data = {'time_stamp': time_stamp}
@@ -2234,9 +2241,13 @@ class DateLastGameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         # get the role
         assert game is not None
-        role_id = game.find_role(player_id)
-        if role_id is None:
+        role_id_found = game.find_role(player_id)
+        if role_id_found is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+
+        # check the role
+        if role_id_found != int(role_id):
+            flask_restful.abort(403, msg=f"You do not seem to have role {role_id} in game {game_id}")
 
         # serves as default value (long time ago)
         time_stamp = 0
