@@ -1960,25 +1960,21 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # gather messages
         assert role_id is not None
-        messages_list = messages.Message.list_with_content_by_game_id(game_id)
+        messages_extracted_list = messages.Message.list_with_content_by_game_id(game_id)
 
-        messages_dict: typing.Dict[int, typing.Tuple[int, int, str]] = dict()
-        messages_to_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
+        # get all message
+        messages_dict_full: typing.Dict[typing.Tuple[int, int, contents.Content], typing.List[int]] = collections.defaultdict(list)
+        for _, author_num, addressee_num, time_stamp, content in messages_extracted_list:
+            messages_dict_full[(author_num, time_stamp, content)].append(addressee_num)
 
-        for _, author_num, addressee_num, identifier, time_stamp, content in messages_list:
-
-            # must be author or addressee
-            if role_id not in [author_num, addressee_num]:
-                continue
-
-            if identifier not in messages_dict:
-                messages_dict[identifier] = (author_num, time_stamp, content.payload)
-
-            messages_to_dict[identifier].append(addressee_num)
+        # extract the ones not concerned
+        messages_list: typing.List[typing.Tuple[int, int, typing.List[int], str]] = list()
+        for (author_num, time_stamp, content), addressees_num in messages_dict_full.items():
+            if role_id == author_num or role_id in addressees_num:
+                messages_list.append((author_num, time_stamp, addressees_num, content.payload))
 
         data = {
-            'messages_dict': messages_dict,
-            'messages_to_dict': messages_to_dict,
+            'messages_list': messages_list,
         }
         return data, 200
 
@@ -2183,7 +2179,7 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # gather messages
         messages_list = messages.Message.list_with_content_by_game_id(game_id)
-        for _, _, addressee_num, _, time_stamp_found, _ in messages_list:
+        for _, _, addressee_num, time_stamp_found, _ in messages_list:
 
             # must be addressee
             if addressee_num != int(role_id):
