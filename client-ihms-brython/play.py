@@ -1302,14 +1302,12 @@ def negotiate():
     def messages_reload(game_id):
         """ messages_reload """
 
-        messages_dict = None
-        messages_to_dict = None
+        messages = None
 
         def reply_callback(req):
             """ reply_callback """
 
-            nonlocal messages_dict
-            nonlocal messages_to_dict
+            nonlocal messages
 
             req_result = json.loads(req.text)
 
@@ -1322,8 +1320,7 @@ def negotiate():
                     alert("Undocumented issue from server")
                 return
 
-            messages_dict = req_result['messages_dict']
-            messages_to_dict = req_result['messages_to_dict']
+            messages = req_result['messages_list']
 
         json_dict = {
             'role_id': role_id,
@@ -1337,7 +1334,7 @@ def negotiate():
         # extracting messages from a game : need token (or not?)
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-        return messages_dict, messages_to_dict
+        return messages
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -1436,16 +1433,14 @@ def negotiate():
     input_declare_in_game.bind("click", add_message_callback)
     form <= input_declare_in_game
 
-    messages_dict, messages_to_dict = messages_reload(game_id)
-    if messages_dict is None:
+    messages = messages_reload(game_id)
+    if messages is None:
         return
 
     # to avoid warning
-    messages_dict = dict(messages_dict)
-    messages_to_dict = dict(messages_to_dict)
+    messages = list(messages)
 
-    print(f"{messages_dict=}")
-    print(f"{messages_to_dict=}")
+    print(f"{messages=}")
 
     messages_table = html.TABLE()
     messages_table.style = {
@@ -1461,7 +1456,7 @@ def negotiate():
         thead <= col
     messages_table <= thead
 
-    for num, (from_role_id_msg, time_stamp, content) in messages_dict.items():
+    for from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
 
         row = html.TR()
         row.style = {
@@ -1487,7 +1482,6 @@ def negotiate():
             "border": "solid",
         }
 
-        dest_role_id_msgs = messages_to_dict[num]
         for dest_role_id_msg in dest_role_id_msgs:
             role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{dest_role_id_msg}.jpg")
             col <= role_icon_img
