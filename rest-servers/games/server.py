@@ -1965,7 +1965,8 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         assert role_id is not None
         messages_list = messages.Message.list_with_content_by_game_id(game_id)
 
-        messages_dict_ret: typing.Dict[(int, int, str): typing.List[int]] = collections.defaultdict(list)
+        messages_dict: typing.Dict[int, typing.Tuple[int, int, str]] = dict()
+        messages_to_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
 
         num = 0
         for _, author_num, addressee_num, identifier, time_stamp, content in messages_list:
@@ -1974,12 +1975,18 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             if role_id not in [author_num, addressee_num]:
                 continue
 
-            messages_dict_ret[(author_num, time_stamp, content.payload)].append(addressee_num)
+            if identifier not in messages_dict:
+                messages_dict[identifier] = (author_num, time_stamp, content.payload)
+            messages_to_dict[identifier].append(addressee_num)
+
             num += 1
             if limit is not None and num == limit:
                 break
 
-        data = {'messages_dict': messages_dict_ret}
+        data = {
+            'messages': messages_dict,
+            'messages_to': messages_to_dict,
+        }
         return data, 200
 
 
@@ -2190,7 +2197,7 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # gather messages
         messages_list = messages.Message.list_with_content_by_game_id(game_id)
-        for _, _, addressee_num, time_stamp_found, _ in messages_list:
+        for _, _, addressee_num, _, time_stamp_found, _ in messages_list:
 
             # must be addressee
             if addressee_num != int(role_id):
