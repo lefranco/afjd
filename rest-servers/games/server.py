@@ -1965,20 +1965,21 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         assert role_id is not None
         messages_list = messages.Message.list_with_content_by_game_id(game_id)
 
-        messages_list_json = list()
+        messages_dict_ret: typing.Dict[(int, int, str): typing.List[int]] = collections.defaultdict(list)
+
         num = 0
-        for _, author_num, addressee_num, time_stamp, content in messages_list:
+        for _, author_num, addressee_num, identifier, time_stamp, content in messages_list:
 
             # must be author or addressee
             if role_id not in [author_num, addressee_num]:
                 continue
 
-            messages_list_json.append((author_num, addressee_num, time_stamp, content.payload))
+            messages_dict_ret[(author_num, time_stamp, content.payload)].append(addressee_num)
             num += 1
             if limit is not None and num == limit:
                 break
 
-        data = {'messages_list': messages_list_json}
+        data = {'messages_dict': messages_dict_ret}
         return data, 200
 
 
@@ -2116,15 +2117,15 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # gather declarations
         declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
 
-        declarations_list_json = list()
+        declarations_list_ret = list()
         num = 0
         for _, author_num, time_stamp, content in declarations_list:
-            declarations_list_json.append((author_num, time_stamp, content.payload))
+            declarations_list_ret.append((author_num, time_stamp, content.payload))
             num += 1
             if limit is not None and num == limit:
                 break
 
-        data = {'declarations_list': declarations_list_json}
+        data = {'declarations_list': declarations_list_ret}
         return data, 200
 
 
