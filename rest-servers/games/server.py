@@ -1485,7 +1485,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         # purge previous
 
         # get list
-        previous_communication_orders = communication_orders.CommunicationOrder.list_by_game_id(int(game_id))
+        previous_communication_orders = communication_orders.CommunicationOrder.list_by_game_id_role_num(int(game_id), role_num)
 
         # purge
         for (_, role_num, _, zone_num, _, _) in previous_communication_orders:
