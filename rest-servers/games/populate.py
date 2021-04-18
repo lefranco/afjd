@@ -10,6 +10,7 @@ Data : populate database
 import mylogger
 import actives
 import submissions
+import communication_orders
 import orders
 import ownerships
 import units
