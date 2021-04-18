@@ -1933,7 +1933,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # remove communication orders
         for (_, role_id, _, zone_num, _, _) in communication_orders.CommunicationOrder.list_by_game_id(game_id):
-            communication_order = orders.Order(int(game_id), role_id, 0, zone_num, 0, 0)
+            communication_order = communication_orders.CommunicationOrder(int(game_id), role_id, 0, zone_num, 0, 0)
             communication_order.delete_database()
             print(f"removed order for zone {zone_num}")
 
