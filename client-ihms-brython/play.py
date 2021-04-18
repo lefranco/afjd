@@ -19,7 +19,7 @@ import login
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'négocier', 'déclarer', 'voter', 'arbitrer', 'paramètres', 'joueurs', 'historique']
+OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'arbitrer', 'paramètres', 'joueurs', 'historique']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -1234,6 +1234,732 @@ def submit_orders():
     my_sub_panel <= my_sub_panel2
 
 
+def submit_communication_orders():
+    """ submit_orders """
+
+    variant_name_loaded = None
+    variant_content_loaded = None
+    variant_data = None
+    position_loaded = None
+    position_data = None
+
+    selected_active_unit = None
+    selected_passive_unit = None
+    selected_dest_zone = None
+    selected_order_type = None
+    selected_build_zone = None
+    automaton_state = None
+
+    stored_event = None
+    down_click_time = None
+
+    def erase_all_callback(_):
+        """ erase_all_callback """
+
+        nonlocal automaton_state
+        nonlocal buttons_right
+
+        # erase orders
+        orders_data.erase_orders()
+
+        # update displayed map
+        callback_render(None)
+
+        my_sub_panel2.removeChild(buttons_right)
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+        stack_role_flag(buttons_right)
+
+        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+            buttons_right <= legend_select_unit
+            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+        if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+            if position_data.has_dislodged():
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                buttons_right <= legend_select_unit
+                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+            else:
+                automaton_state = AutomatonStateEnum.IDLE_STATE
+
+        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+            legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement")
+            buttons_right <= legend_select_order
+            for order_type in mapping.OrderTypeEnum:
+                if order_type.compatible(advancement_season):
+                    input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                    buttons_right <= html.BR()
+                    input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                    buttons_right <= html.BR()
+                    buttons_right <= input_select
+            automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+
+        stack_orders(buttons_right)
+
+        put_submit(buttons_right)
+
+        my_sub_panel2 <= buttons_right
+        my_sub_panel <= my_sub_panel2
+
+    def submit_orders_callback(_):
+        """ submit_orders_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error submitting communication orders: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem submitting communication orders: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez déposé les ordres de communcation : {messages}", remove_after=config.REMOVE_AFTER)
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        orders_list_dict = orders_data.save_json()
+        orders_list_dict_json = json.dumps(orders_list_dict)
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': pseudo,
+            'orders': orders_list_dict_json,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-communication-orders/{game_id}"
+
+        # submitting orders : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def select_order_type_callback(_, order_type):
+        """ select_order_type_callback """
+
+        nonlocal automaton_state
+        nonlocal buttons_right
+        nonlocal selected_order_type
+
+        if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
+
+            selected_order_type = order_type
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+            stack_role_flag(buttons_right)
+
+            if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
+
+                legend_selected_destination = html.LEGEND("Sélectionner la destination de l'attaque")
+                buttons_right <= legend_selected_destination
+
+                automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
+
+                legend_selected_passive = html.LEGEND("Sélectionner l'unité supportée offensivement")
+                buttons_right <= legend_selected_passive
+
+                automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
+
+                legend_selected_passive = html.LEGEND("Sélectionner l'unité supportée defensivement")
+                buttons_right <= legend_selected_passive
+
+                automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
+
+                # insert hold order
+                order = mapping.Order(position_data, order_type, selected_active_unit, None, None)
+                orders_data.insert_order(order)
+
+                # update map
+                callback_render(None)
+
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                buttons_right <= legend_select_unit
+
+                my_sub_panel2 <= buttons_right
+                my_sub_panel <= my_sub_panel2
+
+                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+
+                order_name = variant_data.name_table[order_type]
+                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                buttons_right <= legend_selected_order
+                buttons_right <= html.BR()
+
+                legend_select_passive = html.LEGEND("Sélectionner l'unité convoyée")
+                buttons_right <= legend_select_passive
+
+                automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
+
+            stack_orders(buttons_right)
+            if not orders_data.empty():
+                put_erase_all(buttons_right)
+            put_submit(buttons_right)
+
+            my_sub_panel2 <= buttons_right
+            my_sub_panel <= my_sub_panel2
+
+    def callback_canvas_click(event):
+        """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
+
+        nonlocal selected_order_type
+        nonlocal automaton_state
+        nonlocal selected_active_unit
+        nonlocal selected_passive_unit
+        nonlocal selected_dest_zone
+        nonlocal selected_build_zone
+        nonlocal buttons_right
+
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+
+        # this is a shortcut
+        if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
+
+            selected_order_type = mapping.OrderTypeEnum.ATTACK_ORDER
+            automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
+            # passthru
+
+        if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
+
+            selected_active_unit = position_data.closest_unit(pos, False)
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+            stack_role_flag(buttons_right)
+
+            # can be None if no retreating unit on board
+            if selected_active_unit is not None:
+
+                legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
+                buttons_right <= legend_selected_unit
+
+                legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
+                buttons_right <= legend_select_order
+                buttons_right <= html.BR()
+
+                legend_select_order21 = html.I("Raccourcis clavier :")
+                buttons_right <= legend_select_order21
+                buttons_right <= html.BR()
+
+                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                    legend_select_order22 = html.I(info)
+                    buttons_right <= legend_select_order22
+                    buttons_right <= html.BR()
+
+                for order_type in mapping.OrderTypeEnum:
+                    if order_type.compatible(mapping.SeasonEnum.SPRING_SEASON):
+                        input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                        buttons_right <= html.BR()
+                        input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                        buttons_right <= html.BR()
+                        buttons_right <= input_select
+
+            stack_orders(buttons_right)
+            if not orders_data.empty():
+                put_erase_all(buttons_right)
+            put_submit(buttons_right)
+
+            my_sub_panel2 <= buttons_right
+            my_sub_panel <= my_sub_panel2
+
+            # can be None if no retreating unit on board
+            if selected_active_unit is not None:
+                automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+
+            return
+
+        if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
+
+            selected_dest_zone = variant_data.closest_zone(pos)
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+            stack_role_flag(buttons_right)
+
+            # insert attack, off support or convoy order
+            if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
+                # little shortcut if dest = origin
+                if selected_dest_zone == selected_active_unit.zone:
+                    selected_order_type = mapping.OrderTypeEnum.HOLD_ORDER
+                    selected_dest_zone = None
+                order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
+                orders_data.insert_order(order)
+            if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
+                order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
+                orders_data.insert_order(order)
+            if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
+                # little shortcut if dest = origin
+                if selected_dest_zone == selected_active_unit.zone:
+                    selected_order_type = mapping.OrderTypeEnum.DISBAND_ORDER
+                    selected_dest_zone = None
+                order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
+                orders_data.insert_order(order)
+
+            # update map
+            callback_render(None)
+
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+            buttons_right <= legend_select_unit
+
+            stack_orders(buttons_right)
+            if not orders_data.empty():
+                put_erase_all(buttons_right)
+            put_submit(buttons_right)
+
+            my_sub_panel2 <= buttons_right
+            my_sub_panel <= my_sub_panel2
+
+            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+            return
+
+        if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
+
+            selected_passive_unit = position_data.closest_unit(pos, False)
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+            stack_role_flag(buttons_right)
+
+            if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
+
+                # insert def support order
+                order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, None)
+                orders_data.insert_order(order)
+
+                # update map
+                callback_render(None)
+
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                buttons_right <= legend_select_unit
+
+                my_sub_panel2 <= buttons_right
+                my_sub_panel <= my_sub_panel2
+
+                stack_orders(buttons_right)
+                if not orders_data.empty():
+                    put_erase_all(buttons_right)
+                put_submit(buttons_right)
+
+                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+                return
+
+            if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
+                legend_selected_passive = html.LEGEND(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
+            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+                legend_selected_passive = html.LEGEND(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
+            buttons_right <= legend_selected_passive
+
+            if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
+                legend_select_destination = html.LEGEND("Sélectionner la destination de l'attaque soutenue")
+            if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
+                legend_select_destination = html.LEGEND("Sélectionner la destination du convoi")
+            buttons_right <= legend_select_destination
+
+            stack_orders(buttons_right)
+            if not orders_data.empty():
+                put_erase_all(buttons_right)
+            put_submit(buttons_right)
+
+            my_sub_panel2 <= buttons_right
+            my_sub_panel <= my_sub_panel2
+
+            automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
+            return
+
+    def callback_canvas_long_click(event):
+        """
+        called when there is a click down then a click up separated by more than 'LONG_DURATION_LIMIT_SEC' sec
+        or when pressing 'x' in which case a None is passed
+        """
+
+        nonlocal automaton_state
+        nonlocal buttons_right
+
+        # the aim is to give this variable a value
+        selected_erase_unit = None
+
+        # first : take from event
+        if event:
+
+            # where is the click
+            pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+
+            # moves : select unit : easy case
+            selected_erase_unit = position_data.closest_unit(pos, False)
+
+        # event is None when coming from x pressed, then take 'selected_active_unit' (that can be None)
+        if selected_erase_unit is None:
+            selected_erase_unit = selected_active_unit
+
+        # unit must be selected
+        if selected_erase_unit is None:
+            return
+
+        # unit must have an order
+        if not orders_data.is_ordered(selected_erase_unit):
+            return
+
+        # remove order
+        orders_data.remove_order(selected_erase_unit)
+
+        # update map
+        callback_render(None)
+
+        my_sub_panel2.removeChild(buttons_right)
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+        stack_role_flag(buttons_right)
+
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        buttons_right <= legend_select_unit
+        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+        stack_orders(buttons_right)
+        if not orders_data.empty():
+            put_erase_all(buttons_right)
+        put_submit(buttons_right)
+
+        my_sub_panel2 <= buttons_right
+        my_sub_panel <= my_sub_panel2
+
+    def callback_canvas_mousedown(event):
+        """ callback_mousedow : store event"""
+
+        nonlocal down_click_time
+        nonlocal stored_event
+
+        down_click_time = time.time()
+        stored_event = event
+
+    def callback_canvas_mouseup(_):
+        """ callback_mouseup : retrieve event and pass it"""
+
+        nonlocal down_click_time
+
+        if down_click_time is None:
+            return
+
+        # get click duration
+        up_click_time = time.time()
+        click_duration = up_click_time - down_click_time
+        down_click_time = None
+
+        # slow : call
+        if click_duration > LONG_DURATION_LIMIT_SEC:
+            callback_canvas_long_click(stored_event)
+            return
+
+        # normal : call s
+        callback_canvas_click(stored_event)
+
+    def callback_keypress(event):
+        """ callback_keypress """
+
+        char = chr(event.charCode).lower()
+
+        # order removal : special
+        if char == 'x':
+            # pass to double click
+            callback_canvas_long_click(None)
+            return
+
+        # order shortcut
+        selected_order = mapping.OrderTypeEnum.shortcut(char)
+        if selected_order is None:
+            return
+
+        select_order_type_callback(event, selected_order)
+
+    def callback_render(_):
+        """ callback_render """
+
+        # put the background map first
+        ctx.drawImage(img, 0, 0)
+
+        # put the legends
+        variant_data.render(ctx)
+
+        # put the position
+        position_data.render(ctx)
+
+        # put the orders
+        orders_data.render(ctx)
+
+    def stack_role_flag(buttons_right):
+        """ stack_role_flag """
+
+        # role flag
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+        buttons_right <= role_icon_img
+
+        warning = html.DIV()
+        warning.style = {
+            'color': 'red',
+        }
+        warning <= html.B("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution.")
+        buttons_right <= warning
+
+    def stack_orders(buttons_right):
+        """ stack_orders """
+
+        buttons_right <= html.P()
+        lines = str(orders_data).split('\n')
+        communication_orders = html.DIV()
+        communication_orders.style = {
+            'color': 'pink',
+        }
+        for line in lines:
+            communication_orders <= html.B(line)
+            communication_orders <= html.BR()
+        buttons_right <= communication_orders
+
+    def put_erase_all(buttons_right):
+        """ put_erase_all """
+
+        input_erase_all = html.INPUT(type="submit", value="effacer tout")
+        input_erase_all.bind("click", erase_all_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_erase_all
+        buttons_right <= html.BR()
+
+    def put_submit(buttons_right):
+        """ put_submit """
+
+        input_submit = html.INPUT(type="submit", value="déposer ces ordres de communication")
+        input_submit.bind("click", submit_orders_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_submit
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se loguer au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    # because we do not want the token stale in the middle of the process
+    login.check_token()
+
+    # from game name get game id
+
+    game_id = common.get_game_id(game)
+    if game_id is None:
+        return
+
+    # from pseudo get player id
+
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        return
+
+    # from game id and player id get role_id of player
+
+    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    if role_id is None:
+        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
+        return
+
+    # from game name get variant name
+
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = common.get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+
+    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+    with open(parameters_file_name, "r") as read_file:
+        parameters_read = json.load(read_file)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
+    # game needs to be ongoing
+    if game_parameters_loaded['current_state'] == 0:
+        alert("La partie n'est pas encore démarée")
+        return
+    if game_parameters_loaded['current_state'] == 2:
+        alert("La partie est déjà terminée")
+        return
+
+    game_status = get_game_status(variant_data, game_parameters_loaded, False)
+    my_sub_panel <= game_status
+
+    advancement_loaded = game_parameters_loaded['current_advancement']
+    advancement_season, _ = common.get_season(advancement_loaded, variant_data)
+
+    if advancement_season not in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+        alert("La saison n'est pas appropriée")
+        return
+
+    # get the position from server
+    position_loaded = common.game_position_reload(game)
+    if not position_loaded:
+        return
+
+    # digest the position
+    position_data = mapping.Position(position_loaded, variant_data)
+
+    # now we can display
+
+    map_size = variant_data.map_size
+
+    # create canvas
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return
+
+    # now we need to be more clever and handle the state of the mouse (up or down)
+    canvas.bind("mouseup", callback_canvas_mouseup)
+    canvas.bind("mousedown", callback_canvas_mousedown)
+
+    # to catch keyboard
+    document.bind("keypress", callback_keypress)
+
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return
+
+    # get the orders from server
+    communication_orders_loaded = common.game_communication_orders_reload(game)
+    if not communication_orders_loaded:
+        return
+
+    # digest the orders
+    orders_data = mapping.Orders(communication_orders_loaded, position_data)
+
+    # put background (this will call the callback that display the whole map)
+    img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
+    img.bind('load', callback_render)
+
+    ratings = position_data.role_ratings()
+    colours = position_data.role_colours()
+    rating_colours_window = common.make_rating_colours_window(ratings, colours)
+
+    report_loaded = common.game_report_reload(game)
+    if report_loaded is None:
+        return
+
+    report_window = common.make_report_window(report_loaded)
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    display_left <= canvas
+    display_left <= rating_colours_window
+    display_left <= report_window
+
+    # right side
+
+    buttons_right = html.DIV(id='buttons_right')
+    buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+    stack_role_flag(buttons_right)
+
+    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        buttons_right <= legend_select_unit
+        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+    if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+        if position_data.has_dislodged():
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+            buttons_right <= legend_select_unit
+            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+        else:
+            automaton_state = AutomatonStateEnum.IDLE_STATE
+
+    if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+        legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement")
+        buttons_right <= legend_select_order
+        for order_type in mapping.OrderTypeEnum:
+            if order_type.compatible(advancement_season):
+                input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                buttons_right <= html.BR()
+                input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                buttons_right <= html.BR()
+                buttons_right <= input_select
+        automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+
+    stack_orders(buttons_right)
+    if not orders_data.empty():
+        put_erase_all(buttons_right)
+    put_submit(buttons_right)
+
+    # overall
+    my_sub_panel2 = html.DIV()
+    my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left
+    my_sub_panel2 <= buttons_right
+
+    my_sub_panel <= my_sub_panel2
+
+
 # the idea is not to loose the content of a message if not destinee were sepcified
 content_backup = None  # pylint: disable=invalid-name
 
@@ -1261,7 +1987,7 @@ def negotiate():
             InfoDialog("OK", f"Le message a été envoyé ! {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            global content_backup
+            global content_backup  # pylint: disable=invalid-name
             content_backup = None
             negotiate()
             return
@@ -2555,6 +3281,8 @@ def load_option(_, item_name):
         show_position()
     if item_name == 'ordonner':
         submit_orders()
+    if item_name == 'taguer':
+        submit_communication_orders()
     if item_name == 'négocier':
         negotiate()
     if item_name == 'déclarer':

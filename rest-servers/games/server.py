@@ -1899,14 +1899,9 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         # evaluate communication_orders
         communication_orders_list = list()
         communication_orders_from_game = communication_orders.CommunicationOrder.list_by_game_id(game_id)
-
-        print(f"{communication_orders_from_game=}")
-
         for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in communication_orders_from_game:
             communication_orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
         communication_orders_list_json = json.dumps(communication_orders_list)
-
-        print(f"{communication_orders_list_json=}")
 
         json_dict = {
             'variant': variant_dict_json,
@@ -1932,13 +1927,10 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         communication_orders_content = req_result.json()['orders_content']
         communication_orders_content_tagged = '\n'.join([f"* {l}" for l in communication_orders_content.split('\n')])
 
-        print(f"{orders_result_simplified=}")
-
         # remove communication orders
         for (_, role_id, _, zone_num, _, _) in communication_orders.CommunicationOrder.list_by_game_id(game_id):
             communication_order = communication_orders.CommunicationOrder(int(game_id), role_id, 0, zone_num, 0, 0)
             communication_order.delete_database()
-            print(f"removed order for zone {zone_num}")
 
         # --------------------------
 

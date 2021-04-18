@@ -150,8 +150,6 @@ class PrintRessource(flask_restful.Resource):  # type: ignore
         orders_result_content = solver.build_orders_file(orders, situation, variant, names)
         orders_content = '\n'.join(orders_result_content)
 
-        print(f"solver : {orders_content=}")
-
         data = {
             'orders_content': orders_content,
         }

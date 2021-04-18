@@ -26,7 +26,6 @@ import technical    # noqa: E402
 import admin    # noqa: E402
 
 
-
 # TITLE
 TITLE = "Front end générique Serveurs REST AJFD"
 title = html.TITLE(TITLE, id='title')
