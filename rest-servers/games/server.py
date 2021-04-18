@@ -1565,8 +1565,11 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         assert role_id is not None
         communication_orders_list = communication_orders.CommunicationOrder.list_by_game_id_role_num(game_id, role_id)
 
+        fake_units_list: typing.List[int] = list()
+
         data = {
             'orders': communication_orders_list,
+            'fake_units': fake_units_list,
         }
         return data, 200
 
