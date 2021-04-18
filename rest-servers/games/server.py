@@ -1477,15 +1477,15 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
             # cannot order for someone else
             if role_num != role_id:
-                flask_restful.abort(400, msg="Passed order for unit not owned")
+                flask_restful.abort(400, msg="Passed a communication order for unit not owned")
 
-            # cannot order a non movement order
+            # cannot order a non movement order (with front end cannot happen)
             if order_type_num not in [1, 2, 3, 4, 5]:
-                flask_restful.abort(400, msg="Passed an order to possible in movement phase")
+                flask_restful.abort(400, msg="Passed a communication order but not in movement phase")
 
-            # cannot order for a non existing unit
+            # cannot order for a non existing unit (with front end cannot happen)
             if active_unit_zone_num not in {u[1] for u in unit_dict[str(role_num)]}:
-                flask_restful.abort(400, msg="Passed an order for a non existing unit")
+                flask_restful.abort(400, msg="Passed a communication order for a non existing unit")
 
         # ok so orders are accepted
 
