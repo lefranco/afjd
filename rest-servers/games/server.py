@@ -28,6 +28,7 @@ import ownerships
 import units
 import actives
 import submissions
+import communication_orders
 import orders
 import forbiddens
 import transitions
@@ -102,6 +103,11 @@ SUBMISSION_PARSER.add_argument('role_id', type=int, required=True)
 SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
 SUBMISSION_PARSER.add_argument('names', type=str, required=True)
 SUBMISSION_PARSER.add_argument('pseudo', type=str, required=False)
+
+SUBMISSION2_PARSER = flask_restful.reqparse.RequestParser()
+SUBMISSION2_PARSER.add_argument('role_id', type=int, required=True)
+SUBMISSION2_PARSER.add_argument('orders', type=str, required=True)
+SUBMISSION2_PARSER.add_argument('pseudo', type=str, required=False)
 
 ADJUDICATION_PARSER = flask_restful.reqparse.RequestParser()
 ADJUDICATION_PARSER.add_argument('names', type=str, required=True)
@@ -1365,6 +1371,220 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             'fake_units': fake_units_list,
         }
         return data, 200
+
+
+
+
+
+
+
+
+
+
+
+@API.resource('/game-communication-orders/<game_id>')
+class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
+    """ GameCommunicationOrderRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Submit communication orders
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-communication-orders/<game_id> - POST - submitting communication orders game id=%s", game_id)
+
+        args = SUBMISSION2_PARSER.parse_args(strict=True)
+        role_id = args['role_id']
+
+        mylogger.LOGGER.info("role_id=%s", role_id)
+
+        pseudo = args['pseudo']
+        communication_orders_submitted = args['orders']
+
+        if pseudo is None:
+            flask_restful.abort(401, msg="Need a pseudo to submit communication orders in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to submit communication orders - must be player
+
+        # find the game
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
+        assert game is not None
+        player_id = game.get_role(role_id)
+
+        # not allowed for game master
+        if player_id == 0:
+            flask_restful.abort(403, msg="This is not possible for game master")
+
+        # must be player
+        if user_id != player_id:
+            flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
+
+        # situation: get units
+        game_units = units.Unit.list_by_game_id(game_id)
+        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+            if fake:
+                pass
+            elif region_dislodged_from_num:
+                pass
+            else:
+                unit_dict[str(role_num)].append([type_num, zone_num])
+
+        # check orders (rough check)
+
+        try:
+            the_communication_orders = json.loads(communication_orders_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert orders from json to text ?")
+
+        for the_communication_order in the_communication_orders:
+            communication_order = communication_orders.CommunicationOrder(int(game_id), 0, 0, 0, 0, 0)
+            communication_order.load_json(the_communication_order)
+            role_num, order_type_num, active_unit_zone_num, _, _ = communication_order.export()
+
+            # check that order
+
+            # cannot order for someone else
+            if role_num != role_id:
+                flask_restful.abort(400, msg="Passed order for unit not owned")
+
+            # cannot order a non movement order
+            if order_type_num not in [1, 2, 3, 4, 5]:
+                flask_restful.abort(400, msg="Passed an order to possible in movement phase")
+
+            # cannot order for a non existing unit
+            if active_unit_zone_num not in {u[1] for u in unit_dict[str(role_num)]}:
+                flask_restful.abort(400, msg="Passed an order for a non existing unit")
+
+        # ok so orders are accepted
+
+        # store orders
+
+        # purge previous
+
+        # get list
+        previous_communication_orders = communication_orders.CommunicationOrder.list_by_game_id(int(game_id))
+
+        # purge
+        for (_, role_num, _, zone_num, _, _) in previous_communication_orders:
+            communication_order = communication_orders.CommunicationOrder(int(game_id), role_num, 0, zone_num, 0, 0)
+            communication_order.delete_database()
+
+        # insert new ones
+        for the_communication_order in the_communication_orders:
+            communication_order = communication_orders.CommunicationOrder(int(game_id), 0, 0, 0, 0, 0)
+            communication_order.load_json(the_communication_order)
+            communication_order.update_database()
+
+        data = {'msg': "Ok communication orders stored"}
+        return data, 201
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Gets communication orders
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-communication-orders/<game_id> - GET - getting back communication orders game id=%s", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        # check user has right to get orders - must be player or game master
+
+        # check there is a game
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # get the role
+        assert game is not None
+        role_id = game.find_role(player_id)
+        if role_id is None:
+            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+
+        # get orders
+        assert role_id is not None
+        if role_id == 0:
+            orders_list = orders.Order.list_by_game_id(game_id)
+        else:
+            orders_list = orders.Order.list_by_game_id_role_num(game_id, role_id)
+
+        # get fake units
+        if role_id:
+            units_list = units.Unit.list_by_game_id_role_num(game_id, role_id)
+        else:
+            units_list = units.Unit.list_by_game_id(game_id)
+        fake_units_list = [u for u in units_list if u[5]]
+
+        data = {
+            'orders': orders_list,
+            'fake_units': fake_units_list,
+        }
+        return data, 200
+
+
+
+
+
+
+
+
+
 
 
 @API.resource('/game-orders-submitted/<game_id>')
