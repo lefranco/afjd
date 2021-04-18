@@ -147,7 +147,8 @@ class PrintRessource(flask_restful.Resource):  # type: ignore
         except json.JSONDecodeError:
             flask_restful.abort(400, msg="Did you convert names from json to text ?")
 
-        orders_content = solver.build_orders_file(orders, situation, variant, names)
+        orders_result_content = solver.build_orders_file(orders, situation, variant, names)
+        orders_content = ''.join(orders_result_content)
 
         data = {
             'orders_content': orders_content,
