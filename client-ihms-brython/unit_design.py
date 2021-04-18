@@ -12,7 +12,6 @@ class Point:
         self.y = 0  # pylint: disable=invalid-name
 
 
-
 def stabbeur_army(x: int, y: int, ctx):  # pylint: disable=invalid-name
     """ display an army the stabbeur way """
 
@@ -135,8 +134,6 @@ def stabbeur_fleet(x: int, y: int, ctx):  # pylint: disable=invalid-name
         ctx.stroke(); ctx.closePath()  # no fill
 
 
-
-
 def dol_army(x: int, y: int, ctx):  # pylint: disable=invalid-name
     """ display an army the diplomatie-online way """
 
@@ -157,9 +154,10 @@ def dol_army(x: int, y: int, ctx):  # pylint: disable=invalid-name
 
     # canon
     ctx.beginPath()
-    ctx.moveTo(x-10, y-6)
-    ctx.lineTo(x-15, y-6)
+    ctx.moveTo(x - 10, y - 6)
+    ctx.lineTo(x - 15, y - 6)
     ctx.stroke(); ctx.closePath()  # no fill
+
 
 def dol_fleet(x: int, y: int, ctx):  # pylint: disable=invalid-name
     """ display a fleet the diplomatie-online way """

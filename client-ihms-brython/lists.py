@@ -15,7 +15,6 @@ my_panel = html.DIV(id="players")
 OPTIONS = ['les joueurs', 'les parties', 'les arbitres']
 
 
-
 def show_players_data():
     """ show_players_data """
 
