@@ -1233,7 +1233,10 @@ def submit_orders():
 
     my_sub_panel <= my_sub_panel2
 
+
+# the idea is not to loose the content of a message if not destinee were sepcified
 content_backup = None  # pylint: disable=invalid-name
+
 
 def negotiate():
     """ negotiate """

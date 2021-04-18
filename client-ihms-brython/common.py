@@ -141,7 +141,6 @@ def get_players():
     return players_dict
 
 
-
 def get_players_data():
     """ get_players_data """
 
@@ -172,7 +171,6 @@ def get_players_data():
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return dict(players_dict)
-
 
 
 def get_games_data():
