@@ -105,6 +105,57 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
+@API.resource('/print')
+class PrintRessource(flask_restful.Resource):  # type: ignore
+    """ PrintRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Print orders
+        NOT EXPOSED
+        """
+
+        mylogger.LOGGER.info("/print - POST - printer called")
+
+        args = SOLVER_PARSER.parse_args(strict=True)
+
+        variant_submitted = args['variant']
+
+        try:
+            variant = json.loads(variant_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert variant from json to text ?")
+
+        situation_submitted = args['situation']
+
+        try:
+            situation = json.loads(situation_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert situation from json to text ?")
+
+        orders_submitted = args['orders']
+
+        try:
+            orders = json.loads(orders_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert orders from json to text ?")
+
+        names_submitted = args['names']
+
+        try:
+            names = json.loads(names_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert names from json to text ?")
+
+        orders_content = solver.build_orders_file(orders, situation, variant, names)
+
+        data = {
+            'orders_content': orders_content,
+        }
+
+        return data, 201
+
+
 def main() -> None:
     """ main """
 

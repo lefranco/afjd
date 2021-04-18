@@ -1373,15 +1373,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-
-
-
-
-
-
-
-
-
 @API.resource('/game-communication-orders/<game_id>')
 class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
     """ GameCommunicationOrderRessource """
@@ -1572,15 +1563,6 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             'fake_units': fake_units_list,
         }
         return data, 200
-
-
-
-
-
-
-
-
-
 
 
 @API.resource('/game-orders-submitted/<game_id>')
@@ -1911,13 +1893,59 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         orders_result = req_result.json()['orders_result']
         orders_result_simplified = orders_result
 
+        # --------------------------
+        # get communication orders
+
+        # evaluate communication_orders
+        communication_orders_list = list()
+        communication_orders_from_game = communication_orders.CommunicationOrder.list_by_game_id(game_id)
+        for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in communication_orders_from_game:
+            communication_orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
+        communication_orders_list_json = json.dumps(communication_orders_list)
+
+        json_dict = {
+            'variant': variant_dict_json,
+            'advancement': game.current_advancement,
+            'situation': situation_dict_json,
+            'orders': communication_orders_list_json,
+            'names': names,
+        }
+
+        # post to solver (for print)
+        host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
+        port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
+        url = f"{host}:{port}/print"
+        req_result = SESSION.post(url, data=json_dict)
+
+        if 'msg' in req_result.json():
+            print_report = req_result.json()['msg']
+        else:
+            print_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
+
+        # print failed
+        if req_result.status_code != 201:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Failed to print communication orders {message} : {print_report}")
+
+        # extract printed orders
+        communication_orders_content = req_result.json()['orders_content']
+        orders_result_simplified = orders_result
+
+        # remove communication orders
+        for (_, role_id, _, zone_num, _, _) in communication_orders.CommunicationOrder.list_by_game_id(game_id):
+            communication_order = orders.Order(int(game_id), role_id, 0, zone_num, 0, 0)
+            communication_order.delete_database()
+
+        # --------------------------
+
         # date for report in database (actually unused)
         time_stamp = int(time.time())
 
         # make report
         date_now = datetime.datetime.now()
         date_desc = date_now.strftime('%Y-%m-%d %H:%M:%S')
-        report_txt = f"{date_desc}:\n{orders_result_simplified}"
+        report_txt = f"{date_desc}:\n{orders_result_simplified}\n{communication_orders_content}"
 
         # put report in database
         report = reports.Report(int(game_id), time_stamp, report_txt)
