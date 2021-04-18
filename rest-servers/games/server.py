@@ -1917,13 +1917,6 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         url = f"{host}:{port}/print"
         req_result = SESSION.post(url, data=json_dict)
 
-        print(f"{req_result=}")
-
-        if 'msg' in req_result.json():
-            print_report = req_result.json()['msg']
-        else:
-            print_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
-
         # print failed
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")
