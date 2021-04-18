@@ -49,6 +49,11 @@ def populate_orders() -> None:
     orders.Order.create_table()
 
 
+def populate_communication_orders() -> None:
+    """ inserts these items in database """
+    communication_orders.CommunicationOrder.create_table()
+
+
 def populate_ownerships() -> None:
     """ inserts these items in database """
     ownerships.Ownership.create_table()
@@ -103,6 +108,7 @@ def populate() -> None:
     populate_reports()
     populate_actives()
     populate_submissions()
+    populate_communication_orders()
     populate_orders()
     populate_ownerships()
     populate_units()
