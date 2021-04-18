@@ -1557,23 +1557,16 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
+        # not allowed for game master
+        if role_id == 0:
+            flask_restful.abort(403, msg="This is not possible for game master")
+
         # get orders
         assert role_id is not None
-        if role_id == 0:
-            orders_list = orders.Order.list_by_game_id(game_id)
-        else:
-            orders_list = orders.Order.list_by_game_id_role_num(game_id, role_id)
-
-        # get fake units
-        if role_id:
-            units_list = units.Unit.list_by_game_id_role_num(game_id, role_id)
-        else:
-            units_list = units.Unit.list_by_game_id(game_id)
-        fake_units_list = [u for u in units_list if u[5]]
+        communication_orders_list = communication_orders.CommunicationOrder.list_by_game_id_role_num(game_id, role_id)
 
         data = {
-            'orders': orders_list,
-            'fake_units': fake_units_list,
+            'orders': communication_orders_list,
         }
         return data, 200
 
