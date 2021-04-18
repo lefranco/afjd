@@ -1930,7 +1930,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # extract printed orders
         communication_orders_content = req_result.json()['orders_content']
-        orders_result_simplified = orders_result
+        communication_orders_content_tagged = '\n'.join([f"* {l}" for l in communication_orders_content.split('\n')])
 
         print(f"{orders_result_simplified=}")
 
@@ -1948,7 +1948,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         # make report
         date_now = datetime.datetime.now()
         date_desc = date_now.strftime('%Y-%m-%d %H:%M:%S')
-        report_txt = f"{date_desc}:\n{orders_result_simplified}\n{communication_orders_content}"
+        report_txt = f"{date_desc}:\n{orders_result_simplified}\n{communication_orders_content_tagged}"
 
         # put report in database
         report = reports.Report(int(game_id), time_stamp, report_txt)
