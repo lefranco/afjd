@@ -2225,6 +2225,7 @@ def declare():
         json_dict = {
             'role_id': role_id,
             'pseudo': pseudo,
+            'anonymous': 0,
             'content': content
         }
 
@@ -2269,6 +2270,8 @@ def declare():
 
         # extracting declarations from a game : need token (or not?)
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        print(f"{declarations=}")
 
         return declarations
 
