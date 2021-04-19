@@ -127,6 +127,7 @@ RECTIFICATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 DECLARATION_PARSER = flask_restful.reqparse.RequestParser()
 DECLARATION_PARSER.add_argument('role_id', type=int, required=True)
+DECLARATION_PARSER.add_argument('anonymous', type=int, required=True)
 DECLARATION_PARSER.add_argument('content', type=str, required=True)
 DECLARATION_PARSER.add_argument('pseudo', type=str, required=False)
 
@@ -437,8 +438,8 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             content.delete_database()
 
         # delete declarations
-        for (_, _, content_id) in declarations.Declaration.list_by_game_id(int(game_id)):
-            declaration = declarations.Declaration(0, 0, content_id)
+        for (_, _, _, content_id) in declarations.Declaration.list_by_game_id(int(game_id)):
+            declaration = declarations.Declaration(0, 0, False, content_id)
             declaration.delete_database()
 
         # delete messages
@@ -1928,7 +1929,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 201:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Failed to print communication orders {message} : {print_report}")
+            flask_restful.abort(400, msg=f"Failed to print communication orders {message}")
 
         # extract printed orders
         communication_orders_content = req_result.json()['orders_content']
@@ -2263,6 +2264,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("role_id=%s", role_id)
 
         pseudo = args['pseudo']
+        anonymous = args['anonymous']
         payload = args['content']
 
         if pseudo is None:
@@ -2321,7 +2323,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         content.update_database()
 
         # create a declaration linked to the content
-        declaration = declarations.Declaration(int(game_id), role_id, identifier)
+        declaration = declarations.Declaration(int(game_id), role_id, anonymous, identifier)
         declaration.update_database()
 
         data = {'msg': "Ok declaration inserted."}
@@ -2377,8 +2379,12 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
 
         declarations_list_ret = list()
-        for _, author_num, time_stamp, content in declarations_list:
-            declarations_list_ret.append((author_num, time_stamp, content.payload))
+        for _, author_num, time_stamp, anonymous, content in declarations_list:
+            if anonymous and role_id != 0:
+                declarations_list_ret.append((-1, time_stamp, content.payload))
+            else:
+                declarations_list_ret.append((author_num, time_stamp, content.payload))
+
 
         data = {'declarations_list': declarations_list_ret}
         return data, 200
@@ -2513,7 +2519,7 @@ class DateLastGameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         # gather declarations
         declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
-        for _, _, time_stamp_found, _ in declarations_list:
+        for _, _, _, time_stamp_found, _ in declarations_list:
             time_stamp = time_stamp_found
             break
 
