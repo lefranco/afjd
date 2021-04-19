@@ -2385,7 +2385,6 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             else:
                 declarations_list_ret.append((author_num, time_stamp, content.payload))
 
-
         data = {'declarations_list': declarations_list_ret}
         return data, 200
 
