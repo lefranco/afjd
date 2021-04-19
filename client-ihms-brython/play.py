@@ -2271,8 +2271,6 @@ def declare():
         # extracting declarations from a game : need token (or not?)
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-        print(f"{declarations=}")
-
         return declarations
 
     if 'GAME' not in storage:
@@ -2323,13 +2321,28 @@ def declare():
 
     form = html.FORM()
 
-    legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer ?")
+    legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer à tout le monde ?")
     form <= legend_declaration
     form <= html.BR()
 
     input_declaration = html.TEXTAREA(type="text", rows=5, cols=80)
     form <= input_declaration
     form <= html.BR()
+
+    table = html.TABLE()
+    row = html.TR()
+    col = html.TD()
+
+    label_anonymous = html.LABEL("En restant anonyme ?")
+    col <= label_anonymous
+    row <= col
+
+    input_anonymous = html.INPUT(type="checkbox")
+    col <= input_anonymous
+    row <= col
+
+    table <= row
+    form <= table
 
     form <= html.BR()
     input_declare_in_game = html.INPUT(type="submit", value="déclarer dans la partie")
