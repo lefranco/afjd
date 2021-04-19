@@ -2379,7 +2379,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         declarations_list = declarations.Declaration.list_with_content_by_game_id(game_id)
 
         declarations_list_ret = list()
-        for _, author_num, time_stamp, anonymous, content in declarations_list:
+        for _, author_num, anonymous, time_stamp, content in declarations_list:
             if anonymous and role_id != 0:
                 declarations_list_ret.append((-1, time_stamp, content.payload))
             else:
