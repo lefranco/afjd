@@ -698,6 +698,10 @@ class Unit(Renderable):  # pylint: disable=abstract-method
         self._zone = zone
         self._dislodged_origin = dislodged_origin
 
+    def is_disloged(self):
+        """ dislodged """
+        return self._dislodged_origin is not None
+
     def render_as_dislodged(self, x_pos: int, y_pos: int, ctx) -> None:
         """ render additional stuff when dislodged """
 
@@ -1021,15 +1025,26 @@ class Position(Renderable):
             json_data.append(unit.save_json())
         return json_data
 
-    def closest_unit(self, designated_pos: geometry.PositionRecord, dislodged: bool):
-        """ closest_unit """
+    def closest_unit(self, designated_pos: geometry.PositionRecord, dislodged):
+        """ closest_unit (pass dislodged = None for all dislodged and not dislodged)  """
 
         closest_unit = None
         distance_closest = None
-        search_list = self._dislodged_units if dislodged else self._units
+
+        # what list do we use ?
+        if dislodged is None:
+            search_list = self._units + self._dislodged_units
+        else:
+            if dislodged:
+                search_list = self._dislodged_units
+            else:
+                search_list = self._units
+
         for unit in search_list:
             zone = unit.zone
             unit_pos = self._variant.position_table[zone]
+            if unit.is_disloged():
+                unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT, y_pos=unit_pos.y_pos + DISLODGED_SHIFT)
             distance = designated_pos.distance(unit_pos)
             if distance_closest is None or distance < distance_closest:
                 closest_unit = unit
