@@ -310,9 +310,6 @@ def submit_orders():
         nonlocal automaton_state
         nonlocal buttons_right
 
-        # just a check
-        assert advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]
-
         # complete orders
         orders_data.rest_hold(role_id if role_id != 0 else None)
 
@@ -1111,7 +1108,7 @@ def submit_orders():
 
     # game needs to be ongoing
     if game_parameters_loaded['current_state'] == 0:
-        alert("La partie n'est pas encore démarée")
+        alert("La partie n'est pas encore démarrée")
         return
     if game_parameters_loaded['current_state'] == 2:
         alert("La partie est déjà terminée")
@@ -1271,33 +1268,11 @@ def submit_communication_orders():
 
         stack_role_flag(buttons_right)
 
-        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
-            buttons_right <= legend_select_unit
-            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-
-        if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-            if position_data.has_dislodged():
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
-                buttons_right <= legend_select_unit
-                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-            else:
-                automaton_state = AutomatonStateEnum.IDLE_STATE
-
-        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement")
-            buttons_right <= legend_select_order
-            for order_type in mapping.OrderTypeEnum:
-                if order_type.compatible(advancement_season):
-                    input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
-                    buttons_right <= html.BR()
-                    input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
-                    buttons_right <= html.BR()
-                    buttons_right <= input_select
-            automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        buttons_right <= legend_select_unit
+        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         stack_orders(buttons_right)
-
         put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
@@ -1452,7 +1427,7 @@ def submit_communication_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
 
-            selected_active_unit = position_data.closest_unit(pos, False)
+            selected_active_unit = position_data.closest_unit(pos, None)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -1522,13 +1497,6 @@ def submit_communication_orders():
             if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
                 order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
                 orders_data.insert_order(order)
-            if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
-                # little shortcut if dest = origin
-                if selected_dest_zone == selected_active_unit.zone:
-                    selected_order_type = mapping.OrderTypeEnum.DISBAND_ORDER
-                    selected_dest_zone = None
-                order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
-                orders_data.insert_order(order)
 
             # update map
             callback_render(None)
@@ -1550,7 +1518,7 @@ def submit_communication_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
 
-            selected_passive_unit = position_data.closest_unit(pos, False)
+            selected_passive_unit = position_data.closest_unit(pos, None)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -1623,7 +1591,7 @@ def submit_communication_orders():
             pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
             # moves : select unit : easy case
-            selected_erase_unit = position_data.closest_unit(pos, False)
+            selected_erase_unit = position_data.closest_unit(pos, None)
 
         # event is None when coming from x pressed, then take 'selected_active_unit' (that can be None)
         if selected_erase_unit is None:
@@ -1836,7 +1804,7 @@ def submit_communication_orders():
 
     # game needs to be ongoing
     if game_parameters_loaded['current_state'] == 0:
-        alert("La partie n'est pas encore démarée")
+        alert("La partie n'est pas encore démarrée")
         return
     if game_parameters_loaded['current_state'] == 2:
         alert("La partie est déjà terminée")
@@ -1844,13 +1812,6 @@ def submit_communication_orders():
 
     game_status = get_game_status(variant_data, game_parameters_loaded, False)
     my_sub_panel <= game_status
-
-    advancement_loaded = game_parameters_loaded['current_advancement']
-    advancement_season, _ = common.get_season(advancement_loaded, variant_data)
-
-    if advancement_season not in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
-        alert("La saison n'est pas appropriée")
-        return
 
     # get the position from server
     position_loaded = common.game_position_reload(game)
@@ -1921,30 +1882,9 @@ def submit_communication_orders():
 
     stack_role_flag(buttons_right)
 
-    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
-        buttons_right <= legend_select_unit
-        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-
-    if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-        if position_data.has_dislodged():
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
-            buttons_right <= legend_select_unit
-            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-        else:
-            automaton_state = AutomatonStateEnum.IDLE_STATE
-
-    if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-        legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement")
-        buttons_right <= legend_select_order
-        for order_type in mapping.OrderTypeEnum:
-            if order_type.compatible(advancement_season):
-                input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
-                buttons_right <= html.BR()
-                input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
-                buttons_right <= html.BR()
-                buttons_right <= input_select
-        automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+    legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+    buttons_right <= legend_select_unit
+    automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     stack_orders(buttons_right)
     if not orders_data.empty():
@@ -2693,7 +2633,7 @@ def game_master():
 
     # game needs to be ongoing
     if game_parameters_loaded['current_state'] == 0:
-        alert("La partie n'est pas encore démarée")
+        alert("La partie n'est pas encore démarrée")
         return
     if game_parameters_loaded['current_state'] == 2:
         alert("La partie est déjà terminée")
