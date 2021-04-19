@@ -23,6 +23,14 @@ class Active:
         return actives_found
 
     @staticmethod
+    def list_by_game_id_role_num(game_id: int, role_num: int) -> typing.List[typing.Tuple[int, int]]:
+        """ class lookup : finds the object in database from fame id """
+        actives_found = database.sql_execute("SELECT * FROM actives where game_id = ? and role_num = ?", (game_id, role_num), need_result=True)
+        if not actives_found:
+            return []
+        return actives_found
+
+    @staticmethod
     def create_table() -> None:
         """ creation of table from scratch """
 

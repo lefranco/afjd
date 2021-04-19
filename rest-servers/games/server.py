@@ -1466,6 +1466,12 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
             # check that order
 
+            # cannot order if not active
+
+            actives_list = actives.Active.list_by_game_id_role_num(game_id, role_num)
+            if not actives_list:
+                flask_restful.abort(400, msg="Passed a communication order for role not active")
+
             # cannot order for someone else
             if role_num != role_id:
                 flask_restful.abort(400, msg="Passed a communication order for unit not owned")
