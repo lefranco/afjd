@@ -50,7 +50,7 @@ class Vote:
 
     def update_database(self) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("DELETE FROM votes WHERE game_id = ?", (self._game_id, self._role_num))
+        database.sql_execute("DELETE FROM votes WHERE game_id = ? and role_num = ?", (self._game_id, self._role_num))
         database.sql_execute("INSERT OR REPLACE INTO votes (game_id, role_num, vote) VALUES (?, ?, ?)", (self._game_id, self._role_num, self._vote))
 
     def delete_database(self) -> None:
