@@ -40,6 +40,7 @@ import messages
 import variants
 import database
 import visits
+import votes
 import lowdata
 
 # a little welcome message to new games
@@ -140,6 +141,11 @@ MESSAGE_PARSER.add_argument('pseudo', type=str, required=False)
 VISIT_PARSER = flask_restful.reqparse.RequestParser()
 VISIT_PARSER.add_argument('role_id', type=int, required=True)
 VISIT_PARSER.add_argument('pseudo', type=str, required=False)
+
+VOTE_PARSER = flask_restful.reqparse.RequestParser()
+VOTE_PARSER.add_argument('role_id', type=int, required=True)
+VOTE_PARSER.add_argument('value', type=int, required=True)
+VOTE_PARSER.add_argument('pseudo', type=str, required=False)
 
 
 @API.resource('/variants/<name>')
@@ -1389,6 +1395,10 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         args = SUBMISSION2_PARSER.parse_args(strict=True)
         role_id = args['role_id']
 
+        # not allowed for game master
+        if role_id == 0:
+            flask_restful.abort(403, msg="This is not possible for game master")
+
         mylogger.LOGGER.info("role_id=%s", role_id)
 
         pseudo = args['pseudo']
@@ -1433,10 +1443,6 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         # who is player for role ?
         assert game is not None
         player_id = game.get_role(role_id)
-
-        # not allowed for game master
-        if player_id == 0:
-            flask_restful.abort(403, msg="This is not possible for game master")
 
         # must be player
         if user_id != player_id:
@@ -1484,7 +1490,6 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             # cannot order a non movement order (with front end cannot happen)
             if order_type_num not in [1, 2, 3, 4, 5]:
                 flask_restful.abort(400, msg="Passed a communication order but not in movement phase")
-
 
         # ok so orders are accepted
 
@@ -1933,7 +1938,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
 
         # extract printed orders
         communication_orders_content = req_result.json()['orders_content']
-        communication_orders_content_tagged = '\n'.join([f"* {l}" for l in communication_orders_content.split('\n')])
+        communication_orders_content_tagged = '\n'.join([f"* {ll}" for ll in communication_orders_content.split('\n')])
 
         # remove communication orders
         for (_, role_id, _, zone_num, _, _) in communication_orders.CommunicationOrder.list_by_game_id(game_id):
@@ -2657,6 +2662,138 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
             _, _, _, time_stamp = visit
 
         data = {'time_stamp': time_stamp}
+        return data, 200
+
+
+@API.resource('/game-votes/<game_id>')
+class GameVoteRessource(flask_restful.Resource):  # type: ignore
+    """  GameVoteRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Insert vote in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-votes/<game_id> - POST - creating new vote game id=%s", game_id)
+
+        args = VOTE_PARSER.parse_args(strict=True)
+        role_id = args['role_id']
+        value = args['value']
+
+        # not allowed for game master
+        if role_id == 0:
+            flask_restful.abort(403, msg="This is not possible for game master")
+
+        mylogger.LOGGER.info("role_id=%s", role_id)
+
+        pseudo = args['pseudo']
+
+        if pseudo is None:
+            flask_restful.abort(401, msg="Need a pseudo to insert vote in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to post vote - must be player
+
+        # find the game
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
+        assert game is not None
+        expected_id = game.get_role(role_id)
+
+        # can be player of game master but must correspond
+        if user_id != expected_id:
+            flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
+
+        # create vote here
+        vote = votes.Vote(int(game_id), role_id, bool(value))
+        vote.update_database()
+
+        data = {'msg': "Ok vote inserted"}
+        return data, 201
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Retrieve vote in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-votes/<game_id> - GET - retrieving vote game id=%s", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        # check user has right to read visit - must be player of game master
+
+        # check there is a game
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # get the role
+        assert game is not None
+        role_id = game.find_role(player_id)
+        if role_id is None:
+            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+
+        # retrieve vote here
+        assert role_id is not None
+        if role_id == 0:
+            votes_list = votes.Vote.list_by_game_id(game_id)
+        else:
+            votes_list = votes.Vote.list_by_game_id_role_num(game_id, role_id)
+
+        data = {'votes': votes_list}
         return data, 200
 
 
