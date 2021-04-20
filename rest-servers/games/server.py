@@ -2679,7 +2679,6 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
 
         args = VOTE_PARSER.parse_args(strict=True)
         role_id = args['role_id']
-        value = args['value']
 
         # not allowed for game master
         if role_id == 0:
@@ -2687,6 +2686,7 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("role_id=%s", role_id)
 
+        value = args['value']
         pseudo = args['pseudo']
 
         if pseudo is None:
