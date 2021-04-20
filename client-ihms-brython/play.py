@@ -1771,6 +1771,10 @@ def submit_communication_orders():
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
 
+    if role_id == 0:
+        alert("Ce n'est pas possible pour l'arbitre de cette partie")
+        return
+
     # from game name get variant name
 
     variant_name_loaded = common.game_variant_name_reload(game)
@@ -1991,10 +1995,7 @@ def negotiate():
 
             messages = req_result['messages_list']
 
-        json_dict = {
-            'role_id': role_id,
-            'pseudo': pseudo,
-        }
+        json_dict = dict()
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -2250,8 +2251,6 @@ def declare():
 
             req_result = json.loads(req.text)
 
-            declarations = req_result['declarations_list']
-
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Error extracting declarations from game: {req_result['message']}")
@@ -2261,10 +2260,9 @@ def declare():
                     alert("Undocumented issue from server")
                 return
 
-        json_dict = {
-            'role_id': role_id,
-            'pseudo': pseudo,
-        }
+            declarations = req_result['declarations_list']
+
+        json_dict  = dict()
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -2335,7 +2333,7 @@ def declare():
     row = html.TR()
     col = html.TD()
 
-    label_anonymous = html.LABEL("En restant anonyme ?")
+    label_anonymous = html.LABEL("En restant anonyme ? (pas anonyme auprès de l'arbitre cependant)")
     col <= label_anonymous
     row <= col
 
@@ -2459,7 +2457,7 @@ def vote():
             vote()
             return
 
-        vote = input_vote.checked
+        vote_value = input_vote.checked
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -2468,7 +2466,7 @@ def vote():
         json_dict = {
             'role_id': role_id,
             'pseudo': pseudo,
-            'vote': vote
+            'value': vote_value
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -2477,46 +2475,6 @@ def vote():
 
         # adding a vote in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    def vote_reload(game_id):
-        """ vote_reload """
-
-        vote = None
-
-        def reply_callback(req):
-            """ reply_callback """
-
-            nonlocal vote
-
-            req_result = json.loads(req.text)
-
-            vote = req_result['vote']
-
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Error extracting vote from game: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problem extracting vote in game: {req_result['msg']}")
-                else:
-                    alert("Undocumented issue from server")
-                return
-
-        json_dict = {
-            'role_id': role_id,
-            'pseudo': pseudo,
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-votes/{game_id}"
-
-        if False: # TODO remove
-            # extracting vote from a game : need token (or not?)
-            ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-        else:
-            vote = True
-
-        return vote
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -2547,6 +2505,10 @@ def vote():
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
 
+    if role_id == 0:
+        alert("Ce n'est pas possible pour l'arbitre de cette partie")
+        return
+
     # get variant name
     variant_name_loaded = common.game_variant_name_reload(game)
     if not variant_name_loaded:
@@ -2555,18 +2517,22 @@ def vote():
     # select display (should be a user choice)
     display_chosen = common.get_display_from_variant(variant_name_loaded)
 
-    vote = vote_reload(game_id)
-    if vote is None:
+    votes = common.vote_reload(game_id)
+    if votes is None:
         return
 
-    print(f"{vote=}")
+    vote_value = False
+    for _, role, vote_val in votes:
+        if role == role_id:
+            vote_value = bool(vote_val)
+            break
 
     form = html.FORM()
 
     legend_vote = html.LEGEND("Cochez pour voter l'arrêt", title="Etes vous d'accord pour terminer la partie en l'état ?")
     form <= legend_vote
 
-    input_vote = html.INPUT(type="checkbox", checked = vote)
+    input_vote = html.INPUT(type="checkbox", checked = vote_value)
     form <= input_vote
 
     form <= html.BR()
@@ -2846,6 +2812,15 @@ def game_master():
     # who can I put in this role
     possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
 
+    # votes
+    votes = common.vote_reload(game_id)
+    if votes is None:
+        return
+
+    vote_values_table = dict()
+    for _, role, vote_val in votes:
+        vote_values_table[role] = bool(vote_val)
+
     for role_id in variant_data.roles:
 
         # discard game master
@@ -2935,6 +2910,17 @@ def game_master():
         col.style = {
             "border": "solid",
         }
+        row <= col
+
+        col = html.TD()
+        col.style = {
+            "border": "solid",
+        }
+        if role_id in vote_values_table:
+            vote_val = "Arrêt" if vote_values_table[role_id] else "Continuer"
+        else:
+            vote_val = "Pas de vote"
+        col <= vote_val
         row <= col
 
         game_admin_table <= row
