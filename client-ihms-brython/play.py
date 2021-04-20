@@ -2563,7 +2563,7 @@ def vote():
 
     form = html.FORM()
 
-    legend_vote = html.LEGEND("Votre vote pour arrêter", title="Etes vous d'accord pour terminer la partie en l'état ?")
+    legend_vote = html.LEGEND("Cochez pour voter l'arrêt", title="Etes vous d'accord pour terminer la partie en l'état ?")
     form <= legend_vote
 
     input_vote = html.INPUT(type="checkbox", checked = vote)
