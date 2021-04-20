@@ -2211,6 +2211,8 @@ def declare():
             declare()
             return
 
+        anonymous = input_anonymous.checked
+
         content = input_declaration.value
 
         if not content:
@@ -2225,7 +2227,7 @@ def declare():
         json_dict = {
             'role_id': role_id,
             'pseudo': pseudo,
-            'anonymous': 0,
+            'anonymous': anonymous,
             'content': content
         }
 
@@ -2370,7 +2372,7 @@ def declare():
         thead <= col
     declarations_table <= thead
 
-    for role_id_msg, time_stamp, content in declarations:
+    for anonymous, role_id_msg, time_stamp, content in declarations:
 
         row = html.TR()
         row.style = {
@@ -2384,7 +2386,10 @@ def declare():
         }
         row <= col
 
-        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id_msg}.jpg")
+        if role_id_msg != -1:
+            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id_msg}.jpg")
+        else:
+            role_icon_img = ""
         col = html.TD(role_icon_img)
         col.style = {
             "border": "solid",
@@ -2392,9 +2397,15 @@ def declare():
         row <= col
 
         col = html.TD()
-        col.style = {
-            "border": "solid",
-        }
+        if anonymous:
+            col.style = {
+                "border": "solid",
+                "color": "red",
+            }
+        else:
+            col.style = {
+                "border": "solid",
+            }
 
         for line in content.split('\n'):
             # new so put in bold
