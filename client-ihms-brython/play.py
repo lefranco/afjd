@@ -2436,11 +2436,153 @@ def declare():
 def vote():
     """ vote """
 
-    # because we do not want the token stale in the middle of the process
-    login.check_token()
+    def add_vote_callback(_):
+        """ add_vote_callback """
 
-    dummy = html.P("Sorry, votes is not implemented yet...")
-    my_sub_panel <= dummy
+        def reply_callback(req):
+            """ reply_callback """
+
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error adding vote in game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem adding vote in game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le vote a été enregistré ! {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            vote()
+            return
+
+        vote = input_vote.checked
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': pseudo,
+            'vote': vote
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-votes/{game_id}"
+
+        # adding a vote in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def vote_reload(game_id):
+        """ vote_reload """
+
+        vote = None
+
+        def reply_callback(req):
+            """ reply_callback """
+
+            nonlocal vote
+
+            req_result = json.loads(req.text)
+
+            vote = req_result['vote']
+
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Error extracting vote from game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem extracting vote in game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': pseudo,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-votes/{game_id}"
+
+        if False: # TODO remove
+            # extracting vote from a game : need token (or not?)
+            ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        else:
+            vote = True
+
+        return vote
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se loguer au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    game_id = common.get_game_id(game)
+    if game_id is None:
+        return
+
+    # from pseudo get player id
+
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        return
+
+    # from game id and player id get role_id of player
+
+    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    if role_id is None:
+        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
+        return
+
+    # get variant name
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = common.get_display_from_variant(variant_name_loaded)
+
+    vote = vote_reload(game_id)
+    if vote is None:
+        return
+
+    print(f"{vote=}")
+
+    form = html.FORM()
+
+    legend_vote = html.LEGEND("Votre vote pour arrêter", title="Etes vous d'accord pour terminer la partie en l'état ?")
+    form <= legend_vote
+
+    input_vote = html.INPUT(type="checkbox", checked = vote)
+    form <= input_vote
+
+    form <= html.BR()
+    input_vote_in_game = html.INPUT(type="submit", value="voter dans la partie")
+    input_vote_in_game.bind("click", add_vote_callback)
+    form <= input_vote_in_game
+
+    my_sub_panel.clear()
+
+    # role
+    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+    my_sub_panel <= role_icon_img
+    form <= html.BR()
+
+    # form
+    my_sub_panel <= form
 
 
 def game_master():
