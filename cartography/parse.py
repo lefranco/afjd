@@ -12,6 +12,7 @@ import dataclasses
 import typing
 import sys
 import json
+import copy
 
 import xml.dom.minidom  # type: ignore
 
@@ -60,12 +61,22 @@ class Path:
                 assert point.letter in ['', 'L', 'M', 'C'], f"Hey letter is {point.letter} not '', L M or C"
             list_x.append(point.x_pos)
             list_y.append(point.y_pos)
+
+        # calculate middle
         self._middle_x = (min(list_x) + max(list_x)) / 2.
         self._middle_y = (min(list_y) + max(list_y)) / 2.
+
+        # calculate barycenter
+        self._barycenter_x = sum(list_x) / len(list_x)
+        self._barycenter_y = sum(list_y) / len(list_y)
 
     def middle(self) -> typing.Tuple[float, float]:
         """ middle of area """
         return self._middle_x, self._middle_y
+
+    def barycenter(self) -> typing.Tuple[float, float]:
+        """ middle of area """
+        return self._barycenter_x, self._barycenter_y
 
     def __str__(self) -> str:
         return self._text
@@ -76,7 +87,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--variant_input', required=True, help='Input variant json file')
-    parser.add_argument('-n', '--names_input', required=True, help='Input names json file')
+    parser.add_argument('-p', '--parameters_input', required=True, help='Input parameters (names) json file')
     parser.add_argument('-s', '--svg_input', required=True, help='Input map svg file')
     parser.add_argument('-F', '--first_format_json_output', required=True, help='Output json file for first format (jeremie)')
     parser.add_argument('-S', '--second_format_json_output', required=True, help='Output json file for second format (wenz)')
@@ -84,7 +95,7 @@ def main() -> None:
     args = parser.parse_args()
 
     json_variant_input = args.variant_input
-    json_names_input = args.names_input
+    json_parameters_input = args.parameters_input
     svg_input_file = args.svg_input
     first_format_json_output = args.first_format_json_output
     second_format_json_output = args.second_format_json_output
@@ -94,15 +105,15 @@ def main() -> None:
     with open(json_variant_input, "r") as read_file:
         json_variant_data = json.load(read_file)
 
-    # load names from json data file
-    with open(json_names_input, "r") as read_file:
-        json_name_data = json.load(read_file)
+    # load parameters from json data file
+    with open(json_parameters_input, "r") as read_file:
+        json_parameters_data = json.load(read_file)
 
     # make center table from input json file
-    centers_name2num_table = {json_name_data['zones'][str(n)]['name'].upper(): num + 1 for num, n in enumerate(json_variant_data['centers'])}
+    centers_name2num_table = {json_parameters_data['zones'][str(n)]['name'].upper(): num + 1 for num, n in enumerate(json_variant_data['centers'])}
 
     # make region table from input json file
-    regions_name2num_table = {v['name'].upper(): int(k) for k, v in json_name_data['zones'].items() if v['name']}
+    regions_name2num_table = {v['name'].upper(): int(k) for k, v in json_parameters_data['zones'].items() if v['name']}
 
     # print(f"{regions_ref_name_table=}", file=sys.stderr)
 
@@ -125,6 +136,11 @@ def main() -> None:
     # TODO : calculate this
     png_width = 814.
     png_height = 720.
+
+    map_table = {
+        'width' : int(png_width),
+        'height' : int(png_height),
+    }
 
     centers_path_table: typing.Dict[int, Path] = dict()
     regions_path_table: typing.Dict[int, Path] = dict()
@@ -201,17 +217,20 @@ def main() -> None:
             sys.exit(1)
 
     # make region table from input json file
-    regions_ref_num_table = {int(k): v['name'] for k, v in json_name_data['zones'].items() if v['name']}
+    regions_ref_num_table = {int(k): v['name'] for k, v in json_parameters_data['zones'].items() if v['name']}
 
     # ====== make centers_pos_table =====
     #  for jeremie
 
     centers_pos_table = dict()
     for num, path in sorted(centers_path_table.items(), key=lambda kv: int(kv[0])):
-        x_middle, y_middle = path.middle()
+
+        x_chosen, y_chosen = path.middle()
+#        x_chosen, y_chosen = path.barycenter()
+
         centers_pos_table[num] = {
-            "x_pos": round(x_middle * png_width / viewbox_width),
-            "y_pos": round(y_middle * png_height / viewbox_height)
+            "x_pos": round(x_chosen * png_width / viewbox_width),
+            "y_pos": round(y_chosen * png_height / viewbox_height)
         }
 
     # ====== make regions_pos_table =====
@@ -219,15 +238,18 @@ def main() -> None:
 
     regions_pos_table = dict()
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
-        x_middle, y_middle = path.middle()
+
+        x_chosen, y_chosen = path.middle()
+#        x_chosen, y_chosen = path.barycenter()
+
         region_name = regions_ref_num_table[num]
         regions_pos_table[num] = {
             "name": region_name,
-            "full_name": json_name_data['zones'][str(num)]['full_name'],
-            "x_legend_pos": round(x_middle * png_width / viewbox_width),
-            "y_legend_pos": round(y_middle * png_height / viewbox_height),
-            "x_pos": round(x_middle * png_width / viewbox_width),
-            "y_pos": round(y_middle * png_height / viewbox_height)
+            "full_name": json_parameters_data['zones'][str(num)]['full_name'],
+            "x_legend_pos": round(x_chosen * png_width / viewbox_width),
+            "y_legend_pos": round(y_chosen * png_height / viewbox_height),
+            "x_pos": round(x_chosen * png_width / viewbox_width),
+            "y_pos": round(y_chosen * png_height / viewbox_height)
         }
 
     # ====== make map_elements =====
@@ -264,7 +286,8 @@ def main() -> None:
 
     # ============= output ===============
 
-    result1 = dict()
+    result1 = copy.deepcopy(json_parameters_data)
+    result1['map'] = map_table
     result1['zones'] = regions_pos_table
     result1['centers'] = centers_pos_table
     output = json.dumps(result1, indent=4)
