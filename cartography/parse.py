@@ -223,6 +223,7 @@ def main() -> None:
         region_name = regions_ref_num_table[num]
         regions_pos_table[num] = {
             "name": region_name,
+            "full_name": json_name_data['zones'][str(num)]['full_name'],
             "x_legend_pos": round(x_middle * png_width / viewbox_width),
             "y_legend_pos": round(y_middle * png_height / viewbox_height),
             "x_pos": round(x_middle * png_width / viewbox_width),
@@ -265,7 +266,7 @@ def main() -> None:
 
     result1 = dict()
     result1['centers'] = centers_pos_table
-    result1['regions'] = regions_pos_table
+    result1['zones'] = regions_pos_table
     output = json.dumps(result1, indent=4)
     with open(first_format_json_output, 'w') as file_ptr:
         file_ptr.write(output)
@@ -277,9 +278,9 @@ def main() -> None:
         file_ptr.write(output)
 
     with open(map_text_output, 'w') as file_ptr:
-        file_ptr.write(f"map size is : \n")
-        file_ptr.write(f"{svg_height=} {svg_width=}")
-        file_ptr.write(f"{png_height=} {png_width=}")
+        file_ptr.write(f"map size is :\n")
+        file_ptr.write(f"{svg_height=} {svg_width=}\n")
+        file_ptr.write(f"{png_height=} {png_width=}\n")
 
 
 if __name__ == '__main__':
