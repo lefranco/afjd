@@ -674,10 +674,7 @@ def sandbox():
     display_chosen = common.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
-
-    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file:
-        parameters_read = json.load(read_file)
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
