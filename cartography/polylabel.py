@@ -1,14 +1,11 @@
 import time
-
-from queue import PriorityQueue
-
-from math import sqrt
-from math import inf
+import queue
+import math
 
 
 def _point_to_polygon_distance(x, y, polygon):
     inside = False
-    min_dist_sq = inf
+    min_dist_sq = math.inf
 
     for ring in polygon:
         b = ring[-1]
@@ -21,7 +18,7 @@ def _point_to_polygon_distance(x, y, polygon):
             min_dist_sq = min(min_dist_sq, _get_seg_dist_sq(x, y, a, b))
             b = a
 
-    result = sqrt(min_dist_sq)
+    result = math.sqrt(min_dist_sq)
     if not inside:
         return -result
     return result
@@ -56,7 +53,7 @@ class Cell(object):
         self.y = y
         self.x = x
         self.d = _point_to_polygon_distance(x, y, polygon)
-        self.max = self.d + self.h * sqrt(2)
+        self.max = self.d + self.h * math.sqrt(2)
 
     def __lt__(self, other):
         return self.max < other.max
@@ -115,7 +112,7 @@ def polylabel(polygon, precision=1.0, debug=False, with_distance=False):
     cell_size = min(width, height)
     h = cell_size / 2.0
 
-    cell_queue = PriorityQueue()
+    cell_queue = queue.PriorityQueue()
 
     if cell_size == 0:
         if with_distance:
