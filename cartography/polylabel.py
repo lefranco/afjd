@@ -1,7 +1,10 @@
+""" polylabel """
+
 import time
 import queue
 import math
 
+# pylint: disable=invalid-name
 
 def _point_to_polygon_distance(x, y, polygon):
     inside = False
@@ -11,8 +14,7 @@ def _point_to_polygon_distance(x, y, polygon):
         b = ring[-1]
         for a in ring:
 
-            if ((a[1] > y) != (b[1] > y) and
-                    (x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0])):
+            if ((a[1] > y) != (b[1] > y) and (x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0])):
                 inside = not inside
 
             min_dist_sq = min(min_dist_sq, _get_seg_dist_sq(x, y, a, b))
@@ -47,7 +49,9 @@ def _get_seg_dist_sq(px, py, a, b):
     return dx * dx + dy * dy
 
 
-class Cell(object):
+class Cell:
+    """ Cell """
+
     def __init__(self, x, y, h, polygon):
         self.h = h
         self.y = y
@@ -87,10 +91,10 @@ def _get_centroid_cell(polygon):
         return Cell(points[0][0], points[0][1], 0, polygon)
     return Cell(x / area, y / area, 0, polygon)
 
-    pass
-
 
 def polylabel(polygon, precision=1.0, debug=False, with_distance=False):
+    """ polylabel """
+
     # find bounding box
     first_item = polygon[0][0]
     min_x = first_item[0]
@@ -117,8 +121,7 @@ def polylabel(polygon, precision=1.0, debug=False, with_distance=False):
     if cell_size == 0:
         if with_distance:
             return [min_x, min_y], None
-        else:
-            return [min_x, min_y]
+        return [min_x, min_y]
 
     # cover polygon with initial cells
     x = min_x
@@ -166,5 +169,4 @@ def polylabel(polygon, precision=1.0, debug=False, with_distance=False):
         print('best distance: {}'.format(best_cell.d))
     if with_distance:
         return [best_cell.x, best_cell.y], best_cell.d
-    else:
-        return [best_cell.x, best_cell.y]
+    return [best_cell.x, best_cell.y]
