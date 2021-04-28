@@ -597,6 +597,7 @@ class Variant(Renderable):
 
         # put legends
         for zone in self._zones.values():
+
             position = self._legend_position_table[zone]
             x_pos = position.x_pos
             y_pos = position.y_pos
@@ -604,7 +605,8 @@ class Variant(Renderable):
                 legend = self._name_table[zone.coast_type]
             else:
                 legend = self._name_table[zone]
-            ctx.fillText(legend, x_pos, y_pos)
+            text_width = ctx.measureText(legend).width;
+            ctx.fillText(legend, x_pos - text_width / 2, y_pos)
 
         # put centers
 
