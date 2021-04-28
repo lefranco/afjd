@@ -195,15 +195,6 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify(logged_in_as=logged_in_as), 200
 
 
-
-
-
-
-
-
-
-
-
 @APP.route('/usurp', methods=['POST'])
 @flask_jwt_extended.jwt_required  # type: ignore
 def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
@@ -232,15 +223,6 @@ def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     # Identity can be any data that is json serializable
     access_token = flask_jwt_extended.create_access_token(identity=usurped_user_name)
     return flask.jsonify(AccessToken=access_token), 200
-
-
-
-
-
-
-
-
-
 
 
 # ---------------------------------
