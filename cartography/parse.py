@@ -123,8 +123,8 @@ def main() -> None:
     viewbox_height = float(viewbox_height_str)
 
     # TODO : calculate this
-    png_width = 761.
-    png_height = 673.
+    png_width = 814.
+    png_height = 720.
 
     centers_path_table: typing.Dict[int, Path] = dict()
     regions_path_table: typing.Dict[int, Path] = dict()
@@ -265,8 +265,8 @@ def main() -> None:
     # ============= output ===============
 
     result1 = dict()
-    result1['centers'] = centers_pos_table
     result1['zones'] = regions_pos_table
+    result1['centers'] = centers_pos_table
     output = json.dumps(result1, indent=4)
     with open(first_format_json_output, 'w') as file_ptr:
         file_ptr.write(output)
@@ -279,8 +279,8 @@ def main() -> None:
 
     with open(map_text_output, 'w') as file_ptr:
         file_ptr.write(f"map size is :\n")
-        file_ptr.write(f"{svg_height=} {svg_width=}\n")
-        file_ptr.write(f"{png_height=} {png_width=}\n")
+        file_ptr.write(f"{svg_width=} {svg_height}\n")
+        file_ptr.write(f"{png_width=} {png_height=}\n")
 
 
 if __name__ == '__main__':
