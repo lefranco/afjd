@@ -217,10 +217,7 @@ def show_position():
     display_chosen = common.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
-
-    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file:
-        parameters_read = json.load(read_file)
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
@@ -1091,10 +1088,7 @@ def submit_orders():
     display_chosen = common.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
-
-    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file:
-        parameters_read = json.load(read_file)
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
@@ -1791,10 +1785,7 @@ def submit_communication_orders():
     display_chosen = common.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
-
-    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file:
-        parameters_read = json.load(read_file)
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
@@ -2262,7 +2253,7 @@ def declare():
 
             declarations = req_result['declarations_list']
 
-        json_dict  = dict()
+        json_dict = dict()
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -2532,7 +2523,7 @@ def vote():
     legend_vote = html.LEGEND("Cochez pour voter l'arrêt", title="Etes vous d'accord pour terminer la partie en l'état ?")
     form <= legend_vote
 
-    input_vote = html.INPUT(type="checkbox", checked = vote_value)
+    input_vote = html.INPUT(type="checkbox", checked=vote_value)
     form <= input_vote
 
     form <= html.BR()
@@ -2751,10 +2742,7 @@ def game_master():
     display_chosen = common.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
-
-    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file:
-        parameters_read = json.load(read_file)
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
@@ -3036,10 +3024,7 @@ def show_players_in_game():
     display_chosen = common.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
-
-    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file:
-        parameters_read = json.load(read_file)
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
@@ -3352,10 +3337,7 @@ def show_history():
     display_chosen = common.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
-
-    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file:
-        parameters_read = json.load(read_file)
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)

@@ -805,7 +805,7 @@ def vote_reload(game_id):
 
         votes = req_result['votes']
 
-    json_dict  = dict()
+    json_dict = dict()
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -816,3 +816,12 @@ def vote_reload(game_id):
 
     return votes
 
+
+def read_parameters(variant_name_loaded, display_chosen):
+    """ read_parameters """
+
+    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+    with open(parameters_file_name, "r") as read_file:
+        parameters_read = json.load(read_file)
+
+    return parameters_read
