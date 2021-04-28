@@ -781,7 +781,7 @@ def sandbox():
     orders_data = mapping.Orders(orders_loaded, position_data)
 
     # put background (this will call the callback that display the whole map)
-    img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
+    img = common.read_image(variant_name_loaded, display_chosen)
     img.bind('load', callback_render)
 
     # left side
