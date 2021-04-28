@@ -5,37 +5,11 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="214.969mm"
    version="1.2"
    height="189.992mm"
    viewBox="0 0 2539 2244"
-   id="svg2940"
-   sodipodi:docname="Carte_plain_filtered.svg"
-   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1539"
-     inkscape:window-height="842"
-     id="namedview1420"
-     showgrid="false"
-     inkscape:zoom="3.9494206"
-     inkscape:cx="394.28363"
-     inkscape:cy="462.87196"
-     inkscape:window-x="102"
-     inkscape:window-y="78"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2940"
-     inkscape:document-rotation="0"
-     inkscape:snap-page="true" />
+   id="svg2940">
   <defs
      id="defs2" />
   <g
@@ -12684,4 +12658,46 @@
       </cc:Work>
     </rdf:RDF>
   </metadata>
+  <path
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     id="path17165"
+     d="M 1885.5068,264.17716 1872.3054,264.70361 1867.7253,252.31104 1878.096,244.12556 1889.0856,251.45922 Z">
+    <title
+       id="title17167">ZC_STPNC</title>
+  </path>
+  <path
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     id="path20127"
+     d="M 579.16312,1995.7418 565.96175,1996.2682 561.38161,1983.8756 571.75231,1975.6902 582.74188,1983.0238 Z">
+    <title
+       id="title20125">ZC_SPASC</title>
+  </path>
+  <path
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     id="path20131"
+     d="M 575.60007,1655.7108 562.3987,1656.2372 557.81856,1643.8446 568.18926,1635.6592 579.17883,1642.9928 Z">
+    <title
+       id="title20129">ZC_SPANC</title>
+  </path>
+  <path
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     id="path20145"
+     d="M 1853.874,1634.147 1840.6726,1634.6735 1836.0925,1622.2809 1846.4632,1614.0954 1857.4528,1621.4291 Z">
+    <title
+       id="title20143">ZC_BULEC</title>
+  </path>
+  <path
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     id="path20151"
+     d="M 1766.9074,1753.8734 1753.7061,1754.3998 1749.1259,1742.0072 1759.4966,1733.8218 1770.4862,1741.1554 Z">
+    <title
+       id="title20149">ZC_BULSC</title>
+  </path>
+  <path
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     id="path1477"
+     d="M 1646.5546,746.84868 1633.3532,747.37513 1628.7731,734.98256 1639.1438,726.79708 1650.1334,734.13074 Z">
+    <title
+       id="title1475">ZC_STPSC</title>
+  </path>
 </svg>
