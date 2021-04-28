@@ -703,50 +703,50 @@
         "76": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 464,
-            "y_legend_pos": 428,
-            "x_pos": 457,
-            "y_pos": 419
+            "x_legend_pos": 592,
+            "y_legend_pos": 521,
+            "x_pos": 592,
+            "y_pos": 521
         },
         "77": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 432,
-            "y_legend_pos": 458,
-            "x_pos": 436,
-            "y_pos": 441
+            "x_legend_pos": 564,
+            "y_legend_pos": 560,
+            "x_pos": 564,
+            "y_pos": 560
         },
         "78": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 100,
-            "y_legend_pos": 384,
-            "x_pos": 73,
-            "y_pos": 371
+            "x_legend_pos": 182,
+            "y_legend_pos": 528,
+            "x_pos": 182,
+            "y_pos": 528
         },
         "79": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 95,
-            "y_legend_pos": 475,
-            "x_pos": 61,
-            "y_pos": 472
+            "x_legend_pos": 183,
+            "y_legend_pos": 637,
+            "x_pos": 183,
+            "y_pos": 637
         },
         "80": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 429,
-            "y_legend_pos": 48,
-            "x_pos": 459,
-            "y_pos": 61
+            "x_legend_pos": 602,
+            "y_legend_pos": 82,
+            "x_pos": 602,
+            "y_pos": 82
         },
         "81": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 429,
-            "y_legend_pos": 146,
-            "x_pos": 428,
-            "y_pos": 176
+            "x_legend_pos": 526,
+            "y_legend_pos": 236,
+            "x_pos": 526,
+            "y_pos": 236
         }
     },
     "centers": {
