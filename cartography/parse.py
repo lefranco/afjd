@@ -13,11 +13,29 @@ import typing
 import sys
 import json
 import copy
+import struct
+import os
 
 import xml.dom.minidom
 
 import polylabel
 
+
+def get_image_info(file_name: str) -> typing.Tuple[int, int]:
+    """ get_image_info """
+
+    size = os.path.getsize(file_name)
+
+    with open(file_name, 'rb') as file_ptr:
+        data = file_ptr.read()
+
+    assert data.startswith(b'\211PNG\r\n\032\n') and data[12:16] == b'IHDR', "Not a PNG file"
+    # PNGs
+    w, h = struct.unpack(">LL", data[16:24])
+    width = int(w)
+    height = int(h)
+
+    return width, height
 
 @dataclasses.dataclass
 class Point:
@@ -109,20 +127,20 @@ def main() -> None:
     """ main """
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-m', '--map_png_input', required=True, help='Input png file (from svg) for getting map size')
     parser.add_argument('-v', '--variant_input', required=True, help='Input variant json file')
     parser.add_argument('-p', '--parameters_input', required=True, help='Input parameters (names) json file')
     parser.add_argument('-s', '--svg_input', required=True, help='Input map svg file')
     parser.add_argument('-F', '--first_format_json_output', required=True, help='Output json file for first format (jeremie)')
     parser.add_argument('-S', '--second_format_json_output', required=True, help='Output json file for second format (wenz)')
-    parser.add_argument('-m', '--map_text_output', required=True, help='Output json file for map size')
     args = parser.parse_args()
 
+    map_png_input = args.map_png_input
     json_variant_input = args.variant_input
     json_parameters_input = args.parameters_input
     svg_input_file = args.svg_input
     first_format_json_output = args.first_format_json_output
     second_format_json_output = args.second_format_json_output
-    map_text_output = args.map_text_output
 
     # load variant from json data file
     with open(json_variant_input, "r") as read_file:
@@ -147,8 +165,6 @@ def main() -> None:
     # parse svg map to find paths
     doc = xml.dom.minidom.parse(svg_input_file)
 
-    # size
-
     # ====== get viewbox =====
 
     svg_nodes = doc.getElementsByTagName("svg")
@@ -162,9 +178,9 @@ def main() -> None:
 
     # ====== get png dimension =====
 
-    # TODO : calculate this
-    png_width = 814.
-    png_height = 720.
+    png_width, png_height = get_image_info(map_png_input)
+
+    print(f"{png_width=}, {png_height=}")
 
     map_table = {
         'width': int(png_width),
@@ -372,11 +388,6 @@ def main() -> None:
     output = json.dumps(result2, indent=4)
     with open(second_format_json_output, 'w') as file_ptr:
         file_ptr.write(output)
-
-    with open(map_text_output, 'w') as file_ptr:
-        file_ptr.write("map size is :\n")
-        file_ptr.write(f"{svg_width=} {svg_height}\n")
-        file_ptr.write(f"{png_width=} {png_height=}\n")
 
 
 if __name__ == '__main__':
