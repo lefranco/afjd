@@ -14,7 +14,7 @@ import sys
 import json
 import copy
 
-import xml.dom.minidom  # type: ignore
+import xml.dom.minidom
 
 import polylabel
 
@@ -49,8 +49,9 @@ class Path:
     def __init__(self, text: str):
         self._text = text
         self.points: typing.List[Point] = list()
-        list_x = list()
-        list_y = list()
+        self._list_x = list()
+        self._list_y = list()
+        self._inner_path: typing.Optional['Path'] = None
 
         #  print(f"{text=}")
 
@@ -61,31 +62,41 @@ class Path:
                 assert point.letter == 'M', f"Hey first letter is {point.letter} not M"
             else:
                 assert point.letter in ['', 'L', 'M', 'C'], f"Hey letter is {point.letter} not '', L M or C"
-            list_x.append(point.x_pos)
-            list_y.append(point.y_pos)
+            self._list_x.append(point.x_pos)
+            self._list_y.append(point.y_pos)
 
-        # calculate middle
-        self._middle_x = (min(list_x) + max(list_x)) / 2.
-        self._middle_y = (min(list_y) + max(list_y)) / 2.
-
-        # calculate barycenter
-        self._barycenter_x = sum(list_x) / len(list_x)
-        self._barycenter_y = sum(list_y) / len(list_y)
-
-        # calculate polylabel
-        self._polylabel_x, self._polylabel_y = polylabel.polylabel([[[x, y] for x, y in zip(list_x, list_y)]])
+    def add_inner(self, path: 'Path') -> None:
+        """ add_inner """
+        self._inner_path = path
 
     def middle(self) -> typing.Tuple[float, float]:
-        """ middle of area """
-        return self._middle_x, self._middle_y
+        """ middle of area for centers """
+        middle_x = (min(self._list_x) + max(self._list_x)) / 2.
+        middle_y = (min(self._list_y) + max(self._list_y)) / 2.
+        return middle_x, middle_y
 
-    def barycenter(self) -> typing.Tuple[float, float]:
-        """ middle of area """
-        return self._barycenter_x, self._barycenter_y
+    def polygon(self) -> typing.List[typing.List[float]]:
+        """ polygon """
+        return [[x, y] for x, y in zip(self._list_x, self._list_y)]
 
     def polylabel(self) -> typing.Tuple[float, float]:
-        """ middle of area """
-        return self._polylabel_x, self._polylabel_y
+        """ middle of area for regions """
+        # calculate polylabel
+
+        # list of polygons we pass
+        polygons = list()
+
+        # the one of the region first
+        outer_polygon = self.polygon()
+        polygons.append(outer_polygon)
+
+        # some time the one of the inner center
+        if self._inner_path:
+            inner_polygon = self._inner_path.polygon()
+            polygons.append(inner_polygon)
+
+        polylabel_x, polylabel_y = polylabel.polylabel(polygons, precision=0.1)  # type: ignore
+        return polylabel_x, polylabel_y
 
     def __str__(self) -> str:
         return self._text
@@ -124,7 +135,8 @@ def main() -> None:
     # make region table from input json file
     regions_name2num_table = {v['name'].upper(): int(k) for k, v in json_parameters_data['zones'].items() if v['name']}
 
-    # print(f"{regions_ref_name_table=}", file=sys.stderr)
+    # make table region2center
+    region2center_table = {int(k): centers_name2num_table[v['name'].upper()] for k, v in json_parameters_data['zones'].items() if v['name'] and v['name'].upper() in centers_name2num_table}
 
     # parse svg map to find paths
     doc = xml.dom.minidom.parse(svg_input_file)
@@ -147,8 +159,8 @@ def main() -> None:
     png_height = 720.
 
     map_table = {
-        'width' : int(png_width),
-        'height' : int(png_height),
+        'width': int(png_width),
+        'height': int(png_height),
     }
 
     centers_path_table: typing.Dict[int, Path] = dict()
@@ -228,6 +240,13 @@ def main() -> None:
     # make region table from input json file
     regions_ref_num_table = {int(k): v['name'] for k, v in json_parameters_data['zones'].items() if v['name']}
 
+    # put centers path in region paths
+    for num, path in regions_path_table.items():
+        if num in region2center_table:
+            num_center = region2center_table[num]
+            path_center = centers_path_table[num_center]
+            path.add_inner(path_center)
+
     # ====== make centers_pos_table =====
     #  for jeremie
 
@@ -247,6 +266,8 @@ def main() -> None:
 
     regions_pos_table = dict()
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
+
+        # is there a linked center ?
 
         # for regions :  the polylabel
         x_chosen, y_chosen = path.polylabel()
@@ -310,7 +331,7 @@ def main() -> None:
         file_ptr.write(output)
 
     with open(map_text_output, 'w') as file_ptr:
-        file_ptr.write(f"map size is :\n")
+        file_ptr.write("map size is :\n")
         file_ptr.write(f"{svg_width=} {svg_height}\n")
         file_ptr.write(f"{png_width=} {png_height=}\n")
 
