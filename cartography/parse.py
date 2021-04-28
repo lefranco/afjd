@@ -33,7 +33,7 @@ class Point:
             text = text[0:]
         else:
             self.letter = text[0]
-            assert self.letter.isupper()
+            #assert self.letter.isupper(), f"Hey first letter is not capital"
             text = text[1:]
         text_tab = text.split(',')
         self.x_pos = float(text_tab[0])
@@ -138,12 +138,15 @@ def main() -> None:
     # make table region2center
     region2center_table = {int(k): centers_name2num_table[v['name'].upper()] for k, v in json_parameters_data['zones'].items() if v['name'] and v['name'].upper() in centers_name2num_table}
 
+    # make coastal zone table from input json file
+    coastal_zones_name2num_table = {f"{json_parameters_data['zones'][str(r)]['name']}{json_parameters_data['coasts'][str(c)]['name']}".upper(): len(json_variant_data['regions']) + 1 + n for n, (r, c) in enumerate(json_variant_data['coastal_zones'])}
+
     # parse svg map to find paths
     doc = xml.dom.minidom.parse(svg_input_file)
 
     # size
 
-    # ====== make area region json file =====
+    # ====== get viewbox =====
 
     svg_nodes = doc.getElementsByTagName("svg")
     svg_node = svg_nodes[0]
@@ -154,6 +157,8 @@ def main() -> None:
     viewbox_width = float(viewbox_width_str)
     viewbox_height = float(viewbox_height_str)
 
+    # ====== get png dimension =====
+
     # TODO : calculate this
     png_width = 814.
     png_height = 720.
@@ -163,10 +168,11 @@ def main() -> None:
         'height': int(png_height),
     }
 
+    # ====== parse input svg file =====
+
     centers_path_table: typing.Dict[int, Path] = dict()
     regions_path_table: typing.Dict[int, Path] = dict()
-
-    # ====== parse input svg file =====
+    coastal_zones_path_table: typing.Dict[int, Path] = dict()
 
     for path in doc.getElementsByTagName("path"):
 
@@ -189,7 +195,7 @@ def main() -> None:
         title_content = title_content.upper()
         #  print(f"{title_content=}", file=sys.stderr)
 
-        # we have a center (pos)
+        # we have a center (octogon)
         if title_content.startswith("C_"):
 
             title_content = title_content.replace("C_", "")
@@ -223,18 +229,40 @@ def main() -> None:
             path = Path(d)
             regions_path_table[number] = path
 
+        # we have a coastal zone (star)
+        if title_content.startswith("ZC_"):
+
+            title_content = title_content.replace("ZC_", "")
+            if title_content not in coastal_zones_name2num_table:
+                print(f"Cannot give number to coastal zone '{title_content}'")
+                sys.exit(1)
+
+            # insert
+            number = coastal_zones_name2num_table[title_content]
+            if number in coastal_zones_path_table:
+                print(f"This coastal zones already has a path '{title_content}'")
+                sys.exit(1)
+            path = Path(d)
+            coastal_zones_path_table[number] = path
+
     doc.unlink()
 
     # check every center got a path
-    for center, number in centers_name2num_table.items():
+    for center_name, number in centers_name2num_table.items():
         if number not in centers_path_table:
-            print(f"Seems center '{center}' did not get a path")
+            print(f"Seems center '{center_name}' did not get a path")
             sys.exit(1)
 
     # check every region  got a path
-    for region, number in regions_name2num_table.items():
+    for region_name, number in regions_name2num_table.items():
         if number not in regions_path_table:
-            print(f"Seems region '{region}' did not get a path")
+            print(f"Seems region '{region_name}' did not get a path")
+            sys.exit(1)
+
+    # check every coastal zone  got a path
+    for coastal_zone_name, number in coastal_zones_name2num_table.items():
+        if number not in coastal_zones_path_table:
+            print(f"Seems coastal zone '{coastal_zone_name}' did not get a path")
             sys.exit(1)
 
     # make region table from input json file
