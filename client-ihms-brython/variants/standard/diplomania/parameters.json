@@ -1,23 +1,19 @@
 {
-
-	"map": {
-		"width": 814,
-		"height": 720
-	},
-
-
-	"regions" : {
-		"1": {
-			"name": "Terre"
-		},
-		"2": {
-			"name" : "Cote"
-		},
-		"3": {
-			"name" : "Mer"
-		}
-	},
-
+    "map": {
+        "width": 814,
+        "height": 720
+    },
+    "regions": {
+        "1": {
+            "name": "Terre"
+        },
+        "2": {
+            "name": "Cote"
+        },
+        "3": {
+            "name": "Mer"
+        }
+    },
     "units": {
         "1": {
             "name": "Armee"
@@ -92,7 +88,7 @@
             "blue": 0
         }
     },
-		"coasts": {
+    "coasts": {
         "1": {
             "name": "ec"
         },
