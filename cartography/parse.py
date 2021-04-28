@@ -16,6 +16,8 @@ import copy
 
 import xml.dom.minidom  # type: ignore
 
+import polylabel
+
 
 @dataclasses.dataclass
 class Point:
@@ -70,6 +72,9 @@ class Path:
         self._barycenter_x = sum(list_x) / len(list_x)
         self._barycenter_y = sum(list_y) / len(list_y)
 
+        # calculate polylabel
+        self._polylabel_x, self._polylabel_y = polylabel.polylabel([[[x, y] for x, y in zip(list_x, list_y)]])
+
     def middle(self) -> typing.Tuple[float, float]:
         """ middle of area """
         return self._middle_x, self._middle_y
@@ -77,6 +82,10 @@ class Path:
     def barycenter(self) -> typing.Tuple[float, float]:
         """ middle of area """
         return self._barycenter_x, self._barycenter_y
+
+    def polylabel(self) -> typing.Tuple[float, float]:
+        """ middle of area """
+        return self._polylabel_x, self._polylabel_y
 
     def __str__(self) -> str:
         return self._text
@@ -225,8 +234,8 @@ def main() -> None:
     centers_pos_table = dict()
     for num, path in sorted(centers_path_table.items(), key=lambda kv: int(kv[0])):
 
+        # for centers : middle is OK
         x_chosen, y_chosen = path.middle()
-#        x_chosen, y_chosen = path.barycenter()
 
         centers_pos_table[num] = {
             "x_pos": round(x_chosen * png_width / viewbox_width),
@@ -239,8 +248,8 @@ def main() -> None:
     regions_pos_table = dict()
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
 
-        x_chosen, y_chosen = path.middle()
-#        x_chosen, y_chosen = path.barycenter()
+        # for regions :  the polylabel
+        x_chosen, y_chosen = path.polylabel()
 
         region_name = regions_ref_num_table[num]
         regions_pos_table[num] = {
