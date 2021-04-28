@@ -56,6 +56,9 @@ class Path:
         #  print(f"{text=}")
 
         for num, elt in enumerate(self._text.split()):
+            # special case
+            if elt in ['M', 'Z']:
+                continue
             point = Point(elt)
             #  print(point)
             if num == 0:
@@ -253,13 +256,13 @@ def main() -> None:
             print(f"Seems center '{center_name}' did not get a path")
             sys.exit(1)
 
-    # check every region  got a path
+    # check every region got a path
     for region_name, number in regions_name2num_table.items():
         if number not in regions_path_table:
             print(f"Seems region '{region_name}' did not get a path")
             sys.exit(1)
 
-    # check every coastal zone  got a path
+    # check every coastal zone got a path
     for coastal_zone_name, number in coastal_zones_name2num_table.items():
         if number not in coastal_zones_path_table:
             print(f"Seems coastal zone '{coastal_zone_name}' did not get a path")
@@ -295,8 +298,6 @@ def main() -> None:
     regions_pos_table = dict()
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
 
-        # is there a linked center ?
-
         # for regions :  the polylabel
         x_chosen, y_chosen = path.polylabel()
 
@@ -304,6 +305,20 @@ def main() -> None:
         regions_pos_table[num] = {
             "name": region_name,
             "full_name": json_parameters_data['zones'][str(num)]['full_name'],
+            "x_legend_pos": round(x_chosen * png_width / viewbox_width),
+            "y_legend_pos": round(y_chosen * png_height / viewbox_height),
+            "x_pos": round(x_chosen * png_width / viewbox_width),
+            "y_pos": round(y_chosen * png_height / viewbox_height)
+        }
+
+    for num, path in sorted(coastal_zones_path_table.items(), key=lambda kv: int(kv[0])):
+
+        # for special coasts : middle
+        x_chosen, y_chosen = path.middle()
+
+        regions_pos_table[num] = {
+            "name": "",
+            "full_name": "",
             "x_legend_pos": round(x_chosen * png_width / viewbox_width),
             "y_legend_pos": round(y_chosen * png_height / viewbox_height),
             "x_pos": round(x_chosen * png_width / viewbox_width),
