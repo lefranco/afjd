@@ -495,7 +495,7 @@ def get_display_from_variant(variant):
     # TODO : make it possible to choose which display users wants (descartes/hasbro)
     # At least test it
     assert variant == 'standard'
-    return "stabbeur"
+    return "diplomania"
 
 
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
@@ -816,7 +816,6 @@ def vote_reload(game_id):
 
     return votes
 
-
 def read_parameters(variant_name_loaded, display_chosen):
     """ read_parameters """
 
@@ -825,3 +824,8 @@ def read_parameters(variant_name_loaded, display_chosen):
         parameters_read = json.load(read_file)
 
     return parameters_read
+
+def read_image(variant_name_loaded, display_chosen):
+    """ read_image """
+
+    return html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")

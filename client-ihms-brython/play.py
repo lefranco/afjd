@@ -256,7 +256,7 @@ def show_position():
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
+    img = common.read_image(variant_name_loaded, display_chosen)
     img.bind('load', callback_render)
 
     hover_info = html.DIV(hovering_message)
@@ -1154,7 +1154,7 @@ def submit_orders():
     orders_data = mapping.Orders(orders_loaded, position_data)
 
     # put background (this will call the callback that display the whole map)
-    img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
+    img = common.read_image(variant_name_loaded, display_chosen)
     img.bind('load', callback_render)
 
     ratings = position_data.role_ratings()
@@ -1848,7 +1848,7 @@ def submit_communication_orders():
     orders_data = mapping.Orders(communication_orders_loaded, position_data)
 
     # put background (this will call the callback that display the whole map)
-    img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
+    img = common.read_image(variant_name_loaded, display_chosen)
     img.bind('load', callback_render)
 
     ratings = position_data.role_ratings()
@@ -3227,7 +3227,7 @@ def show_history():
             return
 
         # put background (this will call the callback that display the whole map)
-        img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
+        img = common.read_image(variant_name_loaded, display_chosen)
         img.bind('load', callback_render)
 
         ratings = position_data.role_ratings()
