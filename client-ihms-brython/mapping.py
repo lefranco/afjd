@@ -348,6 +348,8 @@ ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 # legend
 LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
+LEGEND_SHIFT_X = - 15
+LEGEND_SHIFT_Y = - 5
 
 # center
 CENTER_COLOUR = ColourRecord(red=225, green=225, blue=225)  # light grey
@@ -599,8 +601,8 @@ class Variant(Renderable):
         for zone in self._zones.values():
 
             position = self._legend_position_table[zone]
-            x_pos = position.x_pos
-            y_pos = position.y_pos
+            x_pos = position.x_pos + LEGEND_SHIFT_X
+            y_pos = position.y_pos + LEGEND_SHIFT_Y
             if zone.coast_type:
                 legend = self._name_table[zone.coast_type]
             else:
