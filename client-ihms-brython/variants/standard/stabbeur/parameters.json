@@ -107,648 +107,486 @@
         "1": {
             "name": "ADR",
             "full_name": "The Adriatic Sea",
-            "x_legend_pos": 310,
-            "y_legend_pos": 409,
             "x_pos": 342,
             "y_pos": 429
         },
         "2": {
             "name": "AEG",
             "full_name": "The Aegean Sea",
-            "x_legend_pos": 430,
-            "y_legend_pos": 476,
             "x_pos": 440,
             "y_pos": 509
         },
         "3": {
             "name": "alb",
             "full_name": "Albania",
-            "x_legend_pos": 370,
-            "y_legend_pos": 439,
             "x_pos": 375,
             "y_pos": 449
         },
         "4": {
             "name": "ank",
             "full_name": "Ankara",
-            "x_legend_pos": 540,
-            "y_legend_pos": 436,
             "x_pos": 571,
             "y_pos": 440
         },
         "5": {
             "name": "apu",
             "full_name": "Apulia",
-            "x_legend_pos": 344,
-            "y_legend_pos": 448,
             "x_pos": 340,
             "y_pos": 445
         },
         "6": {
             "name": "arm",
             "full_name": "Armenia",
-            "x_legend_pos": 608,
-            "y_legend_pos": 403,
             "x_pos": 613,
             "y_pos": 425
         },
         "7": {
             "name": "BAL",
             "full_name": "The Baltic Sea",
-            "x_legend_pos": 329,
-            "y_legend_pos": 228,
             "x_pos": 334,
             "y_pos": 209
         },
         "8": {
             "name": "BAR",
             "full_name": "The Barents Sea",
-            "x_legend_pos": 390,
-            "y_legend_pos": 11,
             "x_pos": 431,
             "y_pos": 11
         },
         "9": {
             "name": "bel",
             "full_name": "Kingdom of Belgium",
-            "x_legend_pos": 207,
-            "y_legend_pos": 275,
             "x_pos": 222,
             "y_pos": 296
         },
         "10": {
             "name": "ber",
             "full_name": "Berlin",
-            "x_legend_pos": 283,
-            "y_legend_pos": 253,
             "x_pos": 295,
             "y_pos": 262
         },
         "11": {
             "name": "BLA",
             "full_name": "The Black Sea",
-            "x_legend_pos": 501,
-            "y_legend_pos": 405,
             "x_pos": 541,
             "y_pos": 402
         },
         "12": {
             "name": "boh",
             "full_name": "Bohemia",
-            "x_legend_pos": 300,
-            "y_legend_pos": 319,
             "x_pos": 326,
             "y_pos": 319
         },
         "13": {
             "name": "BOT",
             "full_name": "The Gulf of Bothnia",
-            "x_legend_pos": 335,
-            "y_legend_pos": 149,
             "x_pos": 356,
             "y_pos": 170
         },
         "14": {
             "name": "bre",
             "full_name": "Brest",
-            "x_legend_pos": 148,
-            "y_legend_pos": 340,
             "x_pos": 145,
             "y_pos": 319
         },
         "15": {
             "name": "bud",
             "full_name": "Budapest",
-            "x_legend_pos": 383,
-            "y_legend_pos": 358,
             "x_pos": 412,
             "y_pos": 368
         },
         "16": {
             "name": "bul",
             "full_name": "Kingdom of Bulgaria",
-            "x_legend_pos": 416,
-            "y_legend_pos": 437,
             "x_pos": 428,
             "y_pos": 420
         },
         "17": {
             "name": "bur",
             "full_name": "Burgundy",
-            "x_legend_pos": 208,
-            "y_legend_pos": 323,
             "x_pos": 210,
             "y_pos": 343
         },
         "18": {
             "name": "cly",
             "full_name": "Clyde",
-            "x_legend_pos": 153,
-            "y_legend_pos": 157,
             "x_pos": 152,
             "y_pos": 173
         },
         "19": {
             "name": "con",
             "full_name": "Constantinople",
-            "x_legend_pos": 455,
-            "y_legend_pos": 465,
             "x_pos": 487,
             "y_pos": 461
         },
         "20": {
             "name": "den",
             "full_name": "Kingdom of Denmark",
-            "x_legend_pos": 258,
-            "y_legend_pos": 213,
             "x_pos": 285,
             "y_pos": 215
         },
         "21": {
             "name": "EAS",
             "full_name": "The Eastern Mediterranean Sea",
-            "x_legend_pos": 515,
-            "y_legend_pos": 517,
             "x_pos": 493,
             "y_pos": 526
         },
         "22": {
             "name": "edi",
             "full_name": "Edinburgh",
-            "x_legend_pos": 183,
-            "y_legend_pos": 159,
             "x_pos": 179,
             "y_pos": 171
         },
         "23": {
             "name": "ENG",
             "full_name": "The English Channel",
-            "x_legend_pos": 112,
-            "y_legend_pos": 290,
             "x_pos": 143,
             "y_pos": 286
         },
         "24": {
             "name": "fin",
             "full_name": "Finland",
-            "x_legend_pos": 392,
-            "y_legend_pos": 110,
             "x_pos": 374,
             "y_pos": 131
         },
         "25": {
             "name": "gal",
             "full_name": "Galicia",
-            "x_legend_pos": 383,
-            "y_legend_pos": 322,
             "x_pos": 411,
             "y_pos": 325
         },
         "26": {
             "name": "gas",
             "full_name": "Gascony",
-            "x_legend_pos": 152,
-            "y_legend_pos": 365,
             "x_pos": 161,
             "y_pos": 379
         },
         "27": {
             "name": "GOL",
             "full_name": "The Gulf of Lyon",
-            "x_legend_pos": 201,
-            "y_legend_pos": 421,
             "x_pos": 201,
             "y_pos": 438
         },
         "28": {
             "name": "gre",
             "full_name": "Kingdom of Greece",
-            "x_legend_pos": 390,
-            "y_legend_pos": 468,
             "x_pos": 400,
             "y_pos": 494
         },
         "29": {
             "name": "HEL",
             "full_name": "Helgoland Bight",
-            "x_legend_pos": 238,
-            "y_legend_pos": 215,
             "x_pos": 248,
             "y_pos": 228
         },
         "30": {
             "name": "hol",
             "full_name": "Holland",
-            "x_legend_pos": 214,
-            "y_legend_pos": 256,
             "x_pos": 238,
             "y_pos": 273
         },
         "31": {
             "name": "ION",
             "full_name": "The Ionian sea",
-            "x_legend_pos": 356,
-            "y_legend_pos": 500,
             "x_pos": 356,
             "y_pos": 520
         },
         "32": {
             "name": "IRI",
             "full_name": "The Irish Sea",
-            "x_legend_pos": 78,
-            "y_legend_pos": 249,
             "x_pos": 102,
             "y_pos": 259
         },
         "33": {
             "name": "kie",
             "full_name": "Kiel",
-            "x_legend_pos": 246,
-            "y_legend_pos": 256,
             "x_pos": 265,
             "y_pos": 263
         },
         "34": {
             "name": "lon",
             "full_name": "London",
-            "x_legend_pos": 169,
-            "y_legend_pos": 249,
             "x_pos": 184,
             "y_pos": 255
         },
         "35": {
             "name": "lvn",
             "full_name": "Livonia",
-            "x_legend_pos": 392,
-            "y_legend_pos": 184,
             "x_pos": 390,
             "y_pos": 207
         },
         "36": {
             "name": "lvp",
             "full_name": "Liverpool",
-            "x_legend_pos": 138,
-            "y_legend_pos": 225,
             "x_pos": 157,
             "y_pos": 208
         },
         "37": {
             "name": "mar",
             "full_name": "Marseilles",
-            "x_legend_pos": 182,
-            "y_legend_pos": 398,
             "x_pos": 219,
             "y_pos": 387
         },
         "38": {
             "name": "MID",
             "full_name": "The Mid-Atlantic Ocean",
-            "x_legend_pos": 52,
-            "y_legend_pos": 311,
             "x_pos": 52,
             "y_pos": 331
         },
         "39": {
             "name": "mos",
             "full_name": "Moscow",
-            "x_legend_pos": 541,
-            "y_legend_pos": 185,
             "x_pos": 538,
             "y_pos": 207
         },
         "40": {
             "name": "mun",
             "full_name": "Munich",
-            "x_legend_pos": 260,
-            "y_legend_pos": 335,
             "x_pos": 282,
             "y_pos": 304
         },
         "41": {
             "name": "naf",
             "full_name": "North Africa",
-            "x_legend_pos": 135,
-            "y_legend_pos": 519,
             "x_pos": 165,
             "y_pos": 521
         },
         "42": {
             "name": "nap",
             "full_name": "Naples",
-            "x_legend_pos": 313,
-            "y_legend_pos": 461,
             "x_pos": 331,
             "y_pos": 471
         },
         "43": {
             "name": "NAT",
             "full_name": "The North Atlantic Ocean",
-            "x_legend_pos": 117,
-            "y_legend_pos": 126,
             "x_pos": 146,
             "y_pos": 136
         },
         "44": {
             "name": "NRG",
             "full_name": "The Norwegian Sea",
-            "x_legend_pos": 237,
-            "y_legend_pos": 60,
             "x_pos": 237,
             "y_pos": 80
         },
         "45": {
             "name": "NTH",
             "full_name": "The North Sea",
-            "x_legend_pos": 218,
-            "y_legend_pos": 184,
             "x_pos": 217,
             "y_pos": 209
         },
         "46": {
             "name": "nwy",
             "full_name": "Kingdom of Norway",
-            "x_legend_pos": 281,
-            "y_legend_pos": 128,
             "x_pos": 260,
             "y_pos": 148
         },
         "47": {
             "name": "par",
             "full_name": "Paris",
-            "x_legend_pos": 176,
-            "y_legend_pos": 338,
             "x_pos": 179,
             "y_pos": 320
         },
         "48": {
             "name": "pic",
             "full_name": "Picardy",
-            "x_legend_pos": 178,
-            "y_legend_pos": 285,
             "x_pos": 198,
             "y_pos": 295
         },
         "49": {
             "name": "pie",
             "full_name": "Piedmont",
-            "x_legend_pos": 243,
-            "y_legend_pos": 380,
             "x_pos": 250,
             "y_pos": 390
         },
         "50": {
             "name": "por",
             "full_name": "Kingdom of Portugal",
-            "x_legend_pos": 45,
-            "y_legend_pos": 398,
             "x_pos": 43,
             "y_pos": 412
         },
         "51": {
             "name": "pru",
             "full_name": "Prussia",
-            "x_legend_pos": 327,
-            "y_legend_pos": 251,
             "x_pos": 354,
             "y_pos": 250
         },
         "52": {
             "name": "rom",
             "full_name": "Rome",
-            "x_legend_pos": 275,
-            "y_legend_pos": 424,
             "x_pos": 294,
             "y_pos": 441
         },
         "53": {
             "name": "ruh",
             "full_name": "Ruhr",
-            "x_legend_pos": 243,
-            "y_legend_pos": 300,
             "x_pos": 245,
             "y_pos": 321
         },
         "54": {
             "name": "rum",
             "full_name": "Kingdom of Romania",
-            "x_legend_pos": 437,
-            "y_legend_pos": 362,
             "x_pos": 446,
             "y_pos": 381
         },
         "55": {
             "name": "ser",
             "full_name": "Kingdom of Serbia",
-            "x_legend_pos": 388,
-            "y_legend_pos": 404,
             "x_pos": 391,
             "y_pos": 419
         },
         "56": {
             "name": "sev",
             "full_name": "Sevastopol",
-            "x_legend_pos": 515,
-            "y_legend_pos": 350,
             "x_pos": 558,
             "y_pos": 322
         },
         "57": {
             "name": "sil",
             "full_name": "Silesia",
-            "x_legend_pos": 310,
-            "y_legend_pos": 295,
             "x_pos": 330,
             "y_pos": 295
         },
         "58": {
             "name": "SKA",
             "full_name": "Skagerak",
-            "x_legend_pos": 272,
-            "y_legend_pos": 181,
             "x_pos": 273,
             "y_pos": 191
         },
         "59": {
             "name": "smy",
             "full_name": "Smyrna",
-            "x_legend_pos": 530,
-            "y_legend_pos": 479,
             "x_pos": 495,
             "y_pos": 489
         },
         "60": {
             "name": "spa",
             "full_name": "Kingdom of Spain",
-            "x_legend_pos": 105,
-            "y_legend_pos": 409,
             "x_pos": 115,
             "y_pos": 429
         },
         "61": {
             "name": "stp",
             "full_name": "Saint-Petersburg",
-            "x_legend_pos": 481,
-            "y_legend_pos": 95,
             "x_pos": 491,
             "y_pos": 115
         },
         "62": {
             "name": "swe",
             "full_name": "Kingdom of Sweden",
-            "x_legend_pos": 308,
-            "y_legend_pos": 148,
             "x_pos": 305,
             "y_pos": 187
         },
         "63": {
             "name": "syr",
             "full_name": "Syria",
-            "x_legend_pos": 597,
-            "y_legend_pos": 520,
             "x_pos": 593,
             "y_pos": 503
         },
         "64": {
             "name": "tri",
             "full_name": "Trieste",
-            "x_legend_pos": 343,
-            "y_legend_pos": 388,
             "x_pos": 353,
             "y_pos": 402
         },
         "65": {
             "name": "tun",
             "full_name": "Tunis",
-            "x_legend_pos": 224,
-            "y_legend_pos": 506,
             "x_pos": 242,
             "y_pos": 523
         },
         "66": {
             "name": "tus",
             "full_name": "Tuscany",
-            "x_legend_pos": 247,
-            "y_legend_pos": 405,
             "x_pos": 277,
             "y_pos": 411
         },
         "67": {
             "name": "TYN",
             "full_name": "The Tyrrhenian Sea",
-            "x_legend_pos": 273,
-            "y_legend_pos": 469,
             "x_pos": 271,
             "y_pos": 489
         },
         "68": {
             "name": "tyr",
             "full_name": "Tyrolia",
-            "x_legend_pos": 304,
-            "y_legend_pos": 359,
             "x_pos": 287,
             "y_pos": 361
         },
         "69": {
             "name": "ukr",
             "full_name": "Ukraine",
-            "x_legend_pos": 463,
-            "y_legend_pos": 301,
             "x_pos": 458,
             "y_pos": 323
         },
         "70": {
             "name": "ven",
             "full_name": "Venice",
-            "x_legend_pos": 268,
-            "y_legend_pos": 384,
             "x_pos": 287,
             "y_pos": 390
         },
         "71": {
             "name": "vie",
             "full_name": "Vienna",
-            "x_legend_pos": 329,
-            "y_legend_pos": 343,
             "x_pos": 349,
             "y_pos": 341
         },
         "72": {
             "name": "wal",
             "full_name": "Wales",
-            "x_legend_pos": 148,
-            "y_legend_pos": 242,
             "x_pos": 148,
             "y_pos": 263
         },
         "73": {
             "name": "war",
             "full_name": "Warsaw",
-            "x_legend_pos": 373,
-            "y_legend_pos": 275,
             "x_pos": 390,
             "y_pos": 295
         },
         "74": {
             "name": "WES",
             "full_name": "The Western Mediterranean Sea",
-            "x_legend_pos": 187,
-            "y_legend_pos": 467,
             "x_pos": 187,
             "y_pos": 485
         },
         "75": {
             "name": "yor",
             "full_name": "Yorkshire",
-            "x_legend_pos": 182,
-            "y_legend_pos": 212,
             "x_pos": 182,
             "y_pos": 231
         },
         "76": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 464,
-            "y_legend_pos": 428,
             "x_pos": 457,
             "y_pos": 419
         },
         "77": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 432,
-            "y_legend_pos": 458,
             "x_pos": 436,
             "y_pos": 441
         },
         "78": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 100,
-            "y_legend_pos": 384,
             "x_pos": 73,
             "y_pos": 371
         },
         "79": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 95,
-            "y_legend_pos": 475,
             "x_pos": 61,
             "y_pos": 472
         },
         "80": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 429,
-            "y_legend_pos": 48,
             "x_pos": 459,
             "y_pos": 61
         },
         "81": {
             "name": "",
             "full_name": "",
-            "x_legend_pos": 429,
-            "y_legend_pos": 146,
             "x_pos": 428,
             "y_pos": 176
         }
