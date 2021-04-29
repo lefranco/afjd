@@ -90,462 +90,462 @@
     },
     "coasts": {
         "1": {
-            "name": "ec"
+            "name": "ce"
         },
         "2": {
-            "name": "nc"
+            "name": "cn"
         },
         "3": {
-            "name": "sc"
+            "name": "cs"
         }
     },
     "zones": {
         "1": {
-            "name": "ADR",
-            "full_name": "The Adriatic Sea",
+            "name": "Adr",
+            "full_name": "Mer Adriatique",
             "x_pos": 468,
             "y_pos": 563
         },
         "2": {
-            "name": "AEG",
-            "full_name": "The Aegean Sea",
+            "name": "Ege",
+            "full_name": "Mer d'Egée",
             "x_pos": 587,
             "y_pos": 635
         },
         "3": {
-            "name": "alb",
-            "full_name": "Albania",
+            "name": "Alb",
+            "full_name": "Albanie",
             "x_pos": 503,
             "y_pos": 581
         },
         "4": {
-            "name": "ank",
+            "name": "Ank",
             "full_name": "Ankara",
             "x_pos": 702,
             "y_pos": 542
         },
         "5": {
-            "name": "apu",
-            "full_name": "Apulia",
+            "name": "Apu",
+            "full_name": "Apulie",
             "x_pos": 417,
             "y_pos": 561
         },
         "6": {
-            "name": "arm",
-            "full_name": "Armenia",
+            "name": "Arm",
+            "full_name": "Arménie",
             "x_pos": 766,
             "y_pos": 550
         },
         "7": {
-            "name": "BAL",
-            "full_name": "The Baltic Sea",
+            "name": "Bal",
+            "full_name": "Mer Baltique",
             "x_pos": 454,
             "y_pos": 311
         },
         "8": {
-            "name": "BAR",
-            "full_name": "The Barents Sea",
+            "name": "Bar",
+            "full_name": "Mer de Barents",
             "x_pos": 552,
             "y_pos": 31
         },
         "9": {
-            "name": "bel",
-            "full_name": "Kingdom of Belgium",
+            "name": "Bel",
+            "full_name": "Belgique",
             "x_pos": 309,
             "y_pos": 413
         },
         "10": {
-            "name": "ber",
+            "name": "Ber",
             "full_name": "Berlin",
             "x_pos": 388,
             "y_pos": 387
         },
         "11": {
-            "name": "BLA",
-            "full_name": "The Black Sea",
+            "name": "Noi",
+            "full_name": "Mer Noire",
             "x_pos": 638,
             "y_pos": 500
         },
         "12": {
-            "name": "boh",
-            "full_name": "Bohemia",
+            "name": "Boh",
+            "full_name": "Bohème",
             "x_pos": 423,
             "y_pos": 422
         },
         "13": {
-            "name": "BOT",
-            "full_name": "The Gulf of Bothnia",
+            "name": "Bot",
+            "full_name": "Golfe of Botnie",
             "x_pos": 445,
             "y_pos": 213
         },
         "14": {
-            "name": "bre",
+            "name": "Bre",
             "full_name": "Brest",
             "x_pos": 231,
             "y_pos": 452
         },
         "15": {
-            "name": "bud",
+            "name": "Bud",
             "full_name": "Budapest",
             "x_pos": 505,
             "y_pos": 469
         },
         "16": {
-            "name": "bul",
-            "full_name": "Kingdom of Bulgaria",
+            "name": "Bul",
+            "full_name": "Bulgarie",
             "x_pos": 563,
             "y_pos": 538
         },
         "17": {
-            "name": "bur",
-            "full_name": "Burgundy",
+            "name": "Bou",
+            "full_name": "Bourgogne",
             "x_pos": 304,
             "y_pos": 462
         },
         "18": {
-            "name": "cly",
+            "name": "Cly",
             "full_name": "Clyde",
             "x_pos": 227,
             "y_pos": 262
         },
         "19": {
-            "name": "con",
+            "name": "Con",
             "full_name": "Constantinople",
             "x_pos": 645,
             "y_pos": 568
         },
         "20": {
-            "name": "den",
-            "full_name": "Kingdom of Denmark",
+            "name": "Dan",
+            "full_name": "Danemark",
             "x_pos": 357,
             "y_pos": 312
         },
         "21": {
-            "name": "EAS",
-            "full_name": "The Eastern Mediterranean Sea",
+            "name": "MOr",
+            "full_name": "Méditerranée orientale",
             "x_pos": 661,
             "y_pos": 672
         },
         "22": {
-            "name": "edi",
-            "full_name": "Edinburgh",
+            "name": "Edi",
+            "full_name": "Édimbourg",
             "x_pos": 235,
             "y_pos": 283
         },
         "23": {
-            "name": "ENG",
-            "full_name": "The English Channel",
+            "name": "Man",
+            "full_name": "Manche",
             "x_pos": 199,
             "y_pos": 416
         },
         "24": {
-            "name": "fin",
-            "full_name": "Finland",
+            "name": "Fin",
+            "full_name": "Finlande",
             "x_pos": 497,
             "y_pos": 183
         },
         "25": {
-            "name": "gal",
-            "full_name": "Galicia",
+            "name": "Gal",
+            "full_name": "Galicie",
             "x_pos": 491,
             "y_pos": 421
         },
         "26": {
-            "name": "gas",
-            "full_name": "Gascony",
+            "name": "Gas",
+            "full_name": "Gascogne",
             "x_pos": 254,
             "y_pos": 509
         },
         "27": {
-            "name": "GOL",
-            "full_name": "The Gulf of Lyon",
+            "name": "GLi",
+            "full_name": "Golfe du Lion",
             "x_pos": 300,
             "y_pos": 571
         },
         "28": {
-            "name": "gre",
-            "full_name": "Kingdom of Greece",
+            "name": "Gre",
+            "full_name": "Grèce",
             "x_pos": 525,
             "y_pos": 593
         },
         "29": {
-            "name": "HEL",
-            "full_name": "Helgoland Bight",
+            "name": "Hel",
+            "full_name": "Baie de Helgoland",
             "x_pos": 331,
             "y_pos": 322
         },
         "30": {
-            "name": "hol",
-            "full_name": "Holland",
+            "name": "Hol",
+            "full_name": "Hollande",
             "x_pos": 321,
             "y_pos": 373
         },
         "31": {
-            "name": "ION",
-            "full_name": "The Ionian sea",
+            "name": "Ion",
+            "full_name": "Mer Ionienne",
             "x_pos": 489,
             "y_pos": 665
         },
         "32": {
-            "name": "IRI",
-            "full_name": "The Irish Sea",
+            "name": "Irl",
+            "full_name": "Mer d'Irlande",
             "x_pos": 167,
             "y_pos": 386
         },
         "33": {
-            "name": "kie",
+            "name": "Kie",
             "full_name": "Kiel",
             "x_pos": 352,
             "y_pos": 382
         },
         "34": {
-            "name": "lon",
-            "full_name": "London",
+            "name": "Lon",
+            "full_name": "Londres",
             "x_pos": 259,
             "y_pos": 375
         },
         "35": {
-            "name": "lvn",
-            "full_name": "Livonia",
+            "name": "Lvn",
+            "full_name": "Livonie",
             "x_pos": 516,
             "y_pos": 305
         },
         "36": {
-            "name": "lvp",
+            "name": "Lvp",
             "full_name": "Liverpool",
             "x_pos": 231,
             "y_pos": 328
         },
         "37": {
-            "name": "mar",
-            "full_name": "Marseilles",
+            "name": "Mar",
+            "full_name": "Marseille",
             "x_pos": 305,
             "y_pos": 516
         },
         "38": {
-            "name": "MID",
-            "full_name": "The Mid-Atlantic Ocean",
+            "name": "Atl",
+            "full_name": "Atlantique",
             "x_pos": 91,
             "y_pos": 451
         },
         "39": {
-            "name": "mos",
-            "full_name": "Moscow",
+            "name": "Mos",
+            "full_name": "Moscou",
             "x_pos": 724,
             "y_pos": 282
         },
         "40": {
-            "name": "mun",
+            "name": "Mun",
             "full_name": "Munich",
             "x_pos": 363,
             "y_pos": 445
         },
         "41": {
-            "name": "naf",
-            "full_name": "North Africa",
+            "name": "AfN",
+            "full_name": "Afrique du Nord",
             "x_pos": 278,
             "y_pos": 683
         },
         "42": {
-            "name": "nap",
+            "name": "Nap",
             "full_name": "Naples",
             "x_pos": 439,
             "y_pos": 591
         },
         "43": {
-            "name": "NAT",
-            "full_name": "The North Atlantic Ocean",
+            "name": "AtN",
+            "full_name": "Atlantique Nord",
             "x_pos": 106,
             "y_pos": 255
         },
         "44": {
-            "name": "NRG",
-            "full_name": "The Norwegian Sea",
+            "name": "MNg",
+            "full_name": "Mer de Norvège",
             "x_pos": 286,
             "y_pos": 105
         },
         "45": {
-            "name": "NTH",
-            "full_name": "The North Sea",
+            "name": "Nrd",
+            "full_name": "Mer du Nord",
             "x_pos": 290,
             "y_pos": 289
         },
         "46": {
-            "name": "nwy",
-            "full_name": "Kingdom of Norway",
+            "name": "Nge",
+            "full_name": "Norvège",
             "x_pos": 357,
             "y_pos": 216
         },
         "47": {
-            "name": "par",
+            "name": "Par",
             "full_name": "Paris",
             "x_pos": 263,
             "y_pos": 464
         },
         "48": {
-            "name": "pic",
-            "full_name": "Picardy",
+            "name": "Pic",
+            "full_name": "Picardie",
             "x_pos": 279,
             "y_pos": 420
         },
         "49": {
-            "name": "pie",
-            "full_name": "Piedmont",
+            "name": "Pie",
+            "full_name": "Piémont",
             "x_pos": 355,
             "y_pos": 508
         },
         "50": {
-            "name": "por",
-            "full_name": "Kingdom of Portugal",
+            "name": "Por",
+            "full_name": "Portugal",
             "x_pos": 115,
             "y_pos": 580
         },
         "51": {
-            "name": "pru",
-            "full_name": "Prussia",
+            "name": "Pru",
+            "full_name": "Prusse",
             "x_pos": 437,
             "y_pos": 363
         },
         "52": {
-            "name": "rom",
+            "name": "Rom",
             "full_name": "Rome",
             "x_pos": 397,
             "y_pos": 556
         },
         "53": {
-            "name": "ruh",
+            "name": "Ruh",
             "full_name": "Ruhr",
             "x_pos": 339,
             "y_pos": 416
         },
         "54": {
-            "name": "rum",
-            "full_name": "Kingdom of Romania",
+            "name": "Rou",
+            "full_name": "Roumanie",
             "x_pos": 550,
             "y_pos": 500
         },
         "55": {
-            "name": "ser",
-            "full_name": "Kingdom of Serbia",
+            "name": "Ser",
+            "full_name": "Serbie",
             "x_pos": 507,
             "y_pos": 526
         },
         "56": {
-            "name": "sev",
-            "full_name": "Sevastopol",
+            "name": "Seb",
+            "full_name": "Sébastopol",
             "x_pos": 746,
             "y_pos": 422
         },
         "57": {
-            "name": "sil",
-            "full_name": "Silesia",
+            "name": "Sil",
+            "full_name": "Silésie",
             "x_pos": 460,
             "y_pos": 410
         },
         "58": {
-            "name": "SKA",
-            "full_name": "Skagerak",
+            "name": "Ska",
+            "full_name": "Skaggerak",
             "x_pos": 364,
             "y_pos": 273
         },
         "59": {
-            "name": "smy",
-            "full_name": "Smyrna",
+            "name": "Smy",
+            "full_name": "Smyrne",
             "x_pos": 691,
             "y_pos": 598
         },
         "60": {
-            "name": "spa",
-            "full_name": "Kingdom of Spain",
+            "name": "Esp",
+            "full_name": "Espagne",
             "x_pos": 158,
             "y_pos": 607
         },
         "61": {
-            "name": "stp",
-            "full_name": "Saint-Petersburg",
+            "name": "StP",
+            "full_name": "Saint-Pétersbourg",
             "x_pos": 693,
             "y_pos": 103
         },
         "62": {
-            "name": "swe",
-            "full_name": "Kingdom of Sweden",
+            "name": "Sue",
+            "full_name": "Suède",
             "x_pos": 423,
             "y_pos": 154
         },
         "63": {
-            "name": "syr",
-            "full_name": "Syria",
+            "name": "Syr",
+            "full_name": "Syrie",
             "x_pos": 763,
             "y_pos": 689
         },
         "64": {
-            "name": "tri",
+            "name": "Tri",
             "full_name": "Trieste",
             "x_pos": 459,
             "y_pos": 515
         },
         "65": {
-            "name": "tun",
+            "name": "Tun",
             "full_name": "Tunis",
             "x_pos": 351,
             "y_pos": 684
         },
         "66": {
-            "name": "tus",
-            "full_name": "Tuscany",
+            "name": "Tos",
+            "full_name": "Toscane",
             "x_pos": 380,
             "y_pos": 539
         },
         "67": {
-            "name": "TYN",
-            "full_name": "The Tyrrhenian Sea",
+            "name": "MTy",
+            "full_name": "Mer Tyrrhénienne",
             "x_pos": 389,
             "y_pos": 608
         },
         "68": {
-            "name": "tyr",
-            "full_name": "Tyrolia",
+            "name": "Tyr",
+            "full_name": "Tyrol",
             "x_pos": 404,
             "y_pos": 471
         },
         "69": {
-            "name": "ukr",
+            "name": "Ukr",
             "full_name": "Ukraine",
             "x_pos": 576,
             "y_pos": 397
         },
         "70": {
-            "name": "ven",
-            "full_name": "Venice",
+            "name": "Ven",
+            "full_name": "Venise",
             "x_pos": 383,
             "y_pos": 514
         },
         "71": {
-            "name": "vie",
-            "full_name": "Vienna",
+            "name": "Vie",
+            "full_name": "Vienne",
             "x_pos": 431,
             "y_pos": 465
         },
         "72": {
-            "name": "wal",
-            "full_name": "Wales",
+            "name": "PGa",
+            "full_name": "Pays de Galles",
             "x_pos": 224,
             "y_pos": 368
         },
         "73": {
-            "name": "war",
-            "full_name": "Warsaw",
+            "name": "Var",
+            "full_name": "Varsovie",
             "x_pos": 497,
             "y_pos": 358
         },
         "74": {
-            "name": "WES",
-            "full_name": "The Western Mediterranean Sea",
+            "name": "MOc",
+            "full_name": "Méditerranée occidentale",
             "x_pos": 298,
             "y_pos": 628
         },
         "75": {
-            "name": "yor",
+            "name": "Yor",
             "full_name": "Yorkshire",
             "x_pos": 249,
             "y_pos": 357
