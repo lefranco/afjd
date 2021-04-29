@@ -528,6 +528,9 @@ def sandbox():
         # put the orders
         orders_data.render(ctx)
 
+        # put the legends at the end
+        variant_data.render_legends(ctx)
+
     def stack_orders(buttons_right):
         """ stack_orders """
 

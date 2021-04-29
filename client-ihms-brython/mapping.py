@@ -348,8 +348,19 @@ ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 # legend
 LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
-LEGEND_SHIFT_X = - 15
-LEGEND_SHIFT_Y = - 5
+LEGEND_SHIFT_X = 0
+LEGEND_SHIFT_Y = - 15
+
+def legend_font() -> str:
+    """ legend_font """
+    font_style = 'normal'
+    font_variant = 'normal'
+    font_weight = 'lighter'
+    font_size = 'xx-small'
+    font_family ='Arial'
+    return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}" # default is 10 sans serif
+
+LEGEND_FONT = legend_font()
 
 # center
 CENTER_COLOUR = ColourRecord(red=225, green=225, blue=225)  # light grey
@@ -473,7 +484,6 @@ class Variant(Renderable):
         self._name_table = dict()
         self._colour_table = dict()
         self._position_table = dict()
-        self._legend_position_table = dict()
         self._role_add_table = dict()
 
         # load the map size
@@ -541,10 +551,6 @@ class Variant(Renderable):
                 name = data_dict['name']
 
             self._name_table[zone] = name
-            x_pos = data_dict['x_legend_pos']
-            y_pos = data_dict['y_legend_pos']
-            legend_position = geometry.PositionRecord(x_pos=x_pos, y_pos=y_pos)
-            self._legend_position_table[zone] = legend_position
             x_pos = data_dict['x_pos']
             y_pos = data_dict['y_pos']
             unit_position = geometry.PositionRecord(x_pos=x_pos, y_pos=y_pos)
@@ -591,31 +597,7 @@ class Variant(Renderable):
         return closest_zone
 
     def render(self, ctx) -> None:
-        """ render the legends only """
-
-        # colour
-        legend_colour = LEGEND_COLOUR
-        ctx.fillStyle = legend_colour.str_value()
-
-        # put legends
-        for zone in self._zones.values():
-
-            # legend position is replaced by unit position slightly shifted
-            # legend position not used any more
-            # unit position calculated from area with
-
-            #  position = self._legend_position_table[zone]
-
-            position = self._position_table[zone]
-            x_pos = position.x_pos + LEGEND_SHIFT_X
-            y_pos = position.y_pos + LEGEND_SHIFT_Y
-
-            if zone.coast_type:
-                legend = self._name_table[zone.coast_type]
-            else:
-                legend = self._name_table[zone]
-            text_width = ctx.measureText(legend).width;
-            ctx.fillText(legend, x_pos - text_width / 2, y_pos)
+        """ render the empty centers only """
 
         # put centers
 
@@ -633,6 +615,32 @@ class Variant(Renderable):
             ctx.beginPath()
             ctx.arc(x, y, 4, 0, 2 * math.pi, False)
             ctx.fill(); ctx.stroke(); ctx.closePath()
+
+    def render_legends(self, ctx) -> None:
+        """ render the legends only """
+
+        # put legends
+
+        legend_colour = LEGEND_COLOUR
+        ctx.fillStyle = legend_colour.str_value()
+
+        for zone in self._zones.values():
+
+            # legend position is replaced by unit position slightly shifted
+            # unit position calculated from area ith polylabel
+
+            position = self._position_table[zone]
+            x_pos = position.x_pos + LEGEND_SHIFT_X
+            y_pos = position.y_pos + LEGEND_SHIFT_Y
+
+            if zone.coast_type:
+                legend = self._name_table[zone.coast_type]
+            else:
+                legend = self._name_table[zone]
+            text_width = ctx.measureText(legend).width
+            #ctx.font = LEGEND_FONT
+            ctx.fillText(legend, x_pos - text_width / 2, y_pos)
+
 
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
@@ -731,7 +739,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
 
         dislodger_colour = DISLODGED_COLOUR
         ctx.fillStyle = dislodger_colour.str_value()
-        ctx.fillText(dislodger_legend, x_pos + 12, y_pos - 9)
+        ctx.fillText(dislodger_legend, x_pos + 14, y_pos - 9)
 
         ctx.lineWidth = 2
 
