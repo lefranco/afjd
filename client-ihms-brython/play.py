@@ -183,6 +183,9 @@ def show_position():
         # put the position
         position_data.render(ctx)
 
+        # put the legends at the end
+        variant_data.render_legends(ctx)
+
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
 
@@ -994,6 +997,9 @@ def submit_orders():
         # put the orders
         orders_data.render(ctx)
 
+        # put the legends at the end
+        variant_data.render_legends(ctx)
+
     def stack_role_flag(buttons_right):
         """ stack_role_flag """
 
@@ -1685,6 +1691,9 @@ def submit_communication_orders():
 
         # put the orders
         orders_data.render(ctx)
+
+        # put the legends at the end
+        variant_data.render_legends(ctx)
 
     def stack_role_flag(buttons_right):
         """ stack_role_flag """
@@ -3197,6 +3206,9 @@ def show_history():
 
             # put the orders
             orders_data.render(ctx)
+
+            # put the legends at the end
+            variant_data.render_legends(ctx)
 
         transition_loaded = common.game_transition_reload(game, advancement_selected)
         if transition_loaded is None:
