@@ -600,9 +600,16 @@ class Variant(Renderable):
         # put legends
         for zone in self._zones.values():
 
-            position = self._legend_position_table[zone]
+            # legend position is replaced by unit position slightly shifted
+            # legend position not used any more
+            # unit position calculated from area with
+
+            #  position = self._legend_position_table[zone]
+
+            position = self._position_table[zone]
             x_pos = position.x_pos + LEGEND_SHIFT_X
             y_pos = position.y_pos + LEGEND_SHIFT_Y
+
             if zone.coast_type:
                 legend = self._name_table[zone.coast_type]
             else:
