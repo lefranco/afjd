@@ -163,7 +163,7 @@ def get_game_status_histo(variant_data, game_parameters_loaded, advancement_sele
 def show_position():
     """ show_position """
 
-    hovering_message = "(informations sur l'unité survoléee par la souris sur la carte)"
+    hovering_default_message = "(informations sur l'unité survoléee par la souris sur la carte)"
 
     variant_name_loaded = None
     variant_content_loaded = None
@@ -191,12 +191,12 @@ def show_position():
 
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
-        selected_hovered_unit = position_data.closest_unit(pos, False)
-        hover_info.text = selected_hovered_unit.description()
+        selected_hovered_object = position_data.closest_object(pos)
+        hover_info.text = selected_hovered_object.description()
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
-        hover_info.text = hovering_message
+        hover_info.text = hovering_default_message
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -262,7 +262,7 @@ def show_position():
     img = common.read_image(variant_name_loaded, display_chosen)
     img.bind('load', callback_render)
 
-    hover_info = html.DIV(hovering_message)
+    hover_info = html.DIV(hovering_default_message)
     hover_info.style = {
         'color': 'blue',
     }

@@ -249,7 +249,7 @@ class Region:
 class Zone:
     """ A zone """
 
-    def __init__(self, identifier: int, region: Region, coast_type) -> None:
+    def __init__(self, identifier: int, region: Region, coast_type, variant) -> None:
 
         self._identifier = identifier
 
@@ -261,6 +261,22 @@ class Zone:
 
         # other zones one may access by fleet and army
         self._neighbours = {u: list() for u in UnitTypeEnum}
+
+        # variant
+        self._variant = variant
+
+    def description(self):
+        """ description for when hovering """
+
+        variant = self._variant
+
+        # zone
+        zone_full_name = variant.full_name_table[self]
+
+        # region type name
+        region_type_name = variant.name_table[self._region.region_type]
+
+        return f"La zone {zone_full_name} - {region_type_name}."
 
     @property
     def identifier(self) -> int:
@@ -357,7 +373,7 @@ def legend_font() -> str:
     font_variant = 'normal'
     font_weight = 'lighter'
     font_size = 'xx-small'
-    font_family ='Arial'
+    font_family = 'Arial'
     return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}" # default is 10 sans serif
 
 LEGEND_FONT = legend_font()
@@ -430,7 +446,7 @@ class Variant(Renderable):
         self._zones = dict()
         for num, region in enumerate(self._regions.values()):
             number = num + 1
-            zone = Zone(number, region, None)
+            zone = Zone(number, region, None, self)
             region.zone = zone
             self._zones[number] = zone
 
@@ -442,7 +458,7 @@ class Variant(Renderable):
             number = num + 1
             region = self._regions[region_num]
             coast_type = self._coast_types[coast_type_num]
-            zone = Zone(offset + number, region, coast_type)
+            zone = Zone(offset + number, region, coast_type, self)
             self._zones[offset + number] = zone
 
         # load the start units
@@ -482,6 +498,7 @@ class Variant(Renderable):
         self._raw_parameters_content = raw_parameters_content
 
         self._name_table = dict()
+        self._full_name_table = dict()
         self._colour_table = dict()
         self._position_table = dict()
         self._role_add_table = dict()
@@ -545,12 +562,16 @@ class Variant(Renderable):
             # special zones have a special name
             if zone.coast_type:
                 region_name = self._name_table[zone.region.zone]
+                region_full_name = self._full_name_table[zone.region.zone]
                 coast_name = self._name_table[zone.coast_type]
                 name = f"{region_name}{coast_name}"
+                full_name = f"{region_full_name} ({coast_name})"
             else:
                 name = data_dict['name']
+                full_name = data_dict['full_name']
 
             self._name_table[zone] = name
+            self._full_name_table[zone] = full_name
             x_pos = data_dict['x_pos']
             y_pos = data_dict['y_pos']
             unit_position = geometry.PositionRecord(x_pos=x_pos, y_pos=y_pos)
@@ -683,6 +704,11 @@ class Variant(Renderable):
         return self._name_table
 
     @property
+    def full_name_table(self):
+        """ property """
+        return self._full_name_table
+
+    @property
     def colour_table(self):
         """ property """
         return self._colour_table
@@ -782,11 +808,11 @@ class Unit(Renderable):  # pylint: disable=abstract-method
             type_name = variant.name_table[UnitTypeEnum.FLEET_UNIT].lower()
 
         # role
-        adjective = self._position.variant.role_adjective(self._role)
+        adjective = variant.role_adjective(self._role)
 
         # zone
         zone = self._zone
-        zone_name = variant.name_table[zone]
+        zone_full_name = variant.full_name_table[zone]
 
         # dislodger - actually not used since called on standard units
         dislodged_info = ""
@@ -795,7 +821,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
             dislodger_legend = self._position.variant.name_table[zone_dislodger]
             dislodged_info = f"- delogée par une unité venue de la région {dislodger_legend}"
 
-        return f"Une {type_name} apartenant au joueur {adjective} positionnée en {zone_name} {dislodged_info}"
+        return f"Une {type_name} appartenant au joueur {adjective} positionnée en {zone_full_name} {dislodged_info}."
 
     @property
     def zone(self) -> Zone:
@@ -820,7 +846,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
 
 
 # position for units in reserve table
-dummy_position = geometry.PositionRecord(x_pos=15, y_pos=15)
+DUMMY_POSITION = geometry.PositionRecord(x_pos=15, y_pos=15)
 
 
 class Army(Unit):
@@ -840,7 +866,7 @@ class Army(Unit):
         if self._zone:
             position = self._position.variant.position_table[self._zone]
         else:
-            position = dummy_position
+            position = DUMMY_POSITION
 
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
@@ -849,7 +875,6 @@ class Army(Unit):
             x += DISLODGED_SHIFT  # pylint: disable=invalid-name
             y += DISLODGED_SHIFT  # pylint: disable=invalid-name
 
-#        unit_design.dol_army(x, y, ctx)
         unit_design.stabbeur_army(x, y, ctx)
 
         # more stuff if dislodged
@@ -874,7 +899,7 @@ class Fleet(Unit):
         if self._zone:
             position = self._position.variant.position_table[self._zone]
         else:
-            position = dummy_position
+            position = DUMMY_POSITION
 
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
@@ -883,7 +908,6 @@ class Fleet(Unit):
             x += DISLODGED_SHIFT  # pylint: disable=invalid-name
             y += DISLODGED_SHIFT  # pylint: disable=invalid-name
 
-#        unit_design.dol_fleet(x, y, ctx)
         unit_design.stabbeur_fleet(x, y, ctx)
 
         # more stuff if dislodged
@@ -903,6 +927,25 @@ class Ownership(Renderable):
     def role(self) -> Role:
         """ property """
         return self._role
+
+    @property
+    def center(self) -> Center:
+        """ property """
+        return self._center
+
+    def description(self):
+        """ description for when hovering """
+
+        variant = self._position.variant
+
+        # role
+        adjective = variant.role_adjective(self._role)
+
+        # zone
+        zone = self._center.region.zone
+        zone_full_name = variant.full_name_table[zone]
+
+        return f"Un centre appartenant au joueur {adjective} positionné en {zone_full_name}."
 
     def render(self, ctx) -> None:
         """put me on screen """
@@ -928,6 +971,17 @@ class Forbidden(Renderable):
         self._position = position
         self._region = region
 
+    def description(self):
+        """ description for when hovering """
+
+        variant = self._position.variant
+
+        # zone
+        zone = self._region.zone
+        zone_full_name = variant.full_name_table[zone]
+
+        return f"Une région interdite en retraite en {zone_full_name}."
+
     def render(self, ctx) -> None:
         """put me on screen """
 
@@ -948,6 +1002,10 @@ class Forbidden(Renderable):
         ctx.stroke(); ctx.closePath()
         ctx.lineWidth = 1
 
+    @property
+    def region(self) -> Region:
+        """ property """
+        return self._region
 
 class Position(Renderable):
     """ A position that can be displayed """
@@ -1070,6 +1128,54 @@ class Position(Renderable):
                 distance_closest = distance
 
         return closest_unit
+
+    def closest_object(self, designated_pos: geometry.PositionRecord):
+        """ closest_object : unit, center, region  """
+
+        closest_unit = None
+        distance_closest = None
+
+        # what list do we use ?
+        search_list = self._units + self._dislodged_units
+
+        # search in the units
+        for unit in search_list:
+            zone = unit.zone
+            unit_pos = self._variant.position_table[zone]
+            if unit.is_disloged():
+                unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT, y_pos=unit_pos.y_pos + DISLODGED_SHIFT)
+            distance = designated_pos.distance(unit_pos)
+            if distance_closest is None or distance < distance_closest:
+                closest_object = unit
+                distance_closest = distance
+
+        # search in the forbiddens
+        for forbidden in self._forbiddens:
+            zone = forbidden.region.zone
+            forbidden_pos = self._variant.position_table[zone]
+            distance = designated_pos.distance(forbidden_pos)
+            if distance_closest is None or distance < distance_closest:
+                closest_object = forbidden
+                distance_closest = distance
+
+        # search in the centers
+        for ownership in self._ownerships:
+            center = ownership.center
+            center_pos = self._variant.position_table[center]
+            distance = designated_pos.distance(center_pos)
+            if distance_closest is None or distance < distance_closest:
+                closest_object = ownership
+                distance_closest = distance
+
+        # search in the zones
+        for zone in self._variant.zones.values():
+            zone_pos = self._variant.position_table[zone]
+            distance = designated_pos.distance(zone_pos)
+            if distance_closest is None or distance < distance_closest:
+                closest_object = zone
+                distance_closest = distance
+
+        return closest_object
 
     def has_dislodged(self) -> bool:
         """ has_dislodged """

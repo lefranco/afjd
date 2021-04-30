@@ -5,10 +5,10 @@
     },
     "regions": {
         "1": {
-            "name": "Terre"
+            "name": "Cote"
         },
         "2": {
-            "name": "Cote"
+            "name": "Terre"
         },
         "3": {
             "name": "Mer"
