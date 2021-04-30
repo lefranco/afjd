@@ -132,4 +132,3 @@ def stabbeur_fleet(x: int, y: int, ctx):  # pylint: disable=invalid-name
         ctx.beginPath()
         ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2 * math.pi, False)
         ctx.stroke(); ctx.closePath()  # no fill
-
