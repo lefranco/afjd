@@ -1132,7 +1132,7 @@ class Position(Renderable):
     def closest_object(self, designated_pos: geometry.PositionRecord):
         """ closest_object : unit, center, region  """
 
-        closest_unit = None
+        closest_object = None
         distance_closest = None
 
         # what list do we use ?
