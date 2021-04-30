@@ -8,6 +8,7 @@ import abc
 import math
 
 import geometry
+import center_design
 import unit_design
 
 
@@ -961,9 +962,7 @@ class Ownership(Renderable):
         position = self._position.variant.position_table[self._center]
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
-        ctx.beginPath()
-        ctx.arc(x, y, 4, 0, 2 * math.pi, False)
-        ctx.fill(); ctx.stroke(); ctx.closePath()
+        center_design.stabbeur_center(x, y, ctx)
 
 
 class Forbidden(Renderable):
