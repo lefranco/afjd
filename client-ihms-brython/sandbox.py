@@ -5,6 +5,7 @@
 import json
 import enum
 import time
+import collections
 
 from browser import document, html, ajax, alert   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -24,7 +25,6 @@ my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
 
-initial_position = {'ownerships': dict(), 'units': dict(), 'forbiddens': dict(), 'dislodged_ones': dict()}
 initial_orders = {'fake_units': dict(), 'orders': dict(), }
 
 
@@ -39,14 +39,86 @@ class AutomatonStateEnum(enum.Enum):
     SELECT_DESTINATION_STATE = enum.auto()
 
 
+# this will not change
+variant_name_loaded = VARIANT_NAME  # pylint: disable=invalid-name
+
+# this will
+display_chosen = None  # pylint: disable=invalid-name
+variant_data = None  # pylint: disable=invalid-name
+position_data = None  # pylint: disable=invalid-name
+orders_data = None  # pylint: disable=invalid-name
+
+
+def create_initial_position():
+    """ create_initial_position """
+
+    global display_chosen  # pylint: disable=invalid-name
+    global variant_data  # pylint: disable=invalid-name
+    global position_data  # pylint: disable=invalid-name
+    global orders_data  # pylint: disable=invalid-name
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = common.get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
+    # get the position
+    position_loaded = {'ownerships': dict(), 'units': dict(), 'forbiddens': dict(), 'dislodged_ones': dict()}
+
+    # digest the position
+    position_data = mapping.Position(position_loaded, variant_data)
+
+    # get the orders from server
+    orders_loaded = initial_orders
+
+    # digest the orders
+    orders_data = mapping.Orders(orders_loaded, position_data)
+
+
+def import_position(new_position_data):
+    """ import position from play/position """
+
+    global position_data  # pylint: disable=invalid-name
+    global orders_data  # pylint: disable=invalid-name
+
+    # make sure we are ready
+    if not position_data:
+        create_initial_position()
+
+    # get loaded units
+    loaded_units = new_position_data.save_json()
+    dict_loaded_units = collections.defaultdict(list)
+    for loaded_unit in loaded_units:
+        type_num = loaded_unit['type_unit']
+        role_num = loaded_unit['role']
+        zone_num = loaded_unit['zone']
+        dict_loaded_units[role_num].append([type_num, zone_num])
+
+    # get the position
+    position_imported = {'ownerships': dict(), 'units': dict_loaded_units, 'forbiddens': dict(), 'dislodged_ones': dict()}
+
+    # copy position
+    position_data = mapping.Position(position_imported, variant_data)
+
+    # get the orders from server
+    orders_loaded = initial_orders
+
+    # digest the orders
+    orders_data = mapping.Orders(orders_loaded, position_data)
+
+
 def sandbox():
     """ sandbox """
-
-    variant_name_loaded = None
-    variant_content_loaded = None
-    variant_data = None
-    position_loaded = None
-    position_data = None
 
     selected_active_unit = None
     selected_passive_unit = None
@@ -519,7 +591,7 @@ def sandbox():
         # put the background map first
         ctx.drawImage(img, 0, 0)
 
-        # put the legends
+        # put the centers
         variant_data.render(ctx)
 
         # put the position
@@ -665,30 +737,9 @@ def sandbox():
 
     # starts here
 
-    variant_name_loaded = VARIANT_NAME
-
-    # from variant name get variant content
-
-    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-    if not variant_content_loaded:
-        return
-
-    # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
-
-    # from display chose get display parameters
-    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
-
-    # build variant data
-    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-
-    # get the position from server
-    position_loaded = initial_position
-
-    # digest the position
-    position_data = mapping.Position(position_loaded, variant_data)
-
-    # now we can display
+    # make sure we are ready
+    if not position_data:
+        create_initial_position()
 
     # finds data about the dragged unit
     unit_info_table = dict()
@@ -752,6 +803,10 @@ def sandbox():
     display_very_left <= html.LEGEND("ces unités")
     display_very_left <= html.LEGEND("sur la carte")
 
+    # very important : need a blank situation to start with
+    if position_data is None:
+        create_initial_position()
+
     map_size = variant_data.map_size
 
     # create canvas
@@ -776,12 +831,6 @@ def sandbox():
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
-
-    # get the orders from server
-    orders_loaded = initial_orders
-
-    # digest the orders
-    orders_data = mapping.Orders(orders_loaded, position_data)
 
     # put background (this will call the callback that display the whole map)
     img = common.read_image(variant_name_loaded, display_chosen)
@@ -823,16 +872,9 @@ def sandbox():
     my_sub_panel <= my_sub_panel2
 
 
-already = False  # pylint: disable=invalid-name
-
-
 def render(panel_middle):
     """ render """
 
-    global already  # pylint: disable=invalid-name
-
+    my_sub_panel.clear()
     panel_middle <= my_panel
-
-    if not already:
-        sandbox()
-        already = True
+    sandbox()
