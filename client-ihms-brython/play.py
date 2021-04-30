@@ -16,6 +16,7 @@ import common
 import geometry
 import mapping
 import login
+import sandbox
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -198,6 +199,19 @@ def show_position():
         """ callback_canvas_mouse_leave """
         hover_info.text = hovering_default_message
 
+    def callback_export_sandbox(_):
+        """ callback_export_sandbox """
+        sandbox.import_position(position_data)
+
+    def put_export_sandbox(buttons_right):
+        """ put_export_sandbox """
+
+        input_export_sandbox = html.INPUT(type="submit", value="exporter vers le bac à sable")
+        input_export_sandbox.bind("click", callback_export_sandbox)
+        buttons_right <= html.BR()
+        buttons_right <= input_export_sandbox
+        buttons_right <= html.BR()
+
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -267,9 +281,6 @@ def show_position():
         'color': 'blue',
     }
 
-    my_sub_panel <= hover_info
-    my_sub_panel <= canvas
-
     ratings = position_data.role_ratings()
     colours = position_data.role_colours()
     rating_colours_window = common.make_rating_colours_window(ratings, colours)
@@ -280,8 +291,29 @@ def show_position():
 
     report_window = common.make_report_window(report_loaded)
 
-    my_sub_panel <= rating_colours_window
-    my_sub_panel <= report_window
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    display_left <= hover_info
+    display_left <= canvas
+    display_left <= rating_colours_window
+    display_left <= report_window
+
+    # right side
+
+    buttons_right = html.DIV(id='buttons_right')
+    buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+    put_export_sandbox(buttons_right)
+
+    # overall
+    my_sub_panel2 = html.DIV()
+    my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left
+    my_sub_panel2 <= buttons_right
+
+    my_sub_panel <= my_sub_panel2
 
 
 def submit_orders():
@@ -2521,6 +2553,9 @@ def vote():
     if votes is None:
         return
 
+    # avoids a warning
+    votes = list(votes)
+
     vote_value = False
     for _, role, vote_val in votes:
         if role == role_id:
@@ -2813,6 +2848,9 @@ def game_master():
     votes = common.vote_reload(game_id)
     if votes is None:
         return
+
+    # avoids a warning
+    votes = list(votes)
 
     vote_values_table = dict()
     for _, role, vote_val in votes:
