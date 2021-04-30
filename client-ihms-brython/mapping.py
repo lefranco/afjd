@@ -367,14 +367,17 @@ LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 LEGEND_SHIFT_X = 0
 LEGEND_SHIFT_Y = - 15
 
+
 def legend_font() -> str:
     """ legend_font """
+
     font_style = 'normal'
     font_variant = 'normal'
     font_weight = 'lighter'
     font_size = 'xx-small'
     font_family = 'Arial'
-    return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}" # default is 10 sans serif
+    return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"  # default is 10 sans serif
+
 
 LEGEND_FONT = legend_font()
 
@@ -659,9 +662,8 @@ class Variant(Renderable):
             else:
                 legend = self._name_table[zone]
             text_width = ctx.measureText(legend).width
-            #ctx.font = LEGEND_FONT
+            ctx.font = LEGEND_FONT
             ctx.fillText(legend, x_pos - text_width / 2, y_pos)
-
 
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
@@ -1006,6 +1008,7 @@ class Forbidden(Renderable):
     def region(self) -> Region:
         """ property """
         return self._region
+
 
 class Position(Renderable):
     """ A position that can be displayed """
