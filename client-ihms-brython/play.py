@@ -178,7 +178,7 @@ def show_position():
         # put the background map first
         ctx.drawImage(img, 0, 0)
 
-        # put the legends
+        # put the centers
         variant_data.render(ctx)
 
         # put the position
@@ -1020,7 +1020,7 @@ def submit_orders():
         # put the background map first
         ctx.drawImage(img, 0, 0)
 
-        # put the legends
+        # put the centers
         variant_data.render(ctx)
 
         # put the position
@@ -1715,7 +1715,7 @@ def submit_communication_orders():
         # put the background map first
         ctx.drawImage(img, 0, 0)
 
-        # put the legends
+        # put the centers
         variant_data.render(ctx)
 
         # put the position
@@ -3236,7 +3236,7 @@ def show_history():
             # put the background map first
             ctx.drawImage(img, 0, 0)
 
-            # put the legends
+            # put the centers
             variant_data.render(ctx)
 
             # put the position
