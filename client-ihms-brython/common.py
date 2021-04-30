@@ -816,6 +816,7 @@ def vote_reload(game_id):
 
     return votes
 
+
 def read_parameters(variant_name_loaded, display_chosen):
     """ read_parameters """
 
@@ -824,6 +825,7 @@ def read_parameters(variant_name_loaded, display_chosen):
         parameters_read = json.load(read_file)
 
     return parameters_read
+
 
 def read_image(variant_name_loaded, display_chosen):
     """ read_image """
