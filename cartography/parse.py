@@ -176,12 +176,16 @@ def main() -> None:
     viewbox_width = float(viewbox_width_str)
     viewbox_height = float(viewbox_height_str)
 
-    # ====== get png dimension =====
+    # ====== get image dimension =====
 
+    # svg for wenz
+    svg_dim = {
+        'width' : viewbox_width,
+        'height': viewbox_height
+    }
+
+    # png for jeremie
     png_width, png_height = get_image_info(map_png_input)
-
-    print(f"{png_width=}, {png_height=}")
-
     map_table = {
         'width': int(png_width),
         'height': int(png_height),
@@ -297,11 +301,15 @@ def main() -> None:
     # ====== make centers_pos_table =====
     #  for jeremie
 
+    centers_raw_pos_table = dict()
     centers_pos_table = dict()
     for num, path in sorted(centers_path_table.items(), key=lambda kv: int(kv[0])):
 
         # for centers : middle is OK
         x_chosen, y_chosen = path.middle()
+
+        # for wenz
+        centers_raw_pos_table[num] = (x_chosen, y_chosen)
 
         centers_pos_table[num] = {
             "x_pos": round(x_chosen * png_width / viewbox_width),
@@ -311,11 +319,15 @@ def main() -> None:
     # ====== make regions_pos_table =====
     #  for jeremie
 
+    regions_raw_pos_table = dict()
     regions_pos_table = dict()
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
 
         # for regions :  the polylabel
         x_chosen, y_chosen = path.polylabel()
+
+        # for wenz
+        regions_raw_pos_table[num] = (x_chosen, y_chosen)
 
         region_name = regions_ref_num_table[num]
         regions_pos_table[num] = {
@@ -373,6 +385,7 @@ def main() -> None:
     #  for wenz
 
     # uses regions_pos_table and center_pos_table
+    # uses regions_raw_pos_table and center_raw_pos_table
 
     zone_table = dict()
 
@@ -391,10 +404,9 @@ def main() -> None:
         if num in region2center_table:
             city = "1"
             num_center = region2center_table[num]
-            center_data = centers_pos_table[num_center]
-            coord_city = [center_data['x_pos'], center_data['y_pos']]
+            coord_city = list(map(round, centers_raw_pos_table[num_center]))
 
-        coords = data['x_pos'], data['y_pos']
+        coords = list(map(round, regions_raw_pos_table[num]))
 
         zone_table[num] = {
             "label": data['name'],
@@ -419,6 +431,7 @@ def main() -> None:
         file_ptr.write(output)
 
     result2 = dict()
+    result2['svg_dim'] = svg_dim
     result2['map_elements'] = map_elements
     result2['zones'] = zone_table
     output = json.dumps(result2, indent=4, ensure_ascii=False)
