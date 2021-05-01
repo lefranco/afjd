@@ -309,7 +309,7 @@ def main() -> None:
         }
 
     # ====== make regions_pos_table =====
-    #  for wenz and jeremie
+    #  for jeremie
 
     regions_pos_table = dict()
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
@@ -321,8 +321,6 @@ def main() -> None:
         regions_pos_table[num] = {
             "name": region_name,
             "full_name": json_parameters_data['zones'][str(num)]['full_name'],
-            "x_legend_pos": round(x_chosen * png_width / viewbox_width),
-            "y_legend_pos": round(y_chosen * png_height / viewbox_height),
             "x_pos": round(x_chosen * png_width / viewbox_width),
             "y_pos": round(y_chosen * png_height / viewbox_height)
         }
@@ -335,8 +333,6 @@ def main() -> None:
         regions_pos_table[num] = {
             "name": "",
             "full_name": "",
-            "x_legend_pos": round(x_chosen * png_width / viewbox_width),
-            "y_legend_pos": round(y_chosen * png_height / viewbox_height),
             "x_pos": round(x_chosen * png_width / viewbox_width),
             "y_pos": round(y_chosen * png_height / viewbox_height)
         }
@@ -373,19 +369,59 @@ def main() -> None:
         # put in map elements
         map_elements.append(map_element)
 
+    # ====== zones =====
+    #  for wenz
+
+    # uses regions_pos_table and center_pos_table
+
+    zone_table = dict()
+
+    for num, data in sorted(regions_pos_table.items(), key=lambda kv: int(kv[0])):
+
+        # ignore specific coasts
+        if not data['name']:
+            continue
+
+        region_type_code = json_variant_data['regions'][num - 1]
+        assert region_type_code in [1, 2, 3]
+        type_ = "1" if region_type_code in [1, 2] else "0"
+
+        city = "0"
+        coord_city = []
+        if num in region2center_table:
+            city = "1"
+            num_center = region2center_table[num]
+            center_data = centers_pos_table[num_center]
+            coord_city = [center_data['x_pos'], center_data['y_pos']]
+
+        coords = data['x_pos'], data['y_pos']
+
+        zone_table[num] = {
+            "label": data['name'],
+            "coord_label": coords,
+            "name": data['full_name'],
+            "type": type_,
+            "city": city,
+            "coord_city": coord_city,
+            "unit_pos": [[coords]],
+            "pos_labels":  ["d"],
+            "center": 0
+        }
+
     # ============= output ===============
 
     result1 = copy.deepcopy(json_parameters_data)
     result1['map'] = map_table
     result1['zones'] = regions_pos_table
     result1['centers'] = centers_pos_table
-    output = json.dumps(result1, indent=4)
+    output = json.dumps(result1, indent=4, ensure_ascii=False)
     with open(first_format_json_output, 'w') as file_ptr:
         file_ptr.write(output)
 
     result2 = dict()
     result2['map_elements'] = map_elements
-    output = json.dumps(result2, indent=4)
+    result2['zones'] = zone_table
+    output = json.dumps(result2, indent=4, ensure_ascii=False)
     with open(second_format_json_output, 'w') as file_ptr:
         file_ptr.write(output)
 
