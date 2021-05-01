@@ -5,35 +5,11 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="214.969mm"
    version="1.2"
    height="189.992mm"
    viewBox="0 0 2539 2244"
-   id="svg2940"
-   sodipodi:docname="Carte_annotee.svg"
-   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1596"
-     inkscape:window-height="952"
-     id="namedview1473"
-     showgrid="false"
-     inkscape:zoom="1.998346"
-     inkscape:cx="297.33309"
-     inkscape:cy="518.89124"
-     inkscape:window-x="0"
-     inkscape:window-y="23"
-     inkscape:window-maximized="0"
-     inkscape:current-layer="svg2940" />
+   id="svg2940">
   <defs
      id="defs2" />
   <g
