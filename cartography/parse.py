@@ -162,6 +162,9 @@ def main() -> None:
     # make coastal zone table from input json file
     coastal_zones_name2num_table = {f"{json_parameters_data['zones'][str(r)]['name']}{json_parameters_data['coasts'][str(c)]['name']}".upper(): len(json_variant_data['regions']) + 1 + n for n, (r, c) in enumerate(json_variant_data['coastal_zones'])}
 
+    # make table coastal zone2region
+    coastal_zone2region_table = {len(json_variant_data['regions']) + 1 + n : r for n, (r, _) in enumerate(json_variant_data['coastal_zones'])}
+
     # parse svg map to find paths
     doc = xml.dom.minidom.parse(svg_input_file)
 
@@ -337,10 +340,14 @@ def main() -> None:
             "y_pos": round(y_chosen * png_height / viewbox_height)
         }
 
+    coastal_zones_raw_pos_table = dict()
     for num, path in sorted(coastal_zones_path_table.items(), key=lambda kv: int(kv[0])):
 
         # for special coasts : middle
         x_chosen, y_chosen = path.middle()
+
+        # for wenz
+        coastal_zones_raw_pos_table[num] = (x_chosen, y_chosen)
 
         regions_pos_table[num] = {
             "name": "",
@@ -392,32 +399,44 @@ def main() -> None:
     for num, data in sorted(regions_pos_table.items(), key=lambda kv: int(kv[0])):
 
         # ignore specific coasts
-        if not data['name']:
+        if num in coastal_zones_path_table:
+
+            coord_coasts = list(map(round, coastal_zones_raw_pos_table[num]))
+            num_region = coastal_zone2region_table[num]
+            zone_table[num_region]['unit_pos'].append(coord_coasts)
+
+            _, num_coast_type = json_variant_data['coastal_zones'][num - len(json_variant_data['regions']) - 1]
+            label = f"{json_parameters_data['coasts'][str(num_coast_type)]['name']}"
+            zone_table[num_region]['pos_labels'].append(label)
+
             continue
 
         region_type_code = json_variant_data['regions'][num - 1]
         assert region_type_code in [1, 2, 3]
-        type_ = "1" if region_type_code in [1, 2] else "0"
+        type_ = 1 if region_type_code in [1, 2] else 0
 
-        city = "0"
+        city = 0
         coord_city = []
         if num in region2center_table:
-            city = "1"
+            city = 1
             num_center = region2center_table[num]
             coord_city = list(map(round, centers_raw_pos_table[num_center]))
+            if num_center not in sum(json_variant_data['start_centers'], []):
+                city = 2
+
 
         coords = list(map(round, regions_raw_pos_table[num]))
 
         zone_table[num] = {
-            "label": data['name'],
-            "coord_label": coords,
-            "name": data['full_name'],
-            "type": type_,
-            "city": city,
-            "coord_city": coord_city,
-            "unit_pos": [[coords]],
-            "pos_labels":  ["d"],
-            "center": 0
+            'label': data['name'],
+            'coord_label': coords,
+            'name': data['full_name'],
+            'type': type_,
+            'city': city,
+            'coord_city': coord_city,
+            'unit_pos': [coords],
+            'pos_labels':  ["d"],
+            'center': 0
         }
 
     # ============= output ===============
