@@ -5,11 +5,35 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="214.969mm"
    version="1.2"
    height="189.992mm"
    viewBox="0 0 2539 2244"
-   id="svg2940">
+   id="svg2940"
+   sodipodi:docname="Carte_annotee.svg"
+   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1596"
+     inkscape:window-height="952"
+     id="namedview1473"
+     showgrid="false"
+     inkscape:zoom="1.998346"
+     inkscape:cx="297.33309"
+     inkscape:cy="518.89124"
+     inkscape:window-x="0"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2940" />
   <defs
      id="defs2" />
   <g
@@ -216,7 +240,7 @@
          fill-rule="evenodd"
          id="path34">
         <title
-           id="title4175">R_WES</title>
+           id="title4175">R_MOC</title>
       </path>
       <path
          vector-effect="none"
@@ -224,7 +248,7 @@
          fill-rule="evenodd"
          id="path36">
         <title
-           id="title8479">R_EAS</title>
+           id="title8479">R_MOR</title>
       </path>
       <path
          vector-effect="none"
@@ -240,7 +264,7 @@
          fill-rule="evenodd"
          id="path40">
         <title
-           id="title8477">R_NRG</title>
+           id="title8477">R_MNG</title>
       </path>
       <path
          vector-effect="none"
@@ -248,7 +272,7 @@
          fill-rule="evenodd"
          id="path42">
         <title
-           id="title4165">R_MID</title>
+           id="title4165">R_ATL</title>
       </path>
       <path
          vector-effect="none"
@@ -256,7 +280,7 @@
          fill-rule="evenodd"
          id="path44">
         <title
-           id="title4159">R_NAT</title>
+           id="title4159">R_ATN</title>
       </path>
       <path
          vector-effect="none"
@@ -264,7 +288,7 @@
          fill-rule="evenodd"
          id="path46">
         <title
-           id="title4157">R_IRI</title>
+           id="title4157">R_IRL</title>
       </path>
       <path
          vector-effect="none"
@@ -272,7 +296,7 @@
          fill-rule="evenodd"
          id="path48">
         <title
-           id="title2870">R_ENG</title>
+           id="title2870">R_MAN</title>
       </path>
       <path
          vector-effect="none"
@@ -301,7 +325,7 @@
          fill-rule="evenodd"
          id="path56">
         <title
-           id="title4089">R_BLA</title>
+           id="title4089">R_NOI</title>
       </path>
       <path
          vector-effect="none"
@@ -309,7 +333,7 @@
          fill-rule="evenodd"
          id="path58">
         <title
-           id="title8481">R_AEG</title>
+           id="title8481">R_EGE</title>
       </path>
       <path
          vector-effect="none"
@@ -325,7 +349,7 @@
          fill-rule="evenodd"
          id="path62">
         <title
-           id="title4173">R_GOL</title>
+           id="title4173">R_GLI</title>
       </path>
       <path
          vector-effect="none"
@@ -341,7 +365,7 @@
          fill-rule="evenodd"
          id="path66">
         <title
-           id="title4171">R_TYN</title>
+           id="title4171">R_MTY</title>
       </path>
       <path
          vector-effect="none"
@@ -385,7 +409,7 @@
          fill-rule="evenodd"
          id="path80">
         <title
-           id="title4195">R_NTH</title>
+           id="title4195">R_NRD</title>
       </path>
     </g>
     <g
@@ -8868,7 +8892,7 @@
          fill-rule="evenodd"
          id="path2124">
         <title
-           id="title4087">R_SEV</title>
+           id="title4087">R_SEB</title>
       </path>
       <path
          vector-effect="none"
@@ -8945,7 +8969,7 @@
          fill-rule="evenodd"
          id="path2138">
         <title
-           id="title4105">R_RUM</title>
+           id="title4105">R_ROU</title>
       </path>
       <path
          vector-effect="none"
@@ -8963,7 +8987,7 @@
          fill-rule="evenodd"
          id="path2144">
         <title
-           id="title1355">R_SPA</title>
+           id="title1355">R_ESP</title>
       </path>
     </g>
     <g
@@ -9078,7 +9102,7 @@
          fill-rule="evenodd"
          id="path2164">
         <title
-           id="title4197">R_NWY</title>
+           id="title4197">R_NGE</title>
       </path>
     </g>
     <g
@@ -9205,7 +9229,7 @@
          fill-rule="evenodd"
          id="path2194">
         <title
-           id="title2874">R_TUS</title>
+           id="title2874">R_TOS</title>
       </path>
       <path
          vector-effect="none"
@@ -9329,7 +9353,7 @@
          fill-rule="evenodd"
          id="path2218">
         <title
-           id="title2868">R_DEN</title>
+           id="title2868">R_DAN</title>
       </path>
     </g>
     <g
@@ -9395,7 +9419,7 @@
          fill-rule="evenodd"
          id="path2230">
         <title
-           id="title2872">R_NAF</title>
+           id="title2872">R_AFN</title>
       </path>
     </g>
     <g
@@ -9747,7 +9771,7 @@
          fill-rule="evenodd"
          id="path2298">
         <title
-           id="title4151">R_WAL</title>
+           id="title4151">R_PGA</title>
       </path>
     </g>
     <g
@@ -10066,7 +10090,7 @@
          fill-rule="evenodd"
          id="path2364">
         <title
-           id="title4199">R_SWE</title>
+           id="title4199">R_SUE</title>
       </path>
     </g>
     <g
@@ -10198,7 +10222,7 @@
          fill-rule="evenodd"
          id="path2388">
         <title
-           id="title4133">R_BUR</title>
+           id="title4133">R_BOU</title>
       </path>
       <path
          vector-effect="none"
@@ -10252,7 +10276,7 @@
          fill-rule="evenodd"
          id="path2398">
         <title
-           id="title4149">R_WAR</title>
+           id="title4149">R_VAR</title>
       </path>
     </g>
     <g
@@ -10470,7 +10494,7 @@
          fill-rule="evenodd"
          id="path2438">
         <title
-           id="title6629">C_SPA</title>
+           id="title6629">C_ESP</title>
       </path>
     </g>
     <g
@@ -10685,7 +10709,7 @@
          fill-rule="evenodd"
          id="path2478">
         <title
-           id="title6619">C_NWY</title>
+           id="title6619">C_NGE</title>
       </path>
     </g>
     <g
@@ -10728,7 +10752,7 @@
          fill-rule="evenodd"
          id="path2486">
         <title
-           id="title6621">C_SWE</title>
+           id="title6621">C_SUE</title>
       </path>
     </g>
     <g
@@ -10857,7 +10881,7 @@
          fill-rule="evenodd"
          id="path2510">
         <title
-           id="title6601">C_WAR</title>
+           id="title6601">C_VAR</title>
       </path>
     </g>
     <g
@@ -10986,7 +11010,7 @@
          fill-rule="evenodd"
          id="path2534">
         <title
-           id="title6571">C_DEN</title>
+           id="title6571">C_DAN</title>
       </path>
     </g>
     <g
@@ -11717,7 +11741,7 @@
          fill-rule="evenodd"
          id="path2670">
         <title
-           id="title6587">C_SEV</title>
+           id="title6587">C_SEB</title>
       </path>
     </g>
     <g
@@ -11760,7 +11784,7 @@
          fill-rule="evenodd"
          id="path2678">
         <title
-           id="title6579">C_RUM</title>
+           id="title6579">C_ROU</title>
       </path>
     </g>
     <g
@@ -12663,41 +12687,41 @@
      id="path17165"
      d="M 1885.5068,264.17716 1872.3054,264.70361 1867.7253,252.31104 1878.096,244.12556 1889.0856,251.45922 Z">
     <title
-       id="title17167">ZC_STPNC</title>
+       id="title17167">ZC_STPCN</title>
   </path>
   <path
      style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
      id="path20127"
      d="M 579.16312,1995.7418 565.96175,1996.2682 561.38161,1983.8756 571.75231,1975.6902 582.74188,1983.0238 Z">
     <title
-       id="title20125">ZC_SPASC</title>
+       id="title20125">ZC_ESPCS</title>
   </path>
   <path
      style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
      id="path20131"
      d="M 575.60007,1655.7108 562.3987,1656.2372 557.81856,1643.8446 568.18926,1635.6592 579.17883,1642.9928 Z">
     <title
-       id="title20129">ZC_SPANC</title>
+       id="title20129">ZC_ESPCN</title>
   </path>
   <path
      style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
      id="path20145"
      d="M 1853.874,1634.147 1840.6726,1634.6735 1836.0925,1622.2809 1846.4632,1614.0954 1857.4528,1621.4291 Z">
     <title
-       id="title20143">ZC_BULEC</title>
+       id="title20143">ZC_BULCE</title>
   </path>
   <path
      style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
      id="path20151"
      d="M 1766.9074,1753.8734 1753.7061,1754.3998 1749.1259,1742.0072 1759.4966,1733.8218 1770.4862,1741.1554 Z">
     <title
-       id="title20149">ZC_BULSC</title>
+       id="title20149">ZC_BULCS</title>
   </path>
   <path
      style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
      id="path1477"
      d="M 1646.5546,746.84868 1633.3532,747.37513 1628.7731,734.98256 1639.1438,726.79708 1650.1334,734.13074 Z">
     <title
-       id="title1475">ZC_STPSC</title>
+       id="title1475">ZC_STPCS</title>
   </path>
 </svg>
