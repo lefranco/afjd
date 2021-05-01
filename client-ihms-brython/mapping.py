@@ -356,6 +356,19 @@ DISLODGED_TEXT_BACKGROUND_COLOUR = ColourRecord(255, 255, 255)  # white
 DISLODGED_COLOUR = ColourRecord(255, 127, 0)  # orange
 DISLODGED_SHIFT = -5
 
+def dislodged_font() -> str:
+    """ legend_font """
+
+    font_style = 'normal'
+    font_variant = 'normal'
+    font_weight = 'lighter'
+    font_size = 'xx-small'
+    font_family = 'Arial'
+    return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"  # default is 10 sans serif
+
+
+DISLODGED_FONT = dislodged_font()
+
 # orders
 ATTACK_COLOUR = ColourRecord(red=255, green=25, blue=25)  # red
 SUPPORT_COLOUR = ColourRecord(red=25, green=255, blue=25)  # green
@@ -366,7 +379,7 @@ ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 # legend
 LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 LEGEND_SHIFT_X = 0
-LEGEND_SHIFT_Y = - 15
+LEGEND_SHIFT_Y = - 14
 
 
 def legend_font() -> str:
@@ -768,6 +781,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
 
         dislodger_colour = DISLODGED_COLOUR
         ctx.fillStyle = dislodger_colour.str_value()
+        ctx.font = DISLODGED_FONT
         ctx.fillText(dislodger_legend, x_pos + 14, y_pos - 9)
 
         ctx.lineWidth = 2
