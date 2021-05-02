@@ -199,9 +199,6 @@ def sandbox():
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
 
-        names_dict = variant_data.extract_names()
-        names_dict_json = json.dumps(names_dict)
-
         # units
         units_list_dict = position_data.save_json()
         units_list_dict_json = json.dumps(units_list_dict)
