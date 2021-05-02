@@ -787,8 +787,6 @@ def sandbox():
 
         reserve_table <= row
 
-    reserve_table <= row
-
     display_very_left = html.DIV(id='display_very_left')
     display_very_left.attrs['style'] = 'display: table-cell; width=40px; vertical-align: top; table-layout: fixed;'
 
