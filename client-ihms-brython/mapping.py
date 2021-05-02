@@ -356,6 +356,7 @@ DISLODGED_TEXT_BACKGROUND_COLOUR = ColourRecord(255, 255, 255)  # white
 DISLODGED_COLOUR = ColourRecord(255, 127, 0)  # orange
 DISLODGED_SHIFT = -5
 
+
 def dislodged_font() -> str:
     """ legend_font """
 
@@ -891,8 +892,8 @@ class Army(Unit):
 
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
-        x += UNIT_SHIFT_X
-        y += UNIT_SHIFT_Y
+        x += UNIT_SHIFT_X  # pylint: disable=invalid-name
+        y += UNIT_SHIFT_Y  # pylint: disable=invalid-name
 
         # shift for dislodged units
         if self._dislodged_origin is not None:
@@ -927,8 +928,8 @@ class Fleet(Unit):
 
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
-        x += UNIT_SHIFT_X
-        y += UNIT_SHIFT_Y
+        x += UNIT_SHIFT_X  # pylint: disable=invalid-name
+        y += UNIT_SHIFT_Y  # pylint: disable=invalid-name
 
         # shift for dislodged units
         if self._dislodged_origin is not None:
