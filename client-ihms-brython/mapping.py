@@ -166,7 +166,9 @@ class OrderTypeEnum(enum.Enum):
 class Center:
     """ A Center """
 
-    def __init__(self, region: 'Region') -> None:
+    def __init__(self, identifier: int, region: 'Region') -> None:
+
+        self._identifier = identifier
 
         # the region in which is the center
         self._region = region
@@ -188,6 +190,11 @@ class Center:
     def owner_start(self, owner_start: 'Role') -> None:
         """ setter """
         self._owner_start = owner_start
+
+    @property
+    def identifier(self) -> int:
+        """ property """
+        return self._identifier
 
 
 class CoastType:
@@ -432,7 +439,7 @@ class Variant(Renderable):
         for num, num_region in enumerate(self._raw_variant_content['centers']):
             number = num + 1
             region = self._regions[num_region]
-            center = Center(region)
+            center = Center(number, region)
             region.center = center
             self._centers[number] = center
 
@@ -977,6 +984,15 @@ class Ownership(Renderable):
         """ property """
         return self._center
 
+    def save_json(self):
+        """ Save to  dict """
+
+        json_dict = {
+            "role": self._role.identifier,
+            "center_num": self._center.identifier
+        }
+        return json_dict
+
     def description(self):
         """ description for when hovering """
 
@@ -1151,6 +1167,13 @@ class Position(Renderable):
         json_data = list()
         for unit in self._units:
             json_data.append(unit.save_json())
+        return json_data
+
+    def save_json2(self) -> str:
+        """ export as list of dict """
+        json_data = list()
+        for ownership in self._ownerships:
+            json_data.append(ownership.save_json())
         return json_data
 
     def closest_ownership(self, designated_pos: geometry.PositionRecord):

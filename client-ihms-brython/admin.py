@@ -193,8 +193,6 @@ def rectify():
     def submit_callback(_):
         """ submit_callback """
 
-        assert False, "TODO"
-
         def reply_callback(req):
 
             req_result = json.loads(req.text)
@@ -208,29 +206,32 @@ def rectify():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez soumis une rfectification de position : {messages}", remove_after=config.REMOVE_AFTER)
-
-        variant_name = variant_name_loaded
-
-        names_dict = variant_data.extract_names()
-        names_dict_json = json.dumps(names_dict)
+            InfoDialog("OK", f"Vous avez rectifié la position : {messages}", remove_after=config.REMOVE_AFTER)
 
         # units
         units_list_dict = position_data.save_json()
         units_list_dict_json = json.dumps(units_list_dict)
 
+        # ownerships
+        ownerships_list_dict = position_data.save_json2()
+        ownerships_list_dict_json = json.dumps(ownerships_list_dict)
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return None
+
         json_dict = {
-            'variant_name': variant_name,
-            'names': names_dict_json,
+            'pseudo': pseudo,
             'units': units_list_dict_json,
+            'ownerships': ownerships_list_dict_json,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/rectify"  # TODO CHANGE
+        url = f"{host}:{port}/game-positions/{game_id}"
 
-        # submitting position and orders for simulation : do not need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        # submitting position (units ownerships) for rectification : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def callback_canvas_short_click(event):
         """ callback_canvas_short_click """
