@@ -409,6 +409,18 @@ def main() -> None:
             label = f"{json_parameters_data['coasts'][str(num_coast_type)]['name']}"
             zone_table[num_region]['pos_labels'].append(label)
 
+            zone_table[num] = {
+                'label': label,
+                'coord_label': [],
+                'name': "",
+                'type': 1,
+                'city': -1,
+                'coord_city': [],
+                'unit_pos': [coord_coasts],
+                'pos_labels':  ["d"],
+                'center': int(num_region in region2center_table)
+            }
+
             continue
 
         region_type_code = json_variant_data['regions'][num - 1]
@@ -424,7 +436,6 @@ def main() -> None:
             if num_center not in sum(json_variant_data['start_centers'], []):
                 city = 2
 
-
         coords = list(map(round, regions_raw_pos_table[num]))
 
         zone_table[num] = {
@@ -436,7 +447,7 @@ def main() -> None:
             'coord_city': coord_city,
             'unit_pos': [coords],
             'pos_labels':  ["d"],
-            'center': 0
+            'center': int(num in region2center_table)
         }
 
     # ============= output ===============
