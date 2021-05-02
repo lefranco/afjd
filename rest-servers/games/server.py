@@ -121,9 +121,8 @@ SIMULATION_PARSER.add_argument('units', type=str, required=True)
 SIMULATION_PARSER.add_argument('names', type=str, required=True)
 
 RECTIFICATION_PARSER = flask_restful.reqparse.RequestParser()
-RECTIFICATION_PARSER.add_argument('center_ownerships', type=str, required=True)
+RECTIFICATION_PARSER.add_argument('ownerships', type=str, required=True)
 RECTIFICATION_PARSER.add_argument('units', type=str, required=True)
-RECTIFICATION_PARSER.add_argument('forbiddens', type=str, required=True)
 RECTIFICATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 DECLARATION_PARSER = flask_restful.reqparse.RequestParser()
@@ -879,9 +878,8 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
 
         args = RECTIFICATION_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
-        ownerships_submitted = args['center_ownerships']
+        ownerships_submitted = args['ownerships']
         units_submitted = args['units']
-        forbiddens_submitted = args['forbiddens']
 
         try:
             the_ownerships = json.loads(ownerships_submitted)
@@ -892,11 +890,6 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             the_units = json.loads(units_submitted)
         except json.JSONDecodeError:
             flask_restful.abort(400, msg="Did you convert units from json to text ?")
-
-        try:
-            the_forbiddens = json.loads(forbiddens_submitted)
-        except json.JSONDecodeError:
-            flask_restful.abort(400, msg="Did you convert forbiddens from json to text ?")
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to rectify position in game")
@@ -927,20 +920,16 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to change position - must be game master
+        # check user has right to change position - must be admin
 
         # find the game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # who is player for role ?
-        assert game is not None
-        game_master_id = game.get_role(0)
-
-        # must be game master
-        if user_id != game_master_id:
-            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You are not allowed to rectify a position!")
 
         # store position
 
@@ -954,11 +943,6 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             unit = units.Unit(int(game_id), type_num, role_num, zone_num, region_dislodged_from_num, fake)
             unit.delete_database()
 
-        # purge previous forbiddens
-        for (_, center_num) in forbiddens.Forbidden.list_by_game_id(int(game_id)):
-            forbidden = forbiddens.Forbidden(int(game_id), center_num)
-            forbidden.delete_database()
-
         # insert new ownerships
         for the_ownership in the_ownerships:
             center_num = the_ownership['center_num']
@@ -971,16 +955,8 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             type_num = the_unit['type_unit']
             zone_num = the_unit['zone']
             role_num = the_unit['role']
-            region_dislodged_from_num = the_unit['dislodged_origin'] if 'dislodged_origin' in the_unit else 0
-            fake = the_unit['fake'] if 'fake' in the_unit else 0
-            unit = units.Unit(int(game_id), type_num, zone_num, role_num, region_dislodged_from_num, fake)
+            unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, 0)
             unit.update_database()
-
-        # insert new forbiddens
-        for the_forbidden in the_forbiddens:
-            region_num = the_forbidden['region_num']
-            forbidden = forbiddens.Forbidden(int(game_id), region_num)
-            forbidden.update_database()
 
         data = {'msg': 'Ok position rectified'}
         return data, 201
