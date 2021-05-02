@@ -5,17 +5,21 @@
 import json
 import time
 
-from browser import html, ajax, alert  # pylint: disable=import-error
+from browser import document, html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 import common
 import login
+import mapping
+import geometry
 
 my_panel = html.DIV(id="admin")
 
-OPTIONS = ['changer nouvelles', 'usurper', 'envoyer un mail']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position', 'envoyer un mail']
+
+LONG_DURATION_LIMIT_SEC = 1.0
 
 
 def check_admin(pseudo):
@@ -180,6 +184,445 @@ def usurp():
     my_sub_panel <= form
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def rectify():
+    """rectify """
+
+    stored_event = None
+    down_click_time = None
+
+
+    def submit_callback(_):
+        """ submit_callback """
+
+        assert False, "TODO"
+
+        def reply_callback(req):
+
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error submitting position rectification: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem submitting position rectification: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez soumis une rfectification de position : {messages}", remove_after=config.REMOVE_AFTER)
+
+
+        variant_name = variant_name_loaded
+
+        names_dict = variant_data.extract_names()
+        names_dict_json = json.dumps(names_dict)
+
+        # units
+        units_list_dict = position_data.save_json()
+        units_list_dict_json = json.dumps(units_list_dict)
+
+        json_dict = {
+            'variant_name': variant_name,
+            'names': names_dict_json,
+            'units': units_list_dict_json,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/rectify" # TODO CHHANGE
+
+        # submitting position and orders for simulation : do not need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
+    def callback_canvas_long_click(event):
+        """
+        called when there is a click down then a click up separated by more than 'LONG_DURATION_LIMIT_SEC' sec
+        or when pressing 'x' in which case a None is passed
+        """
+
+        nonlocal buttons_right
+
+        # the aim is to give this variable a value
+        selected_erase_unit = None
+
+        # where is the click
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+
+        # select unit
+        selected_erase_unit = position_data.closest_unit(pos, False)
+
+        # unit must be selected
+        if selected_erase_unit is None:
+            return
+
+        # remove unit
+        position_data.remove_unit(selected_erase_unit)
+
+        # update map
+        callback_render(None)
+
+        my_sub_panel2.removeChild(buttons_right)
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+        legend_select_unit = html.LEGEND("Clic-long pour effacer unité")
+        buttons_right <= legend_select_unit
+
+        put_submit(buttons_right)
+
+        my_sub_panel2 <= buttons_right
+        my_sub_panel <= my_sub_panel2
+
+    def callback_canvas_mousedown(event):
+        """ callback_mousedow : store event"""
+
+        nonlocal down_click_time
+        nonlocal stored_event
+
+        down_click_time = time.time()
+        stored_event = event
+
+    def callback_canvas_mouseup(_):
+        """ callback_mouseup : retrieve event and pass it"""
+
+        nonlocal down_click_time
+
+        if down_click_time is None:
+            return
+
+        # get click duration
+        up_click_time = time.time()
+        click_duration = up_click_time - down_click_time
+        down_click_time = None
+
+        # slow : call
+        if click_duration > LONG_DURATION_LIMIT_SEC:
+            callback_canvas_long_click(stored_event)
+            return
+
+    def callback_render(_):
+        """ callback_render """
+
+        # put the background map first
+        ctx.drawImage(img, 0, 0)
+
+        # put the centers
+        variant_data.render(ctx)
+
+        # put the position
+        position_data.render(ctx)
+
+        # put the legends at the end
+        variant_data.render_legends(ctx)
+
+    def put_submit(buttons_right):
+        """ put_submit """
+
+        input_submit = html.INPUT(type="submit", value="rectifier la position")
+        input_submit.bind("click", submit_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_submit
+
+    # callbacks pour le glisser / deposer
+
+    def mouseover(event):
+        """Quand la souris passe sur l'objet déplaçable, changer le curseur."""
+        event.target.style.cursor = "pointer"
+
+    def dragstart(event):
+        """Fonction appelée quand l'utilisateur commence à déplacer l'objet."""
+
+        # associer une donnée au processus de glissement
+        event.dataTransfer.setData("text", event.target.id)
+        # permet à l'object d'être déplacé dans l'objet destination
+        event.dataTransfer.effectAllowed = "move"
+
+    def dragover(event):
+        event.data.dropEffect = 'move'
+        event.preventDefault()
+
+    def drop(event):
+        """Fonction attachée à la zone de destination.
+        Elle définit ce qui se passe quand l'objet est déposé, c'est-à-dire
+        quand l'utilisateur relâche la souris alors que l'objet est au-dessus de
+        la zone.
+        """
+
+        nonlocal buttons_right
+
+        # récupère les données stockées dans drag_start (l'id de l'objet déplacé)
+        src_id = event.dataTransfer.getData("text")
+        elt = document[src_id]
+
+        # enlever la fonction associée à mouseover
+        elt.unbind("mouseover")
+        elt.style.cursor = "auto"
+        event.preventDefault()
+
+        # put unit there
+        # get unit dragged
+        (type_unit, role) = unit_info_table[src_id]
+        # get zone
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        selected_drop_zone = variant_data.closest_zone(pos)
+
+        # get region
+        selected_drop_region = selected_drop_zone.region
+
+        # prevent putting armies in sea
+        if type_unit is mapping.UnitTypeEnum.ARMY_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.SEA_REGION:
+            type_unit = mapping.UnitTypeEnum.FLEET_UNIT
+
+        # prevent putting fleets inland
+        if type_unit is mapping.UnitTypeEnum.FLEET_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION:
+            type_unit = mapping.UnitTypeEnum.ARMY_UNIT
+
+        if selected_drop_zone.coast_type is not None:
+            # prevent putting army on specific coasts
+            if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+                type_unit = mapping.UnitTypeEnum.FLEET_UNIT
+        else:
+            # we are not on a specific cosat
+            if len([z for z in variant_data.zones.values() if z.region == selected_drop_region]) > 1:
+                # prevent putting fleet on non specific coasts if exists
+                if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+                    type_unit = mapping.UnitTypeEnum.ARMY_UNIT
+
+        # create unit
+        if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+            new_unit = mapping.Army(position_data, role, selected_drop_zone, None)
+        if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+            new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None)
+
+        # remove previous occupant if applicable
+        if selected_drop_region in position_data.occupant_table:
+            previous_unit = position_data.occupant_table[selected_drop_region]
+            position_data.remove_unit(previous_unit)
+
+        # add to position
+        position_data.add_unit(new_unit)
+
+        # refresh
+        callback_render(ctx)
+
+        my_sub_panel2.removeChild(buttons_right)
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+        legend_select_unit = html.LEGEND("Clic-long pour effacer une unité")
+        buttons_right <= legend_select_unit
+
+        put_submit(buttons_right)
+
+        my_sub_panel2 <= buttons_right
+        my_sub_panel <= my_sub_panel2
+
+    # starts here
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se loguer au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    # from game name get variant name
+
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # select display (should be a user choice)
+    display_chosen = common.get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
+    # get the position from server
+    position_loaded = common.game_position_reload(game)
+    if not position_loaded:
+        return
+
+    # digest the position
+    position_data = mapping.Position(position_loaded, variant_data)
+
+    # finds data about the dragged unit
+    unit_info_table = dict()
+
+    reserve_table = html.TABLE()
+    reserve_table.style = {
+        "border": "solid",
+    }
+
+    num = 1
+    for role in variant_data.roles.values():
+
+        # ignore GM
+        if role.identifier == 0:
+            continue
+
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+
+        for type_unit in mapping.UnitTypeEnum:
+
+            col = html.TD()
+            col.style = {
+                "border": "solid",
+            }
+
+            if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+                draggable_unit = mapping.Army(position_data, role, None, None)
+            if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+                draggable_unit = mapping.Fleet(position_data, role, None, None)
+
+            identifier = f"unit_{num}"
+            unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Draguez moi!")
+            unit_info_table[identifier] = (type_unit, role)
+            num += 1
+
+            unit_canvas.draggable = True
+            unit_canvas.bind("mouseover", mouseover)
+            unit_canvas.bind("dragstart", dragstart)
+
+            ctx = unit_canvas.getContext("2d")
+            draggable_unit.render(ctx)
+
+            col <= unit_canvas
+            row <= col
+
+        reserve_table <= row
+
+    reserve_table <= row
+
+    display_very_left = html.DIV(id='display_very_left')
+    display_very_left.attrs['style'] = 'display: table-cell; width=40px; vertical-align: top; table-layout: fixed;'
+
+    display_very_left <= reserve_table
+
+    display_very_left <= html.BR()
+
+    display_very_left <= html.LEGEND("Glissez/déposez")
+    display_very_left <= html.LEGEND("ces unités")
+    display_very_left <= html.LEGEND("sur la carte")
+
+    map_size = variant_data.map_size
+
+    # create canvas
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return
+
+    # now we need to be more clever and handle the state of the mouse (up or down)
+    canvas.bind("mouseup", callback_canvas_mouseup)
+    canvas.bind("mousedown", callback_canvas_mousedown)
+
+    # dragging related events
+    canvas.bind('dragover', dragover)
+    canvas.bind("drop", drop)
+
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return
+
+    # put background (this will call the callback that display the whole map)
+    img = common.read_image(variant_name_loaded, display_chosen)
+    img.bind('load', callback_render)
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    display_left <= canvas
+
+    # right side
+
+    buttons_right = html.DIV(id='buttons_right')
+    buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+    legend_select_unit = html.LEGEND("Clic-long pour effacer une unité")
+    buttons_right <= legend_select_unit
+
+    put_submit(buttons_right)
+
+    # overall
+    my_sub_panel2 = html.DIV()
+    my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_very_left
+    my_sub_panel2 <= display_left
+    my_sub_panel2 <= buttons_right
+
+    my_sub_panel <= my_sub_panel2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def sendmail():
     """ sendmail """
 
@@ -300,6 +743,8 @@ def load_option(_, item_name):
         change_news()
     if item_name == 'usurper':
         usurp()
+    if item_name == 'rectifier la position':
+        rectify()
     if item_name == 'envoyer un mail':
         sendmail()
 
