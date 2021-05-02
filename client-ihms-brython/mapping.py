@@ -631,7 +631,7 @@ class Variant(Renderable):
         closest_center = None
         distance_closest = None
 
-        for center in self._centers:
+        for center in self._centers.values():
             zone = center.region.zone
             center_pos = self.position_table[zone]
             distance = designated_pos.distance(center_pos)
@@ -1000,7 +1000,11 @@ class Ownership(Renderable):
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
-        position = self._position.variant.position_table[self._center]
+        if self._center:
+            position = self._position.variant.position_table[self._center]
+        else:
+            position = DUMMY_POSITION
+
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         center_design.stabbeur_center(x, y, ctx)
@@ -1057,6 +1061,9 @@ class Position(Renderable):
 
         self._variant = variant
 
+        # dict that says which ownership owns a center
+        self._owner_table = dict()
+
         # ownerships
         ownerships = server_dict['ownerships']
         self._ownerships = list()
@@ -1066,6 +1073,7 @@ class Position(Renderable):
             role = variant._roles[role_num]
             ownership = Ownership(self, role, center)
             self._ownerships.append(ownership)
+            self._owner_table[center] = ownership
 
         # dict that says which unit is on a region
         self._occupant_table = dict()
@@ -1254,19 +1262,27 @@ class Position(Renderable):
         return {self._variant.name_table[r]: self._variant.colour_table[r] for r in {o.role for o in self._ownerships}}
 
     def add_unit(self, unit: Unit):
-        """ add_unit (sandbox)"""
+        """ add_unit (sandbox and rectification)"""
         self._units.append(unit)
         region = unit.zone.region
         self._occupant_table[region] = unit
 
     def remove_unit(self, unit: Unit):
-        """ remove_unit (sandbox)"""
+        """ remove_unit (sandbox and rectification)"""
         region = unit.zone.region
         del self._occupant_table[region]
         self._units.remove(unit)
 
+    def add_ownership(self, ownership: Ownership):
+        """ add_ownership (rectification)"""
+        self._ownerships.append(ownership)
+        center = ownership.center
+        self._owner_table[center] = ownership
+
     def remove_ownership(self, ownership: Ownership):
         """ remove_ownership (rectification)"""
+        center = ownership.center
+        del self._owner_table[center]
         self._ownerships.remove(ownership)
 
     def empty(self) -> bool:
@@ -1282,6 +1298,11 @@ class Position(Renderable):
     def occupant_table(self):
         """ property """
         return self._occupant_table
+
+    @property
+    def owner_table(self):
+        """ property """
+        return self._owner_table
 
 
 DASH_PATTERN = [4, 4]

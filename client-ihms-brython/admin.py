@@ -235,8 +235,6 @@ def rectify():
     def callback_canvas_short_click(event):
         """ callback_canvas_short_click """
 
-        print("callback_canvas_short_click")
-
         # the aim is to give this variable a value
         selected_erase_ownership = None
 
@@ -262,15 +260,13 @@ def rectify():
         or when pressing 'x' in which case a None is passed
         """
 
-        nonlocal buttons_right
-
         # the aim is to give this variable a value
         selected_erase_unit = None
 
         # where is the click
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
-        # select unit
+        # select unit (cannot be dislodged - issue - maybe later)
         selected_erase_unit = position_data.closest_unit(pos, False)
 
         # unit must be selected
@@ -361,8 +357,6 @@ def rectify():
         la zone.
         """
 
-        nonlocal buttons_right
-
         # récupère les données stockées dans drag_start (l'id de l'objet déplacé)
         src_id = event.dataTransfer.getData("text")
         elt = document[src_id]
@@ -372,48 +366,72 @@ def rectify():
         elt.style.cursor = "auto"
         event.preventDefault()
 
-        # put unit there
-        # get unit dragged
-        (type_unit, role) = unit_info_table[src_id]
-        # get zone
-        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        selected_drop_zone = variant_data.closest_zone(pos)
+        if src_id in unit_info_table:
 
-        # get region
-        selected_drop_region = selected_drop_zone.region
+            # put unit there
+            # get unit dragged
+            (type_unit, role) = unit_info_table[src_id]
 
-        # prevent putting armies in sea
-        if type_unit is mapping.UnitTypeEnum.ARMY_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.SEA_REGION:
-            type_unit = mapping.UnitTypeEnum.FLEET_UNIT
+            # get zone
+            pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+            selected_drop_zone = variant_data.closest_zone(pos)
 
-        # prevent putting fleets inland
-        if type_unit is mapping.UnitTypeEnum.FLEET_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION:
-            type_unit = mapping.UnitTypeEnum.ARMY_UNIT
+            # get region
+            selected_drop_region = selected_drop_zone.region
 
-        if selected_drop_zone.coast_type is not None:
-            # prevent putting army on specific coasts
-            if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+            # prevent putting armies in sea
+            if type_unit is mapping.UnitTypeEnum.ARMY_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.SEA_REGION:
                 type_unit = mapping.UnitTypeEnum.FLEET_UNIT
-        else:
-            # we are not on a specific cosat
-            if len([z for z in variant_data.zones.values() if z.region == selected_drop_region]) > 1:
-                # prevent putting fleet on non specific coasts if exists
-                if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-                    type_unit = mapping.UnitTypeEnum.ARMY_UNIT
 
-        # create unit
-        if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
-            new_unit = mapping.Army(position_data, role, selected_drop_zone, None)
-        if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-            new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None)
+            # prevent putting fleets inland
+            if type_unit is mapping.UnitTypeEnum.FLEET_UNIT and selected_drop_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION:
+                type_unit = mapping.UnitTypeEnum.ARMY_UNIT
 
-        # remove previous occupant if applicable
-        if selected_drop_region in position_data.occupant_table:
-            previous_unit = position_data.occupant_table[selected_drop_region]
-            position_data.remove_unit(previous_unit)
+            if selected_drop_zone.coast_type is not None:
+                # prevent putting army on specific coasts
+                if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+                    type_unit = mapping.UnitTypeEnum.FLEET_UNIT
+            else:
+                # we are not on a specific cosat
+                if len([z for z in variant_data.zones.values() if z.region == selected_drop_region]) > 1:
+                    # prevent putting fleet on non specific coasts if exists
+                    if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+                        type_unit = mapping.UnitTypeEnum.ARMY_UNIT
 
-        # add to position
-        position_data.add_unit(new_unit)
+            # create unit
+            if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
+                new_unit = mapping.Army(position_data, role, selected_drop_zone, None)
+            if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
+                new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None)
+
+            # remove previous occupant if applicable
+            if selected_drop_region in position_data.occupant_table:
+                previous_unit = position_data.occupant_table[selected_drop_region]
+                position_data.remove_unit(previous_unit)
+
+            # add to position
+            position_data.add_unit(new_unit)
+
+        if src_id in ownership_info_table:
+
+            # put ownership there
+            # get ownership dragged
+            (role, ) = ownership_info_table[src_id]
+
+            # get center
+            pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+            selected_drop_center = variant_data.closest_center(pos)
+
+            # create ownership
+            new_ownership = mapping.Ownership(position_data, role, selected_drop_center)
+
+            # remove previous ownership if applicable
+            if selected_drop_center in position_data.owner_table:
+                previous_ownership = position_data.owner_table[selected_drop_center]
+                position_data.remove_ownership(previous_ownership)
+
+            # add to position
+            position_data.add_ownership(new_ownership)
 
         # refresh
         callback_render(ctx)
@@ -467,6 +485,9 @@ def rectify():
     # finds data about the dragged unit
     unit_info_table = dict()
 
+    # finds data about the dragged ownership
+    ownership_info_table = dict()
+
     reserve_table = html.TABLE()
     reserve_table.style = {
         "border": "solid",
@@ -511,9 +532,29 @@ def rectify():
             col <= unit_canvas
             row <= col
 
-        reserve_table <= row
+        col = html.TD()
+        col.style = {
+            "border": "solid",
+        }
 
-    reserve_table <= row
+        draggable_ownership = mapping.Ownership(position_data, role, None)
+
+        identifier = f"center_{num}"
+        ownership_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Draguez moi!")
+        ownership_info_table[identifier] = (role, )
+        num += 1
+
+        ownership_canvas.draggable = True
+        ownership_canvas.bind("mouseover", mouseover)
+        ownership_canvas.bind("dragstart", dragstart)
+
+        ctx = ownership_canvas.getContext("2d")
+        draggable_ownership.render(ctx)
+
+        col <= ownership_canvas
+        row <= col
+
+        reserve_table <= row
 
     display_very_left = html.DIV(id='display_very_left')
     display_very_left.attrs['style'] = 'display: table-cell; width=40px; vertical-align: top; table-layout: fixed;'
@@ -524,6 +565,7 @@ def rectify():
 
     display_very_left <= html.LEGEND("Glissez/déposez")
     display_very_left <= html.LEGEND("ces unités")
+    display_very_left <= html.LEGEND("ou ces centres")
     display_very_left <= html.LEGEND("sur la carte")
 
     map_size = variant_data.map_size
