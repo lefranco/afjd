@@ -625,6 +625,22 @@ class Variant(Renderable):
             assert order_type is not None
             self._name_table[order_type] = data_dict['name']
 
+    def closest_center(self, designated_pos: geometry.PositionRecord):
+        """ closest_center  """
+
+        closest_center = None
+        distance_closest = None
+
+        for center in self._centers:
+            zone = center.region.zone
+            center_pos = self.position_table[zone]
+            distance = designated_pos.distance(center_pos)
+            if distance_closest is None or distance < distance_closest:
+                closest_center = center
+                distance_closest = distance
+
+        return closest_center
+
     def closest_zone(self, designated_pos: geometry.PositionRecord):
         """ closest_zone """
 
@@ -1129,6 +1145,22 @@ class Position(Renderable):
             json_data.append(unit.save_json())
         return json_data
 
+    def closest_ownership(self, designated_pos: geometry.PositionRecord):
+        """ closest_ownership  """
+
+        closest_ownership = None
+        distance_closest = None
+
+        for ownership in self._ownerships:
+            zone = ownership.center.region.zone
+            center_pos = self._variant.position_table[zone]
+            distance = designated_pos.distance(center_pos)
+            if distance_closest is None or distance < distance_closest:
+                closest_ownership = ownership
+                distance_closest = distance
+
+        return closest_ownership
+
     def closest_unit(self, designated_pos: geometry.PositionRecord, dislodged):
         """ closest_unit (pass dislodged = None for all dislodged and not dislodged)  """
 
@@ -1232,6 +1264,10 @@ class Position(Renderable):
         region = unit.zone.region
         del self._occupant_table[region]
         self._units.remove(unit)
+
+    def remove_ownership(self, ownership: Ownership):
+        """ remove_ownership (rectification)"""
+        self._ownerships.remove(ownership)
 
     def empty(self) -> bool:
         """ empty """
