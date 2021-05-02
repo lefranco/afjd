@@ -27,7 +27,8 @@ def check_admin(pseudo):
 
     # TODO improve this with real admin account
     # TODO a revoir
-    if pseudo != "Palpatine":
+    if pseudo not in [ 'Palpatine', 'Bouclette']:
+#    if pseudo != "Palpatine":
         alert("Pas le bon compte (pas admin)")
         return False
 

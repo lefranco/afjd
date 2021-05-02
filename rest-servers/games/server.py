@@ -928,7 +928,8 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo not in [ 'Palpatine', 'Bouclette']:
+        # if pseudo != 'Palpatine':
             flask_restful.abort(403, msg="You are not allowed to rectify a position!")
 
         # store position
