@@ -184,30 +184,11 @@ def usurp():
     my_sub_panel <= form
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def rectify():
     """rectify """
 
     stored_event = None
     down_click_time = None
-
 
     def submit_callback(_):
         """ submit_callback """
@@ -229,7 +210,6 @@ def rectify():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Vous avez soumis une rfectification de position : {messages}", remove_after=config.REMOVE_AFTER)
 
-
         variant_name = variant_name_loaded
 
         names_dict = variant_data.extract_names()
@@ -247,11 +227,34 @@ def rectify():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/rectify" # TODO CHHANGE
+        url = f"{host}:{port}/rectify"  # TODO CHANGE
 
         # submitting position and orders for simulation : do not need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    def callback_canvas_short_click(event):
+        """ callback_canvas_short_click """
+
+        print("callback_canvas_short_click")
+
+        # the aim is to give this variable a value
+        selected_erase_ownership = None
+
+        # where is the click
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+
+        # select unit
+        selected_erase_ownership = position_data.closest_ownership(pos)
+
+        # center must be selected
+        if selected_erase_ownership is None:
+            return
+
+        # remove center
+        position_data.remove_ownership(selected_erase_ownership)
+
+        # update map
+        callback_render(None)
 
     def callback_canvas_long_click(event):
         """
@@ -280,7 +283,6 @@ def rectify():
         # update map
         callback_render(None)
 
-
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
 
@@ -307,6 +309,9 @@ def rectify():
         if click_duration > LONG_DURATION_LIMIT_SEC:
             callback_canvas_long_click(stored_event)
             return
+
+        callback_canvas_short_click(stored_event)
+        return
 
     def callback_render(_):
         """ callback_render """
@@ -559,7 +564,7 @@ def rectify():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-    legend_select_unit = html.LEGEND("Clic-long pour effacer une unité")
+    legend_select_unit = html.LEGEND("Clic-long pour effacer une unité, clic-court pour effacer une possession")
     buttons_right <= legend_select_unit
 
     put_submit(buttons_right)
@@ -572,32 +577,6 @@ def rectify():
     my_sub_panel2 <= buttons_right
 
     my_sub_panel <= my_sub_panel2
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def sendmail():
