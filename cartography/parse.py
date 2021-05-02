@@ -37,29 +37,6 @@ def get_image_info(file_name: str) -> typing.Tuple[int, int]:
 
     return width, height
 
-@dataclasses.dataclass
-class Point:
-    """ A point """
-
-    letter: str
-    x_pos: float
-    y_pos: float
-
-    def __init__(self, text: str):
-        if text[0].isdigit():
-            self.letter = ''
-            text = text[0:]
-        else:
-            self.letter = text[0]
-            #assert self.letter.isupper(), f"Hey first letter is not capital"
-            text = text[1:]
-        text_tab = text.split(',')
-        self.x_pos = float(text_tab[0])
-        self.y_pos = float(text_tab[1])
-
-    def __str__(self) -> str:
-        return f"{self.letter}{self.y_pos},{self.y_pos}"
-
 
 class Path:
     """ Path """
@@ -73,18 +50,41 @@ class Path:
 
         #  print(f"{text=}")
 
-        for num, elt in enumerate(self._text.split()):
-            # special case
-            if elt in ['M', 'Z']:
-                continue
-            point = Point(elt)
-            #  print(point)
-            if num == 0:
-                assert point.letter == 'M', f"Hey first letter is {point.letter} not M"
+        # first we standardize path
+        elements = list()
+        for elt in self._text.split():
+            if len(elt) == 1:
+                letter = elt
+                elements.append(letter)
             else:
-                assert point.letter in ['', 'L', 'M', 'C'], f"Hey letter is {point.letter} not '', L M or C"
-            self._list_x.append(point.x_pos)
-            self._list_y.append(point.y_pos)
+                for letter in ['M', 'L', 'C', 'V', 'H', 'Z']:
+                    if elt.startswith(letter):
+                        elements.append(letter)
+                        elements.append(elt[1:])
+                        break
+                else:
+                    elements.append(elt)
+
+        # then we go through the path
+        for elt in elements:
+
+            #  print(f"{elt=}")
+
+            # letters set the automaton state
+            if elt in ['M', 'L', 'C', 'V', 'H', 'Z']:
+                state = elt
+                continue
+
+            # coordinates get stacked
+            # C bezier : approximate
+            if state in ['L', 'M', 'C']:
+                x_pos, y_pos = map(float, elt.split(','))
+            if state == 'H':
+                x_pos = float(elt)
+            if state == 'V':
+                y_pos = float(elt)
+            self._list_x.append(x_pos)
+            self._list_y.append(y_pos)
 
     def add_inner(self, path: 'Path') -> None:
         """ add_inner """
