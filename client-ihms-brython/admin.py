@@ -280,17 +280,6 @@ def rectify():
         # update map
         callback_render(None)
 
-        my_sub_panel2.removeChild(buttons_right)
-        buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
-
-        legend_select_unit = html.LEGEND("Clic-long pour effacer unité")
-        buttons_right <= legend_select_unit
-
-        put_submit(buttons_right)
-
-        my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
 
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
@@ -423,18 +412,6 @@ def rectify():
 
         # refresh
         callback_render(ctx)
-
-        my_sub_panel2.removeChild(buttons_right)
-        buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
-
-        legend_select_unit = html.LEGEND("Clic-long pour effacer une unité")
-        buttons_right <= legend_select_unit
-
-        put_submit(buttons_right)
-
-        my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
 
     # starts here
 
