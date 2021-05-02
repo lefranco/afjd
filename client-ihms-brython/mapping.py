@@ -379,7 +379,11 @@ ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 # legend
 LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 LEGEND_SHIFT_X = 0
-LEGEND_SHIFT_Y = - 14
+LEGEND_SHIFT_Y = - 7
+
+# unit
+UNIT_SHIFT_X = 0
+UNIT_SHIFT_Y = 7
 
 
 def legend_font() -> str:
@@ -887,6 +891,9 @@ class Army(Unit):
 
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
+        x += UNIT_SHIFT_X
+        y += UNIT_SHIFT_Y
+
         # shift for dislodged units
         if self._dislodged_origin is not None:
             x += DISLODGED_SHIFT  # pylint: disable=invalid-name
@@ -919,6 +926,9 @@ class Fleet(Unit):
             position = DUMMY_POSITION
 
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        x += UNIT_SHIFT_X
+        y += UNIT_SHIFT_Y
 
         # shift for dislodged units
         if self._dislodged_origin is not None:
