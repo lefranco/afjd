@@ -746,6 +746,7 @@ def sandbox():
         "border": "solid",
     }
 
+
     num = 1
     for role in variant_data.roles.values():
 
@@ -757,6 +758,14 @@ def sandbox():
         row.style = {
             "border": "solid",
         }
+
+        # country name
+        col = html.TD()
+        col.style = {
+            "border": "solid",
+        }
+        col <= html.B(variant_data.name_table[role])
+        row <= col
 
         for type_unit in mapping.UnitTypeEnum:
 
