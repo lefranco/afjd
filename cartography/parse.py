@@ -326,18 +326,32 @@ def main() -> None:
     regions_pos_table = dict()
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
 
+        # for wenz
+        regions_raw_pos_table[num] = (x_chosen, y_chosen)
+
         # for regions :  the polylabel
         x_chosen, y_chosen = path.polylabel()
 
-        # for wenz
-        regions_raw_pos_table[num] = (x_chosen, y_chosen)
+        # in png coords
+        x_png_pos = round(x_chosen * png_width / viewbox_width)
+        y_png_pos = round(y_chosen * png_height / viewbox_height)
+
+        # unit
+        x_unit_pos = x_png_pos
+        y_unit_pos = y_png_pos + 7
+
+        # legend
+        x_legend_pos = x_png_pos
+        y_legend_pos = y_png_pos - 7
 
         region_name = regions_ref_num_table[num]
         regions_pos_table[num] = {
             "name": region_name,
             "full_name": json_parameters_data['zones'][str(num)]['full_name'],
-            "x_pos": round(x_chosen * png_width / viewbox_width),
-            "y_pos": round(y_chosen * png_height / viewbox_height)
+            "x_pos": x_unit_pos,
+            "y_pos": y_unit_pos,
+            "x_legend_pos": x_legend_pos,
+            "y_legend_pos": y_legend_pos
         }
 
     coastal_zones_raw_pos_table = dict()
@@ -349,11 +363,25 @@ def main() -> None:
         # for wenz
         coastal_zones_raw_pos_table[num] = (x_chosen, y_chosen)
 
+        # in png coords
+        x_png_pos = round(x_chosen * png_width / viewbox_width)
+        y_png_pos = round(y_chosen * png_height / viewbox_height)
+
+        # unit
+        x_unit_pos = x_png_pos
+        y_unit_pos = y_png_pos + 7
+
+        # legend
+        x_legend_pos = x_png_pos
+        y_legend_pos = y_png_pos - 7
+
         regions_pos_table[num] = {
             "name": "",
             "full_name": "",
-            "x_pos": round(x_chosen * png_width / viewbox_width),
-            "y_pos": round(y_chosen * png_height / viewbox_height)
+            "x_pos": x_unit_pos,
+            "y_pos": y_unit_pos,
+            "x_legend_pos": x_legend_pos,
+            "y_legend_pos": y_legend_pos
         }
 
     # ====== make map_elements =====

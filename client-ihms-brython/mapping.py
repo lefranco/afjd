@@ -386,12 +386,6 @@ ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 # legend
 LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
-LEGEND_SHIFT_X = 0
-LEGEND_SHIFT_Y = - 7
-
-# unit
-UNIT_SHIFT_X = 0
-UNIT_SHIFT_Y = 7
 
 
 def legend_font() -> str:
@@ -530,6 +524,7 @@ class Variant(Renderable):
         self._full_name_table = dict()
         self._colour_table = dict()
         self._position_table = dict()
+        self._legend_position_table = dict()
         self._role_add_table = dict()
 
         # load the map size
@@ -582,7 +577,7 @@ class Variant(Renderable):
             coast_type = self._coast_types[coast_type_num]
             self._name_table[coast_type] = data_dict['name']
 
-        # load the zones names and localisations
+        # load the zones names and localisations (units and legends)
         assert len(self._raw_parameters_content['zones']) == len(self._zones)
         for zone_num_str, data_dict in self._raw_parameters_content['zones'].items():
             zone_num = int(zone_num_str)
@@ -601,10 +596,18 @@ class Variant(Renderable):
 
             self._name_table[zone] = name
             self._full_name_table[zone] = full_name
+
+            # unit position
             x_pos = data_dict['x_pos']
             y_pos = data_dict['y_pos']
             unit_position = geometry.PositionRecord(x_pos=x_pos, y_pos=y_pos)
             self._position_table[zone] = unit_position
+
+            # legend position
+            x_legend_pos = data_dict['x_legend_pos']
+            y_legend_pos = data_dict['y_legend_pos']
+            legend_position = geometry.PositionRecord(x_pos=x_legend_pos, y_pos=y_legend_pos)
+            self._legend_position_table[zone] = legend_position
 
         # load the centers localisations
         assert len(self._raw_parameters_content['centers']) == len(self._centers)
@@ -692,12 +695,10 @@ class Variant(Renderable):
 
         for zone in self._zones.values():
 
-            # legend position is replaced by unit position slightly shifted
-            # unit position calculated from area ith polylabel
-
-            position = self._position_table[zone]
-            x_pos = position.x_pos + LEGEND_SHIFT_X
-            y_pos = position.y_pos + LEGEND_SHIFT_Y
+            # legend position and unit position are calculated from area ith polylabel
+            position = self._legend_position_table[zone]
+            x_pos = position.x_pos
+            y_pos = position.y_pos
 
             if zone.coast_type:
                 legend = self._name_table[zone.coast_type]
@@ -915,9 +916,6 @@ class Army(Unit):
 
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
-        x += UNIT_SHIFT_X  # pylint: disable=invalid-name
-        y += UNIT_SHIFT_Y  # pylint: disable=invalid-name
-
         # shift for dislodged units
         if self._dislodged_origin is not None:
             x += DISLODGED_SHIFT  # pylint: disable=invalid-name
@@ -950,9 +948,6 @@ class Fleet(Unit):
             position = DUMMY_POSITION
 
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
-
-        x += UNIT_SHIFT_X  # pylint: disable=invalid-name
-        y += UNIT_SHIFT_Y  # pylint: disable=invalid-name
 
         # shift for dislodged units
         if self._dislodged_origin is not None:
@@ -1054,6 +1049,7 @@ class Forbidden(Renderable):
         region = self._region
         zone = region.zone
         position = self._position.variant.position_table[zone]
+
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         ctx.beginPath()
