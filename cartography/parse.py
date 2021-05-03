@@ -236,8 +236,8 @@ def main() -> None:
                 sys.exit(1)
 
             # get a point from d
-            path = Path(d)
-            centers_path_table[number] = path
+            the_path = Path(d)
+            centers_path_table[number] = the_path
 
         # we have a region (area)
         if title_content.startswith("R_"):
@@ -252,8 +252,8 @@ def main() -> None:
             if number in regions_path_table:
                 print(f"This region already has a path '{title_content}'")
                 sys.exit(1)
-            path = Path(d)
-            regions_path_table[number] = path
+            the_path = Path(d)
+            regions_path_table[number] = the_path
 
         # we have a coastal zone (star)
         if title_content.startswith("ZC_"):
@@ -268,8 +268,8 @@ def main() -> None:
             if number in coastal_zones_path_table:
                 print(f"This coastal zones already has a path '{title_content}'")
                 sys.exit(1)
-            path = Path(d)
-            coastal_zones_path_table[number] = path
+            the_path = Path(d)
+            coastal_zones_path_table[number] = the_path
 
     doc.unlink()
 
@@ -332,17 +332,34 @@ def main() -> None:
         # for regions :  the polylabel
         x_chosen, y_chosen = path.polylabel()
 
-        # in png coords
-        x_png_pos = round(x_chosen * png_width / viewbox_width)
-        y_png_pos = round(y_chosen * png_height / viewbox_height)
+        # unit in png coords
+        x_unit_pos = round(x_chosen * png_width / viewbox_width)
+        y_unit_pos = round(y_chosen * png_height / viewbox_height)
 
-        # unit
-        x_unit_pos = x_png_pos
-        y_unit_pos = y_png_pos + 7
+        # BEGIN alternate strategy - to be further tested
 
-        # legend
-        x_legend_pos = x_png_pos
-        y_legend_pos = y_png_pos - 7
+        # make a path for unit to put label in center of region without unit
+        #d = f"M {x_chosen-10},{y_chosen-10} L {x_chosen+10},{y_chosen-10} L {x_chosen+10},{y_chosen+10} L {x_chosen-10},{y_chosen+10} {x_chosen-10},{y_chosen-10}"
+        #unit_path =  Path(d)
+
+        #path2 = copy.deepcopy(path)
+        #path2.add_inner(unit_path)
+
+        # for regions label :  the polylabel
+        #x_chosen, y_chosen = path2.polylabel()
+
+        # legend in png coords
+        #x_legend_pos = round(x_chosen * png_width / viewbox_width)
+        #y_legend_pos = round(y_chosen * png_height / viewbox_height)
+
+        # END alternate strategy - to be further tested
+
+        x_legend_pos = x_unit_pos
+        y_legend_pos = y_unit_pos
+
+        # shifts
+        y_unit_pos += 7
+        y_legend_pos -= 7
 
         region_name = regions_ref_num_table[num]
         regions_pos_table[num] = {
@@ -363,17 +380,17 @@ def main() -> None:
         # for wenz
         coastal_zones_raw_pos_table[num] = (x_chosen, y_chosen)
 
-        # in png coords
-        x_png_pos = round(x_chosen * png_width / viewbox_width)
-        y_png_pos = round(y_chosen * png_height / viewbox_height)
-
-        # unit
-        x_unit_pos = x_png_pos
-        y_unit_pos = y_png_pos + 7
+        # unit in png coords
+        x_unit_pos = round(x_chosen * png_width / viewbox_width)
+        y_unit_pos = round(y_chosen * png_height / viewbox_height)
 
         # legend
-        x_legend_pos = x_png_pos
-        y_legend_pos = y_png_pos - 7
+        x_legend_pos = x_unit_pos
+        y_legend_pos = y_unit_pos
+
+        # shifts
+        y_unit_pos += 7
+        y_legend_pos -= 7
 
         regions_pos_table[num] = {
             "name": "",
