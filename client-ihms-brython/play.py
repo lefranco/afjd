@@ -2592,7 +2592,43 @@ def game_master():
     def civil_disorder_callback(_, __):
         """ civil_disorder_callback """
 
-        alert("Désolé: la mise en désordre civil n'est pas implémentée - vous pouvez passer les ordres à la place du joueur en tant qu'arbitre en attendant...")
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error submitting disorder to game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem submitting disorder to game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            my_sub_panel.clear()
+            game_master()
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        names_dict = variant_data.extract_names()
+        names_dict_json = json.dumps(names_dict)
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': pseudo,
+            'names': names_dict_json
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-no-orders/{game_id}"
+
+        # submitting civil disoder : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def unallocate_role_callback(_, pseudo_removed, role_id):
         """ unallocate_role_callback """

@@ -105,10 +105,15 @@ SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
 SUBMISSION_PARSER.add_argument('names', type=str, required=True)
 SUBMISSION_PARSER.add_argument('pseudo', type=str, required=False)
 
-SUBMISSION2_PARSER = flask_restful.reqparse.RequestParser()
-SUBMISSION2_PARSER.add_argument('role_id', type=int, required=True)
-SUBMISSION2_PARSER.add_argument('orders', type=str, required=True)
-SUBMISSION2_PARSER.add_argument('pseudo', type=str, required=False)
+SUBMISSION_PARSER3 = flask_restful.reqparse.RequestParser()
+SUBMISSION_PARSER3.add_argument('role_id', type=int, required=True)
+SUBMISSION_PARSER3.add_argument('orders', type=str, required=True)
+SUBMISSION_PARSER3.add_argument('pseudo', type=str, required=False)
+
+SUBMISSION_PARSER3 = flask_restful.reqparse.RequestParser()
+SUBMISSION_PARSER3.add_argument('role_id', type=int, required=True)
+SUBMISSION_PARSER3.add_argument('names', type=str, required=True)
+SUBMISSION_PARSER3.add_argument('pseudo', type=str, required=False)
 
 ADJUDICATION_PARSER = flask_restful.reqparse.RequestParser()
 ADJUDICATION_PARSER.add_argument('names', type=str, required=True)
@@ -1356,6 +1361,180 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+
+@API.resource('/game-no-orders/<game_id>')
+class GameOrderRessource(flask_restful.Resource):  # type: ignore
+    """ GameOrderRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Submit civil disorder
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-no-orders/<game_id> - POST - submitting civil disorder game id=%s", game_id)
+
+        args = SUBMISSION_PARSER3.parse_args(strict=True)
+        role_id = args['role_id']
+
+        mylogger.LOGGER.info("role_id=%s", role_id)
+
+        pseudo = args['pseudo']
+        names = args['names']
+
+        if pseudo is None:
+            flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to submit civil disorder - must be game master
+
+        # find the game
+        game = games.Game.find_by_identifier(game_id)
+        if game is None:
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is game master ?
+        assert game is not None
+        game_master_id = game.get_role(0)
+
+        # must be game master
+        if user_id != game_master_id:
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+
+        # evaluate variant
+        variant_name = game.variant
+        variant_dict = variants.Variant.get_by_name(variant_name)
+        if variant_dict is None:
+            flask_restful.abort(404, msg=f"Variant {variant_name} doesn't exist")
+        variant_dict_json = json.dumps(variant_dict)
+
+        # evaluate situation
+
+        # situation: get ownerships
+        ownership_dict: typing.Dict[str, int] = dict()
+        game_ownerships = ownerships.Ownership.list_by_game_id(game_id)
+        for _, center_num, role_num in game_ownerships:
+            ownership_dict[str(center_num)] = role_num
+
+        # situation: get units
+        game_units = units.Unit.list_by_game_id(game_id)
+        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+            if fake:
+                fake_unit_dict[str(role_num)].append([type_num, zone_num])
+            elif region_dislodged_from_num:
+                dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
+            else:
+                unit_dict[str(role_num)].append([type_num, zone_num])
+
+        # situation: get forbiddens
+        forbidden_list = list()
+        game_forbiddens = forbiddens.Forbidden.list_by_game_id(game_id)
+        for _, region_num in game_forbiddens:
+            forbidden_list.append(region_num)
+
+        situation_dict = {
+            'ownerships': ownership_dict,
+            'dislodged_ones': dislodged_unit_dict,
+            'units': unit_dict,
+            'fake_units': fake_unit_dict,
+            'forbiddens': forbidden_list,
+        }
+        situation_dict_json = json.dumps(situation_dict)
+
+        json_dict = {
+            'variant': variant_dict_json,
+            'advancement': game.current_advancement,
+            'situation': situation_dict_json,
+            'names': names,
+            'role': role_id,
+        }
+
+        # post to disorderer
+        host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
+        port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
+        url = f"{host}:{port}/disorder"
+        req_result = SESSION.post(url, data=json_dict)
+
+        if 'msg' in req_result.json():
+            submission_report = req_result.json()['msg']
+        else:
+            submission_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
+
+        # adjudication failed
+        if req_result.status_code != 201:
+
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Failed to submit civil disorder {message} : {submission_report}")
+
+        # ok so orders are made up ok
+
+        default_orders_content = req_result.json()['orders_default']
+        print(f"{default_orders_content=}")
+        flask_restful.abort(400, msg=f"STOPPED HERE FOR TRACE")
+
+        # store orders
+
+        # purge previous
+
+        # get list
+        if int(role_id) != 0:
+            previous_orders = orders.Order.list_by_game_id_role_num(int(game_id), role_id)
+        else:
+            previous_orders = orders.Order.list_by_game_id(int(game_id))
+
+        # purge
+        for (_, role_num, _, zone_num, _, _) in previous_orders:
+            order = orders.Order(int(game_id), role_num, 0, zone_num, 0, 0)
+            order.delete_database()
+
+        # insert new ones
+        for the_order in the_orders:
+            order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
+            order.load_json(the_order)
+            order.update_database()
+
+            # special case : build : create a fake unit
+            # this was done before submitting
+            # we tolerate that some extra fake unit may persist from previous submission
+
+        # insert this submisssion
+        submission = submissions.Submission(int(game_id), int(role_id))
+        submission.update_database()
+
+        data = {'msg': f"Ok civil disorder submitted {submission_report}"}
+        return data, 201
+
+
+
 @API.resource('/game-communication-orders/<game_id>')
 class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
     """ GameCommunicationOrderRessource """
@@ -1368,7 +1547,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-communication-orders/<game_id> - POST - submitting communication orders game id=%s", game_id)
 
-        args = SUBMISSION2_PARSER.parse_args(strict=True)
+        args = SUBMISSION_PARSER2.parse_args(strict=True)
         role_id = args['role_id']
 
         # not allowed for game master

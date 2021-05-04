@@ -34,6 +34,13 @@ SOLVER_PARSER.add_argument('orders', type=str, required=True)
 SOLVER_PARSER.add_argument('role', type=int, required=False)
 SOLVER_PARSER.add_argument('names', type=str, required=True)
 
+DISORDER_PARSER = flask_restful.reqparse.RequestParser()
+DISORDER_PARSER.add_argument('variant', type=str, required=True)
+DISORDER_PARSER.add_argument('advancement', type=int, required=True)
+DISORDER_PARSER.add_argument('situation', type=str, required=True)
+DISORDER_PARSER.add_argument('role', type=int, required=True)
+DISORDER_PARSER.add_argument('names', type=str, required=True)
+
 
 @API.resource('/solve')
 class SolveRessource(flask_restful.Resource):  # type: ignore
@@ -152,6 +159,65 @@ class PrintRessource(flask_restful.Resource):  # type: ignore
 
         data = {
             'orders_content': orders_content,
+        }
+
+        return data, 201
+
+
+@API.resource('/disorder')
+class DisorderRessource(flask_restful.Resource):  # type: ignore
+    """ DisorderRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Performs an civil disorder orders extraction
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/disorderer - POST - disorder called")
+
+        args = DISORDER_PARSER.parse_args(strict=True)
+
+        variant_submitted = args['variant']
+
+        try:
+            variant = json.loads(variant_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert variant from json to text ?")
+
+        advancement = int(args['advancement'])
+
+        situation_submitted = args['situation']
+
+        try:
+            situation = json.loads(situation_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert situation from json to text ?")
+
+        role = int(args['role'])
+
+        names_submitted = args['names']
+
+        try:
+            names = json.loads(names_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert names from json to text ?")
+
+        returncode, stderr, stdout, orders_default = solver.disorder(variant, advancement, situation, role, names)
+
+        if returncode != 0:
+
+            data_error = {
+                'stderr': stderr,
+                'stdout': stdout,
+            }
+
+            return data_error, 404
+
+        data = {
+            'stderr': stderr,
+            'stdout': stdout,
+            'orders_default': orders_default,
         }
 
         return data, 201

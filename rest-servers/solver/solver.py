@@ -509,5 +509,59 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result, active_roles_list
 
 
+def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], role: typing.Optional[int], names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[str]]:
+    """ returns errorcode, stderr, stdout, ord-result(text) """
+
+    diplo_dat_content = build_variant_file(variant, names)
+    situation_content = build_situation_file(advancement, situation, variant, names)
+
+    with tempfile.TemporaryDirectory() as tmpdirname:
+
+        # make DIPLOCOM
+        os.mkdir(f"{tmpdirname}/DIPLOCOM")
+
+        # copy message file
+        shutil.copyfile("./messages/DIPLO.fr.TXT", f"{tmpdirname}/DIPLOCOM/DIPLO.fr.TXT")
+
+        # make DEFAULT
+        os.mkdir(f"{tmpdirname}/DIPLOCOM/DEFAULT")
+
+        # copy DATA
+        with open(f"{tmpdirname}/DIPLOCOM/DEFAULT/DIPLO.DAT", "w") as outfile:
+            outfile.write("\n".join(diplo_dat_content))
+
+        # copy situation
+        with open(f"{tmpdirname}/situation.dat", "w") as outfile:
+            outfile.write("\n".join(situation_content))
+
+        # affect env variable
+        os.putenv("DIPLOCOM", f"{tmpdirname}/DIPLOCOM")
+
+        _, _, initial_role = names['roles'][str(role)]
+
+        # parameters used to cal the C language written solver
+        call_list = [
+            "./engine/solveur",
+            "-i", f"{tmpdirname}/situation.dat",
+            f"-P{initial_role}", f"{tmpdirname}/orders_result.txt",
+        ]
+
+        # run solver
+        result = subprocess.run(
+            call_list,
+            check=False,
+            capture_output=True)
+
+        if result.returncode != 0:
+            return result.returncode, result.stderr.decode(), result.stdout.decode(), None
+
+        # copy back orders
+        with open(f"{tmpdirname}/orders_result.txt", "r") as infile:
+            orders_result_content = infile.readlines()
+            orders_result = ''.join(orders_result_content)
+
+        return result.returncode, result.stderr.decode(), result.stdout.decode(), orders_result
+
+
 if __name__ == '__main__':
     assert False, "Do not run this script"
