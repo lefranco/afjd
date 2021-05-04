@@ -538,7 +538,6 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
         os.putenv("DIPLOCOM", f"{tmpdirname}/DIPLOCOM")
 
         print(f"{names=}")
-        print(f"{roles=}")
         print(f"{names['roles']=}")
 
 
