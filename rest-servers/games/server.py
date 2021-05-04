@@ -1497,19 +1497,13 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
 
         # ok so orders are made up ok
 
-        default_orders_content = req_result.json()['orders_default']
-        print(f"{default_orders_content=}")
-        flask_restful.abort(400, msg=f"STOPPED HERE FOR TRACE")
+        orders_default_dict = req_result.json()['orders_default_dict']
 
         # store orders
 
         # purge previous
 
-        # get list
-        if int(role_id) != 0:
-            previous_orders = orders.Order.list_by_game_id_role_num(int(game_id), role_id)
-        else:
-            previous_orders = orders.Order.list_by_game_id(int(game_id))
+        previous_orders = orders.Order.list_by_game_id_role_num(int(game_id), role_id)
 
         # purge
         for (_, role_num, _, zone_num, _, _) in previous_orders:
@@ -1517,7 +1511,7 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
             order.delete_database()
 
         # insert new ones
-        for the_order in the_orders:
+        for the_order in orders_default_dict:
             order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
             order.load_json(the_order)
             order.update_database()
