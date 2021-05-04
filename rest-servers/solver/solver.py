@@ -451,6 +451,7 @@ def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[st
         'orders': orders_list
     }
 
+
 def read_actives(active_roles_content: typing.List[str], names: typing.Dict[str, typing.Any]) -> typing.List[int]:
     """ This will read the situ_result.dat file """
 
