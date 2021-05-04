@@ -430,14 +430,14 @@ def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[st
         tokens = line.split(" ")
 
         if tokens[0] == "-":
+            zone_num = zone_names.index(tokens[2].upper()) + 1
             order_type = 9
-
-        zone_num = zone_names.index(tokens[1].upper()) + 1
-
-        if tokens[2] == "H":
-            order_type = 4
-        if tokens[2] == "A":
-            order_type = 7
+        else:
+            zone_num = zone_names.index(tokens[1].upper()) + 1
+            if tokens[2] == "H":
+                order_type = 4
+            if tokens[2] == "A":
+                order_type = 7
 
         order = {
             'active_unit': {
