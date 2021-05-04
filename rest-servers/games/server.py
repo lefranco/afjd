@@ -1497,7 +1497,7 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
 
         # ok so orders are made up ok
 
-        orders_default_dict = req_result.json()['orders_default_dict']
+        orders_default = req_result.json()['orders_default']
 
         # store orders
 
