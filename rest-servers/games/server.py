@@ -1511,7 +1511,7 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
             order.delete_database()
 
         # insert new ones
-        for the_order in orders_default_dict:
+        for the_order in orders_default:
             order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
             order.load_json(the_order)
             order.update_database()
