@@ -401,6 +401,56 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     }
 
 
+def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any], role_num: int) -> typing.Dict[str, typing.Any]:
+    """ This will read the orders_result.txt file """
+
+    region_names = [r.upper() for r in names['zones'].values() if r]
+    zone_names = [r.upper() for r in names['zones'].values() if r]
+    zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}".upper() for r, c in variant['coastal_zones']]
+    role_names = [v[0].upper() for k, v in names['roles'].items() if int(k)]
+    center_table = variant['centers']
+    type_names = ["A", "F"]
+
+    orders_list: typing.List[int] = list()
+
+    for line in orders_result_content:
+
+        # remove endline
+        line = line.strip()
+
+        # ignore empty lines
+        if not line:
+            continue
+
+        # ignore comments
+        if line.startswith(";"):
+            continue
+
+        # split in list
+        tokens = line.split(" ")
+
+        if tokens[0] == "-":
+            type_order = 9
+
+        active_zone_num = zone_names.index(tokens[1].upper()) + 1
+        passive_zone_num = 0
+        dest_zone_num = 0
+
+        if tokens[2] == "H":
+            type_order = 4
+        if tokens[2] == "A":
+            type_order = 7
+
+        order = role_num, type_order, active_zone_num, passive_zone_num, dest_zone_num
+
+        print(f"{line} --> {order}")
+
+        orders_list.append(order)
+
+    return {
+        'orders': orders_list
+    }
+
 def read_actives(active_roles_content: typing.List[str], names: typing.Dict[str, typing.Any]) -> typing.List[int]:
     """ This will read the situ_result.dat file """
 
@@ -509,7 +559,7 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result, active_roles_list
 
 
-def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], role: typing.Optional[int], names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[str]]:
+def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], role: int, names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[str]]:
     """ returns errorcode, stderr, stdout, ord-result(text) """
 
     diplo_dat_content = build_variant_file(variant, names)
@@ -537,13 +587,7 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
         # affect env variable
         os.putenv("DIPLOCOM", f"{tmpdirname}/DIPLOCOM")
 
-        print(f"{names=}")
-        print(f"{names['roles']=}")
-
-
         _, _, initial_role = names['roles'][str(role)]
-
-        print(f"{initial_role=}")
 
         # parameters used to cal the C language written solver
         call_list = [
@@ -566,7 +610,9 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
             orders_result_content = infile.readlines()
             orders_result = ''.join(orders_result_content)
 
-        return result.returncode, result.stderr.decode(), result.stdout.decode(), orders_result
+        order_list = read_orders(orders_result_content, variant, names, role)
+
+        return result.returncode, result.stderr.decode(), result.stdout.decode(), order_list
 
 
 if __name__ == '__main__':

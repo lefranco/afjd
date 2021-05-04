@@ -2589,7 +2589,7 @@ def vote():
 def game_master():
     """ game_master """
 
-    def civil_disorder_callback(_, __):
+    def civil_disorder_callback(_, role_id):
         """ civil_disorder_callback """
 
         def reply_callback(req):
