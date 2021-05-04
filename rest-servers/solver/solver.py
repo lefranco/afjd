@@ -539,7 +539,7 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
 
         _, _, initial_role = names['roles'][str(role)]
 
-        print("{initial_role=}")
+        print(f"{initial_role=}")
 
         # parameters used to cal the C language written solver
         call_list = [
