@@ -537,6 +537,11 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
         # affect env variable
         os.putenv("DIPLOCOM", f"{tmpdirname}/DIPLOCOM")
 
+        print(f"{names=}")
+        print(f"{roles=}")
+        print(f"{names['roles']=}")
+
+
         _, _, initial_role = names['roles'][str(role)]
 
         print(f"{initial_role=}")
