@@ -430,18 +430,22 @@ def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[st
         tokens = line.split(" ")
 
         if tokens[0] == "-":
-            type_order = 9
+            order_type = 9
 
-        active_zone_num = zone_names.index(tokens[1].upper()) + 1
-        passive_zone_num = 0
-        dest_zone_num = 0
+        zone_num = zone_names.index(tokens[1].upper()) + 1
 
         if tokens[2] == "H":
-            type_order = 4
+            order_type = 4
         if tokens[2] == "A":
-            type_order = 7
+            order_type = 7
 
-        order = role_num, type_order, active_zone_num, passive_zone_num, dest_zone_num
+        order = {
+            'active_unit': {
+                'role' : role_num,
+                'zone' : zone_num
+            },
+            'order_type' : order_type,
+        }
 
         print(f"{line} --> {order}")
 
