@@ -401,7 +401,7 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     }
 
 
-def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any], role_num: int) -> typing.Dict[str, typing.Any]:
+def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any], role_num: int) -> typing.List[typing.Dict[str, typing.Any]]:
     """ This will read the orders_result.txt file """
 
     region_names = [r.upper() for r in names['zones'].values() if r]
@@ -451,9 +451,7 @@ def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[st
 
         orders_list.append(order)
 
-    return {
-        'orders': orders_list
-    }
+    return orders_list
 
 
 def read_actives(active_roles_content: typing.List[str], names: typing.Dict[str, typing.Any]) -> typing.List[int]:
@@ -615,9 +613,9 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
             orders_result_content = infile.readlines()
             orders_result = ''.join(orders_result_content)
 
-        order_list = read_orders(orders_result_content, variant, names, role)
+        orders_list = read_orders(orders_result_content, variant, names, role)
 
-        return result.returncode, result.stderr.decode(), result.stdout.decode(), order_list
+        return result.returncode, result.stderr.decode(), result.stdout.decode(), orders_list
 
 
 if __name__ == '__main__':
