@@ -447,8 +447,6 @@ def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[st
             'order_type' : order_type,
         }
 
-        print(f"{line} --> {order}")
-
         orders_list.append(order)
 
     return orders_list
