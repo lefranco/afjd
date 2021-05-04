@@ -1363,8 +1363,8 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
 
 @API.resource('/game-no-orders/<game_id>')
-class GameOrderRessource(flask_restful.Resource):  # type: ignore
-    """ GameOrderRessource """
+class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
+    """ GameNoOrderRessource """
 
     def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
