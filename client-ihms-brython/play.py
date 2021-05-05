@@ -2911,6 +2911,18 @@ def game_master():
     # who can I put in this role
     possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
 
+    # definitives
+    definitives = common.definitive_reload(game_id)
+    if definitives is None:
+        return
+
+    # avoids a warning
+    definitives = list(definitives)
+
+    definitive_values_table = dict()
+    for _, role, definitive_val in definitives:
+        definitive_values_table[role] = bool(definitive_val)
+
     # votes
     votes = common.vote_reload(game_id)
     if votes is None:
@@ -3018,12 +3030,24 @@ def game_master():
         col.style = {
             "border": "solid",
         }
+        if role_id in definitive_values_table:
+            vote_val = "On peut résoudre" if definitive_values_table[role_id] else "On peut pas résoudre"
+        else:
+            vote_val = "Pas d'avis"
+        col <= vote_val
+        row <= col
+
+        col = html.TD()
+        col.style = {
+            "border": "solid",
+        }
         if role_id in vote_values_table:
             vote_val = "Arrêt" if vote_values_table[role_id] else "Continuer"
         else:
             vote_val = "Pas de vote"
         col <= vote_val
         row <= col
+
 
         game_admin_table <= row
 

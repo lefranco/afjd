@@ -782,6 +782,42 @@ def make_report_window(report_loaded):
     return report_table
 
 
+
+def definitive_reload(game_id):
+    """ definitive_reload """
+
+    definitives = None
+
+    def reply_callback(req):
+        """ reply_callback """
+
+        nonlocal votes
+
+        req_result = json.loads(req.text)
+
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error extracting definitive from game: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem extracting definitive in game: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        definitives = req_result['definitives']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-definitives/{game_id}"
+
+    # extracting definitive from a game : need token (or not?)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return definitives
+
+
 def vote_reload(game_id):
     """ vote_reload """
 
