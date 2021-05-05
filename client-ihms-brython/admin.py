@@ -267,7 +267,7 @@ def rectify():
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         # select unit (cannot be dislodged - issue - maybe later)
-        selected_erase_unit = position_data.closest_unit(pos, False)
+        selected_erase_unit = position_data.closest_unit(pos, None)
 
         # unit must be selected
         if selected_erase_unit is None:

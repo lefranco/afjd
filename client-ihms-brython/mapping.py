@@ -1290,8 +1290,13 @@ class Position(Renderable):
     def remove_unit(self, unit: Unit):
         """ remove_unit (sandbox and rectification)"""
         region = unit.zone.region
-        del self._occupant_table[region]
-        self._units.remove(unit)
+        # test because a dislodging unit is not in the table
+        if region in self._occupant_table:
+            del self._occupant_table[region]
+        if unit.is_disloged():
+            self._dislodged_units.remove(unit)
+        else:
+            self._units.remove(unit)
 
     def add_ownership(self, ownership: Ownership):
         """ add_ownership (rectification)"""
