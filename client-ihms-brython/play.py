@@ -366,6 +366,7 @@ def submit_orders():
         if not orders_data.empty():
             put_erase_all(buttons_right)
         if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+            buttons_right <= html.BR()
             put_submit(buttons_right)
 
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -419,6 +420,7 @@ def submit_orders():
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
             put_rest_hold(buttons_right)
         if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+            buttons_right <= html.BR()
             put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
@@ -491,6 +493,7 @@ def submit_orders():
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                buttons_right <= html.BR()
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -643,6 +646,7 @@ def submit_orders():
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                buttons_right <= html.BR()
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -726,6 +730,7 @@ def submit_orders():
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                buttons_right <= html.BR()
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -810,6 +815,7 @@ def submit_orders():
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                buttons_right <= html.BR()
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -853,6 +859,7 @@ def submit_orders():
                 if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                     put_rest_hold(buttons_right)
                 if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                    buttons_right <= html.BR()
                     put_submit(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -876,6 +883,7 @@ def submit_orders():
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 put_rest_hold(buttons_right)
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                buttons_right <= html.BR()
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -961,6 +969,7 @@ def submit_orders():
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
             put_rest_hold(buttons_right)
         if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+            buttons_right <= html.BR()
             put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
@@ -1070,6 +1079,12 @@ def submit_orders():
 
     def put_submit(buttons_right):
         """ put_submit """
+
+        label_definitive = html.LABEL("On peut résoudre avec ça ?")
+        buttons_right <= label_definitive
+
+        input_definitive = html.INPUT(type="checkbox")
+        buttons_right <= input_definitive
 
         input_submit = html.INPUT(type="submit", value="soumettre ces ordres")
         input_submit.bind("click", submit_orders_callback)
@@ -1252,6 +1267,7 @@ def submit_orders():
     if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
         put_rest_hold(buttons_right)
     if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+        buttons_right <= html.BR()
         put_submit(buttons_right)
 
     # overall
@@ -1305,6 +1321,7 @@ def submit_communication_orders():
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         stack_orders(buttons_right)
+        buttons_right <= html.BR()
         put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
@@ -1432,6 +1449,7 @@ def submit_communication_orders():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
+            buttons_right <= html.BR()
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -1497,6 +1515,7 @@ def submit_communication_orders():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
+            buttons_right <= html.BR()
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -1539,6 +1558,7 @@ def submit_communication_orders():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
+            buttons_right <= html.BR()
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -1576,6 +1596,7 @@ def submit_communication_orders():
                 stack_orders(buttons_right)
                 if not orders_data.empty():
                     put_erase_all(buttons_right)
+                buttons_right <= html.BR()
                 put_submit(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -1596,6 +1617,7 @@ def submit_communication_orders():
             stack_orders(buttons_right)
             if not orders_data.empty():
                 put_erase_all(buttons_right)
+            buttons_right <= html.BR()
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
@@ -1656,6 +1678,7 @@ def submit_communication_orders():
         stack_orders(buttons_right)
         if not orders_data.empty():
             put_erase_all(buttons_right)
+        buttons_right <= html.BR()
         put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
@@ -1925,6 +1948,7 @@ def submit_communication_orders():
     stack_orders(buttons_right)
     if not orders_data.empty():
         put_erase_all(buttons_right)
+    buttons_right <= html.BR()
     put_submit(buttons_right)
 
     # overall
