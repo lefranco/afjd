@@ -1294,11 +1294,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             submission.update_database()
 
         # handle definitive boolean
-        if definitive_value is not None:
+        if role_id != 0:
+            if definitive_value is not None:
 
-            # create vote here
-            definitive = definitives.Definitive(int(game_id), role_id, bool(definitive_value))
-            definitive.update_database()
+                # create vote here
+                definitive = definitives.Definitive(int(game_id), role_id, bool(definitive_value))
+                definitive.update_database()
 
         data = {'msg': f"Ok orders submitted {submission_report}"}
         return data, 201
