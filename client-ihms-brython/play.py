@@ -1768,7 +1768,7 @@ def submit_communication_orders():
         warning.style = {
             'color': 'red',
         }
-        warning <= html.B("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution.")
+        warning <= html.B("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution pourvu que l'unité en question ait reçu l'ordre *réel* de rester en place ou de se disperser.")
         buttons_right <= warning
 
     def stack_orders(buttons_right):
