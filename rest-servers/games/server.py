@@ -102,6 +102,7 @@ ROLE_ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER.add_argument('role_id', type=int, required=True)
 SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
+SUBMISSION_PARSER.add_argument('definitive', type=int, required=False)
 SUBMISSION_PARSER.add_argument('names', type=str, required=True)
 SUBMISSION_PARSER.add_argument('pseudo', type=str, required=False)
 
@@ -1381,6 +1382,7 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = args['pseudo']
         names = args['names']
+        definitive = args['definitive']
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
@@ -1523,6 +1525,11 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
         # insert this submisssion
         submission = submissions.Submission(int(game_id), int(role_id))
         submission.update_database()
+
+        # handle definitive boolean
+        print(f"{definitive=}")
+        if definitive is not None:
+            pass # TODO
 
         data = {'msg': f"Ok civil disorder submitted {submission_report}"}
         return data, 201
