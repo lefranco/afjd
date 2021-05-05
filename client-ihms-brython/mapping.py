@@ -361,7 +361,8 @@ class ColourRecord:
 # position
 DISLODGED_TEXT_BACKGROUND_COLOUR = ColourRecord(255, 255, 255)  # white
 DISLODGED_COLOUR = ColourRecord(255, 127, 0)  # orange
-DISLODGED_SHIFT = -5
+DISLODGED_SHIFT_X = -5
+DISLODGED_SHIFT_Y = -5
 
 
 def dislodged_font() -> str:
@@ -805,7 +806,7 @@ class Unit(Renderable):  # pylint: disable=abstract-method
 
         dislodger_back_colour = DISLODGED_TEXT_BACKGROUND_COLOUR
         ctx.fillStyle = dislodger_back_colour.str_value()
-        ctx.rect(x_pos + 10, y_pos - 17, 20, 10)
+        ctx.rect(x_pos + 12, y_pos - 17, 18, 10)
         ctx.fill()
 
         dislodger_colour = DISLODGED_COLOUR
@@ -918,8 +919,8 @@ class Army(Unit):
 
         # shift for dislodged units
         if self._dislodged_origin is not None:
-            x += DISLODGED_SHIFT  # pylint: disable=invalid-name
-            y += DISLODGED_SHIFT  # pylint: disable=invalid-name
+            x += DISLODGED_SHIFT_X  # pylint: disable=invalid-name
+            y += DISLODGED_SHIFT_Y  # pylint: disable=invalid-name
 
         unit_design.stabbeur_army(x, y, ctx)
 
@@ -951,8 +952,8 @@ class Fleet(Unit):
 
         # shift for dislodged units
         if self._dislodged_origin is not None:
-            x += DISLODGED_SHIFT  # pylint: disable=invalid-name
-            y += DISLODGED_SHIFT  # pylint: disable=invalid-name
+            x += DISLODGED_SHIFT_X  # pylint: disable=invalid-name
+            y += DISLODGED_SHIFT_Y  # pylint: disable=invalid-name
 
         unit_design.stabbeur_fleet(x, y, ctx)
 
@@ -1207,7 +1208,7 @@ class Position(Renderable):
             zone = unit.zone
             unit_pos = self._variant.position_table[zone]
             if unit.is_disloged():
-                unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT, y_pos=unit_pos.y_pos + DISLODGED_SHIFT)
+                unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
             distance = designated_pos.distance(unit_pos)
             if distance_closest is None or distance < distance_closest:
                 closest_unit = unit
@@ -1229,7 +1230,7 @@ class Position(Renderable):
             zone = unit.zone
             unit_pos = self._variant.position_table[zone]
             if unit.is_disloged():
-                unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT, y_pos=unit_pos.y_pos + DISLODGED_SHIFT)
+                unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
             distance = designated_pos.distance(unit_pos)
             if distance_closest is None or distance < distance_closest:
                 closest_object = unit
@@ -1503,9 +1504,9 @@ class Order(Renderable):
 
             # put an arrow (move/retreat)
             unit_position = self._position.variant.position_table[self._active_unit.zone]
-            from_point = geometry.PositionRecord(x_pos=unit_position.x_pos + DISLODGED_SHIFT, y_pos=unit_position.y_pos + DISLODGED_SHIFT)
+            from_point = geometry.PositionRecord(x_pos=unit_position.x_pos + DISLODGED_SHIFT_X, y_pos=unit_position.y_pos + DISLODGED_SHIFT_Y)
             dest_point = self._position.variant.position_table[self._destination_zone]
-            draw_arrow(from_point.x_pos + DISLODGED_SHIFT, from_point.y_pos + DISLODGED_SHIFT, dest_point.x_pos, dest_point.y_pos, ctx)
+            draw_arrow(from_point.x_pos + DISLODGED_SHIFT_X, from_point.y_pos + DISLODGED_SHIFT_Y, dest_point.x_pos, dest_point.y_pos, ctx)
 
             # put back
             ctx.lineWidth = 1
@@ -1520,7 +1521,7 @@ class Order(Renderable):
 
             # put a cross over unit
             unit_position = self._position.variant.position_table[self._active_unit.zone]
-            cross_center_point = geometry.PositionRecord(x_pos=unit_position.x_pos + DISLODGED_SHIFT, y_pos=unit_position.y_pos + DISLODGED_SHIFT)
+            cross_center_point = geometry.PositionRecord(x_pos=unit_position.x_pos + DISLODGED_SHIFT_X, y_pos=unit_position.y_pos + DISLODGED_SHIFT_Y)
             ctx.beginPath()
             ctx.moveTo(cross_center_point.x_pos + 8, cross_center_point.y_pos - 8)
             ctx.lineTo(cross_center_point.x_pos - 8, cross_center_point.y_pos + 8)
