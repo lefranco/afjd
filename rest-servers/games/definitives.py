@@ -35,7 +35,7 @@ class Definitive:
         """ creation of table from scratch """
 
         database.sql_execute("DROP TABLE IF EXISTS definitives")
-        database.sql_execute("CREATE TABLE definitives (game_id INTEGER, role_num INTEGER, definitive INTEGER)")
+        database.sql_execute("CREATE TABLE definitives (game_id INTEGER, role_num INTEGER, value INTEGER)")
 
     def __init__(self, game_id: int, role_num: int, definitive: bool) -> None:
 
@@ -51,7 +51,7 @@ class Definitive:
     def update_database(self) -> None:
         """ Pushes changes from object to database """
         database.sql_execute("DELETE FROM definitives WHERE game_id = ? and role_num = ?", (self._game_id, self._role_num))
-        database.sql_execute("INSERT OR REPLACE INTO definitives (game_id, role_num, value) VALUES (?, ?, ?)", (self._game_id, self._role_num, self._vote))
+        database.sql_execute("INSERT OR REPLACE INTO definitives (game_id, role_num, value) VALUES (?, ?, ?)", (self._game_id, self._role_num, self._value))
 
     def delete_database(self) -> None:
         """ Removes object from database """
