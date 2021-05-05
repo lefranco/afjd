@@ -41,6 +41,7 @@ import variants
 import database
 import visits
 import votes
+import definitives
 import lowdata
 
 # a little welcome message to new games
