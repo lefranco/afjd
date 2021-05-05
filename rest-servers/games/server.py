@@ -2063,6 +2063,8 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             if order_type in [4, 7]:
                 communication_eligibles.append(zone_num)
 
+        print(f"{communication_eligibles=}")
+
         # remove orders
         for (_, role_id, _, zone_num, _, _) in orders.Order.list_by_game_id(game_id):
             order = orders.Order(int(game_id), role_id, 0, zone_num, 0, 0)
@@ -2081,6 +2083,9 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in communication_orders_from_game:
             if active_unit_zone_num in communication_eligibles:
                 communication_orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
+
+        print(f"{communication_orders_list=}")
+
         communication_orders_list_json = json.dumps(communication_orders_list)
 
         json_dict = {
