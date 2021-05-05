@@ -1090,6 +1090,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         pseudo = args['pseudo']
         names = args['names']
         orders_submitted = args['orders']
+        definitive = args['definitive']
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
@@ -1291,6 +1292,11 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             submission = submissions.Submission(int(game_id), int(role_id))
             submission.update_database()
 
+        # handle definitive boolean
+        print(f"{definitive=}")
+        if definitive is not None:
+            pass # TODO
+
         data = {'msg': f"Ok orders submitted {submission_report}"}
         return data, 201
 
@@ -1382,7 +1388,6 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = args['pseudo']
         names = args['names']
-        definitive = args['definitive']
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
@@ -1525,11 +1530,6 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
         # insert this submisssion
         submission = submissions.Submission(int(game_id), int(role_id))
         submission.update_database()
-
-        # handle definitive boolean
-        print(f"{definitive=}")
-        if definitive is not None:
-            pass # TODO
 
         data = {'msg': f"Ok civil disorder submitted {submission_report}"}
         return data, 201
