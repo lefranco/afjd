@@ -791,7 +791,7 @@ def definitive_reload(game_id):
     def reply_callback(req):
         """ reply_callback """
 
-        nonlocal votes
+        nonlocal definitives
 
         req_result = json.loads(req.text)
 

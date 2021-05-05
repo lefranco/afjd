@@ -2056,6 +2056,12 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             active = actives.Active(int(game_id), int(role_num))
             active.update_database()
 
+        # keep a copy of orders eligible for communication orders
+        communication_eligibles = list()
+        for (_, role_id, order_type, zone_num, _, _) in orders.Order.list_by_game_id(game_id):
+            if order_type in [4, 7]:
+                communication_eligibles.append(zone_num)
+
         # remove orders
         for (_, role_id, _, zone_num, _, _) in orders.Order.list_by_game_id(game_id):
             order = orders.Order(int(game_id), role_id, 0, zone_num, 0, 0)
@@ -2068,11 +2074,12 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         # --------------------------
         # get communication orders
 
-        # evaluate communication_orders
+        # evaluate communication_orders (only the units with a hld of disperse order)
         communication_orders_list = list()
         communication_orders_from_game = communication_orders.CommunicationOrder.list_by_game_id(game_id)
         for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in communication_orders_from_game:
-            communication_orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
+            if active_unit_zone_num in communication_eligibles:
+                communication_orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
         communication_orders_list_json = json.dumps(communication_orders_list)
 
         json_dict = {
