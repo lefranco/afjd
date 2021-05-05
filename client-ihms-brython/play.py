@@ -336,6 +336,8 @@ def submit_orders():
     stored_event = None
     down_click_time = None
 
+    input_definitive = None
+
     def rest_hold_callback(_):
         """ rest_hold_callback """
 
@@ -453,10 +455,13 @@ def submit_orders():
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
 
+        definitive_value = input_definitive.checked
+
         json_dict = {
             'role_id': role_id,
             'pseudo': pseudo,
             'orders': orders_list_dict_json,
+            'definitive': definitive_value,
             'names': names_dict_json
         }
 
@@ -1079,6 +1084,8 @@ def submit_orders():
 
     def put_submit(buttons_right):
         """ put_submit """
+
+        nonlocal input_definitive
 
         label_definitive = html.LABEL("On peut résoudre avec ça ?")
         buttons_right <= label_definitive

@@ -23,6 +23,7 @@ import declarations
 import messages
 import allocations
 import visits
+import votes
 
 
 def populate_transitions() -> None:
@@ -100,6 +101,16 @@ def populate_visits() -> None:
     visits.Visit.create_table()
 
 
+def populate_votes() -> None:
+    """ inserts these items in database """
+    votes.Vote.create_table()
+
+
+def populate_definitives() -> None:
+    """ inserts these items in database """
+    definitives.Definitive.create_table()
+
+
 def populate() -> None:
     """ inserts all items in database """
 
@@ -119,6 +130,8 @@ def populate() -> None:
     populate_declarations()
     populate_allocations()
     populate_visits()
+    populate_votes()
+    populate_definitives()
 
 
 if __name__ == '__main__':

@@ -1090,7 +1090,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         pseudo = args['pseudo']
         names = args['names']
         orders_submitted = args['orders']
-        definitive = args['definitive']
+        definitive_value = args['definitive']
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
@@ -1293,9 +1293,11 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             submission.update_database()
 
         # handle definitive boolean
-        print(f"{definitive=}")
-        if definitive is not None:
-            pass # TODO
+        if definitive_value is not None:
+
+            # create vote here
+            definitive = definitives.Definitive(int(game_id), role_id, bool(definitive_value))
+            definitive.update_database()
 
         data = {'msg': f"Ok orders submitted {submission_report}"}
         return data, 201
@@ -2885,7 +2887,7 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
         expected_id = game.get_role(role_id)
 
-        # can be player of game master but must correspond
+        # must be player
         if user_id != expected_id:
             flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
