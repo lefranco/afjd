@@ -45,7 +45,7 @@ class Vote:
         assert isinstance(role_num, int), "role_num must be an int"
         self._role_num = role_num
 
-        assert isinstance(vote, bool), "role_num must be an bool"
+        assert isinstance(vote, bool), "vote must be an bool"
         self._vote = vote
 
     def update_database(self) -> None:
