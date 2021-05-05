@@ -193,7 +193,10 @@ def show_position():
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         selected_hovered_object = position_data.closest_object(pos)
-        hover_info.text = selected_hovered_object.description()
+        if selected_hovered_object is not None:
+            hover_info.text = selected_hovered_object.description()
+        else:
+            hover_info.text = ""
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
