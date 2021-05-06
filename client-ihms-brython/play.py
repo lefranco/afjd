@@ -1128,11 +1128,14 @@ def submit_orders():
     if player_id is None:
         return
 
-    # from game id and player id get role_id of player
-
     role_id = common.get_role_allocated_to_player(game_id, player_id)
     if role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
+        return
+
+    # cannot be game master
+    if role_id == 0:
+        alert("Ce n'est pas possible pour l'arbitre de cette partie")
         return
 
     # from game name get variant name
