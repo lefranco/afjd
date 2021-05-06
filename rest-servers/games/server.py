@@ -100,6 +100,11 @@ ROLE_ALLOCATION_PARSER.add_argument('role_id', type=int, required=True)
 ROLE_ALLOCATION_PARSER.add_argument('delete', type=int, required=True)
 ROLE_ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 
+RECTIFICATION_PARSER = flask_restful.reqparse.RequestParser()
+RECTIFICATION_PARSER.add_argument('ownerships', type=str, required=True)
+RECTIFICATION_PARSER.add_argument('units', type=str, required=True)
+RECTIFICATION_PARSER.add_argument('pseudo', type=str, required=False)
+
 SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER.add_argument('role_id', type=int, required=True)
 SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
@@ -109,12 +114,12 @@ SUBMISSION_PARSER.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER2 = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER2.add_argument('role_id', type=int, required=True)
-SUBMISSION_PARSER2.add_argument('orders', type=str, required=True)
+SUBMISSION_PARSER2.add_argument('names', type=str, required=True)
 SUBMISSION_PARSER2.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER3 = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER3.add_argument('role_id', type=int, required=True)
-SUBMISSION_PARSER3.add_argument('names', type=str, required=True)
+SUBMISSION_PARSER3.add_argument('orders', type=str, required=True)
 SUBMISSION_PARSER3.add_argument('pseudo', type=str, required=False)
 
 ADJUDICATION_PARSER = flask_restful.reqparse.RequestParser()
@@ -126,11 +131,6 @@ SIMULATION_PARSER.add_argument('variant_name', type=str, required=True)
 SIMULATION_PARSER.add_argument('orders', type=str, required=True)
 SIMULATION_PARSER.add_argument('units', type=str, required=True)
 SIMULATION_PARSER.add_argument('names', type=str, required=True)
-
-RECTIFICATION_PARSER = flask_restful.reqparse.RequestParser()
-RECTIFICATION_PARSER.add_argument('ownerships', type=str, required=True)
-RECTIFICATION_PARSER.add_argument('units', type=str, required=True)
-RECTIFICATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 DECLARATION_PARSER = flask_restful.reqparse.RequestParser()
 DECLARATION_PARSER.add_argument('role_id', type=int, required=True)
@@ -212,7 +212,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/games/<name> - GET- retrieving data of game name=%s", name)
 
-        # find data
+        # find the game
         game = games.Game.find_by_name(name)
         if game is None:
             flask_restful.abort(404, msg=f"Game {name} doesn't exist")
@@ -231,11 +231,10 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/games/<name> - PUT - updating game name=%s", name)
 
         args = GAME_PARSER.parse_args(strict=True)
+
         pseudo = args['pseudo']
 
-        game = games.Game.find_by_name(name)
-        if game is None:
-            flask_restful.abort(404, msg=f"Game {name} does not exist")
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to modify game")
@@ -266,6 +265,11 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
 
         user_id = req_result.json()
+
+        # find the game
+        game = games.Game.find_by_name(name)
+        if game is None:
+            flask_restful.abort(404, msg=f"Game {name} does not exist")
 
         # check this is game_master
         assert game is not None
@@ -386,15 +390,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/games/<name> - DELETE - deleting game name=%s", name)
 
-        # delete game from here
-        game = games.Game.find_by_name(name)
-        if game is None:
-            flask_restful.abort(404, msg=f"Game {name} doesn't exist")
-
-        assert game is not None
-        if game.current_state != 2:
-            flask_restful.abort(400, msg=f"Game {name} is not terminated")
-
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -422,10 +417,19 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
+        # find the game
+        game = games.Game.find_by_name(name)
+        if game is None:
+            flask_restful.abort(404, msg=f"Game {name} doesn't exist")
+
         # check this is game_master
         assert game is not None
         if game.get_role(0) != user_id:
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+
+        # check game state
+        if game.current_state != 2:
+            flask_restful.abort(400, msg=f"Game {name} is not terminated")
 
         # delete allocations
         game.delete_allocations()
@@ -490,21 +494,15 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/games - POST - creating new game")
+        mylogger.LOGGER.info("/games - POST - creating new game name")
 
         args = GAME_PARSER.parse_args(strict=True)
+
         name = args['name']
-
-        mylogger.LOGGER.info("game name=%s", name)
-
         pseudo = args['pseudo']
 
-        game = games.Game.find_by_name(name)
-        if game is not None:
-            flask_restful.abort(400, msg=f"Game {name} already exists")
-
-        if not name.isidentifier():
-            flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
+        mylogger.LOGGER.info("name=%s", name)
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to create game")
@@ -534,6 +532,14 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
+
+        if not name.isidentifier():
+            flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
+
+        # find the game
+        game = games.Game.find_by_name(name)
+        if game is not None:
+            flask_restful.abort(400, msg=f"Game {name} already exists")
 
         # pay more attention to deadline
         entered_deadline = args['deadline']
@@ -597,14 +603,18 @@ class GameSelectListRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
+        mylogger.LOGGER.info("/games-select - POST - get getting some games only name")
+
         args = GAMES_SELECT_PARSER.parse_args(strict=True)
+
         selection_submitted = args['selection']
+
+        mylogger.LOGGER.info("selection_submitted=%s", selection_submitted)
+
         try:
             selection_list = list(map(int, selection_submitted.split()))
         except:  # noqa: E722 pylint: disable=bare-except
             flask_restful.abort(400, msg="Bad selection. Use a space separated list of numbers")
-
-        mylogger.LOGGER.info("/games-select - POST - get getting some games only name")
 
         games_list = games.Game.inventory()
         data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state} for g in games_list if g.identifier in selection_list}
@@ -640,12 +650,14 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/allocations - POST - creating/deleting new allocation")
 
         args = ALLOCATION_PARSER.parse_args(strict=True)
+
         game_id = args['game_id']
         player_pseudo = args['player_pseudo']
         delete = args['delete']
         pseudo = args['pseudo']
 
         mylogger.LOGGER.info("game_id=%s player_pseudo=%s delete=%s", game_id, player_pseudo, delete)
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to join/put or quit/remolve in game")
@@ -694,7 +706,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # who is game master ?
+        # find the game master
         assert game is not None
         game_master_id = game.get_role(0)
 
@@ -737,13 +749,15 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/role-allocations - POST - creating/deleting new role-allocation")
 
         args = ROLE_ALLOCATION_PARSER.parse_args(strict=True)
+
         game_id = args['game_id']
         player_pseudo = args['player_pseudo']
         role_id = args['role_id']
         delete = args['delete']
         pseudo = args['pseudo']
 
-        mylogger.LOGGER.info("game_id=%s role_id=%s player_pseudo=%s delete=%s", role_id, game_id, player_pseudo, delete)
+        mylogger.LOGGER.info("game_id=%s player_pseudo=%s role_id=%s delete=%s", game_id, player_pseudo, role_id, delete)
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to move role in game")
@@ -792,7 +806,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # who is game master ?
+        # find the game master
         assert game is not None
         game_master_id = game.get_role(0)
 
@@ -823,10 +837,12 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         # delete role
         allocation = allocations.Allocation(game_id, player_id, role_id)
         allocation.delete_database()
+
         # put dangling
         dangling_role_id = -1
         allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
         allocation.update_database()
+
         # report
         data = {'msg': 'Ok role-allocation deleted if present'}
         return data, 200
@@ -884,9 +900,13 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/game-positions/<game_id> - POST - rectifying position game id=%s", game_id)
 
         args = RECTIFICATION_PARSER.parse_args(strict=True)
-        pseudo = args['pseudo']
+
         ownerships_submitted = args['ownerships']
         units_submitted = args['units']
+        pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("ownerships_submitted=%s units_submitted=%s", ownerships_submitted, units_submitted)
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         try:
             the_ownerships = json.loads(ownerships_submitted)
@@ -925,7 +945,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        user_id = req_result.json()
+        #  user_id = req_result.json()  #  we do not use this variable
 
         # check user has right to change position - must be admin
 
@@ -1021,7 +1041,7 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-reports/<game_id> - GET - getting report game id=%s", game_id)
 
-        # check the game exists
+        # find the game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
@@ -1051,7 +1071,7 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-transitions/<game_id>/<advancement> - GET - getting transition game id=%s advancement=%s", game_id, advancement)
 
-        # check the game exists
+        # find the game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
@@ -1084,14 +1104,15 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/game-orders/<game_id> - POST - submitting orders game id=%s", game_id)
 
         args = SUBMISSION_PARSER.parse_args(strict=True)
+
         role_id = args['role_id']
-
-        mylogger.LOGGER.info("role_id=%s", role_id)
-
-        pseudo = args['pseudo']
-        names = args['names']
         orders_submitted = args['orders']
         definitive_value = args['definitive']
+        names = args['names']
+        pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("role_id=%s orders_submitted=%s definitive_value=%s names=%s", role_id, orders_submitted, definitive_value, names)
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
@@ -1340,7 +1361,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to get orders - must be player or game master
 
-        # check there is a game
+        # find the game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
@@ -1372,7 +1393,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-
 @API.resource('/game-no-orders/<game_id>')
 class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
     """ GameNoOrderRessource """
@@ -1385,13 +1405,14 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-no-orders/<game_id> - POST - submitting civil disorder game id=%s", game_id)
 
-        args = SUBMISSION_PARSER3.parse_args(strict=True)
+        args = SUBMISSION_PARSER2.parse_args(strict=True)
+
         role_id = args['role_id']
-
-        mylogger.LOGGER.info("role_id=%s", role_id)
-
-        pseudo = args['pseudo']
         names = args['names']
+        pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("role_id=%s", role_id)  # names not logged
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
@@ -1429,7 +1450,7 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # who is game master ?
+        # find game master
         assert game is not None
         game_master_id = game.get_role(0)
 
@@ -1539,7 +1560,6 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
-
 @API.resource('/game-communication-orders/<game_id>')
 class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
     """ GameCommunicationOrderRessource """
@@ -1552,17 +1572,14 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-communication-orders/<game_id> - POST - submitting communication orders game id=%s", game_id)
 
-        args = SUBMISSION_PARSER2.parse_args(strict=True)
+        args = SUBMISSION_PARSER3.parse_args(strict=True)
+
         role_id = args['role_id']
-
-        # not allowed for game master
-        if role_id == 0:
-            flask_restful.abort(403, msg="This is not possible for game master")
-
-        mylogger.LOGGER.info("role_id=%s", role_id)
-
-        pseudo = args['pseudo']
         communication_orders_submitted = args['orders']
+        pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("role_id=%s communication_orders_submitted=%s", role_id, communication_orders_submitted)  # names not logged
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to submit communication orders in game")
@@ -1592,6 +1609,10 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
+
+        # not allowed for game master
+        if role_id == 0:
+            flask_restful.abort(403, msg="This is not possible for game master")
 
         # check user has right to submit communication orders - must be player
 
@@ -1710,7 +1731,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to get orders - must be player or game master
 
-        # check there is a game
+        # find the game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
@@ -1778,7 +1799,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to get status of orders - must be game master or player in game
 
-        # check there is a game
+        # find the game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
@@ -1819,8 +1840,12 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/game-adjudications/<game_id> - POST - adjudicating game id=%s", game_id)
 
         args = ADJUDICATION_PARSER.parse_args(strict=True)
-        pseudo = args['pseudo']
+
         names = args['names']
+        pseudo = args['pseudo']
+
+        # names not logged
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to adjudicate in game")
@@ -2155,10 +2180,13 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/simulation - POST - simulation")
 
         args = SIMULATION_PARSER.parse_args(strict=True)
+
         variant_name = args['variant_name']
-        names = args['names']
-        units_submitted = args['units']
         orders_submitted = args['orders']
+        units_submitted = args['units']
+        names = args['names']
+
+        mylogger.LOGGER.info("variant_name=%s orders_submitted=%s units_submitted=%s", variant_name, orders_submitted, units_submitted)  # names not logged
 
         # evaluate variant
         variant_dict = variants.Variant.get_by_name(variant_name)
@@ -2270,13 +2298,14 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/game-messages/<game_id> - POST - creating new message game id=%s", game_id)
 
         args = MESSAGE_PARSER.parse_args(strict=True)
+
         role_id = args['role_id']
         dest_role_ids_submitted = args['dest_role_ids']
-
-        mylogger.LOGGER.info("role_id=%s dest_role_ids=%s", role_id, dest_role_ids_submitted)
-
-        pseudo = args['pseudo']
         payload = args['content']
+        pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("role_id=%s dest_role_ids_submitted=%s", role_id, dest_role_ids_submitted)  # payload not logged
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to insert message in game")
@@ -2314,7 +2343,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # who is player for role ?
+        # find player for role
         assert game is not None
         expected_id = game.get_role(role_id)
 
@@ -2382,7 +2411,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to read message - must be player of game master
 
-        # check there is a game
+        # find the game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
@@ -2432,13 +2461,14 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/game-declarations/<game_id> - POST - creating new declaration game id=%s", game_id)
 
         args = DECLARATION_PARSER.parse_args(strict=True)
+
         role_id = args['role_id']
-
-        mylogger.LOGGER.info("role_id=%s", role_id)
-
-        pseudo = args['pseudo']
         anonymous = args['anonymous']
         payload = args['content']
+        pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("role_id=%s anonymous=%s", role_id, anonymous)  # payload not logged
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to insert declaration in game")
@@ -2537,7 +2567,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to read declaration - must be player of game master
 
-        # check there is a game
+        # find the game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
@@ -2712,11 +2742,12 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/game-visits/<game_id>/<visit_type> - POST - creating new visit game id=%s visit_type=%s", game_id, visit_type)
 
         args = VISIT_PARSER.parse_args(strict=True)
+
         role_id = args['role_id']
+        pseudo = args['pseudo']
 
         mylogger.LOGGER.info("role_id=%s", role_id)
-
-        pseudo = args['pseudo']
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to insert visit in game")
@@ -2833,7 +2864,6 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-
 @API.resource('/game-definitives/<game_id>')
 class GameDefinitiveRessource(flask_restful.Resource):  # type: ignore
     """  GameDefinitiveRessource """
@@ -2895,8 +2925,6 @@ class GameDefinitiveRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-
-
 @API.resource('/game-votes/<game_id>')
 class GameVoteRessource(flask_restful.Resource):  # type: ignore
     """  GameVoteRessource """
@@ -2910,16 +2938,13 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/game-votes/<game_id> - POST - creating new vote game id=%s", game_id)
 
         args = VOTE_PARSER.parse_args(strict=True)
+
         role_id = args['role_id']
-
-        # not allowed for game master
-        if role_id == 0:
-            flask_restful.abort(403, msg="This is not possible for game master")
-
-        mylogger.LOGGER.info("role_id=%s", role_id)
-
         value = args['value']
         pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("role_id=%s value=%s", role_id, value)
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
             flask_restful.abort(401, msg="Need a pseudo to insert vote in game")
@@ -2950,7 +2975,9 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to post vote - must be player
+        # not allowed for game master
+        if role_id == 0:
+            flask_restful.abort(403, msg="This is not possible for game master")
 
         # find the game
         game = games.Game.find_by_identifier(game_id)
