@@ -34,7 +34,7 @@ document <= title
 
 
 # H2
-H2 = "Preuve de concept de l'interface de jeu Diplomacy"
+H2 = "SIte pour jouer à Diplomatie et ses variantes en utilisant l'architecture REST pour l'A.F.J.D"
 h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
