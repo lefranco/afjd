@@ -22,6 +22,7 @@ import pairing    # noqa: E402
 import play    # noqa: E402
 import tools    # noqa: E402
 import sandbox    # noqa: E402
+import artificial    # noqa: E402
 import technical    # noqa: E402
 import admin    # noqa: E402
 
@@ -39,7 +40,7 @@ h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
 
-OPTIONS = ['accueil', 'login', 'sélectionner interfaces', 'sélectionner partie', 'listes', 'mon compte', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie', 'bac à sable', 'coin technique', 'administration']
+OPTIONS = ['accueil', 'login', 'sélectionner interfaces', 'sélectionner partie', 'listes', 'mon compte', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie', 'bac à sable', 'jouer contre l\'I.A.', 'coin technique', 'administration']
 
 # overall_top
 overall_top = html.DIV()
@@ -90,6 +91,8 @@ def load_option(_, item_name):
         play.render(panel_middle)
     if item_name == 'bac à sable':
         sandbox.render(panel_middle)
+    if item_name == 'jouer contre l\'I.A.':
+        artificial.render(panel_middle)
     if item_name == 'coin technique':
         technical.render(panel_middle)
     if item_name == 'administration':
