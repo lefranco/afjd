@@ -1143,7 +1143,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # check user has right to submit orders - must be player
+        # not allowed for game master
+        if role_id == 0:
+            flask_restful.abort(403, msg="Submitting orders is not possible for game master")
 
         # find the game
         game = games.Game.find_by_identifier(game_id)
@@ -1154,7 +1156,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
         player_id = game.get_role(role_id)
 
-        # must be player or game master
+        # must be player
         if user_id != player_id:
             flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
 
@@ -1359,8 +1361,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         player_id = req_result.json()
 
-        # check user has right to get orders - must be player or game master
-
         # find the game
         game = games.Game.find_by_identifier(game_id)
         if game is None:
@@ -1372,18 +1372,16 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
+        # not allowed for game master
+        if role_id == 0:
+            flask_restful.abort(403, msg="Getting submitted orders is not possible for game master")
+
         # get orders
         assert role_id is not None
-        if role_id == 0:
-            orders_list = orders.Order.list_by_game_id(game_id)
-        else:
-            orders_list = orders.Order.list_by_game_id_role_num(game_id, role_id)
+        orders_list = orders.Order.list_by_game_id_role_num(game_id, role_id)
 
         # get fake units
-        if role_id:
-            units_list = units.Unit.list_by_game_id_role_num(game_id, role_id)
-        else:
-            units_list = units.Unit.list_by_game_id(game_id)
+        units_list = units.Unit.list_by_game_id_role_num(game_id, role_id)
         fake_units_list = [u for u in units_list if u[5]]
 
         data = {
@@ -1612,9 +1610,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
         # not allowed for game master
         if role_id == 0:
-            flask_restful.abort(403, msg="This is not possible for game master")
-
-        # check user has right to submit communication orders - must be player
+            flask_restful.abort(403, msg="Submitting communication orders is not possible for game master")
 
         # find the game
         game = games.Game.find_by_identifier(game_id)
@@ -1744,7 +1740,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
         # not allowed for game master
         if role_id == 0:
-            flask_restful.abort(403, msg="This is not possible for game master")
+            flask_restful.abort(403, msg="Getting communication orders is not possible for game master")
 
         # get orders
         assert role_id is not None
@@ -2349,11 +2345,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
         # can be player of game master but must correspond
         if user_id != expected_id:
-            if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
-            else:
-                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
-
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game or the player in charge of the role")
         # create message here
 
         # create a content
@@ -2512,10 +2504,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         # can be player of game master but must correspond
         if user_id != expected_id:
-            if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
-            else:
-                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game or the player in charge of the role")
 
         # create declaration here
 
@@ -2791,10 +2780,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
 
         # can be player of game master but must correspond
         if user_id != expected_id:
-            if role_id == 0:
-                flask_restful.abort(403, msg="You do not seem to be the game master of the game")
-            else:
-                flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game or the player in charge of the role")
 
         # create visit here
         time_stamp = int(time.time())
@@ -2977,7 +2963,7 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
 
         # not allowed for game master
         if role_id == 0:
-            flask_restful.abort(403, msg="This is not possible for game master")
+            flask_restful.abort(403, msg="Submitting vote for game end is not possible for game master")
 
         # find the game
         game = games.Game.find_by_identifier(game_id)
