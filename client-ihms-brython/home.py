@@ -11,7 +11,7 @@ my_panel = html.DIV(id="home")
 title1 = html.H2("Lien utile : Diplomania")
 my_panel <= title1
 
-link1 = html.A(href="http://www.diplomania.fr")
+link1 = html.A(href="http://www.diplomania.fr (brique sociale)")
 link1 <= "Diplomania : Le site officiel de l'Association Française des Joueurs de Diplomatie (brique sociale)"
 my_panel <= link1
 
@@ -22,7 +22,7 @@ note_table = html.TABLE()
 note_table.style = {
     "border": "solid",
 }
-text1 = html.B(html.CODE("Cette interface de jeu - qui n'a reçu aucun financement de la parte de l'Association Française des Joueurs de Diplomatie - n'est pas l'interface financée par les souscriptions. En effet, une autre interface s'appuyant sur le mêmes serveurs de résolution (et gérant donc les mêmes parties) est actuellement en préparation. Cette dernière sera, en apparence, plus conforme au web moderne :-)..."))
+text1 = html.B(html.CODE("Cette interface de jeu n'a reçu aucun financement (par souscriptions) de la part de l'Association Française des Joueurs de Diplomatie. En effet, une autre interface s'appuyant sur le mêmes serveurs de résolution (et gérant donc les mêmes parties) est actuellement en préparation. Cette dernière sera, en apparence, plus conforme au web moderne tel qu'attendu par les jeunes générations :-)..."))
 my_panel <= text1
 col = html.TD(text1)
 col <= text1
