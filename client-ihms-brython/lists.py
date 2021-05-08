@@ -12,7 +12,7 @@ import common
 
 my_panel = html.DIV(id="players")
 
-OPTIONS = ['les joueurs', 'les parties', 'les arbitres']
+OPTIONS = ['les joueurs', 'les parties', 'les arbitres', 'les parties sans arbitres']
 
 
 def show_players_data():
@@ -224,6 +224,69 @@ def show_game_masters_data():
     my_sub_panel <= game_masters_table
 
 
+def show_no_game_masters_data():
+    """ show_no_game_masters_data """
+
+    # get the games
+    games_dict = common.get_games_data()
+
+    if not games_dict:
+        return
+
+    # to avoid a warning
+    games_dict = dict(games_dict)
+
+    # get the players (masters)
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        return
+
+    # get the link (allocations) of game masters
+    game_masters_list = get_game_masters_data()
+
+    if not game_masters_list:
+        return
+
+    no_game_masters_table = html.TABLE()
+    no_game_masters_table.style = {
+        "padding": "5px",
+        "backgroundColor": "#aaaaaa",
+        "border": "solid",
+    }
+
+    # TODO : make it possible to sort etc...
+    fields = ['game']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'game': 'partie'}[field]
+        col = html.TD(field_fr)
+        col.style = {
+            "border": "solid",
+            "font-weight": "bold",
+        }
+        thead <= col
+    no_game_masters_table <= thead
+
+    no_game_masters_list = [v for k,v in games_dict.items() if int(k) not in [g['game'] for g in game_masters_list]]
+
+    for data in sorted(no_game_masters_list, key=lambda g: g['name']):
+        row = html.TR()
+        row.style = {
+            "border": "solid",
+        }
+        value = data['name']
+        col = html.TD(value)
+        col.style = {
+            "border": "solid",
+        }
+        row <= col
+        no_game_masters_table <= row
+
+    my_sub_panel <= no_game_masters_table
+
 my_panel = html.DIV(id="players_games")
 my_panel.attrs['style'] = 'display: table-row'
 
@@ -253,6 +316,8 @@ def load_option(_, item_name):
         show_games_data()
     if item_name == 'les arbitres':
         show_game_masters_data()
+    if item_name == 'les parties sans arbitres':
+        show_no_game_masters_data()
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
