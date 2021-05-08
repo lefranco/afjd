@@ -9,7 +9,7 @@ my_panel = html.DIV(id="artificial")
 
 # --
 
-title1 = html.H2("Pas encore prêt")
+title1 = html.H2("Pas encore prêt ;-)")
 my_panel <= title1
 
 
