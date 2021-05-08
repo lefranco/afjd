@@ -9,20 +9,23 @@ Data : populate database
 
 import mylogger
 import emails
+import database
 
 
-def populate_emails() -> None:
+def populate_emails(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
 
-    emails.Email.create_table()
+    emails.Email.create_table(sql_executor)
 
 
-def populate() -> None:
+def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
     mylogger.LOGGER.warning("Populating...")
 
-    populate_emails()
+    sql_executor = database.SqlExecutor()
+    populate_emails(sql_executor)
+    del sql_executor
 
 
 if __name__ == '__main__':

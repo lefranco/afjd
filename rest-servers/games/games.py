@@ -34,51 +34,51 @@ class Game:
     """ Class for handling a game """
 
     @staticmethod
-    def free_identifier() -> int:
+    def free_identifier(sql_executor: database.SqlExecutor) -> int:
         """ finds an new identifier from database to use for this object """
-        database.sql_execute("UPDATE games_counter SET value = value + 1", None, need_result=False)
-        counter_found = database.sql_execute("SELECT value FROM games_counter", None, need_result=True)
+        sql_executor.execute("UPDATE games_counter SET value = value + 1", None, need_result=False)
+        counter_found = sql_executor.execute("SELECT value FROM games_counter", None, need_result=True)
         counter = counter_found[0][0]  # type: ignore
         return counter  # type: ignore
 
     @staticmethod
-    def find_by_identifier(identifier: int) -> typing.Optional['Game']:
+    def find_by_identifier(sql_executor: database.SqlExecutor, identifier: int) -> typing.Optional['Game']:
         """ class lookup : finds the object in database from identifier """
-        games_found = database.sql_execute("SELECT game_data FROM games where identifier = ?", (identifier,), need_result=True)
+        games_found = sql_executor.execute("SELECT game_data FROM games where identifier = ?", (identifier,), need_result=True)
         if not games_found:
             return None
         return games_found[0][0]  # type: ignore
 
     @staticmethod
-    def find_by_name(name: str) -> typing.Optional['Game']:
+    def find_by_name(sql_executor: database.SqlExecutor, name: str) -> typing.Optional['Game']:
         """ class lookup : finds the object in database from name """
-        games_found = database.sql_execute("SELECT game_data FROM games where name = ?", (name,), need_result=True)
+        games_found = sql_executor.execute("SELECT game_data FROM games where name = ?", (name,), need_result=True)
         if not games_found:
             return None
         return games_found[0][0]  # type: ignore
 
     @staticmethod
-    def inventory() -> typing.List['Game']:
+    def inventory(sql_executor: database.SqlExecutor) -> typing.List['Game']:
         """ class inventory : gives a list of all objects in database """
-        games_found = database.sql_execute("SELECT game_data FROM games", need_result=True)
+        games_found = sql_executor.execute("SELECT game_data FROM games", need_result=True)
         if not games_found:
             return []
         games_list = [g[0] for g in games_found]
         return games_list
 
     @staticmethod
-    def create_table() -> None:
+    def create_table(sql_executor: database.SqlExecutor) -> None:
         """ creation of table from scratch """
 
         # create counter
-        database.sql_execute("DROP TABLE IF EXISTS games_counter")
-        database.sql_execute("CREATE TABLE games_counter (value INT)")
-        database.sql_execute("INSERT INTO games_counter (value) VALUES (?)", (0,))
+        sql_executor.execute("DROP TABLE IF EXISTS games_counter")
+        sql_executor.execute("CREATE TABLE games_counter (value INT)")
+        sql_executor.execute("INSERT INTO games_counter (value) VALUES (?)", (0,))
 
         # create actual table
-        database.sql_execute("DROP TABLE IF EXISTS games")
-        database.sql_execute("CREATE TABLE games (identifier INT UNIQUE PRIMARY KEY, name STR, game_data game)")
-        database.sql_execute("CREATE UNIQUE INDEX name_game ON games (name)")
+        sql_executor.execute("DROP TABLE IF EXISTS games")
+        sql_executor.execute("CREATE TABLE games (identifier INT UNIQUE PRIMARY KEY, name STR, game_data game)")
+        sql_executor.execute("CREATE UNIQUE INDEX name_game ON games (name)")
 
     def __init__(self, identifier: int, name: str, description: str, variant: str, archive: bool, anonymous: bool, silent: bool, cumulate: bool, fast: bool, deadline: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, cd_possible_removals: bool, play_weekend: bool, manual: bool, access_code: int, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, victory_centers: int, current_state: int) -> None:
 
@@ -114,13 +114,13 @@ class Game:
         self._victory_centers = victory_centers
         self._current_state = current_state
 
-    def update_database(self) -> None:
+    def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO games (identifier, name, game_data) VALUES (?, ?, ?)", (self._identifier, self._name, self))
+        sql_executor.execute("INSERT OR REPLACE INTO games (identifier, name, game_data) VALUES (?, ?, ?)", (self._identifier, self._name, self))
 
-    def delete_database(self) -> None:
+    def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
-        database.sql_execute("DELETE FROM games WHERE identifier = ?", (self._identifier,))
+        sql_executor.execute("DELETE FROM games WHERE identifier = ?", (self._identifier,))
 
     def load_json(self, json_dict: typing.Dict[str, typing.Any]) -> bool:
         """ Load from dict - returns True if changed """
@@ -308,11 +308,11 @@ class Game:
         }
         return json_dict
 
-    def number_allocated(self) -> int:
+    def number_allocated(self, sql_executor: database.SqlExecutor) -> int:
         """ number_allocated """
 
         game_id = self.identifier
-        allocations_list = allocations.Allocation.list_by_game_id(game_id)
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
         num = 0
         for _, _, role_id in allocations_list:
             if role_id == 0:
@@ -320,43 +320,43 @@ class Game:
             num += 1
         return num
 
-    def delete_allocations(self) -> None:
+    def delete_allocations(self, sql_executor: database.SqlExecutor) -> None:
         """  delete allocations """
 
         game_id = self.identifier
-        allocations_list = allocations.Allocation.list_by_game_id(game_id)
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
         for game_id, player_id, role_id in allocations_list:
             allocation = allocations.Allocation(game_id, player_id, role_id)
-            allocation.delete_database()
+            allocation.delete_database(sql_executor)
 
-    def put_role(self, user_id: int, role: int) -> None:
+    def put_role(self, sql_executor: database.SqlExecutor, user_id: int, role: int) -> None:
         """ put player/game master in game """
 
         game_id = self.identifier
         allocation = allocations.Allocation(game_id, user_id, role)
-        allocation.update_database()
+        allocation.update_database(sql_executor)
 
-    def get_role(self, role: int) -> typing.Optional[int]:
+    def get_role(self, sql_executor: database.SqlExecutor, role: int) -> typing.Optional[int]:
         """ retrieves player/game master id of role in game """
 
         game_id = self.identifier
-        allocations_list = allocations.Allocation.list_by_game_id(game_id)
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
         for _, player_id, role_id in allocations_list:
             if role_id == role:
                 return player_id
         return None
 
-    def find_role(self, user: int) -> typing.Optional[int]:
+    def find_role(self, sql_executor: database.SqlExecutor, user: int) -> typing.Optional[int]:
         """ retrieves role of player id in game """
 
         game_id = self.identifier
-        allocations_list = allocations.Allocation.list_by_game_id(game_id)
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
         for _, player_id, role_id in allocations_list:
             if player_id == user:
                 return role_id
         return None
 
-    def create_position(self) -> None:
+    def create_position(self, sql_executor: database.SqlExecutor) -> None:
         """ create position for game in database """
 
         variant_name = self.variant
@@ -371,7 +371,7 @@ class Game:
         for start_centers_role in start_centers_all_role:
             for center_num in start_centers_role:
                 ownership = ownerships.Ownership(game_id, center_num, role_num)
-                ownership.update_database()
+                ownership.update_database(sql_executor)
             role_num += 1
 
         # get start units and put them in database
@@ -381,33 +381,33 @@ class Game:
             for type_num, start_units in start_units_role.items():
                 for zone_num in start_units:
                     unit = units.Unit(game_id, int(type_num), zone_num, role_num, 0, 0)
-                    unit.update_database()
+                    unit.update_database(sql_executor)
             role_num += 1
 
-    def delete_position(self) -> None:
+    def delete_position(self, sql_executor: database.SqlExecutor) -> None:
         """ delete position for game in database """
 
         game_id = self.identifier
 
         # delete ownerships
-        game_ownerships = ownerships.Ownership.list_by_game_id(game_id)
+        game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
         for _, center_num, role_num in game_ownerships:
             ownership = ownerships.Ownership(game_id, center_num, role_num)
-            ownership.delete_database()
+            ownership.delete_database(sql_executor)
 
         # delete units
-        game_units = units.Unit.list_by_game_id(game_id)
+        game_units = units.Unit.list_by_game_id(sql_executor, game_id)
         for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
             unit = units.Unit(game_id, type_num, zone_num, role_num, region_dislodged_from_num, fake)
-            unit.delete_database()
+            unit.delete_database(sql_executor)
 
         # delete forbiddens
-        game_forbiddens = forbiddens.Forbidden.list_by_game_id(game_id)
+        game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
         for _, region_num in game_forbiddens:
             forbidden = forbiddens.Forbidden(game_id, region_num)
-            forbidden.delete_database()
+            forbidden.delete_database(sql_executor)
 
-    def start(self) -> None:
+    def start(self, sql_executor: database.SqlExecutor) -> None:
         """ start the game """
 
         # at this point we should have enough players
@@ -424,7 +424,7 @@ class Game:
 
         # we allocate players in the game according to this order
         game_id = self.identifier
-        allocations_list = allocations.Allocation.list_by_game_id(game_id)
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
         num = 0
         for _, player_id, role_id in allocations_list:
             if role_id == 0:
@@ -432,7 +432,7 @@ class Game:
             role_id = role_list[num]
             num += 1
             allocation = allocations.Allocation(game_id, player_id, role_id)
-            allocation.update_database()
+            allocation.update_database(sql_executor)
 
     def advance(self) -> None:
         """ advance the game """

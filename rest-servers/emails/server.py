@@ -49,7 +49,10 @@ class EmailsRessource(flask_restful.Resource):  # type: ignore
         code = args['code']
 
         email = emails.Email(email_value, code)
-        email.update_database()
+
+        sql_executor = database.SqlExecutor()
+        email.update_database(sql_executor)
+        del sql_executor
 
         data = {'msg': 'Email was added or updated'}
         return data, 201
@@ -71,7 +74,10 @@ class CheckEmailRessource(flask_restful.Resource):  # type: ignore
         email_value = args['email_value']
         code = args['code']
 
-        email = emails.Email.find_by_value(email_value)
+        sql_executor = database.SqlExecutor()
+        email = emails.Email.find_by_value(sql_executor, email_value)
+        del sql_executor
+
         if email is None:
             flask_restful.abort(404, msg=f"Email {email_value} does not exists")
 
@@ -100,7 +106,9 @@ def main() -> None:
     # emergency
     if not database.db_present():
         mylogger.LOGGER.info("Emergency populate procedure")
-        populate.populate()
+        sql_executor = database.SqlExecutor()
+        populate.populate(sql_executor)
+        del sql_executor
 
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['EMAIL']['PORT']

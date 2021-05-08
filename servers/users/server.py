@@ -12,7 +12,7 @@ import argparse
 import datetime
 
 import flask
-import flask_cors
+import flask_cors  # type: ignore
 import flask_jwt_extended  # type: ignore
 import werkzeug.security
 import waitress
@@ -47,6 +47,7 @@ USURPING_PSEUDO = 'Palpatine'
 # users
 # ---------------------------------
 
+
 @APP.route('/add', methods=['POST'])
 def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
@@ -67,13 +68,20 @@ def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if not password:
         return flask.jsonify({"msg": "Missing password parameter"}), 400
 
-    user = users.User.find_by_name(user_name)
+    sql_executor = database.SqlExecutor()
+    user = users.User.find_by_name(sql_executor, user_name)
+    del sql_executor
+
     if user is not None:
         return flask.jsonify({"msg": "User already exists"}), 400
 
     pwd_hash = werkzeug.security.generate_password_hash(password)
     user = users.User(user_name, pwd_hash)
-    user.update_database()
+
+    sql_executor = database.SqlExecutor()
+    user.update_database(sql_executor)
+    del sql_executor
+
     return flask.jsonify({"msg": "User was added"}), 201
 
 
@@ -94,7 +102,10 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if not user_name:
         return {"msg": "Missing user_name parameter"}, 400
 
-    user = users.User.find_by_name(user_name)
+    sql_executor = database.SqlExecutor()
+    user = users.User.find_by_name(sql_executor, user_name)
+    del sql_executor
+
     if user is None:
         return {"msg": "User does not exist"}, 404
 
@@ -103,7 +114,10 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         return {"msg": "This is not you ! Good try !"}, 405
 
     assert user is not None
-    user.delete_database()
+
+    sql_executor = database.SqlExecutor()
+    user.delete_database(sql_executor)
+    del sql_executor
 
     return flask.jsonify({"msg": "User was removed"}), 200
 
@@ -129,7 +143,10 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if not password:
         return flask.jsonify({"msg": "Missing password parameter"}), 400
 
-    user = users.User.find_by_name(user_name)
+    sql_executor = database.SqlExecutor()
+    user = users.User.find_by_name(sql_executor, user_name)
+    del sql_executor
+
     if user is None:
         return {"msg": "User does not exist"}, 404
 
@@ -140,7 +157,11 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     assert user is not None
     pwd_hash = werkzeug.security.generate_password_hash(password)
     user.pwd_hash = pwd_hash
-    user.update_database()
+
+    sql_executor = database.SqlExecutor()
+    user.update_database(sql_executor)
+    del sql_executor
+
     return flask.jsonify({"msg": "User was changed"}), 201
 
 
@@ -166,7 +187,10 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if not password:
         return flask.jsonify({"msg": "Missing password parameter"}), 400
 
-    user = users.User.find_by_name(user_name)
+    sql_executor = database.SqlExecutor()
+    user = users.User.find_by_name(sql_executor, user_name)
+    del sql_executor
+
     if user is None:
         return flask.jsonify({"msg": "Bad user_name or password"}), 401
 
@@ -215,10 +239,12 @@ def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if not usurped_user_name:
         return {"msg": "Missing usurped_user_name parameter"}, 400
 
-    user = users.User.find_by_name(usurped_user_name)
+    sql_executor = database.SqlExecutor()
+    user = users.User.find_by_name(sql_executor, usurped_user_name)
+    del sql_executor
+
     if user is None:
         return flask.jsonify({"msg": "Bad usurped_user_name"}), 401
-
 
     # Identity can be any data that is json serializable
     access_token = flask_jwt_extended.create_access_token(identity=usurped_user_name)
@@ -243,7 +269,9 @@ def main() -> None:
     # emergency
     if not database.db_present():
         mylogger.LOGGER.info("Emergency populate procedure")
-        populate.populate()
+        sql_executor = database.SqlExecutor()
+        populate.populate(sql_executor)
+        del sql_executor
 
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['USER']['PORT']

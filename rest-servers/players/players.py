@@ -55,51 +55,51 @@ class Player:
     """ Class for handling a player """
 
     @staticmethod
-    def free_identifier() -> int:
+    def free_identifier(sql_executor: database.SqlExecutor) -> int:
         """ class free identifier : finds an new identifier from database to use for this object """
-        database.sql_execute("UPDATE players_counter SET value = value + 1", None, need_result=True)
-        counter_found = database.sql_execute("SELECT value FROM players_counter", None, need_result=True)
+        sql_executor.execute("UPDATE players_counter SET value = value + 1", None, need_result=True)
+        counter_found = sql_executor.execute("SELECT value FROM players_counter", None, need_result=True)
         counter = counter_found[0][0]  # type: ignore
         return counter  # type: ignore
 
     @staticmethod
-    def find_by_identifier(identifier: int) -> typing.Optional['Player']:
+    def find_by_identifier(sql_executor: database.SqlExecutor, identifier: int) -> typing.Optional['Player']:
         """ class lookup : finds the object in database from identifier """
-        players_found = database.sql_execute("SELECT player_data FROM players where identifier = ?", (identifier,), need_result=True)
+        players_found = sql_executor.execute("SELECT player_data FROM players where identifier = ?", (identifier,), need_result=True)
         if not players_found:
             return None
         return players_found[0][0]  # type: ignore
 
     @staticmethod
-    def find_by_pseudo(pseudo: str) -> typing.Optional['Player']:
+    def find_by_pseudo(sql_executor: database.SqlExecutor, pseudo: str) -> typing.Optional['Player']:
         """ class lookup : finds the object in database from pseudo """
-        players_found = database.sql_execute("SELECT player_data FROM players where pseudo = ?", (pseudo,), need_result=True)
+        players_found = sql_executor.execute("SELECT player_data FROM players where pseudo = ?", (pseudo,), need_result=True)
         if not players_found:
             return None
         return players_found[0][0]  # type: ignore
 
     @staticmethod
-    def inventory() -> typing.List['Player']:
+    def inventory(sql_executor: database.SqlExecutor) -> typing.List['Player']:
         """ class inventory : gives a list of all objects in database """
-        players_found = database.sql_execute("SELECT player_data FROM players", need_result=True)
+        players_found = sql_executor.execute("SELECT player_data FROM players", need_result=True)
         if not players_found:
             return []
         players_list = [p[0] for p in players_found]
         return players_list
 
     @staticmethod
-    def create_table() -> None:
+    def create_table(sql_executor: database.SqlExecutor) -> None:
         """ creation of table from scratch """
 
         # create counter
-        database.sql_execute("DROP TABLE IF EXISTS players_counter")
-        database.sql_execute("CREATE TABLE players_counter (value INT)")
-        database.sql_execute("INSERT INTO players_counter (value) VALUES (?)", (0,))
+        sql_executor.execute("DROP TABLE IF EXISTS players_counter")
+        sql_executor.execute("CREATE TABLE players_counter (value INT)")
+        sql_executor.execute("INSERT INTO players_counter (value) VALUES (?)", (0,))
 
         # create actual table
-        database.sql_execute("DROP TABLE IF EXISTS players")
-        database.sql_execute("CREATE TABLE players (identifier INT UNIQUE PRIMARY KEY, pseudo STR, player_data player)")
-        database.sql_execute("CREATE UNIQUE INDEX pseudo_player ON  players (pseudo)")
+        sql_executor.execute("DROP TABLE IF EXISTS players")
+        sql_executor.execute("CREATE TABLE players (identifier INT UNIQUE PRIMARY KEY, pseudo STR, player_data player)")
+        sql_executor.execute("CREATE UNIQUE INDEX pseudo_player ON  players (pseudo)")
 
     def __init__(self, identifier: int, pseudo: str, email: str, email_confirmed: bool, telephone: str, replace: bool, family_name: str, first_name: str, residence: str, nationality: str, time_zone: str) -> None:
 
@@ -119,13 +119,13 @@ class Player:
         self._nationality = nationality
         self._time_zone = time_zone
 
-    def update_database(self) -> None:
+    def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO players (identifier, pseudo, player_data) VALUES (?, ?, ?)", (self._identifier, self._pseudo, self))
+        sql_executor.execute("INSERT OR REPLACE INTO players (identifier, pseudo, player_data) VALUES (?, ?, ?)", (self._identifier, self._pseudo, self))
 
-    def delete_database(self) -> None:
+    def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
-        database.sql_execute("DELETE FROM players WHERE identifier = ?", (self._identifier,))
+        sql_executor.execute("DELETE FROM players WHERE identifier = ?", (self._identifier,))
 
     def load_json(self, json_dict: typing.Dict[str, typing.Any]) -> bool:
         """ Load from dict - returns True if changed """

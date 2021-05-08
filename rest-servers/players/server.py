@@ -80,7 +80,10 @@ class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/player-identifiers/<pseudo> - GET - retrieving identifier from  player pseudo=%s", pseudo)
 
         # find data
-        player = players.Player.find_by_pseudo(pseudo)
+        sql_executor = database.SqlExecutor()
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        del sql_executor
+
         if player is None:
             flask_restful.abort(404, msg=f"Player {player} doesn't exist")
 
@@ -116,7 +119,10 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="Wrong authentication!")
 
         # find data
-        player = players.Player.find_by_pseudo(pseudo)
+        sql_executor = database.SqlExecutor()
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        del sql_executor
+
         if player is None:
             flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
 
@@ -164,7 +170,10 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if req_result.json()['logged_in_as'] != pseudo:
             flask_restful.abort(403, msg="Wrong authentication!")
 
-        player = players.Player.find_by_pseudo(pseudo)
+        sql_executor = database.SqlExecutor()
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        del sql_executor
+
         if player is None:
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
@@ -214,7 +223,10 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
                 if not mailer.send_mail_checker(code, email_after):
                     flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
 
-        player.update_database()
+        sql_executor = database.SqlExecutor()
+        player.update_database(sql_executor)
+        del sql_executor
+
         data = {'pseudo': pseudo, 'msg': 'Ok updated'}
         return data, 200
 
@@ -226,7 +238,10 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/players/<pseudo> - DELETE - removing one player pseudo=%s", pseudo)
 
-        player = players.Player.find_by_pseudo(pseudo)
+        sql_executor = database.SqlExecutor()
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        del sql_executor
+
         if player is None:
             flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
 
@@ -260,7 +275,9 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg=f"User removal failed!:{message}")
 
         # delete player from here
-        player.delete_database()
+        sql_executor = database.SqlExecutor()
+        player.delete_database(sql_executor)
+        del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok removed'}
         return data, 200
@@ -278,7 +295,10 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/players - GET - get getting all players only pseudo (email and telephone are confidential)")
 
-        players_list = players.Player.inventory()
+        sql_executor = database.SqlExecutor()
+        players_list = players.Player.inventory(sql_executor)
+        del sql_executor
+
         data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone} for p in players_list}
 
         return data, 200
@@ -296,7 +316,10 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("pseudo=%s", pseudo)
 
-        player = players.Player.find_by_pseudo(pseudo)
+        sql_executor = database.SqlExecutor()
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        del sql_executor
+
         if player is not None:
             flask_restful.abort(400, msg=f"Player {pseudo} already exists")
 
@@ -329,10 +352,16 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg=f"User creation failed!:{message}")
 
         # create player here
-        identifier = players.Player.free_identifier()
+        sql_executor = database.SqlExecutor()
+        identifier = players.Player.free_identifier(sql_executor)
+        del sql_executor
+
         player = players.Player(identifier, '', '', False, '', False, '', '', '', '', '')
         _ = player.load_json(args)
-        player.update_database()
+
+        sql_executor = database.SqlExecutor()
+        player.update_database(sql_executor)
+        del sql_executor
 
         # send email confirmation
         email_after = player.email
@@ -381,7 +410,10 @@ class PlayerSelectListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/players-select - POST - get getting some players only pseudo (email and telephone are confidential)")
 
-        players_list = players.Player.inventory()
+        sql_executor = database.SqlExecutor()
+        players_list = players.Player.inventory(sql_executor)
+        del sql_executor
+
         data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone} for p in players_list if p.identifier in selection_list}
 
         return data, 200
@@ -426,16 +458,26 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         try:
             addressees_list = list(map(int, addressees_submitted.split()))
         except:  # noqa: E722 pylint: disable=bare-except
-            flask_restful.abort(400, msg=f"Bad addressees. Use a space separated list of numbers")
+            flask_restful.abort(400, msg="Bad addressees. Use a space separated list of numbers")
+
+        sql_executor = database.SqlExecutor()
 
         recipients: typing.List[str] = list()
+        failed = False
         for addressee_id in addressees_list:
-            pseudo_dest = players.Player.find_by_identifier(addressee_id)
+            pseudo_dest = players.Player.find_by_identifier(sql_executor, addressee_id)
             if pseudo_dest is None:
-                flask_restful.abort(404, msg=f"Failed to find pseudo with id={addressee_id}")
+                failed = True
+                failed_addressee_id = addressee_id
+                break
             assert pseudo_dest is not None
             pseudo_dest_email = pseudo_dest.email
             recipients.append(pseudo_dest_email)
+
+        del sql_executor
+
+        if failed:
+            flask_restful.abort(404, msg=f"Failed to find pseudo with id={failed_addressee_id}")
 
         status = mailer.send_mail(subject, body, recipients)
         if not status:
@@ -462,7 +504,10 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("pseudo=%s", pseudo)
 
-        player = players.Player.find_by_pseudo(pseudo)
+        sql_executor = database.SqlExecutor()
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        del sql_executor
+
         if player is None:
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
@@ -487,7 +532,10 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg=f"Wrong code!:{message}")
 
         player.email_confirmed = True
-        player.update_database()
+
+        sql_executor = database.SqlExecutor()
+        player.update_database(sql_executor)
+        del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok code is correct'}
         return data, 200
@@ -505,7 +553,10 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/news - GET - get the latest news")
 
-        news_content = newss.News.content()
+        sql_executor = database.SqlExecutor()
+        news_content = newss.News.content(sql_executor)
+        del sql_executor
+
         data = news_content
 
         return data, 200
@@ -536,7 +587,10 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
         if req_result.json()['logged_in_as'] != pseudo:
             flask_restful.abort(403, msg="Wrong authentication!")
 
-        player = players.Player.find_by_pseudo(pseudo)
+        sql_executor = database.SqlExecutor()
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        del sql_executor
+
         if player is None:
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
@@ -548,7 +602,10 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         # create news here
         news = newss.News(content)
-        news.update_database()
+
+        sql_executor = database.SqlExecutor()
+        news.update_database(sql_executor)
+        del sql_executor
 
         data = {'msg': 'Ok news created'}
         return data, 201
@@ -568,7 +625,9 @@ def main() -> None:
     # emergency
     if not database.db_present():
         mylogger.LOGGER.info("Emergency populate procedure")
-        populate.populate()
+        sql_executor = database.SqlExecutor()
+        populate.populate(sql_executor)
+        del sql_executor
 
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['PLAYER']['PORT']

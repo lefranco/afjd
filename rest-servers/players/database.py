@@ -46,23 +46,30 @@ def db_present() -> bool:
     return db_file.is_file()
 
 
-def sql_execute(command: str, parameters: typing.Optional[typing.Tuple[typing.Any, ...]] = None, need_result: bool = False) -> typing.Optional[typing.List[typing.Any]]:
-    """ Executes a sql command """
+class SqlExecutor:
+    """ Object capable of executing sql requests """
 
-    # Note : ignoring Ctrl-C is not possible in flask-rest context
+    def __init__(self) -> None:
+        self._connection = sqlite3.connect(FILE, detect_types=sqlite3.PARSE_DECLTYPES)
 
-    connection = sqlite3.connect(FILE, detect_types=sqlite3.PARSE_DECLTYPES)
-    cursor = connection.cursor()
-    if parameters:
-        cursor.execute(command, parameters)
-    else:
-        cursor.execute(command)
-    result = cursor.fetchall() if need_result else None
-    cursor.close()
-    connection.commit()  # necessary otherwise nothing happens
-    connection.close()
+    def execute(self, command: str, parameters: typing.Optional[typing.Tuple[typing.Any, ...]] = None, need_result: bool = False) -> typing.Optional[typing.List[typing.Any]]:
+        """ Executes a sql command """
 
-    return result
+        # Note : ignoring Ctrl-C is not possible in flask-rest context
+
+        cursor = self._connection.cursor()
+        if parameters:
+            cursor.execute(command, parameters)
+        else:
+            cursor.execute(command)
+        result = cursor.fetchall() if need_result else None
+        cursor.close()
+
+        return result
+
+    def __del__(self) -> None:
+        self._connection.commit()  # necessary otherwise nothing happens
+        self._connection.close()
 
 
 if __name__ == '__main__':

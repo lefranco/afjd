@@ -25,114 +25,115 @@ import allocations
 import visits
 import definitives
 import votes
+import database
 
 
-def populate_transitions() -> None:
+def populate_transitions(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    transitions.Transition.create_table()
+    transitions.Transition.create_table(sql_executor)
 
 
-def populate_reports() -> None:
+def populate_reports(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    reports.Report.create_table()
+    reports.Report.create_table(sql_executor)
 
 
-def populate_actives() -> None:
+def populate_actives(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    actives.Active.create_table()
+    actives.Active.create_table(sql_executor)
 
 
-def populate_submissions() -> None:
+def populate_submissions(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    submissions.Submission.create_table()
+    submissions.Submission.create_table(sql_executor)
 
 
-def populate_orders() -> None:
+def populate_orders(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    orders.Order.create_table()
+    orders.Order.create_table(sql_executor)
 
 
-def populate_communication_orders() -> None:
+def populate_communication_orders(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    communication_orders.CommunicationOrder.create_table()
+    communication_orders.CommunicationOrder.create_table(sql_executor)
 
 
-def populate_ownerships() -> None:
+def populate_ownerships(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    ownerships.Ownership.create_table()
+    ownerships.Ownership.create_table(sql_executor)
 
 
-def populate_units() -> None:
+def populate_units(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    units.Unit.create_table()
+    units.Unit.create_table(sql_executor)
 
 
-def populate_forbiddens() -> None:
+def populate_forbiddens(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    forbiddens.Forbidden.create_table()
+    forbiddens.Forbidden.create_table(sql_executor)
 
 
-def populate_games() -> None:
+def populate_games(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    games.Game.create_table()
+    games.Game.create_table(sql_executor)
 
 
-def populate_contents() -> None:
+def populate_contents(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    contents.Content.create_table()
+    contents.Content.create_table(sql_executor)
 
 
-def populate_declarations() -> None:
+def populate_declarations(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    declarations.Declaration.create_table()
+    declarations.Declaration.create_table(sql_executor)
 
 
-def populate_messages() -> None:
+def populate_messages(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    messages.Message.create_table()
+    messages.Message.create_table(sql_executor)
 
 
-def populate_allocations() -> None:
+def populate_allocations(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    allocations.Allocation.create_table()
+    allocations.Allocation.create_table(sql_executor)
 
 
-def populate_visits() -> None:
+def populate_visits(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    visits.Visit.create_table()
+    visits.Visit.create_table(sql_executor)
 
 
-def populate_votes() -> None:
+def populate_votes(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    votes.Vote.create_table()
+    votes.Vote.create_table(sql_executor)
 
 
-def populate_definitives() -> None:
+def populate_definitives(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    definitives.Definitive.create_table()
+    definitives.Definitive.create_table(sql_executor)
 
 
-def populate() -> None:
+def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
     mylogger.LOGGER.warning("Populating...")
 
-    populate_transitions()
-    populate_reports()
-    populate_actives()
-    populate_submissions()
-    populate_communication_orders()
-    populate_orders()
-    populate_ownerships()
-    populate_units()
-    populate_forbiddens()
-    populate_games()
-    populate_messages()
-    populate_declarations()
-    populate_allocations()
-    populate_visits()
-    populate_votes()
-    populate_definitives()
+    populate_transitions(sql_executor)
+    populate_reports(sql_executor)
+    populate_actives(sql_executor)
+    populate_submissions(sql_executor)
+    populate_communication_orders(sql_executor)
+    populate_orders(sql_executor)
+    populate_ownerships(sql_executor)
+    populate_units(sql_executor)
+    populate_forbiddens(sql_executor)
+    populate_games(sql_executor)
+    populate_messages(sql_executor)
+    populate_declarations(sql_executor)
+    populate_allocations(sql_executor)
+    populate_visits(sql_executor)
+    populate_votes(sql_executor)
+    populate_definitives(sql_executor)
 
 
 if __name__ == '__main__':

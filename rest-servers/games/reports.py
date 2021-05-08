@@ -16,19 +16,19 @@ class Report:
     """ Class for handling a report """
 
     @staticmethod
-    def find_by_identifier(identifier: int) -> typing.Optional['Report']:
+    def find_by_identifier(sql_executor: database.SqlExecutor, identifier: int) -> typing.Optional['Report']:
         """ class lookup : finds the object in database from identifier """
-        reports_found = database.sql_execute("SELECT report_data FROM reports where game_id = ?", (identifier,), need_result=True)
+        reports_found = sql_executor.execute("SELECT report_data FROM reports where game_id = ?", (identifier,), need_result=True)
         if not reports_found:
             return None
         return reports_found[0][0]  # type: ignore
 
     @staticmethod
-    def create_table() -> None:
+    def create_table(sql_executor: database.SqlExecutor) -> None:
         """ creation of table from scratch """
 
-        database.sql_execute("DROP TABLE IF EXISTS reports")
-        database.sql_execute("CREATE TABLE reports (game_id INTEGER UNIQUE PRIMARY KEY, report_data report)")
+        sql_executor.execute("DROP TABLE IF EXISTS reports")
+        sql_executor.execute("CREATE TABLE reports (game_id INTEGER UNIQUE PRIMARY KEY, report_data report)")
 
     def __init__(self, game_id: int, time_stamp: int, content: str) -> None:
 
@@ -41,13 +41,13 @@ class Report:
         assert isinstance(content, str), "content must be an str"
         self._content = content
 
-    def update_database(self) -> None:
+    def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO reports (game_id, report_data) VALUES (?, ?)", (self._game_id, self))
+        sql_executor.execute("INSERT OR REPLACE INTO reports (game_id, report_data) VALUES (?, ?)", (self._game_id, self))
 
-    def delete_database(self) -> None:
+    def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
-        database.sql_execute("DELETE FROM reports WHERE game_id = ?", (self._game_id,))
+        sql_executor.execute("DELETE FROM reports WHERE game_id = ?", (self._game_id,))
 
     @property
     def content(self) -> str:
