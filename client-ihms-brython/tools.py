@@ -9,7 +9,7 @@ my_panel = html.DIV(id="tools")
 
 
 my_panel <= """
-  Here go widgets to select interface (stabbeurfou / diplomatie-online / diplomania)
+  Here will go widgets to select interface (stabbeurfou / diplomatie-online / diplomania)
 """
 
 
