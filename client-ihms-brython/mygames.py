@@ -118,7 +118,7 @@ def my_games():
 
         role_id = common.get_role_allocated_to_player(game_id, player_id)
         if role_id is None:
-            return
+            continue
         data['role_played'] = role_id
 
         submitted_data = common.get_roles_submitted_orders(game_id)
