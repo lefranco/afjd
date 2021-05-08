@@ -36,7 +36,7 @@ class Declaration:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS declarations")
-        sql_executor.execute("CREATE TABLE declarations (game_id INT, author_num INT, anonymous INT, content_id INT UNIQUE PRIMARY KEY)")
+        sql_executor.execute("CREATE TABLE declarations (game_id INTEGER, author_num INTEGER, anonymous INTEGER, content_id INTEGER UNIQUE PRIMARY KEY)")
 
     def __init__(self, game_id: int, author_num: int, anonymous: bool, content_id: int) -> None:
 

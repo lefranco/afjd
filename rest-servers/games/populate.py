@@ -130,6 +130,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_games(sql_executor)
     populate_messages(sql_executor)
     populate_declarations(sql_executor)
+    populate_contents(sql_executor)
     populate_allocations(sql_executor)
     populate_visits(sql_executor)
     populate_votes(sql_executor)

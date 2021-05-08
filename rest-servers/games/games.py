@@ -72,12 +72,12 @@ class Game:
 
         # create counter
         sql_executor.execute("DROP TABLE IF EXISTS games_counter")
-        sql_executor.execute("CREATE TABLE games_counter (value INT)")
+        sql_executor.execute("CREATE TABLE games_counter (value INTEGER)")
         sql_executor.execute("INSERT INTO games_counter (value) VALUES (?)", (0,))
 
         # create actual table
         sql_executor.execute("DROP TABLE IF EXISTS games")
-        sql_executor.execute("CREATE TABLE games (identifier INT UNIQUE PRIMARY KEY, name STR, game_data game)")
+        sql_executor.execute("CREATE TABLE games (identifier INTEGER UNIQUE PRIMARY KEY, name STR, game_data game)")
         sql_executor.execute("CREATE UNIQUE INDEX name_game ON games (name)")
 
     def __init__(self, identifier: int, name: str, description: str, variant: str, archive: bool, anonymous: bool, silent: bool, cumulate: bool, fast: bool, deadline: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, cd_possible_removals: bool, play_weekend: bool, manual: bool, access_code: int, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, victory_centers: int, current_state: int) -> None:

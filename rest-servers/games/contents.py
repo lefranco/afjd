@@ -37,7 +37,7 @@ class Content:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS contents")
-        sql_executor.execute("CREATE TABLE contents (identifier INT UNIQUE PRIMARY KEY, game_id2 INT, time_stamp INT, content_data content)")
+        sql_executor.execute("CREATE TABLE contents (identifier INTEGER UNIQUE PRIMARY KEY, game_id2 INTEGER, time_stamp INTEGER, content_data content)")
 
     def __init__(self, identifier: int, game_id: int, time_stamp: int, payload: str) -> None:
 
