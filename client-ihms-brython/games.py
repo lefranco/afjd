@@ -202,6 +202,10 @@ def create_game():
 
     form = html.FORM()
 
+    form <= html.B("Vous voulez jouer ? Crééz-la partie et démissionez ensuite de l'arbitrage (appariement). Un arbitre sera alloué automatiquement...")
+    form <= html.BR()
+    form <= html.BR()
+
     form <= information_about_game()
     form <= html.BR()
 
