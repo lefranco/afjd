@@ -805,7 +805,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         """
         Creates or deletes an role allocation (a relation player-role-game)
         creates : There should be a single -1 role allacation
-        deletes : That will creare a -1 role allacation
+        deletes : That will create a -1 role allocation
         EXPOSED
         """
 
@@ -910,6 +910,11 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(403, msg="You cannot quit game mastership since you are not game master")
 
+            # put dangling
+            dangling_role_id = -1
+            allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
+            allocation.update_database(sql_executor)
+
             del sql_executor
 
             data = {'msg': 'Ok game master role-allocation deleted'}
@@ -934,7 +939,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(400, msg="This player already has this exact role in this game")
 
             player_id_found = game.get_role(sql_executor, role_id)
-            if player_id_found != -1:
+            if player_id_found is not None:
                 del sql_executor
                 flask_restful.abort(403, msg="There is already a player who has this role in this game")
 
@@ -950,17 +955,13 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         # revoking player role
 
         player_id_found = game.get_role(sql_executor, role_id)
-        if player_id_found == -1:
+        if player_id_found is None:
             del sql_executor
             flask_restful.abort(404, msg="There is no player with the role you want to revoke in this game")
 
         if player_id_found != player_id:
             del sql_executor
             flask_restful.abort(404, msg="This player does not have the role you want to revoke in this game")
-
-        # delete role
-        allocation = allocations.Allocation(game_id, player_id, role_id)
-        allocation.delete_database(sql_executor)
 
         # put dangling
         dangling_role_id = -1
