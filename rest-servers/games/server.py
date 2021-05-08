@@ -944,7 +944,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
 
             del sql_executor
 
-            data = {'msg': 'Ok role-allocation updated or created'}
+            data = {'msg': 'Ok player role-allocation updated or created'}
             return data, 201
 
         # revoking player role
@@ -970,7 +970,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         # report
-        data = {'msg': 'Ok role-allocation deleted if present'}
+        data = {'msg': 'Ok player role-allocation deleted if present'}
         return data, 200
 
 
