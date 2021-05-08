@@ -20,19 +20,19 @@ class User:
     """ Class for handling a User (password) """
 
     @staticmethod
-    def find_by_name(user_name: str) -> typing.Optional['User']:
+    def find_by_name(sql_executor: database.SqlExecutor, user_name: str) -> typing.Optional['User']:
         """ class lookup : finds the object in database from user_name """
-        users_found = database.sql_execute("SELECT user_data FROM users where user_name = ?", (user_name,), need_result=True)
+        users_found = sql_executor.execute("SELECT user_data FROM users where user_name = ?", (user_name,), need_result=True)
         if not users_found:
             return None
         return users_found[0][0]  # type: ignore
 
     @staticmethod
-    def create_table() -> None:
+    def create_table(sql_executor: database.SqlExecutor) -> None:
         """ creation of table from scratch """
 
-        database.sql_execute("DROP TABLE IF EXISTS users")
-        database.sql_execute("CREATE TABLE users (user_name STR UNIQUE PRIMARY KEY, user_data user)")
+        sql_executor.execute("DROP TABLE IF EXISTS users")
+        sql_executor.execute("CREATE TABLE users (user_name STR UNIQUE PRIMARY KEY, user_data user)")
 
     def __init__(self, user_name: str, pwd_hash: str) -> None:
 
@@ -42,13 +42,13 @@ class User:
         assert isinstance(pwd_hash, str), "pwd_hash must be a str"
         self._pwd_hash = pwd_hash
 
-    def update_database(self) -> None:
+    def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO users (user_name, user_data) VALUES (?, ?)", (self._user_name, self))
+        sql_executor.execute("INSERT OR REPLACE INTO users (user_name, user_data) VALUES (?, ?)", (self._user_name, self))
 
-    def delete_database(self) -> None:
+    def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
-        database.sql_execute("DELETE FROM users WHERE user_name = ?", (self._user_name,))
+        sql_executor.execute("DELETE FROM users WHERE user_name = ?", (self._user_name,))
 
     @property
     def user_name(self) -> str:

@@ -9,20 +9,20 @@ Data : populate database
 
 import mylogger
 import users
+import database
 
 
-def populate_users() -> None:
+def populate_users(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
 
-    users.User.create_table()
+    users.User.create_table(sql_executor)
 
 
-def populate() -> None:
+def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
     mylogger.LOGGER.warning("Populating...")
-
-    populate_users()
+    populate_users(sql_executor)
 
 
 if __name__ == '__main__':

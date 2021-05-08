@@ -10,27 +10,28 @@ Data : populate database
 import mylogger
 import newss
 import players
+import database
 
 
-def populate_newss() -> None:
+def populate_newss(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
 
-    newss.News.create_table()
+    newss.News.create_table(sql_executor)
 
 
-def populate_players() -> None:
+def populate_players(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
 
-    players.Player.create_table()
+    players.Player.create_table(sql_executor)
 
 
-def populate() -> None:
+def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
     mylogger.LOGGER.warning("Populating...")
 
-    populate_newss()
-    populate_players()
+    populate_newss(sql_executor)
+    populate_players(sql_executor)
 
 
 if __name__ == '__main__':

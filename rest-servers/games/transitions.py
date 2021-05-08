@@ -16,19 +16,19 @@ class Transition:
     """ Class for handling a transition """
 
     @staticmethod
-    def find_by_identifier_advancement(identifier: int, advancement: int) -> typing.Optional['Transition']:
+    def find_by_identifier_advancement(sql_executor: database.SqlExecutor, identifier: int, advancement: int) -> typing.Optional['Transition']:
         """ class lookup : finds the object in database from identifier """
-        reports_found = database.sql_execute("SELECT transition_data FROM transitions where game_id = ? and advancement = ?", (identifier, advancement), need_result=True)
+        reports_found = sql_executor.execute("SELECT transition_data FROM transitions where game_id = ? and advancement = ?", (identifier, advancement), need_result=True)
         if not reports_found:
             return None
         return reports_found[0][0]  # type: ignore
 
     @staticmethod
-    def create_table() -> None:
+    def create_table(sql_executor: database.SqlExecutor) -> None:
         """ creation of table from scratch """
 
-        database.sql_execute("DROP TABLE IF EXISTS transitions")
-        database.sql_execute("CREATE TABLE transitions (game_id INTEGER, advancement INTEGER, transition_data transition, PRIMARY KEY(game_id, advancement))")
+        sql_executor.execute("DROP TABLE IF EXISTS transitions")
+        sql_executor.execute("CREATE TABLE transitions (game_id INTEGER, advancement INTEGER, transition_data transition, PRIMARY KEY(game_id, advancement))")
 
     def __init__(self, game_id: int, advancement: int, situation_json: str, orders_json: str, report_txt: str) -> None:
 
@@ -47,13 +47,13 @@ class Transition:
         assert isinstance(report_txt, str), "report_txt must be an str"
         self._report_txt = report_txt
 
-    def update_database(self) -> None:
+    def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO transitions (game_id, advancement, transition_data) VALUES (?, ?, ?)", (self._game_id, self._advancement, self))
+        sql_executor.execute("INSERT OR REPLACE INTO transitions (game_id, advancement, transition_data) VALUES (?, ?, ?)", (self._game_id, self._advancement, self))
 
-    def delete_database(self) -> None:
+    def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
-        database.sql_execute("DELETE FROM transitions WHERE game_id = ? and advancement = ?", (self._game_id, self._advancement))
+        sql_executor.execute("DELETE FROM transitions WHERE game_id = ? and advancement = ?", (self._game_id, self._advancement))
 
     @property
     def situation_json(self) -> str:

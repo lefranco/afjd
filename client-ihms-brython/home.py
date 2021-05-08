@@ -40,6 +40,9 @@ if news_content_loaded is not None:
     for line in news_content_loaded.split("\n"):
         news_content <= html.EM(line)
         news_content <= html.BR()
+news_content.style = {
+    'color': 'red',
+}
 my_panel <= news_content
 
 title4 = html.H2("Support")

@@ -16,28 +16,28 @@ class Content:
     """ Class for handling a content """
 
     @staticmethod
-    def free_identifier() -> int:
+    def free_identifier(sql_executor: database.SqlExecutor) -> int:
         """ class free identifier : finds an new identifier from database to use for this object """
-        highest_identifier_found = database.sql_execute("SELECT MAX(identifier) AS max_identifier FROM contents", None, need_result=True)
+        highest_identifier_found = sql_executor.execute("SELECT MAX(identifier) AS max_identifier FROM contents", None, need_result=True)
         highest_identifier = highest_identifier_found[0][0]  # type: ignore
         if highest_identifier is None:
             return 1
         return highest_identifier + 1  # type: ignore
 
     @staticmethod
-    def list_by_game_id(game_id: int) -> typing.List[typing.Tuple[int, int, int, int]]:
+    def list_by_game_id(sql_executor: database.SqlExecutor, game_id: int) -> typing.List[typing.Tuple[int, int, int, int]]:
         """ class lookup : finds the object in database from fame id """
-        contents_found = database.sql_execute("SELECT * FROM contents where game_id2 = ?", (game_id,), need_result=True)
+        contents_found = sql_executor.execute("SELECT * FROM contents where game_id2 = ?", (game_id,), need_result=True)
         if not contents_found:
             return []
         return contents_found
 
     @staticmethod
-    def create_table() -> None:
+    def create_table(sql_executor: database.SqlExecutor) -> None:
         """ creation of table from scratch """
 
-        database.sql_execute("DROP TABLE IF EXISTS contents")
-        database.sql_execute("CREATE TABLE contents (identifier INT UNIQUE PRIMARY KEY, game_id2 INT, time_stamp INT, content_data content)")
+        sql_executor.execute("DROP TABLE IF EXISTS contents")
+        sql_executor.execute("CREATE TABLE contents (identifier INT UNIQUE PRIMARY KEY, game_id2 INT, time_stamp INT, content_data content)")
 
     def __init__(self, identifier: int, game_id: int, time_stamp: int, payload: str) -> None:
 
@@ -53,13 +53,13 @@ class Content:
         assert isinstance(payload, str), "payload must be an str"
         self._payload = payload
 
-    def update_database(self) -> None:
+    def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO contents (identifier, game_id2, time_stamp, content_data) VALUES (?, ?, ?, ?)", (self._identifier, self._game_id, self._time_stamp, self))
+        sql_executor.execute("INSERT OR REPLACE INTO contents (identifier, game_id2, time_stamp, content_data) VALUES (?, ?, ?, ?)", (self._identifier, self._game_id, self._time_stamp, self))
 
-    def delete_database(self) -> None:
+    def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
-        database.sql_execute("DELETE FROM contents WHERE identifier = ?", (self._identifier,))
+        sql_executor.execute("DELETE FROM contents WHERE identifier = ?", (self._identifier,))
 
     @property
     def identifier(self) -> int:

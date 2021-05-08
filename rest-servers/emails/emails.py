@@ -20,19 +20,19 @@ class Email:
     """ Class for handling a Email (code) """
 
     @staticmethod
-    def find_by_value(email_value: str) -> typing.Optional['Email']:
+    def find_by_value(sql_executor: database.SqlExecutor, email_value: str) -> typing.Optional['Email']:
         """ class lookup : finds the object in database from email_value """
-        emails_found = database.sql_execute("SELECT email_data FROM emails where email_value = ?", (email_value,), need_result=True)
+        emails_found = sql_executor.execute("SELECT email_data FROM emails where email_value = ?", (email_value,), need_result=True)
         if not emails_found:
             return None
         return emails_found[0][0]  # type: ignore
 
     @staticmethod
-    def create_table() -> None:
+    def create_table(sql_executor: database.SqlExecutor) -> None:
         """ creation of table from scratch """
 
-        database.sql_execute("DROP TABLE IF EXISTS emails")
-        database.sql_execute("CREATE TABLE emails (email_value STR UNIQUE PRIMARY KEY, email_data email)")
+        sql_executor.execute("DROP TABLE IF EXISTS emails")
+        sql_executor.execute("CREATE TABLE emails (email_value STR UNIQUE PRIMARY KEY, email_data email)")
 
     def __init__(self, email_value: str, code: int) -> None:
 
@@ -42,13 +42,13 @@ class Email:
         assert isinstance(code, int), "code must be a int"
         self._code = code
 
-    def update_database(self) -> None:
+    def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        database.sql_execute("INSERT OR REPLACE INTO emails (email_value, email_data) VALUES (?, ?)", (self._email_value, self))
+        sql_executor.execute("INSERT OR REPLACE INTO emails (email_value, email_data) VALUES (?, ?)", (self._email_value, self))
 
-    def delete_database(self) -> None:
+    def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
-        database.sql_execute("DELETE FROM emails WHERE email_value = ?", (self._email_value,))
+        sql_executor.execute("DELETE FROM emails WHERE email_value = ?", (self._email_value,))
 
     @property
     def email_value(self) -> str:
