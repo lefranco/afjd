@@ -9,8 +9,9 @@ my_panel = html.DIV(id="artificial")
 
 # --
 
-title1 = html.H2("Pas encore prêt ;-)")
-my_panel <= title1
+my_panel <= """
+  Here will go widgets to play versus an AI module
+"""
 
 
 
