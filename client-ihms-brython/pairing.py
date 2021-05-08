@@ -409,7 +409,7 @@ def take_mastering_game():
 
     form = html.FORM()
 
-    input_join_game = html.INPUT(type="submit", value="arbitrer la partie")
+    input_join_game = html.INPUT(type="submit", value="prendre l'arbitrage de la partie")
     input_join_game.bind("click", take_mastering_game_callback)
     form <= input_join_game
 
@@ -435,7 +435,7 @@ def quit_mastering_game():
 
         def reply_callback(req):
             req_result = json.loads(req.text)
-            if req.status != 201:
+            if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Error quitting mastering game: {req_result['message']}")
                 elif 'msg' in req_result:
@@ -463,18 +463,16 @@ def quit_mastering_game():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/role-allocations"
 
-        # takikng game mastering : need a token
+        # giving up game mastering : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     form = html.FORM()
 
-    input_join_game = html.INPUT(type="submit", value="arbitrer la partie")
-    input_join_game.bind("click", take_mastering_game_callback)
+    input_join_game = html.INPUT(type="submit", value="démissionner de l'arbitrage de la partie")
+    input_join_game.bind("click", quit_mastering_game_callback)
     form <= input_join_game
 
     my_sub_panel <= form
-
-
 
 
 my_panel = html.DIV(id="pairing")
