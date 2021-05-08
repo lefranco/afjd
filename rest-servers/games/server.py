@@ -890,7 +890,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                     del sql_executor
                     flask_restful.abort(400, msg="You are already game master of this game !")
 
-                if game_master_id != -1:
+                if game_master_id is not None:
                     del sql_executor
                     flask_restful.abort(403, msg="There is already a game master in this game !")
 
