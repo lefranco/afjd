@@ -14,7 +14,7 @@ import common
 my_panel = html.DIV(id="pairing")
 
 
-OPTIONS = ['se mettre dans les joueurs potentiels de la partie', 'se retirer des joueurs potentiels de la partie', 'déplacer des joueurs potentiels de la partie', 'prendre l\'arbitrage de la partie', 'démissionner l\'arbitrage de la partie']
+OPTIONS = ['se mettre dans les joueurs potentiels de la partie', 'se retirer des joueurs potentiels de la partie', 'déplacer des joueurs potentiels de la partie', 'prendre l\'arbitrage de la partie', 'démissionner de l\'arbitrage de la partie']
 
 
 def get_game_allocated_players(game_id):
@@ -506,7 +506,7 @@ def load_option(_, item_name):
         move_players_in_game()
     if item_name == 'prendre l\'arbitrage de la partie':
         take_mastering_game()
-    if item_name == 'démissionner l\'arbitrage de la partie':
+    if item_name == 'démissionner de l\'arbitrage de la partie':
         quit_mastering_game()
 
     global item_name_selected  # pylint: disable=invalid-name
