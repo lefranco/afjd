@@ -1,5 +1,0 @@
-cd client-<xxx>
-pyinstaller --onefile --windowed <myscript.py> --icon <icone.ico>
-recuperer dans le repertoire dist
-mettre dans un repertoire nommmé delivery
-compresser avec zip -r delivery.zip delivery
