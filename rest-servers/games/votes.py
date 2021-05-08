@@ -35,7 +35,7 @@ class Vote:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS votes")
-        sql_executor.execute("CREATE TABLE votes (game_id INTEGER, role_num INTEGER, vote INTEGER)")
+        sql_executor.execute("CREATE TABLE votes (game_id INTEGER, role_num INTEGER, value INTEGER)")
 
     def __init__(self, game_id: int, role_num: int, vote: bool) -> None:
 
