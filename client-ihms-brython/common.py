@@ -529,7 +529,11 @@ def get_role_allocated_to_player(game_id, player_id):
         req_result = json.loads(req.text)
         nonlocal role_id
         # TODO : consider if a player has more than one role
-        role_id = req_result[str(player_id)] if str(player_id) in req_result else None
+        role_id = None
+        if str(player_id) in req_result:
+            role_found = req_result[str(player_id)]
+            if role_found != -1:
+                role_id = role_found
 
     json_dict = dict()
 
