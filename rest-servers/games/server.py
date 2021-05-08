@@ -876,35 +876,87 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
         game_master_id = game.get_role(sql_executor, 0)
 
+        # first branch : dealing with game master
+        if role_id == 0:
+
+            if player_id != user_id:
+                del sql_executor
+                flask_restful.abort(403, msg="You cannot assign or desassign game mastership for someone else")
+
+            if not delete:
+                # taking game master role
+
+                if game_master_id == player_id:
+                    del sql_executor
+                    flask_restful.abort(400, msg="You are already game master of this game !")
+
+                if game_master_id != -1:
+                    del sql_executor
+                    flask_restful.abort(403, msg="There is already a game master in this game !")
+
+                role_id_found = game.find_role(sql_executor, player_id)
+                if role_id_found is not None:
+                    del sql_executor
+                    flask_restful.abort(400, msg="You cannot take game mastership since you are a player in this game")
+
+                del sql_executor
+
+                data = {'msg': 'Ok game master role-allocation updated or created'}
+                return data, 201
+
+            # quitting game master role
+
+            if player_id != game_master_id:
+                del sql_executor
+                flask_restful.abort(403, msg="You cannot quit game mastership since you are not game master")
+
+            del sql_executor
+
+            data = {'msg': 'Ok game master role-allocation deleted'}
+            return data, 200
+
+        # second branch : dealing with player - not game master
+
         if user_id != game_master_id:
             del sql_executor
-            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+            flask_restful.abort(403, msg="You need be the game master of the game to allocate ro unallocate roles")
 
-        # game master of game can neither be added (changed) not removed
-
+        # giving player role
         if not delete:
-            if game_master_id == player_id:
-                del sql_executor
-                flask_restful.abort(400, msg="You cannot put the game master as a player in the game")
-        else:
-            if game_master_id == player_id:
-                del sql_executor
-                flask_restful.abort(400, msg="You cannot remove the game master from the game")
 
-        if not delete:
-            # delete dangling
-            dangling_role_id = -1
-            allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
-            allocation.delete_database(sql_executor)
+            if player_id == game_master_id:
+                del sql_executor
+                flask_restful.abort(403, msg="You cannot put the game master of the game as a player in the game")
+
+            role_id_found = game.find_role(sql_executor, player_id)
+            if role_id_found == role_id:
+                del sql_executor
+                flask_restful.abort(400, msg="This player already has this exact role in this game")
+
+            player_id_found = game.get_role(sql_executor, role_id)
+            if player_id_found != -1:
+                del sql_executor
+                flask_restful.abort(403, msg="There is already a player who has this role in this game")
+
             # put role
             allocation = allocations.Allocation(game_id, player_id, role_id)
             allocation.update_database(sql_executor)
-            # report
 
             del sql_executor
 
             data = {'msg': 'Ok role-allocation updated or created'}
             return data, 201
+
+        # revoking player role
+
+        player_id_found = game.get_role(sql_executor, role_id)
+        if player_id_found == -1:
+            del sql_executor
+            flask_restful.abort(404, msg="There is no player with the role you want to revoke in this game")
+
+        if player_id_found != player_id:
+            del sql_executor
+            flask_restful.abort(404, msg="This player does not have the role you want to revoke in this game")
 
         # delete role
         allocation = allocations.Allocation(game_id, player_id, role_id)

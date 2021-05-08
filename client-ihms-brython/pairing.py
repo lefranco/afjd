@@ -13,7 +13,8 @@ import common
 
 my_panel = html.DIV(id="pairing")
 
-OPTIONS = ['rejoindre une partie', 'quitter une partie', 'déplacer des joueurs']
+
+OPTIONS = ['se mettre dans les joueurs potentiels de la partie', 'se retirer des joueurs potentiels de la partie', 'déplacer des joueurs potentiels de la partie', 'prendre l\'arbitrage de la partie', 'démissionner l\'arbitrage de la partie']
 
 
 def get_game_allocated_players(game_id):
@@ -356,6 +357,126 @@ def move_players_in_game():
     my_sub_panel <= form
 
 
+def take_mastering_game():
+    """ take_mastering_game """
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se loguer au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    def take_mastering_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error taking mastering game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem taking mastering game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez pris l'arbitrage de la partie : {messages}", remove_after=config.REMOVE_AFTER)
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        json_dict = {
+            'game_id': game_id,
+            'role_id': 0,
+            'player_pseudo': pseudo,
+            'pseudo': pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/role-allocations"
+
+        # takikng game mastering : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    form = html.FORM()
+
+    input_join_game = html.INPUT(type="submit", value="arbitrer la partie")
+    input_join_game.bind("click", take_mastering_game_callback)
+    form <= input_join_game
+
+    my_sub_panel <= form
+
+
+def quit_mastering_game():
+    """ quit_mastering_game """
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se loguer au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    def quit_mastering_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error quitting mastering game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem quitting mastering game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez quitté l'arbitrage de la partie : {messages}", remove_after=config.REMOVE_AFTER)
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        json_dict = {
+            'game_id': game_id,
+            'role_id': 0,
+            'player_pseudo': pseudo,
+            'pseudo': pseudo,
+            'delete': 1
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/role-allocations"
+
+        # takikng game mastering : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    form = html.FORM()
+
+    input_join_game = html.INPUT(type="submit", value="arbitrer la partie")
+    input_join_game.bind("click", take_mastering_game_callback)
+    form <= input_join_game
+
+    my_sub_panel <= form
+
+
+
+
 my_panel = html.DIV(id="pairing")
 my_panel.attrs['style'] = 'display: table-row'
 
@@ -379,12 +500,16 @@ def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
-    if item_name == 'rejoindre une partie':
+    if item_name == 'se mettre dans les joueurs potentiels de la partie':
         join_game()
-    if item_name == 'quitter une partie':
+    if item_name == 'se retirer des joueurs potentiels de la partie':
         quit_game()
-    if item_name == 'déplacer des joueurs':
+    if item_name == 'déplacer des joueurs potentiels de la partie':
         move_players_in_game()
+    if item_name == 'prendre l\'arbitrage de la partie':
+        take_mastering_game()
+    if item_name == 'démissionner l\'arbitrage de la partie':
+        quit_mastering_game()
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
