@@ -899,6 +899,10 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                     del sql_executor
                     flask_restful.abort(400, msg="You cannot take game mastership since you are a player in this game")
 
+                # put role
+                allocation = allocations.Allocation(game_id, player_id, role_id)
+                allocation.update_database(sql_executor)
+
                 del sql_executor
 
                 data = {'msg': 'Ok game master role-allocation updated or created'}
