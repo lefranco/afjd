@@ -271,6 +271,9 @@ def show_position():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
 
+    # probably useless
+    ctx.imageSmoothingEnabled = False;
+
     # give some information sometimes
     canvas.bind("mousemove", callback_canvas_mouse_move)
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
@@ -1090,7 +1093,7 @@ def submit_orders():
 
         nonlocal input_definitive
 
-        label_definitive = html.LABEL("On peut résoudre avec ça ?")
+        label_definitive = html.LABEL("Prêt pour la résolution ?")
         buttons_right <= label_definitive
 
         input_definitive = html.INPUT(type="checkbox")
@@ -1199,17 +1202,15 @@ def submit_orders():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
 
+    # probably useless
+    ctx.imageSmoothingEnabled = False;
+
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
     canvas.bind("mousedown", callback_canvas_mousedown)
 
     # to catch keyboard
     document.bind("keypress", callback_keypress)
-
-    ctx = canvas.getContext("2d")
-    if ctx is None:
-        alert("Il faudrait utiliser un navigateur plus récent !")
-        return
 
     # get the orders from server
     orders_loaded = common.game_orders_reload(game)
@@ -1904,17 +1905,15 @@ def submit_communication_orders():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
 
+    # probably useless
+    ctx.imageSmoothingEnabled = False;
+
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
     canvas.bind("mousedown", callback_canvas_mousedown)
 
     # to catch keyboard
     document.bind("keypress", callback_keypress)
-
-    ctx = canvas.getContext("2d")
-    if ctx is None:
-        alert("Il faudrait utiliser un navigateur plus récent !")
-        return
 
     # get the orders from server
     communication_orders_loaded = common.game_communication_orders_reload(game)
@@ -3037,7 +3036,7 @@ def game_master():
             "border": "solid",
         }
         if role_id in definitive_values_table:
-            vote_val = "On peut résoudre" if definitive_values_table[role_id] else "On peut pas résoudre"
+            vote_val = "Prêt pour la résolution" if definitive_values_table[role_id] else "Pas encore prêt pour la résolution"
         else:
             vote_val = "Pas d'avis"
         col <= vote_val
@@ -3372,6 +3371,9 @@ def show_history():
         if ctx is None:
             alert("Il faudrait utiliser un navigateur plus récent !")
             return
+
+        # probably useless
+        ctx.imageSmoothingEnabled = False;
 
         # put background (this will call the callback that display the whole map)
         img = common.read_image(variant_name_loaded, display_chosen)
