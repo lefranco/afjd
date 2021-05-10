@@ -729,7 +729,6 @@ def make_rating_colours_window(ratings, colours):
 
         canvas = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
         ctx = canvas.getContext("2d")
-        ctx.imageSmoothingEnabled = False;
 
         colour = colours[role_name]
 
@@ -785,7 +784,6 @@ def make_report_window(report_loaded):
             report_col <= html.BR()
         report_row <= report_col
     return report_table
-
 
 
 def definitive_reload(game_id):

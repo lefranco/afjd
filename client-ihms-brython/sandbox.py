@@ -746,7 +746,6 @@ def sandbox():
         "border": "solid",
     }
 
-
     num = 1
     for role in variant_data.roles.values():
 
@@ -819,9 +818,6 @@ def sandbox():
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
-
-    # probably useless
-    ctx.imageSmoothingEnabled = False;
 
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
