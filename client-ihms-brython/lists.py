@@ -270,7 +270,7 @@ def show_no_game_masters_data():
         thead <= col
     no_game_masters_table <= thead
 
-    no_game_masters_list = [v for k,v in games_dict.items() if int(k) not in [g['game'] for g in game_masters_list]]
+    no_game_masters_list = [v for k, v in games_dict.items() if int(k) not in [g['game'] for g in game_masters_list]]
 
     for data in sorted(no_game_masters_list, key=lambda g: g['name']):
         row = html.TR()
@@ -286,6 +286,7 @@ def show_no_game_masters_data():
         no_game_masters_table <= row
 
     my_sub_panel <= no_game_masters_table
+
 
 my_panel = html.DIV(id="players_games")
 my_panel.attrs['style'] = 'display: table-row'

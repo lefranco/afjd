@@ -8,9 +8,6 @@ start = time.time()
 
 from browser import document, html  # pylint: disable=import-error # noqa: E402
 
-# remove at some point
-import debug
-
 import home    # noqa: E402
 import login    # noqa: E402
 import lists    # noqa: E402

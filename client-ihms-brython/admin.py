@@ -217,7 +217,7 @@ def rectify():
 
         game_id = common.get_game_id(game)
         if game_id is None:
-            return None
+            return
 
         json_dict = {
             'pseudo': pseudo,
@@ -584,9 +584,6 @@ def rectify():
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
-
-    # probably useless
-    ctx.imageSmoothingEnabled = False;
 
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)

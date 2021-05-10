@@ -14,7 +14,6 @@ my_panel <= """
 """
 
 
-
 def render(panel_middle):
     """ render """
     panel_middle <= my_panel
