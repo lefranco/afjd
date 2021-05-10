@@ -4,14 +4,16 @@
 
 import json
 import datetime
+import time
 
-from browser import html, ajax, alert   # pylint: disable=import-error
+from browser import timer, html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
 import config
 import mapping
 
+import debug
 
 my_panel = html.DIV(id="my_games")
 
@@ -50,6 +52,27 @@ def get_player_games_playing_in(player_id):
 
 def my_games():
     """ my_games """
+
+    clock_panel = None
+
+    def callback_set_clock(panel):
+        """ callback_set_clock """
+
+        nonlocal clock_panel
+
+        if clock_panel is not None:
+            panel.removeChild(clock_panel)
+
+        clock_panel = html.DIV(id="clock")
+
+        time_stamp = time.time()
+        time_now = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+        time_now_str = datetime.datetime.strftime(time_now, "%d-%m-%Y %H:%M:%S")
+        description = f"Date et heure actuellement : {time_now_str} (temps GMT)"
+
+        clock_panel <= html.B(description)
+        panel <= clock_panel
+
 
     my_panel.clear()
 
@@ -220,6 +243,9 @@ def my_games():
         games_table <= row
 
     my_panel <= games_table
+    my_panel <= html.BR()
+
+    timer.set_interval(lambda p=my_panel: callback_set_clock(p), 1000)
 
 
 def render(panel_middle):
