@@ -394,7 +394,7 @@ def legend_font() -> str:
 
     font_style = 'normal'
     font_variant = 'normal'
-    font_weight = 'lighter'
+    font_weight = 'normal'
     font_size = 'xx-small'
     font_family = 'Arial'
     return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"  # default is 10 sans serif

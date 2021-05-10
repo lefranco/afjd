@@ -820,6 +820,9 @@ def sandbox():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return
 
+    # probably useless
+    ctx.imageSmoothingEnabled = False;
+
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
     canvas.bind("mousedown", callback_canvas_mousedown)
@@ -830,11 +833,6 @@ def sandbox():
 
     # to catch keyboard
     document.bind("keypress", callback_keypress)
-
-    ctx = canvas.getContext("2d")
-    if ctx is None:
-        alert("Il faudrait utiliser un navigateur plus récent !")
-        return
 
     # put background (this will call the callback that display the whole map)
     img = common.read_image(variant_name_loaded, display_chosen)
