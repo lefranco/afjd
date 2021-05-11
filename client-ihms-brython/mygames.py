@@ -53,27 +53,6 @@ def get_player_games_playing_in(player_id):
 def my_games():
     """ my_games """
 
-    clock_panel = None
-
-    def callback_set_clock(panel):
-        """ callback_set_clock """
-
-        nonlocal clock_panel
-
-        if clock_panel is not None:
-            panel.removeChild(clock_panel)
-
-        clock_panel = html.DIV(id="clock")
-
-        time_stamp_now = time.time()
-        time_now = datetime.datetime.fromtimestamp(time_stamp_now, datetime.timezone.utc)
-        time_now_str = datetime.datetime.strftime(time_now, "%d-%m-%Y %H:%M:%S GMT")
-        description = f"Pour information, date et heure actuellement : {time_now_str}"
-
-        clock_panel <= html.B(description)
-        panel <= clock_panel
-
-
     my_panel.clear()
 
     if 'PSEUDO' not in storage:
@@ -93,6 +72,8 @@ def my_games():
     games_dict = common.get_games_data()
     if games_dict is None:
         return
+
+    time_stamp_now = time.time()
 
     games_table = html.TABLE()
     games_table.style = {
@@ -167,7 +148,7 @@ def my_games():
                 deadline_loaded = value
                 datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
                 deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-                deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
+                deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
                 deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
                 value = deadline_loaded_str
 
@@ -239,14 +220,34 @@ def my_games():
             col.style = {
                 "border": "solid",
             }
+
+            if field == 'deadline':
+
+                # we are after deadline : red
+                if time_stamp_now > deadline_loaded:
+                    col.style = {
+                        'color': 'red',
+                    }
+
+                # deadline is today : orange
+                elif time_stamp_now > deadline_loaded - 24 * 3600:
+                    col.style = {
+                        'color': 'orange',
+                    }
+
             row <= col
         games_table <= row
 
     my_panel <= games_table
     my_panel <= html.BR()
 
-    timer.set_interval(lambda p=my_panel: callback_set_clock(p), 1000)
+    # get GMT date and time
+    time_stamp = time.time()
+    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
+    special_legend = html.LEGEND(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
+    my_panel <= special_legend
 
 def render(panel_middle):
     """ render """
