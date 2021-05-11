@@ -6,14 +6,15 @@ import json
 import datetime
 import time
 
-from browser import timer, html, ajax, alert   # pylint: disable=import-error
+from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
 import config
 import mapping
+import selection
+import index # circular import
 
-import debug
 
 my_panel = html.DIV(id="my_games")
 
@@ -53,6 +54,16 @@ def get_player_games_playing_in(player_id):
 def my_games():
     """ my_games """
 
+    def select_game_callback(_, game):
+        """ select_game_callback """
+
+        # action of selecting game
+        storage['GAME'] = game
+        selection.show_game_selected()
+
+        # action of going to game page
+        index.load_option(None, 'jouer la partie')
+
     my_panel.clear()
 
     if 'PSEUDO' not in storage:
@@ -82,12 +93,12 @@ def my_games():
         "border": "solid",
     }
 
-    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played', 'orders_submitted', 'new_declarations', 'new_messages']
+    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played', 'orders_submitted', 'new_declarations', 'new_messages', 'jump']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'ordres soumis', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'ordres soumis', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump': 'sauter'}[field]
         col = html.TD(field_fr)
         col.style = {
             "border": "solid",
@@ -135,6 +146,7 @@ def my_games():
         data['orders_submitted'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
+        data['jump'] = None
 
         row = html.TR()
         row.style = {
@@ -143,6 +155,7 @@ def my_games():
         for field in fields:
 
             value = data[field]
+            colour = 'black'
 
             if field == 'deadline':
                 deadline_loaded = value
@@ -151,6 +164,13 @@ def my_games():
                 deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
                 deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
                 value = deadline_loaded_str
+
+                # we are after deadline : red
+                if time_stamp_now > deadline_loaded:
+                    colour = 'red'
+                # deadline is today : orange
+                elif time_stamp_now > deadline_loaded - 24 * 3600:
+                    colour = 'orange'
 
             if field == 'current_state':
                 state_loaded = value
@@ -218,26 +238,22 @@ def my_games():
                     popup = html.IMG(src="./data/new_content.gif", title="Nouveau(x) message(s)")
                 value = popup
 
+            if field == 'jump':
+                game_name = data['name']
+                form = html.FORM()
+                input_jump_game = html.INPUT(type="submit", value="sauter à pied joints dans la partie")
+                input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
+                form <= input_jump_game
+                value = form
+
             col = html.TD(value)
             col.style = {
                 "border": "solid",
+                'color': colour
             }
 
-            if field == 'deadline':
-
-                # we are after deadline : red
-                if time_stamp_now > deadline_loaded:
-                    col.style = {
-                        'color': 'red',
-                    }
-
-                # deadline is today : orange
-                elif time_stamp_now > deadline_loaded - 24 * 3600:
-                    col.style = {
-                        'color': 'orange',
-                    }
-
             row <= col
+
         games_table <= row
 
     my_panel <= games_table
