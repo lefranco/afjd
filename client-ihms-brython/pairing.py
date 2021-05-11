@@ -472,6 +472,12 @@ def quit_mastering_game():
     input_join_game.bind("click", quit_mastering_game_callback)
     form <= input_join_game
 
+    form <= html.BR()
+    form <= html.BR()
+
+    warning = html.B(f"Attention : Créer une partie anonyme, se retirer de l'arbitrage après avoir consulté la liste des joueurs et ensuite jouer dans cette partie... est considéré comme tricher !")
+    form <= warning
+
     my_sub_panel <= form
 
 

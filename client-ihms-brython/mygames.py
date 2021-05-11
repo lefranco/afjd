@@ -248,7 +248,7 @@ def my_games():
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
-    special_legend = html.LEGEND(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
+    special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     my_panel <= special_legend
 
 def render(panel_middle):
