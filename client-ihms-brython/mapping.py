@@ -1727,8 +1727,8 @@ class Orders(Renderable):
                 return True
         return False
 
-    def closest_unit(self, designated_pos: geometry.PositionRecord):
-        """ closest_unit """
+    def closest_unit_or_built_unit(self, designated_pos: geometry.PositionRecord):
+        """ closest_unit_or_built_unit """
 
         # search units from position (make a copy)
         search_list = list(self._position.units_list())
