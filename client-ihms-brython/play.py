@@ -1053,7 +1053,9 @@ def submit_orders():
         """ stack_role_flag """
 
         # role flag
-        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+        role = variant_data.roles[role_id]
+        role_name = variant_data.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
         buttons_right <= role_icon_img
 
     def stack_orders(buttons_right):
@@ -1762,7 +1764,9 @@ def submit_communication_orders():
         """ stack_role_flag """
 
         # role flag
-        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+        role = variant_data.roles[role_id]
+        role_name = variant_data.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
         buttons_right <= role_icon_img
 
         warning = html.DIV()
@@ -2118,6 +2122,12 @@ def negotiate():
     # select display (should be a user choice)
     display_chosen = common.get_display_from_variant(variant_name_loaded)
 
+    # from display chose get display parameters
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
     form = html.FORM()
 
     legend_declaration = html.LEGEND("Votre message", title="Qu'avez vous à lui/leur dire ?")
@@ -2135,7 +2145,9 @@ def negotiate():
     selected = dict()
     for role_id_dest in range(variant_content_loaded['roles']['number'] + 1):
 
-        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id_dest}.jpg")
+        role = variant_data.roles[role_id_dest]
+        role_name = variant_data.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id_dest}.jpg", title=role_name)
 
         # the alternative
         input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), name="destinees")
@@ -2197,7 +2209,9 @@ def negotiate():
         }
         row <= col
 
-        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{from_role_id_msg}.jpg")
+        role = variant_data.roles[from_role_id_msg]
+        role_name = variant_data.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{from_role_id_msg}.jpg", title=role_name)
         col = html.TD(role_icon_img)
         col.style = {
             "border": "solid",
@@ -2210,7 +2224,9 @@ def negotiate():
         }
 
         for dest_role_id_msg in dest_role_id_msgs:
-            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{dest_role_id_msg}.jpg")
+            role = variant_data.roles[dest_role_id_msg]
+            role_name = variant_data.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{dest_role_id_msg}.jpg", title=role_name)
             col <= role_icon_img
         row <= col
 
@@ -2233,7 +2249,9 @@ def negotiate():
     my_sub_panel.clear()
 
     # role
-    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+    role = variant_data.roles[role_id]
+    role_name = variant_data.name_table[role]
+    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
     my_sub_panel <= role_icon_img
 
     # form
@@ -2370,13 +2388,25 @@ def declare():
     # put time stamp of last visit of declarations as now
     common.last_visit_update(game_id, pseudo, role_id, common.DECLARATIONS_TYPE)
 
-    # get variant name
+    # from game name get variant name
     variant_name_loaded = common.game_variant_name_reload(game)
     if not variant_name_loaded:
         return
 
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
     # select display (should be a user choice)
     display_chosen = common.get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
     form = html.FORM()
 
@@ -2444,7 +2474,9 @@ def declare():
         row <= col
 
         if role_id_msg != -1:
-            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id_msg}.jpg")
+            role = variant_data.roles[role_id_msg]
+            role_name = variant_data.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id_msg}.jpg", title=role_name)
         else:
             role_icon_img = ""
         col = html.TD(role_icon_img)
@@ -2478,7 +2510,9 @@ def declare():
     my_sub_panel.clear()
 
     # role
-    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+    role = variant_data.roles[role_id]
+    role_name = variant_data.name_table[role]
+    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
     my_sub_panel <= role_icon_img
 
     # form
@@ -2573,8 +2607,20 @@ def vote():
     if not variant_name_loaded:
         return
 
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
     # select display (should be a user choice)
     display_chosen = common.get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
     votes = common.vote_reload(game_id)
     if votes is None:
@@ -2605,7 +2651,9 @@ def vote():
     my_sub_panel.clear()
 
     # role
-    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+    role = variant_data.roles[role_id]
+    role_name = variant_data.name_table[role]
+    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
     my_sub_panel <= role_icon_img
     form <= html.BR()
 
@@ -3117,7 +3165,9 @@ def game_master():
             "border": "solid",
         }
 
-        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+        role = variant_data.roles[role_id]
+        role_name = variant_data.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
         col = html.TD(role_icon_img)
         col.style = {
             "border": "solid",
@@ -3415,7 +3465,9 @@ def show_players_in_game():
         if role_id < 0:
             role_icon_img = None
         else:
-            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+            role = variant_data.roles[role_id]
+            role_name = variant_data.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)

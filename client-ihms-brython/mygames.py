@@ -170,7 +170,9 @@ def my_games():
                 if role_id == -1:
                     value = "Affecté"
                 else:
-                    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg")
+                    role = variant_data.roles[role_id]
+                    role_name = variant_data.name_table[role]
+                    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
                     value = role_icon_img
 
             if field == 'orders_submitted':
