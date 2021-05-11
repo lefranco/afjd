@@ -928,7 +928,7 @@ def submit_orders():
 
             #  builds : tougher case : we take the build units into account
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                selected_erase_unit = orders_data.closest_unit(pos)
+                selected_erase_unit = orders_data.closest_unit_or_built_unit(pos)
 
         # event is None when coming from x pressed, then take 'selected_active_unit' (that can be None)
         if selected_erase_unit is None:
