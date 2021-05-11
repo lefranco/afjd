@@ -63,8 +63,9 @@ def select_display():
 
         form = html.FORM()
 
-        # TODO : put in file in display directory
-        interface_description = f"description de l'interface '{interface}' pour la variante {variant_name_loaded}"
+        with open(f"./variants/{variant_name_loaded}/{interface}/README", "r") as file_ptr:
+            lines = file_ptr.readlines()
+        interface_description = '\n'.join(lines)
 
         legend_game = html.LEGEND(interface_description, title="Sélection de l'interface")
         form <= legend_game
