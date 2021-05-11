@@ -1168,7 +1168,7 @@ def delete_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"La partie a été supprimée : {messages}", remove_after=config.REMOVE_AFTER)
-            selection.un_select_game()
+            selection.unselect_game()
 
         json_dict = {
             'pseudo': pseudo
