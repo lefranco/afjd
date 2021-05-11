@@ -148,7 +148,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -255,7 +255,7 @@ def sandbox():
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_passive = html.LEGEND("Sélectionner l'unité supportée offensivement")
+                legend_selected_passive = html.LEGEND("Sélectionner l'unité supportée offensivement (cliquer sous la légende)")
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -281,7 +281,7 @@ def sandbox():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -343,7 +343,7 @@ def sandbox():
                 legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
                 buttons_right <= legend_selected_unit
 
-                legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
+                legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination - sous la légende)")
                 buttons_right <= legend_select_order
                 buttons_right <= html.BR()
 
@@ -402,7 +402,7 @@ def sandbox():
             # update map
             callback_render(None)
 
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
+            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
             buttons_right <= legend_select_unit
 
             stack_orders(buttons_right)
@@ -435,7 +435,7 @@ def sandbox():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -457,9 +457,9 @@ def sandbox():
             buttons_right <= legend_selected_passive
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_select_destination = html.LEGEND("Sélectionner la destination de l'attaque soutenue")
+                legend_select_destination = html.LEGEND("Sélectionner la destination de l'attaque soutenue (cliquer sous la légende)")
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_select_destination = html.LEGEND("Sélectionner la destination du convoi")
+                legend_select_destination = html.LEGEND("Sélectionner la destination du convoi (cliquer sous la légende)")
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
@@ -521,7 +521,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -719,7 +719,7 @@ def sandbox():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -850,7 +850,7 @@ def sandbox():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-    legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer ordre/unité sans ordre)")
+    legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
     buttons_right <= legend_select_unit
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 

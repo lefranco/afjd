@@ -492,7 +492,7 @@ def submit_orders():
 
             stack_role_flag(buttons_right)
 
-            legend_select_active = html.LEGEND("Sélectionner la zone où construire")
+            legend_select_active = html.LEGEND("Sélectionner la zone où construire (cliquer sous la légende)")
             buttons_right <= legend_select_active
 
             stack_orders(buttons_right)
@@ -535,7 +535,7 @@ def submit_orders():
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.LEGEND("Sélectionner la destination de l'attaque")
+                legend_selected_destination = html.LEGEND("Sélectionner la destination de l'attaque (cliquer sous la légende)")
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -600,7 +600,7 @@ def submit_orders():
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.LEGEND("Sélectionner la destination de la retraite")
+                legend_selected_destination = html.LEGEND("Sélectionner la destination de la retraite (cliquer sous la légende)")
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -712,7 +712,7 @@ def submit_orders():
                         legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
                         buttons_right <= legend_selected_unit
 
-                    legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
+                    legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination - sous la légende)")
                     buttons_right <= legend_select_order
                     buttons_right <= html.BR()
 
@@ -888,9 +888,9 @@ def submit_orders():
             buttons_right <= legend_selected_passive
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_select_destination = html.LEGEND("Sélectionner la destination de l'attaque soutenue")
+                legend_select_destination = html.LEGEND("Sélectionner la destination de l'attaque soutenue (cliquer sous la légende)")
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_select_destination = html.LEGEND("Sélectionner la destination du convoi")
+                legend_select_destination = html.LEGEND("Sélectionner la destination du convoi (cliquer sous la légende)")
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
@@ -1406,7 +1406,7 @@ def submit_communication_orders():
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.LEGEND("Sélectionner la destination de l'attaque")
+                legend_selected_destination = html.LEGEND("Sélectionner la destination de l'attaque (cliquer sous la légende)")
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -1516,7 +1516,7 @@ def submit_communication_orders():
                     legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
                     buttons_right <= legend_selected_unit
 
-                    legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
+                    legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination - sous la légende)")
                     buttons_right <= legend_select_order
                     buttons_right <= html.BR()
 
@@ -1634,9 +1634,9 @@ def submit_communication_orders():
             buttons_right <= legend_selected_passive
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_select_destination = html.LEGEND("Sélectionner la destination de l'attaque soutenue")
+                legend_select_destination = html.LEGEND("Sélectionner la destination de l'attaque soutenue (cliquer sous la légende)")
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_select_destination = html.LEGEND("Sélectionner la destination du convoi")
+                legend_select_destination = html.LEGEND("Sélectionner la destination du convoi (cliquer sous la légende)")
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
