@@ -12,25 +12,18 @@ import common
 
 # simplest is to hard code displays of variants here
 INTERFACE_TABLE = {
-    'standard' : ['diplomania', 'diplomatie_online', 'stabbeurfou']
-    }
+    'standard': ['diplomania', 'diplomatie_online', 'stabbeurfou']
+}
 
 my_panel = html.DIV(id="tools")
 
-import debug
 
 def get_display_from_variant(variant):
     """ get_display_from_variant """
 
-    InfoDialog("OK", f"Recup Interface sélectionnée pour la variante {variant} ", remove_after=config.REMOVE_AFTER)
-
-    desc = " | ".join([f"{k} : {v}" for k,v in storage.items()])
-    print(f"getting {desc=}")
-
-    if f'DISPLAY_{variant}'.upper() in storage:
-        return storage[f'DISPLAY_{variant}'.upper()]
-
-    alert("default interface")
+    reference = f'DISPLAY_{variant}'.upper()
+    if reference in storage:
+        return storage[reference]
 
     # takes the first
     return INTERFACE_TABLE[variant][0]
@@ -39,15 +32,15 @@ def get_display_from_variant(variant):
 def select_display():
     """ select_display """
 
-    def select_display_callback(variant, interface):
+    variant_name_loaded = None
+
+    def select_display_callback(interface):
         """ select_display_callback """
 
-        storage[f'DISPLAY_{variant}'.upper()] = interface
+        reference = f'DISPLAY_{variant_name_loaded}'.upper()
+        storage[reference] = interface
 
-        desc = " | ".join([f"{k} : {v}" for k,v in storage.items()])
-        print(f"after insert {desc=}")
-
-        InfoDialog("OK", f"Interface sélectionnée pour la variante {variant} : {interface}", remove_after=config.REMOVE_AFTER)
+        InfoDialog("OK", f"Interface sélectionnée pour la variante {variant_name_loaded} : {interface}", remove_after=config.REMOVE_AFTER)
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -70,8 +63,8 @@ def select_display():
 
         form = html.FORM()
 
-        # TODO : put in file in ddisplay directory
-        interface_description = f"description de l'interface {interface} pour la variante {variant_name_loaded}"
+        # TODO : put in file in display directory
+        interface_description = f"description de l'interface '{interface}' pour la variante {variant_name_loaded}"
 
         legend_game = html.LEGEND(interface_description, title="Sélection de l'interface")
         form <= legend_game
@@ -79,7 +72,7 @@ def select_display():
 
         form <= html.BR()
         input_select_interface = html.INPUT(type="submit", value="sélectionner l'interface")
-        input_select_interface.bind("click", lambda v=variant_name_loaded, i=interface: select_display_callback(v, i))
+        input_select_interface.bind("click", lambda _, i=interface: select_display_callback(i))
 
         form <= input_select_interface
 
