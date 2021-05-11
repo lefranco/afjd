@@ -489,15 +489,6 @@ def game_parameters_reload(game):
     return game_parameters_loaded
 
 
-def get_display_from_variant(variant):
-    """ get_display_from_variant """
-
-    # TODO : make it possible to choose which display users wants (descartes/hasbro)
-    # At least test it
-    assert variant == 'standard'
-    return "diplomania"
-
-
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
 
