@@ -14,7 +14,7 @@ import tools
 import config
 import mapping
 import selection
-import index # circular import
+import index  # circular import
 
 
 my_panel = html.DIV(id="my_games")
@@ -267,6 +267,7 @@ def my_games():
 
     special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     my_panel <= special_legend
+
 
 def render(panel_middle):
     """ render """

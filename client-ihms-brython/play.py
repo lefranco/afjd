@@ -691,7 +691,6 @@ def submit_orders():
             if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 selected_active_unit = position_data.closest_unit(pos, True)
 
-
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
@@ -1983,14 +1982,12 @@ def submit_communication_orders():
     my_sub_panel <= my_sub_panel2
 
 
-
 def visual_chat():
     """ negotiate """
 
     my_sub_panel <= """
       Here will go widgets to chat by video
     """
-
 
 
 # the idea is not to loose the content of a message if not destinee were specified

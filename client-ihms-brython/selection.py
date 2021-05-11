@@ -40,7 +40,7 @@ def select_game():
         "border": "solid",
     }
 
-    rev_state_code_table = {v:k for k,v in config.STATE_CODE_TABLE.items()}
+    rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
 
     for variant in variants:
         for current_state in current_states:
