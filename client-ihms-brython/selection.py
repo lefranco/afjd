@@ -32,11 +32,9 @@ def select_game():
 
     # list the variants we have0
     variants = {d['variant'] for d in games_data.values()}
-    print(f"{variants=}")
 
     # list the states we have
     current_states = {d['current_state'] for d in games_data.values()}
-    print(f"{current_states=}")
 
     select_table = html.TABLE()
     select_table.style = {
