@@ -11,8 +11,8 @@ from browser import document, html, ajax, alert   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-MAP_WIDTH=814
-MAP_HEIGHT=720
+MAP_WIDTH=667
+MAP_HEIGHT=673
 MAP_FILE='map.png'
 
 my_panel = html.DIV(id="play")
