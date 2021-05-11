@@ -690,6 +690,7 @@ def submit_orders():
             if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 selected_active_unit = position_data.closest_unit(pos, True)
 
+
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
@@ -699,38 +700,45 @@ def submit_orders():
             # can be None if no retreating unit on board
             if selected_active_unit is not None:
 
-                if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+                if selected_active_unit.role != variant_data.roles[role_id]:
 
-                    legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
-                    buttons_right <= legend_selected_unit
+                    alert("Bien essayé, mais cette unité ne vous appartient pas.")
+                    selected_active_unit = None
 
-                legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
-                buttons_right <= legend_select_order
-                buttons_right <= html.BR()
+                else:
 
-                legend_select_order21 = html.I("Raccourcis clavier :")
-                buttons_right <= legend_select_order21
-                buttons_right <= html.BR()
+                    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
 
-                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
-                    legend_select_order22 = html.I(info)
-                    buttons_right <= legend_select_order22
+                        legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
+                        buttons_right <= legend_selected_unit
+
+                    legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
+                    buttons_right <= legend_select_order
                     buttons_right <= html.BR()
 
-                for order_type in mapping.OrderTypeEnum:
-                    if order_type.compatible(advancement_season):
-                        input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
-                        buttons_right <= html.BR()
-                        input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
-                        buttons_right <= html.BR()
-                        buttons_right <= input_select
+                    legend_select_order21 = html.I("Raccourcis clavier :")
+                    buttons_right <= legend_select_order21
+                    buttons_right <= html.BR()
 
-                if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                    order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, None)
-                    orders_data.insert_order(order)
+                    for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                        legend_select_order22 = html.I(info)
+                        buttons_right <= legend_select_order22
+                        buttons_right <= html.BR()
 
-                    # update map
-                    callback_render(None)
+                    for order_type in mapping.OrderTypeEnum:
+                        if order_type.compatible(advancement_season):
+                            input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                            buttons_right <= html.BR()
+                            input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                            buttons_right <= html.BR()
+                            buttons_right <= input_select
+
+                    if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                        order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, None)
+                        orders_data.insert_order(order)
+
+                        # update map
+                        callback_render(None)
 
             stack_orders(buttons_right)
             if not orders_data.empty():
@@ -1498,29 +1506,36 @@ def submit_communication_orders():
             # can be None if no retreating unit on board
             if selected_active_unit is not None:
 
-                legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
-                buttons_right <= legend_selected_unit
+                if selected_active_unit.role != variant_data.roles[role_id]:
 
-                legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
-                buttons_right <= legend_select_order
-                buttons_right <= html.BR()
+                    alert("Bien essayé, mais cette unité ne vous appartient pas.")
+                    selected_active_unit = None
 
-                legend_select_order21 = html.I("Raccourcis clavier :")
-                buttons_right <= legend_select_order21
-                buttons_right <= html.BR()
+                else:
 
-                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
-                    legend_select_order22 = html.I(info)
-                    buttons_right <= legend_select_order22
+                    legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
+                    buttons_right <= legend_selected_unit
+
+                    legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination)")
+                    buttons_right <= legend_select_order
                     buttons_right <= html.BR()
 
-                for order_type in mapping.OrderTypeEnum:
-                    if order_type.compatible(mapping.SeasonEnum.SPRING_SEASON):
-                        input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                    legend_select_order21 = html.I("Raccourcis clavier :")
+                    buttons_right <= legend_select_order21
+                    buttons_right <= html.BR()
+
+                    for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                        legend_select_order22 = html.I(info)
+                        buttons_right <= legend_select_order22
                         buttons_right <= html.BR()
-                        input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
-                        buttons_right <= html.BR()
-                        buttons_right <= input_select
+
+                    for order_type in mapping.OrderTypeEnum:
+                        if order_type.compatible(mapping.SeasonEnum.SPRING_SEASON):
+                            input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                            buttons_right <= html.BR()
+                            input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                            buttons_right <= html.BR()
+                            buttons_right <= input_select
 
             stack_orders(buttons_right)
             if not orders_data.empty():
