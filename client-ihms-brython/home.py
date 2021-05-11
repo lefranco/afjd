@@ -22,7 +22,14 @@ note_table = html.TABLE()
 note_table.style = {
     "border": "solid",
 }
-text1 = html.B(html.CODE("Cette interface de jeu n'a reçu aucun financement (par souscriptions) de la part de l'Association Française des Joueurs de Diplomatie. En effet, une autre interface s'appuyant sur le mêmes serveurs de résolution (et gérant donc les mêmes parties) est actuellement en préparation. Cette dernière sera, en apparence, plus conforme au web moderne tel qu'attendu par les jeunes générations :-)..."))
+text1 = html.B(html.CODE("""
+Bienvenue dans la version Beta du site diplomania.
+Information importante : vous ne visualisez ici que le moteur de jeu sans le design. Ce dernier est en cours dans les mains de notre graphiste Wenz partiellement financé par les dons du crowfunding.
+Le moteur que vous allez tester est le fruit du très gros travail de Jérémie (Palpatine) membre du CA et bénévole.
+On compte sur vous sur ces premiers tests et on vous promet très prochainement la version « habillée » par les soins de wenz.
+Et tout cela en open source bien sûr !
+merci de nous remonter vos remarque sur le forum de diplomania.
+"""))
 my_panel <= text1
 col = html.TD(text1)
 col <= text1
