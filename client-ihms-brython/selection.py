@@ -9,7 +9,6 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import common
 
-import debug
 
 my_panel = html.DIV(id="select")
 

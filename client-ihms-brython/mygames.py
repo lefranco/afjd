@@ -10,6 +10,7 @@ from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
+import tools
 import config
 import mapping
 import selection
@@ -124,7 +125,7 @@ def my_games():
             return
 
         # select display (should be a user choice)
-        display_chosen = common.get_display_from_variant(variant_name_loaded)
+        display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
         parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 

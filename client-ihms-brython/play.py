@@ -13,6 +13,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 import common
+import tools
 import geometry
 import mapping
 import login
@@ -234,7 +235,7 @@ def show_position():
         return
 
     # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
+    display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
@@ -1161,7 +1162,7 @@ def submit_orders():
         return
 
     # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
+    display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
@@ -1873,7 +1874,7 @@ def submit_communication_orders():
         return
 
     # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
+    display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
@@ -2145,7 +2146,7 @@ def negotiate():
     variant_content_loaded = dict(variant_content_loaded)
 
     # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
+    display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
@@ -2425,7 +2426,7 @@ def declare():
         return
 
     # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
+    display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
@@ -2639,7 +2640,7 @@ def vote():
         return
 
     # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
+    display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
@@ -2845,7 +2846,7 @@ def show_history():
         return
 
     # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
+    display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
@@ -3094,7 +3095,7 @@ def game_master():
         return
 
     # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
+    display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
@@ -3404,7 +3405,7 @@ def show_players_in_game():
         return
 
     # select display (should be a user choice)
-    display_chosen = common.get_display_from_variant(variant_name_loaded)
+    display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
