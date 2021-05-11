@@ -52,6 +52,7 @@ def select_game():
 
             legend_game = html.LEGEND(f"Parties basées sur la variante {variant} dans l'état {rev_state_code_table[current_state]}", title="Sélection de la partie")
             form <= legend_game
+            form <= html.BR()
 
             input_game = html.SELECT(type="select-one", value="")
             game_list = sorted([g['name'] for g in games_data.values() if g['variant'] == variant and g['current_state'] == current_state])
@@ -127,6 +128,7 @@ def render(panel_middle):
 
     if my_sub_panel:
         my_panel <= html.B("Sélectionnez la partie du site avec laquelle vous souhaitez interagir")
+        my_panel <= html.BR()
         my_panel <= html.BR()
         my_panel <= my_sub_panel
 
