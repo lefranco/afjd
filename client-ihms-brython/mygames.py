@@ -67,8 +67,8 @@ def my_games():
 
         time_stamp_now = time.time()
         time_now = datetime.datetime.fromtimestamp(time_stamp_now, datetime.timezone.utc)
-        time_now_str = datetime.datetime.strftime(time_now, "%d-%m-%Y %H:%M:%S")
-        description = f"Date et heure actuellement : {time_now_str} (temps GMT)"
+        time_now_str = datetime.datetime.strftime(time_now, "%d-%m-%Y %H:%M:%S GMT")
+        description = f"Pour information, date et heure actuellement : {time_now_str}"
 
         clock_panel <= html.B(description)
         panel <= clock_panel
@@ -168,8 +168,8 @@ def my_games():
                 datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
                 deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
                 deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
-                deadline_loaded = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
-                value = deadline_loaded
+                deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
+                value = deadline_loaded_str
 
             if field == 'current_state':
                 state_loaded = value
