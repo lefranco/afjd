@@ -11,7 +11,7 @@ my_panel = html.DIV(id="home")
 title1 = html.H2("Lien utile : Diplomania")
 my_panel <= title1
 
-link1 = html.A(href="http://www.diplomania.fr (brique sociale)")
+link1 = html.A(href="http://www.diplomania.fr")
 link1 <= "Diplomania : Le site officiel de l'Association Française des Joueurs de Diplomatie (brique sociale)"
 my_panel <= link1
 
