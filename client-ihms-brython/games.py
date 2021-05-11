@@ -147,7 +147,7 @@ def create_game():
         # these are automatic
         time_stamp = time.time()
         time_creation = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-        time_creation_str = datetime.datetime.strftime(time_creation, "%d/%m/%Y %H:%M:%S")
+        time_creation_str = datetime.datetime.strftime(time_creation, "%d-%m-%Y %H:%M:%S")
         description = f"game created at {time_creation_str} (gmt time) by {pseudo} variant {variant}"
         deadline = int(time_stamp) + DEADLINE_DELAY_SEC
         state = 0
@@ -704,7 +704,6 @@ def change_deadline_game():
             deadline_loaded = req_result['deadline']
             datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
             deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-
             deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
 
         json_dict = dict()
@@ -771,9 +770,9 @@ def change_deadline_game():
     # get GMT date and time
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d/%m/%Y %H:%M:%S")
+    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
-    special_legend = html.LEGEND(f"Pour information, le temps GMT en ce moment est {date_now_gmt_str}")
+    special_legend = html.LEGEND(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     form <= special_legend
     form <= html.BR()
 

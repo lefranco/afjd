@@ -75,7 +75,7 @@ def get_game_status(variant_data, game_parameters_loaded, full):
     datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
     deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
     deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
-    game_deadline = f"{deadline_loaded_day} {deadline_loaded_hour}"
+    game_deadline_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
 
     game_status_table = html.TABLE()
     game_status_table.style = {
@@ -103,7 +103,7 @@ def get_game_status(variant_data, game_parameters_loaded, full):
         "border": "solid",
     }
     row <= col
-    col = html.TD(f"DL {game_deadline} GMT")
+    col = html.TD(f"DL {game_deadline_str}")
     col.style = {
         "border": "solid",
     }
