@@ -199,7 +199,7 @@ def my_games():
                 # popup if new
                 popup = ""
                 if time_stamp_last_event > time_stamp_last_visit:
-                    popup = html.IMG(src="./data/new.gif")
+                    popup = html.IMG(src="./data/new_content.gif", title="Nouvelle(s) déclaration(s)")
                 value = popup
 
             if field == 'new_messages':
@@ -215,7 +215,7 @@ def my_games():
                 # popup if new
                 popup = ""
                 if time_stamp_last_event > time_stamp_last_visit:
-                    popup = html.IMG(src="./data/new.gif")
+                    popup = html.IMG(src="./data/new_content.gif", title="Nouveau(x) message(s)")
                 value = popup
 
             col = html.TD(value)
