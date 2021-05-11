@@ -65,10 +65,13 @@ def select_display():
 
         with open(f"./variants/{variant_name_loaded}/{interface}/README", "r") as file_ptr:
             lines = file_ptr.readlines()
-        interface_description = '\n'.join(lines)
 
-        legend_game = html.LEGEND(interface_description, title="Sélection de l'interface")
-        form <= legend_game
+        description = html.DIV()
+        for line in lines:
+            description <= line
+            description <= html.BR()
+
+        form <= description
         form <= html.BR()
 
         form <= html.BR()
