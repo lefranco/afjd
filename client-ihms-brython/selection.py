@@ -9,6 +9,8 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import common
 
+import debug
+
 my_panel = html.DIV(id="select")
 
 
@@ -28,29 +30,65 @@ def select_game():
     if not games_data:
         return None
 
-    form = html.FORM()
+    # list the variants we have0
+    variants = {d['variant'] for d in games_data.values()}
+    print(f"{variants=}")
 
-    legend_game = html.LEGEND("Partie", title="Sélection de la partie")
-    form <= legend_game
+    # list the states we have
+    current_states = {d['current_state'] for d in games_data.values()}
+    print(f"{current_states=}")
 
-    input_game = html.SELECT(type="select-one", value="")
-    for game in sorted([g['name'] for g in games_data.values()]):
-        option = html.OPTION(game)
-        if 'GAME' in storage:
-            if storage['GAME'] == game:
-                option.selected = True
-        input_game <= option
+    select_table = html.TABLE()
+    select_table.style = {
+        "border": "solid",
+    }
 
-    form <= input_game
-    form <= html.BR()
+    rev_state_code_table = {v:k for k,v in config.STATE_CODE_TABLE.items()}
 
-    form <= html.BR()
+    for variant in variants:
+        for current_state in current_states:
 
-    input_select_game = html.INPUT(type="submit", value="sélectionner la partie")
-    input_select_game.bind("click", select_game_callback)
-    form <= input_select_game
+            form = html.FORM()
 
-    return form
+            legend_game = html.LEGEND(f"Parties basées sur la variante {variant} dans l'état {rev_state_code_table[current_state]}", title="Sélection de la partie")
+            form <= legend_game
+
+            input_game = html.SELECT(type="select-one", value="")
+            game_list = sorted([g['name'] for g in games_data.values() if g['variant'] == variant and g['current_state'] == current_state])
+            for game in game_list:
+
+                option = html.OPTION(game)
+                if 'GAME' in storage:
+                    if storage['GAME'] == game:
+                        option.selected = True
+                input_game <= option
+
+            form <= input_game
+            form <= html.BR()
+
+            form <= html.BR()
+            input_select_game = html.INPUT(type="submit", value="sélectionner la partie")
+            input_select_game.bind("click", select_game_callback)
+            form <= input_select_game
+
+            form <= html.BR()
+            form <= html.BR()
+
+            col = html.TD()
+            col.style = {
+                "border": "solid",
+            }
+            col <= form
+
+            row = html.TR()
+            row.style = {
+                "border": "solid",
+            }
+            row <= col
+
+            select_table <= row
+
+    return select_table
 
 
 def unselect_game():
