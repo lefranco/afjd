@@ -65,8 +65,8 @@ def my_games():
 
         clock_panel = html.DIV(id="clock")
 
-        time_stamp = time.time()
-        time_now = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+        time_stamp_now = time.time()
+        time_now = datetime.datetime.fromtimestamp(time_stamp_now, datetime.timezone.utc)
         time_now_str = datetime.datetime.strftime(time_now, "%d-%m-%Y %H:%M:%S")
         description = f"Date et heure actuellement : {time_now_str} (temps GMT)"
 
