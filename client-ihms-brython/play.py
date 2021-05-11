@@ -20,7 +20,7 @@ import sandbox
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'paramètres', 'joueurs']
+OPTIONS = ['position', 'ordonner', 'taguer', 'chatter', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'paramètres', 'joueurs']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -1982,7 +1982,17 @@ def submit_communication_orders():
     my_sub_panel <= my_sub_panel2
 
 
-# the idea is not to loose the content of a message if not destinee were sepcified
+
+def visual_chat():
+    """ negotiate """
+
+    my_sub_panel <= """
+      Here will go widgets to chat by video
+    """
+
+
+
+# the idea is not to loose the content of a message if not destinee were specified
 content_backup = None  # pylint: disable=invalid-name
 
 
@@ -3563,6 +3573,8 @@ def load_option(_, item_name):
         submit_orders()
     if item_name == 'taguer':
         submit_communication_orders()
+    if item_name == 'chatter':
+        visual_chat()
     if item_name == 'négocier':
         negotiate()
     if item_name == 'déclarer':
