@@ -1,8 +1,8 @@
 {
 
 	"map": {
-		"width": 630,
-		"height": 535
+		"width": 667,
+		"height": 673
 	},
 
 
@@ -475,10 +475,10 @@
         "47": {
             "name": "par",
             "full_name": "Paris",
-            "x_legend_pos": 176,
-            "y_legend_pos": 338,
-            "x_pos": 179,
-            "y_pos": 320
+            "x_legend_pos": 194,
+            "y_legend_pos": 341,
+            "x_pos": 194,
+            "y_pos": 355
         },
         "48": {
             "name": "pic",
