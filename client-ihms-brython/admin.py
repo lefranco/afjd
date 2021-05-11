@@ -609,7 +609,7 @@ def rectify():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
-    legend_select_unit = html.LEGEND("Clic-long pour effacer une unité, clic-court pour effacer une possession")
+    legend_select_unit = html.LEGEND("Clic-long sur une unité pour l'effacer, clic-court sur une possession pour l'effacer")
     buttons_right <= legend_select_unit
 
     put_submit(buttons_right)
