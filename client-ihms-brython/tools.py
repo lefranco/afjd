@@ -34,7 +34,7 @@ def select_display():
 
     variant_name_loaded = None
 
-    def select_display_callback(interface):
+    def select_display_callback(_, interface):
         """ select_display_callback """
 
         reference = f'DISPLAY_{variant_name_loaded}'.upper()
@@ -76,7 +76,7 @@ def select_display():
 
         form <= html.BR()
         input_select_interface = html.INPUT(type="submit", value="sélectionner l'interface")
-        input_select_interface.bind("click", lambda _, i=interface: select_display_callback(i))
+        input_select_interface.bind("click", lambda e, i=interface: select_display_callback(e, i))
 
         form <= input_select_interface
 
