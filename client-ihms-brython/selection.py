@@ -16,7 +16,7 @@ my_panel = html.DIV(id="select")
 def select_game():
     """ select_game """
 
-    def select_game_callback(_):
+    def select_game_callback(_, input_game):
         """ select_game_callback """
 
         game = input_game.value
@@ -66,7 +66,7 @@ def select_game():
 
             form <= html.BR()
             input_select_game = html.INPUT(type="submit", value="sélectionner la partie")
-            input_select_game.bind("click", select_game_callback)
+            input_select_game.bind("click", lambda e, i=input_game: select_game_callback(e, i))
             form <= input_select_game
 
             form <= html.BR()
