@@ -326,11 +326,11 @@ def main() -> None:
     regions_pos_table = dict()
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
 
-        # for wenz
-        regions_raw_pos_table[num] = (x_chosen, y_chosen)
-
         # for regions :  the polylabel
         x_chosen, y_chosen = path.polylabel()
+
+        # for wenz
+        regions_raw_pos_table[num] = (x_chosen, y_chosen)
 
         # unit in png coords
         x_unit_pos = round(x_chosen * png_width / viewbox_width)
