@@ -6,8 +6,6 @@
 
 from browser import document, html  # pylint: disable=import-error # noqa: E402
 
-# remove at some point
-import debug
 
 import show    # noqa: E402
 
