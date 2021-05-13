@@ -47,7 +47,13 @@ def select_game():
 
             form = html.FORM()
 
-            legend_game = html.LEGEND(f"Parties basées sur la variante {variant} dans l'état {rev_state_code_table[current_state]}", title="Sélection de la partie")
+            legend = html.P()
+            legend <= "Parties basées sur la variante "
+            legend <= html.B(html.EM(variant))
+            legend <= " dans l'état "
+            legend <= html.B(rev_state_code_table[current_state])
+
+            legend_game = html.LEGEND(legend, title="Sélection de la partie")
             form <= legend_game
             form <= html.BR()
 
@@ -65,7 +71,7 @@ def select_game():
             form <= html.BR()
 
             form <= html.BR()
-            input_select_game = html.INPUT(type="submit", value="sélectionner la partie")
+            input_select_game = html.INPUT(type="submit", value="sélectionner cette partie")
             input_select_game.bind("click", lambda e, i=input_game: select_game_callback(e, i))
             form <= input_select_game
 
