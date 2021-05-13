@@ -3323,21 +3323,54 @@ def show_game_parameters():
         "border": "solid",
     }
     for key, value in game_parameters_loaded.items():
+
+        if key in ['description', 'variant', 'deadline', 'current_state', 'current_advancement']:
+            continue
+
         row = html.TR()
         row.style = {
             "border": "solid",
         }
 
-        col1 = html.TD(key)
+        parameter_name = {
+            'name': "nom de la partie (pour rappel)",
+            'archive': "archive (la partie n'est pas jouée, elle est juste consultable)",
+            'anonymous': "anonyme (on sait pas qui joue quel rôle dans la partie)",
+            'silent': "silencieuse (on peut pas déclarer ni négocier - sauf avec l'arbitre)",
+            'cumulate': "cumulable (un joueur peut prenbdre plusieurs rôle dans la partie)",
+            'fast': "rapide (on ne tient pas compte des dates limites pour résoudre)",
+            'speed_moves': "vitesse pour les mouvements (en jours)",
+            'speed_retreats': "vitesse pour les retraites (en jours)",
+            'speed_moves': "vitesse pour les mouvements (en jours)",
+            'speed_adjustments': "vitesse pour les ajustements (en jours)",
+            'cd_possible_moves': "désordre civil possible pour les mouvements",
+            'cd_possible_retreats': "désordre civil possible pour les retraites",
+            'cd_possible_builds': "désordre civil possible pour les constructions",
+            'cd_possible_removals': "désordre civil possible pour les suppressions",
+            'play_weekend': "on joue le week-end",
+            'manual': "l'attribution des rôle est manuelle (par l'arbitre)",
+            'access_code': "code d'accès pour la partie",
+            'access_restriction_reliability': "restriction d'accès sur la fiabilité",
+            'access_restriction_regularity': "restriction d'accès sur la régularité",
+            'access_restriction_performance': "restriction d'accès sur la performance",
+            'nb_max_cycles_to_play': "nombre maximum de cycles (années) à jouer",
+            'victory_centers': "nombre de centres pour la victoire"
+        } [key]
+
+        col1 = html.TD(parameter_name)
         col1.style = {
             "border": "solid",
         }
         row <= col1
 
-        if key in ['description', 'variant', 'deadline', 'current_state', 'current_advancement']:
-            continue
+        if value is False:
+            parameter_value = "Non"
+        elif value is True:
+            parameter_value = "Oui"
+        else:
+            parameter_value = value
 
-        col2 = html.TD(value)
+        col2 = html.TD(parameter_value)
         col2.style = {
             "border": "solid",
         }
