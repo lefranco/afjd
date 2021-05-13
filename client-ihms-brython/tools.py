@@ -75,7 +75,7 @@ def select_display():
         form <= html.BR()
 
         form <= html.BR()
-        input_select_interface = html.INPUT(type="submit", value="sélectionner l'interface")
+        input_select_interface = html.INPUT(type="submit", value="sélectionner cette interface")
         input_select_interface.bind("click", lambda e, i=interface: select_display_callback(e, i))
 
         form <= input_select_interface
