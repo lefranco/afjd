@@ -111,27 +111,7 @@
                     conn.on('data', function (data) {
                         console.log("Data recieved");
                         var cueString = "<span class=\"cueMsg\">Cue: </span>";
-                        switch (data) {
-                            case 'Go':
-                                go();
                                 addMessage(cueString + data);
-                                break;
-                            case 'Fade':
-                                fade();
-                                addMessage(cueString + data);
-                                break;
-                            case 'Off':
-                                off();
-                                addMessage(cueString + data);
-                                break;
-                            case 'Reset':
-                                reset();
-                                addMessage(cueString + data);
-                                break;
-                            default:
-                                addMessage("<span class=\"peerMsg\">Peer: </span>" + data);
-                                break;
-                        };
                     });
                     conn.on('close', function () {
                         status.innerHTML = "Connection reset<br>Awaiting connection...";
