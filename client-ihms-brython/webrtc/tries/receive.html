@@ -50,6 +50,7 @@
                  * peer object.
                  */
                  function initialize() {
+                 
                     // Create own peer object with connection to shared PeerJS server
                     peer = new Peer(null, {
                         debug: 2
@@ -68,6 +69,7 @@
                         recvId.innerHTML = "ID: " + peer.id;
                         status.innerHTML = "Awaiting connection...";
                     });
+                    
                     peer.on('connection', function (c) {
                         // Allow only a single connection
                         if (conn && conn.open) {
@@ -83,6 +85,7 @@
                         status.innerHTML = "Connected";
                         ready();
                     });
+                    
                     peer.on('disconnected', function () {
                         status.innerHTML = "Connection lost. Please reconnect";
                         console.log('Connection lost. Please reconnect');
@@ -92,11 +95,13 @@
                         peer._lastServerId = lastPeerId;
                         peer.reconnect();
                     });
+                    
                     peer.on('close', function() {
                         conn = null;
                         status.innerHTML = "Connection destroyed. Please refresh";
                         console.log('Connection destroyed');
                     });
+                    
                     peer.on('error', function (err) {
                         console.log(err);
                         alert('' + err);

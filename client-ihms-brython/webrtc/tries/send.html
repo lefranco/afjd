@@ -53,6 +53,7 @@
                  * peer object.
                  */
                 function initialize() {
+                
                     // Create own peer object with connection to shared PeerJS server
                     peer = new Peer(null, {
                         debug: 2
@@ -69,6 +70,7 @@
 
                         console.log('ID: ' + peer.id);
                     });
+                    
                     peer.on('connection', function (c) {
                         // Disallow incoming connections
                         c.on('open', function() {
@@ -76,6 +78,7 @@
                             setTimeout(function() { c.close(); }, 500);
                         });
                     });
+                    
                     peer.on('disconnected', function () {
                         status.innerHTML = "Connection lost. Please reconnect";
                         console.log('Connection lost. Please reconnect');
@@ -85,11 +88,13 @@
                         peer._lastServerId = lastPeerId;
                         peer.reconnect();
                     });
+                    
                     peer.on('close', function() {
                         conn = null;
                         status.innerHTML = "Connection destroyed. Please refresh";
                         console.log('Connection destroyed');
                     });
+                    
                     peer.on('error', function (err) {
                         console.log(err);
                         alert('' + err);
@@ -103,6 +108,7 @@
                  * connection and data received on it.
                  */
                 function join() {
+                
                     // Close old connection
                     if (conn) {
                         conn.close();
@@ -117,6 +123,7 @@
                         status.innerHTML = "Connected to: " + conn.peer;
                         console.log("Connected to: " + conn.peer);
                     });
+                    
                     // Handle incoming data (messages only since this is the signal sender)
                     conn.on('data', function (data) {
                         addMessage("<span class=\"peerMsg\">Peer:</span> " + data);
