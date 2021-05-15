@@ -64,7 +64,11 @@ def send_mail_checker(code: int, email_dest: str) -> bool:
 
     subject = "Ceci est un email pour vérifier votre adresse email"
     body = ""
-    body += "Le code de confirmation à utiliser (sur le site) pour valider votre adresse email est :"
+    body += "Vous recevez cet email pour valider votre compte."
+    body += "\n"
+    body += "Si vous êtes bien à l'origine de sa création, rendez-vous dans le menu mon compte/valider mon mail et entrez le code ci dessous."
+    body += "\n"
+    body += "Merci et bonnes parties."
     body += "\n"
     body += str(code)
 

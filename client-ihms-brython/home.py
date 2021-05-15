@@ -11,7 +11,7 @@ my_panel = html.DIV(id="home")
 title1 = html.H2("Lien utile : Diplomania")
 my_panel <= title1
 
-link1 = html.A(href="http://www.diplomania.fr")
+link1 = html.A(href="http://www.diplomania.fr", target="_blank")
 link1 <= "Diplomania : Le site officiel de l'Association Française des Joueurs de Diplomatie (brique sociale)"
 my_panel <= link1
 
@@ -63,14 +63,6 @@ my_panel <= emails_support_img
 
 text3 = html.P("N'oubliez de bien préciser une procédure pour reproduire le problème, la différence entre le résultat obtenu et le résultat attendu...")
 my_panel <= text3
-
-title5 = html.H2("Une version simplifiée des règles du Jeu")
-my_panel <= title5
-
-my_panel <= html.BR()
-
-iframe = html.IFRAME(src="./docs/Summary_rules_fr.html", width='100%', height=500)
-my_panel <= iframe
 
 
 def render(panel_middle):
