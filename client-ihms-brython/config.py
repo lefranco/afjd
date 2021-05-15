@@ -7,7 +7,7 @@ import json
 TIMEOUT_SERVER = 2
 
 # timeout for message when OK
-REMOVE_AFTER = 10
+REMOVE_AFTER = 15
 
 # to display state of a game
 STATE_CODE_TABLE = {'en attente': 0, 'en cours': 1, 'terminée': 2}

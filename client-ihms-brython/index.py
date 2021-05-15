@@ -33,12 +33,12 @@ document <= title
 
 
 # H2
-H2 = "Site pour jouer à Diplomatie et ses variantes en utilisant l'architecture REST pour l'A.F.J.D"
+H2 = "Moteur de jeu du site Diplomania. Version BETA (sans le graphisme)"
 h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
 
-OPTIONS = ['accueil', 'login', 'sélectionner partie', 'sélectionner interface', 'mon compte', 'mes opportunités', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie', 'bac à sable', 'jouer contre l\'I.A.', 'listes', 'coin technique', 'administration']
+OPTIONS = ['accueil', 'login', 'sélectionner partie', 'sélectionner interface', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie', 'bac à sable', 'jouer contre l\'I.A.', 'listes', 'coin technique', 'administration']
 
 # overall_top
 overall_top = html.DIV()
@@ -77,7 +77,7 @@ def load_option(_, item_name):
         tools.render(panel_middle)
     if item_name == 'mon compte':
         account.render(panel_middle)
-    if item_name == 'mes opportunités':
+    if item_name == 'rejoindre une partie':
         opportunities.render(panel_middle)
     if item_name == 'mes parties':
         mygames.render(panel_middle)

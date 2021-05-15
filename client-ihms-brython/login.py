@@ -94,7 +94,7 @@ def login_callback(_):
 def forgot_callback(_):
     """ forgot_callback """
 
-    alert("Désolé: la récupération du mot de passe n'est pas encore implémentée - vous pouvez contacter le support qui vous forcera un nouveau mot de passe")
+    alert("Désolé: la récupération du mot de passe n'est pas encore implémentée - vous pouvez contacter le support (cf. page d'accueil) qui vous forcera un nouveau mot de passe")
 
 
 def logout():
