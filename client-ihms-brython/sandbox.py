@@ -743,9 +743,6 @@ def sandbox():
     unit_info_table = dict()
 
     reserve_table = html.TABLE()
-    reserve_table.style = {
-        "border": "solid",
-    }
 
     num = 1
     for role in variant_data.roles.values():
@@ -755,24 +752,15 @@ def sandbox():
             continue
 
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
 
         # country name
         col = html.TD()
-        col.style = {
-            "border": "solid",
-        }
         col <= html.B(variant_data.name_table[role])
         row <= col
 
         for type_unit in mapping.UnitTypeEnum:
 
             col = html.TD()
-            col.style = {
-                "border": "solid",
-            }
 
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
                 draggable_unit = mapping.Army(position_data, role, None, None)

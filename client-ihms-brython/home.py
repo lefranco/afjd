@@ -19,9 +19,6 @@ title2 = html.H2("Note importante")
 my_panel <= title2
 
 note_table = html.TABLE()
-note_table.style = {
-    "border": "solid",
-}
 text1 = html.B(html.CODE("""
 Bienvenue dans la version Beta du site diplomania.
 Information importante : vous ne visualisez ici que le moteur de jeu sans le design. Ce dernier est en cours dans les mains de notre graphiste Wenz partiellement financé par les dons du crowfunding.

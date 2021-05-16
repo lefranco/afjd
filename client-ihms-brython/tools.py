@@ -55,9 +55,6 @@ def select_display():
         return None
 
     select_table = html.TABLE()
-    select_table.style = {
-        "border": "solid",
-    }
 
     for interface in INTERFACE_TABLE[variant_name_loaded]:
 
@@ -84,15 +81,9 @@ def select_display():
         form <= html.BR()
 
         col = html.TD()
-        col.style = {
-            "border": "solid",
-        }
         col <= form
 
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
         row <= col
 
         select_table <= row

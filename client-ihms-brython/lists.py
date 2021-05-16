@@ -24,11 +24,6 @@ def show_players_data():
         return
 
     players_table = html.TABLE()
-    players_table.style = {
-        "padding": "5px",
-        "backgroundColor": "#aaaaaa",
-        "border": "solid",
-    }
 
     # TODO : make it possible to sort etc...
     fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone']
@@ -38,24 +33,14 @@ def show_players_data():
     for field in fields:
         field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire'}[field]
         col = html.TD(field_fr)
-        col.style = {
-            "border": "solid",
-            "font-weight": "bold",
-        }
         thead <= col
     players_table <= thead
 
     for data in sorted(players_dict.values(), key=lambda g: g['pseudo']):
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
         for field in fields:
             value = data[field]
             col = html.TD(value)
-            col.style = {
-                "border": "solid",
-            }
             row <= col
         players_table <= row
 
@@ -71,11 +56,6 @@ def show_games_data():
         return
 
     games_table = html.TABLE()
-    games_table.style = {
-        "padding": "5px",
-        "backgroundColor": "#aaaaaa",
-        "border": "solid",
-    }
 
     # TODO : make it possible to sort etc...
     fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement']
@@ -85,18 +65,11 @@ def show_games_data():
     for field in fields:
         field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'avancement'}[field]
         col = html.TD(field_fr)
-        col.style = {
-            "border": "solid",
-            "font-weight": "bold",
-        }
         thead <= col
     games_table <= thead
 
     for data in sorted(games_dict.values(), key=lambda g: g['name']):
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
         for field in fields:
             value = data[field]
             if field == 'deadline':
@@ -114,9 +87,6 @@ def show_games_data():
                         break
                 value = state_loaded
             col = html.TD(value)
-            col.style = {
-                "border": "solid",
-            }
             row <= col
         games_table <= row
 
@@ -180,11 +150,6 @@ def show_game_masters_data():
         return
 
     game_masters_table = html.TABLE()
-    game_masters_table.style = {
-        "padding": "5px",
-        "backgroundColor": "#aaaaaa",
-        "border": "solid",
-    }
 
     # TODO : make it possible to sort etc...
     fields = ['game', 'master']
@@ -194,18 +159,11 @@ def show_game_masters_data():
     for field in fields:
         field_fr = {'game': 'partie', 'master': 'arbitre'}[field]
         col = html.TD(field_fr)
-        col.style = {
-            "border": "solid",
-            "font-weight": "bold",
-        }
         thead <= col
     game_masters_table <= thead
 
     for data in sorted(game_masters_list, key=lambda d: games_dict[str(d['game'])]['name']):
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
         for field in fields:
             value_index = str(data[field])
             if field == 'game':
@@ -215,9 +173,6 @@ def show_game_masters_data():
                 value_data = players_dict[value_index]
                 value = value_data['pseudo']
             col = html.TD(value)
-            col.style = {
-                "border": "solid",
-            }
             row <= col
         game_masters_table <= row
 
@@ -249,11 +204,6 @@ def show_no_game_masters_data():
         return
 
     no_game_masters_table = html.TABLE()
-    no_game_masters_table.style = {
-        "padding": "5px",
-        "backgroundColor": "#aaaaaa",
-        "border": "solid",
-    }
 
     # TODO : make it possible to sort etc...
     fields = ['game']
@@ -263,10 +213,6 @@ def show_no_game_masters_data():
     for field in fields:
         field_fr = {'game': 'partie'}[field]
         col = html.TD(field_fr)
-        col.style = {
-            "border": "solid",
-            "font-weight": "bold",
-        }
         thead <= col
     no_game_masters_table <= thead
 
@@ -274,14 +220,8 @@ def show_no_game_masters_data():
 
     for data in sorted(no_game_masters_list, key=lambda g: g['name']):
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
         value = data['name']
         col = html.TD(value)
-        col.style = {
-            "border": "solid",
-        }
         row <= col
         no_game_masters_table <= row
 
