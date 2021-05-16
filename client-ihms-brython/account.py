@@ -44,6 +44,7 @@ def information_about_emails():
 
     information = html.DIV()
     information <= "Vous recevrez un email pour confimer votre adresse mail, au démarrage et à l'arrêt de vos parties."
+    information <= html.BR()
     information <= "Rien de plus !"
     return information
 
