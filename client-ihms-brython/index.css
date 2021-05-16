@@ -35,15 +35,7 @@ li{
     text-align: left;
 }
 
-button{
-    background-color: #dadada;
-    color: #113;
-    border-style: solid;
-    border-color: #000;
-    border-width: 1px;
-    border-radius: 3px;
-    font-size: 1.2em;
-}
+
 button.btn-ls{
     font-size: 1em;
 }
