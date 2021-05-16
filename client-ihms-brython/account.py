@@ -49,21 +49,12 @@ def information_about_emails():
     case_envoi_email = html.UL()
 
     cas1 = html.LI("pour confimer votre adresse mail")
-    cas1.style = {
-        "list-style-type": "disc",
-    }
     case_envoi_email <= cas1
 
     cas2 = html.LI("au démarrage des parties dans lesquelles vous jouez")
-    cas2.style = {
-        "list-style-type": "disc",
-    }
     case_envoi_email <= cas2
 
     cas3 = html.LI("à l'arrêt des parties dans lesquelles vous jouez")
-    cas3.style = {
-        "list-style-type": "disc",
-    }
     case_envoi_email <= cas3
 
     information <= case_envoi_email
