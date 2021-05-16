@@ -43,23 +43,8 @@ def information_about_emails():
     """ information_about_emails """
 
     information = html.DIV()
-
-    information <= "Vous recevrez un email :"
-
-    case_envoi_email = html.UL()
-
-    cas1 = html.LI("pour confimer votre adresse mail")
-    case_envoi_email <= cas1
-
-    cas2 = html.LI("au démarrage des parties dans lesquelles vous jouez")
-    case_envoi_email <= cas2
-
-    cas3 = html.LI("à l'arrêt des parties dans lesquelles vous jouez")
-    case_envoi_email <= cas3
-
-    information <= case_envoi_email
+    information <= "Vous recevrez un email pour confimer votre adresse mail, au démarrage et à l'arrêt de vos parties."
     information <= "Rien de plus !"
-
     return information
 
 
