@@ -113,3 +113,17 @@ span.python-keyword{
 span.python-builtin{
     color: #0f0;
 }
+
+
+table{
+    border: solid;
+    padding: 5px;
+}
+
+tr{
+    border: solid;
+}
+
+td{
+    border: solid;
+}

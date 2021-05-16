@@ -79,48 +79,24 @@ def get_game_status(variant_data, game_parameters_loaded, full):
     game_deadline_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
 
     game_status_table = html.TABLE()
-    game_status_table.style = {
-        "border": "solid",
-    }
 
     row = html.TR()
-    row.style = {
-        "border": "solid",
-    }
 
     col = html.TD(f"Partie {game_name} ({game_variant})")
-    col.style = {
-        "border": "solid",
-    }
     row <= col
     if full:
         col = html.TD(f"Etat {game_state_readable}")
-        col.style = {
-            "border": "solid",
-        }
         row <= col
     col = html.TD(f"Saison {game_season}")
-    col.style = {
-        "border": "solid",
-    }
     row <= col
     col = html.TD(f"DL {game_deadline_str}")
-    col.style = {
-        "border": "solid",
-    }
     row <= col
     game_status_table <= row
 
     if full:
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
 
         col = html.TD(game_description, colspan="4")
-        col.style = {
-            "border": "solid",
-        }
         row <= col
         game_status_table <= row
 
@@ -138,24 +114,12 @@ def get_game_status_histo(variant_data, game_parameters_loaded, advancement_sele
     game_season = f"{advancement_selected_season_readable} {advancement_selected_year}"
 
     game_status_table = html.TABLE()
-    game_status_table.style = {
-        "border": "solid",
-    }
 
     row = html.TR()
-    row.style = {
-        "border": "solid",
-    }
 
     col = html.TD(f"Partie {game_name} ({game_variant})")
-    col.style = {
-        "border": "solid",
-    }
     row <= col
     col = html.TD(f"Saison {game_season}")
-    col.style = {
-        "border": "solid",
-    }
     row <= col
 
     game_status_table <= row
@@ -2205,46 +2169,28 @@ def negotiate():
     messages = list(messages)
 
     messages_table = html.TABLE()
-    messages_table.style = {
-        "border": "solid",
-    }
 
     thead = html.THEAD()
     for title in ['Date', 'Auteur', 'Destinataire(s)', 'Contenu']:
         col = html.TD(html.B(title))
-        col.style = {
-            "border": "solid",
-        }
         thead <= col
     messages_table <= thead
 
     for from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
 
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
 
         date_desc = datetime.datetime.fromtimestamp(time_stamp)
         col = html.TD(f"{date_desc}")
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         role = variant_data.roles[from_role_id_msg]
         role_name = variant_data.name_table[role]
         role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{from_role_id_msg}.jpg", title=role_name)
         col = html.TD(role_icon_img)
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         col = html.TD()
-        col.style = {
-            "border": "solid",
-        }
 
         for dest_role_id_msg in dest_role_id_msgs:
             role = variant_data.roles[dest_role_id_msg]
@@ -2254,9 +2200,6 @@ def negotiate():
         row <= col
 
         col = html.TD()
-        col.style = {
-            "border": "solid",
-        }
 
         for line in content.split('\n'):
             # new so put in bold
@@ -2469,31 +2412,19 @@ def declare():
     declarations = list(declarations)
 
     declarations_table = html.TABLE()
-    declarations_table.style = {
-        "border": "solid",
-    }
 
     thead = html.THEAD()
     for title in ['Date', 'Auteur', 'Contenu']:
         col = html.TD(html.B(title))
-        col.style = {
-            "border": "solid",
-        }
         thead <= col
     declarations_table <= thead
 
     for anonymous, role_id_msg, time_stamp, content in declarations:
 
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
 
         date_desc = datetime.datetime.fromtimestamp(time_stamp)
         col = html.TD(f"{date_desc}")
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         if role_id_msg != -1:
@@ -2503,20 +2434,12 @@ def declare():
         else:
             role_icon_img = ""
         col = html.TD(role_icon_img)
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         col = html.TD()
         if anonymous:
             col.style = {
-                "border": "solid",
                 "color": "red",
-            }
-        else:
-            col.style = {
-                "border": "solid",
             }
 
         for line in content.split('\n'):
@@ -3135,11 +3058,6 @@ def game_master():
     id2pseudo = {v: k for k, v in players_dict.items()}
 
     game_admin_table = html.TABLE()
-    game_admin_table.style = {
-        "padding": "5px",
-        "backgroundColor": "#aaaaaa",
-        "border": "solid",
-    }
 
     role2pseudo = {v: k for k, v in game_players_dict.items()}
 
@@ -3184,17 +3102,11 @@ def game_master():
             continue
 
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
 
         role = variant_data.roles[role_id]
         role_name = variant_data.name_table[role]
         role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
         col = html.TD(role_icon_img)
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         # player
@@ -3205,9 +3117,6 @@ def game_master():
         else:
             pseudo_there = None
         col = html.TD(pseudo_there if pseudo_there else "")
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         submitted_roles_list = submitted_data['submitted']
@@ -3219,17 +3128,11 @@ def game_master():
         else:
             flag = ""
         col = html.TD(flag)
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         input_civil_disorder = html.INPUT(type="submit", value="mettre en désordre civil")
         input_civil_disorder.bind("click", lambda e, r=role_id: civil_disorder_callback(e, r))
         col = html.TD(input_civil_disorder)
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         if pseudo_there is not None:
@@ -3238,9 +3141,6 @@ def game_master():
         else:
             input_unallocate_role = None
         col = html.TD(input_unallocate_role if input_unallocate_role else "")
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         if pseudo_there is None:
@@ -3265,15 +3165,9 @@ def game_master():
             form = None
 
         col = html.TD(form if form else "")
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         col = html.TD()
-        col.style = {
-            "border": "solid",
-        }
         if role_id in definitive_values_table:
             vote_val = "Prêt pour la résolution" if definitive_values_table[role_id] else "Pas encore prêt pour la résolution"
         else:
@@ -3282,9 +3176,6 @@ def game_master():
         row <= col
 
         col = html.TD()
-        col.style = {
-            "border": "solid",
-        }
         if role_id in vote_values_table:
             vote_val = "Arrêt" if vote_values_table[role_id] else "Continuer"
         else:
@@ -3317,20 +3208,12 @@ def show_game_parameters():
         return
 
     game_params_table = html.TABLE()
-    game_params_table.style = {
-        "padding": "5px",
-        "backgroundColor": "#aaaaaa",
-        "border": "solid",
-    }
     for key, value in game_parameters_loaded.items():
 
         if key in ['description', 'variant', 'deadline', 'current_state', 'current_advancement']:
             continue
 
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
 
         parameter_name = {
             'name': "nom de la partie (pour rappel)",
@@ -3358,9 +3241,6 @@ def show_game_parameters():
         } [key]
 
         col1 = html.TD(parameter_name)
-        col1.style = {
-            "border": "solid",
-        }
         row <= col1
 
         if value is False:
@@ -3371,9 +3251,6 @@ def show_game_parameters():
             parameter_value = value
 
         col2 = html.TD(parameter_value)
-        col2.style = {
-            "border": "solid",
-        }
         row <= col2
 
         game_params_table <= row
@@ -3488,11 +3365,6 @@ def show_players_in_game():
                 submitted_data = dict(submitted_data)
 
     game_players_table = html.TABLE()
-    game_players_table.style = {
-        "padding": "5px",
-        "backgroundColor": "#aaaaaa",
-        "border": "solid",
-    }
 
     fields = ['flag', 'role', 'player', 'orders']
 
@@ -3501,10 +3373,6 @@ def show_players_in_game():
     for field in fields:
         field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'role', 'orders': 'ordres'}[field]
         col = html.TD(field_fr)
-        col.style = {
-            "border": "solid",
-            "font-weight": "bold",
-        }
         thead <= col
     game_players_table <= thead
 
@@ -3513,9 +3381,6 @@ def show_players_in_game():
     for role_id in variant_data.roles:
 
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
 
         # role flag
         if role_id < 0:
@@ -3529,9 +3394,6 @@ def show_players_in_game():
             col = html.TD(role_icon_img)
         else:
             col = html.TD()
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         # role name
@@ -3542,9 +3404,6 @@ def show_players_in_game():
             role_name = variant_data.name_table[role]
 
         col = html.TD(role_name)
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         # player
@@ -3555,9 +3414,6 @@ def show_players_in_game():
         else:
             pseudo_there = None
         col = html.TD(pseudo_there if pseudo_there else "")
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         # orders are in
@@ -3573,9 +3429,6 @@ def show_players_in_game():
         else:
             flag = ""
         col = html.TD(flag)
-        col.style = {
-            "border": "solid",
-        }
         row <= col
 
         game_players_table <= row

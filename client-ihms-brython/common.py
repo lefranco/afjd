@@ -704,19 +704,10 @@ def make_rating_colours_window(ratings, colours):
     """ make_rating_window """
 
     rating_table = html.TABLE()
-    rating_table.style = {
-        "border": "solid",
-    }
     rating_row = html.TR()
-    rating_row.style = {
-        "border": "solid",
-    }
     rating_table <= rating_row
     for role_name, ncenters in ratings.items():
         rating_col = html.TD()
-        rating_col.style = {
-            "border": "solid",
-        }
 
         canvas = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
         ctx = canvas.getContext("2d")
@@ -749,19 +740,10 @@ def make_report_window(report_loaded):
     lines = report_loaded.split('\n')
     split_size = (len(lines) + columns) // columns
     report_table = html.TABLE()
-    report_table.style = {
-        "border": "solid",
-    }
     report_row = html.TR()
-    report_row.style = {
-        "border": "solid",
-    }
     report_table <= report_row
     for chunk_num in range(columns):
         report_col = html.TD()
-        report_col.style = {
-            "border": "solid",
-        }
         chunk_content = lines[chunk_num * split_size: (chunk_num + 1) * split_size]
         for line in chunk_content:
             if line.find("(échec)") != -1 or line.find("(coupé)") != -1 or line.find("(délogée)") != -1 or line.find("(détruite)") != -1 or line.find("(invalide)") != -1:

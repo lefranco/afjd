@@ -36,9 +36,6 @@ def select_game():
     current_states = {d['current_state'] for d in games_data.values()}
 
     select_table = html.TABLE()
-    select_table.style = {
-        "border": "solid",
-    }
 
     rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
 
@@ -79,15 +76,9 @@ def select_game():
             form <= html.BR()
 
             col = html.TD()
-            col.style = {
-                "border": "solid",
-            }
             col <= form
 
             row = html.TR()
-            row.style = {
-                "border": "solid",
-            }
             row <= col
 
             select_table <= row

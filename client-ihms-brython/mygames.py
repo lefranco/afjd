@@ -88,11 +88,6 @@ def my_games():
     time_stamp_now = time.time()
 
     games_table = html.TABLE()
-    games_table.style = {
-        "padding": "5px",
-        "backgroundColor": "#aaaaaa",
-        "border": "solid",
-    }
 
     fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played', 'orders_submitted', 'new_declarations', 'new_messages', 'jump']
 
@@ -101,10 +96,6 @@ def my_games():
     for field in fields:
         field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'ordres soumis', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump': 'sauter'}[field]
         col = html.TD(field_fr)
-        col.style = {
-            "border": "solid",
-            "font-weight": "bold",
-        }
         thead <= col
     games_table <= thead
 
@@ -150,9 +141,6 @@ def my_games():
         data['jump'] = None
 
         row = html.TR()
-        row.style = {
-            "border": "solid",
-        }
         for field in fields:
 
             value = data[field]
@@ -249,7 +237,6 @@ def my_games():
 
             col = html.TD(value)
             col.style = {
-                "border": "solid",
                 'color': colour
             }
 
