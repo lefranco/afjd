@@ -58,7 +58,7 @@ def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     mylogger.LOGGER.info("/add - POST - adding one user")
 
     if not flask.request.is_json:
-        return flask.jsonify({"msg": "Missing JSON in request"}), 400
+        return flask.jsonify({"msg": "1Missing JSON in request"}), 400
 
     user_name = flask.request.json.get('user_name', None)
     if not user_name:
@@ -96,7 +96,7 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     mylogger.LOGGER.info("/remove - POST - removing one user")
 
     if not flask.request.is_json:
-        return flask.jsonify({"msg": "Missing JSON in request"}), 400
+        return flask.jsonify({"msg": "2Missing JSON in request"}), 400
 
     user_name = flask.request.json.get('user_name', None)
     if not user_name:
@@ -133,7 +133,7 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     mylogger.LOGGER.info("/change - POST - updating one user (change password)")
 
     if not flask.request.is_json:
-        return flask.jsonify({"msg": "Missing JSON in request"}), 400
+        return flask.jsonify({"msg": "3Missing JSON in request"}), 400
 
     user_name = flask.request.json.get('user_name', None)
     if not user_name:
@@ -177,7 +177,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     mylogger.LOGGER.info("/login - POST - login in a user")
 
     if not flask.request.is_json:
-        return flask.jsonify({"msg": "Missing JSON in request"}), 400
+        return flask.jsonify({"msg": "4Missing JSON in request"}), 400
 
     user_name = flask.request.json.get('user_name', None)
     if not user_name:
