@@ -36,10 +36,6 @@ def information_about_game():
     """ information_about_account """
 
     information = html.DIV()
-    information <= "Les champs avec (*) ne peuvent plus être changés la partie créée"
-    information <= html.BR()
-    information <= "Les champs avec (**) ne peuvent plus être changés la partie démarrée"
-    information <= html.BR()
     information <= "Survolez les titres pour pour plus de détails"
     return information
 
@@ -209,7 +205,7 @@ def create_game():
     form <= information_about_game()
     form <= html.BR()
 
-    legend_title_main = html.LEGEND("Paramètres principaux de la partie (*)")
+    legend_title_main = html.LEGEND("Paramètres principaux de la partie - ne peuvent plus être changés la partie créée")
     legend_title_main.style = {
         'color': 'red',
     }
@@ -239,7 +235,7 @@ def create_game():
     form <= input_manual
     form <= html.BR()
 
-    legend_title_terms = html.LEGEND("Modalités de la partie (*)")
+    legend_title_terms = html.LEGEND("Modalités de la partie - ne peuvent plus être changés la partie créée")
     legend_title_terms.style = {
         'color': 'red',
     }
@@ -335,7 +331,7 @@ def create_game():
     form <= input_play_weekend
     form <= html.BR()
 
-    legend_title_access = html.LEGEND("Accès à la partie (**)")
+    legend_title_access = html.LEGEND("Accès à la partie - ne peuvent plus être changés la partie démarré")
     legend_title_access.style = {
         'color': 'red',
     }
@@ -365,7 +361,7 @@ def create_game():
     form <= input_access_restriction_performance
     form <= html.BR()
 
-    legend_title_access = html.LEGEND("Advancement de la partie (*)")
+    legend_title_access = html.LEGEND("Avancement de la partie - ne peuvent plus être changés la partie créée")
     legend_title_access.style = {
         'color': 'red',
     }

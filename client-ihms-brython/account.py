@@ -160,7 +160,7 @@ def create_account():
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok pour remplacer", title="Pouvons nous vous mettre dans une partie ?")
+    legend_replace = html.LEGEND("ok pour remplacer", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandonné ?")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=False)
     form <= input_replace
@@ -525,37 +525,37 @@ def edit_account():
     form <= input_pseudo
     form <= html.BR()
 
-    legend_email = html.LEGEND("email (*)", title="Le site vous notifiera des événements")
+    legend_email = html.LEGEND("email", title="Le site vous notifiera des événements")
     form <= legend_email
     input_email = html.INPUT(type="email", value=email_loaded, size="40")
     form <= input_email
     form <= html.BR()
 
-    legend_email_confirmed = html.LEGEND("email confirmé (*)", title="(pour information)")
+    legend_email_confirmed = html.LEGEND("email confirmé", title="(pour information)")
     form <= legend_email_confirmed
     input_email_confirmed = html.INPUT(type="checkbox", readonly=True, checked=email_confirmed_loaded)
     form <= input_email_confirmed
     form <= html.BR()
 
-    legend_telephone = html.LEGEND("téléphone (*)", title="En cas d'urgence")
+    legend_telephone = html.LEGEND("téléphone (privé et facultatif)", title="En cas d'urgence")
     form <= legend_telephone
     input_telephone = html.INPUT(type="tel", value=telephone_loaded)
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok pour remplacer", title="Pouvons nous vous mettre dans une partie ?")
+    legend_replace = html.LEGEND("ok pour remplacer", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandoné ?")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("nom", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
+    legend_family_name = html.LEGEND("nom (facultatif)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value=family_name_loaded)
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("prénom", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
+    legend_first_name = html.LEGEND("prénom (facultatif)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value=first_name_loaded)
     form <= input_first_name
