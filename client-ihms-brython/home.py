@@ -15,6 +15,16 @@ link1 = html.A(href="http://www.diplomania.fr", target="_blank")
 link1 <= "Diplomania : Le site officiel de l'Association Française des Joueurs de Diplomatie (brique sociale)"
 my_panel <= link1
 
+title11 = html.H2("Parainnage")
+my_panel <= title11
+
+link11 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
+link11 <= "Vous pouvez participer au financement du développement du site en cliquant sur le lien "
+my_panel <= link11
+link11.style = {
+    'color': 'blue',
+}
+
 title2 = html.H2("Note importante")
 my_panel <= title2
 
