@@ -176,7 +176,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
     mylogger.LOGGER.info("/login - POST - login in a user")
 
-    if not flask.Request.is_json:
+    if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
 
     user_name = flask.request.json.get('user_name', None)
