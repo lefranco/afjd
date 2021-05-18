@@ -9,6 +9,12 @@ from browser import html, ajax, alert  # pylint: disable=import-error
 
 import config
 import common
+import json
+
+# load country list from json data file
+with open("./data/country_list.json", "r") as read_file:
+    COUNTRY_CODE_TABLE = json.load(read_file)
+
 
 my_panel = html.DIV(id="players")
 
@@ -36,12 +42,21 @@ def show_players_data():
         thead <= col
     players_table <= thead
 
+    code_country_table = {v: k for k,v in COUNTRY_CODE_TABLE.items()}
+
     for data in sorted(players_dict.values(), key=lambda g: g['pseudo']):
         row = html.TR()
         for field in fields:
             value = data[field]
+
+            if field in ['residence', 'nationality']:
+                code = value
+                country_name = code_country_table[code]
+                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="50", height="25")
+
             col = html.TD(value)
             row <= col
+
         players_table <= row
 
     my_sub_panel <= players_table
