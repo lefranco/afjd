@@ -41,8 +41,6 @@ li{
     color: #111;
     background-color: #fff;
     border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
     border: 1px solid rgba(0,0,0,0.3);
 }
 
@@ -50,7 +48,7 @@ li{
         background-color: #e3e3e3;
         border-color: rgba(0,0,0,0.5);
     }
-    
+
     .btn-menu:active {
         background-color: #CCC;
         border-color: rgba(0,0,0,0.9);
