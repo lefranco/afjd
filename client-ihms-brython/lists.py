@@ -44,7 +44,7 @@ def show_players_data():
 
     code_country_table = {v: k for k,v in COUNTRY_CODE_TABLE.items()}
 
-    for data in sorted(players_dict.values(), key=lambda g: g['pseudo']):
+    for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):
         row = html.TR()
         for field in fields:
             value = data[field]
@@ -83,7 +83,7 @@ def show_games_data():
         thead <= col
     games_table <= thead
 
-    for data in sorted(games_dict.values(), key=lambda g: g['name']):
+    for data in sorted(games_dict.values(), key=lambda g: g['name'].upper()):
         row = html.TR()
         for field in fields:
             value = data[field]
@@ -177,7 +177,7 @@ def show_game_masters_data():
         thead <= col
     game_masters_table <= thead
 
-    for data in sorted(game_masters_list, key=lambda d: games_dict[str(d['game'])]['name']):
+    for data in sorted(game_masters_list, key=lambda d: games_dict[str(d['game'])]['name'].upper()):
         row = html.TR()
         for field in fields:
             value_index = str(data[field])
@@ -233,7 +233,7 @@ def show_no_game_masters_data():
 
     no_game_masters_list = [v for k, v in games_dict.items() if int(k) not in [g['game'] for g in game_masters_list]]
 
-    for data in sorted(no_game_masters_list, key=lambda g: g['name']):
+    for data in sorted(no_game_masters_list, key=lambda g: g['name'].upper()):
         row = html.TR()
         value = data['name']
         col = html.TD(value)

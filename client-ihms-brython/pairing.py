@@ -327,7 +327,14 @@ def move_players_in_game():
     form <= input_put_in_game
 
     # ---
+
     form <= html.BR()
+    form <= html.BR()
+    form <= html.LEGEND("Ont un rôle : " + " ".join(sorted(list(set(players_assigned_list)), key=lambda p:p.upper())))
+    form <= html.BR()
+    form <= html.LEGEND("Sont en attente : " + " ".join(sorted(list(set(players_allocated_list)), key=lambda p:p.upper())))
+
+    # ---
     form <= html.BR()
 
     legend_outcomer = html.LEGEND("Sortant", title="Sélectionner le joueur à retirer de la partie")

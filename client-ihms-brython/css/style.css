@@ -92,7 +92,6 @@ code{
 
 code.file{
     background-color: #fff;
-    font-weigth: bold;
     font-style: italic;
 }
 
@@ -140,4 +139,8 @@ tr{
 
 td{
     border: solid;
+}
+
+thead{
+    font-weight:bold;
 }
