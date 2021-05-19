@@ -17,7 +17,6 @@ import selection
 import index  # circular import
 
 
-import debug
 
 my_panel = html.DIV(id="opportunities")
 
@@ -57,12 +56,50 @@ def get_recruiting_games():
 def my_opportunities():
     """ my_opportunities """
 
-    def select_game_callback(_, game):
-        """ select_game_callback """
+    def join_game_callback(_, game):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error joining game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem joining game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez rejoint la partie : {messages}", remove_after=config.REMOVE_AFTER)
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        json_dict = {
+            'game_id': game_id,
+            'player_pseudo': pseudo,
+            'pseudo': pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/allocations"
+
+        # adding allocation : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
+    def join_and_select_game_callback(ev, game):
+        """ join_and_select_game_callback """
 
         # action of selecting game
         storage['GAME'] = game
         selection.show_game_selected()
+
+        # action of putting myself in game
+        join_game_callback(ev, game)
 
         # action of going to game page
         index.load_option(None, 'jouer la partie')
@@ -81,8 +118,6 @@ def my_opportunities():
 
     recruiting_games_dict = {tr[0] : {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
 
-    print(f"{recruiting_games_dict=}")
-
     games_dict = common.get_games_data()
     if games_dict is None:
         return
@@ -98,7 +133,7 @@ def my_opportunities():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué', 'capacity' : 'capacité', 'join': 'rejoindre'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'capacity' : 'capacité (dont arbitre)', 'join': 'rejoindre'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -170,7 +205,7 @@ def my_opportunities():
                 game_name = data['name']
                 form = html.FORM()
                 input_join_game = html.INPUT(type="submit", value="Eh, il y a de la place. J'en profite !")
-                input_join_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
+                input_join_game.bind("click", lambda e, g=game_name: join_and_select_game_callback(e, g))
                 form <= input_join_game
                 value = form
 
