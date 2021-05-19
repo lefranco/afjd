@@ -16,9 +16,9 @@ class Capacity:
     """ Class for handling a capacity """
 
     @staticmethod
-    def find_by_identifier(sql_executor: database.SqlExecutor, identifier: int) -> typing.Optional['Report']:
+    def find_by_identifier(sql_executor: database.SqlExecutor, identifier: int) -> typing.Optional['Capacity']:
         """ class lookup : finds the object in database from identifier """
-        capacities_found = sql_executor.execute("SELECT * FROM capacities where game_id = ?", (identifier,), need_result=True)
+        capacities_found = sql_executor.execute("SELECT value FROM capacities where game_id = ?", (identifier,), need_result=True)
         if not capacities_found:
             return None
         return capacities_found[0][0]  # type: ignore
