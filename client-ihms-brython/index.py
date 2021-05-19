@@ -52,7 +52,7 @@ overall_top <= overall
 
 # menu-left
 menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width:15%; vertical-align: top;'
+menu_left.attrs['style'] = 'display: table-cell; width: 10%; vertical-align: top;'
 overall <= menu_left
 
 # menu-selection

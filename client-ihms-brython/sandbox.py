@@ -147,7 +147,7 @@ def sandbox():
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+        buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
         legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
         buttons_right <= legend_select_unit
@@ -235,7 +235,7 @@ def sandbox():
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
-            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+            buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
@@ -336,7 +336,7 @@ def sandbox():
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
-            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+            buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             # can be None if no retreating unit on board
             if selected_active_unit is not None:
@@ -386,7 +386,7 @@ def sandbox():
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
-            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+            buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
@@ -425,7 +425,7 @@ def sandbox():
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
-            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+            buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -520,7 +520,7 @@ def sandbox():
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+        buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
         legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
         buttons_right <= legend_select_unit
@@ -718,7 +718,7 @@ def sandbox():
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+        buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
         legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
         buttons_right <= legend_select_unit
@@ -837,7 +837,7 @@ def sandbox():
     # right side
 
     buttons_right = html.DIV(id='buttons_right')
-    buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+    buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
     legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
     buttons_right <= legend_select_unit

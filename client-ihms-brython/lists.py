@@ -247,7 +247,7 @@ my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
 menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width:15%; vertical-align: top;'
+menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 my_panel <= menu_left
 
 # menu-selection
