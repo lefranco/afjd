@@ -21,7 +21,7 @@ class Capacity:
         capacities_found = sql_executor.execute("SELECT * FROM capacities where game_id = ?", (identifier,), need_result=True)
         if not capacities_found:
             return None
-        return rcapacities_found[0][0]  # type: ignore
+        return capacities_found[0][0]  # type: ignore
 
     @staticmethod
     def create_table(sql_executor: database.SqlExecutor) -> None:
