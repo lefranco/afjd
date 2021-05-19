@@ -1036,11 +1036,6 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-
-
-
-
-
 @API.resource('/games-recruiting')
 class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
     """ GamesRecruitingRessource """
@@ -1064,14 +1059,6 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
         data = [tr for tr in full_games_data if tr[1] < tr[2]]
 
         return data, 200
-
-
-
-
-
-
-
-
 
 
 @API.resource('/game-positions/<game_id>')
