@@ -115,7 +115,7 @@ def my_games():
         if not variant_content_loaded:
             return
 
-        # select display (should be a user choice)
+        # selected display (user choice)
         display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
         parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
