@@ -1050,11 +1050,9 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        full_games_data = sql_executor.execute("select games.identifier, count(*) as filled_count, capacities.value from games join allocations on allocations.game_id=games.identifier join capacities on capacities.game_id=games.identifier where allocations.role_id > 0 group by identifier", need_result=True)
+        full_games_data = sql_executor.execute("select games.identifier, count(*) as filled_count, capacities.value from games join allocations on allocations.game_id=games.identifier join capacities on capacities.game_id=games.identifier where allocations.role_id >= 0 group by identifier", need_result=True)
 
         del sql_executor
-
-        print(f"{full_games_data=}")
 
         # keep only the ones where a role is missing
         assert full_games_data is not None
