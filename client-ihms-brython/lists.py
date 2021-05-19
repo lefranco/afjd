@@ -9,7 +9,6 @@ from browser import html, ajax, alert  # pylint: disable=import-error
 
 import config
 import common
-import json
 
 # load country list from json data file
 with open("./data/country_list.json", "r") as read_file:
@@ -42,7 +41,7 @@ def show_players_data():
         thead <= col
     players_table <= thead
 
-    code_country_table = {v: k for k,v in COUNTRY_CODE_TABLE.items()}
+    code_country_table = {v: k for k, v in COUNTRY_CODE_TABLE.items()}
 
     for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):
         row = html.TR()

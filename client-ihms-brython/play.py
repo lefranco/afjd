@@ -3224,7 +3224,6 @@ def show_game_parameters():
             'fast': "rapide (on ne tient pas compte des dates limites pour résoudre)",
             'speed_moves': "vitesse pour les mouvements (en jours)",
             'speed_retreats': "vitesse pour les retraites (en jours)",
-            'speed_moves': "vitesse pour les mouvements (en jours)",
             'speed_adjustments': "vitesse pour les ajustements (en jours)",
             'cd_possible_moves': "désordre civil possible pour les mouvements",
             'cd_possible_retreats': "désordre civil possible pour les retraites",
@@ -3238,7 +3237,7 @@ def show_game_parameters():
             'access_restriction_performance': "restriction d'accès sur la performance",
             'nb_max_cycles_to_play': "nombre maximum de cycles (années) à jouer",
             'victory_centers': "nombre de centres pour la victoire"
-        } [key]
+        }[key]
 
         col1 = html.TD(parameter_name)
         row <= col1
