@@ -41,7 +41,7 @@ def populate_reports(sql_executor: database.SqlExecutor) -> None:
 
 def populate_capacities(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    capacities.Capacitiy.create_table(sql_executor)
+    capacities.Capacity.create_table(sql_executor)
 
 
 def populate_actives(sql_executor: database.SqlExecutor) -> None:

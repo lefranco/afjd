@@ -1045,13 +1045,13 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
 class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
     """ GamesRecruitingRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:  # pylint: disable=no-self-use
         """
         Gets all  games that do not have all players
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/games-recruiting - GET - get getting all games recruiting", player_id)
+        mylogger.LOGGER.info("/games-recruiting - GET - get getting all games recruiting")
 
         sql_executor = database.SqlExecutor()
 
@@ -1060,6 +1060,7 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         # keep only the ones where a role is missing
+        assert full_games_data is not None
         data = [tr for tr in full_games_data if tr[1] < tr[2]]
 
         return data, 200
