@@ -17,6 +17,8 @@ import selection
 import index  # circular import
 
 
+import debug
+
 my_panel = html.DIV(id="opportunities")
 
 
@@ -78,6 +80,8 @@ def my_opportunities():
         return
 
     recruiting_games_dict = {tr[0] : {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
+
+    print(f"{recruiting_games_dict=}")
 
     games_dict = common.get_games_data()
     if games_dict is None:

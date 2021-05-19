@@ -1054,6 +1054,8 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
+        print(f"{full_games_data=}")
+
         # keep only the ones where a role is missing
         assert full_games_data is not None
         data = [tr for tr in full_games_data if tr[1] < tr[2]]
