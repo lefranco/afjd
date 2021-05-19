@@ -64,7 +64,7 @@ def create_initial_position():
     if not variant_content_loaded:
         return
 
-    # select display (should be a user choice)
+    # selected display (user choice)
     display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters

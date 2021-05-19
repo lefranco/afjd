@@ -198,7 +198,7 @@ def show_position():
     if not variant_content_loaded:
         return
 
-    # select display (should be a user choice)
+    # selected display (user choice)
     display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
@@ -1124,7 +1124,7 @@ def submit_orders():
     if not variant_content_loaded:
         return
 
-    # select display (should be a user choice)
+    # selected display (user choice)
     display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
@@ -1836,7 +1836,7 @@ def submit_communication_orders():
     if not variant_content_loaded:
         return
 
-    # select display (should be a user choice)
+    # selected display (user choice)
     display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
@@ -2106,7 +2106,7 @@ def negotiate():
     # to avoid a warning
     variant_content_loaded = dict(variant_content_loaded)
 
-    # select display (should be a user choice)
+    # selected display (user choice)
     display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
@@ -2365,7 +2365,7 @@ def declare():
     if not variant_content_loaded:
         return
 
-    # select display (should be a user choice)
+    # selected display (user choice)
     display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
@@ -2559,7 +2559,7 @@ def vote():
     if not variant_content_loaded:
         return
 
-    # select display (should be a user choice)
+    # selected display (user choice)
     display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
@@ -2765,7 +2765,7 @@ def show_history():
     if not variant_content_loaded:
         return
 
-    # select display (should be a user choice)
+    # selected display (user choice)
     display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
@@ -3014,7 +3014,7 @@ def game_master():
     if not variant_content_loaded:
         return
 
-    # select display (should be a user choice)
+    # selected display (user choice)
     display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
@@ -3311,7 +3311,7 @@ def show_players_in_game():
     if not variant_content_loaded:
         return
 
-    # select display (should be a user choice)
+    # selected display (user choice)
     display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
