@@ -630,7 +630,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         # TODO : get correct value from variant
         value = 7
         capacity = capacities.Capacity(game_id, value)
-        report.update_database(sql_executor)
+        capacity.update_database(sql_executor)
 
         # add that all players are active (those who own a center - that will do)
         game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
