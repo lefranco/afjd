@@ -653,7 +653,6 @@ def delete_account():
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
 
-
     form = html.FORM()
     my_sub_panel <= form
 
