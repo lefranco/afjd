@@ -479,8 +479,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         report.delete_database(sql_executor)
 
         # and capacity
-        capacity = capacities.Capacity.find_by_identifier(sql_executor, game_id)
-        assert capacity is not None
+        capacity = capacities.Capacity(int(game_id), 0)
         capacity.delete_database(sql_executor)
 
         # and actives
