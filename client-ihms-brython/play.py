@@ -2119,13 +2119,16 @@ def negotiate():
 
     legend_declaration = html.LEGEND("Votre message", title="Qu'avez vous à lui/leur dire ?")
     form <= legend_declaration
-    form <= html.BR()
 
     input_message = html.TEXTAREA(type="text", rows=5, cols=80)
     if content_backup is not None:
         input_message <= content_backup
     form <= input_message
     form <= html.BR()
+    form <= html.BR()
+
+    legend_destinees = html.LEGEND("Destinataire(s)", title="Et à qui ?")
+    form <= legend_destinees
 
     table = html.TABLE()
     row = html.TR()
@@ -2145,10 +2148,6 @@ def negotiate():
         label_dest = html.LABEL(role_icon_img, for_=str(role_id_dest))
         col <= label_dest
 
-        row <= col
-
-        # add a separator
-        col = html.TD()
         row <= col
 
         selected[role_id_dest] = input_dest
@@ -2219,11 +2218,13 @@ def negotiate():
     role_name = variant_data.name_table[role]
     role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
     my_sub_panel <= role_icon_img
+    my_sub_panel <= html.BR()
+    my_sub_panel <= html.BR()
 
     # form
     my_sub_panel <= form
-    form <= html.BR()
-    form <= html.BR()
+    my_sub_panel <= html.BR()
+    my_sub_panel <= html.BR()
 
     # declarations already
     my_sub_panel <= messages_table
@@ -2378,10 +2379,10 @@ def declare():
 
     legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer à tout le monde ?")
     form <= legend_declaration
-    form <= html.BR()
 
     input_declaration = html.TEXTAREA(type="text", rows=5, cols=80)
     form <= input_declaration
+    form <= html.BR()
     form <= html.BR()
 
     table = html.TABLE()
@@ -2460,11 +2461,13 @@ def declare():
     role_name = variant_data.name_table[role]
     role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
     my_sub_panel <= role_icon_img
+    my_sub_panel <= html.BR()
+    my_sub_panel <= html.BR()
 
     # form
     my_sub_panel <= form
-    form <= html.BR()
-    form <= html.BR()
+    my_sub_panel <= html.BR()
+    my_sub_panel <= html.BR()
 
     # declarations already
     my_sub_panel <= declarations_table
