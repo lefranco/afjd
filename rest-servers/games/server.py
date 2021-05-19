@@ -33,6 +33,7 @@ import orders
 import forbiddens
 import transitions
 import reports
+import capacities
 import games
 import contents
 import declarations
@@ -470,11 +471,17 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # and position
         game.delete_position(sql_executor)
 
-        # and report
         game_id = game.identifier
+
+        # and report
         report = reports.Report.find_by_identifier(sql_executor, game_id)
         assert report is not None
         report.delete_database(sql_executor)
+
+        # and capacity
+        capacity = capacities.Capacity.find_by_identifier(sql_executor, game_id)
+        assert capacity is not None
+        capacity.delete_database(sql_executor)
 
         # and actives
         for (_, role_num) in actives.Active.list_by_game_id(sql_executor, int(game_id)):
@@ -617,6 +624,12 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         # add a little report
         time_stamp = int(time.time())
         report = reports.Report(game_id, time_stamp, WELCOME_TO_GAME)
+        report.update_database(sql_executor)
+
+        # add a capacity
+        # TODO : get correct value from variant
+        value = 7
+        capacity = capacities.Capacity(game_id, value)
         report.update_database(sql_executor)
 
         # add that all players are active (those who own a center - that will do)

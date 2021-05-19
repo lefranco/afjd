@@ -16,6 +16,7 @@ import ownerships
 import units
 import forbiddens
 import reports
+import capacities
 import transitions
 import games
 import contents
@@ -36,6 +37,11 @@ def populate_transitions(sql_executor: database.SqlExecutor) -> None:
 def populate_reports(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
     reports.Report.create_table(sql_executor)
+
+
+def populate_capacities(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    capacities.Capacitiy.create_table(sql_executor)
 
 
 def populate_actives(sql_executor: database.SqlExecutor) -> None:
@@ -120,6 +126,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
 
     populate_transitions(sql_executor)
     populate_reports(sql_executor)
+    populate_capacities(sql_executor)
     populate_actives(sql_executor)
     populate_submissions(sql_executor)
     populate_communication_orders(sql_executor)
