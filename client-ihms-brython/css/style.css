@@ -37,6 +37,7 @@ li{
 
 
 .btn-menu {
+    width: 100%;
     display: inline-block;
     color: #111;
     background-color: #fff;
