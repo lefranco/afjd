@@ -627,7 +627,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         # add a capacity
         # TODO : get correct value from variant
-        value = 7
+        value = 8
         capacity = capacities.Capacity(game_id, value)
         capacity.update_database(sql_executor)
 
