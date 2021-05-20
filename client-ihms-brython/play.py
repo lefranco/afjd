@@ -1949,10 +1949,20 @@ def submit_communication_orders():
 def visual_chat():
     """ negotiate """
 
-    my_sub_panel <= """
-      Here will go widgets to chat by video
-    """
+    def put_wall_message_callback(_):
+        pass
 
+    iframe = html.IFRAME(src="./webrtc/video/index.html", allow="fullscreen", width=1000, height=650)
+    my_panel <= iframe
+
+    form = html.FORM()
+    input_wall_message = html.TEXTAREA(type="text", rows=1, cols=100)
+    form <= input_wall_message
+    input_put_on_game_wall = html.INPUT(type="submit", value="poster sur le mur")
+    input_put_on_game_wall.bind("click", put_wall_message_callback)
+    form <= input_put_on_game_wall
+
+    my_sub_panel <= form
 
 # the idea is not to loose the content of a message if not destinee were specified
 content_backup = None  # pylint: disable=invalid-name

@@ -142,7 +142,7 @@ def create_account():
     form <= input_password
     form <= html.BR()
 
-    legend_password_again = html.LEGEND("mot de passe encore", title="Pour éviter une faute de frappe sur le mot de passe")
+    legend_password_again = html.LEGEND("confirmation mot de passe", title="Pour éviter une faute de frappe sur le mot de passe")
     form <= legend_password_again
     input_password_again = html.INPUT(type="password", value="")
     form <= input_password_again

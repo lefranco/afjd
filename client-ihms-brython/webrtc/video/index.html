@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Video Chat with PeerJS</title>
+    <title>Video Chat Diplomania</title>
     
     <!-- Use Bootswatch CSS from cdn -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cerulean/bootstrap.min.css">
@@ -19,7 +19,7 @@
                  -->
                 <div class="text-center">
                     <video id="my-camera"  width="300" height="300" autoplay="autoplay" muted="true" class="center-block"></video>
-                    <span class="label label-info">You</span>
+                    <span class="label label-info">Vous-même</span>
                 </div>
             </div>
 
@@ -33,11 +33,9 @@
         </div>
 
         <div class="row">
-            <h1 class="text-center">
-                Videochat Example
-                <br>
-                <small> Share the following ID with the pal that wants to talk with you</small>
-            </h1>
+            <h2 class="text-center">
+                <small> Donnez l'identifiant ci dessous à la personne qui veut vous contacter (utiliser le mur) </small>
+            </h2>
             <!-- The ID of your current session -->
             <h4 class="text-center">
                 <span id="peer-id-label"></span>
@@ -45,15 +43,14 @@
             <div class="col-md-12 col-lg-12">
                 <div class="form-horizontal" id="connection-form">
                     <fieldset>
-                        <legend>Connection Form</legend>
                         <div class="form-group">
-                            <label for="name" class="col-lg-2 control-label">Username</label>
+                            <label for="name" class="col-lg-2 control-label">Username (quelconque)</label>
                             <div class="col-lg-10">
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Your random username">
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Username">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="peer_id" class="col-lg-2 control-label">Peer ID (id of your pal)</label>
+                            <label for="peer_id" class="col-lg-2 control-label">Peer ID (id de votre interlocuteur)</label>
                             <div class="col-lg-10">
                                 <input type="text" class="form-control" name="peer_id" id="peer_id" placeholder="Peer ID" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                                 
@@ -83,7 +80,7 @@
                                 <span class="input-group-btn">
                                     <button id="call" class="btn btn-info">Call</button>
                                 </span>
-                                <input type="text" class="form-control" name="message" id="message" placeholder="Your messag here ...">
+                                <input type="text" class="form-control" name="message" id="message" placeholder="Your message here ...">
                                 <span class="input-group-btn">
                                     <button id="send-message" class="btn btn-success">Send Message</button>
                                 </span>
