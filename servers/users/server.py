@@ -48,7 +48,7 @@ USURPING_PSEUDO = 'Palpatine'
 # ---------------------------------
 
 
-@APP.route('/add', methods=['POST'])
+@APP.route('/add', methods=['POST'], endpoint=add_user)
 def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     add an user account
@@ -85,7 +85,7 @@ def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify({"msg": "User was added"}), 201
 
 
-@APP.route('/remove', methods=['POST'])
+@APP.route('/remove', methods=['POST'], endpoint=remove_user)
 @flask_jwt_extended.jwt_required  # type: ignore
 def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
@@ -122,7 +122,7 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify({"msg": "User was removed"}), 200
 
 
-@APP.route('/change', methods=['POST'])
+@APP.route('/change', methods=['POST'], endpoint=change_user)
 @flask_jwt_extended.jwt_required  # type: ignore
 def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
@@ -165,7 +165,7 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify({"msg": "User was changed"}), 201
 
 
-@APP.route('/login', methods=['POST'])
+@APP.route('/login', methods=['POST'], endpoint=login_user)
 def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     Provide a method to create access tokens. The create_access_token()
@@ -202,7 +202,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify(AccessToken=access_token), 200
 
 
-@APP.route('/verify', methods=['GET'])
+@APP.route('/verify', methods=['GET'], endpoint=verify_user)
 @flask_jwt_extended.jwt_required  # type: ignore
 def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
@@ -219,7 +219,7 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     return flask.jsonify(logged_in_as=logged_in_as), 200
 
 
-@APP.route('/usurp', methods=['POST'])
+@APP.route('/usurp', methods=['POST'], endpoint=usurp_user)
 @flask_jwt_extended.jwt_required  # type: ignore
 def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
