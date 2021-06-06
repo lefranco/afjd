@@ -86,7 +86,7 @@ def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 
 @APP.route('/remove', methods=['POST'])
-@flask_jwt_extended.jwt_required  # type: ignore
+@flask_jwt_extended.jwt_required()  # type: ignore
 def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     remove an user account
@@ -123,7 +123,7 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 
 @APP.route('/change', methods=['POST'])
-@flask_jwt_extended.jwt_required  # type: ignore
+@flask_jwt_extended.jwt_required()  # type: ignore
 def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     change password of an account
@@ -203,7 +203,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 
 @APP.route('/verify', methods=['GET'])
-@flask_jwt_extended.jwt_required  # type: ignore
+@flask_jwt_extended.jwt_required()  # type: ignore
 def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     Protect a view with jwt_required, which requires a valid access token
@@ -220,7 +220,7 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 
 @APP.route('/usurp', methods=['POST'])
-@flask_jwt_extended.jwt_required  # type: ignore
+@flask_jwt_extended.jwt_required()  # type: ignore
 def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     Protect a view with jwt_required, which requires a valid access token
