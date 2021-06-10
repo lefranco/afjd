@@ -1952,6 +1952,10 @@ def visual_chat():
     def put_wall_message_callback(_):
         pass
 
+    # TODO
+    my_sub_panel <= "Pas encore implémenté, désolé !"
+    return
+
     iframe = html.IFRAME(src="./webrtc/video/index.html", allow="fullscreen", width=1000, height=650)
     my_panel <= iframe
 
