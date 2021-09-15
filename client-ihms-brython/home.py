@@ -71,6 +71,14 @@ my_panel <= emails_support_img
 text3 = html.P("N'oubliez de bien préciser une procédure pour reproduire le problème, la différence entre le résultat obtenu et le résultat attendu...")
 my_panel <= text3
 
+title5 = html.H2("Copinage")
+my_panel <= title5
+
+
+link4 = html.A(href="https://visitercracovie.wordpress.com/", target="_blank")
+link4 <= "Si vous savez pas quoi faire pendant vos vacances..."
+my_panel <= link4
+
 
 def render(panel_middle):
     """ render """

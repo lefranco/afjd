@@ -635,7 +635,8 @@ def delete_account():
             InfoDialog("OK", f"Votre compte a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
             login.logout()
 
-        dialog.close()
+        if dialog:
+            dialog.close()
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -649,9 +650,14 @@ def delete_account():
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def delete_account_callback_confirm(_):
-        dialog = Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
+
+        # For some reason does not work, confirmation window dissapears
+        #dialog = Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
+        #dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
+        #dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
+
+        # called directly
+        delete_account_callback(_, None)
 
     form = html.FORM()
     my_sub_panel <= form

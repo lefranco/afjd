@@ -6,7 +6,7 @@ import json
 import datetime
 import time
 
-from browser import html, ajax, alert  # pylint: disable=import-error
+from browser import html, ajax, alert, bind  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -1166,7 +1166,8 @@ def delete_game():
             InfoDialog("OK", f"La partie a été supprimée : {messages}", remove_after=config.REMOVE_AFTER)
             selection.unselect_game()
 
-        dialog.close()
+        if dialog:
+            dialog.close()
 
         json_dict = {
             'pseudo': pseudo
@@ -1180,9 +1181,14 @@ def delete_game():
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def delete_game_callback_confirm(_):
-        dialog = Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
+
+        # For some reason does not work, confirmation window dissapears
+        #dialog = Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
+        #dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
+        #dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
+
+        # called directly
+        delete_game_callback(_, None)
 
     form = html.FORM()
 
