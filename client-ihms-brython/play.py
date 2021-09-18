@@ -3237,7 +3237,7 @@ def show_game_parameters():
             'archive': "archive (la partie n'est pas jouée, elle est juste consultable)",
             'anonymous': "anonyme (on sait pas qui joue quel rôle dans la partie)",
             'silent': "silencieuse (on peut pas déclarer ni négocier - sauf avec l'arbitre)",
-            'cumulate': "cumulable (un joueur peut prenbdre plusieurs rôle dans la partie)",
+            'cumulate': "cumulable (un joueur peut prendre plusieurs rôle dans la partie)",
             'fast': "rapide (on ne tient pas compte des dates limites pour résoudre)",
             'speed_moves': "vitesse pour les mouvements (en jours)",
             'speed_retreats': "vitesse pour les retraites (en jours)",
