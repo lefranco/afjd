@@ -16,6 +16,6 @@ STATE_CODE_TABLE = {'en attente': 0, 'en cours': 1, 'terminée': 2}
 with open("./config/servers.json", "r") as read_file:
     SERVER_CONFIG = json.load(read_file)
 
-#  kept to show how top write json file
+#  kept to show how to write json file
 #  x = json.dumps(SERVER_CONFIG, indent=4)
 #  print(x)
