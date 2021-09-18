@@ -130,6 +130,37 @@ def sandbox():
     stored_event = None
     down_click_time = None
 
+    def rest_hold_callback(_):
+        """ rest_hold_callback """
+
+        nonlocal automaton_state
+        nonlocal buttons_right
+
+        # complete orders
+        orders_data.rest_hold(None)
+
+        # update displayed map
+        callback_render(None)
+
+        my_sub_panel2.removeChild(buttons_right)
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)")
+        buttons_right <= legend_select_unit
+        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+        stack_orders(buttons_right)
+
+        if not orders_data.empty():
+            put_erase_all(buttons_right)
+        # do not put all rest hold
+        if not orders_data.empty():
+            put_submit(buttons_right)
+
+        my_sub_panel2 <= buttons_right
+        my_sub_panel <= my_sub_panel2
+
     def erase_all_callback(_):
         """ erase_all_callback """
 
@@ -305,6 +336,7 @@ def sandbox():
             stack_orders(buttons_right)
             if not position_data.empty():
                 put_erase_all(buttons_right)
+            put_rest_hold(buttons_right)
             if not orders_data.empty():
                 put_submit(buttons_right)
 
@@ -368,6 +400,7 @@ def sandbox():
             stack_orders(buttons_right)
             if not position_data.empty():
                 put_erase_all(buttons_right)
+            put_rest_hold(buttons_right)
             if not orders_data.empty():
                 put_submit(buttons_right)
 
@@ -409,6 +442,7 @@ def sandbox():
             stack_orders(buttons_right)
             if not position_data.empty():
                 put_erase_all(buttons_right)
+            put_rest_hold(buttons_right)
             if not orders_data.empty():
                 put_submit(buttons_right)
 
@@ -445,6 +479,7 @@ def sandbox():
                 stack_orders(buttons_right)
                 if not position_data.empty():
                     put_erase_all(buttons_right)
+                put_rest_hold(buttons_right)
                 if not orders_data.empty():
                     put_submit(buttons_right)
 
@@ -466,6 +501,7 @@ def sandbox():
             stack_orders(buttons_right)
             if not position_data.empty():
                 put_erase_all(buttons_right)
+            put_rest_hold(buttons_right)
             if not orders_data.empty():
                 put_submit(buttons_right)
 
@@ -529,6 +565,7 @@ def sandbox():
         stack_orders(buttons_right)
         if not position_data.empty():
             put_erase_all(buttons_right)
+        put_rest_hold(buttons_right)
         if not orders_data.empty():
             put_submit(buttons_right)
 
@@ -619,6 +656,15 @@ def sandbox():
         input_erase_all.bind("click", erase_all_callback)
         buttons_right <= html.BR()
         buttons_right <= input_erase_all
+        buttons_right <= html.BR()
+
+    def put_rest_hold(buttons_right):
+        """ put_rest_hold """
+
+        input_rest_hold = html.INPUT(type="submit", value="tout le reste tient")
+        input_rest_hold.bind("click", rest_hold_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_rest_hold
         buttons_right <= html.BR()
 
     def put_submit(buttons_right):
@@ -727,6 +773,7 @@ def sandbox():
         stack_orders(buttons_right)
         if not position_data.empty():
             put_erase_all(buttons_right)
+        put_rest_hold(buttons_right)
         if not orders_data.empty():
             put_submit(buttons_right)
 
@@ -846,6 +893,7 @@ def sandbox():
     stack_orders(buttons_right)
     if not position_data.empty():
         put_erase_all(buttons_right)
+    put_rest_hold(buttons_right)
     if not orders_data.empty():
         put_submit(buttons_right)
 
