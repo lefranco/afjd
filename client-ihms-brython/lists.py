@@ -43,6 +43,7 @@ def show_players_data():
 
     code_country_table = {v: k for k, v in COUNTRY_CODE_TABLE.items()}
 
+    count = 0
     for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):
         row = html.TR()
         for field in fields:
@@ -57,9 +58,10 @@ def show_players_data():
             row <= col
 
         players_table <= row
+        count += 1
 
     my_sub_panel <= players_table
-
+    my_sub_panel <= html.P(f"Il y a {count} joueurs")
 
 def show_games_data():
     """ show_games_data """
@@ -82,6 +84,7 @@ def show_games_data():
         thead <= col
     games_table <= thead
 
+    count = 0
     for data in sorted(games_dict.values(), key=lambda g: g['name'].upper()):
         row = html.TR()
         for field in fields:
@@ -103,8 +106,10 @@ def show_games_data():
             col = html.TD(value)
             row <= col
         games_table <= row
+        count += 1
 
     my_sub_panel <= games_table
+    my_sub_panel <= html.P(f"Il y a {count} parties")
 
 
 def get_game_masters_data():
