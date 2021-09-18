@@ -106,7 +106,7 @@ def join_game():
 
     form = html.FORM()
 
-    input_join_game = html.INPUT(type="submit", value="rejoindre la partie sélectionée")
+    input_join_game = html.INPUT(type="submit", value="rejoindre la partie sélectionnée")
     input_join_game.bind("click", join_game_callback)
     form <= input_join_game
 
@@ -165,7 +165,7 @@ def quit_game():
 
     form = html.FORM()
 
-    input_quit_game = html.INPUT(type="submit", value="quitter la partie sélectionée")
+    input_quit_game = html.INPUT(type="submit", value="quitter la partie sélectionnée")
     input_quit_game.bind("click", quit_game_callback)
     form <= input_quit_game
 
@@ -356,7 +356,7 @@ def move_players_in_game():
 
     form <= html.BR()
 
-    input_remove_from_game = html.INPUT(type="submit", value="retirer de la partie sélectionée")
+    input_remove_from_game = html.INPUT(type="submit", value="retirer de la partie sélectionnée")
     input_remove_from_game.bind("click", remove_from_game_callback)
     form <= input_remove_from_game
 
@@ -416,7 +416,7 @@ def take_mastering_game():
 
     form = html.FORM()
 
-    input_join_game = html.INPUT(type="submit", value="prendre l'arbitrage de la partie sélectionée")
+    input_join_game = html.INPUT(type="submit", value="prendre l'arbitrage de la partie sélectionnée")
     input_join_game.bind("click", take_mastering_game_callback)
     form <= input_join_game
 
@@ -475,7 +475,7 @@ def quit_mastering_game():
 
     form = html.FORM()
 
-    input_join_game = html.INPUT(type="submit", value="démissionner de l'arbitrage de la partie sélectionée")
+    input_join_game = html.INPUT(type="submit", value="démissionner de l'arbitrage de la partie sélectionnée")
     input_join_game.bind("click", quit_mastering_game_callback)
     form <= input_join_game
 
