@@ -1339,10 +1339,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
-        # not allowed for game master
-        if role_id == 0:
-            flask_restful.abort(403, msg="Submitting orders is not possible for game master")
-
         sql_executor = database.SqlExecutor()
 
         # find the game
@@ -1359,6 +1355,10 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         if user_id != player_id:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
+
+        # not allowed for game master
+        if role_id == 0 and not game.archive:
+            flask_restful.abort(403, msg="Submitting orders is not possible for game master for non archive games")
 
         # put in database fake units - units for build orders
 
@@ -1582,16 +1582,22 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
         # not allowed for game master
-        if role_id == 0:
+        if role_id == 0 and not game.archive:
             del sql_executor
-            flask_restful.abort(403, msg="Getting submitted orders is not possible for game master")
+            flask_restful.abort(403, msg="Getting submitted orders is not possible for game master for non archive game")
 
         # get orders
         assert role_id is not None
-        orders_list = orders.Order.list_by_game_id_role_num(sql_executor, game_id, role_id)
+        if role_id == 0:
+            orders_list = orders.Order.list_by_game_id(sql_executor, game_id)
+        else:
+            orders_list = orders.Order.list_by_game_id_role_num(sql_executor, game_id, role_id)
 
         # get fake units
-        units_list = units.Unit.list_by_game_id_role_num(sql_executor, game_id, role_id)
+        if role_id == 0:
+            units_list = units.Unit.list_by_game_id(sql_executor, game_id)
+        else:
+            units_list = units.Unit.list_by_game_id_role_num(sql_executor, game_id, role_id)
         fake_units_list = [u for u in units_list if u[5]]
 
         del sql_executor
