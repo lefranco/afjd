@@ -1107,11 +1107,6 @@ def submit_orders():
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
 
-    # cannot be game master
-    if role_id == 0:
-        alert("Ce n'est pas possible pour l'arbitre de cette partie")
-        return
-
     # from game name get variant name
 
     variant_name_loaded = common.game_variant_name_reload(game)
@@ -1139,6 +1134,11 @@ def submit_orders():
 
     # just to prevent a erroneous pylint warning
     game_parameters_loaded = dict(game_parameters_loaded)
+
+    # cannot be game master unless archive game
+    if role_id == 0 and not game_parameters_loaded['archive']:
+        alert("Ordonner pour un arbitre n'est possible que pour les parties archive")
+        return
 
     # game needs to be ongoing
     if game_parameters_loaded['current_state'] == 0:
@@ -3225,38 +3225,45 @@ def show_game_parameters():
         return
 
     game_params_table = html.TABLE()
+
+    # table header
+    thead = html.THEAD()
+    for field_name in "Nom du paramètre", "Valeur pour la partie", "Explication sommaire", "Effet (ce qui change concrètement)", "Implémenté ?":
+        col = html.TD(field_name)
+        thead <= col
+    game_params_table <= thead
+
     for key, value in game_parameters_loaded.items():
 
-        if key in ['description', 'variant', 'deadline', 'current_state', 'current_advancement']:
+        if key in ['name', 'description', 'variant', 'deadline', 'current_state', 'current_advancement']:
             continue
 
         row = html.TR()
 
-        parameter_name = {
-            'name': "nom de la partie (pour rappel)",
-            'archive': "archive (la partie n'est pas jouée, elle est juste consultable)",
-            'anonymous': "anonyme (on sait pas qui joue quel rôle dans la partie)",
-            'silent': "silencieuse (on peut pas déclarer ni négocier - sauf avec l'arbitre)",
-            'cumulate': "cumulable (un joueur peut prendre plusieurs rôle dans la partie)",
-            'fast': "rapide (on ne tient pas compte des dates limites pour résoudre)",
-            'speed_moves': "vitesse pour les mouvements (en jours)",
-            'speed_retreats': "vitesse pour les retraites (en jours)",
-            'speed_adjustments': "vitesse pour les ajustements (en jours)",
-            'cd_possible_moves': "désordre civil possible pour les mouvements",
-            'cd_possible_retreats': "désordre civil possible pour les retraites",
-            'cd_possible_builds': "désordre civil possible pour les constructions",
-            'cd_possible_removals': "désordre civil possible pour les suppressions",
-            'play_weekend': "on joue le week-end",
-            'manual': "l'attribution des rôle est manuelle (par l'arbitre)",
-            'access_code': "code d'accès pour la partie",
-            'access_restriction_reliability': "restriction d'accès sur la fiabilité",
-            'access_restriction_regularity': "restriction d'accès sur la régularité",
-            'access_restriction_performance': "restriction d'accès sur la performance",
-            'nb_max_cycles_to_play': "nombre maximum de cycles (années) à jouer",
-            'victory_centers': "nombre de centres pour la victoire"
+        parameter_name, explanation, effect, implemented = {
+            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres", "NON mais BIENTOT"),
+            'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue", "NON mais BIENTOT"),
+            'silent': ("silencieuse", "on peut pas déclarer ni négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible, toute déclaration de joueur est impossible", "NON mais BIENTOT"),
+            'cumulate': ("cumulable", "un joueur peut prendre plusieurs rôle dans la partie", "Le système accepte qu'un joueur prenne plus d'un rôle", "NON et pas dans un futur proche !"),
+            'fast': ("rapide", "la partie est jouée en temps réel comme sur un plateau", "Les dates limite ne sont pas mises à jour par le système", "NON mais BIENTOT"),
+            'speed_moves': ("vitesse pour les mouvements", "en jours", "Le système ajoute les jours avant une résolution de mouvement pour une date limite", "NON"),
+            'speed_retreats': ("vitesse pour les retraites", "en jours", "Le système ajoute les jours avant une résolution de retraites pour une date limite", "NON"),
+            'speed_adjustments': ("vitesse pour les ajustements", "en jours", "Le système ajoute les jours avant une résolution d'ajustements pour une date limite", "NON"),
+            'cd_possible_moves': ("désordre civil possible pour les mouvements", "oui ou non", "Charge à l'arbitre de le respecter", "-"),
+            'cd_possible_retreats': ("désordre civil possible pour les retraites", "oui ou non", "Charge à l'arbitre de le respecter", "-"),
+            'cd_possible_builds': ("désordre civil possible pour les constructions", "oui ou non", "Charge à l'arbitre de le respecter", "-"),
+            'cd_possible_removals': ("désordre civil possible pour les suppressions", "oui ou non", "Charge à l'arbitre de le respecter", "-"),
+            'play_weekend': ("on joue le week-end", "oui ou non", "Le système est empêché de mettre une date limite pendant le week-end", "NON"),
+            'manual': ("l'attribution des rôle est manuelle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "NON"),
+            'access_code': ("code d'accès pour la partie", "(code de quatre chiffres)", "Le système demande un code pour rejoindre la partie", "NON"),
+            'access_restriction_reliability': ("restriction d'accès sur la fiabilité", "(valeur)", "Un seuil de fiabilité est exigé pour rejoindre la partie", "NON"),
+            'access_restriction_regularity': ("restriction d'accès sur la régularité", "(valeur)", "Un seuil de régularité est exigé pour rejoindre la partie", "NON"),
+            'access_restriction_performance': ("restriction d'accès sur la performance", "(valeur)", "Un seuil de performance est exigé pour rejoindre la partie", "NON"),
+            'nb_max_cycles_to_play': ("nombre maximum de cycles (années) à jouer", "(valeur)", "L'arbitre déclare la partie terminée si autant de cycles ont été joués", "-"),
+            'victory_centers': ("nombre de centres pour la victoire", "(valeur)", "L'arbitre déclare la partie gagnée si un joueur a autant de centres", "-")
         }[key]
 
-        col1 = html.TD(parameter_name)
+        col1 = html.TD(html.B(parameter_name))
         row <= col1
 
         if value is False:
@@ -3266,8 +3273,22 @@ def show_game_parameters():
         else:
             parameter_value = value
 
-        col2 = html.TD(parameter_value)
+        col2 = html.TD(html.B(parameter_value))
+        col2.style = {
+            'color': 'red',
+        }
         row <= col2
+
+        # some more info
+
+        col3 = html.TD(explanation)
+        row <= col3
+
+        col4 = html.TD(effect)
+        row <= col4
+
+        col5 = html.TD(implemented)
+        row <= col5
 
         game_params_table <= row
 
