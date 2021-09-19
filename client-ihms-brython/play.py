@@ -664,7 +664,8 @@ def submit_orders():
             # can be None if no retreating unit on board
             if selected_active_unit is not None:
 
-                if selected_active_unit.role != variant_data.roles[role_id]:
+                # gm can pass orders on archive games
+                if role_id != 0 and selected_active_unit.role != variant_data.roles[role_id]:
 
                     alert("Bien essayé, mais cette unité ne vous appartient pas.")
                     selected_active_unit = None
@@ -1470,7 +1471,8 @@ def submit_communication_orders():
             # can be None if no retreating unit on board
             if selected_active_unit is not None:
 
-                if selected_active_unit.role != variant_data.roles[role_id]:
+                # gm can pass orders on archive games
+                if role_id != 0 and selected_active_unit.role != variant_data.roles[role_id]:
 
                     alert("Bien essayé, mais cette unité ne vous appartient pas.")
                     selected_active_unit = None
@@ -3241,7 +3243,7 @@ def show_game_parameters():
         row = html.TR()
 
         parameter_name, explanation, effect, implemented = {
-            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres", "NON mais BIENTOT"),
+            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, le système autorise les résolution sans tenir compte des soumissions des joueurs", "En partie"),
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue", "NON mais BIENTOT"),
             'silent': ("silencieuse", "on peut pas déclarer ni négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible, toute déclaration de joueur est impossible", "NON mais BIENTOT"),
             'cumulate': ("cumulable", "un joueur peut prendre plusieurs rôle dans la partie", "Le système accepte qu'un joueur prenne plus d'un rôle", "NON et pas dans un futur proche !"),
