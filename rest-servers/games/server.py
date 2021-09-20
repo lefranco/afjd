@@ -991,6 +991,71 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+
+
+
+
+
+@API.resource('/game-role/<game_id>')
+class GameRoleRessource(flask_restful.Resource):  # type: ignore
+    """ GameRoleRessource """
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Get my role in a game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-role/<game_id> GETTING - rectifying position game id=%s", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+
+        del sql_executor
+
+        role_table = {str(a[1]): a[2] for a in allocations_list}
+
+        role_id = None
+        if str(player_id) in role_table:
+            role_found = role_table[str(player_id)]
+            if role_found != -1:
+                role_id = role_found
+
+        return role_id, 200
+
+
 @API.resource('/game-allocations/<game_id>')
 class AllocationGameRessource(flask_restful.Resource):  # type: ignore
     """ AllocationGameRessource """
