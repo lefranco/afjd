@@ -1050,9 +1050,10 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
 
-        if req_result.json() != player_id:
-            flask_restful.abort(404, msg=f"Only player can get player allocations")
+        if user_id != int(player_id):
+            flask_restful.abort(403, msg=f"Only player can get his/her player allocations")
 
         sql_executor = database.SqlExecutor()
 

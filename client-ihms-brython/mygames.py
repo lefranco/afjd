@@ -46,8 +46,8 @@ def get_player_games_playing_in(player_id):
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/player-allocations/{player_id}"
 
-    # getting player games playing in list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    # getting player games playing in list : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict(player_games_dict)
 
