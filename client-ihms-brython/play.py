@@ -2918,7 +2918,7 @@ def game_master():
         url = f"{host}:{port}/game-allocations/{game_id}"
 
         # get roles that are allocated to game : do not need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return pseudo_list
 
@@ -3290,19 +3290,40 @@ def get_game_players_data(game_id):
     url = f"{host}:{port}/game-allocations/{game_id}"
 
     # getting game allocation : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return game_players_dict
 
 
 def show_players_in_game():
-    """ show_game_players_data """
+    """ show_players_in_game """
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
 
     game = storage['GAME']
+
+    # game parameters
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
+    # from game name get game id
+
+    game_id = common.get_game_id(game)
+    if game_id is None:
+        return
+
+    # from game id and token get role_id of player
+
+    role_id = common.get_role_allocated_to_player(game_id)
+    if game_parameters_loaded['anonymous'] and role_id != 0:
+        alert("Seul l'arbitre peut voir les joueurs d'une partie anonyme")
+        return
 
     # from game name get variant name
 

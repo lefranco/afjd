@@ -123,7 +123,7 @@ def my_games():
         # build variant data
         variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
-        role_id = common.get_role_allocated_to_player(game_id, player_id)
+        role_id = common.get_role_allocated_to_player(game_id)
         if role_id is None:
             continue
         data['role_played'] = role_id
