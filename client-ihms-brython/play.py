@@ -21,7 +21,7 @@ import sandbox
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'chatter', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'paramètres', 'joueurs']
+OPTIONS = ['position', 'ordonner', 'taguer', 'chatter', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'paramètres', 'joueurs', 'ordres']
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -3209,8 +3209,8 @@ def show_game_parameters():
         row = html.TR()
 
         parameter_name, explanation, effect, implemented = {
-            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, le système autorise les résolutions sans tenir compte des soumissions des joueurs", "En partie"),
-            'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue", "NON mais BIENTOT"),
+            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, le système autorise les résolutions sans tenir compte des soumissions des joueurs", "1:oui 2:non"),
+            'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue", "OUI"),
             'silent': ("silencieuse", "on peut pas déclarer ni négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible, toute déclaration de joueur est impossible", "NON mais BIENTOT"),
             'cumulate': ("cumulable", "un joueur peut prendre plusieurs rôle dans la partie", "Le système accepte qu'un joueur prenne plus d'un rôle", "NON et pas dans un futur proche !"),
             'fast': ("rapide", "la partie est jouée en temps réel comme sur un plateau", "Les dates limite ne sont pas mises à jour par le système", "NON mais BIENTOT"),
@@ -3368,32 +3368,14 @@ def show_players_in_game():
 
     id2pseudo = {v: k for k, v in players_dict.items()}
 
-    submitted_data = None
-
-    # if user identified ?
-    if 'PSEUDO' in storage:
-        pseudo = storage['PSEUDO']
-
-        # is player in game ?
-        role_id = common.get_role_allocated_to_player(game_id)
-        if role_id is not None:
-
-            # you will at least get your own role
-            submitted_data = common.get_roles_submitted_orders(game_id)
-            if submitted_data is None:
-                return
-
-            # just to avoid a warning
-            submitted_data = dict(submitted_data)
-
     game_players_table = html.TABLE()
 
-    fields = ['flag', 'role', 'player', 'orders']
+    fields = ['flag', 'role', 'player']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'role', 'orders': 'ordres'}[field]
+        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'role'}[field]
         col = html.TD(field_fr)
         thead <= col
     game_players_table <= thead
@@ -3438,6 +3420,115 @@ def show_players_in_game():
         col = html.TD(pseudo_there if pseudo_there else "")
         row <= col
 
+        game_players_table <= row
+
+    my_sub_panel <= game_players_table
+
+    # add the non allocated players
+    dangling_players = [p for p in game_players_dict.keys() if game_players_dict[p] == - 1]
+    if dangling_players:
+        my_sub_panel <= html.BR()
+        my_sub_panel <= html.EM("Les pseudos suivants sont alloués à la partie sans rôle:")
+        for dangling_player_id_str in dangling_players:
+            my_sub_panel <= html.BR()
+            dangling_player_id = int(dangling_player_id_str)
+            dangling_player = id2pseudo[dangling_player_id]
+            my_sub_panel <= html.B(html.EM(dangling_player))
+
+
+def show_orders_submitted_in_game():
+    """ show_orders_submitted_in_game """
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    # from game name get variant name
+
+    variant_name_loaded = common.game_variant_name_reload(game)
+    if not variant_name_loaded:
+        return
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # selected display (user choice)
+    display_chosen = tools.get_display_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
+    # game id now
+    game_id = common.get_game_id(game)
+    if game_id is None:
+        return
+
+    submitted_data = None
+
+    # if user identified ?
+    if 'PSEUDO' in storage:
+        pseudo = storage['PSEUDO']
+
+        # is player in game ?
+        role_id = common.get_role_allocated_to_player(game_id)
+        if role_id is not None:
+
+            # you will at least get your own role
+            submitted_data = common.get_roles_submitted_orders(game_id)
+            if submitted_data is None:
+                return
+
+            # just to avoid a warning
+            submitted_data = dict(submitted_data)
+
+    game_players_table = html.TABLE()
+
+    fields = ['flag', 'role', 'orders']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'flag': 'drapeau', 'role': 'role', 'orders': 'ordres'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    game_players_table <= thead
+
+    for role_id in variant_data.roles:
+
+        row = html.TR()
+
+        # role flag
+        if role_id < 0:
+            role_icon_img = None
+        else:
+            role = variant_data.roles[role_id]
+            role_name = variant_data.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
+
+        if role_icon_img:
+            col = html.TD(role_icon_img)
+        else:
+            col = html.TD()
+        row <= col
+
+        # role name
+        if role_id == -1:
+            role_name = ""
+        else:
+            role = variant_data.roles[role_id]
+            role_name = variant_data.name_table[role]
+
+        col = html.TD(role_name)
+        row <= col
+
         # orders are in
         if submitted_data is not None:
             submitted_roles_list = submitted_data['submitted']
@@ -3456,18 +3547,6 @@ def show_players_in_game():
         game_players_table <= row
 
     my_sub_panel <= game_players_table
-
-    # add the non allocated players
-    dangling_players = [p for p in game_players_dict.keys() if game_players_dict[p] == - 1]
-    if dangling_players:
-        my_sub_panel <= html.BR()
-        my_sub_panel <= html.EM("Les pseudos suivants sont alloués à la partie sans rôle:")
-        for dangling_player_id_str in dangling_players:
-            my_sub_panel <= html.BR()
-            dangling_player_id = int(dangling_player_id_str)
-            dangling_player = id2pseudo[dangling_player_id]
-            my_sub_panel <= html.B(html.EM(dangling_player))
-
 
 def load_option(_, item_name):
     """ load_option """
@@ -3495,6 +3574,8 @@ def load_option(_, item_name):
         show_game_parameters()
     if item_name == 'joueurs':
         show_players_in_game()
+    if item_name == 'ordres':
+        show_orders_submitted_in_game()
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
