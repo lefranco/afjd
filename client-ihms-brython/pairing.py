@@ -281,6 +281,20 @@ def move_players_in_game():
     if game_id is None:
         return
 
+    # from pseudo get player id
+
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        # note : login is required to reach here so should not happen
+        return
+
+    # from game id and player id get role_id of player
+
+    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    if role_id != 0:
+        alert("Vous ne semblez pas être l'arbitre de cette partie")
+        return
+
     allocated = get_game_allocated_players(game_id)
     if allocated is None:
         return
