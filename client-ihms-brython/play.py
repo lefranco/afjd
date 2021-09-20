@@ -1097,13 +1097,9 @@ def submit_orders():
     if game_id is None:
         return
 
-    # from pseudo get player id
+    # from game_id and token get role
 
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        return
-
-    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    role_id = common.get_role_allocated_to_player(game_id)
     if role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
@@ -1809,15 +1805,9 @@ def submit_communication_orders():
     if game_id is None:
         return
 
-    # from pseudo get player id
+    # from game_id and token get role
 
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        return
-
-    # from game id and player id get role_id of player
-
-    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    role_id = common.get_role_allocated_to_player(game_id)
     if role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
@@ -2091,15 +2081,9 @@ def negotiate():
     if game_id is None:
         return
 
-    # from pseudo get player id
+    # from game_id and token get role
 
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        return
-
-    # from game id and player id get role_id of player
-
-    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    role_id = common.get_role_allocated_to_player(game_id)
     if role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
@@ -2352,15 +2336,9 @@ def declare():
     if game_id is None:
         return
 
-    # from pseudo get player id
+    # from game_id and token get role
 
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        return
-
-    # from game id and player id get role_id of player
-
-    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    role_id = common.get_role_allocated_to_player(game_id)
     if role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
@@ -2550,15 +2528,9 @@ def vote():
     if game_id is None:
         return
 
-    # from pseudo get player id
+    # from game id and token get role_id of player
 
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        return
-
-    # from game id and player id get role_id of player
-
-    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    role_id = common.get_role_allocated_to_player(game_id)
     if role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
@@ -3008,15 +2980,9 @@ def game_master():
     if game_id is None:
         return
 
-    # from pseudo get player id
+    # from game id and token get role_id of player
 
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        return
-
-    # from game id and player id get role_id of player
-
-    role_id = common.get_role_allocated_to_player(game_id, player_id)
+    role_id = common.get_role_allocated_to_player(game_id)
     if role_id != 0:
         alert("Vous ne semblez pas être l'arbitre de cette partie")
         return
@@ -3387,21 +3353,17 @@ def show_players_in_game():
     if 'PSEUDO' in storage:
         pseudo = storage['PSEUDO']
 
-        # from pseudo get player id
-        player_id = common.get_player_id(pseudo)
-        if player_id is not None:
+        # is player in game ?
+        role_id = common.get_role_allocated_to_player(game_id)
+        if role_id is not None:
 
-            # is player in game ?
-            role_id = common.get_role_allocated_to_player(game_id, player_id)
-            if role_id is not None:
+            # you will at least get your own role
+            submitted_data = common.get_roles_submitted_orders(game_id)
+            if submitted_data is None:
+                return
 
-                # you will at least get your own role
-                submitted_data = common.get_roles_submitted_orders(game_id)
-                if submitted_data is None:
-                    return
-
-                # just to avoid a warning
-                submitted_data = dict(submitted_data)
+            # just to avoid a warning
+            submitted_data = dict(submitted_data)
 
     game_players_table = html.TABLE()
 
