@@ -168,7 +168,7 @@ def usurp():
     possible_usurped = set(players_dict.keys())
 
     input_usurped = html.SELECT(type="select-one", value="")
-    for usurped_pseudo in sorted(possible_usurped):
+    for usurped_pseudo in sorted(possible_usurped, key=lambda pu: pu.upper()):
         option = html.OPTION(usurped_pseudo)
         input_usurped <= option
 
