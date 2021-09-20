@@ -502,7 +502,7 @@ def get_season(advancement, variant) -> None:
     return advancement_season, advancement_year
 
 
-def get_role_allocated_to_player(game_id, player_id):
+def get_role_allocated_to_player(game_id):
     """ get_role the player has in the game """
 
     role_id = None
@@ -520,20 +520,18 @@ def get_role_allocated_to_player(game_id, player_id):
         req_result = json.loads(req.text)
         nonlocal role_id
         # TODO : consider if a player has more than one role
-        role_id = None
-        if str(player_id) in req_result:
-            role_found = req_result[str(player_id)]
-            if role_found != -1:
-                role_id = role_found
+        role_id = req_result
 
-    json_dict = dict()
+    json_dict = {
+        'game_id': game_id,
+    }
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-allocations/{game_id}"
+    url = f"{host}:{port}/game-role/{game_id}"
 
-    # get players allocated to game : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    # get players allocated to game : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return role_id
 
