@@ -50,7 +50,7 @@ def get_game_allocated_players(game_id):
     url = f"{host}:{port}/game-allocations/{game_id}"
 
     # get players allocated to game : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return game_master_id, players_allocated_list, players_assigned_list
 
@@ -418,7 +418,7 @@ def take_mastering_game():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/role-allocations"
 
-        # takikng game mastering : need a token
+        # taking game mastering : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     form = html.FORM()
