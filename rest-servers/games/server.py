@@ -2735,6 +2735,25 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         if user_id != expected_id:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game or the player in charge of the role")
+
+        # get destinees
+        try:
+            dest_role_ids = list(map(int, dest_role_ids_submitted.split()))
+        except:  # noqa: E722 pylint: disable=bare-except
+            flask_restful.abort(400, msg="Bad list of addresses identifiers. Use a space separated list of numbers")
+
+        # checks relative to silent
+        if game.silent:
+
+            # find game master
+            assert game is not None
+            game_master_id = game.get_role(sql_executor, 0)
+
+            # is game master sending or are we sending to game master only ?
+            if not (user_id == game_master_id or dest_role_ids == [0]):
+                del sql_executor
+                flask_restful.abort(403, msg="Only game master may send or receive message in a silent game")
+
         # create message here
 
         # create a content
@@ -2744,11 +2763,6 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         content.update_database(sql_executor)
 
         # create a message linked to the content
-        try:
-            dest_role_ids = list(map(int, dest_role_ids_submitted.split()))
-        except:  # noqa: E722 pylint: disable=bare-except
-            flask_restful.abort(400, msg="Bad list of addresses identifiers. Use a space separated list of numbers")
-
         for dest_role_id in dest_role_ids:
             message = messages.Message(int(game_id), role_id, dest_role_id, identifier)
             message.update_database(sql_executor)
@@ -2907,6 +2921,18 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         if user_id != expected_id:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game or the player in charge of the role")
+
+        # checks relative to silent
+        if game.silent:
+
+            # find game master
+            assert game is not None
+            game_master_id = game.get_role(sql_executor, 0)
+
+            # must be game master
+            if user_id != game_master_id:
+                del sql_executor
+                flask_restful.abort(403, msg="Only game master may declare in a silent game")
 
         # create declaration here
 
