@@ -36,7 +36,7 @@ class Message:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS messages")
-        sql_executor.execute("CREATE TABLE messages (game_id INT, author_num INT, addressee_num INT, content_id INTEGER UNIQUE PRIMARY KEY)")
+        sql_executor.execute("CREATE TABLE messages (game_id INT, author_num INT, addressee_num INT, content_id INTEGER)")
 
     def __init__(self, game_id: int, author_num: int, addressee_num: int, content_id: int) -> None:
 
