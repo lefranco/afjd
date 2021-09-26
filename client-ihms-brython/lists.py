@@ -112,38 +112,6 @@ def show_games_data():
     my_sub_panel <= html.P(f"Il y a {count} parties")
 
 
-def get_game_masters_data():
-    """ get_game_masters_data """
-
-    game_masters_dict = None
-
-    def reply_callback(req):
-        nonlocal game_masters_dict
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Error getting game/game masters list: {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problem getting game/game masters list: {req_result['msg']}")
-            else:
-                alert("Undocumented issue from server")
-            return
-
-        req_result = json.loads(req.text)
-        game_masters_dict = req_result
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/allocations"
-
-    # getting allocations : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return list(game_masters_dict)
-
-
 def show_game_masters_data():
     """ show_game_masters_data """
 
@@ -163,7 +131,7 @@ def show_game_masters_data():
         return
 
     # get the link (allocations) of game masters
-    game_masters_list = get_game_masters_data()
+    game_masters_list = common.get_game_masters_data()
 
     if not game_masters_list:
         return
@@ -217,7 +185,7 @@ def show_no_game_masters_data():
         return
 
     # get the link (allocations) of game masters
-    game_masters_list = get_game_masters_data()
+    game_masters_list = common.get_game_masters_data()
 
     if not game_masters_list:
         return

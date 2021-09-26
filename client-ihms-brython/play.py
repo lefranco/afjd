@@ -91,12 +91,21 @@ def get_game_status(variant_data, game_parameters_loaded, full):
     row <= col
     col = html.TD(f"DL {game_deadline_str}")
     row <= col
+
+    if full:
+
+        game_id = common.get_game_id(game_name)
+        if game_id is not None:
+            game_master = get_game_master(game_id)
+            col = html.TD(f"Arbitre {game_master}")
+            row <= col
+
     game_status_table <= row
 
     if full:
         row = html.TR()
 
-        col = html.TD(game_description, colspan="4")
+        col = html.TD(game_description, colspan="5")
         row <= col
         game_status_table <= row
 
@@ -125,6 +134,32 @@ def get_game_status_histo(variant_data, game_parameters_loaded, advancement_sele
     game_status_table <= row
     return game_status_table
 
+
+def get_game_master(game_id):
+    """ get_game_master """
+
+    # get the link (allocations) of game masters
+    game_masters_list = common.get_game_masters_data()
+
+    # get the game it self
+    for data in game_masters_list:
+        if 'game' not in data:
+            continue
+        if data['game'] == game_id:
+            if 'master' in data:
+                game_master_id = data['master']
+
+                # get the players (all players)
+                players_dict = common.get_players()
+                if players_dict is None:
+                    return None
+
+                game_master_pseudo = None
+                for pseudo, identifier in players_dict.items():
+                    if identifier == game_master_id:
+                        return pseudo
+
+    return None
 
 def show_position():
     """ show_position """
@@ -3391,13 +3426,13 @@ def show_players_in_game():
 
         row = html.TR()
 
+        if role_id <= 0:
+            continue
+
         # role flag
-        if role_id < 0:
-            role_icon_img = None
-        else:
-            role = variant_data.roles[role_id]
-            role_name = variant_data.name_table[role]
-            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
+        role = variant_data.roles[role_id]
+        role_name = variant_data.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)
@@ -3406,11 +3441,8 @@ def show_players_in_game():
         row <= col
 
         # role name
-        if role_id == -1:
-            role_name = ""
-        else:
-            role = variant_data.roles[role_id]
-            role_name = variant_data.name_table[role]
+        role = variant_data.roles[role_id]
+        role_name = variant_data.name_table[role]
 
         col = html.TD(role_name)
         row <= col
@@ -3471,28 +3503,31 @@ def show_orders_submitted_in_game():
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
+    # if user identified ?
+    if 'PSEUDO' not in storage:
+        alert("Il faut se loguer au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
     # game id now
     game_id = common.get_game_id(game)
     if game_id is None:
         return
 
-    submitted_data = None
+    # is player in game ?
+    role_id = common.get_role_allocated_to_player(game_id)
+    if role_id is None:
+        alert("Seul les participants à une partie peuvent voir le statut des ordres")
+        return
 
-    # if user identified ?
-    if 'PSEUDO' in storage:
-        pseudo = storage['PSEUDO']
+    # you will at least get your own role
+    submitted_data = common.get_roles_submitted_orders(game_id)
+    if submitted_data is None:
+        return
 
-        # is player in game ?
-        role_id = common.get_role_allocated_to_player(game_id)
-        if role_id is not None:
-
-            # you will at least get your own role
-            submitted_data = common.get_roles_submitted_orders(game_id)
-            if submitted_data is None:
-                return
-
-            # just to avoid a warning
-            submitted_data = dict(submitted_data)
+    # just to avoid a warning
+    submitted_data = dict(submitted_data)
 
     game_players_table = html.TABLE()
 
@@ -3510,13 +3545,13 @@ def show_orders_submitted_in_game():
 
         row = html.TR()
 
+        if role_id <= 0:
+            continue
+
         # role flag
-        if role_id < 0:
-            role_icon_img = None
-        else:
-            role = variant_data.roles[role_id]
-            role_name = variant_data.name_table[role]
-            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
+        role = variant_data.roles[role_id]
+        role_name = variant_data.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)
@@ -3524,26 +3559,19 @@ def show_orders_submitted_in_game():
             col = html.TD()
         row <= col
 
-        # role name
-        if role_id == -1:
-            role_name = ""
-        else:
-            role = variant_data.roles[role_id]
-            role_name = variant_data.name_table[role]
+        role = variant_data.roles[role_id]
+        role_name = variant_data.name_table[role]
 
         col = html.TD(role_name)
         row <= col
 
         # orders are in
-        if submitted_data is not None:
-            submitted_roles_list = submitted_data['submitted']
-            needed_roles_list = submitted_data['needed']
-            if role_id in submitted_roles_list:
-                flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
-            elif role_id in needed_roles_list:
-                flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
-            else:
-                flag = ""
+        submitted_roles_list = submitted_data['submitted']
+        needed_roles_list = submitted_data['needed']
+        if role_id in submitted_roles_list:
+            flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
+        elif role_id in needed_roles_list:
+            flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
         else:
             flag = ""
         col = html.TD(flag)
