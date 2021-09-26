@@ -841,3 +841,36 @@ def read_image(variant_name_loaded, display_chosen):
     """ read_image """
 
     return html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
+
+
+def get_game_masters_data():
+    """ get_game_masters_data """
+
+    game_masters_dict = None
+
+    def reply_callback(req):
+        nonlocal game_masters_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting game/game masters list: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting game/game masters list: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        req_result = json.loads(req.text)
+        game_masters_dict = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/allocations"
+
+    # getting allocations : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return list(game_masters_dict)
+
