@@ -2165,10 +2165,23 @@ def negotiate():
     legend_destinees = html.LEGEND("Destinataire(s)", title="Et à qui ?")
     form <= legend_destinees
 
+    # game parameters
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
     table = html.TABLE()
     row = html.TR()
     selected = dict()
     for role_id_dest in range(variant_content_loaded['roles']['number'] + 1):
+
+        # dest only if allowed
+        if game_parameters_loaded['silent']:
+            if not (role_id == 0 or role_id_dest == 0):
+                continue
 
         role = variant_data.roles[role_id_dest]
         role_name = variant_data.name_table[role]
@@ -2498,10 +2511,22 @@ def declare():
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
 
-    # form
-    my_sub_panel <= form
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.BR()
+    # game parameters
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
+    # form only if allowed
+    if game_parameters_loaded['silent'] and role_id != 0:
+        my_sub_panel <= html.P("Cette partie est silencieuse")
+    else:
+        # form
+        my_sub_panel <= form
+        my_sub_panel <= html.BR()
+        my_sub_panel <= html.BR()
 
     # declarations already
     my_sub_panel <= declarations_table
