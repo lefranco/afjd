@@ -679,7 +679,7 @@ def sendmail():
     possible_addressed = set(players_dict.keys())
 
     input_addressed = html.SELECT(type="select-one", value="")
-    for addressee_pseudo in sorted(possible_addressed):
+    for addressee_pseudo in sorted(possible_addressed, key=lambda pu: pu.upper()):
         option = html.OPTION(addressee_pseudo)
         input_addressed <= option
 
