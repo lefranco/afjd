@@ -320,6 +320,10 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # special : game changed state
         if game.current_state != current_state_before:
 
+            if not game.current_state > current_state_before:
+                data = {'name': name, 'msg': 'Transition not allowed'}
+                return data, 400
+
             if current_state_before == 0 and game.current_state == 1:
 
                 # check enough players
