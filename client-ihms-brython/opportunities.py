@@ -8,6 +8,7 @@ import time
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 
 import config
 import tools
@@ -15,7 +16,6 @@ import common
 import mapping
 import selection
 import index  # circular import
-
 
 
 my_panel = html.DIV(id="opportunities")
@@ -90,7 +90,6 @@ def my_opportunities():
         # adding allocation : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-
     def join_and_select_game_callback(ev, game):
         """ join_and_select_game_callback """
 
@@ -116,7 +115,7 @@ def my_opportunities():
     if recruiting_games_list is None:
         return
 
-    recruiting_games_dict = {tr[0] : {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
+    recruiting_games_dict = {tr[0]: {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
 
     games_dict = common.get_games_data()
     if games_dict is None:
@@ -133,7 +132,7 @@ def my_opportunities():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'capacity' : 'capacité (dont arbitre)', 'join': 'rejoindre'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'capacity': 'capacité (dont arbitre)', 'join': 'rejoindre'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead

@@ -5,8 +5,11 @@
 import json
 
 from browser import html, ajax, alert  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog, Dialog   # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
+
+#  from browser.widgets.dialog import Dialog # pylint: disable=import-error
+
 
 import config
 import common
@@ -652,9 +655,9 @@ def delete_account():
     def delete_account_callback_confirm(_):
 
         # For some reason does not work, confirmation window dissapears
-        #dialog = Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
-        #dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
-        #dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
+        #  dialog = Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
+        #  dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
+        #  dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
 
         # called directly
         delete_account_callback(_, None)

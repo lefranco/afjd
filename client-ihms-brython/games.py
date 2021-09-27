@@ -6,9 +6,13 @@ import json
 import datetime
 import time
 
-from browser import html, ajax, alert, bind  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
+from browser import html, ajax, alert  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
+
+#  from browser.widgets.dialog import Dialog  # pylint: disable=import-error
+#  from browser import bind  # pylint: disable=import-error
+
 
 import config
 import common
@@ -1183,9 +1187,9 @@ def delete_game():
     def delete_game_callback_confirm(_):
 
         # For some reason does not work, confirmation window dissapears
-        #dialog = Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
-        #dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
-        #dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
+        #  dialog = Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
+        #  dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
+        #  dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
 
         # called directly
         delete_game_callback(_, None)
