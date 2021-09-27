@@ -96,8 +96,8 @@ def get_game_status(variant_data, game_parameters_loaded, full):
 
         game_id = common.get_game_id(game_name)
         if game_id is not None:
-            game_master = get_game_master(game_id)
-            col = html.TD(f"Arbitre {game_master}")
+            game_master_pseudo = get_game_master(game_id)
+            col = html.TD(f"Arbitre {game_master_pseudo}")
             row <= col
 
     game_status_table <= row
@@ -1976,24 +1976,8 @@ def submit_communication_orders():
 def visual_chat():
     """ negotiate """
 
-    def put_wall_message_callback(_):
-        pass
-
     # TODO
     my_sub_panel <= "Pas encore implémenté, désolé !"
-    return
-
-    iframe = html.IFRAME(src="./webrtc/video/index.html", allow="fullscreen", width=1000, height=650)
-    my_panel <= iframe
-
-    form = html.FORM()
-    input_wall_message = html.TEXTAREA(type="text", rows=1, cols=100)
-    form <= input_wall_message
-    input_put_on_game_wall = html.INPUT(type="submit", value="poster sur le mur")
-    input_put_on_game_wall.bind("click", put_wall_message_callback)
-    form <= input_put_on_game_wall
-
-    my_sub_panel <= form
 
 
 # the idea is not to loose the content of a message if not destinee were specified
