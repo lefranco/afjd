@@ -90,7 +90,7 @@ def my_opportunities():
         # adding allocation : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def join_and_select_game_callback(ev, game):
+    def join_and_select_game_callback(_, game):
         """ join_and_select_game_callback """
 
         # action of selecting game
@@ -98,7 +98,7 @@ def my_opportunities():
         selection.show_game_selected()
 
         # action of putting myself in game
-        join_game_callback(ev, game)
+        join_game_callback(_, game)
 
         # action of going to game page
         index.load_option(None, 'jouer la partie')
@@ -114,6 +114,9 @@ def my_opportunities():
     recruiting_games_list = get_recruiting_games()
     if recruiting_games_list is None:
         return
+
+    # to avoid warning
+    recruiting_games_list = list(recruiting_games_list)
 
     recruiting_games_dict = {tr[0]: {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
 
