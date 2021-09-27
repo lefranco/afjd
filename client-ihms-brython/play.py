@@ -154,12 +154,12 @@ def get_game_master(game_id):
                 if players_dict is None:
                     return None
 
-                game_master_pseudo = None
                 for pseudo, identifier in players_dict.items():
                     if identifier == game_master_id:
                         return pseudo
 
     return None
+
 
 def show_position():
     """ show_position """
@@ -1995,6 +1995,7 @@ def visual_chat():
 
     my_sub_panel <= form
 
+
 # the idea is not to loose the content of a message if not destinee were specified
 content_backup = None  # pylint: disable=invalid-name
 
@@ -3533,8 +3534,6 @@ def show_orders_submitted_in_game():
         alert("Il faut se loguer au préalable")
         return
 
-    pseudo = storage['PSEUDO']
-
     # game id now
     game_id = common.get_game_id(game)
     if game_id is None:
@@ -3605,6 +3604,7 @@ def show_orders_submitted_in_game():
         game_players_table <= row
 
     my_sub_panel <= game_players_table
+
 
 def load_option(_, item_name):
     """ load_option """

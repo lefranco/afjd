@@ -5,7 +5,7 @@
 import json
 import datetime
 
-from browser import html, ajax, alert  # pylint: disable=import-error
+from browser import html  # pylint: disable=import-error
 
 import config
 import common
@@ -62,6 +62,7 @@ def show_players_data():
 
     my_sub_panel <= players_table
     my_sub_panel <= html.P(f"Il y a {count} joueurs")
+
 
 def show_games_data():
     """ show_games_data """
