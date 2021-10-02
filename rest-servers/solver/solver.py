@@ -404,14 +404,10 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
 def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any], role_num: int) -> typing.List[typing.Dict[str, typing.Any]]:
     """ This will read the orders_result.txt file """
 
-    region_names = [r.upper() for r in names['zones'].values() if r]
     zone_names = [r.upper() for r in names['zones'].values() if r]
     zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}".upper() for r, c in variant['coastal_zones']]
-    role_names = [v[0].upper() for k, v in names['roles'].items() if int(k)]
-    center_table = variant['centers']
-    type_names = ["A", "F"]
 
-    orders_list: typing.List[int] = list()
+    orders_list: typing.List[typing.Dict[str, typing.Any]] = list()
 
     for line in orders_result_content:
 
@@ -441,10 +437,10 @@ def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[st
 
         order = {
             'active_unit': {
-                'role' : role_num,
-                'zone' : zone_num
+                'role': role_num,
+                'zone': zone_num
             },
-            'order_type' : order_type,
+            'order_type': order_type,
         }
 
         orders_list.append(order)
@@ -560,7 +556,7 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         return result.returncode, result.stderr.decode(), result.stdout.decode(), situation_result, orders_result, active_roles_list
 
 
-def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], role: int, names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[str]]:
+def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation: typing.Dict[str, typing.Any], role: int, names: typing.Dict[str, typing.Any]) -> typing.Tuple[int, str, str, typing.Optional[typing.List[typing.Dict[str, typing.Any]]]]:
     """ returns errorcode, stderr, stdout, ord-result(text) """
 
     diplo_dat_content = build_variant_file(variant, names)
@@ -609,7 +605,6 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
         # copy back orders
         with open(f"{tmpdirname}/orders_result.txt", "r") as infile:
             orders_result_content = infile.readlines()
-            orders_result = ''.join(orders_result_content)
 
         orders_list = read_orders(orders_result_content, variant, names, role)
 
