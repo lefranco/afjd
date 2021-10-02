@@ -192,16 +192,13 @@ class GameIdentifierRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-identifiers/<name> - GET - retrieving identifier of game name=%s", name)
 
-        sql_executor = database.SqlExecutor()
-
         # find the game
+        sql_executor = database.SqlExecutor()
         game = games.Game.find_by_name(sql_executor, name)
+        del sql_executor
 
         if game is None:
-            del sql_executor
             flask_restful.abort(404, msg=f"Game {name} doesn't exist")
-
-        del sql_executor
 
         assert game is not None
         return game.identifier, 200
@@ -219,16 +216,13 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/games/<name> - GET- retrieving data of game name=%s", name)
 
-        sql_executor = database.SqlExecutor()
-
         # find the game
+        sql_executor = database.SqlExecutor()
         game = games.Game.find_by_name(sql_executor, name)
+        del sql_executor
 
         if game is None:
-            del sql_executor
             flask_restful.abort(404, msg=f"Game {name} doesn't exist")
-
-        del sql_executor
 
         assert game is not None
         data = game.save_json()
@@ -303,6 +297,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             # cannot be in past
             if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
                 date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
+                del sql_executor
                 flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{date_desc}' (GMT)")
 
         # keep a note of game state before
@@ -322,6 +317,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
             if not game.current_state > current_state_before:
                 data = {'name': name, 'msg': 'Transition not allowed'}
+                del sql_executor
                 return data, 400
 
             if current_state_before == 0 and game.current_state == 1:
@@ -334,17 +330,13 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 number_players_expected = variant_data['roles']['number']
 
                 if nb_players_allocated < number_players_expected:
-
-                    del sql_executor
-
                     data = {'name': name, 'msg': 'Not enough players !'}
+                    del sql_executor
                     return data, 400
 
                 if nb_players_allocated > number_players_expected:
-
-                    del sql_executor
-
                     data = {'name': name, 'msg': 'Too many players !'}
+                    del sql_executor
                     return data, 400
 
                 game.start(sql_executor)
@@ -374,6 +366,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 if req_result.status_code != 200:
                     print(f"ERROR from server  : {req_result.text}")
                     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                    del sql_executor
                     flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
             if current_state_before == 1 and game.current_state == 2:
@@ -406,6 +399,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 if req_result.status_code != 200:
                     print(f"ERROR from server  : {req_result.text}")
                     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                    del sql_executor
                     flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
         game.update_database(sql_executor)
@@ -529,9 +523,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/games - GET - get getting all games names")
 
         sql_executor = database.SqlExecutor()
-
         games_list = games.Game.inventory(sql_executor)
-
         del sql_executor
 
         data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state} for g in games_list}
@@ -589,6 +581,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         # find the game
         game = games.Game.find_by_name(sql_executor, name)
+
         if game is not None:
             del sql_executor
             flask_restful.abort(400, msg=f"Game {name} already exists")
@@ -604,6 +597,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             # cannot be in past
             if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
                 date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
+                del sql_executor
                 flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{date_desc}' (GMT)")
 
         else:
@@ -677,9 +671,7 @@ class GameSelectListRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg="Bad selection. Use a space separated list of numbers")
 
         sql_executor = database.SqlExecutor()
-
         games_list = games.Game.inventory(sql_executor)
-
         del sql_executor
 
         data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state} for g in games_list if g.identifier in selection_list}
@@ -701,12 +693,10 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/allocations - GET - get getting all game master allocations")
 
         sql_executor = database.SqlExecutor()
-
         allocations_list = allocations.Allocation.inventory(sql_executor)
-        data = [{'game': a[0], 'master': a[1]} for a in allocations_list if a[2] == 0]
-
         del sql_executor
 
+        data = [{'game': a[0], 'master': a[1]} for a in allocations_list if a[2] == 0]
         return data, 200
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
@@ -999,7 +989,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
 class GameRoleRessource(flask_restful.Resource):  # type: ignore
     """ GameRoleRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int) -> typing.Tuple[typing.Optional[int], int]:  # pylint: disable=no-self-use
         """
         Get my role in a game
         EXPOSED
@@ -1118,6 +1108,7 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
+
 @API.resource('/player-allocations/<player_id>')
 class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
     """ AllocationPlayerRessource """
@@ -1158,12 +1149,10 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
         user_id = req_result.json()
 
         if user_id != int(player_id):
-            flask_restful.abort(403, msg=f"Only player can get his/her player allocations")
+            flask_restful.abort(403, msg="Only player can get his/her player allocations")
 
         sql_executor = database.SqlExecutor()
-
         allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
-
         del sql_executor
 
         data = {str(a[0]): a[2] for a in allocations_list}
@@ -1183,9 +1172,7 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/games-recruiting - GET - get getting all games recruiting")
 
         sql_executor = database.SqlExecutor()
-
         full_games_data = sql_executor.execute("select games.identifier, count(*) as filled_count, capacities.value from games join allocations on allocations.game_id=games.identifier join capacities on capacities.game_id=games.identifier group by identifier", need_result=True)
-
         del sql_executor
 
         # keep only the ones where a role is missing
@@ -1492,6 +1479,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # not allowed for game master
         if role_id == 0 and not game.archive:
+            del sql_executor
             flask_restful.abort(403, msg="Submitting orders is not possible for game master for non archive games")
 
         # put in database fake units - units for build orders
@@ -1615,10 +1603,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 # insert
                 fake_unit.update_database(sql_executor)  # noqa: F821
 
-            del sql_executor
-
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(400, msg=f"Failed to submit orders {message} : {submission_report}")
 
         # ok so orders are accepted
@@ -1818,6 +1805,7 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
         if variant_dict is None:
             del sql_executor
             flask_restful.abort(404, msg=f"Variant {variant_name} doesn't exist")
+
         variant_dict_json = json.dumps(variant_dict)
 
         # evaluate situation
@@ -1877,11 +1865,9 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
 
         # adjudication failed
         if req_result.status_code != 201:
-
-            del sql_executor
-
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(400, msg=f"Failed to submit civil disorder {message} : {submission_report}")
 
         # ok so orders are made up ok
@@ -2548,6 +2534,8 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         game.advance()
         game.update_database(sql_executor)
 
+        del sql_executor
+
         data = {'msg': f"Ok adjudication performed and game updated : {adjudication_report}"}
         return data, 201
 
@@ -2744,6 +2732,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         try:
             dest_role_ids = list(map(int, dest_role_ids_submitted.split()))
         except:  # noqa: E722 pylint: disable=bare-except
+            del sql_executor
             flask_restful.abort(400, msg="Bad list of addresses identifiers. Use a space separated list of numbers")
 
         # checks relative to silent
@@ -3537,7 +3526,9 @@ def main() -> None:
 
     # emergency
     if not database.db_present():
+
         mylogger.LOGGER.info("Emergency populate procedure")
+
         sql_executor = database.SqlExecutor()
         populate.populate(sql_executor)
         del sql_executor
