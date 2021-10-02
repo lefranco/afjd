@@ -171,31 +171,38 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="Wrong authentication!")
 
         sql_executor = database.SqlExecutor()
+
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
-        del sql_executor
 
         if player is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
         if args['residence']:
             residence_provided = args['residence']
             if not players.check_country(residence_provided):
+                del sql_executor
                 flask_restful.abort(404, msg=f"Residence '{residence_provided}' is not a valid country code")
 
         if args['nationality']:
             nationality_provided = args['nationality']
             if not players.check_country(nationality_provided):
+                del sql_executor
                 flask_restful.abort(404, msg=f"Nationality '{nationality_provided}' is not a valid country code")
 
         if args['time_zone']:
             timezone_provided = args['time_zone']
             if not players.check_timezone(timezone_provided):
+                del sql_executor
                 flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
 
         assert player is not None
         email_before = player.email
         changed = player.load_json(args)
         if not changed:
+
+            del sql_executor
+
             data = {'pseudo': pseudo, 'msg': 'Ok but no change !'}
             return data, 200
 
@@ -218,13 +225,15 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             if req_result.status_code != 201:
                 mylogger.LOGGER.error("ERROR = %s", req_result.text)
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                del sql_executor
                 flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
             if not PREVENT_MAIL_CHECKING:
                 if not mailer.send_mail_checker(code, email_after):
+                    del sql_executor
                     flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
 
-        sql_executor = database.SqlExecutor()
         player.update_database(sql_executor)
+
         del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok updated'}
@@ -239,10 +248,11 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/players/<pseudo> - DELETE - removing one player pseudo=%s", pseudo)
 
         sql_executor = database.SqlExecutor()
+
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
-        del sql_executor
 
         if player is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
 
         assert player is not None
@@ -256,11 +266,13 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(400, msg=f"Allocation check failed!:{message}")
         json_dict = req_result.json()
         allocations_dict = json_dict
 
         if allocations_dict:
+            del sql_executor
             flask_restful.abort(400, msg="Player is still in a game")
 
         # delete player from users server (that will implicitly check we have rights)
@@ -272,11 +284,12 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(400, msg=f"User removal failed!:{message}")
 
         # delete player from here
-        sql_executor = database.SqlExecutor()
         player.delete_database(sql_executor)
+
         del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok removed'}
@@ -317,28 +330,33 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         sql_executor = database.SqlExecutor()
+
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
-        del sql_executor
 
         if player is not None:
+            del sql_executor
             flask_restful.abort(400, msg=f"Player {pseudo} already exists")
 
         if not pseudo.isidentifier():
+            del sql_executor
             flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is not a valid pseudo")
 
         if args['residence']:
             residence_provided = args['residence']
             if not players.check_country(residence_provided):
+                del sql_executor
                 flask_restful.abort(404, msg=f"Residence '{residence_provided}' is not a valid country code")
 
         if args['nationality']:
             nationality_provided = args['nationality']
             if not players.check_country(nationality_provided):
+                del sql_executor
                 flask_restful.abort(404, msg=f"Nationality '{nationality_provided}' is not a valid country code")
 
         if args['time_zone']:
             timezone_provided = args['time_zone']
             if not players.check_timezone(timezone_provided):
+                del sql_executor
                 flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
 
         # create player on users server
@@ -349,19 +367,16 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 201:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(400, msg=f"User creation failed!:{message}")
 
         # create player here
-        sql_executor = database.SqlExecutor()
         identifier = players.Player.free_identifier(sql_executor)
-        del sql_executor
 
         player = players.Player(identifier, '', '', False, '', False, '', '', '', '', '')
         _ = player.load_json(args)
 
-        sql_executor = database.SqlExecutor()
         player.update_database(sql_executor)
-        del sql_executor
 
         # send email confirmation
         email_after = player.email
@@ -380,10 +395,14 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 201:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
         if not PREVENT_MAIL_CHECKING:
             if not mailer.send_mail_checker(code, email_after):
+                del sql_executor
                 flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
+
+        del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok player created'}
         return data, 201
@@ -505,10 +524,11 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         sql_executor = database.SqlExecutor()
+
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
-        del sql_executor
 
         if player is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
         assert player is not None
@@ -529,12 +549,13 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(400, msg=f"Wrong code!:{message}")
 
         player.email_confirmed = True
 
-        sql_executor = database.SqlExecutor()
         player.update_database(sql_executor)
+
         del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok code is correct'}
@@ -588,14 +609,16 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="Wrong authentication!")
 
         sql_executor = database.SqlExecutor()
+
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
-        del sql_executor
 
         if player is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
         # TODO improve this with real admin account
         if pseudo != 'Palpatine':
+            del sql_executor
             flask_restful.abort(403, msg="You are not allowed to change news!")
 
         content = args['content']
@@ -603,8 +626,8 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
         # create news here
         news = newss.News(content)
 
-        sql_executor = database.SqlExecutor()
         news.update_database(sql_executor)
+
         del sql_executor
 
         data = {'msg': 'Ok news created'}
@@ -624,7 +647,9 @@ def main() -> None:
 
     # emergency
     if not database.db_present():
+
         mylogger.LOGGER.info("Emergency populate procedure")
+
         sql_executor = database.SqlExecutor()
         populate.populate(sql_executor)
         del sql_executor

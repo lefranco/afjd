@@ -105,7 +105,9 @@ def main() -> None:
 
     # emergency
     if not database.db_present():
+
         mylogger.LOGGER.info("Emergency populate procedure")
+
         sql_executor = database.SqlExecutor()
         populate.populate(sql_executor)
         del sql_executor

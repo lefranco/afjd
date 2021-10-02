@@ -69,17 +69,18 @@ def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         return flask.jsonify({"msg": "Missing password parameter"}), 400
 
     sql_executor = database.SqlExecutor()
+
     user = users.User.find_by_name(sql_executor, user_name)
-    del sql_executor
 
     if user is not None:
+        del sql_executor
         return flask.jsonify({"msg": "User already exists"}), 400
 
     pwd_hash = werkzeug.security.generate_password_hash(password)
     user = users.User(user_name, pwd_hash)
 
-    sql_executor = database.SqlExecutor()
     user.update_database(sql_executor)
+
     del sql_executor
 
     return flask.jsonify({"msg": "User was added"}), 201
@@ -103,20 +104,22 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         return {"msg": "Missing user_name parameter"}, 400
 
     sql_executor = database.SqlExecutor()
+
     user = users.User.find_by_name(sql_executor, user_name)
-    del sql_executor
 
     if user is None:
+        del sql_executor
         return {"msg": "User does not exist"}, 404
 
     logged_in_as = flask_jwt_extended.get_jwt_identity()
     if logged_in_as != user_name:
+        del sql_executor
         return {"msg": "This is not you ! Good try !"}, 405
 
     assert user is not None
 
-    sql_executor = database.SqlExecutor()
     user.delete_database(sql_executor)
+
     del sql_executor
 
     return flask.jsonify({"msg": "User was removed"}), 200
@@ -144,22 +147,24 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         return flask.jsonify({"msg": "Missing password parameter"}), 400
 
     sql_executor = database.SqlExecutor()
+
     user = users.User.find_by_name(sql_executor, user_name)
-    del sql_executor
 
     if user is None:
+        del sql_executor
         return {"msg": "User does not exist"}, 404
 
     logged_in_as = flask_jwt_extended.get_jwt_identity()
     if logged_in_as != user_name:
+        del sql_executor
         return {"msg": "This is not you ! Good try !"}, 405
 
     assert user is not None
     pwd_hash = werkzeug.security.generate_password_hash(password)
     user.pwd_hash = pwd_hash
 
-    sql_executor = database.SqlExecutor()
     user.update_database(sql_executor)
+
     del sql_executor
 
     return flask.jsonify({"msg": "User was changed"}), 201
@@ -268,7 +273,9 @@ def main() -> None:
 
     # emergency
     if not database.db_present():
+
         mylogger.LOGGER.info("Emergency populate procedure")
+
         sql_executor = database.SqlExecutor()
         populate.populate(sql_executor)
         del sql_executor
