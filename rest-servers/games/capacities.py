@@ -7,7 +7,6 @@ File : capacities.py
 Handles the number of expected players of the game
 """
 import typing
-import sqlite3
 
 import database
 
@@ -37,7 +36,6 @@ class Capacity:
 
         assert isinstance(value, int), "time_stamp must be an int"
         self._value = value
-
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
