@@ -9,6 +9,7 @@ Handles the games
 import typing
 import sqlite3
 import random
+import datetime
 
 import database
 import allocations
@@ -435,8 +436,20 @@ class Game:
             allocation.update_database(sql_executor)
 
     def advance(self) -> None:
-        """ advance the game """
+        """ advance the game and update deadline """
 
+        # extract deadline to viewable
+        datetime_deadline_extracted = datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)
+
+        # save deadline to format
+        timestamp_extracted = datetime_deadline_extracted.replace(tzinfo=datetime.timezone.utc).timestamp()
+
+        # add one day
+        # TODO : temporary
+        self._deadline += 24 * 3600
+
+
+        # advancement
         self._current_advancement += 1
 
     def terminate(self) -> None:

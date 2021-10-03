@@ -2292,7 +2292,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
-        # check all orders are submlitted
+        # check all orders are submitted
 
         # needed list : those who need to submit orders
         actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
@@ -2576,7 +2576,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_dict_json, report_txt)
         transition.update_database(sql_executor)
 
-        # update season
+        # update season and deadline
         game.advance()
         game.update_database(sql_executor)
 
