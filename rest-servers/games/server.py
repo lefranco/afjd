@@ -1512,6 +1512,21 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
             fake_unit.delete_database(sql_executor)  # noqa: F821
 
+        # we check not building where there is already a unit
+        # get the occupied zones
+        game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
+        occupied_zones: typing.Set[int] = set()
+        for _, _, zone_num, _, _, fake in game_units:
+            if not fake:
+                occupied_zones.add(zone_num)
+        # check not build on occupied zone
+        for the_order in the_orders:
+            if the_order['order_type'] == 8:
+                zone_num = the_order['active_unit']['zone']
+                if zone_num in occupied_zones:
+                    del sql_executor
+                    flask_restful.abort(400, msg="Trying to build in a zone where there is already a unit")
+
         # then we put the incoming ones in the database
         inserted_fake_unit_list: typing.List[typing.List[int]] = list()
         for the_order in the_orders:
@@ -1530,6 +1545,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         variant_name = game.variant
         variant_dict = variants.Variant.get_by_name(variant_name)
         if variant_dict is None:
+            del sql_executor
             flask_restful.abort(404, msg=f"Variant {variant_name} doesn't exist")
         variant_dict_json = json.dumps(variant_dict)
 
