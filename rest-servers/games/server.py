@@ -2580,6 +2580,10 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         game.advance()
         game.update_database(sql_executor)
 
+        # update season and deadline
+        game.push_deadline()
+        game.update_database(sql_executor)
+
         sql_executor.commit()
         del sql_executor
 
