@@ -3146,8 +3146,14 @@ def game_master():
 
         role = variant_data.roles[role_id]
         role_name = variant_data.name_table[role]
+
+        # flag
         role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
         col = html.TD(role_icon_img)
+        row <= col
+
+        # role name
+        col = html.TD(role_name)
         row <= col
 
         # player
