@@ -90,7 +90,20 @@ def get_game_status(variant_data, game_parameters_loaded, full):
         row <= col
     col = html.TD(f"Saison {game_season}")
     row <= col
+
+    colour = 'black'
+    time_stamp_now = time.time()
+    # we are after deadline : red
+    if time_stamp_now > deadline_loaded:
+        colour = 'red'
+    # deadline is today : orange
+    elif time_stamp_now > deadline_loaded - 24 * 3600:
+        colour = 'orange'
+
     col = html.TD(f"DL {game_deadline_str}")
+    col.style = {
+        'color': colour
+    }
     row <= col
 
     if full:
