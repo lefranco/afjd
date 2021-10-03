@@ -18,6 +18,7 @@ import geometry
 import mapping
 import login
 import sandbox
+import index  # circular import
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -204,7 +205,12 @@ def show_position():
 
     def callback_export_sandbox(_):
         """ callback_export_sandbox """
+
+        # action on importing game
         sandbox.import_position(position_data)
+
+        # action of going to sandbox page
+        index.load_option(None, 'bac à sable')
 
     def put_export_sandbox(buttons_right):
         """ put_export_sandbox """
