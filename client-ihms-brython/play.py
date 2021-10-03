@@ -3602,10 +3602,11 @@ def show_orders_submitted_in_game():
         # orders are in
         submitted_roles_list = submitted_data['submitted']
         needed_roles_list = submitted_data['needed']
-        if role_id in submitted_roles_list:
-            flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
-        elif role_id in needed_roles_list:
-            flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
+        if role_id in needed_roles_list:
+            if role_id in submitted_roles_list:
+                flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
+            else:
+                flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
         else:
             flag = ""
         col = html.TD(flag)
