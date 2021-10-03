@@ -320,7 +320,7 @@ def move_players_in_game():
     possible_incomers -= set([game_master_id])
 
     input_incomer = html.SELECT(type="select-one", value="")
-    for play_pseudo in sorted(possible_incomers):
+    for play_pseudo in sorted(possible_incomers, key=lambda pi: pi.upper()):
         option = html.OPTION(play_pseudo)
         input_incomer <= option
 
