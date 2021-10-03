@@ -67,8 +67,11 @@ class SqlExecutor:
 
         return result
 
-    def __del__(self) -> None:
+    def commit(self) -> None:
+        """ commit """
         self._connection.commit()  # necessary otherwise nothing happens
+
+    def __del__(self) -> None:
         self._connection.close()
 
 

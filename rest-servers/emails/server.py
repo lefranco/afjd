@@ -52,6 +52,7 @@ class EmailsRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
         email.update_database(sql_executor)
+        sql_executor.commit()
         del sql_executor
 
         data = {'msg': 'Email was added or updated'}
@@ -110,6 +111,7 @@ def main() -> None:
 
         sql_executor = database.SqlExecutor()
         populate.populate(sql_executor)
+        sql_executor.commit()
         del sql_executor
 
     # may specify host and port here

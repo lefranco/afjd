@@ -340,6 +340,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     return data, 400
 
                 game.start(sql_executor)
+                # commited later
 
                 # notify players
 
@@ -373,6 +374,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
                 # no check ?
                 game.terminate()
+                # commited later
 
                 # notify players
 
@@ -403,6 +405,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
         game.update_database(sql_executor)
+        sql_executor.commit()
 
         del sql_executor
 
@@ -504,6 +507,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
         game.delete_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'name': name, 'msg': 'Ok removed'}
@@ -639,6 +643,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         # allocate game master to game
         game.put_role(sql_executor, user_id, 0)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'name': name, 'msg': 'Ok game created'}
@@ -787,6 +792,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
             allocation.update_database(sql_executor)
 
+            sql_executor.commit()
             del sql_executor
 
             data = {'msg': 'Ok allocation updated or created'}
@@ -795,6 +801,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
         allocation.delete_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'msg': 'Ok allocation deleted if present'}
@@ -909,6 +916,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                 allocation = allocations.Allocation(game_id, player_id, role_id)
                 allocation.update_database(sql_executor)
 
+                sql_executor.commit()
                 del sql_executor
 
                 data = {'msg': 'Ok game master role-allocation updated or created'}
@@ -925,6 +933,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
             allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
             allocation.update_database(sql_executor)
 
+            sql_executor.commit()
             del sql_executor
 
             data = {'msg': 'Ok game master role-allocation deleted'}
@@ -1284,6 +1293,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, 0)
             unit.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'msg': 'Ok position rectified'}
@@ -1605,6 +1615,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            sql_executor.commit()  # noqa: F821
             del sql_executor
             flask_restful.abort(400, msg=f"Failed to submit orders {message} : {submission_report}")
 
@@ -1648,6 +1659,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 definitive = definitives.Definitive(int(game_id), role_id, bool(definitive_value))
                 definitive.update_database(sql_executor)  # noqa: F821
 
+        sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
         data = {'msg': f"Ok orders submitted {submission_report}"}
@@ -1899,6 +1911,7 @@ class GameNoOrderRessource(flask_restful.Resource):  # type: ignore
         submission = submissions.Submission(int(game_id), int(role_id))
         submission.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'msg': f"Ok civil disorder submitted {submission_report}"}
@@ -2044,6 +2057,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             communication_order.load_json(the_communication_order)
             communication_order.update_database(sql_executor)  # noqa: F821
 
+        sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
         data = {'msg': "Ok communication orders stored"}
@@ -2534,6 +2548,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         game.advance()
         game.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'msg': f"Ok adjudication performed and game updated : {adjudication_report}"}
@@ -2740,7 +2755,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
             # find game master
             assert game is not None
-            game_master_id = game.get_role(sql_executor, 0)
+            game_master_id = game.get_role(sql_executor, 0)  # noqa: F821
 
             # is game master sending or are we sending to game master only ?
             if not (user_id == game_master_id or dest_role_ids == [0]):
@@ -2750,19 +2765,20 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         # create message here
 
         # create a content
-        identifier = contents.Content.free_identifier(sql_executor)
+        identifier = contents.Content.free_identifier(sql_executor)  # noqa: F821
         time_stamp = int(time.time())  # now
         content = contents.Content(identifier, int(game_id), time_stamp, payload)
-        content.update_database(sql_executor)
+        content.update_database(sql_executor)  # noqa: F821
 
         # create a message linked to the content
         for dest_role_id in dest_role_ids:
             message = messages.Message(int(game_id), role_id, dest_role_id, identifier)
-            message.update_database(sql_executor)
+            message.update_database(sql_executor)  # noqa: F821
 
         nb_addressees = len(dest_role_ids)
 
-        del sql_executor
+        sql_executor.commit()  # noqa: F821
+        del sql_executor  # noqa: F821
 
         data = {'msg': f"Ok {nb_addressees} message(s) inserted"}
         return data, 201
@@ -2939,6 +2955,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         declaration = declarations.Declaration(int(game_id), role_id, anonymous, identifier)
         declaration.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'msg': "Ok declaration inserted."}
@@ -3233,6 +3250,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         visit = visits.Visit(int(game_id), role_id, int(visit_type), time_stamp)
         visit.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'msg': "Ok visit inserted"}
@@ -3446,6 +3464,7 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
         vote = votes.Vote(int(game_id), role_id, bool(value))
         vote.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'msg': "Ok vote inserted"}
@@ -3531,6 +3550,7 @@ def main() -> None:
 
         sql_executor = database.SqlExecutor()
         populate.populate(sql_executor)
+        sql_executor.commit()
         del sql_executor
 
     # may specify host and port here
