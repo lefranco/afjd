@@ -438,19 +438,31 @@ class Game:
     def advance(self) -> None:
         """ advance the game and update deadline """
 
-        # extract deadline to viewable
-        datetime_deadline_extracted = datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)
-
-        # save deadline to format
-        timestamp_extracted = datetime_deadline_extracted.replace(tzinfo=datetime.timezone.utc).timestamp()
-
-        # add one day
-        # TODO : temporary
-        self._deadline += 24 * 3600
-
-
         # advancement
         self._current_advancement += 1
+
+        if self._current_advancement % 5 in [0, 2]:
+            days_add = self._speed_moves
+        elif self._current_advancement % 5 in [1, 3]:
+            days_add = self._speed_retreats
+        else:
+            days_add = self._speed_adjustments
+
+        while True:
+
+            # add a day
+            self._deadline += 24 * 3600
+
+            # extract deadline to datetime
+            datetime_deadline_extracted = datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)
+
+            # datetime to date
+            deadline_day = datetime_deadline_extracted.date()
+
+            # accept of not weekend when no weekend and enough days passed
+            days_add -= 1
+            if days_add <= 0 and not (deadline_day.weekday() in [5,6] and not self._play_weekend):
+                break
 
     def terminate(self) -> None:
         """ start the game """
