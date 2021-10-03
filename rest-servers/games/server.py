@@ -2292,6 +2292,22 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
+        # check all orders are submlitted
+
+        # needed list : those who need to submit orders
+        actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+        needed_list = [o[1] for o in actives_list]
+
+        # submissions_list : those who submitted orders
+        submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+        submitted_list = [o[1] for o in submissions_list]
+
+        # check all submitted
+        for role in needed_list:
+            if role not in submitted_list:
+                del sql_executor
+                flask_restful.abort(400, msg="It seems at least one set of orders is still not submitted")
+
         # evaluate variant
         variant_name = game.variant
         variant_dict = variants.Variant.get_by_name(variant_name)
