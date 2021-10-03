@@ -3289,7 +3289,7 @@ def show_game_parameters():
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue", "OUI"),
             'silent': ("silencieuse", "on peut pas déclarer ni négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible, toute déclaration de joueur est impossible", "OUI"),
             'cumulate': ("cumulable", "un joueur peut prendre plusieurs rôle dans la partie", "Le système accepte qu'un joueur prenne plus d'un rôle", "NON et pas dans un futur proche !"),
-            'fast': ("rapide", "la partie est jouée en temps réel comme sur un plateau", "Les dates limite ne sont pas mises à jour par le système", "NON mais BIENTOT"),
+            'fast': ("rapide", "la partie est jouée en temps réel comme sur un plateau", "Les dates limite ne sont pas mises à jour par le système", "OUI"),
             'speed_moves': ("vitesse pour les mouvements", "en jours", "Le système ajoute les jours avant une résolution de mouvement pour une date limite", "OUI"),
             'speed_retreats': ("vitesse pour les retraites", "en jours", "Le système ajoute les jours avant une résolution de retraites pour une date limite", "OUI"),
             'speed_adjustments': ("vitesse pour les ajustements", "en jours", "Le système ajoute les jours avant une résolution d'ajustements pour une date limite", "OUI"),
