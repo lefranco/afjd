@@ -234,6 +234,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
         player.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok updated'}
@@ -290,6 +291,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # delete player from here
         player.delete_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok removed'}
@@ -402,6 +404,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok player created'}
@@ -493,14 +496,17 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
             pseudo_dest_email = pseudo_dest.email
             recipients.append(pseudo_dest_email)
 
-        del sql_executor
-
         if failed:
+            del sql_executor
             flask_restful.abort(404, msg=f"Failed to find pseudo with id={failed_addressee_id}")
 
         status = mailer.send_mail(subject, body, recipients)
         if not status:
+            del sql_executor
             flask_restful.abort(400, msg="Failed to send!")
+
+        sql_executor.commit()
+        del sql_executor
 
         data = {'msg': 'Ok emails sent'}
         return data, 200
@@ -556,6 +562,7 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
 
         player.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok code is correct'}
@@ -628,6 +635,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         news.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'msg': 'Ok news created'}
@@ -652,6 +660,7 @@ def main() -> None:
 
         sql_executor = database.SqlExecutor()
         populate.populate(sql_executor)
+        sql_executor.commit()
         del sql_executor
 
     # may specify host and port here

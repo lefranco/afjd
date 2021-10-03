@@ -81,13 +81,14 @@ def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
     user.update_database(sql_executor)
 
+    sql_executor.commit()
     del sql_executor
 
     return flask.jsonify({"msg": "User was added"}), 201
 
 
 @APP.route('/remove', methods=['POST'])
-@flask_jwt_extended.jwt_required()  # type: ignore
+@flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
 def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     remove an user account
@@ -120,13 +121,14 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
     user.delete_database(sql_executor)
 
+    sql_executor.commit()
     del sql_executor
 
     return flask.jsonify({"msg": "User was removed"}), 200
 
 
 @APP.route('/change', methods=['POST'])
-@flask_jwt_extended.jwt_required()  # type: ignore
+@flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
 def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     change password of an account
@@ -165,6 +167,7 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
     user.update_database(sql_executor)
 
+    sql_executor.commit()
     del sql_executor
 
     return flask.jsonify({"msg": "User was changed"}), 201
@@ -208,7 +211,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 
 @APP.route('/verify', methods=['GET'])
-@flask_jwt_extended.jwt_required()  # type: ignore
+@flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
 def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     Protect a view with jwt_required, which requires a valid access token
@@ -225,7 +228,7 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 
 @APP.route('/usurp', methods=['POST'])
-@flask_jwt_extended.jwt_required()  # type: ignore
+@flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
 def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     """
     Protect a view with jwt_required, which requires a valid access token
@@ -278,6 +281,7 @@ def main() -> None:
 
         sql_executor = database.SqlExecutor()
         populate.populate(sql_executor)
+        sql_executor.commit()
         del sql_executor
 
     # may specify host and port here
