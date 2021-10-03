@@ -10,6 +10,7 @@ import typing
 import sqlite3
 import random
 import datetime
+import time
 
 import database
 import allocations
@@ -436,11 +437,25 @@ class Game:
             allocation.update_database(sql_executor)
 
     def advance(self) -> None:
-        """ advance the game and update deadline """
+        """ advance the game """
 
         # advancement
         self._current_advancement += 1
 
+    def push_deadline(self) -> None:
+        """ push_deadline """
+
+        # set to deadline now if now < deadline
+        now = time.time()
+        self._deadline = int(now)
+
+        # do not touch deadline if game is fast
+        if self._fast:
+            return
+
+        # increment deadline
+
+        # what is the season next to play ?
         if self._current_advancement % 5 in [0, 2]:
             days_add = self._speed_moves
         elif self._current_advancement % 5 in [1, 3]:
@@ -459,8 +474,10 @@ class Game:
             # datetime to date
             deadline_day = datetime_deadline_extracted.date()
 
-            # accept of not weekend when no weekend and enough days passed
+            # consume
             days_add -= 1
+
+            # accept if enough days passed and not in weekend when no play at weekend
             if days_add <= 0 and not (deadline_day.weekday() in [5,6] and not self._play_weekend):
                 break
 
