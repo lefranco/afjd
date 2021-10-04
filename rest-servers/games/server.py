@@ -2303,10 +2303,11 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
         submitted_list = [o[1] for o in submissions_list]
 
         # check all submitted
-        for role in needed_list:
-            if role not in submitted_list:
-                del sql_executor
-                flask_restful.abort(400, msg="It seems at least one set of orders is still not submitted")
+        if not game.archive:
+            for role in needed_list:
+                if role not in submitted_list:
+                    del sql_executor
+                    flask_restful.abort(400, msg="It seems at least one set of orders is still not submitted")
 
         # evaluate variant
         variant_name = game.variant
