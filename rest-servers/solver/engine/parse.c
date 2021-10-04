@@ -7,15 +7,8 @@
 
 #include "parse.h"
 
-#define NCOTESPOSSS 10
 
-typedef struct {
-	char nom[TAILLEMOT];
-} _COTEPOSS;
-
-/* Liste des cotes possibles */
-typedef/**/LISTE(_COTEPOSS,NCOTESPOSSS) _COTEPOSSS;
-_COTEPOSSS COTEPOSS;
+TCOTEPOSSS COTEPOSS;
 
 /* Pour accelerer la recherche des voisinages, on stoque dans une table */
 extern BOOL TABLEVOISINAGEFLOTTE[NZONES][NZONES];

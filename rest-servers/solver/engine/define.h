@@ -28,6 +28,8 @@
 #define NDELOGEES       10
 #define NANEANTIES      10
 
+#define NCOTESPOSSS     10
+
 #define NDISPARITIONS 	NPAYSS
 #define NELOIGNEMENTS   1500
 
