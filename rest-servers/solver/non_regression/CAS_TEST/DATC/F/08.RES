@@ -1,0 +1,9 @@
+ENGLAND
+A LON - HOL;(failed)
+F NTH c A LON - HOL;(dislodged)
+
+GERMANY
+A BEL - HOL
+F HEL S F SKA - NTH
+F SKA - NTH
+

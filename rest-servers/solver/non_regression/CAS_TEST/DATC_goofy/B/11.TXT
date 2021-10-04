@@ -1,0 +1,4 @@
+; France has a fleet on the north coast of Spain and orders: 
+
+France:
+F Spain(sc) - Gulf of Lyon

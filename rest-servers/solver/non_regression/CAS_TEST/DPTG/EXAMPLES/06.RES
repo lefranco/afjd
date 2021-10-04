@@ -1,0 +1,12 @@
+ENGLAND
+A LON - BEL;(failed)
+F NTH C A LON - BEL
+
+FRANCE
+F BEL S F ENG - NTH
+F ENG - NTH;(failed)
+
+GERMANY
+F DEN - NTH;(failed)
+F HOL S F DEN - NTH
+

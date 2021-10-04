@@ -1,0 +1,9 @@
+England: 
+F North Sea Convoys A London - Belgium
+A Holland Supports A London - Belgium
+A Yorkshire - London
+A London - Belgium via Convoy
+
+France: 
+F English Channel Convoys A Belgium - London
+A Belgium - London via Convoy

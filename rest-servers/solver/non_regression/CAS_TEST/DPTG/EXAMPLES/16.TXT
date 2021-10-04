@@ -1,0 +1,11 @@
+        GERMANY
+        Army Munich to Bohemia.
+
+        AUSTRIA
+        Army Bohemia to Tyrolia.
+        Army Tyrolia to Munich.
+        Army Trieste supports Army Bohemia to Tyrolia.
+        
+        ITALY
+        Army Venice to Tyrolia.
+

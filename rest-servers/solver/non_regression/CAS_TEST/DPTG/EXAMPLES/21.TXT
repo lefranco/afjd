@@ -1,0 +1,34 @@
+        TURKEY
+        Fleet Tunis holds.
+
+        AUSTRIA
+        Fleet Western Mediterranean to Tunis.
+        Army North Africa supports Fleet Western Mediterranean to Tunis.
+        Fleet Ionian Sea supports Turkish Fleet Tunis  hold.
+
+        ITALY
+        Fleet Tyrrhenian Sea to  Western Mediterranean.
+        Army Marseilles supports French Fleet Gascony to Spain (nc).
+
+        FRANCE
+        Fleet Spain (south coast) to  Western .
+        Fleet Mid-Atlantic supports Fleet Spain (south coast) to Western. .
+        Fleet Gulf of Lyon supports Italian Fleet Tyrrhenian to Western. .
+        Fleet Gascony to Spain (north coast).
+
+        GERMANY
+        Fleet Bothnia supports English Army Finland to Saint. Petersburg.
+        Army Prussia to Warsaw.
+        Army Silesia supports Army Prussia to Warsaw.
+        Army Berlin to Prussia.
+
+        RUSSIA
+        Army Warsaw holds.
+        Fleet Saint. Petersburg (south coast) to  Gulf of Bothnia.
+        Fleet Barents Sea supports English Army Finland to Saint. Petersburg.
+        Army Livonia to Saint. Petersburg.
+        Army Moscow supports Army Livonia to Saint. Petersburg.
+
+        ENGLAND
+        Army Finland to Saint. Petersburg.
+        Fleet Skagerrak to Sweden.

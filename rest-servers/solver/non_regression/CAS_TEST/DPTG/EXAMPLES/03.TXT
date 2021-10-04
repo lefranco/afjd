@@ -1,0 +1,8 @@
+        GERMANY
+        Army Munich holds.
+
+        AUSTRIA
+        Army Silesia to Munich.
+        Army Tyrolia supports Army Silesia to Munich.
+        Army Trieste to Tyrolia.
+

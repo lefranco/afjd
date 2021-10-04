@@ -1,0 +1,13 @@
+Austria: 
+A Trieste - Serbia
+A Serbia - Bulgaria
+
+Turkey: 
+A Bulgaria - Trieste
+F Aegean Sea Convoys A Bulgaria - Trieste
+F Ionian Sea Convoys A Bulgaria - Trieste
+F Adriatic Sea Convoys A Bulgaria - Trieste
+
+Italy: 
+F Naples - Ionian Sea
+F Tunis Supports F Naples - Ionian Sea

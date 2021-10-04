@@ -1,0 +1,4 @@
+SOLVEUR : WARNING : Attention : if a province has split coasts, one should specify it for a fleet to build
+SOLVEUR : ERROR Input analysis :
++ F STP <<<
+orders : Problem with the rules of the game : RUSSIA : Unit to add is not of the type that may be present on the province (or area within province) from the type provided at line 2

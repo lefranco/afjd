@@ -1,0 +1,12 @@
+FRANCE
+A BOU - MUN;(failed)
+A RHE S A BOU - MUN
+
+ALLEMAGNE
+A MUN H
+A SIL S autrichien A BOH - MUN
+
+AUTRICHE
+A ALP S A BOH - MUN
+A BOH - MUN;(failed)
+

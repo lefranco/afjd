@@ -1,0 +1,7 @@
+England: 
+F London Supports F North Sea - English Channel
+F North Sea - English Channel
+A Yorkshire - London
+
+France: 
+F English Channel Hold

@@ -1,0 +1,11 @@
+ENGLAND
+F DEN S F SWE - BAL
+F SWE - BAL;(failed)
+
+GERMANY
+A BER H
+
+RUSSIA
+F BAL C german A BER - LVN;(invalid)
+F PRU S F BAL
+

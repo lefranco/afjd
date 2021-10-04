@@ -1,0 +1,10 @@
+England: 
+A Norway - Sweden via Convoy
+A Denmark Supports A Norway - Sweden
+F Baltic Sea Supports A Norway - Sweden
+F Skagerrak Convoys A Norway - Sweden
+F North Sea - Norway
+
+Russia: 
+A Sweden - Norway
+F Norwegian Sea Supports A Sweden - Norway

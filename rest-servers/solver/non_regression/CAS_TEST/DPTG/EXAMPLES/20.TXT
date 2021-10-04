@@ -1,0 +1,19 @@
+        ITALY
+        Army Rome to Venice.
+        Army Venice to Trieste.
+        Fleet Naples to  Ionian Sea.
+
+        AUSTRIA
+        Army Vienna to Trieste.
+        Army Budapest supports Army Vienna to Trieste.
+        Fleet Trieste to Albania.
+
+        RUSSIA
+        Army Norway holds.
+
+        ENGLAND
+        Fleet North Sea to Norway.
+
+        GERMANY
+        Fleet Helgoland Bight to  North Sea.
+        Fleet Denmark supports Fleet Helgoland Bight to  North Sea.

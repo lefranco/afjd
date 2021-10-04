@@ -1,0 +1,18 @@
+        GERMANY
+        Fleet Denmark to  North Sea.
+        Fleet Helgoland Bight supports Fleet Denmark to  North Sea.
+
+        FRANCE
+        Fleet Belgium to  North Sea.
+        Fleet Holland supports Fleet Belgium to  North Sea.
+        Fleet English Channel supports Fleet Belgium to  North Sea.
+
+        ENGLAND
+        Fleet North Sea to Denmark.
+        Fleet Skagerrak supports Fleet North Sea to Denmark.
+
+        RUSSIA
+        Army Livonia to Denmark.
+        Fleet Baltic Sea convoys Army Livonia to Denmark.
+        Army Sweden supports Army Livonia to Denmark.
+

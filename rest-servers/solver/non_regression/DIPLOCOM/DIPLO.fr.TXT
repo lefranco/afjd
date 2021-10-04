@@ -1,0 +1,1 @@
+../../messages/DIPLO.fr.TXT

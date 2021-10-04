@@ -1,0 +1,12 @@
+England: 
+F London Supports F Wales - English Channel
+F Wales - English Channel
+
+France: 
+A Brest - London
+F English Channel Convoys A Brest - London
+
+Italy: 
+F Irish Sea Convoys A North Africa - Wales
+F Mid-Atlantic Ocean Convoys A North Africa - Wales
+A North Africa - Wales

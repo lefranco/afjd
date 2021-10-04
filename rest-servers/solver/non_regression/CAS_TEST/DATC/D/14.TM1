@@ -1,0 +1,9 @@
+ITALY
+F ADR S A VEN - TRI
+A TYR S A VEN - TRI
+A VEN - TRI
+
+AUSTRIA
+F TRI h;(dislodged)
+A VIE S italian A VEN - TRI
+

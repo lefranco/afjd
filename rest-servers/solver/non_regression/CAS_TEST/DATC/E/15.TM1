@@ -1,0 +1,18 @@
+ENGLAND
+F HOL S A RUH - KIE
+A RUH - KIE;(failed)
+
+FRANCE
+A KIE - BER;(failed)
+A MUN S A KIE - BER
+A SIL S A KIE - BER
+
+GERMANY
+A BER - KIE;(failed)
+F DEN S A BER - KIE
+F HEL S A BER - KIE
+
+RUSSIA
+F BAL S A PRU - BER
+A PRU - BER;(failed)
+

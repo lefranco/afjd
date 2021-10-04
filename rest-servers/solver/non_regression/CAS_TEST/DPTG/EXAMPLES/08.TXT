@@ -1,0 +1,47 @@
+        TURKEY
+        Army Greece to Tunis.
+        Fleet Ionian Sea convoys Army Greece to Tunis.
+        Army North Africa supports Army Greece to Tunis.
+        Fleet Constantinople to  Black Sea.
+        Fleet Ankara supports Fleet Constantinople to  Black Sea.
+        Army Smyrna supports Fleet Ankara  hold.
+
+        RUSSIA
+        Army Rumania to Ankara.
+        Fleet Black Sea convoys Army Rumania to Ankara.
+        Fleet Brest supports French Fleet Mid-Atlantic  hold.
+
+        GERMANY
+        Fleet Denmark to  North Sea.
+        Fleet Norway supports Fleet Denmark to  North Sea.
+
+        ENGLAND
+        Army Edinburgh to Norway.
+        Fleet Norwegian Sea convoys Army Edinburgh to Norway.
+        Fleet Clyde supports Fleet Norwegian Sea  hold.
+        Fleet Irish Sea to  North Atlantic Ocean.
+
+        FRANCE
+        Army Gascony to Clyde.
+        Fleet Mid-Atlantic convoys Army Gascony to Clyde.
+        Fleet North Atlantic Ocean convoys Army Gascony to Clyde.
+        Army Holland to Brest.
+        Fleet North Sea convoys Army Holland to Brest.
+        Fleet English Channel convoys Army Holland to Brest.
+        Fleet Spain (south coast) supports Fleet Mid Atlantic  hold.
+
+        ITALY
+        Army Piedmont to Spain.
+        Fleet Gulf of Lyon convoys Army Piedmont to Spain.
+        Fleet Tuscany supports Fleet Gulf of Lyon  hold.
+        Fleet Naples to  Ionian Sea.
+
+        AUSTRIA
+        Army Tunis to Tuscany.
+        Fleet Tyrrhenian Sea convoys Army Tunis to Tuscany.
+        Army Bulgaria to Smyrna.
+        Fleet Aegean Sea convoys Army Bulgaria to Smyrna.
+        Fleet Eastern Mediterranean convoys Army Bulgaria to Smyrna.
+        Fleet Albania to  Ionian .
+        Fleet Adriatic supports Fleet Albania to  Ionian .
+ 

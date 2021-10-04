@@ -1,0 +1,12 @@
+England: 
+A Picardy Hold
+F English Channel Supports A Picardy - Belgium
+
+France: 
+A Paris - Picardy
+A Brest Supports A Paris - Picardy
+A Burgundy Hold
+
+Germany: 
+A Munich Supports A Marseilles - Burgundy
+A Marseilles - Burgundy

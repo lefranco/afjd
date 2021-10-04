@@ -1,0 +1,7 @@
+Italy: 
+F Gulf of Lyon - Spain(sc)
+F Western Mediterranean Supports F Gulf of Lyon - Spain(sc)
+
+France: 
+F Spain(nc) - Gulf of Lyon
+F Marseilles Supports F Spain(nc) - Gulf of Lyon

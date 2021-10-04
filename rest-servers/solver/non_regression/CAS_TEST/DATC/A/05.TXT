@@ -1,0 +1,8 @@
+England: 
+F North Sea Convoys A Yorkshire - Yorkshire
+A Yorkshire - Yorkshire
+A Liverpool Supports A Yorkshire - Yorkshire
+
+Germany:
+F London - Yorkshire
+A Wales Supports F London - Yorkshire

@@ -1,0 +1,17 @@
+England:
+F Holland Supports A Ruhr - Kiel
+A Ruhr - Kiel
+
+France:
+A Kiel - Berlin
+A Munich Supports A Kiel - Berlin
+A Silesia Supports A Kiel - Berlin
+
+Germany:
+A Berlin - Kiel
+F Denmark Supports A Berlin - Kiel
+F Helgoland Bight Supports A Berlin - Kiel
+
+Russia:
+F Baltic Sea Supports A Prussia - Berlin
+A Prussia - Berlin

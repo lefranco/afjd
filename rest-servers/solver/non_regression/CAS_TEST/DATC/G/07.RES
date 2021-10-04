@@ -1,0 +1,8 @@
+ENGLAND
+F NWY - SWE
+F SKA C russian A SWE - NWY
+
+RUSSIA
+F BOT C A SWE - NWY
+A SWE - NWY
+

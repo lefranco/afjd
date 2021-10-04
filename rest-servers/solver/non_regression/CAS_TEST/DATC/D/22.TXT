@@ -1,0 +1,7 @@
+Germany: 
+F Kiel - Munich
+A Burgundy Supports F Kiel - Munich
+
+Russia: 
+A Munich - Kiel
+A Berlin Supports A Munich - Kiel

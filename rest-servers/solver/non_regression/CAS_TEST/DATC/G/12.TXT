@@ -1,0 +1,10 @@
+England: 
+A Liverpool - Edinburgh via Convoy
+F North Atlantic Ocean Convoys A Liverpool - Edinburgh
+F Norwegian Sea Convoys A Liverpool - Edinburgh
+
+Germany: 
+A Edinburgh - Liverpool via Convoy
+F North Sea Convoys A Edinburgh - Liverpool
+F English Channel Convoys A Edinburgh - Liverpool
+F Irish Sea Convoys A Edinburgh - Liverpool

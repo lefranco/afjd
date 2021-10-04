@@ -1,0 +1,10 @@
+England: 
+F Irish Sea Supports F North Atlantic Ocean - Mid-Atlantic Ocean
+F North Atlantic Ocean - Mid-Atlantic Ocean
+
+France: 
+F Spain(nc) Supports F Mid-Atlantic Ocean
+F Mid-Atlantic Ocean Hold
+
+Italy: 
+F Gulf of Lyon - Spain(sc)

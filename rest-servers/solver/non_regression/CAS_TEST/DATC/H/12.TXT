@@ -1,0 +1,15 @@
+England: 
+A Liverpool - Edinburgh via Convoy
+F Irish Sea Convoys A Liverpool - Edinburgh
+F English Channel Convoys A Liverpool - Edinburgh
+F North Sea Convoys A Liverpool - Edinburgh
+
+France: 
+F Brest - English Channel
+F Mid-Atlantic Ocean Supports F Brest - English Channel
+
+Russia: 
+A Edinburgh - Liverpool via Convoy
+F Norwegian Sea Convoys A Edinburgh - Liverpool
+F North Atlantic Ocean Convoys A Edinburgh - Liverpool
+A Clyde Supports A Edinburgh - Liverpool

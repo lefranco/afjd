@@ -1,0 +1,35 @@
+TURKEY  
+A CON
+A SMY
+F ANK
+
+ENGLAND  
+A lvp
+F EDI
+F LON
+
+RUSSIA  
+A MOS
+A war
+F STPsc
+F sev
+
+GERMANY  
+A BER
+A MUN
+F KIE
+
+FRANCE 
+A mar
+A PAR
+F BRE
+
+ITALY 
+A VEN
+A ROM
+F NAP
+
+AUSTRIA 
+A BUD
+A VIE
+F TRI

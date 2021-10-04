@@ -1,0 +1,11 @@
+AUTRICHE
+A SER H
+
+RUSSIE
+A BUD S A ROU - SER
+A ROU - SER;(failed)
+
+TURQUIE
+A BUL - SER;(failed)
+A GRE S A BUL - SER
+

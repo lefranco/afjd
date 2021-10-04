@@ -1,0 +1,18 @@
+Germany: 
+F Holland - North Sea
+F Helgoland Bight Supports F Holland - North Sea
+F Skagerrak Supports F Holland - North Sea
+
+France: 
+F North Sea - Holland
+F Belgium Supports F North Sea - Holland
+
+England: 
+F Edinburgh Supports F Norwegian Sea - North Sea
+F Yorkshire Supports F Norwegian Sea - North Sea
+F Norwegian Sea - North Sea
+F London Supports F Norwegian Sea - North Sea
+
+Austria: 
+A Kiel Supports A Ruhr - Holland
+A Ruhr - Holland

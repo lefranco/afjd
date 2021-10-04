@@ -1,0 +1,10 @@
+England: 
+F Sweden - Baltic Sea
+F Denmark Supports F Sweden - Baltic Sea
+
+Germany: 
+A Berlin Hold
+
+Russia: 
+F Baltic Sea Convoys A Berlin - Livonia
+F Prussia Supports F Baltic Sea

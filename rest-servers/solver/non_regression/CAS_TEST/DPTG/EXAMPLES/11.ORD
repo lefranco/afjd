@@ -1,0 +1,39 @@
+Turkey
+F Con - BLA
+F Ank S F Con - BLA
+F Bul ec - BLA
+F Arm S F Bul ec - BLA
+F Nap - TYN
+F ION S F Nap - TYN
+Russia
+A Rum - Ank
+F BLA C A Rum - Ank
+F Lvn S German F BAL H
+Austria
+F Alb - ADR
+F Tri S F Alb - ADR
+Italy
+A Apu - Tri
+F ADR C A Apu - Tri
+A Rom - Tun
+F TYN C A Rom - Tun
+F Tus S F TYN H
+England
+F Yor - NTH
+F Lon S F Yor - NTH
+F IRI - ENG
+A Naf - Tus
+F WES C A Naf - Tus
+F GOL C A Naf - Tus
+F Tun S F WES H
+France
+A Pic - Lon
+F ENG C A Pic - Lon
+F Bel S F ENG H
+F Mar - GOL
+F Spa sc S F Mar - GOL
+Germany
+A Nwy - Bel
+F NTH C A Nwy - Bel
+A Swe - Lvn
+F BAL C A Swe - Lvn

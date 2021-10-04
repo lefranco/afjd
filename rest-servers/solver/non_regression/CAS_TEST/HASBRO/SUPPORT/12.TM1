@@ -1,0 +1,12 @@
+GERMANY
+A BER S A MUN - SIL
+A MUN - SIL;(failed);(dislodged)
+
+AUSTRIA
+A BOH - MUN
+A TYR S A BOH - MUN
+
+RUSSIA
+A PRU S A WAR - SIL
+A WAR - SIL;(failed)
+

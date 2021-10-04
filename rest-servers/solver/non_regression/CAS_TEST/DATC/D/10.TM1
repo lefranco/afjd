@@ -1,0 +1,5 @@
+GERMANY
+A BER H
+F KIE - BER;(failed)
+A MUN S F KIE - BER
+

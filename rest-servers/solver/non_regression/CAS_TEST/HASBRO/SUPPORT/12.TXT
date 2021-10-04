@@ -1,0 +1,9 @@
+Austria
+a boh - mun
+a tyr s a boh - mun
+Germany
+a mun - sil;fails
+a ber s a mun - sil
+Russia
+a war - sil;fails
+a pru s a war - sil

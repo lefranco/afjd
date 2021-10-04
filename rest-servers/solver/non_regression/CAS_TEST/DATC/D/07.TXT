@@ -1,0 +1,8 @@
+Germany: 
+F Baltic Sea - Sweden
+F Prussia Supports F Baltic Sea
+
+Russia: 
+F Livonia - Baltic Sea
+F Gulf of Bothnia Supports F Livonia - Baltic Sea
+A Finland - Sweden

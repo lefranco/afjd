@@ -1,0 +1,11 @@
+England: 
+F London Supports F Wales - English Channel
+F Wales - English Channel
+
+France: 
+A Brest - London
+F English Channel Convoys A Brest - London
+
+Germany: 
+F North Sea Supports F Belgium - English Channel
+F Belgium - English Channel

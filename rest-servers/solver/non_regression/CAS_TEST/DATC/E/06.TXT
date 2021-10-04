@@ -1,0 +1,12 @@
+Germany: 
+F Holland - North Sea
+F Helgoland Bight Supports F Holland - North Sea
+
+France: 
+F North Sea - Holland
+F Belgium Supports F North Sea - Holland
+F English Channel Supports F Holland - North Sea
+
+Austria: 
+A Kiel Supports A Ruhr - Holland
+A Ruhr - Holland

@@ -1,0 +1,9 @@
+Italy: 
+F Aegean Sea Supports F Constantinople
+
+Russia: 
+F Constantinople - Bulgaria
+
+Turkey: 
+F Black Sea - Constantinople
+A Bulgaria Supports F Black Sea - Constantinople

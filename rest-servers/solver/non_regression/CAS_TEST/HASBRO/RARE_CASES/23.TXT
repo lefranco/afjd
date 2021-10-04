@@ -1,0 +1,7 @@
+France
+a par - bur;fails
+a bur - mar;fails
+Germany
+a ruh s french a par - bur
+Italy
+a mar - bur;fails

@@ -1,0 +1,7 @@
+        AUSTRIA
+        Army Silesia to Munich.
+        Army Tyrolia supports Army Silesia to Munich.
+
+        GERMANY
+        Army Munich to Tyrolia.
+

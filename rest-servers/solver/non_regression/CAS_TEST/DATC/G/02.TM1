@@ -1,0 +1,9 @@
+ENGLAND
+A NWY - SWE
+
+GERMANY
+F SKA C english A NWY - SWE
+
+RUSSIA
+F SWE - NWY
+

@@ -1,0 +1,9 @@
+ANGLETERRE
+A LON - BEL
+F MAN c A LON - BEL;(dislodged)
+F NRD C A LON - BEL
+
+FRANCE
+F BRE - MAN
+F STG S F BRE - MAN
+

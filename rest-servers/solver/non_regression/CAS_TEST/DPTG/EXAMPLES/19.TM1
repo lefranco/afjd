@@ -1,0 +1,18 @@
+ENGLAND
+F NTH - DEN;(failed);(dislodged)
+F SKA S F NTH - DEN
+
+FRANCE
+F BEL - NTH
+F ENG S F BEL - NTH
+F HOL S F BEL - NTH
+
+GERMANY
+F DEN - NTH;(failed)
+F HEL S F DEN - NTH
+
+RUSSIA
+F BAL C A LVN - DEN
+A LVN - DEN;(failed)
+A SWE S A LVN - DEN
+

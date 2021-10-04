@@ -1,0 +1,8 @@
+Germany: 
+A Berlin - Sweden
+F Baltic Sea Convoys A Berlin - Sweden
+F Prussia Supports F Baltic Sea
+
+Russia: 
+F Livonia - Baltic Sea
+F Gulf of Bothnia Supports F Livonia - Baltic Sea

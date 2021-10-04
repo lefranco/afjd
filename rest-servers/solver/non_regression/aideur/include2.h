@@ -1,0 +1,7 @@
+#include "../solveur/define.h"
+#include "define2.h"
+#include "../solveur/struct.h"
+#include "../solveur/includes.h"
+#include "../solveur/protos.h"
+#include "protos2.h"
+#include "../solveur/datas.h"

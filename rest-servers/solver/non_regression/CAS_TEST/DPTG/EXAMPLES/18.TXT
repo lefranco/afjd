@@ -1,0 +1,15 @@
+        AUSTRIA
+        Army Galicia to Warsaw.
+
+        RUSSIA
+        Army Warsaw to Galicia.
+
+        TURKEY
+        Army Rumania to Galicia.
+
+        ENGLAND
+        Army Livonia to Warsaw.
+
+        GERMANY
+        Army Prussia to Warsaw.
+        Army Silesia supports Army Prussia to Warsaw.
