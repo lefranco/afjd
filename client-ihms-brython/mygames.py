@@ -89,12 +89,12 @@ def my_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played', 'orders_submitted', 'new_declarations', 'new_messages', 'jump']
+    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played', 'all_orders_submitted', 'orders_submitted', 'new_declarations', 'new_messages', 'jump']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'ordres soumis', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump': 'sauter'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'all_orders_submitted': 'ordres soumis sur la partie', 'orders_submitted': 'ordres soumis par moi', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump': 'sauter'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -135,6 +135,7 @@ def my_games():
         # just to avoid a warning
         submitted_data = dict(submitted_data)
 
+        data['all_orders_submitted'] = None
         data['orders_submitted'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
@@ -183,6 +184,20 @@ def my_games():
                     role_name = variant_data.name_table[role]
                     role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
                     value = role_icon_img
+
+            if field == 'all_orders_submitted':
+                submitted_roles_list = submitted_data['submitted']
+                nb_submitted = len(submitted_roles_list)
+                needed_roles_list = submitted_data['needed']
+                nb_needed = len(needed_roles_list)
+                value = f"{nb_submitted}/{nb_needed}"
+                colour = 'black'
+                if nb_submitted >= nb_needed:
+                    # we have all orders : green
+                    colour = 'green'
+                elif nb_submitted == 0:
+                    # we have no orders : red
+                    colour = 'red'
 
             if field == 'orders_submitted':
                 submitted_roles_list = submitted_data['submitted']
