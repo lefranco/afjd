@@ -1,0 +1,127 @@
+TRASH 
+;
+COUNTRY_GERMANY Germany
+COUNTRY_AUSTRIA Austria
+COUNTRY_ENGLAND England
+COUNTRY_ITALY Italy
+COUNTRY_FRANCE France
+COUNTRY_RUSSIA Russia
+COUNTRY_TURKEY Turkey
+;
+COUNTRYMAN_GERMANY German 
+COUNTRYMAN_AUSTRIA Austrian
+COUNTRYMAN_ENGLAND English 
+COUNTRYMAN_ITALY Italian 
+COUNTRYMAN_FRANCE French 
+COUNTRYMAN_RUSSIA Russian 
+COUNTRYMAN_TURKEY Turkish 
+;
+TYPE_ARMY A
+TYPE_FLEET F
+;
+ACTION_HOLD Holds
+ACTION_ATTACK -
+ACTION_SUPPORT s
+ACTION_CONVOY c
+;
+ACTION_RETREAT  -
+ACTION_DISBAND d 
+;
+ACTION_REMOVE  r
+ACTION_BUILD  b
+ACTION_WAIVE w
+;
+COAST_NORTH /nc 
+COAST_SOUTH /sc 
+COAST_EAST /ec 
+COAST_OPEN 
+COAST_CLOSE 
+COAST_BEFORE
+;
+; special
+;
+SPECIFIC_STPNC St_Petersburg_/nc
+SPECIFIC_STPSC St_Petersburg_/sc
+SPECIFIC_BULEC Bulgaria_/ec
+SPECIFIC_BULSC Bulgaria_/sc
+SPECIFIC_SPANC Spain_/nc
+SPECIFIC_SPASC Spain_/sc
+;
+
+REGION_ADR 	Adriatic_Sea 
+REGION_AEG 	Aegean_Sea 
+REGION_ALB 	Albania 
+REGION_ANK 	Ankara 
+REGION_APU 	Apulia 
+REGION_ARM 	Armenia
+REGION_BAL 	Baltic_Sea
+REGION_BAR 	Barents_Sea
+REGION_BEL 	Belgium 
+REGION_BER 	Berlin 
+REGION_BLA 	Black_Sea 
+REGION_BOH 	Bohemia 
+REGION_BOT	Gulf_of_Bothnia 
+REGION_BRE 	Brest 
+REGION_BUD 	Budapest 
+REGION_BUL 	Bulgaria 
+REGION_BUR 	Burgundy 
+REGION_CLY 	Clyde
+REGION_CON	Constantinople 
+REGION_DEN 	Denmark 
+REGION_EAS	Eastern_Mediterranean
+REGION_EDI 	Edinburgh 
+REGION_ENG 	English_Channel 
+REGION_FIN 	Finland 
+REGION_GAL 	Galicia
+REGION_GAS 	Gascony
+REGION_GOL 	Gulf_of_Lyon 
+REGION_GRE 	Greece 
+REGION_HEL 	Helgoland_Bight
+REGION_HOL 	Holland 
+REGION_ION 	Ionian_Sea 
+REGION_IRI	Irish_Sea
+REGION_KIE 	Kiel 
+REGION_LVN	Livonia
+REGION_LON 	London 
+REGION_LVP	Liverpool 
+REGION_MID 	Mid-Atlantic_Ocean 
+REGION_MAR 	Marseilles
+REGION_MOS 	Moscow 
+REGION_MUN 	Munich 
+REGION_NAT	North_Atlantic_Ocean
+REGION_NAF 	North_Africa
+REGION_NAP 	Naples 
+REGION_NRG	Norwegian_Sea
+REGION_NTH	North_Sea 
+REGION_NWY	Norway
+REGION_PAR 	Paris 
+REGION_PIC 	Picardy 
+REGION_PIE 	Piedmont 
+REGION_POR 	Portugal 
+REGION_PRU 	Prussia 
+REGION_ROM 	Rome 
+REGION_RUH 	Ruhr 
+REGION_RUM	Rumania 
+REGION_SER 	Serbia 
+REGION_SEV 	Sevastopol 
+REGION_SIL 	Silesia 
+REGION_SKA 	Skagerrak 
+REGION_SMY 	Smyrna 
+REGION_SPA	Spain 
+REGION_STP 	St_Petersburg 
+REGION_SWE 	Sweden 
+REGION_SYR 	Syria 
+REGION_TRI 	Trieste 
+REGION_TUN 	Tunis
+REGION_TUS 	Tuscany 
+REGION_TYR 	Tyrolia 
+REGION_TYN	Tyrrhenian_Sea 
+REGION_UKR 	Ukraine 
+REGION_VEN 	Venice 
+REGION_VIE 	Vienna 
+REGION_WAL 	Wales
+REGION_WAR 	Warsaw 
+REGION_WES	Western_Mediterranean
+REGION_YOR 	Yorkshire
+
+NOTATION_VIA_CONVOY Via_Convoy

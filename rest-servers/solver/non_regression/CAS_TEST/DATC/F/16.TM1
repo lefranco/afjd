@@ -1,0 +1,12 @@
+ENGLAND
+F LON S F WAL - ENG
+F WAL - ENG;(failed)
+
+FRANCE
+A BRE - LON;(failed)
+F ENG C A BRE - LON
+
+GERMANY
+F BEL - ENG;(failed)
+F NTH S F BEL - ENG
+

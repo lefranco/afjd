@@ -1,0 +1,10 @@
+England: 
+A London - Belgium
+F North Sea Convoys A London - Belgium
+
+France: 
+F English Channel Convoys A London - Belgium
+
+Germany: 
+F Holland Supports F Denmark - North Sea
+F Denmark - North Sea

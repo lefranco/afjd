@@ -1,0 +1,13 @@
+England: 
+F North Sea - Denmark
+F Yorkshire Supports F Norway - North Sea
+
+Germany: 
+F Holland Supports F Helgoland Bight - North Sea
+F Helgoland Bight - North Sea
+F Denmark - Helgoland Bight
+
+Russia: 
+F Skagerrak Supports F Norway - North Sea
+F Norway - North Sea
+

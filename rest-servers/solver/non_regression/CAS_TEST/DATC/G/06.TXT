@@ -1,0 +1,14 @@
+England: 
+A Liverpool - Edinburgh
+F English Channel Convoys A Liverpool - Edinburgh
+
+Germany: 
+A Edinburgh - Liverpool
+
+France: 
+F Irish Sea Hold
+F North Sea Hold
+
+Russia: 
+F Norwegian Sea Convoys A Liverpool - Edinburgh
+F North Atlantic Ocean Convoys A Liverpool - Edinburgh

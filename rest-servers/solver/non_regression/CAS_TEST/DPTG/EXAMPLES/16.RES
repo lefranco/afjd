@@ -1,0 +1,11 @@
+GERMANY
+A MUN - BOH
+
+ITALY
+A VEN - TYR;(failed)
+
+AUSTRIA
+A BOH - TYR
+A TRI S A BOH - TYR
+A TYR - MUN
+

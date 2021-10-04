@@ -1,0 +1,8 @@
+FRANCE
+A BUR H
+A PAR S german A RUH - BUR
+
+GERMANY
+A MUN H
+A RUH - BUR;(failed)
+

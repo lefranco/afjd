@@ -1,0 +1,12 @@
+        ENGLAND
+        Army London to Belgium.
+        Fleet North Sea convoys Army London to Belgium.
+
+        FRANCE
+        Fleet English Channel to  North Sea.
+        Fleet Belgium supports Fleet English Channel to  North Sea.
+
+        GERMANY
+        Fleet Denmark to  North Sea.
+        Fleet Holland supports Fleet Denmark to  North Sea.
+

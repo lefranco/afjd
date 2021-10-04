@@ -1,0 +1,9 @@
+GERMANY
+A BER s A MUN - SIL;(cut)
+F KIE S A BER
+A MUN - SIL
+
+RUSSIA
+F BAL S A PRU - BER
+A PRU - BER;(failed)
+

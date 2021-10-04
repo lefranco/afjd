@@ -1,0 +1,26 @@
+Turkey
+F Con - BLA
+F Ank S F Con - BLA
+F Arm S F Con - BLA
+Russia
+A Rum - Ank
+F BLA C A Rum - Ank
+Austria
+F Alb - ADR
+F Tri S F Alb - ADR
+Italy
+A Apu - Tri
+F ADR C A Apu - Tri
+F Ven S F ADR H
+England
+F IRI - ENG
+F Yor - NTH
+F Edi S F Yor - NTH
+F Lon S F Yor - NTH
+France
+A Pic - Lon
+F ENG C A Pic - Lon
+F Bel S F ENG H
+Germany
+A Nwy - Bel
+F NTH C A Nwy - Bel

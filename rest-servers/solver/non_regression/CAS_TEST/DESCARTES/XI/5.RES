@@ -1,0 +1,5 @@
+AUTRICHE
+A MON - SER;(failed)
+A SER S F TRI
+F TRI H
+

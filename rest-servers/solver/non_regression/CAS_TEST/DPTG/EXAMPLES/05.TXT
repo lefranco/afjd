@@ -1,0 +1,12 @@
+       TURKEY
+        Army Greece to Apulia.
+        Fleet Ionian Sea convoys Army Greece to Apulia.
+        Fleet Tunis supports Fleet Ionian Sea  hold.
+
+        ITALY
+        Fleet Naples to Ionian Sea.
+        Fleet Tyrrhenian Sea supports Fleet Naples to Ionian Sea.
+
+        FRANCE
+        Army Spain to Tunis.
+        Fleet Western Mediterranean convoys Army Spain to Tunis.

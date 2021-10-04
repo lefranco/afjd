@@ -1,0 +1,14 @@
+England: 
+F Edinburgh Supports F Yorkshire - North Sea
+F Yorkshire - North Sea
+
+France: 
+F Belgium - North Sea
+F English Channel Supports F Belgium - North Sea
+
+Germany: 
+F North Sea Hold
+
+Russia: 
+F Norwegian Sea - North Sea
+F Norway Supports F Norwegian Sea - North Sea

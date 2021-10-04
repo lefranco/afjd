@@ -1,0 +1,8 @@
+FRANCE
+F GOL - TYN;(failed)
+F WES S F GOL - TYN
+
+ITALY
+F NAP - TYN;(failed)
+F ROM S F NAP - TYN
+

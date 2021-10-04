@@ -1,0 +1,6 @@
+France
+a tun - nap;fails
+f tyn c a tun - nap;fails
+Italy
+f ion - tyn
+f nap s f ion - tyn

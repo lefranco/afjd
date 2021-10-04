@@ -1,0 +1,9 @@
+GERMANY
+F BAL C A BER - SWE
+A BER - SWE
+F PRU S F BAL
+
+RUSSIA
+F BOT S F LVN - BAL
+F LVN - BAL;(failed)
+

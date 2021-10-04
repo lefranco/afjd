@@ -1,0 +1,134 @@
+; ceux que je sors
+TRASH [ ]  ?  = 
+
+; d'autres...
+TRASH  ! " # $ % & ' * , .
+TRASH : < > @ \ ^ _ ` { | }  ~
+
+;
+COUNTRY_GERMANY Germany Allemagne GER
+COUNTRY_AUSTRIA Austria Autriche AUS
+COUNTRY_ENGLAND England Angleterre ;-- non ENG
+COUNTRY_ITALY Italy Italie ITA
+COUNTRY_FRANCE France FRA
+COUNTRY_RUSSIA Russia Russie RUS
+COUNTRY_TURKEY Turkey Turquie TUR
+;
+COUNTRYMAN_GERMANY German Allemand
+COUNTRYMAN_AUSTRIA Austrian Autrichien
+COUNTRYMAN_ENGLAND English Anglais
+COUNTRYMAN_ITALY Italian Italien
+COUNTRYMAN_FRANCE French Francais
+COUNTRYMAN_RUSSIA Russian Russe 
+COUNTRYMAN_TURKEY Turkish Turc 
+;
+TYPE_ARMY A Army
+TYPE_FLEET F Fleet
+;
+ACTION_HOLD H Hold Holds Stand Stands T
+ACTION_ATTACK - – -> m move moves move_to moves_to Attack Attacks to ; noter duerx tirets differents !!!
+ACTION_SUPPORT S Support Supports
+ACTION_CONVOY C Convoy Convoys
+;
+ACTION_RETREAT R Retreat Retreats 
+ACTION_DISBAND Disband Disbands ; --non a
+;
+ACTION_REMOVE Remove d ; --non  r Disband
+ACTION_BUILD + Build b
+ACTION_WAIVE w Waive w
+;
+COAST_NORTH nc north north_coast cn
+COAST_SOUTH sc south south_coast cs
+COAST_EAST ec east east_coast ce
+COAST_OPEN ( 
+COAST_CLOSE )
+COAST_BEFORE /
+;
+; special
+;
+SPECIFIC_STPNC stpnc stpcn
+SPECIFIC_STPSC stpsc stpcs
+SPECIFIC_BULEC bulec bulcn bulce bulnc 
+SPECIFIC_BULSC bulsc bulcs
+SPECIFIC_SPANC spanc espnc espcn
+SPECIFIC_SPASC spasc espsc espcs
+;
+; trigramme Hasbro, nom hasbro; nom wm si /= ; code wm si /= ; descartes si /=; judge ; vopaliec & diplonet si /=
+;
+REGION_ADR 	Adr Adriatic_Sea ADS adriatic
+REGION_AEG 	Aeg Aegean_Sea Ege aegean
+REGION_ALB 	Alb Albania Mon
+REGION_ANK 	Ank Ankara 
+REGION_APU 	Apu Apulia 
+REGION_ARM 	Arm Armenia Cau
+REGION_BAL 	Bal Baltic_Sea baltic
+REGION_BAR 	Bar Barents_Sea barents
+REGION_BEL 	Bel Belgium 
+REGION_BER 	Ber Berlin 
+REGION_BLA 	Bla Black_Sea Noi black
+REGION_BOH 	Boh Bohemia 
+REGION_BOT	Bot Gulf_of_Bothnia GOB both gulfofb bothnia
+REGION_BRE 	Bre Brest 
+REGION_BUD 	Bud Budapest 
+REGION_BUL 	Bul Bulgaria 
+REGION_BUR 	Bur Burgundy Bou
+REGION_CLY 	Cly Clyde Hig
+REGION_CON	Con Constantinople 
+REGION_DEN 	Den Denmark Dan
+REGION_EAS	Eas Eastern_Mediterranean Eastern_Mediterranean_Sea EMS Lev emed eastmed eastern eme mor
+REGION_EDI 	Edi Edinburgh 
+REGION_ENG 	Eng English_Channel Man channel ech ; --non english 
+REGION_FIN 	Fin Finland 
+REGION_GAL 	Gal Galicia
+REGION_GAS 	Gas Gascony
+REGION_GOL 	Gol Gulf_of_Lyon Gulf_of_Lyons Lio lyo gulfofl lyon gli
+REGION_GRE 	Gre Greece
+REGION_HEL 	Hel Helgoland_Bight Helligoland_Bight helgoland
+REGION_HOL 	Hol Holland Pay 
+REGION_ION 	Ion Ionian_Sea ionian
+REGION_IRI	Iri Irish_Sea Stg irish irl
+REGION_KIE 	Kie Kiel 
+REGION_LVN	Lvn Livonia Lit Liv livo lvo lva
+REGION_LON 	Lon London 
+REGION_LVP	Lvp Liverpool LPL livp ; --non Liv
+REGION_MID 	Mid Mid-Atlantic_Ocean Mid_Atlantic_Ocean MAO Atl midatlanticocean midatlantic mat atm
+REGION_MAR 	Mar Marseilles Tou
+REGION_MOS 	Mos Moscow 
+REGION_MUN 	Mun Munich 
+REGION_NAT	Nat North_Atlantic_Ocean NAO Isl atn
+REGION_NAF 	Naf North_Africa nora afn ; --non Mar
+REGION_NAP 	Nap Naples 
+REGION_NRG	Nrg Norwegian_Sea NWG Gro norwsea norwegian nvn
+REGION_NTH	Nth North_Sea Nrd norsea nts
+REGION_NWY	Nwy Norway Nge nor norw
+REGION_PAR 	Par Paris 
+REGION_PIC 	Pic Picardy 
+REGION_PIE 	Pie Piedmont 
+REGION_POR 	Por Portugal 
+REGION_PRU 	Pru Prussia 
+REGION_ROM 	Rom Rome 
+REGION_RUH 	Ruh Ruhr Rhe
+REGION_RUM	Rum Rumania Rou
+REGION_SER 	Ser Serbia 
+REGION_SEV 	Sev Sevastopol Ode sevastapol seb
+REGION_SIL 	Sil Silesia 
+REGION_SKA 	Ska Skagerrak 
+REGION_SMY 	Smy Smyrna 
+REGION_SPA	Spa Spain Esp
+REGION_STP 	Stp Saint-Petersburg St_Petersburg 
+REGION_SWE 	Swe Sweden Sue
+REGION_SYR 	Syr Syria  
+REGION_TRI 	Tri Trieste 
+REGION_TUN 	Tun Tunis
+REGION_TUS 	Tus Tuscany Tos
+REGION_TYR 	Tyr Tyrolia Alp tyl trl
+REGION_TYN	Tyn Tyrrhenian_Sea TYS tyrr tyrrhenian tyh mty ; --non Tyr
+REGION_UKR 	Ukr Ukraine 
+REGION_VEN 	Ven Venice 
+REGION_VIE 	Vie Vienna 
+REGION_WAL 	Wal Wales Cor pga
+REGION_WAR 	War Warsaw Var
+REGION_WES	Wes Western_Mediterranean Western_Mediterranean_Sea WMS Med wmed west western westmed wme moc
+REGION_YOR 	Yor Yorkshire york yonkers
+
+NOTATION_VIA_CONVOY       Via_Convoy

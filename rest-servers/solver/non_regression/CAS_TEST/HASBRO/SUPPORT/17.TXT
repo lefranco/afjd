@@ -1,0 +1,7 @@
+Germany
+f ber - pru;fails
+a sil s f ber - pru;fails
+Russia
+a pru - sil
+a war s a pru - sil
+f bal - pru;fails

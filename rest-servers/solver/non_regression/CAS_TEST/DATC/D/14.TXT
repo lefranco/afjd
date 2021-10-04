@@ -1,0 +1,8 @@
+Austria:
+F Trieste Hold
+A Vienna Supports A Venice - Trieste
+
+Italy:
+A Venice - Trieste
+A Tyrolia Supports A Venice - Trieste
+F Adriatic Sea Supports A Venice - Trieste

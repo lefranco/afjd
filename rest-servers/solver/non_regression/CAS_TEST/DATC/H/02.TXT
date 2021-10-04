@@ -1,0 +1,14 @@
+England: 
+A Liverpool - Edinburgh
+F Yorkshire Supports A Liverpool - Edinburgh
+F Norway Hold
+
+Germany: 
+A Kiel Supports A Ruhr - Holland
+A Ruhr - Holland
+
+Russia: 
+F Edinburgh Hold
+A Sweden Supports A Finland - Norway
+A Finland - Norway
+F Holland Hold

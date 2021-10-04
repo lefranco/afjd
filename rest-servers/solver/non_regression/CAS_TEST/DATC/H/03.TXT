@@ -1,0 +1,7 @@
+England: 
+F North Sea Hold
+A Holland Hold
+
+Germany: 
+F Kiel Supports A Ruhr - Holland
+A Ruhr - Holland

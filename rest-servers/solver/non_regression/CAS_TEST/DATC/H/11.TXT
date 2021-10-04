@@ -1,0 +1,9 @@
+France: 
+A Gascony - Marseilles via Convoy
+A Burgundy Supports A Gascony - Marseilles
+F Mid-Atlantic Ocean Convoys A Gascony - Marseilles
+F Western Mediterranean Convoys A Gascony - Marseilles
+F Gulf of Lyon Convoys A Gascony - Marseilles
+
+Italy: 
+A Marseilles Hold

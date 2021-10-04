@@ -1,0 +1,5 @@
+SOLVEUR : INFORMATION : It is preferable to attach the coast to the province
+SOLVEUR : WARNING : Remove coast specification for an army
+SOLVEUR : ERROR Input analysis :
++ A STP NC <<<
+orders : Problem with the rules of the game : RUSSIA : Unit to add is not of the type that may be present on the province (or area within province) from the type provided at line 2

@@ -1,0 +1,13 @@
+FRANCE
+F BEL S F NTH - HOL
+F ENG S german F HOL - NTH
+F NTH - HOL;(failed)
+
+GERMANY
+F HEL S F HOL - NTH
+F HOL - NTH;(failed)
+
+AUSTRIA
+A KIE S A RUH - HOL
+A RUH - HOL;(failed)
+

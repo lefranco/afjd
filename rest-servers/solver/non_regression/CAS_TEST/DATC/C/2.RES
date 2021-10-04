@@ -1,0 +1,6 @@
+TURKEY
+F ANK - CON
+A BUL S F ANK - CON
+A CON - SMY
+A SMY - ANK
+

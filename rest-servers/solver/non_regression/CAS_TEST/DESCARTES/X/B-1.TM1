@@ -1,0 +1,7 @@
+FRANCE
+A PAR - BOU
+A TOU S A PAR - BOU
+
+ALLEMAGNE
+A MUN - BOU;(failed)
+

@@ -1,0 +1,12 @@
+England: 
+A London - Belgium
+
+Germany: 
+F English Channel Convoys A London - Belgium
+
+Russia: 
+F North Sea Convoys A London - Belgium
+
+France: 
+F Brest Supports F Mid-Atlantic Ocean - English Channel
+F Mid-Atlantic Ocean - English Channel

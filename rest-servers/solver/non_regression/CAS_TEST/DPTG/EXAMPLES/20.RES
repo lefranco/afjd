@@ -1,0 +1,20 @@
+ENGLAND
+F NTH - NWY;(failed);(dislodged)
+
+GERMANY
+F DEN S F HEL - NTH
+F HEL - NTH
+
+ITALY
+F NAP - ION
+A ROM - VEN;(failed)
+A VEN - TRI;(failed)
+
+AUSTRIA
+A BUD S A VIE - TRI
+F TRI - ALB
+A VIE - TRI
+
+RUSSIA
+A NWY H
+

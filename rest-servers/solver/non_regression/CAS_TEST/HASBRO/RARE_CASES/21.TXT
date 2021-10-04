@@ -1,0 +1,7 @@
+France
+a spa - nap;fails
+f gol c a spa - nap
+f tyn c a spa - nap;fails
+Italy
+f ion - tyn
+f tun s f ion - tyn

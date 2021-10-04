@@ -1,0 +1,11 @@
+ENGLAND
+F BAL S A NWY - SWE
+A DEN S A NWY - SWE
+F NTH - NWY;(failed)
+A NWY - SWE
+F SKA C A NWY - SWE
+
+RUSSIA
+F NRG S A SWE - NWY
+A SWE - NWY;(failed);(dislodged)
+

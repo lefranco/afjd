@@ -1,0 +1,10 @@
+RUSSIA
+A GRE S A RUM - BUL
+A RUM - BUL
+A SER S A RUM - BUL
+A SEV - RUM
+
+TURKEY
+F BLA S A BUL - RUM
+A BUL - RUM;(failed);(dislodged)
+

@@ -1,0 +1,21 @@
+        AUSTRIA
+        Fleet Ionian Sea to  Aegean Sea.
+        Fleet Eastern Mediterranean supports Fleet Ionian to  Aegean.
+        Fleet Adriatic Sea supports Turkish Fleet Aegean to  Ionian.
+        Fleet Albania supports Turkish Fleet Aegean to  Ionian.
+        Fleet Greece supports Turkish Fleet Aegean to  Ionian.
+
+        TURKEY
+        Fleet Aegean Sea to  Ionian Sea.
+        Fleet Smyrna supports Austrian Fleet Ionian to  Aegean.
+        Fleet Constantinople to  Aegean Sea.
+
+        ITALY
+        Fleet Naples to  Ionian Sea.
+        Fleet Apulia supports Fleet Naples to  Ionian.
+        Fleet Tyrrhenian Sea supports Fleet Naples to  Ionian.
+        Fleet Tunis supports Fleet Naples to  Ionian.
+
+        RUSSIA
+        Fleet Black Sea to Constantinople.
+

@@ -1,0 +1,11 @@
+England: 
+A Kiel Hold
+
+Germany: 
+A Berlin - Kiel
+A Munich Supports A Berlin - Kiel
+A Prussia Hold
+
+Russia: 
+A Warsaw - Prussia
+A Silesia Supports A Warsaw - Prussia

@@ -1,0 +1,11 @@
+Germany:
+A Berlin - Prussia
+A Silesia Supports A Berlin - Prussia
+F Baltic Sea Supports A Berlin - Prussia
+
+Italy:
+A Prussia Supports Livonia - Prussia
+
+Russia:
+A Warsaw Supports A Livonia - Prussia
+A Livonia - Prussia

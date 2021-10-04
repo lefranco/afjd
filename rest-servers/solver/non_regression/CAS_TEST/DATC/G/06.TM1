@@ -1,0 +1,15 @@
+ENGLAND
+F ENG C A LVP - EDI
+A LVP - EDI
+
+FRANCE
+F IRI H
+F NTH H
+
+GERMANY
+A EDI - LVP
+
+RUSSIA
+F NAT C english A LVP - EDI
+F NRG C english A LVP - EDI
+

@@ -1,0 +1,9 @@
+FRANCE
+A ESP - NAP;(failed)
+F LIO C A ESP - NAP
+F TYR c A ESP - NAP;(dislodged)
+
+ITALIE
+F ION - TYR
+F NAP S F ION - TYR
+

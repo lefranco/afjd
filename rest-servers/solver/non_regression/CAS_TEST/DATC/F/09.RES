@@ -1,0 +1,9 @@
+ENGLAND
+F ENG c A LON - BEL;(dislodged)
+A LON - BEL
+F NTH C A LON - BEL
+
+FRANCE
+F BRE S F MID - ENG
+F MID - ENG
+

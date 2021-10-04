@@ -1,0 +1,6 @@
+        GERMANY
+        Army Munich to Bohemia.
+
+        AUSTRIA
+        Army Bohemia to Tyrolia.
+        Army Tyrolia to Munich.

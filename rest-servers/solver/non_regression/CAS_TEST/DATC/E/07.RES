@@ -1,0 +1,12 @@
+ENGLAND
+F NTH H
+F YOR S russian F NWY - NTH
+
+GERMANY
+F HEL - NTH;(failed)
+F HOL S F HEL - NTH
+
+RUSSIA
+F NWY - NTH;(failed)
+F SKA S F NWY - NTH
+

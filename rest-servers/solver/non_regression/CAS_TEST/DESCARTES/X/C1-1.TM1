@@ -1,0 +1,9 @@
+ANGLETERRE
+F DAN - KIE;(failed)
+F HEL S F NRD - DAN
+F NRD - DAN;(failed)
+
+RUSSIE
+F BAL S A BER - KIE
+A BER - KIE
+

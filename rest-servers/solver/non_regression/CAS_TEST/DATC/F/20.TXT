@@ -1,0 +1,11 @@
+France: 
+A Tunis - Naples
+F Tyrrhenian Sea Convoys A Tunis - Naples
+
+Italy: 
+F Naples Supports F Ionian Sea
+F Ionian Sea Convoys A Tunis - Naples
+
+Turkey: 
+F Aegean Sea Supports F Eastern Mediterranean - Ionian Sea
+F Eastern Mediterranean - Ionian Sea

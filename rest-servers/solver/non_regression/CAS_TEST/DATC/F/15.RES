@@ -1,0 +1,13 @@
+ENGLAND
+F LON S F WAL - ENG
+F WAL - ENG
+
+FRANCE
+A BRE - LON;(failed)
+F ENG c A BRE - LON;(dislodged)
+
+ITALY
+F IRI C A NAF - WAL
+F MID C A NAF - WAL
+A NAF - WAL
+

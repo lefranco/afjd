@@ -1,0 +1,13 @@
+FRANCE
+F GOL S italian F POR - SPAnc
+F MID C A SPA - POR
+A SPA - POR
+
+GERMANY
+A GAS - SPA;(failed)
+A MAR S A GAS - SPA
+
+ITALY
+F POR - SPAnc
+F WES S F POR - SPAnc
+

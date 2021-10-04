@@ -1,0 +1,14 @@
+England: 
+F Edinburgh - North Sea
+F London Supports F Edinburgh - North Sea
+F Irish Sea - English Channel
+F Mid-Atlantic Ocean Supports F Irish Sea - English Channel
+
+France: 
+A Brest - London
+F English Channel Convoys A Brest - London
+F Belgium Supports F English Channel
+
+Russia: 
+A Norway - Belgium
+F North Sea Convoys A Norway - Belgium

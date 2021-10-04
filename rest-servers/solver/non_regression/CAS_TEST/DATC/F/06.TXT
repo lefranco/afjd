@@ -1,0 +1,13 @@
+England: 
+F North Sea Convoys A London - Holland
+A London - Holland
+
+Germany: 
+A Holland Supports A Belgium
+A Belgium Supports A Holland
+F Helgoland Bight Supports F Skagerrak - North Sea
+F Skagerrak - North Sea
+
+France: 
+A Picardy - Belgium
+A Burgundy Supports A Picardy - Belgium

@@ -1,0 +1,13 @@
+Russia: 
+A Edinburgh Supports A Norway - Clyde
+F Norwegian Sea Convoys A Norway - Clyde
+A Norway - Clyde
+
+France: 
+F Irish Sea Supports F Mid-Atlantic Ocean - North Atlantic Ocean
+F Mid-Atlantic Ocean - North Atlantic Ocean
+
+England: 
+A Liverpool - Clyde via Convoy
+F North Atlantic Ocean Convoys A Liverpool - Clyde
+F Clyde Supports F North Atlantic Ocean

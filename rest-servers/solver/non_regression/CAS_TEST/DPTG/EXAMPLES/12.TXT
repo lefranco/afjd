@@ -1,0 +1,23 @@
+        FRANCE
+        Army Wales to Brest.
+        Fleet English Channel convoys Army Wales to Brest.
+        Fleet Belgium supports Fleet English Channel  hold.
+        Army Gascony to Edinburgh.
+        Fleet Mid-Atlantic convoys Army Gascony to Edinburgh.
+        Fleet North Atlantic Ocean convoys Army Gascony to Edinburgh.
+        Fleet Norwegian Sea convoys Army Gascony to Edinburgh.
+
+        GERMANY
+        Army Norway to Belgium.
+        Fleet North Sea convoys Army Norway to Belgium.
+
+        ENGLAND
+        Fleet Yorkshire to  North Sea.
+        Fleet Edinburgh supports Fleet Yorkshire to  North Sea.
+        Fleet Picardy to  English Channel.
+        Fleet Irish Sea to  Mid-Atlantic.
+        Fleet Brest supports Fleet Irish Sea to  Mid-Atlantic.
+
+        ITALY
+        Fleet North Africa to  Mid-Atlantic. 
+        Fleet Western  supports Fleet North Africa to  Mid-Atlantic.

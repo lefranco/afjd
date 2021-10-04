@@ -1,0 +1,11 @@
+FRANCE
+A BOU h;(dislodged)
+A GAS H
+A PAR H
+A PIC H
+A TOU H
+
+ALLEMAGNE
+A BEL - BOU
+A RHE S A BEL - BOU
+

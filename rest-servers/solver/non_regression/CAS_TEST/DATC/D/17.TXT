@@ -1,0 +1,8 @@
+Russia: 
+F Constantinople Supports F Black Sea - Ankara
+F Black Sea - Ankara
+
+Turkey: 
+F Ankara - Constantinople
+A Smyrna Supports F Ankara - Constantinople
+A Armenia - Ankara

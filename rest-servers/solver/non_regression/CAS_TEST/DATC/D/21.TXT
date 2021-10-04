@@ -1,0 +1,13 @@
+Austria: 
+F Trieste Hold
+ 
+Italy: 
+A Venice - Trieste
+A Tyrolia Supports A Venice - Trieste
+       
+Germany: 
+A Munich - Tyrolia
+
+Russia: 
+A Silesia - Munich
+A Berlin Supports A Silesia - Munich

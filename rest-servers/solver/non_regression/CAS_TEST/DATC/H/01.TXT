@@ -1,0 +1,12 @@
+Austria: 
+F Trieste Hold
+A Serbia Hold
+
+Turkey: 
+F Greece Hold
+
+Italy: 
+A Venice Supports A Tyrolia - Trieste
+A Tyrolia - Trieste
+F Ionian Sea - Greece
+F Aegean Sea Supports F Ionian Sea - Greece

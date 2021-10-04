@@ -1,0 +1,4 @@
+ALLEMAGNE
+A BOH S A MUN;(invalid)
+A MUN - BER
+

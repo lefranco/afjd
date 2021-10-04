@@ -1,0 +1,11 @@
+England: 
+F Helgoland Bight - Kiel
+F Denmark Supports F Helgoland Bight - Kiel
+
+Germany: 
+A Berlin - Prussia
+F Kiel Hold
+A Silesia Supports A Berlin - Prussia
+
+Russia: 
+A Prussia - Berlin

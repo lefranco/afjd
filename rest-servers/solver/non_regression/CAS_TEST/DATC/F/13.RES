@@ -1,0 +1,11 @@
+ENGLAND
+A LON - BEL
+F NTH c A LON - BEL;(dislodged)
+
+FRANCE
+F ENG C english A LON - BEL
+
+GERMANY
+F DEN - NTH
+F HOL S F DEN - NTH
+

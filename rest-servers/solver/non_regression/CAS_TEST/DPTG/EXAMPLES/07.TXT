@@ -1,0 +1,10 @@
+        GERMANY
+        Army Holland to Norway.
+        Fleet North Sea convoys Army Holland to Norway.
+
+        ENGLAND
+        Fleet London supports German Fleet North Sea  hold.
+        Army Picardy to London.
+
+        FRANCE
+        Fleet English Channel convoys English Army Picardy to London.

@@ -1,0 +1,21 @@
+        FRANCE
+        Army Burgundy to Munich.
+        Army Paris supports A. Burgundy  hold.     
+
+        GERMANY
+        Army Holland holds.                 
+
+        ENGLAND
+        F. North Sea supports. German A. Hol.  hold.   
+
+        AUSTRIA
+        Fleet Trieste holds.
+        Army Serbia supports F. Trieste to Albania.  
+
+        RUSSIA
+        Army Sevastopol holds.
+        Army Moscow supports A. Sevastopol  hold.
+        Army Prussia to Silesia.
+        Army Warsaw supports A. Prussia to Silesia.
+        Army Ukraine supports A. Warsaw  hold.
+

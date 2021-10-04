@@ -1,0 +1,12 @@
+France: 
+A Spain - Portugal via Convoy
+F Mid-Atlantic Ocean Convoys A Spain - Portugal
+F Gulf of Lyon Supports F Portugal - Spain(nc)
+
+Germany: 
+A Marseilles Supports A Gascony - Spain
+A Gascony - Spain
+
+Italy: 
+F Portugal - Spain(nc)
+F Western Mediterranean Supports F Portugal - Spain(nc)
