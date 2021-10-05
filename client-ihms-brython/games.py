@@ -227,13 +227,13 @@ def create_game():
     form <= input_variant
     form <= html.BR()
 
-    legend_archive = html.LEGEND("archive", title="Partie pour les archives - non jouée - non implémenté")
+    legend_archive = html.LEGEND("archive", title="Partie pour les archives - non jouée - l'arbitre passe les ordres")
     form <= legend_archive
     input_archive = html.INPUT(type="checkbox", checked=False)
     form <= input_archive
     form <= html.BR()
 
-    legend_manual = html.LEGEND("casting manuel", title="L'arbitre attribue les rôles dans la partie")
+    legend_manual = html.LEGEND("casting manuel", title="L'arbitre attribue les rôles dans la partie et non le système")
     form <= legend_manual
     input_manual = html.INPUT(type="checkbox", checked=False)
     form <= input_manual
@@ -251,19 +251,19 @@ def create_game():
     form <= input_cumulate
     form <= html.BR()
 
-    legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées - non implémenté")
+    legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées")
     form <= legend_anonymous
     input_anonymous = html.INPUT(type="checkbox", checked=False)
     form <= input_anonymous
     form <= html.BR()
 
-    legend_silent = html.LEGEND("silencieuse", title="Les joueurs ne peuvent pas communiquer - non implémenté")
+    legend_silent = html.LEGEND("silencieuse", title="Les joueurs ne peuvent pas communiquer")
     form <= legend_silent
     input_silent = html.INPUT(type="checkbox", checked=False)
     form <= input_silent
     form <= html.BR()
 
-    legend_fast = html.LEGEND("rapide", title="Les résolutions se font aussi vite que possible - non implémenté")
+    legend_fast = html.LEGEND("rapide", title="Les résolutions se font aussi que possible, le système n'ajoute pas les jours aux dates limites")
     form <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=False)
     form <= input_fast
@@ -277,7 +277,7 @@ def create_game():
 
     # moves
 
-    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours avant la date limite de mouvements")
+    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours alloués avant la date limite de mouvements")
     form <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=DEFAULT_SPEED_MOVES)
     form <= input_speed_moves
@@ -291,7 +291,7 @@ def create_game():
 
     # retreats
 
-    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours avant la date limite de retraites")
+    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours alloués avant la date limite de retraites")
     form <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=DEFAULT_SPEED_OTHERS)
     form <= input_speed_retreats
@@ -305,7 +305,7 @@ def create_game():
 
     # adjustments
 
-    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours avant la date limite d'ajustements")
+    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours alloués avant la date limite d'ajustements")
     form <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=DEFAULT_SPEED_OTHERS)
     form <= input_speed_adjustments
@@ -329,13 +329,13 @@ def create_game():
 
     # ---
 
-    legend_play_weekend = html.LEGEND("jeu weekend", title="La partie est jouée en fin de semaine")
+    legend_play_weekend = html.LEGEND("jeu weekend", title="La date limite peut elle se trouver en fin de semaine")
     form <= legend_play_weekend
     input_play_weekend = html.INPUT(type="checkbox", checked=False)
     form <= input_play_weekend
     form <= html.BR()
 
-    legend_title_access = html.LEGEND("Accès à la partie - ne peuvent plus être changés la partie démarré")
+    legend_title_access = html.LEGEND("Accès à la partie - ne peuvent plus être changés la partie démarrée")
     legend_title_access.style = {
         'color': 'red',
     }
