@@ -3285,7 +3285,7 @@ def show_game_parameters():
         row = html.TR()
 
         parameter_name, explanation, effect, implemented = {
-            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, le système autorise les résolutions sans tenir compte des soumissions des joueurs", "OUI"),
+            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs", "OUI"),
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue", "OUI"),
             'silent': ("silencieuse", "on peut pas déclarer ni négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible, toute déclaration de joueur est impossible", "OUI"),
             'cumulate': ("cumulable", "un joueur peut prendre plusieurs rôle dans la partie", "Le système accepte qu'un joueur prenne plus d'un rôle", "NON et pas dans un futur proche !"),

@@ -445,11 +445,15 @@ class Game:
     def push_deadline(self) -> None:
         """ push_deadline """
 
+        # do not touch deadline if game is archive
+        if self._archive:
+            return
+
         # set to deadline now if now < deadline
         now = time.time()
         self._deadline = int(now)
 
-        # do not touch deadline if game is fast
+        # do not increment deadline if game is fast
         if self._fast:
             return
 
