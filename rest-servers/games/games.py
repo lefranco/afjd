@@ -23,7 +23,7 @@ import variants
 LEN_NAME_MAX = 20
 
 # for safety
-MIN_CYCLES_TO_PLAY = 10
+MIN_CYCLES_TO_PLAY = 7
 
 # for safety
 MIN_VICTORY_CENTERS = 10
