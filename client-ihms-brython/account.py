@@ -169,13 +169,13 @@ def create_account():
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("nom (facultatif)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
+    legend_family_name = html.LEGEND("nom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value="")
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("prénom (facultatif)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
+    legend_first_name = html.LEGEND("prénom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value="")
     form <= input_first_name
@@ -552,13 +552,13 @@ def edit_account():
     form <= input_replace
     form <= html.BR()
 
-    legend_family_name = html.LEGEND("nom (facultatif)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
+    legend_family_name = html.LEGEND("nom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     form <= legend_family_name
     input_family_name = html.INPUT(type="text", value=family_name_loaded)
     form <= input_family_name
     form <= html.BR()
 
-    legend_first_name = html.LEGEND("prénom (facultatif)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
+    legend_first_name = html.LEGEND("prénom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     form <= legend_first_name
     input_first_name = html.INPUT(type="text", value=first_name_loaded)
     form <= input_first_name
