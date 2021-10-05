@@ -846,10 +846,10 @@ def read_image(variant_name_loaded, display_chosen):
 def get_game_masters_data():
     """ get_game_masters_data """
 
-    game_masters_dict = None
+    game_masters_list = None
 
     def reply_callback(req):
-        nonlocal game_masters_dict
+        nonlocal game_masters_list
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -861,7 +861,7 @@ def get_game_masters_data():
             return
 
         req_result = json.loads(req.text)
-        game_masters_dict = req_result
+        game_masters_list = req_result
 
     json_dict = dict()
 
@@ -872,4 +872,4 @@ def get_game_masters_data():
     # getting allocations : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return list(game_masters_dict)
+    return list(game_masters_list)

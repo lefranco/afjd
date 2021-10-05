@@ -143,29 +143,35 @@ def show_game_masters_data():
     if not game_masters_list:
         return
 
+    # gather games to game masters
+    master_games_dict = dict()
+    for game_data in game_masters_list:
+        game = games_dict[str(game_data['game'])]['name']
+        master = players_dict[str(game_data['master'])]['pseudo']
+        if master not in master_games_dict:
+            master_games_dict[master] = list()
+        master_games_dict[master].append(game)
+
     game_masters_table = html.TABLE()
 
     # TODO : make it possible to sort etc...
-    fields = ['game', 'master']
+    fields = ['master', 'games']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'game': 'partie', 'master': 'arbitre'}[field]
+        field_fr = {'master': 'arbitre', 'games': 'parties', }[field]
         col = html.TD(field_fr)
         thead <= col
     game_masters_table <= thead
 
-    for data in sorted(game_masters_list, key=lambda d: games_dict[str(d['game'])]['name'].upper()):
+    for master in sorted(master_games_dict, key=lambda m: m.upper()):
         row = html.TR()
         for field in fields:
-            value_index = str(data[field])
-            if field == 'game':
-                value_data = games_dict[value_index]
-                value = value_data['name']
             if field == 'master':
-                value_data = players_dict[value_index]
-                value = value_data['pseudo']
+                value = master
+            if field == 'games':
+                value = ' '.join(master_games_dict[master])
             col = html.TD(value)
             row <= col
         game_masters_table <= row
