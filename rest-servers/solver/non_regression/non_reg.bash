@@ -106,15 +106,14 @@ for rep in `ls CAS_TEST/DESCARTES_goofy` ; do
 	for cas in `ls CAS_TEST/DESCARTES_goofy/$rep/*.bash` ; do 
 		rep1="CAS_TEST/DESCARTES_goofy/$rep"
 		cas1=`basename $cas .bash`
-		REP=$PWD
-		cd $rep1 >/dev/null
+		pushd $rep1 >/dev/null
 		./$cas1.bash #appel du test
 		case $? in
 			 0)   diag="Ok" ; ok=$ok+1 ;;
 			 1)   diag="Echec" ; ko=$ko+1 ;;
 			 255) diag="***ERREUR***" ; err=$err+1 ;;
 		esac
-		cd $REP >/dev/null
+		popd >/dev/null
 		if test "$ref" != "" ; then
 			diagref=`grep "$rep1/$cas1" $ref | cut -d : -f 2 | cut -d " " -f 2`
 		fi
@@ -173,15 +172,14 @@ for rep in `ls CAS_TEST/DATC_goofy` ; do
 	for cas in `ls CAS_TEST/DATC_goofy/$rep/*.bash` ; do 
 		rep1="CAS_TEST/DATC_goofy/$rep"
 		cas1=`basename $cas .bash`
-		REP=$PWD
-		cd $rep1 >/dev/null
+		pushd $rep1 >/dev/null
 		./$cas1.bash #appel du test
 		case $? in
 			 0)   diag="Ok" ; ok=$ok+1 ;;
 			 1)   diag="Echec" ; ko=$ko+1 ;;
 			 255) diag="***ERREUR***" ; err=$err+1 ;;
 		esac
-		cd $REP >/dev/null
+		popd >/dev/null
 		if test "$ref" != "" ; then
 			diagref=`grep "$rep1/$cas1" $ref | cut -d : -f 2 | cut -d " " -f 2`
 		fi

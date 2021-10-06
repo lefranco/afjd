@@ -1,0 +1,11 @@
+FRANCE
+F DEN - SKA
+F NTH S F DEN - SKA
+
+GERMANY
+F SKA c A SWE - NWY;(dislodged);(destroyed)
+A SWE - NWY
+
+RUSSIA
+F NWY - SWE
+
