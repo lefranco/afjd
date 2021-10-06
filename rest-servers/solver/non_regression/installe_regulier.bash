@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 
 # pour trouver les fichiers
-export DIPLOCOM=/cygdrive/c/diplocom
+export DIPLOCOM=$(pwd)/DIPLOCOM
 
 # pour executer les programmes
-PATH=$PATH:${DIPLOCOM}/programmes/
+export PATH=$PATH:$(pwd)/bin
 
 #analyse parametres
 entree2=$4
@@ -12,6 +12,9 @@ entree=$3
 rep=$2
 cas=$1
 pref=$rep/$cas
+
+carte=HASBRO
+lexique=hasbro
 
 # mode d'emploi
 if test "$1" = "" ; then
@@ -39,14 +42,14 @@ cp $entree  $pref.TXT 1>/dev/null 2>/dev/null
 sed 's/;.*$//' $pref.TXT > $pref.TXT2
 
 rm -f $pref.ORD
-if ! traducteur.exe $pref.TXT2 $pref.ORD ${DIPLOCOM}/traduction/lexique_hasbro.txt ${DIPLOCOM}/traduction/filtre.txt  ; then
+if ! traducteur $pref.TXT2 $pref.ORD "${DIPLOCOM}/traduction/lexique_$lexique.txt" "${DIPLOCOM}/traduction/filtre.txt"  ; then
 	echo Probleme traducteur 1
     exit 255
 fi
 rm $pref.TXT2
 
 rm -f $pref.DAT
-if ! aideur.exe -s -S P01  -o $pref.ORD -i $pref.DAT ; then # 2>/dev/null  ; then
+if ! aideur -s -S P01  -o $pref.ORD -i $pref.DAT ; then 
 	echo Probleme aideur 
     exit 255
 fi
@@ -58,7 +61,7 @@ if test -r "$entree2" ; then
 
 	cp $entree2  $pref.RET 1>/dev/null 2>/dev/null 
     
-	if ! solveur.exe -s -o $pref.ORD -i $pref.DAT -a $pref.TM1 -f $pref.TM3 2>/dev/null ; then
+	if ! solveur -en -c $carte -s -o $pref.ORD -i $pref.DAT -a $pref.TM1 -f $pref.TM3 ; then
 		echo Probleme solveur premiere invocation
     	exit 255    
 	fi
@@ -70,7 +73,7 @@ if test -r "$entree2" ; then
 	sed 's/;.*$//' $pref.RET > $pref.RET2
 
 	rm -f $pref.ORD
-	if ! traducteur.exe $pref.RET2 $pref.ORD ${DIPLOCOM}/traduction/lexique_hasbro.txt ${DIPLOCOM}/traduction/filtre.txt  ; then
+	if ! traducteur $pref.RET2 $pref.ORD "${DIPLOCOM}/traduction/lexique_$lexique.txt" "${DIPLOCOM}/traduction/filtre.txt"  ; then
 		echo Probleme traducteur 2
     	exit 255
 	fi
@@ -83,7 +86,8 @@ rm -f $pref.TM2
 echo "====================================="
 cat $pref.TXT
 echo "====================================="
-if solveur.exe -s -o $pref.ORD -i $pref.DAT -a $pref.TM1  2>$pref.TM2 ; then
+
+if solveur -en -c $carte -s -o $pref.ORD -i $pref.DAT -a $pref.TM1  2>$pref.TM2 ; then
     cp $pref.TM1 $pref.RES 1>/dev/null 2>/dev/null 
 	rm -f $pref.ERR
     echo NE PRODUIT PAS D\'ERREUR
