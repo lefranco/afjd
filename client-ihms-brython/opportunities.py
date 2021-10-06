@@ -101,7 +101,7 @@ def my_opportunities():
         join_game_callback(_, game)
 
         # action of going to game page
-        index.load_option(None, 'jouer la partie')
+        index.load_option(None, 'jouer la partie sélectionnée')
 
     my_panel.clear()
 
