@@ -4,8 +4,8 @@ F NTH S F DEN - SKA
 
 GERMANY
 F SKA c A SWE - NWY;(dislodged);(destroyed)
-A SWE - NWY
+A SWE - NWY;(fails)
 
 RUSSIA
-F NWY - SWE
+F NWY - SWE;(fails)
 
