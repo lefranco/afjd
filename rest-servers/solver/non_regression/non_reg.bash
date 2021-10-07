@@ -1,10 +1,5 @@
 #!/usr/bin/bash
 
-# pour trouver les fichiers
-export DIPLOCOM=$(pwd)/DIPLOCOM
-
-# pour executer les programmes
-export PATH=$PATH:$(pwd)/bin
 
 echo ==================================================================
 
