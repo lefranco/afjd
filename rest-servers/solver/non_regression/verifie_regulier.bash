@@ -49,8 +49,8 @@ if ! aideur -c $carte -s -S P01  -o $pref.ORD -i $pref.DAT 2>/dev/null ; then
 	exit 255
 fi
 
-##rm -f $pref.TM1
-##rm -f $pref.TM2
+rm -f $pref.TM1
+rm -f $pref.TM2
 
 # il y a des retraites
 if test -r "$pref.RET" ; then 	
@@ -93,10 +93,10 @@ else
     fi
 fi
 
-##rm -f $pref.TM1
-##rm -f $pref.TM2
-##rm -f $pref.TM3
-##rm -f $pref.ORD
-##rm -f $pref.DAT
+rm -f $pref.TM1
+rm -f $pref.TM2
+rm -f $pref.TM3
+rm -f $pref.ORD
+rm -f $pref.DAT
 
 exit $retour
