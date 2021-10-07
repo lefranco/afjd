@@ -1,1 +1,0 @@
-solveur: resoud.c:3079: resoudmouvements: Assertion `passe <= MAXPASSES' failed.
