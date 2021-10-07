@@ -21,6 +21,7 @@ else
     fi
 fi
 
+rm -f $pref.TM1
 rm -f $pref.TM2
 rm -f $pref.ORD
 
