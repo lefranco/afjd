@@ -1,4 +1,0 @@
-SOLVEUR : WARNING : Attention : if a province has split coasts, one should specify it for the destination of a fleet in a support to attack
-SOLVEUR : ERROR Input analysis :
-F POR S F MID - SPA <<<
-orders : Problem with the rules of the game : FRANCE : Passive unit of support or convoy order is not of the type that may reach the support destination province (or area within province) at line 2

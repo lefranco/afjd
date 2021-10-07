@@ -1,5 +1,0 @@
-SOLVEUR : INFORMATION : It is preferable to attach the coast to the province
-SOLVEUR : WARNING : Remove coast specification for an army
-SOLVEUR : ERROR Input analysis :
-A GAS - SPA NC <<<
-orders : Problem with the rules of the game : FRANCE : Active unit of move order is not of the type that may reach attack destination province (or area within province) at line 2
