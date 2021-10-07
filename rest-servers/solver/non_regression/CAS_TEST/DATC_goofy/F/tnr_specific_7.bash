@@ -31,6 +31,7 @@ if ! aideur -c $carte -s -S A01  -o $pref.ORD -i $pref.DAT 2>/dev/null ; then
     exit 255
 fi
 
+rm -f $pref.ORD
 rm -f $pref.TM1
 rm -f $pref.TM2
 
