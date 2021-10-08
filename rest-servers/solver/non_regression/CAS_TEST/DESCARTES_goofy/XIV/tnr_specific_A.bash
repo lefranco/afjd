@@ -60,5 +60,7 @@ fi
 
 pref=PRI
 rm -f $pref.ORD
+pref=HIV
+rm -f $pref.ORD
 
 exit $retour
