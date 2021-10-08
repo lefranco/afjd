@@ -20,7 +20,6 @@ rm $pref.TXT2
 
 rm -f $pref.TM1
 
- solveur -en -c $carte -s -o $pref.ORD -i $pref.DAT -a $pref.TM1 
 if solveur -en -c $carte -s -o $pref.ORD -i $pref.DAT -a $pref.TM1 2>$pref.TM2  ; then
 	retour=1
 else
