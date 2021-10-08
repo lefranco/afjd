@@ -58,6 +58,7 @@ else
 	retour=1
 fi
 
+pref=PRI
 rm -f $pref.ORD
 
 exit $retour

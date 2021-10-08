@@ -49,5 +49,6 @@ fi
 rm -f $pref.ORD
 rm -f $pref.TM1
 rm -f $pref.TM2
+rm -f $pref.TM3
 
 exit $retour
