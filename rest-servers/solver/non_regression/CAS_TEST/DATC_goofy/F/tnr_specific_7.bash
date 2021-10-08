@@ -35,7 +35,6 @@ fi
 rm -f $pref.TM1
 rm -f $pref.TM2
 
- solveur -en -c $carte -s -o $pref.ORD -i $pref.DAT -a $pref.TM1 -f $pref.TM3  
 if solveur -en -c $carte -s -o $pref.ORD -i $pref.DAT -a $pref.TM1 -f $pref.TM3  2>$pref.TM2 ; then
     if diff $pref.TM3 $pref.RES 1>/dev/null 2>/dev/null ; then
 		  retour=0
