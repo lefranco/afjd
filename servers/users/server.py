@@ -39,9 +39,6 @@ APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 JWT = flask_jwt_extended.JWTManager(APP)
 
 
-# TODO improve this with real admin account
-# The only accountg allowed to usurp
-USURPING_PSEUDO = 'Palpatine'
 
 # ---------------------------------
 # users
@@ -240,7 +237,9 @@ def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
-    if logged_in_as != USURPING_PSEUDO:
+
+    # TODO improve this with real admin account
+    if logged_in_as != 'Palpatine':
         return {"msg": "Wrong user_name to perform operation"}, 403
 
     usurped_user_name = flask.request.json.get('usurped_user_name', None)
