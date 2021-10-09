@@ -71,6 +71,10 @@ def change_news():
         # changing news : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+        # back to where we started
+        my_sub_panel.clear()
+        change_news()
+
     if 'PSEUDO' not in storage:
         alert("Il faut se loguer au préalable")
         return
@@ -653,6 +657,10 @@ def sendmail():
 
         # sending email : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        my_sub_panel.clear()
+        sendmail()
 
     if 'PSEUDO' not in storage:
         alert("Il faut se loguer au préalable")
