@@ -6,6 +6,8 @@ from browser import html  # pylint: disable=import-error
 
 import common
 
+EMAIL_SUPPORT = "jeremie.lefrancois@gmail.com"
+
 my_panel = html.DIV(id="home")
 
 title1 = html.H2("Lien utile : Diplomania")
@@ -62,11 +64,15 @@ my_panel <= news_content
 title4 = html.H2("Support")
 my_panel <= title4
 
-text2 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la DL est ce soir ? Vous pouvez envoyer un mél à l'adresse ci-dessous.")
-my_panel <= text2
+text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la DL est ce soir ? ")
+my_panel <= text21
 
-emails_support_img = html.IMG(src="./data/email_support.png")
-my_panel <= emails_support_img
+text22 = html.P("Vous pouvez envoyer un mél à l'adresse ci-dessous :")
+my_panel <= text22
+
+email_support = html.A(href=f"mailto:{EMAIL_SUPPORT}")
+email_support <= "Contacter le support"
+my_panel <= email_support
 
 text3 = html.P("N'oubliez de bien préciser une procédure pour reproduire le problème, la différence entre le résultat obtenu et le résultat attendu...")
 my_panel <= text3
