@@ -1181,6 +1181,24 @@ def submit_orders():
         alert("La partie est déjà terminée")
         return
 
+    # reject if no order required
+    submitted_data = common.get_roles_submitted_orders(game_id)
+    if submitted_data is None:
+        alert("No submitted data")
+        return
+
+    # just to avoid a warning
+    submitted_data = dict(submitted_data)
+
+    if role_id == 0:
+        if not submitted_data['needed']:
+            alert("Il n'y a pas d'ordre à passer")
+            return
+    else:
+        if role_id not in submitted_data['needed']:
+            alert("Vous n'avez pas d'ordre à passer")
+            return
+
     game_status = get_game_status(variant_data, game_parameters_loaded, False)
     my_sub_panel <= game_status
 
@@ -1886,6 +1904,19 @@ def submit_communication_orders():
         return
     if game_parameters_loaded['current_state'] == 2:
         alert("La partie est déjà terminée")
+        return
+
+    # reject if no order required
+    submitted_data = common.get_roles_submitted_orders(game_id)
+    if submitted_data is None:
+        alert("No submitted data")
+        return
+
+    # just to avoid a warning
+    submitted_data = dict(submitted_data)
+
+    if role_id not in submitted_data['needed']:
+        alert("Vous n'avez pas d'ordre à passer")
         return
 
     game_status = get_game_status(variant_data, game_parameters_loaded, False)
@@ -3099,6 +3130,7 @@ def game_master():
 
     submitted_data = common.get_roles_submitted_orders(game_id)
     if submitted_data is None:
+        alert("No submitted data")
         return
 
     # just to avoid a warning
@@ -3540,6 +3572,7 @@ def show_orders_submitted_in_game():
     # you will at least get your own role
     submitted_data = common.get_roles_submitted_orders(game_id)
     if submitted_data is None:
+        alert("No submitted data")
         return
 
     # just to avoid a warning
