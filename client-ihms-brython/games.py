@@ -481,6 +481,10 @@ def change_description_game():
         # changing game description : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+        # back to where we started
+        my_sub_panel.clear()
+        change_description_game()
+
     status = change_description_reload()
     if not status:
         return
@@ -610,6 +614,10 @@ def change_access_parameters_game():
 
         # changing game access parameters : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        my_sub_panel.clear()
+        change_access_parameters_game()
 
     status = change_access_parameters_reload()
     if not status:
@@ -753,6 +761,10 @@ def change_deadline_game():
 
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        my_sub_panel.clear()
+        change_deadline_game()
 
     status = change_deadline_reload()
     if not status:
@@ -941,6 +953,10 @@ def change_pace_parameters_game():
         # changing game pace parameters : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+        # back to where we started
+        my_sub_panel.clear()
+        change_pace_parameters_game()
+
     status = change_pace_parameters_reload()
     if not status:
         return
@@ -1107,6 +1123,11 @@ def change_state_game():
 
         # changing game state : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        my_sub_panel.clear()
+        change_state_game()
+
 
     status = change_state_reload()
     if not status:
