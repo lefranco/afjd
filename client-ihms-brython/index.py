@@ -133,4 +133,4 @@ login.show_login()
 selection.show_game_selected()
 
 end = time.time()
-document <= f"Inital page loaded in {(end-start)} sec"
+document <= f"Page initiale chargée en {(end-start)} sec"
