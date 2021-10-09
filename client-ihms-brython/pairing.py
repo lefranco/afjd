@@ -207,6 +207,7 @@ def move_players_in_game():
             InfoDialog("OK", f"Le joueur a été mis dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
+            my_sub_panel.clear()
             move_players_in_game()
 
         player_pseudo = input_incomer.value

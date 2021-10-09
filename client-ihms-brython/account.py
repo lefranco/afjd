@@ -128,6 +128,10 @@ def create_account():
         # adding a player : no need for token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+        # back to where we started
+        my_sub_panel.clear()
+        create_account()
+
     form = html.FORM()
 
     form <= information_about_account()
@@ -275,6 +279,10 @@ def change_password():
         # changing password : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+        # back to where we started
+        my_sub_panel.clear()
+        change_password()
+
     if 'PSEUDO' not in storage:
         alert("Il faut se loguer au préalable")
         return
@@ -352,6 +360,11 @@ def validate_email():
 
         # adding an email : no need for token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        my_sub_panel.clear()
+        validate_email()
+
 
     if 'PSEUDO' not in storage:
         alert("Il faut se loguer au préalable")
@@ -512,6 +525,10 @@ def edit_account():
 
         # updating data about account : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        my_sub_panel.clear()
+        edit_account()
 
     status = edit_account_reload()
     if not status:

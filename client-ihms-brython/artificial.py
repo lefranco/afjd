@@ -9,9 +9,8 @@ my_panel = html.DIV(id="artificial")
 
 # --
 
-my_panel <= """
-  Here will go widgets to play versus an AI module
-"""
+# TODO
+my_panel <= "Pas encore implémenté, désolé !"
 
 
 def render(panel_middle):
