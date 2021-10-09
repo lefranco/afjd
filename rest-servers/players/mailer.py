@@ -41,7 +41,7 @@ def load_mail_config(app: typing.Any) -> None:
 
 
 def send_mail(subject: str, body: str, recipients: typing.List[str]) -> bool:
-    """ send_mail_checker """
+    """ send_mail """
 
     msg = flask_mail.Message(subject, sender=SENDER, recipients=recipients)
     msg.body = body
@@ -54,6 +54,8 @@ def send_mail(subject: str, body: str, recipients: typing.List[str]) -> bool:
     try:
         MAILER.send(msg)
     except smtplib.SMTPRecipientsRefused:
+        return False
+    except smtplib.SMTPDataError: # occured once
         return False
 
     return True
