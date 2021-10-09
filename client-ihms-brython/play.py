@@ -3268,9 +3268,9 @@ def show_game_parameters():
 
         parameter_name, explanation, effect, implemented = {
             'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs", "OUI"),
-            'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue", "OUI"),
-            'nomessage': ("pas de message", "on peut pas négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible", "OUI"),
-            'nopress': ("pas de presse", "on ne peut pas déclarer - sauf l'arbitre", "Toute déclaration de joueur est impossible", "OUI"),
+            'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue - effacé à la fin de la partie", "OUI"),
+            'nomessage': ("pas de message", "on peut pas négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible - effacé à la fin de la partie", "OUI"),
+            'nopress': ("pas de presse", "on ne peut pas déclarer - sauf l'arbitre", "Toute déclaration de joueur est impossible - effacé à la fin de la partie", "OUI"),
             'fast': ("rapide", "la partie est jouée en temps réel comme sur un plateau", "Les dates limite ne sont pas mises à jour par le système", "OUI"),
             'speed_moves': ("vitesse pour les mouvements", "en jours", "Le système ajoute les jours avant une résolution de mouvement pour une date limite", "OUI"),
             'speed_retreats': ("vitesse pour les retraites", "en jours", "Le système ajoute les jours avant une résolution de retraites pour une date limite", "OUI"),
