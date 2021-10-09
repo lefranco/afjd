@@ -62,8 +62,8 @@ GAME_PARSER.add_argument('description', type=str, required=False)
 GAME_PARSER.add_argument('variant', type=str, required=False)
 GAME_PARSER.add_argument('archive', type=int, required=False)
 GAME_PARSER.add_argument('anonymous', type=int, required=False)
-GAME_PARSER.add_argument('silent', type=int, required=False)
-GAME_PARSER.add_argument('cumulate', type=int, required=False)
+GAME_PARSER.add_argument('nomessage', type=int, required=False)
+GAME_PARSER.add_argument('nopress', type=int, required=False)
 GAME_PARSER.add_argument('fast', type=int, required=False)
 GAME_PARSER.add_argument('deadline', type=int, required=False)
 GAME_PARSER.add_argument('speed_moves', type=int, required=False)
@@ -2804,8 +2804,8 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg="Bad list of addresses identifiers. Use a space separated list of numbers")
 
-        # checks relative to silent
-        if game.silent:
+        # checks relative to no message
+        if game.nomessage:
 
             # find game master
             assert game is not None
@@ -2814,7 +2814,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             # is game master sending or are we sending to game master only ?
             if not (user_id == game_master_id or dest_role_ids == [0]):
                 del sql_executor
-                flask_restful.abort(403, msg="Only game master may send or receive message in a silent game")
+                flask_restful.abort(403, msg="Only game master may send or receive message in 'no message' game")
 
         # create message here
 
@@ -2985,8 +2985,8 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game or the player in charge of the role")
 
-        # checks relative to silent
-        if game.silent:
+        # checks relative to no press
+        if game.nopress:
 
             # find game master
             assert game is not None
@@ -2995,7 +2995,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             # must be game master
             if user_id != game_master_id:
                 del sql_executor
-                flask_restful.abort(403, msg="Only game master may declare in a silent game")
+                flask_restful.abort(403, msg="Only game master may declare in a 'no press' game")
 
         # create declaration here
 

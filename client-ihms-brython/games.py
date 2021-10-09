@@ -87,8 +87,8 @@ def create_game():
         archive = int(input_archive.checked)
         manual = int(input_manual.checked)
         anonymous = int(input_anonymous.checked)
-        silent = int(input_silent.checked)
-        cumulate = int(input_cumulate.checked)
+        nomessage = int(input_nomessage.checked)
+        nopress = int(input_nopress.checked)
         fast = int(input_fast.checked)
 
         try:
@@ -159,8 +159,8 @@ def create_game():
             'manual': manual,
 
             'anonymous': anonymous,
-            'silent': silent,
-            'cumulate': cumulate,
+            'nomessage': nomessage,
+            'nopress': nopress,
             'fast': fast,
 
             'speed_moves': speed_moves,
@@ -245,22 +245,22 @@ def create_game():
     }
     form <= legend_title_terms
 
-    legend_cumulate = html.LEGEND("cumulation possible", title="Un joueur peut cumuler plusieurs rôles - non implémenté")
-    form <= legend_cumulate
-    input_cumulate = html.INPUT(type="checkbox", checked=False)
-    form <= input_cumulate
-    form <= html.BR()
-
     legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées")
     form <= legend_anonymous
     input_anonymous = html.INPUT(type="checkbox", checked=False)
     form <= input_anonymous
     form <= html.BR()
 
-    legend_silent = html.LEGEND("silencieuse", title="Les joueurs ne peuvent pas communiquer")
-    form <= legend_silent
-    input_silent = html.INPUT(type="checkbox", checked=False)
-    form <= input_silent
+    legend_nomessage = html.LEGEND("pas de message", title="Les joueurs ne peuvent pas communiquer par message")
+    form <= legend_nomessage
+    input_nomessage = html.INPUT(type="checkbox", checked=False)
+    form <= input_nomessage
+    form <= html.BR()
+
+    legend_nopress = html.LEGEND("pas de presse", title="Les joueurs ne peuvent pas communiquer par presse")
+    form <= legend_nopress
+    input_nopress = html.INPUT(type="checkbox", checked=False)
+    form <= input_nopress
     form <= html.BR()
 
     legend_fast = html.LEGEND("rapide", title="Les résolutions se font aussi que possible, le système n'ajoute pas les jours aux dates limites")
