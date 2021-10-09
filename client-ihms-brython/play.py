@@ -24,24 +24,6 @@ LONG_DURATION_LIMIT_SEC = 1.0
 
 OPTIONS = ['position', 'ordonner', 'taguer', 'chatter', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'paramètres', 'joueurs', 'ordres']
 
-my_panel = html.DIV(id="play")
-my_panel.attrs['style'] = 'display: table-row'
-
-# menu-left
-menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-my_panel <= menu_left
-
-# menu-selection
-menu_selection = html.UL()
-menu_left <= menu_selection
-
-item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
-
-my_sub_panel = html.DIV(id="sub")
-
-my_panel <= my_sub_panel
-
 
 @enum.unique
 class AutomatonStateEnum(enum.Enum):
@@ -3615,6 +3597,25 @@ def show_orders_submitted_in_game():
         game_players_table <= row
 
     my_sub_panel <= game_players_table
+
+
+my_panel = html.DIV(id="play")
+my_panel.attrs['style'] = 'display: table-row'
+
+# menu-left
+menu_left = html.DIV()
+menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+my_panel <= menu_left
+
+# menu-selection
+menu_selection = html.UL()
+menu_left <= menu_selection
+
+item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
+
+my_sub_panel = html.DIV(id="sub")
+
+my_panel <= my_sub_panel
 
 
 def load_option(_, item_name):
