@@ -263,7 +263,8 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
         port = lowdata.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/player-allocations/{player_id}"
-        req_result = SESSION.get(url)
+        jwt_token = flask.request.headers.get('AccessToken')
+        req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"})
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
