@@ -703,7 +703,7 @@ def submit_orders():
                 # gm can pass orders on archive games
                 if role_id != 0 and selected_active_unit.role != variant_data.roles[role_id]:
 
-                    alert("Bien essayé, mais cette unité ne vous appartient pas.")
+                    alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
                     selected_active_unit = None
 
                 else:
@@ -1506,7 +1506,7 @@ def submit_communication_orders():
                 # gm can pass orders on archive games
                 if role_id != 0 and selected_active_unit.role != variant_data.roles[role_id]:
 
-                    alert("Bien essayé, mais cette unité ne vous appartient pas.")
+                    alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
                     selected_active_unit = None
 
                 else:
