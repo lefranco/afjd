@@ -24,6 +24,8 @@ def select_game():
         InfoDialog("OK", f"Partie sélectionnée : {game}", remove_after=config.REMOVE_AFTER)
         show_game_selected()
 
+        render(g_panel_middle)
+
     games_data = common.get_games_data()
 
     if not games_data:
@@ -112,9 +114,13 @@ def show_game_selected():
 
     document <= show_game_selected_panel
 
+g_panel_middle = None
 
 def render(panel_middle):
     """ render """
+
+    global g_panel_middle
+    g_panel_middle = panel_middle
 
     my_panel.clear()
 
