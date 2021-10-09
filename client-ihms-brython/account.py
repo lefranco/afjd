@@ -365,7 +365,6 @@ def validate_email():
         my_sub_panel.clear()
         validate_email()
 
-
     if 'PSEUDO' not in storage:
         alert("Il faut se loguer au préalable")
         return
