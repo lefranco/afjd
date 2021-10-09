@@ -42,6 +42,8 @@ def select_display():
 
         InfoDialog("OK", f"Interface sélectionnée pour la variante {variant_name_loaded} : {interface}", remove_after=config.REMOVE_AFTER)
 
+        render(g_panel_middle)
+
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return None
@@ -91,8 +93,13 @@ def select_display():
     return select_table
 
 
+g_panel_middle = None
+
 def render(panel_middle):
     """ render """
+
+    global g_panel_middle
+    g_panel_middle = panel_middle
 
     my_panel.clear()
 
