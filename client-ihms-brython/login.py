@@ -146,7 +146,7 @@ form1 <= html.BR()
 
 form1 <= html.BR()
 
-input_login = html.INPUT(type="submit", value="login")
+input_login = html.INPUT(type="submit", value="connexion")
 input_login.bind("click", login_callback)
 form1 <= input_login
 form1 <= html.BR()
@@ -166,7 +166,7 @@ my_panel <= html.BR()
 
 form3 = html.FORM()
 
-input_logout = html.INPUT(type="submit", value="logout")
+input_logout = html.INPUT(type="submit", value="déconnexion")
 input_logout.bind("click", logout_callback)
 form3 <= input_logout
 form3 <= html.BR()

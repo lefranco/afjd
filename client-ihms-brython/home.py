@@ -14,14 +14,17 @@ title1 = html.H2("Lien utile : Diplomania")
 my_panel <= title1
 
 link1 = html.A(href="http://www.diplomania.fr", target="_blank")
-link1 <= "Diplomania : Le site officiel de l'Association Française des Joueurs de Diplomatie (brique sociale)"
+link1 <= "Diplomania : Le site officiel de l'Association Francophone des Joueurs de Diplomacy (brique sociale)"
+link1.style = {
+    'color': 'blue',
+}
 my_panel <= link1
 
 title11 = html.H2("Parainnage")
 my_panel <= title11
 
 link11 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
-link11 <= "Vous pouvez participer au financement du développement du site en cliquant sur le lien "
+link11 <= "Participer au financement du développement du site"
 my_panel <= link11
 link11.style = {
     'color': 'blue',
@@ -72,6 +75,9 @@ my_panel <= text22
 
 email_support = html.A(href=f"mailto:{EMAIL_SUPPORT}")
 email_support <= "Contacter le support"
+email_support.style = {
+    'color': 'red',
+}
 my_panel <= email_support
 
 text3 = html.P("N'oubliez de bien préciser une procédure pour reproduire le problème, la différence entre le résultat obtenu et le résultat attendu...")
@@ -79,7 +85,6 @@ my_panel <= text3
 
 title5 = html.H2("Copinage")
 my_panel <= title5
-
 
 link4 = html.A(href="https://visitercracovie.wordpress.com/", target="_blank")
 link4 <= "Si vous savez pas quoi faire pendant vos vacances..."
