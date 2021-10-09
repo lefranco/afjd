@@ -488,7 +488,10 @@ class Game:
     def terminate(self) -> None:
         """ start the game """
 
-        # There does not seem anything to do for the moment here
+        # clear restrictions
+        self._anonymous = False
+        self._nomessage = False
+        self._nopress = False
 
     @property
     def identifier(self) -> int:
