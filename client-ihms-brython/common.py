@@ -519,7 +519,7 @@ def get_role_allocated_to_player(game_id):
             return
         req_result = json.loads(req.text)
         nonlocal role_id
-        # TODO : consider if a player has more than one role
+        # a player has never more than one role
         role_id = req_result
 
     json_dict = {
