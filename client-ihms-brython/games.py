@@ -1128,7 +1128,6 @@ def change_state_game():
         my_sub_panel.clear()
         change_state_game()
 
-
     status = change_state_reload()
     if not status:
         return
