@@ -29,7 +29,7 @@ def select_game():
     if not games_data:
         return None
 
-    # list the variants we have0
+    # list the variants we have
     variants = {d['variant'] for d in games_data.values()}
 
     # list the states we have
