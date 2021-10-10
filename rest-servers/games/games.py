@@ -414,6 +414,10 @@ class Game:
 
         # at this point we should have enough players
 
+        # manual game : do not allocate players
+        if self._manual or self._archive:
+            return
+
         # we make a random order
         # get variant
         variant_name = self.variant
