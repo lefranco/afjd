@@ -328,6 +328,7 @@ def submit_orders():
     variant_data = None
     position_loaded = None
     position_data = None
+    definitives_loaded = None
 
     selected_active_unit = None
     selected_passive_unit = None
@@ -341,7 +342,6 @@ def submit_orders():
     down_click_time = None
 
     input_definitive = None
-
     def rest_hold_callback(_):
         """ rest_hold_callback """
 
@@ -1104,7 +1104,16 @@ def submit_orders():
         label_definitive = html.LABEL("Prêt pour la résolution ?")
         buttons_right <= label_definitive
 
-        input_definitive = html.INPUT(type="checkbox", value=True)
+        definitive_value = None
+        for _, role, definitive_val in definitives_loaded:
+            if role == role_id:
+                definitive_value = bool(definitive_val)
+                break
+
+        if definitive_value is None:
+            alert("definitive_value is None")
+
+        input_definitive = html.INPUT(type="checkbox", checked=definitive_value)
         buttons_right <= input_definitive
 
         input_submit = html.INPUT(type="submit", value="soumettre ces ordres")
@@ -1204,6 +1213,14 @@ def submit_orders():
 
     advancement_loaded = game_parameters_loaded['current_advancement']
     advancement_season, _ = common.get_season(advancement_loaded, variant_data)
+
+    # definitives
+    definitives_loaded = common.definitive_reload(game_id)
+    if definitives_loaded is None:
+        return
+
+    # avoids a warning
+    definitives_loaded = list(definitives_loaded)
 
     # get the position from server
     position_loaded = common.game_position_reload(game)
@@ -3140,15 +3157,15 @@ def game_master():
     possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
 
     # definitives
-    definitives = common.definitive_reload(game_id)
-    if definitives is None:
+    definitives_loaded = common.definitive_reload(game_id)
+    if definitives_loaded is None:
         return
 
     # avoids a warning
-    definitives = list(definitives)
+    definitives_loaded = list(definitives_loaded)
 
     definitive_values_table = dict()
-    for _, role, definitive_val in definitives:
+    for _, role, definitive_val in definitives_loaded:
         definitive_values_table[role] = bool(definitive_val)
 
     # votes
