@@ -10,16 +10,17 @@ from browser import document, html  # pylint: disable=import-error # noqa: E402
 
 import home    # noqa: E402
 import login    # noqa: E402
-import lists    # noqa: E402
+import selection    # noqa: E402
+import tools    # noqa: E402
 import account    # noqa: E402
 import opportunities    # noqa: E402
 import mygames    # noqa: E402
 import games    # noqa: E402
-import selection    # noqa: E402
 import pairing    # noqa: E402
 import play    # noqa: E402
-import tools    # noqa: E402
+import tournament    # noqa: E402
 import sandbox    # noqa: E402
+import lists    # noqa: E402
 import artificial    # noqa: E402
 import technical    # noqa: E402
 import admin    # noqa: E402
@@ -38,7 +39,7 @@ h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'sélectionner interface', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'bac à sable', 'jouer contre l\'I.A.', 'listes', 'coin technique', 'administration']
+OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'sélectionner interface', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'jouer contre l\'I.A.', 'listes', 'coin technique', 'administration']
 
 # overall_top
 overall_top = html.DIV()
@@ -87,6 +88,8 @@ def load_option(_, item_name):
         pairing.render(panel_middle)
     if item_name == 'jouer la partie sélectionnée':
         play.render(panel_middle)
+    if item_name == 'interface tournois':
+        tournament.render(panel_middle)
     if item_name == 'bac à sable':
         sandbox.render(panel_middle)
     if item_name == 'jouer contre l\'I.A.':
