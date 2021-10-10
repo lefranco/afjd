@@ -966,6 +966,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
             allocation = allocations.Allocation(game_id, player_id, role_id)
             allocation.update_database(sql_executor)
 
+            sql_executor.commit()
             del sql_executor
 
             data = {'msg': 'Ok player role-allocation updated or created'}
@@ -987,6 +988,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
         allocation.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         # report
