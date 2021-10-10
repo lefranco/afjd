@@ -68,7 +68,7 @@ def my_games():
     my_panel.clear()
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']

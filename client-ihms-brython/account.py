@@ -284,7 +284,7 @@ def change_password():
         change_password()
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -366,7 +366,7 @@ def validate_email():
         validate_email()
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -393,7 +393,7 @@ def edit_account():
     """ edit_account """
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -631,7 +631,7 @@ def delete_account():
     """ delete_account """
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']

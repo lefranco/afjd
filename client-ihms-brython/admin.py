@@ -76,7 +76,7 @@ def change_news():
         change_news()
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -151,7 +151,7 @@ def usurp():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -444,7 +444,7 @@ def rectify():
     # starts here
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -663,7 +663,7 @@ def sendmail():
         sendmail()
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
