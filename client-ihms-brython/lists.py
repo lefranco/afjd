@@ -17,7 +17,7 @@ with open("./data/country_list.json", "r") as read_file:
 
 my_panel = html.DIV(id="players")
 
-OPTIONS = ['les joueurs', 'les parties', 'les arbitres', 'les parties sans arbitres']
+OPTIONS = ['les joueurs', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres']
 
 
 def show_players_data():
@@ -70,7 +70,7 @@ def show_players_data():
     my_sub_panel <= html.P(f"Il y a {count} joueurs")
 
 
-def show_games_data():
+def show_games_data(game_state):
     """ show_games_data """
 
     games_dict = common.get_games_data()
@@ -81,18 +81,23 @@ def show_games_data():
     games_table = html.TABLE()
 
     # TODO : make it possible to sort etc...
-    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement']
+    fields = ['name', 'variant', 'deadline', 'current_advancement']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'avancement'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'avancement'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
 
     count = 0
     for data in sorted(games_dict.values(), key=lambda g: g['name'].upper()):
+
+        # restrict to proper state
+        if data['current_state'] != game_state:
+            continue
+
         row = html.TR()
         for field in fields:
             value = data[field]
@@ -103,13 +108,6 @@ def show_games_data():
                 deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
                 deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
                 value = deadline_loaded_str
-            if field == 'current_state':
-                state_loaded = value
-                for possible_state in config.STATE_CODE_TABLE:
-                    if config.STATE_CODE_TABLE[possible_state] == state_loaded:
-                        state_loaded = possible_state
-                        break
-                value = state_loaded
             col = html.TD(value)
             row <= col
         games_table <= row
@@ -253,8 +251,12 @@ def load_option(_, item_name):
     my_sub_panel.clear()
     if item_name == 'les joueurs':
         show_players_data()
-    if item_name == 'les parties':
-        show_games_data()
+    if item_name == 'les parties en attente':
+        show_games_data(0)
+    if item_name == 'les parties en cours':
+        show_games_data(1)
+    if item_name == 'les parties terminées':
+        show_games_data(2)
     if item_name == 'les arbitres':
         show_game_masters_data()
     if item_name == 'les parties sans arbitres':
