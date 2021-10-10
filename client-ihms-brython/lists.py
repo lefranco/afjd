@@ -17,7 +17,7 @@ with open("./data/country_list.json", "r") as read_file:
 
 my_panel = html.DIV(id="players")
 
-OPTIONS = ['les joueurs', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres']
+OPTIONS = ['les joueurs', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les tournois', 'les arbitres', 'les parties sans arbitres']
 
 
 def show_players_data():
@@ -116,6 +116,11 @@ def show_games_data(game_state):
     my_sub_panel <= games_table
     my_sub_panel <= html.P(f"Il y a {count} parties")
 
+def show_tournaments_data():
+    """ show_tournaments_data """
+
+    # TODO
+    my_sub_panel <= "ICI liste des tournois avec leurs parties - Pas encore implémenté, désolé !"
 
 def show_game_masters_data():
     """ show_game_masters_data """
@@ -257,6 +262,8 @@ def load_option(_, item_name):
         show_games_data(1)
     if item_name == 'les parties terminées':
         show_games_data(2)
+    if item_name == 'les tournois':
+        show_tournaments_data()
     if item_name == 'les arbitres':
         show_game_masters_data()
     if item_name == 'les parties sans arbitres':
