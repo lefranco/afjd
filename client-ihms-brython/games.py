@@ -227,7 +227,7 @@ def create_game():
     form <= input_variant
     form <= html.BR()
 
-    legend_archive = html.LEGEND("archive", title="Partie pour les archives - non jouée - l'arbitre passe les ordres")
+    legend_archive = html.LEGEND("archive", title="Partie pour les archives - la partie n'est pas jouée - l'arbitre passe tous les ordres")
     form <= legend_archive
     input_archive = html.INPUT(type="checkbox", checked=False)
     form <= input_archive
@@ -245,19 +245,19 @@ def create_game():
     }
     form <= legend_title_terms
 
-    legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées")
+    legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
     form <= legend_anonymous
     input_anonymous = html.INPUT(type="checkbox", checked=False)
     form <= input_anonymous
     form <= html.BR()
 
-    legend_nomessage = html.LEGEND("pas de message", title="Les joueurs ne peuvent pas communiquer par message")
+    legend_nomessage = html.LEGEND("pas de message", title="Les joueurs ne peuvent pas communiquer par message avant la fin de la partie")
     form <= legend_nomessage
     input_nomessage = html.INPUT(type="checkbox", checked=False)
     form <= input_nomessage
     form <= html.BR()
 
-    legend_nopress = html.LEGEND("pas de presse", title="Les joueurs ne peuvent pas communiquer par presse")
+    legend_nopress = html.LEGEND("pas de presse", title="Les joueurs ne peuvent pas communiquer par presse avant la fin de la partie")
     form <= legend_nopress
     input_nopress = html.INPUT(type="checkbox", checked=False)
     form <= input_nopress
@@ -299,7 +299,7 @@ def create_game():
 
     legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
     form <= legend_cd_possible_retreats
-    input_cd_possible_retreats = html.INPUT(type="checkbox", checked=False)
+    input_cd_possible_retreats = html.INPUT(type="checkbox", checked=True)
     form <= input_cd_possible_retreats
     form <= html.BR()
 
@@ -323,7 +323,7 @@ def create_game():
 
     legend_cd_possible_removals = html.LEGEND("DC possible suppressions", title="Désordre civil possible pour une résolution d'ajustements - suppressions")
     form <= legend_cd_possible_removals
-    input_cd_possible_removals = html.INPUT(type="checkbox", checked=False)
+    input_cd_possible_removals = html.INPUT(type="checkbox", checked=True)
     form <= input_cd_possible_removals
     form <= html.BR()
 
@@ -331,7 +331,7 @@ def create_game():
 
     legend_play_weekend = html.LEGEND("jeu weekend", title="La date limite peut elle se trouver en fin de semaine")
     form <= legend_play_weekend
-    input_play_weekend = html.INPUT(type="checkbox", checked=False)
+    input_play_weekend = html.INPUT(type="checkbox", checked=True)
     form <= input_play_weekend
     form <= html.BR()
 
