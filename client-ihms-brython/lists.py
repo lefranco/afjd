@@ -7,7 +7,6 @@ import datetime
 
 from browser import html  # pylint: disable=import-error
 
-import config
 import common
 
 # load country list from json data file
@@ -116,11 +115,13 @@ def show_games_data(game_state):
     my_sub_panel <= games_table
     my_sub_panel <= html.P(f"Il y a {count} parties")
 
+
 def show_tournaments_data():
     """ show_tournaments_data """
 
     # TODO
     my_sub_panel <= "ICI liste des tournois avec leurs parties - Pas encore implémenté, désolé !"
+
 
 def show_game_masters_data():
     """ show_game_masters_data """
