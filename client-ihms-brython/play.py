@@ -3316,7 +3316,7 @@ def show_game_parameters():
         row = html.TR()
 
         parameter_name, explanation, effect, implemented = {
-            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs", "OUI"),
+            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue - effacé à la fin de la partie", "OUI"),
             'nomessage': ("pas de message", "on peut pas négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible - effacé à la fin de la partie", "OUI"),
             'nopress': ("pas de presse", "on ne peut pas déclarer - sauf l'arbitre", "Toute déclaration de joueur est impossible - effacé à la fin de la partie", "OUI"),
@@ -3329,7 +3329,7 @@ def show_game_parameters():
             'cd_possible_builds': ("désordre civil possible pour les constructions", "oui ou non", "Charge à l'arbitre de le respecter", "-"),
             'cd_possible_removals': ("désordre civil possible pour les suppressions", "oui ou non", "Charge à l'arbitre de le respecter", "-"),
             'play_weekend': ("on joue le week-end", "oui ou non", "Le système est empêché de mettre une date limite pendant le week-end", "OUI"),
-            'manual': ("l'attribution des rôle est manuelle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "NON"),
+            'manual': ("l'attribution des rôle est manuelle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
             'access_code': ("code d'accès pour la partie", "(code de quatre chiffres)", "Le système demande un code pour rejoindre la partie", "NON"),
             'access_restriction_reliability': ("restriction d'accès sur la fiabilité", "(valeur)", "Un seuil de fiabilité est exigé pour rejoindre la partie", "NON"),
             'access_restriction_regularity': ("restriction d'accès sur la régularité", "(valeur)", "Un seuil de régularité est exigé pour rejoindre la partie", "NON"),
