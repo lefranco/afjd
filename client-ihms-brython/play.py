@@ -1104,7 +1104,7 @@ def submit_orders():
         label_definitive = html.LABEL("Prêt pour la résolution ?")
         buttons_right <= label_definitive
 
-        input_definitive = html.INPUT(type="checkbox")
+        input_definitive = html.INPUT(type="checkbox", value=True)
         buttons_right <= input_definitive
 
         input_submit = html.INPUT(type="submit", value="soumettre ces ordres")
@@ -1119,7 +1119,7 @@ def submit_orders():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -1845,7 +1845,7 @@ def submit_communication_orders():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -2121,7 +2121,7 @@ def negotiate():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -2394,7 +2394,7 @@ def declare():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -2601,7 +2601,7 @@ def vote():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -3051,7 +3051,7 @@ def game_master():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -3555,7 +3555,7 @@ def show_orders_submitted_in_game():
 
     # if user identified ?
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     # game id now

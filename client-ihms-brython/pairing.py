@@ -65,7 +65,7 @@ def join_game():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -123,7 +123,7 @@ def quit_game():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -182,7 +182,7 @@ def move_players_in_game():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -382,7 +382,7 @@ def take_mastering_game():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -441,7 +441,7 @@ def quit_mastering_game():
     game = storage['GAME']
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se loguer au préalable")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
