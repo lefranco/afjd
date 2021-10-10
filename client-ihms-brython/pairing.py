@@ -330,7 +330,7 @@ def move_players_in_game():
 
     form <= html.BR()
 
-    input_put_in_game = html.INPUT(type="submit", value="mettre dans la partie sélectionée")
+    input_put_in_game = html.INPUT(type="submit", value="mettre dans la partie sélectionnée")
     input_put_in_game.bind("click", put_in_game_callback)
     form <= input_put_in_game
 
