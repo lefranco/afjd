@@ -1110,8 +1110,9 @@ def submit_orders():
                 definitive_value = bool(definitive_val)
                 break
 
+        # can happen if never submitted orders
         if definitive_value is None:
-            alert("definitive_value is None")
+            definitive_value = False
 
         input_definitive = html.INPUT(type="checkbox", checked=definitive_value)
         buttons_right <= input_definitive
