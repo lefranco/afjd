@@ -3412,6 +3412,11 @@ def show_players_in_game():
 
     game = storage['GAME']
 
+    # if user identified ?
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
     # game parameters
     game_parameters_loaded = common.game_parameters_reload(game)
     if not game_parameters_loaded:
@@ -3550,6 +3555,11 @@ def show_orders_submitted_in_game():
 
     game = storage['GAME']
 
+    # if user identified ?
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
     # from game name get variant name
 
     variant_name_loaded = common.game_variant_name_reload(game)
@@ -3570,11 +3580,6 @@ def show_orders_submitted_in_game():
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-
-    # if user identified ?
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
 
     # game id now
     game_id = common.get_game_id(game)
