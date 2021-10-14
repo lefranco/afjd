@@ -20,7 +20,7 @@ link1.style = {
 }
 my_panel <= link1
 
-title11 = html.H2("Parainnage")
+title11 = html.H2("Parainage")
 my_panel <= title11
 
 link11 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
