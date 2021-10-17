@@ -24,9 +24,12 @@ LEN_NAME_MAX = 20
 
 # for safety
 MIN_CYCLES_TO_PLAY = 7
+MAX_CYCLES_TO_PLAY = 99
 
-# for safety
-MIN_VICTORY_CENTERS = 10
+# for safety (diplomacy standard)
+# to change later
+MIN_VICTORY_CENTERS = 18
+MAX_VICTORY_CENTERS = 18
 
 # for the moment
 IMPOSED_VARIANT = 'standard'
@@ -259,6 +262,8 @@ class Game:
             # safety
             if self._nb_max_cycles_to_play < MIN_CYCLES_TO_PLAY:
                 self._nb_max_cycles_to_play = MIN_CYCLES_TO_PLAY
+            if self._nb_max_cycles_to_play > MAX_CYCLES_TO_PLAY:
+                self._nb_max_cycles_to_play = MAX_CYCLES_TO_PLAY
             changed = True
 
         if 'victory_centers' in json_dict and json_dict['victory_centers'] is not None and json_dict['victory_centers'] != self._victory_centers:
@@ -266,6 +271,8 @@ class Game:
             # safety
             if self._victory_centers < MIN_VICTORY_CENTERS:
                 self._victory_centers = MIN_VICTORY_CENTERS
+            if self._victory_centers > MAX_VICTORY_CENTERS:
+                self._victory_centers = MAX_VICTORY_CENTERS
             changed = True
 
         if 'current_state' in json_dict and json_dict['current_state'] is not None and json_dict['current_state'] != self._current_state:
