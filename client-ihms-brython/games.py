@@ -371,7 +371,7 @@ def create_game():
     }
     form <= legend_title_access
 
-    legend_nb_max_cycles_to_play = html.LEGEND("maximum de cycles", title="Combien d'années à jouer au plus ?")
+    legend_nb_max_cycles_to_play = html.LEGEND("maximum de cycles (années)", title="Combien d'années à jouer au plus ?")
     form <= legend_nb_max_cycles_to_play
     input_nb_max_cycles_to_play = html.INPUT(type="number", value=DEFAULT_NB_CYCLES)
     form <= input_nb_max_cycles_to_play
