@@ -2490,6 +2490,11 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             submission = submissions.Submission(int(game_id), role_num)
             submission.delete_database(sql_executor)
 
+        # purge definitives
+        for (_, role_num, _) in definitives.Definitive.list_by_game_id(sql_executor, int(game_id)):
+            definitive = definitives.Definitive(int(game_id), role_num, False)
+            definitive.delete_database(sql_executor)
+
         # insert
 
         # insert new ownerships
