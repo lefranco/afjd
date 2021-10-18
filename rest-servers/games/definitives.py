@@ -55,7 +55,7 @@ class Definitive:
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
-        sql_executor.execute("DELETE FROM definitive WHERE game_id = ? AND role_num = ?", (self._game_id, self._role_num))
+        sql_executor.execute("DELETE FROM definitives WHERE game_id = ? AND role_num = ?", (self._game_id, self._role_num))
 
     def __str__(self) -> str:
         return f"game_id={self._game_id} role_num={self._role_num} definitive={self._definitive}"
