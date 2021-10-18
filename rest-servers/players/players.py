@@ -38,6 +38,16 @@ def check_country(country: str) -> bool:
     assert isinstance(json_data, dict), "File to check countries is not a dict"
     return country in json_data.values()
 
+def default_country() -> bool:
+    """ default_country """
+
+    name = "country_list"
+    full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
+    assert full_name_file.exists(), "Missing file to check countries"
+    with open(full_name_file, 'r') as file_ptr:
+        json_data = json.load(file_ptr)
+    assert isinstance(json_data, dict), "File to check countries is not a dict"
+    return list(json_data.values())[0]
 
 def check_timezone(timezone: str) -> bool:
     """ check timezone is ok """
@@ -49,6 +59,17 @@ def check_timezone(timezone: str) -> bool:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check timezones is not a dict"
     return timezone in json_data.values()
+
+def default_timezone() -> str:
+    """ default_timezone """
+
+    name = "timezone_list"
+    full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
+    assert full_name_file.exists(), "Missing file to check timezones"
+    with open(full_name_file, 'r') as file_ptr:
+        json_data = json.load(file_ptr)
+    assert isinstance(json_data, dict), "File to check timezones is not a dict"
+    return list(json_data.values())[0]
 
 
 class Player:

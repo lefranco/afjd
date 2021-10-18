@@ -344,34 +344,32 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is not a valid pseudo")
 
+        # cannot have a void residence
         if args['residence']:
             residence_provided = args['residence']
             if not players.check_country(residence_provided):
                 del sql_executor
                 flask_restful.abort(404, msg=f"Residence '{residence_provided}' is not a valid country code")
+        else:
+            args['residence'] = players.default_country()
 
+        # cannot have a void nationality
         if args['nationality']:
             nationality_provided = args['nationality']
             if not players.check_country(nationality_provided):
                 del sql_executor
                 flask_restful.abort(404, msg=f"Nationality '{nationality_provided}' is not a valid country code")
+        else:
+            args['nationality'] = players.default_country()
 
+        # cannot have a void timezone
         if args['time_zone']:
             timezone_provided = args['time_zone']
             if not players.check_timezone(timezone_provided):
                 del sql_executor
                 flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
-
-        # create player on users server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/add"
-        req_result = SESSION.post(url, json={'user_name': pseudo, 'password': args['password']})
-        if req_result.status_code != 201:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            del sql_executor
-            flask_restful.abort(400, msg=f"User creation failed!:{message}")
+        else:
+            args['time_zone'] = players.default_timezone()
 
         # create player here
         identifier = players.Player.free_identifier(sql_executor)
@@ -404,6 +402,17 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
             if not mailer.send_mail_checker(code, email_after):
                 del sql_executor
                 flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
+
+        # create player on users server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/add"
+        req_result = SESSION.post(url, json={'user_name': pseudo, 'password': args['password']})
+        if req_result.status_code != 201:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"User creation failed!:{message}")
 
         sql_executor.commit()
         del sql_executor
