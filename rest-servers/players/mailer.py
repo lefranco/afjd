@@ -15,7 +15,7 @@ import flask_mail  # type: ignore
 import lowdata
 
 NOREPLY = "Ne pas répondre à ce message !"
-SENDER = "jeremie.lefrancois@laposte.net"
+SENDER = "jeremie.lefrancois@orange.fr"
 
 MAILER = None
 
@@ -54,8 +54,6 @@ def send_mail(subject: str, body: str, recipients: typing.List[str]) -> bool:
     try:
         MAILER.send(msg)
     except smtplib.SMTPRecipientsRefused:
-        return False
-    except smtplib.SMTPDataError: # occured once
         return False
 
     return True
