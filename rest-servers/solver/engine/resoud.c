@@ -2940,8 +2940,24 @@ static void propagation(_DECISION *decision) {
 		modif = FALSE;
 		for (s = decision->DECISION1.t; s < decision->DECISION1.t
 				+ decision->DECISION1.n; s++) {
+			if (move_decision(decision, s))
+				modif = TRUE;
+			if (support_decision(decision, s))
+				modif = TRUE;
+			if (dislodge_decision(decision, s))
+				modif = TRUE;
 			if (attack_strength_decision(decision, s))
 				modif = TRUE;
+		}
+
+		for (u = decision->DECISION3.t; u < decision->DECISION3.t
+				+ decision->DECISION3.n; u++) {
+			if (hold_strength_decision(decision, u))
+				modif = TRUE;
+		}
+
+		for (s = decision->DECISION1.t; s < decision->DECISION1.t
+				+ decision->DECISION1.n; s++) {
 			if (prevent_strength_decision(decision, s))
 				modif = TRUE;
 			if (defend_strength_decision(decision, s))
@@ -2950,27 +2966,26 @@ static void propagation(_DECISION *decision) {
 				modif = TRUE;
 			if (convoy_path_decision(decision, s))
 				modif = TRUE;
-			if (paradox_decision(decision, s))
-				modif = TRUE;
-			if (move_decision(decision, s))
-				modif = TRUE;
-			if (support_decision(decision, s))
-				modif = TRUE;
-			if (dislodge_decision(decision, s))
-				modif = TRUE;
 		}
+
+		/* additional to DATC */
 		for (s = decision->DECISION1.t; s < decision->DECISION1.t
-				+ decision->DECISION1.n; s++)
+				+ decision->DECISION1.n; s++) {
 			for (t = decision->DECISION1.t; t < decision->DECISION1.t
 					+ decision->DECISION1.n; t++) {
 				if (head_to_head_battle_decision(decision, s, t))
 					modif = TRUE;
 			}
-		for (u = decision->DECISION3.t; u < decision->DECISION3.t
-				+ decision->DECISION3.n; u++) {
-			if (hold_strength_decision(decision, u))
+		}
+
+
+		for (s = decision->DECISION1.t; s < decision->DECISION1.t
+				+ decision->DECISION1.n; s++) {
+			/* added to DATC */
+			if (paradox_decision(decision, s))
 				modif = TRUE;
 		}
+
 		if (modif)
 			continue;
 
