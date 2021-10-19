@@ -493,7 +493,7 @@ class Game:
             days_add -= 1
 
             # accept if enough days passed and not in weekend when no play at weekend
-            if days_add <= 0 and not (deadline_day.weekday() in [5,6] and not self._play_weekend):
+            if days_add <= 0 and not (deadline_day.weekday() in [5, 6] and not self._play_weekend):
                 break
 
     def terminate(self) -> None:
