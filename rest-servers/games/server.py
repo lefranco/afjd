@@ -42,8 +42,8 @@ import variants
 import database
 import visits
 import votes
-import definitives
 import lowdata
+import agree
 
 # a little welcome message to new games
 WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
@@ -112,6 +112,12 @@ SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
 SUBMISSION_PARSER.add_argument('definitive', type=int, required=False)
 SUBMISSION_PARSER.add_argument('names', type=str, required=True)
 SUBMISSION_PARSER.add_argument('pseudo', type=str, required=False)
+
+AGREE_PARSER = flask_restful.reqparse.RequestParser()
+AGREE_PARSER.add_argument('role_id', type=int, required=True)
+AGREE_PARSER.add_argument('definitive', type=int, required=False)
+AGREE_PARSER.add_argument('names', type=str, required=True)
+AGREE_PARSER.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER2 = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER2.add_argument('role_id', type=int, required=True)
@@ -1420,6 +1426,91 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/game-agree-solve/<game_id>')
+class GameAgreeSolveRessource(flask_restful.Resource):  # type: ignore
+    """ GameAgreeSolveRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Agree to solve with these orders (forced by a game master)
+        EXPOSED
+        """
+        mylogger.LOGGER.info("/game-agree-solve/<game_id> - POST - agreeing to solve with orders game id=%s", game_id)
+
+        args = AGREE_PARSER.parse_args(strict=True)
+
+        role_id = args['role_id']
+        definitive_value = args['definitive']
+        names = args['names']
+        pseudo = args['pseudo']
+
+        if pseudo is None:
+            flask_restful.abort(401, msg="Need a pseudo to agree to solve with orders in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is game master
+        assert game is not None
+        game_master_id = game.get_role(sql_executor, 0)
+
+        # must be game master
+        if user_id != game_master_id:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+
+        # check orders are required
+        # needed list : those who need to submit orders
+        if role_id != 0:
+            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+            needed_list = [o[1] for o in actives_list]
+            if role_id not in needed_list:
+                del sql_executor
+                flask_restful.abort(403, msg="This role does not seem to require any orders")
+
+        sql_executor = database.SqlExecutor()
+
+        # handle definitive boolean
+        agree.post(game_id, role_id, bool(definitive_value), names, sql_executor)
+
+        sql_executor.commit()  # noqa: F821
+        del sql_executor  # noqa: F821
+
+        data = {'msg': f"Ok agreement {bool(definitive_value)} stored for role {role_id}"}
+        return data, 201
+
+
 @API.resource('/game-orders/<game_id>')
 class GameOrderRessource(flask_restful.Resource):  # type: ignore
     """ GameOrderRessource """
@@ -1679,17 +1770,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             submission.update_database(sql_executor)  # noqa: F821
 
         # handle definitive boolean
-        if role_id != 0:
-            if definitive_value is not None:
-
-                # create vote here
-                definitive = definitives.Definitive(int(game_id), role_id, bool(definitive_value))
-                definitive.update_database(sql_executor)  # noqa: F821
+        agree.post(game_id, role_id, bool(definitive_value), names, sql_executor)  # noqa: F821
 
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
-        data = {'msg': f"Ok orders submitted {submission_report}"}
+        data = {'msg': f"Ok orders submitted {submission_report} and agreement {bool(definitive_value)} stored for role {role_id}"}
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
@@ -2491,9 +2577,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             submission.delete_database(sql_executor)
 
         # purge definitives
-        for (_, role_num, _) in definitives.Definitive.list_by_game_id(sql_executor, int(game_id)):
-            definitive = definitives.Definitive(int(game_id), role_num, False)
-            definitive.delete_database(sql_executor)
+        agree.clear(game_id, sql_executor)
 
         # insert
 
@@ -3439,10 +3523,7 @@ class GameDefinitiveRessource(flask_restful.Resource):  # type: ignore
 
         # retrieve definitive here
         assert role_id is not None
-        if role_id == 0:
-            definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
-        else:
-            definitives_list = definitives.Definitive.list_by_game_id_role_num(sql_executor, game_id, role_id)
+        definitives_list = agree.retrieve(game_id, role_id, sql_executor)
 
         del sql_executor
 

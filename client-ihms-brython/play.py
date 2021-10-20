@@ -2914,8 +2914,52 @@ def game_master():
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/game-no-orders/{game_id}"
 
-        # submitting civil disoder : need a token
+        # submitting civil disorder : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def force_agreement_callback(_, role_id):
+        """ force_agreement_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Error submitting force agreement to game: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problem submitting force agreement to game: {req_result['msg']}")
+                else:
+                    alert("Undocumented issue from server")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur s'est vu imposé un accord pour résoudre: {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            my_sub_panel.clear()
+            game_master()
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        names_dict = variant_data.extract_names()
+        names_dict_json = json.dumps(names_dict)
+        definitive_value = True
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': pseudo,
+            'definitive': definitive_value,
+            'names': names_dict_json
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-agree-solve/{game_id}"
+
+        # submitting force agreement : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
 
     def unallocate_role_callback(_, pseudo_removed, role_id):
         """ unallocate_role_callback """
@@ -3266,6 +3310,12 @@ def game_master():
         else:
             vote_val = "Pas d'avis"
         col <= vote_val
+        row <= col
+
+        col = html.TD()
+        input_force_agreement = html.INPUT(type="submit", value="forcer son accord")
+        input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
+        col = html.TD(input_force_agreement)
         row <= col
 
         col = html.TD()
