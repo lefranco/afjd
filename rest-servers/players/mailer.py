@@ -14,9 +14,7 @@ import flask_mail  # type: ignore
 
 import lowdata
 
-NOREPLY = "Ne pas répondre à ce message !"
-SENDER = "jeremie.lefrancois@orange.fr"
-
+SENDER = None
 MAILER = None
 
 
@@ -38,7 +36,8 @@ def load_mail_config(app: typing.Any) -> None:
 
     global MAILER
     MAILER = flask_mail.Mail(app)
-
+    global SENDER
+    SENDER = app.config['MAIL_USERNAME']
 
 def send_mail(subject: str, body: str, recipients: typing.List[str]) -> bool:
     """ send_mail """
