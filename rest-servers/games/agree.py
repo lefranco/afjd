@@ -32,6 +32,7 @@ import lowdata
 
 SESSION = requests.Session()
 
+
 # TODO : remove this function when adjudication from GM is removed
 def clear(game_id: int, sql_executor: database.SqlExecutor) -> None:
     """ clear for a game the agreements"""
