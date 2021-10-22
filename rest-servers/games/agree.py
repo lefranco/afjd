@@ -377,11 +377,11 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
     transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_dict_json, report_txt)
     transition.update_database(sql_executor)
 
-    # update season and deadline
+    # update season
     game.advance()
     game.update_database(sql_executor)
 
-    # update season and deadline
+    # update deadline
     game.push_deadline()
     game.update_database(sql_executor)
 
