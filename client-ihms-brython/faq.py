@@ -9,10 +9,7 @@ faq_content_table = {
     "Pourquoi certaines messages sont en français, certains en angals, voire certains dans un mélange des deux  ?":
     "Les messages issus de l'interface 'front end' sont en français (sauf omission à corriger rapidement). Les messages issus du serveur 'back end' sont en anglais",
 
-    "Comment créér une partie dans laquelle je joue ?":
-    "Il faut créer la partie, puis se retirer de l'arbitrage et demander à un arbitre de parties du site d'en prendre l'arbitrage",
-
-    "Peut-on joueur plusieurs rôles sur une partie  ?":
+    "Peut-on jouer plusieurs rôles sur une partie  ?":
     "Non, cela n'est pas prévu. Il doit y avoir 8 intervenants distincts sur une partie (arbitre y compris)",
 
     "Peut-on faire des erreurs d'ordres ?":
@@ -35,6 +32,9 @@ faq_content_table = {
 
     "Que peut faire l'arbitre ?":
     "L'arbitre démarre et arrête la partie. L'arbitre force une résolution quand il n'y a pas besoin d'ordres. Il peut forcer des ordres de désordre civil pour un pays. Il peut forcer un accord pour résoudre pour un pays. Il peut retirer ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
+
+    "Comment créér une partie dans laquelle je joue ?":
+    "Il faut créer la partie, puis se retirer de l'arbitrage et demander à un arbitre de parties du site d'en prendre l'arbitrage",
 
     "Est-il prévu de développer des variantes ?":
     "Certainement. Hundred tient la corde pour le moment",
