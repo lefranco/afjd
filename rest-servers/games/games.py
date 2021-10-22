@@ -148,7 +148,7 @@ class Game:
             self._variant = database.sanitize_field(self._variant)
             self._variant = self._variant[:LEN_NAME_MAX]
 
-            # TODO : change later
+            # TODO : change later when variants are implemented
             if self._variant != IMPOSED_VARIANT:
                 self._variant = IMPOSED_VARIANT
 
