@@ -2410,313 +2410,33 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
+        role_id = 0
+
         # who is game master ?
         assert game is not None
-        game_master_id = game.get_role(sql_executor, 0)
+        game_master_id = game.get_role(sql_executor, role_id)
 
         # must be game master
         if user_id != game_master_id:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
-        # check all orders are submitted
+        # call agree
+        status, adjudicated, agreement_report = agree.post(game_id, role_id, True, names, sql_executor)
 
-        # needed list : those who need to submit orders
-        actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
-        needed_list = [o[1] for o in actives_list]
+        if not status:
+            del sql_executor  # noqa: F821
+            flask_restful.abort(400, msg=f"Failed to force adjudication with error: {agreement_report}")
 
-        # submissions_list : those who submitted orders
-        submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
-        submitted_list = [o[1] for o in submissions_list]
+        # just a naming
+        adjudication_report = agreement_report
 
-        # check all submitted
-        if not game.archive:
-            for role in needed_list:
-                if role not in submitted_list:
-                    del sql_executor
-                    flask_restful.abort(400, msg="It seems at least one set of orders is still not submitted")
+        if not adjudicated:
+            del sql_executor  # noqa: F821
+            flask_restful.abort(400, msg=f"Failed to force adjudication with condition missing: {adjudication_report}")
 
-        # evaluate variant
-        variant_name = game.variant
-        variant_dict = variants.Variant.get_by_name(variant_name)
-        if variant_dict is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"Variant {variant_name} doesn't exist")
-
-        variant_dict_json = json.dumps(variant_dict)
-
-        # evaluate situation
-
-        # situation: get ownerships
-        ownership_dict = dict()
-        game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
-        for _, center_num, role_num in game_ownerships:
-            ownership_dict[str(center_num)] = role_num
-
-        # situation: get units
-        game_units = units.Unit.list_by_game_id(sql_executor, game_id)
-        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
-            if fake:
-                fake_unit_dict[str(role_num)].append([type_num, zone_num])
-            elif region_dislodged_from_num:
-                dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
-            else:
-                unit_dict[str(role_num)].append([type_num, zone_num])
-
-        # situation: get forbiddens
-        forbidden_list = list()
-        game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
-        for _, region_num in game_forbiddens:
-            forbidden_list.append(region_num)
-
-        situation_dict = {
-            'ownerships': ownership_dict,
-            'dislodged_ones': dislodged_unit_dict,
-            'units': unit_dict,
-            'fake_units': fake_unit_dict,
-            'forbiddens': forbidden_list,
-        }
-        situation_dict_json = json.dumps(situation_dict)
-
-        # evaluate orders
-        orders_list = list()
-        orders_from_game = orders.Order.list_by_game_id(sql_executor, game_id)
-        for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders_from_game:
-            orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
-        orders_list_json = json.dumps(orders_list)
-
-        json_dict = {
-            'variant': variant_dict_json,
-            'advancement': game.current_advancement,
-            'situation': situation_dict_json,
-            'orders': orders_list_json,
-            'names': names,
-        }
-
-        # post to solver
-        host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
-        port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
-        url = f"{host}:{port}/solve"
-        req_result = SESSION.post(url, data=json_dict)
-
-        if 'msg' in req_result.json():
-            adjudication_report = req_result.json()['msg']
-        else:
-            adjudication_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
-
-        # adjudication failed
-        if req_result.status_code != 201:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Failed to adjudicate {message} : {adjudication_report}")
-
-        # adjudication successful : backup for transition archive
-
-        # position for transition
-
-        # get ownerships
-        ownership_dict = dict()
-        game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
-        for _, center_num, role_num in game_ownerships:
-            ownership_dict[str(center_num)] = role_num
-
-        # get units
-        unit_dict2: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        dislodged_unit_dict2: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        game_units = units.Unit.list_by_game_id(sql_executor, game_id)
-        for _, type_num, zone_num, role_num, zone_dislodged_from_num, fake in game_units:
-            if fake:
-                pass  # this is confidential
-            elif zone_dislodged_from_num:
-                dislodged_unit_dict2[str(role_num)].append([type_num, zone_num, zone_dislodged_from_num])
-            else:
-                unit_dict2[str(role_num)].append([type_num, zone_num])
-
-        # get forbiddens
-        forbidden_list = list()
-        game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
-        for _, region_num in game_forbiddens:
-            forbidden_list.append(region_num)
-
-        position_transition_dict = {
-            'ownerships': ownership_dict,
-            'dislodged_ones': dislodged_unit_dict2,
-            'units': unit_dict2,
-            'forbiddens': forbidden_list,
-        }
-
-        # orders for transition
-        orders_transition_list = orders.Order.list_by_game_id(sql_executor, game_id)
-
-        units_transition_list = units.Unit.list_by_game_id(sql_executor, game_id)
-        fake_units_transition_list = [u for u in units_transition_list if u[5]]
-
-        orders_transition_dict = {
-            'orders': orders_transition_list,
-            'fake_units': fake_units_transition_list,
-        }
-
-        # extract new position
-        situation_result = req_result.json()['situation_result']
-        the_ownerships = situation_result['ownerships']
-        the_units = situation_result['units']
-        the_dislodged_units = situation_result['dislodged_ones']
-        the_forbiddens = situation_result['forbiddens']
-
-        # extract actives
-        the_active_roles = req_result.json()['active_roles']
-
-        # store new position in database
-
-        # purge
-
-        # purge previous ownerships
-        for (_, center_num, role_num) in ownerships.Ownership.list_by_game_id(sql_executor, int(game_id)):
-            ownership = ownerships.Ownership(int(game_id), center_num, role_num)
-            ownership.delete_database(sql_executor)
-
-        # purge previous units
-        for (_, type_num, role_num, zone_num, zone_dislodged_from_num, fake) in units.Unit.list_by_game_id(sql_executor, int(game_id)):
-            unit = units.Unit(int(game_id), type_num, role_num, zone_num, zone_dislodged_from_num, fake)
-            unit.delete_database(sql_executor)
-
-        # purge previous forbiddens
-        for (_, center_num) in forbiddens.Forbidden.list_by_game_id(sql_executor, int(game_id)):
-            forbidden = forbiddens.Forbidden(int(game_id), center_num)
-            forbidden.delete_database(sql_executor)
-
-        # purge actives
-        for (_, role_num) in actives.Active.list_by_game_id(sql_executor, int(game_id)):
-            active = actives.Active(int(game_id), role_num)
-            active.delete_database(sql_executor)
-
-        # purge submissions
-        for (_, role_num) in submissions.Submission.list_by_game_id(sql_executor, int(game_id)):
-            submission = submissions.Submission(int(game_id), role_num)
-            submission.delete_database(sql_executor)
-
-        # purge definitives
-        agree.clear(game_id, sql_executor)
-
-        # insert
-
-        # insert new ownerships
-        for center_num, role in the_ownerships.items():
-            ownership = ownerships.Ownership(int(game_id), int(center_num), role)
-            ownership.update_database(sql_executor)
-
-        # insert new units
-        for role_num, the_unit_role in the_units.items():
-            for type_num, zone_num in the_unit_role:
-                unit = units.Unit(int(game_id), type_num, zone_num, int(role_num), 0, 0)
-                unit.update_database(sql_executor)
-
-        # insert new dislodged units
-        for role_num, the_unit_role in the_dislodged_units.items():
-            for type_num, zone_num, zone_dislodged_from_num in the_unit_role:
-                unit = units.Unit(int(game_id), type_num, zone_num, int(role_num), zone_dislodged_from_num, 0)
-                unit.update_database(sql_executor)
-
-        # insert new forbiddens
-        for region_num in the_forbiddens:
-            forbidden = forbiddens.Forbidden(int(game_id), region_num)
-            forbidden.update_database(sql_executor)
-
-        # insert new actives
-        for role_num in the_active_roles:
-            active = actives.Active(int(game_id), int(role_num))
-            active.update_database(sql_executor)
-
-        # keep a copy of orders eligible for communication orders
-        communication_eligibles = list()
-        for (_, role_id, order_type, zone_num, _, _) in orders.Order.list_by_game_id(sql_executor, game_id):
-            if order_type in [4, 7]:
-                communication_eligibles.append(zone_num)
-
-        # remove orders
-        for (_, role_id, _, zone_num, _, _) in orders.Order.list_by_game_id(sql_executor, game_id):
-            order = orders.Order(int(game_id), role_id, 0, zone_num, 0, 0)
-            order.delete_database(sql_executor)
-
-        # extract new report
-        orders_result = req_result.json()['orders_result']
-        orders_result_simplified = orders_result
-
-        # --------------------------
-        # get communication orders
-
-        # evaluate communication_orders (only the units with a hld of disperse order)
-        communication_orders_list = list()
-        communication_orders_from_game = communication_orders.CommunicationOrder.list_by_game_id(sql_executor, game_id)
-        for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in communication_orders_from_game:
-            if active_unit_zone_num in communication_eligibles:
-                communication_orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
-
-        communication_orders_list_json = json.dumps(communication_orders_list)
-
-        json_dict = {
-            'variant': variant_dict_json,
-            'advancement': game.current_advancement,
-            'situation': situation_dict_json,
-            'orders': communication_orders_list_json,
-            'names': names,
-        }
-
-        # post to solver (for print)
-        host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
-        port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
-        url = f"{host}:{port}/print"
-        req_result = SESSION.post(url, data=json_dict)
-
-        # print failed
-        if req_result.status_code != 201:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Failed to print communication orders {message}")
-
-        # extract printed orders
-        communication_orders_content = req_result.json()['orders_content']
-        communication_orders_content_tagged = '\n'.join([f"* {ll}" for ll in communication_orders_content.split('\n')])
-
-        # remove communication orders
-        for (_, role_id, _, zone_num, _, _) in communication_orders.CommunicationOrder.list_by_game_id(sql_executor, game_id):
-            communication_order = communication_orders.CommunicationOrder(int(game_id), role_id, 0, zone_num, 0, 0)
-            communication_order.delete_database(sql_executor)
-
-        # --------------------------
-
-        # date for report in database (actually unused)
-        time_stamp = int(time.time())
-
-        # make report
-        date_now = datetime.datetime.now()
-        date_desc = date_now.strftime('%Y-%m-%d %H:%M:%S')
-        report_txt = f"{date_desc}:\n{orders_result_simplified}\n{communication_orders_content_tagged}"
-
-        # put report in database
-        report = reports.Report(int(game_id), time_stamp, report_txt)
-        report.update_database(sql_executor)
-
-        # put transition in database
-        # important : need to be same as when getting situation
-        position_transition_dict_json = json.dumps(position_transition_dict)
-        orders_transition_dict_json = json.dumps(orders_transition_dict)
-        transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_dict_json, report_txt)
-        transition.update_database(sql_executor)
-
-        # update season and deadline
-        game.advance()
-        game.update_database(sql_executor)
-
-        # update season and deadline
-        game.push_deadline()
-        game.update_database(sql_executor)
-
-        sql_executor.commit()
-        del sql_executor
+        sql_executor.commit()  # noqa: F821
+        del sql_executor  # noqa: F821
 
         data = {'msg': f"Ok adjudication performed and game updated : {adjudication_report}"}
         return data, 201
