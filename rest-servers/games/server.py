@@ -1509,12 +1509,19 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         sql_executor = database.SqlExecutor()
 
         # handle definitive boolean
-        agree.post(game_id, role_id, bool(definitive_value), names, sql_executor)
+        status, adjudicated, agreement_report = agree.post(game_id, role_id, bool(definitive_value), names, sql_executor)
+
+        if not status:
+            del sql_executor  # noqa: F821
+            flask_restful.abort(400, msg=f"Failed to agree (forced) to adjudicate : {agreement_report}")
 
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
-        data = {'msg': f"Ok agreement {bool(definitive_value)} stored for role {role_id}"}
+        if adjudicated:
+            data = {'msg': f"Ok adjudication was performed (initiated by game master): {agreement_report}"}
+        else:
+            data = {'msg': f"Ok agreement {bool(definitive_value)} stored for role {role_id} (forced by game master) (game adjudication:{agreement_report})"}
         return data, 201
 
 
@@ -1777,12 +1784,20 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             submission.update_database(sql_executor)  # noqa: F821
 
         # handle definitive boolean
-        agree.post(game_id, role_id, bool(definitive_value), names, sql_executor)  # noqa: F821
+        status, adjudicated, agreement_report = agree.post(game_id, role_id, bool(definitive_value), names, sql_executor)  # noqa: F821
+
+        if not status:
+            del sql_executor  # noqa: F821
+            flask_restful.abort(400, msg=f"Failed to agree to adjudicate : {agreement_report}")
 
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
-        data = {'msg': f"Ok orders submitted {submission_report} and agreement {bool(definitive_value)} stored for role {role_id}"}
+        if adjudicated:
+            data = {'msg': f"Ok adjudication was performed (initiated by player): {agreement_report}"}
+        else:
+            data = {'msg': f"Ok orders submitted {submission_report} and agreement {bool(definitive_value)} stored for role {role_id} (from player) (game adjudication:{agreement_report})"}
+
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
