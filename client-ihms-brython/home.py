@@ -36,11 +36,8 @@ my_panel <= title2
 note_table = html.TABLE()
 text1 = html.B(html.CODE("""
 Bienvenue dans la version Beta du site diplomania.<br>
-Information importante : vous ne visualisez ici que le moteur de jeu sans le design. Ce dernier est en cours dans les mains de notre graphiste partiellement financé par les dons du crowfunding.<br>
-Le moteur que vous allez tester est le fruit du très gros travail de Jérémie (Palpatine) membre du CA et bénévole.<br>
-On compte sur vous sur ces premiers tests et on vous promet assez prochainement la version « habillée ».<br>
-Et tout cela en open source bien sûr !<br>
-Merci de nous remonter vos remarque sur le forum de diplomania ou sur le serveur Discord.
+Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu. Une version avec un design plus élaboré est espérée pour plus tard.<br>
+Merci de nous remonter vos remarques sur le forum de diplomania ou sur le serveur Discord.
 """))
 my_panel <= text1
 col = html.TD(text1)
