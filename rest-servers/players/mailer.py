@@ -39,6 +39,7 @@ def load_mail_config(app: typing.Any) -> None:
     global SENDER
     SENDER = app.config['MAIL_USERNAME']
 
+
 def send_mail(subject: str, body: str, recipients: typing.List[str]) -> bool:
     """ send_mail """
 
