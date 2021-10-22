@@ -2421,6 +2421,14 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
+        # there must be no orders required (otherwise must be enclenched by "agree to solve")
+        # needed list : those who need to submit orders
+        actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+        needed_list = [o[1] for o in actives_list]
+        if needed_list:
+            del sql_executor  # noqa: F821
+            flask_restful.abort(400, msg=f"Orders are required so adjudication must come from player agreement to solve")
+
         # call agree
         status, adjudicated, agreement_report = agree.post(game_id, role_id, True, names, sql_executor)
 
