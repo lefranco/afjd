@@ -3192,7 +3192,6 @@ def game_master():
 
     submitted_data = common.get_roles_submitted_orders(game_id)
     if submitted_data is None:
-        alert("No submitted data")
         return
 
     # just to avoid a warning
@@ -3332,9 +3331,12 @@ def game_master():
 
     my_sub_panel <= html.BR()
 
-    input_adjudicate = html.INPUT(type="submit", value="déclencher la résolution")
-    input_adjudicate.bind("click", adjudicate_callback)
-    my_sub_panel <= input_adjudicate
+    # adjudicate button only if no orders required
+    needed_roles_list = submitted_data['needed']
+    if len(needed_roles_list) == 0:
+        input_adjudicate = html.INPUT(type="submit", value="déclencher la résolution")
+        input_adjudicate.bind("click", adjudicate_callback)
+        my_sub_panel <= input_adjudicate
 
 
 def show_game_parameters():
@@ -3645,7 +3647,6 @@ def show_orders_submitted_in_game():
     # you will at least get your own role
     submitted_data = common.get_roles_submitted_orders(game_id)
     if submitted_data is None:
-        alert("No submitted data")
         return
 
     # just to avoid a warning
