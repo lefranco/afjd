@@ -67,7 +67,7 @@ my_panel <= title4
 text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la DL est ce soir ? ")
 my_panel <= text21
 
-text22 = html.P("Vous pouvez envoyer un mél à l'adresse ci-dessous :")
+text22 = html.P("Vous pouvez utiliser le lien ci-dessous pour envoyer un email :")
 my_panel <= text22
 
 email_support = html.A(href=f"mailto:{EMAIL_SUPPORT}")
