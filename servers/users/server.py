@@ -38,8 +38,6 @@ APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 # Seems JWT variable is not used in this implementation but could be later on...
 JWT = flask_jwt_extended.JWTManager(APP)
 
-
-
 # ---------------------------------
 # users
 # ---------------------------------
