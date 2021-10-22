@@ -32,9 +32,6 @@ DEFAULT_CD_OTHERS = 1
 DEFAULT_VICTORY_CENTERS = 18
 DEFAULT_NB_CYCLES = 99
 
-# game created at now + this
-DEADLINE_DELAY_SEC = 10 * 60
-
 
 def information_about_game():
     """ information_about_account """
@@ -149,7 +146,6 @@ def create_game():
         time_creation = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
         time_creation_str = datetime.datetime.strftime(time_creation, "%d-%m-%Y %H:%M:%S")
         description = f"game created at {time_creation_str} (gmt time) by {pseudo} variant {variant}"
-        deadline = int(time_stamp) + DEADLINE_DELAY_SEC
         state = 0
 
         json_dict = {
@@ -181,7 +177,6 @@ def create_game():
             'victory_centers': victory_centers,
 
             'description': description,
-            'deadline': deadline,
             'current_state': state,
 
             'pseudo': pseudo

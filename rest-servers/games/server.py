@@ -329,6 +329,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             if current_state_before == 0 and game.current_state == 1:
 
                 # check enough players
+
                 nb_players_allocated = game.number_allocated(sql_executor)
                 variant_name = game.variant
                 variant_data = variants.Variant.get_by_name(variant_name)
@@ -345,7 +346,12 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     del sql_executor
                     return data, 400
 
+                # start the game
                 game.start(sql_executor)
+                # commited later
+
+                # give a deadlines
+                game.push_deadline()
                 # commited later
 
                 # notify players
