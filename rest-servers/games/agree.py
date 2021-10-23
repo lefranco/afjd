@@ -266,7 +266,7 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
         submission = submissions.Submission(int(game_id), role_num)
         submission.delete_database(sql_executor)
 
-    # clear agrrements
+    # clear agreements
     for (_, role_num, _) in definitives.Definitive.list_by_game_id(sql_executor, int(game_id)):
         definitive = definitives.Definitive(int(game_id), role_num, False)
         definitive.delete_database(sql_executor)
