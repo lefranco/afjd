@@ -16,7 +16,6 @@ import mapping
 import selection
 import index  # circular import
 
-
 my_panel = html.DIV(id="my_games")
 
 
@@ -65,6 +64,8 @@ def my_games():
         # action of going to game page
         index.load_option(None, 'jouer la partie sélectionnée')
 
+    overall_time_before = time.time()
+
     my_panel.clear()
 
     if 'PSEUDO' not in storage:
@@ -101,6 +102,9 @@ def my_games():
 
     games_id_player = [int(n) for n in player_games.keys()]
 
+    # for optimization
+    variant_memoize_table = dict()
+
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
 
         game_id = int(game_id_str)
@@ -121,7 +125,20 @@ def my_games():
         parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
         # build variant data
-        variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
+        # this is an optimisation
+        # new code
+        variant_name_loaded_str = str(variant_name_loaded)
+        variant_content_loaded_str = str(variant_content_loaded)
+        parameters_read_str = str(parameters_read)
+        if (variant_name_loaded_str, variant_content_loaded_str, parameters_read_str) not in variant_memoize_table:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            variant_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)] = variant_data
+        else:
+            variant_data = variant_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)]
+
+        # old code
+        #  variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
         role_id = common.get_role_allocated_to_player(game_id)
         if role_id is None:
@@ -269,6 +286,13 @@ def my_games():
 
     special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     my_panel <= special_legend
+    my_panel <= html.BR()
+
+    number_games = len(games_dict)
+    overall_time_after = time.time()
+    elapsed = overall_time_after - overall_time_before
+    my_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
+
 
 
 def render(panel_middle):
