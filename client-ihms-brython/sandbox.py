@@ -15,6 +15,8 @@ import common
 import tools
 import geometry
 import mapping
+import oracle
+import index  # circular import
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -780,6 +782,15 @@ def sandbox():
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
 
+    def callback_export_oracle(_):
+        """ callback_export_oracle """
+
+        # action on importing game
+        oracle.import_position(position_data)
+
+        # action of going to sandbox page
+        index.load_option(None, 'oracle')
+
     # starts here
 
     # make sure we are ready
@@ -842,9 +853,11 @@ def sandbox():
     display_very_left <= html.LEGEND("ces unités")
     display_very_left <= html.LEGEND("sur la carte")
 
-    # very important : need a blank situation to start with
-    if position_data is None:
-        create_initial_position()
+    display_very_left <= html.BR()
+
+    input_export_sandbox = html.INPUT(type="submit", value="exporter vers l'oracle")
+    input_export_sandbox.bind("click", callback_export_oracle)
+    display_very_left <= input_export_sandbox
 
     map_size = variant_data.map_size
 
