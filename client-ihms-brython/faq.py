@@ -36,6 +36,9 @@ faq_content_table = {
     "Comment créér une partie dans laquelle je joue ?":
     "Il faut créer la partie, puis se retirer de l'arbitrage et demander à un arbitre de parties du site d'en prendre l'arbitrage",
 
+    "C'est quoi ce truc : l'oracle ?":
+    "Pas encore développé. Fournira une suggestion de jeux d'ordres à partir d'une position...",
+
     "Est-il prévu de développer des variantes ?":
     "Certainement. Hundred tient la corde pour le moment",
 
