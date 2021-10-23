@@ -3217,6 +3217,9 @@ def game_master():
     for _, role, vote_val in votes:
         vote_values_table[role] = bool(vote_val)
 
+    submitted_roles_list = submitted_data['submitted']
+    needed_roles_list = submitted_data['needed']
+
     for role_id in variant_data.roles:
 
         # discard game master
@@ -3229,49 +3232,55 @@ def game_master():
         role_name = variant_data.name_table[role]
 
         # flag
+        col = html.TD()
         role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
-        col = html.TD(role_icon_img)
+        col <= role_icon_img
         row <= col
 
         # role name
-        col = html.TD(role_name)
+        col = html.TD()
+        col <= role_name
         row <= col
 
         # player
+        col = html.TD()
+        pseudo_there = ""
         if role_id in role2pseudo:
             player_id_str = role2pseudo[role_id]
             player_id = int(player_id_str)
             pseudo_there = id2pseudo[player_id]
-        else:
-            pseudo_there = None
-        col = html.TD(pseudo_there if pseudo_there else "")
+        col <= pseudo_there
         row <= col
 
-        submitted_roles_list = submitted_data['submitted']
-        needed_roles_list = submitted_data['needed']
+        col = html.TD()
+        flag = ""
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
                 flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
             else:
                 flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
-        else:
-            flag = ""
-        col = html.TD(flag)
+        col <= flag
         row <= col
 
-        input_civil_disorder = html.INPUT(type="submit", value="mettre en désordre civil")
-        input_civil_disorder.bind("click", lambda e, r=role_id: civil_disorder_callback(e, r))
-        col = html.TD(input_civil_disorder)
+        col = html.TD()
+        input_civil_disorder = ""
+        if role_id in needed_roles_list:
+            if role_id not in submitted_roles_list:
+                input_civil_disorder = html.INPUT(type="submit", value="mettre en désordre civil")
+                input_civil_disorder.bind("click", lambda e, r=role_id: civil_disorder_callback(e, r))
+        col <= input_civil_disorder
         row <= col
 
+        col = html.TD()
+        input_unallocate_role = ""
         if pseudo_there is not None:
             input_unallocate_role = html.INPUT(type="submit", value="retirer le rôle")
             input_unallocate_role.bind("click", lambda e, p=pseudo_there, r=role_id: unallocate_role_callback(e, p, r))
-        else:
-            input_unallocate_role = None
-        col = html.TD(input_unallocate_role if input_unallocate_role else "")
+        col <= input_unallocate_role
         row <= col
 
+        col = html.TD()
+        form = ""
         if pseudo_there is None:
 
             form = html.FORM()
@@ -3289,32 +3298,34 @@ def game_master():
 
             form <= input_put_in_role
 
-        else:
-
-            form = None
-
-        col = html.TD(form if form else "")
+        col <= form
         row <= col
 
         col = html.TD()
+        vote_val = "Pas d'avis"
         if role_id in definitive_values_table:
-            vote_val = "Prêt pour la résolution" if definitive_values_table[role_id] else "Pas encore prêt pour la résolution"
-        else:
-            vote_val = "Pas d'avis"
+            if definitive_values_table[role_id]:
+                vote_val = "Prêt pour la résolution"
+            else:
+                vote_val = "Pas encore prêt pour la résolution"
         col <= vote_val
         row <= col
 
         col = html.TD()
-        input_force_agreement = html.INPUT(type="submit", value="forcer son accord")
-        input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
-        col = html.TD(input_force_agreement)
+        input_force_agreement = ""
+        if role_id not in definitive_values_table:
+            input_force_agreement = html.INPUT(type="submit", value="forcer son accord")
+            input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
+        col <= input_force_agreement
         row <= col
 
         col = html.TD()
+        vote_val = "Pas de vote"
         if role_id in vote_values_table:
-            vote_val = "Arrêt" if vote_values_table[role_id] else "Continuer"
-        else:
-            vote_val = "Pas de vote"
+            if vote_values_table[role_id]:
+                vote_val = "Arrêt"
+            else:
+                vote_val = "Continuer"
         col <= vote_val
         row <= col
 
