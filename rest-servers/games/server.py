@@ -42,6 +42,7 @@ import variants
 import database
 import visits
 import votes
+import definitives
 import lowdata
 import agree
 
@@ -499,6 +500,16 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         for (_, role_num) in actives.Active.list_by_game_id(sql_executor, int(game_id)):
             active = actives.Active(int(game_id), role_num)
             active.delete_database(sql_executor)
+
+        # and submissions
+        for (_, role_num) in submissions.Submission.list_by_game_id(sql_executor, int(game_id)):
+            submission = submissions.Submission(int(game_id), role_num)
+            submission.delete_database(sql_executor)
+
+        # and agreements
+        for (_, role_num, _) in definitives.Definitive.list_by_game_id(sql_executor, int(game_id)):
+            definitive = definitives.Definitive(int(game_id), role_num, False)
+            definitive.delete_database(sql_executor)
 
         # delete contents
         for (identifier, _, _, _) in contents.Content.list_by_game_id(sql_executor, int(game_id)):
