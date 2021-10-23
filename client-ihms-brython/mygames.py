@@ -108,6 +108,10 @@ def my_games():
 
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
 
+        # do not display finished games
+        if data['current_state'] == 2:
+            continue
+
         game_id = int(game_id_str)
         if game_id not in games_id_player:
             continue
@@ -201,6 +205,8 @@ def my_games():
                         state_loaded = possible_state
                         break
                 value = state_loaded
+                if value == 'en attente':
+                    colour = 'pink'
 
             if field == 'current_advancement':
                 advancement_loaded = value
@@ -298,9 +304,9 @@ def my_games():
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
-
     special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     my_panel <= special_legend
+    my_panel <= html.BR()
     my_panel <= html.BR()
 
     number_games = len(games_dict)
