@@ -3303,19 +3303,20 @@ def game_master():
 
         col = html.TD()
         vote_val = "Pas d'avis"
-        if role_id in definitive_values_table:
-            if definitive_values_table[role_id]:
-                vote_val = "Prêt pour la résolution"
-            else:
-                vote_val = "Pas encore prêt pour la résolution"
+        if role_id in definitive_values_table and definitive_values_table[role_id]:
+            vote_val = "Prêt pour la résolution"
+        else:
+            vote_val = "Pas encore prêt pour la résolution"
         col <= vote_val
         row <= col
 
         col = html.TD()
         input_force_agreement = ""
-        if role_id not in definitive_values_table:
-            input_force_agreement = html.INPUT(type="submit", value="forcer son accord")
-            input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
+        if role_id in needed_roles_list:
+            if role_id in submitted_roles_list:
+                if not (role_id in definitive_values_table and definitive_values_table[role_id]):
+                    input_force_agreement = html.INPUT(type="submit", value="forcer son accord")
+                    input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
         col <= input_force_agreement
         row <= col
 
