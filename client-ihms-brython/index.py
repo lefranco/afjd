@@ -15,7 +15,6 @@ import tools    # noqa: E402
 import account    # noqa: E402
 import opportunities    # noqa: E402
 import mygames    # noqa: E402
-import mygames2    # noqa: E402
 import games    # noqa: E402
 import pairing    # noqa: E402
 import play    # noqa: E402
@@ -84,8 +83,6 @@ def load_option(_, item_name):
         opportunities.render(panel_middle)
     if item_name == 'mes parties':
         mygames.render(panel_middle)
-    if item_name == 'mes parties2':
-        mygames2.render(panel_middle)
     if item_name == 'éditer partie':
         games.render(panel_middle)
     if item_name == 'appariement':
