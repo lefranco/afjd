@@ -65,6 +65,10 @@ def my_games():
         # action of going to game page
         index.load_option(None, 'jouer la partie sélectionnée')
 
+    overall_time_before = time.time()
+
+    time_before_element = time.time()
+
     my_panel.clear()
 
     if 'PSEUDO' not in storage:
@@ -101,7 +105,18 @@ def my_games():
 
     games_id_player = [int(n) for n in player_games.keys()]
 
+    stats = ""
+
+    time_after_element = time.time()
+    elapsed = time_after_element - time_before_element
+    stats += f"preamble : {elapsed}\n"
+
+    # for optimisation
+    variant_memoize_table = dict()
+
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
+
+        time_before = time.time()
 
         game_id = int(game_id_str)
         if game_id not in games_id_player:
@@ -111,7 +126,11 @@ def my_games():
         variant_name_loaded = data['variant']
 
         # from variant name get variant content
+        time_before_element = time.time()
         variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+        time_after_element = time.time()
+        elapsed = time_after_element - time_before_element
+        stats += f"game_variant_content_reload : {elapsed}\n"
         if not variant_content_loaded:
             return
 
@@ -121,14 +140,36 @@ def my_games():
         parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
         # build variant data
-        variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+        time_before_element = time.time()
 
+        variant_name_loaded_str = str(variant_name_loaded)
+        variant_content_loaded_str = str(variant_content_loaded)
+        parameters_read_str = str(parameters_read)
+
+        if (variant_name_loaded_str, variant_content_loaded_str, parameters_read_str) not in variant_memoize_table:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            variant_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)] = variant_data
+        else:
+            variant_data = variant_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)]
+
+        time_after_element = time.time()
+        elapsed = time_after_element - time_before_element
+        stats += f"Variant : {elapsed}\n"
+
+        time_before_element = time.time()
         role_id = common.get_role_allocated_to_player(game_id)
+        time_after_element = time.time()
+        elapsed = time_after_element - time_before_element
+        stats += f"get_role_allocated_to_player : {elapsed}\n"
         if role_id is None:
             continue
         data['role_played'] = role_id
 
+        time_before_element = time.time()
         submitted_data = common.get_roles_submitted_orders(game_id)
+        time_after_element = time.time()
+        elapsed = time_after_element - time_before_element
+        stats += f"get_roles_submitted_orders : {elapsed}\n"
         if submitted_data is None:
             return
 
@@ -213,10 +254,18 @@ def my_games():
             if field == 'new_declarations':
 
                 # get time stamp of last visit of declarations
+                time_before_element = time.time()
                 time_stamp_last_visit = common.last_visit_load(game_id, common.DECLARATIONS_TYPE)
+                time_after_element = time.time()
+                elapsed = time_after_element - time_before_element
+                stats += f"last_visit_load declarations : {elapsed}\n"
                 if time_stamp_last_visit is None:
                     return
+                time_before_element = time.time()
                 time_stamp_last_event = common.last_game_declaration(game_id)
+                time_after_element = time.time()
+                elapsed = time_after_element - time_before_element
+                stats += f"last_game_declaration : {elapsed}\n"
                 if time_stamp_last_event is None:
                     return
 
@@ -229,10 +278,18 @@ def my_games():
             if field == 'new_messages':
 
                 # get time stamp of last visit of declarations
+                time_before_element = time.time()
                 time_stamp_last_visit = common.last_visit_load(game_id, common.MESSAGES_TYPE)
+                time_after_element = time.time()
+                elapsed = time_after_element - time_before_element
+                stats += f"last_visit_load messages : {elapsed}\n"
                 if time_stamp_last_visit is None:
                     return
+                time_before_element = time.time()
                 time_stamp_last_event = common.last_game_message(game_id, role_id)
+                time_after_element = time.time()
+                elapsed = time_after_element - time_before_element
+                stats += f"last_game_message : {elapsed}\n"
                 if time_stamp_last_event is None:
                     return
 
@@ -259,6 +316,12 @@ def my_games():
 
         games_table <= row
 
+        time_after = time.time()
+        elapsed = time_after - time_before
+        stats += "---\n"
+        stats += f"{data['name']} {elapsed}\n"
+        stats += "---\n"
+
     my_panel <= games_table
     my_panel <= html.BR()
 
@@ -269,7 +332,17 @@ def my_games():
 
     special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     my_panel <= special_legend
+    my_panel <= html.BR()
 
+    for s in stats.split('\n'):
+        my_panel <= s
+        my_panel <= html.BR()
+    my_panel <= html.BR()
+
+    number_games = len(games_dict)
+    overall_time_after = time.time()
+    elapsed = overall_time_after - overall_time_before
+    my_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
 
 def render(panel_middle):
     """ render """
