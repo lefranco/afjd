@@ -22,7 +22,7 @@ import index  # circular import
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'chatter', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'paramètres', 'joueurs', 'ordres']
+OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'paramètres', 'joueurs', 'ordres']
 
 
 @enum.unique
@@ -342,6 +342,7 @@ def submit_orders():
     down_click_time = None
 
     input_definitive = None
+
     def rest_hold_callback(_):
         """ rest_hold_callback """
 
@@ -2023,13 +2024,6 @@ def submit_communication_orders():
     my_sub_panel <= my_sub_panel2
 
 
-def visual_chat():
-    """ negotiate """
-
-    # TODO
-    my_sub_panel <= "Pas encore implémenté, désolé !"
-
-
 # the idea is not to loose the content of a message if not destinee were specified
 content_backup = None  # pylint: disable=invalid-name
 
@@ -2960,7 +2954,6 @@ def game_master():
         # submitting force agreement : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-
     def unallocate_role_callback(_, pseudo_removed, role_id):
         """ unallocate_role_callback """
 
@@ -3735,8 +3728,6 @@ def load_option(_, item_name):
         submit_orders()
     if item_name == 'taguer':
         submit_communication_orders()
-    if item_name == 'chatter':
-        visual_chat()
     if item_name == 'négocier':
         negotiate()
     if item_name == 'déclarer':
