@@ -51,7 +51,7 @@ faq_content_table = {
 
 faq_displayed_table = {k: False for k in faq_content_table}
 
-my_panel = html.DIV(id="F.A.Q")
+my_panel = html.DIV(id="Foire Aux Questions")
 
 # --
 

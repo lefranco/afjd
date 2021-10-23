@@ -15,6 +15,7 @@ import tools    # noqa: E402
 import account    # noqa: E402
 import opportunities    # noqa: E402
 import mygames    # noqa: E402
+import mygames2    # noqa: E402
 import games    # noqa: E402
 import pairing    # noqa: E402
 import play    # noqa: E402
@@ -40,7 +41,7 @@ h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'sélectionner interface', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'jouer contre l\'I.A.', 'listes', 'foire aux questions', 'coin technique', 'administration']
+OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'sélectionner interface', 'mon compte', 'rejoindre une partie', 'mes parties', 'mes parties2', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'jouer contre l\'I.A.', 'listes', 'foire aux questions', 'coin technique', 'administration']
 
 # overall_top
 overall_top = html.DIV()
@@ -83,6 +84,8 @@ def load_option(_, item_name):
         opportunities.render(panel_middle)
     if item_name == 'mes parties':
         mygames.render(panel_middle)
+    if item_name == 'mes parties2':
+        mygames2.render(panel_middle)
     if item_name == 'éditer partie':
         games.render(panel_middle)
     if item_name == 'appariement':
