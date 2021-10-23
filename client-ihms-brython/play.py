@@ -3273,7 +3273,7 @@ def game_master():
 
         col = html.TD()
         input_unallocate_role = ""
-        if pseudo_there is not None:
+        if pseudo_there:
             input_unallocate_role = html.INPUT(type="submit", value="retirer le rôle")
             input_unallocate_role.bind("click", lambda e, p=pseudo_there, r=role_id: unallocate_role_callback(e, p, r))
         col <= input_unallocate_role
@@ -3281,7 +3281,7 @@ def game_master():
 
         col = html.TD()
         form = ""
-        if pseudo_there is None:
+        if not pseudo_there:
 
             form = html.FORM()
 
