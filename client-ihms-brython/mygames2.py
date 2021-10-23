@@ -16,7 +16,6 @@ import mapping
 import selection
 import index  # circular import
 
-
 my_panel = html.DIV(id="my_games")
 
 
@@ -343,6 +342,7 @@ def my_games():
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
     my_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
+
 
 def render(panel_middle):
     """ render """

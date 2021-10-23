@@ -294,7 +294,6 @@ def my_games():
     my_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
 
 
-
 def render(panel_middle):
     """ render """
     my_games()
