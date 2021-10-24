@@ -21,9 +21,41 @@ import index  # circular import
 
 my_panel = html.DIV(id="admin")
 
-OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'rectifier la position', 'envoyer un mail']
+OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'rectifier la position', 'envoyer un mail']
 
 LONG_DURATION_LIMIT_SEC = 1.0
+
+
+def get_last_logins():
+    """ get_last_logins """
+
+    logins_list = None
+
+    def reply_callback(req):
+        nonlocal logins_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des connexions : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des connexions : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        logins_list = req_result['login_list']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['USER']['HOST']
+    port = config.SERVER_CONFIG['USER']['PORT']
+    url = f"{host}:{port}/logins_list"
+
+    # logins list : need token
+    # note : since we access directly to the user server, we present the token in a slightly different way
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return logins_list
 
 
 def get_all_games():
@@ -43,7 +75,6 @@ def get_all_games():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        req_result = json.loads(req.text)
         games_dict = req_result
 
     json_dict = dict()
@@ -426,6 +457,45 @@ def all_games():
     my_sub_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
 
 
+def last_logins():
+    """ logins """
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        return
+
+    logins_list = get_last_logins()
+
+    logins_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'date']:
+        col = html.TD(field)
+        thead <= col
+    logins_table <= thead
+
+    for pseudo, date in sorted(logins_list, key=lambda l: l[1], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
+        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        col = html.TD(date_now_gmt_str)
+        row <= col
+
+        logins_table <= row
+
+    my_sub_panel <= logins_table
+
+
 def rectify():
     """rectify """
 
@@ -436,7 +506,6 @@ def rectify():
         """ submit_callback """
 
         def reply_callback(req):
-
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -978,6 +1047,8 @@ def load_option(_, item_name):
         usurp()
     if item_name == 'toutes les parties':
         all_games()
+    if item_name == 'dernières connexions':
+        last_logins()
     if item_name == 'rectifier la position':
         rectify()
     if item_name == 'envoyer un mail':

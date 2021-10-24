@@ -26,6 +26,7 @@ def get_news_content():
     news_content = None
 
     def reply_callback(req):
+        nonlocal news_content
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -35,7 +36,6 @@ def get_news_content():
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-        nonlocal news_content
         news_content = req_result
 
     json_dict = dict()
@@ -56,6 +56,7 @@ def get_player_id(pseudo):
     player_id = None
 
     def reply_callback(req):
+        nonlocal player_id
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -65,7 +66,6 @@ def get_player_id(pseudo):
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-        nonlocal player_id
         player_id = int(req_result)
 
     json_dict = dict()
@@ -86,6 +86,7 @@ def get_game_id(name):
     game_id = None
 
     def reply_callback(req):
+        nonlocal game_id
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -95,7 +96,6 @@ def get_game_id(name):
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-        nonlocal game_id
         game_id = int(req_result)
 
     json_dict = dict()
@@ -116,6 +116,7 @@ def get_players():
     players_dict = None
 
     def reply_callback(req):
+        nonlocal players_dict
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -125,8 +126,6 @@ def get_players():
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-        req_result = json.loads(req.text)
-        nonlocal players_dict
         players_dict = {v['pseudo']: int(k) for k, v in req_result.items()}
 
     json_dict = dict()
@@ -157,8 +156,6 @@ def get_players_data():
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-
-        req_result = json.loads(req.text)
         players_dict = req_result
 
     json_dict = dict()
@@ -189,8 +186,6 @@ def get_games_data():
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-
-        req_result = json.loads(req.text)
         games_dict = dict(req_result)
 
     json_dict = dict()
@@ -211,9 +206,7 @@ def game_variant_name_reload(game):
     variant_name_loaded = None
 
     def reply_callback(req):
-        """ reply_callback """
         nonlocal variant_name_loaded
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -244,9 +237,7 @@ def game_variant_content_reload(variant_name):
     variant_content_loaded = None
 
     def reply_callback(req):
-        """ reply_callback """
         nonlocal variant_content_loaded
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -277,9 +268,7 @@ def game_position_reload(game):
     position_loaded = None
 
     def reply_callback(req):
-        """ reply_callback """
         nonlocal position_loaded
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -314,9 +303,7 @@ def game_report_reload(game):
     report_loaded = None
 
     def reply_callback(req):
-        """ reply_callback """
         nonlocal report_loaded
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -351,9 +338,7 @@ def game_transition_reload(game, advancement):
     transition_loaded = None
 
     def reply_callback(req):
-        """ reply_callback """
         nonlocal transition_loaded
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -388,9 +373,7 @@ def game_orders_reload(game):
     orders_loaded = None
 
     def reply_callback(req):
-        """ reply_callback """
         nonlocal orders_loaded
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -425,9 +408,7 @@ def game_communication_orders_reload(game):
     orders_loaded = None
 
     def reply_callback(req):
-        """ reply_callback """
         nonlocal orders_loaded
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -462,9 +443,7 @@ def game_parameters_reload(game):
     game_parameters_loaded = None
 
     def reply_callback(req):
-        """ reply_callback """
         nonlocal game_parameters_loaded
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -508,6 +487,7 @@ def get_role_allocated_to_player(game_id):
     role_id = None
 
     def reply_callback(req):
+        nonlocal role_id
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -517,8 +497,6 @@ def get_role_allocated_to_player(game_id):
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-        req_result = json.loads(req.text)
-        nonlocal role_id
         # a player has never more than one role
         role_id = req_result
 
@@ -542,6 +520,7 @@ def get_roles_submitted_orders(game_id):
     submitted_data = None
 
     def reply_callback(req):
+        nonlocal submitted_data
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -551,8 +530,6 @@ def get_roles_submitted_orders(game_id):
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-        req_result = json.loads(req.text)
-        nonlocal submitted_data
         submitted_data = req_result
 
     json_dict = dict()
@@ -573,10 +550,7 @@ def last_visit_load(game_id, visit_type):
     time_stamp = None
 
     def reply_callback(req):
-        """ reply_callback """
-
         nonlocal time_stamp
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -605,8 +579,6 @@ def last_visit_update(game_id, pseudo, role_id, visit_type):
     """ last_visit_update """
 
     def reply_callback(req):
-        """ reply_callback """
-
         req_result = json.loads(req.text)
         if req.status != 201:
             if 'message' in req_result:
@@ -636,10 +608,7 @@ def last_game_declaration(game_id):
     time_stamp = None
 
     def reply_callback(req):
-        """ reply_callback """
-
         nonlocal time_stamp
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -670,10 +639,7 @@ def last_game_message(game_id, role_id):
     time_stamp = None
 
     def reply_callback(req):
-        """ reply_callback """
-
         nonlocal time_stamp
-
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -763,12 +729,8 @@ def definitive_reload(game_id):
     definitives = None
 
     def reply_callback(req):
-        """ reply_callback """
-
         nonlocal definitives
-
         req_result = json.loads(req.text)
-
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des accords pour résoudre de la partie : {req_result['message']}")
@@ -798,12 +760,8 @@ def vote_reload(game_id):
     votes = None
 
     def reply_callback(req):
-        """ reply_callback """
-
         nonlocal votes
-
         req_result = json.loads(req.text)
-
         if req.status != 200:
             if 'message' in req_result:
                 alert(f"Erreur à la récupération des votes d'arrêt de la partie : {req_result['message']}")
@@ -860,7 +818,6 @@ def get_game_masters_data():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        req_result = json.loads(req.text)
         game_masters_list = req_result
 
     json_dict = dict()

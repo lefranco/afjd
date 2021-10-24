@@ -199,9 +199,7 @@ def sandbox():
         """ submit_callback """
 
         def reply_callback(req):
-
             nonlocal report_window
-
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:

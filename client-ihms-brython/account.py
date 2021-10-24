@@ -421,7 +421,6 @@ def edit_account():
             status = False
 
         def reply_callback(req):
-            """ reply_callback """
             nonlocal status
             nonlocal email_loaded
             nonlocal email_confirmed_loaded
@@ -432,7 +431,6 @@ def edit_account():
             nonlocal residence_loaded_code
             nonlocal nationality_loaded_code
             nonlocal timezone_loaded_code
-
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:

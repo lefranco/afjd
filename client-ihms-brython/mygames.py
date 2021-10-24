@@ -36,7 +36,6 @@ def get_player_games_playing_in(player_id):
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        req_result = json.loads(req.text)
         player_games_dict = req_result
 
     json_dict = dict()

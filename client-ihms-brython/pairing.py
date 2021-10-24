@@ -37,7 +37,7 @@ def get_game_allocated_players(game_id):
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-        req_result = json.loads(req.text)
+
         game_masters_list = [int(k) for k, v in req_result.items() if v == 0]
         game_master_id = game_masters_list.pop()
         players_allocated_list = [int(k) for k, v in req_result.items() if v == -1]
@@ -191,8 +191,6 @@ def move_players_in_game():
         """ put_in_game_callback """
 
         def reply_callback(req):
-            """ reply_callback """
-
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -234,8 +232,6 @@ def move_players_in_game():
         """remove_from_game_callback"""
 
         def reply_callback(req):
-            """ reply_callback """
-
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -390,6 +386,7 @@ def take_mastering_game():
     def take_mastering_game_callback(_):
 
         def reply_callback(req):
+
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:

@@ -48,8 +48,6 @@ def create_game():
         """ create_game_callback """
 
         def reply_callback(req):
-            """ reply_callback """
-
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -417,10 +415,8 @@ def change_description_game():
             status = False
 
         def reply_callback(req):
-            """ reply_callback """
             nonlocal status
             nonlocal description_loaded
-
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -539,13 +535,11 @@ def change_access_parameters_game():
             status = False
 
         def reply_callback(req):
-            """ reply_callback """
             nonlocal status
             nonlocal access_code_loaded
             nonlocal access_restriction_reliability_loaded
             nonlocal access_restriction_regularity_loaded
             nonlocal access_restriction_performance_loaded
-
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -687,11 +681,9 @@ def change_deadline_game():
             status = False
 
         def reply_callback(req):
-            """ reply_callback """
             nonlocal status
             nonlocal deadline_loaded_day
             nonlocal deadline_loaded_hour
-
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -847,7 +839,6 @@ def change_pace_parameters_game():
             status = False
 
         def reply_callback(req):
-            """ reply_callback """
             nonlocal status
             nonlocal speed_moves_loaded
             nonlocal cd_possible_moves_loaded
@@ -857,7 +848,6 @@ def change_pace_parameters_game():
             nonlocal cd_possible_builds_loaded
             nonlocal cd_possible_removals_loaded
             nonlocal play_weekend_loaded
-
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -1060,10 +1050,8 @@ def change_state_game():
             status = False
 
         def reply_callback(req):
-            """ reply_callback """
             nonlocal status
             nonlocal state_loaded
-
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:

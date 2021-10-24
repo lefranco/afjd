@@ -2036,8 +2036,6 @@ def negotiate():
         """ add_message_callback """
 
         def reply_callback(req):
-            """ reply_callback """
-
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -2099,12 +2097,8 @@ def negotiate():
         messages = None
 
         def reply_callback(req):
-            """ reply_callback """
-
             nonlocal messages
-
             req_result = json.loads(req.text)
-
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération des messages dans la partie : {req_result['message']}")
@@ -2320,8 +2314,6 @@ def declare():
         """ add_declaration_callback """
 
         def reply_callback(req):
-            """ reply_callback """
-
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -2372,12 +2364,8 @@ def declare():
         declarations = None
 
         def reply_callback(req):
-            """ reply_callback """
-
             nonlocal declarations
-
             req_result = json.loads(req.text)
-
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération de déclarations dans la partie : {req_result['message']}")
@@ -2569,8 +2557,6 @@ def vote():
         """ add_vote_callback """
 
         def reply_callback(req):
-            """ reply_callback """
-
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -3035,6 +3021,7 @@ def game_master():
         pseudo_list = None
 
         def reply_callback(req):
+            nonlocal pseudo_list
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -3044,8 +3031,7 @@ def game_master():
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return None
-            req_result = json.loads(req.text)
-            nonlocal pseudo_list
+
             pseudo_list = [id2pseudo[int(k)] for k, v in req_result.items() if v == -1]
             return pseudo_list
 
@@ -3446,7 +3432,6 @@ def get_game_players_data(game_id):
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        req_result = json.loads(req.text)
         game_players_dict = req_result
 
     json_dict = dict()
