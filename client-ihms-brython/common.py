@@ -151,9 +151,9 @@ def get_players_data():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des joueurs : {req_result['message']}")
+                alert(f"Erreur à la récupération de la liste des joueurs et leurs données : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des joueurs : {req_result['msg']}")
+                alert(f"Problème à la récupération de la liste des joueurs et leurs données : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
