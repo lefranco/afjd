@@ -29,11 +29,11 @@ def get_player_games_playing_in(player_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting player games playing in list: {req_result['message']}")
+                alert(f"Erreur à la récuperation de la liste des parties du joueur : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting player games playing in  list: {req_result['msg']}")
+                alert(f"Problème à la récuperation de la liste des parties du joueur : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         req_result = json.loads(req.text)

@@ -62,11 +62,11 @@ def create_account():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error creating account: {req_result['message']}")
+                    alert(f"Erreur à la création du compte : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem creating account : {req_result['msg']}")
+                    alert(f"Problème à la création du compte  : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -247,11 +247,11 @@ def change_password():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error changing password: {req_result['message']}")
+                    alert(f"Erreur à la modification de mot de passe : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem changing password: {req_result['msg']}")
+                    alert(f"Problème à la modification de mot de passe : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -323,11 +323,11 @@ def validate_email():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error validating email: {req_result['message']}")
+                    alert(f"Erreur à la validation de l'adresse mail : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem validating email: {req_result['msg']}")
+                    alert(f"Problème à la validation de l'adresse mail : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -417,7 +417,7 @@ def edit_account():
         def local_noreply_callback(_):
             """ local_noreply_callback """
             nonlocal status
-            alert("Problem (no answer from server)")
+            alert("Problème (pas de réponse de la part du serveur)")
             status = False
 
         def reply_callback(req):
@@ -436,11 +436,11 @@ def edit_account():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error loading account: {req_result['message']}")
+                    alert(f"Erreur au chargement des informations du compte : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem loading account: {req_result['msg']}")
+                    alert(f"Problème au chargement des informations du compte : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 status = False
                 return
 
@@ -479,11 +479,11 @@ def edit_account():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error changing account: {req_result['message']}")
+                    alert(f"Erreur à la modification des informations du compte : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem changing account: {req_result['msg']}")
+                    alert(f"Problème à la modification des informations du compte : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -643,11 +643,11 @@ def delete_account():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error deleting account: {req_result['message']}")
+                    alert(f"Erreur à la suppression du compte : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem deleting account: {req_result['msg']}")
+                    alert(f"Problème à la suppression du compte : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))

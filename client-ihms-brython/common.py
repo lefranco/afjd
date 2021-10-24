@@ -17,7 +17,7 @@ MESSAGES_TYPE = 1
 
 def noreply_callback(_):
     """ noreply_callback """
-    alert("Problem (no answer from server)")
+    alert("Problème (pas de réponse de la part du serveur)")
 
 
 def get_news_content():
@@ -29,11 +29,11 @@ def get_news_content():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting news content: {req_result['message']}")
+                alert(f"Erreur à la récupération du contenu des nouvelles : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting news content: {req_result['msg']}")
+                alert(f"Problème à la récupération du contenu des nouvelles : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
         nonlocal news_content
         news_content = req_result
@@ -59,11 +59,11 @@ def get_player_id(pseudo):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting player identifier: {req_result['message']}")
+                alert(f"Erreur à la récupération d'identifiant de joueur : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting player identifier: {req_result['msg']}")
+                alert(f"Problème à la récupération d'identifiant de joueur : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
         nonlocal player_id
         player_id = int(req_result)
@@ -89,11 +89,11 @@ def get_game_id(name):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting game identifier: {req_result['message']}")
+                alert(f"Erreur à la récupération de l'identifiant de partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting game identifier: {req_result['msg']}")
+                alert(f"Problème à la récupération de l'identifiant de partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
         nonlocal game_id
         game_id = int(req_result)
@@ -119,11 +119,11 @@ def get_players():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting players: {req_result['message']}")
+                alert(f"Erreur à la récupération de la liste des joueurs : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting players: {req_result['msg']}")
+                alert(f"Problème à la récupération de la liste des joueurs : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
         req_result = json.loads(req.text)
         nonlocal players_dict
@@ -151,11 +151,11 @@ def get_players_data():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting players list: {req_result['message']}")
+                alert(f"Erreur à la récupération de la liste des joueurs : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting players list: {req_result['msg']}")
+                alert(f"Problème à la récupération de la liste des joueurs : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         req_result = json.loads(req.text)
@@ -183,11 +183,11 @@ def get_games_data():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting games list: {req_result['message']}")
+                alert(f"Erreur à la récupération de la liste des parties : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting games list: {req_result['msg']}")
+                alert(f"Problème à la récupération de la liste des parties : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         req_result = json.loads(req.text)
@@ -217,11 +217,11 @@ def game_variant_name_reload(game):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error loading game variant name: {req_result['message']}")
+                alert(f"Erreur au chargement du nom de la variante de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem loading game variant name: {req_result['msg']}")
+                alert(f"Problème au chargement du nom de la variante de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         variant_name_loaded = req_result['variant']
@@ -250,11 +250,11 @@ def game_variant_content_reload(variant_name):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error loading game variant content: {req_result['message']}")
+                alert(f"Erreur au chargement du contenu de la variante de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem loading game variant content: {req_result['msg']}")
+                alert(f"Problème au chargement du contenu de la variante de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         variant_content_loaded = req_result
@@ -283,11 +283,11 @@ def game_position_reload(game):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error loading game position: {req_result['message']}")
+                alert(f"Erreur au chargement de la position de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem loading game position: {req_result['msg']}")
+                alert(f"Problème au chargement de la position de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         position_loaded = dict(req_result)
@@ -320,11 +320,11 @@ def game_report_reload(game):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error loading game report: {req_result['message']}")
+                alert(f"Erreur au chargement du rapport de résolution de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem loading game report: {req_result['msg']}")
+                alert(f"Problème au chargement du rapport de résolution de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         report_loaded = req_result['content']
@@ -357,11 +357,11 @@ def game_transition_reload(game, advancement):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error loading game transition: {req_result['message']}")
+                alert(f"Erreur au chargement de la transition de la partie : {req_result['message']}")
             elif 'msg' in req_result:
                 alert(f"Résolution introuvable: {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         transition_loaded = req_result
@@ -394,11 +394,11 @@ def game_orders_reload(game):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error loading game orders: {req_result['message']}")
+                alert(f"Erreur au chargement des ordres de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem loading game orders: {req_result['msg']}")
+                alert(f"Problème au chargement des ordres de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         orders_loaded = dict(req_result)
@@ -431,11 +431,11 @@ def game_communication_orders_reload(game):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error loading game communication orders: {req_result['message']}")
+                alert(f"Erreur au chargement des ordres de communication la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem loading game communication orders: {req_result['msg']}")
+                alert(f"Problème au chargement des ordres de communication la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         orders_loaded = dict(req_result)
@@ -468,11 +468,11 @@ def game_parameters_reload(game):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error loading main parameters: {req_result['message']}")
+                alert(f"Erreur au chargement des paramètres de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem loading main parameters: {req_result['msg']}")
+                alert(f"Problème au chargement des paramètres de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         game_parameters_loaded = dict(req_result)
@@ -511,11 +511,11 @@ def get_role_allocated_to_player(game_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting role allocated to player: {req_result['message']}")
+                alert(f"Erreur à la récupération du rôle alloué au joueur : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting role allocated to player: {req_result['msg']}")
+                alert(f"Problème à la récupération du rôle alloué au joueur : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
         req_result = json.loads(req.text)
         nonlocal role_id
@@ -545,11 +545,11 @@ def get_roles_submitted_orders(game_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting roles submitted orders: {req_result['message']}")
+                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting roles submitted orders: {req_result['msg']}")
+                alert(f"Problème à la récupération des rôles qui ont soumis des ordres : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
         req_result = json.loads(req.text)
         nonlocal submitted_data
@@ -580,11 +580,11 @@ def last_visit_load(game_id, visit_type):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting last visit in game ({visit_type}): {req_result['message']}")
+                alert(f"Erreur à la récupération de la dernière visite de la partie : ({visit_type}): {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting last visit in game ({visit_type=}): {req_result['msg']}")
+                alert(f"Problème à la récupération de la dernière visite de la partie : ({visit_type=}): {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         time_stamp = req_result['time_stamp']
@@ -610,11 +610,11 @@ def last_visit_update(game_id, pseudo, role_id, visit_type):
         req_result = json.loads(req.text)
         if req.status != 201:
             if 'message' in req_result:
-                alert(f"Error putting last visit in game: {req_result['message']}")
+                alert(f"Erreur à la mise à jour de la dernière visite de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem putting last visit in game: {req_result['msg']}")
+                alert(f"Problème à la mise à jour de la dernière visite de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
     json_dict = {
@@ -643,11 +643,11 @@ def last_game_declaration(game_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting last game declaration: {req_result['message']}")
+                alert(f"Erreur à la récupération de la dernière déclaration de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting last game declaration: {req_result['msg']}")
+                alert(f"Problème à la récupération de la dernière déclaration de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         time_stamp = req_result['time_stamp']
@@ -677,11 +677,11 @@ def last_game_message(game_id, role_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting last game message : {req_result['message']}")
+                alert(f"Erreur à la récupération du dernier message de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting last game message: {req_result['msg']}")
+                alert(f"Problème à la récupération du dernier message de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         time_stamp = req_result['time_stamp']
@@ -771,11 +771,11 @@ def definitive_reload(game_id):
 
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error extracting definitive from game: {req_result['message']}")
+                alert(f"Erreur à la récupération des accords pour résoudre de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem extracting definitive in game: {req_result['msg']}")
+                alert(f"Problème à la récupération des accords pour résoudre de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         definitives = req_result['definitives']
@@ -806,11 +806,11 @@ def vote_reload(game_id):
 
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error extracting vote from game: {req_result['message']}")
+                alert(f"Erreur à la récupération des votes d'arrêt de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem extracting vote in game: {req_result['msg']}")
+                alert(f"Problème à la récupération des votes d'arrêt de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         votes = req_result['votes']
@@ -853,11 +853,11 @@ def get_game_masters_data():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting game/game masters list: {req_result['message']}")
+                alert(f"Erreur à la récupération des listes parties avec les arbitres : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting game/game masters list: {req_result['msg']}")
+                alert(f"Problème à la récupération des listes parties avec les arbitres : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         req_result = json.loads(req.text)

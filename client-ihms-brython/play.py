@@ -441,11 +441,11 @@ def submit_orders():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error submitting orders: {req_result['message']}")
+                    alert(f"Erreur à la soumission d'ordres : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem submitting orders: {req_result['msg']}")
+                    alert(f"Problème à la soumission d'ordres : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -1387,11 +1387,11 @@ def submit_communication_orders():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error submitting communication orders: {req_result['message']}")
+                    alert(f"Erreur à la soumission d'ordres de communication : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem submitting communication orders: {req_result['msg']}")
+                    alert(f"Problème à la soumission d'ordres de communication : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -2041,11 +2041,11 @@ def negotiate():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error adding message in game: {req_result['message']}")
+                    alert(f"Erreur à l'ajout de message dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem adding message in game: {req_result['msg']}")
+                    alert(f"Problème à l'ajout de message dans la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -2107,11 +2107,11 @@ def negotiate():
 
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error extracting messages from game: {req_result['message']}")
+                    alert(f"Erreur à la récupération des messages dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem extracting messages in game: {req_result['msg']}")
+                    alert(f"Problème à la récupération des messages dans la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = req_result['messages_list']
@@ -2325,11 +2325,11 @@ def declare():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error adding declaration in game: {req_result['message']}")
+                    alert(f"Erreur à l'ajout de déclaration dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem adding declaration in game: {req_result['msg']}")
+                    alert(f"Problème à l'ajout de déclaration dans la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -2380,11 +2380,11 @@ def declare():
 
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error extracting declarations from game: {req_result['message']}")
+                    alert(f"Erreur à la récupération de déclarations dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem extracting declarations in game: {req_result['msg']}")
+                    alert(f"Problème à la récupération de déclarations dans la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             declarations = req_result['declarations_list']
@@ -2574,11 +2574,11 @@ def vote():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error adding vote in game: {req_result['message']}")
+                    alert(f"Erreur à l'ajout de vote d'arrêt dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem adding vote in game: {req_result['msg']}")
+                    alert(f"Problème à l'ajout de vote d'arrêt dans la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -2878,11 +2878,11 @@ def game_master():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error submitting disorder to game: {req_result['message']}")
+                    alert(f"Erreur à la soumission d'ordres de désordre civil dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem submitting disorder to game: {req_result['msg']}")
+                    alert(f"Problème à la soumission d'ordres de désordre civil dans la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -2919,11 +2919,11 @@ def game_master():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error submitting force agreement to game: {req_result['message']}")
+                    alert(f"Erreur à la soumission d'accord forcé pour résoudre dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem submitting force agreement to game: {req_result['msg']}")
+                    alert(f"Problème à la soumission d'accord forcé pour résoudre dans la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -2962,11 +2962,11 @@ def game_master():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error allocating role to game: {req_result['message']}")
+                    alert(f"Erreur à la désallocation de rôle dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem allocating role to game: {req_result['msg']}")
+                    alert(f"Problème Erreur à la désallocation de rôle dans la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -2998,11 +2998,11 @@ def game_master():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error allocating role to game: {req_result['message']}")
+                    alert(f"Erreur à l'allocation de rôle dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem allocating role to game: {req_result['msg']}")
+                    alert(f"Problème à l'allocation de rôle dans la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -3038,11 +3038,11 @@ def game_master():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error getting list pseudo allocatable game: {req_result['message']}")
+                    alert(f"Erreur à la récupération de la liste des joueurs allouables dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem getting list pseudo allocatable game: {req_result['msg']}")
+                    alert(f"Problème à la récupération de la liste des joueurs allouables dans la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return None
             req_result = json.loads(req.text)
             nonlocal pseudo_list
@@ -3067,11 +3067,11 @@ def game_master():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error adjudicating: {req_result['message']}")
+                    alert(f"Erreur à la résolution : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem adjudicating: {req_result['msg']}")
+                    alert(f"Problème à la résolution : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -3439,11 +3439,11 @@ def get_game_players_data(game_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting game/game players list: {req_result['message']}")
+                alert(f"Erreur à la récupération de la liste des joueurs de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting game/game players list: {req_result['msg']}")
+                alert(f"Problème à la récupération de la liste des joueurs de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         req_result = json.loads(req.text)

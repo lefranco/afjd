@@ -53,11 +53,11 @@ def create_game():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error creating game: {req_result['message']}")
+                    alert(f"Erreur à la création de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem creating game: {req_result['msg']}")
+                    alert(f"Problème à la création de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -413,7 +413,7 @@ def change_description_game():
         def local_noreply_callback(_):
             """ local_noreply_callback """
             nonlocal status
-            alert("Problem (no answer from server)")
+            alert("Problème (pas de réponse de la part du serveur)")
             status = False
 
         def reply_callback(req):
@@ -424,11 +424,11 @@ def change_description_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error loading game description: {req_result['message']}")
+                    alert(f"Erreur à la récupération de la description de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem loading game description: {req_result['msg']}")
+                    alert(f"Problème à la récupération de la description de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 status = False
                 return
 
@@ -451,11 +451,11 @@ def change_description_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error changing game description: {req_result['message']}")
+                    alert(f"Erreur à la modification de la description de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem changing game description: {req_result['msg']}")
+                    alert(f"Problème à la modification de la description de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -535,7 +535,7 @@ def change_access_parameters_game():
         def local_noreply_callback(_):
             """ local_noreply_callback """
             nonlocal status
-            alert("Problem (no answer from server)")
+            alert("Problème (pas de réponse de la part du serveur)")
             status = False
 
         def reply_callback(req):
@@ -549,11 +549,11 @@ def change_access_parameters_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error loading game access parameters: {req_result['message']}")
+                    alert(f"Erreur à la récupération du paramètre d'accès à la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem loading game access parameters: {req_result['msg']}")
+                    alert(f"Problème à la récupération du paramètre d'accès à la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 status = False
                 return
 
@@ -579,11 +579,11 @@ def change_access_parameters_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error changing game access parameters: {req_result['message']}")
+                    alert(f"Erreur à la modification du paramètre d'accès à la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem changing game access parameters: {req_result['msg']}")
+                    alert(f"Problème à la modification du paramètre d'accès à la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -683,7 +683,7 @@ def change_deadline_game():
         def local_noreply_callback(_):
             """ local_noreply_callback """
             nonlocal status
-            alert("Problem (no answer from server)")
+            alert("Problème (pas de réponse de la part du serveur)")
             status = False
 
         def reply_callback(req):
@@ -695,11 +695,11 @@ def change_deadline_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error loading game deadline: {req_result['message']}")
+                    alert(f"Erreur à la récupération de la date limite de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem loading game deadline: {req_result['msg']}")
+                    alert(f"Problème à la récupération de la date limite de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 status = False
                 return
 
@@ -726,11 +726,11 @@ def change_deadline_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error changing game deadline: {req_result['message']}")
+                    alert(f"Erreur à la modification de la date limite à la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem changing game deadline: {req_result['msg']}")
+                    alert(f"Problème à la modification de la date limite à la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -843,7 +843,7 @@ def change_pace_parameters_game():
         def local_noreply_callback(_):
             """ local_noreply_callback """
             nonlocal status
-            alert("Problem (no answer from server)")
+            alert("Problème (pas de réponse de la part du serveur)")
             status = False
 
         def reply_callback(req):
@@ -861,11 +861,11 @@ def change_pace_parameters_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error loading game access parameters: {req_result['message']}")
+                    alert(f"Erreur à la récupération du rythme de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem loading game access parameters: {req_result['msg']}")
+                    alert(f"Problème à la récupération du rythme de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 status = False
                 return
 
@@ -895,11 +895,11 @@ def change_pace_parameters_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error changing game access parameters: {req_result['message']}")
+                    alert(f"Erreur à la modification du rythme à la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem changing game access parameters: {req_result['msg']}")
+                    alert(f"Problème à la modification du rythme à la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -1056,7 +1056,7 @@ def change_state_game():
         def local_noreply_callback(_):
             """ local_noreply_callback """
             nonlocal status
-            alert("Problem (no answer from server)")
+            alert("Problème (pas de réponse de la part du serveur)")
             status = False
 
         def reply_callback(req):
@@ -1067,11 +1067,11 @@ def change_state_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error loading game state: {req_result['message']}")
+                    alert(f"Erreur à la récupération de l'état de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem loading game state: {req_result['msg']}")
+                    alert(f"Problème à la récupération de l'état de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 status = False
                 return
 
@@ -1094,11 +1094,11 @@ def change_state_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error changing game state: {req_result['message']}")
+                    alert(f"Erreur à la modification de l'état de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem changing game state: {req_result['msg']}")
+                    alert(f"Problème à la modification de l'état de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -1174,11 +1174,11 @@ def delete_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error deleting game: {req_result['message']}")
+                    alert(f"Erreur à la suppresssion de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem deleting game: {req_result['msg']}")
+                    alert(f"Problème à la suppresssion de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
