@@ -17,6 +17,7 @@ import tools
 import geometry
 import mapping
 import login
+import admin
 import sandbox
 import index  # circular import
 
@@ -3474,6 +3475,8 @@ def show_players_in_game():
         alert("Il faut se connecter au préalable")
         return
 
+    pseudo = storage['PSEUDO']
+
     # game parameters
     game_parameters_loaded = common.game_parameters_reload(game)
     if not game_parameters_loaded:
@@ -3491,8 +3494,8 @@ def show_players_in_game():
     # from game id and token get role_id of player
 
     role_id = common.get_role_allocated_to_player(game_id)
-    if game_parameters_loaded['anonymous'] and role_id != 0:
-        alert("Seul l'arbitre peut voir les joueurs d'une partie anonyme")
+    if game_parameters_loaded['anonymous'] and role_id != 0 and not admin.check_admin(pseudo):
+        alert("Seul l'arbitre (ou l'administrateur du site) peut voir les joueurs d'une partie anonyme")
         return
 
     # from game name get variant name
@@ -3617,6 +3620,8 @@ def show_orders_submitted_in_game():
         alert("Il faut se connecter au préalable")
         return
 
+    pseudo = storage['PSEUDO']
+
     # from game name get variant name
 
     variant_name_loaded = common.game_variant_name_reload(game)
@@ -3646,8 +3651,9 @@ def show_orders_submitted_in_game():
     # is player in game ?
     role_id = common.get_role_allocated_to_player(game_id)
     if role_id is None:
-        alert("Seul les participants à une partie peuvent voir le statut des ordres")
-        return
+        if not admin.check_admin(pseudo):
+            alert("Seul les participants à une partie (ou l'administrateur du site) peuvent voir le statut des ordres")
+            return
 
     # you will at least get your own role
     submitted_data = common.get_roles_submitted_orders(game_id)

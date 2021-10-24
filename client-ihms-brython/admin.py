@@ -4,6 +4,7 @@
 
 import json
 import time
+import datetime
 
 from browser import document, html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -15,12 +16,46 @@ import tools
 import login
 import mapping
 import geometry
+import selection
+import index  # circular import
 
 my_panel = html.DIV(id="admin")
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position', 'envoyer un mail']
+OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'rectifier la position', 'envoyer un mail']
 
 LONG_DURATION_LIMIT_SEC = 1.0
+
+
+def get_all_games():
+    """ get_all_games """
+
+    games_dict = None
+
+    def reply_callback(req):
+        nonlocal games_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Error getting all games list: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problem getting all games list: {req_result['msg']}")
+            else:
+                alert("Undocumented issue from server")
+            return
+
+        req_result = json.loads(req.text)
+        games_dict = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/games"
+
+    # getting player games playing in list : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return games_dict.keys()
 
 
 def check_admin(pseudo):
@@ -186,6 +221,209 @@ def usurp():
     form <= input_select_player
 
     my_sub_panel <= form
+
+
+def all_games():
+    """all_games """
+
+    def select_game_callback(_, game):
+        """ select_game_callback """
+
+        # action of selecting game
+        storage['GAME'] = game
+        selection.show_game_selected()
+
+        # action of going to game page
+        index.load_option(None, 'jouer la partie sélectionnée')
+
+    overall_time_before = time.time()
+
+    my_sub_panel.clear()
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        return
+
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        return
+
+    player_games = get_all_games()
+    if player_games is None:
+        return
+
+    games_dict = common.get_games_data()
+    if games_dict is None:
+        return
+
+    time_stamp_now = time.time()
+
+    games_table = html.TABLE()
+
+    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'all_orders_submitted', 'jump']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres soumis sur la partie', 'jump': 'sauter'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    games_table <= thead
+
+    # for optimization
+    variant_data_memoize_table = dict()
+    variant_content_memoize_table = dict()
+
+    for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
+
+        # do not display finished games
+        if data['current_state'] == 2:
+            continue
+
+        game_id = int(game_id_str)
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+
+        # this is an optimisation
+
+        # new code after optimization
+        if variant_name_loaded not in variant_content_memoize_table:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                return
+            variant_content_memoize_table[variant_name_loaded] = variant_content_loaded
+        else:
+            variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
+
+        # old code before optimization
+        #  variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+        #  if not variant_content_loaded:
+        #      return
+
+        # selected display (user choice)
+        display_chosen = tools.get_display_from_variant(variant_name_loaded)
+
+        parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+
+        # build variant data
+
+        # this is an optimisation
+
+        # new code after optimization
+        variant_name_loaded_str = str(variant_name_loaded)
+        variant_content_loaded_str = str(variant_content_loaded)
+        parameters_read_str = str(parameters_read)
+        if (variant_name_loaded_str, variant_content_loaded_str, parameters_read_str) not in variant_data_memoize_table:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            variant_data_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)] = variant_data
+        else:
+            variant_data = variant_data_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)]
+
+        # old code before optimization
+        #  variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
+        submitted_data = common.get_roles_submitted_orders(game_id)
+        if submitted_data is None:
+            return
+
+        # just to avoid a warning
+        submitted_data = dict(submitted_data)
+
+        data['all_orders_submitted'] = None
+        data['jump'] = None
+
+        row = html.TR()
+        for field in fields:
+
+            value = data[field]
+            colour = 'black'
+
+            if field == 'deadline':
+                deadline_loaded = value
+                datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
+                deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+                deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
+                deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
+                value = deadline_loaded_str
+
+                # we are after deadline : red
+                if time_stamp_now > deadline_loaded:
+                    colour = 'red'
+                # deadline is today : orange
+                elif time_stamp_now > deadline_loaded - 24 * 3600:
+                    colour = 'orange'
+
+            if field == 'current_state':
+                state_loaded = value
+                for possible_state in config.STATE_CODE_TABLE:
+                    if config.STATE_CODE_TABLE[possible_state] == state_loaded:
+                        state_loaded = possible_state
+                        break
+                value = state_loaded
+                if value == 'en attente':
+                    colour = 'pink'
+
+            if field == 'current_advancement':
+                advancement_loaded = value
+                advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
+                advancement_season_readable = variant_data.name_table[advancement_season]
+                value = f"{advancement_season_readable} {advancement_year}"
+
+            if field == 'all_orders_submitted':
+                submitted_roles_list = submitted_data['submitted']
+                nb_submitted = len(submitted_roles_list)
+                needed_roles_list = submitted_data['needed']
+                nb_needed = len(needed_roles_list)
+                value = f"{nb_submitted}/{nb_needed}"
+                colour = 'black'
+                if nb_submitted >= nb_needed:
+                    # we have all orders : green
+                    colour = 'green'
+                elif nb_submitted == 0:
+                    # we have no orders : red
+                    colour = 'red'
+
+            if field == 'jump':
+                game_name = data['name']
+                form = html.FORM()
+                input_jump_game = html.INPUT(type="submit", value="sauter à pied joints dans la partie")
+                input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
+                form <= input_jump_game
+                value = form
+
+            col = html.TD(value)
+            col.style = {
+                'color': colour
+            }
+
+            row <= col
+
+        games_table <= row
+
+    my_sub_panel <= games_table
+    my_sub_panel <= html.BR()
+
+    # get GMT date and time
+    time_stamp = time.time()
+    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+    special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
+    my_sub_panel <= special_legend
+    my_sub_panel <= html.BR()
+    my_sub_panel <= html.BR()
+
+    number_games = len(games_dict)
+    overall_time_after = time.time()
+    elapsed = overall_time_after - overall_time_before
+    my_sub_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
 
 
 def rectify():
@@ -738,6 +976,8 @@ def load_option(_, item_name):
         change_news()
     if item_name == 'usurper':
         usurp()
+    if item_name == 'toutes les parties':
+        all_games()
     if item_name == 'rectifier la position':
         rectify()
     if item_name == 'envoyer un mail':

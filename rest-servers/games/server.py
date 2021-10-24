@@ -1138,7 +1138,9 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
             user_id = req_result.json()
 
             if user_id != game_master_id:
-                flask_restful.abort(403, msg="You need be the game master of the game to see the roles of this anonymous game")
+                # TODO improve this with real admin account
+                if pseudo != 'Palpatine':
+                    flask_restful.abort(403, msg="You need to be the game master of the game (or site administrator) to see the roles of this anonymous game")
 
         return data, 200
 
@@ -1289,7 +1291,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         # TODO improve this with real admin account
         if pseudo != 'Palpatine':
             del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to rectify a position!")
+            flask_restful.abort(403, msg="You do noty seem to be site administrator so you are not allowed to rectify a position!")
 
         # store position
 
@@ -2332,7 +2334,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         player_id = req_result.json()
 
-        # check user has right to get status of orders - must be game master or player in game
+        # check user has right to get status of orders - must be game master or player in game - or admin
 
         sql_executor = database.SqlExecutor()
 
@@ -2346,13 +2348,13 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
         role_id = game.find_role(sql_executor, player_id)
         if role_id is None:
-            del sql_executor
-            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
-        # TODO : change if we decide to hide this information
-        # we could restrict to game master from here
-        #  if role_id != 0:
-            #  flask_restful.abort(403, msg=f"You do not seem to master game {game_id}")
+            # TODO improve this with real admin account
+            # Admin can still see who passed orders
+            if pseudo != 'Palpatine':
+
+                del sql_executor
+                flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id} or to be site administrator!")
 
         # submissions_list : those who submitted orders
         submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
