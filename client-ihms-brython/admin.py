@@ -36,11 +36,11 @@ def get_all_games():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting all games list: {req_result['message']}")
+                alert(f"Erreur à la récupération de la liste de toutes les parties : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting all games list: {req_result['msg']}")
+                alert(f"Problème à la récupération de la liste de toutes les parties : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         req_result = json.loads(req.text)
@@ -79,11 +79,11 @@ def change_news():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error changing news: {req_result['message']}")
+                    alert(f"Erreur à la modification du contenu des nouvelles : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem changing news: {req_result['msg']}")
+                    alert(f"Problème à la modification du contenu des nouvelles : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -153,11 +153,11 @@ def usurp():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error usurping: {req_result['message']}")
+                    alert(f"Erreur à l'usurpation : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem usurping: {req_result['msg']}")
+                    alert(f"Problème à l'usurpation : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             storage['PSEUDO'] = usurped_user_name
@@ -440,11 +440,11 @@ def rectify():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error submitting position rectification: {req_result['message']}")
+                    alert(f"Erreur à la soumission de rectification de position : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem submitting position rectification: {req_result['msg']}")
+                    alert(f"Problème à la soumission de rectification de position : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -862,11 +862,11 @@ def sendmail():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error sending email: {req_result['message']}")
+                    alert(f"Erreur à l'envoi de courrier électronique : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem sending email: {req_result['msg']}")
+                    alert(f"Problème à l'envoi de courrier électronique : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             InfoDialog("OK", f"Message émis vers : {addressed_user_name}", remove_after=config.REMOVE_AFTER)

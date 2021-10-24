@@ -24,14 +24,13 @@ def check_token():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error checking token: {req_result['message']}")
+                alert(f"Erreur à la vérification du jeton d'authentification : {req_result['message']}")
             elif 'msg' in req_result:
 
-                #  alert(f"Problem checking token: {req_result['msg']}")
                 messages = "<br>".join(req_result['msg'].split('\n'))
                 InfoDialog("OK", f"Votre jeton d'authentification a expiré.<br>Vous devez juste vous loguer à nouveau {messages}", remove_after=config.REMOVE_AFTER)
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             logout()
             nonlocal status
             status = False
@@ -62,11 +61,11 @@ def login_callback(_):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error logging in: {req_result['message']}")
+                alert(f"Erreur à la connexion : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem logging in: {req_result['msg']}")
+                alert(f"Problème à la connexion : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
         storage['PSEUDO'] = pseudo
         storage['JWT_TOKEN'] = req_result['AccessToken']

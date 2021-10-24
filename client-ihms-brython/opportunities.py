@@ -31,11 +31,11 @@ def get_recruiting_games():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting recruiting games list: {req_result['message']}")
+                alert(f"Erreur à la récupartion de la liste des parties qui recrutent : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting recruiting games list: {req_result['msg']}")
+                alert(f"Problème à la récupartion de la liste des parties qui recrutent : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
 
         req_result = json.loads(req.text)
@@ -62,11 +62,11 @@ def my_opportunities():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error joining game: {req_result['message']}")
+                    alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem joining game: {req_result['msg']}")
+                    alert(f"Problème à l'inscription à la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))

@@ -31,11 +31,11 @@ def get_game_allocated_players(game_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Error getting game allocated players: {req_result['message']}")
+                alert(f"Erreur à la récupération de la liste des joueurs de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problem getting game allocated players: {req_result['msg']}")
+                alert(f"Problème à la récupération de la liste des joueurs de la partie : {req_result['msg']}")
             else:
-                alert("Undocumented issue from server")
+                alert("Réponse du serveur imprévue et non documentée")
             return
         req_result = json.loads(req.text)
         game_masters_list = [int(k) for k, v in req_result.items() if v == 0]
@@ -76,11 +76,11 @@ def join_game():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error joining game: {req_result['message']}")
+                    alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem joining game: {req_result['msg']}")
+                    alert(f"Erreur à l'inscription à la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -134,11 +134,11 @@ def quit_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error quitting game: {req_result['message']}")
+                    alert(f"Erreur à la désinscription de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem quitting game: {req_result['msg']}")
+                    alert(f"Erreur à la désinscription de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -196,11 +196,11 @@ def move_players_in_game():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error putting player in game: {req_result['message']}")
+                    alert(f"Erreur à la mise d'un joueur dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem putting player in game: {req_result['msg']}")
+                    alert(f"Problème putting player in game: {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -239,11 +239,11 @@ def move_players_in_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error removing player from game: {req_result['message']}")
+                    alert(f"Erreur au retrait d'un joueur de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem removing player from game: {req_result['msg']}")
+                    alert(f"Problème au retrait d'un joueur de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -393,11 +393,11 @@ def take_mastering_game():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Error taking mastering game: {req_result['message']}")
+                    alert(f"Erreur à la prise de l'arbitrage de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem taking mastering game: {req_result['msg']}")
+                    alert(f"Problème à la prise de l'arbitrage de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -452,11 +452,11 @@ def quit_mastering_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Error quitting mastering game: {req_result['message']}")
+                    alert(f"Erreur à la démission de l'arbitrage de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problem quitting mastering game: {req_result['msg']}")
+                    alert(f"Problème à la démission de l'arbitrage de la partie : {req_result['msg']}")
                 else:
-                    alert("Undocumented issue from server")
+                    alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
