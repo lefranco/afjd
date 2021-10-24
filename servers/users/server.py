@@ -21,6 +21,7 @@ import lowdata
 import mylogger
 import populate
 import users
+import logins
 import database
 
 
@@ -191,14 +192,23 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         return flask.jsonify({"msg": "Missing password parameter"}), 400
 
     sql_executor = database.SqlExecutor()
+
     user = users.User.find_by_name(sql_executor, user_name)
-    del sql_executor
 
     if user is None:
+        del sql_executor
         return flask.jsonify({"msg": "Bad user_name or password"}), 401
 
     if not werkzeug.security.check_password_hash(user.pwd_hash, password):  # type: ignore
+        del sql_executor
         return flask.jsonify({"msg": "Bad user_name or password"}), 401
+
+    # we keep a trace of the login
+    login = logins.Login(user_name)
+    login.update_database(sql_executor)
+
+    sql_executor.commit()
+    del sql_executor
 
     # Identity can be any data that is json serializable
     access_token = flask_jwt_extended.create_access_token(identity=user_name)
@@ -255,6 +265,30 @@ def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     access_token = flask_jwt_extended.create_access_token(identity=usurped_user_name)
     return flask.jsonify(AccessToken=access_token), 200
 
+
+@APP.route('/logins_list', methods=['POST'])
+@flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
+def logins_list() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    """
+    Protect a view with jwt_required, which requires a valid access token
+    in the request to access.
+    EXPOSED : Get list of all logins
+    """
+
+    mylogger.LOGGER.info("/logins_list - POST - list of all logins")
+
+    # Access the identity of the current user with get_jwt_identity
+    logged_in_as = flask_jwt_extended.get_jwt_identity()
+
+    # TODO improve this with real admin account
+    if logged_in_as != 'Palpatine':
+        return {"msg": "Wrong user_name to perform operation"}, 403
+
+    sql_executor = database.SqlExecutor()
+    login_list = logins.Login.find_all(sql_executor)
+    del sql_executor
+
+    return flask.jsonify({"login_list": login_list}), 200
 
 # ---------------------------------
 # main
