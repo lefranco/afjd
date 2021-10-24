@@ -130,12 +130,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'allocated', 'capacity', 'join']
+    fields = ['name', 'variant', 'description', 'deadline', 'current_state', 'current_advancement', 'allocated', 'capacity', 'join']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'capacity': 'capacité (dont arbitre)', 'join': 'rejoindre'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'description': 'description', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'capacity': 'capacité (dont arbitre)', 'join': 'rejoindre'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
