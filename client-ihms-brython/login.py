@@ -20,7 +20,7 @@ def check_token():
     status = True
 
     def reply_callback(req):
-        """ reply_callback """
+        nonlocal status
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -32,7 +32,6 @@ def check_token():
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             logout()
-            nonlocal status
             status = False
 
     if 'PSEUDO' not in storage:

@@ -38,7 +38,6 @@ def get_recruiting_games():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        req_result = json.loads(req.text)
         recruiting_games_list = req_result
 
     json_dict = dict()
