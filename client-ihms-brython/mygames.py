@@ -67,6 +67,14 @@ def my_games(state):
 
     my_panel.clear()
 
+    # title
+    for state_name in config.STATE_CODE_TABLE:
+        if config.STATE_CODE_TABLE[state_name] == state:
+            state_displayed_name = state_name
+            break
+    title = html.H2(f"Parties qui sont : {state_displayed_name}")
+    my_panel <= title
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
