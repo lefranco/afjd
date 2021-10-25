@@ -50,7 +50,7 @@ def get_player_games_playing_in(player_id):
     return dict(player_games_dict)
 
 
-def my_games():
+def my_games(state):
     """ my_games """
 
     def select_game_callback(_, game):
@@ -89,12 +89,12 @@ def my_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'role_played', 'all_orders_submitted', 'orders_submitted', 'new_declarations', 'new_messages', 'jump']
+    fields = ['name', 'variant', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'orders_submitted', 'new_declarations', 'new_messages', 'jump']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'all_orders_submitted': 'ordres soumis sur la partie', 'orders_submitted': 'ordres soumis par moi', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump': 'sauter'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'all_orders_submitted': 'ordres soumis sur la partie', 'orders_submitted': 'ordres soumis par moi', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump': 'sauter'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -108,7 +108,7 @@ def my_games():
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
 
         # do not display finished games
-        if data['current_state'] == 2:
+        if data['current_state'] != state:
             continue
 
         game_id = int(game_id_str)
@@ -196,16 +196,6 @@ def my_games():
                 # deadline is today : orange
                 elif time_stamp_now > deadline_loaded - 24 * 3600:
                     colour = 'orange'
-
-            if field == 'current_state':
-                state_loaded = value
-                for possible_state in config.STATE_CODE_TABLE:
-                    if config.STATE_CODE_TABLE[possible_state] == state_loaded:
-                        state_loaded = possible_state
-                        break
-                value = state_loaded
-                if value == 'en attente':
-                    colour = 'pink'
 
             if field == 'current_advancement':
                 advancement_loaded = value
@@ -313,8 +303,28 @@ def my_games():
     elapsed = overall_time_after - overall_time_before
     my_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
 
+    my_panel <= html.BR()
+    my_panel <= html.BR()
+
+    for other_state in range(len(config.STATE_CODE_TABLE)):
+
+        if other_state != state:
+
+            # state name
+            for state_name in config.STATE_CODE_TABLE:
+                if config.STATE_CODE_TABLE[state_name] == other_state:
+                    state_displayed_name = state_name
+                    break
+
+            input_change_state = html.INPUT(type="submit", value=state_displayed_name)
+            input_change_state.bind("click", lambda _, s=other_state: my_games(s))
+
+            my_panel <= input_change_state
+            my_panel <= html.BR()
+            my_panel <= html.BR()
+
 
 def render(panel_middle):
     """ render """
-    my_games()
+    my_games(1)
     panel_middle <= my_panel
