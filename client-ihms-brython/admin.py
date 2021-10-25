@@ -159,7 +159,7 @@ def change_news():
     legend_news_content = html.LEGEND("nouveau contenu de nouvelles")
     form <= legend_news_content
 
-    input_news_content = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_news_content = html.TEXTAREA(type="text", rows=20, cols=80)
     input_news_content <= news_content_loaded
     form <= input_news_content
     form <= html.BR()
