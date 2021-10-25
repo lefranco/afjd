@@ -254,7 +254,7 @@ def usurp():
     my_sub_panel <= form
 
 
-def all_games():
+def all_games(state):
     """all_games """
 
     def select_game_callback(_, game):
@@ -270,6 +270,14 @@ def all_games():
     overall_time_before = time.time()
 
     my_sub_panel.clear()
+
+    # title
+    for state_name in config.STATE_CODE_TABLE:
+        if config.STATE_CODE_TABLE[state_name] == state:
+            state_displayed_name = state_name
+            break
+    title = html.H2(f"Parties qui sont : {state_displayed_name}")
+    my_sub_panel <= title
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -296,12 +304,12 @@ def all_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'deadline', 'current_state', 'current_advancement', 'all_orders_submitted', 'jump']
+    fields = ['name', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'jump']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres soumis sur la partie', 'jump': 'sauter'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres soumis sur la partie', 'jump': 'sauter'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -313,7 +321,7 @@ def all_games():
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
 
         # do not display finished games
-        if data['current_state'] == 2:
+        if data['current_state'] != state:
             continue
 
         game_id = int(game_id_str)
@@ -392,16 +400,6 @@ def all_games():
                 elif time_stamp_now > deadline_loaded - 24 * 3600:
                     colour = 'orange'
 
-            if field == 'current_state':
-                state_loaded = value
-                for possible_state in config.STATE_CODE_TABLE:
-                    if config.STATE_CODE_TABLE[possible_state] == state_loaded:
-                        state_loaded = possible_state
-                        break
-                value = state_loaded
-                if value == 'en attente':
-                    colour = 'pink'
-
             if field == 'current_advancement':
                 advancement_loaded = value
                 advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
@@ -455,6 +453,26 @@ def all_games():
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
     my_sub_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
+
+    my_sub_panel <= html.BR()
+    my_sub_panel <= html.BR()
+
+    for other_state in range(len(config.STATE_CODE_TABLE)):
+
+        if other_state != state:
+
+            # state name
+            for state_name in config.STATE_CODE_TABLE:
+                if config.STATE_CODE_TABLE[state_name] == other_state:
+                    state_displayed_name = state_name
+                    break
+
+            input_change_state = html.INPUT(type="submit", value=state_displayed_name)
+            input_change_state.bind("click", lambda _, s=other_state: all_games(s))
+
+            my_sub_panel <= input_change_state
+            my_sub_panel <= html.BR()
+            my_sub_panel <= html.BR()
 
 
 def last_logins():
@@ -1046,7 +1064,7 @@ def load_option(_, item_name):
     if item_name == 'usurper':
         usurp()
     if item_name == 'toutes les parties':
-        all_games()
+        all_games(1)
     if item_name == 'dernières connexions':
         last_logins()
     if item_name == 'rectifier la position':
