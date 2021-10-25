@@ -15,7 +15,7 @@ import database
 
 # need to have a limit in sizes of fields
 LEN_PSEUDO_MAX = 20
-LEN_EMAIL_MAX = 30
+LEN_EMAIL_MAX = 100
 LEN_EMAIL_CONFIRMED_MAX = 5
 LEN_TELEPHONE_MAX = 15
 LEN_FAMILY_NAME_MAX = 30
