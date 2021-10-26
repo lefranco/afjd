@@ -92,7 +92,7 @@ def oracle():
     def consult_callback(_):
         """ consult_callback """
 
-        # TODO : calculate some intersting orders or advices here
+        # TODO : calculate some interesting orders or advices here
 
         alert("Hélas, trois fois hélas, ce module n'est pas encore prêt...")
 
