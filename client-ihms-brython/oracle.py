@@ -155,6 +155,9 @@ def oracle():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+    legend_change_position = html.LEGEND(f"Utilisez le bac à sable pour changer la position")
+    buttons_right <= legend_change_position
+    buttons_right <= html.BR()
     put_consult(buttons_right)
 
     # overall
