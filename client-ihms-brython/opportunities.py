@@ -102,6 +102,8 @@ def my_opportunities():
         # action of going to game page
         index.load_option(None, 'jouer la partie sélectionnée')
 
+    overall_time_before = time.time()
+
     my_panel.clear()
 
     if 'PSEUDO' not in storage:
@@ -139,15 +141,32 @@ def my_opportunities():
         thead <= col
     games_table <= thead
 
+    # for optimization
+    variant_data_memoize_table = dict()
+    variant_content_memoize_table = dict()
+
     for game_id_str, data in sorted(games_dict_recruiting.items(), key=lambda g: g[1]['name']):
 
         # variant is available
         variant_name_loaded = data['variant']
 
         # from variant name get variant content
-        variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-        if not variant_content_loaded:
-            return
+
+        # this is an optimisation
+
+        # new code after optimization
+        if variant_name_loaded not in variant_content_memoize_table:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                return
+            variant_content_memoize_table[variant_name_loaded] = variant_content_loaded
+        else:
+            variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
+
+        # old code before optimization
+        #  variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+        #  if not variant_content_loaded:
+        #      return
 
         # selected display (user choice)
         display_chosen = tools.get_display_from_variant(variant_name_loaded)
@@ -155,6 +174,20 @@ def my_opportunities():
         parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
         # build variant data
+
+        # this is an optimisation
+
+        # new code after optimization
+        variant_name_loaded_str = str(variant_name_loaded)
+        variant_content_loaded_str = str(variant_content_loaded)
+        parameters_read_str = str(parameters_read)
+        if (variant_name_loaded_str, variant_content_loaded_str, parameters_read_str) not in variant_data_memoize_table:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            variant_data_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)] = variant_data
+        else:
+            variant_data = variant_data_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)]
+
+        # old code before optimization
         variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
         data['allocated'] = None
@@ -229,6 +262,14 @@ def my_opportunities():
 
     special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     my_panel <= special_legend
+
+    my_panel <= html.BR()
+    my_panel <= html.BR()
+
+    number_games = len(games_dict)
+    overall_time_after = time.time()
+    elapsed = overall_time_after - overall_time_before
+    my_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
 
 
 def render(panel_middle):
