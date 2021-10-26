@@ -2,23 +2,9 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
-import datetime
-import enum
-import time
 
-from browser import document, html, ajax, alert   # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
-from browser.local_storage import storage  # pylint: disable=import-error
+from browser import html  # pylint: disable=import-error
 
-import config
-import common
-import tools
-import geometry
-import mapping
-import login
-import sandbox
-import index  # circular import
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -28,43 +14,43 @@ OPTIONS = ['classement', 'parties', 'ajouter partie', 'retirer partie', 'diriger
 def ratings():
     """ ratings """
 
-    # TODO
+    # TODO classement du tournoi
     my_sub_panel <= "ICI classement du tournoi (sélectionner une partie du tournoi au préalable) - Pas encore implémenté, désolé !"
+
 
 def games():
     """ games """
 
-    # TODO
+    # TODO état des parties du tournoi
     my_sub_panel <= "ICI état des parties du tournoi - Pas encore implémenté, désolé !"
 
 
 def add_game():
     """ add_game """
 
-    # TODO
+    # TODO ajouter une partie au tournoi
     my_sub_panel <= "ICI possibilité pour le directeur de tournoi d'ajouter une partie au tournoi - Pas encore implémenté, désolé !"
 
 
 def remove_game():
     """ remove_game """
 
-    # TODO
+    # TODO retirer une partie du tournoi
     my_sub_panel <= "ICI possibilité pour le directeur de tournoi de retirer une partie du tournoi - Pas encore implémenté, désolé !"
 
 
 def direct():
     """ direct """
 
-    # TODO
+    # TODO prendre la direction du tournoi
     my_sub_panel <= "ICI possibilité de prendre la direction du tournoi - Pas encore implémenté, désolé !"
 
 
 def quit_directing():
     """ quit_directing """
 
-    # TODO
+    # TODO quitter la direction du tournoi
     my_sub_panel <= "ICI possibilité de quitter la direction du tournoi - Pas encore implémenté, désolé !"
-
 
 
 my_panel = html.DIV(id="tournament")
