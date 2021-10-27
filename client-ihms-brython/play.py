@@ -2290,6 +2290,11 @@ def negotiate():
 
     my_sub_panel.clear()
 
+    # header
+    game_status = get_game_status(variant_data, game_parameters_loaded, False)
+    my_sub_panel <= game_status
+    my_sub_panel <= html.BR()
+
     # role
     role = variant_data.roles[role_id]
     role_name = variant_data.name_table[role]
@@ -2519,7 +2524,20 @@ def declare():
 
         declarations_table <= row
 
+    # game parameters
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
     my_sub_panel.clear()
+
+    # header
+    game_status = get_game_status(variant_data, game_parameters_loaded, False)
+    my_sub_panel <= game_status
+    my_sub_panel <= html.BR()
 
     # role
     role = variant_data.roles[role_id]
@@ -2528,14 +2546,6 @@ def declare():
     my_sub_panel <= role_icon_img
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
-
-    # game parameters
-    game_parameters_loaded = common.game_parameters_reload(game)
-    if not game_parameters_loaded:
-        return
-
-    # just to prevent a erroneous pylint warning
-    game_parameters_loaded = dict(game_parameters_loaded)
 
     # form only if allowed
     if game_parameters_loaded['nopress'] and role_id != 0:
