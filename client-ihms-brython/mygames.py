@@ -113,6 +113,8 @@ def my_games(state):
     variant_data_memoize_table = dict()
     variant_content_memoize_table = dict()
 
+    number_games = 0
+
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
 
         # do not display finished games
@@ -167,8 +169,9 @@ def my_games(state):
         #  variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
         role_id = common.get_role_allocated_to_player(game_id)
-        if role_id is None:
-            continue
+
+        number_games += 1
+
         data['role_played'] = role_id
 
         submitted_data = common.get_roles_submitted_orders(game_id)
@@ -212,70 +215,79 @@ def my_games(state):
                 value = f"{advancement_season_readable} {advancement_year}"
 
             if field == 'role_played':
-                if role_id == -1:
-                    value = "Affecté"
-                else:
+                value = "Affecté"
+                if role_id is not None:
                     role = variant_data.roles[role_id]
                     role_name = variant_data.name_table[role]
                     role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
                     value = role_icon_img
 
             if field == 'all_orders_submitted':
-                submitted_roles_list = submitted_data['submitted']
-                nb_submitted = len(submitted_roles_list)
-                needed_roles_list = submitted_data['needed']
-                nb_needed = len(needed_roles_list)
-                value = f"{nb_submitted}/{nb_needed}"
-                colour = 'black'
-                if nb_submitted >= nb_needed:
-                    # we have all orders : green
-                    colour = 'green'
-                elif nb_submitted == 0:
-                    # we have no orders : red
-                    colour = 'red'
+
+                value = ""
+                if role_id is not None:
+                    submitted_roles_list = submitted_data['submitted']
+                    nb_submitted = len(submitted_roles_list)
+                    needed_roles_list = submitted_data['needed']
+                    nb_needed = len(needed_roles_list)
+                    stats = f"{nb_submitted}/{nb_needed}"
+                    value = stats
+                    colour = 'black'
+                    if nb_submitted >= nb_needed:
+                        # we have all orders : green
+                        colour = 'green'
+                    elif nb_submitted == 0:
+                        # we have no orders : red
+                        colour = 'red'
 
             if field == 'orders_submitted':
+
                 submitted_roles_list = submitted_data['submitted']
                 needed_roles_list = submitted_data['needed']
-                if role_id in submitted_roles_list:
-                    flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
-                elif role_id in needed_roles_list:
-                    flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
-                else:
-                    flag = ""
-                value = flag
+                value = ""
+                if role_id is not None:
+                    if role_id in submitted_roles_list:
+                        flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
+                        value = flag
+                    elif role_id in needed_roles_list:
+                        flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
+                        value = flag
 
             if field == 'new_declarations':
 
-                # get time stamp of last visit of declarations
-                time_stamp_last_visit = common.last_visit_load(game_id, common.DECLARATIONS_TYPE)
-                if time_stamp_last_visit is None:
-                    return
-                time_stamp_last_event = common.last_game_declaration(game_id)
-                if time_stamp_last_event is None:
-                    return
+                value = ""
+                if role_id is not None:
+                    # get time stamp of last visit of declarations
+                    time_stamp_last_visit = common.last_visit_load(game_id, common.DECLARATIONS_TYPE)
+                    if time_stamp_last_visit is None:
+                        return
+                    time_stamp_last_event = common.last_game_declaration(game_id)
+                    if time_stamp_last_event is None:
+                        return
 
-                # popup if new
-                popup = ""
-                if time_stamp_last_event > time_stamp_last_visit:
-                    popup = html.IMG(src="./data/new_content.gif", title="Nouvelle(s) déclaration(s)")
-                value = popup
+                    # popup if new
+                    popup = ""
+                    if time_stamp_last_event > time_stamp_last_visit:
+                        popup = html.IMG(src="./data/new_content.gif", title="Nouvelle(s) déclaration(s)")
+                    value = popup
 
             if field == 'new_messages':
 
-                # get time stamp of last visit of declarations
-                time_stamp_last_visit = common.last_visit_load(game_id, common.MESSAGES_TYPE)
-                if time_stamp_last_visit is None:
-                    return
-                time_stamp_last_event = common.last_game_message(game_id, role_id)
-                if time_stamp_last_event is None:
-                    return
+                value = ""
+                if role_id is not None:
+                    # get time stamp of last visit of declarations
+                    time_stamp_last_visit = common.last_visit_load(game_id, common.MESSAGES_TYPE)
+                    if time_stamp_last_visit is None:
+                        return
+                    time_stamp_last_event = common.last_game_message(game_id, role_id)
+                    if time_stamp_last_event is None:
+                        return
 
-                # popup if new
-                popup = ""
-                if time_stamp_last_event > time_stamp_last_visit:
-                    popup = html.IMG(src="./data/new_content.gif", title="Nouveau(x) message(s)")
-                value = popup
+                    # popup if new
+                    popup = ""
+                    if time_stamp_last_event > time_stamp_last_visit:
+                        popup = html.IMG(src="./data/new_content.gif", title="Nouveau(x) message(s)")
+                    value = popup
 
             if field == 'jump':
                 game_name = data['name']
@@ -306,10 +318,11 @@ def my_games(state):
     my_panel <= html.BR()
     my_panel <= html.BR()
 
-    number_games = len(games_dict)
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
-    my_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
+    my_panel <= f"Temps de chargement de la page {elapsed}"
+    if number_games:
+        my_panel <= f" soit {elapsed/number_games} par partie"
 
     my_panel <= html.BR()
     my_panel <= html.BR()

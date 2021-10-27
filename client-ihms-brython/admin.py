@@ -318,11 +318,15 @@ def all_games(state):
     variant_data_memoize_table = dict()
     variant_content_memoize_table = dict()
 
+    number_games = 0
+
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
 
         # do not display finished games
         if data['current_state'] != state:
             continue
+
+        number_games += 1
 
         game_id = int(game_id_str)
 
@@ -449,10 +453,11 @@ def all_games(state):
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
 
-    number_games = len(games_dict)
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
-    my_sub_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
+    my_sub_panel <= f"Temps de chargement de la page {elapsed}"
+    if number_games:
+        my_sub_panel <= f" soit {elapsed/number_games} par partie"
 
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()

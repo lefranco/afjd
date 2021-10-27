@@ -145,7 +145,11 @@ def my_opportunities():
     variant_data_memoize_table = dict()
     variant_content_memoize_table = dict()
 
+    number_games = 0
+
     for game_id_str, data in sorted(games_dict_recruiting.items(), key=lambda g: g[1]['name']):
+
+        number_games += 1
 
         # variant is available
         variant_name_loaded = data['variant']
@@ -266,10 +270,11 @@ def my_opportunities():
     my_panel <= html.BR()
     my_panel <= html.BR()
 
-    number_games = len(games_dict)
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
-    my_panel <= f"Temps de chargement de la page {elapsed} soit {elapsed/number_games} par partie\n"
+    my_panel <= f"Temps de chargement de la page {elapsed}"
+    if number_games:
+        my_panel <= f" soit {elapsed/number_games} par partie"
 
 
 def render(panel_middle):
