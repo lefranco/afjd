@@ -7,7 +7,7 @@ import datetime
 import enum
 import time
 
-from browser import document, html, ajax, alert   # pylint: disable=import-error
+from browser import document, html, ajax, alert, timer   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -40,6 +40,20 @@ class AutomatonStateEnum(enum.Enum):
 
 def get_game_status(variant_data, game_parameters_loaded, full):
     """ get_game__status """
+
+    def countdown():
+        now = time.time()
+        remains = int(deadline_loaded - now)
+        if remains < 0:
+            countdown_elt.text = f"passée!"
+        elif remains < 60:
+            countdown_elt.text = f"{remains}s"
+        elif remains < 3600:
+            countdown_elt.text = f"{remains // 60}mn {remains % 60}s"
+        elif remains < 24 * 3600:
+            countdown_elt.text = f"~ {remains // 3600}h"
+        else:
+            countdown_elt.text = f"~ {remains // (24 * 3600)}j"
 
     game_name = game_parameters_loaded['name']
     game_description = game_parameters_loaded['description']
@@ -89,7 +103,8 @@ def get_game_status(variant_data, game_parameters_loaded, full):
     }
     row <= col
 
-    col = html.TD("compte a rebours")
+    countdown_elt = html.DIV()
+    col = html.TD(countdown_elt)
     row <= col
 
     if full:
@@ -108,6 +123,10 @@ def get_game_status(variant_data, game_parameters_loaded, full):
         col = html.TD(game_description, colspan="6")
         row <= col
         game_status_table <= row
+
+    # initiates countdown
+    countdown()
+    timer.set_interval(countdown, 1000)
 
     return game_status_table
 
