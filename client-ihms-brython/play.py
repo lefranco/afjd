@@ -89,6 +89,9 @@ def get_game_status(variant_data, game_parameters_loaded, full):
     }
     row <= col
 
+    col = html.TD("compte a rebours")
+    row <= col
+
     if full:
 
         game_id = common.get_game_id(game_name)
@@ -102,7 +105,7 @@ def get_game_status(variant_data, game_parameters_loaded, full):
     if full:
         row = html.TR()
 
-        col = html.TD(game_description, colspan="5")
+        col = html.TD(game_description, colspan="6")
         row <= col
         game_status_table <= row
 
