@@ -107,8 +107,16 @@ def import_position(new_position_data):
         zone_num = loaded_unit['zone']
         dict_loaded_units[role_num].append([type_num, zone_num])
 
+    # get loaded centers for convenience
+    loaded_ownerships = new_position_data.save_json2()
+    dict_loaded_ownerships = dict()
+    for loaded_ownership in loaded_ownerships:
+        center_num = loaded_ownership['center_num']
+        role_num = loaded_ownership['role']
+        dict_loaded_ownerships[center_num] = role_num
+
     # get the position
-    position_imported = {'ownerships': dict(), 'units': dict_loaded_units, 'forbiddens': dict(), 'dislodged_ones': dict()}
+    position_imported = {'ownerships': dict_loaded_ownerships, 'units': dict_loaded_units, 'forbiddens': dict(), 'dislodged_ones': dict()}
 
     # copy position
     position_data = mapping.Position(position_imported, variant_data)
