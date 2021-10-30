@@ -174,12 +174,18 @@ def my_games(state):
 
         data['role_played'] = role_id
 
-        submitted_data = common.get_roles_submitted_orders(game_id)
-        if submitted_data is None:
+        game_name = data['name']
+        game_parameters_loaded = common.game_parameters_reload(game_name)
+        if not game_parameters_loaded:
             return
 
-        # just to avoid a warning
-        submitted_data = dict(submitted_data)
+        submitted_data = None
+        if not game_parameters_loaded['anonymous'] or role_id == 0:
+            submitted_data = common.get_roles_submitted_orders(game_id)
+            if submitted_data is None:
+                return
+            # just to avoid a warning
+            submitted_data = dict(submitted_data)
 
         data['all_orders_submitted'] = None
         data['orders_submitted'] = None
@@ -225,33 +231,43 @@ def my_games(state):
             if field == 'all_orders_submitted':
 
                 value = ""
-                if role_id is not None:
-                    submitted_roles_list = submitted_data['submitted']
-                    nb_submitted = len(submitted_roles_list)
-                    needed_roles_list = submitted_data['needed']
-                    nb_needed = len(needed_roles_list)
-                    stats = f"{nb_submitted}/{nb_needed}"
-                    value = stats
-                    colour = 'black'
-                    if nb_submitted >= nb_needed:
-                        # we have all orders : green
-                        colour = 'green'
-                    elif nb_submitted == 0:
-                        # we have no orders : red
-                        colour = 'red'
+                if submitted_data is None:
+                    value = "Accès interdit"
+                else:
+                    if role_id is None:
+                        value = "Pas de rôle"
+                    else:
+                        submitted_roles_list = submitted_data['submitted']
+                        nb_submitted = len(submitted_roles_list)
+                        needed_roles_list = submitted_data['needed']
+                        nb_needed = len(needed_roles_list)
+                        stats = f"{nb_submitted}/{nb_needed}"
+                        value = stats
+                        colour = 'black'
+                        if nb_submitted >= nb_needed:
+                            # we have all orders : green
+                            colour = 'green'
+                        elif nb_submitted == 0:
+                            # we have no orders : red
+                            colour = 'red'
 
             if field == 'orders_submitted':
 
-                submitted_roles_list = submitted_data['submitted']
-                needed_roles_list = submitted_data['needed']
                 value = ""
-                if role_id is not None:
-                    if role_id in submitted_roles_list:
-                        flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
-                        value = flag
-                    elif role_id in needed_roles_list:
-                        flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
-                        value = flag
+                if submitted_data is None:
+                    value = "Accès interdit"
+                else:
+                    submitted_roles_list = submitted_data['submitted']
+                    needed_roles_list = submitted_data['needed']
+                    if role_id is None:
+                        value = "Pas de rôle"
+                    else:
+                        if role_id in submitted_roles_list:
+                            flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
+                            value = flag
+                        elif role_id in needed_roles_list:
+                            flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
+                            value = flag
 
             if field == 'new_declarations':
 
