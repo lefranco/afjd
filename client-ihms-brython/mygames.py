@@ -102,7 +102,7 @@ def my_games(state):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'all_orders_submitted': 'ordres soumis sur la partie', 'orders_submitted': 'ordres soumis par moi', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump': 'sauter'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'all_orders_submitted': 'ordres soumis accessibles', 'orders_submitted': 'ordres soumis par moi', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump': 'aller dans la partie'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
