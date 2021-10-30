@@ -26,6 +26,8 @@ import faq    # noqa: E402
 import technical    # noqa: E402
 import admin    # noqa: E402
 
+from browser.local_storage import storage  # pylint: disable=import-error
+
 
 # TITLE
 TITLE = "Front end générique Serveurs REST AJFD"
@@ -128,8 +130,12 @@ overall <= panel_middle
 
 
 # starts here
-load_option(None, item_name_selected)
-
+if 'game' in document.query:
+    game = document.query['game']
+    storage['GAME'] = game
+    load_option(None, 'jouer la partie sélectionnée')
+else:
+    load_option(None, item_name_selected)
 
 document <= html.BR()
 document <= html.BR()
