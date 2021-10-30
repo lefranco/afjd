@@ -2356,20 +2356,14 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id} or to be site administrator!")
 
-        # reject if not game master ans game is anonymous
-        if game.anonymous:
-            if role_id is not 0:
-
-                # TODO improve this with real admin account
-                # Admin can still see who passed orders
-                if pseudo != 'Palpatine':
-                    del sql_executor
-                    flask_restful.abort(403, msg=f"This game is anonymous")
-
-
         # submissions_list : those who submitted orders
         submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
         submitted_list = [o[1] for o in submissions_list]
+
+        # game is anonymous : you get only information for your own role
+        if game.anonymous:
+            if role_id is not 0:
+                submitted_list = [r for r in submitted_list if r == role_id]
 
         # needed list : those who need to submit orders
         actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
