@@ -3394,7 +3394,7 @@ def show_game_parameters():
 
         parameter_name, explanation, effect, implemented = {
             'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
-            'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue - effacé à la fin de la partie", "OUI"),
+            'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres - effacé à la fin de la partie", "OUI"),
             'nomessage': ("pas de message", "on peut pas négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible - effacé à la fin de la partie", "OUI"),
             'nopress': ("pas de presse", "on ne peut pas déclarer - sauf l'arbitre", "Toute déclaration de joueur est impossible - effacé à la fin de la partie", "OUI"),
             'fast': ("rapide", "la partie est jouée en temps réel comme sur un plateau", "Les dates limite ne sont pas mises à jour par le système", "OUI"),
@@ -3639,6 +3639,14 @@ def show_orders_submitted_in_game():
 
     pseudo = storage['PSEUDO']
 
+    # game parameters
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
     # from game name get variant name
 
     variant_name_loaded = common.game_variant_name_reload(game)
@@ -3669,8 +3677,13 @@ def show_orders_submitted_in_game():
     role_id = common.get_role_allocated_to_player(game_id)
     if role_id is None:
         if not admin.check_admin(pseudo):
-            alert("Seul les participants à une partie (ou l'administrateur du site) peuvent voir le statut des ordres")
+            alert("Seul les participants à une partie (ou l'administrateur du site) peuvent voir le statut des ordres pour une partie non anonyme")
             return
+
+    # game anonymous
+    if game_parameters_loaded['anonymous'] and role_id != 0 and not admin.check_admin(pseudo):
+        alert("Seul l'arbitre (ou l'administrateur du site) peut voir le statut des ordres  pour une partie anonyme")
+        return
 
     # you will at least get your own role
     submitted_data = common.get_roles_submitted_orders(game_id)
