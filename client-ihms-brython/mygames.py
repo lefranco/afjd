@@ -53,7 +53,7 @@ def get_player_games_playing_in(player_id):
 def my_games(state):
     """ my_games """
 
-    def select_game_callback(_, game):
+    def select_game_callback(_, game, away):
         """ select_game_callback """
 
         # action of selecting game
@@ -97,12 +97,12 @@ def my_games(state):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'orders_submitted', 'new_declarations', 'new_messages', 'jump']
+    fields = ['name', 'variant', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'orders_submitted', 'new_declarations', 'new_messages', 'jump_here', 'go_away']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'all_orders_submitted': 'ordres soumis accessibles', 'orders_submitted': 'ordres soumis par moi', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump': 'aller dans la partie'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'all_orders_submitted': 'ordres soumis accessibles', 'orders_submitted': 'ordres soumis par moi', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump_here': 'sauter dans la partie', 'go_away': 'aller dans la partie (nouvel onglet)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -186,7 +186,8 @@ def my_games(state):
         data['orders_submitted'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
-        data['jump'] = None
+        data['jump_here'] = None
+        data['go_away'] = None
 
         row = html.TR()
         for field in fields:
@@ -296,13 +297,22 @@ def my_games(state):
                         popup = html.IMG(src="./data/new_content.gif", title="Nouveau(x) message(s)")
                     value = popup
 
-            if field == 'jump':
+            if field == 'jump_here':
                 game_name = data['name']
                 form = html.FORM()
-                input_jump_game = html.INPUT(type="submit", value="sauter à pied joints dans la partie")
-                input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
+                input_jump_game = html.INPUT(type="submit", value="sauter")
+                input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g, False))
                 form <= input_jump_game
                 value = form
+
+            if field == 'go_away':
+
+                link = html.A(href=f"?game={game_name}", target="_blank")
+                link <= "On y va"
+                link.style = {
+                    'color': 'blue',
+                }
+                value = link
 
             col = html.TD(value)
             col.style = {
