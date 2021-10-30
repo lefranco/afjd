@@ -221,8 +221,10 @@ def my_games(state):
                 value = f"{advancement_season_readable} {advancement_year}"
 
             if field == 'role_played':
-                value = "Affecté"
-                if role_id is not None:
+                value = ""
+                if role_id is None:
+                    value = "Affecté à la partie"
+                else:
                     role = variant_data.roles[role_id]
                     role_name = variant_data.name_table[role]
                     role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
