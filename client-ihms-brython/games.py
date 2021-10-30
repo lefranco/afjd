@@ -270,7 +270,7 @@ def create_game():
 
     # moves
 
-    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours alloués avant la date limite de mouvements")
+    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de mouvements")
     form <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=DEFAULT_SPEED_MOVES)
     form <= input_speed_moves
@@ -284,7 +284,7 @@ def create_game():
 
     # retreats
 
-    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours alloués avant la date limite de retraites")
+    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de retraites")
     form <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=DEFAULT_SPEED_OTHERS)
     form <= input_speed_retreats
@@ -298,7 +298,7 @@ def create_game():
 
     # adjustments
 
-    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours alloués avant la date limite d'ajustements")
+    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite d'ajustements")
     form <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=DEFAULT_SPEED_OTHERS)
     form <= input_speed_adjustments
@@ -953,7 +953,7 @@ def change_pace_parameters_game():
 
     # moves
 
-    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours alloués avant la date limite de mouvements")
+    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de mouvements")
     form <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=speed_moves_loaded)
     form <= input_speed_moves
@@ -967,7 +967,7 @@ def change_pace_parameters_game():
 
     # retreats
 
-    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours alloués avant la date limite de retraites")
+    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de retraites")
     form <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=speed_retreats_loaded)
     form <= input_speed_retreats
@@ -981,7 +981,7 @@ def change_pace_parameters_game():
 
     # adjustments
 
-    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours alloués avant la date limite d'ajustements")
+    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite d'ajustements")
     form <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments_loaded)
     form <= input_speed_adjustments

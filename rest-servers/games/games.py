@@ -466,7 +466,9 @@ class Game:
 
         # do not increment deadline if game is fast
         if self._fast:
-            return
+            increment = 60
+        else:
+            increment = 24 * 3600
 
         # increment deadline
 
@@ -480,8 +482,8 @@ class Game:
 
         while True:
 
-            # add a day
-            self._deadline += 24 * 3600
+            # add a day (a minute for fast games)
+            self._deadline += increment
 
             # extract deadline to datetime
             datetime_deadline_extracted = datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)
