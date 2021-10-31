@@ -7,6 +7,7 @@ import time
 start = time.time()
 
 from browser import document, html  # pylint: disable=import-error # noqa: E402
+from browser.local_storage import storage  # pylint: disable=import-error # noqa: E402
 
 import home    # noqa: E402
 import login    # noqa: E402
@@ -25,8 +26,6 @@ import oracle    # noqa: E402
 import faq    # noqa: E402
 import technical    # noqa: E402
 import admin    # noqa: E402
-
-from browser.local_storage import storage  # pylint: disable=import-error
 
 
 # TITLE

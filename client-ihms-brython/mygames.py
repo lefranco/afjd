@@ -53,7 +53,7 @@ def get_player_games_playing_in(player_id):
 def my_games(state):
     """ my_games """
 
-    def select_game_callback(_, game, away):
+    def select_game_callback(_, game):
         """ select_game_callback """
 
         # action of selecting game
@@ -301,7 +301,7 @@ def my_games(state):
                 game_name = data['name']
                 form = html.FORM()
                 input_jump_game = html.INPUT(type="submit", value="sauter")
-                input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g, False))
+                input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
                 form <= input_jump_game
                 value = form
 

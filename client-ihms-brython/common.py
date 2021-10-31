@@ -11,6 +11,16 @@ import config
 import mapping
 
 
+# load country list from json data file
+with open("./data/country_list.json", "r") as read_file:
+    COUNTRY_CODE_TABLE = json.load(read_file)
+
+
+# load timezone list from json data file
+with open("./data/timezone_list.json", "r") as read_file:
+    TIMEZONE_CODE_TABLE = json.load(read_file)
+
+
 DECLARATIONS_TYPE = 0
 MESSAGES_TYPE = 1
 
@@ -789,8 +799,8 @@ def read_parameters(variant_name_loaded, display_chosen):
     """ read_parameters """
 
     parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file:
-        parameters_read = json.load(read_file)
+    with open(parameters_file_name, "r") as read_file2:
+        parameters_read = json.load(read_file2)
 
     return parameters_read
 

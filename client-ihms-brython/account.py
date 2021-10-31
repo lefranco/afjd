@@ -22,15 +22,6 @@ MAX_LEN_PSEUDO = 20
 DEFAULT_COUNTRY_CODE = "FRA"
 DEFAULT_TIMEZONE_CODE = "UTC+01:00"
 
-# load country list from json data file
-with open("./data/country_list.json", "r") as read_file:
-    COUNTRY_CODE_TABLE = json.load(read_file)
-
-
-# load timezone list from json data file
-with open("./data/timezone_list.json", "r") as read_file:
-    TIMEZONE_CODE_TABLE = json.load(read_file)
-
 
 def information_about_account():
     """ information_about_account """
@@ -104,9 +95,9 @@ def create_account():
         family_name = input_family_name.value
         first_name = input_first_name.value
 
-        residence_code = COUNTRY_CODE_TABLE[input_residence.value]
-        nationality_code = COUNTRY_CODE_TABLE[input_nationality.value]
-        timezone_code = TIMEZONE_CODE_TABLE[input_timezone.value]
+        residence_code = common.COUNTRY_CODE_TABLE[input_residence.value]
+        nationality_code = common.COUNTRY_CODE_TABLE[input_nationality.value]
+        timezone_code = common.TIMEZONE_CODE_TABLE[input_timezone.value]
 
         json_dict = {
             'pseudo': pseudo,
@@ -189,9 +180,9 @@ def create_account():
     form <= legend_residence
     input_residence = html.SELECT(type="select-one", value="")
 
-    for country_name in COUNTRY_CODE_TABLE:
+    for country_name in common.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
+        if common.COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
             option.selected = True
         input_residence <= option
 
@@ -202,9 +193,9 @@ def create_account():
     form <= legend_nationality
     input_nationality = html.SELECT(type="select-one", value="")
 
-    for country_name in COUNTRY_CODE_TABLE:
+    for country_name in common.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
+        if common.COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
             option.selected = True
         input_nationality <= option
 
@@ -215,9 +206,9 @@ def create_account():
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
-    for timezone_cities in TIMEZONE_CODE_TABLE:
+    for timezone_cities in common.TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
-        if TIMEZONE_CODE_TABLE[timezone_cities] == DEFAULT_TIMEZONE_CODE:
+        if common.TIMEZONE_CODE_TABLE[timezone_cities] == DEFAULT_TIMEZONE_CODE:
             option.selected = True
         input_timezone <= option
 
@@ -500,9 +491,9 @@ def edit_account():
         family_name = input_family_name.value
         first_name = input_first_name.value
 
-        residence_code = COUNTRY_CODE_TABLE[input_residence.value]
-        nationality_code = COUNTRY_CODE_TABLE[input_nationality.value]
-        timezone_code = TIMEZONE_CODE_TABLE[input_timezone.value]
+        residence_code = common.COUNTRY_CODE_TABLE[input_residence.value]
+        nationality_code = common.COUNTRY_CODE_TABLE[input_nationality.value]
+        timezone_code = common.TIMEZONE_CODE_TABLE[input_timezone.value]
 
         json_dict = {
             'pseudo': pseudo,
@@ -582,9 +573,9 @@ def edit_account():
     form <= legend_residence
     input_residence = html.SELECT(type="select-one", value="")
 
-    for country_name in COUNTRY_CODE_TABLE:
+    for country_name in common.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if COUNTRY_CODE_TABLE[country_name] == residence_loaded_code:
+        if common.COUNTRY_CODE_TABLE[country_name] == residence_loaded_code:
             option.selected = True
         input_residence <= option
 
@@ -595,9 +586,9 @@ def edit_account():
     form <= legend_nationality
     input_nationality = html.SELECT(type="select-one", value="")
 
-    for country_name in COUNTRY_CODE_TABLE:
+    for country_name in common.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if COUNTRY_CODE_TABLE[country_name] == nationality_loaded_code:
+        if common.COUNTRY_CODE_TABLE[country_name] == nationality_loaded_code:
             option.selected = True
         input_nationality <= option
 
@@ -607,9 +598,9 @@ def edit_account():
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
-    for timezone_cities in TIMEZONE_CODE_TABLE:
+    for timezone_cities in common.TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
-        if TIMEZONE_CODE_TABLE[timezone_cities] == timezone_loaded_code:
+        if common.TIMEZONE_CODE_TABLE[timezone_cities] == timezone_loaded_code:
             option.selected = True
         input_timezone <= option
 
