@@ -33,83 +33,19 @@ import lowdata
 SESSION = requests.Session()
 
 
-# TODO : remove this function when adjudication from GM is removed
-def clear(game_id: int, sql_executor: database.SqlExecutor) -> None:
-    """ clear for a game the agreements"""
-
-    for (_, role_num, _) in definitives.Definitive.list_by_game_id(sql_executor, int(game_id)):
-        definitive = definitives.Definitive(int(game_id), role_num, False)
-        definitive.delete_database(sql_executor)
-
-
-def retrieve(game_id: int, role_id: int, sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[int, int, int]]:
-    """ retrieves for a game the agreements """
-
-    assert role_id is not None
-    if role_id == 0:
-        definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
-    else:
-        definitives_list = definitives.Definitive.list_by_game_id_role_num(sql_executor, game_id, role_id)
-    return definitives_list
-
-
-def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
-    """
-    posts an agreement in a game (or a disagreement)
-    returns
-      * a status (True if no error)
-      * an adjudication indicator (True is adjudication ready)
-      * a message (explaining the error)
-    """
-
-    # update db here
-    if role_id == 0:
-        definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
-        definitive.update_database(sql_executor)  # noqa: F821
-    else:
-        definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
-        definitive.update_database(sql_executor)  # noqa: F821
-
-    if not definitive_value:
-        return True, False, "Player does not agree to adjudicate"
-
-    # needed list : those who need to submit orders
-    actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
-    needed_list = [o[1] for o in actives_list]
-
-    # submissions_list : those who submitted orders
-    submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
-    submitted_list = [o[1] for o in submissions_list]
-
-    # definitives_list : those who agreed to adjudicate
-    definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
-    agreed_list = [o[1] for o in definitives_list]
+def adjudicate(game_id: int, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, str]:
+    """ this will perform game adjudication """
 
     # find the game
     game = games.Game.find_by_identifier(sql_executor, game_id)
     if game is None:
-        return False, False, "ERROR : Could not find the game"
-
-    if not game.archive:
-
-        # check all submitted
-        for role in needed_list:
-            if role not in submitted_list:
-                return True, False, "Still some orders are missing"
-
-        # check all agreed
-        for role in needed_list:
-            # ignore for role_id : it may not be in database yet
-            if role == role_id:
-                continue
-            if role not in agreed_list:
-                return True, False, "Still some agreements are missing"
+        return False, "ERROR : Could not find the game"
 
     # evaluate variant
     variant_name = game.variant
     variant_dict = variants.Variant.get_by_name(variant_name)
     if variant_dict is None:
-        return False, False, "ERROR : Could not find the variant"
+        return False, "ERROR : Could not find the variant"
 
     variant_dict_json = json.dumps(variant_dict)
 
@@ -179,7 +115,7 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
     if req_result.status_code != 201:
         print(f"ERROR from server  : {req_result.text}")
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-        return False, False, f"ERROR : Failed to adjudicate {message} : {adjudication_report}"
+        return False, f"ERROR : Failed to adjudicate {message} : {adjudication_report}"
 
     # adjudication successful : backup for transition archive
 
@@ -345,7 +281,7 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
     if req_result.status_code != 201:
         print(f"ERROR from server  : {req_result.text}")
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-        return False, False, f"ERROR : Failed to print communication orders {message}"
+        return False, f"ERROR : Failed to print communication orders {message}"
 
     # extract printed orders
     communication_orders_content = req_result.json()['orders_content']
@@ -385,7 +321,67 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
     game.push_deadline()
     game.update_database(sql_executor)
 
-    return True, True, "Adjudication of game initiated !"
+    return True, "Adjudication performed !"
+
+
+def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
+    """
+    posts an agreement in a game (or a disagreement)
+    returns
+      * a status (True if no error)
+      * an adjudication indicator (True is adjudication ready)
+      * a message (explaining the error)
+    """
+
+    # update db here
+    if role_id == 0:
+        definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
+        definitive.update_database(sql_executor)  # noqa: F821
+    else:
+        definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
+        definitive.update_database(sql_executor)  # noqa: F821
+
+    if not definitive_value:
+        return True, False, "Player does not agree to adjudicate"
+
+    # needed list : those who need to submit orders
+    actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+    needed_list = [o[1] for o in actives_list]
+
+    # submissions_list : those who submitted orders
+    submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+    submitted_list = [o[1] for o in submissions_list]
+
+    # definitives_list : those who agreed to adjudicate
+    definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
+    agreed_list = [o[1] for o in definitives_list]
+
+    # find the game
+    game = games.Game.find_by_identifier(sql_executor, game_id)
+    if game is None:
+        return False, False, "ERROR : Could not find the game"
+
+    if not game.archive:
+
+        # check all submitted
+        for role in needed_list:
+            if role not in submitted_list:
+                return True, False, "Still some orders are missing"
+
+        # check all agreed
+        for role in needed_list:
+            # ignore for role_id : it may not be in database yet
+            if role == role_id:
+                continue
+            if role not in agreed_list:
+                return True, False, "Still some agreements are missing"
+
+    # now we can do adjudication itself
+    adj_status, adj_message = adjudicate(game_id, names, sql_executor)
+
+    # note : commit will be done by caller
+
+    return True, adj_status, adj_message
 
 
 if __name__ == '__main__':
