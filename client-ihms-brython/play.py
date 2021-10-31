@@ -3078,45 +3078,6 @@ def game_master():
 
         return pseudo_list
 
-    def adjudicate_callback(_):
-        """ adjudicate_callback """
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 201:
-                if 'message' in req_result:
-                    alert(f"Erreur à la résolution : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la résolution : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La résolution a été réalisée : {messages}", remove_after=config.REMOVE_AFTER)
-
-            # back to where we started
-            my_sub_panel.clear()
-            game_master()
-
-        game_id = common.get_game_id(game)
-        if game_id is None:
-            return
-
-        names_dict = variant_data.extract_names()
-        names_dict_json = json.dumps(names_dict)
-
-        json_dict = {
-            'pseudo': pseudo,
-            'names': names_dict_json
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-adjudications/{game_id}"
-
-        # asking adjudication : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -3352,15 +3313,6 @@ def game_master():
         game_admin_table <= row
 
     my_sub_panel <= game_admin_table
-
-    my_sub_panel <= html.BR()
-
-    # adjudicate button only if no orders required
-    needed_roles_list = submitted_data['needed']
-    if len(needed_roles_list) == 0:
-        input_adjudicate = html.INPUT(type="submit", value="déclencher la résolution")
-        input_adjudicate.bind("click", adjudicate_callback)
-        my_sub_panel <= input_adjudicate
 
 
 def show_game_parameters():

@@ -377,11 +377,32 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
                 return True, False, "Still some agreements are missing"
 
     # now we can do adjudication itself
-    adj_status, adj_message = adjudicate(game_id, names, sql_executor)
+
+    # get all messages
+    adj_messages: typing.List[str] = list()
+
+    # first adjudication
+    adj_first_status, adj_message = adjudicate(game_id, names, sql_executor)
+
+    # keep list of messages
+    adj_messages.append(adj_message)
+
+    # all possible next adjudications
+    while True:
+
+        # one adjudication
+        adj_status, adj_message = adjudicate(game_id, names, sql_executor)
+
+        # failed : done
+        if not adj_status:
+            break
+
+        # keep list of messages
+        adj_messages.append(adj_message)
 
     # note : commit will be done by caller
 
-    return True, adj_status, adj_message
+    return True, adj_first_status, "\n".join(adj_messages)
 
 
 if __name__ == '__main__':
