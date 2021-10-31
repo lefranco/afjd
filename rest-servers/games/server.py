@@ -1528,6 +1528,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         sql_executor = database.SqlExecutor()
 
         # handle definitive boolean
+        # game master forced player to agree to adjudicate
         status, adjudicated, agreement_report = agree.post(game_id, role_id, bool(definitive_value), names, sql_executor)
 
         if not status:
@@ -1803,6 +1804,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             submission.update_database(sql_executor)  # noqa: F821
 
         # handle definitive boolean
+        # player submitted orders and agreed (or not) to adjudicate
         status, adjudicated, agreement_report = agree.post(game_id, role_id, bool(definitive_value), names, sql_executor)  # noqa: F821
 
         if not status:
@@ -2362,7 +2364,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         # game is anonymous : you get only information for your own role
         if game.anonymous:
-            if role_id is not 0:
+            if role_id != 0:
                 submitted_list = [r for r in submitted_list if r == role_id]
 
         # needed list : those who need to submit orders
@@ -2375,6 +2377,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+# TODO : remove this access point :-)
 @API.resource('/game-adjudications/<game_id>')
 class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
     """ GameAdjudicationRessource """
@@ -2453,7 +2456,7 @@ class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
             del sql_executor  # noqa: F821
             flask_restful.abort(400, msg="Orders are required so adjudication must come from player agreement to solve")
 
-        # call agree
+        # game master is adjudicating
         status, adjudicated, agreement_report = agree.post(game_id, role_id, True, names, sql_executor)
 
         if not status:
@@ -3297,7 +3300,10 @@ class GameDefinitiveRessource(flask_restful.Resource):  # type: ignore
 
         # retrieve definitive here
         assert role_id is not None
-        definitives_list = agree.retrieve(game_id, role_id, sql_executor)
+        if role_id == 0:
+            definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
+        else:
+            definitives_list = definitives.Definitive.list_by_game_id_role_num(sql_executor, game_id, role_id)
 
         del sql_executor
 
