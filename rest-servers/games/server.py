@@ -2364,7 +2364,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         # game is anonymous : you get only information for your own role
         if game.anonymous:
-            if role_id != 0:
+            if role_id is not None and role_id != 0:
                 submitted_list = [r for r in submitted_list if r == role_id]
 
         # needed list : those who need to submit orders
@@ -2375,106 +2375,6 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         data = {'submitted': submitted_list, 'needed': needed_list}
         return data, 200
-
-
-# TODO : remove this access point :-)
-@API.resource('/game-adjudications/<game_id>')
-class GameAdjudicationRessource(flask_restful.Resource):  # type: ignore
-    """ GameAdjudicationRessource """
-
-    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """
-        Performs adjudication of game
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/game-adjudications/<game_id> - POST - adjudicating game id=%s", game_id)
-
-        args = ADJUDICATION_PARSER.parse_args(strict=True)
-
-        names = args['names']
-        pseudo = args['pseudo']
-
-        # names not logged
-        mylogger.LOGGER.info("pseudo=%s", pseudo)
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to adjudicate in game")
-
-        # check authentication from user server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
-
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        user_id = req_result.json()
-
-        sql_executor = database.SqlExecutor()
-
-        # check user has right to adjudicate - must be game master
-
-        # find the game
-        game = games.Game.find_by_identifier(sql_executor, game_id)
-        if game is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
-
-        role_id = 0
-
-        # who is game master ?
-        assert game is not None
-        game_master_id = game.get_role(sql_executor, role_id)
-
-        # must be game master
-        if user_id != game_master_id:
-            del sql_executor
-            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
-
-        # there must be no orders required (otherwise must be enclenched by "agree to solve")
-        # needed list : those who need to submit orders
-        actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
-        needed_list = [o[1] for o in actives_list]
-        if needed_list:
-            del sql_executor  # noqa: F821
-            flask_restful.abort(400, msg="Orders are required so adjudication must come from player agreement to solve")
-
-        # game master is adjudicating
-        status, adjudicated, agreement_report = agree.post(game_id, role_id, True, names, sql_executor)
-
-        if not status:
-            del sql_executor  # noqa: F821
-            flask_restful.abort(400, msg=f"Failed to force adjudication with error: {agreement_report}")
-
-        # just a naming
-        adjudication_report = agreement_report
-
-        if not adjudicated:
-            del sql_executor  # noqa: F821
-            flask_restful.abort(400, msg=f"Failed to force adjudication with condition missing: {adjudication_report}")
-
-        sql_executor.commit()  # noqa: F821
-        del sql_executor  # noqa: F821
-
-        data = {'msg': f"Ok adjudication performed and game updated : {adjudication_report}"}
-        return data, 201
 
 
 @API.resource('/simulation')
