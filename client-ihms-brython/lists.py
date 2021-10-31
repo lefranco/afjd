@@ -2,17 +2,11 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import json
 import datetime
 
 from browser import html  # pylint: disable=import-error
 
 import common
-
-# load country list from json data file
-with open("./data/country_list.json", "r") as read_file:
-    COUNTRY_CODE_TABLE = json.load(read_file)
-
 
 my_panel = html.DIV(id="players")
 
@@ -40,7 +34,7 @@ def show_players_data():
         thead <= col
     players_table <= thead
 
-    code_country_table = {v: k for k, v in COUNTRY_CODE_TABLE.items()}
+    code_country_table = {v: k for k, v in common.COUNTRY_CODE_TABLE.items()}
 
     count = 0
     for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):
