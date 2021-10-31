@@ -304,12 +304,12 @@ def all_games(state):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'jump']
+    fields = ['name', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'jump_here', 'go_away']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres soumis sur la partie', 'jump': 'sauter'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres soumis sur la partie', 'jump_here': 'sauter dans la partie', 'go_away': 'aller dans la partie (nouvel onglet)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -381,7 +381,8 @@ def all_games(state):
         submitted_data = dict(submitted_data)
 
         data['all_orders_submitted'] = None
-        data['jump'] = None
+        data['jump_here'] = None
+        data['go_away'] = None
 
         row = html.TR()
         for field in fields:
@@ -424,13 +425,22 @@ def all_games(state):
                     # we have no orders : red
                     colour = 'red'
 
-            if field == 'jump':
+            if field == 'jump_here':
                 game_name = data['name']
                 form = html.FORM()
                 input_jump_game = html.INPUT(type="submit", value="sauter dans la partie")
                 input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
                 form <= input_jump_game
                 value = form
+
+            if field == 'go_away':
+
+                link = html.A(href=f"?game={game_name}", target="_blank")
+                link <= "On y va"
+                link.style = {
+                    'color': 'blue',
+                }
+                value = link
 
             col = html.TD(value)
             col.style = {
@@ -969,6 +979,11 @@ def sendmail():
             return
 
         subject = "Message de la part de l'administrateur du site www.diplomania.fr (AFJD)"
+
+        if not input_message.value:
+            alert("Contenu du message vide")
+            return
+
         body = input_message.value
 
         addressed_id = players_dict[addressed_user_name]
