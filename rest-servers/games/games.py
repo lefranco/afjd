@@ -486,18 +486,25 @@ class Game:
         if self._archive:
             return
 
-        # set to deadline now if now < deadline
+        # set start deadline
         now = time.time()
-        self._deadline = int(now)
-
-        # set deadline to next time of day if deadline_sync
-        # TODO
-
-        # set deadline increment value
         if self._fast:
-            increment = 60
+            # round it to next minute
+            self._deadline = (int(now) // 60) * 60 + 60
         else:
-            increment = 24 * 3600
+            if self._deadline_sync:
+                # time in day now
+                now_time_in_day = int(now) % (24 * 3600)
+                # time in day of deadline wished
+                deadline_time_in_day = self._deadline_hour * 3600
+                # increment or decrement (depending on which is later)
+                self._deadline = int(now) + (deadline_time_in_day - now_time_in_day)
+                if now_time_in_day > deadline_time_in_day:
+                    # expected deadline time is earlier in day :  we set our deadline next day
+                    self._deadline += 24 * 3600
+            else:
+                # round it to next hour
+                self._deadline = (int(now) // 3600) * 3600 + 3600
 
         # increment deadline
 
@@ -512,7 +519,10 @@ class Game:
         while True:
 
             # add a day (a minute for fast games)
-            self._deadline += increment
+            if self._fast:
+                self._deadline += 60
+            else:
+                self._deadline += 24 * 3600
 
             # extract deadline to datetime
             datetime_deadline_extracted = datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)
