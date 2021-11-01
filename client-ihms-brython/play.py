@@ -3314,6 +3314,11 @@ def game_master():
 
     my_sub_panel <= game_admin_table
 
+    # cannot be game master unless archive game
+    if game_parameters_loaded['fast']:
+        my_sub_panel <= "partie rapide : passage en mode automatique ?"
+
+
 
 def show_game_parameters():
     """ show_game_parameters """
@@ -3351,9 +3356,9 @@ def show_game_parameters():
             'nopress': ("pas de presse", "on ne peut pas déclarer - sauf l'arbitre", "Toute déclaration de joueur est impossible - effacé à la fin de la partie", "OUI"),
             'fast': ("rapide", "la partie est jouée en temps réel comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en jours", "OUI"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
-            'speed_moves': ("vitesse pour les mouvements", "en jours", "Le système ajoute les jours avant une résolution de mouvement pour une date limite", "OUI"),
-            'speed_retreats': ("vitesse pour les retraites", "en jours", "Le système ajoute les jours avant une résolution de retraites pour une date limite", "OUI"),
-            'speed_adjustments': ("vitesse pour les ajustements", "en jours", "Le système ajoute les jours avant une résolution d'ajustements pour une date limite", "OUI"),
+            'speed_moves': ("vitesse pour les mouvements", "en jours", "Le système ajoute autant de jours avant une résolution de mouvement pour une date limite", "OUI"),
+            'speed_retreats': ("vitesse pour les retraites", "en jours", "Le système ajoute autant de jours avant une résolution de retraites pour une date limite", "OUI"),
+            'speed_adjustments': ("vitesse pour les ajustements", "en jours", "Le système ajoute autant de jours avant une résolution d'ajustements pour une date limite", "OUI"),
             'cd_possible_moves': ("désordre civil possible pour les mouvements", "oui ou non", "Charge à l'arbitre de le respecter (pas de vérification serveur)", "-"),
             'cd_possible_retreats': ("désordre civil possible pour les retraites", "oui ou non", "Charge à l'arbitre de le respecter (pas de vérification serveur)", "-"),
             'cd_possible_builds': ("désordre civil possible pour les constructions", "oui ou non", "Charge à l'arbitre de le respecter (pas de vérification serveur)", "-"),
