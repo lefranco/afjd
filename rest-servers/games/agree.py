@@ -317,10 +317,6 @@ def adjudicate(game_id: int, names: str, sql_executor: database.SqlExecutor) -> 
     game.advance()
     game.update_database(sql_executor)
 
-    # update deadline
-    game.push_deadline()
-    game.update_database(sql_executor)
-
     return True, "Adjudication performed !"
 
 
@@ -399,6 +395,15 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
 
         # keep list of messages
         adj_messages.append(adj_message)
+
+    if adj_first_status:
+
+        # update deadline
+        game.push_deadline()
+        game.update_database(sql_executor)
+
+        push_message = "Deadline adjusted"
+        adj_messages.append(push_message)
 
     # note : commit will be done by caller
 
