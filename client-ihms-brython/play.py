@@ -3369,7 +3369,7 @@ def show_game_parameters():
             'access_restriction_regularity': ("restriction d'accès sur la régularité", "(valeur)", "Un seuil de régularité est exigé pour rejoindre la partie", "NON"),
             'access_restriction_performance': ("restriction d'accès sur la performance", "(valeur)", "Un seuil de performance est exigé pour rejoindre la partie", "NON"),
             'nb_max_cycles_to_play': ("nombre maximum de cycles (années) à jouer", "(valeur)", "L'arbitre déclare la partie terminée si autant de cycles ont été joués", "-"),
-            'victory_centers': ("nombre de centres pour la victoire", "(valeur)", "L'arbitre déclare la partie gagnée si un joueur a autant de centres", "-")
+            'victory_centers': ("nombre de centres pour la victoire", "(valeur)", "L'arbitre déclare la partie gagnée si un joueur possède autant de centres", "-")
         }[key]
 
         col1 = html.TD(html.B(parameter_name))
