@@ -3471,6 +3471,8 @@ def show_players_in_game():
     # from game id and token get role_id of player
 
     role_id = common.get_role_allocated_to_player(game_id)
+
+    # is game anonymous
     if game_parameters_loaded['anonymous'] and role_id != 0 and not admin.check_admin(pseudo):
         alert("Seul l'arbitre (ou l'administrateur du site) peut voir les joueurs d'une partie anonyme")
         return
@@ -3607,6 +3609,12 @@ def show_orders_submitted_in_game():
     # just to prevent a erroneous pylint warning
     game_parameters_loaded = dict(game_parameters_loaded)
 
+    # from game name get game id
+
+    game_id = common.get_game_id(game)
+    if game_id is None:
+        return
+
     # from game name get variant name
 
     variant_name_loaded = common.game_variant_name_reload(game)
@@ -3628,11 +3636,6 @@ def show_orders_submitted_in_game():
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
-    # game id now
-    game_id = common.get_game_id(game)
-    if game_id is None:
-        return
-
     # is player in game ?
     role_id = common.get_role_allocated_to_player(game_id)
     if role_id is None:
@@ -3653,14 +3656,33 @@ def show_orders_submitted_in_game():
     # just to avoid a warning
     submitted_data = dict(submitted_data)
 
+    # get the players of the game
+    game_players_dict = get_game_players_data(game_id)
+
+    if not game_players_dict:
+        return
+
+    # just to avoid a warning
+    game_players_dict = dict(game_players_dict)
+
+    role2pseudo = {v: k for k, v in game_players_dict.items()}
+
+    # get the players (all players)
+    players_dict = common.get_players()
+
+    if not players_dict:
+        return
+
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
     game_players_table = html.TABLE()
 
-    fields = ['flag', 'role', 'orders']
+    fields = ['flag', 'role', 'player', 'orders']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'role': 'role', 'orders': 'ordres'}[field]
+        field_fr = {'flag': 'drapeau', 'role': 'role', 'player': 'joueur', 'orders': 'ordres'}[field]
         col = html.TD(field_fr)
         thead <= col
     game_players_table <= thead
@@ -3687,6 +3709,16 @@ def show_orders_submitted_in_game():
         role_name = variant_data.name_table[role]
 
         col = html.TD(role_name)
+        row <= col
+
+        # player
+        if role_id in role2pseudo:
+            player_id_str = role2pseudo[role_id]
+            player_id = int(player_id_str)
+            pseudo_there = id2pseudo[player_id]
+        else:
+            pseudo_there = None
+        col = html.TD(pseudo_there if pseudo_there else "")
         row <= col
 
         # orders are in
