@@ -33,13 +33,8 @@ import lowdata
 SESSION = requests.Session()
 
 
-def adjudicate(game_id: int, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, str]:
+def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, str]:
     """ this will perform game adjudication """
-
-    # find the game
-    game = games.Game.find_by_identifier(sql_executor, game_id)
-    if game is None:
-        return False, "ERROR : Could not find the game"
 
     # evaluate variant
     variant_name = game.variant
@@ -317,7 +312,7 @@ def adjudicate(game_id: int, names: str, sql_executor: database.SqlExecutor) -> 
     game.advance()
     game.update_database(sql_executor)
 
-    return True, "Adjudication performed !"
+    return True, f"Adjudication performed for game {game.name} season {game.current_advancement}!"
 
 
 def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
@@ -374,11 +369,14 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
 
     # now we can do adjudication itself
 
+    # first adjudication
+    adj_status, adj_message = adjudicate(game_id, game, names, sql_executor)
+
+    if not adj_status:
+        return True, adj_status, adj_message
+
     # get all messages
     adj_messages: typing.List[str] = list()
-
-    # first adjudication
-    adj_first_status, adj_message = adjudicate(game_id, names, sql_executor)
 
     # keep list of messages
     adj_messages.append(adj_message)
@@ -386,28 +384,39 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
     # all possible next adjudications
     while True:
 
-        # one adjudication
-        adj_status, adj_message = adjudicate(game_id, names, sql_executor)
+        # needed list : those who need to submit orders
+        actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+        needed_list = [o[1] for o in actives_list]
 
-        # failed : done
-        if not adj_status:
+        # need orders : stop now
+        if needed_list:
+            needed_message = "Orders needed now!"
+            adj_messages.append(needed_message)
             break
+
+        # one more adjudication
+        adj_status, adj_message = adjudicate(game_id, game, names, sql_executor)
 
         # keep list of messages
         adj_messages.append(adj_message)
 
-    if adj_first_status:
+        # error adjudicating : stop now (safer, but should not happen)
+        if not adj_status:
+            break
 
-        # update deadline
-        game.push_deadline()
-        game.update_database(sql_executor)
+    if not adj_status:
+        return True, adj_status, "\n".join(adj_messages)
 
-        push_message = "Deadline adjusted"
-        adj_messages.append(push_message)
+    # update deadline
+    game.push_deadline()
+    game.update_database(sql_executor)
+
+    push_message = "Deadline adjusted!"
+    adj_messages.append(push_message)
 
     # note : commit will be done by caller
 
-    return True, adj_first_status, "\n".join(adj_messages)
+    return True, adj_status, "\n".join(adj_messages)
 
 
 if __name__ == '__main__':
