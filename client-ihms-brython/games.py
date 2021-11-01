@@ -25,7 +25,9 @@ OPTIONS = ['créer', 'changer description', 'changer paramètres accès', 'chang
 MAX_LEN_NAME = 30
 
 DEFAULT_VARIANT = 'standard'
-DEFAULT_SPEED_MOVES = 2
+DEFAULT_DEADLINE_TIME = 21
+DEFAULT_GRACE_DURATION = 2
+DEFAULT_SPEED_MOVES = 3
 DEFAULT_SPEED_OTHERS = 1
 DEFAULT_CD_POSSIBLE_MOVES_BUILDS = 0
 DEFAULT_CD_OTHERS = 1
@@ -85,6 +87,18 @@ def create_game():
         nomessage = int(input_nomessage.checked)
         nopress = int(input_nopress.checked)
         fast = int(input_fast.checked)
+
+        try:
+            deadline_hour = int(input_deadline_hour.value)
+        except:  # noqa: E722 pylint: disable=bare-except
+            deadline_hour = None
+
+        deadline_sync = int(input_deadline_sync.checked)
+
+        try:
+            grace_duration = int(input_grace_duration.value)
+        except:  # noqa: E722 pylint: disable=bare-except
+            grace_duration = None
 
         try:
             speed_moves = int(input_speed_moves.value)
@@ -157,6 +171,9 @@ def create_game():
             'nopress': nopress,
             'fast': fast,
 
+            'deadline_hour': deadline_hour,
+            'deadline_sync': deadline_sync,
+            'grace_duration': grace_duration,
             'speed_moves': speed_moves,
             'cd_possible_moves': cd_possible_moves,
             'speed_retreats': speed_retreats,
@@ -267,6 +284,26 @@ def create_game():
         'color': 'red',
     }
     form <= legend_title_pace
+
+    # deadline
+
+    legend_deadline_hour = html.LEGEND("heure de date limite", title="Heure GMT de la journée à laquelle placer les dates limites")
+    form <= legend_deadline_hour
+    input_deadline_hour = html.INPUT(type="number", value=DEFAULT_DEADLINE_TIME)
+    form <= input_deadline_hour
+    form <= html.BR()
+
+    legend_deadline_sync = html.LEGEND("synchronisation des date limites", title="Faut-il synchroniser les dates limites à une heure donnée")
+    form <= legend_deadline_sync
+    input_deadline_sync = html.INPUT(type="checkbox", checked=True)
+    form <= input_deadline_sync
+    form <= html.BR()
+
+    legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre de jours (minutes pour une partie rapide) alloués avant fin de la grâce")
+    form <= legend_grace_duration
+    input_grace_duration = html.INPUT(type="number", value=DEFAULT_GRACE_DURATION)
+    form <= input_grace_duration
+    form <= html.BR()
 
     # moves
 
@@ -818,6 +855,9 @@ def change_pace_parameters_game():
     pseudo = storage['PSEUDO']
 
     # declare the values
+    deadline_hour_loaded = None
+    deadline_sync_loaded = None
+    grace_duration_loaded = None
     speed_moves_loaded = None
     cd_possible_moves_loaded = None
     speed_retreats_loaded = None
@@ -840,6 +880,9 @@ def change_pace_parameters_game():
 
         def reply_callback(req):
             nonlocal status
+            nonlocal deadline_hour_loaded
+            nonlocal deadline_sync_loaded
+            nonlocal grace_duration_loaded
             nonlocal speed_moves_loaded
             nonlocal cd_possible_moves_loaded
             nonlocal speed_retreats_loaded
@@ -859,6 +902,9 @@ def change_pace_parameters_game():
                 status = False
                 return
 
+            deadline_hour_loaded = req_result['deadline_hour']
+            deadline_sync_loaded = req_result['deadline_sync']
+            grace_duration_loaded = req_result['grace_duration']
             speed_moves_loaded = req_result['speed_moves']
             cd_possible_moves_loaded = req_result['cd_possible_moves']
             speed_retreats_loaded = req_result['speed_retreats']
@@ -896,6 +942,18 @@ def change_pace_parameters_game():
             InfoDialog("OK", f"Les paramètres de cadence ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
 
         try:
+            deadline_hour = int(input_deadline_hour.value)
+        except:  # noqa: E722 pylint: disable=bare-except
+            deadline_hour = None
+
+        deadline_sync = int(input_deadline_sync.checked)
+
+        try:
+            grace_duration = int(input_grace_duration.value)
+        except:  # noqa: E722 pylint: disable=bare-except
+            grace_duration = None
+
+        try:
             speed_moves = int(input_speed_moves.value)
         except:  # noqa: E722 pylint: disable=bare-except
             speed_moves = None
@@ -921,6 +979,9 @@ def change_pace_parameters_game():
         json_dict = {
             'pseudo': pseudo,
             'name': game,
+            'deadline_hour': deadline_hour,
+            'deadline_sync': deadline_sync,
+            'grace_duration': grace_duration,
             'speed_moves': speed_moves,
             'cd_possible_moves': cd_possible_moves,
             'speed_retreats': speed_retreats,
@@ -949,6 +1010,26 @@ def change_pace_parameters_game():
     form = html.FORM()
 
     form <= information_about_game()
+    form <= html.BR()
+
+    # deadline related
+
+    legend_deadline_hour = html.LEGEND("heure de date limite", title="Heure GMT de la journée à laquelle placer les dates limites")
+    form <= legend_deadline_hour
+    input_deadline_hour = html.INPUT(type="number", value=deadline_hour_loaded)
+    form <= input_deadline_hour
+    form <= html.BR()
+
+    legend_deadline_sync = html.LEGEND("synchronisation des date limites", title="Faut-il synchroniser les dates limites à une heure donnée")
+    form <= legend_deadline_sync
+    input_deadline_sync = html.INPUT(type="checkbox", checked=deadline_sync_loaded)
+    form <= input_deadline_sync
+    form <= html.BR()
+
+    legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre de jours (minutes pour une partie rapide) alloués avant fin de la grâce")
+    form <= legend_grace_duration
+    input_grace_duration = html.INPUT(type="number", value=grace_duration_loaded)
+    form <= input_grace_duration
     form <= html.BR()
 
     # moves
