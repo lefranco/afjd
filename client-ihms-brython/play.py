@@ -47,11 +47,11 @@ def get_game_status(variant_data, game_parameters_loaded, full):
         if remains < 0:
             countdown_elt.text = "passée !"
         elif remains < 60:
-            countdown_elt.text = f"{remains}s"
+            countdown_elt.text = f"{remains:02}s"
         elif remains < 3600:
-            countdown_elt.text = f"{remains // 60}mn {remains % 60}s"
+            countdown_elt.text = f"{remains // 60:02}mn {remains % 60:02}s"
         elif remains < 24 * 3600:
-            countdown_elt.text = f"~ {remains // 3600}h"
+            countdown_elt.text = f"~ {remains // 3600:02}h"
         else:
             countdown_elt.text = f"~ {remains // (24 * 3600)}j"
 
