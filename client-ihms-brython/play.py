@@ -3078,7 +3078,6 @@ def game_master():
 
         return pseudo_list
 
-
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -3317,7 +3316,6 @@ def game_master():
     # cannot be game master unless archive game
     if game_parameters_loaded['fast']:
         my_sub_panel <= "partie rapide : passage en mode automatique ?"
-
 
 
 def show_game_parameters():
