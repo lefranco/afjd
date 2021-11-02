@@ -113,7 +113,7 @@ def show_games_data(game_state):
 def show_tournaments_data():
     """ show_tournaments_data """
 
-    # TODO
+    # TODO : liste des tournois
     my_sub_panel <= "ICI liste des tournois avec leurs parties - Pas encore implémenté, désolé !"
 
 
