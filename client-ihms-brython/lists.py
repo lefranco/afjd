@@ -6,6 +6,7 @@ import datetime
 
 from browser import html  # pylint: disable=import-error
 
+import config
 import common
 
 my_panel = html.DIV(id="players")
@@ -34,7 +35,7 @@ def show_players_data():
         thead <= col
     players_table <= thead
 
-    code_country_table = {v: k for k, v in common.COUNTRY_CODE_TABLE.items()}
+    code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
 
     count = 0
     for data in sorted(players_dict.values(), key=lambda g: g['pseudo'].upper()):

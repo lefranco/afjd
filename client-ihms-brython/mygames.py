@@ -266,7 +266,7 @@ def my_games(state):
                 value = ""
                 if role_id is not None:
                     # get time stamp of last visit of declarations
-                    time_stamp_last_visit = common.last_visit_load(game_id, common.DECLARATIONS_TYPE)
+                    time_stamp_last_visit = common.last_visit_load(game_id, config.DECLARATIONS_TYPE)
                     if time_stamp_last_visit is None:
                         return
                     time_stamp_last_event = common.last_game_declaration(game_id)
@@ -284,7 +284,7 @@ def my_games(state):
                 value = ""
                 if role_id is not None:
                     # get time stamp of last visit of declarations
-                    time_stamp_last_visit = common.last_visit_load(game_id, common.MESSAGES_TYPE)
+                    time_stamp_last_visit = common.last_visit_load(game_id, config.MESSAGES_TYPE)
                     if time_stamp_last_visit is None:
                         return
                     time_stamp_last_event = common.last_game_message(game_id, role_id)
