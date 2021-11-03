@@ -286,7 +286,7 @@ def my_games(state):
                     before_el = time.time()
 
                     # get time stamp of last visit of declarations
-                    time_stamp_last_visit = common.last_visit_load(game_id, common.DECLARATIONS_TYPE)
+                    time_stamp_last_visit = common.last_visit_load(game_id, config.DECLARATIONS_TYPE)
                     if time_stamp_last_visit is None:
                         return
                     time_stamp_last_event = common.last_game_declaration(game_id)

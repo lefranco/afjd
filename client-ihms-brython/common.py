@@ -11,20 +11,6 @@ import config
 import mapping
 
 
-# load country list from json data file
-with open("./data/country_list.json", "r") as read_file:
-    COUNTRY_CODE_TABLE = json.load(read_file)
-
-
-# load timezone list from json data file
-with open("./data/timezone_list.json", "r") as read_file:
-    TIMEZONE_CODE_TABLE = json.load(read_file)
-
-
-DECLARATIONS_TYPE = 0
-MESSAGES_TYPE = 1
-
-
 def noreply_callback(_):
     """ noreply_callback """
     alert("Problème (pas de réponse de la part du serveur)")

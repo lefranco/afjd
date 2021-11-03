@@ -2170,10 +2170,10 @@ def negotiate():
         return
 
     # get time stamp of last visit of declarations
-    time_stamp_last_visit = common.last_visit_load(game_id, common.MESSAGES_TYPE)
+    time_stamp_last_visit = common.last_visit_load(game_id, config.MESSAGES_TYPE)
 
     # put time stamp of last visit of declarations as now
-    common.last_visit_update(game_id, pseudo, role_id, common.MESSAGES_TYPE)
+    common.last_visit_update(game_id, pseudo, role_id, config.MESSAGES_TYPE)
 
     # get variant name
     variant_name_loaded = common.game_variant_name_reload(game)
@@ -2442,10 +2442,10 @@ def declare():
         return
 
     # get time stamp of last visit of declarations
-    time_stamp_last_visit = common.last_visit_load(game_id, common.DECLARATIONS_TYPE)
+    time_stamp_last_visit = common.last_visit_load(game_id, config.DECLARATIONS_TYPE)
 
     # put time stamp of last visit of declarations as now
-    common.last_visit_update(game_id, pseudo, role_id, common.DECLARATIONS_TYPE)
+    common.last_visit_update(game_id, pseudo, role_id, config.DECLARATIONS_TYPE)
 
     # from game name get variant name
     variant_name_loaded = common.game_variant_name_reload(game)

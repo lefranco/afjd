@@ -95,9 +95,9 @@ def create_account():
         family_name = input_family_name.value
         first_name = input_first_name.value
 
-        residence_code = common.COUNTRY_CODE_TABLE[input_residence.value]
-        nationality_code = common.COUNTRY_CODE_TABLE[input_nationality.value]
-        timezone_code = common.TIMEZONE_CODE_TABLE[input_timezone.value]
+        residence_code = config.COUNTRY_CODE_TABLE[input_residence.value]
+        nationality_code = config.COUNTRY_CODE_TABLE[input_nationality.value]
+        timezone_code = config.TIMEZONE_CODE_TABLE[input_timezone.value]
 
         json_dict = {
             'pseudo': pseudo,
@@ -180,9 +180,9 @@ def create_account():
     form <= legend_residence
     input_residence = html.SELECT(type="select-one", value="")
 
-    for country_name in common.COUNTRY_CODE_TABLE:
+    for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if common.COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
+        if config.COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
             option.selected = True
         input_residence <= option
 
@@ -193,9 +193,9 @@ def create_account():
     form <= legend_nationality
     input_nationality = html.SELECT(type="select-one", value="")
 
-    for country_name in common.COUNTRY_CODE_TABLE:
+    for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if common.COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
+        if config.COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
             option.selected = True
         input_nationality <= option
 
@@ -206,9 +206,9 @@ def create_account():
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
-    for timezone_cities in common.TIMEZONE_CODE_TABLE:
+    for timezone_cities in config.TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
-        if common.TIMEZONE_CODE_TABLE[timezone_cities] == DEFAULT_TIMEZONE_CODE:
+        if config.TIMEZONE_CODE_TABLE[timezone_cities] == DEFAULT_TIMEZONE_CODE:
             option.selected = True
         input_timezone <= option
 
@@ -491,9 +491,9 @@ def edit_account():
         family_name = input_family_name.value
         first_name = input_first_name.value
 
-        residence_code = common.COUNTRY_CODE_TABLE[input_residence.value]
-        nationality_code = common.COUNTRY_CODE_TABLE[input_nationality.value]
-        timezone_code = common.TIMEZONE_CODE_TABLE[input_timezone.value]
+        residence_code = config.COUNTRY_CODE_TABLE[input_residence.value]
+        nationality_code = config.COUNTRY_CODE_TABLE[input_nationality.value]
+        timezone_code = config.TIMEZONE_CODE_TABLE[input_timezone.value]
 
         json_dict = {
             'pseudo': pseudo,
@@ -573,9 +573,9 @@ def edit_account():
     form <= legend_residence
     input_residence = html.SELECT(type="select-one", value="")
 
-    for country_name in common.COUNTRY_CODE_TABLE:
+    for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if common.COUNTRY_CODE_TABLE[country_name] == residence_loaded_code:
+        if config.COUNTRY_CODE_TABLE[country_name] == residence_loaded_code:
             option.selected = True
         input_residence <= option
 
@@ -586,9 +586,9 @@ def edit_account():
     form <= legend_nationality
     input_nationality = html.SELECT(type="select-one", value="")
 
-    for country_name in common.COUNTRY_CODE_TABLE:
+    for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if common.COUNTRY_CODE_TABLE[country_name] == nationality_loaded_code:
+        if config.COUNTRY_CODE_TABLE[country_name] == nationality_loaded_code:
             option.selected = True
         input_nationality <= option
 
@@ -598,9 +598,9 @@ def edit_account():
     form <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
-    for timezone_cities in common.TIMEZONE_CODE_TABLE:
+    for timezone_cities in config.TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
-        if common.TIMEZONE_CODE_TABLE[timezone_cities] == timezone_loaded_code:
+        if config.TIMEZONE_CODE_TABLE[timezone_cities] == timezone_loaded_code:
             option.selected = True
         input_timezone <= option
 
