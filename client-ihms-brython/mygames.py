@@ -307,7 +307,16 @@ def my_games(state):
 
             if field == 'go_away':
 
-                link = html.A(href=f"?game={game_name}", target="_blank")
+                if role_id is None:
+                    # TODO improve this with real admin account
+                    if pseudo == "Palpatine":
+                        page = 'admin'
+                else:
+                    if role_id == 0:
+                        page = 'master'
+                    else:
+                        page = 'player'
+                link = html.A(href=f"?game={game_name}&page={page}", target="_blank")
                 link <= "On y va"
                 link.style = {
                     'color': 'blue',
