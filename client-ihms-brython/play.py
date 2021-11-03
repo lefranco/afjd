@@ -318,6 +318,18 @@ def show_position():
 
     report_window = common.make_report_window(report_loaded)
 
+    # if connected, then find if has a role
+    role_id = None
+    if 'PSEUDO' in storage:
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        # from game_id and token get role
+        role_id = common.get_role_allocated_to_player(game_id)
+        # role_id can be none
+
     # left side
 
     display_left = html.DIV(id='display_left')
@@ -332,6 +344,14 @@ def show_position():
 
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+    # role flag if applicable
+    if role_id is not None:
+        role = variant_data.roles[role_id]
+        role_name = variant_data.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
+        buttons_right <= role_icon_img
+
     put_export_sandbox(buttons_right)
 
     # overall
@@ -2714,7 +2734,9 @@ def vote():
 def show_history():
     """ show_history """
 
-    def transition_display_callback(_, advancement_selected: int):
+    role_icon_img = None
+
+    def transition_display_callback(_, advancement_selected):
 
         def callback_render(_):
             """ callback_render """
@@ -2799,6 +2821,9 @@ def show_history():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+        if role_icon_img is not None:
+            buttons_right <= role_icon_img
+
         buttons_right <= html.BR()
         input_first = html.INPUT(type="submit", value="||<<")
         input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
@@ -2877,6 +2902,24 @@ def show_history():
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
+    # if connected, then find if has a role
+    role_icon_img = None
+    if 'PSEUDO' in storage:
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        # from game_id and token get role
+        role_id = common.get_role_allocated_to_player(game_id)
+        # role_id can be none
+
+        # role flag if applicable
+        if role_id is not None:
+            role = variant_data.roles[role_id]
+            role_name = variant_data.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
 
     # put it there to remove it at first display
     my_sub_panel2 = html.DIV()
