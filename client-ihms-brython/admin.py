@@ -300,16 +300,38 @@ def all_games(state):
     if games_dict is None:
         return
 
+    # avoids a warning
+    games_dict = dict(games_dict)
+
+    # get the players (masters)
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        return
+
+    # get the link (allocations) of game masters
+    game_masters_list = common.get_game_masters_data()
+
+    if not game_masters_list:
+        return
+
+    # fill table game -> master
+    game_master_dict = dict()
+    for game_data in game_masters_list:
+        game = games_dict[str(game_data['game'])]['name']
+        master = players_dict[str(game_data['master'])]['pseudo']
+        game_master_dict[game] = master
+
     time_stamp_now = time.time()
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'jump_here', 'go_away']
+    fields = ['name', 'master', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'jump_here', 'go_away']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres soumis sur la partie', 'jump_here': 'sauter dans la partie', 'go_away': 'aller dans la partie (nouvel onglet)'}[field]
+        field_fr = {'name': 'nom', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres soumis sur la partie', 'jump_here': 'sauter dans la partie', 'go_away': 'aller dans la partie (nouvel onglet)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -380,6 +402,7 @@ def all_games(state):
         # just to avoid a warning
         submitted_data = dict(submitted_data)
 
+        data['master'] = None
         data['all_orders_submitted'] = None
         data['jump_here'] = None
         data['go_away'] = None
@@ -389,6 +412,11 @@ def all_games(state):
 
             value = data[field]
             colour = 'black'
+
+            if field == 'master':
+                game_name = data['name']
+                master_name = game_master_dict[game_name]
+                value = master_name
 
             if field == 'deadline':
                 deadline_loaded = value
