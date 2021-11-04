@@ -3851,18 +3851,5 @@ def render(panel_middle):
     # always back to top
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
-
-    if 'game' in document.query and 'page' in document.query:
-        page = document.query['page']
-        if page == 'player':
-            load_option(None, 'ordonner')
-        elif page == 'master':
-            load_option(None, 'arbitrer')
-        elif page == 'admin':
-            load_option(None, 'ordres')
-        else:
-            load_option(None, item_name_selected)
-    else:
-        load_option(None, item_name_selected)
-
+    load_option(None, item_name_selected)
     panel_middle <= my_panel
