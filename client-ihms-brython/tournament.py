@@ -8,7 +8,7 @@ from browser import html  # pylint: disable=import-error
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['classement', 'parties', 'ajouter partie', 'retirer partie', 'diriger', 'ne plus diriger']
+OPTIONS = ['classement', 'parties', 's\'inscrire', 'ajouter partie', 'retirer partie', 'diriger', 'ne plus diriger']
 
 
 def ratings():
@@ -23,6 +23,13 @@ def games():
 
     # TODO état des parties du tournoi
     my_sub_panel <= "ICI état des parties du tournoi - Pas encore implémenté, désolé !"
+
+
+def register():
+    """ games """
+
+    # TODO s'inscrire au tournoi
+    my_sub_panel <= "ICI possibilité de s'inscrire au tournoi - Pas encore implémenté, désolé !"
 
 
 def add_game():
@@ -80,6 +87,8 @@ def load_option(_, item_name):
         ratings()
     if item_name == 'parties':
         games()
+    if item_name == 's\'inscrire':
+        register()
     if item_name == 'ajouter partie':
         add_game()
     if item_name == 'retirer partie':
