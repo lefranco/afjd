@@ -2718,7 +2718,20 @@ def vote():
     input_vote_in_game.bind("click", add_vote_callback)
     form <= input_vote_in_game
 
+    # game parameters
+    game_parameters_loaded = common.game_parameters_reload(game)
+    if not game_parameters_loaded:
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_parameters_loaded = dict(game_parameters_loaded)
+
     my_sub_panel.clear()
+
+    # header
+    game_status = get_game_status(variant_data, game_parameters_loaded, False)
+    my_sub_panel <= game_status
+    my_sub_panel <= html.BR()
 
     # role
     role = variant_data.roles[role_id]
