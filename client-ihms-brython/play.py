@@ -3863,6 +3863,51 @@ def render(panel_middle):
 
     # always back to top
     global item_name_selected  # pylint: disable=invalid-name
-    item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
+
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' in storage:
+
+        pseudo = storage['PSEUDO']
+
+        # from game name get game id
+
+        game_id = common.get_game_id(game)
+        if game_id is None:
+            return
+
+        # from game_id and token get role
+
+        role_id = common.get_role_allocated_to_player(game_id)
+
+        if role_id is not None:
+
+            if role_id == 0:
+                # Arbitre
+                item_name_selected = 'arbitrer'
+            else:
+                # Joueur
+                item_name_selected = 'ordonner'
+
+        else:
+
+            # TODO improve this with real admin account
+            if pseudo == "Palpatine":
+                # Admin
+                item_name_selected = 'ordres'
+
+            else:
+                # Connecté mais pas joueur
+                item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
+
+    else:
+        # Pas connecté
+        item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
+
     load_option(None, item_name_selected)
     panel_middle <= my_panel
