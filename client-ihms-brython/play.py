@@ -266,11 +266,6 @@ def show_position():
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
-    # get the position from server
-    position_loaded = common.game_position_reload(game)
-    if not position_loaded:
-        return
-
     game_parameters_loaded = common.game_parameters_reload(game)
     if not game_parameters_loaded:
         return
@@ -280,6 +275,11 @@ def show_position():
 
     game_status = get_game_status(variant_data, game_parameters_loaded, True)
     my_sub_panel <= game_status
+
+    # get the position from server
+    position_loaded = common.game_position_reload(game)
+    if not position_loaded:
+        return
 
     # digest the position
     position_data = mapping.Position(position_loaded, variant_data)
