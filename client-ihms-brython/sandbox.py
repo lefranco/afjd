@@ -5,7 +5,6 @@
 import json
 import enum
 import time
-import collections
 
 from browser import document, html, ajax, alert   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -100,11 +99,13 @@ def import_position(new_position_data):
 
     # get loaded units
     loaded_units = new_position_data.save_json()
-    dict_loaded_units = collections.defaultdict(list)
+    dict_loaded_units = dict()
     for loaded_unit in loaded_units:
         type_num = loaded_unit['type_unit']
         role_num = loaded_unit['role']
         zone_num = loaded_unit['zone']
+        if role_num not in dict_loaded_units:
+            dict_loaded_units[role_num] = list()
         dict_loaded_units[role_num].append([type_num, zone_num])
 
     # get loaded centers for convenience
