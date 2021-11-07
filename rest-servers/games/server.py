@@ -1542,9 +1542,9 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         del sql_executor  # noqa: F821
 
         if adjudicated:
-            data = {'msg': f"Ok adjudication was performed (initiated by game master): {agreement_report}"}
+            data = {'adjudicated': adjudicated, 'msg': f"Ok adjudication was performed (initiated by game master): {agreement_report}"}
         else:
-            data = {'msg': f"Ok agreement {bool(definitive_value)} stored for role {role_id} (forced by game master) (game adjudication:{agreement_report})"}
+            data = {'adjudicated': adjudicated, 'msg': f"Ok agreement {bool(definitive_value)} stored for role {role_id} (forced by game master) (game adjudication:{agreement_report})"}
         return data, 201
 
 
@@ -1818,9 +1818,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         del sql_executor  # noqa: F821
 
         if adjudicated:
-            data = {'msg': f"Ok adjudication was performed (initiated by player): {agreement_report}"}
+            data = {'adjudicated': adjudicated, 'msg': f"Ok adjudication was performed (initiated by player): {agreement_report}"}
         else:
-            data = {'msg': f"Ok orders submitted {submission_report} and agreement {bool(definitive_value)} stored for role {role_id} (from player) (game adjudication:{agreement_report})"}
+            data = {'adjudicated': adjudicated, 'msg': f"Ok orders submitted {submission_report} and agreement {bool(definitive_value)} stored for role {role_id} (from player) (game adjudication:{agreement_report})"}
 
         return data, 201
 
