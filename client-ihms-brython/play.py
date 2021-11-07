@@ -67,16 +67,6 @@ g_position_data = None  # pylint: disable=invalid-name
 g_report_loaded = None  # pylint: disable=invalid-name
 
 
-def stack_role_flag(frame):
-    """ stack_role_flag """
-
-    # role flag
-    role = g_variant_data.roles[g_role_id]
-    role_name = g_variant_data.name_table[role]
-    role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{g_role_id}.jpg", title=role_name)
-    frame <= role_icon_img
-
-
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
@@ -123,12 +113,14 @@ def load_static_stuff():
     # less useful but in more than one page so here
 
     # get the players of the game
-    global g_game_players_dict  # pylint: disable=invalid-name
-    g_game_players_dict = get_game_players_data(g_game_id)
-    if not g_game_players_dict:
-        alert("Erreur chargement joueurs de la partie")
-        return
-    g_game_players_dict = dict(g_game_players_dict)  # avoids a warning
+    # need a token for this
+    if g_pseudo:
+        global g_game_players_dict  # pylint: disable=invalid-name
+        g_game_players_dict = get_game_players_data(g_game_id)
+        if not g_game_players_dict:
+            alert("Erreur chargement joueurs de la partie")
+            return
+        g_game_players_dict = dict(g_game_players_dict)  # avoids a warning
 
 
 def load_dynamic_stuff():
@@ -164,6 +156,16 @@ def load_dynamic_stuff():
     if g_report_loaded is None:
         alert("Erreur chargement rapport")
         return
+
+
+def stack_role_flag(frame):
+    """ stack_role_flag """
+
+    # role flag
+    role = g_variant_data.roles[g_role_id]
+    role_name = g_variant_data.name_table[role]
+    role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{g_role_id}.jpg", title=role_name)
+    frame <= role_icon_img
 
 
 def get_game_status(variant_data, game_parameters_loaded, game_id):
@@ -322,7 +324,7 @@ def get_game_players_data(game_id):
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/game-allocations/{game_id}"
 
-    # getting game allocation : do not need a token
+    # getting game allocation : need a token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return game_players_dict
@@ -2628,7 +2630,9 @@ def show_history():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-        stack_role_flag(buttons_right)
+        # role flag if applicable
+        if g_role_id is not None:
+            stack_role_flag(buttons_right)
 
         buttons_right <= html.BR()
         input_first = html.INPUT(type="submit", value="||<<")
