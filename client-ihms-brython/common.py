@@ -258,7 +258,7 @@ def game_variant_content_reload(variant_name):
     return variant_content_loaded
 
 
-def game_position_reload(game):
+def game_position_reload(game_id):
     """ game_position_reload """
 
     position_loaded = None
@@ -277,10 +277,6 @@ def game_position_reload(game):
 
         position_loaded = dict(req_result)
 
-    game_id = get_game_id(game)
-    if game_id is None:
-        return None
-
     json_dict = dict()
 
     host = config.SERVER_CONFIG['GAME']['HOST']
@@ -293,7 +289,7 @@ def game_position_reload(game):
     return position_loaded
 
 
-def game_report_reload(game):
+def game_report_reload(game_id):
     """ game_report_reload """
 
     report_loaded = None
@@ -312,10 +308,6 @@ def game_report_reload(game):
 
         report_loaded = req_result['content']
 
-    game_id = get_game_id(game)
-    if game_id is None:
-        return None
-
     json_dict = dict()
 
     host = config.SERVER_CONFIG['GAME']['HOST']
@@ -328,7 +320,7 @@ def game_report_reload(game):
     return report_loaded
 
 
-def game_transition_reload(game, advancement):
+def game_transition_reload(game_id, advancement):
     """ game_transition_reload """
 
     transition_loaded = None
@@ -347,10 +339,6 @@ def game_transition_reload(game, advancement):
 
         transition_loaded = req_result
 
-    game_id = get_game_id(game)
-    if game_id is None:
-        return None
-
     json_dict = dict()
 
     host = config.SERVER_CONFIG['GAME']['HOST']
@@ -363,7 +351,7 @@ def game_transition_reload(game, advancement):
     return transition_loaded
 
 
-def game_orders_reload(game):
+def game_orders_reload(game_id):
     """ game_orders_reload """
 
     orders_loaded = None
@@ -382,10 +370,6 @@ def game_orders_reload(game):
 
         orders_loaded = dict(req_result)
 
-    game_id = get_game_id(game)
-    if game_id is None:
-        return None
-
     json_dict = dict()
 
     host = config.SERVER_CONFIG['GAME']['HOST']
@@ -398,7 +382,7 @@ def game_orders_reload(game):
     return orders_loaded
 
 
-def game_communication_orders_reload(game):
+def game_communication_orders_reload(game_id):
     """ game_communication_orders_reload """
 
     orders_loaded = None
@@ -416,10 +400,6 @@ def game_communication_orders_reload(game):
             return
 
         orders_loaded = dict(req_result)
-
-    game_id = get_game_id(game)
-    if game_id is None:
-        return None
 
     json_dict = dict()
 

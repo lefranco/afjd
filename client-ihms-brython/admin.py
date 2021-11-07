@@ -847,8 +847,12 @@ def rectify():
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
+    game_id = common.get_game_id(game)
+    if game_id is None:
+        return
+
     # get the position from server
-    position_loaded = common.game_position_reload(game)
+    position_loaded = common.game_position_reload(game_id)
     if not position_loaded:
         return
 
