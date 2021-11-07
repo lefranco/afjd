@@ -3864,7 +3864,6 @@ def render(panel_middle):
     # always back to top
     global item_name_selected  # pylint: disable=invalid-name
 
-
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
