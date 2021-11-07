@@ -44,10 +44,13 @@ content_backup = None  # pylint: disable=invalid-name
 
 # global data below
 
+# loaded in render()
 g_game_id = None  # pylint: disable=invalid-name
 g_pseudo = None  # pylint: disable=invalid-name
 g_role_id = None  # pylint: disable=invalid-name
 
+# loaded in load_static_stuff
+g_players_dict = None  # pylint: disable=invalid-name
 g_game = None  # pylint: disable=invalid-name
 g_variant_name_loaded = None  # pylint: disable=invalid-name
 g_variant_content_loaded = None  # pylint: disable=invalid-name
@@ -55,13 +58,13 @@ g_display_chosen = None  # pylint: disable=invalid-name
 g_parameters_read = None  # pylint: disable=invalid-name
 g_variant_data = None  # pylint: disable=invalid-name
 g_game_parameters_loaded = None  # pylint: disable=invalid-name
+g_game_players_dict = None  # pylint: disable=invalid-name
+
+# loaded in load_dynamic_stuff
 g_game_status = None  # pylint: disable=invalid-name
 g_position_loaded = None  # pylint: disable=invalid-name
 g_position_data = None  # pylint: disable=invalid-name
 g_report_loaded = None  # pylint: disable=invalid-name
-
-g_game_players_dict = None  # pylint: disable=invalid-name
-g_players_dict = None  # pylint: disable=invalid-name
 
 
 def stack_role_flag(frame):
@@ -74,8 +77,8 @@ def stack_role_flag(frame):
     frame <= role_icon_img
 
 
-def load_stuff():
-    """ load_stuff : loads global data """
+def load_static_stuff():
+    """ load_static_stuff : loads global data """
 
     # need to be first since used in get_game_status()
     # get the players (all players)
@@ -117,7 +120,21 @@ def load_stuff():
     global g_variant_data  # pylint: disable=invalid-name
     g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_parameters_read)
 
-    # now game parameters
+    # less useful but in more than one page so here
+
+    # get the players of the game
+    global g_game_players_dict  # pylint: disable=invalid-name
+    g_game_players_dict = get_game_players_data(g_game_id)
+    if not g_game_players_dict:
+        alert("Erreur chargement joueurs de la partie")
+        return
+    g_game_players_dict = dict(g_game_players_dict)  # avoids a warning
+
+
+def load_dynamic_stuff():
+    """ load_dynamic_stuff : loads global data """
+
+    # now game parameters (dynamic since advancement is dynamic)
     global g_game_parameters_loaded  # pylint: disable=invalid-name
     g_game_parameters_loaded = common.game_parameters_reload(g_game)
     if not g_game_parameters_loaded:
@@ -141,21 +158,12 @@ def load_stuff():
     global g_position_data  # pylint: disable=invalid-name
     g_position_data = mapping.Position(g_position_loaded, g_variant_data)
 
+    # need to be after game parameters (advancement -> season)
     global g_report_loaded  # pylint: disable=invalid-name
     g_report_loaded = common.game_report_reload(g_game_id)
     if g_report_loaded is None:
         alert("Erreur chargement rapport")
         return
-
-    # less useful but in more than one page so here
-
-    # get the players of the game
-    global g_game_players_dict  # pylint: disable=invalid-name
-    g_game_players_dict = get_game_players_data(g_game_id)
-    if not g_game_players_dict:
-        alert("Erreur chargement joueurs de la partie")
-        return
-    g_game_players_dict = dict(g_game_players_dict)  # avoids a warning
 
 
 def get_game_status(variant_data, game_parameters_loaded, game_id):
@@ -455,6 +463,53 @@ def submit_orders():
 
     input_definitive = None
 
+    def submit_orders_callback(_):
+        """ submit_orders_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la soumission d'ordres : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la soumission d'ordres : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez soumis les ordres : {messages}", remove_after=config.REMOVE_AFTER)
+
+            adjudicated = req_result['adjudicated']
+            if adjudicated:
+                alert("La position de la partie a changé !")
+                load_dynamic_stuff()
+                my_sub_panel.clear()
+                submit_orders()
+
+        names_dict = g_variant_data.extract_names()
+        names_dict_json = json.dumps(names_dict)
+
+        orders_list_dict = orders_data.save_json()
+        orders_list_dict_json = json.dumps(orders_list_dict)
+
+        definitive_value = input_definitive.checked
+
+        json_dict = {
+            'role_id': g_role_id,
+            'pseudo': g_pseudo,
+            'orders': orders_list_dict_json,
+            'definitive': definitive_value,
+            'names': names_dict_json
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-orders/{g_game_id}"
+
+        # submitting orders : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     def rest_hold_callback(_):
         """ rest_hold_callback """
 
@@ -544,46 +599,6 @@ def submit_orders():
 
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
-
-    def submit_orders_callback(_):
-        """ submit_orders_callback """
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 201:
-                if 'message' in req_result:
-                    alert(f"Erreur à la soumission d'ordres : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la soumission d'ordres : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez soumis les ordres : {messages}", remove_after=config.REMOVE_AFTER)
-
-        names_dict = g_variant_data.extract_names()
-        names_dict_json = json.dumps(names_dict)
-
-        orders_list_dict = orders_data.save_json()
-        orders_list_dict_json = json.dumps(orders_list_dict)
-
-        definitive_value = input_definitive.checked
-
-        json_dict = {
-            'role_id': g_role_id,
-            'pseudo': g_pseudo,
-            'orders': orders_list_dict_json,
-            'definitive': definitive_value,
-            'names': names_dict_json
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-orders/{g_game_id}"
-
-        # submitting orders : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def select_built_unit_type_callback(_, build_unit_type):
         """ select_built_unit_type_callback """
@@ -1394,35 +1409,6 @@ def submit_communication_orders():
     stored_event = None
     down_click_time = None
 
-    def erase_all_callback(_):
-        """ erase_all_callback """
-
-        nonlocal automaton_state
-        nonlocal buttons_right
-
-        # erase orders
-        orders_data.erase_orders()
-
-        # update displayed map
-        callback_render(None)
-
-        my_sub_panel2.removeChild(buttons_right)
-        buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-
-        stack_role_flag(buttons_right)
-
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
-        buttons_right <= legend_select_unit
-        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-
-        stack_orders(buttons_right)
-        buttons_right <= html.BR()
-        put_submit(buttons_right)
-
-        my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
-
     def submit_orders_callback(_):
         """ submit_orders_callback """
 
@@ -1455,6 +1441,35 @@ def submit_communication_orders():
 
         # submitting orders : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def erase_all_callback(_):
+        """ erase_all_callback """
+
+        nonlocal automaton_state
+        nonlocal buttons_right
+
+        # erase orders
+        orders_data.erase_orders()
+
+        # update displayed map
+        callback_render(None)
+
+        my_sub_panel2.removeChild(buttons_right)
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+        stack_role_flag(buttons_right)
+
+        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        buttons_right <= legend_select_unit
+        automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+        stack_orders(buttons_right)
+        buttons_right <= html.BR()
+        put_submit(buttons_right)
+
+        my_sub_panel2 <= buttons_right
+        my_sub_panel <= my_sub_panel2
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
@@ -2725,6 +2740,11 @@ def game_master():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Le joueur s'est vu imposé un accord pour résoudre: {messages}", remove_after=config.REMOVE_AFTER)
 
+            adjudicated = req_result['adjudicated']
+            if adjudicated:
+                alert("La position de la partie a changé !")
+                load_dynamic_stuff()
+
             # back to where we started
             my_sub_panel.clear()
             game_master()
@@ -3422,6 +3442,8 @@ def render(panel_middle):
                 # Admin
                 item_name_selected = 'ordres'
 
-    load_stuff()
+    load_static_stuff()
+    load_dynamic_stuff()
+
     load_option(None, item_name_selected)
     panel_middle <= my_panel
