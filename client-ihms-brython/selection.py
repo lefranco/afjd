@@ -10,7 +10,7 @@ import config
 import common
 
 
-my_panel = html.DIV(id="select")
+my_panel = html.DIV(id="select")  # pylint: disable=invalid-name
 
 
 def select_game():
@@ -24,7 +24,7 @@ def select_game():
         InfoDialog("OK", f"Partie sélectionnée : {game}", remove_after=config.REMOVE_AFTER)
         show_game_selected()
 
-        render(G_PANEL_MIDDLE)
+        render(g_panel_middle)
 
     games_data = common.get_games_data()
 
@@ -85,7 +85,10 @@ def select_game():
 
             select_table <= row
 
-    return select_table
+    sub_panel = html.DIV(id='sub_panel')
+    sub_panel <= select_table
+
+    return sub_panel
 
 
 def unselect_game():
@@ -115,14 +118,14 @@ def show_game_selected():
     document <= show_game_selected_panel
 
 
-G_PANEL_MIDDLE = None
+g_panel_middle = None  # pylint: disable=invalid-name
 
 
 def render(panel_middle):
     """ render """
 
-    global G_PANEL_MIDDLE
-    G_PANEL_MIDDLE = panel_middle
+    global g_panel_middle  # pylint: disable=invalid-name
+    g_panel_middle = panel_middle
 
     my_panel.clear()
 
