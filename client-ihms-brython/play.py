@@ -2560,7 +2560,7 @@ def show_history():
             g_variant_data.render(ctx)
 
             # put the position
-            g_position_data.render(ctx)
+            position_data.render(ctx)
 
             # put the orders
             orders_data.render(ctx)
