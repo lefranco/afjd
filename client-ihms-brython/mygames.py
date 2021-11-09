@@ -118,6 +118,8 @@ def my_games(state):
 
     number_games = 0
 
+    log_info = ""
+
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
 
         # do not display finished games
@@ -127,6 +129,8 @@ def my_games(state):
         game_id = int(game_id_str)
         if game_id not in games_id_player:
             continue
+
+        log_info += f"partie {data['name']}\n"
 
         # variant is available
         variant_name_loaded = data['variant']
@@ -171,19 +175,26 @@ def my_games(state):
         # old code before optimization
         #  variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
+        before = time.time()
         role_id = common.get_role_allocated_to_player(game_id)
+        after = time.time()
+        elapsed = after - before
+        log_info += f"get_role_allocated_to_player took {elapsed}\n"
 
         number_games += 1
 
         data['role_played'] = role_id
 
+        before = time.time()
         submitted_data = None
         submitted_data = common.get_roles_submitted_orders(game_id)
         if submitted_data is None:
             return
-
         # just to avoid a warning
         submitted_data = dict(submitted_data)
+        after = time.time()
+        elapsed = after - before
+        log_info += f"get_roles_submitted_orders took {elapsed}\n"
 
         data['all_orders_submitted'] = None
         data['orders_submitted'] = None
@@ -265,6 +276,9 @@ def my_games(state):
 
                 value = ""
                 if role_id is not None:
+
+                    before = time.time()
+
                     # get time stamp of last visit of declarations
                     time_stamp_last_visit = common.last_visit_load(game_id, config.DECLARATIONS_TYPE)
                     if time_stamp_last_visit is None:
@@ -279,10 +293,18 @@ def my_games(state):
                         popup = html.IMG(src="./data/new_content.gif", title="Nouvelle(s) déclaration(s)")
                     value = popup
 
+                    after = time.time()
+                    elapsed = after - before
+                    log_info += f"declarations took {elapsed}\n"
+
+
             if field == 'new_messages':
 
                 value = ""
                 if role_id is not None:
+
+                    before = time.time()
+
                     # get time stamp of last visit of declarations
                     time_stamp_last_visit = common.last_visit_load(game_id, config.MESSAGES_TYPE)
                     if time_stamp_last_visit is None:
@@ -296,6 +318,10 @@ def my_games(state):
                     if time_stamp_last_event > time_stamp_last_visit:
                         popup = html.IMG(src="./data/new_content.gif", title="Nouveau(x) message(s)")
                     value = popup
+
+                    after = time.time()
+                    elapsed = after - before
+                    log_info += f"messages took {elapsed}\n"
 
             if field == 'jump_here':
                 game_name = data['name']
@@ -320,6 +346,8 @@ def my_games(state):
             }
 
             row <= col
+
+        log_info += "\n"
 
         games_table <= row
 
@@ -357,10 +385,15 @@ def my_games(state):
     addressees = [addressed_id]
 
     subject = f"stats pour {pseudo}"
-    body = f"{stats}"
+    body = ""
+    body += stats
+
+    body += "\n\n"
+    body += log_info
 
     # lot of useful information
     body += "\n\n"
+
     try:
         body += f"{window.navigator.connection=}\n"
     except:
