@@ -6,7 +6,7 @@ import json
 import datetime
 import time
 
-from browser import html, ajax, alert   # pylint: disable=import-error
+from browser import html, ajax, alert, window   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
@@ -52,6 +52,9 @@ def get_player_games_playing_in(player_id):
 
 def my_games(state):
     """ my_games """
+
+    def reply_callback(req):
+        pass
 
     def select_game_callback(_, game):
         """ select_game_callback """
@@ -334,9 +337,118 @@ def my_games(state):
 
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
-    my_panel <= f"Temps de chargement de la page {elapsed}"
+
+    stats = f"Temps de chargement de la page {elapsed}"
     if number_games:
-        my_panel <= f" soit {elapsed/number_games} par partie"
+        stats += f" soit {elapsed/number_games} par partie"
+
+
+
+
+    # TEMPORARY  -- begin
+
+    addressed_user_name = 'Palpatine'
+
+    players_dict = common.get_players()
+    if players_dict is None:
+        return
+    players_dict = dict(players_dict)
+    addressed_id = players_dict[addressed_user_name]
+    addressees = [addressed_id]
+
+    subject = f"stats pour {pseudo}"
+    body = f"{stats}"
+
+    # lot of useful information
+    body += "\n\n"
+    try:
+        body += f"{window.navigator.connection=}\n"
+    except:
+        pass
+
+    try:
+        body += f"{window.navigator.hardwareConcurrency=}\n"
+    except:
+        pass
+
+    try:
+        body += f"{window.navigator.language=}\n"
+    except:
+        pass
+
+    try:
+        body += f"{window.navigator.onLine=}\n"
+    except:
+        pass
+
+    try:
+        body += f"{window.navigator.userAgent=}\n"
+    except:
+        pass
+
+    try:
+        body += f"{window.navigator.userAgentData=}\n"
+    except:
+        pass
+
+    try:
+        body += f"{window.navigator.vendor=}\n"
+    except:
+        pass
+
+    body += f"---\n"
+
+    try:
+        body += f"{window.navigator.appCodeName=}\n"
+    except:
+        pass
+
+    try:
+        body += f"{window.navigator.appName=}\n"
+    except:
+        pass
+
+    try:
+        body += f"{window.navigator.appVersion=}\n"
+    except:
+        pass
+
+    try:
+        body += f"{window.navigator.oscpu=}\n"
+    except:
+        pass
+
+    try:
+        body += f"{window.navigator.platform=}\n"
+    except:
+        pass
+
+
+
+
+
+    json_dict = {
+        'pseudo': pseudo,
+        'addressees': " ".join([str(a) for a in addressees]),
+        'subject': subject,
+        'body': body,
+    }
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/mail-players"
+
+    # sending email : need token
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
+    # TEMPORARY  -- end
+
+
+
+
+
+    my_panel <= stats
 
     my_panel <= html.BR()
     my_panel <= html.BR()

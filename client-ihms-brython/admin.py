@@ -490,9 +490,12 @@ def all_games(state):
 
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
-    my_sub_panel <= f"Temps de chargement de la page {elapsed}"
+
+    stats = f"Temps de chargement de la page {elapsed}"
     if number_games:
-        my_sub_panel <= f" soit {elapsed/number_games} par partie"
+        stats += f" soit {elapsed/number_games} par partie"
+
+    my_sub_panel <= stats
 
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
