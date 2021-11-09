@@ -36,7 +36,7 @@ document <= title
 
 
 # H2
-H2 = "Moteur de jeu du site Diplomania. Version BETA (sans le graphisme)"
+H2 = "Moteur de jeu du site Diplomania. Version BETA (graphisme simplifié)"
 h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
