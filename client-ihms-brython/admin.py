@@ -449,9 +449,6 @@ def all_games(state):
                 if nb_submitted >= nb_needed:
                     # we have all orders : green
                     colour = 'green'
-                elif nb_submitted == 0:
-                    # we have no orders : red
-                    colour = 'red'
 
             if field == 'jump_here':
                 game_name = data['name']
