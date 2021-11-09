@@ -110,19 +110,6 @@ def load_static_stuff():
     global g_variant_data  # pylint: disable=invalid-name
     g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_parameters_read)
 
-    # less useful but in more than one page so here
-
-    # get the players of the game
-    # need a token for this
-    if g_pseudo:
-        global g_game_players_dict  # pylint: disable=invalid-name
-        g_game_players_dict = get_game_players_data(g_game_id)
-        if not g_game_players_dict:
-            alert("Erreur chargement joueurs de la partie")
-            return
-        g_game_players_dict = dict(g_game_players_dict)  # avoids a warning
-
-
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
 
@@ -156,6 +143,21 @@ def load_dynamic_stuff():
     if g_report_loaded is None:
         alert("Erreur chargement rapport")
         return
+
+
+def load_special_stuff():
+    """ load_special_stuff : loads global data """
+
+    # TODO improve this with real admin account
+    if g_pseudo is not None and (g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
+        global g_game_players_dict  # pylint: disable=invalid-name
+        # get the players of the game
+        # need a token for this
+        g_game_players_dict = get_game_players_data(g_game_id)
+        if not g_game_players_dict:
+            alert("Erreur chargement joueurs de la partie")
+            return
+        g_game_players_dict = dict(g_game_players_dict)  # avoids a warning
 
 
 def stack_role_flag(frame):
@@ -3163,7 +3165,8 @@ def show_players_in_game():
         return
 
     # is game anonymous
-    if g_game_parameters_loaded['anonymous'] and g_role_id != 0 and not admin.check_admin(g_pseudo):
+    # TODO improve this with real admin account
+    if not(g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
         alert("Seul l'arbitre (ou l'administrateur du site) peut voir les joueurs d'une partie anonyme")
         return
 
@@ -3242,13 +3245,14 @@ def show_orders_submitted_in_game():
         return
 
     # is player in game ?
-    if g_role_id is None:
-        if not admin.check_admin(g_pseudo):
-            alert("Seul les participants à une partie (ou l'administrateur du site) peuvent voir le statut des ordres pour une partie non anonyme")
-            return
+    # TODO improve this with real admin account
+    if not(g_pseudo == 'Palpatine' or g_role_id is not None):
+        alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir le statut des ordres pour une partie non anonyme")
+        return
 
     # game anonymous
-    if g_game_parameters_loaded['anonymous'] and g_role_id != 0 and not admin.check_admin(g_pseudo):
+    # TODO improve this with real admin account
+    if not(g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
         alert("Seul l'arbitre (ou l'administrateur du site) peut voir le statut des ordres  pour une partie anonyme")
         return
 
@@ -3448,6 +3452,7 @@ def render(panel_middle):
 
     load_static_stuff()
     load_dynamic_stuff()
+    load_special_stuff()
 
     load_option(None, item_name_selected)
     panel_middle <= my_panel
