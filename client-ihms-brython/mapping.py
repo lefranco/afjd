@@ -380,9 +380,10 @@ DISLODGED_FONT = dislodged_font()
 
 # orders
 ATTACK_COLOUR = ColourRecord(red=255, green=25, blue=25)  # red
+ATTACK_FAILED_COLOUR = ColourRecord(red=25, green=25, blue=25)  # black (not used)
 SUPPORT_COLOUR = ColourRecord(red=25, green=255, blue=25)  # green
 CONVOY_COLOUR = ColourRecord(red=25, green=25, blue=255)  # blue
-RETREAT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
+RETREAT_COLOUR = ColourRecord(red=255, green=127, blue=0)  # orange
 ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 # legend
