@@ -204,6 +204,10 @@ def create_game():
         # creating a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+        # back to where we started
+        my_sub_panel.clear()
+        change_access_parameters_game()
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
