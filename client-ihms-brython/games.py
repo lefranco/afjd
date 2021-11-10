@@ -206,7 +206,7 @@ def create_game():
 
         # back to where we started
         my_sub_panel.clear()
-        change_access_parameters_game()
+        create_game()
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
