@@ -404,7 +404,7 @@ def legend_font() -> str:
 LEGEND_FONT = legend_font()
 
 # center
-CENTER_COLOUR = ColourRecord(red=225, green=225, blue=225)  # light grey
+CENTER_COLOUR = ColourRecord(red=200, green=200, blue=200)  # light grey
 
 
 class Variant(Renderable):
