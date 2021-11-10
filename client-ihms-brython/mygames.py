@@ -126,7 +126,7 @@ def my_games(state):
 
     log_info += "\n"
 
-    for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
+    for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name'].upper()):
 
         # do not display finished games
         if data['current_state'] != state:
