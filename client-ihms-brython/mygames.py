@@ -120,6 +120,12 @@ def my_games(state):
 
     log_info = ""
 
+    now = datetime.datetime.utcnow()
+    date_str = now.strftime("%Y-%m-%d %H:%M:%S")
+    log_info += f"GMT date and time {date_str}\n"
+
+    log_info += "\n"
+
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
 
         # do not display finished games
@@ -130,7 +136,7 @@ def my_games(state):
         if game_id not in games_id_player:
             continue
 
-        log_info += f"partie {data['name']}\n"
+        log_info += f"game {data['name']}\n"
 
         # variant is available
         variant_name_loaded = data['variant']
