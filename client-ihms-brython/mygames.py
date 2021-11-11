@@ -53,7 +53,7 @@ def get_player_games_playing_in(player_id):
 def my_games(state):
     """ my_games """
 
-    def reply_callback(req):
+    def reply_callback(_):
         pass
 
     def select_game_callback(_, game):
@@ -286,10 +286,10 @@ def my_games(state):
                     before = time.time()
 
                     # get time stamp of last visit of declarations
-                    time_stamp_last_visit = common.last_visit_load(game_id, config.DECLARATIONS_TYPE)
+                    time_stamp_last_visit = common.date_last_visit_load(game_id, config.DECLARATIONS_TYPE)
                     if time_stamp_last_visit is None:
                         return
-                    time_stamp_last_event = common.last_game_declaration(game_id)
+                    time_stamp_last_event = common.date_last_declarations(game_id)
                     if time_stamp_last_event is None:
                         return
 
@@ -303,7 +303,6 @@ def my_games(state):
                     elapsed = after - before
                     log_info += f"declarations took {elapsed}\n"
 
-
             if field == 'new_messages':
 
                 value = ""
@@ -312,10 +311,10 @@ def my_games(state):
                     before = time.time()
 
                     # get time stamp of last visit of declarations
-                    time_stamp_last_visit = common.last_visit_load(game_id, config.MESSAGES_TYPE)
+                    time_stamp_last_visit = common.date_last_visit_load(game_id, config.MESSAGES_TYPE)
                     if time_stamp_last_visit is None:
                         return
-                    time_stamp_last_event = common.last_game_message(game_id, role_id)
+                    time_stamp_last_event = common.date_last_messages(game_id, role_id)
                     if time_stamp_last_event is None:
                         return
 
@@ -376,9 +375,6 @@ def my_games(state):
     if number_games:
         stats += f" soit {elapsed/number_games} par partie"
 
-
-
-
     # TEMPORARY  -- begin
 
     addressed_user_name = 'Palpatine'
@@ -402,69 +398,65 @@ def my_games(state):
 
     try:
         body += f"{window.navigator.connection=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
     try:
         body += f"{window.navigator.hardwareConcurrency=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
     try:
         body += f"{window.navigator.language=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
     try:
         body += f"{window.navigator.onLine=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
     try:
         body += f"{window.navigator.userAgent=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
     try:
         body += f"{window.navigator.userAgentData=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
     try:
         body += f"{window.navigator.vendor=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
-    body += f"---\n"
+    body += "---\n"
 
     try:
         body += f"{window.navigator.appCodeName=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
     try:
         body += f"{window.navigator.appName=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
     try:
         body += f"{window.navigator.appVersion=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
     try:
         body += f"{window.navigator.oscpu=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
 
     try:
         body += f"{window.navigator.platform=}\n"
-    except:
+    except:  # noqa: E722 pylint: disable=bare-except
         pass
-
-
-
-
 
     json_dict = {
         'pseudo': pseudo,
@@ -480,12 +472,7 @@ def my_games(state):
     # sending email : need token
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-
     # TEMPORARY  -- end
-
-
-
-
 
     my_panel <= stats
 
