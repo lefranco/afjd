@@ -312,34 +312,22 @@ def my_games(state):
                 value = ""
                 if role_id is not None:
 
-                    before = time.time()
-
                     # popup if new
                     popup = ""
                     if dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
                         popup = html.IMG(src="./data/new_content.gif", title="Nouvelle(s) déclaration(s) dans cette partie !")
                     value = popup
 
-                    after = time.time()
-                    elapsed = after - before
-                    log_info += f"declarations took {elapsed}\n"
-
             if field == 'new_messages':
 
                 value = ""
                 if role_id is not None:
-
-                    before = time.time()
 
                     # popup if new
                     popup = ""
                     if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
                         popup = html.IMG(src="./data/new_content.gif", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
-
-                    after = time.time()
-                    elapsed = after - before
-                    log_info += f"messages took {elapsed}\n"
 
             if field == 'jump_here':
                 game_name = data['name']
