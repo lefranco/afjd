@@ -2852,17 +2852,17 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/date-last-game-message/<game_id>/<role_id>')
-class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
-    """  DateLastGameMessageRessource """
+@API.resource('/date-last-declarations')
+class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
+    """  DateLastDeclarationsRessource """
 
-    def get(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
-        Gets date of last messages sent to role of game
+        Gets date of last declarations of all games in which player plays
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/date-last-game-message/<game_id>/<role_id> - GET - getting date last received messages game id=%s role_id=%s", game_id, role_id)
+        mylogger.LOGGER.info("/date-last-declarations - GET - getting date last declarations of all my games")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -2891,59 +2891,40 @@ class DateLastGameMessageRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # check user has right to read message - must be player of game master
+        # get list of games in which player is involved
+        allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
 
-        # check there is a game
-        game = games.Game.find_by_identifier(sql_executor, game_id)
-        if game is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+        dict_time_stamp: typing.Dict[int, int] = dict()
+        for game_id, _, _ in allocations_list:
 
-        # get the role
-        assert game is not None
-        role_id_found = game.find_role(sql_executor, player_id)
-        if role_id_found is None:
-            del sql_executor
-            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+            # serves as default value (long time ago)
+            time_stamp = 0
 
-        # check the role
-        if role_id_found != int(role_id):
-            del sql_executor
-            flask_restful.abort(403, msg=f"You do not seem to have role {role_id} in game {game_id}")
+            # gather declarations
+            declarations_list = declarations.Declaration.list_with_content_by_game_id(sql_executor, game_id)
+            for _, _, _, time_stamp_found, _ in declarations_list:
+                time_stamp = time_stamp_found
+                break
 
-        # serves as default value (long time ago)
-        time_stamp = 0
-
-        assert role_id is not None
-
-        # gather messages
-        messages_list = messages.Message.list_with_content_by_game_id(sql_executor, game_id)
-        for _, _, _, addressee_num, time_stamp_found, _ in messages_list:
-
-            # must be addressee
-            if addressee_num != int(role_id):
-                continue
-
-            time_stamp = time_stamp_found
-            break
+            dict_time_stamp[game_id] = time_stamp
 
         del sql_executor
 
-        data = {'time_stamp': time_stamp}
+        data = {'dict_time_stamp': dict_time_stamp}
         return data, 200
 
 
-@API.resource('/date-last-game-declaration/<game_id>')
-class DateLastGameDeclarationRessource(flask_restful.Resource):  # type: ignore
-    """  DateLastGameDeclarationRessource """
+@API.resource('/date-last-game-messages')
+class DateLastGameMessagesRessource(flask_restful.Resource):  # type: ignore
+    """  DateLastGameMessagesRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
-        Gets date of last declarations of game
+        Gets date of last messages sent to player's role in all games in which player plays
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/date-last-game-declaration/<game_id> - GET - getting date last game declarations game id=%s", game_id)
+        mylogger.LOGGER.info("/date-last-game-message - GET - getting date last received messages of all my games")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -2972,39 +2953,37 @@ class DateLastGameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # check user has right to read declaration - must be player of game master
+        # get list of games in which player is involved
+        allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
 
-        # check there is a game
-        game = games.Game.find_by_identifier(sql_executor, game_id)
-        if game is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+        dict_time_stamp: typing.Dict[int, int] = dict()
+        for game_id, _, role_id in allocations_list:
 
-        # get the role
-        assert game is not None
-        role_id_found = game.find_role(sql_executor, player_id)
-        if role_id_found is None:
-            del sql_executor
-            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+            # serves as default value (long time ago)
+            time_stamp = 0
 
-        # serves as default value (long time ago)
-        time_stamp = 0
+            # gather messages
+            messages_list = messages.Message.list_with_content_by_game_id(sql_executor, game_id)
+            for _, _, _, addressee_num, time_stamp_found, _ in messages_list:
 
-        # gather declarations
-        declarations_list = declarations.Declaration.list_with_content_by_game_id(sql_executor, game_id)
-        for _, _, _, time_stamp_found, _ in declarations_list:
-            time_stamp = time_stamp_found
-            break
+                # must be addressee
+                if addressee_num != int(role_id):
+                    continue
+
+                time_stamp = time_stamp_found
+                break
+
+            dict_time_stamp[game_id] = time_stamp
 
         del sql_executor
 
-        data = {'time_stamp': time_stamp}
+        data = {'dict_time_stamp': dict_time_stamp}
         return data, 200
 
 
 @API.resource('/game-visits/<game_id>/<visit_type>')
-class GameVisitRessource(flask_restful.Resource):  # type: ignore
-    """  GameVisitRessource """
+class GameVisitsRessource(flask_restful.Resource):  # type: ignore
+    """  GameVisitsRessource """
 
     def post(self, game_id: int, visit_type: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
@@ -3087,7 +3066,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-visits/<game_id> - GET - retrieving new visit game id=%s visit_type=%s", game_id, visit_type)
+        mylogger.LOGGER.info("/game-visits/<game_id> - GET - retrieving last visit game id=%s visit_type=%s", game_id, visit_type)
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -3132,7 +3111,7 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
 
         # serves as default (very long time ago)
-        time_stamp = 0.
+        time_stamp = 0
 
         # retrieve visit here
         assert role_id is not None
@@ -3144,6 +3123,69 @@ class GameVisitRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'time_stamp': time_stamp}
+        return data, 200
+
+
+@API.resource('/all-game-visits/<visit_type>')
+class AllGameVisitsRessource(flask_restful.Resource):  # type: ignore
+    """  AllGameVisitsRessource """
+
+    def get(self, visit_type: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Retrieve visit for all my games in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/all-game-visits - GET - retrieving last visit visit_type=%s", visit_type)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # get list of games in which player is involved
+        allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
+
+        dict_time_stamp: typing.Dict[int, int] = dict()
+        for game_id, _, role_id in allocations_list:
+
+            # serves as default (very long time ago)
+            time_stamp = 0
+
+            # retrieve visit here
+            assert role_id is not None
+            visits_list = visits.Visit.list_by_game_id_role_num(sql_executor, game_id, role_id, visit_type)
+            if visits_list:
+                visit = visits_list[0]
+                _, _, _, time_stamp = visit
+
+            dict_time_stamp[game_id] = time_stamp
+
+        del sql_executor
+
+        data = {'dict_time_stamp': dict_time_stamp}
         return data, 200
 
 

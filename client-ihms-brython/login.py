@@ -37,7 +37,7 @@ def login():
             storage['JWT_TOKEN'] = req_result['AccessToken']
             time_stamp = time.time()
             storage['LOGIN_TIME'] = str(time_stamp)
-            InfoDialog("OK", f"Logué avec succès en tant que {pseudo}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Connecté avec succès en tant que {pseudo}", remove_after=config.REMOVE_AFTER)
             show_login()
 
             render(g_panel_middle)
@@ -69,7 +69,7 @@ def login():
 
         effective = logout()
         if effective:
-            InfoDialog("OK", "Délogué avec succès", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", "Déconnecté avec succès", remove_after=config.REMOVE_AFTER)
 
         render(g_panel_middle)
 
@@ -198,7 +198,7 @@ def show_login():
 
     log_message = html.DIV()
     if 'PSEUDO' in storage:
-        log_message <= "Logué en tant que "
+        log_message <= "Connecté en tant que "
         log_message <= html.B(storage['PSEUDO'])
     else:
         log_message <= "En visite..."

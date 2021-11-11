@@ -551,6 +551,37 @@ def date_last_visit_load(game_id, visit_type):
     return time_stamp
 
 
+def date_last_visit_load_all_games(visit_type):
+    """ date_last_visit_load_all_games """
+
+    dict_time_stamp = None
+
+    def reply_callback(req):
+        nonlocal dict_time_stamp
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la dernière visite de la partie : ({visit_type}): {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la dernière visite de la partie : ({visit_type=}): {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        dict_time_stamp = req_result['dict_time_stamp']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-game-visits/{visit_type}"
+
+    # getting last visit in a game : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return dict_time_stamp
+
+
 def date_last_visit_update(game_id, pseudo, role_id, visit_type):
     """ date_last_visit_update """
 
@@ -578,66 +609,66 @@ def date_last_visit_update(game_id, pseudo, role_id, visit_type):
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
 
-def date_last_declarations(game_id):
+def date_last_declarations():
     """ date_last_declarations """
 
-    time_stamp = None
+    dict_time_stamp = None
 
     def reply_callback(req):
-        nonlocal time_stamp
+        nonlocal dict_time_stamp
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération de la dernière déclaration de la partie : {req_result['message']}")
+                alert(f"Erreur à la récupération des dates de dernières déclarations des parties jouées : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la dernière déclaration de la partie : {req_result['msg']}")
+                alert(f"Problème à la récupération des dates de dernières déclarations de parties joueées : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        time_stamp = req_result['time_stamp']
+        dict_time_stamp = req_result['dict_time_stamp']
 
     json_dict = dict()
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/date-last-game-declaration/{game_id}"
+    url = f"{host}:{port}/date-last-declarations"
 
     # getting last game declaration : need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return time_stamp
+    return dict_time_stamp
 
 
-def date_last_messages(game_id, role_id):
+def date_last_messages():
     """ date_last_messages """
 
-    time_stamp = None
+    dict_time_stamp = None
 
     def reply_callback(req):
-        nonlocal time_stamp
+        nonlocal dict_time_stamp
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération du dernier message de la partie : {req_result['message']}")
+                alert(f"Erreur à la récupération des dates des derniers messages des parties jouées : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération du dernier message de la partie : {req_result['msg']}")
+                alert(f"Problème à la récupération des dates des derniers messages des partie jouées : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        time_stamp = req_result['time_stamp']
+        dict_time_stamp = req_result['dict_time_stamp']
 
     json_dict = dict()
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/date-last-game-message/{game_id}/{role_id}"
+    url = f"{host}:{port}/date-last-game-messages"
 
     # getting last game message role : need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return time_stamp
+    return dict_time_stamp
 
 
 def make_rating_colours_window(ratings, colours):
