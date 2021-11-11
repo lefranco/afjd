@@ -101,9 +101,15 @@ def my_games(state):
 
     dict_role_id = common.get_all_roles_allocated_to_player()
     if dict_role_id is None:
-        alert("Erreur chargement des roles ans les parties")
+        alert("Erreur chargement des roles dans les parties")
         return
     dict_role_id = dict(dict_role_id)
+
+    dict_submitted_data = common.get_all_player_games_roles_submitted_orders()
+    if dict_submitted_data is None:
+        alert("Erreur chargement des soumissions dans les parties")
+        return
+    dict_submitted_data = dict(dict_submitted_data)
 
     dict_time_stamp_last_declarations = common.date_last_declarations()
     if dict_time_stamp_last_declarations is None:
@@ -143,7 +149,7 @@ def my_games(state):
         thead <= col
     games_table <= thead
 
-    games_id_player = set([int(n) for n in player_games.keys()])
+    games_id_player = {int(n) for n in player_games.keys()}
 
     # for optimization
     variant_data_memoize_table = dict()
@@ -223,17 +229,9 @@ def my_games(state):
             role_id = None
         data['role_played'] = role_id
 
-        before = time.time()
-        submitted_data = None
-        submitted_data = common.get_roles_submitted_orders(game_id)
-        if submitted_data is None:
-            alert("Erreur chargement données soumissions de la partie")
-            return
-        # just to avoid a warning
-        submitted_data = dict(submitted_data)
-        after = time.time()
-        elapsed = after - before
-        log_info += f"get_roles_submitted_orders took {elapsed}\n"
+        submitted_data = dict()
+        submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
+        submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
 
         data['all_orders_submitted'] = None
         data['orders_submitted'] = None
@@ -393,7 +391,7 @@ def my_games(state):
 
     subject = f"stats pour {pseudo}"
     body = ""
-    body += "Version V2 (opt sur déclarations/messages)"
+    body += "Version V2_f (opt sur tout)"
 
     body += "\n\n"
     body += stats

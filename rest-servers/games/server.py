@@ -2352,11 +2352,11 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
 @API.resource('/game-orders-submitted/<game_id>')
 class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
-    """ GameOrderRessource """
+    """ GameOrdersSubmittedRessource """
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[int]], int]:  # pylint: disable=no-self-use
         """
-        Gets list of roles which have submitted orders, orders are missing, orders are not needed
+        Gets list of roles which have submitted orders, orders are missing, orders are not needed for given game
         EXPOSED
         """
 
@@ -2426,6 +2426,136 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'submitted': submitted_list, 'needed': needed_list}
+        return data, 200
+
+
+@API.resource('/all-player-games-orders-submitted')
+class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
+    """ AllPlayerGamesOrdersSubmittedRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[int, typing.List[int]]], int]:  # pylint: disable=no-self-use
+        """
+        Gets list of roles which have submitted orders, orders are missing, orders are not needed for all my games
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/all-player-games-orders-submitted - GET - getting which orders submitted, missing, not needed for all my games")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # get list of games in which player is involved
+        allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
+
+        dict_submitted_list: typing.Dict[int, typing.List[int]] = dict()
+        dict_needed_list: typing.Dict[int, typing.List[int]] = dict()
+        for game_id, _, role_id in allocations_list:
+
+            # submissions_list : those who submitted orders
+            submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+            submitted_list = [o[1] for o in submissions_list]
+
+            # game is anonymous : you get only information for your own role
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+            if game.anonymous:
+                if role_id is not None and role_id != 0:
+                    submitted_list = [r for r in submitted_list if r == role_id]
+
+            dict_submitted_list[game_id] = submitted_list
+
+            # needed list : those who need to submit orders
+            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+            needed_list = [o[1] for o in actives_list]
+            dict_needed_list[game_id] = needed_list
+
+        del sql_executor
+
+        data = {'dict_submitted': dict_submitted_list, 'dict_needed': dict_needed_list}
+        return data, 200
+
+
+@API.resource('/all-games-orders-submitted')
+class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
+    """ AllGamesOrdersSubmittedRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[int, typing.List[int]]], int]:  # pylint: disable=no-self-use
+        """
+        Gets list of roles which have submitted orders, orders are missing, orders are not needed for all possible games
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/all-games-orders-submitted - GET - getting which orders submitted, missing, not needed for all possible games")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to get all games all players submitted!")
+
+        sql_executor = database.SqlExecutor()
+
+        # get list of all games
+        allocations_list = allocations.Allocation.inventory(sql_executor)
+
+        # extract list of all games identifiers
+        game_id_list = list(set(a[0] for a in allocations_list))
+
+        dict_submitted_list: typing.Dict[int, typing.List[int]] = dict()
+        dict_needed_list: typing.Dict[int, typing.List[int]] = dict()
+        for game_id in game_id_list:
+
+            # submissions_list : those who submitted orders
+            submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+            submitted_list = [o[1] for o in submissions_list]
+            dict_submitted_list[game_id] = submitted_list
+
+            # needed list : those who need to submit orders
+            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+            needed_list = [o[1] for o in actives_list]
+            dict_needed_list[game_id] = needed_list
+
+        del sql_executor
+
+        data = {'dict_submitted': dict_submitted_list, 'dict_needed': dict_needed_list}
         return data, 200
 
 

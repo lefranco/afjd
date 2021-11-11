@@ -290,14 +290,17 @@ def all_games(state):
 
     player_id = common.get_player_id(pseudo)
     if player_id is None:
+        alert("Erreur chargement identifiants des joueurs")
         return
 
     player_games = get_all_games()
     if player_games is None:
+        alert("Erreur chargement joueurs des parties")
         return
 
     games_dict = common.get_games_data()
     if games_dict is None:
+        alert("Erreur chargement dictionnaire parties")
         return
 
     # avoids a warning
@@ -307,6 +310,7 @@ def all_games(state):
     players_dict = common.get_players_data()
 
     if not players_dict:
+        alert("Erreur chargement dictionnaire des joueurs")
         return
 
     # get the link (allocations) of game masters
@@ -314,6 +318,12 @@ def all_games(state):
 
     if not game_masters_list:
         return
+
+    dict_submitted_data = common.get_all_games_roles_submitted_orders()
+    if dict_submitted_data is None:
+        alert("Erreur chargement des soumissions dans les parties")
+        return
+    dict_submitted_data = dict(dict_submitted_data)
 
     # fill table game -> master
     game_master_dict = dict()
@@ -395,12 +405,9 @@ def all_games(state):
         # old code before optimization
         #  variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
-        submitted_data = common.get_roles_submitted_orders(game_id)
-        if submitted_data is None:
-            return
-
-        # just to avoid a warning
-        submitted_data = dict(submitted_data)
+        submitted_data = dict()
+        submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
+        submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
 
         data['master'] = None
         data['all_orders_submitted'] = None
