@@ -457,8 +457,8 @@ def get_season(advancement, variant) -> None:
     return advancement_season, advancement_year
 
 
-def get_role_allocated_to_player(game_id):
-    """ get_role the player has in the game """
+def get_role_allocated_to_player_in_game(game_id):
+    """ get_role the player has in this game """
 
     role_id = None
 
@@ -467,9 +467,9 @@ def get_role_allocated_to_player(game_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération du rôle alloué au joueur : {req_result['message']}")
+                alert(f"Erreur à la récupération du rôle alloué au joueur dans la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération du rôle alloué au joueur : {req_result['msg']}")
+                alert(f"Problème à la récupération du rôle alloué au joueur dans la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
@@ -489,6 +489,36 @@ def get_role_allocated_to_player(game_id):
 
     return role_id
 
+
+def get_all_roles_allocated_to_player():
+    """ get all roles the player has in all the games """
+
+    dict_role_id = None
+
+    def reply_callback(req):
+        nonlocal dict_role_id
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des rôles alloué au joueur dans toutes les parties : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des rôles alloué au joueur dans toutes les parties : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        # a player has never more than one role
+        dict_role_id = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-games-roles"
+
+    # get players allocated to game : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return dict_role_id
 
 def get_roles_submitted_orders(game_id):
     """ get_roles_submitted_orders """

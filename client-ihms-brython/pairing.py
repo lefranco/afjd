@@ -280,7 +280,7 @@ def move_players_in_game():
 
     # from game id and token get role_id of player
 
-    role_id = common.get_role_allocated_to_player(game_id)
+    role_id = common.get_role_allocated_to_player_in_game(game_id)
     if role_id != 0:
         alert("Vous ne semblez pas être l'arbitre de cette partie")
         return

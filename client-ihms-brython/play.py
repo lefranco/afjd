@@ -3433,7 +3433,7 @@ def render(panel_middle):
 
     if g_pseudo is not None:
 
-        g_role_id = common.get_role_allocated_to_player(g_game_id)
+        g_role_id = common.get_role_allocated_to_player_in_game(g_game_id)
         if g_role_id is not None:
 
             if g_role_id == 0:
