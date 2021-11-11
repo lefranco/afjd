@@ -66,6 +66,12 @@ def my_games(state):
         # action of going to game page
         index.load_option(None, 'jouer la partie sélectionnée')
 
+    log_info = ""
+
+    now = datetime.datetime.utcnow()
+    date_str = now.strftime("%Y-%m-%d %H:%M:%S")
+    log_info += f"GMT date and time {date_str}\n"
+
     overall_time_before = time.time()
 
     my_panel.clear()
@@ -84,56 +90,92 @@ def my_games(state):
 
     pseudo = storage['PSEUDO']
 
+    time_before = time.time()
     player_id = common.get_player_id(pseudo)
     if player_id is None:
         alert("Erreur chargement identifiants joueurs")
         return
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"1) chargement identifiants joueurs {elapsed}\n"
 
+    time_before = time.time()
     player_games = get_player_games_playing_in(player_id)
     if player_games is None:
-        alert("Erreur chargement list parties joueés")
+        alert("Erreur chargement liste parties joueés")
         return
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"2) chargement liste parties joueés {elapsed}\n"
 
+    time_before = time.time()
     games_dict = common.get_games_data()
     if games_dict is None:
         alert("Erreur chargement données des parties")
         return
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"3) chargement données des parties {elapsed}\n"
 
+    time_before = time.time()
     dict_role_id = common.get_all_roles_allocated_to_player()
     if dict_role_id is None:
         alert("Erreur chargement des roles dans les parties")
         return
     dict_role_id = dict(dict_role_id)
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"4) chargement des roles dans les parties {elapsed}\n"
 
+    time_before = time.time()
     dict_submitted_data = common.get_all_player_games_roles_submitted_orders()
     if dict_submitted_data is None:
         alert("Erreur chargement des soumissions dans les parties")
         return
     dict_submitted_data = dict(dict_submitted_data)
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"5) chargement des soumissions dans les parties {elapsed}\n"
 
+    time_before = time.time()
     dict_time_stamp_last_declarations = common.date_last_declarations()
     if dict_time_stamp_last_declarations is None:
         alert("Erreur chargement dates dernières déclarations des parties")
         return
     dict_time_stamp_last_declarations = dict(dict_time_stamp_last_declarations)
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"6) chargement dates dernières déclarations des parties {elapsed}\n"
 
+    time_before = time.time()
     dict_time_stamp_last_messages = common.date_last_messages()
     if dict_time_stamp_last_messages is None:
         alert("Erreur chargement dates derniers messages des parties")
         return
     dict_time_stamp_last_messages = dict(dict_time_stamp_last_messages)
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"7) chargement dates derniers messages des parties {elapsed}\n"
 
+    time_before = time.time()
     dict_time_stamp_last_visits_declarations = common.date_last_visit_load_all_games(config.DECLARATIONS_TYPE)
     if dict_time_stamp_last_visits_declarations is None:
         alert("Erreur chargement dates visites dernières declarations des parties")
         return
     dict_time_stamp_last_visits_declarations = dict(dict_time_stamp_last_visits_declarations)
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"8) chargement dates visites dernières declarations des parties {elapsed}\n"
 
+    time_before = time.time()
     dict_time_stamp_last_visits_messages = common.date_last_visit_load_all_games(config.MESSAGES_TYPE)
     if dict_time_stamp_last_visits_messages is None:
         alert("Erreur chargement dates visites derniers messages des parties")
         return
     dict_time_stamp_last_visits_messages = dict(dict_time_stamp_last_visits_messages)
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"9) chargement dates visites derniers messages des parties {elapsed}\n"
 
     time_stamp_now = time.time()
 
@@ -157,12 +199,6 @@ def my_games(state):
 
     number_games = 0
 
-    log_info = ""
-
-    now = datetime.datetime.utcnow()
-    date_str = now.strftime("%Y-%m-%d %H:%M:%S")
-    log_info += f"GMT date and time {date_str}\n"
-
     log_info += "\n"
 
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name'].upper()):
@@ -176,7 +212,8 @@ def my_games(state):
         if game_id not in games_id_player:
             continue
 
-        log_info += f"game {data['name']}\n"
+        log_info += f"partie {data['name']}\n"
+        time_before = time.time()
 
         # variant is available
         variant_name_loaded = data['variant']
@@ -355,6 +392,9 @@ def my_games(state):
 
             row <= col
 
+        time_after = time.time()
+        elapsed = time_after - time_before
+        log_info += f"pour la partie {elapsed}\n"
         log_info += "\n"
 
         games_table <= row
@@ -374,7 +414,7 @@ def my_games(state):
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
 
-    stats = f"Temps de chargement de la page {elapsed}"
+    stats = f"Temps de chargement de la page {elapsed} avec {number_games} partie(s)"
     if number_games:
         stats += f" soit {elapsed/number_games} par partie"
 
