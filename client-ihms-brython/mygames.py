@@ -99,6 +99,12 @@ def my_games(state):
         alert("Erreur chargement données des parties")
         return
 
+    dict_role_id = common.get_all_roles_allocated_to_player()
+    if dict_role_id is None:
+        alert("Erreur chargement des roles ans les parties")
+        return
+    dict_role_id = dict(dict_role_id)
+
     dict_time_stamp_last_declarations = common.date_last_declarations()
     if dict_time_stamp_last_declarations is None:
         alert("Erreur chargement dates dernières déclarations des parties")
@@ -137,7 +143,7 @@ def my_games(state):
         thead <= col
     games_table <= thead
 
-    games_id_player = [int(n) for n in player_games.keys()]
+    games_id_player = set([int(n) for n in player_games.keys()])
 
     # for optimization
     variant_data_memoize_table = dict()
@@ -159,6 +165,7 @@ def my_games(state):
         if data['current_state'] != state:
             continue
 
+        # do not display games players does not participate into
         game_id = int(game_id_str)
         if game_id not in games_id_player:
             continue
@@ -209,14 +216,11 @@ def my_games(state):
         # old code before optimization
         #  variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
-        before = time.time()
-        role_id = common.get_role_allocated_to_player(game_id)
-        after = time.time()
-        elapsed = after - before
-        log_info += f"get_role_allocated_to_player took {elapsed}\n"
-
         number_games += 1
 
+        role_id = dict_role_id[str(game_id)]
+        if role_id == -1:
+            role_id = None
         data['role_played'] = role_id
 
         before = time.time()
