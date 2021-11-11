@@ -74,6 +74,8 @@ def my_games(state):
 
     overall_time_before = time.time()
 
+    time_before = time.time()
+
     my_panel.clear()
 
     # title
@@ -89,6 +91,10 @@ def my_games(state):
         return
 
     pseudo = storage['PSEUDO']
+
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"préambule {elapsed}\n"
 
     time_before = time.time()
     player_id = common.get_player_id(pseudo)
@@ -177,6 +183,8 @@ def my_games(state):
     elapsed = time_after - time_before
     log_info += f"9) chargement dates visites derniers messages des parties {elapsed}\n"
 
+    time_before = time.time()
+
     time_stamp_now = time.time()
 
     games_table = html.TABLE()
@@ -198,6 +206,10 @@ def my_games(state):
     variant_content_memoize_table = dict()
 
     number_games = 0
+
+    time_after = time.time()
+    elapsed = time_after - time_before
+    log_info += f"postambule {elapsed}\n"
 
     log_info += "\n"
 
