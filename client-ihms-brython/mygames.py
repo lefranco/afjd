@@ -86,15 +86,42 @@ def my_games(state):
 
     player_id = common.get_player_id(pseudo)
     if player_id is None:
+        alert("Erreur chargement identifiants joueurs")
         return
 
     player_games = get_player_games_playing_in(player_id)
     if player_games is None:
+        alert("Erreur chargement list parties joueés")
         return
 
     games_dict = common.get_games_data()
     if games_dict is None:
+        alert("Erreur chargement données des parties")
         return
+
+    dict_time_stamp_last_declarations = common.date_last_declarations()
+    if dict_time_stamp_last_declarations is None:
+        alert("Erreur chargement dates dernières déclarations des parties")
+        return
+    dict_time_stamp_last_declarations = dict(dict_time_stamp_last_declarations)
+
+    dict_time_stamp_last_messages = common.date_last_messages()
+    if dict_time_stamp_last_messages is None:
+        alert("Erreur chargement dates derniers messages des parties")
+        return
+    dict_time_stamp_last_messages = dict(dict_time_stamp_last_messages)
+
+    dict_time_stamp_last_visits_declarations = common.date_last_visit_load_all_games(config.DECLARATIONS_TYPE)
+    if dict_time_stamp_last_visits_declarations is None:
+        alert("Erreur chargement dates visites dernières declarations des parties")
+        return
+    dict_time_stamp_last_visits_declarations = dict(dict_time_stamp_last_visits_declarations)
+
+    dict_time_stamp_last_visits_messages = common.date_last_visit_load_all_games(config.MESSAGES_TYPE)
+    if dict_time_stamp_last_visits_messages is None:
+        alert("Erreur chargement dates visites derniers messages des parties")
+        return
+    dict_time_stamp_last_visits_messages = dict(dict_time_stamp_last_visits_messages)
 
     time_stamp_now = time.time()
 
@@ -149,6 +176,7 @@ def my_games(state):
         if variant_name_loaded not in variant_content_memoize_table:
             variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
             if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
                 return
             variant_content_memoize_table[variant_name_loaded] = variant_content_loaded
         else:
@@ -195,6 +223,7 @@ def my_games(state):
         submitted_data = None
         submitted_data = common.get_roles_submitted_orders(game_id)
         if submitted_data is None:
+            alert("Erreur chargement données soumissions de la partie")
             return
         # just to avoid a warning
         submitted_data = dict(submitted_data)
@@ -285,18 +314,10 @@ def my_games(state):
 
                     before = time.time()
 
-                    # get time stamp of last visit of declarations
-                    time_stamp_last_visit = common.date_last_visit_load(game_id, config.DECLARATIONS_TYPE)
-                    if time_stamp_last_visit is None:
-                        return
-                    time_stamp_last_event = common.date_last_declarations(game_id)
-                    if time_stamp_last_event is None:
-                        return
-
                     # popup if new
                     popup = ""
-                    if time_stamp_last_event > time_stamp_last_visit:
-                        popup = html.IMG(src="./data/new_content.gif", title="Nouvelle(s) déclaration(s)")
+                    if dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
+                        popup = html.IMG(src="./data/new_content.gif", title="Nouvelle(s) déclaration(s) dans cette partie !")
                     value = popup
 
                     after = time.time()
@@ -310,18 +331,10 @@ def my_games(state):
 
                     before = time.time()
 
-                    # get time stamp of last visit of declarations
-                    time_stamp_last_visit = common.date_last_visit_load(game_id, config.MESSAGES_TYPE)
-                    if time_stamp_last_visit is None:
-                        return
-                    time_stamp_last_event = common.date_last_messages(game_id, role_id)
-                    if time_stamp_last_event is None:
-                        return
-
                     # popup if new
                     popup = ""
-                    if time_stamp_last_event > time_stamp_last_visit:
-                        popup = html.IMG(src="./data/new_content.gif", title="Nouveau(x) message(s)")
+                    if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
+                        popup = html.IMG(src="./data/new_content.gif", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
 
                     after = time.time()
@@ -388,6 +401,9 @@ def my_games(state):
 
     subject = f"stats pour {pseudo}"
     body = ""
+    body += "Version V2 (opt sur déclarations/messages)"
+
+    body += "\n\n"
     body += stats
 
     body += "\n\n"
