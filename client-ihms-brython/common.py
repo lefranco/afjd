@@ -520,6 +520,7 @@ def get_all_roles_allocated_to_player():
 
     return dict_role_id
 
+
 def get_roles_submitted_orders(game_id):
     """ get_roles_submitted_orders """
 
@@ -530,9 +531,9 @@ def get_roles_submitted_orders(game_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres : {req_result['message']}")
+                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération des rôles qui ont soumis des ordres : {req_result['msg']}")
+                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
@@ -548,6 +549,66 @@ def get_roles_submitted_orders(game_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return submitted_data
+
+
+def get_all_player_games_roles_submitted_orders():
+    """ get_all_player_games_roles_submitted_orders """
+
+    dict_submitted_data = None
+
+    def reply_callback(req):
+        nonlocal dict_submitted_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour toutes mes parties : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour toutes mes parties : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        dict_submitted_data = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-player-games-orders-submitted"
+
+    # get roles that submitted orders : need token (but may change)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return dict_submitted_data
+
+
+def get_all_games_roles_submitted_orders():
+    """ get_all_games_roles_submitted_orders """
+
+    dict_submitted_data = None
+
+    def reply_callback(req):
+        nonlocal dict_submitted_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour toutes les parties possibles : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour toutes les parties possibles : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        dict_submitted_data = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-games-orders-submitted"
+
+    # get roles that submitted orders : need token (but may change)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return dict_submitted_data
 
 
 def date_last_visit_load(game_id, visit_type):
