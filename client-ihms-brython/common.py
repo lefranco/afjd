@@ -520,8 +520,8 @@ def get_roles_submitted_orders(game_id):
     return submitted_data
 
 
-def last_visit_load(game_id, visit_type):
-    """ last_visit_load """
+def date_last_visit_load(game_id, visit_type):
+    """ date_last_visit_load """
 
     time_stamp = None
 
@@ -551,8 +551,8 @@ def last_visit_load(game_id, visit_type):
     return time_stamp
 
 
-def last_visit_update(game_id, pseudo, role_id, visit_type):
-    """ last_visit_update """
+def date_last_visit_update(game_id, pseudo, role_id, visit_type):
+    """ date_last_visit_update """
 
     def reply_callback(req):
         req_result = json.loads(req.text)
@@ -578,8 +578,8 @@ def last_visit_update(game_id, pseudo, role_id, visit_type):
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
 
-def last_game_declaration(game_id):
-    """ last_game_declaration """
+def date_last_declarations(game_id):
+    """ date_last_declarations """
 
     time_stamp = None
 
@@ -609,8 +609,8 @@ def last_game_declaration(game_id):
     return time_stamp
 
 
-def last_game_message(game_id, role_id):
-    """ last_game_message """
+def date_last_messages(game_id, role_id):
+    """ date_last_messages """
 
     time_stamp = None
 

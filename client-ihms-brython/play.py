@@ -17,7 +17,6 @@ import tools
 import geometry
 import mapping
 import login
-import admin
 import sandbox
 import index  # circular import
 
@@ -109,6 +108,7 @@ def load_static_stuff():
     # build variant data
     global g_variant_data  # pylint: disable=invalid-name
     g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_parameters_read)
+
 
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
@@ -2115,10 +2115,10 @@ def negotiate():
     login.check_token()
 
     # get time stamp of last visit of declarations
-    time_stamp_last_visit = common.last_visit_load(g_game_id, config.MESSAGES_TYPE)
+    time_stamp_last_visit = common.date_last_visit_load(g_game_id, config.MESSAGES_TYPE)
 
     # put time stamp of last visit of declarations as now
-    common.last_visit_update(g_game_id, g_pseudo, g_role_id, config.MESSAGES_TYPE)
+    common.date_last_visit_update(g_game_id, g_pseudo, g_role_id, config.MESSAGES_TYPE)
 
     form = html.FORM()
 
@@ -2336,10 +2336,10 @@ def declare():
     login.check_token()
 
     # get time stamp of last visit of declarations
-    time_stamp_last_visit = common.last_visit_load(g_game_id, config.DECLARATIONS_TYPE)
+    time_stamp_last_visit = common.date_last_visit_load(g_game_id, config.DECLARATIONS_TYPE)
 
     # put time stamp of last visit of declarations as now
-    common.last_visit_update(g_game_id, g_pseudo, g_role_id, config.DECLARATIONS_TYPE)
+    common.date_last_visit_update(g_game_id, g_pseudo, g_role_id, config.DECLARATIONS_TYPE)
 
     form = html.FORM()
 

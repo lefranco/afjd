@@ -150,7 +150,7 @@ def logout():
     show_login()
 
     render(g_panel_middle)
-    
+
     return effective
 
 
