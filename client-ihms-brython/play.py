@@ -452,8 +452,6 @@ def show_position():
 def submit_orders():
     """ submit_orders """
 
-    definitives_loaded = None
-
     selected_active_unit = None
     selected_passive_unit = None
     selected_dest_zone = None
@@ -1223,15 +1221,7 @@ def submit_orders():
         label_definitive = html.LABEL("Prêt pour la résolution ?")
         buttons_right <= label_definitive
 
-        definitive_value = None
-        for _, role, definitive_val in definitives_loaded:
-            if role == g_role_id:
-                definitive_value = bool(definitive_val)
-                break
-
-        # can happen if never submitted orders
-        if definitive_value is None:
-            definitive_value = False
+        definitive_value = g_role_id in submitted_data['agreed']
 
         input_definitive = html.INPUT(type="checkbox", checked=definitive_value)
         buttons_right <= input_definitive
@@ -1297,15 +1287,6 @@ def submit_orders():
 
     advancement_loaded = g_game_parameters_loaded['current_advancement']
     advancement_season, _ = common.get_season(advancement_loaded, g_variant_data)
-
-    # definitives
-    definitives_loaded = common.definitive_reload(g_game_id)
-    if definitives_loaded is None:
-        alert("Erreur chargement accords")
-        return
-
-    # avoids a warning
-    definitives_loaded = list(definitives_loaded)
 
     # create canvas
     map_size = g_variant_data.map_size
@@ -2926,19 +2907,6 @@ def game_master():
     # who can I put in this role
     possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
 
-    # definitives
-    definitives_loaded = common.definitive_reload(g_game_id)
-    if definitives_loaded is None:
-        alert("Erreur chargement accords")
-        return
-
-    # avoids a warning
-    definitives_loaded = list(definitives_loaded)
-
-    definitive_values_table = dict()
-    for _, role, definitive_val in definitives_loaded:
-        definitive_values_table[role] = bool(definitive_val)
-
     # votes
     votes = common.vote_reload(g_game_id)
     if votes is None:
@@ -2952,6 +2920,7 @@ def game_master():
         vote_values_table[role] = bool(vote_val)
 
     submitted_roles_list = submitted_data['submitted']
+    agreed_roles_list = submitted_data['agreed']
     needed_roles_list = submitted_data['needed']
 
     for role_id in g_variant_data.roles:
@@ -3036,11 +3005,10 @@ def game_master():
         row <= col
 
         col = html.TD()
-        vote_val = "Pas d'avis"
-        if role_id in definitive_values_table and definitive_values_table[role_id]:
+        if role_id in agreed_roles_list:
             vote_val = "Prêt pour la résolution"
         else:
-            vote_val = "Pas encore prêt pour la résolution"
+            vote_val = "Pas prêt pour la résolution"
         col <= vote_val
         row <= col
 
@@ -3048,7 +3016,7 @@ def game_master():
         input_force_agreement = ""
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
-                if not (role_id in definitive_values_table and definitive_values_table[role_id]):
+                if role_id not in agreed_roles_list:
                     input_force_agreement = html.INPUT(type="submit", value="forcer son accord")
                     input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
         col <= input_force_agreement
