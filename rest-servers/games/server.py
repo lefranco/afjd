@@ -2414,10 +2414,15 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
         submitted_list = [o[1] for o in submissions_list]
 
+        # definitives_list : those who ageed to adjudicate with their orders
+        definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
+        agreed_list = [o[1] for o in definitives_list if o[2]]
+
         # game is anonymous : you get only information for your own role
         if game.anonymous:
             if role_id is not None and role_id != 0:
                 submitted_list = [r for r in submitted_list if r == role_id]
+                agreed_list = [r for r in agreed_list if r == role_id]
 
         # needed list : those who need to submit orders
         actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
@@ -2425,7 +2430,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {'submitted': submitted_list, 'needed': needed_list}
+        data = {'submitted': submitted_list, 'agreed': agreed_list, 'needed': needed_list}
         return data, 200
 
 
@@ -2473,6 +2478,7 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
         allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
 
         dict_submitted_list: typing.Dict[int, typing.List[int]] = dict()
+        dict_agreed_list: typing.Dict[int, typing.List[int]] = dict()
         dict_needed_list: typing.Dict[int, typing.List[int]] = dict()
         for game_id, _, role_id in allocations_list:
 
@@ -2480,14 +2486,20 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
             submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
             submitted_list = [o[1] for o in submissions_list]
 
+            # definitives_list : those who ageed to adjudicate with their orders
+            definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
+            agreed_list = [o[1] for o in definitives_list if o[2]]
+
             # game is anonymous : you get only information for your own role
             game = games.Game.find_by_identifier(sql_executor, game_id)
             assert game is not None
             if game.anonymous:
                 if role_id is not None and role_id != 0:
                     submitted_list = [r for r in submitted_list if r == role_id]
+                    agreed_list = [r for r in agreed_list if r == role_id]
 
             dict_submitted_list[game_id] = submitted_list
+            dict_agreed_list[game_id] = agreed_list
 
             # needed list : those who need to submit orders
             actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
@@ -2496,7 +2508,7 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
 
         del sql_executor
 
-        data = {'dict_submitted': dict_submitted_list, 'dict_needed': dict_needed_list}
+        data = {'dict_submitted': dict_submitted_list, 'dict_agreed': dict_agreed_list, 'dict_needed': dict_needed_list}
         return data, 200
 
 
@@ -2540,6 +2552,7 @@ class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         game_id_list = list(set(a[0] for a in allocations_list))
 
         dict_submitted_list: typing.Dict[int, typing.List[int]] = dict()
+        dict_agreed_list: typing.Dict[int, typing.List[int]] = dict()
         dict_needed_list: typing.Dict[int, typing.List[int]] = dict()
         for game_id in game_id_list:
 
@@ -2548,6 +2561,11 @@ class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
             submitted_list = [o[1] for o in submissions_list]
             dict_submitted_list[game_id] = submitted_list
 
+            # definitives_list : those who ageed to adjudicate with their orders
+            definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
+            agreed_list = [o[1] for o in definitives_list if o[2]]
+            dict_agreed_list[game_id] = agreed_list
+
             # needed list : those who need to submit orders
             actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
             needed_list = [o[1] for o in actives_list]
@@ -2555,7 +2573,7 @@ class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {'dict_submitted': dict_submitted_list, 'dict_needed': dict_needed_list}
+        data = {'dict_submitted': dict_submitted_list, 'dict_agreed': dict_agreed_list, 'dict_needed': dict_needed_list}
         return data, 200
 
 
