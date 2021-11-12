@@ -2959,9 +2959,9 @@ def game_master():
         flag = ""
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
-                flag = html.IMG(src="./icons/orders_in.png", title="Les ordres sont validés")
+                flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
             else:
-                flag = html.IMG(src="./icons/orders_missing.png", title="Les ordres ne sont pas validés")
+                flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
         col <= flag
         row <= col
 
@@ -3009,9 +3009,9 @@ def game_master():
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
                 if role_id in agreed_roles_list:
-                    flag = html.IMG(src="./icons/ready.jpg", title="Prêt pour résoudre")
+                    flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
                 else:
-                    flag = html.IMG(src="./icons/not_ready.jpg", title="Pas prêt pour résoudre")
+                    flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
         col <= flag
         row <= col
 
@@ -3029,9 +3029,9 @@ def game_master():
         flag = ""
         if role_id in vote_values_table:
             if vote_values_table[role_id]:
-                flag = html.IMG(src="./icons/stop.png", title="Arrêter la partie")
+                flag = html.IMG(src="./images/stop.png", title="Arrêter la partie")
             else:
-                flag = html.IMG(src="./icons/continue.jpg", title="Continuer la partie")
+                flag = html.IMG(src="./images/continue.jpg", title="Continuer la partie")
         col <= flag
         row <= col
 
@@ -3290,9 +3290,9 @@ def show_orders_submitted_in_game():
         needed_roles_list = submitted_data['needed']
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
-                flag = html.IMG(src="./icons/orders_in.png", title="Les ordres sont validés")
+                flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
             else:
-                flag = html.IMG(src="./icons/orders_missing.png", title="Les ordres ne sont pas validés")
+                flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
         else:
             flag = ""
         col = html.TD(flag)
@@ -3307,9 +3307,9 @@ def show_orders_submitted_in_game():
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
                 if role_id in agreed_roles_list:
-                    flag = html.IMG(src="./icons/ready.jpg", title="Prêt pour résoudre")
+                    flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
                 else:
-                    flag = html.IMG(src="./icons/not_ready.jpg", title="Pas prêt pour résoudre")
+                    flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
         col <= flag
         row <= col
 
