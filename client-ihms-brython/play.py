@@ -3009,7 +3009,7 @@ def game_master():
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
                 if role_id in agreed_roles_list:
-                    flag = html.IMG(src="./icons/ready.png", title="Prêt pour résoudre")
+                    flag = html.IMG(src="./icons/ready.jpg", title="Prêt pour résoudre")
                 else:
                     flag = html.IMG(src="./icons/not_ready.jpg", title="Pas prêt pour résoudre")
         col <= flag
