@@ -338,10 +338,10 @@ def my_games(state):
                     value = "Pas de rôle"
                 else:
                     if role_id in submitted_roles_list:
-                        flag = html.IMG(src="./icons/green_tick.jpg", title="Les ordres sont validés")
+                        flag = html.IMG(src="./icons/orders_in.png", title="Les ordres sont validés")
                         value = flag
                     elif role_id in needed_roles_list:
-                        flag = html.IMG(src="./icons/red_close.jpg", title="Les ordres ne sont pas validés")
+                        flag = html.IMG(src="./icons/orders_missing.png", title="Les ordres ne sont pas validés")
                         value = flag
 
             if field == 'agreed':
@@ -353,10 +353,10 @@ def my_games(state):
                     value = "Pas de rôle"
                 else:
                     if role_id in submitted_roles_list:
-                        flag = html.IMG(src="./icons/green_tick.jpg", title="D'accord pour résoudre")
+                        flag = html.IMG(src="./icons/ready.jpg", title="Prêt pour résoudre")
                         value = flag
                     elif role_id in needed_roles_list:
-                        flag = html.IMG(src="./icons/red_close.jpg", title="Pas d'accord pour résoudre")
+                        flag = html.IMG(src="./icons/not_ready.jpg", title="Pas prêt pour résoudre")
                         value = flag
 
             if field == 'all_orders_submitted':
@@ -384,13 +384,13 @@ def my_games(state):
                 else:
                     agreed_roles_list = submitted_data['agreed']
                     nb_agreed = len(agreed_roles_list)
-                    needed_roles_list = submitted_data['needed']
-                    nb_needed = len(needed_roles_list)
-                    stats = f"{nb_agreed}/{nb_needed}"
+                    submitted_roles_list = submitted_data['submitted']
+                    nb_submitted = len(submitted_roles_list)
+                    stats = f"{nb_agreed}/{nb_submitted}"
                     value = stats
                     colour = 'black'
-                    if nb_submitted >= nb_needed:
-                        # we have all orders : green
+                    if nb_agreed >= nb_submitted:
+                        # we have all agreements : green
                         colour = 'green'
 
             if field == 'new_declarations':
@@ -401,7 +401,7 @@ def my_games(state):
                     # popup if new
                     popup = ""
                     if dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
-                        popup = html.IMG(src="./icons/new_content.gif", title="Nouvelle(s) déclaration(s) dans cette partie !")
+                        popup = html.IMG(src="./icons/press_published.jpg", title="Nouvelle(s) déclaration(s) dans cette partie !")
                     value = popup
 
             if field == 'new_messages':
@@ -412,7 +412,7 @@ def my_games(state):
                     # popup if new
                     popup = ""
                     if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
-                        popup = html.IMG(src="./icons/new_content.gif", title="Nouveau(x) message(s) dans cette partie !")
+                        popup = html.IMG(src="./icons/messages_received.jpg", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
 
             if field == 'jump_here':

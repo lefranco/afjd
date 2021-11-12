@@ -2959,9 +2959,9 @@ def game_master():
         flag = ""
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
-                flag = html.IMG(src="./icons/green_tick.jpg", title="Les ordres sont validés")
+                flag = html.IMG(src="./icons/orders_in.png", title="Les ordres sont validés")
             else:
-                flag = html.IMG(src="./icons/red_close.jpg", title="Les ordres ne sont pas validés")
+                flag = html.IMG(src="./icons/orders_missing.png", title="Les ordres ne sont pas validés")
         col <= flag
         row <= col
 
@@ -3005,11 +3005,14 @@ def game_master():
         row <= col
 
         col = html.TD()
-        if role_id in agreed_roles_list:
-            vote_val = "Prêt pour la résolution"
-        else:
-            vote_val = "Pas prêt pour la résolution"
-        col <= vote_val
+        flag = ""
+        if role_id in needed_roles_list:
+            if role_id in submitted_roles_list:
+                if role_id in agreed_roles_list:
+                    flag = html.IMG(src="./icons/ready.png", title="Prêt pour résoudre")
+                else:
+                    flag = html.IMG(src="./icons/not_ready.jpg", title="Pas prêt pour résoudre")
+        col <= flag
         row <= col
 
         col = html.TD()
@@ -3023,13 +3026,13 @@ def game_master():
         row <= col
 
         col = html.TD()
-        vote_val = "Pas de vote"
+        flag = ""
         if role_id in vote_values_table:
             if vote_values_table[role_id]:
-                vote_val = "Arrêt"
+                flag = html.IMG(src="./icons/stop.png", title="Arrêter la partie")
             else:
-                vote_val = "Continuer"
-        col <= vote_val
+                flag = html.IMG(src="./icons/continue.jpg", title="Continuer la partie")
+        col <= flag
         row <= col
 
         game_admin_table <= row
