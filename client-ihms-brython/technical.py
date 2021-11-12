@@ -43,6 +43,11 @@ link4 = html.A(href="https://brython.info/", target="_blank")
 link4 <= "Outil utilisé pour ce front end"
 my_panel <= link4
 
+my_panel <= html.P()
+
+link5 = html.A(href="https://www.flaticon.com/", target="_blank")
+link5 <= "Icones utilisées pour ce front end"
+my_panel <= link5
 
 title5 = html.H2("Une version simplifiée des règles du Jeu")
 my_panel <= title5
