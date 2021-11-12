@@ -336,12 +336,12 @@ def all_games(state):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'master', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'jump_here', 'go_away']
+    fields = ['name', 'master', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'all_agreed', 'jump_here', 'go_away']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres soumis sur la partie', 'jump_here': 'sauter dans la partie', 'go_away': 'aller dans la partie (nouvel onglet)'}[field]
+        field_fr = {'name': 'nom', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres soumis sur la partie', 'all_agreed': 'accords sur la partie', 'jump_here': 'sauter dans la partie', 'go_away': 'aller dans la partie (nouvel onglet)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -408,9 +408,11 @@ def all_games(state):
         submitted_data = dict()
         submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
         submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
+        submitted_data['agreed'] = dict_submitted_data['dict_agreed'][str(game_id)]
 
         data['master'] = None
         data['all_orders_submitted'] = None
+        data['all_agreed'] = None
         data['jump_here'] = None
         data['go_away'] = None
 
@@ -452,6 +454,17 @@ def all_games(state):
                 needed_roles_list = submitted_data['needed']
                 nb_needed = len(needed_roles_list)
                 value = f"{nb_submitted}/{nb_needed}"
+                colour = 'black'
+                if nb_submitted >= nb_needed:
+                    # we have all orders : green
+                    colour = 'green'
+
+            if field == 'all_agreed':
+                agreed_roles_list = submitted_data['agreed']
+                nb_agreed = len(agreed_roles_list)
+                needed_roles_list = submitted_data['needed']
+                nb_needed = len(needed_roles_list)
+                value = f"{nb_agreed}/{nb_needed}"
                 colour = 'black'
                 if nb_submitted >= nb_needed:
                     # we have all orders : green

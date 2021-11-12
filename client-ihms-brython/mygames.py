@@ -189,12 +189,12 @@ def my_games(state):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'orders_submitted', 'new_declarations', 'new_messages', 'jump_here', 'go_away']
+    fields = ['name', 'variant', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'jump_here', 'go_away']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'all_orders_submitted': 'ordres soumis accessibles', 'orders_submitted': 'ordres soumis par moi', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump_here': 'sauter dans la partie', 'go_away': 'aller dans la partie (nouvel onglet)'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'ordres soumis par moi', 'agreed': 'accord par moi',  'all_orders_submitted': 'ordres soumis accessibles',  'all_agreed': 'accords accessibles', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump_here': 'sauter dans la partie', 'go_away': 'aller dans la partie (nouvel onglet)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -281,9 +281,12 @@ def my_games(state):
         submitted_data = dict()
         submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
         submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
+        submitted_data['agreed'] = dict_submitted_data['dict_agreed'][str(game_id)]
 
-        data['all_orders_submitted'] = None
         data['orders_submitted'] = None
+        data['agreed'] = None
+        data['all_orders_submitted'] = None
+        data['all_agreed'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
         data['jump_here'] = None
@@ -326,6 +329,36 @@ def my_games(state):
                     role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
                     value = role_icon_img
 
+            if field == 'orders_submitted':
+
+                value = ""
+                submitted_roles_list = submitted_data['submitted']
+                needed_roles_list = submitted_data['needed']
+                if role_id is None:
+                    value = "Pas de rôle"
+                else:
+                    if role_id in submitted_roles_list:
+                        flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
+                        value = flag
+                    elif role_id in needed_roles_list:
+                        flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
+                        value = flag
+
+            if field == 'agreed':
+
+                value = ""
+                submitted_roles_list = submitted_data['submitted']
+                agreed_roles_list = submitted_data['agreed']
+                if role_id is None:
+                    value = "Pas de rôle"
+                else:
+                    if role_id in submitted_roles_list:
+                        flag = html.IMG(src="./data/green_tick.jpg", title="D'accord pour résoudre")
+                        value = flag
+                    elif role_id in needed_roles_list:
+                        flag = html.IMG(src="./data/red_close.jpg", title="Pas d'accord pour résoudre")
+                        value = flag
+
             if field == 'all_orders_submitted':
 
                 value = ""
@@ -343,20 +376,22 @@ def my_games(state):
                         # we have all orders : green
                         colour = 'green'
 
-            if field == 'orders_submitted':
+            if field == 'all_agreed':
 
                 value = ""
-                submitted_roles_list = submitted_data['submitted']
-                needed_roles_list = submitted_data['needed']
                 if role_id is None:
                     value = "Pas de rôle"
                 else:
-                    if role_id in submitted_roles_list:
-                        flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
-                        value = flag
-                    elif role_id in needed_roles_list:
-                        flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
-                        value = flag
+                    agreed_roles_list = submitted_data['agreed']
+                    nb_agreed = len(agreed_roles_list)
+                    needed_roles_list = submitted_data['needed']
+                    nb_needed = len(needed_roles_list)
+                    stats = f"{nb_agreed}/{nb_needed}"
+                    value = stats
+                    colour = 'black'
+                    if nb_submitted >= nb_needed:
+                        # we have all orders : green
+                        colour = 'green'
 
             if field == 'new_declarations':
 
