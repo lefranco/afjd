@@ -462,12 +462,12 @@ def all_games(state):
             if field == 'all_agreed':
                 agreed_roles_list = submitted_data['agreed']
                 nb_agreed = len(agreed_roles_list)
-                needed_roles_list = submitted_data['needed']
-                nb_needed = len(needed_roles_list)
-                value = f"{nb_agreed}/{nb_needed}"
+                submitted_roles_list = submitted_data['submitted']
+                nb_submitted = len(submitted_roles_list)
+                value = f"{nb_agreed}/{nb_submitted}"
                 colour = 'black'
-                if nb_submitted >= nb_needed:
-                    # we have all orders : green
+                if nb_agreed >= nb_submitted:
+                    # we have all agreements : green
                     colour = 'green'
 
             if field == 'jump_here':
