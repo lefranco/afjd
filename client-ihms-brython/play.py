@@ -2092,6 +2092,7 @@ def negotiate():
     if g_role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         return
+
     # because we do not want the token stale in the middle of the process
     login.check_token()
 
@@ -2153,6 +2154,7 @@ def negotiate():
 
     messages = messages_reload(g_game_id)
     if messages is None:
+        alert("Erreur chargement messages")
         return
 
     # to avoid warning
@@ -2354,7 +2356,7 @@ def declare():
 
     declarations = declarations_reload(g_game_id)
     if declarations is None:
-        alert
+        alert("Erreur chargement déclarations")
         return
 
     # to avoid warning
@@ -2482,7 +2484,7 @@ def vote():
 
     votes = common.vote_reload(g_game_id)
     if votes is None:
-        alert
+        alert("Erreur chargement votes")
         return
 
     # avoids a warning
@@ -3043,16 +3045,6 @@ def game_master():
 def show_game_parameters():
     """ show_game_parameters """
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    game_parameters_loaded = common.game_parameters_reload(game)
-    if not game_parameters_loaded:
-        return
-
     game_params_table = html.TABLE()
 
     # table header
@@ -3062,7 +3054,7 @@ def show_game_parameters():
         thead <= col
     game_params_table <= thead
 
-    for key, value in game_parameters_loaded.items():
+    for key, value in g_game_parameters_loaded.items():
 
         if key in ['name', 'description', 'variant', 'deadline', 'current_state', 'current_advancement']:
             continue
@@ -3405,7 +3397,7 @@ def render(panel_middle):
 
     # Connecté mais pas joueur
     # Pas connecté
-    item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
+    item_name_selected = 'position'  # pylint: disable=invalid-name
 
     global g_pseudo  # pylint: disable=invalid-name
     g_pseudo = None
