@@ -3242,12 +3242,12 @@ def show_orders_submitted_in_game():
 
     game_players_table = html.TABLE()
 
-    fields = ['flag', 'role', 'player', 'orders']
+    fields = ['flag', 'role', 'player', 'orders', 'agreement']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'role': 'role', 'player': 'joueur', 'orders': 'ordres'}[field]
+        field_fr = {'flag': 'drapeau', 'role': 'role', 'player': 'joueur', 'orders': 'ordres', 'agreement': 'accord'}[field]
         col = html.TD(field_fr)
         thead <= col
     game_players_table <= thead
@@ -3290,12 +3290,27 @@ def show_orders_submitted_in_game():
         needed_roles_list = submitted_data['needed']
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
-                flag = html.IMG(src="./icons/green_tick.jpg", title="Les ordres sont validés")
+                flag = html.IMG(src="./icons/orders_in.png", title="Les ordres sont validés")
             else:
-                flag = html.IMG(src="./icons/red_close.jpg", title="Les ordres ne sont pas validés")
+                flag = html.IMG(src="./icons/orders_missing.png", title="Les ordres ne sont pas validés")
         else:
             flag = ""
         col = html.TD(flag)
+        row <= col
+
+        # agreed
+        col = html.TD()
+        flag = ""
+        submitted_roles_list = submitted_data['submitted']
+        agreed_roles_list = submitted_data['agreed']
+        needed_roles_list = submitted_data['needed']
+        if role_id in needed_roles_list:
+            if role_id in submitted_roles_list:
+                if role_id in agreed_roles_list:
+                    flag = html.IMG(src="./icons/ready.png", title="Prêt pour résoudre")
+                else:
+                    flag = html.IMG(src="./icons/not_ready.jpg", title="Pas prêt pour résoudre")
+        col <= flag
         row <= col
 
         game_players_table <= row
