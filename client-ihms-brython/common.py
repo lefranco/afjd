@@ -611,6 +611,37 @@ def get_all_games_roles_submitted_orders():
     return dict_submitted_data
 
 
+def definitive_reload(game_id):
+    """ definitive_reload """
+
+    definitives = None
+
+    def reply_callback(req):
+        nonlocal definitives
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des accords pour résoudre de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des accords pour résoudre de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        definitives = req_result['definitives']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-definitives/{game_id}"
+
+    # extracting definitive from a game : need token (or not?)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return definitives
+
+
 def date_last_visit_load(game_id, visit_type):
     """ date_last_visit_load """
 
@@ -819,37 +850,6 @@ def make_report_window(report_loaded):
             report_col <= html.BR()
         report_row <= report_col
     return report_table
-
-
-def definitive_reload(game_id):
-    """ definitive_reload """
-
-    definitives = None
-
-    def reply_callback(req):
-        nonlocal definitives
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des accords pour résoudre de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des accords pour résoudre de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        definitives = req_result['definitives']
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-definitives/{game_id}"
-
-    # extracting definitive from a game : need token (or not?)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
-
-    return definitives
 
 
 def vote_reload(game_id):
