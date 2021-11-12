@@ -322,26 +322,24 @@ def my_games(state):
             if field == 'role_played':
                 value = ""
                 if role_id is None:
-                    value = "Affecté à la partie"
+                    role_icon_img = html.IMG(src="./images/assigned.png", title="Affecté à la partie")
                 else:
                     role = variant_data.roles[role_id]
                     role_name = variant_data.name_table[role]
                     role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
-                    value = role_icon_img
+                value = role_icon_img
 
             if field == 'orders_submitted':
 
                 value = ""
                 submitted_roles_list = submitted_data['submitted']
                 needed_roles_list = submitted_data['needed']
-                if role_id is None:
-                    value = "Pas de rôle"
-                else:
+                if role_id is not None:
                     if role_id in submitted_roles_list:
-                        flag = html.IMG(src="./icons/orders_in.png", title="Les ordres sont validés")
+                        flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
                         value = flag
                     elif role_id in needed_roles_list:
-                        flag = html.IMG(src="./icons/orders_missing.png", title="Les ordres ne sont pas validés")
+                        flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
                         value = flag
 
             if field == 'agreed':
@@ -349,22 +347,18 @@ def my_games(state):
                 value = ""
                 submitted_roles_list = submitted_data['submitted']
                 agreed_roles_list = submitted_data['agreed']
-                if role_id is None:
-                    value = "Pas de rôle"
-                else:
+                if role_id is not None:
                     if role_id in submitted_roles_list:
-                        flag = html.IMG(src="./icons/ready.jpg", title="Prêt pour résoudre")
+                        flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
                         value = flag
                     elif role_id in needed_roles_list:
-                        flag = html.IMG(src="./icons/not_ready.jpg", title="Pas prêt pour résoudre")
+                        flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
                         value = flag
 
             if field == 'all_orders_submitted':
 
                 value = ""
-                if role_id is None:
-                    value = "Pas de rôle"
-                else:
+                if role_id is not None:
                     submitted_roles_list = submitted_data['submitted']
                     nb_submitted = len(submitted_roles_list)
                     needed_roles_list = submitted_data['needed']
@@ -379,9 +373,7 @@ def my_games(state):
             if field == 'all_agreed':
 
                 value = ""
-                if role_id is None:
-                    value = "Pas de rôle"
-                else:
+                if role_id is not None:
                     agreed_roles_list = submitted_data['agreed']
                     nb_agreed = len(agreed_roles_list)
                     submitted_roles_list = submitted_data['submitted']
@@ -401,7 +393,7 @@ def my_games(state):
                     # popup if new
                     popup = ""
                     if dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
-                        popup = html.IMG(src="./icons/press_published.jpg", title="Nouvelle(s) déclaration(s) dans cette partie !")
+                        popup = html.IMG(src="./images/press_published.jpg", title="Nouvelle(s) déclaration(s) dans cette partie !")
                     value = popup
 
             if field == 'new_messages':
@@ -412,7 +404,7 @@ def my_games(state):
                     # popup if new
                     popup = ""
                     if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
-                        popup = html.IMG(src="./icons/messages_received.jpg", title="Nouveau(x) message(s) dans cette partie !")
+                        popup = html.IMG(src="./images/messages_received.jpg", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
 
             if field == 'jump_here':
