@@ -338,10 +338,10 @@ def my_games(state):
                     value = "Pas de rôle"
                 else:
                     if role_id in submitted_roles_list:
-                        flag = html.IMG(src="./data/green_tick.jpg", title="Les ordres sont validés")
+                        flag = html.IMG(src="./icons/green_tick.jpg", title="Les ordres sont validés")
                         value = flag
                     elif role_id in needed_roles_list:
-                        flag = html.IMG(src="./data/red_close.jpg", title="Les ordres ne sont pas validés")
+                        flag = html.IMG(src="./icons/red_close.jpg", title="Les ordres ne sont pas validés")
                         value = flag
 
             if field == 'agreed':
@@ -353,10 +353,10 @@ def my_games(state):
                     value = "Pas de rôle"
                 else:
                     if role_id in submitted_roles_list:
-                        flag = html.IMG(src="./data/green_tick.jpg", title="D'accord pour résoudre")
+                        flag = html.IMG(src="./icons/green_tick.jpg", title="D'accord pour résoudre")
                         value = flag
                     elif role_id in needed_roles_list:
-                        flag = html.IMG(src="./data/red_close.jpg", title="Pas d'accord pour résoudre")
+                        flag = html.IMG(src="./icons/red_close.jpg", title="Pas d'accord pour résoudre")
                         value = flag
 
             if field == 'all_orders_submitted':
@@ -401,7 +401,7 @@ def my_games(state):
                     # popup if new
                     popup = ""
                     if dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
-                        popup = html.IMG(src="./data/new_content.gif", title="Nouvelle(s) déclaration(s) dans cette partie !")
+                        popup = html.IMG(src="./icons/new_content.gif", title="Nouvelle(s) déclaration(s) dans cette partie !")
                     value = popup
 
             if field == 'new_messages':
@@ -412,7 +412,7 @@ def my_games(state):
                     # popup if new
                     popup = ""
                     if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
-                        popup = html.IMG(src="./data/new_content.gif", title="Nouveau(x) message(s) dans cette partie !")
+                        popup = html.IMG(src="./icons/new_content.gif", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
 
             if field == 'jump_here':
