@@ -398,7 +398,7 @@ def show_position():
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
-        return
+        return True
 
     # give some information sometimes
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -447,6 +447,8 @@ def show_position():
     my_sub_panel2 <= buttons_right
 
     my_sub_panel <= my_sub_panel2
+
+    return True
 
 
 def submit_orders():
@@ -1234,34 +1236,40 @@ def submit_orders():
     # need to be connected
     if g_pseudo is None:
         alert("Il faut se connecter au préalable")
-        return
+        load_option(None, 'position')
+        return False
 
     # need to have a role
     if g_role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        return
+        load_option(None, 'position')
+        return False
 
     # cannot be game master unless archive game
     if g_role_id == 0 and not g_game_parameters_loaded['archive']:
         alert("Ordonner pour un arbitre n'est possible que pour les parties archive")
-        return
+        load_option(None, 'position')
+        return False
 
     # game needs to be ongoing - not waiting
     if g_game_parameters_loaded['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
-        return
+        load_option(None, 'position')
+        return False
 
     # game needs to be ongoing - not finished
     if g_game_parameters_loaded['current_state'] == 2:
         alert("La partie est déjà terminée")
-        return
+        load_option(None, 'position')
+        return False
 
     # need to have orders to submit
 
     submitted_data = common.get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
-        return
+        load_option(None, 'position')
+        return False
 
     # just to avoid a warning
     submitted_data = dict(submitted_data)
@@ -1269,11 +1277,13 @@ def submit_orders():
     if g_role_id == 0:
         if not submitted_data['needed']:
             alert("Il n'y a pas d'ordre à passer")
-            return
+            load_option(None, 'position')
+            return False
     else:
         if g_role_id not in submitted_data['needed']:
             alert("Vous n'avez pas d'ordre à passer")
-            return
+            load_option(None, 'position')
+            return False
 
     # because we do not want the token stale in the middle of the process
     login.check_token()
@@ -1294,7 +1304,7 @@ def submit_orders():
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
-        return
+        return True
 
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
@@ -1307,7 +1317,8 @@ def submit_orders():
     orders_loaded = common.game_orders_reload(g_game_id)
     if not orders_loaded:
         alert("Erreur chargement ordres")
-        return
+        load_option(None, 'position')
+        return False
 
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, g_position_data)
@@ -1379,6 +1390,8 @@ def submit_orders():
     my_sub_panel2 <= buttons_right
 
     my_sub_panel <= my_sub_panel2
+
+    return True
 
 
 def submit_communication_orders():
@@ -1892,36 +1905,48 @@ def submit_communication_orders():
     # need to be connected
     if g_pseudo is None:
         alert("Il faut se connecter au préalable")
-        return
+        load_option(None, 'position')
+        return False
 
     # need to have a role
+    if g_role_id is None:
+        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
+        load_option(None, 'position')
+        return False
+
+    # cannot be game master
     if g_role_id == 0:
         alert("Ce n'est pas possible pour l'arbitre de cette partie")
-        return
+        load_option(None, 'position')
+        return False
 
     # game needs to be ongoing - not waiting
     if g_game_parameters_loaded['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
-        return
+        load_option(None, 'position')
+        return False
 
     # game needs to be ongoing - not finished
     if g_game_parameters_loaded['current_state'] == 2:
         alert("La partie est déjà terminée")
-        return
+        load_option(None, 'position')
+        return False
 
     # need to have orders to submit
 
     submitted_data = common.get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
-        return
+        load_option(None, 'position')
+        return False
 
     # just to avoid a warning
     submitted_data = dict(submitted_data)
 
     if g_role_id not in submitted_data['needed']:
         alert("Vous n'avez pas d'ordre à passer")
-        return
+        load_option(None, 'position')
+        return False
 
     # because we do not want the token stale in the middle of the process
     login.check_token()
@@ -1939,7 +1964,7 @@ def submit_communication_orders():
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
-        return
+        return True
 
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
@@ -1952,7 +1977,8 @@ def submit_communication_orders():
     communication_orders_loaded = common.game_communication_orders_reload(g_game_id)
     if not communication_orders_loaded:
         alert("Erreur chargement ordres communication")
-        return
+        load_option(None, 'position')
+        return False
 
     # digest the orders
     orders_data = mapping.Orders(communication_orders_loaded, g_position_data)
@@ -2000,6 +2026,8 @@ def submit_communication_orders():
 
     my_sub_panel <= my_sub_panel2
 
+    return True
+
 
 def negotiate():
     """ negotiate """
@@ -2025,7 +2053,6 @@ def negotiate():
             global content_backup  # pylint: disable=invalid-name
             content_backup = None
             negotiate()
-            return
 
         dest_role_ids = ' '.join([str(role_num) for (role_num, button) in selected.items() if button.checked])
 
@@ -2091,7 +2118,8 @@ def negotiate():
 
     if g_role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        return
+        load_option(None, 'position')
+        return False
 
     # because we do not want the token stale in the middle of the process
     login.check_token()
@@ -2155,7 +2183,8 @@ def negotiate():
     messages = messages_reload(g_game_id)
     if messages is None:
         alert("Erreur chargement messages")
-        return
+        load_option(None, 'position')
+        return False
 
     # to avoid warning
     messages = list(messages)
@@ -2233,6 +2262,8 @@ def negotiate():
     # declarations already
     my_sub_panel <= messages_table
 
+    return True
+
 
 def declare():
     """ declare """
@@ -2256,7 +2287,6 @@ def declare():
 
             # back to where we started
             declare()
-            return
 
         anonymous = input_anonymous.checked
 
@@ -2313,7 +2343,8 @@ def declare():
 
     if g_role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        return
+        load_option(None, 'position')
+        return False
 
     # because we do not want the token stale in the middle of the process
     login.check_token()
@@ -2357,7 +2388,8 @@ def declare():
     declarations = declarations_reload(g_game_id)
     if declarations is None:
         alert("Erreur chargement déclarations")
-        return
+        load_option(None, 'position')
+        return False
 
     # to avoid warning
     declarations = list(declarations)
@@ -2432,6 +2464,8 @@ def declare():
     # declarations already
     my_sub_panel <= declarations_table
 
+    return True
+
 
 def vote():
     """ vote """
@@ -2455,7 +2489,6 @@ def vote():
 
             # back to where we started
             vote()
-            return
 
         vote_value = input_vote.checked
 
@@ -2476,16 +2509,19 @@ def vote():
 
     if g_role_id is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        return
+        load_option(None, 'position')
+        return False
 
     if g_role_id == 0:
         alert("Ce n'est pas possible pour l'arbitre de cette partie")
-        return
+        load_option(None, 'position')
+        return False
 
     votes = common.vote_reload(g_game_id)
     if votes is None:
         alert("Erreur chargement votes")
-        return
+        load_option(None, 'position')
+        return False
 
     # avoids a warning
     votes = list(votes)
@@ -2526,6 +2562,8 @@ def vote():
 
     # form
     my_sub_panel <= form
+
+    return True
 
 
 def show_history():
@@ -2662,7 +2700,8 @@ def show_history():
     last_advancement = advancement_loaded - 1
     if not last_advancement >= 0:
         alert("Rien pour le moment !")
-        return
+        load_option(None, 'position')
+        return False
 
     # put it there to remove it at first display
     my_sub_panel2 = html.DIV()
@@ -2670,6 +2709,8 @@ def show_history():
 
     # initiates callback
     transition_display_callback(None, last_advancement)
+
+    return True
 
 
 def game_master():
@@ -2864,22 +2905,26 @@ def game_master():
     # need to be connected
     if g_pseudo is None:
         alert("Il faut se connecter au préalable")
-        return
+        load_option(None, 'position')
+        return False
 
     # need to e game master
     if g_role_id != 0:
         alert("Vous ne semblez pas être l'arbitre de cette partie")
-        return
+        load_option(None, 'position')
+        return False
 
     # game needs to be ongoing - not waiting
     if g_game_parameters_loaded['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
-        return
+        load_option(None, 'position')
+        return False
 
     # game needs to be ongoing - not finished
     if g_game_parameters_loaded['current_state'] == 2:
         alert("La partie est déjà terminée")
-        return
+        load_option(None, 'position')
+        return False
 
     # now we can display
 
@@ -2901,7 +2946,8 @@ def game_master():
     submitted_data = common.get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
-        return
+        load_option(None, 'position')
+        return False
 
     # just to avoid a warning
     submitted_data = dict(submitted_data)
@@ -2912,7 +2958,7 @@ def game_master():
     # votes
     votes = common.vote_reload(g_game_id)
     if votes is None:
-        return
+        return vote()
 
     # avoids a warning
     votes = list(votes)
@@ -3041,6 +3087,8 @@ def game_master():
 
     my_sub_panel <= game_admin_table
 
+    return True
+
 
 def show_game_parameters():
     """ show_game_parameters """
@@ -3118,6 +3166,8 @@ def show_game_parameters():
 
     my_sub_panel <= game_params_table
 
+    return True
+
 
 def show_players_in_game():
     """ show_players_in_game """
@@ -3125,13 +3175,15 @@ def show_players_in_game():
     # need to be connected
     if g_pseudo is None:
         alert("Il faut se connecter au préalable")
-        return
+        load_option(None, 'position')
+        return False
 
     # is game anonymous
     # TODO improve this with real admin account
     if not(g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
         alert("Seul l'arbitre (ou l'administrateur du site) peut voir les joueurs d'une partie anonyme")
-        return
+        load_option(None, 'position')
+        return False
 
     id2pseudo = {v: k for k, v in g_players_dict.items()}
 
@@ -3198,6 +3250,8 @@ def show_players_in_game():
             dangling_player = id2pseudo[dangling_player_id]
             my_sub_panel <= html.B(html.EM(dangling_player))
 
+    return True
+
 
 def show_orders_submitted_in_game():
     """ show_orders_submitted_in_game """
@@ -3205,25 +3259,29 @@ def show_orders_submitted_in_game():
     # if user identified ?
     if g_pseudo is None:
         alert("Il faut se connecter au préalable")
-        return
+        load_option(None, 'position')
+        return False
 
     # is player in game ?
     # TODO improve this with real admin account
     if not(g_pseudo == 'Palpatine' or g_role_id is not None):
         alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir le statut des ordres pour une partie non anonyme")
-        return
+        load_option(None, 'position')
+        return False
 
     # game anonymous
     # TODO improve this with real admin account
     if not(g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
         alert("Seul l'arbitre (ou l'administrateur du site) peut voir le statut des ordres  pour une partie anonyme")
-        return
+        load_option(None, 'position')
+        return False
 
     # you will at least get your own role
     submitted_data = common.get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
-        return
+        load_option(None, 'position')
+        return False
 
     # just to avoid a warning
     submitted_data = dict(submitted_data)
@@ -3309,6 +3367,8 @@ def show_orders_submitted_in_game():
 
     my_sub_panel <= game_players_table
 
+    return True
+
 
 my_panel = html.DIV(id="play")
 my_panel.attrs['style'] = 'display: table-row'
@@ -3322,7 +3382,7 @@ my_panel <= menu_left
 menu_selection = html.UL()
 menu_left <= menu_selection
 
-item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
+item_name_selected = None  # pylint: disable=invalid-name
 
 my_sub_panel = html.DIV(id="sub")
 
@@ -3334,27 +3394,30 @@ def load_option(_, item_name):
 
     my_sub_panel.clear()
     if item_name == 'position':
-        show_position()
+        status = show_position()
     if item_name == 'ordonner':
-        submit_orders()
+        status = submit_orders()
     if item_name == 'taguer':
-        submit_communication_orders()
+        status = submit_communication_orders()
     if item_name == 'négocier':
-        negotiate()
+        status = negotiate()
     if item_name == 'déclarer':
-        declare()
+        status = declare()
     if item_name == 'voter':
-        vote()
+        status = vote()
     if item_name == 'historique':
-        show_history()
+        status = show_history()
     if item_name == 'arbitrer':
-        game_master()
+        status = game_master()
     if item_name == 'paramètres':
-        show_game_parameters()
+        status = show_game_parameters()
     if item_name == 'joueurs':
-        show_players_in_game()
+        status = show_players_in_game()
     if item_name == 'ordres':
-        show_orders_submitted_in_game()
+        status = show_orders_submitted_in_game()
+
+    if not status:
+        return
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
