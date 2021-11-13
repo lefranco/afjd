@@ -194,7 +194,7 @@ def my_games(state):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'ordres soumis par moi', 'agreed': 'accord par moi', 'all_orders_submitted': 'ordres soumis accessibles', 'all_agreed': 'accords accessibles', 'new_declarations': 'nouvelle déclarations', 'new_messages': 'nouveau messages', 'jump_here': 'sauter dans la partie', 'go_away': 'aller dans la partie (nouvel onglet)'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres', 'all_agreed': 'accords', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'jump_here': 'partie', 'go_away': 'partie (nouvel onglet)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -418,7 +418,7 @@ def my_games(state):
             if field == 'go_away':
 
                 link = html.A(href=f"?game={game_name}", target="_blank")
-                link <= "On y va"
+                link <= "y aller"
                 link.style = {
                     'color': 'blue',
                 }

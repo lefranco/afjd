@@ -341,7 +341,7 @@ def all_games(state):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres soumis sur la partie', 'all_agreed': 'accords sur la partie', 'jump_here': 'sauter dans la partie', 'go_away': 'aller dans la partie (nouvel onglet)'}[field]
+        field_fr = {'name': 'nom', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres', 'all_agreed': 'accords', 'jump_here': 'partie', 'go_away': 'partie (nouvel onglet)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -473,7 +473,7 @@ def all_games(state):
             if field == 'jump_here':
                 game_name = data['name']
                 form = html.FORM()
-                input_jump_game = html.INPUT(type="submit", value="sauter dans la partie")
+                input_jump_game = html.INPUT(type="submit", value="on saute")
                 input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
                 form <= input_jump_game
                 value = form
@@ -481,7 +481,7 @@ def all_games(state):
             if field == 'go_away':
 
                 link = html.A(href=f"?game={game_name}", target="_blank")
-                link <= "On y va"
+                link <= "y aller"
                 link.style = {
                     'color': 'blue',
                 }
