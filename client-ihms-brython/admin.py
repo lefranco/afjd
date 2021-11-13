@@ -473,7 +473,7 @@ def all_games(state):
             if field == 'jump_here':
                 game_name = data['name']
                 form = html.FORM()
-                input_jump_game = html.INPUT(type="submit", value="on saute")
+                input_jump_game = html.INPUT(type="submit", value="sauter")
                 input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
                 form <= input_jump_game
                 value = form
