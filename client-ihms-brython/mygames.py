@@ -227,6 +227,8 @@ def my_games(state):
         log_info += f"partie {data['name']}\n"
         time_before = time.time()
 
+        time_before2 = time.time()
+
         # variant is available
         variant_name_loaded = data['variant']
 
@@ -249,6 +251,12 @@ def my_games(state):
         #  if not variant_content_loaded:
         #      return
 
+        time_after2 = time.time()
+        elapsed = time_after2 - time_before2
+        log_info += f"preamble partie A : {elapsed}\n"
+
+        time_before2 = time.time()
+
         # selected display (user choice)
         display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
@@ -259,17 +267,29 @@ def my_games(state):
         # this is an optimisation
 
         # new code after optimization
-        variant_name_loaded_str = str(variant_name_loaded)
-        variant_content_loaded_str = str(variant_content_loaded)
-        parameters_read_str = str(parameters_read)
-        if (variant_name_loaded_str, variant_content_loaded_str, parameters_read_str) not in variant_data_memoize_table:
+#        variant_name_loaded_str = str(variant_name_loaded)
+#        variant_content_loaded_str = str(variant_content_loaded)
+
+        time_after2 = time.time()
+        elapsed = time_after2 - time_before2
+        log_info += f"preamble partie B1 : {elapsed}\n"
+
+        time_before2 = time.time()
+
+        if variant_name_loaded not in variant_data_memoize_table:
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-            variant_data_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)] = variant_data
+            variant_data_memoize_table[variant_name_loaded] = variant_data
         else:
-            variant_data = variant_data_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)]
+            variant_data = variant_data_memoize_table[variant_name_loaded]
 
         # old code before optimization
         #  variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+
+        time_after2 = time.time()
+        elapsed = time_after2 - time_before2
+        log_info += f"preamble partie B2 : {elapsed}\n"
+
+        time_before2 = time.time()
 
         number_games += 1
 
@@ -292,6 +312,10 @@ def my_games(state):
         data['jump_here'] = None
         data['go_away'] = None
 
+        time_after2 = time.time()
+        elapsed = time_after2 - time_before2
+        log_info += f"preamble partie C : {elapsed}\n"
+
         row = html.TR()
         for field in fields:
 
@@ -299,6 +323,9 @@ def my_games(state):
             colour = 'black'
 
             if field == 'deadline':
+
+                time_before2 = time.time()
+
                 deadline_loaded = value
                 datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
                 deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
@@ -313,13 +340,27 @@ def my_games(state):
                 elif time_stamp_now > deadline_loaded - 24 * 3600:
                     colour = 'orange'
 
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
+
             if field == 'current_advancement':
+
+                time_before2 = time.time()
+
                 advancement_loaded = value
                 advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
                 advancement_season_readable = variant_data.name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
 
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
+
             if field == 'role_played':
+
+                time_before2 = time.time()
+
                 value = ""
                 if role_id is None:
                     role_icon_img = html.IMG(src="./images/assigned.png", title="Affecté à la partie")
@@ -329,7 +370,13 @@ def my_games(state):
                     role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
                 value = role_icon_img
 
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
+
             if field == 'orders_submitted':
+
+                time_before2 = time.time()
 
                 value = ""
                 submitted_roles_list = submitted_data['submitted']
@@ -342,7 +389,13 @@ def my_games(state):
                         flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
                         value = flag
 
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
+
             if field == 'agreed':
+
+                time_before2 = time.time()
 
                 value = ""
                 submitted_roles_list = submitted_data['submitted']
@@ -355,7 +408,13 @@ def my_games(state):
                         flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
                         value = flag
 
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
+
             if field == 'all_orders_submitted':
+
+                time_before2 = time.time()
 
                 value = ""
                 if role_id is not None:
@@ -370,7 +429,13 @@ def my_games(state):
                         # we have all orders : green
                         colour = 'green'
 
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
+
             if field == 'all_agreed':
+
+                time_before2 = time.time()
 
                 value = ""
                 if role_id is not None:
@@ -385,7 +450,13 @@ def my_games(state):
                         # we have all agreements : green
                         colour = 'green'
 
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
+
             if field == 'new_declarations':
+
+                time_before2 = time.time()
 
                 value = ""
                 if role_id is not None:
@@ -396,7 +467,13 @@ def my_games(state):
                         popup = html.IMG(src="./images/press_published.jpg", title="Nouvelle(s) déclaration(s) dans cette partie !")
                     value = popup
 
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
+
             if field == 'new_messages':
+
+                time_before2 = time.time()
 
                 value = ""
                 if role_id is not None:
@@ -407,7 +484,14 @@ def my_games(state):
                         popup = html.IMG(src="./images/messages_received.jpg", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
 
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
+
             if field == 'jump_here':
+
+                time_before2 = time.time()
+
                 game_name = data['name']
                 form = html.FORM()
                 input_jump_game = html.INPUT(type="submit", value="sauter")
@@ -415,7 +499,13 @@ def my_games(state):
                 form <= input_jump_game
                 value = form
 
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
+
             if field == 'go_away':
+
+                time_before2 = time.time()
 
                 link = html.A(href=f"?game={game_name}", target="_blank")
                 link <= "y aller"
@@ -423,6 +513,10 @@ def my_games(state):
                     'color': 'blue',
                 }
                 value = link
+
+                time_after2 = time.time()
+                elapsed = time_after2 - time_before2
+                log_info += f"{field} : {elapsed}\n"
 
             col = html.TD(value)
             col.style = {
