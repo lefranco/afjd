@@ -1561,21 +1561,23 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
-        if role_id != 0:
+        if role_id == 0:
+            del sql_executor
+            flask_restful.abort(400, msg="Invalid role_id parameter")
 
-            # check orders are required
-            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
-            needed_list = [o[1] for o in actives_list]
-            if role_id not in needed_list:
-                del sql_executor
-                flask_restful.abort(400, msg="This role does not seem to require any orders")
+        # check orders are required
+        actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+        needed_list = [o[1] for o in actives_list]
+        if role_id not in needed_list:
+            del sql_executor
+            flask_restful.abort(400, msg="This role does not seem to require any orders")
 
-            # check orders are submitted
-            submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
-            submitted_list = [o[1] for o in submissions_list]
-            if role_id not in submitted_list:
-                del sql_executor
-                flask_restful.abort(400, msg="This role does not seem to have submitted orders yet")
+        # check orders are submitted
+        submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+        submitted_list = [o[1] for o in submissions_list]
+        if role_id not in submitted_list:
+            del sql_executor
+            flask_restful.abort(400, msg="This role does not seem to have submitted orders yet")
 
         sql_executor = database.SqlExecutor()
 
@@ -2018,6 +2020,10 @@ class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
         if user_id != game_master_id:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+
+        if role_id == 0:
+            del sql_executor
+            flask_restful.abort(400, msg="Invalid role_id parameter")
 
         # check orders are required
         # needed list : those who need to submit orders

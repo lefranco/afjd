@@ -325,12 +325,8 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
     """
 
     # update db here
-    if role_id == 0:
-        definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
-        definitive.update_database(sql_executor)  # noqa: F821
-    else:
-        definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
-        definitive.update_database(sql_executor)  # noqa: F821
+    definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
+    definitive.update_database(sql_executor)  # noqa: F821
 
     if not definitive_value:
         return True, False, "Player does not agree to adjudicate"
