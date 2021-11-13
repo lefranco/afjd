@@ -2816,6 +2816,7 @@ def game_master():
 
             # back to where we started
             my_sub_panel.clear()
+            load_special_stuff()
             game_master()
 
         json_dict = {
@@ -2852,6 +2853,7 @@ def game_master():
 
             # back to where we started
             my_sub_panel.clear()
+            load_special_stuff()
             game_master()
 
         player_pseudo = input_for_role.value
