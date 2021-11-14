@@ -341,7 +341,7 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
 
     # definitives_list : those who agreed to adjudicate
     definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
-    agreed_list = [o[1] for o in definitives_list]
+    agreed_list = [o[1] for o in definitives_list if o[2]]
 
     # find the game
     game = games.Game.find_by_identifier(sql_executor, game_id)
