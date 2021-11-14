@@ -556,7 +556,7 @@ def my_games(state):
 
     subject = f"stats pour {pseudo}"
     body = ""
-    body += "Version V2_f (opt sur tout - final)"
+    body += "Version V2_f (opt sur tout - final-final)"
 
     body += "\n\n"
     body += stats
