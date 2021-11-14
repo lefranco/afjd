@@ -6,7 +6,7 @@
 import time
 start = time.time()
 
-from browser import document, html  # pylint: disable=import-error # noqa: E402
+from browser import document, html, timer  # pylint: disable=import-error # noqa: E402
 from browser.local_storage import storage  # pylint: disable=import-error # noqa: E402
 
 import home    # noqa: E402
@@ -122,6 +122,12 @@ def load_option(_, item_name):
         menu_item = html.LI(button)
         menu_left <= menu_item
 
+    # quitting superviser : clear timer
+    if item_name_selected != 'jouer la partie sélectionnée':
+        if play.refresh_timer is not None:
+            print("kill refresh()")
+            timer.clear_interval(play.refresh_timer)
+            play.refresh_timer = None
 
 # panel-middle
 panel_middle = html.DIV(id='panel_middle')

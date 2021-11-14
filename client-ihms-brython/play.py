@@ -179,6 +179,9 @@ def get_game_status(variant_data, game_parameters_loaded, game_id):
     """ get_game__status """
 
     def countdown():
+
+        print(f"countdown()")
+
         now = time.time()
         remains = int(deadline_loaded - now)
         if remains < 0:
@@ -255,13 +258,14 @@ def get_game_status(variant_data, game_parameters_loaded, game_id):
     row <= col
     game_status_table <= row
 
-    global countdown_timer  # pylint: disable=invalid-name
-    # clear previous countdown
-    if countdown_timer is not None:
-        timer.clear_interval(countdown_timer)
     # initiates countdown
     countdown()
-    countdown_timer = timer.set_interval(countdown, 1000)
+
+    # repeat
+    global countdown_timer  # pylint: disable=invalid-name
+    if countdown_timer is None:
+        print("start countdown()")
+        countdown_timer = timer.set_interval(countdown, 1000)
 
     return game_status_table
 
@@ -3287,6 +3291,8 @@ def supervise():
     def refresh():
         """ refresh """
 
+        print(f"refresh()")
+
         my_sub_panel.clear()
 
         # game status
@@ -3356,13 +3362,14 @@ def supervise():
 
     log_stack = list()
 
-    global refresh_timer  # pylint: disable=invalid-name
-    # clear previous countdown
-    if refresh_timer is not None:
-        timer.clear_interval(refresh_timer)
     # initiates refresh
     refresh()
-    refresh_timer = timer.set_interval(refresh, REFRESH_PERIOD * 1000)  # refresh every x seconds
+
+    # repeat
+    global refresh_timer
+    if refresh_timer is None:
+        print("start refresh()")
+        refresh_timer = timer.set_interval(refresh, REFRESH_PERIOD * 1000)  # refresh every x seconds
 
     return True
 
@@ -3716,6 +3723,13 @@ def load_option(_, item_name):
         menu_item = html.LI(button)
         menu_left <= menu_item
 
+    # quitting superviser : clear timer
+    global refresh_timer
+    if item_name_selected != 'superviser':
+        if refresh_timer is not None:
+            print("kill refresh()")
+            timer.clear_interval(refresh_timer)
+            refresh_timer = None
 
 def render(panel_middle):
     """ render """
