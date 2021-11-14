@@ -202,8 +202,9 @@ def my_games(state):
     games_id_player = {int(n) for n in player_games.keys()}
 
     # for optimization
-    variant_data_memoize_table = dict()
     variant_content_memoize_table = dict()
+    parameters_read_memoize_table = dict()
+    variant_data_memoize_table = dict()
 
     number_games = 0
 
@@ -233,10 +234,6 @@ def my_games(state):
         variant_name_loaded = data['variant']
 
         # from variant name get variant content
-
-        # this is an optimisation
-
-        # new code after optimization
         if variant_name_loaded not in variant_content_memoize_table:
             variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
             if not variant_content_loaded:
@@ -245,11 +242,6 @@ def my_games(state):
             variant_content_memoize_table[variant_name_loaded] = variant_content_loaded
         else:
             variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
-
-        # old code before optimization
-        #  variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-        #  if not variant_content_loaded:
-        #      return
 
         time_after2 = time.time()
         elapsed = time_after2 - time_before2
@@ -266,15 +258,12 @@ def my_games(state):
 
         time_before2 = time.time()
 
-        parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+        if (variant_name_loaded, display_chosen) in parameters_read_memoize_table:
+            parameters_read = parameters_read_memoize_table[(variant_name_loaded, display_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
         # build variant data
-
-        # this is an optimisation
-
-        # new code after optimization
-#        variant_name_loaded_str = str(variant_name_loaded)
-#        variant_content_loaded_str = str(variant_content_loaded)
 
         time_after2 = time.time()
         elapsed = time_after2 - time_before2
@@ -287,9 +276,6 @@ def my_games(state):
             variant_data_memoize_table[variant_name_loaded] = variant_data
         else:
             variant_data = variant_data_memoize_table[variant_name_loaded]
-
-        # old code before optimization
-        #  variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
         time_after2 = time.time()
         elapsed = time_after2 - time_before2
