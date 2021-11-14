@@ -3310,8 +3310,6 @@ def supervise():
         log_line = html.CODE(f"{date_now_gmt_str} : {message}")
         log_stack.append(log_line)
 
-        print(f"{log_stack=}")
-
         log_window = html.DIV(id="log")
         for log_line in reversed(log_stack):
             log_window <= log_line
@@ -3357,7 +3355,6 @@ def supervise():
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
     log_stack = list()
-    print("new start !")
 
     global refresh_timer  # pylint: disable=invalid-name
     # clear previous countdown
