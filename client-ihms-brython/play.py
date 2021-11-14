@@ -172,6 +172,9 @@ def stack_role_flag(frame):
     frame <= role_icon_img
 
 
+countdown_timer = None  # pylint: disable=invalid-name
+
+
 def get_game_status(variant_data, game_parameters_loaded, game_id):
     """ get_game__status """
 
@@ -252,9 +255,13 @@ def get_game_status(variant_data, game_parameters_loaded, game_id):
     row <= col
     game_status_table <= row
 
+    global countdown_timer  # pylint: disable=invalid-name
+    # clear previous countdown
+    if countdown_timer is not None:
+        timer.clear_interval(countdown_timer)
     # initiates countdown
     countdown()
-    timer.set_interval(countdown, 1000)
+    countdown_timer = timer.set_interval(countdown, 1000)
 
     return game_status_table
 
@@ -3093,6 +3100,9 @@ def game_master():
     return True
 
 
+refresh_timer = None  # pylint: disable=invalid-name
+
+
 def supervise():
     """ supervise """
 
@@ -3177,7 +3187,6 @@ def supervise():
         # submitting force agreement : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-
     def reload_game_admin_table():
         """ reload_game_admin_table """
 
@@ -3207,8 +3216,6 @@ def supervise():
         needed_roles_list = submitted_data['needed']
 
         game_admin_table = html.TABLE()
-
-        print(f"{g_variant_data.roles=}")
 
         for role_id in g_variant_data.roles:
 
@@ -3303,13 +3310,14 @@ def supervise():
         log_line = html.CODE(f"{date_now_gmt_str} : {message}")
         log_stack.append(log_line)
 
+        print(f"{log_stack=}")
+
         log_window = html.DIV(id="log")
         for log_line in reversed(log_stack):
             log_window <= log_line
             log_window <= html.BR()
 
         my_sub_panel <= log_window
-
 
     # need to be connected
     if g_pseudo is None:
@@ -3349,9 +3357,15 @@ def supervise():
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
     log_stack = list()
+    print("new start !")
 
+    global refresh_timer  # pylint: disable=invalid-name
+    # clear previous countdown
+    if refresh_timer is not None:
+        timer.clear_interval(refresh_timer)
+    # initiates refresh
     refresh()
-    timer.set_interval(refresh, REFRESH_PERIOD * 1000) # refresh every x seconds
+    refresh_timer = timer.set_interval(refresh, REFRESH_PERIOD * 1000)  # refresh every x seconds
 
     return True
 
