@@ -260,6 +260,12 @@ def my_games(state):
         # selected display (user choice)
         display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
+        time_after2 = time.time()
+        elapsed = time_after2 - time_before2
+        log_info += f"preamble partie B : {elapsed}\n"
+
+        time_before2 = time.time()
+
         parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 
         # build variant data
@@ -272,7 +278,7 @@ def my_games(state):
 
         time_after2 = time.time()
         elapsed = time_after2 - time_before2
-        log_info += f"preamble partie B1 : {elapsed}\n"
+        log_info += f"preamble partie C : {elapsed}\n"
 
         time_before2 = time.time()
 
@@ -287,7 +293,7 @@ def my_games(state):
 
         time_after2 = time.time()
         elapsed = time_after2 - time_before2
-        log_info += f"preamble partie B2 : {elapsed}\n"
+        log_info += f"preamble partie D : {elapsed}\n"
 
         time_before2 = time.time()
 
@@ -314,7 +320,7 @@ def my_games(state):
 
         time_after2 = time.time()
         elapsed = time_after2 - time_before2
-        log_info += f"preamble partie C : {elapsed}\n"
+        log_info += f"preamble partie E : {elapsed}\n"
 
         row = html.TR()
         for field in fields:
