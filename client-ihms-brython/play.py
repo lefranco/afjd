@@ -6,6 +6,7 @@ import json
 import datetime
 import enum
 import time
+import random
 
 from browser import document, html, ajax, alert, timer   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -20,8 +21,8 @@ import login
 import sandbox
 import index  # circular import
 
-REFRESH_PERIOD_SEC = 10
-LOG_WINDOW_SIZE = 10
+# how long between two consecutives refresh
+REFRESH_PERIOD_SEC = 15
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -186,7 +187,15 @@ def get_game_status(variant_data, game_parameters_loaded, game_id):
         now = time.time()
         remains = int(deadline_loaded - now)
         if remains < 0:
-            countdown_elt.text = "passée !"
+            late = - remains
+            if late < 60:
+                countdown_elt.text = f"passée de {late:02}s !"
+            elif late < 3600:
+                countdown_elt.text = f"passée de {late // 60:02}mn {late % 60:02}s !"
+            elif late < 24 * 3600:
+                countdown_elt.text = f"passée de ~ {late // 3600:02}h !"
+            else:
+                countdown_elt.text = f"passée de ~ {late // (24 * 3600)}j !"
         elif remains < 60:
             countdown_elt.text = f"{remains:02}s"
         elif remains < 3600:
@@ -264,9 +273,11 @@ def get_game_status(variant_data, game_parameters_loaded, game_id):
 
     # repeat
     global countdown_timer  # pylint: disable=invalid-name
-    if countdown_timer is None:
-        print("start countdown()")
-        countdown_timer = timer.set_interval(countdown, 1000)
+    if countdown_timer is not None:
+        print("kill countdown()")
+        timer.clear_interval(countdown_timer)
+    print("start countdown()")
+    countdown_timer = timer.set_interval(countdown, 1000)
 
     return game_status_table
 
@@ -3280,7 +3291,9 @@ def supervise():
         print("refresh()")
 
         # reload from server
+        load_dynamic_stuff()
 
+        # reload from server
         submitted_data = common.get_roles_submitted_orders(g_game_id)
         if submitted_data is None:
             alert("Erreur chargement données de soumission")
@@ -3309,26 +3322,53 @@ def supervise():
 
         game_admin_table = reload_game_admin_table(submitted_data, votes)
         my_sub_panel <= game_admin_table
-        my_sub_panel <= html.P()
+        my_sub_panel <= html.BR()
 
-        # message
-        message = "Mise à jour..."
+        # are we past deadline + grace ?
+        deadline_loaded = g_game_parameters_loaded['deadline']
+        grace_duration_loaded = g_game_parameters_loaded['grace_duration']
+        force_point = deadline_loaded + 60 * grace_duration_loaded
+        now = time.time()
 
-        # insert datation
-        time_stamp = time.time()
-        date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        if now > force_point:
 
-        # put lin log window (limited height)
-        log_line = html.CODE(f"{date_now_gmt_str} : {message}")
-        log_stack.append(log_line)
-        log_stack_limited = log_stack[: LOG_WINDOW_SIZE]
+            submitted_roles_list = submitted_data['submitted']
+            agreed_roles_list = submitted_data['agreed']
+            needed_roles_list = submitted_data['needed']
 
+            missing_orders = list()
+            for role_id in g_variant_data.roles:
+                if role_id in needed_roles_list and role_id not in submitted_roles_list:
+                    missing_orders.append(role_id)
+
+            if missing_orders:
+                victim_role = random.choice(missing_orders)
+                message = f"should force orders for role {victim_role}"
+            else:
+                missing_agreements = list()
+                for role_id in g_variant_data.roles:
+                    if role_id in submitted_roles_list and role_id not in agreed_roles_list:
+                        missing_agreements.append(role_id)
+                if missing_agreements:
+                    victim_role = random.choice(missing_agreements)
+                    message = f"should force agreement for role {victim_role}"
+
+            # insert datation
+            time_stamp = time.time()
+            date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+            date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+
+            # put in stack (limited height)
+            log_line = html.CODE(f"{date_now_gmt_str} : {message}")
+            log_stack.append(log_line)
+
+        # put stack in log window
         log_window = html.DIV(id="log")
-        for log_line in reversed(log_stack_limited):
+        for log_line in reversed(log_stack):
             log_window <= log_line
             log_window <= html.BR()
 
+        # display
         my_sub_panel <= log_window
 
     # need to be connected
