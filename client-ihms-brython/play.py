@@ -20,6 +20,8 @@ import login
 import sandbox
 import index  # circular import
 
+REFRESH_PERIOD = 10
+
 LONG_DURATION_LIMIT_SEC = 1.0
 
 OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'paramètres', 'joueurs', 'ordres']
@@ -2940,9 +2942,6 @@ def game_master():
     my_sub_panel <= html.BR()
 
     id2pseudo = {v: k for k, v in g_players_dict.items()}
-
-    game_admin_table = html.TABLE()
-
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
     submitted_data = common.get_roles_submitted_orders(g_game_id)
@@ -2972,6 +2971,8 @@ def game_master():
     submitted_roles_list = submitted_data['submitted']
     agreed_roles_list = submitted_data['agreed']
     needed_roles_list = submitted_data['needed']
+
+    game_admin_table = html.TABLE()
 
     for role_id in g_variant_data.roles:
 
@@ -3176,6 +3177,140 @@ def supervise():
         # submitting force agreement : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+
+    def reload_game_admin_table():
+        """ reload_game_admin_table """
+
+        submitted_data = common.get_roles_submitted_orders(g_game_id)
+        if submitted_data is None:
+            alert("Erreur chargement données de soumission")
+            load_option(None, 'position')
+            return False
+
+        # just to avoid a warning
+        submitted_data = dict(submitted_data)
+
+        # votes
+        votes = common.vote_reload(g_game_id)
+        if votes is None:
+            return vote()
+
+        # avoids a warning
+        votes = list(votes)
+
+        vote_values_table = dict()
+        for _, role, vote_val in votes:
+            vote_values_table[role] = bool(vote_val)
+
+        submitted_roles_list = submitted_data['submitted']
+        agreed_roles_list = submitted_data['agreed']
+        needed_roles_list = submitted_data['needed']
+
+        game_admin_table = html.TABLE()
+
+        print(f"{g_variant_data.roles=}")
+
+        for role_id in g_variant_data.roles:
+
+            # discard game master
+            if role_id == 0:
+                continue
+
+            row = html.TR()
+
+            role = g_variant_data.roles[role_id]
+            role_name = g_variant_data.name_table[role]
+
+            # flag
+            col = html.TD()
+            role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id}.jpg", title=role_name)
+            col <= role_icon_img
+            row <= col
+
+            # role name
+            col = html.TD()
+            col <= role_name
+            row <= col
+
+            # player
+            col = html.TD()
+            pseudo_there = ""
+            if role_id in role2pseudo:
+                player_id_str = role2pseudo[role_id]
+                player_id = int(player_id_str)
+                pseudo_there = id2pseudo[player_id]
+            col <= pseudo_there
+            row <= col
+
+            col = html.TD()
+            flag = ""
+            if role_id in needed_roles_list:
+                if role_id in submitted_roles_list:
+                    flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
+                else:
+                    flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
+            col <= flag
+            row <= col
+
+            col = html.TD()
+            flag = ""
+            if role_id in needed_roles_list:
+                if role_id in submitted_roles_list:
+                    if role_id in agreed_roles_list:
+                        flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
+                    else:
+                        flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
+            col <= flag
+            row <= col
+
+            col = html.TD()
+            flag = ""
+            if role_id in vote_values_table:
+                if vote_values_table[role_id]:
+                    flag = html.IMG(src="./images/stop.png", title="Arrêter la partie")
+                else:
+                    flag = html.IMG(src="./images/continue.jpg", title="Continuer la partie")
+            col <= flag
+            row <= col
+
+            game_admin_table <= row
+
+        return game_admin_table
+
+    def refresh():
+        """ refresh """
+
+        my_sub_panel.clear()
+
+        # game status
+        my_sub_panel <= g_game_status
+        my_sub_panel <= html.BR()
+
+        stack_role_flag(my_sub_panel)
+        my_sub_panel <= html.BR()
+
+        game_admin_table = reload_game_admin_table()
+        my_sub_panel <= game_admin_table
+        my_sub_panel <= html.P()
+
+        # message
+        message = "Mise à jour..."
+
+        # insert datation
+        time_stamp = time.time()
+        date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        log_line = html.CODE(f"{date_now_gmt_str} : {message}")
+        log_stack.append(log_line)
+
+        log_window = html.DIV(id="log")
+        for log_line in reversed(log_stack):
+            log_window <= log_line
+            log_window <= html.BR()
+
+        my_sub_panel <= log_window
+
+
     # need to be connected
     if g_pseudo is None:
         alert("Il faut se connecter au préalable")
@@ -3210,110 +3345,13 @@ def supervise():
 
     # header
 
-    # game status
-    my_sub_panel <= g_game_status
-    my_sub_panel <= html.BR()
-
-    stack_role_flag(my_sub_panel)
-    my_sub_panel <= html.BR()
-
     id2pseudo = {v: k for k, v in g_players_dict.items()}
-
-    game_admin_table = html.TABLE()
-
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
-    submitted_data = common.get_roles_submitted_orders(g_game_id)
-    if submitted_data is None:
-        alert("Erreur chargement données de soumission")
-        load_option(None, 'position')
-        return False
+    log_stack = list()
 
-    # just to avoid a warning
-    submitted_data = dict(submitted_data)
-
-    # votes
-    votes = common.vote_reload(g_game_id)
-    if votes is None:
-        return vote()
-
-    # avoids a warning
-    votes = list(votes)
-
-    vote_values_table = dict()
-    for _, role, vote_val in votes:
-        vote_values_table[role] = bool(vote_val)
-
-    submitted_roles_list = submitted_data['submitted']
-    agreed_roles_list = submitted_data['agreed']
-    needed_roles_list = submitted_data['needed']
-
-    for role_id in g_variant_data.roles:
-
-        # discard game master
-        if role_id == 0:
-            continue
-
-        row = html.TR()
-
-        role = g_variant_data.roles[role_id]
-        role_name = g_variant_data.name_table[role]
-
-        # flag
-        col = html.TD()
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id}.jpg", title=role_name)
-        col <= role_icon_img
-        row <= col
-
-        # role name
-        col = html.TD()
-        col <= role_name
-        row <= col
-
-        # player
-        col = html.TD()
-        pseudo_there = ""
-        if role_id in role2pseudo:
-            player_id_str = role2pseudo[role_id]
-            player_id = int(player_id_str)
-            pseudo_there = id2pseudo[player_id]
-        col <= pseudo_there
-        row <= col
-
-        col = html.TD()
-        flag = ""
-        if role_id in needed_roles_list:
-            if role_id in submitted_roles_list:
-                flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
-            else:
-                flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
-        col <= flag
-        row <= col
-
-        col = html.TD()
-        flag = ""
-        if role_id in needed_roles_list:
-            if role_id in submitted_roles_list:
-                if role_id in agreed_roles_list:
-                    flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
-                else:
-                    flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
-        col <= flag
-        row <= col
-
-        col = html.TD()
-        flag = ""
-        if role_id in vote_values_table:
-            if vote_values_table[role_id]:
-                flag = html.IMG(src="./images/stop.png", title="Arrêter la partie")
-            else:
-                flag = html.IMG(src="./images/continue.jpg", title="Continuer la partie")
-        col <= flag
-        row <= col
-
-        game_admin_table <= row
-
-    my_sub_panel <= game_admin_table
+    refresh()
+    timer.set_interval(refresh, REFRESH_PERIOD * 1000) # refresh every x seconds
 
     return True
 
