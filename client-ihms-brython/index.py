@@ -129,6 +129,7 @@ def load_option(_, item_name):
             timer.clear_interval(play.refresh_timer)
             play.refresh_timer = None
 
+
 # panel-middle
 panel_middle = html.DIV(id='panel_middle')
 overall <= panel_middle
