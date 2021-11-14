@@ -262,6 +262,7 @@ def my_games(state):
             parameters_read = parameters_read_memoize_table[(variant_name_loaded, display_chosen)]
         else:
             parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+            parameters_read_memoize_table[(variant_name_loaded, display_chosen)] = parameters_read
 
         # build variant data
 
@@ -393,7 +394,7 @@ def my_games(state):
                 submitted_roles_list = submitted_data['submitted']
                 agreed_roles_list = submitted_data['agreed']
                 if role_id is not None:
-                    if role_id in submitted_roles_list:
+                    if role_id in agreed_roles_list:
                         flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
                         value = flag
                     elif role_id in needed_roles_list:
@@ -556,7 +557,7 @@ def my_games(state):
 
     subject = f"stats pour {pseudo}"
     body = ""
-    body += "Version V2_f (opt sur tout - final-final)"
+    body += "Version V2_f (opt sur tout - def-final)"
 
     body += "\n\n"
     body += stats
