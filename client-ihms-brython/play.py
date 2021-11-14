@@ -254,6 +254,9 @@ def get_game_status(variant_data, game_parameters_loaded, game_id):
 
     countdown_elt = html.DIV()
     col = html.TD(countdown_elt)
+    col.style = {
+        'color': colour
+    }
     row <= col
 
     game_master_pseudo = get_game_master(game_id)
