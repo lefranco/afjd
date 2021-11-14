@@ -3144,10 +3144,6 @@ def supervise():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}", remove_after=config.REMOVE_AFTER)
 
-            # back to where we started
-            my_sub_panel.clear()
-            game_master()
-
         names_dict = g_variant_data.extract_names()
         names_dict_json = json.dumps(names_dict)
 
@@ -3185,10 +3181,6 @@ def supervise():
             if adjudicated:
                 alert("La position de la partie a changé !")
                 load_dynamic_stuff()
-
-            # back to where we started
-            my_sub_panel.clear()
-            game_master()
 
         names_dict = g_variant_data.extract_names()
         names_dict_json = json.dumps(names_dict)
@@ -3327,12 +3319,13 @@ def supervise():
         my_sub_panel <= game_admin_table
         my_sub_panel <= html.BR()
 
-        # are we past deadline + grace ?
+        # calculate deadline + grace
         deadline_loaded = g_game_parameters_loaded['deadline']
         grace_duration_loaded = g_game_parameters_loaded['grace_duration']
         force_point = deadline_loaded + 60 * grace_duration_loaded
         now = time.time()
 
+        # are we past ?
         if now > force_point:
 
             submitted_roles_list = submitted_data['submitted']
@@ -3345,16 +3338,22 @@ def supervise():
                     missing_orders.append(role_id)
 
             if missing_orders:
-                victim_role = random.choice(missing_orders)
-                message = f"should force orders for role {victim_role}"
+                role_id = random.choice(missing_orders)
+                civil_disorder_callback(None, role_id)
+                role = g_variant_data.roles[role_id]
+                role_name = g_variant_data.name_table[role]
+                message = f"Désordre civil pour {role_name}"
             else:
                 missing_agreements = list()
                 for role_id in g_variant_data.roles:
                     if role_id in submitted_roles_list and role_id not in agreed_roles_list:
                         missing_agreements.append(role_id)
                 if missing_agreements:
-                    victim_role = random.choice(missing_agreements)
-                    message = f"should force agreement for role {victim_role}"
+                    role_id = random.choice(missing_agreements)
+                    force_agreement_callback(None, role_id)
+                    role = g_variant_data.roles[role_id]
+                    role_name = g_variant_data.name_table[role]
+                    message = f"Forçage accord pour {role_name}"
 
             # insert datation
             time_stamp = time.time()
