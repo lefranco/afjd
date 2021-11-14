@@ -22,7 +22,7 @@ import index  # circular import
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'paramètres', 'joueurs', 'ordres']
+OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'paramètres', 'joueurs', 'ordres']
 
 
 @enum.unique
@@ -2910,7 +2910,7 @@ def game_master():
         load_option(None, 'position')
         return False
 
-    # need to e game master
+    # need to be game master
     if g_role_id != 0:
         alert("Vous ne semblez pas être l'arbitre de cette partie")
         load_option(None, 'position')
@@ -3073,6 +3073,232 @@ def game_master():
                     input_force_agreement = html.INPUT(type="submit", value="forcer son accord")
                     input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
         col <= input_force_agreement
+        row <= col
+
+        col = html.TD()
+        flag = ""
+        if role_id in vote_values_table:
+            if vote_values_table[role_id]:
+                flag = html.IMG(src="./images/stop.png", title="Arrêter la partie")
+            else:
+                flag = html.IMG(src="./images/continue.jpg", title="Continuer la partie")
+        col <= flag
+        row <= col
+
+        game_admin_table <= row
+
+    my_sub_panel <= game_admin_table
+
+    return True
+
+
+def supervise():
+    """ supervise """
+
+    def civil_disorder_callback(_, role_id):
+        """ civil_disorder_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la soumission d'ordres de désordre civil dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la soumission d'ordres de désordre civil dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            my_sub_panel.clear()
+            game_master()
+
+        names_dict = g_variant_data.extract_names()
+        names_dict_json = json.dumps(names_dict)
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': g_pseudo,
+            'names': names_dict_json
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-force-no-orders/{g_game_id}"
+
+        # submitting civil disorder : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def force_agreement_callback(_, role_id):
+        """ force_agreement_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la soumission d'accord forcé pour résoudre dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la soumission d'accord forcé pour résoudre dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur s'est vu imposé un accord pour résoudre: {messages}", remove_after=config.REMOVE_AFTER)
+
+            adjudicated = req_result['adjudicated']
+            if adjudicated:
+                alert("La position de la partie a changé !")
+                load_dynamic_stuff()
+
+            # back to where we started
+            my_sub_panel.clear()
+            game_master()
+
+        names_dict = g_variant_data.extract_names()
+        names_dict_json = json.dumps(names_dict)
+        definitive_value = True
+
+        json_dict = {
+            'role_id': role_id,
+            'pseudo': g_pseudo,
+            'definitive': definitive_value,
+            'names': names_dict_json
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-force-agree-solve/{g_game_id}"
+
+        # submitting force agreement : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    # need to be connected
+    if g_pseudo is None:
+        alert("Il faut se connecter au préalable")
+        load_option(None, 'position')
+        return False
+
+    # need to be game master
+    if g_role_id != 0:
+        alert("Vous ne semblez pas être l'arbitre de cette partie")
+        load_option(None, 'position')
+        return False
+
+    # game needs to be ongoing - not waiting
+    if g_game_parameters_loaded['current_state'] == 0:
+        alert("La partie n'est pas encore démarrée")
+        load_option(None, 'position')
+        return False
+
+    # game needs to be ongoing - not finished
+    if g_game_parameters_loaded['current_state'] == 2:
+        alert("La partie est déjà terminée")
+        load_option(None, 'position')
+        return False
+
+    # game needs to be fast
+    if not g_game_parameters_loaded['fast']:
+        alert("Cette partie n'est pas une partie rapide")
+        load_option(None, 'position')
+        return False
+
+    # now we can display
+
+    # header
+
+    # game status
+    my_sub_panel <= g_game_status
+    my_sub_panel <= html.BR()
+
+    stack_role_flag(my_sub_panel)
+    my_sub_panel <= html.BR()
+
+    id2pseudo = {v: k for k, v in g_players_dict.items()}
+
+    game_admin_table = html.TABLE()
+
+    role2pseudo = {v: k for k, v in g_game_players_dict.items()}
+
+    submitted_data = common.get_roles_submitted_orders(g_game_id)
+    if submitted_data is None:
+        alert("Erreur chargement données de soumission")
+        load_option(None, 'position')
+        return False
+
+    # just to avoid a warning
+    submitted_data = dict(submitted_data)
+
+    # votes
+    votes = common.vote_reload(g_game_id)
+    if votes is None:
+        return vote()
+
+    # avoids a warning
+    votes = list(votes)
+
+    vote_values_table = dict()
+    for _, role, vote_val in votes:
+        vote_values_table[role] = bool(vote_val)
+
+    submitted_roles_list = submitted_data['submitted']
+    agreed_roles_list = submitted_data['agreed']
+    needed_roles_list = submitted_data['needed']
+
+    for role_id in g_variant_data.roles:
+
+        # discard game master
+        if role_id == 0:
+            continue
+
+        row = html.TR()
+
+        role = g_variant_data.roles[role_id]
+        role_name = g_variant_data.name_table[role]
+
+        # flag
+        col = html.TD()
+        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id}.jpg", title=role_name)
+        col <= role_icon_img
+        row <= col
+
+        # role name
+        col = html.TD()
+        col <= role_name
+        row <= col
+
+        # player
+        col = html.TD()
+        pseudo_there = ""
+        if role_id in role2pseudo:
+            player_id_str = role2pseudo[role_id]
+            player_id = int(player_id_str)
+            pseudo_there = id2pseudo[player_id]
+        col <= pseudo_there
+        row <= col
+
+        col = html.TD()
+        flag = ""
+        if role_id in needed_roles_list:
+            if role_id in submitted_roles_list:
+                flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
+            else:
+                flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
+        col <= flag
+        row <= col
+
+        col = html.TD()
+        flag = ""
+        if role_id in needed_roles_list:
+            if role_id in submitted_roles_list:
+                if role_id in agreed_roles_list:
+                    flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
+                else:
+                    flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
+        col <= flag
         row <= col
 
         col = html.TD()
@@ -3411,6 +3637,8 @@ def load_option(_, item_name):
         status = show_history()
     if item_name == 'arbitrer':
         status = game_master()
+    if item_name == 'superviser':
+        status = supervise()
     if item_name == 'paramètres':
         status = show_game_parameters()
     if item_name == 'joueurs':
