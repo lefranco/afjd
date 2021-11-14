@@ -20,7 +20,8 @@ import login
 import sandbox
 import index  # circular import
 
-REFRESH_PERIOD = 10
+REFRESH_PERIOD_SEC = 10
+LOG_WINDOW_SIZE = 10
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -180,7 +181,7 @@ def get_game_status(variant_data, game_parameters_loaded, game_id):
 
     def countdown():
 
-        print(f"countdown()")
+        print("countdown()")
 
         now = time.time()
         remains = int(deadline_loaded - now)
@@ -2970,7 +2971,9 @@ def game_master():
     # votes
     votes = common.vote_reload(g_game_id)
     if votes is None:
-        return vote()
+        alert("Erreur chargement votes")
+        load_option(None, 'position')
+        return False
 
     # avoids a warning
     votes = list(votes)
@@ -3191,25 +3194,8 @@ def supervise():
         # submitting force agreement : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def reload_game_admin_table():
+    def reload_game_admin_table(submitted_data, votes):
         """ reload_game_admin_table """
-
-        submitted_data = common.get_roles_submitted_orders(g_game_id)
-        if submitted_data is None:
-            alert("Erreur chargement données de soumission")
-            load_option(None, 'position')
-            return False
-
-        # just to avoid a warning
-        submitted_data = dict(submitted_data)
-
-        # votes
-        votes = common.vote_reload(g_game_id)
-        if votes is None:
-            return vote()
-
-        # avoids a warning
-        votes = list(votes)
 
         vote_values_table = dict()
         for _, role, vote_val in votes:
@@ -3291,7 +3277,26 @@ def supervise():
     def refresh():
         """ refresh """
 
-        print(f"refresh()")
+        print("refresh()")
+
+        # reload from server
+
+        submitted_data = common.get_roles_submitted_orders(g_game_id)
+        if submitted_data is None:
+            alert("Erreur chargement données de soumission")
+            return
+
+        # avoids a warning
+        submitted_data = dict(submitted_data)
+
+        # votes
+        votes = common.vote_reload(g_game_id)
+        if votes is None:
+            alert("Erreur chargement votes")
+            return
+
+        # avoids a warning
+        votes = list(votes)
 
         my_sub_panel.clear()
 
@@ -3302,7 +3307,7 @@ def supervise():
         stack_role_flag(my_sub_panel)
         my_sub_panel <= html.BR()
 
-        game_admin_table = reload_game_admin_table()
+        game_admin_table = reload_game_admin_table(submitted_data, votes)
         my_sub_panel <= game_admin_table
         my_sub_panel <= html.P()
 
@@ -3313,11 +3318,14 @@ def supervise():
         time_stamp = time.time()
         date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
         date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+
+        # put lin log window (limited height)
         log_line = html.CODE(f"{date_now_gmt_str} : {message}")
         log_stack.append(log_line)
+        log_stack_limited = log_stack[: LOG_WINDOW_SIZE]
 
         log_window = html.DIV(id="log")
-        for log_line in reversed(log_stack):
+        for log_line in reversed(log_stack_limited):
             log_window <= log_line
             log_window <= html.BR()
 
@@ -3366,10 +3374,10 @@ def supervise():
     refresh()
 
     # repeat
-    global refresh_timer
+    global refresh_timer  # pylint: disable=invalid-name
     if refresh_timer is None:
         print("start refresh()")
-        refresh_timer = timer.set_interval(refresh, REFRESH_PERIOD * 1000)  # refresh every x seconds
+        refresh_timer = timer.set_interval(refresh, REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
 
     return True
 
@@ -3724,12 +3732,13 @@ def load_option(_, item_name):
         menu_left <= menu_item
 
     # quitting superviser : clear timer
-    global refresh_timer
+    global refresh_timer  # pylint: disable=invalid-name
     if item_name_selected != 'superviser':
         if refresh_timer is not None:
             print("kill refresh()")
             timer.clear_interval(refresh_timer)
             refresh_timer = None
+
 
 def render(panel_middle):
     """ render """
