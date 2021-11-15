@@ -3124,6 +3124,28 @@ def game_master():
 refresh_timer = None  # pylint: disable=invalid-name
 
 
+class Logger(list):
+
+    def insert(self, message):
+        """ insert """
+
+        # insert datation
+        time_stamp = time.time()
+        date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+
+        # put in stack (limited height)
+        log_line = html.CODE(f"{date_now_gmt_str} : {message}")
+        self.append(log_line)
+
+    def display(self, log_window):
+        """ display """
+
+        for log_line in reversed(self):
+            log_window <= log_line
+            log_window <= html.BR()
+
+
 def supervise():
     """ supervise """
 
@@ -3179,7 +3201,9 @@ def supervise():
 
             adjudicated = req_result['adjudicated']
             if adjudicated:
-                alert("La position de la partie a changé !")
+                InfoDialog("OK", "La résolution a été forcée..", remove_after=config.REMOVE_AFTER)
+                message = "Résolution forcée par la console suite forçage accord"
+                log_stack.insert(message)
                 load_dynamic_stuff()
 
         names_dict = g_variant_data.extract_names()
@@ -3355,20 +3379,11 @@ def supervise():
                     role_name = g_variant_data.name_table[role]
                     message = f"Forçage accord pour {role_name}"
 
-            # insert datation
-            time_stamp = time.time()
-            date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-            date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
-
-            # put in stack (limited height)
-            log_line = html.CODE(f"{date_now_gmt_str} : {message}")
-            log_stack.append(log_line)
+            log_stack.insert(message)
 
         # put stack in log window
         log_window = html.DIV(id="log")
-        for log_line in reversed(log_stack):
-            log_window <= log_line
-            log_window <= html.BR()
+        log_stack.display(log_window)
 
         # display
         my_sub_panel <= log_window
@@ -3410,7 +3425,7 @@ def supervise():
     id2pseudo = {v: k for k, v in g_players_dict.items()}
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
-    log_stack = list()
+    log_stack = Logger()
 
     # initiates refresh
     refresh()
