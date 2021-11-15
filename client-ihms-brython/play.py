@@ -3163,9 +3163,6 @@ def supervise():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}", remove_after=config.REMOVE_AFTER)
-
         names_dict = g_variant_data.extract_names()
         names_dict_json = json.dumps(names_dict)
 
@@ -3196,15 +3193,11 @@ def supervise():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur s'est vu imposé un accord pour résoudre: {messages}", remove_after=config.REMOVE_AFTER)
-
             adjudicated = req_result['adjudicated']
             if adjudicated:
                 InfoDialog("OK", "La résolution a été forcée..", remove_after=config.REMOVE_AFTER)
                 message = "Résolution forcée par la console suite forçage accord"
                 log_stack.insert(message)
-                load_dynamic_stuff()
 
         names_dict = g_variant_data.extract_names()
         names_dict_json = json.dumps(names_dict)
@@ -3309,10 +3302,8 @@ def supervise():
 
         print("refresh()")
 
-        # reload from server
+        # reload from server to see what changed from outside
         load_dynamic_stuff()
-
-        # reload from server
         submitted_data = common.get_roles_submitted_orders(g_game_id)
         if submitted_data is None:
             alert("Erreur chargement données de soumission")
@@ -3337,10 +3328,6 @@ def supervise():
         my_sub_panel <= html.BR()
 
         stack_role_flag(my_sub_panel)
-        my_sub_panel <= html.BR()
-
-        game_admin_table = reload_game_admin_table(submitted_data, votes)
-        my_sub_panel <= game_admin_table
         my_sub_panel <= html.BR()
 
         # calculate deadline + grace
@@ -3380,6 +3367,17 @@ def supervise():
                     message = f"Forçage accord pour {role_name}"
 
             log_stack.insert(message)
+
+            # reload from server to see what changed from here
+            load_dynamic_stuff()
+            submitted_data = common.get_roles_submitted_orders(g_game_id)
+            if submitted_data is None:
+                alert("Erreur chargement données de soumission")
+                return
+
+        game_admin_table = reload_game_admin_table(submitted_data, votes)
+        my_sub_panel <= game_admin_table
+        my_sub_panel <= html.BR()
 
         # put stack in log window
         log_window = html.DIV(id="log")
