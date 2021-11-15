@@ -22,11 +22,14 @@ import sandbox
 import index  # circular import
 
 # how long between two consecutives refresh
-REFRESH_PERIOD_SEC = 15
+SUPERVISE_REFRESH_PERIOD_SEC = 15
+
+# how long between two consecutives refresh
+OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'paramètres', 'joueurs', 'ordres']
+OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'observer', 'paramètres', 'joueurs', 'ordres']
 
 
 @enum.unique
@@ -128,7 +131,7 @@ def load_dynamic_stuff():
     g_game_parameters_loaded = dict(g_game_parameters_loaded)
 
     global g_game_status  # pylint: disable=invalid-name
-    g_game_status = get_game_status(g_variant_data, g_game_parameters_loaded, g_game_id)
+    g_game_status = get_game_status()
 
     # get the position from server
     global g_position_loaded  # pylint: disable=invalid-name
@@ -164,6 +167,13 @@ def load_special_stuff():
         g_game_players_dict = dict(g_game_players_dict)  # avoids a warning
 
 
+def stack_clock(frame, period):
+    """ stack_clock """
+
+    clock_icon_img = html.IMG(src="./images/clock.png", title=f"Cette page est rafraichie périodiquement toutes les {period} secondes")
+    frame <= clock_icon_img
+
+
 def stack_role_flag(frame):
     """ stack_role_flag """
 
@@ -174,53 +184,59 @@ def stack_role_flag(frame):
     frame <= role_icon_img
 
 
+countdown_elt = None  # pylint: disable=invalid-name
 countdown_timer = None  # pylint: disable=invalid-name
 
 
-def get_game_status(variant_data, game_parameters_loaded, game_id):
+def countdown():
+    """ countdown """
+
+    print("countdown()")
+
+    deadline_loaded = g_game_parameters_loaded['deadline']
+
+    now = time.time()
+    remains = int(deadline_loaded - now)
+
+    if remains < 0:
+        late = - remains
+        if late < 60:
+            countdown_elt.text = f"passée de {late:02}s !"
+        elif late < 3600:
+            countdown_elt.text = f"passée de {late // 60:02}mn {late % 60:02}s !"
+        elif late < 24 * 3600:
+            countdown_elt.text = f"passée de ~ {late // 3600:02}h !"
+        else:
+            countdown_elt.text = f"passée de ~ {late // (24 * 3600)}j !"
+    elif remains < 60:
+        countdown_elt.text = f"{remains:02}s"
+    elif remains < 3600:
+        countdown_elt.text = f"{remains // 60:02}mn {remains % 60:02}s"
+    elif remains < 24 * 3600:
+        countdown_elt.text = f"~ {remains // 3600:02}h"
+    else:
+        countdown_elt.text = f"~ {remains // (24 * 3600)}j"
+
+
+def get_game_status():
     """ get_game__status """
 
-    def countdown():
+    game_name = g_game_parameters_loaded['name']
+    game_description = g_game_parameters_loaded['description']
+    game_variant = g_game_parameters_loaded['variant']
 
-        print("countdown()")
-
-        now = time.time()
-        remains = int(deadline_loaded - now)
-        if remains < 0:
-            late = - remains
-            if late < 60:
-                countdown_elt.text = f"passée de {late:02}s !"
-            elif late < 3600:
-                countdown_elt.text = f"passée de {late // 60:02}mn {late % 60:02}s !"
-            elif late < 24 * 3600:
-                countdown_elt.text = f"passée de ~ {late // 3600:02}h !"
-            else:
-                countdown_elt.text = f"passée de ~ {late // (24 * 3600)}j !"
-        elif remains < 60:
-            countdown_elt.text = f"{remains:02}s"
-        elif remains < 3600:
-            countdown_elt.text = f"{remains // 60:02}mn {remains % 60:02}s"
-        elif remains < 24 * 3600:
-            countdown_elt.text = f"~ {remains // 3600:02}h"
-        else:
-            countdown_elt.text = f"~ {remains // (24 * 3600)}j"
-
-    game_name = game_parameters_loaded['name']
-    game_description = game_parameters_loaded['description']
-    game_variant = game_parameters_loaded['variant']
-
-    state_loaded = game_parameters_loaded['current_state']
+    state_loaded = g_game_parameters_loaded['current_state']
     for possible_state in config.STATE_CODE_TABLE:
         if config.STATE_CODE_TABLE[possible_state] == state_loaded:
             game_state_readable = possible_state
             break
 
-    advancement_loaded = game_parameters_loaded['current_advancement']
-    advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
-    advancement_season_readable = variant_data.name_table[advancement_season]
+    advancement_loaded = g_game_parameters_loaded['current_advancement']
+    advancement_season, advancement_year = common.get_season(advancement_loaded, g_variant_data)
+    advancement_season_readable = g_variant_data.name_table[advancement_season]
     game_season = f"{advancement_season_readable} {advancement_year}"
 
-    deadline_loaded = game_parameters_loaded['deadline']
+    deadline_loaded = g_game_parameters_loaded['deadline']
     datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
     deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
     deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
@@ -252,14 +268,16 @@ def get_game_status(variant_data, game_parameters_loaded, game_id):
     }
     row <= col
 
-    countdown_elt = html.DIV()
+    global countdown_elt  # pylint: disable=invalid-name
+    if countdown_elt is None:
+        countdown_elt = html.DIV()
     col = html.TD(countdown_elt)
     col.style = {
         'color': colour
     }
     row <= col
 
-    game_master_pseudo = get_game_master(game_id)
+    game_master_pseudo = get_game_master(g_game_id)
     col = html.TD(f"Arbitre {game_master_pseudo}")
     row <= col
 
@@ -276,11 +294,9 @@ def get_game_status(variant_data, game_parameters_loaded, game_id):
 
     # repeat
     global countdown_timer  # pylint: disable=invalid-name
-    if countdown_timer is not None:
-        print("kill countdown()")
-        timer.clear_interval(countdown_timer)
-    print("start countdown()")
-    countdown_timer = timer.set_interval(countdown, 1000)
+    if countdown_timer is None:
+        print("start countdown()")
+        countdown_timer = timer.set_interval(countdown, 1000)
 
     return game_status_table
 
@@ -3121,10 +3137,11 @@ def game_master():
     return True
 
 
-refresh_timer = None  # pylint: disable=invalid-name
+supervise_refresh_timer = None  # pylint: disable=invalid-name
 
 
 class Logger(list):
+    """ Logger """
 
     def insert(self, message):
         """ insert """
@@ -3300,7 +3317,7 @@ def supervise():
     def refresh():
         """ refresh """
 
-        print("refresh()")
+        print("supervise refresh()")
 
         # reload from server to see what changed from outside
         load_dynamic_stuff()
@@ -3322,6 +3339,10 @@ def supervise():
         votes = list(votes)
 
         my_sub_panel.clear()
+
+        # clock
+        stack_clock(my_sub_panel, SUPERVISE_REFRESH_PERIOD_SEC)
+        my_sub_panel <= html.BR()
 
         # game status
         my_sub_panel <= g_game_status
@@ -3429,10 +3450,107 @@ def supervise():
     refresh()
 
     # repeat
-    global refresh_timer  # pylint: disable=invalid-name
-    if refresh_timer is None:
-        print("start refresh()")
-        refresh_timer = timer.set_interval(refresh, REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
+    global supervise_refresh_timer  # pylint: disable=invalid-name
+    if supervise_refresh_timer is None:
+        print("start supervise refresh()")
+        supervise_refresh_timer = timer.set_interval(refresh, SUPERVISE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
+
+    return True
+
+
+observe_refresh_timer = None  # pylint: disable=invalid-name
+
+
+def observe():
+    """ observe """
+
+    ctx = None
+    img = None
+
+    def callback_render(_):
+        """ callback_render """
+
+        # put the background map first
+        ctx.drawImage(img, 0, 0)
+
+        # put the centers
+        g_variant_data.render(ctx)
+
+        # put the position
+        g_position_data.render(ctx)
+
+        # put the legends at the end
+        g_variant_data.render_legends(ctx)
+
+    def refresh():
+        """ refresh """
+
+        print("observe refresh()")
+
+        # reload from server to see what changed from outside
+        load_dynamic_stuff()
+
+        my_sub_panel.clear()
+
+        # clock
+        stack_clock(my_sub_panel, OBSERVE_REFRESH_PERIOD_SEC)
+        my_sub_panel <= html.BR()
+
+        # game status
+        my_sub_panel <= g_game_status
+
+        # create canvas
+        map_size = g_variant_data.map_size
+        canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+        nonlocal ctx
+        ctx = canvas.getContext("2d")
+        if ctx is None:
+            alert("Il faudrait utiliser un navigateur plus récent !")
+            return
+
+        # put background (this will call the callback that display the whole map)
+        nonlocal img
+        img = common.read_image(g_variant_name_loaded, g_display_chosen)
+        img.bind('load', callback_render)
+
+        ratings = g_position_data.role_ratings()
+        colours = g_position_data.role_colours()
+        rating_colours_window = common.make_rating_colours_window(ratings, colours)
+
+        report_window = common.make_report_window(g_report_loaded)
+
+        # left side
+
+        my_sub_panel <= canvas
+        my_sub_panel <= rating_colours_window
+        my_sub_panel <= report_window
+
+    # game needs to be ongoing - not waiting
+    if g_game_parameters_loaded['current_state'] == 0:
+        alert("La partie n'est pas encore démarrée")
+        load_option(None, 'position')
+        return False
+
+    # game needs to be ongoing - not finished
+    if g_game_parameters_loaded['current_state'] == 2:
+        alert("La partie est déjà terminée")
+        load_option(None, 'position')
+        return False
+
+    # game needs to be fast
+    if not g_game_parameters_loaded['fast']:
+        alert("Cette partie n'est pas une partie rapide")
+        load_option(None, 'position')
+        return False
+
+    # initiates refresh
+    refresh()
+
+    # repeat
+    global observe_refresh_timer  # pylint: disable=invalid-name
+    if observe_refresh_timer is None:
+        print("start observe refresh()")
+        observe_refresh_timer = timer.set_interval(refresh, OBSERVE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
 
     return True
 
@@ -3758,6 +3876,8 @@ def load_option(_, item_name):
         status = game_master()
     if item_name == 'superviser':
         status = supervise()
+    if item_name == 'observer':
+        status = observe()
     if item_name == 'paramètres':
         status = show_game_parameters()
     if item_name == 'joueurs':
@@ -3787,12 +3907,20 @@ def load_option(_, item_name):
         menu_left <= menu_item
 
     # quitting superviser : clear timer
-    global refresh_timer  # pylint: disable=invalid-name
+    global supervise_refresh_timer  # pylint: disable=invalid-name
     if item_name_selected != 'superviser':
-        if refresh_timer is not None:
-            print("kill refresh()")
-            timer.clear_interval(refresh_timer)
-            refresh_timer = None
+        if supervise_refresh_timer is not None:
+            print("kill supervise refresh()")
+            timer.clear_interval(supervise_refresh_timer)
+            supervise_refresh_timer = None
+
+    # quitting observer : clear timer
+    global observe_refresh_timer  # pylint: disable=invalid-name
+    if item_name_selected != 'observer':
+        if observe_refresh_timer is not None:
+            print("kill observe refresh()")
+            timer.clear_interval(observe_refresh_timer)
+            observe_refresh_timer = None
 
 
 def render(panel_middle):
