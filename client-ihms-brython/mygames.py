@@ -6,7 +6,7 @@ import json
 import datetime
 import time
 
-from browser import html, ajax, alert, window   # pylint: disable=import-error
+from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
@@ -66,15 +66,7 @@ def my_games(state):
         # action of going to game page
         index.load_option(None, 'jouer la partie sélectionnée')
 
-    log_info = ""
-
-    now = datetime.datetime.utcnow()
-    date_str = now.strftime("%Y-%m-%d %H:%M:%S")
-    log_info += f"GMT date and time {date_str}\n"
-
     overall_time_before = time.time()
-
-    time_before = time.time()
 
     my_panel.clear()
 
@@ -92,98 +84,56 @@ def my_games(state):
 
     pseudo = storage['PSEUDO']
 
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"préambule {elapsed}\n"
-
-    time_before = time.time()
     player_id = common.get_player_id(pseudo)
     if player_id is None:
         alert("Erreur chargement identifiants joueurs")
         return
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"1) chargement identifiants joueurs {elapsed}\n"
 
-    time_before = time.time()
     player_games = get_player_games_playing_in(player_id)
     if player_games is None:
         alert("Erreur chargement liste parties joueés")
         return
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"2) chargement liste parties joueés {elapsed}\n"
 
-    time_before = time.time()
     games_dict = common.get_games_data()
     if games_dict is None:
         alert("Erreur chargement données des parties")
         return
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"3) chargement données des parties {elapsed}\n"
 
-    time_before = time.time()
     dict_role_id = common.get_all_roles_allocated_to_player()
     if dict_role_id is None:
         alert("Erreur chargement des roles dans les parties")
         return
     dict_role_id = dict(dict_role_id)
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"4) chargement des roles dans les parties {elapsed}\n"
 
-    time_before = time.time()
     dict_submitted_data = common.get_all_player_games_roles_submitted_orders()
     if dict_submitted_data is None:
         alert("Erreur chargement des soumissions dans les parties")
         return
     dict_submitted_data = dict(dict_submitted_data)
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"5) chargement des soumissions dans les parties {elapsed}\n"
 
-    time_before = time.time()
     dict_time_stamp_last_declarations = common.date_last_declarations()
     if dict_time_stamp_last_declarations is None:
         alert("Erreur chargement dates dernières déclarations des parties")
         return
     dict_time_stamp_last_declarations = dict(dict_time_stamp_last_declarations)
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"6) chargement dates dernières déclarations des parties {elapsed}\n"
 
-    time_before = time.time()
     dict_time_stamp_last_messages = common.date_last_messages()
     if dict_time_stamp_last_messages is None:
         alert("Erreur chargement dates derniers messages des parties")
         return
     dict_time_stamp_last_messages = dict(dict_time_stamp_last_messages)
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"7) chargement dates derniers messages des parties {elapsed}\n"
 
-    time_before = time.time()
     dict_time_stamp_last_visits_declarations = common.date_last_visit_load_all_games(config.DECLARATIONS_TYPE)
     if dict_time_stamp_last_visits_declarations is None:
         alert("Erreur chargement dates visites dernières declarations des parties")
         return
     dict_time_stamp_last_visits_declarations = dict(dict_time_stamp_last_visits_declarations)
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"8) chargement dates visites dernières declarations des parties {elapsed}\n"
 
-    time_before = time.time()
     dict_time_stamp_last_visits_messages = common.date_last_visit_load_all_games(config.MESSAGES_TYPE)
     if dict_time_stamp_last_visits_messages is None:
         alert("Erreur chargement dates visites derniers messages des parties")
         return
     dict_time_stamp_last_visits_messages = dict(dict_time_stamp_last_visits_messages)
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"9) chargement dates visites derniers messages des parties {elapsed}\n"
-
-    time_before = time.time()
 
     time_stamp_now = time.time()
 
@@ -208,12 +158,6 @@ def my_games(state):
 
     number_games = 0
 
-    time_after = time.time()
-    elapsed = time_after - time_before
-    log_info += f"postambule {elapsed}\n"
-
-    log_info += "\n"
-
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name'].upper()):
 
         # do not display finished games
@@ -224,11 +168,6 @@ def my_games(state):
         game_id = int(game_id_str)
         if game_id not in games_id_player:
             continue
-
-        log_info += f"partie {data['name']}\n"
-        time_before = time.time()
-
-        time_before2 = time.time()
 
         # variant is available
         variant_name_loaded = data['variant']
@@ -243,20 +182,8 @@ def my_games(state):
         else:
             variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
 
-        time_after2 = time.time()
-        elapsed = time_after2 - time_before2
-        log_info += f"preamble partie A : {elapsed}\n"
-
-        time_before2 = time.time()
-
         # selected display (user choice)
         display_chosen = tools.get_display_from_variant(variant_name_loaded)
-
-        time_after2 = time.time()
-        elapsed = time_after2 - time_before2
-        log_info += f"preamble partie B : {elapsed}\n"
-
-        time_before2 = time.time()
 
         if (variant_name_loaded, display_chosen) in parameters_read_memoize_table:
             parameters_read = parameters_read_memoize_table[(variant_name_loaded, display_chosen)]
@@ -266,23 +193,11 @@ def my_games(state):
 
         # build variant data
 
-        time_after2 = time.time()
-        elapsed = time_after2 - time_before2
-        log_info += f"preamble partie C : {elapsed}\n"
-
-        time_before2 = time.time()
-
         if variant_name_loaded not in variant_data_memoize_table:
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             variant_data_memoize_table[variant_name_loaded] = variant_data
         else:
             variant_data = variant_data_memoize_table[variant_name_loaded]
-
-        time_after2 = time.time()
-        elapsed = time_after2 - time_before2
-        log_info += f"preamble partie D : {elapsed}\n"
-
-        time_before2 = time.time()
 
         number_games += 1
 
@@ -305,10 +220,6 @@ def my_games(state):
         data['jump_here'] = None
         data['go_away'] = None
 
-        time_after2 = time.time()
-        elapsed = time_after2 - time_before2
-        log_info += f"preamble partie E : {elapsed}\n"
-
         row = html.TR()
         for field in fields:
 
@@ -316,8 +227,6 @@ def my_games(state):
             colour = 'black'
 
             if field == 'deadline':
-
-                time_before2 = time.time()
 
                 deadline_loaded = value
                 datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
@@ -333,26 +242,14 @@ def my_games(state):
                 elif time_stamp_now > deadline_loaded - 24 * 3600:
                     colour = 'orange'
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             if field == 'current_advancement':
-
-                time_before2 = time.time()
 
                 advancement_loaded = value
                 advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
                 advancement_season_readable = variant_data.name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             if field == 'role_played':
-
-                time_before2 = time.time()
 
                 value = ""
                 if role_id is None:
@@ -363,13 +260,7 @@ def my_games(state):
                     role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
                 value = role_icon_img
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             if field == 'orders_submitted':
-
-                time_before2 = time.time()
 
                 value = ""
                 submitted_roles_list = submitted_data['submitted']
@@ -382,13 +273,7 @@ def my_games(state):
                         flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
                         value = flag
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             if field == 'agreed':
-
-                time_before2 = time.time()
 
                 value = ""
                 submitted_roles_list = submitted_data['submitted']
@@ -401,13 +286,7 @@ def my_games(state):
                         flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
                         value = flag
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             if field == 'all_orders_submitted':
-
-                time_before2 = time.time()
 
                 value = ""
                 if role_id is not None:
@@ -422,13 +301,7 @@ def my_games(state):
                         # we have all orders : green
                         colour = 'green'
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             if field == 'all_agreed':
-
-                time_before2 = time.time()
 
                 value = ""
                 if role_id is not None:
@@ -443,13 +316,7 @@ def my_games(state):
                         # we have all agreements : green
                         colour = 'green'
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             if field == 'new_declarations':
-
-                time_before2 = time.time()
 
                 value = ""
                 if role_id is not None:
@@ -460,13 +327,7 @@ def my_games(state):
                         popup = html.IMG(src="./images/press_published.jpg", title="Nouvelle(s) déclaration(s) dans cette partie !")
                     value = popup
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             if field == 'new_messages':
-
-                time_before2 = time.time()
 
                 value = ""
                 if role_id is not None:
@@ -477,13 +338,7 @@ def my_games(state):
                         popup = html.IMG(src="./images/messages_received.jpg", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             if field == 'jump_here':
-
-                time_before2 = time.time()
 
                 game_name = data['name']
                 form = html.FORM()
@@ -492,13 +347,7 @@ def my_games(state):
                 form <= input_jump_game
                 value = form
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             if field == 'go_away':
-
-                time_before2 = time.time()
 
                 link = html.A(href=f"?game={game_name}", target="_blank")
                 link <= "y aller"
@@ -507,21 +356,12 @@ def my_games(state):
                 }
                 value = link
 
-                time_after2 = time.time()
-                elapsed = time_after2 - time_before2
-                log_info += f"{field} : {elapsed}\n"
-
             col = html.TD(value)
             col.style = {
                 'color': colour
             }
 
             row <= col
-
-        time_after = time.time()
-        elapsed = time_after - time_before
-        log_info += f"pour la partie {elapsed}\n"
-        log_info += "\n"
 
         games_table <= row
 
@@ -544,110 +384,7 @@ def my_games(state):
     if number_games:
         stats += f" soit {elapsed/number_games} par partie"
 
-    # TEMPORARY  -- begin
-
-    addressed_user_name = 'Palpatine'
-
-    players_dict = common.get_players()
-    if players_dict is None:
-        return
-    players_dict = dict(players_dict)
-    addressed_id = players_dict[addressed_user_name]
-    addressees = [addressed_id]
-
-    subject = f"stats pour {pseudo}"
-    body = ""
-    body += "Version V2_f (opt sur tout - def-final)"
-
-    body += "\n\n"
-    body += stats
-
-    body += "\n\n"
-    body += log_info
-
-    # lot of useful information
-    body += "\n\n"
-
-    try:
-        body += f"{window.navigator.connection=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    try:
-        body += f"{window.navigator.hardwareConcurrency=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    try:
-        body += f"{window.navigator.language=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    try:
-        body += f"{window.navigator.onLine=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    try:
-        body += f"{window.navigator.userAgent=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    try:
-        body += f"{window.navigator.userAgentData=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    try:
-        body += f"{window.navigator.vendor=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    body += "---\n"
-
-    try:
-        body += f"{window.navigator.appCodeName=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    try:
-        body += f"{window.navigator.appName=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    try:
-        body += f"{window.navigator.appVersion=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    try:
-        body += f"{window.navigator.oscpu=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    try:
-        body += f"{window.navigator.platform=}\n"
-    except:  # noqa: E722 pylint: disable=bare-except
-        pass
-
-    json_dict = {
-        'pseudo': pseudo,
-        'addressees': " ".join([str(a) for a in addressees]),
-        'subject': subject,
-        'body': body,
-    }
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/mail-players"
-
-    # sending email : need token
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    # TEMPORARY  -- end
-
     my_panel <= stats
-
     my_panel <= html.BR()
     my_panel <= html.BR()
 
