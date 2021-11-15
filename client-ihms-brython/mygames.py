@@ -158,7 +158,7 @@ def my_games(state):
 
     number_games = 0
 
-    for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name'].upper()):
+    for game_id_str, data in sorted(games_dict.items(), key=lambda g: (g[1]['deadline'], g[1]['name'].upper())):
 
         # do not display finished games
         if data['current_state'] != state:
@@ -184,6 +184,8 @@ def my_games(state):
 
         # selected display (user choice)
         display_chosen = tools.get_display_from_variant(variant_name_loaded)
+
+        # parameters
 
         if (variant_name_loaded, display_chosen) in parameters_read_memoize_table:
             parameters_read = parameters_read_memoize_table[(variant_name_loaded, display_chosen)]
