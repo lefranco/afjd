@@ -157,7 +157,11 @@ def create_game():
         time_stamp = time.time()
         time_creation = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
         time_creation_str = datetime.datetime.strftime(time_creation, "%d-%m-%Y %H:%M:%S")
-        description = f"game created at {time_creation_str} (gmt time) by {pseudo} variant {variant}"
+
+        # TODO : adjust for variants
+        last_year = 1900 + nb_max_cycles_to_play
+
+        description = f"Partie créé à {time_creation_str} (gmt) par {pseudo} variante {variant} dernière année jouée {last_year}"
         state = 0
 
         json_dict = {
