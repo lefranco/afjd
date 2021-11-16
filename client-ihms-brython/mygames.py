@@ -53,9 +53,6 @@ def get_player_games_playing_in(player_id):
 def my_games(state):
     """ my_games """
 
-    def reply_callback(_):
-        pass
-
     def select_game_callback(_, game):
         """ select_game_callback """
 

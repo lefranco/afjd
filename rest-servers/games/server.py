@@ -715,19 +715,39 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
     # an allocation is a game-role-pseudo relation where role is -1
 
-    def get(self) -> typing.Tuple[typing.List[typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
-        Get list of all allocations only game master (dictionary identifier -> name)
+        Get list of all allocations only games that are not anonymous (dictionary identifier -> (gm name, list of players names))
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/allocations - GET - get getting all game master allocations")
+        mylogger.LOGGER.info("/allocations - GET - get getting all allocations in non anonymous games")
 
         sql_executor = database.SqlExecutor()
         allocations_list = allocations.Allocation.inventory(sql_executor)
+        games_list = games.Game.inventory(sql_executor)
         del sql_executor
 
-        data = [{'game': a[0], 'master': a[1]} for a in allocations_list if a[2] == 0]
+        # games we can speak about the players
+        allowed_games = {g.identifier for g in games_list if not g.anonymous}
+
+        # game_masters_dict
+        game_masters_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
+        for (game_id, player_id, role_id) in allocations_list:
+            if role_id != 0:
+                continue
+            game_masters_dict[player_id].append(game_id)
+
+        # players_dict
+        players_dict: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
+        for (game_id, player_id, role_id) in allocations_list:
+            if game_id not in allowed_games:
+                continue
+            if role_id == 0:
+                continue
+            players_dict[player_id].append(game_id)
+
+        data = {'game_masters_dict': game_masters_dict, 'players_dict': players_dict}
         return data, 200
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use

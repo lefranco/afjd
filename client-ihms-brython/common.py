@@ -868,13 +868,13 @@ def read_image(variant_name_loaded, display_chosen):
     return html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
 
 
-def get_game_masters_data():
-    """ get_game_masters_data """
+def get_allocations_data():
+    """ get_allocations_data """
 
-    game_masters_list = None
+    allocation_data = None
 
     def reply_callback(req):
-        nonlocal game_masters_list
+        nonlocal allocation_data
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -885,7 +885,7 @@ def get_game_masters_data():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        game_masters_list = req_result
+        allocation_data = req_result
 
     json_dict = dict()
 
@@ -896,4 +896,4 @@ def get_game_masters_data():
     # getting allocations : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return list(game_masters_list)
+    return allocation_data

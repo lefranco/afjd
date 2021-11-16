@@ -314,10 +314,12 @@ def all_games(state):
         return
 
     # get the link (allocations) of game masters
-    game_masters_list = common.get_game_masters_data()
-
-    if not game_masters_list:
+    allocations_data = common.get_allocations_data()
+    if allocations_data is None:
+        alert("Erreur chargement allocations")
         return
+    allocations_data = dict(allocations_data)
+    masters_alloc = allocations_data['game_masters_dict']
 
     dict_submitted_data = common.get_all_games_roles_submitted_orders()
     if dict_submitted_data is None:
@@ -327,10 +329,11 @@ def all_games(state):
 
     # fill table game -> master
     game_master_dict = dict()
-    for game_data in game_masters_list:
-        game = games_dict[str(game_data['game'])]['name']
-        master = players_dict[str(game_data['master'])]['pseudo']
-        game_master_dict[game] = master
+    for master_id, games_id in masters_alloc.items():
+        master = players_dict[str(master_id)]['pseudo']
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            game_master_dict[game] = master
 
     time_stamp_now = time.time()
 
