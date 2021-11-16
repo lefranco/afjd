@@ -6,6 +6,7 @@ from browser import html  # pylint: disable=import-error
 
 
 my_panel = html.DIV(id="technical")
+my_panel.attrs['style'] = 'display-table'
 
 # --
 

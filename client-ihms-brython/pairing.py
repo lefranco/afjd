@@ -11,8 +11,6 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import common
 
-my_panel = html.DIV(id="pairing")
-
 
 OPTIONS = ['se mettre dans les joueurs potentiels de la partie', 'se retirer des joueurs potentiels de la partie', 'déplacer des joueurs potentiels de la partie', 'prendre l\'arbitrage de la partie', 'démissionner de l\'arbitrage de la partie']
 
@@ -494,7 +492,7 @@ def quit_mastering_game():
 
 
 my_panel = html.DIV(id="pairing")
-my_panel.attrs['style'] = 'display: table-row'
+my_panel.attrs['style'] = 'display: table'
 
 # menu-left
 menu_left = html.DIV()
@@ -508,7 +506,6 @@ menu_left <= menu_selection
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
 my_sub_panel = html.DIV(id="sub")
-
 my_panel <= my_sub_panel
 
 

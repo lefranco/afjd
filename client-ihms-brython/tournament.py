@@ -61,7 +61,7 @@ def quit_directing():
 
 
 my_panel = html.DIV(id="tournament")
-my_panel.attrs['style'] = 'display: table-row'
+my_panel.attrs['style'] = 'display: table'
 
 # menu-left
 menu_left = html.DIV()
@@ -75,7 +75,6 @@ menu_left <= menu_selection
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
 my_sub_panel = html.DIV(id="sub")
-
 my_panel <= my_sub_panel
 
 

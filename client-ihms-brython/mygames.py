@@ -16,7 +16,8 @@ import mapping
 import selection
 import index  # circular import
 
-my_panel = html.DIV(id="my_games")
+my_panel = html.DIV(id="mygames")
+my_panel.attrs['style'] = 'display: table'
 
 
 def get_player_games_playing_in(player_id):

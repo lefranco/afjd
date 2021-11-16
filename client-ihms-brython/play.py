@@ -3860,21 +3860,21 @@ def show_orders_submitted_in_game():
     return True
 
 
-my_panel = html.DIV(id="play")  # pylint: disable=invalid-name
+my_panel = html.DIV(id="play") 
 my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
-menu_left = html.DIV()  # pylint: disable=invalid-name
+menu_left = html.DIV()  
 menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 my_panel <= menu_left
 
 # menu-selection
-menu_selection = html.UL()  # pylint: disable=invalid-name
+menu_selection = html.UL()
 menu_left <= menu_selection
 
-item_name_selected = None  # pylint: disable=invalid-name
+item_name_selected = None 
 
-my_sub_panel = html.DIV(id="sub")  # pylint: disable=invalid-name
+my_sub_panel = html.DIV(id="sub")
 
 my_panel <= my_sub_panel
 

@@ -14,8 +14,8 @@ import config
 import common
 
 
-my_panel = html.DIV(id="login")  # pylint: disable=invalid-name
-
+my_panel = html.DIV(id="login")
+my_panel.attrs['style'] = 'display: table'
 
 def login():
     """ login """

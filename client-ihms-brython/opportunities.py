@@ -19,6 +19,7 @@ import index  # circular import
 
 
 my_panel = html.DIV(id="opportunities")
+my_panel.attrs['style'] = 'display: table'
 
 
 def get_recruiting_games():

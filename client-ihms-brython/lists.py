@@ -9,7 +9,6 @@ from browser import html  # pylint: disable=import-error
 import config
 import common
 
-my_panel = html.DIV(id="players")
 
 OPTIONS = ['les inscrits', 'les joueurs', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les tournois', 'les arbitres', 'les parties sans arbitres']
 
@@ -306,8 +305,8 @@ def show_no_game_masters_data():
     my_sub_panel <= no_game_masters_table
 
 
-my_panel = html.DIV(id="players_games")
-my_panel.attrs['style'] = 'display: table-row'
+my_panel = html.DIV(id="lists")
+my_panel.attrs['style'] = 'display: table'
 
 # menu-left
 menu_left = html.DIV()
@@ -321,7 +320,6 @@ menu_left <= menu_selection
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
 my_sub_panel = html.DIV(id="sub")
-
 my_panel <= my_sub_panel
 
 
