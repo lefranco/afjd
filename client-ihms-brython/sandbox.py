@@ -24,6 +24,7 @@ VARIANT_NAME = "standard"
 my_panel = html.DIV(id="sandbox")
 my_panel.attrs['style'] = 'display: table'
 
+# TODO : remove this sub_panel
 my_sub_panel = html.DIV(id="sub")
 my_panel <= my_sub_panel
 

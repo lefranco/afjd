@@ -3860,7 +3860,7 @@ def show_orders_submitted_in_game():
     return True
 
 
-my_panel = html.DIV(id="play") 
+my_panel = html.DIV() 
 my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
@@ -3874,7 +3874,7 @@ menu_left <= menu_selection
 
 item_name_selected = None 
 
-my_sub_panel = html.DIV(id="sub")
+my_sub_panel = html.DIV(id="play")
 
 my_panel <= my_sub_panel
 

@@ -482,17 +482,20 @@ def quit_mastering_game():
     input_join_game.bind("click", quit_mastering_game_callback)
     form <= input_join_game
 
-    form <= html.BR()
-    form <= html.BR()
-
-    warning = html.B("Attention : Créer une partie anonyme, se retirer de l'arbitrage après avoir consulté la liste des joueurs et ensuite jouer dans cette partie... est considéré comme tricher !")
-    form <= warning
-
     my_sub_panel <= form
+    my_sub_panel <= html.BR()
+    my_sub_panel <= html.BR()
 
+    warning = html.DIV()
+    warning <= html.B("Attention : Créer une partie anonyme,")
+    warning <= html.BR()
+    warning <= html.B("se retirer de l'arbitrage après avoir consulté la liste des joueurs")
+    warning <= html.BR()
+    warning <= html.B("et ensuite jouer dans cette partie... est considéré comme tricher !")
+    my_sub_panel <= warning
 
-my_panel = html.DIV(id="pairing")
-my_panel.attrs['style'] = 'display: table'
+my_panel = html.DIV()
+my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
 menu_left = html.DIV()
@@ -505,7 +508,7 @@ menu_left <= menu_selection
 
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
-my_sub_panel = html.DIV(id="sub")
+my_sub_panel = html.DIV(id="pairing")
 my_panel <= my_sub_panel
 
 
