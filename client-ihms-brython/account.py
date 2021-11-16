@@ -626,8 +626,6 @@ def delete_account():
 
     def cancel_delete_account_callback(_, dialog):
 
-        print("cancel_delete_account_callback()")
-
         dialog.close()
 
 
@@ -655,8 +653,6 @@ def delete_account():
             my_sub_panel.clear()
             create_account()
 
-        print("delete_account_callback()")
-
         dialog.close()
 
         json_dict = {
@@ -675,9 +671,6 @@ def delete_account():
         dialog = Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_account_callback(e, d))
-
-        # called directly
-        #  delete_account_callback(_, None)
 
         # back to where we started
         my_sub_panel.clear()
