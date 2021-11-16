@@ -328,19 +328,20 @@ def get_game_master(game_id):
     """ get_game_master """
 
     # get the link (allocations) of game masters
-    game_masters_list = common.get_game_masters_data()
+    allocations_data = common.get_allocations_data()
+    if allocations_data is None:
+        alert("Erreur chargement allocations")
+        return None
+    allocations_data = dict(allocations_data)
+
+    masters_alloc = allocations_data['game_masters_dict']
 
     # get the game it self
-    for data in game_masters_list:
-        if 'game' not in data:
-            continue
-        if data['game'] == game_id:
-            if 'master' in data:
-                game_master_id = data['master']
-
-                for pseudo, identifier in g_players_dict.items():
-                    if identifier == game_master_id:
-                        return pseudo
+    for master_id, games_id in masters_alloc.items():
+        if game_id in games_id:
+            for pseudo, identifier in g_players_dict.items():
+                if str(identifier) == master_id:
+                    return pseudo
 
     return None
 

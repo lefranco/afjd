@@ -11,11 +11,11 @@ import common
 
 my_panel = html.DIV(id="players")
 
-OPTIONS = ['les joueurs', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les tournois', 'les arbitres', 'les parties sans arbitres']
+OPTIONS = ['les inscrits', 'les joueurs', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les tournois', 'les arbitres', 'les parties sans arbitres']
 
 
-def show_players_data():
-    """ show_players_data """
+def show_registered_data():
+    """ show_registered_data """
 
     players_dict = common.get_players_data()
 
@@ -54,6 +54,72 @@ def show_players_data():
                 elif value is True:
                     value = "Oui"
 
+            col = html.TD(value)
+            row <= col
+
+        players_table <= row
+        count += 1
+
+    my_sub_panel <= players_table
+    my_sub_panel <= html.P(f"Il y a {count} inscrits")
+
+
+def show_players_data():
+    """ show_players_data """
+
+    # get the games
+    games_dict = common.get_games_data()
+
+    if not games_dict:
+        return
+
+    # to avoid a warning
+    games_dict = dict(games_dict)
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        return
+
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        return
+    allocations_data = dict(allocations_data)
+
+    players_alloc = allocations_data['players_dict']
+
+    # gather games to players
+    player_games_dict = dict()
+    for player_id, games_id in players_alloc.items():
+        player = players_dict[str(player_id)]['pseudo']
+        if player not in player_games_dict:
+            player_games_dict[player] = list()
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            player_games_dict[player].append(game)
+
+    players_table = html.TABLE()
+
+    # TODO : make it possible to sort etc...
+    fields = ['player', 'games']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'player': 'joueur', 'games': 'parties'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    count = 0
+    for player, games in sorted(player_games_dict.items(), key=lambda p: p[0].upper()):
+        row = html.TR()
+        for field in fields:
+            if field == 'player':
+                value = player
+            if field == 'games':
+                value = ' '.join(games)
             col = html.TD(value)
             row <= col
 
@@ -130,28 +196,30 @@ def show_game_masters_data():
     # to avoid a warning
     games_dict = dict(games_dict)
 
-    # get the players (masters)
     players_dict = common.get_players_data()
 
     if not players_dict:
         return
 
-    # get the link (allocations) of game masters
-    game_masters_list = common.get_game_masters_data()
-
-    if not game_masters_list:
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
         return
+    allocations_data = dict(allocations_data)
 
-    # gather games to game masters
+    masters_alloc = allocations_data['game_masters_dict']
+
+    # gather games to masters
     master_games_dict = dict()
-    for game_data in game_masters_list:
-        game = games_dict[str(game_data['game'])]['name']
-        master = players_dict[str(game_data['master'])]['pseudo']
+    for master_id, games_id in masters_alloc.items():
+        master = players_dict[str(master_id)]['pseudo']
         if master not in master_games_dict:
             master_games_dict[master] = list()
-        master_games_dict[master].append(game)
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            master_games_dict[master].append(game)
 
-    game_masters_table = html.TABLE()
+    masters_table = html.TABLE()
 
     # TODO : make it possible to sort etc...
     fields = ['master', 'games']
@@ -159,23 +227,27 @@ def show_game_masters_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'master': 'arbitre', 'games': 'parties', }[field]
+        field_fr = {'master': 'arbitre', 'games': 'parties'}[field]
         col = html.TD(field_fr)
         thead <= col
-    game_masters_table <= thead
+    masters_table <= thead
 
-    for master in sorted(master_games_dict, key=lambda m: m.upper()):
+    count = 0
+    for master, games in sorted(master_games_dict.items(), key=lambda m: m[0].upper()):
         row = html.TR()
         for field in fields:
             if field == 'master':
                 value = master
             if field == 'games':
-                value = ' '.join(master_games_dict[master])
+                value = ' '.join(games)
             col = html.TD(value)
             row <= col
-        game_masters_table <= row
 
-    my_sub_panel <= game_masters_table
+        masters_table <= row
+        count += 1
+
+    my_sub_panel <= masters_table
+    my_sub_panel <= html.P(f"Il y a {count} arbitres")
 
 
 def show_no_game_masters_data():
@@ -196,11 +268,16 @@ def show_no_game_masters_data():
     if not players_dict:
         return
 
-    # get the link (allocations) of game masters
-    game_masters_list = common.get_game_masters_data()
-
-    if not game_masters_list:
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
         return
+    allocations_data = dict(allocations_data)
+
+    masters_alloc = allocations_data['game_masters_dict']
+    games_with_master = list()
+    for load in masters_alloc.values():
+        games_with_master += load
 
     no_game_masters_table = html.TABLE()
 
@@ -215,9 +292,11 @@ def show_no_game_masters_data():
         thead <= col
     no_game_masters_table <= thead
 
-    no_game_masters_list = [v for k, v in games_dict.items() if int(k) not in [g['game'] for g in game_masters_list]]
+    for identifier, data in sorted(games_dict.items(), key=lambda g: g[1]['name'].upper()):
 
-    for data in sorted(no_game_masters_list, key=lambda g: g['name'].upper()):
+        if int(identifier) in games_with_master:
+            continue
+
         row = html.TR()
         value = data['name']
         col = html.TD(value)
@@ -250,6 +329,8 @@ def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
+    if item_name == 'les inscrits':
+        show_registered_data()
     if item_name == 'les joueurs':
         show_players_data()
     if item_name == 'les parties en attente':
