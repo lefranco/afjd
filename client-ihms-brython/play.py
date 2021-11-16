@@ -278,7 +278,10 @@ def get_game_status():
     row <= col
 
     game_master_pseudo = get_game_master(g_game_id)
-    col = html.TD(f"Arbitre {game_master_pseudo}")
+    info = ''  # some games do not have a game master
+    if game_master_pseudo is not None:
+        info = f"Arbitre {game_master_pseudo}"
+    col = html.TD(info)
     row <= col
 
     game_status_table <= row
