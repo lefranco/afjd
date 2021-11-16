@@ -1245,8 +1245,6 @@ def delete_game():
 
     def cancel_delete_game_callback(_, dialog):
 
-        print("cancel_delete_game_callback()")
-
         dialog.close()
 
     def delete_game_callback(_, dialog):
@@ -1269,8 +1267,6 @@ def delete_game():
             # go to select another game
             index.load_option(None, 'sélectionner partie')
         
-        print("delete_game_callback()")
-
         dialog.close()
 
         json_dict = {
@@ -1290,9 +1286,6 @@ def delete_game():
         dialog = Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_game_callback(e, d))
-
-        # called directly
-        #  delete_game_callback(_, None)
 
         # back to where we started
         my_sub_panel.clear()
