@@ -545,6 +545,9 @@ class Game:
         self._nomessage = False
         self._nopress = False
 
+        # set a fake deadline far in future
+        self._deadline = 10000000000
+
     @property
     def identifier(self) -> int:
         """ property """
