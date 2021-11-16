@@ -3408,8 +3408,8 @@ def supervise():
         # display
         my_sub_panel <= log_window
 
-    def cancel_callback(_, dialog):
-        """ cancel_callback """
+    def cancel_supervise_callback(_, dialog):
+        """ cancel_supervise_callback """
 
         dialog.close()
 
@@ -3475,7 +3475,7 @@ def supervise():
     # since touchy, this requires a confirmation
     dialog = Dialog(f"On supervise vraiment la partie (cela peut entrainer des désordres civils) ?", ok_cancel=True)
     dialog.ok_button.bind("click", lambda e, d=dialog: supervise_callback(e, d))
-    dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_callback(e, d))
+    dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_supervise_callback(e, d))
 
     return True
 

@@ -7,16 +7,14 @@ import datetime
 import time
 
 from browser import html, ajax, alert  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
-
-#  from browser.widgets.dialog import Dialog  # pylint: disable=import-error
-#  from browser import bind  # pylint: disable=import-error
 
 
 import config
 import common
 import selection
+import index  # circular import
 
 my_panel = html.DIV(id="games")
 
@@ -1245,6 +1243,12 @@ def delete_game():
 
     pseudo = storage['PSEUDO']
 
+    def cancel_delete_game_callback(_, dialog):
+
+        print("cancel_delete_game_callback()")
+
+        dialog.close()
+
     def delete_game_callback(_, dialog):
 
         def reply_callback(req):
@@ -1262,8 +1266,12 @@ def delete_game():
             InfoDialog("OK", f"La partie a été supprimée : {messages}", remove_after=config.REMOVE_AFTER)
             selection.unselect_game()
 
-        if dialog:
-            dialog.close()
+            # go to select another game
+            index.load_option(None, 'sélectionner partie')
+        
+        print("delete_game_callback()")
+
+        dialog.close()
 
         json_dict = {
             'pseudo': pseudo
@@ -1276,15 +1284,19 @@ def delete_game():
         # deleting game : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+
     def delete_game_callback_confirm(_):
 
-        # For some reason does not work, confirmation window dissapears
-        #  dialog = Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
-        #  dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
-        #  dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
+        dialog = Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_game_callback(e, d))
 
         # called directly
-        delete_game_callback(_, None)
+        #  delete_game_callback(_, None)
+
+        # back to where we started
+        my_sub_panel.clear()
+        delete_game()
 
     form = html.FORM()
 
@@ -1332,6 +1344,7 @@ def load_option(_, item_name):
         change_state_game()
     if item_name == 'supprimer':
         delete_game()
+
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 

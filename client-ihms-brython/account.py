@@ -5,15 +5,13 @@
 import json
 
 from browser import html, ajax, alert  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
-
-#  from browser.widgets.dialog import Dialog # pylint: disable=import-error
-
 
 import config
 import common
 import login
+import index  # circular import
 
 OPTIONS = ['créer', 'mot de passe', 'valider mon email', 'editer', 'supprimer']
 
@@ -625,6 +623,14 @@ def delete_account():
 
     pseudo = storage['PSEUDO']
 
+
+    def cancel_delete_account_callback(_, dialog):
+
+        print("cancel_delete_account_callback()")
+
+        dialog.close()
+
+
     def delete_account_callback(_, dialog):
         """ delete_account_callback """
 
@@ -641,31 +647,41 @@ def delete_account():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Votre compte a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # logout
             login.logout()
 
-        if dialog:
-            dialog.close()
+            # back to the top
+            my_sub_panel.clear()
+            create_account()
 
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/players/{pseudo}"
+        print("delete_account_callback()")
+
+        dialog.close()
 
         json_dict = {
             'pseudo': pseudo,
         }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/players/{pseudo}"
 
         # deleting account : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def delete_account_callback_confirm(_):
 
-        # For some reason does not work, confirmation window dissapears
-        #  dialog = Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
-        #  dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
-        #  dialog.cancel_button.bind("click", lambda e, d=dialog: d.close())
+        dialog = Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_account_callback(e, d))
 
         # called directly
-        delete_account_callback(_, None)
+        #  delete_account_callback(_, None)
+
+        # back to where we started
+        my_sub_panel.clear()
+        delete_account()
 
     form = html.FORM()
     my_sub_panel <= form
@@ -709,6 +725,7 @@ def load_option(_, item_name):
         edit_account()
     if item_name == 'supprimer':
         delete_account()
+
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
 
@@ -726,9 +743,6 @@ def load_option(_, item_name):
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
         menu_left <= menu_item
-
-
-# starts here
 
 
 def render(panel_middle):
