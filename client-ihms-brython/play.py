@@ -9,7 +9,7 @@ import time
 import random
 
 from browser import document, html, ajax, alert, timer   # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -3408,6 +3408,40 @@ def supervise():
         # display
         my_sub_panel <= log_window
 
+    def cancel_callback(_, dialog):
+        """ cancel_callback """
+
+        dialog.close()
+
+        load_option(None, 'position')
+
+    def supervise_callback(_, dialog):
+        """ supervise_callback """
+
+        dialog.close()
+
+        nonlocal id2pseudo
+        id2pseudo = {v: k for k, v in g_players_dict.items()}
+
+        nonlocal role2pseudo
+        role2pseudo = {v: k for k, v in g_game_players_dict.items()}
+
+        nonlocal log_stack
+        log_stack = Logger()
+
+        # initiates refresh
+        refresh()
+
+        # repeat
+        global supervise_refresh_timer  # pylint: disable=invalid-name
+        if supervise_refresh_timer is None:
+            print("start supervise refresh()")
+            supervise_refresh_timer = timer.set_interval(refresh, SUPERVISE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
+
+    id2pseudo = dict()
+    role2pseudo = dict()
+    log_stack = None
+
     # need to be connected
     if g_pseudo is None:
         alert("Il faut se connecter au préalable")
@@ -3438,23 +3472,10 @@ def supervise():
         load_option(None, 'position')
         return False
 
-    # now we can display
-
-    # header
-
-    id2pseudo = {v: k for k, v in g_players_dict.items()}
-    role2pseudo = {v: k for k, v in g_game_players_dict.items()}
-
-    log_stack = Logger()
-
-    # initiates refresh
-    refresh()
-
-    # repeat
-    global supervise_refresh_timer  # pylint: disable=invalid-name
-    if supervise_refresh_timer is None:
-        print("start supervise refresh()")
-        supervise_refresh_timer = timer.set_interval(refresh, SUPERVISE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
+    # since touchy, this requires a confirmation
+    dialog = Dialog(f"On supervise vraiment la partie (cela peut entrainer des désordres civils) ?", ok_cancel=True)
+    dialog.ok_button.bind("click", lambda e, d=dialog: supervise_callback(e, d))
+    dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_callback(e, d))
 
     return True
 
@@ -3836,21 +3857,21 @@ def show_orders_submitted_in_game():
     return True
 
 
-my_panel = html.DIV(id="play")
+my_panel = html.DIV(id="play")  # pylint: disable=invalid-name
 my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
-menu_left = html.DIV()
+menu_left = html.DIV()  # pylint: disable=invalid-name
 menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 my_panel <= menu_left
 
 # menu-selection
-menu_selection = html.UL()
+menu_selection = html.UL()  # pylint: disable=invalid-name
 menu_left <= menu_selection
 
 item_name_selected = None  # pylint: disable=invalid-name
 
-my_sub_panel = html.DIV(id="sub")
+my_sub_panel = html.DIV(id="sub")  # pylint: disable=invalid-name
 
 my_panel <= my_sub_panel
 
