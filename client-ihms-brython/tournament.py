@@ -60,8 +60,8 @@ def quit_directing():
     my_sub_panel <= "ICI possibilité de quitter la direction du tournoi - Pas encore implémenté, désolé !"
 
 
-my_panel = html.DIV(id="tournament")
-my_panel.attrs['style'] = 'display: table'
+my_panel = html.DIV()
+my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
 menu_left = html.DIV()
@@ -74,7 +74,7 @@ menu_left <= menu_selection
 
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
-my_sub_panel = html.DIV(id="sub")
+my_sub_panel = html.DIV(id="tournament")
 my_panel <= my_sub_panel
 
 

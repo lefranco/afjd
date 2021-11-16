@@ -305,8 +305,8 @@ def show_no_game_masters_data():
     my_sub_panel <= no_game_masters_table
 
 
-my_panel = html.DIV(id="lists")
-my_panel.attrs['style'] = 'display: table'
+my_panel = html.DIV()
+my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
 menu_left = html.DIV()
@@ -319,7 +319,7 @@ menu_left <= menu_selection
 
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
-my_sub_panel = html.DIV(id="sub")
+my_sub_panel = html.DIV(id="lists")
 my_panel <= my_sub_panel
 
 

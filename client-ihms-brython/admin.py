@@ -1104,8 +1104,8 @@ def sendmail():
     my_sub_panel <= form
 
 
-my_panel = html.DIV(id="admin")
-my_panel.attrs['style'] = 'display: table'
+my_panel = html.DIV()
+my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
 menu_left = html.DIV()
@@ -1118,7 +1118,7 @@ menu_left <= menu_selection
 
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
-my_sub_panel = html.DIV(id="sub")
+my_sub_panel = html.DIV(id="admin")
 my_panel <= my_sub_panel
 
 
