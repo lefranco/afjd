@@ -10,7 +10,8 @@ import config
 import common
 
 
-my_panel = html.DIV(id="select")  # pylint: disable=invalid-name
+my_panel = html.DIV(id="selection")
+my_panel.attrs['style'] = 'display: table'
 
 
 def select_game():

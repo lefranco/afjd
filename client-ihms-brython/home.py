@@ -9,6 +9,7 @@ import common
 EMAIL_SUPPORT = "jeremie.lefrancois@gmail.com"
 
 my_panel = html.DIV(id="home")
+my_panel.attrs['style'] = 'display: table'
 
 title1 = html.H2("Lien utile : Diplomania")
 my_panel <= title1

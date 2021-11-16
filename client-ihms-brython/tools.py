@@ -16,6 +16,7 @@ INTERFACE_TABLE = {
 }
 
 my_panel = html.DIV(id="tools")
+my_panel.attrs['style'] = 'display: table'
 
 
 def get_display_from_variant(variant):

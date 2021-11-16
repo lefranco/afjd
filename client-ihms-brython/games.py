@@ -16,8 +16,6 @@ import common
 import selection
 import index  # circular import
 
-my_panel = html.DIV(id="games")
-
 OPTIONS = ['créer', 'changer description', 'changer paramètres accès', 'changer date limite', 'changer paramètre cadence', 'changer état', 'supprimer']
 
 MAX_LEN_NAME = 30
@@ -1301,7 +1299,7 @@ def delete_game():
 
 
 my_panel = html.DIV(id="games")
-my_panel.attrs['style'] = 'display: table-row'
+my_panel.attrs['style'] = 'display: table'
 
 # menu-left
 menu_left = html.DIV()
@@ -1315,7 +1313,6 @@ menu_left <= menu_selection
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
 my_sub_panel = html.DIV(id="sub")
-
 my_panel <= my_sub_panel
 
 
