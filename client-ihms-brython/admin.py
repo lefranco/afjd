@@ -419,7 +419,9 @@ def all_games(state):
 
             if field == 'master':
                 game_name = data['name']
-                master_name = game_master_dict[game_name]
+                master_name = ''  # some games do not have a game master
+                if game_name in game_master_dict:
+                    master_name = game_master_dict[game_name]
                 value = master_name
 
             if field == 'deadline':
