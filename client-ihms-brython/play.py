@@ -3875,7 +3875,6 @@ menu_left <= menu_selection
 item_name_selected = None
 
 my_sub_panel = html.DIV(id="play")
-
 my_panel <= my_sub_panel
 
 
