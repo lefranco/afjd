@@ -698,6 +698,7 @@ class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
+        assert contact is not None
         telephone = contact.telephone
 
         data = {'telephone': telephone}
