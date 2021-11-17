@@ -1710,17 +1710,35 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg="Did you convert orders from json to text ?")
 
-        # first we copy the fake units of the role already present and remove them
+
+
+        # CODE RECENTLY ADDED
+        # first we remove the fake units of the role already present
         game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
-        prev_fake_unit_list: typing.List[typing.List[int]] = list()
         for _, type_num, zone_num, role_num, _, fake in game_units:
             if not fake:
                 continue
             if not (role_id == 0 or role_num == int(role_id)):
                 continue
-            prev_fake_unit_list.append([type_num, zone_num, role_num])
             fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
             fake_unit.delete_database(sql_executor)  # noqa: F821
+
+
+
+        # CODE RECENTLY COMMENTED
+        #  # first we copy the fake units of the role already present and remove them
+        #  game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
+        #  prev_fake_unit_list: typing.List[typing.List[int]] = list()
+        #  for _, type_num, zone_num, role_num, _, fake in game_units:
+        #      if not fake:
+        #         continue
+        #      if not (role_id == 0 or role_num == int(role_id)):
+        #         continue
+        #      prev_fake_unit_list.append([type_num, zone_num, role_num])
+        #      fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
+        #      fake_unit.delete_database(sql_executor)  # noqa: F821
+
+
 
         # we check not building where there is already a unit
         # get the occupied zones
@@ -1833,15 +1851,23 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 # remove
                 fake_unit.delete_database(sql_executor)  # noqa: F821
 
-            # we restore the backed up fake units
-            for type_num, zone_num, role_num in prev_fake_unit_list:
-                fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
-                # insert
-                fake_unit.update_database(sql_executor)  # noqa: F821
+
+
+            # CODE RECENTLY COMMENTED
+            #  we restore the backed up fake units
+            #  for type_num, zone_num, role_num in prev_fake_unit_list:
+                #  fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
+                #  # insert
+                #  fake_unit.update_database(sql_executor)  # noqa: F821
+
+
 
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            sql_executor.commit()  # noqa: F821
+
+            # CODE RECENTLY COMMENTED
+            # sql_executor.commit()  # noqa: F821
+
             del sql_executor
             flask_restful.abort(400, msg=f"Failed to submit orders {message} : {submission_report}")
 
