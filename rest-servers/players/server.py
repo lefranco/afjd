@@ -36,9 +36,9 @@ PLAYER_PARSER = flask_restful.reqparse.RequestParser()
 PLAYER_PARSER.add_argument('pseudo', type=str, required=True)
 PLAYER_PARSER.add_argument('password', type=str, required=False)
 PLAYER_PARSER.add_argument('email', type=str, required=False)
-PLAYER_PARSER.add_argument('email_confirmed', type=str, required=False)
+PLAYER_PARSER.add_argument('email_confirmed', type=int, required=False)
 PLAYER_PARSER.add_argument('telephone', type=str, required=False)
-PLAYER_PARSER.add_argument('replace', type=str, required=False)
+PLAYER_PARSER.add_argument('replace', type=int, required=False)
 PLAYER_PARSER.add_argument('first_name', type=str, required=False)
 PLAYER_PARSER.add_argument('family_name', type=str, required=False)
 PLAYER_PARSER.add_argument('residence', type=str, required=False)
@@ -315,7 +315,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         players_list = players.Player.inventory(sql_executor)
         del sql_executor
 
-        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone, 'email_confirmed': p.email_confirmed} for p in players_list}
+        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone, 'email_confirmed': p.email_confirmed,  'replace': p.replace} for p in players_list}
 
         return data, 200
 

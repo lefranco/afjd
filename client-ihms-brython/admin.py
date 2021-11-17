@@ -20,7 +20,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'rectifier la position', 'envoyer un mail']
+OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'rectifier la position', 'emails non confirmés', 'remplaçants', 'envoyer un mail']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1002,6 +1002,100 @@ def rectify():
     my_sub_panel <= my_sub_panel2
 
 
+def show_non_confirmed_data():
+    """ show_non_confirmed_data """
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        return
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        return
+
+    players_table = html.TABLE()
+
+    # TODO : make it possible to sort etc...
+    fields = ['pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for data in sorted(players_dict.values(), key=lambda p: p['pseudo'].upper()):
+
+        if data['email_confirmed']:
+            continue
+
+        row = html.TR()
+        for field in fields:
+            value = data[field]
+
+            col = html.TD(value)
+            row <= col
+
+        players_table <= row
+
+    my_sub_panel <= players_table
+
+
+def show_replacement_data():
+    """ show_replacement_data """
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        return
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        return
+
+    players_table = html.TABLE()
+
+    # TODO : make it possible to sort etc...
+    fields = ['pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for data in sorted(players_dict.values(), key=lambda p: p['pseudo'].upper()):
+
+        if not data['replace']:
+            continue
+
+        row = html.TR()
+        for field in fields:
+            value = data[field]
+
+            col = html.TD(value)
+            row <= col
+
+        players_table <= row
+
+    my_sub_panel <= players_table
+
+
 def sendmail():
     """ sendmail """
 
@@ -1136,6 +1230,10 @@ def load_option(_, item_name):
         last_logins()
     if item_name == 'rectifier la position':
         rectify()
+    if item_name == 'emails non confirmés':
+        show_non_confirmed_data()
+    if item_name == 'remplaçants':
+        show_replacement_data()
     if item_name == 'envoyer un mail':
         sendmail()
 
