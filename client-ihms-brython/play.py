@@ -292,6 +292,13 @@ def get_game_status():
     row <= col
     game_status_table <= row
 
+    if g_game_parameters_loaded['fast']:
+        row = html.TR()
+        specific_information = html.EM("Partie rapide : rafraichissez la position etc... avec le bouton 'Jouer la partie sélectionnée'")
+        col = html.TD(specific_information, colspan="6")
+        row <= col
+        game_status_table <= row
+
     # initiates countdown
     countdown()
 
