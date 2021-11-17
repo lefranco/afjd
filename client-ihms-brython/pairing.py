@@ -486,12 +486,7 @@ def quit_mastering_game():
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
 
-    warning = html.DIV()
-    warning <= html.B("Attention : Créer une partie anonyme,")
-    warning <= html.BR()
-    warning <= html.B("se retirer de l'arbitrage après avoir consulté la liste des joueurs")
-    warning <= html.BR()
-    warning <= html.B("et ensuite jouer dans cette partie... est considéré comme tricher !")
+    warning = html.B("Attention : Créer une partie anonyme, se retirer de l'arbitrage après avoir consulté la liste des joueurs et ensuite jouer dans cette partie... est considéré comme tricher !")
     my_sub_panel <= warning
 
 my_panel = html.DIV()
