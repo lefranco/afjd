@@ -84,6 +84,10 @@ def join_game():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Vous avez rejoint la partie : {messages}", remove_after=config.REMOVE_AFTER)
 
+            # back to where we started
+            my_sub_panel.clear()
+            join_game()
+
         game_id = common.get_game_id(game)
         if game_id is None:
             return
@@ -141,6 +145,10 @@ def quit_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Vous avez quitté la partie : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            my_sub_panel.clear()
+            quit_game()
 
         game_id = common.get_game_id(game)
         if game_id is None:
@@ -244,6 +252,7 @@ def move_players_in_game():
             InfoDialog("OK", f"Le joueur a été retiré de la partie: {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
+            my_sub_panel.clear()
             move_players_in_game()
 
         player_pseudo = input_outcomer.value
@@ -398,6 +407,10 @@ def take_mastering_game():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Vous avez pris l'arbitrage de la partie : {messages}", remove_after=config.REMOVE_AFTER)
 
+            # back to where we started
+            my_sub_panel.clear()
+            take_mastering_game()
+
         game_id = common.get_game_id(game)
         if game_id is None:
             return
@@ -456,6 +469,10 @@ def quit_mastering_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Vous avez quitté l'arbitrage de la partie : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            my_sub_panel.clear()
+            quit_mastering_game()
 
         game_id = common.get_game_id(game)
         if game_id is None:
