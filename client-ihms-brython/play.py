@@ -992,7 +992,7 @@ def submit_orders():
                 legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
                 buttons_right <= legend_select_unit
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                legend_select_unit = html.LEGEND("Sélectionner l'ordre d'adjustement")
+                legend_select_unit = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
                 buttons_right <= legend_select_unit
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
@@ -1145,7 +1145,7 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement")
+            legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
@@ -1411,7 +1411,7 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.IDLE_STATE
 
     if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-        legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement")
+        legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
         buttons_right <= legend_select_order
         for order_type in mapping.OrderTypeEnum:
             if order_type.compatible(advancement_season):
