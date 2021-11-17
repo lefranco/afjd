@@ -279,6 +279,11 @@ class Player:
         """ setter """
         self._email_confirmed = email_confirmed
 
+    @property
+    def replace(self) -> bool:
+        """ property """
+        return self._replace
+
     def __str__(self) -> str:
         return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} telephone={self._telephone} replace={self._replace} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality} time_zone={self._time_zone}"
 

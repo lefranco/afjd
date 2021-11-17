@@ -156,7 +156,7 @@ def create_account():
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok pour remplacer", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandonné ?")
+    legend_replace = html.LEGEND("D'accord pour remplacer - à effacer après usage !", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandonné ?")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=False)
     form <= input_replace
@@ -443,7 +443,6 @@ def edit_account():
             replace_loaded = req_result['replace']
             family_name_loaded = req_result['family_name']
             first_name_loaded = req_result['first_name']
-
             residence_loaded_code = req_result['residence']
             nationality_loaded_code = req_result['nationality']
             timezone_loaded_code = req_result['time_zone']
@@ -488,7 +487,6 @@ def edit_account():
         replace = int(input_replace.checked)
         family_name = input_family_name.value
         first_name = input_first_name.value
-
         residence_code = config.COUNTRY_CODE_TABLE[input_residence.value]
         nationality_code = config.COUNTRY_CODE_TABLE[input_nationality.value]
         timezone_code = config.TIMEZONE_CODE_TABLE[input_timezone.value]
@@ -549,7 +547,7 @@ def edit_account():
     form <= input_telephone
     form <= html.BR()
 
-    legend_replace = html.LEGEND("ok pour remplacer", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandoné ?")
+    legend_replace = html.LEGEND("D'accord pour remplacer - à effacer après usage !", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandoné ?")
     form <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
     form <= input_replace

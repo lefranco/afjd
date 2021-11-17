@@ -24,12 +24,12 @@ def show_registered_data():
     players_table = html.TABLE()
 
     # TODO : make it possible to sort etc...
-    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'email_confirmed']
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'email_confirmed': 'email confirmé'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_table <= thead
@@ -46,12 +46,6 @@ def show_registered_data():
                 code = value
                 country_name = code_country_table[code]
                 value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
-
-            if field == 'email_confirmed':
-                if value is False:
-                    value = "Non"
-                elif value is True:
-                    value = "Oui"
 
             col = html.TD(value)
             row <= col
