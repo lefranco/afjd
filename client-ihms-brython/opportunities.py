@@ -180,9 +180,6 @@ def my_opportunities():
 
         # build variant data
 
-        # this is an optimisation
-
-        # new code after optimization
         variant_name_loaded_str = str(variant_name_loaded)
         variant_content_loaded_str = str(variant_content_loaded)
         parameters_read_str = str(parameters_read)
@@ -191,9 +188,6 @@ def my_opportunities():
             variant_data_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)] = variant_data
         else:
             variant_data = variant_data_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)]
-
-        # old code before optimization
-        variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
         data['allocated'] = None
         data['capacity'] = None
