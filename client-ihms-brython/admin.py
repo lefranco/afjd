@@ -1215,7 +1215,10 @@ def get_phone_number():
                 return
 
             telephone = req_result['telephone']
-            alert(f"Son numéro est {telephone}")
+            if telephone:
+                alert(f"Son numéro est '{telephone}'")
+            else:
+                alert(f"Pas de numéro entré !")
 
         contact_user_name = input_contact.value
         if not contact_user_name:
