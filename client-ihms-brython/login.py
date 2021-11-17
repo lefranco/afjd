@@ -32,6 +32,10 @@ def login():
                     alert(f"Problème à la connexion : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but still refresh window
+                render(g_panel_middle)
+
                 return
             storage['PSEUDO'] = pseudo
             storage['JWT_TOKEN'] = req_result['AccessToken']
@@ -68,7 +72,10 @@ def login():
         """ logout_callback """
 
         effective = logout()
-        if effective:
+
+        if not effective:
+            alert("Déjà déconnecté !")
+        else:
             InfoDialog("OK", "Déconnecté avec succès", remove_after=config.REMOVE_AFTER)
 
         render(g_panel_middle)
