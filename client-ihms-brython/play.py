@@ -629,7 +629,7 @@ def submit_orders():
                 automaton_state = AutomatonStateEnum.IDLE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement")
+            legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
@@ -3860,11 +3860,11 @@ def show_orders_submitted_in_game():
     return True
 
 
-my_panel = html.DIV() 
+my_panel = html.DIV()
 my_panel.attrs['style'] = 'display: table-row'
 
 # menu-left
-menu_left = html.DIV()  
+menu_left = html.DIV()
 menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 my_panel <= menu_left
 
@@ -3872,7 +3872,7 @@ my_panel <= menu_left
 menu_selection = html.UL()
 menu_left <= menu_selection
 
-item_name_selected = None 
+item_name_selected = None
 
 my_sub_panel = html.DIV(id="play")
 
