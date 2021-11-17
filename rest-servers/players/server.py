@@ -62,7 +62,6 @@ NEWS_PARSER = flask_restful.reqparse.RequestParser()
 NEWS_PARSER.add_argument('pseudo', type=str, required=True)
 NEWS_PARSER.add_argument('content', type=str, required=True)
 
-
 # to avoid sending emails in debug phase
 PREVENT_MAIL_CHECKING = False
 
@@ -315,7 +314,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         players_list = players.Player.inventory(sql_executor)
         del sql_executor
 
-        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone, 'email_confirmed': p.email_confirmed,  'replace': p.replace} for p in players_list}
+        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone, 'email_confirmed': p.email_confirmed, 'replace': p.replace} for p in players_list}
 
         return data, 200
 
@@ -650,6 +649,59 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         data = {'msg': 'Ok news created'}
         return data, 201
+
+
+@API.resource('/player-telephone/<pseudo>')
+class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
+    """ PlayerTelephoneRessource """
+
+    def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, str], int]:  # pylint: disable=no-self-use
+        """
+        Provides the phone number of a player
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/news - GET - get the phone number of player pseudo=%s", pseudo)
+
+        # check from user server user is pseudo
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+        pseudo_requester = req_result.json()['logged_in_as']
+
+        sql_executor = database.SqlExecutor()
+
+        requester = players.Player.find_by_pseudo(sql_executor, pseudo_requester)
+
+        if requester is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
+
+        # TODO improve this with real admin account
+        if pseudo_requester != 'Palpatine':
+            del sql_executor
+            flask_restful.abort(403, msg="You are not allowed to get phone number!")
+
+        contact = players.Player.find_by_pseudo(sql_executor, pseudo)
+
+        if contact is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Contact player {pseudo} does not exist")
+
+        del sql_executor
+
+        telephone = contact.telephone
+
+        data = {'telephone': telephone}
+        return data, 200
 
 
 def main() -> None:

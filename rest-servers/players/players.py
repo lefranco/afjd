@@ -270,6 +270,11 @@ class Player:
         return self._email
 
     @property
+    def telephone(self) -> str:
+        """ property """
+        return self._telephone
+
+    @property
     def email_confirmed(self) -> bool:
         """ property """
         return self._email_confirmed
