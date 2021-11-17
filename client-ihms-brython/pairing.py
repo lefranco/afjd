@@ -79,6 +79,11 @@ def join_game():
                     alert(f"Erreur à l'inscription à la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                my_sub_panel.clear()
+                join_game()
+
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -141,6 +146,11 @@ def quit_game():
                     alert(f"Erreur à la désinscription de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                my_sub_panel.clear()
+                quit_game()
+
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -205,6 +215,11 @@ def move_players_in_game():
                     alert(f"Problème putting player in game: {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                my_sub_panel.clear()
+                move_players_in_game()
+
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -246,6 +261,11 @@ def move_players_in_game():
                     alert(f"Problème au retrait d'un joueur de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                my_sub_panel.clear()
+                move_players_in_game()
+
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -402,6 +422,11 @@ def take_mastering_game():
                     alert(f"Problème à la prise de l'arbitrage de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                my_sub_panel.clear()
+                take_mastering_game()
+
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -465,6 +490,11 @@ def quit_mastering_game():
                     alert(f"Problème à la démission de l'arbitrage de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                my_sub_panel.clear()
+                quit_mastering_game()
+
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
@@ -505,6 +535,7 @@ def quit_mastering_game():
 
     warning = html.B("Attention : Créer une partie anonyme, se retirer de l'arbitrage après avoir consulté la liste des joueurs et ensuite jouer dans cette partie... est considéré comme tricher !")
     my_sub_panel <= warning
+
 
 my_panel = html.DIV()
 my_panel.attrs['style'] = 'display: table-row'
