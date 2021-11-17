@@ -63,18 +63,28 @@ def create_game():
 
         if not name:
             alert("Nom manquant")
+            my_sub_panel.clear()
+            create_game()
             return
+
         if len(name) > MAX_LEN_NAME:
             alert("Nom trop long")
+            my_sub_panel.clear()
+            create_game()
             return
 
         variant = input_variant.value
 
         if not variant:
             alert("Variante manquante")
+            my_sub_panel.clear()
+            create_game()
             return
+
         if len(variant) > MAX_LEN_NAME:
             alert("Variante trop longue")
+            my_sub_panel.clear()
+            create_game()
             return
 
         archive = int(input_archive.checked)

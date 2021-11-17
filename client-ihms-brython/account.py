@@ -65,9 +65,14 @@ def create_account():
 
         if not pseudo:
             alert("Pseudo manquant")
+            my_sub_panel.clear()
+            create_account()
             return
+
         if len(pseudo) > MAX_LEN_PSEUDO:
             alert("Pseudo trop long")
+            my_sub_panel.clear()
+            create_account()
             return
 
         password = input_password.value
@@ -78,14 +83,21 @@ def create_account():
         password_again = input_password_again.value
         if password_again != password:
             alert("Les mots de passe ne correspondent pas")
+            my_sub_panel.clear()
+            create_account()
             return
 
         email = input_email.value
         if not email:
             alert("email manquant")
+            my_sub_panel.clear()
+            create_account()
             return
+
         if email.find('@') == -1:
             alert("@ dans email manquant")
+            my_sub_panel.clear()
+            create_account()
             return
 
         telephone = input_telephone.value
@@ -249,11 +261,15 @@ def change_password():
         new_password = input_new_password.value
         if not new_password:
             alert("Nouveau mot de passe manquant")
+            my_sub_panel.clear()
+            change_password()
             return
 
         new_password_again = input_new_password_again.value
         if new_password_again != new_password:
             alert("Les mots de passe ne correspondent pas")
+            my_sub_panel.clear()
+            change_password()
             return
 
         json_dict = {
@@ -322,20 +338,24 @@ def validate_email():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Félicitations, votre email a été validé : {messages}", remove_after=config.REMOVE_AFTER)
 
-        confirmation_code = int(input_confirmation_code.value)
-
-        if not confirmation_code:
-            alert("Code de confirmation manquant")
+        if not input_confirmation_code.value:
+            alert("Code de confirmation mal saisi")
+            my_sub_panel.clear()
+            validate_email()
             return
 
         try:
-            confirmation_code_int = int(confirmation_code)
+            confirmation_code_int = int(input_confirmation_code.value)
         except:  # noqa: E722 pylint: disable=bare-except
             alert("Code de confirmation incorrect")
+            my_sub_panel.clear()
+            validate_email()
             return
 
         if not 1000 <= confirmation_code_int <= 9999:
             alert("Le code de confirmation doit utiliser 4 chiffres")
+            my_sub_panel.clear()
+            validate_email()
             return
 
         json_dict = {
@@ -478,9 +498,14 @@ def edit_account():
         email = input_email.value
         if not email:
             alert("email manquant")
+            my_sub_panel.clear()
+            edit_account()
             return
+
         if email.find('@') == -1:
             alert("@ dans email manquant")
+            my_sub_panel.clear()
+            edit_account()
             return
 
         telephone = input_telephone.value
