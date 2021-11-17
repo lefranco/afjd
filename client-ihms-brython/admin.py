@@ -20,7 +20,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'rectifier la position', 'emails non confirmés', 'remplaçants', 'envoyer un mail']
+OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'rectifier la position', 'emails non confirmés', 'remplaçants', 'envoyer un mail', 'récupérer un téléphone']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -418,9 +418,8 @@ def all_games(state):
 
             if field == 'master':
                 game_name = data['name']
-                master_name = ''  # some games do not have a game master
-                if game_name in game_master_dict:
-                    master_name = game_master_dict[game_name]
+                # some games do not have a game master
+                master_name = game_master_dict.get(game_name, '')
                 value = master_name
 
             if field == 'deadline':
@@ -1198,6 +1197,85 @@ def sendmail():
     my_sub_panel <= form
 
 
+def get_phone_number():
+    """ get_phone_number """
+
+    def get_phone_number_callback(_):
+        """ get_phone_number_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération de numéro de téléphone : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération de numéro de téléphone : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            telephone = req_result['telephone']
+            alert(f"Son numéro est {telephone}")
+
+        contact_user_name = input_contact.value
+        if not contact_user_name:
+            alert("User name à contacter manquant")
+            return
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-telephone/{contact_user_name}"
+
+        # getting private phone number : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        my_sub_panel.clear()
+        get_phone_number()
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        return
+
+    form = html.FORM()
+
+    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter")
+    form <= legend_contact
+
+    players_dict = common.get_players()
+    if players_dict is None:
+        return
+
+    # clears a warnng
+    players_dict = dict(players_dict)
+
+    # all players can be usurped
+    possible_contacts = set(players_dict.keys())
+
+    input_contact = html.SELECT(type="select-one", value="")
+    for contact_pseudo in sorted(possible_contacts, key=lambda pu: pu.upper()):
+        option = html.OPTION(contact_pseudo)
+        input_contact <= option
+
+    form <= input_contact
+    form <= html.BR()
+
+    form <= html.BR()
+
+    input_select_player = html.INPUT(type="submit", value="récupérer son numéro de téléphone")
+    input_select_player.bind("click", get_phone_number_callback)
+    form <= input_select_player
+
+    my_sub_panel <= form
+
+
 my_panel = html.DIV()
 my_panel.attrs['style'] = 'display: table-row'
 
@@ -1236,6 +1314,8 @@ def load_option(_, item_name):
         show_replacement_data()
     if item_name == 'envoyer un mail':
         sendmail()
+    if item_name == 'récupérer un téléphone':
+        get_phone_number()
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
