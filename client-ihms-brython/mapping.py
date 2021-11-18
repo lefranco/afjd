@@ -1265,10 +1265,6 @@ class Position(Renderable):
 
         return closest_object
 
-    def has_dislodged(self) -> bool:
-        """ has_dislodged """
-        return bool(self._dislodged_units)
-
     def units_list(self):
         """ units_list """
         return self._units
