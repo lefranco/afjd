@@ -3569,12 +3569,6 @@ def observe():
         load_option(None, 'position')
         return False
 
-    # game needs to be fast
-    if not g_game_parameters_loaded['fast']:
-        alert("Cette partie n'est pas une partie rapide")
-        load_option(None, 'position')
-        return False
-
     # initiates refresh
     refresh()
 
