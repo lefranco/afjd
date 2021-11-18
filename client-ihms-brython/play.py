@@ -36,7 +36,6 @@ OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 
 class AutomatonStateEnum(enum.Enum):
     """ AutomatonStateEnum """
 
-    IDLE_STATE = enum.auto()
     SELECT_ACTIVE_STATE = enum.auto()
     SELECT_ORDER_STATE = enum.auto()
     SELECT_PASSIVE_UNIT_STATE = enum.auto()
@@ -622,18 +621,10 @@ def submit_orders():
 
         stack_role_flag(buttons_right)
 
-        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-
-        if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-            if g_position_data.has_dislodged():
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
-                buttons_right <= legend_select_unit
-                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-            else:
-                automaton_state = AutomatonStateEnum.IDLE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
@@ -880,35 +871,23 @@ def submit_orders():
 
             stack_role_flag(buttons_right)
 
-            # can be None if no retreating unit on board
-            if selected_active_unit is not None:
+            # gm can pass orders on archive games
+            if g_role_id != 0 and selected_active_unit.role != g_variant_data.roles[g_role_id]:
 
-                # gm can pass orders on archive games
-                if g_role_id != 0 and selected_active_unit.role != g_variant_data.roles[g_role_id]:
+                alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
 
-                    alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
-                    selected_active_unit = None
+                selected_active_unit = None
 
-                else:
+                # switch back to initial state selecting unit
+                if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+                    legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                    buttons_right <= legend_select_unit
 
-                    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+                    automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
-                        legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
-                        buttons_right <= legend_selected_unit
-
-                    legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination - sous la légende)")
-                    buttons_right <= legend_select_order
-                    buttons_right <= html.BR()
-
-                    legend_select_order21 = html.I("Raccourcis clavier :")
-                    buttons_right <= legend_select_order21
-                    buttons_right <= html.BR()
-
-                    for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
-                        legend_select_order22 = html.I(info)
-                        buttons_right <= legend_select_order22
-                        buttons_right <= html.BR()
-
+                if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                    legend_select_unit = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
+                    buttons_right <= legend_select_unit
                     for order_type in mapping.OrderTypeEnum:
                         if order_type.compatible(advancement_season):
                             input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
@@ -917,12 +896,44 @@ def submit_orders():
                             buttons_right <= html.BR()
                             buttons_right <= input_select
 
-                    if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                        order = mapping.Order(g_position_data, selected_order_type, selected_active_unit, None, None)
-                        orders_data.insert_order(order)
+                    automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
-                        # update map
-                        callback_render(None)
+            else:
+
+                if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+
+                    legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
+                    buttons_right <= legend_selected_unit
+
+                legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination - sous la légende)")
+                buttons_right <= legend_select_order
+                buttons_right <= html.BR()
+
+                legend_select_order21 = html.I("Raccourcis clavier :")
+                buttons_right <= legend_select_order21
+                buttons_right <= html.BR()
+
+                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                    legend_select_order22 = html.I(info)
+                    buttons_right <= legend_select_order22
+                    buttons_right <= html.BR()
+
+                for order_type in mapping.OrderTypeEnum:
+                    if order_type.compatible(advancement_season):
+                        input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
+                        buttons_right <= html.BR()
+                        input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                        buttons_right <= html.BR()
+                        buttons_right <= input_select
+
+                if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+                    order = mapping.Order(g_position_data, selected_order_type, selected_active_unit, None, None)
+                    orders_data.insert_order(order)
+
+                    # update map
+                    callback_render(None)
+
+                automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
             stack_orders(buttons_right)
             if not orders_data.empty():
@@ -935,10 +946,6 @@ def submit_orders():
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
-
-            # can be None if no retreating unit on board
-            if selected_active_unit is not None:
-                automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
             return
 
@@ -998,6 +1005,7 @@ def submit_orders():
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
                 buttons_right <= legend_select_unit
+
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 legend_select_unit = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
                 buttons_right <= legend_select_unit
@@ -1404,18 +1412,10 @@ def submit_orders():
 
     stack_role_flag(buttons_right)
 
-    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
+    if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
         legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-
-    if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-        if g_position_data.has_dislodged():
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
-            buttons_right <= legend_select_unit
-            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
-        else:
-            automaton_state = AutomatonStateEnum.IDLE_STATE
 
     if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
         legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
@@ -1645,40 +1645,46 @@ def submit_communication_orders():
 
             stack_role_flag(buttons_right)
 
-            # can be None if no retreating unit on board
-            if selected_active_unit is not None:
+            # gm can pass orders on archive games
+            if g_role_id != 0 and selected_active_unit.role != g_variant_data.roles[g_role_id]:
 
-                # gm can pass orders on archive games
-                if g_role_id != 0 and selected_active_unit.role != g_variant_data.roles[g_role_id]:
+                alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
 
-                    alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
-                    selected_active_unit = None
+                selected_active_unit = None
 
-                else:
+                # switch back to initial state selecting unit
+                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                buttons_right <= legend_select_unit
 
-                    legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
-                    buttons_right <= legend_selected_unit
+                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
-                    legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination - sous la légende)")
-                    buttons_right <= legend_select_order
+            else:
+
+                legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
+                buttons_right <= legend_selected_unit
+
+                legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination - sous la légende)")
+                buttons_right <= legend_select_order
+                buttons_right <= html.BR()
+
+                legend_select_order21 = html.I("Raccourcis clavier :")
+                buttons_right <= legend_select_order21
+                buttons_right <= html.BR()
+
+                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                    legend_select_order22 = html.I(info)
+                    buttons_right <= legend_select_order22
                     buttons_right <= html.BR()
 
-                    legend_select_order21 = html.I("Raccourcis clavier :")
-                    buttons_right <= legend_select_order21
-                    buttons_right <= html.BR()
-
-                    for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
-                        legend_select_order22 = html.I(info)
-                        buttons_right <= legend_select_order22
+                for order_type in mapping.OrderTypeEnum:
+                    if order_type.compatible(mapping.SeasonEnum.SPRING_SEASON):
+                        input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
                         buttons_right <= html.BR()
+                        input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
+                        buttons_right <= html.BR()
+                        buttons_right <= input_select
 
-                    for order_type in mapping.OrderTypeEnum:
-                        if order_type.compatible(mapping.SeasonEnum.SPRING_SEASON):
-                            input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
-                            buttons_right <= html.BR()
-                            input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
-                            buttons_right <= html.BR()
-                            buttons_right <= input_select
+                automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
             stack_orders(buttons_right)
             if not orders_data.empty():
@@ -1688,10 +1694,6 @@ def submit_communication_orders():
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
-
-            # can be None if no retreating unit on board
-            if selected_active_unit is not None:
-                automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
             return
 
