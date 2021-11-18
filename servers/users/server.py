@@ -22,6 +22,7 @@ import mylogger
 import populate
 import users
 import logins
+import failures
 import database
 
 
@@ -195,12 +196,15 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
     user = users.User.find_by_name(sql_executor, user_name)
 
-    if user is None:
-        del sql_executor
-        return flask.jsonify({"msg": "Bad user_name or password"}), 401
+    if user is None or not werkzeug.security.check_password_hash(user.pwd_hash, password):  # type: ignore
 
-    if not werkzeug.security.check_password_hash(user.pwd_hash, password):  # type: ignore
+        # we keep a trace of the failure
+        failure = failures.Failure(user_name)
+        failure.update_database(sql_executor)
+
+        sql_executor.commit()
         del sql_executor
+
         return flask.jsonify({"msg": "Bad user_name or password"}), 401
 
     # we keep a trace of the login
@@ -289,6 +293,31 @@ def logins_list() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     del sql_executor
 
     return flask.jsonify({"login_list": login_list}), 200
+
+
+@APP.route('/failures_list', methods=['POST'])
+@flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
+def failures_list() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    """
+    Protect a view with jwt_required, which requires a valid access token
+    in the request to access.
+    EXPOSED : Get list of all failures
+    """
+
+    mylogger.LOGGER.info("/failures_list - POST - list of all failures (failed logins)")
+
+    # Access the identity of the current user with get_jwt_identity
+    logged_in_as = flask_jwt_extended.get_jwt_identity()
+
+    # TODO improve this with real admin account
+    if logged_in_as != 'Palpatine':
+        return {"msg": "Wrong user_name to perform operation"}, 403
+
+    sql_executor = database.SqlExecutor()
+    failure_list = failures.Failure.find_all(sql_executor)
+    del sql_executor
+
+    return flask.jsonify({"failure_list": failure_list}), 200
 
 # ---------------------------------
 # main
