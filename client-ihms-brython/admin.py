@@ -20,7 +20,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'rectifier la position', 'emails non confirmés', 'remplaçants', 'envoyer un mail', 'récupérer un téléphone']
+OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'dernières connexions manquées', 'rectifier la position', 'emails non confirmés', 'remplaçants', 'envoyer un mail', 'récupérer un téléphone']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -55,6 +55,38 @@ def get_last_logins():
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return logins_list
+
+
+def get_last_failures():
+    """ get_last_failures """
+
+    failures_list = None
+
+    def reply_callback(req):
+        nonlocal failures_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des connexions manquées : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des connexions manquées : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        failures_list = req_result['failure_list']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['USER']['HOST']
+    port = config.SERVER_CONFIG['USER']['PORT']
+    url = f"{host}:{port}/failures_list"
+
+    # failures_list list : need token
+    # note : since we access directly to the user server, we present the token in a slightly different way
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return failures_list
 
 
 def get_all_games():
@@ -570,6 +602,45 @@ def last_logins():
         logins_table <= row
 
     my_sub_panel <= logins_table
+
+
+def last_failures():
+    """ failures """
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        return
+
+    failures_list = get_last_failures()
+
+    failures_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'date']:
+        col = html.TD(field)
+        thead <= col
+    failures_table <= thead
+
+    for pseudo, date in sorted(failures_list, key=lambda l: l[1], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
+        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        col = html.TD(date_now_gmt_str)
+        row <= col
+
+        failures_table <= row
+
+    my_sub_panel <= failures_table
 
 
 def rectify():
@@ -1218,7 +1289,7 @@ def get_phone_number():
             if telephone:
                 alert(f"Son numéro est '{telephone}'")
             else:
-                alert(f"Pas de numéro entré !")
+                alert("Pas de numéro entré !")
 
         contact_user_name = input_contact.value
         if not contact_user_name:
@@ -1309,6 +1380,8 @@ def load_option(_, item_name):
         all_games(1)
     if item_name == 'dernières connexions':
         last_logins()
+    if item_name == 'dernières connexions manquées':
+        last_failures()
     if item_name == 'rectifier la position':
         rectify()
     if item_name == 'emails non confirmés':
