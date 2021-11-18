@@ -167,7 +167,15 @@ def create_game():
         # TODO : adjust for variants
         last_year = 1900 + nb_max_cycles_to_play
 
-        description = f"Partie créé à {time_creation_str} (gmt) par {pseudo} variante {variant} dernière année jouée {last_year}"
+        specific_data = ""
+        if archive: specific_data += 'archive '
+        if manual: specific_data += 'manuelle '
+        if anonymous: specific_data += 'anonyme '
+        if nomessage: specific_data += 'sans message '
+        if nopress: specific_data += 'sans presse '
+        if fast: specific_data += 'rapide '
+
+        description = f"Partie créé à {time_creation_str} (gmt) par {pseudo} variante {variant} dernière année jouée {last_year}. Cette partie est {specific_data}"
         state = 0
 
         json_dict = {
@@ -1274,7 +1282,7 @@ def delete_game():
 
             # go to select another game
             index.load_option(None, 'sélectionner partie')
-        
+
         dialog.close()
 
         json_dict = {

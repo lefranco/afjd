@@ -56,6 +56,16 @@ def get_recruiting_games():
 def my_opportunities():
     """ my_opportunities """
 
+    def select_game_callback(_, game):
+        """ select_game_callback """
+
+        # action of selecting game
+        storage['GAME'] = game
+        selection.show_game_selected()
+
+        # action of going to game page
+        index.load_option(None, 'jouer la partie sélectionnée')
+
     def join_game_callback(_, game):
 
         def reply_callback(req):
@@ -132,12 +142,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'description', 'deadline', 'current_state', 'current_advancement', 'allocated', 'capacity', 'join']
+    fields = ['name', 'variant', 'description', 'deadline', 'current_state', 'current_advancement', 'allocated', 'capacity', 'jump_here', 'join']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'description': 'description', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'capacity': 'capacité (dont arbitre)', 'join': 'rejoindre'}[field]
+        field_fr = {'name': 'nom', 'variant': 'variante', 'description': 'description', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'capacity': 'capacité (dont arbitre)', 'jump_here': 'partie', 'join': 'rejoindre'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -168,11 +178,6 @@ def my_opportunities():
         else:
             variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
 
-        # old code before optimization
-        #  variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-        #  if not variant_content_loaded:
-        #      return
-
         # selected display (user choice)
         display_chosen = tools.get_display_from_variant(variant_name_loaded)
 
@@ -191,6 +196,7 @@ def my_opportunities():
 
         data['allocated'] = None
         data['capacity'] = None
+        data['jump_here'] = None
         data['join'] = None
 
         row = html.TR()
@@ -233,6 +239,14 @@ def my_opportunities():
 
             if field == 'capacity':
                 value = recruiting_games_dict[int(game_id_str)]['capacity']
+
+            if field == 'jump_here':
+                game_name = data['name']
+                form = html.FORM()
+                input_jump_game = html.INPUT(type="submit", value="consulter")
+                input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
+                form <= input_jump_game
+                value = form
 
             if field == 'join':
                 game_name = data['name']
