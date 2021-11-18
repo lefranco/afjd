@@ -1743,7 +1743,11 @@ class Orders(Renderable):
             zone = unit.zone
             unit_pos = self._position.variant.position_table[zone]
             distance = designated_pos.distance(unit_pos)
-            if distance_closest is None or distance < distance_closest:
+            # if two units at same position we prefer the built one
+            # this only occurs when user built on an existing unit
+            print(f"consider {unit.zone.region.identifier} {type(unit)}")
+            if distance_closest is None or distance < distance_closest or (distance == distance_closest and unit in self._fake_units.values()):
+                print(f"better")
                 closest_unit = unit
                 distance_closest = distance
 
