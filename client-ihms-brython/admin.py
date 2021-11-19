@@ -476,7 +476,7 @@ def all_games(state):
                 elif time_stamp_now > deadline_loaded:
                     colour = 'orange'
                 # deadline is today : yellow
-                elif time_stamp_now > deadline_loaded - 24 * 3600:
+                elif time_stamp_now > deadline_loaded - time_unit:
                     colour = 'yellow'
 
             if field == 'current_advancement':
