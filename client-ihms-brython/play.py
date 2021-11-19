@@ -2912,7 +2912,6 @@ def game_master():
             adjudicated = req_result['adjudicated']
             if adjudicated:
                 alert("La position de la partie a changé !")
-                load_dynamic_stuff()
 
             # back to where we started
             my_sub_panel.clear()
@@ -3426,42 +3425,53 @@ def supervise():
     def refresh():
         """ refresh """
 
-        # reload from server to see what changed from outside
-        load_dynamic_stuff()
-        submitted_data = common.get_roles_submitted_orders(g_game_id)
-        if submitted_data is None:
-            alert("Erreur chargement données de soumission")
-            return
+        submitted_data = None
+        votes = None
 
-        # avoids a warning
-        submitted_data = dict(submitted_data)
+        def refresh_subroutine():
 
-        # votes
-        votes = common.vote_reload(g_game_id)
-        if votes is None:
-            alert("Erreur chargement votes")
-            return
+            # reload from server to see what changed from outside
+            load_dynamic_stuff()
+            nonlocal submitted_data
+            submitted_data = common.get_roles_submitted_orders(g_game_id)
+            if submitted_data is None:
+                alert("Erreur chargement données de soumission")
+                return
 
-        # avoids a warning
-        votes = list(votes)
+            # avoids a warning
+            submitted_data = dict(submitted_data)
 
-        my_sub_panel.clear()
+            # votes
+            nonlocal votes
+            votes = common.vote_reload(g_game_id)
+            if votes is None:
+                alert("Erreur chargement votes")
+                return
 
-        # clock
-        stack_clock(my_sub_panel, SUPERVISE_REFRESH_PERIOD_SEC)
-        my_sub_panel <= html.BR()
+            # avoids a warning
+            votes = list(votes)
 
-        # game status
-        my_sub_panel <= g_game_status
-        my_sub_panel <= html.BR()
+            my_sub_panel.clear()
 
-        stack_role_flag(my_sub_panel)
-        my_sub_panel <= html.BR()
+            # clock
+            stack_clock(my_sub_panel, SUPERVISE_REFRESH_PERIOD_SEC)
+            my_sub_panel <= html.BR()
+
+            # game status
+            my_sub_panel <= g_game_status
+            my_sub_panel <= html.BR()
+
+            stack_role_flag(my_sub_panel)
+            my_sub_panel <= html.BR()
+
+        # changed from outside
+        refresh_subroutine()
 
         # calculate deadline + grace
+        time_unit = 60 if g_game_parameters_loaded['fast'] else 24 * 60 * 60
         deadline_loaded = g_game_parameters_loaded['deadline']
         grace_duration_loaded = g_game_parameters_loaded['grace_duration']
-        force_point = deadline_loaded + 60 * grace_duration_loaded
+        force_point = deadline_loaded + time_unit * grace_duration_loaded
         time_stamp_now = time.time()
 
         # are we past ?
@@ -3476,12 +3486,14 @@ def supervise():
                 if role_id in needed_roles_list and role_id not in submitted_roles_list:
                     missing_orders.append(role_id)
 
+            alterated = False
             if missing_orders:
                 role_id = random.choice(missing_orders)
                 civil_disorder_callback(None, role_id)
                 role = g_variant_data.roles[role_id]
                 role_name = g_variant_data.name_table[role]
                 message = f"Désordre civil pour {role_name}"
+                alterated = True
             else:
                 missing_agreements = list()
                 for role_id in g_variant_data.roles:
@@ -3493,15 +3505,14 @@ def supervise():
                     role = g_variant_data.roles[role_id]
                     role_name = g_variant_data.name_table[role]
                     message = f"Forçage accord pour {role_name}"
+                    alterated = True
 
-            log_stack.insert(message)
+            if alterated:
 
-            # reload from server to see what changed from here
-            load_dynamic_stuff()
-            submitted_data = common.get_roles_submitted_orders(g_game_id)
-            if submitted_data is None:
-                alert("Erreur chargement données de soumission")
-                return
+                log_stack.insert(message)
+
+                # changed from myself
+                refresh_subroutine()
 
         game_admin_table = reload_game_admin_table(submitted_data, votes)
         my_sub_panel <= game_admin_table
@@ -3614,7 +3625,6 @@ def observe():
 
         # reload from server to see what changed from outside
         load_dynamic_stuff()
-
         my_sub_panel.clear()
 
         # clock
