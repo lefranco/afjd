@@ -3672,6 +3672,11 @@ def observe():
 def show_game_parameters():
     """ show_game_parameters """
 
+
+    # game status
+    my_sub_panel <= g_game_status
+    my_sub_panel <= html.BR()
+
     game_params_table = html.TABLE()
 
     # table header
@@ -4070,28 +4075,38 @@ def render(panel_middle):
     global g_role_id  # pylint: disable=invalid-name
     g_role_id = None
 
-    if g_pseudo is not None:
-
-        g_role_id = common.get_role_allocated_to_player_in_game(g_game_id)
-        if g_role_id is not None:
-
-            if g_role_id == 0:
-                # Arbitre
-                item_name_selected = 'arbitrer'
-            else:
-                # Joueur
-                item_name_selected = 'ordonner'
-
-        else:
-
-            # TODO improve this with real admin account
-            if g_pseudo == "Palpatine":
-                # Admin
-                item_name_selected = 'ordres'
-
     load_static_stuff()
     load_dynamic_stuff()
     load_special_stuff()
+
+    # game not started, visiting to see parameters (identified)
+    if g_game_parameters_loaded['current_state'] == 0:
+        item_name_selected = 'paramètres'
+
+    elif g_game_parameters_loaded['current_state'] == 2:
+        item_name_selected = 'historique'
+
+    else:
+        if g_pseudo is not None:
+
+            g_role_id = common.get_role_allocated_to_player_in_game(g_game_id)
+            if g_role_id is not None:
+
+                if g_role_id == 0:
+                    # Arbitre
+                    item_name_selected = 'arbitrer'
+                else:
+                    # Joueur
+                    item_name_selected = 'ordonner'
+
+            else:
+
+                # Admin wants to see whose orders are missing
+                # TODO improve this with real admin account
+                if g_pseudo == "Palpatine":
+                    # Admin
+                    item_name_selected = 'ordres'
+
 
     load_option(None, item_name_selected)
     panel_middle <= my_panel
