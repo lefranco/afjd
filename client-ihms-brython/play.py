@@ -183,16 +183,40 @@ def stack_role_flag(frame):
     frame <= role_icon_img
 
 
-countdown_elt = None  # pylint: disable=invalid-name
-countdown_timer = None  # pylint: disable=invalid-name
+g_deadline_col = None  # pylint: disable=invalid-name
+g_countdown_col = None  # pylint: disable=invalid-name
 
 
 def countdown():
     """ countdown """
 
-    print("countdown()")
+    print("countdwon called !")
 
     deadline_loaded = g_game_parameters_loaded['deadline']
+
+    # calculate display colour for deadline and countdown
+
+    time_unit = 60 if g_game_parameters_loaded['fast'] else 24 * 60 * 60
+
+    colour = 'black'
+    time_stamp_now = time.time()
+    # we are after deadline + grace : red
+    if time_stamp_now > deadline_loaded + time_unit * g_game_parameters_loaded['grace_duration']:
+        colour = 'red'
+    # we are after deadline : orange
+    elif time_stamp_now > deadline_loaded:
+        colour = 'orange'
+    # deadline is today : yellow
+    elif time_stamp_now > deadline_loaded - time_unit:
+        colour = 'yellow'
+
+    # set the colour
+
+    g_deadline_col.style = {
+        'color': colour
+    }
+
+    # calculate text value of countdown
 
     time_stamp_now = time.time()
     remains = int(deadline_loaded - time_stamp_now)
@@ -200,21 +224,24 @@ def countdown():
     if remains < 0:
         late = - remains
         if late < 60:
-            countdown_elt.text = f"passée de {late:02}s !"
+            countdown_text = f"passée de {late:02}s !"
         elif late < 3600:
-            countdown_elt.text = f"passée de {late // 60:02}mn {late % 60:02}s !"
+            countdown_text = f"passée de {late // 60:02}mn {late % 60:02}s !"
         elif late < 24 * 3600:
-            countdown_elt.text = f"passée de ~ {late // 3600:02}h !"
+            countdown_text = f"passée de ~ {late // 3600:02}h !"
         else:
-            countdown_elt.text = f"passée de ~ {late // (24 * 3600)}j !"
+            countdown_text = f"passée de ~ {late // (24 * 3600)}j !"
     elif remains < 60:
-        countdown_elt.text = f"{remains:02}s"
+        countdown_text = f"{remains:02}s"
     elif remains < 3600:
-        countdown_elt.text = f"{remains // 60:02}mn {remains % 60:02}s"
+        countdown_text = f"{remains // 60:02}mn {remains % 60:02}s"
     elif remains < 24 * 3600:
-        countdown_elt.text = f"~ {remains // 3600:02}h"
+        countdown_text = f"~ {remains // 3600:02}h"
     else:
-        countdown_elt.text = f"~ {remains // (24 * 3600)}j"
+        countdown_text = f"~ {remains // (24 * 3600)}j"
+
+    # insert text
+    g_countdown_col.text = countdown_text
 
 
 def get_game_status():
@@ -252,34 +279,13 @@ def get_game_status():
     col = html.TD(f"Saison {game_season}")
     row <= col
 
-    time_unit = 60 if g_game_parameters_loaded['fast'] else 24 * 60 * 60
+    global g_deadline_col
+    g_deadline_col = html.TD(f"DL {game_deadline_str}")
+    row <= g_deadline_col
 
-    colour = 'black'
-    time_stamp_now = time.time()
-    # we are after deadline + grace : red
-    if time_stamp_now > deadline_loaded + time_unit * g_game_parameters_loaded['grace_duration']:
-        colour = 'red'
-    # we are after deadline : orange
-    elif time_stamp_now > deadline_loaded:
-        colour = 'orange'
-    # deadline is today : yellow
-    elif time_stamp_now > deadline_loaded - time_unit:
-        colour = 'yellow'
-
-    col = html.TD(f"DL {game_deadline_str}")
-    col.style = {
-        'color': colour
-    }
-    row <= col
-
-    global countdown_elt  # pylint: disable=invalid-name
-    if countdown_elt is None:
-        countdown_elt = html.DIV()
-    col = html.TD(countdown_elt)
-    col.style = {
-        'color': colour
-    }
-    row <= col
+    global g_countdown_col
+    g_countdown_col = html.TD("xxx")
+    row <= g_countdown_col
 
     game_master_pseudo = get_game_master(g_game_id)
     info = ''  # some games do not have a game master
@@ -302,15 +308,6 @@ def get_game_status():
         col = html.TD(specific_information, colspan="6")
         row <= col
         game_status_table <= row
-
-    # initiates countdown
-    countdown()
-
-    # repeat
-    global countdown_timer  # pylint: disable=invalid-name
-    if countdown_timer is None:
-        print("start countdown()")
-        countdown_timer = timer.set_interval(countdown, 1000)
 
     return game_status_table
 
@@ -3425,8 +3422,6 @@ def supervise():
     def refresh():
         """ refresh """
 
-        print("supervise refresh()")
-
         # reload from server to see what changed from outside
         load_dynamic_stuff()
         submitted_data = common.get_roles_submitted_orders(g_game_id)
@@ -3542,7 +3537,6 @@ def supervise():
         # repeat
         global supervise_refresh_timer  # pylint: disable=invalid-name
         if supervise_refresh_timer is None:
-            print("start supervise refresh()")
             supervise_refresh_timer = timer.set_interval(refresh, SUPERVISE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
 
     id2pseudo = dict()
@@ -3614,8 +3608,6 @@ def observe():
     def refresh():
         """ refresh """
 
-        print("observe refresh()")
-
         # reload from server to see what changed from outside
         load_dynamic_stuff()
 
@@ -3672,7 +3664,6 @@ def observe():
     # repeat
     global observe_refresh_timer  # pylint: disable=invalid-name
     if observe_refresh_timer is None:
-        print("start observe refresh()")
         observe_refresh_timer = timer.set_interval(refresh, OBSERVE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
 
     return True
@@ -4036,7 +4027,6 @@ def load_option(_, item_name):
     global supervise_refresh_timer  # pylint: disable=invalid-name
     if item_name_selected != 'superviser':
         if supervise_refresh_timer is not None:
-            print("kill supervise refresh()")
             timer.clear_interval(supervise_refresh_timer)
             supervise_refresh_timer = None
 
@@ -4044,9 +4034,11 @@ def load_option(_, item_name):
     global observe_refresh_timer  # pylint: disable=invalid-name
     if item_name_selected != 'observer':
         if observe_refresh_timer is not None:
-            print("kill observe refresh()")
             timer.clear_interval(observe_refresh_timer)
             observe_refresh_timer = None
+
+
+countdown_timer = None  # pylint: disable=invalid-name
 
 
 def render(panel_middle):
@@ -4088,6 +4080,15 @@ def render(panel_middle):
     load_static_stuff()
     load_dynamic_stuff()
     load_special_stuff()
+
+    # initiates new countdown
+    countdown()
+
+    # start countdown (must not be inside a timed function !)
+    global countdown_timer  # pylint: disable=invalid-name
+    if countdown_timer is None:
+        print("start (from main) countdown()")
+        countdown_timer = timer.set_interval(countdown, 1000)
 
     # game not started, visiting probably to see parameters
     if g_game_parameters_loaded['current_state'] == 0:
