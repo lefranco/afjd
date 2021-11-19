@@ -2829,14 +2829,16 @@ def game_master():
             load_dynamic_stuff()
             game_master()
 
-        # get deadline from server
+        # get deadline from server (change to now if in the past)
         deadline_loaded = change_deadline_reload()
+        time_stamp_now = time.time()
+        # round to end of minute to avoid little surprises
+        deadline_now = (time_stamp_now // 60) * 60 + 60
+        deadline_used = max(deadline_now, deadline_loaded)
 
         # add one day - if fast game change to one minute
-        if g_game_parameters_loaded['fast']:
-            deadline_forced = deadline_loaded + 60
-        else:
-            deadline_forced = deadline_loaded + 24 * 60 * 60
+        time_unit = 60 if g_game_parameters_loaded['fast'] else 24 * 60 * 60
+        deadline_forced = deadline_used + time_unit
 
         # push on server
         json_dict = {
@@ -3228,10 +3230,12 @@ def game_master():
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
 
-    legend_push1 = html.LEGEND("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie rapide).")
-    my_sub_panel <= legend_push1
-    legend_push2 = html.LEGEND("Pour une gestion plus fine de cette date limite vous devez éditer la partie.")
-    my_sub_panel <= legend_push2
+    my_sub_panel <= html.EM("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie rapide).")
+    my_sub_panel <= html.BR()
+    my_sub_panel <= html.EM("Ce, à partir de maintenant si la date limite est passée.")
+    my_sub_panel <= html.BR()
+    my_sub_panel <= html.EM("Pour une gestion plus fine de cette date limite vous devez éditer la partie.")
+    my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
 
     input_push_deadline = html.INPUT(type="submit", value="Reporter la date limite")
