@@ -220,11 +220,6 @@ def my_games(state):
         data['jump_here'] = None
         data['go_away'] = None
 
-        # TEMPORARY
-        # TODO REMOVE
-        data['fast'] = False
-        data['grace_duration'] = 2
-
         row = html.TR()
         for field in fields:
 
