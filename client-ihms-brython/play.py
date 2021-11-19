@@ -247,6 +247,7 @@ def countdown():
         'color': colour
     }
 
+
 def get_game_status():
     """ get_game__status """
 
