@@ -194,8 +194,8 @@ def countdown():
 
     deadline_loaded = g_game_parameters_loaded['deadline']
 
-    now = time.time()
-    remains = int(deadline_loaded - now)
+    time_stamp_now = time.time()
+    remains = int(deadline_loaded - time_stamp_now)
 
     if remains < 0:
         late = - remains
@@ -3463,10 +3463,10 @@ def supervise():
         deadline_loaded = g_game_parameters_loaded['deadline']
         grace_duration_loaded = g_game_parameters_loaded['grace_duration']
         force_point = deadline_loaded + 60 * grace_duration_loaded
-        now = time.time()
+        time_stamp_now = time.time()
 
         # are we past ?
-        if now > force_point:
+        if time_stamp_now > force_point:
 
             submitted_roles_list = submitted_data['submitted']
             agreed_roles_list = submitted_data['agreed']
