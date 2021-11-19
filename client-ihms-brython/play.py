@@ -211,7 +211,6 @@ def countdown():
         colour = 'yellow'
 
     # set the colour
-
     g_deadline_col.style = {
         'color': colour
     }
@@ -243,6 +242,10 @@ def countdown():
     # insert text
     g_countdown_col.text = countdown_text
 
+    # set the colour
+    g_countdown_col.style = {
+        'color': colour
+    }
 
 def get_game_status():
     """ get_game__status """
