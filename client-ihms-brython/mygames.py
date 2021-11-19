@@ -220,6 +220,11 @@ def my_games(state):
         data['jump_here'] = None
         data['go_away'] = None
 
+        # TEMPORARY
+        # TODO REMOVE
+        data['fast'] = False
+        data['grace_duration'] = 2
+
         row = html.TR()
         for field in fields:
 
@@ -235,12 +240,17 @@ def my_games(state):
                 deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
                 value = deadline_loaded_str
 
-                # we are after deadline : red
-                if time_stamp_now > deadline_loaded:
+                time_unit = 60 if data['fast'] else 24 * 60 * 60
+
+                # we are after deadline + grace : red
+                if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
                     colour = 'red'
-                # deadline is today : orange
-                elif time_stamp_now > deadline_loaded - 24 * 3600:
+                # we are after deadline : orange
+                elif time_stamp_now > deadline_loaded:
                     colour = 'orange'
+                # deadline is today : yellow
+                elif time_stamp_now > deadline_loaded - 24 * 3600:
+                    colour = 'yellow'
 
             if field == 'current_advancement':
 
