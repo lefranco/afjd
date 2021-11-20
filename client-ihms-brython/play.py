@@ -200,15 +200,15 @@ def countdown():
 
     colour = 'black'
     time_stamp_now = time.time()
-    # we are after deadline + grace : red
+    # we are after deadline + grace
     if time_stamp_now > deadline_loaded + time_unit * g_game_parameters_loaded['grace_duration']:
-        colour = 'red'
-    # we are after deadline : orange
+        colour = config.PASSED_GRACE_COLOR
+    # we are after deadline
     elif time_stamp_now > deadline_loaded:
-        colour = 'orange'
-    # deadline is today : yellow
+        colour = config.PASSED_DEADLINE_COLOR
+    # deadline is today
     elif time_stamp_now > deadline_loaded - time_unit:
-        colour = 'yellow'
+        colour = config.APPROACHING_DEADLINE_COLOR
 
     # set the colour
     g_deadline_col.style = {
