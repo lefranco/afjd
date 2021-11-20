@@ -40,7 +40,12 @@ note_content = html.DIV(id='note')
 for line in note_content_stated.split("\n"):
     note_content <= line
     note_content <= html.BR()
-my_panel <= note_content
+note_content_table = html.TABLE()
+row = html.TR()
+note_content_table <= row
+col = html.TD(note_content)
+row <= col
+my_panel <= note_content_table
 
 title3 = html.H2("Dernières nouvelles")
 my_panel <= title3
