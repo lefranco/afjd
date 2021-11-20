@@ -241,9 +241,7 @@ def render(panel_middle):
     my_sub_panel = login()
 
     if my_sub_panel:
-        my_panel <= html.B("Identifiez vous pour accéder aux ressources protégées")
-        my_panel <= html.BR()
-        my_panel <= html.BR()
+        my_panel <= html.H2("Identifiez vous pour accéder aux ressources protégées")
         my_panel <= my_sub_panel
 
     panel_middle <= my_panel

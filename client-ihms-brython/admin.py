@@ -285,7 +285,7 @@ def usurp():
     my_sub_panel <= form
 
 
-def all_games(state):
+def all_games(state_name):
     """all_games """
 
     def select_game_callback(_, game):
@@ -303,12 +303,10 @@ def all_games(state):
     my_sub_panel.clear()
 
     # title
-    for state_name in config.STATE_CODE_TABLE:
-        if config.STATE_CODE_TABLE[state_name] == state:
-            state_displayed_name = state_name
-            break
-    title = html.H2(f"Parties qui sont : {state_displayed_name}")
+    title = html.H2(f"Parties dans l'état: {state_name}")
     my_sub_panel <= title
+
+    state = config.STATE_CODE_TABLE[state_name]
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -388,7 +386,6 @@ def all_games(state):
     number_games = 0
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0])):
 
-        # do not display finished games
         if data['current_state'] != state:
             continue
 
@@ -548,18 +545,12 @@ def all_games(state):
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
 
-    for other_state in range(len(config.STATE_CODE_TABLE)):
+    for other_state_name in config.STATE_CODE_TABLE:
 
-        if other_state != state:
+        if other_state_name != state_name:
 
-            # state name
-            for state_name in config.STATE_CODE_TABLE:
-                if config.STATE_CODE_TABLE[state_name] == other_state:
-                    state_displayed_name = state_name
-                    break
-
-            input_change_state = html.INPUT(type="submit", value=state_displayed_name)
-            input_change_state.bind("click", lambda _, s=other_state: all_games(s))
+            input_change_state = html.INPUT(type="submit", value=other_state_name)
+            input_change_state.bind("click", lambda _, s=other_state_name: all_games(s))
 
             my_sub_panel <= input_change_state
             my_sub_panel <= html.BR()
@@ -1378,7 +1369,7 @@ def load_option(_, item_name):
     if item_name == 'usurper':
         usurp()
     if item_name == 'toutes les parties':
-        all_games(1)
+        all_games('en cours')
     if item_name == 'dernières connexions':
         last_logins()
     if item_name == 'dernières connexions manquées':
