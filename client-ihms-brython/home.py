@@ -70,9 +70,6 @@ my_panel <= text23
 
 email_support = html.A(href=f"mailto:{EMAIL_SUPPORT}")
 email_support <= "Contacter le support"
-email_support.style = {
-    'color': 'red',
-}
 my_panel <= email_support
 
 text3 = html.P("N'oubliez de bien préciser une procédure pour reproduire le problème, la différence entre le résultat obtenu et le résultat attendu...")
