@@ -53,6 +53,7 @@ def show_registered_data():
         players_table <= row
         count += 1
 
+    my_sub_panel <= html.H2("Les inscrits")
     my_sub_panel <= players_table
     my_sub_panel <= html.P(f"Il y a {count} inscrits")
 
@@ -119,12 +120,15 @@ def show_players_data():
         players_table <= row
         count += 1
 
+    my_sub_panel <= html.H2("Les joueurs")
     my_sub_panel <= players_table
     my_sub_panel <= html.P(f"Il y a {count} joueurs")
 
 
-def show_games_data(game_state):
+def show_games_data(game_state_name):
     """ show_games_data """
+
+    game_state = config.STATE_CODE_TABLE[game_state_name]
 
     games_dict = common.get_games_data()
 
@@ -166,6 +170,7 @@ def show_games_data(game_state):
         games_table <= row
         count += 1
 
+    my_sub_panel <= html.H2(f"Les parties dans l'état : {game_state_name}")
     my_sub_panel <= games_table
     my_sub_panel <= html.P(f"Il y a {count} parties")
 
@@ -173,6 +178,7 @@ def show_games_data(game_state):
 def show_tournaments_data():
     """ show_tournaments_data """
 
+    my_sub_panel <= html.H2("Les tournois")
     # TODO : liste des tournois
     my_sub_panel <= "ICI liste des tournois avec leurs parties - Pas encore implémenté, désolé !"
 
@@ -239,6 +245,7 @@ def show_game_masters_data():
         masters_table <= row
         count += 1
 
+    my_sub_panel <= html.H2("Les arbitres")
     my_sub_panel <= masters_table
     my_sub_panel <= html.P(f"Il y a {count} arbitres")
 
@@ -296,6 +303,7 @@ def show_no_game_masters_data():
         row <= col
         no_game_masters_table <= row
 
+    my_sub_panel <= html.H2("Les parties sans arbitre")
     my_sub_panel <= no_game_masters_table
 
 
@@ -326,11 +334,11 @@ def load_option(_, item_name):
     if item_name == 'les joueurs':
         show_players_data()
     if item_name == 'les parties en attente':
-        show_games_data(0)
+        show_games_data('en attente')
     if item_name == 'les parties en cours':
-        show_games_data(1)
+        show_games_data('en cours')
     if item_name == 'les parties terminées':
-        show_games_data(2)
+        show_games_data('terminée')
     if item_name == 'les tournois':
         show_tournaments_data()
     if item_name == 'les arbitres':

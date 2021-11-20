@@ -133,9 +133,7 @@ def render(panel_middle):
     my_sub_panel = select_game()
 
     if my_sub_panel:
-        my_panel <= html.B("Sélectionnez la partie du site avec laquelle vous souhaitez interagir")
-        my_panel <= html.BR()
-        my_panel <= html.BR()
+        my_panel <= html.H2("Sélectionnez la partie (au sens partie de Diplomatie ou variante) avec laquelle vous souhaitez interagir")
         my_panel <= my_sub_panel
 
     panel_middle <= my_panel

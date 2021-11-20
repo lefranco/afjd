@@ -325,9 +325,6 @@ def move_players_in_game():
     # ---
 
     legend_incomer = html.LEGEND("Entrant", title="Sélectionner le joueur à mettre dans la partie")
-    legend_incomer.style = {
-        'color': 'red',
-    }
     form <= legend_incomer
 
     # all players can come in
@@ -369,9 +366,6 @@ def move_players_in_game():
     form <= html.BR()
 
     legend_outcomer = html.LEGEND("Sortant", title="Sélectionner le joueur à retirer de la partie")
-    legend_outcomer.style = {
-        'color': 'red',
-    }
     form <= legend_outcomer
 
     # players can come out are the ones not assigned

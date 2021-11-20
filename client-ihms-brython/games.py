@@ -248,9 +248,6 @@ def create_game():
     form <= html.BR()
 
     legend_title_main = html.LEGEND("Paramètres principaux de la partie - ne peuvent plus être changés la partie créée")
-    legend_title_main.style = {
-        'color': 'red',
-    }
     form <= legend_title_main
 
     legend_name = html.LEGEND("nom")
@@ -277,11 +274,8 @@ def create_game():
     form <= input_manual
     form <= html.BR()
 
-    legend_title_terms = html.LEGEND("Modalités de la partie - ne peuvent plus être changés la partie créée")
-    legend_title_terms.style = {
-        'color': 'red',
-    }
-    form <= legend_title_terms
+    title_terms = html.H3("Modalités de la partie - ne peuvent plus être changés la partie créée")
+    form <= title_terms
 
     legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
     form <= legend_anonymous
@@ -307,11 +301,8 @@ def create_game():
     form <= input_fast
     form <= html.BR()
 
-    legend_title_pace = html.LEGEND("Cadence de la partie")
-    legend_title_pace.style = {
-        'color': 'red',
-    }
-    form <= legend_title_pace
+    title_pace = html.H3("Cadence de la partie")
+    form <= title_pace
 
     # deadline
 
@@ -393,11 +384,8 @@ def create_game():
     form <= input_play_weekend
     form <= html.BR()
 
-    legend_title_access = html.LEGEND("Accès à la partie - ne peuvent plus être changés la partie démarrée")
-    legend_title_access.style = {
-        'color': 'red',
-    }
-    form <= legend_title_access
+    title_access = html.H3("Accès à la partie - ne peuvent plus être changés la partie démarrée")
+    form <= title_access
 
     legend_access_code = html.LEGEND("code accès", title="Code d'accès à la partie")
     form <= legend_access_code
@@ -423,11 +411,8 @@ def create_game():
     form <= input_access_restriction_performance
     form <= html.BR()
 
-    legend_title_access = html.LEGEND("Avancement de la partie - ne peuvent plus être changés la partie créée")
-    legend_title_access.style = {
-        'color': 'red',
-    }
-    form <= legend_title_access
+    title_access = html.H3("Avancement de la partie - ne peuvent plus être changés la partie créée")
+    form <= title_access
 
     legend_nb_max_cycles_to_play = html.LEGEND("maximum de cycles (années)", title="Combien d'années à jouer au plus ?")
     form <= legend_nb_max_cycles_to_play

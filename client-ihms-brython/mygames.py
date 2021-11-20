@@ -51,7 +51,7 @@ def get_player_games_playing_in(player_id):
     return dict(player_games_dict)
 
 
-def my_games(state):
+def my_games(state_name):
     """ my_games """
 
     def select_game_callback(_, game):
@@ -69,12 +69,9 @@ def my_games(state):
     my_panel.clear()
 
     # title
-    for state_name in config.STATE_CODE_TABLE:
-        if config.STATE_CODE_TABLE[state_name] == state:
-            state_displayed_name = state_name
-            break
-    title = html.H2(f"Parties qui sont : {state_displayed_name}")
-    my_panel <= title
+    my_panel <= html.H2(f"Parties que je joue dans l'état : {state_name}")
+
+    state = config.STATE_CODE_TABLE[state_name]
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -301,7 +298,6 @@ def my_games(state):
                     nb_needed = len(needed_roles_list)
                     stats = f"{nb_submitted}/{nb_needed}"
                     value = stats
-                    colour = 'black'
                     if nb_submitted >= nb_needed:
                         # we have all orders : green
                         colour = config.ALL_ORDERS_IN_COLOUR
@@ -316,7 +312,6 @@ def my_games(state):
                     nb_submitted = len(submitted_roles_list)
                     stats = f"{nb_agreed}/{nb_submitted}"
                     value = stats
-                    colour = 'black'
                     if nb_agreed >= nb_submitted:
                         # we have all agreements : green
                         colour = config.ALL_AGREEMENTS_IN_COLOUR
@@ -391,18 +386,12 @@ def my_games(state):
     my_panel <= html.BR()
     my_panel <= html.BR()
 
-    for other_state in range(len(config.STATE_CODE_TABLE)):
+    for other_state_name in config.STATE_CODE_TABLE:
 
-        if other_state != state:
+        if other_state_name != state_name:
 
-            # state name
-            for state_name in config.STATE_CODE_TABLE:
-                if config.STATE_CODE_TABLE[state_name] == other_state:
-                    state_displayed_name = state_name
-                    break
-
-            input_change_state = html.INPUT(type="submit", value=state_displayed_name)
-            input_change_state.bind("click", lambda _, s=other_state: my_games(s))
+            input_change_state = html.INPUT(type="submit", value=other_state_name)
+            input_change_state.bind("click", lambda _, s=other_state_name: my_games(s))
 
             my_panel <= input_change_state
             my_panel <= html.BR()
@@ -411,5 +400,5 @@ def my_games(state):
 
 def render(panel_middle):
     """ render """
-    my_games(1)
+    my_games('en cours')
     panel_middle <= my_panel

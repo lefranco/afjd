@@ -271,6 +271,9 @@ def my_opportunities():
 
         games_table <= row
 
+    # Title
+    my_panel <= html.H2("Parties qui recrutent des joueurs")
+
     my_panel <= games_table
     my_panel <= html.BR()
 

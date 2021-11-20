@@ -3743,7 +3743,7 @@ def show_game_parameters():
 
         col2 = html.TD(html.B(parameter_value))
         col2.style = {
-            'color': 'red',
+            'color': 'blue',
         }
         row <= col2
 

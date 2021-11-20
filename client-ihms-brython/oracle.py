@@ -175,6 +175,7 @@ def oracle():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
+    my_sub_panel <= html.H2("L'oracle : \"Que voyez-vous maître ?\"")
     my_sub_panel <= my_sub_panel2
 
 

@@ -108,9 +108,7 @@ def render(panel_middle):
     my_sub_panel = select_display()
 
     if my_sub_panel:
-        my_panel <= html.B("Sélectionnez l'interface du site que vous souhaitez utiliser")
-        my_panel <= html.BR()
-        my_panel <= html.BR()
+        my_panel <= html.H2("Sélectionnez l'interface (pour la carte du jeu) que vous souhaitez utiliser")
         my_panel <= my_sub_panel
 
     panel_middle <= my_panel
