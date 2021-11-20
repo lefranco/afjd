@@ -11,7 +11,6 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import common
 import login
-import index  # circular import
 
 OPTIONS = ['créer', 'mot de passe', 'valider mon email', 'editer', 'supprimer']
 
