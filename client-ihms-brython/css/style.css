@@ -146,104 +146,90 @@ thead{
     font-weight:bold;
 }
 
+/* color of sea in diplomania map BBD9DC */
+
+
 #home {
-    background-image: url('../fonds/pexels-photo-11.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010; */
+    background-color: #BBD9DC;
+    color: #101010; 
 }
 
 #login {
-    background-image: url('../fonds/pexels-photo-82256.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #selection {
-    background-image: url('../fonds/pexels-photo-132197.jpeg');
-/*   background-color: #E0E0E0;
-    color: #101010;*/
+   background-color: #BBD9DC;
+    color: #101010;
 }
 
 #tools {
-    background-image: url('../fonds/pexels-photo-132197.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #account {
-    background-image: url('../fonds/pexels-photo-311039.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #opportunities {
-    background-image: url('../fonds/pexels-photo-242236.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #mygames {
-    background-image: url('../fonds/pexels-photo-242236.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #games {
-    background-image: url('../fonds/pexels-photo-311039.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #pairing {
-    background-image: url('../fonds/pexels-photo-1484759.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #play {
-    background-image: url('../fonds/pexels-photo-3611882.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #tournament {
-    background-image: url('../fonds/pexels-photo-3611882.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #sandbox {
-    background-image: url('../fonds/pexels-photo-2088170.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #oracle {
-    background-image: url('../fonds/pexels-photo-2088170.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #lists {
-    background-image: url('../fonds/pexels-photo-1484759.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #faq {
-    background-image: url('../fonds/pexels-photo-82256.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #technical {
-    background-image: url('../fonds/pexels-photo-11.jpeg');
-/*    background-color: #E0E0E0;
-    color: #101010;*/
+    background-color: #BBD9DC;
+    color: #101010;
 }
 
 #admin {
-/*     background-image: url('../fonds/pexels-photo-268415.jpeg'); */
-    background-color: #E0E0E0;
+    background-color: #BBD9DC;
     color: #101010;
 }
