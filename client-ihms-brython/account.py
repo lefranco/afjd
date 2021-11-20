@@ -645,11 +645,9 @@ def delete_account():
 
     pseudo = storage['PSEUDO']
 
-
     def cancel_delete_account_callback(_, dialog):
-
+        """ cancel_delete_account_callback """
         dialog.close()
-
 
     def delete_account_callback(_, dialog):
         """ delete_account_callback """
@@ -689,6 +687,7 @@ def delete_account():
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def delete_account_callback_confirm(_):
+        """ delete_account_callback_confirm """
 
         dialog = Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
