@@ -168,12 +168,18 @@ def create_game():
         last_year = 1900 + nb_max_cycles_to_play
 
         specific_data = ""
-        if archive: specific_data += 'archive '
-        if manual: specific_data += 'manuelle '
-        if anonymous: specific_data += 'anonyme '
-        if nomessage: specific_data += 'sans message '
-        if nopress: specific_data += 'sans presse '
-        if fast: specific_data += 'rapide '
+        if archive:
+            specific_data += 'archive '
+        if manual:
+            specific_data += 'manuelle '
+        if anonymous:
+            specific_data += 'anonyme '
+        if nomessage:
+            specific_data += 'sans message '
+        if nopress:
+            specific_data += 'sans presse '
+        if fast:
+            specific_data += 'rapide '
 
         description = f"Partie créé à {time_creation_str} (gmt) par {pseudo} variante {variant} dernière année jouée {last_year}. Cette partie est {specific_data}"
         state = 0
