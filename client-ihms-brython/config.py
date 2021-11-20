@@ -27,9 +27,13 @@ with open("./data/country_list.json", "r") as read_file:
 with open("./data/timezone_list.json", "r") as read_file:
     TIMEZONE_CODE_TABLE = json.load(read_file)
 
-PASSED_GRACE_COLOR = 'red'
-PASSED_DEADLINE_COLOR = 'orange'
-APPROACHING_DEADLINE_COLOR = 'yellow'
+# colours
+ALL_AGREEMENTS_IN_COLOUR = 'DarkGreen'
+ALL_ORDERS_IN_COLOUR = 'green'
+
+PASSED_GRACE_COLOUR = 'Crimson'
+PASSED_DEADLINE_COLOUR = 'OrangeRed'
+APPROACHING_DEADLINE_COLOUR = 'Gold'
 
 
 #  kept to show how to write json file

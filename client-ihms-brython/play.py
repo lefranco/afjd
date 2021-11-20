@@ -198,22 +198,23 @@ def countdown():
 
     time_unit = 60 if g_game_parameters_loaded['fast'] else 24 * 60 * 60
 
-    colour = 'black'
+    colour = None
     time_stamp_now = time.time()
     # we are after deadline + grace
     if time_stamp_now > deadline_loaded + time_unit * g_game_parameters_loaded['grace_duration']:
-        colour = config.PASSED_GRACE_COLOR
+        colour = config.PASSED_GRACE_COLOUR
     # we are after deadline
     elif time_stamp_now > deadline_loaded:
-        colour = config.PASSED_DEADLINE_COLOR
+        colour = config.PASSED_DEADLINE_COLOUR
     # deadline is today
     elif time_stamp_now > deadline_loaded - time_unit:
-        colour = config.APPROACHING_DEADLINE_COLOR
+        colour = config.APPROACHING_DEADLINE_COLOUR
 
     # set the colour
-    g_deadline_col.style = {
-        'color': colour
-    }
+    if colour is not None:
+        g_deadline_col.style = {
+            'background-color': colour
+        }
 
     # calculate text value of countdown
 
@@ -243,9 +244,10 @@ def countdown():
     g_countdown_col.text = countdown_text
 
     # set the colour
-    g_countdown_col.style = {
-        'color': colour
-    }
+    if colour is not None:
+        g_countdown_col.style = {
+            'background-color': colour
+        }
 
 
 def get_game_status():
@@ -283,11 +285,11 @@ def get_game_status():
     col = html.TD(f"Saison {game_season}")
     row <= col
 
-    global g_deadline_col
+    global g_deadline_col  # pylint: disable=invalid-name
     g_deadline_col = html.TD(f"DL {game_deadline_str}")
     row <= g_deadline_col
 
-    global g_countdown_col
+    global g_countdown_col  # pylint: disable=invalid-name
     g_countdown_col = html.TD("xxx")
     row <= g_countdown_col
 
@@ -469,9 +471,6 @@ def show_position():
     img.bind('load', callback_render)
 
     hover_info = html.DIV(hovering_default_message)
-    hover_info.style = {
-        'color': 'blue',
-    }
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
@@ -3438,9 +3437,6 @@ def supervise():
                 alert("Erreur chargement données de soumission")
                 return
 
-            # avoids a warning
-            submitted_data = dict(submitted_data)
-
             # votes
             nonlocal votes
             votes = common.vote_reload(g_game_id)
@@ -3476,6 +3472,9 @@ def supervise():
 
         # are we past ?
         if time_stamp_now > force_point:
+
+            # avoids a warning
+            submitted_data = dict(submitted_data)
 
             submitted_roles_list = submitted_data['submitted']
             agreed_roles_list = submitted_data['agreed']
@@ -3589,7 +3588,7 @@ def supervise():
         return False
 
     # since touchy, this requires a confirmation
-    dialog = Dialog(f"On supervise vraiment la partie (cela peut entrainer des désordres civils) ?", ok_cancel=True)
+    dialog = Dialog("On supervise vraiment la partie (cela peut entrainer des désordres civils) ?", ok_cancel=True)
     dialog.ok_button.bind("click", lambda e, d=dialog: supervise_callback(e, d))
     dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_supervise_callback(e, d))
 
@@ -3979,7 +3978,7 @@ my_panel <= menu_left
 menu_selection = html.UL()
 menu_left <= menu_selection
 
-item_name_selected = None
+item_name_selected = None  # pylint: disable=invalid-name
 
 my_sub_panel = html.DIV(id="play")
 my_panel <= my_sub_panel

@@ -203,7 +203,7 @@ def my_opportunities():
         for field in fields:
 
             value = data[field]
-            colour = 'black'
+            colour = None
 
             if field == 'deadline':
                 deadline_loaded = value
@@ -217,13 +217,13 @@ def my_opportunities():
 
                 # we are after deadline + grace
                 if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
-                    colour = config.PASSED_GRACE_COLOR
+                    colour = config.PASSED_GRACE_COLOUR
                 # we are after deadline
                 elif time_stamp_now > deadline_loaded:
-                    colour = config.PASSED_DEADLINE_COLOR
+                    colour = config.PASSED_DEADLINE_COLOUR
                 # deadline is today
                 elif time_stamp_now > deadline_loaded - time_unit:
-                    colour = config.APPROACHING_DEADLINE_COLOR
+                    colour = config.APPROACHING_DEADLINE_COLOUR
 
             if field == 'current_state':
                 state_loaded = value
@@ -262,9 +262,10 @@ def my_opportunities():
                 value = form
 
             col = html.TD(value)
-            col.style = {
-                'color': colour
-            }
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
 
             row <= col
 

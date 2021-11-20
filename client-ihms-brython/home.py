@@ -16,9 +16,6 @@ my_panel <= title1
 
 link1 = html.A(href="http://www.diplomania.fr", target="_blank")
 link1 <= "Diplomania : Le site officiel de l'Association Francophone des Joueurs de Diplomacy (brique sociale)"
-link1.style = {
-    'color': 'blue',
-}
 my_panel <= link1
 
 title11 = html.H2("Parainage")
@@ -27,18 +24,18 @@ my_panel <= title11
 link11 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
 link11 <= "Participer au financement du développement du site"
 my_panel <= link11
-link11.style = {
-    'color': 'blue',
-}
+
 
 title2 = html.H2("Note importante")
 my_panel <= title2
 
+# pylint: disable=invalid-name
 note_content_stated = """
 Bienvenue dans la version Beta du site diplomania.
 Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu. Une version avec un design plus élaboré est espérée pour plus tard.
 Merci de nous remonter vos remarques sur le forum de diplomania ou sur le serveur Discord.
 """
+
 note_content = html.DIV(id='note')
 for line in note_content_stated.split("\n"):
     note_content <= line
