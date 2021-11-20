@@ -34,32 +34,26 @@ link11.style = {
 title2 = html.H2("Note importante")
 my_panel <= title2
 
-note_table = html.TABLE()
-text1 = html.B(html.CODE("""
-Bienvenue dans la version Beta du site diplomania.<br>
-Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu. Une version avec un design plus élaboré est espérée pour plus tard.<br>
+note_content_stated = """
+Bienvenue dans la version Beta du site diplomania.
+Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu. Une version avec un design plus élaboré est espérée pour plus tard.
 Merci de nous remonter vos remarques sur le forum de diplomania ou sur le serveur Discord.
-"""))
-my_panel <= text1
-col = html.TD(text1)
-col <= text1
-row = html.TR(col)
-row <= col
-note_table <= row
-my_panel <= note_table
+"""
+note_content = html.DIV(id='note')
+for line in note_content_stated.split("\n"):
+    note_content <= line
+    note_content <= html.BR()
+my_panel <= note_content
 
 title3 = html.H2("Dernières nouvelles")
 my_panel <= title3
 
 news_content_loaded = common.get_news_content()  # pylint: disable=invalid-name
-news_content = html.DIV()
+news_content = html.DIV(id='news')
 if news_content_loaded is not None:
     for line in news_content_loaded.split("\n"):
-        news_content <= html.EM(line)
+        news_content <= line
         news_content <= html.BR()
-news_content.style = {
-    'color': 'red',
-}
 my_panel <= news_content
 
 title4 = html.H2("Support")

@@ -89,11 +89,9 @@ def show_faq():
 
         if faq_displayed_table[question_txt]:
 
-            answer = html.B(answer_txt)
-            answer.style = {
-                'color': 'red',
-            }
-            faq_content <= html.DIV(answer)
+            faq_elt = html.DIV(id='faqelt')
+            faq_elt <= answer_txt
+            faq_content <= faq_elt
 
         faq_content <= html.P()
 

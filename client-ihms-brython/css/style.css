@@ -1,7 +1,8 @@
 
 body{
     font-size: 14px;
-    font-family: Helvetica;
+    font-family: Arial;
+/*     font-family: Helvetica;*/
 }
 
 a{
@@ -113,37 +114,42 @@ code.file{
     font-size:0.8em;
 }
 
-/* colors for highlighted Python code */
+/* color of turkey in diplomania map EDE585 */
 
-span.python-string{
-    color: #6aa;
-}
-span.python-comment{
-    color: #6a6;
-}
-span.python-keyword{
-    color: #42ebf4;
-}
-span.python-builtin{
-    color: #0f0;
+#note{
+     background-color: #EDE585;    
 }
 
+#news{
+     background-color: #EDE585;    
+}
+
+#faqelt{
+}
+
+/* color of england in diplomania map 83B9CC */
 
 
 table{
-    border: solid;
+     border: 1px solid black; 
+     border-collapse: collapse;
+     background-color: #83B9CC;
 }
 
 tr{
-    border: solid;
+     border: 1px solid black; 
+     background-color: #83B9CC;
 }
 
 td{
-    border: solid;
+     border: 1px solid black; 
+     background-color: #83B9CC;
 }
 
 thead{
-    font-weight:bold;
+     font-weight:bold; 
+     border: 1px solid black; 
+     background-color: #83B9CC;
 }
 
 /* color of sea in diplomania map BBD9DC */
