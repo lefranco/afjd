@@ -56,18 +56,6 @@ def get_game_allocated_players(game_id):
 def join_game():
     """ join_game """
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
     def join_game_callback(_):
 
         def reply_callback(req):
@@ -111,17 +99,7 @@ def join_game():
         # adding allocation : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    form = html.FORM()
-
-    input_join_game = html.INPUT(type="submit", value="rejoindre la partie sélectionnée")
-    input_join_game.bind("click", join_game_callback)
-    form <= input_join_game
-
-    my_sub_panel <= form
-
-
-def quit_game():
-    """ quit_game """
+    my_sub_panel <= html.H3("Se mettre dans la partie")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -134,6 +112,18 @@ def quit_game():
         return
 
     pseudo = storage['PSEUDO']
+
+    form = html.FORM()
+
+    input_join_game = html.INPUT(type="submit", value="rejoindre la partie sélectionnée")
+    input_join_game.bind("click", join_game_callback)
+    form <= input_join_game
+
+    my_sub_panel <= form
+
+
+def quit_game():
+    """ quit_game """
 
     def quit_game_callback(_):
 
@@ -179,17 +169,8 @@ def quit_game():
         # quitting a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    form = html.FORM()
 
-    input_quit_game = html.INPUT(type="submit", value="quitter la partie sélectionnée")
-    input_quit_game.bind("click", quit_game_callback)
-    form <= input_quit_game
-
-    my_sub_panel <= form
-
-
-def move_players_in_game():
-    """ move_players_in_game """
+    my_sub_panel <= html.H3("Se retirer de la partie")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -202,6 +183,18 @@ def move_players_in_game():
         return
 
     pseudo = storage['PSEUDO']
+
+    form = html.FORM()
+
+    input_quit_game = html.INPUT(type="submit", value="quitter la partie sélectionnée")
+    input_quit_game.bind("click", quit_game_callback)
+    form <= input_quit_game
+
+    my_sub_panel <= form
+
+
+def move_players_in_game():
+    """ move_players_in_game """
 
     def put_in_game_callback(_):
         """ put_in_game_callback """
@@ -295,6 +288,21 @@ def move_players_in_game():
         # removing a player from a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+
+    my_sub_panel <= html.H3("Mettre dans ou enlever des joueurs de la partie")
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
     players_dict = common.get_players()
     if players_dict is None:
         return
@@ -385,24 +393,11 @@ def move_players_in_game():
     input_remove_from_game.bind("click", remove_from_game_callback)
     form <= input_remove_from_game
 
-    my_sub_panel.clear()
     my_sub_panel <= form
 
 
 def take_mastering_game():
     """ take_mastering_game """
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
 
     def take_mastering_game_callback(_):
 
@@ -449,17 +444,7 @@ def take_mastering_game():
         # taking game mastering : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    form = html.FORM()
-
-    input_join_game = html.INPUT(type="submit", value="prendre l'arbitrage de la partie sélectionnée")
-    input_join_game.bind("click", take_mastering_game_callback)
-    form <= input_join_game
-
-    my_sub_panel <= form
-
-
-def quit_mastering_game():
-    """ quit_mastering_game """
+    my_sub_panel <= html.H3("Prendre l'arbitrage de la partie")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -472,6 +457,18 @@ def quit_mastering_game():
         return
 
     pseudo = storage['PSEUDO']
+
+    form = html.FORM()
+
+    input_join_game = html.INPUT(type="submit", value="prendre l'arbitrage de la partie sélectionnée")
+    input_join_game.bind("click", take_mastering_game_callback)
+    form <= input_join_game
+
+    my_sub_panel <= form
+
+
+def quit_mastering_game():
+    """ quit_mastering_game """
 
     def quit_mastering_game_callback(_):
 
@@ -516,6 +513,20 @@ def quit_mastering_game():
 
         # giving up game mastering : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    my_sub_panel <= html.H3("Quitter l'arbitrage de la partie")
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
 
     form = html.FORM()
 

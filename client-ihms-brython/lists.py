@@ -53,7 +53,7 @@ def show_registered_data():
         players_table <= row
         count += 1
 
-    my_sub_panel <= html.H2("Les inscrits")
+    my_sub_panel <= html.H3("Les inscrits")
     my_sub_panel <= players_table
     my_sub_panel <= html.P(f"Il y a {count} inscrits")
 
@@ -120,7 +120,7 @@ def show_players_data():
         players_table <= row
         count += 1
 
-    my_sub_panel <= html.H2("Les joueurs")
+    my_sub_panel <= html.H3("Les joueurs")
     my_sub_panel <= players_table
     my_sub_panel <= html.P(f"Il y a {count} joueurs")
 
@@ -170,7 +170,7 @@ def show_games_data(game_state_name):
         games_table <= row
         count += 1
 
-    my_sub_panel <= html.H2(f"Les parties dans l'état : {game_state_name}")
+    my_sub_panel <= html.H3(f"Les parties dans l'état : {game_state_name}")
     my_sub_panel <= games_table
     my_sub_panel <= html.P(f"Il y a {count} parties")
 
@@ -178,7 +178,7 @@ def show_games_data(game_state_name):
 def show_tournaments_data():
     """ show_tournaments_data """
 
-    my_sub_panel <= html.H2("Les tournois")
+    my_sub_panel <= html.H3("Les tournois")
     # TODO : liste des tournois
     my_sub_panel <= "ICI liste des tournois avec leurs parties - Pas encore implémenté, désolé !"
 
@@ -245,7 +245,7 @@ def show_game_masters_data():
         masters_table <= row
         count += 1
 
-    my_sub_panel <= html.H2("Les arbitres")
+    my_sub_panel <= html.H3("Les arbitres")
     my_sub_panel <= masters_table
     my_sub_panel <= html.P(f"Il y a {count} arbitres")
 
@@ -303,7 +303,7 @@ def show_no_game_masters_data():
         row <= col
         no_game_masters_table <= row
 
-    my_sub_panel <= html.H2("Les parties sans arbitre")
+    my_sub_panel <= html.H3("Les parties sans arbitre")
     my_sub_panel <= no_game_masters_table
 
 

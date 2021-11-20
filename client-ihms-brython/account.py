@@ -132,6 +132,8 @@ def create_account():
         my_sub_panel.clear()
         create_account()
 
+    my_sub_panel <= html.H3("Création du compte")
+
     form = html.FORM()
 
     form <= information_about_account()
@@ -291,6 +293,8 @@ def change_password():
         alert("Il faut se connecter au préalable")
         return
 
+    my_sub_panel <= html.H3("Changement de mot de passe")
+
     pseudo = storage['PSEUDO']
 
     form = html.FORM()
@@ -373,6 +377,8 @@ def validate_email():
         my_sub_panel.clear()
         validate_email()
 
+    my_sub_panel <= html.H3("Validation du e-mail")
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -399,12 +405,6 @@ def validate_email():
 
 def edit_account():
     """ edit_account """
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
 
     # declare the values
     email_loaded = None
@@ -538,6 +538,14 @@ def edit_account():
         my_sub_panel.clear()
         edit_account()
 
+    my_sub_panel <= html.H3("Edition du compte")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
     status = edit_account_reload()
     if not status:
         return
@@ -639,12 +647,6 @@ def edit_account():
 def delete_account():
     """ delete_account """
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
     def cancel_delete_account_callback(_, dialog):
         """ cancel_delete_account_callback """
         dialog.close()
@@ -696,6 +698,14 @@ def delete_account():
         # back to where we started
         my_sub_panel.clear()
         delete_account()
+
+    my_sub_panel <= html.H3("Suppression du compte")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
 
     form = html.FORM()
     my_sub_panel <= form
