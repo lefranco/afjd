@@ -55,7 +55,7 @@ my_panel <= title5
 
 my_panel <= html.BR()
 
-iframe = html.IFRAME(src="./docs/Summary_rules_fr.html", width='100%', height=500)
+iframe = html.IFRAME(src="./docs/Summary_rules_fr.html", width='100%', height='100%')
 my_panel <= iframe
 
 

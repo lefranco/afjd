@@ -18,6 +18,9 @@ faq_content_table = {
     "Quand a lieu la résolution ?":
     "Quand le dernier joueur qui a des ordres a rendre coche sur la case d'accord pour résoudre, ou si pas d'ordres sont nécessaires, quand l'arbitre coche la résolution sur sa console d'arbitrage",
 
+    "Pourquoi les dates limites changent-elles de couleur ?":
+    "Le code de couleur est asez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée. Rouge que la grâce est aussi passée. Soyez ponctuels !",
+
     "Pourquoi les unités ne se déplacent pas dans le bac à sable ?":
     "Le bac à sable n'a pas vocation à déplacer les unités, il cherche à répondre à la question 'que se passerait-il si...'. Il faut bien lire le compte rendu des ordres sous forme de texte sous la carte",
 
