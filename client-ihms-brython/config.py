@@ -28,11 +28,11 @@ with open("./data/timezone_list.json", "r") as read_file:
     TIMEZONE_CODE_TABLE = json.load(read_file)
 
 # colours
-ALL_AGREEMENTS_IN_COLOUR = 'DarkGreen'
-ALL_ORDERS_IN_COLOUR = 'green'
+ALL_AGREEMENTS_IN_COLOUR = 'Chartreuse'
+ALL_ORDERS_IN_COLOUR = 'Chartreuse'
 
-PASSED_GRACE_COLOUR = 'Crimson'
-PASSED_DEADLINE_COLOUR = 'OrangeRed'
+PASSED_GRACE_COLOUR = 'Red'
+PASSED_DEADLINE_COLOUR = 'DarkOrange'
 APPROACHING_DEADLINE_COLOUR = 'Gold'
 
 
