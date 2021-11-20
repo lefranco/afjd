@@ -446,7 +446,7 @@ def all_games(state):
         for field in fields:
 
             value = data[field]
-            colour = 'black'
+            colour = None
 
             if field == 'master':
                 game_name = data['name']
@@ -466,13 +466,13 @@ def all_games(state):
 
                 # we are after deadline + grace
                 if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
-                    colour = config.PASSED_GRACE_COLOR
+                    colour = config.PASSED_GRACE_COLOUR
                 # we are after deadline
                 elif time_stamp_now > deadline_loaded:
-                    colour = config.PASSED_DEADLINE_COLOR
+                    colour = config.PASSED_DEADLINE_COLOUR
                 # deadline is today
                 elif time_stamp_now > deadline_loaded - time_unit:
-                    colour = config.APPROACHING_DEADLINE_COLOR
+                    colour = config.APPROACHING_DEADLINE_COLOUR
 
             if field == 'current_advancement':
                 advancement_loaded = value
@@ -486,10 +486,9 @@ def all_games(state):
                 needed_roles_list = submitted_data['needed']
                 nb_needed = len(needed_roles_list)
                 value = f"{nb_submitted}/{nb_needed}"
-                colour = 'black'
                 if nb_submitted >= nb_needed:
                     # we have all orders : green
-                    colour = 'green'
+                    colour = config.ALL_ORDERS_IN_COLOUR
 
             if field == 'all_agreed':
                 agreed_roles_list = submitted_data['agreed']
@@ -497,10 +496,9 @@ def all_games(state):
                 submitted_roles_list = submitted_data['submitted']
                 nb_submitted = len(submitted_roles_list)
                 value = f"{nb_agreed}/{nb_submitted}"
-                colour = 'black'
                 if nb_agreed >= nb_submitted:
                     # we have all agreements : green
-                    colour = 'green'
+                    colour = config.ALL_AGREEMENTS_IN_COLOUR
 
             if field == 'jump_here':
                 game_name = data['name']
@@ -514,15 +512,13 @@ def all_games(state):
 
                 link = html.A(href=f"?game={game_name}", target="_blank")
                 link <= "y aller"
-                link.style = {
-                    'color': 'blue',
-                }
                 value = link
 
             col = html.TD(value)
-            col.style = {
-                'color': colour
-            }
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
 
             row <= col
 
