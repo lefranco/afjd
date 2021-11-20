@@ -232,6 +232,8 @@ def create_game():
         my_sub_panel.clear()
         create_game()
 
+    my_sub_panel <= html.H3("Création de partie")
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -438,18 +440,6 @@ def create_game():
 def change_description_game():
     """ change_description_game """
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
     # declare the values
     description_loaded = None
 
@@ -526,6 +516,20 @@ def change_description_game():
         my_sub_panel.clear()
         change_description_game()
 
+    my_sub_panel <= html.H3("Changement de la description")
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
     status = change_description_reload()
     if not status:
         return
@@ -554,18 +558,6 @@ def change_description_game():
 
 def change_access_parameters_game():
     """ change_access_parameters_game """
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
 
     # declare the values
     access_code_loaded = None
@@ -658,6 +650,20 @@ def change_access_parameters_game():
         my_sub_panel.clear()
         change_access_parameters_game()
 
+    my_sub_panel <= html.H3("Changement des paramètres d'accès")
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
     status = change_access_parameters_reload()
     if not status:
         return
@@ -702,18 +708,6 @@ def change_access_parameters_game():
 
 def change_deadline_game():
     """ change_deadline_game """
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
 
     # declare the values
     deadline_loaded_day = None
@@ -803,6 +797,20 @@ def change_deadline_game():
         my_sub_panel.clear()
         change_deadline_game()
 
+    my_sub_panel <= html.H3("Changement de la date limite")
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
     status = change_deadline_reload()
     if not status:
         return
@@ -854,18 +862,6 @@ def change_deadline_game():
 
 def change_pace_parameters_game():
     """ change_pace_parameters_game """
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
 
     # declare the values
     deadline_hour_loaded = None
@@ -1016,6 +1012,20 @@ def change_pace_parameters_game():
         my_sub_panel.clear()
         change_pace_parameters_game()
 
+    my_sub_panel <= html.H3("Changement de paramètres de cadence")
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
     status = change_pace_parameters_reload()
     if not status:
         return
@@ -1117,18 +1127,6 @@ def change_pace_parameters_game():
 def change_state_game():
     """ change_state_game """
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
     # declare the values
     state_loaded = None
 
@@ -1205,6 +1203,20 @@ def change_state_game():
         my_sub_panel.clear()
         change_state_game()
 
+    my_sub_panel <= html.H3("Changement d'état")
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
     status = change_state_reload()
     if not status:
         return
@@ -1237,18 +1249,6 @@ def change_state_game():
 
 def delete_game():
     """ delete_game """
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
 
     def cancel_delete_game_callback(_, dialog):
         """ cancel_delete_game_callback """
@@ -1297,6 +1297,20 @@ def delete_game():
         # back to where we started
         my_sub_panel.clear()
         delete_game()
+
+    my_sub_panel <= html.H3("Suppression")
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
 
     form = html.FORM()
 

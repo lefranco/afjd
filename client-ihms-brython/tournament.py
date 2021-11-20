@@ -14,12 +14,16 @@ OPTIONS = ['classement', 'parties', 's\'inscrire', 'ajouter partie', 'retirer pa
 def ratings():
     """ ratings """
 
+    my_sub_panel <= html.H3("Le classement")
+
     # TODO classement du tournoi
     my_sub_panel <= "ICI classement du tournoi (sélectionner une partie du tournoi au préalable) - Pas encore implémenté, désolé !"
 
 
 def games():
     """ games """
+
+    my_sub_panel <= html.H3("Les parties")
 
     # TODO état des parties du tournoi
     my_sub_panel <= "ICI état des parties du tournoi - Pas encore implémenté, désolé !"
@@ -28,12 +32,16 @@ def games():
 def register():
     """ games """
 
+    my_sub_panel <= html.H3("S'inscrire")
+
     # TODO s'inscrire au tournoi
     my_sub_panel <= "ICI possibilité de s'inscrire au tournoi - Pas encore implémenté, désolé !"
 
 
 def add_game():
     """ add_game """
+
+    my_sub_panel <= html.H3("Ajouter une partie")
 
     # TODO ajouter une partie au tournoi
     my_sub_panel <= "ICI possibilité pour le directeur de tournoi d'ajouter une partie au tournoi - Pas encore implémenté, désolé !"
@@ -42,6 +50,8 @@ def add_game():
 def remove_game():
     """ remove_game """
 
+    my_sub_panel <= html.H3("Retirer une partie")
+
     # TODO retirer une partie du tournoi
     my_sub_panel <= "ICI possibilité pour le directeur de tournoi de retirer une partie du tournoi - Pas encore implémenté, désolé !"
 
@@ -49,12 +59,16 @@ def remove_game():
 def direct():
     """ direct """
 
+    my_sub_panel <= html.H3("Prendre la direction")
+
     # TODO prendre la direction du tournoi
     my_sub_panel <= "ICI possibilité de prendre la direction du tournoi - Pas encore implémenté, désolé !"
 
 
 def quit_directing():
     """ quit_directing """
+
+    my_sub_panel <= html.H3("Quitter la direction")
 
     # TODO quitter la direction du tournoi
     my_sub_panel <= "ICI possibilité de quitter la direction du tournoi - Pas encore implémenté, désolé !"
