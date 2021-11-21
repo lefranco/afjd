@@ -330,8 +330,9 @@ def move_players_in_game():
 
     # ---
 
+    fieldset = html.FIELDSET()
     legend_incomer = html.LEGEND("Entrant", title="Sélectionner le joueur à mettre dans la partie")
-    form <= legend_incomer
+    fieldset <= legend_incomer
 
     # all players can come in
     possible_incomers = set(players_dict.keys())
@@ -351,8 +352,8 @@ def move_players_in_game():
         option = html.OPTION(play_pseudo)
         input_incomer <= option
 
-    form <= input_incomer
-    form <= html.BR()
+    fieldset <= input_incomer
+    form <= fieldset
 
     form <= html.BR()
 
@@ -364,15 +365,16 @@ def move_players_in_game():
 
     form <= html.BR()
     form <= html.BR()
-    form <= html.LEGEND("Ont un rôle : " + " ".join(sorted(list(set(players_assigned_list)), key=lambda p: p.upper())))
+    form <= html.DIV("Ont un rôle : " + " ".join(sorted(list(set(players_assigned_list)), key=lambda p: p.upper())), Class='note')
     form <= html.BR()
-    form <= html.LEGEND("Sont en attente : " + " ".join(sorted(list(set(players_allocated_list)), key=lambda p: p.upper())))
+    form <= html.DIV("Sont en attente : " + " ".join(sorted(list(set(players_allocated_list)), key=lambda p: p.upper())), Class='note')
 
     # ---
     form <= html.BR()
 
+    fieldset = html.FIELDSET()
     legend_outcomer = html.LEGEND("Sortant", title="Sélectionner le joueur à retirer de la partie")
-    form <= legend_outcomer
+    fieldset <= legend_outcomer
 
     # players can come out are the ones not assigned
     possible_outcomers = players_allocated_list
@@ -382,8 +384,8 @@ def move_players_in_game():
         option = html.OPTION(play_pseudo)
         input_outcomer <= option
 
-    form <= input_outcomer
-    form <= html.BR()
+    fieldset <= input_outcomer
+    form <= fieldset
 
     form <= html.BR()
 
