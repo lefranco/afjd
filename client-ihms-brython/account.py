@@ -147,56 +147,65 @@ def create_account():
     form <= information_about_account()
     form <= html.BR()
 
+    fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("pseudo", title="Votre identifiant sur le site")
-    form <= legend_pseudo
+    fieldset <= legend_pseudo
     input_pseudo = html.INPUT(type="text", value="")
-    form <= input_pseudo
-    form <= html.BR()
+    fieldset <= input_pseudo
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_password = html.LEGEND("mot de passe", title="Pour empêcher les autres de jouer à votre place;-)")
-    form <= legend_password
+    fieldset <= legend_password
     input_password = html.INPUT(type="password", value="")
-    form <= input_password
-    form <= html.BR()
+    fieldset <= input_password
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_password_again = html.LEGEND("confirmation mot de passe", title="Pour éviter une faute de frappe sur le mot de passe")
-    form <= legend_password_again
+    fieldset <= legend_password_again
     input_password_again = html.INPUT(type="password", value="")
-    form <= input_password_again
-    form <= html.BR()
+    fieldset <= input_password_again
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_email = html.LEGEND("email (privé)", title="Le site vous notifiera des événements")
-    form <= legend_email
+    fieldset <= legend_email
     input_email = html.INPUT(type="email", value="", size="80")
-    form <= input_email
-    form <= html.BR()
+    fieldset <= input_email
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_telephone = html.LEGEND("téléphone (privé et facultatif)", title="En cas d'urgence")
-    form <= legend_telephone
+    fieldset <= legend_telephone
     input_telephone = html.INPUT(type="tel", value="")
-    form <= input_telephone
-    form <= html.BR()
+    fieldset <= input_telephone
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_replace = html.LEGEND("D'accord pour remplacer - à effacer après usage !", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandonné ?")
-    form <= legend_replace
+    fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=False)
-    form <= input_replace
-    form <= html.BR()
+    fieldset <= input_replace
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_family_name = html.LEGEND("nom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
-    form <= legend_family_name
+    fieldset <= legend_family_name
     input_family_name = html.INPUT(type="text", value="")
-    form <= input_family_name
+    fieldset <= input_family_name
     form <= html.BR()
 
+    fieldset = html.FIELDSET()
     legend_first_name = html.LEGEND("prénom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
-    form <= legend_first_name
+    fieldset <= legend_first_name
     input_first_name = html.INPUT(type="text", value="")
-    form <= input_first_name
-    form <= html.BR()
+    fieldset <= input_first_name
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_residence = html.LEGEND("résidence", title="Mettez votre lieu de résidence")
-    form <= legend_residence
+    fieldset <= legend_residence
     input_residence = html.SELECT(type="select-one", value="")
 
     for country_name in config.COUNTRY_CODE_TABLE:
@@ -205,11 +214,12 @@ def create_account():
             option.selected = True
         input_residence <= option
 
-    form <= input_residence
-    form <= html.BR()
+    fieldset <= input_residence
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_nationality = html.LEGEND("nationalité", title="Mettez votre nationalité")
-    form <= legend_nationality
+    fieldset <= legend_nationality
     input_nationality = html.SELECT(type="select-one", value="")
 
     for country_name in config.COUNTRY_CODE_TABLE:
@@ -218,11 +228,12 @@ def create_account():
             option.selected = True
         input_nationality <= option
 
-    form <= input_nationality
-    form <= html.BR()
+    fieldset <= input_nationality
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_timezone = html.LEGEND("fuseau horaire", title="Pour mieux comprendre vos heures d'éveil")
-    form <= legend_timezone
+    fieldset <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
     for timezone_cities in config.TIMEZONE_CODE_TABLE:
@@ -231,8 +242,8 @@ def create_account():
             option.selected = True
         input_timezone <= option
 
-    form <= input_timezone
-    form <= html.BR()
+    fieldset <= input_timezone
+    form <= fieldset
 
     form <= html.BR()
 
@@ -240,11 +251,11 @@ def create_account():
     input_create_account.bind("click", create_account_callback)
     form <= input_create_account
 
-    form <= html.BR()
-    form <= html.BR()
-    form <= information_about_emails()
-
     my_sub_panel <= form
+
+    my_sub_panel <= html.BR()
+    my_sub_panel <= html.BR()
+    my_sub_panel <= information_about_emails()
 
 
 def change_password():
@@ -310,24 +321,25 @@ def change_password():
     form <= information_about_input()
     form <= html.BR()
 
+    fieldset = html.FIELDSET()
     legend_new_password = html.LEGEND("nouveau mot de passe", title="Le nouveau mot de passe")
-    form <= legend_new_password
+    fieldset <= legend_new_password
     input_new_password = html.INPUT(type="password", value="")
-    form <= input_new_password
-    form <= html.BR()
+    fieldset <= input_new_password
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_new_password_again = html.LEGEND("nouveau mot de passe encore", title="Le nouveau mot de passe")
-    form <= legend_new_password_again
+    fieldset <= legend_new_password_again
     input_new_password_again = html.INPUT(type="password", value="")
-    form <= input_new_password_again
-    form <= html.BR()
+    fieldset <= input_new_password_again
+    form <= fieldset
 
     form <= html.BR()
 
     input_change_password = html.INPUT(type="submit", value="changer le mot de passe")
     input_change_password.bind("click", change_password_callback)
     form <= input_change_password
-    form <= html.BR()
 
     my_sub_panel <= form
 
@@ -401,11 +413,12 @@ def validate_email():
     form <= information_about_input()
     form <= html.BR()
 
+    fieldset = html.FIELDSET()
     legend_confirmation_code = html.LEGEND("code de confirmation")
-    form <= legend_confirmation_code
+    fieldset <= legend_confirmation_code
     input_confirmation_code = html.INPUT(type="number", value="", required=True)
-    form <= input_confirmation_code
-    form <= html.BR()
+    fieldset <= input_confirmation_code
+    form <= fieldset
 
     form <= html.BR()
 
@@ -572,50 +585,58 @@ def edit_account():
     form <= information_about_input()
     form <= html.BR()
 
+    fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("pseudo", title="(pour rappel)")
-    form <= legend_pseudo
+    fieldset <= legend_pseudo
     input_pseudo = html.INPUT(type="text", readonly=True, value=pseudo)
-    form <= input_pseudo
-    form <= html.BR()
+    fieldset <= input_pseudo
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_email = html.LEGEND("email", title="Le site vous notifiera des événements")
-    form <= legend_email
+    fieldset <= legend_email
     input_email = html.INPUT(type="email", value=email_loaded, size="40")
-    form <= input_email
-    form <= html.BR()
+    fieldset <= input_email
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_email_confirmed = html.LEGEND("email confirmé", title="(pour information)")
-    form <= legend_email_confirmed
+    fieldset <= legend_email_confirmed
     input_email_confirmed = html.INPUT(type="checkbox", readonly=True, checked=email_confirmed_loaded)
-    form <= input_email_confirmed
-    form <= html.BR()
+    fieldset <= input_email_confirmed
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_telephone = html.LEGEND("téléphone (privé et facultatif)", title="En cas d'urgence")
-    form <= legend_telephone
+    fieldset <= legend_telephone
     input_telephone = html.INPUT(type="tel", value=telephone_loaded)
-    form <= input_telephone
-    form <= html.BR()
+    fieldset <= input_telephone
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_replace = html.LEGEND("D'accord pour remplacer - à effacer après usage !", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandoné ?")
-    form <= legend_replace
+    fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
-    form <= input_replace
-    form <= html.BR()
+    fieldset <= input_replace
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_family_name = html.LEGEND("nom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
-    form <= legend_family_name
+    fieldset <= legend_family_name
     input_family_name = html.INPUT(type="text", value=family_name_loaded)
-    form <= input_family_name
-    form <= html.BR()
+    fieldset <= input_family_name
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_first_name = html.LEGEND("prénom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
-    form <= legend_first_name
+    fieldset <= legend_first_name
     input_first_name = html.INPUT(type="text", value=first_name_loaded)
-    form <= input_first_name
-    form <= html.BR()
+    fieldset <= input_first_name
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_residence = html.LEGEND("résidence", title="Mettez votre lieu de résidence")
-    form <= legend_residence
+    fieldset <= legend_residence
     input_residence = html.SELECT(type="select-one", value="")
 
     for country_name in config.COUNTRY_CODE_TABLE:
@@ -624,11 +645,12 @@ def edit_account():
             option.selected = True
         input_residence <= option
 
-    form <= input_residence
-    form <= html.BR()
+    fieldset <= input_residence
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_nationality = html.LEGEND("nationalité", title="Mettez votre nationalité")
-    form <= legend_nationality
+    fieldset <= legend_nationality
     input_nationality = html.SELECT(type="select-one", value="")
 
     for country_name in config.COUNTRY_CODE_TABLE:
@@ -637,10 +659,12 @@ def edit_account():
             option.selected = True
         input_nationality <= option
 
-    form <= input_nationality
-    form <= html.BR()
+    fieldset <= input_nationality
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
     legend_timezone = html.LEGEND("fuseau horaire", title="Pour mieux comprendre vos heures d'éveil")
-    form <= legend_timezone
+    fieldset <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
     for timezone_cities in config.TIMEZONE_CODE_TABLE:
@@ -649,8 +673,8 @@ def edit_account():
             option.selected = True
         input_timezone <= option
 
-    form <= input_timezone
-    form <= html.BR()
+    fieldset <= input_timezone
+    form <= fieldset
 
     form <= html.BR()
 
