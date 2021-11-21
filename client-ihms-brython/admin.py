@@ -189,7 +189,7 @@ def change_news():
 
     form = html.FORM()
 
-    legend_news_content = html.LEGEND("nouveau contenu de nouvelles")
+    legend_news_content = html.LEGEND("nouvelles", title="Saisir le nouveau contenu de nouvelles")
     form <= legend_news_content
 
     input_news_content = html.TEXTAREA(type="text", rows=20, cols=100)
@@ -532,8 +532,8 @@ def all_games(state_name):
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
-    special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
-    my_sub_panel <= special_legend
+    special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
+    my_sub_panel <= special_info
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
 
@@ -544,9 +544,7 @@ def all_games(state_name):
     if number_games:
         stats += f" soit {elapsed/number_games} par partie"
 
-    my_sub_panel <= stats
-
-    my_sub_panel <= html.BR()
+    my_sub_panel <= html.DIV(stats, Class='load')
     my_sub_panel <= html.BR()
 
     for other_state_name in config.STATE_CODE_TABLE:
@@ -1238,7 +1236,7 @@ def sendmail():
 
     form = html.FORM()
 
-    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter")
+    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par email")
     form <= legend_addressee
 
     players_dict = common.get_players()
@@ -1330,7 +1328,7 @@ def get_phone_number():
 
     form = html.FORM()
 
-    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter")
+    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter par téléphone")
     form <= legend_contact
 
     players_dict = common.get_players()

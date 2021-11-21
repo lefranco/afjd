@@ -31,11 +31,21 @@ DEFAULT_VICTORY_CENTERS = 18
 DEFAULT_NB_CYCLES = 99
 
 
-def information_about_game():
+def information_about_input():
     """ information_about_account """
 
-    information = html.DIV()
+    information = html.DIV(Class='note')
     information <= "Survolez les titres pour pour plus de détails"
+    return information
+
+
+def information_about_playing():
+    """ information_about_playing """
+
+    information = html.DIV(Class='note')
+    information <= "Vous voulez jouer ? Crééz-la partie et démissionez ensuite de l'arbitrage (appariement)"
+    information <= html.BR()
+    information <= "Un arbitre sera alloué automatiquement..."
     return information
 
 
@@ -242,11 +252,10 @@ def create_game():
 
     form = html.FORM()
 
-    form <= html.B("Vous voulez jouer ? Crééz-la partie et démissionez ensuite de l'arbitrage (appariement). Un arbitre sera alloué automatiquement...")
-    form <= html.BR()
+    form <= information_about_playing()
     form <= html.BR()
 
-    form <= information_about_game()
+    form <= information_about_input()
     form <= html.BR()
 
     legend_title_main = html.LEGEND("Paramètres principaux de la partie - ne peuvent plus être changés la partie créée")
@@ -536,7 +545,7 @@ def change_description_game():
 
     form = html.FORM()
 
-    form <= information_about_game()
+    form <= information_about_input()
     form <= html.BR()
 
     legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'une partie entre étudiants de l'ETIAM'")
@@ -670,7 +679,7 @@ def change_access_parameters_game():
 
     form = html.FORM()
 
-    form <= information_about_game()
+    form <= information_about_input()
     form <= html.BR()
 
     legend_access_code = html.LEGEND("code accès", title="Code d'accès à la partie")
@@ -817,11 +826,12 @@ def change_deadline_game():
 
     form = html.FORM()
 
-    form <= information_about_game()
+    form <= information_about_input()
     form <= html.BR()
 
-    dl_gmt = html.B("ATTENTION : vous devez entrer une date limite en temps GMT")
+    dl_gmt = html.DIV("ATTENTION : vous devez entrer une date limite en temps GMT", Class='important')
     special_legend = html.LEGEND(dl_gmt)
+    form <= html.BR()
     form <= special_legend
 
     # get GMT date and time
@@ -829,8 +839,8 @@ def change_deadline_game():
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
-    special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
-    form <= special_legend
+    special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
+    form <= special_info
     form <= html.BR()
 
     form <= html.BR()
@@ -1032,7 +1042,7 @@ def change_pace_parameters_game():
 
     form = html.FORM()
 
-    form <= information_about_game()
+    form <= information_about_input()
     form <= html.BR()
 
     # deadline related
@@ -1223,7 +1233,7 @@ def change_state_game():
 
     form = html.FORM()
 
-    form <= information_about_game()
+    form <= information_about_input()
     form <= html.BR()
 
     legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours ou terminée.")

@@ -370,7 +370,7 @@ def my_games(state_name):
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
-    special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
+    special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
     my_panel <= special_legend
     my_panel <= html.BR()
     my_panel <= html.BR()
@@ -382,8 +382,7 @@ def my_games(state_name):
     if number_games:
         stats += f" soit {elapsed/number_games} par partie"
 
-    my_panel <= stats
-    my_panel <= html.BR()
+    my_panel <= html.DIV(stats, Class='load')
     my_panel <= html.BR()
 
     for other_state_name in config.STATE_CODE_TABLE:

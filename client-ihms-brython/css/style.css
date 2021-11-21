@@ -113,22 +113,35 @@ code.file{
     font-size:0.8em;
 }
 
+/* all legends for all inputs */
+
 .legend{
-    color: LightSkyBlue;
+     background-color: #EDA89E;
+}
+
+/* all load time information */
+
+.load{
+    font-style: italic;
+}
+
+/* color of france in diplomania map 98E4ED */
+.note{
+     background-color: #98E4ED;
+}
+
+/* color of austria in diplomania map EDA89E */
+.important{
+     background-color: #EDA89E;
 }
 
 /* color of turkey in diplomania map EDE585 */
 
-
 #news{
-     background-color: #EDE585;    
-}
-
-#faqelt{
+     background-color: #EDE585;
 }
 
 /* color of england in diplomania map 83B9CC */
-
 
 table{
      border: 1px solid black; 
@@ -153,7 +166,6 @@ thead{
 }
 
 /* color of sea in diplomania map BBD9DC */
-
 
 #home {
     background-color: #BBD9DC;

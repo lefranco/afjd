@@ -88,8 +88,7 @@ def login():
     # --
     form1 = html.FORM()
 
-    form1 <= html.B("Pas de compte ? Crééz-le à partir du menu 'mon compte'...")
-    form1 <= html.BR()
+    form1 <= html.DIV("Pas de compte ? Crééz-le à partir du menu 'mon compte'...", Class='note')
     form1 <= html.BR()
 
     legend_pseudo = html.LEGEND("pseudo")

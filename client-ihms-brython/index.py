@@ -155,4 +155,5 @@ login.show_login()
 selection.show_game_selected()
 
 end = time.time()
-document <= f"Page initiale chargée en {(end-start)} sec"
+stats = f"Temps de chargement de la page initiale  {(end-start)} sec"
+document <= html.DIV(stats, Class='load')

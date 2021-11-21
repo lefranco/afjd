@@ -496,6 +496,7 @@ def show_position():
     # role flag if applicable
     if g_role_id is not None:
         stack_role_flag(buttons_right)
+        buttons_right <= html.BR()
 
     put_export_sandbox(buttons_right)
 

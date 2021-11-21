@@ -169,7 +169,6 @@ def quit_game():
         # quitting a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-
     my_sub_panel <= html.H3("Se retirer de la partie")
 
     if 'GAME' not in storage:
@@ -287,7 +286,6 @@ def move_players_in_game():
 
         # removing a player from a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
 
     my_sub_panel <= html.H3("Mettre dans ou enlever des joueurs de la partie")
 
