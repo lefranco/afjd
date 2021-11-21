@@ -89,7 +89,7 @@ def show_faq():
 
         if faq_displayed_table[question_txt]:
 
-            faq_elt = html.DIV(answer_txt, Class='note')
+            faq_elt = html.DIV(answer_txt)
             faq_content <= faq_elt
 
         faq_content <= html.P()

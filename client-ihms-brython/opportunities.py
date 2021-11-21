@@ -286,7 +286,6 @@ def my_opportunities():
     my_panel <= special_legend
 
     my_panel <= html.BR()
-    my_panel <= html.BR()
 
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before

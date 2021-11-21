@@ -373,7 +373,6 @@ def my_games(state_name):
     special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
     my_panel <= special_legend
     my_panel <= html.BR()
-    my_panel <= html.BR()
 
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
