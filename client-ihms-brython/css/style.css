@@ -160,6 +160,10 @@ legend{
 .text{
     font-family: cursive;
 }
+.text_anonymous{
+    color: darkred;
+    font-family: cursive;
+}
 
 
 /* color of italy in diplomania map A8EDA5 */

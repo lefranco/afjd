@@ -25,6 +25,36 @@ OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières con
 LONG_DURATION_LIMIT_SEC = 1.0
 
 
+def get_all_games_roles_submitted_orders():
+    """ get_all_games_roles_submitted_orders """
+
+    dict_submitted_data = None
+
+    def reply_callback(req):
+        nonlocal dict_submitted_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour toutes les parties possibles : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour toutes les parties possibles : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        dict_submitted_data = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-games-orders-submitted"
+
+    # get roles that submitted orders : need token (but may change)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return dict_submitted_data
+
+
 def get_last_logins():
     """ get_last_logins """
 
@@ -353,7 +383,7 @@ def all_games(state_name):
     allocations_data = dict(allocations_data)
     masters_alloc = allocations_data['game_masters_dict']
 
-    dict_submitted_data = common.get_all_games_roles_submitted_orders()
+    dict_submitted_data = get_all_games_roles_submitted_orders()
     if dict_submitted_data is None:
         alert("Erreur chargement des soumissions dans les parties")
         return

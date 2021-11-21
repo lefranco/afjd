@@ -72,6 +72,251 @@ g_position_data = None  # pylint: disable=invalid-name
 g_report_loaded = None  # pylint: disable=invalid-name
 
 
+def game_report_reload(game_id):
+    """ game_report_reload """
+
+    report_loaded = None
+
+    def reply_callback(req):
+        nonlocal report_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement du rapport de résolution de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement du rapport de résolution de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        report_loaded = req_result['content']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-reports/{game_id}"
+
+    # getting variant : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return report_loaded
+
+
+def game_transition_reload(game_id, advancement):
+    """ game_transition_reload """
+
+    transition_loaded = None
+
+    def reply_callback(req):
+        nonlocal transition_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement de la transition de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Résolution introuvable: {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        transition_loaded = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-transitions/{game_id}/{advancement}"
+
+    # getting variant : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return transition_loaded
+
+
+def game_orders_reload(game_id):
+    """ game_orders_reload """
+
+    orders_loaded = None
+
+    def reply_callback(req):
+        nonlocal orders_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement des ordres de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement des ordres de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        orders_loaded = dict(req_result)
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-orders/{game_id}"
+
+    # getting orders : need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return orders_loaded
+
+
+def game_communication_orders_reload(game_id):
+    """ game_communication_orders_reload """
+
+    orders_loaded = None
+
+    def reply_callback(req):
+        nonlocal orders_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement des ordres de communication la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement des ordres de communication la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        orders_loaded = dict(req_result)
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-communication-orders/{game_id}"
+
+    # getting orders : need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return orders_loaded
+
+
+def game_parameters_reload(game):
+    """ display_main_parameters_reload """
+
+    game_parameters_loaded = None
+
+    def reply_callback(req):
+        nonlocal game_parameters_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement des paramètres de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement des paramètres de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        game_parameters_loaded = dict(req_result)
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/games/{game}"
+
+    # getting game data : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return game_parameters_loaded
+
+
+def make_rating_colours_window(ratings, colours):
+    """ make_rating_window """
+
+    rating_table = html.TABLE()
+    rating_row = html.TR()
+    rating_table <= rating_row
+    for role_name, ncenters in ratings.items():
+        rating_col = html.TD()
+
+        canvas = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
+        ctx = canvas.getContext("2d")
+
+        colour = colours[role_name]
+
+        outline_colour = colour.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.rect(0, 0, 14, 14)
+        ctx.stroke()
+        ctx.closePath()  # no fill
+
+        ctx.fillStyle = colour.str_value()
+        ctx.fillRect(1, 1, 13, 13)
+
+        rating_col <= canvas
+        rating_col <= f" {role_name} {ncenters}"
+        rating_row <= rating_col
+
+    return rating_table
+
+
+def date_last_visit_update(game_id, pseudo, role_id, visit_type):
+    """ date_last_visit_update """
+
+    def reply_callback(req):
+        req_result = json.loads(req.text)
+        if req.status != 201:
+            if 'message' in req_result:
+                alert(f"Erreur à la mise à jour de la dernière visite de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la mise à jour de la dernière visite de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+    json_dict = {
+        'role_id': role_id,
+        'pseudo': pseudo,
+    }
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-visits/{game_id}/{visit_type}"
+
+    # putting visit in a game : need token
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
+def vote_reload(game_id):
+    """ vote_reload """
+
+    votes = None
+
+    def reply_callback(req):
+        nonlocal votes
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des votes d'arrêt de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des votes d'arrêt de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        votes = req_result['votes']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-votes/{game_id}"
+
+    # extracting vote from a game : need token (or not?)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return votes
+
+
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
@@ -121,7 +366,7 @@ def load_dynamic_stuff():
 
     # now game parameters (dynamic since advancement is dynamic)
     global g_game_parameters_loaded  # pylint: disable=invalid-name
-    g_game_parameters_loaded = common.game_parameters_reload(g_game)
+    g_game_parameters_loaded = game_parameters_reload(g_game)
     if not g_game_parameters_loaded:
         alert("Erreur chargement paramètres")
         return
@@ -145,7 +390,7 @@ def load_dynamic_stuff():
 
     # need to be after game parameters (advancement -> season)
     global g_report_loaded  # pylint: disable=invalid-name
-    g_report_loaded = common.game_report_reload(g_game_id)
+    g_report_loaded = game_report_reload(g_game_id)
     if g_report_loaded is None:
         alert("Erreur chargement rapport")
         return
@@ -474,7 +719,7 @@ def show_position():
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
-    rating_colours_window = common.make_rating_colours_window(ratings, colours)
+    rating_colours_window = make_rating_colours_window(ratings, colours)
 
     report_window = common.make_report_window(g_report_loaded)
 
@@ -1385,7 +1630,7 @@ def submit_orders():
     document.bind("keypress", callback_keypress)
 
     # get the orders from server
-    orders_loaded = common.game_orders_reload(g_game_id)
+    orders_loaded = game_orders_reload(g_game_id)
     if not orders_loaded:
         alert("Erreur chargement ordres")
         load_option(None, 'position')
@@ -1400,7 +1645,7 @@ def submit_orders():
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
-    rating_colours_window = common.make_rating_colours_window(ratings, colours)
+    rating_colours_window = make_rating_colours_window(ratings, colours)
 
     report_window = common.make_report_window(g_report_loaded)
 
@@ -2037,7 +2282,7 @@ def submit_communication_orders():
     document.bind("keypress", callback_keypress)
 
     # get the orders from server
-    communication_orders_loaded = common.game_communication_orders_reload(g_game_id)
+    communication_orders_loaded = game_communication_orders_reload(g_game_id)
     if not communication_orders_loaded:
         alert("Erreur chargement ordres communication")
         load_option(None, 'position')
@@ -2052,7 +2297,7 @@ def submit_communication_orders():
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
-    rating_colours_window = common.make_rating_colours_window(ratings, colours)
+    rating_colours_window = make_rating_colours_window(ratings, colours)
 
     report_window = common.make_report_window(g_report_loaded)
 
@@ -2193,7 +2438,7 @@ def negotiate():
     time_stamp_last_visit = common.date_last_visit_load(g_game_id, config.MESSAGES_TYPE)
 
     # put time stamp of last visit of declarations as now
-    common.date_last_visit_update(g_game_id, g_pseudo, g_role_id, config.MESSAGES_TYPE)
+    date_last_visit_update(g_game_id, g_pseudo, g_role_id, config.MESSAGES_TYPE)
 
     form = html.FORM()
 
@@ -2422,7 +2667,7 @@ def declare():
     time_stamp_last_visit = common.date_last_visit_load(g_game_id, config.DECLARATIONS_TYPE)
 
     # put time stamp of last visit of declarations as now
-    common.date_last_visit_update(g_game_id, g_pseudo, g_role_id, config.DECLARATIONS_TYPE)
+    date_last_visit_update(g_game_id, g_pseudo, g_role_id, config.DECLARATIONS_TYPE)
 
     form = html.FORM()
 
@@ -2482,7 +2727,10 @@ def declare():
         col = html.TD(role_icon_img)
         row <= col
 
-        col = html.TD(Class='text')
+        if anonymous:
+            col = html.TD(Class='text_anonymous')
+        else:
+            col = html.TD(Class='text')
 
         for line in content.split('\n'):
             # new so put in bold
@@ -2576,7 +2824,7 @@ def vote():
         load_option(None, 'position')
         return False
 
-    votes = common.vote_reload(g_game_id)
+    votes = vote_reload(g_game_id)
     if votes is None:
         alert("Erreur chargement votes")
         load_option(None, 'position')
@@ -2650,7 +2898,7 @@ def show_history():
             # put the legends at the end
             g_variant_data.render_legends(ctx)
 
-        transition_loaded = common.game_transition_reload(g_game_id, advancement_selected)
+        transition_loaded = game_transition_reload(g_game_id, advancement_selected)
         if transition_loaded is None:
             return
 
@@ -2683,7 +2931,7 @@ def show_history():
 
         ratings = position_data.role_ratings()
         colours = position_data.role_colours()
-        rating_colours_window = common.make_rating_colours_window(ratings, colours)
+        rating_colours_window = make_rating_colours_window(ratings, colours)
         my_sub_panel <= rating_colours_window
 
         report_window = common.make_report_window(report_loaded)
@@ -3093,7 +3341,7 @@ def game_master():
     possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
 
     # votes
-    votes = common.vote_reload(g_game_id)
+    votes = vote_reload(g_game_id)
     if votes is None:
         alert("Erreur chargement votes")
         load_option(None, 'position')
@@ -3439,7 +3687,7 @@ def supervise():
 
             # votes
             nonlocal votes
-            votes = common.vote_reload(g_game_id)
+            votes = vote_reload(g_game_id)
             if votes is None:
                 alert("Erreur chargement votes")
                 return
@@ -3649,7 +3897,7 @@ def observe():
 
         ratings = g_position_data.role_ratings()
         colours = g_position_data.role_colours()
-        rating_colours_window = common.make_rating_colours_window(ratings, colours)
+        rating_colours_window = make_rating_colours_window(ratings, colours)
 
         report_window = common.make_report_window(g_report_loaded)
 
