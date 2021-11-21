@@ -1018,10 +1018,7 @@ def rectify():
 
     display_very_left <= html.BR()
 
-    display_very_left <= html.LEGEND("Glissez/déposez")
-    display_very_left <= html.LEGEND("ces unités")
-    display_very_left <= html.LEGEND("ou ces centres")
-    display_very_left <= html.LEGEND("sur la carte")
+    display_very_left <= html.DIV("Glissez/déposez ces unités ou ces centres sur la carte", Class='instruction')
 
     map_size = variant_data.map_size
 
@@ -1056,7 +1053,7 @@ def rectify():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-    legend_select_unit = html.LEGEND("Clic-long sur une unité pour l'effacer, clic-court sur une possession pour l'effacer")
+    legend_select_unit = html.DIV("Clic-long sur une unité pour l'effacer, clic-court sur une possession pour l'effacer", Class='instruction')
     buttons_right <= legend_select_unit
 
     put_submit(buttons_right)

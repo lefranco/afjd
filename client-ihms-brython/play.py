@@ -593,7 +593,7 @@ def submit_orders():
         stack_role_flag(buttons_right)
 
         # we are in spring or autumn
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
 
         my_sub_panel2 <= buttons_right
@@ -628,12 +628,12 @@ def submit_orders():
         stack_role_flag(buttons_right)
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
+            legend_select_order = html.DIV("Sélectionner l'ordre d'adjustement (clic-long pour effacer)", Class='instruction')
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
@@ -673,7 +673,7 @@ def submit_orders():
 
             stack_role_flag(buttons_right)
 
-            legend_select_active = html.LEGEND("Sélectionner la zone où construire (cliquer sous la légende)")
+            legend_select_active = html.DIV("Sélectionner la zone où construire (cliquer sous la légende)", Class='instruction')
             buttons_right <= legend_select_active
 
             stack_orders(buttons_right)
@@ -712,11 +712,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
                 order_name = g_variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.LEGEND("Sélectionner la destination de l'attaque (cliquer sous la légende)")
+                legend_selected_destination = html.DIV("Sélectionner la destination de l'attaque (cliquer sous la légende)", Class='instruction')
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -724,11 +724,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
                 order_name = g_variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_passive = html.LEGEND("Sélectionner l'unité supportée offensivement")
+                legend_selected_passive = html.DIV("Sélectionner l'unité supportée offensivement", Class='instruction')
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -736,11 +736,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
                 order_name = g_variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_passive = html.LEGEND("Sélectionner l'unité supportée defensivement")
+                legend_selected_passive = html.DIV("Sélectionner l'unité supportée defensivement", Class='instruction')
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -754,7 +754,7 @@ def submit_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -765,11 +765,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
                 order_name = g_variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_select_passive = html.LEGEND("Sélectionner l'unité convoyée")
+                legend_select_passive = html.DIV("Sélectionner l'unité convoyée", Class='instruction')
                 buttons_right <= legend_select_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -777,11 +777,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
 
                 order_name = g_variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.LEGEND("Sélectionner la destination de la retraite (cliquer sous la légende)")
+                legend_selected_destination = html.DIV("Sélectionner la destination de la retraite (cliquer sous la légende)", Class='instruction')
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -795,7 +795,7 @@ def submit_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -805,7 +805,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER:
 
-                legend_select_active = html.LEGEND("Sélectionner le type d'unité à construire")
+                legend_select_active = html.DIV("Sélectionner le type d'unité à construire", Class='instruction')
                 buttons_right <= legend_select_active
 
                 for unit_type in mapping.UnitTypeEnum:
@@ -820,11 +820,11 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.REMOVE_ORDER:
 
                 order_name = g_variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_select_active = html.LEGEND("Sélectionner l'unité à retirer")
+                legend_select_active = html.DIV("Sélectionner l'unité à retirer", Class='instruction')
                 buttons_right <= legend_select_active
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -886,13 +886,13 @@ def submit_orders():
 
                 # switch back to initial state selecting unit
                 if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                    legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                    legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                     buttons_right <= legend_select_unit
 
                     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
                 if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                    legend_select_unit = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
+                    legend_select_unit = html.DIV("Sélectionner l'ordre d'adjustement (clic-long pour effacer)", Class='instruction')
                     buttons_right <= legend_select_unit
                     for order_type in mapping.OrderTypeEnum:
                         if order_type.compatible(advancement_season):
@@ -908,10 +908,10 @@ def submit_orders():
 
                 if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
 
-                    legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
+                    legend_selected_unit = html.DIV(f"L'unité active sélectionnée est {selected_active_unit}")
                     buttons_right <= legend_selected_unit
 
-                legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination - sous la légende)")
+                legend_select_order = html.DIV("Sélectionner l'ordre (ou directement la destination - sous la légende)", Class='instruction')
                 buttons_right <= legend_select_order
                 buttons_right <= html.BR()
 
@@ -1009,11 +1009,11 @@ def submit_orders():
             callback_render(None)
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                legend_select_unit = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
+                legend_select_unit = html.DIV("Sélectionner l'ordre d'adjustement (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
@@ -1061,7 +1061,7 @@ def submit_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -1080,15 +1080,15 @@ def submit_orders():
                 return
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_selected_passive = html.LEGEND(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
+                legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_selected_passive = html.LEGEND(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
+                legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
             buttons_right <= legend_selected_passive
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_select_destination = html.LEGEND("Sélectionner la destination de l'attaque soutenue (cliquer sous la légende)")
+                legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue (cliquer sous la légende)", Class='instruction')
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_select_destination = html.LEGEND("Sélectionner la destination du convoi (cliquer sous la légende)")
+                legend_select_destination = html.DIV("Sélectionner la destination du convoi (cliquer sous la légende)", Class='instruction')
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
@@ -1161,12 +1161,12 @@ def submit_orders():
         stack_role_flag(buttons_right)
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
             buttons_right <= legend_select_unit
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
+            legend_select_order = html.DIV("Sélectionner l'ordre d'adjustement (clic-long pour effacer)", Class='instruction')
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
@@ -1419,12 +1419,12 @@ def submit_orders():
     stack_role_flag(buttons_right)
 
     if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-        legend_select_order = html.LEGEND("Sélectionner l'ordre d'adjustement (clic-long pour effacer)")
+        legend_select_order = html.DIV("Sélectionner l'ordre d'adjustement (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_order
         for order_type in mapping.OrderTypeEnum:
             if order_type.compatible(advancement_season):
@@ -1519,7 +1519,7 @@ def submit_communication_orders():
 
         stack_role_flag(buttons_right)
 
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -1550,11 +1550,11 @@ def submit_communication_orders():
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
                 order_name = g_variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.LEGEND("Sélectionner la destination de l'attaque (cliquer sous la légende)")
+                legend_selected_destination = html.DIV("Sélectionner la destination de l'attaque (cliquer sous la légende)", Class='instruction')
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -1562,11 +1562,11 @@ def submit_communication_orders():
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
                 order_name = g_variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_passive = html.LEGEND("Sélectionner l'unité supportée offensivement")
+                legend_selected_passive = html.DIV("Sélectionner l'unité supportée offensivement", Class='instruction')
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -1574,11 +1574,11 @@ def submit_communication_orders():
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
                 order_name = g_variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_passive = html.LEGEND("Sélectionner l'unité supportée defensivement")
+                legend_selected_passive = html.DIV("Sélectionner l'unité supportée defensivement", Class='instruction')
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -1592,7 +1592,7 @@ def submit_communication_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -1603,11 +1603,11 @@ def submit_communication_orders():
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
                 order_name = g_variant_data.name_table[order_type]
-                legend_selected_order = html.LEGEND(f"L'ordre sélectionné est {order_name}")
+                legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_select_passive = html.LEGEND("Sélectionner l'unité convoyée")
+                legend_select_passive = html.DIV("Sélectionner l'unité convoyée", Class='instruction')
                 buttons_right <= legend_select_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -1659,17 +1659,17 @@ def submit_communication_orders():
                 selected_active_unit = None
 
                 # switch back to initial state selecting unit
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
             else:
 
-                legend_selected_unit = html.LEGEND(f"L'unité active sélectionnée est {selected_active_unit}")
+                legend_selected_unit = html.DIV(f"L'unité active sélectionnée est {selected_active_unit}")
                 buttons_right <= legend_selected_unit
 
-                legend_select_order = html.LEGEND("Sélectionner l'ordre (ou directement la destination - sous la légende)")
+                legend_select_order = html.DIV("Sélectionner l'ordre (ou directement la destination - sous la légende)", Class='instruction')
                 buttons_right <= legend_select_order
                 buttons_right <= html.BR()
 
@@ -1728,7 +1728,7 @@ def submit_communication_orders():
             # update map
             callback_render(None)
 
-            legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+            legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
             buttons_right <= legend_select_unit
 
             stack_orders(buttons_right)
@@ -1763,7 +1763,7 @@ def submit_communication_orders():
                 # update map
                 callback_render(None)
 
-                legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
@@ -1779,15 +1779,15 @@ def submit_communication_orders():
                 return
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_selected_passive = html.LEGEND(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
+                legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du support offensif est {selected_passive_unit}")
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_selected_passive = html.LEGEND(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
+                legend_selected_passive = html.DIV(f"L'unité sélectionnée objet du convoi est {selected_passive_unit}")
             buttons_right <= legend_selected_passive
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_select_destination = html.LEGEND("Sélectionner la destination de l'attaque soutenue (cliquer sous la légende)")
+                legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue (cliquer sous la légende)", Class='instruction')
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_select_destination = html.LEGEND("Sélectionner la destination du convoi (cliquer sous la légende)")
+                legend_select_destination = html.DIV("Sélectionner la destination du convoi (cliquer sous la légende)", Class='instruction')
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
@@ -1847,7 +1847,7 @@ def submit_communication_orders():
 
         stack_role_flag(buttons_right)
 
-        legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+        legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -2071,7 +2071,7 @@ def submit_communication_orders():
 
     stack_role_flag(buttons_right)
 
-    legend_select_unit = html.LEGEND("Cliquez sur l'unité à ordonner (clic-long pour effacer)")
+    legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
     buttons_right <= legend_select_unit
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
