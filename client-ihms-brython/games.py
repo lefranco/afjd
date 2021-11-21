@@ -258,184 +258,209 @@ def create_game():
     form <= information_about_input()
     form <= html.BR()
 
-    legend_title_main = html.LEGEND("Paramètres principaux de la partie - ne peuvent plus être changés la partie créée")
+    legend_title_main = html.H3("Paramètres principaux de la partie - ne peuvent plus être changés la partie créée")
     form <= legend_title_main
 
+    fieldset = html.FIELDSET()
     legend_name = html.LEGEND("nom")
-    form <= legend_name
+    fieldset <= legend_name
     input_name = html.INPUT(type="text", value="", title="Nom de la partie (faites court et simple)")
-    form <= input_name
-    form <= html.BR()
+    fieldset <= input_name
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_variant = html.LEGEND("variante", title="(imposée pour me moment)")
-    form <= legend_variant
+    fieldset <= legend_variant
     input_variant = html.INPUT(type="select-one", readonly=True, value=DEFAULT_VARIANT)
-    form <= input_variant
-    form <= html.BR()
+    fieldset <= input_variant
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_archive = html.LEGEND("archive", title="Partie pour les archives - la partie n'est pas jouée - l'arbitre passe tous les ordres")
-    form <= legend_archive
+    fieldset <= legend_archive
     input_archive = html.INPUT(type="checkbox", checked=False)
-    form <= input_archive
-    form <= html.BR()
+    fieldset <= input_archive
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_manual = html.LEGEND("casting manuel", title="L'arbitre attribue les rôles dans la partie et non le système")
-    form <= legend_manual
+    fieldset <= legend_manual
     input_manual = html.INPUT(type="checkbox", checked=False)
-    form <= input_manual
-    form <= html.BR()
+    fieldset <= input_manual
+    form <= fieldset
 
     title_terms = html.H3("Modalités de la partie - ne peuvent plus être changés la partie créée")
     form <= title_terms
 
+    fieldset = html.FIELDSET()
     legend_anonymous = html.LEGEND("anonyme", title="Les identités des joueurs ne sont pas révélées avant la fin de la partie")
-    form <= legend_anonymous
+    fieldset <= legend_anonymous
     input_anonymous = html.INPUT(type="checkbox", checked=False)
-    form <= input_anonymous
-    form <= html.BR()
+    fieldset <= input_anonymous
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_nomessage = html.LEGEND("pas de message", title="Les joueurs ne peuvent pas communiquer par message avant la fin de la partie")
-    form <= legend_nomessage
+    fieldset <= legend_nomessage
     input_nomessage = html.INPUT(type="checkbox", checked=False)
-    form <= input_nomessage
-    form <= html.BR()
+    fieldset <= input_nomessage
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_nopress = html.LEGEND("pas de presse", title="Les joueurs ne peuvent pas communiquer par presse avant la fin de la partie")
-    form <= legend_nopress
+    fieldset <= legend_nopress
     input_nopress = html.INPUT(type="checkbox", checked=False)
-    form <= input_nopress
-    form <= html.BR()
+    fieldset <= input_nopress
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_fast = html.LEGEND("rapide", title="Les résolutions se font aussi que possible, le système n'ajoute pas les jours aux dates limites")
-    form <= legend_fast
+    fieldset <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=False)
-    form <= input_fast
-    form <= html.BR()
+    fieldset <= input_fast
+    form <= fieldset
 
     title_pace = html.H3("Cadence de la partie")
     form <= title_pace
 
     # deadline
 
+    fieldset = html.FIELDSET()
     legend_deadline_hour = html.LEGEND("heure de date limite", title="Heure GMT de la journée à laquelle placer les dates limites")
-    form <= legend_deadline_hour
+    fieldset <= legend_deadline_hour
     input_deadline_hour = html.INPUT(type="number", value=DEFAULT_DEADLINE_TIME)
-    form <= input_deadline_hour
-    form <= html.BR()
+    fieldset <= input_deadline_hour
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_deadline_sync = html.LEGEND("synchronisation des date limites", title="Faut-il synchroniser les dates limites à une heure donnée")
-    form <= legend_deadline_sync
+    fieldset <= legend_deadline_sync
     input_deadline_sync = html.INPUT(type="checkbox", checked=True)
-    form <= input_deadline_sync
-    form <= html.BR()
+    fieldset <= input_deadline_sync
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre de jours (minutes pour une partie rapide) alloués avant fin de la grâce")
-    form <= legend_grace_duration
+    fieldset <= legend_grace_duration
     input_grace_duration = html.INPUT(type="number", value=DEFAULT_GRACE_DURATION)
-    form <= input_grace_duration
-    form <= html.BR()
+    fieldset <= input_grace_duration
+    form <= fieldset
 
     # moves
 
+    fieldset = html.FIELDSET()
     legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de mouvements")
-    form <= legend_speed_moves
+    fieldset <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=DEFAULT_SPEED_MOVES)
-    form <= input_speed_moves
-    form <= html.BR()
+    fieldset <= input_speed_moves
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
-    form <= legend_cd_possible_moves
+    fieldset <= legend_cd_possible_moves
     input_cd_possible_moves = html.INPUT(type="checkbox", checked=False)
-    form <= input_cd_possible_moves
-    form <= html.BR()
+    fieldset <= input_cd_possible_moves
+    form <= fieldset
 
     # retreats
 
+    fieldset = html.FIELDSET()
     legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de retraites")
-    form <= legend_speed_retreats
+    fieldset <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=DEFAULT_SPEED_OTHERS)
-    form <= input_speed_retreats
-    form <= html.BR()
+    fieldset <= input_speed_retreats
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
-    form <= legend_cd_possible_retreats
+    fieldset <= legend_cd_possible_retreats
     input_cd_possible_retreats = html.INPUT(type="checkbox", checked=True)
-    form <= input_cd_possible_retreats
-    form <= html.BR()
+    fieldset <= input_cd_possible_retreats
+    form <= fieldset
 
     # adjustments
 
+    fieldset = html.FIELDSET()
     legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite d'ajustements")
-    form <= legend_speed_adjustments
+    fieldset <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=DEFAULT_SPEED_OTHERS)
-    form <= input_speed_adjustments
-    form <= html.BR()
+    fieldset <= input_speed_adjustments
+    form <= fieldset
 
     # builds
 
+    fieldset = html.FIELDSET()
     legend_cd_possible_builds = html.LEGEND("DC possible constructions", title="Désordre civil possible pour une résolution d'ajustements - constructions")
-    form <= legend_cd_possible_builds
+    fieldset <= legend_cd_possible_builds
     input_cd_possible_builds = html.INPUT(type="checkbox", checked=False)
-    form <= input_cd_possible_builds
-    form <= html.BR()
+    fieldset <= input_cd_possible_builds
+    form <= fieldset
 
     # removals
 
+    fieldset = html.FIELDSET()
     legend_cd_possible_removals = html.LEGEND("DC possible suppressions", title="Désordre civil possible pour une résolution d'ajustements - suppressions")
-    form <= legend_cd_possible_removals
+    fieldset <= legend_cd_possible_removals
     input_cd_possible_removals = html.INPUT(type="checkbox", checked=True)
-    form <= input_cd_possible_removals
-    form <= html.BR()
+    fieldset <= input_cd_possible_removals
+    form <= fieldset
 
     # ---
 
+    fieldset = html.FIELDSET()
     legend_play_weekend = html.LEGEND("jeu weekend", title="La date limite peut elle se trouver en fin de semaine")
-    form <= legend_play_weekend
+    fieldset <= legend_play_weekend
     input_play_weekend = html.INPUT(type="checkbox", checked=True)
-    form <= input_play_weekend
-    form <= html.BR()
+    fieldset <= input_play_weekend
+    form <= fieldset
 
     title_access = html.H3("Accès à la partie - ne peuvent plus être changés la partie démarrée")
     form <= title_access
 
+    fieldset = html.FIELDSET()
     legend_access_code = html.LEGEND("code accès", title="Code d'accès à la partie")
-    form <= legend_access_code
+    fieldset <= legend_access_code
     input_access_code = html.INPUT(type="number", value="")
-    form <= input_access_code
-    form <= html.BR()
+    fieldset <= input_access_code
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
-    form <= legend_access_restriction_reliability
+    fieldset <= legend_access_restriction_reliability
     input_access_restriction_reliability = html.INPUT(type="number", value="")
-    form <= input_access_restriction_reliability
-    form <= html.BR()
+    fieldset <= input_access_restriction_reliability
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_access_restriction_regularity = html.LEGEND("restriction régularité", title="Sélectionne les joueurs sur leur régularité")
-    form <= legend_access_restriction_regularity
+    fieldset <= legend_access_restriction_regularity
     input_access_restriction_regularity = html.INPUT(type="number", value="")
-    form <= input_access_restriction_regularity
-    form <= html.BR()
+    fieldset <= input_access_restriction_regularity
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_access_restriction_performance = html.LEGEND("restriction performance", title="Sélectionne les joueurs sur leur niveau de performance")
-    form <= legend_access_restriction_performance
+    fieldset <= legend_access_restriction_performance
     input_access_restriction_performance = html.INPUT(type="number", value="")
-    form <= input_access_restriction_performance
-    form <= html.BR()
+    fieldset <= input_access_restriction_performance
+    form <= fieldset
 
     title_access = html.H3("Avancement de la partie - ne peuvent plus être changés la partie créée")
     form <= title_access
 
+    fieldset = html.FIELDSET()
     legend_nb_max_cycles_to_play = html.LEGEND("maximum de cycles (années)", title="Combien d'années à jouer au plus ?")
-    form <= legend_nb_max_cycles_to_play
+    fieldset <= legend_nb_max_cycles_to_play
     input_nb_max_cycles_to_play = html.INPUT(type="number", value=DEFAULT_NB_CYCLES)
-    form <= input_nb_max_cycles_to_play
-    form <= html.BR()
+    fieldset <= input_nb_max_cycles_to_play
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_victory_centers = html.LEGEND("victoire en centres", title="Combien de centres sont nécessaires pour gagner ?")
-    form <= legend_victory_centers
+    fieldset <= legend_victory_centers
     input_victory_centers = html.INPUT(type="number", value=DEFAULT_VICTORY_CENTERS)
-    form <= input_victory_centers
-    form <= html.BR()
+    fieldset <= input_victory_centers
+    form <= fieldset
 
     form <= html.BR()
 
@@ -548,13 +573,13 @@ def change_description_game():
     form <= information_about_input()
     form <= html.BR()
 
+    fieldset = html.FIELDSET()
     legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'une partie entre étudiants de l'ETIAM'")
-    form <= legend_description
-
+    fieldset <= legend_description
     input_description = html.TEXTAREA(type="text", rows=5, cols=80)
     input_description <= description_loaded
-    form <= input_description
-    form <= html.BR()
+    fieldset <= input_description
+    form <= fieldset
 
     form <= html.BR()
 
@@ -682,29 +707,33 @@ def change_access_parameters_game():
     form <= information_about_input()
     form <= html.BR()
 
+    fieldset = html.FIELDSET()
     legend_access_code = html.LEGEND("code accès", title="Code d'accès à la partie")
-    form <= legend_access_code
+    fieldset <= legend_access_code
     input_access_code = html.INPUT(type="number", value=access_code_loaded)
-    form <= input_access_code
-    form <= html.BR()
+    fieldset <= input_access_code
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
-    form <= legend_access_restriction_reliability
+    fieldset <= legend_access_restriction_reliability
     input_access_restriction_reliability = html.INPUT(type="number", value=access_restriction_reliability_loaded)
-    form <= input_access_restriction_reliability
-    form <= html.BR()
+    fieldset <= input_access_restriction_reliability
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_access_restriction_regularity = html.LEGEND("restriction régularité", title="Sélectionne les joueurs sur leur régularité")
-    form <= legend_access_restriction_regularity
+    fieldset <= legend_access_restriction_regularity
     input_access_restriction_regularity = html.INPUT(type="number", value=access_restriction_regularity_loaded)
-    form <= input_access_restriction_regularity
-    form <= html.BR()
+    fieldset <= input_access_restriction_regularity
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_access_restriction_performance = html.LEGEND("restriction performance", title="Sélectionne les joueurs sur leur niveau de performance")
-    form <= legend_access_restriction_performance
+    fieldset <= legend_access_restriction_performance
     input_access_restriction_performance = html.INPUT(type="number", value=access_restriction_performance_loaded)
-    form <= input_access_restriction_performance
-    form <= html.BR()
+    fieldset <= input_access_restriction_performance
+    form <= fieldset
 
     form <= html.BR()
 
@@ -831,8 +860,8 @@ def change_deadline_game():
 
     dl_gmt = html.DIV("ATTENTION : vous devez entrer une date limite en temps GMT", Class='important')
     special_legend = html.LEGEND(dl_gmt)
-    form <= html.BR()
     form <= special_legend
+    form <= html.BR()
 
     # get GMT date and time
     time_stamp = time.time()
@@ -843,23 +872,19 @@ def change_deadline_game():
     form <= special_info
     form <= html.BR()
 
-    form <= html.BR()
-
+    fieldset = html.FIELDSET()
     legend_deadline_day = html.LEGEND("Jour de la date limite (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
-    form <= legend_deadline_day
-
+    fieldset <= legend_deadline_day
     input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day)
-    form <= input_deadline_day
-    form <= html.BR()
+    fieldset <= input_deadline_day
+    form <= fieldset
 
-    form <= html.BR()
-
+    fieldset = html.FIELDSET()
     legend_deadline_hour = html.LEGEND("Heure de la date limite (hh:mm ou selon les réglages du navigateur)")
-    form <= legend_deadline_hour
-
+    fieldset <= legend_deadline_hour
     input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour)
-    form <= input_deadline_hour
-    form <= html.BR()
+    fieldset <= input_deadline_hour
+    form <= fieldset
 
     form <= html.BR()
 
@@ -1047,83 +1072,94 @@ def change_pace_parameters_game():
 
     # deadline related
 
+    fieldset = html.FIELDSET()
     legend_deadline_hour = html.LEGEND("heure de date limite", title="Heure GMT de la journée à laquelle placer les dates limites")
-    form <= legend_deadline_hour
+    fieldset <= legend_deadline_hour
     input_deadline_hour = html.INPUT(type="number", value=deadline_hour_loaded)
-    form <= input_deadline_hour
-    form <= html.BR()
+    fieldset <= input_deadline_hour
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_deadline_sync = html.LEGEND("synchronisation des date limites", title="Faut-il synchroniser les dates limites à une heure donnée")
-    form <= legend_deadline_sync
+    fieldset <= legend_deadline_sync
     input_deadline_sync = html.INPUT(type="checkbox", checked=deadline_sync_loaded)
-    form <= input_deadline_sync
-    form <= html.BR()
+    fieldset <= input_deadline_sync
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre de jours (minutes pour une partie rapide) alloués avant fin de la grâce")
-    form <= legend_grace_duration
+    fieldset <= legend_grace_duration
     input_grace_duration = html.INPUT(type="number", value=grace_duration_loaded)
-    form <= input_grace_duration
-    form <= html.BR()
+    fieldset <= input_grace_duration
+    form <= fieldset
 
     # moves
 
+    fieldset = html.FIELDSET()
     legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de mouvements")
-    form <= legend_speed_moves
+    fieldset <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=speed_moves_loaded)
-    form <= input_speed_moves
-    form <= html.BR()
+    fieldset <= input_speed_moves
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_cd_possible_moves = html.LEGEND("DC possible mouvements", title="Désordre civil possible pour une résolution de mouvements")
-    form <= legend_cd_possible_moves
+    fieldset <= legend_cd_possible_moves
     input_cd_possible_moves = html.INPUT(type="checkbox", checked=cd_possible_moves_loaded)
-    form <= input_cd_possible_moves
-    form <= html.BR()
+    fieldset <= input_cd_possible_moves
+    form <= fieldset
 
     # retreats
 
+    fieldset = html.FIELDSET()
     legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de retraites")
-    form <= legend_speed_retreats
+    fieldset <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=speed_retreats_loaded)
-    form <= input_speed_retreats
-    form <= html.BR()
+    fieldset <= input_speed_retreats
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_cd_possible_retreats = html.LEGEND("DC possible retraites", title="Désordre civil possible pour une résolution de retraites")
-    form <= legend_cd_possible_retreats
+    fieldset <= legend_cd_possible_retreats
     input_cd_possible_retreats = html.INPUT(type="checkbox", checked=cd_possible_retreats_loaded)
-    form <= input_cd_possible_retreats
-    form <= html.BR()
+    fieldset <= input_cd_possible_retreats
+    form <= fieldset
 
     # adjustments
 
+    fieldset = html.FIELDSET()
     legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite d'ajustements")
-    form <= legend_speed_adjustments
+    fieldset <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments_loaded)
-    form <= input_speed_adjustments
-    form <= html.BR()
+    fieldset <= input_speed_adjustments
+    form <= fieldset
 
     # builds
 
+    fieldset = html.FIELDSET()
     legend_cd_possible_builds = html.LEGEND("DC possible constructions", title="Désordre civil possible pour une résolution d'ajustements - constructions")
-    form <= legend_cd_possible_builds
+    fieldset <= legend_cd_possible_builds
     input_cd_possible_builds = html.INPUT(type="checkbox", checked=cd_possible_builds_loaded)
-    form <= input_cd_possible_builds
-    form <= html.BR()
+    fieldset <= input_cd_possible_builds
+    form <= fieldset
 
     # removals
 
+    fieldset = html.FIELDSET()
     legend_cd_possible_removals = html.LEGEND("DC possible suppressions", title="Désordre civil possible pour une résolution d'ajustements - suppressions")
-    form <= legend_cd_possible_removals
+    fieldset <= legend_cd_possible_removals
     input_cd_possible_removals = html.INPUT(type="checkbox", checked=cd_possible_removals_loaded)
-    form <= input_cd_possible_removals
-    form <= html.BR()
+    fieldset <= input_cd_possible_removals
+    form <= fieldset
 
     # ---
 
+    fieldset = html.FIELDSET()
     legend_play_weekend = html.LEGEND("jeu weekend", title="La date limite peut elle se trouver en fin de semaine")
-    form <= legend_play_weekend
+    fieldset <= legend_play_weekend
     input_play_weekend = html.INPUT(type="checkbox", checked=play_weekend_loaded)
-    form <= input_play_weekend
-    form <= html.BR()
+    fieldset <= input_play_weekend
+    form <= fieldset
 
     form <= html.BR()
 
@@ -1236,8 +1272,9 @@ def change_state_game():
     form <= information_about_input()
     form <= html.BR()
 
+    fieldset = html.FIELDSET()
     legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours ou terminée.")
-    form <= legend_state
+    fieldset <= legend_state
 
     input_state = html.SELECT(type="select-one", value="")
     for possible_state in config.STATE_CODE_TABLE:
@@ -1245,8 +1282,8 @@ def change_state_game():
         if config.STATE_CODE_TABLE[possible_state] == state_loaded:
             option.selected = True
         input_state <= option
-    form <= input_state
-    form <= html.BR()
+    fieldset <= input_state
+    form <= fieldset
 
     form <= html.BR()
 

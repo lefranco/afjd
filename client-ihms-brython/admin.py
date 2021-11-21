@@ -189,13 +189,13 @@ def change_news():
 
     form = html.FORM()
 
+    fieldset = html.FIELDSET()
     legend_news_content = html.LEGEND("nouvelles", title="Saisir le nouveau contenu de nouvelles")
-    form <= legend_news_content
-
+    fieldset <= legend_news_content
     input_news_content = html.TEXTAREA(type="text", rows=20, cols=100)
     input_news_content <= news_content_loaded
-    form <= input_news_content
-    form <= html.BR()
+    fieldset <= input_news_content
+    form <= fieldset
 
     form <= html.BR()
 
@@ -260,11 +260,6 @@ def usurp():
     if not check_admin(pseudo):
         return
 
-    form = html.FORM()
-
-    legend_usurped = html.LEGEND("Usurpé", title="Sélectionner le joueur à usurper")
-    form <= legend_usurped
-
     players_dict = common.get_players()
     if players_dict is None:
         return
@@ -272,13 +267,17 @@ def usurp():
     # all players can be usurped
     possible_usurped = set(players_dict.keys())
 
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_usurped = html.LEGEND("Usurpé", title="Sélectionner le joueur à usurper")
+    fieldset <= legend_usurped
     input_usurped = html.SELECT(type="select-one", value="")
     for usurped_pseudo in sorted(possible_usurped, key=lambda pu: pu.upper()):
         option = html.OPTION(usurped_pseudo)
         input_usurped <= option
-
-    form <= input_usurped
-    form <= html.BR()
+    fieldset <= input_usurped
+    form <= fieldset
 
     form <= html.BR()
 
@@ -1234,11 +1233,6 @@ def sendmail():
     if not check_admin(pseudo):
         return
 
-    form = html.FORM()
-
-    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par email")
-    form <= legend_addressee
-
     players_dict = common.get_players()
     if players_dict is None:
         return
@@ -1249,22 +1243,25 @@ def sendmail():
     # all players can be usurped
     possible_addressed = set(players_dict.keys())
 
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par email")
+    fieldset <= legend_addressee
     input_addressed = html.SELECT(type="select-one", value="")
     for addressee_pseudo in sorted(possible_addressed, key=lambda pu: pu.upper()):
         option = html.OPTION(addressee_pseudo)
         input_addressed <= option
+    fieldset <= input_addressed
+    form <= fieldset
 
-    form <= input_addressed
-    form <= html.BR()
-
-    form <= html.BR()
-
+    fieldset = html.FIELDSET()
     legend_message = html.LEGEND("Votre message", title="Qu'avez vous à lui dire ?")
-    form <= legend_message
-    form <= html.BR()
-
+    fieldset <= legend_message
     input_message = html.TEXTAREA(type="text", rows=5, cols=80)
-    form <= input_message
+    fieldset <= input_message
+    form <= fieldset
+
     form <= html.BR()
 
     input_select_player = html.INPUT(type="submit", value="contacter")
@@ -1326,11 +1323,6 @@ def get_phone_number():
     if not check_admin(pseudo):
         return
 
-    form = html.FORM()
-
-    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter par téléphone")
-    form <= legend_contact
-
     players_dict = common.get_players()
     if players_dict is None:
         return
@@ -1341,13 +1333,17 @@ def get_phone_number():
     # all players can be usurped
     possible_contacts = set(players_dict.keys())
 
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter par téléphone")
+    fieldset <= legend_contact
     input_contact = html.SELECT(type="select-one", value="")
     for contact_pseudo in sorted(possible_contacts, key=lambda pu: pu.upper()):
         option = html.OPTION(contact_pseudo)
         input_contact <= option
-
-    form <= input_contact
-    form <= html.BR()
+    fieldset <= input_contact
+    form <= fieldset
 
     form <= html.BR()
 
