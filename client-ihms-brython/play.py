@@ -2594,12 +2594,14 @@ def vote():
 
     form = html.FORM()
 
+    fieldset = html.FIELDSET()
     legend_vote = html.LEGEND("Cochez pour voter l'arrêt", title="Etes vous d'accord pour terminer la partie en l'état ?")
-    form <= legend_vote
-    form <= html.BR()
-
+    fieldset <= legend_vote
+    form <= fieldset
     input_vote = html.INPUT(type="checkbox", checked=vote_value)
-    form <= input_vote
+    fieldset <= input_vote
+    form <= fieldset
+
     form <= html.BR()
 
     input_vote_in_game = html.INPUT(type="submit", value="voter dans la partie")
