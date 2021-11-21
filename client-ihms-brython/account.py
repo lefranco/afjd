@@ -20,10 +20,18 @@ DEFAULT_COUNTRY_CODE = "FRA"
 DEFAULT_TIMEZONE_CODE = "UTC+01:00"
 
 
+def information_about_input():
+    """ information_about_account """
+
+    information = html.DIV(Class='note')
+    information <= "Survolez les titres pour pour plus de détails"
+    return information
+
+
 def information_about_account():
     """ information_about_account """
 
-    information = html.DIV()
+    information = html.DIV(Class='note')
     information <= "La plupart des champs sont privés et ne seront pas montrés sur le site et/ou facultatifs"
     information <= html.BR()
     information <= "Survolez les titres pour plus de détails"
@@ -33,8 +41,8 @@ def information_about_account():
 def information_about_emails():
     """ information_about_emails """
 
-    information = html.DIV()
-    information <= "Vous recevrez un email pour confimer votre adresse mail, ainsi qu'au démarrage et à l'arrêt de vos parties."
+    information = html.DIV(Class='important')
+    information <= "Vous recevrez un email pour confimer votre adresse mail, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un email de rappel de l'arbitre si vous êtes en retard sur les ordres."
     information <= html.BR()
     information <= "Rien de plus !"
     return information
@@ -299,13 +307,16 @@ def change_password():
 
     form = html.FORM()
 
-    legend_new_password = html.LEGEND("nouveau mot de passe")
+    form <= information_about_input()
+    form <= html.BR()
+
+    legend_new_password = html.LEGEND("nouveau mot de passe", title="Le nouveau mot de passe")
     form <= legend_new_password
     input_new_password = html.INPUT(type="password", value="")
     form <= input_new_password
     form <= html.BR()
 
-    legend_new_password_again = html.LEGEND("nouveau mot de passe encore")
+    legend_new_password_again = html.LEGEND("nouveau mot de passe encore", title="Le nouveau mot de passe")
     form <= legend_new_password_again
     input_new_password_again = html.INPUT(type="password", value="")
     form <= input_new_password_again
@@ -386,6 +397,9 @@ def validate_email():
     pseudo = storage['PSEUDO']
 
     form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
 
     legend_confirmation_code = html.LEGEND("code de confirmation")
     form <= legend_confirmation_code
@@ -555,6 +569,9 @@ def edit_account():
     form <= information_about_account()
     form <= html.BR()
 
+    form <= information_about_input()
+    form <= html.BR()
+
     legend_pseudo = html.LEGEND("pseudo", title="(pour rappel)")
     form <= legend_pseudo
     input_pseudo = html.INPUT(type="text", readonly=True, value=pseudo)
@@ -708,6 +725,7 @@ def delete_account():
     pseudo = storage['PSEUDO']
 
     form = html.FORM()
+
     my_sub_panel <= form
 
     input_delete_account = html.INPUT(type="submit", value="supprimer le compte")

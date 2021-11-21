@@ -282,7 +282,7 @@ def my_opportunities():
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
-    special_legend = html.CODE(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
+    special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
     my_panel <= special_legend
 
     my_panel <= html.BR()
@@ -290,9 +290,13 @@ def my_opportunities():
 
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
-    my_panel <= f"Temps de chargement de la page {elapsed}"
+
+    stats = f"Temps de chargement de la page {elapsed}"
     if number_games:
-        my_panel <= f" soit {elapsed/number_games} par partie"
+        stats += f" soit {elapsed/number_games} par partie"
+
+    my_panel <= html.DIV(stats, Class='load')
+    my_panel <= html.BR()
 
 
 def render(panel_middle):

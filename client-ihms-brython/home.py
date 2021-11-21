@@ -36,7 +36,7 @@ Information importante : vous visualisez ici une interface au design rustique po
 Merci de nous remonter vos remarques sur le forum de diplomania ou sur le serveur Discord.
 """
 
-note_content = html.DIV(id='note')
+note_content = html.DIV(Class='important')
 for line in note_content_stated.split("\n"):
     note_content <= line
     note_content <= html.BR()
@@ -45,7 +45,7 @@ row = html.TR()
 note_content_table <= row
 col = html.TD(note_content)
 row <= col
-my_panel <= note_content_table
+my_panel <= note_content
 
 title3 = html.H2("Dernières nouvelles")
 my_panel <= title3
