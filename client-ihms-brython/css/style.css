@@ -84,17 +84,43 @@ pre.html{
     width: 20em;
 }
 
-code{
-    font-family: Consolas, Courier New;
-    color: #113;
+
+.code_failed{
+    color: grey; 
+    font-weight: bold;
+    font-family: Consolas;
+    background-color: white;
     padding-left: 0.2em;
-    padding-right: 0.2em;
+    padding-right: 0.2em; 
 }
 
-code.file{
-    background-color: #fff;
-    font-style: italic;
+.code_info{
+    color: blue; 
+    font-weight: bold;
+    font-family: Courier New;
+    background-color: white;
+    padding-left: 0.2em;
+    padding-right: 0.2em; 
 }
+
+.code_communication{
+    color: pink; 
+    font-weight: bold;
+    font-family: Courier New;
+    background-color: white;
+    padding-left: 0.2em;
+    padding-right: 0.2em; 
+}
+
+.code_success{
+    color: red; 
+    font-weight: bold;
+    font-family: Courier New;
+    background-color: white;
+    padding-left: 0.2em;
+    padding-right: 0.2em; 
+}
+
 
 #moving{
     position: relative;
@@ -146,6 +172,7 @@ legend{
 /* color of austria in diplomania map EDA89E */
 .important{
     color: #101010; 
+    font-weight: bold;
     background-color: #EDA89E;
 }
 

@@ -809,14 +809,13 @@ def make_report_window(report_loaded):
         chunk_content = lines[chunk_num * split_size: (chunk_num + 1) * split_size]
         for line in chunk_content:
             if line.find("(échec)") != -1 or line.find("(coupé)") != -1 or line.find("(délogée)") != -1 or line.find("(détruite)") != -1 or line.find("(invalide)") != -1:
-                report_col <= html.B(html.CODE(line, style={'color': 'grey'}))
+                report_col <= html.DIV(line, Class='code_failed')
             elif line.find(":") != -1:
-                report_col <= html.B(html.CODE(line, style={'color': 'blue'}))
+                report_col <= html.DIV(line, Class='code_info')
             elif line.startswith("*"):
-                report_col <= html.B(html.CODE(line, style={'color': 'pink'}))
+                report_col <= html.DIV(line, Class='code_communication')
             else:
-                report_col <= html.B(html.CODE(line, style={'color': 'red'}))
-            report_col <= html.BR()
+                report_col <= html.DIV(line, Class='code_success')
         report_row <= report_col
     return report_table
 

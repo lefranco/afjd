@@ -157,6 +157,7 @@ def oracle():
 
     # need to be one there
     report_window = common.make_report_window("")
+    display_left <= html.BR()
     display_left <= report_window
 
     # right side

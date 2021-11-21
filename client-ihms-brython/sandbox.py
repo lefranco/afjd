@@ -850,6 +850,8 @@ def sandbox():
 
         reserve_table <= row
 
+    report_window = common.make_report_window("")
+
     display_very_left = html.DIV(id='display_very_left')
     display_very_left.attrs['style'] = 'display: table-cell; width=40px; vertical-align: top; table-layout: fixed;'
 
@@ -895,7 +897,7 @@ def sandbox():
     display_left <= canvas
 
     # need to be one there
-    report_window = common.make_report_window("")
+    display_left <= html.BR()
     display_left <= report_window
 
     # right side
