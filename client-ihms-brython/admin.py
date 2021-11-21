@@ -20,7 +20,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'dernières connexions manquées', 'rectifier la position', 'emails non confirmés', 'remplaçants', 'envoyer un mail', 'récupérer un téléphone']
+OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'connexions manquées', 'rectifier la position', 'emails non confirmés', 'remplaçants', 'envoyer un mail', 'récupérer un téléphone']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -172,6 +172,8 @@ def change_news():
         my_sub_panel.clear()
         change_news()
 
+    my_sub_panel <= html.H3("Editer les nouvelles")
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -247,6 +249,8 @@ def usurp():
         # note : since we access directly to the user server, we present the token in a slightly different way
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    my_sub_panel <= html.H3("Usurper un inscrit")
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -303,7 +307,7 @@ def all_games(state_name):
     my_sub_panel.clear()
 
     # title
-    title = html.H2(f"Parties dans l'état: {state_name}")
+    title = html.H3(f"Parties dans l'état: {state_name}")
     my_sub_panel <= title
 
     state = config.STATE_CODE_TABLE[state_name]
@@ -564,6 +568,8 @@ def last_logins():
         alert("Il faut se connecter au préalable")
         return
 
+    my_sub_panel <= html.H3("Liste des dernières connexions")
+
     pseudo = storage['PSEUDO']
 
     if not check_admin(pseudo):
@@ -602,6 +608,8 @@ def last_failures():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
+
+    my_sub_panel <= html.H3("Liste des connexions manquées")
 
     pseudo = storage['PSEUDO']
 
@@ -889,6 +897,8 @@ def rectify():
 
     # starts here
 
+    my_sub_panel <= html.H3("Rectifier une position")
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -1067,6 +1077,8 @@ def rectify():
 def show_non_confirmed_data():
     """ show_non_confirmed_data """
 
+    my_sub_panel <= html.H3("Liste des inscrits non confirmés")
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -1113,6 +1125,8 @@ def show_non_confirmed_data():
 
 def show_replacement_data():
     """ show_replacement_data """
+
+    my_sub_panel <= html.H3("Liste des candidats au remplacement")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1211,6 +1225,8 @@ def sendmail():
         my_sub_panel.clear()
         sendmail()
 
+    my_sub_panel <= html.H3("Envoyer un e-mail")
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -1301,6 +1317,8 @@ def get_phone_number():
         my_sub_panel.clear()
         get_phone_number()
 
+    my_sub_panel <= html.H3("Un numéro de téléphone")
+
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -1372,7 +1390,7 @@ def load_option(_, item_name):
         all_games('en cours')
     if item_name == 'dernières connexions':
         last_logins()
-    if item_name == 'dernières connexions manquées':
+    if item_name == 'connexions manquées':
         last_failures()
     if item_name == 'rectifier la position':
         rectify()
