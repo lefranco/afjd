@@ -61,30 +61,33 @@ def select_display():
 
     for interface in INTERFACE_TABLE[variant_name_loaded]:
 
-        form = html.FORM()
-
+        # get description
         with open(f"./variants/{variant_name_loaded}/{interface}/README", "r") as file_ptr:
             lines = file_ptr.readlines()
-
-        description = html.DIV()
+        description = html.DIV(Class='note')
         for line in lines:
             description <= line
             description <= html.BR()
 
-        form <= description
-        form <= html.BR()
+        form = html.FORM()
+        fieldset = html.FIELDSET()
+        legend_display = html.LEGEND(interface, title=description)
+        fieldset <= legend_display
+        form <= fieldset
+
+        fieldset = html.FIELDSET()
+        fieldset <= description
+        form <= fieldset
 
         form <= html.BR()
+
         input_select_interface = html.INPUT(type="submit", value="sélectionner cette interface")
         input_select_interface.bind("click", lambda e, i=interface: select_display_callback(e, i))
-
         form <= input_select_interface
-
-        form <= html.BR()
-        form <= html.BR()
 
         col = html.TD()
         col <= form
+        col <= html.BR()
 
         row = html.TR()
         row <= col
