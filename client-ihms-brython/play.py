@@ -1931,9 +1931,6 @@ def submit_communication_orders():
         g_variant_data.render_legends(ctx)
 
         warning = html.DIV("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution pourvu que l'unité en question ait reçu l'ordre *réel* de rester en place ou de se disperser.", Class='important')
-        warning.style = {
-            'color': 'blue',
-        }
         buttons_right <= html.P()
         buttons_right <= warning
 
@@ -2297,7 +2294,7 @@ def negotiate():
 
         row <= col
 
-        col = html.TD()
+        col = html.TD(Class='text')
 
         for line in content.split('\n'):
             # new so put in bold
@@ -2485,11 +2482,7 @@ def declare():
         col = html.TD(role_icon_img)
         row <= col
 
-        col = html.TD()
-        if anonymous:
-            col.style = {
-                "color": "red",
-            }
+        col = html.TD(Class='text')
 
         for line in content.split('\n'):
             # new so put in bold
@@ -3750,10 +3743,7 @@ def show_game_parameters():
         else:
             parameter_value = value
 
-        col2 = html.TD(html.B(parameter_value))
-        col2.style = {
-            'color': 'blue',
-        }
+        col2 = html.TD(html.B(parameter_value), Class='important')
         row <= col2
 
         # some more info

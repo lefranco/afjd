@@ -156,12 +156,17 @@ legend{
     font-style: italic;
 }
 
+/* diplomacy messages and declarations */
+.text{
+    font-family: cursive;
+}
+
+
 /* color of italy in diplomania map A8EDA5 */
 .instruction{
     color: #101010; 
     background-color: #A8EDA5;
 }
-
 
 /* color of france in diplomania map 98E4ED */
 .note{
@@ -177,7 +182,7 @@ legend{
 }
 
 /* color of turkey in diplomania map EDE585 */
-#news{
+.news{
     color: #101010; 
     background-color: #EDE585;
 }
@@ -203,7 +208,16 @@ td{
 thead{
     font-weight:bold; 
     border: 1px solid black; 
+    text-align: center;
     background-color: #83B9CC;
+}
+
+iframe{
+    background: white;
+}
+
+fieldset{
+    border: 0;
 }
 
 /* color of sea in diplomania map BBD9DC */

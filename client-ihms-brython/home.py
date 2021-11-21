@@ -26,7 +26,7 @@ link11 <= "Participer au financement du développement du site"
 my_panel <= link11
 
 
-title2 = html.H2("Note importante")
+title2 = html.H2("Note importante", Class='important')
 my_panel <= title2
 
 # pylint: disable=invalid-name
@@ -47,11 +47,11 @@ col = html.TD(note_bene_content)
 row <= col
 my_panel <= note_content_table
 
-title3 = html.H2("Dernières nouvelles")
+title3 = html.H2("Dernières nouvelles", Class='news')
 my_panel <= title3
 
 news_content_loaded = common.get_news_content()  # pylint: disable=invalid-name
-news_content = html.DIV(id='news')
+news_content = html.DIV(Class='news')
 if news_content_loaded is not None:
     for line in news_content_loaded.split("\n"):
         news_content <= line
