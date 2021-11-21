@@ -113,10 +113,15 @@ code.file{
     font-size:0.8em;
 }
 
+/* color of germany in diplomania map CEB087 */
+
 /* all legends for all inputs */
 
-.legend{
-     background-color: #EDA89E;
+legend{
+    display: block;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color:#CEB087;
 }
 
 /* all load time information */
