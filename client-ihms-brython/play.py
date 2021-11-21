@@ -3833,6 +3833,10 @@ def show_players_in_game():
 
         game_players_table <= row
 
+    # game status
+    my_sub_panel <= g_game_status
+    my_sub_panel <= html.BR()
+
     my_sub_panel <= game_players_table
 
     # add the non allocated players
@@ -3960,6 +3964,10 @@ def show_orders_submitted_in_game():
         row <= col
 
         game_players_table <= row
+
+    # game status
+    my_sub_panel <= g_game_status
+    my_sub_panel <= html.BR()
 
     my_sub_panel <= game_players_table
 
