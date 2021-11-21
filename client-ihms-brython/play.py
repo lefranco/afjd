@@ -485,7 +485,9 @@ def show_position():
 
     display_left <= hover_info
     display_left <= canvas
+    display_left <= html.BR()
     display_left <= rating_colours_window
+    display_left <= html.BR()
     display_left <= report_window
 
     # right side
@@ -1408,7 +1410,9 @@ def submit_orders():
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
     display_left <= canvas
+    display_left <= html.BR()
     display_left <= rating_colours_window
+    display_left <= html.BR()
     display_left <= report_window
 
     # right side
@@ -2061,7 +2065,9 @@ def submit_communication_orders():
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
     display_left <= canvas
+    display_left <= html.BR()
     display_left <= rating_colours_window
+    display_left <= html.BR()
     display_left <= report_window
 
     # right side
@@ -3259,7 +3265,7 @@ class Logger(list):
         date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
         # put in stack (limited height)
-        log_line = html.CODE(f"{date_now_gmt_str} : {message}")
+        log_line = html.DIV(f"{date_now_gmt_str} : {message}", Class='important')
         self.append(log_line)
 
     def display(self, log_window):
@@ -3267,7 +3273,6 @@ class Logger(list):
 
         for log_line in reversed(self):
             log_window <= log_line
-            log_window <= html.BR()
 
 
 def supervise():
@@ -3656,7 +3661,9 @@ def observe():
         # left side
 
         my_sub_panel <= canvas
+        my_sub_panel <= html.BR()
         my_sub_panel <= rating_colours_window
+        my_sub_panel <= html.BR()
         my_sub_panel <= report_window
 
     # game needs to be ongoing - not waiting

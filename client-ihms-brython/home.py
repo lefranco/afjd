@@ -36,16 +36,16 @@ Information importante : vous visualisez ici une interface au design rustique po
 Merci de nous remonter vos remarques sur le forum de diplomania ou sur le serveur Discord.
 """
 
-note_content = html.DIV(Class='important')
+note_bene_content = html.DIV(Class='important')
 for line in note_content_stated.split("\n"):
-    note_content <= line
-    note_content <= html.BR()
+    note_bene_content <= line
+    note_bene_content <= html.BR()
 note_content_table = html.TABLE()
 row = html.TR()
 note_content_table <= row
-col = html.TD(note_content)
+col = html.TD(note_bene_content)
 row <= col
-my_panel <= note_content
+my_panel <= note_content_table
 
 title3 = html.H2("Dernières nouvelles")
 my_panel <= title3
@@ -64,7 +64,7 @@ my_panel <= title4
 text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la DL est ce soir ? ")
 my_panel <= text21
 
-text22 = html.P("Le bug est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs)...")
+text22 = html.P("Le bug est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs...")
 my_panel <= text22
 
 text23 = html.P("Vous pouvez utiliser le lien ci-dessous pour envoyer un email :")
