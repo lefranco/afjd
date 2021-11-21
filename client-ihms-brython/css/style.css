@@ -130,6 +130,13 @@ legend{
     font-style: italic;
 }
 
+/* color of italy in diplomania map A8EDA5 */
+.instruction{
+    color: #101010; 
+    background-color: #A8EDA5;
+}
+
+
 /* color of france in diplomania map 98E4ED */
 .note{
     color: #101010; 
