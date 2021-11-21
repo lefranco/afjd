@@ -2195,18 +2195,18 @@ def negotiate():
 
     form = html.FORM()
 
+    fieldset = html.FIELDSET()
     legend_declaration = html.LEGEND("Votre message", title="Qu'avez vous à lui/leur dire ?")
-    form <= legend_declaration
-
+    fieldset <= legend_declaration
     input_message = html.TEXTAREA(type="text", rows=5, cols=80)
     if content_backup is not None:
         input_message <= content_backup
-    form <= input_message
-    form <= html.BR()
-    form <= html.BR()
+    fieldset <= input_message
+    form <= fieldset
 
+    fieldset = html.FIELDSET()
     legend_destinees = html.LEGEND("Destinataire(s)", title="Et à qui ?")
-    form <= legend_destinees
+    fieldset <= legend_destinees
 
     table = html.TABLE()
     row = html.TR()
@@ -2236,12 +2236,16 @@ def negotiate():
         selected[role_id_dest] = input_dest
 
     table <= row
-    form <= table
+    fieldset <= table
+    form <= fieldset
 
     form <= html.BR()
+
     input_declare_in_game = html.INPUT(type="submit", value="envoyer le message")
     input_declare_in_game.bind("click", add_message_callback)
     form <= input_declare_in_game
+
+    # now we display messages
 
     messages = messages_reload(g_game_id)
     if messages is None:
@@ -2420,33 +2424,27 @@ def declare():
 
     form = html.FORM()
 
+    fieldset = html.FIELDSET()
     legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer à tout le monde ?")
-    form <= legend_declaration
-
+    fieldset <= legend_declaration
     input_declaration = html.TEXTAREA(type="text", rows=5, cols=80)
-    form <= input_declaration
-    form <= html.BR()
-    form <= html.BR()
+    fieldset <= input_declaration
+    form <= fieldset
 
-    table = html.TABLE()
-    row = html.TR()
-    col = html.TD()
-
+    fieldset = html.FIELDSET()
     label_anonymous = html.LABEL("En restant anonyme ? (pas anonyme auprès de l'arbitre cependant)")
-    col <= label_anonymous
-    row <= col
-
+    fieldset <= label_anonymous
     input_anonymous = html.INPUT(type="checkbox")
-    col <= input_anonymous
-    row <= col
-
-    table <= row
-    form <= table
+    fieldset <= input_anonymous
+    form <= fieldset
 
     form <= html.BR()
+
     input_declare_in_game = html.INPUT(type="submit", value="déclarer dans la partie")
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
+
+    # now we display declarations
 
     declarations = declarations_reload(g_game_id)
     if declarations is None:
