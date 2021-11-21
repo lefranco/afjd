@@ -47,39 +47,35 @@ def select_game():
 
             form = html.FORM()
 
-            legend = html.P()
+            legend = html.DIV()
             legend <= "Parties basées sur la variante "
             legend <= html.B(html.EM(variant))
             legend <= " dans l'état "
             legend <= html.B(rev_state_code_table[current_state])
 
+            fieldset = html.FIELDSET()
             legend_game = html.LEGEND(legend, title="Sélection de la partie")
-            form <= legend_game
-            form <= html.BR()
-
+            fieldset <= legend_game
             input_game = html.SELECT(type="select-one", value="")
             game_list = sorted([g['name'] for g in games_data.values() if g['variant'] == variant and g['current_state'] == current_state])
             for game in game_list:
-
                 option = html.OPTION(game)
                 if 'GAME' in storage:
                     if storage['GAME'] == game:
                         option.selected = True
                 input_game <= option
+            fieldset <= input_game
+            form <= fieldset
 
-            form <= input_game
             form <= html.BR()
 
-            form <= html.BR()
             input_select_game = html.INPUT(type="submit", value="sélectionner cette partie")
             input_select_game.bind("click", lambda e, i=input_game: select_game_callback(e, i))
             form <= input_select_game
 
-            form <= html.BR()
-            form <= html.BR()
-
             col = html.TD()
             col <= form
+            col <= html.BR()
 
             row = html.TR()
             row <= col
