@@ -2704,7 +2704,9 @@ def show_history():
 
         display_left <= game_status
         display_left <= canvas
+        display_left <= html.BR()
         display_left <= rating_colours_window
+        display_left <= html.BR()
         display_left <= report_window
 
         nonlocal my_sub_panel2
