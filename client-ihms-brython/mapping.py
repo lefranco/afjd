@@ -735,6 +735,10 @@ class Variant(Renderable):
         role_info = self._role_add_table[role]
         return role_info[0]
 
+    def number_centers(self):
+        """ number_centers """
+        return len(self._centers)
+
     @property
     def name(self) -> str:
         """ property """
