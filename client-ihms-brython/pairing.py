@@ -361,13 +361,22 @@ def move_players_in_game():
     input_put_in_game.bind("click", put_in_game_callback)
     form <= input_put_in_game
 
+    form <= html.BR()
+    form <= html.BR()
+
     # ---
 
+    fieldset = html.FIELDSET()
+    fieldset <= html.LEGEND("Ont un rôle : ")
+    fieldset <= html.DIV(" ".join(sorted(list(set(players_assigned_list)), key=lambda p: p.upper())), Class='note')
+    form <= fieldset
+
     form <= html.BR()
-    form <= html.BR()
-    form <= html.DIV("Ont un rôle : " + " ".join(sorted(list(set(players_assigned_list)), key=lambda p: p.upper())), Class='note')
-    form <= html.BR()
-    form <= html.DIV("Sont en attente : " + " ".join(sorted(list(set(players_allocated_list)), key=lambda p: p.upper())), Class='note')
+
+    fieldset = html.FIELDSET()
+    fieldset <= html.LEGEND("Sont en attente : ")
+    fieldset <= html.DIV(" ".join(sorted(list(set(players_allocated_list)), key=lambda p: p.upper())), Class='note')
+    form <= fieldset
 
     # ---
     form <= html.BR()

@@ -1926,11 +1926,10 @@ def submit_communication_orders():
         # put the legends at the end
         g_variant_data.render_legends(ctx)
 
-        warning = html.DIV()
+        warning = html.DIV("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution pourvu que l'unité en question ait reçu l'ordre *réel* de rester en place ou de se disperser.", Class='important')
         warning.style = {
-            'color': 'red',
+            'color': 'blue',
         }
-        warning <= html.B("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution pourvu que l'unité en question ait reçu l'ordre *réel* de rester en place ou de se disperser.")
         buttons_right <= html.P()
         buttons_right <= warning
 

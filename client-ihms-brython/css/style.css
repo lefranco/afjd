@@ -132,127 +132,129 @@ legend{
 
 /* color of france in diplomania map 98E4ED */
 .note{
-     background-color: #98E4ED;
+    color: #101010; 
+    background-color: #98E4ED;
 }
 
 /* color of austria in diplomania map EDA89E */
 .important{
-     background-color: #EDA89E;
+    color: #101010; 
+    background-color: #EDA89E;
 }
 
 /* color of turkey in diplomania map EDE585 */
-
 #news{
-     background-color: #EDE585;
+    color: #101010; 
+    background-color: #EDE585;
 }
 
 /* color of england in diplomania map 83B9CC */
-
 table{
-     border: 1px solid black; 
-     border-collapse: collapse;
-     background-color: #83B9CC;
+    color: #101010; 
+    border: 1px solid black; 
+    border-collapse: collapse;
+    background-color: #83B9CC;
 }
 
 tr{
-     border: 1px solid black; 
-     background-color: #83B9CC;
+    border: 1px solid black; 
+    background-color: #83B9CC;
 }
 
 td{
-     border: 1px solid black; 
-     background-color: #83B9CC;
+    border: 1px solid black; 
+    background-color: #83B9CC;
 }
 
 thead{
-     font-weight:bold; 
-     border: 1px solid black; 
-     background-color: #83B9CC;
+    font-weight:bold; 
+    border: 1px solid black; 
+    background-color: #83B9CC;
 }
 
 /* color of sea in diplomania map BBD9DC */
 
 #home {
     background-color: #BBD9DC;
-    color: #101010; 
+/*    color: #101010;  */
 }
 
 #login {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #selection {
    background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #tools {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #account {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #opportunities {
     background-color: #BBD9DC;
-    color: #101010;
+    color: #101010; */
 }
 
 #mygames {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #games {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #pairing {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #play {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #tournament {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #sandbox {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #oracle {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #lists {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #faq {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #technical {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
 
 #admin {
     background-color: #BBD9DC;
-    color: #101010;
+/*    color: #101010; */
 }
