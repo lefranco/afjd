@@ -50,14 +50,21 @@ link5 = html.A(href="https://www.flaticon.com/", target="_blank")
 link5 <= "Icones utilisées pour ce front end"
 my_panel <= link5
 
-title5 = html.H2("Une version simplifiée des règles du Jeu")
+title5 = html.H2("Les spécifications des systeème de scorage sur le site")
 my_panel <= title5
 
 my_panel <= html.BR()
 
-iframe = html.IFRAME(src="./docs/Summary_rules_fr.html", width=1000, height=1000)
-my_panel <= iframe
+iframe1 = html.IFRAME(src="./docs/Scorings.pdf", width=1000, height=1000)
+my_panel <= iframe1
 
+title6 = html.H2("Une version simplifiée des règles du Jeu")
+my_panel <= title6
+
+my_panel <= html.BR()
+
+iframe2 = html.IFRAME(src="./docs/Summary_rules_fr.pdf", width=1000, height=1000)
+my_panel <= iframe2
 
 def render(panel_middle):
     """ render """
