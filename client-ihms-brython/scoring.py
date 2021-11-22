@@ -7,7 +7,7 @@ def c_diplo(variant, ratings):
     """ the c-diplo scoring system """
 
     rank_points_list = [38, 14, 7]
-    solo_reward = 100
+    solo_reward = 73
 
     # default score
     score = {role_name: 0 for role_name in ratings}
@@ -61,7 +61,7 @@ def win_namur(variant, ratings):
     # detect solo
     best_role_name = list(ratings.keys())[0]
     if ratings[best_role_name] > variant.number_centers() // 2:
-        ratings[best_role_name] = solo_reward
+        score[best_role_name] = solo_reward
         return score
 
     # center points
@@ -94,27 +94,24 @@ def win_namur(variant, ratings):
 
     # calculate sharers
     best_centers = max(ratings.values())
-    sharers = [r for r in ratings if ratings[r] >= best_centers - wave_distance]
+    wave_sharers = [r for r in ratings if ratings[r] >= best_centers - wave_distance]
 
     # give points
-    for role_name in sharers:
-        ratings[role_name] += wave_bonus / len(sharers)
+    for role_name in wave_sharers:
+        score[role_name] += wave_bonus / len(wave_sharers)
 
     return score
 
 
-def diplo_league(variant, ratings):
+def diplo_league(_, ratings):
     """ the diplo_league scoring system """
 
     rank_points_list = [16, 14, 12, 10, 8, 6, 4]
+    bonus_alone = 4
+    bonus_not_alone = 1
 
     # default score
     score = {role_name: 0 for role_name in ratings}
-
-    # center points
-    for role_name in score:
-        center_num = ratings[role_name]
-        score[role_name] += center_num
 
     # rank points
 
@@ -131,5 +128,10 @@ def diplo_league(variant, ratings):
         for rank2 in range(rank, rank + sharers):
             if rank2 - 1 in range(len(rank_points_list)):
                 score[role_name] += rank_points_list[rank2 - 1] / sharers
+
+    # extra points for winner(s)
+    winners = [r for r in rank_table if rank_table[r] == 1]
+    for role_name in winners:
+        score[role_name] += bonus_alone if len(winners) == 1 else bonus_not_alone
 
     return score

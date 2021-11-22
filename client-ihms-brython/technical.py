@@ -66,6 +66,7 @@ my_panel <= html.BR()
 iframe2 = html.IFRAME(src="./docs/Summary_rules_fr.pdf", width=1000, height=1000)
 my_panel <= iframe2
 
+
 def render(panel_middle):
     """ render """
     panel_middle <= my_panel
