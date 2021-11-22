@@ -50,7 +50,7 @@ link5 = html.A(href="https://www.flaticon.com/", target="_blank")
 link5 <= "Icones utilisées pour ce front end"
 my_panel <= link5
 
-title5 = html.H2("Les spécifications des systeème de scorage sur le site")
+title5 = html.H2("Les spécifications des systèmes de scorage sur le site")
 my_panel <= title5
 
 my_panel <= html.BR()
