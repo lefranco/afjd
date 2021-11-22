@@ -64,10 +64,6 @@ def win_namur(variant, ratings):
         ratings[best_role_name] = solo_reward
         return score
 
-    # participation point
-    for role_name in score:
-        score[role_name] += 1
-
     # center points
     for role_name in score:
         center_num = ratings[role_name]
