@@ -288,11 +288,13 @@ def make_rating_colours_window(variant, ratings, colours):
     rating_win_namur_row = html.TR()
     rating_table <= rating_win_namur_row
     col = html.TD(html.B("Win Namur :"))
+    col.attrs['style'] = 'font-size: x-small'
     rating_win_namur_row <= col
     for role_name in ratings:
         score_dis = float(score[role_name])
         role_score = f"{score_dis:.2f}"
         col = html.TD(role_score)
+        col.attrs['style'] = 'font-size: x-small'
         rating_win_namur_row <= col
 
     # diplo league
@@ -300,11 +302,13 @@ def make_rating_colours_window(variant, ratings, colours):
     rating_diplo_league_row = html.TR()
     rating_table <= rating_diplo_league_row
     col = html.TD(html.B("Diplo Ligue :"))
+    col.attrs['style'] = 'font-size: x-small'
     rating_diplo_league_row <= col
     for role_name in ratings:
         score_dis = float(score[role_name])
         role_score = f"{score_dis:.2f}"
         col = html.TD(role_score)
+        col.attrs['style'] = 'font-size: x-small'
         rating_diplo_league_row <= col
 
     return rating_table
