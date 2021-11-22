@@ -14,6 +14,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 import common
+import scoring
 import tools
 import geometry
 import mapping
@@ -230,59 +231,14 @@ def game_parameters_reload(game):
 def make_rating_colours_window(variant, ratings, colours):
     """ make_rating_window """
 
-    def namur_score(ratings):
-
-        center_bonus_list = [0, 5, 9, 12, 14, 16, 18]
-        rank_points_list = [38, 14, 7]
-
-        # default score
-        score = {role_name: 0 for role_name in ratings}
-
-        # detect solo
-        best_role_name = list(ratings.keys())[0]
-        if ratings[best_role_name] > variant.number_centers() // 2:
-            ratings[best_role_name] = 85
-            return score
-
-        # participation point
-        for role_name in score:
-            score[role_name] += 1
-
-        # center points
-        for role_name in score:
-            center_num = ratings[role_name]
-            if center_num in range(len(center_bonus_list)):
-                score[role_name] += center_bonus_list[center_num]
-            else:
-                best_bonus = center_bonus_list[-1]
-                score[role_name] += best_bonus
-                score[role_name] += 1 + center_num - len(center_bonus_list)
-
-        # rank points
-
-        # calculate rank and rank share
-        rank_table = {role_name: 1 + len([ro for ro in ratings if ratings[ro] > ratings[role_name]]) for role_name in ratings}
-        rank_share_table = {ra: len([ro for ro in rank_table if rank_table[ro] == ra]) for ra in rank_table.values()}
-
-        # give points
-        for role_name in ratings:
-            rank = rank_table[role_name]
-            if rank - 1 not in range(len(rank_points_list)):
-                continue
-            sharers = rank_share_table[rank]
-            for rank2 in range(rank, rank+sharers):
-                if rank2 - 1 in range(len(rank_points_list)):
-                    score[role_name] += rank_points_list[rank2 - 1] / sharers
-
-        return score
-
     rating_table = html.TABLE()
 
-    rating_centers_row = html.TR()
-    rating_table <= rating_centers_row
-    col = html.TD("Centres :")
-    rating_centers_row <= col
-    for role_name, ncenters in ratings.items():
+    # roles
+    rating_names_row = html.TR()
+    rating_table <= rating_names_row
+    col = html.TD(html.B("Rôles :"))
+    rating_names_row <= col
+    for role_name in ratings:
         col = html.TD()
 
         canvas = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
@@ -302,20 +258,54 @@ def make_rating_colours_window(variant, ratings, colours):
         ctx.fillRect(1, 1, 13, 13)
 
         col <= canvas
-        col <= f" {role_name} {ncenters}"
+        col <= f" {role_name}"
+        rating_names_row <= col
+
+    # centers
+    rating_centers_row = html.TR()
+    rating_table <= rating_centers_row
+    col = html.TD(html.B("Centres :"))
+    rating_centers_row <= col
+    for ncenters in ratings.values():
+        col = html.TD()
+        col <= f"{ncenters}"
         rating_centers_row <= col
 
-    score = namur_score(ratings)
-
-    rating_winnamur_row = html.TR()
-    rating_table <= rating_winnamur_row
-    col = html.TD("Win Namur :")
-    rating_winnamur_row <= col
+    # c-diplo
+    score = scoring.c_diplo(variant, ratings)
+    rating_c_diplo_row = html.TR()
+    rating_table <= rating_c_diplo_row
+    col = html.TD(html.B("C-Diplo :"))
+    rating_c_diplo_row <= col
     for role_name in ratings:
         score_dis = float(score[role_name])
         role_score = f"{score_dis:.2f}"
         col = html.TD(role_score)
-        rating_winnamur_row <= col
+        rating_c_diplo_row <= col
+
+    # win namur
+    score = scoring.win_namur(variant, ratings)
+    rating_win_namur_row = html.TR()
+    rating_table <= rating_win_namur_row
+    col = html.TD(html.B("Win Namur :"))
+    rating_win_namur_row <= col
+    for role_name in ratings:
+        score_dis = float(score[role_name])
+        role_score = f"{score_dis:.2f}"
+        col = html.TD(role_score)
+        rating_win_namur_row <= col
+
+    # diplo league
+    score = scoring.diplo_league(variant, ratings)
+    rating_diplo_league_row = html.TR()
+    rating_table <= rating_diplo_league_row
+    col = html.TD(html.B("Diplo Ligue :"))
+    rating_diplo_league_row <= col
+    for role_name in ratings:
+        score_dis = float(score[role_name])
+        role_score = f"{score_dis:.2f}"
+        col = html.TD(role_score)
+        rating_diplo_league_row <= col
 
     return rating_table
 
