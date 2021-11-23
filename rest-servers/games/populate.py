@@ -25,6 +25,7 @@ import messages
 import allocations
 import visits
 import definitives
+import incidents
 import votes
 import database
 
@@ -119,6 +120,11 @@ def populate_definitives(sql_executor: database.SqlExecutor) -> None:
     definitives.Definitive.create_table(sql_executor)
 
 
+def populate_incidents(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    incidents.Incident.create_table(sql_executor)
+
+
 def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
@@ -142,6 +148,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_visits(sql_executor)
     populate_votes(sql_executor)
     populate_definitives(sql_executor)
+    populate_incidents(sql_executor)
 
 
 if __name__ == '__main__':

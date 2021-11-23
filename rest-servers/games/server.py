@@ -2141,7 +2141,7 @@ class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
             # this was done before submitting
             # we tolerate that some extra fake unit may persist from previous submission
 
-        # insert this submisssion
+        # insert this submission
         submission = submissions.Submission(int(game_id), int(role_id))
         submission.update_database(sql_executor)
 

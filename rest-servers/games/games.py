@@ -537,6 +537,12 @@ class Game:
             if days_add <= 0 and not (deadline_day.weekday() in [5, 6] and not self._play_weekend):
                 break
 
+    def past_deadline(self) -> bool:
+        """ past_deadline """
+
+        now = time.time()
+        return now > self._deadline
+
     def terminate(self) -> None:
         """ start the game """
 

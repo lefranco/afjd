@@ -27,6 +27,7 @@ import games
 import variants
 import database
 import definitives
+import incidents
 import lowdata
 
 
@@ -330,6 +331,25 @@ def fake_post(game_id: int, role_id: int, definitive_value: bool, names: str, sq
 
     if not definitive_value:
         return True, False, "Player does not agree to adjudicate"
+
+    # do we have a transition disagree -> agree (means actual submission of orders)
+    definitive_before_list = definitives.Definitive.list_by_game_id_role_num(sql_executor, game_id, role_id)
+    definitive_before = definitive_before_list[1]
+    if not definitive_before:
+
+        # are we after deadline ?
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            return False, False, "ERROR : Could not find the game"
+
+        if game.past_deadline():
+
+            # insert this incident
+            advancement = game.current_advancement
+            incident = incidents.Incident(int(game_id), int(role_id), advancement)
+            incident.update_database(sql_executor)
 
     # needed list : those who need to submit orders
     actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
