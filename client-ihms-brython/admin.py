@@ -1219,7 +1219,7 @@ def sendmail():
             alert("User name destinataire manquant")
             return
 
-        subject = "Message de la part de l'administrateur du site www.diplomania.fr (AFJD)"
+        subject = "Message de la part de l'administrateur du site https://diplomania-gen.fr (AFJD)"
 
         if not input_message.value:
             alert("Contenu du message vide")

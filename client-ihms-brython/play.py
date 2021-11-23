@@ -490,7 +490,7 @@ g_countdown_col = None  # pylint: disable=invalid-name
 def countdown():
     """ countdown """
 
-    print("countdwon called !")
+    print("countdown called !")
 
     deadline_loaded = g_game_parameters_loaded['deadline']
 
@@ -3177,10 +3177,13 @@ def game_master():
 
             InfoDialog("OK", f"Message de rappel émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
 
-        subject = f"Message de la part de l'arbire de la partie {g_game} sur le site www.diplomania.fr (AFJD)"
+        subject = f"Message de la part de l'arbitre de la partie {g_game} sur le site https://diplomania-gen.fr (AFJD)"
 
-        # TODO change ;-)
-        body = "heh.. et tes ordres ?!?"
+        body = "Bonjour. Il manque vos ordres et la date limite est passée. Merci d'aviser rapidement."
+        body += "\n"
+        body += "Pour se rendre directement sur la partie :\n"
+        body +=  f"https://diplomania-gen.fr?game={g_game}"
+
 
         player_id_str = role2pseudo[role_id]
         player_id = int(player_id_str)
