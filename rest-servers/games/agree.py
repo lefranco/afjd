@@ -315,7 +315,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
     return True, f"Adjudication performed for game {game.name} season {game.current_advancement}!"
 
 
-def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
+def fake_post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
     """
     posts an agreement in a game (or a disagreement)
     returns
@@ -324,7 +324,7 @@ def post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_exe
       * a message (explaining the error)
     """
 
-    # update db here
+    # update db here for agreement
     definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
     definitive.update_database(sql_executor)  # noqa: F821
 

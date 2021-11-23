@@ -1603,7 +1603,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
         # handle definitive boolean
         # game master forced player to agree to adjudicate
-        status, adjudicated, agreement_report = agree.post(game_id, role_id, bool(definitive_value), names, sql_executor)
+        status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), names, sql_executor)
 
         if not status:
             del sql_executor  # noqa: F821
@@ -1871,7 +1871,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # handle definitive boolean
         # player submitted orders and agreed (or not) to adjudicate
-        status, adjudicated, agreement_report = agree.post(game_id, role_id, bool(definitive_value), names, sql_executor)  # noqa: F821
+        status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), names, sql_executor)  # noqa: F821
 
         if not status:
             del sql_executor  # noqa: F821
