@@ -61,10 +61,10 @@ my_panel <= news_content
 title4 = html.H2("Support")
 my_panel <= title4
 
-text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la DL est ce soir ? ")
+text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la DL est ce soir ? Votre partie n'avance pas depuis des jours et il semble que votre arbitre se soit endormi ?")
 my_panel <= text21
 
-text22 = html.P("Le bug est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs...")
+text22 = html.P("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs) et n'oubliez pas de bien préciser une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu ...")
 my_panel <= text22
 
 text23 = html.P("Vous pouvez utiliser le lien ci-dessous pour envoyer un email :")
@@ -74,7 +74,7 @@ email_support = html.A(href=f"mailto:{EMAIL_SUPPORT}")
 email_support <= "Contacter le support"
 my_panel <= email_support
 
-text3 = html.P("N'oubliez de bien préciser une procédure pour reproduire le problème, la différence entre le résultat obtenu et le résultat attendu...")
+text3 = html.P("S'il s'agit d'une partie, précisez bien la partie et le rôle que vous y jouez.")
 my_panel <= text3
 
 title5 = html.H2("Copinage")
