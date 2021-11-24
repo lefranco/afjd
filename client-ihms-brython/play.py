@@ -61,7 +61,7 @@ g_game = None  # pylint: disable=invalid-name
 g_variant_name_loaded = None  # pylint: disable=invalid-name
 g_variant_content_loaded = None  # pylint: disable=invalid-name
 g_display_chosen = None  # pylint: disable=invalid-name
-g_parameters_read = None  # pylint: disable=invalid-name
+g_display_parameters_read = None  # pylint: disable=invalid-name
 g_variant_data = None  # pylint: disable=invalid-name
 g_game_parameters_loaded = None  # pylint: disable=invalid-name
 g_game_players_dict = None  # pylint: disable=invalid-name
@@ -71,7 +71,7 @@ g_game_status = None  # pylint: disable=invalid-name
 g_position_loaded = None  # pylint: disable=invalid-name
 g_position_data = None  # pylint: disable=invalid-name
 g_report_loaded = None  # pylint: disable=invalid-name
-
+g_incidents_loaded = None  # pylint: disable=invalid-name
 
 def game_report_reload(game_id):
     """ game_report_reload """
@@ -341,8 +341,8 @@ def date_last_visit_update(game_id, pseudo, role_id, visit_type):
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
-def vote_reload(game_id):
-    """ vote_reload """
+def game_votes_reload(game_id):
+    """ game_votes_reload """
 
     votes = None
 
@@ -370,6 +370,37 @@ def vote_reload(game_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return votes
+
+
+def game_incidents_reload(game_id):
+    """ game_incidents_reload """
+
+    incidents = None
+
+    def reply_callback(req):
+        nonlocal incidents
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des incidents de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des incidents de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        incidents = req_result['incidents']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-incidents/{game_id}"
+
+    # extracting incidents from a game : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return incidents
 
 
 def load_static_stuff():
@@ -408,12 +439,12 @@ def load_static_stuff():
     g_display_chosen = tools.get_display_from_variant(g_variant_name_loaded)
 
     # from display chose get display parameters
-    global g_parameters_read  # pylint: disable=invalid-name
-    g_parameters_read = common.read_parameters(g_variant_name_loaded, g_display_chosen)
+    global g_display_parameters_read  # pylint: disable=invalid-name
+    g_display_parameters_read = common.read_parameters(g_variant_name_loaded, g_display_chosen)
 
     # build variant data
     global g_variant_data  # pylint: disable=invalid-name
-    g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_parameters_read)
+    g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_display_parameters_read)
 
 
 def load_dynamic_stuff():
@@ -443,13 +474,18 @@ def load_dynamic_stuff():
     global g_position_data  # pylint: disable=invalid-name
     g_position_data = mapping.Position(g_position_loaded, g_variant_data)
 
+    global g_incidents_loaded  # pylint: disable=invalid-name
+    g_incidents_loaded = game_incidents_reload(g_game_id)
+    if g_incidents_loaded is None:
+        alert("Erreur chargement incidents")
+        return
+
     # need to be after game parameters (advancement -> season)
     global g_report_loaded  # pylint: disable=invalid-name
     g_report_loaded = game_report_reload(g_game_id)
     if g_report_loaded is None:
         alert("Erreur chargement rapport")
         return
-
 
 def load_special_stuff():
     """ load_special_stuff : loads global data """
@@ -2879,7 +2915,7 @@ def vote():
         load_option(None, 'position')
         return False
 
-    votes = vote_reload(g_game_id)
+    votes = game_votes_reload(g_game_id)
     if votes is None:
         alert("Erreur chargement votes")
         load_option(None, 'position')
@@ -3182,8 +3218,7 @@ def game_master():
         body = "Bonjour. Il manque vos ordres et la date limite est passée. Merci d'aviser rapidement."
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
-        body +=  f"https://diplomania-gen.fr?game={g_game}"
-
+        body += f"https://diplomania-gen.fr?game={g_game}"
 
         player_id_str = role2pseudo[role_id]
         player_id = int(player_id_str)
@@ -3444,7 +3479,7 @@ def game_master():
     possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
 
     # votes
-    votes = vote_reload(g_game_id)
+    votes = game_votes_reload(g_game_id)
     if votes is None:
         alert("Erreur chargement votes")
         load_option(None, 'position')
@@ -3799,7 +3834,7 @@ def supervise():
 
             # votes
             nonlocal votes
-            votes = vote_reload(g_game_id)
+            votes = game_votes_reload(g_game_id)
             if votes is None:
                 alert("Erreur chargement votes")
                 return
@@ -4324,11 +4359,95 @@ def show_orders_submitted_in_game():
 
         game_players_table <= row
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+    game_incidents_table = html.TABLE()
+
+    fields = ['flag', 'role', 'player', 'season', 'date']
+
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'flag': 'drapeau', 'role': 'role', 'player': 'joueur', 'season': 'saison', 'date': 'date'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    game_incidents_table <= thead
+
+    print(f"{g_incidents_loaded=}")
+
+    for incident in g_incidents_loaded:
+
+        row = html.TR()
+
+        # role flag
+        role = g_variant_data.roles[role_id]
+        role_name = g_variant_data.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id}.jpg", title=role_name)
+
+        if role_icon_img:
+            col = html.TD(role_icon_img)
+        else:
+            col = html.TD()
+        row <= col
+
+        role = g_variant_data.roles[role_id]
+        role_name = g_variant_data.name_table[role]
+
+        col = html.TD(role_name)
+        row <= col
+
+        # player
+        pseudo_there = ""
+        if role_id in role2pseudo:
+            player_id_str = role2pseudo[role_id]
+            player_id = int(player_id_str)
+            pseudo_there = id2pseudo[player_id]
+        col = html.TD(pseudo_there)
+        row <= col
+
+        game_incidents_table <= row
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     # game status
     my_sub_panel <= g_game_status
     my_sub_panel <= html.BR()
 
     my_sub_panel <= game_players_table
+    my_sub_panel <= game_incidents_table
 
     return True
 
