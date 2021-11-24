@@ -108,7 +108,7 @@ def create_account():
             return
 
         telephone = input_telephone.value
-        replace = input_replace.value
+        replace = int(input_replace.checked)
         family_name = input_family_name.value
         first_name = input_first_name.value
 
