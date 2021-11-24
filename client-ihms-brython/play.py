@@ -646,7 +646,7 @@ def get_game_status():
 
     if g_game_parameters_loaded['fast']:
         row = html.TR()
-        specific_information = html.EM("Partie rapide : rafraichissez la position etc... avec le bouton 'Jouer la partie sélectionnée'")
+        specific_information = html.DIV("Partie rapide : rafraichissez la position etc... avec le bouton 'Jouer la partie sélectionnée'", Class='note')
         col = html.TD(specific_information, colspan="6")
         row <= col
         game_status_table <= row
@@ -3625,11 +3625,7 @@ def game_master():
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
 
-    my_sub_panel <= html.EM("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie rapide).")
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.EM("Ce, à partir de maintenant si la date limite est passée.")
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.EM("Pour une gestion plus fine de cette date limite vous devez éditer la partie.")
+    my_sub_panel <= html.DIV("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie rapide). Ce, à partir de maintenant si la date limite est passée. Pour une gestion plus fine de cette date limite vous devez éditer la partie.", Class='note')
     my_sub_panel <= html.BR()
     my_sub_panel <= html.BR()
 
@@ -4237,12 +4233,13 @@ def show_players_in_game():
     dangling_players = [p for p in g_game_players_dict.keys() if g_game_players_dict[p] == - 1]
     if dangling_players:
         my_sub_panel <= html.BR()
-        my_sub_panel <= html.EM("Les pseudos suivants sont alloués à la partie sans rôle:")
+        info = html.EM("Les pseudos suivants sont alloués à la partie sans rôle : ")
+        roles_less = html.DIV(info, Class='note')
         for dangling_player_id_str in dangling_players:
-            my_sub_panel <= html.BR()
             dangling_player_id = int(dangling_player_id_str)
             dangling_player = id2pseudo[dangling_player_id]
-            my_sub_panel <= html.B(html.EM(dangling_player))
+            roles_less <= html.EM(f"{dangling_player} ")
+        my_sub_panel <= roles_less
 
     return True
 
