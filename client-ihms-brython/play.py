@@ -474,12 +474,6 @@ def load_dynamic_stuff():
     global g_position_data  # pylint: disable=invalid-name
     g_position_data = mapping.Position(g_position_loaded, g_variant_data)
 
-    global g_incidents_loaded  # pylint: disable=invalid-name
-    g_incidents_loaded = game_incidents_reload(g_game_id)
-    if g_incidents_loaded is None:
-        alert("Erreur chargement incidents")
-        return
-
     # need to be after game parameters (advancement -> season)
     global g_report_loaded  # pylint: disable=invalid-name
     g_report_loaded = game_report_reload(g_game_id)
@@ -492,6 +486,7 @@ def load_special_stuff():
 
     # TODO improve this with real admin account
     if g_pseudo is not None and (g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
+
         global g_game_players_dict  # pylint: disable=invalid-name
         # get the players of the game
         # need a token for this
@@ -500,6 +495,12 @@ def load_special_stuff():
             alert("Erreur chargement joueurs de la partie")
             return
         g_game_players_dict = dict(g_game_players_dict)  # avoids a warning
+
+        global g_incidents_loaded  # pylint: disable=invalid-name
+        g_incidents_loaded = game_incidents_reload(g_game_id)
+        if g_incidents_loaded is None:
+            alert("Erreur chargement incidents")
+            return
 
 
 def stack_clock(frame, period):
@@ -4472,6 +4473,11 @@ def show_incidents_in_game():
     my_sub_panel <= html.BR()
 
     my_sub_panel <= game_incidents_table
+    my_sub_panel <= html.BR()
+
+    # a bit of humour !
+    humour_img = html.IMG(src=f"./images/goudrons_plumes.gif", title="Du goudron et des plumes !")
+    my_sub_panel <= humour_img
 
     return True
 
