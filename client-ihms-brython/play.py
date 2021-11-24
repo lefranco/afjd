@@ -4389,6 +4389,8 @@ def show_orders_submitted_in_game():
 
     for incident in g_incidents_loaded:
 
+        role_id, season, date_happened = incident
+
         row = html.TR()
 
         # role flag
@@ -4416,6 +4418,15 @@ def show_orders_submitted_in_game():
             pseudo_there = id2pseudo[player_id]
         col = html.TD(pseudo_there)
         row <= col
+
+        # season
+        col = html.TD(season)
+        row <= col
+
+        # date
+        col = html.TD(date_happened)
+        row <= col
+
 
         game_incidents_table <= row
 
@@ -4447,6 +4458,7 @@ def show_orders_submitted_in_game():
     my_sub_panel <= html.BR()
 
     my_sub_panel <= game_players_table
+    my_sub_panel <= html.BR()
     my_sub_panel <= game_incidents_table
 
     return True
