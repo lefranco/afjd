@@ -43,7 +43,7 @@ def load_mail_config(app: typing.Any) -> None:
 def send_mail(subject: str, body: str, recipients: typing.List[str]) -> bool:
     """ send_mail """
 
-    msg = flask_mail.Message(subject, sender=SENDER, recipients=recipients)
+    msg = flask_mail.Message(subject, sender=SENDER, bcc=recipients)
     msg.body = body
     msg.body += "\n"
     msg.body += "\n"
