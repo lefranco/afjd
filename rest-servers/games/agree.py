@@ -325,6 +325,14 @@ def fake_post(game_id: int, role_id: int, definitive_value: bool, names: str, sq
       * a message (explaining the error)
     """
 
+    # what was before ?
+    definitive_before = False
+    definitive_before_list = definitives.Definitive.list_by_game_id_role_num(sql_executor, game_id, role_id)
+    if definitive_before_list:
+        definitive_before_element = definitive_before_list[0]
+        definitive_before_int = definitive_before_element[2]
+        definitive_before = bool(definitive_before_int)
+
     # update db here for agreement
     definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
     definitive.update_database(sql_executor)  # noqa: F821
@@ -333,23 +341,24 @@ def fake_post(game_id: int, role_id: int, definitive_value: bool, names: str, sq
         return True, False, "Player does not agree to adjudicate"
 
     # do we have a transition disagree -> agree (means actual submission of orders)
-    definitive_before_list = definitives.Definitive.list_by_game_id_role_num(sql_executor, game_id, role_id)
-    definitive_before = definitive_before_list[1]
     if not definitive_before:
 
         # are we after deadline ?
-
-        # find the game
         game = games.Game.find_by_identifier(sql_executor, game_id)
         if game is None:
             return False, False, "ERROR : Could not find the game"
 
         if game.past_deadline():
 
-            # insert this incident
+            # we are : insert this incident
+
             advancement = game.current_advancement
-            incident = incidents.Incident(int(game_id), int(role_id), advancement)
-            incident.update_database(sql_executor)
+            player_id = game.get_role(sql_executor, int(role_id))
+            if player_id is None:
+                return False, False, "ERROR : Could not find the player identifier"
+
+            incident = incidents.Incident(int(game_id), int(role_id), advancement, player_id)
+            incident.update_database(sql_executor)  # noqa: F821
 
     # needed list : those who need to submit orders
     actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
