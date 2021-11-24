@@ -30,7 +30,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'observer', 'paramètres', 'joueurs', 'ordres']
+OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'observer', 'paramètres', 'joueurs', 'ordres', 'retards']
 
 
 @enum.unique
@@ -4358,21 +4358,55 @@ def show_orders_submitted_in_game():
 
 
 
+    # game status
+    my_sub_panel <= g_game_status
+    my_sub_panel <= html.BR()
+
+    my_sub_panel <= game_players_table
+
+    return True
 
 
+def show_incidents_in_game():
+    """ show_incidents_in_game """
 
+    # if user identified ?
+    if g_pseudo is None:
+        alert("Il faut se connecter au préalable")
+        load_option(None, 'position')
+        return False
 
+    # is player in game ?
+    # TODO improve this with real admin account
+    if not(g_pseudo == 'Palpatine' or g_role_id is not None):
+        alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir les retards pour une partie non anonyme")
+        load_option(None, 'position')
+        return False
 
+    # game anonymous
+    # TODO improve this with real admin account
+    if not(g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
+        alert("Seul l'arbitre (ou l'administrateur du site) peut voir les retards pour une partie anonyme")
+        load_option(None, 'position')
+        return False
 
+    # you will at least get your own role
+    submitted_data = common.get_roles_submitted_orders(g_game_id)
+    if submitted_data is None:
+        alert("Erreur chargement données de soumission")
+        load_option(None, 'position')
+        return False
 
+    # just to avoid a warning
+    submitted_data = dict(submitted_data)
 
+    role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
-
+    id2pseudo = {v: k for k, v in g_players_dict.items()}
 
     game_incidents_table = html.TABLE()
 
     fields = ['flag', 'role', 'player', 'season', 'date']
-
 
     # header
     thead = html.THEAD()
@@ -4386,7 +4420,7 @@ def show_orders_submitted_in_game():
 
     for incident in g_incidents_loaded:
 
-        role_id, season, date_happened = incident
+        role_id, advancement, date_incident = incident
 
         row = html.TR()
 
@@ -4417,45 +4451,26 @@ def show_orders_submitted_in_game():
         row <= col
 
         # season
-        col = html.TD(season)
+        advancement_season, advancement_year = common.get_season(advancement, g_variant_data)
+        advancement_season_readable = g_variant_data.name_table[advancement_season]
+        game_season = f"{advancement_season_readable} {advancement_year}"
+        col = html.TD(game_season)
         row <= col
 
         # date
-        col = html.TD(date_happened)
+        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
+        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
+        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
+        incident_str = f"{incident_day} {incident_hour} GMT"
+        col = html.TD(incident_str)
         row <= col
 
-
         game_incidents_table <= row
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     # game status
     my_sub_panel <= g_game_status
     my_sub_panel <= html.BR()
 
-    my_sub_panel <= game_players_table
-    my_sub_panel <= html.BR()
     my_sub_panel <= game_incidents_table
 
     return True
@@ -4509,6 +4524,8 @@ def load_option(_, item_name):
         status = show_players_in_game()
     if item_name == 'ordres':
         status = show_orders_submitted_in_game()
+    if item_name == 'retards':
+        status = show_incidents_in_game()
 
     if not status:
         return
