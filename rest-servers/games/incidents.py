@@ -7,6 +7,7 @@ File : incidents.py
 Handles the players - that have submitted orders late
 """
 import typing
+import time
 
 import database
 
@@ -27,9 +28,9 @@ class Incident:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS incidents")
-        sql_executor.execute("CREATE TABLE incident (game_id INTEGER, role_num INTEGER, advancement INTEGER)")
+        sql_executor.execute("CREATE TABLE incidents (game_id INTEGER, role_num INTEGER, advancement INTEGER, player_id INTEGER, date real)")
 
-    def __init__(self, game_id: int, role_num: int, advancement: int) -> None:
+    def __init__(self, game_id: int, role_num: int, advancement: int, player_id: int) -> None:
 
         assert isinstance(game_id, int), "game_id must be an int"
         self._game_id = game_id
@@ -40,17 +41,22 @@ class Incident:
         assert isinstance(advancement, int), "advancement must be an int"
         self._advancement = advancement
 
+        assert isinstance(player_id, int), "player_id must be an int"
+        self._player_id = player_id
+
+        self._date = time.time()
+
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        sql_executor.execute("DELETE FROM incident WHERE game_id = ? AND role_num = ? AND advancement = ?", (self._game_id, self._role_num, self._advancement))
-        sql_executor.execute("INSERT OR REPLACE INTO incident (game_id, role_num, incident) VALUES (?, ?)", (self._game_id, self._role_num, self._advancement))
+        sql_executor.execute("DELETE FROM incidents WHERE game_id = ? AND role_num = ? AND advancement = ?", (self._game_id, self._role_num, self._advancement))
+        sql_executor.execute("INSERT OR REPLACE INTO incidents (game_id, role_num, advancement, player_id, date) VALUES (?, ?, ?, ?, ?)", (self._game_id, self._role_num, self._advancement, self._player_id, self._date))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
-        sql_executor.execute("DELETE FROM incident WHERE game_id = ? AND role_num = ? and incident = ?", (self._game_id, self._role_num, self._advancement))
+        sql_executor.execute("DELETE FROM incidents WHERE game_id = ? AND role_num = ? and advancement = ?", (self._game_id, self._role_num, self._advancement))
 
     def __str__(self) -> str:
-        return f"game_id={self._game_id} role_num={self._role_num} incident={self._advancement}"
+        return f"game_id={self._game_id} role_num={self._role_num} advancement={self._advancement} player_id={self._player_id} date={self._date}"
 
 
 if __name__ == '__main__':
