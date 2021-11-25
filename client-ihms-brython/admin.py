@@ -20,7 +20,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'connexions manquées', 'rectifier la position', 'emails non confirmés', 'remplaçants', 'envoyer un mail', 'récupérer un téléphone']
+OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'connexions manquées', 'rectifier la position', 'e-mails non confirmés', 'remplaçants', 'envoyer un e-mail', 'récupérer un téléphone']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1272,7 +1272,7 @@ def sendmail():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par email")
+    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par e-mail")
     fieldset <= legend_addressee
     input_addressed = html.SELECT(type="select-one", value="")
     for addressee_pseudo in sorted(possible_addressed, key=lambda pu: pu.upper()):
@@ -1414,11 +1414,11 @@ def load_option(_, item_name):
         last_failures()
     if item_name == 'rectifier la position':
         rectify()
-    if item_name == 'emails non confirmés':
+    if item_name == 'e-mails non confirmés':
         show_non_confirmed_data()
     if item_name == 'remplaçants':
         show_replacement_data()
-    if item_name == 'envoyer un mail':
+    if item_name == 'envoyer un e-mail':
         sendmail()
     if item_name == 'récupérer un téléphone':
         get_phone_number()

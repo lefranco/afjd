@@ -28,7 +28,7 @@ faq_content_table = {
     "Le bac à sable n'a pas vocation à déplacer les unités, il cherche à répondre à la question 'que se passerait-il si...'. Il faut bien lire le compte rendu des ordres sous forme de texte sous la carte",
 
     "Eh, je pense avoir trouvé un bug dans le moteur de résolution. Que faire ?":
-    "Le moteur s'appuie sur le DATC. Il faut utiliser le lien en page d'accueil pour envoyer un email et signaler le problème. Reproduisez le soigneusement avec le bac à sable",
+    "Le moteur s'appuie sur le DATC. Il faut utiliser le lien en page d'accueil pour envoyer un e-mail et signaler le problème. Reproduisez le soigneusement avec le bac à sable",
 
     "Où trouver des explications sur les paramètres des parties ?":
     "Soit en survolant les titres à la creation de la partie, soit en consultant le menu 'paramètres' d'une partie existante",

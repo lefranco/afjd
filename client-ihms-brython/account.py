@@ -12,7 +12,7 @@ import config
 import common
 import login
 
-OPTIONS = ['créer', 'mot de passe', 'valider mon email', 'editer', 'supprimer']
+OPTIONS = ['créer', 'mot de passe', 'valider mon e-mail', 'editer', 'supprimer']
 
 MAX_LEN_PSEUDO = 20
 
@@ -42,7 +42,7 @@ def information_about_emails():
     """ information_about_emails """
 
     information = html.DIV(Class='important')
-    information <= "Vous recevrez un email pour confimer votre adresse mail, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un email de rappel de l'arbitre si vous êtes en retard sur les ordres."
+    information <= "Vous recevrez un e-mail pour confimer votre adresse mail, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un e-mail de rappel de l'arbitre si vous êtes en retard sur les ordres."
     information <= html.BR()
     information <= "Rien de plus !"
     return information
@@ -96,13 +96,13 @@ def create_account():
 
         email = input_email.value
         if not email:
-            alert("email manquant")
+            alert("e-mail manquant")
             my_sub_panel.clear()
             create_account()
             return
 
         if email.find('@') == -1:
-            alert("@ dans email manquant")
+            alert("@ dans e-mail manquant")
             my_sub_panel.clear()
             create_account()
             return
@@ -169,7 +169,7 @@ def create_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("email (privé)", title="Le site vous notifiera des événements")
+    legend_email = html.LEGEND("email (privé)", title="Le site vous notifiera de quelques très rares événements")
     fieldset <= legend_email
     input_email = html.INPUT(type="email", value="", size="80")
     fieldset <= input_email
@@ -362,7 +362,7 @@ def validate_email():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Félicitations, votre email a été validé : {messages}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Félicitations, votre e-mail a été validé : {messages}", remove_after=config.REMOVE_AFTER)
 
         if not input_confirmation_code.value:
             alert("Code de confirmation mal saisi")
@@ -422,7 +422,7 @@ def validate_email():
 
     form <= html.BR()
 
-    input_validate_email = html.INPUT(type="submit", value="valider l'email")
+    input_validate_email = html.INPUT(type="submit", value="valider l'e-mail")
     input_validate_email.bind("click", validate_email_callback)
     form <= input_validate_email
     form <= html.BR()
@@ -593,14 +593,14 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("email", title="Le site vous notifiera des événements")
+    legend_email = html.LEGEND("email", title="Le site vous notifiera de quelques très rares événements")
     fieldset <= legend_email
     input_email = html.INPUT(type="email", value=email_loaded, size="40")
     fieldset <= input_email
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email_confirmed = html.LEGEND("email confirmé", title="(pour information)")
+    legend_email_confirmed = html.LEGEND("e-mail confirmé", title="(pour information)")
     fieldset <= legend_email_confirmed
     input_email_confirmed = html.INPUT(type="checkbox", readonly=True, checked=email_confirmed_loaded)
     fieldset <= input_email_confirmed
@@ -784,7 +784,7 @@ def load_option(_, item_name):
         create_account()
     if item_name == 'mot de passe':
         change_password()
-    if item_name == 'valider mon email':
+    if item_name == 'valider mon e-mail':
         validate_email()
     if item_name == 'editer':
         edit_account()
