@@ -67,7 +67,7 @@ my_panel <= text21
 text22 = html.P("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs) et n'oubliez pas de bien préciser une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu ...")
 my_panel <= text22
 
-text23 = html.P("Vous pouvez utiliser le lien ci-dessous pour envoyer un email :")
+text23 = html.P("Vous pouvez utiliser le lien ci-dessous pour envoyer un e-mail :")
 my_panel <= text23
 
 email_support = html.A(href=f"mailto:{EMAIL_SUPPORT}")

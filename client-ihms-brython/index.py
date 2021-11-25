@@ -154,6 +154,10 @@ login.check_token()
 login.show_login()
 selection.show_game_selected()
 
+
+document <= html.B("Contactez le support par e-mail en cas de problème (cf page d'accueil). Merci !")
+
+
 end = time.time()
 stats = f"Temps de chargement de la page initiale  {(end-start)} sec"
 document <= html.DIV(stats, Class='load')
