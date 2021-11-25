@@ -3302,6 +3302,7 @@ def game_master():
 
             # back to where we started
             my_sub_panel.clear()
+            load_special_stuff()
             game_master()
 
         names_dict = g_variant_data.extract_names()
@@ -4417,8 +4418,6 @@ def show_incidents_in_game():
         thead <= col
     game_incidents_table <= thead
 
-    print(f"{g_incidents_loaded=}")
-
     for incident in g_incidents_loaded:
 
         role_id, advancement, date_incident = incident
@@ -4476,8 +4475,9 @@ def show_incidents_in_game():
     my_sub_panel <= html.BR()
 
     # a bit of humour !
-    humour_img = html.IMG(src=f"./images/goudrons_plumes.gif", title="Du goudron et des plumes !")
-    my_sub_panel <= humour_img
+    if g_incidents_loaded:
+        humour_img = html.IMG(src=f"./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
+        my_sub_panel <= humour_img
 
     return True
 
