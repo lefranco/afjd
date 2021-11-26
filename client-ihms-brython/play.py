@@ -509,6 +509,7 @@ def load_special_stuff():
         # just to prevent a erroneous pylint warning
         g_incidents_loaded = dict(g_incidents_loaded)
 
+
 def stack_clock(frame, period):
     """ stack_clock """
 
