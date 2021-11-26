@@ -2309,7 +2309,7 @@ def submit_communication_orders():
         lines = str(orders_data).split('\n')
         communication_orders = html.DIV()
         communication_orders.style = {
-            'color': 'pink',
+            'color': 'magenta',
         }
         for line in lines:
             communication_orders <= html.B(line)
