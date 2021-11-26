@@ -928,11 +928,6 @@ class Army(Unit):
         """put me on screen """
 
         fill_color = self._position.variant.colour_table[self._role]
-
-        # inversion (highlite)
-        if invert:
-            invert_colour = fill_color.invert_colour()
-
         ctx.fillStyle = fill_color.str_value()
 
         outline_colour = fill_color.outline_colour()
@@ -971,11 +966,6 @@ class Fleet(Unit):
         """put me on screen """
 
         fill_color = self._position.variant.colour_table[self._role]
-
-        # inversion (highlite)
-        if invert:
-            invert_colour = fill_color.invert_colour()
-
         ctx.fillStyle = fill_color.str_value()
 
         outline_colour = fill_color.outline_colour()
