@@ -4504,7 +4504,7 @@ def show_incidents_in_game():
 
     # a bit of humour !
     if g_incidents_loaded:
-        humour_img = html.IMG(src=f"./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
+        humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
         my_sub_panel <= humour_img
 
     return True
