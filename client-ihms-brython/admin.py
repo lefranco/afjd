@@ -813,7 +813,7 @@ def rectify():
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
-        if selected_hovered_object is not None:
+        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
             selected_hovered_object.highlite(ctx, False)
 
     def callback_render(_):

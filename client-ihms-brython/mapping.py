@@ -59,11 +59,11 @@ class Renderable:
     """ Renderable """
 
     @abc.abstractmethod
-    def render(self, ctx) -> None:
+    def render(self, ctx, active=False) -> None:
         """ render = display """
 
 
-class Highliteable:
+class Highliteable(Renderable):
     """ Renderable """
 
     @abc.abstractmethod
@@ -184,6 +184,22 @@ class Center:
         # the owner at start of the game
         self._owner_start = None
 
+    def render(self, ctx):
+        """ put me on screen """
+
+        fill_color = CENTER_COLOUR
+        ctx.fillStyle = fill_color.str_value()
+
+        outline_colour = fill_color.outline_colour()
+        ctx.strokeStyle = outline_colour.str_value()
+
+        position = self._region.zone.variant.position_table[self]
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        ctx.beginPath()
+        ctx.arc(x, y, 4, 0, 2 * math.pi, False)
+        ctx.fill(); ctx.stroke(); ctx.closePath()
+
     @property
     def region(self) -> 'Region':
         """ property """
@@ -282,7 +298,31 @@ class Zone(Highliteable):
         self._variant = variant
 
     def highlite(self, ctx, active) -> None:
-        pass  # TODO
+        self.render(ctx, active)
+
+    def render(self, ctx, active=False):
+        """ put me on screen """
+
+        legend_colour = LEGEND_COLOUR
+
+        # inversion (highlite)
+        if active:
+            legend_colour = legend_colour.invert_colour()
+
+        ctx.fillStyle = legend_colour.str_value()
+
+        # legend position and unit position are calculated from area ith polylabel
+        position = self._variant.legend_position_table[self]
+        x_pos = position.x_pos
+        y_pos = position.y_pos
+
+        if self._coast_type:
+            legend = self._variant.name_table[self._coast_type]
+        else:
+            legend = self._variant.name_table[self]
+        text_width = ctx.measureText(legend).width
+        ctx.font = LEGEND_FONT
+        ctx.fillText(legend, x_pos - text_width / 2, y_pos)
 
     def description(self):
         """ description for when hovering """
@@ -321,6 +361,11 @@ class Zone(Highliteable):
     def neighbours(self, neighbours) -> None:
         """ setter """
         self._neighbours = neighbours
+
+    @property
+    def variant(self) -> 'Variant':
+        """ property """
+        return self._variant
 
 
 class Role:
@@ -366,7 +411,7 @@ class ColourRecord:
 
     def invert_colour(self) -> 'ColourRecord':
         """ invert_colour """
-        return ColourRecord(255-self.red, 255-self.green, 255-self.blue)
+        return ColourRecord(255 - self.red, 255 - self.green, 255 - self.blue)
 
     def str_value(self) -> str:
         """ str_value """
@@ -682,48 +727,19 @@ class Variant(Renderable):
 
         return closest_zone
 
-    def render(self, ctx) -> None:
-        """ render the empty centers only """
+    def render(self, ctx, active=False) -> None:
+        """ put me on screen """
 
         # put centers
-
-        fill_color = CENTER_COLOUR
-        ctx.fillStyle = fill_color.str_value()
-
-        outline_colour = fill_color.outline_colour()
-        ctx.strokeStyle = outline_colour.str_value()
-
         for center in self._centers.values():
-
-            position = self._position_table[center]
-            x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
-
-            ctx.beginPath()
-            ctx.arc(x, y, 4, 0, 2 * math.pi, False)
-            ctx.fill(); ctx.stroke(); ctx.closePath()
+            center.render(ctx)
 
     def render_legends(self, ctx) -> None:
         """ render the legends only """
 
-        # put legends
-
-        legend_colour = LEGEND_COLOUR
-        ctx.fillStyle = legend_colour.str_value()
-
+        # put legends actually
         for zone in self._zones.values():
-
-            # legend position and unit position are calculated from area ith polylabel
-            position = self._legend_position_table[zone]
-            x_pos = position.x_pos
-            y_pos = position.y_pos
-
-            if zone.coast_type:
-                legend = self._name_table[zone.coast_type]
-            else:
-                legend = self._name_table[zone]
-            text_width = ctx.measureText(legend).width
-            ctx.font = LEGEND_FONT
-            ctx.fillText(legend, x_pos - text_width / 2, y_pos)
+            zone.render(ctx)
 
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
@@ -785,6 +801,11 @@ class Variant(Renderable):
         return self._position_table
 
     @property
+    def legend_position_table(self):
+        """ property """
+        return self._legend_position_table
+
+    @property
     def zones(self):
         """ property """
         return self._zones
@@ -800,7 +821,7 @@ class Variant(Renderable):
         return self._year_zero
 
 
-class Unit(Renderable, Highliteable):  # pylint: disable=abstract-method
+class Unit(Highliteable):  # pylint: disable=abstract-method
     """ A unit """
 
     def __init__(self, position: 'Position', role: Role, zone: Zone, dislodged_origin) -> None:
@@ -924,8 +945,7 @@ class Army(Unit):
 
     # use init from parent class
 
-    def render(self, ctx, invert=False) -> None:
-        """put me on screen """
+    def render(self, ctx, active=False) -> None:
 
         fill_color = self._position.variant.colour_table[self._role]
         ctx.fillStyle = fill_color.str_value()
@@ -933,7 +953,7 @@ class Army(Unit):
         outline_colour = fill_color.outline_colour()
 
         # inversion (highlite)
-        if invert:
+        if active:
             outline_colour = outline_colour.invert_colour()
 
         ctx.strokeStyle = outline_colour.str_value()
@@ -962,8 +982,7 @@ class Fleet(Unit):
 
     # use init from parent class
 
-    def render(self, ctx, invert=False) -> None:
-        """put me on screen """
+    def render(self, ctx, active=False) -> None:
 
         fill_color = self._position.variant.colour_table[self._role]
         ctx.fillStyle = fill_color.str_value()
@@ -971,7 +990,7 @@ class Fleet(Unit):
         outline_colour = fill_color.outline_colour()
 
         # inversion (highlite)
-        if invert:
+        if active:
             outline_colour = outline_colour.invert_colour()
 
         ctx.strokeStyle = outline_colour.str_value()
@@ -1036,8 +1055,7 @@ class Ownership(Renderable):
 
         return f"Un centre appartenant au joueur {adjective} positionné en {zone_full_name}."
 
-    def render(self, ctx) -> None:
-        """put me on screen """
+    def render(self, ctx, active=False) -> None:
 
         fill_color = self._position.variant.colour_table[self._role]
         ctx.fillStyle = fill_color.str_value()
@@ -1073,8 +1091,7 @@ class Forbidden(Renderable):
 
         return f"Une région interdite en retraite en {zone_full_name}."
 
-    def render(self, ctx) -> None:
-        """put me on screen """
+    def render(self, ctx, active=False) -> None:
 
         outline_colour = ColourRecord(red=255, green=0, blue=0)
         ctx.strokeStyle = outline_colour.str_value()
@@ -1173,8 +1190,7 @@ class Position(Renderable):
         """ erase all units """
         self._units = list()
 
-    def render(self, ctx) -> None:
-        """put me on screen """
+    def render(self, ctx, active=False) -> None:
 
         # ownerships
         for ownership in self._ownerships:
@@ -1372,8 +1388,7 @@ class Order(Renderable):
         self._passive_unit = passive_unit
         self._destination_zone = destination_zone
 
-    def render(self, ctx) -> None:
-        """put me on screen """
+    def render(self, ctx, active=False) -> None:
 
         # -- moves --
 
@@ -1802,8 +1817,7 @@ class Orders(Renderable):
             order = Order(self._position, OrderTypeEnum.HOLD_ORDER, unordered_unit, None, None)
             self.insert_order(order)
 
-    def render(self, ctx) -> None:
-        """ put me on screen """
+    def render(self, ctx, active=False) -> None:
 
         # orders
         for order in self._orders:
