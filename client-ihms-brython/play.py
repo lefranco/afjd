@@ -1242,7 +1242,7 @@ def submit_orders():
                 buttons_right <= legend_select_order21
                 buttons_right <= html.BR()
 
-                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
                     legend_select_order22 = html.I(info)
                     buttons_right <= legend_select_order22
                     buttons_right <= html.BR()
@@ -2028,7 +2028,7 @@ def submit_communication_orders():
                 buttons_right <= legend_select_order21
                 buttons_right <= html.BR()
 
-                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
+                for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre"]:
                     legend_select_order22 = html.I(info)
                     buttons_right <= legend_select_order22
                     buttons_right <= html.BR()

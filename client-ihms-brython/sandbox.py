@@ -395,7 +395,7 @@ def sandbox():
                 buttons_right <= legend_select_order21
                 buttons_right <= html.BR()
 
-                for info in ["(a)ttaquer", "soutenir(o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre/l'unité"]:
+                for info in ["(a)ttaquer", "soutenir (o)ffensivement", "soutenir (d)éfensivement", "(t)enir", "(c)onvoyer", "(x)supprimer l'ordre/l'unité"]:
                     legend_select_order22 = html.I(info)
                     buttons_right <= legend_select_order22
                     buttons_right <= html.BR()
