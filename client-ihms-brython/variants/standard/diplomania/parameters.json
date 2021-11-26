@@ -679,10 +679,10 @@
         "73": {
             "name": "Var",
             "full_name": "Varsovie",
-            "x_pos": 497,
-            "y_pos": 365,
-            "x_legend_pos": 497,
-            "y_legend_pos": 351
+            "x_pos": 496,
+            "y_pos": 366,
+            "x_legend_pos": 496,
+            "y_legend_pos": 352
         },
         "74": {
             "name": "MOc",
@@ -883,7 +883,7 @@
             "y_pos": 451
         },
         "34": {
-            "x_pos": 485,
+            "x_pos": 481,
             "y_pos": 373
         }
     },
