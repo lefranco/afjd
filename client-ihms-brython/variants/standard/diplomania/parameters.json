@@ -30,7 +30,7 @@
             "red": 0,
             "green": 0,
             "blue": 0
-         },
+        },
         "1": {
             "name": "Angleterre",
             "adjective_name": "anglais",
@@ -511,10 +511,10 @@
         "52": {
             "name": "Rom",
             "full_name": "Rome",
-            "x_pos": 397,
-            "y_pos": 563,
-            "x_legend_pos": 397,
-            "y_legend_pos": 549
+            "x_pos": 396,
+            "y_pos": 567,
+            "x_legend_pos": 396,
+            "y_legend_pos": 553
         },
         "53": {
             "name": "Ruh",
@@ -800,7 +800,7 @@
         },
         "13": {
             "x_pos": 251,
-            "y_pos": 388
+            "y_pos": 391
         },
         "14": {
             "x_pos": 232,
@@ -835,8 +835,8 @@
             "y_pos": 589
         },
         "22": {
-            "x_pos": 395,
-            "y_pos": 569
+            "x_pos": 405,
+            "y_pos": 572
         },
         "23": {
             "x_pos": 570,
