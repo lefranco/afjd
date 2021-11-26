@@ -496,7 +496,9 @@ def load_special_stuff():
         if not g_game_players_dict:
             alert("Erreur chargement joueurs de la partie")
             return
-        g_game_players_dict = dict(g_game_players_dict)  # avoids a warning
+
+        # just to prevent a erroneous pylint warning
+        g_game_players_dict = dict(g_game_players_dict)
 
         global g_incidents_loaded  # pylint: disable=invalid-name
         g_incidents_loaded = game_incidents_reload(g_game_id)
@@ -504,6 +506,8 @@ def load_special_stuff():
             alert("Erreur chargement incidents")
             return
 
+        # just to prevent a erroneous pylint warning
+        g_incidents_loaded = dict(g_incidents_loaded)
 
 def stack_clock(frame, period):
     """ stack_clock """
