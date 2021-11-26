@@ -63,6 +63,14 @@ class Renderable:
         """ render = display """
 
 
+class Highliteable:
+    """ Renderable """
+
+    @abc.abstractmethod
+    def highlite(self, ctx, active) -> None:
+        """ highlited when mouses passes over """
+
+
 @enum.unique
 class RegionTypeEnum(enum.Enum):
     """ RegionTypeEnum """
@@ -254,7 +262,7 @@ class Region:
         self._zone = zone
 
 
-class Zone:
+class Zone(Highliteable):
     """ A zone """
 
     def __init__(self, identifier: int, region: Region, coast_type, variant) -> None:
@@ -272,6 +280,9 @@ class Zone:
 
         # variant
         self._variant = variant
+
+    def highlite(self, ctx, active) -> None:
+        pass  # TODO
 
     def description(self):
         """ description for when hovering """
@@ -352,6 +363,10 @@ class ColourRecord:
         if the_sum < (3 * 255) // 10:
             return ColourRecord(red=255 // 2, green=255 // 2, blue=255 // 2)
         return ColourRecord(red=0, green=0, blue=0)
+
+    def invert_colour(self) -> 'ColourRecord':
+        """ invert_colour """
+        return ColourRecord(255-self.red, 255-self.green, 255-self.blue)
 
     def str_value(self) -> str:
         """ str_value """
@@ -785,7 +800,7 @@ class Variant(Renderable):
         return self._year_zero
 
 
-class Unit(Renderable):  # pylint: disable=abstract-method
+class Unit(Renderable, Highliteable):  # pylint: disable=abstract-method
     """ A unit """
 
     def __init__(self, position: 'Position', role: Role, zone: Zone, dislodged_origin) -> None:
@@ -848,6 +863,9 @@ class Unit(Renderable):  # pylint: disable=abstract-method
             json_dict.update({"dislodged_origin": self._dislodged_origin.identifier})
         return json_dict
 
+    def highlite(self, ctx, active) -> None:
+        self.render(ctx, active)
+
     def description(self):
         """ description for when hovering """
 
@@ -906,13 +924,23 @@ class Army(Unit):
 
     # use init from parent class
 
-    def render(self, ctx) -> None:
+    def render(self, ctx, invert=False) -> None:
         """put me on screen """
 
         fill_color = self._position.variant.colour_table[self._role]
+
+        # inversion (highlite)
+        if invert:
+            invert_colour = fill_color.invert_colour()
+
         ctx.fillStyle = fill_color.str_value()
 
         outline_colour = fill_color.outline_colour()
+
+        # inversion (highlite)
+        if invert:
+            outline_colour = outline_colour.invert_colour()
+
         ctx.strokeStyle = outline_colour.str_value()
 
         if self._zone:
@@ -939,13 +967,23 @@ class Fleet(Unit):
 
     # use init from parent class
 
-    def render(self, ctx) -> None:
+    def render(self, ctx, invert=False) -> None:
         """put me on screen """
 
         fill_color = self._position.variant.colour_table[self._role]
+
+        # inversion (highlite)
+        if invert:
+            invert_colour = fill_color.invert_colour()
+
         ctx.fillStyle = fill_color.str_value()
 
         outline_colour = fill_color.outline_colour()
+
+        # inversion (highlite)
+        if invert:
+            outline_colour = outline_colour.invert_colour()
+
         ctx.strokeStyle = outline_colour.str_value()
 
         if self._zone:

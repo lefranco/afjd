@@ -73,6 +73,7 @@ g_position_data = None  # pylint: disable=invalid-name
 g_report_loaded = None  # pylint: disable=invalid-name
 g_incidents_loaded = None  # pylint: disable=invalid-name
 
+
 def game_report_reload(game_id):
     """ game_report_reload """
 
@@ -481,6 +482,7 @@ def load_dynamic_stuff():
         alert("Erreur chargement rapport")
         return
 
+
 def load_special_stuff():
     """ load_special_stuff : loads global data """
 
@@ -734,8 +736,6 @@ def get_game_players_data(game_id):
 def show_position():
     """ show_position """
 
-    hovering_default_message = "(informations sur l'unité survoléee par la souris sur la carte)"
-
     def callback_render(_):
         """ callback_render """
 
@@ -750,21 +750,6 @@ def show_position():
 
         # put the legends at the end
         g_variant_data.render_legends(ctx)
-
-    def callback_canvas_mouse_move(event):
-        """ callback_canvas_mouse_move """
-
-        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-
-        selected_hovered_object = g_position_data.closest_object(pos)
-        if selected_hovered_object is not None:
-            hover_info.text = selected_hovered_object.description()
-        else:
-            hover_info.text = ""
-
-    def callback_canvas_mouse_leave(_):
-        """ callback_canvas_mouse_leave """
-        hover_info.text = hovering_default_message
 
     def callback_export_sandbox(_):
         """ callback_export_sandbox """
@@ -799,15 +784,9 @@ def show_position():
         alert("Il faudrait utiliser un navigateur plus récent !")
         return True
 
-    # give some information sometimes
-    canvas.bind("mousemove", callback_canvas_mouse_move)
-    canvas.bind("mouseleave", callback_canvas_mouse_leave)
-
     # put background (this will call the callback that display the whole map)
     img = common.read_image(g_variant_name_loaded, g_display_chosen)
     img.bind('load', callback_render)
-
-    hover_info = html.DIV(hovering_default_message)
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
@@ -820,7 +799,6 @@ def show_position():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    display_left <= hover_info
     display_left <= canvas
     display_left <= html.BR()
     display_left <= rating_colours_window
@@ -863,6 +841,7 @@ def submit_orders():
 
     stored_event = None
     down_click_time = None
+    selected_hovered_object = None
 
     input_definitive = None
 
@@ -1576,6 +1555,27 @@ def submit_orders():
 
         select_order_type_callback(event, selected_order)
 
+    def callback_canvas_mouse_move(event):
+        """ callback_canvas_mouse_move """
+
+        # put back previous
+        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
+            selected_hovered_object.highlite(ctx, False)
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        nonlocal selected_hovered_object
+        selected_hovered_object = g_position_data.closest_object(pos)
+
+        # hightlite object where mouse is
+        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
+            selected_hovered_object.highlite(ctx, True)
+
+    def callback_canvas_mouse_leave(_):
+        """ callback_canvas_mouse_leave """
+        if selected_hovered_object is not None:
+            selected_hovered_object.highlite(ctx, False)
+
     def callback_render(_):
         """ callback_render """
 
@@ -1731,6 +1731,10 @@ def submit_orders():
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, g_position_data)
 
+    # hovering effect
+    canvas.bind("mousemove", callback_canvas_mouse_move)
+    canvas.bind("mouseleave", callback_canvas_mouse_leave)
+
     # put background (this will call the callback that display the whole map)
     img = common.read_image(g_variant_name_loaded, g_display_chosen)
     img.bind('load', callback_render)
@@ -1808,6 +1812,7 @@ def submit_communication_orders():
 
     stored_event = None
     down_click_time = None
+    selected_hovered_object = None
 
     def submit_orders_callback(_):
         """ submit_orders_callback """
@@ -2249,6 +2254,27 @@ def submit_communication_orders():
 
         select_order_type_callback(event, selected_order)
 
+    def callback_canvas_mouse_move(event):
+        """ callback_canvas_mouse_move """
+
+        # put back previous
+        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
+            selected_hovered_object.highlite(ctx, False)
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        nonlocal selected_hovered_object
+        selected_hovered_object = g_position_data.closest_object(pos)
+
+        # hightlite object where mouse is
+        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
+            selected_hovered_object.highlite(ctx, True)
+
+    def callback_canvas_mouse_leave(_):
+        """ callback_canvas_mouse_leave """
+        if selected_hovered_object is not None:
+            selected_hovered_object.highlite(ctx, False)
+
     def callback_render(_):
         """ callback_render """
 
@@ -2382,6 +2408,10 @@ def submit_communication_orders():
 
     # digest the orders
     orders_data = mapping.Orders(communication_orders_loaded, g_position_data)
+
+    # hovering effect
+    canvas.bind("mousemove", callback_canvas_mouse_move)
+    canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
     img = common.read_image(g_variant_name_loaded, g_display_chosen)
@@ -4357,8 +4387,6 @@ def show_orders_submitted_in_game():
         row <= col
 
         game_players_table <= row
-
-
 
     # game status
     my_sub_panel <= g_game_status

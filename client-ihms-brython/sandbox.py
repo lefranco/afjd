@@ -141,6 +141,7 @@ def sandbox():
 
     stored_event = None
     down_click_time = None
+    selected_hovered_object = None
 
     def rest_hold_callback(_):
         """ rest_hold_callback """
@@ -630,6 +631,27 @@ def sandbox():
 
         select_order_type_callback(event, selected_order)
 
+    def callback_canvas_mouse_move(event):
+        """ callback_canvas_mouse_move """
+
+        # put back previous
+        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
+            selected_hovered_object.highlite(ctx, False)
+
+        # find where is mouse
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        nonlocal selected_hovered_object
+        selected_hovered_object = position_data.closest_object(pos)
+
+        # hightlite object where mouse is
+        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
+            selected_hovered_object.highlite(ctx, True)
+
+    def callback_canvas_mouse_leave(_):
+        """ callback_canvas_mouse_leave """
+        if selected_hovered_object is not None:
+            selected_hovered_object.highlite(ctx, False)
+
     def callback_render(_):
         """ callback_render """
 
@@ -884,6 +906,10 @@ def sandbox():
 
     # to catch keyboard
     document.bind("keypress", callback_keypress)
+
+    # hovering effect
+    canvas.bind("mousemove", callback_canvas_mouse_move)
+    canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
     img = common.read_image(variant_name_loaded, display_chosen)
