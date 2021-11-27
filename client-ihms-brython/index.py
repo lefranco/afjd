@@ -12,7 +12,7 @@ from browser.local_storage import storage  # pylint: disable=import-error # noqa
 import home    # noqa: E402
 import login    # noqa: E402
 import selection    # noqa: E402
-import tools    # noqa: E402
+import interface    # noqa: E402
 import account    # noqa: E402
 import opportunities    # noqa: E402
 import mygames    # noqa: E402
@@ -77,7 +77,7 @@ def load_option(_, item_name):
     if item_name == 'sélectionner partie':
         selection.render(panel_middle)
     if item_name == 'sélectionner interface':
-        tools.render(panel_middle)
+        interface.render(panel_middle)
     if item_name == 'mon compte':
         account.render(panel_middle)
     if item_name == 'rejoindre une partie':

@@ -10,7 +10,7 @@ from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
-import tools
+import interface
 import config
 import mapping
 import selection
@@ -332,7 +332,7 @@ def my_games(state_name):
             variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
 
         # selected display (user choice)
-        display_chosen = tools.get_display_from_variant(variant_name_loaded)
+        display_chosen = interface.get_display_from_variant(variant_name_loaded)
 
         # parameters
 

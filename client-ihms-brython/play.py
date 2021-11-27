@@ -15,7 +15,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import common
 import scoring
-import tools
+import interface
 import geometry
 import mapping
 import login
@@ -437,7 +437,7 @@ def load_static_stuff():
 
     # selected display (user choice)
     global g_display_chosen  # pylint: disable=invalid-name
-    g_display_chosen = tools.get_display_from_variant(g_variant_name_loaded)
+    g_display_chosen = interface.get_display_from_variant(g_variant_name_loaded)
 
     # from display chose get display parameters
     global g_display_parameters_read  # pylint: disable=invalid-name
