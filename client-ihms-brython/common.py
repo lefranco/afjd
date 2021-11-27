@@ -422,20 +422,20 @@ def make_report_window(report_loaded):
     return report_table
 
 
-def read_parameters(variant_name_loaded, display_chosen):
+def read_parameters(variant_name_loaded, interface_chosen):
     """ read_parameters """
 
-    parameters_file_name = f"./variants/{variant_name_loaded}/{display_chosen}/parameters.json"
+    parameters_file_name = f"./variants/{variant_name_loaded}/{interface_chosen}/parameters.json"
     with open(parameters_file_name, "r") as read_file2:
         parameters_read = json.load(read_file2)
 
     return parameters_read
 
 
-def read_image(variant_name_loaded, display_chosen):
+def read_image(variant_name_loaded, interface_chosen):
     """ read_image """
 
-    return html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/map.png")
+    return html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png")
 
 
 def get_allocations_data():

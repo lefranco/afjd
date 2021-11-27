@@ -178,10 +178,10 @@ def my_opportunities():
         else:
             variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
 
-        # selected display (user choice)
-        display_chosen = interface.get_display_from_variant(variant_name_loaded)
+        # selected interface (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
 
-        parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+        parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
 
         # build variant data
 

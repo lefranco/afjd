@@ -46,7 +46,7 @@ class AutomatonStateEnum(enum.Enum):
 variant_name_loaded = VARIANT_NAME  # pylint: disable=invalid-name
 
 # this will
-display_chosen = None  # pylint: disable=invalid-name
+interface_chosen = None  # pylint: disable=invalid-name
 variant_data = None  # pylint: disable=invalid-name
 position_data = None  # pylint: disable=invalid-name
 orders_data = None  # pylint: disable=invalid-name
@@ -55,7 +55,7 @@ orders_data = None  # pylint: disable=invalid-name
 def create_initial_position():
     """ create_initial_position """
 
-    global display_chosen  # pylint: disable=invalid-name
+    global interface_chosen  # pylint: disable=invalid-name
     global variant_data  # pylint: disable=invalid-name
     global position_data  # pylint: disable=invalid-name
     global orders_data  # pylint: disable=invalid-name
@@ -66,11 +66,11 @@ def create_initial_position():
     if not variant_content_loaded:
         return
 
-    # selected display (user choice)
-    display_chosen = interface.get_display_from_variant(variant_name_loaded)
+    # selected interface (user choice)
+    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
-    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+    parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
@@ -917,7 +917,7 @@ def sandbox():
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(variant_name_loaded, display_chosen)
+    img = common.read_image(variant_name_loaded, interface_chosen)
     img.bind('load', callback_render)
 
     # left side

@@ -60,7 +60,7 @@ g_players_dict = None  # pylint: disable=invalid-name
 g_game = None  # pylint: disable=invalid-name
 g_variant_name_loaded = None  # pylint: disable=invalid-name
 g_variant_content_loaded = None  # pylint: disable=invalid-name
-g_display_chosen = None  # pylint: disable=invalid-name
+g_interface_chosen = None  # pylint: disable=invalid-name
 g_display_parameters_read = None  # pylint: disable=invalid-name
 g_variant_data = None  # pylint: disable=invalid-name
 g_game_parameters_loaded = None  # pylint: disable=invalid-name
@@ -415,13 +415,13 @@ def load_static_stuff():
     # just to prevent a erroneous pylint warning
     g_variant_content_loaded = dict(g_variant_content_loaded)
 
-    # selected display (user choice)
-    global g_display_chosen  # pylint: disable=invalid-name
-    g_display_chosen = interface.get_display_from_variant(g_variant_name_loaded)
+    # selected interface (user choice)
+    global g_interface_chosen  # pylint: disable=invalid-name
+    g_interface_chosen = interface.get_interface_from_variant(g_variant_name_loaded)
 
     # from display chose get display parameters
     global g_display_parameters_read  # pylint: disable=invalid-name
-    g_display_parameters_read = common.read_parameters(g_variant_name_loaded, g_display_chosen)
+    g_display_parameters_read = common.read_parameters(g_variant_name_loaded, g_interface_chosen)
 
     # build variant data
     global g_variant_data  # pylint: disable=invalid-name
@@ -503,7 +503,7 @@ def stack_role_flag(frame):
     # role flag
     role = g_variant_data.roles[g_role_id]
     role_name = g_variant_data.name_table[role]
-    role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{g_role_id}.jpg", title=role_name)
+    role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{g_role_id}.jpg", title=role_name)
     frame <= role_icon_img
 
 
@@ -768,7 +768,7 @@ def show_position():
         return True
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(g_variant_name_loaded, g_display_chosen)
+    img = common.read_image(g_variant_name_loaded, g_interface_chosen)
     img.bind('load', callback_render)
 
     ratings = g_position_data.role_ratings()
@@ -1725,7 +1725,7 @@ def submit_orders():
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(g_variant_name_loaded, g_display_chosen)
+    img = common.read_image(g_variant_name_loaded, g_interface_chosen)
     img.bind('load', callback_render)
 
     ratings = g_position_data.role_ratings()
@@ -2409,7 +2409,7 @@ def submit_communication_orders():
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(g_variant_name_loaded, g_display_chosen)
+    img = common.read_image(g_variant_name_loaded, g_interface_chosen)
     img.bind('load', callback_render)
 
     ratings = g_position_data.role_ratings()
@@ -2584,7 +2584,7 @@ def negotiate():
 
         role_dest = g_variant_data.roles[role_id_dest]
         role_name = g_variant_data.name_table[role_dest]
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id_dest}.jpg", title=role_name)
+        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id_dest}.jpg", title=role_name)
 
         # the alternative
         input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), name="destinees")
@@ -2638,7 +2638,7 @@ def negotiate():
 
         role = g_variant_data.roles[from_role_id_msg]
         role_name = g_variant_data.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{from_role_id_msg}.jpg", title=role_name)
+        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{from_role_id_msg}.jpg", title=role_name)
         col = html.TD(role_icon_img)
         row <= col
 
@@ -2648,7 +2648,7 @@ def negotiate():
 
             role = g_variant_data.roles[dest_role_id_msg]
             role_name = g_variant_data.name_table[role]
-            role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{dest_role_id_msg}.jpg", title=role_name)
+            role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{dest_role_id_msg}.jpg", title=role_name)
             col <= role_icon_img
 
             # separator
@@ -2838,7 +2838,7 @@ def declare():
         if role_id_msg != -1:
             role = g_variant_data.roles[role_id_msg]
             role_name = g_variant_data.name_table[role]
-            role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id_msg}.jpg", title=role_name)
+            role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id_msg}.jpg", title=role_name)
         else:
             role_icon_img = ""
         col = html.TD(role_icon_img)
@@ -3043,7 +3043,7 @@ def show_history():
             return
 
         # put background (this will call the callback that display the whole map)
-        img = common.read_image(g_variant_name_loaded, g_display_chosen)
+        img = common.read_image(g_variant_name_loaded, g_interface_chosen)
         img.bind('load', callback_render)
 
         ratings = position_data.role_ratings()
@@ -3538,7 +3538,7 @@ def game_master():
 
         # flag
         col = html.TD()
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id}.jpg", title=role_name)
+        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
         col <= role_icon_img
         row <= col
 
@@ -3785,7 +3785,7 @@ def supervise():
 
             # flag
             col = html.TD()
-            role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id}.jpg", title=role_name)
+            role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
             col <= role_icon_img
             row <= col
 
@@ -4062,7 +4062,7 @@ def observe():
 
         # put background (this will call the callback that display the whole map)
         nonlocal img
-        img = common.read_image(g_variant_name_loaded, g_display_chosen)
+        img = common.read_image(g_variant_name_loaded, g_interface_chosen)
         img.bind('load', callback_render)
 
         ratings = g_position_data.role_ratings()
@@ -4224,7 +4224,7 @@ def show_players_in_game():
         # role flag
         role = g_variant_data.roles[role_id]
         role_name = g_variant_data.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id}.jpg", title=role_name)
+        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)
@@ -4330,7 +4330,7 @@ def show_orders_submitted_in_game():
         # role flag
         role = g_variant_data.roles[role_id]
         role_name = g_variant_data.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id}.jpg", title=role_name)
+        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)
@@ -4450,7 +4450,7 @@ def show_incidents_in_game():
         # role flag
         role = g_variant_data.roles[role_id]
         role_name = g_variant_data.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_display_chosen}/roles/{role_id}.jpg", title=role_name)
+        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)

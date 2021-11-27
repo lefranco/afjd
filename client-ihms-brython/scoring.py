@@ -166,7 +166,7 @@ def get_scoring_from_variant(variant):
 
 
 def select_scoring():
-    """ select_display """
+    """ select_scoring """
 
     variant_name_loaded = None
 

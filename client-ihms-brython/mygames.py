@@ -332,15 +332,15 @@ def my_games(state_name):
             variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
 
         # selected display (user choice)
-        display_chosen = interface.get_display_from_variant(variant_name_loaded)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
 
         # parameters
 
-        if (variant_name_loaded, display_chosen) in parameters_read_memoize_table:
-            parameters_read = parameters_read_memoize_table[(variant_name_loaded, display_chosen)]
+        if (variant_name_loaded, interface_chosen) in parameters_read_memoize_table:
+            parameters_read = parameters_read_memoize_table[(variant_name_loaded, interface_chosen)]
         else:
-            parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
-            parameters_read_memoize_table[(variant_name_loaded, display_chosen)] = parameters_read
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            parameters_read_memoize_table[(variant_name_loaded, interface_chosen)] = parameters_read
 
         # build variant data
 
@@ -413,7 +413,7 @@ def my_games(state_name):
                 else:
                     role = variant_data.roles[role_id]
                     role_name = variant_data.name_table[role]
-                    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{display_chosen}/roles/{role_id}.jpg", title=role_name)
+                    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
                 value = role_icon_img
 
             if field == 'orders_submitted':
