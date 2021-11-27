@@ -445,7 +445,7 @@ def create_game():
     fieldset <= input_access_restriction_performance
     form <= fieldset
 
-    title_access = html.H3("Avancement de la partie - ne peuvent plus être changés la partie créée")
+    title_access = html.H3("Fin de la partie - ne peuvent plus être changés la partie créée")
     form <= title_access
 
     fieldset = html.FIELDSET()
