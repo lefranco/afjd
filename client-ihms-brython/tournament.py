@@ -6,8 +6,6 @@
 from browser import html  # pylint: disable=import-error
 
 
-LONG_DURATION_LIMIT_SEC = 1.0
-
 OPTIONS = ['classement', 'parties', 's\'inscrire', 'ajouter partie', 'retirer partie', 'diriger', 'ne plus diriger']
 
 
