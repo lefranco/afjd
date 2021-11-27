@@ -11,7 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 
 import config
-import tools
+import interface
 import common
 import mapping
 import selection
@@ -179,7 +179,7 @@ def my_opportunities():
             variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
 
         # selected display (user choice)
-        display_chosen = tools.get_display_from_variant(variant_name_loaded)
+        display_chosen = interface.get_display_from_variant(variant_name_loaded)
 
         parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
 

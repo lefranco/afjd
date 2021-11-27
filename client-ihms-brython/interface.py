@@ -15,7 +15,7 @@ INTERFACE_TABLE = {
     'standard': ['diplomania', 'diplomatie_online', 'stabbeurfou']
 }
 
-my_panel = html.DIV(id="tools")
+my_panel = html.DIV(id="interface")
 my_panel.attrs['style'] = 'display: table'
 
 

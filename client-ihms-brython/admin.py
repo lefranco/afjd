@@ -12,7 +12,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 import common
-import tools
+import interface
 import login
 import mapping
 import geometry
@@ -440,7 +440,7 @@ def all_games(state_name):
             variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
 
         # selected display (user choice)
-        display_chosen = tools.get_display_from_variant(variant_name_loaded)
+        display_chosen = interface.get_display_from_variant(variant_name_loaded)
 
         # parameters
 
@@ -980,7 +980,7 @@ def rectify():
         return
 
     # selected display (user choice)
-    display_chosen = tools.get_display_from_variant(variant_name_loaded)
+    display_chosen = interface.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)

@@ -5,7 +5,7 @@
 from browser import html, alert   # pylint: disable=import-error
 
 import common
-import tools
+import interface
 import mapping
 
 VARIANT_NAME = "standard"
@@ -43,7 +43,7 @@ def create_initial_position():
         return
 
     # selected display (user choice)
-    display_chosen = tools.get_display_from_variant(variant_name_loaded)
+    display_chosen = interface.get_display_from_variant(variant_name_loaded)
 
     # from display chose get display parameters
     parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
