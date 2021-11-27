@@ -439,16 +439,16 @@ def all_games(state_name):
         else:
             variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
 
-        # selected display (user choice)
-        display_chosen = interface.get_display_from_variant(variant_name_loaded)
+        # selected interface (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
 
         # parameters
 
-        if (variant_name_loaded, display_chosen) in parameters_read_memoize_table:
-            parameters_read = parameters_read_memoize_table[(variant_name_loaded, display_chosen)]
+        if (variant_name_loaded, interface_chosen) in parameters_read_memoize_table:
+            parameters_read = parameters_read_memoize_table[(variant_name_loaded, interface_chosen)]
         else:
-            parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
-            parameters_read_memoize_table[(variant_name_loaded, display_chosen)] = parameters_read
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            parameters_read_memoize_table[(variant_name_loaded, interface_chosen)] = parameters_read
 
         # build variant data
 
@@ -979,11 +979,11 @@ def rectify():
     if not variant_content_loaded:
         return
 
-    # selected display (user choice)
-    display_chosen = interface.get_display_from_variant(variant_name_loaded)
+    # selected interface (user choice)
+    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
 
-    # from display chose get display parameters
-    parameters_read = common.read_parameters(variant_name_loaded, display_chosen)
+    # from interface chose get display parameters
+    parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
@@ -1098,7 +1098,7 @@ def rectify():
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(variant_name_loaded, display_chosen)
+    img = common.read_image(variant_name_loaded, interface_chosen)
     img.bind('load', callback_render)
 
     # left side

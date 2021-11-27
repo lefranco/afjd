@@ -19,8 +19,8 @@ my_panel = html.DIV(id="interface")
 my_panel.attrs['style'] = 'display: table'
 
 
-def get_display_from_variant(variant):
-    """ get_display_from_variant """
+def get_interface_from_variant(variant):
+    """ get_interface_from_variant """
 
     reference = f'DISPLAY_{variant}'.upper()
     if reference in storage:
@@ -30,13 +30,13 @@ def get_display_from_variant(variant):
     return INTERFACE_TABLE[variant][0]
 
 
-def select_display():
-    """ select_display """
+def select_interface():
+    """ select_interface """
 
     variant_name_loaded = None
 
-    def select_display_callback(_, interface):
-        """ select_display_callback """
+    def select_interface_callback(_, interface):
+        """ select_interface_callback """
 
         reference = f'DISPLAY_{variant_name_loaded}'.upper()
         storage[reference] = interface
@@ -82,7 +82,7 @@ def select_display():
         form <= html.BR()
 
         input_select_interface = html.INPUT(type="submit", value="sélectionner cette interface")
-        input_select_interface.bind("click", lambda e, i=interface: select_display_callback(e, i))
+        input_select_interface.bind("click", lambda e, i=interface: select_interface_callback(e, i))
         form <= input_select_interface
 
         col = html.TD()
@@ -108,7 +108,7 @@ def render(panel_middle):
 
     my_panel.clear()
 
-    my_sub_panel = select_display()
+    my_sub_panel = select_interface()
 
     if my_sub_panel:
         my_panel <= html.H2("Sélectionnez l'interface (pour la carte du jeu) que vous souhaitez utiliser")
