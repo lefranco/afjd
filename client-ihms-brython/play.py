@@ -534,8 +534,6 @@ g_countdown_col = None  # pylint: disable=invalid-name
 def countdown():
     """ countdown """
 
-    print("countdown called !")
-
     deadline_loaded = g_game_parameters_loaded['deadline']
 
     # calculate display colour for deadline and countdown
@@ -1563,22 +1561,28 @@ def submit_orders():
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
 
-        # put back previous
-        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
-            selected_hovered_object.highlite(ctx, False)
+        nonlocal selected_hovered_object
+
+        prev_selected_hovered_object = selected_hovered_object
 
         # find where is mouse
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        nonlocal selected_hovered_object
         selected_hovered_object = g_position_data.closest_object(pos)
 
-        # hightlite object where mouse is
-        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
-            selected_hovered_object.highlite(ctx, True)
+        if selected_hovered_object != prev_selected_hovered_object:
+
+            # put back previous
+            if prev_selected_hovered_object is not None:
+                prev_selected_hovered_object.highlite(ctx, False)
+
+            # hightlite object where mouse is
+            if selected_hovered_object is not None:
+                selected_hovered_object.highlite(ctx, True)
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
-        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
+
+        if selected_hovered_object is not None:
             selected_hovered_object.highlite(ctx, False)
 
     def callback_render(_):
@@ -2262,22 +2266,28 @@ def submit_communication_orders():
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
 
-        # put back previous
-        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
-            selected_hovered_object.highlite(ctx, False)
+        nonlocal selected_hovered_object
+
+        prev_selected_hovered_object = selected_hovered_object
 
         # find where is mouse
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        nonlocal selected_hovered_object
         selected_hovered_object = g_position_data.closest_object(pos)
 
-        # hightlite object where mouse is
-        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
-            selected_hovered_object.highlite(ctx, True)
+        if selected_hovered_object != prev_selected_hovered_object:
+
+            # put back previous
+            if prev_selected_hovered_object is not None:
+                prev_selected_hovered_object.highlite(ctx, False)
+
+            # hightlite object where mouse is
+            if selected_hovered_object is not None:
+                selected_hovered_object.highlite(ctx, True)
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
-        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
+
+        if selected_hovered_object is not None:
             selected_hovered_object.highlite(ctx, False)
 
     def callback_render(_):
@@ -4651,7 +4661,6 @@ def render(panel_middle):
     # start countdown (must not be inside a timed function !)
     global countdown_timer  # pylint: disable=invalid-name
     if countdown_timer is None:
-        print("start (from main) countdown()")
         countdown_timer = timer.set_interval(countdown, 1000)
 
     # game not started, visiting probably to see parameters

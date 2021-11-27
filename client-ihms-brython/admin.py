@@ -798,22 +798,27 @@ def rectify():
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
 
-        # put back previous
-        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
-            selected_hovered_object.highlite(ctx, False)
+        nonlocal selected_hovered_object
+
+        prev_selected_hovered_object = selected_hovered_object
 
         # find where is mouse
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        nonlocal selected_hovered_object
         selected_hovered_object = position_data.closest_object(pos)
 
-        # hightlite object where mouse is
-        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
-            selected_hovered_object.highlite(ctx, True)
+        if selected_hovered_object != prev_selected_hovered_object:
+
+            # put back previous
+            if prev_selected_hovered_object is not None:
+                prev_selected_hovered_object.highlite(ctx, False)
+
+            # hightlite object where mouse is
+            if selected_hovered_object is not None:
+                selected_hovered_object.highlite(ctx, True)
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
-        if selected_hovered_object is not None and isinstance(selected_hovered_object, mapping.Highliteable):
+        if selected_hovered_object is not None:
             selected_hovered_object.highlite(ctx, False)
 
     def callback_render(_):
