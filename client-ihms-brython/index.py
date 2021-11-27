@@ -125,11 +125,9 @@ def load_option(_, item_name):
     # quitting superviser : clear timer
     if item_name_selected != 'jouer la partie sélectionnée':
         if play.supervise_refresh_timer is not None:
-            print("kill supervise refresh()")
             timer.clear_interval(play.supervise_refresh_timer)
             play.supervise_refresh_timer = None
         if play.observe_refresh_timer is not None:
-            print("kill observe refresh()")
             timer.clear_interval(play.observe_refresh_timer)
             play.observe_refresh_timer = None
 
