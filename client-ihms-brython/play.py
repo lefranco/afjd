@@ -229,7 +229,7 @@ def game_parameters_reload(game):
     return game_parameters_loaded
 
 
-def make_rating_colours_window(variant, ratings, colours):
+def make_rating_colours_window(variant_name, variant, ratings, colours):
     """ make_rating_window """
 
     rating_table = html.TABLE()
@@ -272,45 +272,25 @@ def make_rating_colours_window(variant, ratings, colours):
         col <= f"{ncenters}"
         rating_centers_row <= col
 
-    # c-diplo
-    score = scoring.c_diplo(variant, ratings)
-    rating_c_diplo_row = html.TR()
-    rating_table <= rating_c_diplo_row
-    col = html.TD(html.B("C-Diplo :"))
-    rating_c_diplo_row <= col
-    for role_name in ratings:
-        score_dis = float(score[role_name])
-        role_score = f"{score_dis:.2f}"
-        col = html.TD(role_score)
-        rating_c_diplo_row <= col
+    # selected scoring (user choice)
+    scoring_chosen = scoring.get_scoring_from_variant(variant_name)
+    if scoring_chosen == 'win namur':
+        score = scoring.win_namur(variant, ratings)
+    elif scoring_chosen == 'diplo league':
+        score = scoring.diplo_league(variant, ratings)
+    else:
+        score = scoring.c_diplo(variant, ratings)
 
-    # win namur
-    score = scoring.win_namur(variant, ratings)
-    rating_win_namur_row = html.TR()
-    rating_table <= rating_win_namur_row
-    col = html.TD(html.B("Win Namur :"))
-    col.attrs['style'] = 'font-size: x-small'
-    rating_win_namur_row <= col
+    # scoring
+    rating_scoring_row = html.TR()
+    rating_table <= rating_scoring_row
+    col = html.TD(html.B(f"{scoring_chosen} :"))
+    rating_scoring_row <= col
     for role_name in ratings:
         score_dis = float(score[role_name])
         role_score = f"{score_dis:.2f}"
         col = html.TD(role_score)
-        col.attrs['style'] = 'font-size: x-small'
-        rating_win_namur_row <= col
-
-    # diplo league
-    score = scoring.diplo_league(variant, ratings)
-    rating_diplo_league_row = html.TR()
-    rating_table <= rating_diplo_league_row
-    col = html.TD(html.B("Diplo Ligue :"))
-    col.attrs['style'] = 'font-size: x-small'
-    rating_diplo_league_row <= col
-    for role_name in ratings:
-        score_dis = float(score[role_name])
-        role_score = f"{score_dis:.2f}"
-        col = html.TD(role_score)
-        col.attrs['style'] = 'font-size: x-small'
-        rating_diplo_league_row <= col
+        rating_scoring_row <= col
 
     return rating_table
 
@@ -793,7 +773,7 @@ def show_position():
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
-    rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours)
+    rating_colours_window = make_rating_colours_window(g_variant_name_loaded, g_variant_data, ratings, colours)
 
     report_window = common.make_report_window(g_report_loaded)
 
@@ -1750,7 +1730,7 @@ def submit_orders():
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
-    rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours)
+    rating_colours_window = make_rating_colours_window(g_variant_name_loaded, g_variant_data, ratings, colours)
 
     report_window = common.make_report_window(g_report_loaded)
 
@@ -2434,7 +2414,7 @@ def submit_communication_orders():
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
-    rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours)
+    rating_colours_window = make_rating_colours_window(g_variant_name_loaded, g_variant_data, ratings, colours)
 
     report_window = common.make_report_window(g_report_loaded)
 
@@ -3068,7 +3048,7 @@ def show_history():
 
         ratings = position_data.role_ratings()
         colours = position_data.role_colours()
-        rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours)
+        rating_colours_window = make_rating_colours_window(g_variant_name_loaded, g_variant_data, ratings, colours)
         my_sub_panel <= rating_colours_window
 
         report_window = common.make_report_window(report_loaded)
@@ -4087,7 +4067,7 @@ def observe():
 
         ratings = g_position_data.role_ratings()
         colours = g_position_data.role_colours()
-        rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours)
+        rating_colours_window = make_rating_colours_window(g_variant_name_loaded, g_variant_data, ratings, colours)
 
         report_window = common.make_report_window(g_report_loaded)
 
