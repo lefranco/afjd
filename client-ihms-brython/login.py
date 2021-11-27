@@ -48,7 +48,21 @@ def login():
             render(g_panel_middle)
 
         pseudo = input_pseudo.value
+        if not pseudo:
+            alert("Il manque le pseudo !")
+            render(g_panel_middle)
+            return
+
         password = input_password.value
+        if not password:
+            alert("Il manque le mot de passe !")
+            render(g_panel_middle)
+            return
+
+        if pseudo.find("@") != -1:
+            alert("Attention, c'est le pseudo qui est demandé, pas l'adresse e-mail !")
+            render(g_panel_middle)
+            return
 
         host = config.SERVER_CONFIG['USER']['HOST']
         port = config.SERVER_CONFIG['USER']['PORT']
