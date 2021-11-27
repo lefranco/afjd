@@ -3,73 +3,70 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 
-from browser import html  # pylint: disable=import-error
+from browser import html, ajax, alert, window  # pylint: disable=import-error
 
 
-OPTIONS = ['classement', 'parties', 's\'inscrire', 'ajouter partie', 'retirer partie', 'diriger', 'ne plus diriger']
+OPTIONS = ['créer les parties']
 
 
-def ratings():
+def create_games():
     """ ratings """
 
-    my_sub_panel <= html.H3("Le classement")
+    def create_games_callback(_):
+        """ create_games_callback """
 
-    # TODO classement du tournoi
-    my_sub_panel <= "ICI classement du tournoi (sélectionner une partie du tournoi au préalable) - Pas encore implémenté, désolé !"
+        def onload_callback(_):
+            """ onload_callback """
 
+            # TODO : à exploiter
+            alert(f"{reader.result=}")
 
-def games():
-    """ games """
+            # back to where we started
+            my_sub_panel.clear()
+            create_games()
+            return
 
-    my_sub_panel <= html.H3("Les parties")
+        if not input_file.files:
+            alert("Pas de fichier")
 
-    # TODO état des parties du tournoi
-    my_sub_panel <= "ICI état des parties du tournoi - Pas encore implémenté, désolé !"
+            # back to where we started
+            my_sub_panel.clear()
+            create_games()
+            return
 
+        file = input_file.files[0]
+        # Create a new DOM FileReader instance
+        reader = window.FileReader.new()
+        # Read the file content as text
+        reader.readAsText(file)
+        reader.bind("load", onload_callback)
 
-def register():
-    """ games """
+        alert("creation des parties non opérationnelle pour le moment")
 
-    my_sub_panel <= html.H3("S'inscrire")
+        # back to where we started
+        my_sub_panel.clear()
+        create_games()
 
-    # TODO s'inscrire au tournoi
-    my_sub_panel <= "ICI possibilité de s'inscrire au tournoi - Pas encore implémenté, désolé !"
+    my_sub_panel <= html.H3("Création des parties")
 
+    form = html.FORM()
 
-def add_game():
-    """ add_game """
+    fieldset = html.FIELDSET()
+    legend_name = html.LEGEND("Ficher CSV")
+    fieldset <= legend_name
+    form <= fieldset
 
-    my_sub_panel <= html.H3("Ajouter une partie")
+    input_file = html.INPUT(type="file")
+    form <= input_file
+    form <= html.BR()
 
-    # TODO ajouter une partie au tournoi
-    my_sub_panel <= "ICI possibilité pour le directeur de tournoi d'ajouter une partie au tournoi - Pas encore implémenté, désolé !"
+    form <= html.BR()
 
+    input_create_games = html.INPUT(type="submit", value="créer les parties")
+    input_create_games.bind("click", create_games_callback)
+    form <= input_create_games
 
-def remove_game():
-    """ remove_game """
-
-    my_sub_panel <= html.H3("Retirer une partie")
-
-    # TODO retirer une partie du tournoi
-    my_sub_panel <= "ICI possibilité pour le directeur de tournoi de retirer une partie du tournoi - Pas encore implémenté, désolé !"
-
-
-def direct():
-    """ direct """
-
-    my_sub_panel <= html.H3("Prendre la direction")
-
-    # TODO prendre la direction du tournoi
-    my_sub_panel <= "ICI possibilité de prendre la direction du tournoi - Pas encore implémenté, désolé !"
-
-
-def quit_directing():
-    """ quit_directing """
-
-    my_sub_panel <= html.H3("Quitter la direction")
-
-    # TODO quitter la direction du tournoi
-    my_sub_panel <= "ICI possibilité de quitter la direction du tournoi - Pas encore implémenté, désolé !"
+    my_sub_panel <= form
 
 
 my_panel = html.DIV()
@@ -94,20 +91,8 @@ def load_option(_, item_name):
     """ load_option """
 
     my_sub_panel.clear()
-    if item_name == 'classement':
-        ratings()
-    if item_name == 'parties':
-        games()
-    if item_name == 's\'inscrire':
-        register()
-    if item_name == 'ajouter partie':
-        add_game()
-    if item_name == 'retirer partie':
-        remove_game()
-    if item_name == 'diriger':
-        direct()
-    if item_name == 'ne plus diriger':
-        quit_directing()
+    if item_name == 'créer les parties':
+        create_games()
 
     global item_name_selected  # pylint: disable=invalid-name
     item_name_selected = item_name
