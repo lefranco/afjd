@@ -24,7 +24,6 @@ def create_games():
             # back to where we started
             my_sub_panel.clear()
             create_games()
-            return
 
         if not input_file.files:
             alert("Pas de fichier")
