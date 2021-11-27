@@ -305,9 +305,9 @@ class Zone(Highliteable):
 
         legend_colour = LEGEND_COLOUR
 
-        # inversion (highlite)
+        # alteration (highlite)
         if active:
-            legend_colour = legend_colour.invert_colour()
+            legend_colour = LEGEND_COLOUR_HIGHLITED
 
         ctx.fillStyle = legend_colour.str_value()
 
@@ -325,7 +325,7 @@ class Zone(Highliteable):
         ctx.fillText(legend, x_pos - text_width / 2, y_pos)
 
     def description(self):
-        """ description for when hovering """
+        """ description for helping - not used currently """
 
         variant = self._variant
 
@@ -366,6 +366,11 @@ class Zone(Highliteable):
     def variant(self) -> 'Variant':
         """ property """
         return self._variant
+
+    def __str__(self) -> str:
+        variant = self._variant
+        zone_full_name = variant.full_name_table[self]
+        return f"La zone {zone_full_name}"
 
 
 class Role:
@@ -409,9 +414,9 @@ class ColourRecord:
             return ColourRecord(red=255 // 2, green=255 // 2, blue=255 // 2)
         return ColourRecord(red=0, green=0, blue=0)
 
-    def invert_colour(self) -> 'ColourRecord':
-        """ invert_colour """
-        return ColourRecord(255 - self.red, 255 - self.green, 255 - self.blue)
+    def highlite_colour(self) -> 'ColourRecord':
+        """ highlite_colour """
+        return ColourRecord(self.red // 2, self.green // 2, self.blue // 2)
 
     def str_value(self) -> str:
         """ str_value """
@@ -448,6 +453,7 @@ ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 # legend
 LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
+LEGEND_COLOUR_HIGHLITED = ColourRecord(red=255, green=255, blue=255)  # white
 
 
 def legend_font() -> str:
@@ -888,7 +894,7 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
         self.render(ctx, active)
 
     def description(self):
-        """ description for when hovering """
+        """ description for helping - not used currently """
 
         variant = self._position.variant
 
@@ -948,13 +954,18 @@ class Army(Unit):
     def render(self, ctx, active=False) -> None:
 
         fill_color = self._position.variant.colour_table[self._role]
+
+        # alteration (highlite)
+        if active:
+            fill_color = fill_color.highlite_colour()
+
         ctx.fillStyle = fill_color.str_value()
 
         outline_colour = fill_color.outline_colour()
 
-        # inversion (highlite)
+        # alteration (highlite)
         if active:
-            outline_colour = outline_colour.invert_colour()
+            outline_colour = outline_colour.highlite_colour()
 
         ctx.strokeStyle = outline_colour.str_value()
 
@@ -985,13 +996,18 @@ class Fleet(Unit):
     def render(self, ctx, active=False) -> None:
 
         fill_color = self._position.variant.colour_table[self._role]
+
+        # alteration (highlite)
+        if active:
+            fill_color = fill_color.highlite_colour()
+
         ctx.fillStyle = fill_color.str_value()
 
         outline_colour = fill_color.outline_colour()
 
-        # inversion (highlite)
+        # alteration (highlite)
         if active:
-            outline_colour = outline_colour.invert_colour()
+            outline_colour = outline_colour.highlite_colour()
 
         ctx.strokeStyle = outline_colour.str_value()
 
@@ -1042,7 +1058,7 @@ class Ownership(Renderable):
         return json_dict
 
     def description(self):
-        """ description for when hovering """
+        """ description for helping - not used currently """
 
         variant = self._position.variant
 
@@ -1081,7 +1097,7 @@ class Forbidden(Renderable):
         self._region = region
 
     def description(self):
-        """ description for when hovering """
+        """ description for helping - not used currently """
 
         variant = self._position.variant
 
@@ -1283,24 +1299,6 @@ class Position(Renderable):
             distance = designated_pos.distance(unit_pos)
             if distance_closest is None or distance < distance_closest:
                 closest_object = unit
-                distance_closest = distance
-
-        # search in the forbiddens
-        for forbidden in self._forbiddens:
-            zone = forbidden.region.zone
-            forbidden_pos = self._variant.position_table[zone]
-            distance = designated_pos.distance(forbidden_pos)
-            if distance_closest is None or distance < distance_closest:
-                closest_object = forbidden
-                distance_closest = distance
-
-        # search in the centers
-        for ownership in self._ownerships:
-            center = ownership.center
-            center_pos = self._variant.position_table[center]
-            distance = designated_pos.distance(center_pos)
-            if distance_closest is None or distance < distance_closest:
-                closest_object = ownership
                 distance_closest = distance
 
         # search in the zones
