@@ -8,8 +8,6 @@ import common
 import tools
 import mapping
 
-LONG_DURATION_LIMIT_SEC = 1.0
-
 VARIANT_NAME = "standard"
 
 my_panel = html.DIV(id="oracle")
