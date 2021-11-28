@@ -43,7 +43,13 @@ def load_mail_config(app: typing.Any) -> None:
 def send_mail(subject: str, body: str, recipients: typing.List[str]) -> bool:
     """ send_mail """
 
-    msg = flask_mail.Message(subject, sender=SENDER, bcc=recipients)
+    # only on destinee : normal email
+    if len(recipients) == 1:
+        msg = flask_mail.Message(subject, sender=SENDER, recipients=recipients)
+    # otherwise : send to myself and use hidden copies
+    else:
+        msg = flask_mail.Message(subject, sender=SENDER, recipients=[SENDER], bcc=recipients)
+
     msg.body = body
     msg.body += "\n"
     msg.body += "\n"
