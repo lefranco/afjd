@@ -517,12 +517,12 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         if failed:
             del sql_executor
-            flask_restful.abort(400, msg=f"Failed to send at least one message")
+            flask_restful.abort(400, msg="Failed to send at least one message")
 
         sql_executor.commit()
         del sql_executor
 
-        data = {'msg': f"Ok  email(s) successfully sent"}
+        data = {'msg': "Ok  email(s) successfully sent"}
         return data, 200
 
 
