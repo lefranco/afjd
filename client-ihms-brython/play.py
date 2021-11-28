@@ -61,7 +61,7 @@ g_game = None  # pylint: disable=invalid-name
 g_variant_name_loaded = None  # pylint: disable=invalid-name
 g_variant_content_loaded = None  # pylint: disable=invalid-name
 g_interface_chosen = None  # pylint: disable=invalid-name
-g_display_parameters_read = None  # pylint: disable=invalid-name
+g_interface_parameters_read = None  # pylint: disable=invalid-name
 g_variant_data = None  # pylint: disable=invalid-name
 g_game_parameters_loaded = None  # pylint: disable=invalid-name
 g_game_players_dict = None  # pylint: disable=invalid-name
@@ -420,12 +420,12 @@ def load_static_stuff():
     g_interface_chosen = interface.get_interface_from_variant(g_variant_name_loaded)
 
     # from display chose get display parameters
-    global g_display_parameters_read  # pylint: disable=invalid-name
-    g_display_parameters_read = common.read_parameters(g_variant_name_loaded, g_interface_chosen)
+    global g_interface_parameters_read  # pylint: disable=invalid-name
+    g_interface_parameters_read = common.read_parameters(g_variant_name_loaded, g_interface_chosen)
 
     # build variant data
     global g_variant_data  # pylint: disable=invalid-name
-    g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_display_parameters_read)
+    g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_interface_parameters_read)
 
 
 def load_dynamic_stuff():
