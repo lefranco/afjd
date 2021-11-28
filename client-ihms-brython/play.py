@@ -65,6 +65,7 @@ g_interface_parameters_read = None  # pylint: disable=invalid-name
 g_variant_data = None  # pylint: disable=invalid-name
 g_game_parameters_loaded = None  # pylint: disable=invalid-name
 g_game_players_dict = None  # pylint: disable=invalid-name
+g_inforced_variant_data = None  # pylint: disable=invalid-name
 
 # loaded in load_dynamic_stuff
 g_game_status = None  # pylint: disable=invalid-name
@@ -426,6 +427,16 @@ def load_static_stuff():
     # build variant data
     global g_variant_data  # pylint: disable=invalid-name
     g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_interface_parameters_read)
+
+    # now for official map
+
+    # like above
+    interface_inforced = interface.get_inforced_interface_from_variant(g_variant_name_loaded)
+    inforced_interface_parameters_read = common.read_parameters(g_variant_name_loaded, interface_inforced)
+
+    # build variant data
+    global g_inforced_variant_data  # pylint: disable=invalid-name
+    g_inforced_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, inforced_interface_parameters_read)
 
 
 def load_dynamic_stuff():
@@ -890,6 +901,9 @@ def submit_orders():
         names_dict = g_variant_data.extract_names()
         names_dict_json = json.dumps(names_dict)
 
+        inforced_names_dict = g_inforced_variant_data.extract_names()
+        inforced_names_dict_json = json.dumps(inforced_names_dict)
+
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
 
@@ -900,7 +914,8 @@ def submit_orders():
             'pseudo': g_pseudo,
             'orders': orders_list_dict_json,
             'definitive': definitive_value,
-            'names': names_dict_json
+            'names': names_dict_json,
+            'adjudication_names': inforced_names_dict_json
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -3365,15 +3380,16 @@ def game_master():
             load_special_stuff()
             game_master()
 
-        names_dict = g_variant_data.extract_names()
-        names_dict_json = json.dumps(names_dict)
+        inforced_names_dict = g_inforced_variant_data.extract_names()
+        inforced_names_dict_json = json.dumps(inforced_names_dict)
+
         definitive_value = True
 
         json_dict = {
             'role_id': role_id,
             'pseudo': g_pseudo,
             'definitive': definitive_value,
-            'names': names_dict_json
+            'adjudication_names': inforced_names_dict_json
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']

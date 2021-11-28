@@ -19,6 +19,13 @@ my_panel = html.DIV(id="interface")
 my_panel.attrs['style'] = 'display: table'
 
 
+def get_inforced_interface_from_variant(variant):
+    """ get_inforced_interface_from_variant """
+
+    # takes the first
+    return INTERFACE_TABLE[variant][0]
+
+
 def get_interface_from_variant(variant):
     """ get_interface_from_variant """
 

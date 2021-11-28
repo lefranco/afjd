@@ -116,12 +116,13 @@ SUBMISSION_PARSER.add_argument('role_id', type=int, required=True)
 SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
 SUBMISSION_PARSER.add_argument('definitive', type=int, required=False)
 SUBMISSION_PARSER.add_argument('names', type=str, required=True)
+SUBMISSION_PARSER.add_argument('adjudication_names', type=str, required=True)
 SUBMISSION_PARSER.add_argument('pseudo', type=str, required=False)
 
 AGREE_PARSER = flask_restful.reqparse.RequestParser()
 AGREE_PARSER.add_argument('role_id', type=int, required=True)
 AGREE_PARSER.add_argument('definitive', type=int, required=False)
-AGREE_PARSER.add_argument('names', type=str, required=True)
+AGREE_PARSER.add_argument('adjudication_names', type=str, required=True)
 AGREE_PARSER.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER2 = flask_restful.reqparse.RequestParser()
@@ -1533,7 +1534,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
         role_id = args['role_id']
         definitive_value = args['definitive']
-        names = args['names']
+        adjudication_names = args['adjudication_names']
         pseudo = args['pseudo']
 
         if pseudo is None:
@@ -1604,7 +1605,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
         # handle definitive boolean
         # game master forced player to agree to adjudicate
-        status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), names, sql_executor)
+        status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), adjudication_names, sql_executor)
 
         if not status:
             del sql_executor  # noqa: F821
@@ -1638,6 +1639,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         orders_submitted = args['orders']
         definitive_value = args['definitive']
         names = args['names']
+        adjudication_names = args['adjudication_names']
         pseudo = args['pseudo']
 
         mylogger.LOGGER.info("role_id=%s orders_submitted=%s definitive_value=%s names=%s", role_id, orders_submitted, definitive_value, names)
@@ -1872,7 +1874,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         # handle definitive boolean
         # player submitted orders and agreed (or not) to adjudicate
-        status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), names, sql_executor)  # noqa: F821
+        status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), adjudication_names, sql_executor)  # noqa: F821
 
         if not status:
             del sql_executor  # noqa: F821
