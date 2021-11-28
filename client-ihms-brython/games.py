@@ -21,6 +21,7 @@ OPTIONS = ['créer', 'changer description', 'changer paramètres accès', 'chang
 MAX_LEN_NAME = 30
 
 DEFAULT_VARIANT = 'standard'
+DEFAULT_SCORING_CODE = "CDIP"
 DEFAULT_DEADLINE_TIME = 21
 DEFAULT_GRACE_DURATION = 2
 DEFAULT_SPEED_MOVES = 3
@@ -104,6 +105,8 @@ def create_game():
         nopress = int(input_nopress.checked)
         fast = int(input_fast.checked)
 
+        scoring_code = config.SCORING_CODE_TABLE[input_scoring.value]
+
         try:
             deadline_hour = int(input_deadline_hour.value)
         except:  # noqa: E722 pylint: disable=bare-except
@@ -179,19 +182,21 @@ def create_game():
 
         specific_data = ""
         if archive:
-            specific_data += 'archive '
+            specific_data += "archive "
         if manual:
-            specific_data += 'manuelle '
+            specific_data += "manuelle "
         if anonymous:
-            specific_data += 'anonyme '
+            specific_data += "anonyme "
         if nomessage:
-            specific_data += 'sans message '
+            specific_data += "sans message "
         if nopress:
-            specific_data += 'sans presse '
+            specific_data += "sans presse "
         if fast:
-            specific_data += 'rapide '
+            specific_data += "rapide "
+        if not specific_data:
+            specific_data = "(sans particularité) "
 
-        description = f"Partie créé à {time_creation_str} (gmt) par {pseudo} variante {variant} dernière année jouée {last_year}. Cette partie est {specific_data}"
+        description = f"Partie créé à {time_creation_str} (gmt) par {pseudo} variante {variant} dernière année jouée {last_year}. Cette partie est {specific_data}. Scorage {scoring_code}"
         state = 0
 
         json_dict = {
@@ -204,6 +209,8 @@ def create_game():
             'nomessage': nomessage,
             'nopress': nopress,
             'fast': fast,
+
+            'scoring': scoring_code,
 
             'deadline_hour': deadline_hour,
             'deadline_sync': deadline_sync,
@@ -314,10 +321,26 @@ def create_game():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_fast = html.LEGEND("rapide", title="Les résolutions se font aussi que possible, le système n'ajoute pas les jours aux dates limites")
+    legend_fast = html.LEGEND("rapide", title="Les résolutions se font aussi que possible, le système n'ajoute pas les jours aux dates limites (pour des parties en temps réel)")
     fieldset <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_fast
+    form <= fieldset
+
+    # special : la marque
+
+    fieldset = html.FIELDSET()
+    legend_scoring = html.LEGEND("scoring", title="La méthode pour compter les popints (applicable aux parties en tournoi uniquement)")
+    fieldset <= legend_scoring
+    input_scoring = html.SELECT(type="select-one", value="")
+
+    for scoring_name in config.SCORING_CODE_TABLE:
+        option = html.OPTION(scoring_name)
+        if config.SCORING_CODE_TABLE[scoring_name] == DEFAULT_SCORING_CODE:
+            option.selected = True
+        input_scoring <= option
+
+    fieldset <= input_scoring
     form <= fieldset
 
     title_pace = html.H3("Cadence de la partie")

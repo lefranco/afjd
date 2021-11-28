@@ -27,6 +27,10 @@ with open("./data/country_list.json", "r") as read_file:
 with open("./data/timezone_list.json", "r") as read_file:
     TIMEZONE_CODE_TABLE = json.load(read_file)
 
+# load scoring list from json data file
+with open("./data/scoring_list.json", "r") as read_file:
+    SCORING_CODE_TABLE = json.load(read_file)
+
 # colours
 ALL_AGREEMENTS_IN_COLOUR = 'Chartreuse'
 ALL_ORDERS_IN_COLOUR = 'Chartreuse'

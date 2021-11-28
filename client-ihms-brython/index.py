@@ -13,7 +13,6 @@ import home    # noqa: E402
 import login    # noqa: E402
 import selection    # noqa: E402
 import interface    # noqa: E402
-import scoring    # noqa: E402
 import account    # noqa: E402
 import opportunities    # noqa: E402
 import mygames    # noqa: E402
@@ -42,7 +41,7 @@ h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'sélectionner interface', 'sélectionner scorage', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'oracle', 'listes', 'foire aux questions', 'coin technique', 'administration']
+OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'sélectionner interface', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'oracle', 'listes', 'foire aux questions', 'coin technique', 'administration']
 
 # overall_top
 overall_top = html.DIV()
@@ -79,8 +78,6 @@ def load_option(_, item_name):
         selection.render(panel_middle)
     if item_name == 'sélectionner interface':
         interface.render(panel_middle)
-    if item_name == 'sélectionner scorage':
-        scoring.render(panel_middle)
     if item_name == 'mon compte':
         account.render(panel_middle)
     if item_name == 'rejoindre une partie':
