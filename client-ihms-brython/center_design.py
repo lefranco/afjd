@@ -4,7 +4,9 @@
 
 import math
 
+
 CENTER_RAY = 5
+
 
 def stabbeur_center(x: int, y: int, ctx):  # pylint: disable=invalid-name
     """ display a center the stabbeur way """
