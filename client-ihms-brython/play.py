@@ -230,7 +230,7 @@ def game_parameters_reload(game):
     return game_parameters_loaded
 
 
-def make_rating_colours_window(variant_name, variant, ratings, colours):
+def make_rating_colours_window(variant, ratings, colours, game_scoring):
     """ make_rating_window """
 
     rating_table = html.TABLE()
@@ -273,19 +273,18 @@ def make_rating_colours_window(variant_name, variant, ratings, colours):
         col <= f"{ncenters}"
         rating_centers_row <= col
 
-    # selected scoring (user choice)
-    scoring_chosen = scoring.get_scoring_from_variant(variant_name)
-    if scoring_chosen == 'win namur':
-        score = scoring.win_namur(variant, ratings)
-    elif scoring_chosen == 'diplo league':
-        score = scoring.diplo_league(variant, ratings)
-    else:
+    # selected scoring game parameter
+    if game_scoring == 'CDIP':
         score = scoring.c_diplo(variant, ratings)
+    if game_scoring == 'WNAM':
+        score = scoring.win_namur(variant, ratings)
+    if game_scoring == 'DLIG':
+        score = scoring.diplo_league(variant, ratings)
 
     # scoring
     rating_scoring_row = html.TR()
     rating_table <= rating_scoring_row
-    col = html.TD(html.B(f"{scoring_chosen} :"))
+    col = html.TD(html.B(f"{game_scoring} :"))
     rating_scoring_row <= col
     for role_name in ratings:
         score_dis = float(score[role_name])
@@ -819,7 +818,8 @@ def show_position():
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
-    rating_colours_window = make_rating_colours_window(g_variant_name_loaded, g_variant_data, ratings, colours)
+    game_scoring = g_game_parameters_loaded['scoring']
+    rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
 
     report_window = common.make_report_window(g_report_loaded)
 
@@ -1780,7 +1780,8 @@ def submit_orders():
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
-    rating_colours_window = make_rating_colours_window(g_variant_name_loaded, g_variant_data, ratings, colours)
+    game_scoring = g_game_parameters_loaded['scoring']
+    rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
 
     report_window = common.make_report_window(g_report_loaded)
 
@@ -2464,7 +2465,8 @@ def submit_communication_orders():
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
-    rating_colours_window = make_rating_colours_window(g_variant_name_loaded, g_variant_data, ratings, colours)
+    game_scoring = g_game_parameters_loaded['scoring']
+    rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
 
     report_window = common.make_report_window(g_report_loaded)
 
@@ -3098,7 +3100,8 @@ def show_history():
 
         ratings = position_data.role_ratings()
         colours = position_data.role_colours()
-        rating_colours_window = make_rating_colours_window(g_variant_name_loaded, g_variant_data, ratings, colours)
+        game_scoring = g_game_parameters_loaded['scoring']
+        rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
         my_sub_panel <= rating_colours_window
 
         report_window = common.make_report_window(report_loaded)
@@ -4118,7 +4121,8 @@ def observe():
 
         ratings = g_position_data.role_ratings()
         colours = g_position_data.role_colours()
-        rating_colours_window = make_rating_colours_window(g_variant_name_loaded, g_variant_data, ratings, colours)
+        game_scoring = g_game_parameters_loaded['scoring']
+        rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
 
         report_window = common.make_report_window(g_report_loaded)
 
@@ -4171,7 +4175,7 @@ def show_game_parameters():
 
     for key, value in g_game_parameters_loaded.items():
 
-        if key in ['name', 'description', 'variant', 'deadline', 'current_state', 'current_advancement']:
+        if key in ['name', 'description', 'variant', 'scoring', 'deadline', 'current_state', 'current_advancement']:
             continue
 
         row = html.TR()
