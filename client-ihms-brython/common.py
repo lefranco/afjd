@@ -335,36 +335,6 @@ def get_role_allocated_to_player_in_game(game_id):
     return role_id
 
 
-def get_roles_submitted_orders(game_id):
-    """ get_roles_submitted_orders """
-
-    submitted_data = None
-
-    def reply_callback(req):
-        nonlocal submitted_data
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        submitted_data = req_result
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-orders-submitted/{game_id}"
-
-    # get roles that submitted orders : need token (but may change)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
-
-    return submitted_data
-
-
 def date_last_visit_load(game_id, visit_type):
     """ date_last_visit_load """
 
