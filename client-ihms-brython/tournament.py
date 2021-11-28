@@ -18,8 +18,28 @@ def create_games():
         def onload_callback(_):
             """ onload_callback """
 
-            # TODO : à exploiter
-            alert(f"{reader.result=}")
+            games_to_create = dict()
+
+            content = str(reader.result)
+            lines = content.split('\n')
+
+            for line in lines:
+
+                # ignore empty lines
+                if not line:
+                    continue
+
+                tab = line.split(',')
+                game_name = tab[0]
+
+                # TODO : check = pseudo
+                game_master = tab[1]
+
+                games_to_create[game_name] = {n : tab[n+1] for n in range(len(tab)-1)}
+
+            alert(f"{games_to_create=}")
+
+            # TODO : actual creation of all the games
 
             # back to where we started
             my_sub_panel.clear()
@@ -37,7 +57,7 @@ def create_games():
         # Create a new DOM FileReader instance
         reader = window.FileReader.new()
         # Read the file content as text
-        reader.readAsText(file)
+        reader.readAsBinaryString(file)
         reader.bind("load", onload_callback)
 
         alert("creation des parties non opérationnelle pour le moment")
