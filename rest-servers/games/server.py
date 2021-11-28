@@ -67,6 +67,7 @@ GAME_PARSER.add_argument('anonymous', type=int, required=False)
 GAME_PARSER.add_argument('nomessage', type=int, required=False)
 GAME_PARSER.add_argument('nopress', type=int, required=False)
 GAME_PARSER.add_argument('fast', type=int, required=False)
+GAME_PARSER.add_argument('scoring', type=str, required=False)
 GAME_PARSER.add_argument('deadline', type=int, required=False)
 GAME_PARSER.add_argument('deadline_hour', type=int, required=False)
 GAME_PARSER.add_argument('deadline_sync', type=int, required=False)
@@ -609,6 +610,14 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         if not name.isidentifier():
             flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
 
+        # cannot have a void scoring
+        if args['scoring']:
+            scoring_provided = args['scoring']
+            if not games.check_scoring(scoring_provided):
+                flask_restful.abort(404, msg=f"Scoring '{scoring_provided}' is not a valid scoring code")
+        else:
+            args['scoring'] = games.default_scoring()
+
         sql_executor = database.SqlExecutor()
 
         # find the game
@@ -641,7 +650,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         # create game here
         identifier = games.Game.free_identifier(sql_executor)
-        game = games.Game(identifier, '', '', '', False, False, False, False, False, 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0, 0)
+        game = games.Game(identifier, '', '', '', False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0, 0)
         _ = game.load_json(args)
         game.update_database(sql_executor)
 
