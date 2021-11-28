@@ -197,7 +197,7 @@ class Center:
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
 
         ctx.beginPath()
-        ctx.arc(x, y, 4, 0, 2 * math.pi, False)
+        ctx.arc(x, y, center_design.CENTER_RAY, 0, 2 * math.pi, False)
         ctx.fill(); ctx.stroke(); ctx.closePath()
 
     @property
