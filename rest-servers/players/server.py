@@ -509,15 +509,20 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Failed to find pseudo with id={failed_addressee_id}")
 
-        status = mailer.send_mail(subject, body, recipients)
-        if not status:
+        for destinee in recipients:
+            status = mailer.send_mail(subject, body, destinee)
+            # try them all
+            if not status:
+                failed = True
+
+        if failed:
             del sql_executor
-            flask_restful.abort(400, msg="Failed to send!")
+            flask_restful.abort(400, msg=f"Failed to send at least one message")
 
         sql_executor.commit()
         del sql_executor
 
-        data = {'msg': 'Ok emails sent'}
+        data = {'msg': f"Ok  email(s) successfully sent"}
         return data, 200
 
 

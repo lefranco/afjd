@@ -40,15 +40,10 @@ def load_mail_config(app: typing.Any) -> None:
     SENDER = app.config['MAIL_USERNAME']
 
 
-def send_mail(subject: str, body: str, recipients: typing.List[str]) -> bool:
+def send_mail(subject: str, body: str, destinee: str) -> bool:
     """ send_mail """
 
-    # only on destinee : normal email
-    if len(recipients) == 1:
-        msg = flask_mail.Message(subject, sender=SENDER, recipients=recipients)
-    # otherwise : send to myself and use hidden copies
-    else:
-        msg = flask_mail.Message(subject, sender=SENDER, recipients=[SENDER], bcc=recipients)
+    msg = flask_mail.Message(subject, sender=SENDER, recipients=[destinee])
 
     msg.body = body
     msg.body += "\n"
@@ -78,7 +73,7 @@ def send_mail_checker(code: int, email_dest: str) -> bool:
     body += "\n"
     body += str(code)
 
-    return send_mail(subject, body, [email_dest])
+    return send_mail(subject, body, email_dest)
 
 
 if __name__ == '__main__':
