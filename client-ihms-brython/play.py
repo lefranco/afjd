@@ -477,6 +477,9 @@ def load_special_stuff():
             alert("Erreur chargement joueurs de la partie")
             return
 
+    # TODO improve this with real admin account
+    if g_pseudo is not None and (g_pseudo == 'Palpatine' or (g_role_id is not None and (g_role_id == 0 or not g_game_parameters_loaded['anonymous']))):
+
         # just to prevent a erroneous pylint warning
         g_game_players_dict = dict(g_game_players_dict)
 
@@ -716,6 +719,36 @@ def get_game_players_data(game_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return game_players_dict
+
+
+def get_roles_submitted_orders(game_id):
+    """ get_roles_submitted_orders """
+
+    submitted_data = None
+
+    def reply_callback(req):
+        nonlocal submitted_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        submitted_data = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-orders-submitted/{game_id}"
+
+    # get roles that submitted orders : need token (but may change)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return submitted_data
 
 
 def show_position():
@@ -1664,7 +1697,7 @@ def submit_orders():
 
     # need to have orders to submit
 
-    submitted_data = common.get_roles_submitted_orders(g_game_id)
+    submitted_data = get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
@@ -2357,7 +2390,7 @@ def submit_communication_orders():
 
     # need to have orders to submit
 
-    submitted_data = common.get_roles_submitted_orders(g_game_id)
+    submitted_data = get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
@@ -3495,7 +3528,7 @@ def game_master():
     id2pseudo = {v: k for k, v in g_players_dict.items()}
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
-    submitted_data = common.get_roles_submitted_orders(g_game_id)
+    submitted_data = get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
@@ -3852,7 +3885,7 @@ def supervise():
             # reload from server to see what changed from outside
             load_dynamic_stuff()
             nonlocal submitted_data
-            submitted_data = common.get_roles_submitted_orders(g_game_id)
+            submitted_data = get_roles_submitted_orders(g_game_id)
             if submitted_data is None:
                 alert("Erreur chargement données de soumission")
                 return
@@ -4297,7 +4330,7 @@ def show_orders_submitted_in_game():
         return False
 
     # you will at least get your own role
-    submitted_data = common.get_roles_submitted_orders(g_game_id)
+    submitted_data = get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
@@ -4418,7 +4451,7 @@ def show_incidents_in_game():
         return False
 
     # you will at least get your own role
-    submitted_data = common.get_roles_submitted_orders(g_game_id)
+    submitted_data = get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
