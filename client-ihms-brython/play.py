@@ -480,6 +480,8 @@ def load_special_stuff():
         # just to prevent a erroneous pylint warning
         g_game_players_dict = dict(g_game_players_dict)
 
+        # get the incidents of the game
+        # need a token for this
         global g_incidents_loaded  # pylint: disable=invalid-name
         g_incidents_loaded = game_incidents_reload(g_game_id)
         if g_incidents_loaded is None:
