@@ -35,7 +35,7 @@ def create_games():
                 # TODO : check = pseudo
                 game_master = tab[1]
 
-                games_to_create[game_name] = {n : tab[n+1] for n in range(len(tab)-1)}
+                games_to_create[game_name] = {n: tab[n + 1] for n in range(len(tab) - 1)}
 
             alert(f"{games_to_create=}")
 
