@@ -497,12 +497,13 @@ def load_special_stuff():
         # need a token for this
         global g_incidents_loaded  # pylint: disable=invalid-name
         g_incidents_loaded = game_incidents_reload(g_game_id)
+
         if g_incidents_loaded is None:
             alert("Erreur chargement incidents")
             return
 
         # just to prevent a erroneous pylint warning
-        g_incidents_loaded = dict(g_incidents_loaded)
+        g_incidents_loaded = list(g_incidents_loaded)
 
 
 def stack_clock(frame, period):
@@ -4175,7 +4176,7 @@ def show_game_parameters():
 
     for key, value in g_game_parameters_loaded.items():
 
-        if key in ['name', 'description', 'variant', 'scoring', 'deadline', 'current_state', 'current_advancement']:
+        if key in ['name', 'description', 'variant', 'deadline', 'current_state', 'current_advancement']:
             continue
 
         row = html.TR()
@@ -4187,6 +4188,7 @@ def show_game_parameters():
             'nopress': ("pas de presse", "on ne peut pas déclarer - sauf l'arbitre", "Toute déclaration de joueur est impossible - effacé à la fin de la partie", "OUI"),
             'fast': ("rapide", "la partie est jouée en temps réel comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en jours", "OUI"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
+            'scoring': ("code du scorage", "le système de scorage appliqué", "Actuellement CDIP = C-Diplo, WNAM = WIN Namur et DLIG = Diplo Ligue. Note : Le calcul est réalisé dans l'interface", "OUI"),
             'deadline_hour': ("heure de la date limite", "entre 0 et 23", "Heure à laquelle le système placera la date limite dans la journée si la synchronisation est souhaitée", "OUI"),
             'deadline_sync': ("synchronisation de la date limite", "oui ou non", "Le système synchronise la date limite à une heure précise dans la journée", "OUI"),
             'grace_duration': ("durée de la grâce", "en jours", "L'arbitre tolère un retard d'autant de jours avant de placer des désordres civils", "OUI"),
