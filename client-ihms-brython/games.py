@@ -16,7 +16,7 @@ import common
 import selection
 import index  # circular import
 
-OPTIONS = ['créer', 'changer description', 'changer paramètres accès', 'changer date limite', 'changer paramètre cadence', 'changer état', 'supprimer']
+OPTIONS = ['créer', 'changer description', 'changer scorage', 'changer paramètres accès', 'changer date limite', 'changer paramètre cadence', 'changer état', 'supprimer']
 
 MAX_LEN_NAME = 30
 
@@ -327,10 +327,13 @@ def create_game():
     fieldset <= input_fast
     form <= fieldset
 
+    title_scoring = html.H3("Système de marque")
+    form <= title_scoring
+
     # special : la marque
 
     fieldset = html.FIELDSET()
-    legend_scoring = html.LEGEND("scoring", title="La méthode pour compter les popints (applicable aux parties en tournoi uniquement)")
+    legend_scoring = html.LEGEND("scoring", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
     fieldset <= legend_scoring
     input_scoring = html.SELECT(type="select-one", value="")
 
@@ -609,6 +612,131 @@ def change_description_game():
     input_change_description_game = html.INPUT(type="submit", value="changer la description de la partie")
     input_change_description_game.bind("click", change_description_game_callback)
     form <= input_change_description_game
+
+    my_sub_panel <= form
+
+
+def change_scoring_game():
+    """ change_scoring_game """
+
+    # declare the values
+    scoring_code_loaded = None
+
+    def change_scoring_reload():
+        """ change_scoring_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ local_noreply_callback """
+            nonlocal status
+            alert("Problème (pas de réponse de la part du serveur)")
+            status = False
+
+        def reply_callback(req):
+            nonlocal status
+            nonlocal scoring_code_loaded
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération du scorage de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération du scorage de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                status = False
+                return
+
+            scoring_code_loaded = req_result['scoring']
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # getting game data : no need for token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_scoring_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification du scorage de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification du scorage de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le scorage a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
+
+        scoring_code = config.SCORING_CODE_TABLE[input_scoring.value]
+
+        json_dict = {
+            'pseudo': pseudo,
+            'name': game,
+            'scoring': scoring_code,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # changing game scoring : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        my_sub_panel.clear()
+        change_scoring_game()
+
+    my_sub_panel <= html.H3("Changement du scorage")
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    status = change_scoring_reload()
+    if not status:
+        return
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_scoring = html.LEGEND("scoring", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
+    fieldset <= legend_scoring
+    input_scoring = html.SELECT(type="select-one", value="")
+
+    for scoring_name in config.SCORING_CODE_TABLE:
+        option = html.OPTION(scoring_name)
+        if config.SCORING_CODE_TABLE[scoring_name] == scoring_code_loaded:
+            option.selected = True
+        input_scoring <= option
+
+    fieldset <= input_scoring
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_scoring_game = html.INPUT(type="submit", value="changer le scorage de la partie")
+    input_change_scoring_game.bind("click", change_scoring_game_callback)
+    form <= input_change_scoring_game
 
     my_sub_panel <= form
 
@@ -1417,6 +1545,8 @@ def load_option(_, item_name):
         create_game()
     if item_name == 'changer description':
         change_description_game()
+    if item_name == 'changer scorage':
+        change_scoring_game()
     if item_name == 'changer paramètres accès':
         change_access_parameters_game()
     if item_name == 'changer date limite':
