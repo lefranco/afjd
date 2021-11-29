@@ -42,7 +42,7 @@ def information_about_emails():
     """ information_about_emails """
 
     information = html.DIV(Class='important')
-    information <= "Vous recevrez un e-mail pour confimer votre adresse mail, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un e-mail de rappel de l'arbitre si vous êtes en retard sur les ordres."
+    information <= "Vous recevrez un e-mail pour confimer votre adresse mail, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un e-mail de rappel de l'arbitre si vous êtes en retard sur les ordres. Un e-mail de notification de résolution mais dans ce dernier cas seulement si vous l'avez demandé."
     information <= html.BR()
     information <= "Rien de plus !"
     return information

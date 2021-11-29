@@ -321,7 +321,7 @@ def create_game():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_fast = html.LEGEND("rapide", title="Les résolutions se font aussi que possible, le système n'ajoute pas les jours aux dates limites (pour des parties en temps réel)")
+    legend_fast = html.LEGEND("rapide", title="Le calcul des dates limites se fait en minutes au lieu de jours (pour des parties en temps réel)")
     fieldset <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_fast
