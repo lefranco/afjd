@@ -16,7 +16,7 @@ faq_content_table = {
     "Eh non. Les ordres sont 100% vérifiés avant d'être enregistrés. Par contre le menu 'taguer' dans une partie permet une communcation par ordres 'ésotériques'. Cela ne presente un intérêt que dans les parties sans communication",
 
     "Quand a lieu la résolution ?":
-    "Quand le dernier joueur qui a des ordres a rendre coche sur la case d'accord pour résoudre, ou si pas d'ordres sont nécessaires, quand l'arbitre coche la résolution sur sa console d'arbitrage",
+    "Quand le dernier joueur qui a des ordres a rendre coche sur la case 'prêt à résoudre' tout simplement (ou quand l'arbitre le fait à sa place pour éviter que la partie ne s'éternise)",
 
     "Pourquoi les dates limites changent-elles de couleur ?":
     "Le code de couleur est asez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée. Rouge que la grâce est aussi passée. Soyez ponctuels !",
