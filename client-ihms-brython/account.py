@@ -108,6 +108,7 @@ def create_account():
             return
 
         telephone = input_telephone.value
+        notify = int(input_notify.checked)
         replace = int(input_replace.checked)
         family_name = input_family_name.value
         first_name = input_first_name.value
@@ -121,6 +122,7 @@ def create_account():
             'password': password,
             'email': email,
             'telephone': telephone,
+            'notify': notify,
             'replace': replace,
             'family_name': family_name,
             'first_name': first_name,
@@ -180,6 +182,13 @@ def create_account():
     fieldset <= legend_telephone
     input_telephone = html.INPUT(type="tel", value="")
     fieldset <= input_telephone
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_notify = html.LEGEND("Notifiez-moi !", title="Devoins nous vous envoyer un e-mail sur chaque résolution de vos parties ?")
+    fieldset <= legend_notify
+    input_notify = html.INPUT(type="checkbox", checked=False)
+    fieldset <= input_notify
     form <= fieldset
 
     fieldset = html.FIELDSET()
@@ -437,6 +446,7 @@ def edit_account():
     email_loaded = None
     email_confirmed_loaded = None
     telephone_loaded = None
+    notify_loaded = None
     replace_loaded = None
     family_name_loaded = None
     first_name_loaded = None
@@ -460,6 +470,7 @@ def edit_account():
             nonlocal email_loaded
             nonlocal email_confirmed_loaded
             nonlocal telephone_loaded
+            nonlocal notify_loaded
             nonlocal replace_loaded
             nonlocal family_name_loaded
             nonlocal first_name_loaded
@@ -486,6 +497,7 @@ def edit_account():
             email_loaded = req_result['email']
             email_confirmed_loaded = req_result['email_confirmed']
             telephone_loaded = req_result['telephone']
+            notify_loaded = req_result['notify']
             replace_loaded = req_result['replace']
             family_name_loaded = req_result['family_name']
             first_name_loaded = req_result['first_name']
@@ -535,6 +547,7 @@ def edit_account():
             return
 
         telephone = input_telephone.value
+        notify = int(input_notify.checked)
         replace = int(input_replace.checked)
         family_name = input_family_name.value
         first_name = input_first_name.value
@@ -546,6 +559,7 @@ def edit_account():
             'pseudo': pseudo,
             'email': email,
             'telephone': telephone,
+            'notify': notify,
             'replace': replace,
             'family_name': family_name,
             'first_name': first_name,
@@ -611,6 +625,13 @@ def edit_account():
     fieldset <= legend_telephone
     input_telephone = html.INPUT(type="tel", value=telephone_loaded)
     fieldset <= input_telephone
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_notify = html.LEGEND("Notifiez-moi !", title="Devoins nous vous envoyer un e-mail sur chaque résolution de vos parties ?")
+    fieldset <= legend_notify
+    input_notify = html.INPUT(type="checkbox", checked=notify_loaded)
+    fieldset <= input_notify
     form <= fieldset
 
     fieldset = html.FIELDSET()
