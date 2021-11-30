@@ -3295,7 +3295,9 @@ def game_master():
 
         subject = f"Message de la part de l'arbitre de la partie {g_game} sur le site https://diplomania-gen.fr (AFJD)"
 
-        body = "Bonjour. Il manque vos ordres et la date limite est passée. Merci d'aviser rapidement."
+        body = "Bonjour !"
+        body += "\n"
+        body += "Il manque vos ordres et la date limite est passée. Merci d'aviser rapidement."
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
         body += f"https://diplomania-gen.fr?game={g_game}"
@@ -3312,6 +3314,7 @@ def game_master():
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
+            'force': True,
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -4182,11 +4185,11 @@ def show_game_parameters():
         row = html.TR()
 
         parameter_name, explanation, effect, implemented = {
-            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
+            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de e-mails de notification aux joueurs", "OUI"),
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres - effacé à la fin de la partie", "OUI"),
             'nomessage': ("pas de message", "on peut pas négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible - effacé à la fin de la partie", "OUI"),
             'nopress': ("pas de presse", "on ne peut pas déclarer - sauf l'arbitre", "Toute déclaration de joueur est impossible - effacé à la fin de la partie", "OUI"),
-            'fast': ("rapide", "la partie est jouée en temps réel comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en jours", "OUI"),
+            'fast': ("rapide", "la partie est jouée en temps réel comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en jours, pas de e-mails de notification aux joueurs", "OUI"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
             'scoring': ("code du scorage", "le système de scorage appliqué", "Actuellement CDIP = C-Diplo, WNAM = WIN Namur et DLIG = Diplo Ligue. Note : Le calcul est réalisé dans l'interface", "OUI"),
             'deadline_hour': ("heure de la date limite", "entre 0 et 23", "Heure à laquelle le système placera la date limite dans la journée si la synchronisation est souhaitée", "OUI"),

@@ -371,12 +371,16 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     for _, player_id, __ in allocations_list:
                         addressees.append(player_id)
                     body = "Vous pouvez commencer à jouer dans cette partie !"
+                    body += "\n"
+                    body += "Pour se rendre directement sur la partie :\n"
+                    body += f"https://diplomania-gen.fr?game={game.name}"
 
                     json_dict = {
                         'pseudo': pseudo,
                         'addressees': " ".join([str(a) for a in addressees]),
                         'subject': subject,
                         'body': body,
+                        'force': 1,
                     }
 
                     host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -406,12 +410,16 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     for _, player_id, __ in allocations_list:
                         addressees.append(player_id)
                     body = "Vous ne pouvez plus jouer dans cette partie !"
+                    body += "\n"
+                    body += "Pour se rendre directement sur la partie :\n"
+                    body += f"https://diplomania-gen.fr?game={game.name}"
 
                     json_dict = {
                         'pseudo': pseudo,
                         'addressees': " ".join([str(a) for a in addressees]),
                         'subject': subject,
                         'body': body,
+                        'force': 1,
                     }
 
                     host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1634,12 +1642,16 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 for _, player_id, __ in allocations_list:
                     addressees.append(player_id)
                 body = "Vous pouvez continuer à jouer dans cette partie !"
+                body += "\n"
+                body += "Pour se rendre directement sur la partie :\n"
+                body += f"https://diplomania-gen.fr?game={game.name}"
 
                 json_dict = {
                     'pseudo': pseudo,
                     'addressees': " ".join([str(a) for a in addressees]),
                     'subject': subject,
                     'body': body,
+                    'force': 0,
                 }
 
                 host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1934,12 +1946,16 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 for _, player_id, __ in allocations_list:
                     addressees.append(player_id)
                 body = "Vous pouvez continuer à jouer dans cette partie !"
+                body += "\n"
+                body += "Pour se rendre directement sur la partie :\n"
+                body += f"https://diplomania-gen.fr?game={game.name}"
 
                 json_dict = {
                     'pseudo': pseudo,
                     'addressees': " ".join([str(a) for a in addressees]),
                     'subject': subject,
                     'body': body,
+                    'force': 0,
                 }
 
                 host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
