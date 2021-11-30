@@ -185,7 +185,7 @@ def create_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_notify = html.LEGEND("Notifiez-moi !", title="Devoins nous vous envoyer un e-mail sur chaque résolution de vos parties ?")
+    legend_notify = html.LEGEND("Notifiez-moi !", title="Devons nous vous envoyer un e-mail sur chaque résolution de vos parties ?")
     fieldset <= legend_notify
     input_notify = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_notify
@@ -628,7 +628,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_notify = html.LEGEND("Notifiez-moi !", title="Devoins nous vous envoyer un e-mail sur chaque résolution de vos parties ?")
+    legend_notify = html.LEGEND("Notifiez-moi !", title="Devons nous vous envoyer un e-mail sur chaque résolution de vos parties ?")
     fieldset <= legend_notify
     input_notify = html.INPUT(type="checkbox", checked=notify_loaded)
     fieldset <= input_notify
