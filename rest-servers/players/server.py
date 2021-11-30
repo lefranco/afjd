@@ -11,8 +11,6 @@ import typing
 import random
 import argparse
 
-import sys
-
 import waitress
 import flask
 import flask_cors  # type: ignore
@@ -61,6 +59,7 @@ SENDMAIL_PARSER.add_argument('pseudo', type=str, required=True)
 SENDMAIL_PARSER.add_argument('addressees', type=str, required=True)
 SENDMAIL_PARSER.add_argument('subject', type=str, required=True)
 SENDMAIL_PARSER.add_argument('body', type=str, required=True)
+SENDMAIL_PARSER.add_argument('force', type=int, required=True)
 
 NEWS_PARSER = flask_restful.reqparse.RequestParser()
 NEWS_PARSER.add_argument('pseudo', type=str, required=True)
@@ -468,6 +467,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         args = SENDMAIL_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
+        force = args['force']
 
         mylogger.LOGGER.info("pseudo=%s", pseudo)
 
@@ -497,7 +497,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        recipients: typing.List[str] = list()
+        addressees: typing.List[str] = list()
         failed = False
         for addressee_id in addressees_list:
             pseudo_dest = players.Player.find_by_identifier(sql_executor, addressee_id)
@@ -506,18 +506,22 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
                 failed_addressee_id = addressee_id
                 break
             assert pseudo_dest is not None
+            # does not want to receive notifications
+            if not pseudo_dest.notify:
+                # however force parameters makes them be still sent
+                if not force:
+                    continue
             pseudo_dest_email = pseudo_dest.email
-            recipients.append(pseudo_dest_email)
+            addressees.append(pseudo_dest_email)
 
         if failed:
             del sql_executor
             flask_restful.abort(404, msg=f"Failed to find pseudo with id={failed_addressee_id}")
 
-        for destinee in recipients:
-            status = mailer.send_mail(subject, body, destinee)
-            # try them all
-            if not status:
-                failed = True
+        status = mailer.send_mail(subject, body, addressees)
+        # try them all
+        if not status:
+            failed = True
 
         if failed:
             del sql_executor

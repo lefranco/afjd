@@ -17,6 +17,8 @@ import lowdata
 SENDER = None
 MAILER = None
 
+SITE_ADDRESS = "https://diplomania-gen.fr/"
+
 
 def load_mail_config(app: typing.Any) -> None:
     """ read mail config """
@@ -40,14 +42,20 @@ def load_mail_config(app: typing.Any) -> None:
     SENDER = app.config['MAIL_USERNAME']
 
 
-def send_mail(subject: str, body: str, destinee: str) -> bool:
+def send_mail(subject: str, body: str, addressees: typing.List[str]) -> bool:
     """ send_mail """
 
-    msg = flask_mail.Message(subject, sender=SENDER, recipients=[destinee])
+    if len(addressees) == 1:
+        msg = flask_mail.Message(subject, sender=SENDER, recipients=addressees)
+    else:
+        # because we need to be fast so we send a single email
+        # little drawback : it may get into the spam box...
+        msg = flask_mail.Message(subject, sender=SENDER, bcc=addressees)
 
     msg.body = body
     msg.body += "\n"
     msg.body += "\n"
+    msg.body += f"adresse web du site : {SITE_ADDRESS}"
     msg.body += "\n"
     msg.body += "Ne pas répondre à ce message !"
 
@@ -73,7 +81,7 @@ def send_mail_checker(code: int, email_dest: str) -> bool:
     body += "\n"
     body += str(code)
 
-    return send_mail(subject, body, email_dest)
+    return send_mail(subject, body, [email_dest])
 
 
 if __name__ == '__main__':
