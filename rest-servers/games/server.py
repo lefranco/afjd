@@ -361,33 +361,34 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 game.push_deadline()
                 # commited later
 
-                # notify players
+                if not (game.fast or game.archive):
 
-                subject = f"La partie {game.name} a démarré !"
-                game_id = game.identifier
-                allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-                addressees = list()
-                for _, player_id, __ in allocations_list:
-                    addressees.append(player_id)
-                body = "Vous pouvez commencer à jouer dans cette partie !"
+                    # notify players
+                    subject = f"La partie {game.name} a démarré !"
+                    game_id = game.identifier
+                    allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+                    addressees = list()
+                    for _, player_id, __ in allocations_list:
+                        addressees.append(player_id)
+                    body = "Vous pouvez commencer à jouer dans cette partie !"
 
-                json_dict = {
-                    'pseudo': pseudo,
-                    'addressees': " ".join([str(a) for a in addressees]),
-                    'subject': subject,
-                    'body': body,
-                }
+                    json_dict = {
+                        'pseudo': pseudo,
+                        'addressees': " ".join([str(a) for a in addressees]),
+                        'subject': subject,
+                        'body': body,
+                    }
 
-                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-                url = f"{host}:{port}/mail-players"
-                # for a rest API headers are presented differently
-                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
-                if req_result.status_code != 200:
-                    print(f"ERROR from server  : {req_result.text}")
-                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                    del sql_executor
-                    flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+                    host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                    port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                    url = f"{host}:{port}/mail-players"
+                    # for a rest API headers are presented differently
+                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                    if req_result.status_code != 200:
+                        print(f"ERROR from server  : {req_result.text}")
+                        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                        del sql_executor
+                        flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
             if current_state_before == 1 and game.current_state == 2:
 
@@ -395,33 +396,34 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                 game.terminate()
                 # commited later
 
-                # notify players
+                if not (game.fast or game.archive):
 
-                subject = f"La partie {game.name} s'est terminée !"
-                game_id = game.identifier
-                allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-                addressees = list()
-                for _, player_id, __ in allocations_list:
-                    addressees.append(player_id)
-                body = "Vous ne pouvez plus jouer dans cette partie !"
+                    # notify players
+                    subject = f"La partie {game.name} s'est terminée !"
+                    game_id = game.identifier
+                    allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+                    addressees = list()
+                    for _, player_id, __ in allocations_list:
+                        addressees.append(player_id)
+                    body = "Vous ne pouvez plus jouer dans cette partie !"
 
-                json_dict = {
-                    'pseudo': pseudo,
-                    'addressees': " ".join([str(a) for a in addressees]),
-                    'subject': subject,
-                    'body': body,
-                }
+                    json_dict = {
+                        'pseudo': pseudo,
+                        'addressees': " ".join([str(a) for a in addressees]),
+                        'subject': subject,
+                        'body': body,
+                    }
 
-                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-                url = f"{host}:{port}/mail-players"
-                # for a rest API headers are presented differently
-                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
-                if req_result.status_code != 200:
-                    print(f"ERROR from server  : {req_result.text}")
-                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                    del sql_executor
-                    flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+                    host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                    port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                    url = f"{host}:{port}/mail-players"
+                    # for a rest API headers are presented differently
+                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                    if req_result.status_code != 200:
+                        print(f"ERROR from server  : {req_result.text}")
+                        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                        del sql_executor
+                        flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
         game.update_database(sql_executor)
         sql_executor.commit()
@@ -1620,6 +1622,37 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             del sql_executor  # noqa: F821
             flask_restful.abort(400, msg=f"Failed to agree (forced) to adjudicate : {agreement_report}")
 
+        if adjudicated:
+            # notify players
+
+            if not (game.fast or game.archive):
+
+                subject = f"La partie {game.name} a avancé (avec l'aide de l'arbitre)!"
+                game_id = game.identifier
+                allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+                addressees = list()
+                for _, player_id, __ in allocations_list:
+                    addressees.append(player_id)
+                body = "Vous pouvez continuer à jouer dans cette partie !"
+
+                json_dict = {
+                    'pseudo': pseudo,
+                    'addressees': " ".join([str(a) for a in addressees]),
+                    'subject': subject,
+                    'body': body,
+                }
+
+                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                url = f"{host}:{port}/mail-players"
+                # for a rest API headers are presented differently
+                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                if req_result.status_code != 200:
+                    print(f"ERROR from server  : {req_result.text}")
+                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                    del sql_executor
+                    flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
@@ -1888,6 +1921,37 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         if not status:
             del sql_executor  # noqa: F821
             flask_restful.abort(400, msg=f"Failed to agree to adjudicate : {agreement_report}")
+
+        if adjudicated:
+
+            if not (game.fast or game.archive):
+
+                # notify players
+                subject = f"La partie {game.name} a avancé !"
+                game_id = game.identifier
+                allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)  # noqa: F821
+                addressees = list()
+                for _, player_id, __ in allocations_list:
+                    addressees.append(player_id)
+                body = "Vous pouvez continuer à jouer dans cette partie !"
+
+                json_dict = {
+                    'pseudo': pseudo,
+                    'addressees': " ".join([str(a) for a in addressees]),
+                    'subject': subject,
+                    'body': body,
+                }
+
+                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                url = f"{host}:{port}/mail-players"
+                # for a rest API headers are presented differently
+                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                if req_result.status_code != 200:
+                    print(f"ERROR from server  : {req_result.text}")
+                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                    del sql_executor
+                    flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
@@ -2444,7 +2508,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
         submitted_list = [o[1] for o in submissions_list]
 
-        # definitives_list : those who ageed to adjudicate with their orders
+        # definitives_list : those who agreed to adjudicate with their orders
         definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
         agreed_list = [o[1] for o in definitives_list if o[2]]
 
@@ -2516,7 +2580,7 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
             submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
             submitted_list = [o[1] for o in submissions_list]
 
-            # definitives_list : those who ageed to adjudicate with their orders
+            # definitives_list : those who agreed to adjudicate with their orders
             definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
             agreed_list = [o[1] for o in definitives_list if o[2]]
 
@@ -2591,7 +2655,7 @@ class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
             submitted_list = [o[1] for o in submissions_list]
             dict_submitted_list[game_id] = submitted_list
 
-            # definitives_list : those who ageed to adjudicate with their orders
+            # definitives_list : those who agreed to adjudicate with their orders
             definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
             agreed_list = [o[1] for o in definitives_list if o[2]]
             dict_agreed_list[game_id] = agreed_list
