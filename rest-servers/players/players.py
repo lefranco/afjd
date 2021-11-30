@@ -125,7 +125,7 @@ class Player:
         sql_executor.execute("CREATE TABLE players (identifier INT UNIQUE PRIMARY KEY, pseudo STR, player_data player)")
         sql_executor.execute("CREATE UNIQUE INDEX pseudo_player ON  players (pseudo)")
 
-    def __init__(self, identifier: int, pseudo: str, email: str, email_confirmed: bool, telephone: str, replace: bool, family_name: str, first_name: str, residence: str, nationality: str, time_zone: str) -> None:
+    def __init__(self, identifier: int, pseudo: str, email: str, email_confirmed: bool, telephone: str, notify: bool, replace: bool, family_name: str, first_name: str, residence: str, nationality: str, time_zone: str) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -136,6 +136,7 @@ class Player:
         self._email = email
         self._email_confirmed = email_confirmed
         self._telephone = telephone
+        self._notify = notify
         self._replace = replace
         self._first_name = first_name
         self._family_name = family_name
@@ -174,6 +175,10 @@ class Player:
             self._telephone = json_dict['telephone']
             self._telephone = database.sanitize_field(self._telephone)
             self._telephone = self._telephone[:LEN_TELEPHONE_MAX]
+            changed = True
+
+        if 'notify' in json_dict and json_dict['notify'] is not None and json_dict['notify'] != self._notify:
+            self._notify = json_dict['notify']
             changed = True
 
         if 'replace' in json_dict and json_dict['replace'] is not None and json_dict['replace'] != self._replace:
@@ -220,6 +225,7 @@ class Player:
             'email': self._email,
             'email_confirmed': self._email_confirmed,
             'telephone': self._telephone,
+            'notify': self._notify,
             'replace': self._replace,
             'family_name': self._family_name,
             'first_name': self._first_name,
@@ -285,16 +291,21 @@ class Player:
         self._email_confirmed = email_confirmed
 
     @property
+    def notify(self) -> bool:
+        """ property """
+        return self._notify
+
+    @property
     def replace(self) -> bool:
         """ property """
         return self._replace
 
     def __str__(self) -> str:
-        return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} telephone={self._telephone} replace={self._replace} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality} time_zone={self._time_zone}"
+        return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} telephone={self._telephone} notify={self._notify} replace={self._replace} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality} time_zone={self._time_zone}"
 
     def adapt_player(self) -> bytes:
         """ To put an object in database """
-        return (f"{self._identifier}{database.STR_SEPARATOR}{self._pseudo}{database.STR_SEPARATOR}{self._email}{database.STR_SEPARATOR}{int(bool(self._email_confirmed))}{database.STR_SEPARATOR}{self._telephone}{database.STR_SEPARATOR}{int(bool(self._replace))}{database.STR_SEPARATOR}{self._family_name}{database.STR_SEPARATOR}{self._first_name}{database.STR_SEPARATOR}{self._residence}{database.STR_SEPARATOR}{self._nationality}{database.STR_SEPARATOR}{self._time_zone}").encode('ascii')
+        return (f"{self._identifier}{database.STR_SEPARATOR}{self._pseudo}{database.STR_SEPARATOR}{self._email}{database.STR_SEPARATOR}{int(bool(self._email_confirmed))}{database.STR_SEPARATOR}{self._telephone}{database.STR_SEPARATOR}{int(bool(self._notify))}{database.STR_SEPARATOR}{int(bool(self._replace))}{database.STR_SEPARATOR}{self._family_name}{database.STR_SEPARATOR}{self._first_name}{database.STR_SEPARATOR}{self._residence}{database.STR_SEPARATOR}{self._nationality}{database.STR_SEPARATOR}{self._time_zone}").encode('ascii')
 
 
 def convert_player(buffer: bytes) -> Player:
@@ -306,14 +317,15 @@ def convert_player(buffer: bytes) -> Player:
     email = tab[2].decode()
     email_confirmed = bool(int(tab[3].decode()))
     telephone = tab[4].decode()
-    replace = bool(int(tab[5].decode()))
-    family_name = tab[6].decode()
-    first_name = tab[7].decode()
-    residence = tab[8].decode()
-    nationality = tab[9].decode()
-    time_zone = tab[10].decode()
+    notify = bool(int(tab[5].decode()))
+    replace = bool(int(tab[6].decode()))
+    family_name = tab[7].decode()
+    first_name = tab[8].decode()
+    residence = tab[9].decode()
+    nationality = tab[10].decode()
+    time_zone = tab[11].decode()
 
-    player = Player(identifier, pseudo, email, email_confirmed, telephone, replace, family_name, first_name, residence, nationality, time_zone)
+    player = Player(identifier, pseudo, email, email_confirmed, telephone, notify, replace, family_name, first_name, residence, nationality, time_zone)
     return player
 
 
