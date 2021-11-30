@@ -11,6 +11,8 @@ import typing
 import random
 import argparse
 
+import sys
+
 import waitress
 import flask
 import flask_cors  # type: ignore
@@ -25,6 +27,7 @@ import mailer
 import players
 import newss
 import database
+
 
 SESSION = requests.Session()
 
@@ -373,7 +376,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         # create player here
         identifier = players.Player.free_identifier(sql_executor)
 
-        player = players.Player(identifier, '', '', False, '', False, '', '', '', '', '')
+        player = players.Player(identifier, '', '', False, '', False, False, '', '', '', '', '')
         _ = player.load_json(args)
 
         player.update_database(sql_executor)
@@ -646,7 +649,6 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         # create news here
         news = newss.News(content)
-
         news.update_database(sql_executor)
 
         sql_executor.commit()
