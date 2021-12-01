@@ -390,6 +390,8 @@ def game_incidents_reload(game_id):
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
+    profile_data.start('load_static_stuff - info_joueurs')
+
     # need to be first since used in get_game_status()
     # get the players (all players)
     global g_players_dict  # pylint: disable=invalid-name
@@ -401,6 +403,8 @@ def load_static_stuff():
 
     # from game name get variant name
 
+    profile_data.start('load_static_stuff - chargement_variante')
+
     global g_variant_name_loaded  # pylint: disable=invalid-name
     g_variant_name_loaded = common.game_variant_name_reload(g_game)
     if not g_variant_name_loaded:
@@ -408,6 +412,8 @@ def load_static_stuff():
         return
 
     # from variant name get variant content
+
+    profile_data.start('load_static_stuff - chargement_contenu_variante')
 
     global g_variant_content_loaded  # pylint: disable=invalid-name
     g_variant_content_loaded = common.game_variant_content_reload(g_variant_name_loaded)
@@ -418,13 +424,19 @@ def load_static_stuff():
     # just to prevent a erroneous pylint warning
     g_variant_content_loaded = dict(g_variant_content_loaded)
 
+    profile_data.start('load_static_stuff - interface_from_variant')
+
     # selected interface (user choice)
     global g_interface_chosen  # pylint: disable=invalid-name
     g_interface_chosen = interface.get_interface_from_variant(g_variant_name_loaded)
 
+    profile_data.start('load_static_stuff - read_parameters_1')
+
     # from display chose get display parameters
     global g_interface_parameters_read  # pylint: disable=invalid-name
     g_interface_parameters_read = common.read_parameters(g_variant_name_loaded, g_interface_chosen)
+
+    profile_data.start('load_static_stuff - Variant_1')
 
     # build variant data
     global g_variant_data  # pylint: disable=invalid-name
@@ -432,9 +444,16 @@ def load_static_stuff():
 
     # now for official map
 
+    profile_data.start('load_static_stuff - get_inforced_interface_from_variant')
+
     # like above
     interface_inforced = interface.get_inforced_interface_from_variant(g_variant_name_loaded)
+
+    profile_data.start('load_static_stuff - read_parameters_2')
+
     inforced_interface_parameters_read = common.read_parameters(g_variant_name_loaded, interface_inforced)
+
+    profile_data.start('load_static_stuff - Variant_2')
 
     # build variant data
     global g_inforced_variant_data  # pylint: disable=invalid-name
@@ -443,6 +462,8 @@ def load_static_stuff():
 
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
+
+    profile_data.start('load_dynamic_stuff - chargement_paramètres_1')
 
     # now game parameters (dynamic since advancement is dynamic)
     global g_game_parameters_loaded  # pylint: disable=invalid-name
@@ -454,8 +475,12 @@ def load_dynamic_stuff():
     # just to prevent a erroneous pylint warning
     g_game_parameters_loaded = dict(g_game_parameters_loaded)
 
+    profile_data.start('load_dynamic_stuff - get_game_status')
+
     global g_game_status  # pylint: disable=invalid-name
     g_game_status = get_game_status()
+
+    profile_data.start('load_dynamic_stuff - chargement_position')
 
     # get the position from server
     global g_position_loaded  # pylint: disable=invalid-name
@@ -464,9 +489,13 @@ def load_dynamic_stuff():
         alert("Erreur chargement position")
         return
 
+    profile_data.start('load_dynamic_stuff - Position')
+
     # digest the position
     global g_position_data  # pylint: disable=invalid-name
     g_position_data = mapping.Position(g_position_loaded, g_variant_data)
+
+    profile_data.start('load_dynamic_stuff - chargement_rapport')
 
     # need to be after game parameters (advancement -> season)
     global g_report_loaded  # pylint: disable=invalid-name
@@ -482,6 +511,8 @@ def load_special_stuff():
     # TODO improve this with real admin account
     if g_pseudo is not None and (g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
 
+        profile_data.start('load_special_stuff - chargement_joueurs_partie')
+
         global g_game_players_dict  # pylint: disable=invalid-name
         # get the players of the game
         # need a token for this
@@ -490,11 +521,13 @@ def load_special_stuff():
             alert("Erreur chargement joueurs de la partie")
             return
 
+        g_game_players_dict = dict(g_game_players_dict)
+
     # TODO improve this with real admin account
     if g_pseudo is not None and (g_pseudo == 'Palpatine' or (g_role_id is not None and (g_role_id == 0 or not g_game_parameters_loaded['anonymous']))):
 
+        profile_data.start('load_special_stuff - chargement_incidents_partie')
         # just to prevent a erroneous pylint warning
-        g_game_players_dict = dict(g_game_players_dict)
 
         # get the incidents of the game
         # need a token for this
@@ -4661,6 +4694,9 @@ countdown_timer = None  # pylint: disable=invalid-name
 def render(panel_middle):
     """ render """
 
+    def reply_callback(_):
+        pass
+
     # always back to top
     global item_name_selected  # pylint: disable=invalid-name
 
@@ -4697,19 +4733,42 @@ def render(panel_middle):
     global profile_data
     profile_data = profiler.Profiler()
 
-    profile_data.start('load_static_stuff')
     load_static_stuff()
-    profile_data.stop('load_static_stuff')
-
-    profile_data.start('load_dynamic_stuff')
     load_dynamic_stuff()
-    profile_data.stop('load_dynamic_stuff')
-
-    profile_data.start('load_special_stuff')
     load_special_stuff()
-    profile_data.stop('load_special_stuff')
 
-    print(profile_data)
+    profile_data.stop()
+
+    if g_pseudo:
+
+        subject = f"stats jouer la partie pour {g_pseudo}"
+        body = ""
+        body += f"{profile_data}"
+        body += "\n\n"
+
+        addressed_user_name = 'Palpatine'
+
+        players_dict = common.get_players()
+        if players_dict is None:
+            return
+        players_dict = dict(players_dict)
+        addressed_id = players_dict[addressed_user_name]
+        addressees = [addressed_id]
+        json_dict = {
+            'pseudo': g_pseudo,
+            'addressees': " ".join([str(a) for a in addressees]),
+            'subject': subject,
+            'body': body,
+            'force': 1,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+
+        # sending email : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
 
     # initiates new countdown
     countdown()
