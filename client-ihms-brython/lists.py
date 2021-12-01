@@ -10,7 +10,7 @@ import config
 import common
 
 
-OPTIONS = ['les inscrits', 'les joueurs', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les tournois', 'les arbitres', 'les parties sans arbitres']
+OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les tournois', 'les arbitres', 'les parties sans arbitres']
 
 
 def show_registered_data():
@@ -123,6 +123,48 @@ def show_players_data():
     my_sub_panel <= html.H3("Les joueurs")
     my_sub_panel <= players_table
     my_sub_panel <= html.P(f"Il y a {count} joueurs")
+
+
+
+
+def show_replacement_data():
+    """ show_replacement_data """
+
+    my_sub_panel <= html.H3("Liste des candidats au remplacement")
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        return
+
+    players_table = html.TABLE()
+
+    # TODO : make it possible to sort etc...
+    fields = ['pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for data in sorted(players_dict.values(), key=lambda p: p['pseudo'].upper()):
+
+        if not data['replace']:
+            continue
+
+        row = html.TR()
+        for field in fields:
+            value = data[field]
+
+            col = html.TD(value)
+            row <= col
+
+        players_table <= row
+
+    my_sub_panel <= players_table
 
 
 def show_games_data(game_state_name):
@@ -333,6 +375,8 @@ def load_option(_, item_name):
         show_registered_data()
     if item_name == 'les joueurs':
         show_players_data()
+    if item_name == 'les remplaçants':
+        show_replacement_data()
     if item_name == 'les parties en attente':
         show_games_data('en attente')
     if item_name == 'les parties en cours':
