@@ -20,7 +20,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'connexions manquées', 'rectifier la position', 'e-mails non confirmés', 'remplaçants', 'envoyer un e-mail', 'récupérer un téléphone']
+OPTIONS = ['changer nouvelles', 'usurper', 'toutes les parties', 'dernières connexions', 'connexions manquées', 'rectifier la position', 'e-mails non confirmés', 'envoyer un e-mail', 'récupérer un téléphone']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1177,55 +1177,6 @@ def show_non_confirmed_data():
     my_sub_panel <= players_table
 
 
-def show_replacement_data():
-    """ show_replacement_data """
-
-    my_sub_panel <= html.H3("Liste des candidats au remplacement")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
-        return
-
-    players_dict = common.get_players_data()
-
-    if not players_dict:
-        return
-
-    players_table = html.TABLE()
-
-    # TODO : make it possible to sort etc...
-    fields = ['pseudo']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    players_table <= thead
-
-    for data in sorted(players_dict.values(), key=lambda p: p['pseudo'].upper()):
-
-        if not data['replace']:
-            continue
-
-        row = html.TR()
-        for field in fields:
-            value = data[field]
-
-            col = html.TD(value)
-            row <= col
-
-        players_table <= row
-
-    my_sub_panel <= players_table
-
-
 def sendmail():
     """ sendmail """
 
@@ -1448,8 +1399,6 @@ def load_option(_, item_name):
         rectify()
     if item_name == 'e-mails non confirmés':
         show_non_confirmed_data()
-    if item_name == 'remplaçants':
-        show_replacement_data()
     if item_name == 'envoyer un e-mail':
         sendmail()
     if item_name == 'récupérer un téléphone':
