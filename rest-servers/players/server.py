@@ -498,13 +498,11 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         sql_executor = database.SqlExecutor()
 
         addressees: typing.List[str] = list()
-        failed = False
         for addressee_id in addressees_list:
             pseudo_dest = players.Player.find_by_identifier(sql_executor, addressee_id)
             if pseudo_dest is None:
-                failed = True
-                failed_addressee_id = addressee_id
-                break
+                del sql_executor
+                flask_restful.abort(404, msg=f"Failed to find pseudo with id={addressee_id}")
             assert pseudo_dest is not None
             # does not want to receive notifications
             if not pseudo_dest.notify:
@@ -514,23 +512,17 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
             pseudo_dest_email = pseudo_dest.email
             addressees.append(pseudo_dest_email)
 
-        if failed:
-            del sql_executor
-            flask_restful.abort(404, msg=f"Failed to find pseudo with id={failed_addressee_id}")
+        # can happen that nobody is actually interested
+        if addressees:
+            status = mailer.send_mail(subject, body, addressees)
+            if not status:
+                del sql_executor
+                flask_restful.abort(400, msg="Failed to send at least one message")
 
-        status = mailer.send_mail(subject, body, addressees)
-        # try them all
-        if not status:
-            failed = True
-
-        if failed:
-            del sql_executor
-            flask_restful.abort(400, msg="Failed to send at least one message")
-
-        sql_executor.commit()
         del sql_executor
 
-        data = {'msg': "Ok  email(s) successfully sent"}
+        nb_mails = len(addressees)
+        data = {'msg': f"Ok {nb_mails} email(s) successfully sent"}
         return data, 200
 
 
