@@ -4714,6 +4714,9 @@ def render(panel_middle):
     def reply_callback(_):
         pass
 
+    global profile_data
+    profile_data = profiler.Profiler()
+
     # always back to top
     global item_name_selected  # pylint: disable=invalid-name
 
@@ -4723,6 +4726,8 @@ def render(panel_middle):
 
     global g_game  # pylint: disable=invalid-name
     g_game = storage['GAME']
+
+    profile_data.start('get_game_id')
 
     # from game name get game id
     global g_game_id  # pylint: disable=invalid-name
@@ -4742,13 +4747,12 @@ def render(panel_middle):
 
     # from game_id and token get role
 
+    profile_data.start('get_role_allocated_to_player_in_game')
+
     global g_role_id  # pylint: disable=invalid-name
     g_role_id = None
     if g_pseudo is not None:
         g_role_id = common.get_role_allocated_to_player_in_game(g_game_id)
-
-    global profile_data
-    profile_data = profiler.Profiler()
 
     load_static_stuff()
     load_dynamic_stuff()

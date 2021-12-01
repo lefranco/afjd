@@ -21,6 +21,8 @@ class Profiler:
     def __init__(self):
         self._table = dict()
         self._current = None
+        self._start = time.time()
+        self._stop = None
 
     def start(self, name) :
         prev_name = self._current
@@ -35,7 +37,9 @@ class Profiler:
         prev_name = self._current
         old_measure = self._table[prev_name]
         old_measure.terminate()
+        self._stop = time.time()
+        self.elapsed = self._stop - self._start
 
     def __str__(self) :
-        return "\n".join([f"{n} : {m}" for n, m in self._table.items()])
+        return f"{self.elapsed}s\n\n" + "\n".join([f"{n} : {m}" for n, m in self._table.items()])
 
