@@ -24,6 +24,8 @@ import index  # circular import
 
 import profiler
 
+SEND_REPORT = True
+
 # how long between two consecutives refresh
 SUPERVISE_REFRESH_PERIOD_SEC = 15
 
@@ -33,6 +35,10 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 LONG_DURATION_LIMIT_SEC = 1.0
 
 OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'observer', 'paramètres', 'joueurs', 'ordres', 'retards']
+
+# to optimize a bit
+VARIANT_CONTENT_MEMOIZE_TABLE = dict()
+
 
 profile_data = None
 
@@ -440,7 +446,13 @@ def load_static_stuff():
 
     # build variant data
     global g_variant_data  # pylint: disable=invalid-name
-    g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_interface_parameters_read)
+
+    # optmization
+    if (g_variant_name_loaded, g_interface_chosen) in VARIANT_CONTENT_MEMOIZE_TABLE:
+        g_variant_data = VARIANT_CONTENT_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
+    else:
+        g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_interface_parameters_read)
+        VARIANT_CONTENT_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)] = g_variant_data
 
     # now for official map
 
@@ -457,8 +469,13 @@ def load_static_stuff():
 
     # build variant data
     global g_inforced_variant_data  # pylint: disable=invalid-name
-    g_inforced_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, inforced_interface_parameters_read)
 
+    # optmization
+    if (g_variant_name_loaded, interface_inforced) in VARIANT_CONTENT_MEMOIZE_TABLE:
+        g_inforced_variant_data = VARIANT_CONTENT_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
+    else:
+        g_inforced_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, inforced_interface_parameters_read)
+        VARIANT_CONTENT_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)] = g_inforced_variant_data
 
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
@@ -4741,33 +4758,35 @@ def render(panel_middle):
 
     if g_pseudo:
 
-        subject = f"stats jouer la partie pour {g_pseudo}"
-        body = ""
-        body += f"{profile_data}"
-        body += "\n\n"
+        if SEND_REPORT:
 
-        addressed_user_name = 'Palpatine'
+            subject = f"stats jouer la partie pour {g_pseudo}"
+            body = ""
+            body += f"{profile_data}"
+            body += "\n\n"
 
-        players_dict = common.get_players()
-        if players_dict is None:
-            return
-        players_dict = dict(players_dict)
-        addressed_id = players_dict[addressed_user_name]
-        addressees = [addressed_id]
-        json_dict = {
-            'pseudo': g_pseudo,
-            'addressees': " ".join([str(a) for a in addressees]),
-            'subject': subject,
-            'body': body,
-            'force': 1,
-        }
+            addressed_user_name = 'Palpatine'
 
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/mail-players"
+            players_dict = common.get_players()
+            if players_dict is None:
+                return
+            players_dict = dict(players_dict)
+            addressed_id = players_dict[addressed_user_name]
+            addressees = [addressed_id]
+            json_dict = {
+                'pseudo': g_pseudo,
+                'addressees': " ".join([str(a) for a in addressees]),
+                'subject': subject,
+                'body': body,
+                'force': 1,
+            }
 
-        # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+            host = config.SERVER_CONFIG['PLAYER']['HOST']
+            port = config.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/mail-players"
+
+            # sending email : need token
+            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
     # initiates new countdown
