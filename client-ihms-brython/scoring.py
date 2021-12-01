@@ -49,7 +49,7 @@ def c_diplo(variant, ratings):
             if rank2 - 1 in range(len(rank_points_list)):
                 score[role_name] += rank_points_list[rank2 - 1] / sharers
 
-    return score
+    return "C-Diplo73", score
 
 
 def win_namur(variant, ratings):
@@ -106,7 +106,7 @@ def win_namur(variant, ratings):
     for role_name in wave_sharers:
         score[role_name] += wave_bonus / len(wave_sharers)
 
-    return score
+    return "WIN Namur", score
 
 
 def diplo_league(_, ratings):
@@ -140,4 +140,4 @@ def diplo_league(_, ratings):
     for role_name in winners:
         score[role_name] += bonus_alone if len(winners) == 1 else bonus_not_alone
 
-    return score
+    return "Diplo Ligue", score

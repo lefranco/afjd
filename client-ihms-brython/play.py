@@ -275,19 +275,19 @@ def make_rating_colours_window(variant, ratings, colours, game_scoring):
 
     # selected scoring game parameter
     if game_scoring == 'CDIP':
-        score = scoring.c_diplo(variant, ratings)
+        scoring_name, score_table = scoring.c_diplo(variant, ratings)
     if game_scoring == 'WNAM':
-        score = scoring.win_namur(variant, ratings)
+        scoring_name, score_table = scoring.win_namur(variant, ratings)
     if game_scoring == 'DLIG':
-        score = scoring.diplo_league(variant, ratings)
+        scoring_name, score_table = scoring.diplo_league(variant, ratings)
 
     # scoring
     rating_scoring_row = html.TR()
     rating_table <= rating_scoring_row
-    col = html.TD(html.B(f"{game_scoring} :"))
+    col = html.TD(html.B(f"{scoring_name} :"))
     rating_scoring_row <= col
     for role_name in ratings:
-        score_dis = float(score[role_name])
+        score_dis = float(score_table[role_name])
         role_score = f"{score_dis:.2f}"
         col = html.TD(role_score)
         rating_scoring_row <= col
