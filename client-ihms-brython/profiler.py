@@ -7,28 +7,34 @@ class Measure:
         now = time.time()
         self._start = now
 
-    def stop(self):
+    def terminate(self):
         now = time.time()
         self._stop = now
 
-    def duration(self):
-        elapsed = self._stop - self._start
-        return elapsed
-
     def __str__(self) :
-        return str(self.duration())
+        elapsed = self._stop - self._start
+        elapsed_ms = round(elapsed * 1000.)
+        return f"{elapsed_ms}ms"
 
 class Profiler:
 
     def __init__(self):
         self._table = dict()
+        self._current = None
 
     def start(self, name) :
-        self._table[name] = Measure()
+        prev_name = self._current
+        if prev_name:
+            old_measure = self._table[prev_name]
+            old_measure.terminate()
+        new_measure = Measure()
+        self._table[name] = new_measure
+        self._current = name
 
-    def stop(self, name) :
-        measure = self._table[name]
-        measure.stop()
+    def stop(self) :
+        prev_name = self._current
+        old_measure = self._table[prev_name]
+        old_measure.terminate()
 
     def __str__(self) :
         return "\n".join([f"{n} : {m}" for n, m in self._table.items()])
