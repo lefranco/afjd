@@ -22,6 +22,8 @@ import login
 import sandbox
 import index  # circular import
 
+import profiler
+
 # how long between two consecutives refresh
 SUPERVISE_REFRESH_PERIOD_SEC = 15
 
@@ -32,6 +34,7 @@ LONG_DURATION_LIMIT_SEC = 1.0
 
 OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'observer', 'paramètres', 'joueurs', 'ordres', 'retards']
 
+profile_data = None
 
 @enum.unique
 class AutomatonStateEnum(enum.Enum):
@@ -4691,9 +4694,22 @@ def render(panel_middle):
     if g_pseudo is not None:
         g_role_id = common.get_role_allocated_to_player_in_game(g_game_id)
 
+    global profile_data
+    profile_data = profiler.Profiler()
+
+    profile_data.start('load_static_stuff')
     load_static_stuff()
+    profile_data.stop('load_static_stuff')
+
+    profile_data.start('load_dynamic_stuff')
     load_dynamic_stuff()
+    profile_data.stop('load_dynamic_stuff')
+
+    profile_data.start('load_special_stuff')
     load_special_stuff()
+    profile_data.stop('load_special_stuff')
+
+    print(profile_data)
 
     # initiates new countdown
     countdown()
