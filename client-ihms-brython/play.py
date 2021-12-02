@@ -396,7 +396,7 @@ def game_incidents_reload(game_id):
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
-    profile_data.start('load_static_stuff - info_joueurs')
+    profile_data.start('load_static_stuff - chargement de la liste des joueurs')
 
     # need to be first since used in get_game_status()
     # get the players (all players)
@@ -409,7 +409,7 @@ def load_static_stuff():
 
     # from game name get variant name
 
-    profile_data.start('load_static_stuff - chargement_variante')
+    profile_data.start('load_static_stuff - chargement de la variante')
 
     global g_variant_name_loaded  # pylint: disable=invalid-name
     g_variant_name_loaded = common.game_variant_name_reload(g_game)
@@ -419,7 +419,7 @@ def load_static_stuff():
 
     # from variant name get variant content
 
-    profile_data.start('load_static_stuff - chargement_contenu_variante')
+    profile_data.start('load_static_stuff - chargement du contenu de la variante')
 
     global g_variant_content_loaded  # pylint: disable=invalid-name
     g_variant_content_loaded = common.game_variant_content_reload(g_variant_name_loaded)
@@ -430,19 +430,19 @@ def load_static_stuff():
     # just to prevent a erroneous pylint warning
     g_variant_content_loaded = dict(g_variant_content_loaded)
 
-    profile_data.start('load_static_stuff - interface_from_variant')
+    profile_data.start('load_static_stuff - lecture tableau interface_from_variant()')
 
     # selected interface (user choice)
     global g_interface_chosen  # pylint: disable=invalid-name
     g_interface_chosen = interface.get_interface_from_variant(g_variant_name_loaded)
 
-    profile_data.start('load_static_stuff - read_parameters_1')
+    profile_data.start('load_static_stuff - lecture fichier parametres affichage 1')
 
     # from display chose get display parameters
     global g_interface_parameters_read  # pylint: disable=invalid-name
     g_interface_parameters_read = common.read_parameters(g_variant_name_loaded, g_interface_chosen)
 
-    profile_data.start('load_static_stuff - Variant_1')
+    profile_data.start('load_static_stuff - creation objet Variant 1')
 
     # build variant data
     global g_variant_data  # pylint: disable=invalid-name
@@ -456,16 +456,16 @@ def load_static_stuff():
 
     # now for official map
 
-    profile_data.start('load_static_stuff - get_inforced_interface_from_variant')
+    profile_data.start('load_static_stuff - lecture tableau inforced_interface_from_variant()')
 
     # like above
     interface_inforced = interface.get_inforced_interface_from_variant(g_variant_name_loaded)
 
-    profile_data.start('load_static_stuff - read_parameters_2')
+    profile_data.start('load_static_stuff - lecture fichier parametres affichage 2')
 
     inforced_interface_parameters_read = common.read_parameters(g_variant_name_loaded, interface_inforced)
 
-    profile_data.start('load_static_stuff - Variant_2')
+    profile_data.start('load_static_stuff - creation objet Variant 2')
 
     # build variant data
     global g_inforced_variant_data  # pylint: disable=invalid-name
@@ -480,7 +480,7 @@ def load_static_stuff():
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
 
-    profile_data.start('load_dynamic_stuff - chargement_paramètres_1')
+    profile_data.start('load_dynamic_stuff - chargement paramètres de la partie')
 
     # now game parameters (dynamic since advancement is dynamic)
     global g_game_parameters_loaded  # pylint: disable=invalid-name
@@ -492,12 +492,12 @@ def load_dynamic_stuff():
     # just to prevent a erroneous pylint warning
     g_game_parameters_loaded = dict(g_game_parameters_loaded)
 
-    profile_data.start('load_dynamic_stuff - get_game_status')
+    profile_data.start('load_dynamic_stuff - calcul get_game_status()')
 
     global g_game_status  # pylint: disable=invalid-name
     g_game_status = get_game_status()
 
-    profile_data.start('load_dynamic_stuff - chargement_position')
+    profile_data.start('load_dynamic_stuff - chargement de la position')
 
     # get the position from server
     global g_position_loaded  # pylint: disable=invalid-name
@@ -506,13 +506,13 @@ def load_dynamic_stuff():
         alert("Erreur chargement position")
         return
 
-    profile_data.start('load_dynamic_stuff - Position')
+    profile_data.start('load_dynamic_stuff - creation objet Position')
 
     # digest the position
     global g_position_data  # pylint: disable=invalid-name
     g_position_data = mapping.Position(g_position_loaded, g_variant_data)
 
-    profile_data.start('load_dynamic_stuff - chargement_rapport')
+    profile_data.start('load_dynamic_stuff - chargement du rapport de resolution')
 
     # need to be after game parameters (advancement -> season)
     global g_report_loaded  # pylint: disable=invalid-name
@@ -528,7 +528,7 @@ def load_special_stuff():
     # TODO improve this with real admin account
     if g_pseudo is not None and (g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
 
-        profile_data.start('load_special_stuff - chargement_joueurs_partie')
+        profile_data.start('load_special_stuff - chargement des joueurs de la partie')
 
         global g_game_players_dict  # pylint: disable=invalid-name
         # get the players of the game
@@ -543,7 +543,7 @@ def load_special_stuff():
     # TODO improve this with real admin account
     if g_pseudo is not None and (g_pseudo == 'Palpatine' or (g_role_id is not None and (g_role_id == 0 or not g_game_parameters_loaded['anonymous']))):
 
-        profile_data.start('load_special_stuff - chargement_incidents_partie')
+        profile_data.start('load_special_stuff - chargement des incidents de la partie')
         # just to prevent a erroneous pylint warning
 
         # get the incidents of the game
@@ -4727,7 +4727,7 @@ def render(panel_middle):
     global g_game  # pylint: disable=invalid-name
     g_game = storage['GAME']
 
-    profile_data.start('get_game_id')
+    profile_data.start('chargement du game_id')
 
     # from game name get game id
     global g_game_id  # pylint: disable=invalid-name
@@ -4747,7 +4747,7 @@ def render(panel_middle):
 
     # from game_id and token get role
 
-    profile_data.start('get_role_allocated_to_player_in_game')
+    profile_data.start('chargement du role alloué au joueur')
 
     global g_role_id  # pylint: disable=invalid-name
     g_role_id = None
