@@ -762,6 +762,11 @@ def rectify():
         # remove unit
         position_data.remove_unit(selected_erase_unit)
 
+        # tricky
+        nonlocal selected_hovered_object
+        if selected_hovered_object == selected_erase_unit:
+            selected_hovered_object = None
+
         # update map
         callback_render(None)
 
