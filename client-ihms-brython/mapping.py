@@ -1205,6 +1205,7 @@ class Position(Renderable):
     def erase_units(self) -> None:
         """ erase all units """
         self._units = list()
+        self._occupant_table = dict()
 
     def render(self, ctx, active=False) -> None:
 
