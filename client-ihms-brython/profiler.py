@@ -4,11 +4,11 @@
 import time
 import json
 
-import common
-import config
-
 from browser import ajax   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
+
+import common
+import config
 
 
 class Measure:
