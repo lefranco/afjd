@@ -511,10 +511,14 @@ def load_dynamic_stuff():
     # just to prevent a erroneous pylint warning
     g_game_parameters_loaded = dict(g_game_parameters_loaded)
 
+    profile_data.start('load_dynamic_stuff - get_game_master()')
+
+    game_master_pseudo = get_game_master(g_game_id)
+
     profile_data.start('load_dynamic_stuff - calcul get_game_status()')
 
     global g_game_status  # pylint: disable=invalid-name
-    g_game_status = get_game_status()
+    g_game_status = get_game_status(game_master_pseudo)
 
     profile_data.start('load_dynamic_stuff - chargement de la position')
 
@@ -660,7 +664,7 @@ def countdown():
         }
 
 
-def get_game_status():
+def get_game_status(game_master_pseudo):
     """ get_game__status """
 
     game_name = g_game_parameters_loaded['name']
@@ -703,7 +707,6 @@ def get_game_status():
     g_countdown_col = html.TD("xxx")
     row <= g_countdown_col
 
-    game_master_pseudo = get_game_master(g_game_id)
     info = ''  # some games do not have a game master
     if game_master_pseudo is not None:
         info = f"Arbitre {game_master_pseudo}"
