@@ -1,4 +1,4 @@
-""" submit """
+""" play """
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
@@ -41,7 +41,8 @@ VARIANT_CONTENT_MEMOIZE_TABLE = dict()
 PARAMETERS_READ_MEMOIZE_TABLE = dict()
 VARIANT_DATA_MEMOIZE_TABLE = dict()
 
-profile_data = None
+profile_data = None  # pylint: disable=invalid-name
+
 
 @enum.unique
 class AutomatonStateEnum(enum.Enum):
@@ -422,11 +423,16 @@ def load_static_stuff():
 
     profile_data.start('load_static_stuff - chargement du contenu de la variante')
 
+    # optimization
     global g_variant_content_loaded  # pylint: disable=invalid-name
-    g_variant_content_loaded = common.game_variant_content_reload(g_variant_name_loaded)
-    if not g_variant_content_loaded:
-        alert("Erreur chargement contenu variante")
-        return
+    if g_variant_name_loaded in VARIANT_CONTENT_MEMOIZE_TABLE:
+        g_variant_content_loaded = VARIANT_CONTENT_MEMOIZE_TABLE[g_variant_name_loaded]
+    else:
+        g_variant_content_loaded = common.game_variant_content_reload(g_variant_name_loaded)
+        if not g_variant_content_loaded:
+            alert("Erreur chargement contenu variante")
+            return
+        VARIANT_CONTENT_MEMOIZE_TABLE[g_variant_name_loaded] = g_variant_content_loaded
 
     # just to prevent a erroneous pylint warning
     g_variant_content_loaded = dict(g_variant_content_loaded)
@@ -440,15 +446,21 @@ def load_static_stuff():
     profile_data.start('load_static_stuff - lecture fichier parametres affichage 1')
 
     # from display chose get display parameters
+
+    # optimization
     global g_interface_parameters_read  # pylint: disable=invalid-name
-    g_interface_parameters_read = common.read_parameters(g_variant_name_loaded, g_interface_chosen)
+    if (g_variant_name_loaded, g_interface_chosen) in PARAMETERS_READ_MEMOIZE_TABLE:
+        g_interface_parameters_read = PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
+    else:
+        g_interface_parameters_read = common.read_parameters(g_variant_name_loaded, g_interface_chosen)
+        PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)] = g_interface_parameters_read
 
     profile_data.start('load_static_stuff - creation objet Variant 1')
 
     # build variant data
     global g_variant_data  # pylint: disable=invalid-name
 
-    # optmization
+    # optimization
     if (g_variant_name_loaded, g_interface_chosen) in VARIANT_DATA_MEMOIZE_TABLE:
         g_variant_data = VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
     else:
@@ -464,19 +476,25 @@ def load_static_stuff():
 
     profile_data.start('load_static_stuff - lecture fichier parametres affichage 2')
 
-    inforced_interface_parameters_read = common.read_parameters(g_variant_name_loaded, interface_inforced)
+    # optimization
+    if (g_variant_name_loaded, interface_inforced) in PARAMETERS_READ_MEMOIZE_TABLE:
+        inforced_interface_parameters_read = PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
+    else:
+        inforced_interface_parameters_read = common.read_parameters(g_variant_name_loaded, interface_inforced)
+        PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)] = inforced_interface_parameters_read
 
     profile_data.start('load_static_stuff - creation objet Variant 2')
 
     # build variant data
     global g_inforced_variant_data  # pylint: disable=invalid-name
 
-    # optmization
+    # optimization
     if (g_variant_name_loaded, interface_inforced) in VARIANT_DATA_MEMOIZE_TABLE:
         g_inforced_variant_data = VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
     else:
         g_inforced_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, inforced_interface_parameters_read)
         VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)] = g_inforced_variant_data
+
 
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
@@ -1767,6 +1785,8 @@ def submit_orders():
 
     # need to have orders to submit
 
+    profile_data.start('submit_orders() - chargement données de soumission')
+
     submitted_data = get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
@@ -1793,6 +1813,7 @@ def submit_orders():
     # now we can display
 
     # header
+    profile_data.start('submit_orders() - affichage')
 
     # game status
     my_sub_panel <= g_game_status
@@ -3605,6 +3626,8 @@ def game_master():
     id2pseudo = {v: k for k, v in g_players_dict.items()}
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
+    profile_data.start('game_master() - chargement données soumission')
+
     submitted_data = get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
         alert("Erreur chargement données de soumission")
@@ -3614,10 +3637,14 @@ def game_master():
     # just to avoid a warning
     submitted_data = dict(submitted_data)
 
+    profile_data.start('game_master() - chargement roles possibles')
+
     # who can I put in this role
     possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
 
+    profile_data.start('game_master() - chargement votes')
     # votes
+
     votes = game_votes_reload(g_game_id)
     if votes is None:
         alert("Erreur chargement votes")
@@ -4712,10 +4739,7 @@ countdown_timer = None  # pylint: disable=invalid-name
 def render(panel_middle):
     """ render """
 
-    def reply_callback(_):
-        pass
-
-    global profile_data
+    global profile_data  # pylint: disable=invalid-name
     profile_data = profiler.Profiler()
 
     # always back to top
@@ -4759,40 +4783,7 @@ def render(panel_middle):
     load_dynamic_stuff()
     load_special_stuff()
 
-    profile_data.stop()
-
-    if g_pseudo:
-
-        if SEND_REPORT:
-
-            subject = f"stats jouer la partie pour {g_pseudo}"
-            body = ""
-            body += f"{profile_data}"
-            body += "\n\n"
-
-            addressed_user_name = 'Palpatine'
-
-            players_dict = common.get_players()
-            if players_dict is None:
-                return
-            players_dict = dict(players_dict)
-            addressed_id = players_dict[addressed_user_name]
-            addressees = [addressed_id]
-            json_dict = {
-                'pseudo': g_pseudo,
-                'addressees': " ".join([str(a) for a in addressees]),
-                'subject': subject,
-                'body': body,
-                'force': 1,
-            }
-
-            host = config.SERVER_CONFIG['PLAYER']['HOST']
-            port = config.SERVER_CONFIG['PLAYER']['PORT']
-            url = f"{host}:{port}/mail-players"
-
-            # sending email : need token
-            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
+    profile_data.start('programme principal')
 
     # initiates new countdown
     countdown()
@@ -4829,5 +4820,15 @@ def render(panel_middle):
                 # Admin
                 item_name_selected = 'ordres'
 
+    profile_data.start(f'load_option({item_name_selected})')
+
     load_option(None, item_name_selected)
     panel_middle <= my_panel
+
+    # stop profiling
+    profile_data.stop()
+
+    # send report
+    if SEND_REPORT:
+        if g_pseudo:
+            profile_data.send_report(g_pseudo)
