@@ -22,8 +22,6 @@ import play    # noqa: E402
 import tournament    # noqa: E402
 import sandbox    # noqa: E402
 import lists    # noqa: E402
-import faq    # noqa: E402
-import technical    # noqa: E402
 import admin    # noqa: E402
 
 
@@ -40,7 +38,7 @@ h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'sélectionner interface', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'listes', 'foire aux questions', 'coin technique', 'administration']
+OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'sélectionner interface', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'listes', 'administration']
 
 # overall_top
 overall_top = html.DIV()
@@ -95,10 +93,6 @@ def load_option(_, item_name):
         sandbox.render(panel_middle)
     if item_name == 'listes':
         lists.render(panel_middle)
-    if item_name == 'foire aux questions':
-        faq.render(panel_middle)
-    if item_name == 'coin technique':
-        technical.render(panel_middle)
     if item_name == 'administration':
         admin.render(panel_middle)
     global item_name_selected  # pylint: disable=invalid-name
