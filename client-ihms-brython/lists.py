@@ -125,8 +125,6 @@ def show_players_data():
     my_sub_panel <= html.P(f"Il y a {count} joueurs")
 
 
-
-
 def show_replacement_data():
     """ show_replacement_data """
 
