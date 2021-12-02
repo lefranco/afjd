@@ -38,7 +38,8 @@ OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 
 
 # to optimize a bit
 VARIANT_CONTENT_MEMOIZE_TABLE = dict()
-
+PARAMETERS_READ_MEMOIZE_TABLE = dict()
+VARIANT_DATA_MEMOIZE_TABLE = dict()
 
 profile_data = None
 
@@ -448,11 +449,11 @@ def load_static_stuff():
     global g_variant_data  # pylint: disable=invalid-name
 
     # optmization
-    if (g_variant_name_loaded, g_interface_chosen) in VARIANT_CONTENT_MEMOIZE_TABLE:
-        g_variant_data = VARIANT_CONTENT_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
+    if (g_variant_name_loaded, g_interface_chosen) in VARIANT_DATA_MEMOIZE_TABLE:
+        g_variant_data = VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
     else:
         g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_interface_parameters_read)
-        VARIANT_CONTENT_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)] = g_variant_data
+        VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)] = g_variant_data
 
     # now for official map
 
@@ -471,11 +472,11 @@ def load_static_stuff():
     global g_inforced_variant_data  # pylint: disable=invalid-name
 
     # optmization
-    if (g_variant_name_loaded, interface_inforced) in VARIANT_CONTENT_MEMOIZE_TABLE:
-        g_inforced_variant_data = VARIANT_CONTENT_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
+    if (g_variant_name_loaded, interface_inforced) in VARIANT_DATA_MEMOIZE_TABLE:
+        g_inforced_variant_data = VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
     else:
         g_inforced_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, inforced_interface_parameters_read)
-        VARIANT_CONTENT_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)] = g_inforced_variant_data
+        VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)] = g_inforced_variant_data
 
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
