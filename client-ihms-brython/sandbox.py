@@ -14,8 +14,6 @@ import common
 import interface
 import geometry
 import mapping
-import oracle
-import index  # circular import
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -170,6 +168,8 @@ def sandbox():
         # do not put all rest hold
         if not orders_data.empty():
             put_submit(buttons_right)
+        if not position_data.empty():
+            put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
@@ -202,6 +202,8 @@ def sandbox():
         # do not put erase all
         if not orders_data.empty():
             put_submit(buttons_right)
+        if not position_data.empty():
+            put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
@@ -263,6 +265,13 @@ def sandbox():
 
         # submitting position and orders for simulation : do not need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def consult_callback(_):
+        """ consult_callback """
+
+        # TODO : calculate some interesting orders or advices here
+
+        alert("Hélas, trois fois hélas, cette fonctionalité n'est pas encore prête...")
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
@@ -350,6 +359,8 @@ def sandbox():
             put_rest_hold(buttons_right)
             if not orders_data.empty():
                 put_submit(buttons_right)
+            if not position_data.empty():
+                put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -414,6 +425,8 @@ def sandbox():
             put_rest_hold(buttons_right)
             if not orders_data.empty():
                 put_submit(buttons_right)
+            if not position_data.empty():
+                put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -456,6 +469,8 @@ def sandbox():
             put_rest_hold(buttons_right)
             if not orders_data.empty():
                 put_submit(buttons_right)
+            if not position_data.empty():
+                put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -493,6 +508,8 @@ def sandbox():
                 put_rest_hold(buttons_right)
                 if not orders_data.empty():
                     put_submit(buttons_right)
+                if not position_data.empty():
+                    put_consult(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
                 return
@@ -515,6 +532,8 @@ def sandbox():
             put_rest_hold(buttons_right)
             if not orders_data.empty():
                 put_submit(buttons_right)
+            if not position_data.empty():
+                put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
             my_sub_panel <= my_sub_panel2
@@ -557,6 +576,11 @@ def sandbox():
             # remove unit
             position_data.remove_unit(selected_erase_unit)
 
+            # tricky
+            nonlocal selected_hovered_object
+            if selected_hovered_object == selected_erase_unit:
+                selected_hovered_object = None
+
         else:
 
             # remove order
@@ -579,6 +603,8 @@ def sandbox():
         put_rest_hold(buttons_right)
         if not orders_data.empty():
             put_submit(buttons_right)
+        if not position_data.empty():
+            put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
@@ -711,6 +737,16 @@ def sandbox():
         input_submit.bind("click", submit_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
+        buttons_right <= html.BR()
+
+    def put_consult(buttons_right):
+        """ put_consult """
+
+        input_consult = html.INPUT(type="submit", value="consulter l'oracle sur cette position")
+        input_consult.bind("click", consult_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_consult
+        buttons_right <= html.BR()
 
     # callbacks pour le glisser / deposer
 
@@ -813,18 +849,11 @@ def sandbox():
         put_rest_hold(buttons_right)
         if not orders_data.empty():
             put_submit(buttons_right)
+        if not position_data.empty():
+            put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
         my_sub_panel <= my_sub_panel2
-
-    def callback_export_oracle(_):
-        """ callback_export_oracle """
-
-        # action on importing game
-        oracle.import_position(position_data)
-
-        # action of going to sandbox page
-        index.load_option(None, 'oracle')
 
     # starts here
 
@@ -888,10 +917,6 @@ def sandbox():
     display_very_left <= html.DIV("Glissez/déposez ces unités sur la carte", Class='instruction')
     display_very_left <= html.BR()
 
-    input_export_sandbox = html.INPUT(type="submit", value="exporter vers l'oracle")
-    input_export_sandbox.bind("click", callback_export_oracle)
-    display_very_left <= input_export_sandbox
-
     map_size = variant_data.map_size
 
     # create canvas
@@ -946,6 +971,8 @@ def sandbox():
     put_rest_hold(buttons_right)
     if not orders_data.empty():
         put_submit(buttons_right)
+    if not position_data.empty():
+        put_consult(buttons_right)
 
     # overall
     my_sub_panel2 = html.DIV()
