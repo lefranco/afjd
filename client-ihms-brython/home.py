@@ -237,7 +237,7 @@ def select_interface():
         return
 
     information = html.DIV(Class='important')
-    information <= "Une 'interface' vous permet d'avoir une carte et des trigrammes de désignation des régions sépcifiquaes différents de ceux pratiqués sur le site"
+    information <= "Une 'interface' vous permet d'avoir une carte et des trigrammes de désignation des régions spécifiques c'est à dire différents de ceux pratiqués sur le site"
     my_sub_panel <= information
     my_sub_panel <= html.BR()
 
