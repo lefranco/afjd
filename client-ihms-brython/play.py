@@ -1810,6 +1810,8 @@ def submit_orders():
             load_option(None, 'position')
             return False
 
+    profile_data.start('submit_orders() - check_token()')
+
     # because we do not want the token stale in the middle of the process
     login.check_token()
 
