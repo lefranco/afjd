@@ -37,7 +37,7 @@ ALL_ORDERS_IN_COLOUR = 'Chartreuse'
 
 PASSED_GRACE_COLOUR = 'Red'
 PASSED_DEADLINE_COLOUR = 'DarkOrange'
-APPROACHING_DEADLINE_COLOUR = 'Gold'
+APPROACHING_DEADLINE_COLOUR = 'Yellow'
 
 
 #  kept to show how to write json file
