@@ -192,7 +192,7 @@ def create_game():
         if nopress:
             specific_data += "sans presse "
         if fast:
-            specific_data += "rapide "
+            specific_data += "temps réel "
         if not specific_data:
             specific_data = "(sans particularité) "
 
@@ -321,7 +321,7 @@ def create_game():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_fast = html.LEGEND("rapide", title="Le calcul des dates limites se fait en minutes au lieu de jours (pour des parties en temps réel)")
+    legend_fast = html.LEGEND("temps réel", title="Le calcul des dates limites se fait en minutes au lieu de jours. (Ne cocher que pour une partie comme sur un plateau)")
     fieldset <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_fast
@@ -366,7 +366,7 @@ def create_game():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre de jours (minutes pour une partie rapide) alloués avant fin de la grâce")
+    legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre de jours (minutes pour une partie temps réel) alloués avant fin de la grâce")
     fieldset <= legend_grace_duration
     input_grace_duration = html.INPUT(type="number", value=DEFAULT_GRACE_DURATION)
     fieldset <= input_grace_duration
@@ -375,7 +375,7 @@ def create_game():
     # moves
 
     fieldset = html.FIELDSET()
-    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de mouvements")
+    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours (minutes pour une partie temps réel) alloués avant la date limite de mouvements")
     fieldset <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=DEFAULT_SPEED_MOVES)
     fieldset <= input_speed_moves
@@ -391,7 +391,7 @@ def create_game():
     # retreats
 
     fieldset = html.FIELDSET()
-    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de retraites")
+    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours (minutes pour une partie temps réel) alloués avant la date limite de retraites")
     fieldset <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=DEFAULT_SPEED_OTHERS)
     fieldset <= input_speed_retreats
@@ -407,7 +407,7 @@ def create_game():
     # adjustments
 
     fieldset = html.FIELDSET()
-    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite d'ajustements")
+    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours (minutes pour une partie temps réel) alloués avant la date limite d'ajustements")
     fieldset <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=DEFAULT_SPEED_OTHERS)
     fieldset <= input_speed_adjustments
@@ -1238,7 +1238,7 @@ def change_pace_parameters_game():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre de jours (minutes pour une partie rapide) alloués avant fin de la grâce")
+    legend_grace_duration = html.LEGEND("durée de grâce", title="Nombre de jours (minutes pour une partie temps réel) alloués avant fin de la grâce")
     fieldset <= legend_grace_duration
     input_grace_duration = html.INPUT(type="number", value=grace_duration_loaded)
     fieldset <= input_grace_duration
@@ -1247,7 +1247,7 @@ def change_pace_parameters_game():
     # moves
 
     fieldset = html.FIELDSET()
-    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de mouvements")
+    legend_speed_moves = html.LEGEND("cadence mouvements", title="Nombre de jours (minutes pour une partie temps réel) alloués avant la date limite de mouvements")
     fieldset <= legend_speed_moves
     input_speed_moves = html.INPUT(type="number", value=speed_moves_loaded)
     fieldset <= input_speed_moves
@@ -1263,7 +1263,7 @@ def change_pace_parameters_game():
     # retreats
 
     fieldset = html.FIELDSET()
-    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite de retraites")
+    legend_speed_retreats = html.LEGEND("cadence retraites", title="Nombre de jours (minutes pour une partie temps réel) alloués avant la date limite de retraites")
     fieldset <= legend_speed_retreats
     input_speed_retreats = html.INPUT(type="number", value=speed_retreats_loaded)
     fieldset <= input_speed_retreats
@@ -1279,7 +1279,7 @@ def change_pace_parameters_game():
     # adjustments
 
     fieldset = html.FIELDSET()
-    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours (minutes pour une partie rapide) alloués avant la date limite d'ajustements")
+    legend_speed_adjustments = html.LEGEND("cadence ajustements", title="Nombre de jours (minutes pour une partie temps réel) alloués avant la date limite d'ajustements")
     fieldset <= legend_speed_adjustments
     input_speed_adjustments = html.INPUT(type="number", value=speed_adjustments_loaded)
     fieldset <= input_speed_adjustments
