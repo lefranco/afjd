@@ -2,7 +2,7 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import document, html  # pylint: disable=import-error
+from browser import document, html, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -17,19 +17,24 @@ my_panel.attrs['style'] = 'display: table'
 def select_game():
     """ select_game """
 
-    def select_game_callback(_, input_game):
+    def select_game_callback(_, input_game, game_data_sel):
         """ select_game_callback """
 
-        game = input_game.value
-        storage['GAME'] = game
-        InfoDialog("OK", f"Partie sélectionnée : {game}", remove_after=config.REMOVE_AFTER)
+        game_name = input_game.value
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_VARIANT'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_ID'] = game_variant
+
+        InfoDialog("OK", f"Partie sélectionnée : {game_name}/{game_id}/{game_variant}", remove_after=config.REMOVE_AFTER)
         show_game_selected()
 
         render(g_panel_middle)
 
     games_data = common.get_games_data()
-
     if not games_data:
+        alert("Erreur chargement dictionnaire parties")
         return None
 
     # list the variants we have
@@ -69,8 +74,11 @@ def select_game():
 
             form <= html.BR()
 
+            # create a table to pass information about selected game
+            game_data_sel = {v['name']: (k, v['variant']) for k, v in games_data.items()}
+
             input_select_game = html.INPUT(type="submit", value="sélectionner cette partie")
-            input_select_game.bind("click", lambda e, i=input_game: select_game_callback(e, i))
+            input_select_game.bind("click", lambda e, ig=input_game, gds=game_data_sel: select_game_callback(e, ig, gds))
             form <= input_select_game
 
             col = html.TD()

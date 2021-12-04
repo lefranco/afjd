@@ -208,11 +208,16 @@ def get_player_games_playing_in(player_id):
 def my_games(state_name):
     """ my_games """
 
-    def select_game_callback(_, game):
+    def select_game_callback(_, game_name, game_data_sel):
         """ select_game_callback """
 
         # action of selecting game
-        storage['GAME'] = game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_VARIANT'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_ID'] = game_variant
+
         selection.show_game_selected()
 
         # action of going to game page
@@ -245,7 +250,7 @@ def my_games(state_name):
 
     games_dict = common.get_games_data()
     if games_dict is None:
-        alert("Erreur chargement données des parties")
+        alert("Erreur chargement dictionnaire parties")
         return
 
     dict_role_id = get_all_roles_allocated_to_player()
@@ -305,8 +310,10 @@ def my_games(state_name):
     parameters_read_memoize_table = dict()
     variant_data_memoize_table = dict()
 
-    number_games = 0
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
+    number_games = 0
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0])):
 
         # do not display finished games
@@ -497,7 +504,7 @@ def my_games(state_name):
                 game_name = data['name']
                 form = html.FORM()
                 input_jump_game = html.INPUT(type="submit", value="sauter")
-                input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
+                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                 form <= input_jump_game
                 value = form
 
