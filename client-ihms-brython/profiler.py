@@ -10,6 +10,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import common
 import config
 
+VERSION = "optimisée game_id et variant"
 
 class Measure:
     """ Measure """
@@ -70,6 +71,8 @@ class Profiler:
         subject = f"stats jouer la partie pour {pseudo}"
         body = ""
         body += f"{self}"
+        body += "\n\n"
+        body += f"version : {VERSION}"
         body += "\n\n"
 
         addressed_user_name = 'Palpatine'
