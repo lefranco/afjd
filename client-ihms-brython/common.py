@@ -357,9 +357,9 @@ def get_allocations_data():
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération des listes parties avec les arbitres : {req_result['message']}")
+                alert(f"Erreur à la récupération des allocations : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération des listes parties avec les arbitres : {req_result['msg']}")
+                alert(f"Problème à la récupération des allocations : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
