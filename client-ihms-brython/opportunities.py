@@ -59,8 +59,6 @@ def my_opportunities():
     def select_game_callback(_, game_name, game_data_sel):
         """ select_game_callback """
 
-        print("select_game_callback()")
-
         # action of selecting game
         storage['GAME'] = game_name
         game_id = game_data_sel[game_name][0]
@@ -80,8 +78,6 @@ def my_opportunities():
 
             def reply_callback(req):
 
-                print("reply_callback()")
-
                 req_result = json.loads(req.text)
                 if req.status != 201:
                     if 'message' in req_result:
@@ -94,8 +90,6 @@ def my_opportunities():
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
                 InfoDialog("OK", f"Vous avez rejoint la partie : {messages}", remove_after=config.REMOVE_AFTER)
-
-            print("join_game()")
 
             game_id = common.get_game_id(game)
             if game_id is None:
@@ -115,12 +109,8 @@ def my_opportunities():
             # adding allocation : need a token
             ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-        print("join_and_select_game_callback()")
-
         # action of putting myself in game
         join_game(game)
-
-        print("after join_game()")
 
         # action of going to the game
         select_game_callback(evt, game, game_data_sel)
