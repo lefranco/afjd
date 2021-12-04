@@ -10,7 +10,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import common
 import config
 
-VERSION = "optimisée game_id et variant"
+VERSION = "optimisée game_id, variant et game_master"
 
 class Measure:
     """ Measure """

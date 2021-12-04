@@ -34,7 +34,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'observer', 'paramètres', 'joueurs', 'ordres', 'retards']
+OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'observer', 'paramètres', 'arbitre', 'joueurs', 'ordres', 'retards']
 
 # to optimize a bit
 VARIANT_CONTENT_MEMOIZE_TABLE = dict()
@@ -514,14 +514,10 @@ def load_dynamic_stuff():
     # just to prevent a erroneous pylint warning
     g_game_parameters_loaded = dict(g_game_parameters_loaded)
 
-    profile_data.start('load_dynamic_stuff - get_game_master()')
-
-    game_master_pseudo = get_game_master(g_game_id)
-
     profile_data.start('load_dynamic_stuff - calcul get_game_status()')
 
     global g_game_status  # pylint: disable=invalid-name
-    g_game_status = get_game_status(game_master_pseudo)
+    g_game_status = get_game_status()
 
     profile_data.start('load_dynamic_stuff - chargement de la position')
 
@@ -667,7 +663,7 @@ def countdown():
         }
 
 
-def get_game_status(game_master_pseudo):
+def get_game_status():
     """ get_game__status """
 
     game_name = g_game_parameters_loaded['name']
@@ -707,14 +703,8 @@ def get_game_status(game_master_pseudo):
     row <= g_deadline_col
 
     global g_countdown_col  # pylint: disable=invalid-name
-    g_countdown_col = html.TD("xxx")
+    g_countdown_col = html.TD("")
     row <= g_countdown_col
-
-    info = ''  # some games do not have a game master
-    if game_master_pseudo is not None:
-        info = f"Arbitre {game_master_pseudo}"
-    col = html.TD(info)
-    row <= col
 
     game_status_table <= row
 
@@ -4331,6 +4321,67 @@ def show_game_parameters():
     return True
 
 
+def show_game_master_in_game():
+    """ show_players_in_game """
+
+    id2pseudo = {v: k for k, v in g_players_dict.items()}
+
+    game_master_table = html.TABLE()
+
+    fields = ['flag', 'role', 'player']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'role'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    game_master_table <= thead
+
+    role2pseudo = {v: k for k, v in g_game_players_dict.items()}
+
+    role_id = 0
+
+    row = html.TR()
+
+    # role flag
+    role = g_variant_data.roles[role_id]
+    role_name = g_variant_data.name_table[role]
+    role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
+
+    if role_icon_img:
+        col = html.TD(role_icon_img)
+    else:
+        col = html.TD()
+    row <= col
+
+    # role name
+    role = g_variant_data.roles[role_id]
+    role_name = g_variant_data.name_table[role]
+
+    col = html.TD(role_name)
+    row <= col
+
+    # player
+    pseudo_there = ""
+    if role_id in role2pseudo:
+        player_id_str = role2pseudo[role_id]
+        player_id = int(player_id_str)
+        pseudo_there = id2pseudo[player_id]
+    col = html.TD(pseudo_there)
+    row <= col
+
+    game_master_table <= row
+
+    # game status
+    my_sub_panel <= g_game_status
+    my_sub_panel <= html.BR()
+
+    my_sub_panel <= game_master_table
+
+    return True
+
+
 def show_players_in_game():
     """ show_players_in_game """
 
@@ -4698,6 +4749,8 @@ def load_option(_, item_name):
         status = observe()
     if item_name == 'paramètres':
         status = show_game_parameters()
+    if item_name == 'arbitre':
+        status = show_game_master_in_game()
     if item_name == 'joueurs':
         status = show_players_in_game()
     if item_name == 'ordres':
