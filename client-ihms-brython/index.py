@@ -84,9 +84,9 @@ def load_game(game_name):
     storage['GAME'] = game_name
 
     game_id = game_data_sel[game_name][0]
-    storage['GAME_VARIANT'] = game_id
+    storage['GAME_ID'] = game_id
     game_variant = game_data_sel[game_name][1]
-    storage['GAME_ID'] = game_variant
+    storage['GAME_VARIANT'] = game_variant
 
     return True
 
