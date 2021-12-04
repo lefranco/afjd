@@ -27,7 +27,7 @@ def select_game():
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        InfoDialog("OK", f"Partie sélectionnée : {game_name}/{game_id}/{game_variant}", remove_after=config.REMOVE_AFTER)
+        InfoDialog("OK", f"Partie sélectionnée : {game_name}", remove_after=config.REMOVE_AFTER)
         show_game_selected()
 
         render(g_panel_middle)
