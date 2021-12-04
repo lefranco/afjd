@@ -709,10 +709,6 @@ def rectify():
         ownerships_list_dict = position_data.save_json2()
         ownerships_list_dict_json = json.dumps(ownerships_list_dict)
 
-        game_id = common.get_game_id(game)
-        if game_id is None:
-            return
-
         json_dict = {
             'pseudo': pseudo,
             'units': units_list_dict_json,
@@ -978,13 +974,17 @@ def rectify():
         alert("Il faut choisir la partie au préalable")
         return
 
-    game = storage['GAME']
-
     if 'GAME_VARIANT' not in storage:
         alert("ERREUR : variante introuvable")
         return
 
     variant_name_loaded = storage['GAME_VARIANT']
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
 
     # from variant name get variant content
 
@@ -1000,10 +1000,6 @@ def rectify():
 
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-
-    game_id = common.get_game_id(game)
-    if game_id is None:
-        return
 
     # get the position from server
     position_loaded = common.game_position_reload(game_id)
