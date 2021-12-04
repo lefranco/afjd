@@ -6,9 +6,10 @@
 import time
 start = time.time()
 
-from browser import document, html, timer  # pylint: disable=import-error # noqa: E402
+from browser import document, html, alert, timer  # pylint: disable=import-error # noqa: E402
 from browser.local_storage import storage  # pylint: disable=import-error # noqa: E402
 
+import common    # noqa: E402
 import home    # noqa: E402
 import login    # noqa: E402
 import selection    # noqa: E402
@@ -60,6 +61,34 @@ menu_left <= menu_selection
 
 
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
+
+
+def load_game(game_name):
+    """ load_game """
+
+    game_data = common.get_game_data(game_name)
+    if not game_data:
+        alert(f"Erreur chargement données partie {game_name}. Cette partie existe ?")
+        return False
+    game_data = dict(game_data)
+
+    game_id_int = common.get_game_id(game_name)
+    if not game_id_int:
+        alert(f"Erreur chargement identifiant partie {game_name}. Cette partie existe ?")
+        return False
+    game_id = str(game_id_int)
+
+    # create a table to pass information about selected game
+    game_data_sel = {game_name: (game_data['variant'], game_id)}
+
+    storage['GAME'] = game_name
+
+    game_id = game_data_sel[game_name][0]
+    storage['GAME_VARIANT'] = game_id
+    game_variant = game_data_sel[game_name][1]
+    storage['GAME_ID'] = game_variant
+
+    return True
 
 
 def load_option(_, item_name):
@@ -124,12 +153,13 @@ def load_option(_, item_name):
 panel_middle = html.DIV(id='panel_middle')
 overall <= panel_middle
 
-
 # starts here
 if 'game' in document.query:
-    game = document.query['game']
-    storage['GAME'] = game
-    load_option(None, 'jouer la partie sélectionnée')
+    query_game_name = document.query['game']
+    if load_game(query_game_name):
+        load_option(None, 'jouer la partie sélectionnée')
+    else:
+        load_option(None, item_name_selected)
 else:
     load_option(None, item_name_selected)
 

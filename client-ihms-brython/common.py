@@ -437,3 +437,34 @@ def get_allocations_data():
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return allocation_data
+
+
+def get_game_data(game):
+    """ get_game_data """
+
+    game_data = None
+
+    def reply_callback(req):
+        nonlocal game_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement des données de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement des données de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        game_data = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/games/{game}"
+
+    # getting game data : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return game_data

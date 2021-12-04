@@ -321,11 +321,16 @@ def usurp():
 def all_games(state_name):
     """all_games """
 
-    def select_game_callback(_, game):
+    def select_game_callback(_, game_name, game_data_sel):
         """ select_game_callback """
 
         # action of selecting game
-        storage['GAME'] = game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_VARIANT'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_ID'] = game_variant
+
         selection.show_game_selected()
 
         # action of going to game page
@@ -415,6 +420,9 @@ def all_games(state_name):
     variant_data_memoize_table = dict()
     parameters_read_memoize_table = dict()
     variant_content_memoize_table = dict()
+
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     number_games = 0
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0])):
@@ -534,7 +542,7 @@ def all_games(state_name):
                 game_name = data['name']
                 form = html.FORM()
                 input_jump_game = html.INPUT(type="submit", value="sauter")
-                input_jump_game.bind("click", lambda e, g=game_name: select_game_callback(e, g))
+                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                 form <= input_jump_game
                 value = form
 
