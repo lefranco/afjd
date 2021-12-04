@@ -4308,7 +4308,7 @@ def show_game_master_in_game():
     game_master_pseudo = get_game_master(int(g_game_id))
     if game_master_pseudo is None:
         alert("Pas d'arbitre pour cette partie ou erreur au chargement de l'arbitre de la partie")
-        return
+        return False
 
     game_master_table = html.TABLE()
 
@@ -4608,7 +4608,7 @@ def show_incidents_in_game():
 
     if game_incidents is None:
         alert("Erreur chargement incidents")
-        return
+        return False
 
     # just to prevent a erroneous pylint warning
     game_incidents = list(game_incidents)
