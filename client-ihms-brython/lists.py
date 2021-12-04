@@ -19,6 +19,7 @@ def show_registered_data():
     players_dict = common.get_players_data()
 
     if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
         return
 
     players_table = html.TABLE()
@@ -63,8 +64,8 @@ def show_players_data():
 
     # get the games
     games_dict = common.get_games_data()
-
     if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
         return
 
     # to avoid a warning
@@ -73,11 +74,13 @@ def show_players_data():
     players_dict = common.get_players_data()
 
     if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
         return
 
     # get the link (allocations) of players
     allocations_data = common.get_allocations_data()
     if not allocations_data:
+        alert("Erreur chargement allocations")
         return
     allocations_data = dict(allocations_data)
 
@@ -133,6 +136,7 @@ def show_replacement_data():
     players_dict = common.get_players_data()
 
     if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
         return
 
     players_table = html.TABLE()
@@ -171,8 +175,8 @@ def show_games_data(game_state_name):
     game_state = config.STATE_CODE_TABLE[game_state_name]
 
     games_dict = common.get_games_data()
-
     if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
         return
 
     games_table = html.TABLE()
@@ -228,8 +232,8 @@ def show_game_masters_data():
 
     # get the games
     games_dict = common.get_games_data()
-
     if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
         return
 
     # to avoid a warning
@@ -238,11 +242,13 @@ def show_game_masters_data():
     players_dict = common.get_players_data()
 
     if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
         return
 
     # get the link (allocations) of players
     allocations_data = common.get_allocations_data()
     if not allocations_data:
+        alert("Erreur chargement allocations")
         return
     allocations_data = dict(allocations_data)
 
@@ -295,8 +301,8 @@ def show_no_game_masters_data():
 
     # get the games
     games_dict = common.get_games_data()
-
     if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
         return
 
     # to avoid a warning
@@ -306,11 +312,13 @@ def show_no_game_masters_data():
     players_dict = common.get_players_data()
 
     if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
         return
 
     # get the link (allocations) of players
     allocations_data = common.get_allocations_data()
     if not allocations_data:
+        alert("Erreur chargement allocations")
         return
     allocations_data = dict(allocations_data)
 
