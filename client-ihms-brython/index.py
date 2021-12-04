@@ -6,9 +6,12 @@
 import time
 start = time.time()
 
-from browser import document, html, alert, timer  # pylint: disable=import-error # noqa: E402
+import json    # noqa: E402
+
+from browser import document, html, alert, timer, ajax  # pylint: disable=import-error # noqa: E402
 from browser.local_storage import storage  # pylint: disable=import-error # noqa: E402
 
+import config    # noqa: E402
 import common    # noqa: E402
 import home    # noqa: E402
 import login    # noqa: E402
@@ -63,6 +66,36 @@ menu_left <= menu_selection
 item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
 
 
+def get_game_id(name):
+    """ get_game_id """
+
+    game_id = None
+
+    def reply_callback(req):
+        nonlocal game_id
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de l'identifiant de partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de l'identifiant de partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        game_id = int(req_result)
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-identifiers/{name}"
+
+    # getting a game identifier : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return game_id
+
+
 def load_game(game_name):
     """ load_game """
 
@@ -72,14 +105,14 @@ def load_game(game_name):
         return False
     game_data = dict(game_data)
 
-    game_id_int = common.get_game_id(game_name)
+    game_id_int = get_game_id(game_name)
     if not game_id_int:
         alert(f"Erreur chargement identifiant partie {game_name}. Cette partie existe ?")
         return False
     game_id = str(game_id_int)
 
     # create a table to pass information about selected game
-    game_data_sel = {game_name: (game_data['variant'], game_id)}
+    game_data_sel = {game_name: (game_id, game_data['variant'])}
 
     storage['GAME'] = game_name
 

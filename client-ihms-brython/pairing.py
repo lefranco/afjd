@@ -81,10 +81,6 @@ def join_game():
             my_sub_panel.clear()
             join_game()
 
-        game_id = common.get_game_id(game)
-        if game_id is None:
-            return
-
         json_dict = {
             'game_id': game_id,
             'player_pseudo': pseudo,
@@ -101,17 +97,21 @@ def join_game():
 
     my_sub_panel <= html.H3("Se mettre dans la partie")
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
 
     form = html.FORM()
 
@@ -150,10 +150,6 @@ def quit_game():
             my_sub_panel.clear()
             quit_game()
 
-        game_id = common.get_game_id(game)
-        if game_id is None:
-            return
-
         json_dict = {
             'game_id': game_id,
             'player_pseudo': pseudo,
@@ -171,17 +167,21 @@ def quit_game():
 
     my_sub_panel <= html.H3("Se retirer de la partie")
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
 
     form = html.FORM()
 
@@ -222,10 +222,6 @@ def move_players_in_game():
             move_players_in_game()
 
         player_pseudo = input_incomer.value
-
-        game_id = common.get_game_id(game)
-        if game_id is None:
-            return
 
         json_dict = {
             'game_id': game_id,
@@ -269,10 +265,6 @@ def move_players_in_game():
 
         player_pseudo = input_outcomer.value
 
-        game_id = common.get_game_id(game)
-        if game_id is None:
-            return
-
         json_dict = {
             'game_id': game_id,
             'player_pseudo': player_pseudo,
@@ -289,27 +281,27 @@ def move_players_in_game():
 
     my_sub_panel <= html.H3("Mettre dans ou enlever des joueurs de la partie")
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
 
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
+
     players_dict = common.get_players()
     if players_dict is None:
         return
 
     id2pseudo = {v: k for k, v in players_dict.items()}
-
-    game_id = common.get_game_id(game)
-    if game_id is None:
-        return
 
     # from game id and token get role_id of player
 
@@ -434,10 +426,6 @@ def take_mastering_game():
             my_sub_panel.clear()
             take_mastering_game()
 
-        game_id = common.get_game_id(game)
-        if game_id is None:
-            return
-
         json_dict = {
             'game_id': game_id,
             'role_id': 0,
@@ -455,17 +443,21 @@ def take_mastering_game():
 
     my_sub_panel <= html.H3("Prendre l'arbitrage de la partie")
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
 
     form = html.FORM()
 
@@ -504,10 +496,6 @@ def quit_mastering_game():
             my_sub_panel.clear()
             quit_mastering_game()
 
-        game_id = common.get_game_id(game)
-        if game_id is None:
-            return
-
         json_dict = {
             'game_id': game_id,
             'role_id': 0,
@@ -525,17 +513,21 @@ def quit_mastering_game():
 
     my_sub_panel <= html.H3("Quitter l'arbitrage de la partie")
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
 
     form = html.FORM()
 

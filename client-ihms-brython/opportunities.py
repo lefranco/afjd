@@ -71,10 +71,10 @@ def my_opportunities():
         # action of going to game page
         index.load_option(None, 'jouer la partie sélectionnée')
 
-    def join_and_select_game_callback(evt, game, game_data_sel):
+    def join_and_select_game_callback(evt, game_name, game_data_sel):
         """ join_and_select_game_callback """
 
-        def join_game(game):
+        def join_game(game_name, game_data_sel):
 
             def reply_callback(req):
 
@@ -91,9 +91,7 @@ def my_opportunities():
                 messages = "<br>".join(req_result['msg'].split('\n'))
                 InfoDialog("OK", f"Vous avez rejoint la partie : {messages}", remove_after=config.REMOVE_AFTER)
 
-            game_id = common.get_game_id(game)
-            if game_id is None:
-                return
+            game_id = game_data_sel[game_name][0]
 
             json_dict = {
                 'game_id': game_id,
@@ -110,10 +108,10 @@ def my_opportunities():
             ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # action of putting myself in game
-        join_game(game)
+        join_game(game_name, game_data_sel)
 
         # action of going to the game
-        select_game_callback(evt, game, game_data_sel)
+        select_game_callback(evt, game_name, game_data_sel)
 
     overall_time_before = time.time()
 

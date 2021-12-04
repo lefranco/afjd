@@ -4758,14 +4758,14 @@ def render(panel_middle):
     global g_game  # pylint: disable=invalid-name
     g_game = storage['GAME']
 
-    profile_data.start('chargement du game_id')
+    profile_data.start('lecture du game_id')
 
-    # from game name get game id
-    global g_game_id  # pylint: disable=invalid-name
-    g_game_id = common.get_game_id(g_game)
-    if g_game_id is None:
-        alert("Erreur chargement identifiant partie")
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
         return
+
+    global g_game_id  # pylint: disable=invalid-name
+    g_game_id = storage['GAME_ID']
 
     # Connecté mais pas joueur
     # Pas connecté
