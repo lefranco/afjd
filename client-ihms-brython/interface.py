@@ -5,12 +5,10 @@
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
-
 # simplest is to hard code displays of variants here
 INTERFACE_TABLE = {
     'standard': ['diplomania', 'diplomatie_online', 'stabbeurfou']
 }
-
 
 
 def get_inforced_interface_from_variant(variant):
@@ -29,6 +27,7 @@ def get_interface_from_variant(variant):
 
     # takes the first
     return INTERFACE_TABLE[variant][0]
+
 
 def set_interface(variant_name, user_interface):
     """ set_interface """
