@@ -227,14 +227,11 @@ def select_interface():
         alert("Il faut choisir la partie au préalable (pour la variante)")
         return
 
-    game = storage['GAME']
-
-    # from game name get variant name
-
-    variant_name_loaded = common.game_variant_name_reload(game)
-    if not variant_name_loaded:
-        alert("Problème chargement nom de variante")
+    if 'GAME_VARIANT' not in storage:
+        alert("ERREUR : variante introuvable")
         return
+
+    variant_name_loaded = storage['GAME_VARIANT']
 
     information = html.DIV(Class='important')
     information <= "Une 'interface' vous permet d'avoir une carte et des trigrammes de désignation des régions spécifiques c'est à dire différents de ceux pratiqués sur le site"
