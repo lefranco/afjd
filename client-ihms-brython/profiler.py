@@ -12,6 +12,7 @@ import config
 
 VERSION = "optimisée game_id, variant et game_master"
 
+
 class Measure:
     """ Measure """
 
