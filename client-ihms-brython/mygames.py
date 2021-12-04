@@ -214,9 +214,9 @@ def my_games(state_name):
         # action of selecting game
         storage['GAME'] = game_name
         game_id = game_data_sel[game_name][0]
-        storage['GAME_VARIANT'] = game_id
+        storage['GAME_ID'] = game_id
         game_variant = game_data_sel[game_name][1]
-        storage['GAME_ID'] = game_variant
+        storage['GAME_VARIANT'] = game_variant
 
         selection.show_game_selected()
 
