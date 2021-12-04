@@ -62,27 +62,29 @@ content_backup = None  # pylint: disable=invalid-name
 # global data below
 
 # loaded in render()
+g_game = None  # pylint: disable=invalid-name
 g_game_id = None  # pylint: disable=invalid-name
 g_pseudo = None  # pylint: disable=invalid-name
 g_role_id = None  # pylint: disable=invalid-name
 
 # loaded in load_static_stuff
 g_players_dict = None  # pylint: disable=invalid-name
-g_game = None  # pylint: disable=invalid-name
 g_variant_name_loaded = None  # pylint: disable=invalid-name
 g_variant_content_loaded = None  # pylint: disable=invalid-name
 g_interface_chosen = None  # pylint: disable=invalid-name
 g_interface_parameters_read = None  # pylint: disable=invalid-name
 g_variant_data = None  # pylint: disable=invalid-name
-g_game_parameters_loaded = None  # pylint: disable=invalid-name
-g_game_players_dict = None  # pylint: disable=invalid-name
 g_inforced_variant_data = None  # pylint: disable=invalid-name
 
 # loaded in load_dynamic_stuff
+g_game_parameters_loaded = None  # pylint: disable=invalid-name
 g_game_status = None  # pylint: disable=invalid-name
 g_position_loaded = None  # pylint: disable=invalid-name
 g_position_data = None  # pylint: disable=invalid-name
 g_report_loaded = None  # pylint: disable=invalid-name
+
+# loaded in load_special_stuff
+g_game_players_dict = None  # pylint: disable=invalid-name
 g_incidents_loaded = None  # pylint: disable=invalid-name
 
 
