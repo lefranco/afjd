@@ -196,37 +196,6 @@ def get_games_data():
     return games_dict
 
 
-def game_variant_name_reload(game):
-    """ game_variant_name_reload """
-
-    variant_name_loaded = None
-
-    def reply_callback(req):
-        nonlocal variant_name_loaded
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur au chargement du nom de la variante de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème au chargement du nom de la variante de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        variant_name_loaded = req_result['variant']
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games/{game}"
-
-    # getting game data : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
-
-    return variant_name_loaded
-
-
 def game_variant_content_reload(variant_name):
     """ game_variant_content_reload """
 

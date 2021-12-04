@@ -411,13 +411,14 @@ def load_static_stuff():
 
     # from game name get variant name
 
-    profile_data.start('load_static_stuff - chargement de la variante')
+    profile_data.start('load_static_stuff - lecture de la variante')
+
+    if 'GAME_VARIANT' not in storage:
+        alert("ERREUR : variante introuvable")
+        return
 
     global g_variant_name_loaded  # pylint: disable=invalid-name
-    g_variant_name_loaded = common.game_variant_name_reload(g_game)
-    if not g_variant_name_loaded:
-        alert("Erreur chargement variante")
-        return
+    g_variant_name_loaded = storage['GAME_VARIANT']
 
     # from variant name get variant content
 
