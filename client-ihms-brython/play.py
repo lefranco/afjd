@@ -85,7 +85,6 @@ g_report_loaded = None  # pylint: disable=invalid-name
 
 # loaded in load_special_stuff
 g_game_players_dict = None  # pylint: disable=invalid-name
-g_incidents_loaded = None  # pylint: disable=invalid-name
 
 
 def game_report_reload(game_id):
@@ -366,37 +365,6 @@ def game_votes_reload(game_id):
     return votes
 
 
-def game_incidents_reload(game_id):
-    """ game_incidents_reload """
-
-    incidents = None
-
-    def reply_callback(req):
-        nonlocal incidents
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des incidents de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des incidents de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        incidents = req_result['incidents']
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-incidents/{game_id}"
-
-    # extracting incidents from a game : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return incidents
-
-
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
@@ -562,24 +530,6 @@ def load_special_stuff():
 
         g_game_players_dict = dict(g_game_players_dict)
 
-    # TODO improve this with real admin account
-    if g_pseudo is not None and (g_pseudo == 'Palpatine' or (g_role_id is not None and (g_role_id == 0 or not g_game_parameters_loaded['anonymous']))):
-
-        profile_data.start('load_special_stuff - chargement des incidents de la partie')
-        # just to prevent a erroneous pylint warning
-
-        # get the incidents of the game
-        # need a token for this
-        global g_incidents_loaded  # pylint: disable=invalid-name
-        g_incidents_loaded = game_incidents_reload(g_game_id)
-
-        if g_incidents_loaded is None:
-            alert("Erreur chargement incidents")
-            return
-
-        # just to prevent a erroneous pylint warning
-        g_incidents_loaded = list(g_incidents_loaded)
-
 
 def stack_clock(frame, period):
     """ stack_clock """
@@ -661,6 +611,59 @@ def countdown():
         g_countdown_col.style = {
             'background-color': colour
         }
+
+
+def get_game_incidents(game_id):
+    """ get_game_incidents """
+
+    incidents = None
+
+    def reply_callback(req):
+        nonlocal incidents
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des incidents de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des incidents de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        incidents = req_result['incidents']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-incidents/{game_id}"
+
+    # extracting incidents from a game : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return incidents
+
+
+def get_game_master(game_id):
+    """ get_game_master """
+
+    # get the link (allocations) of game masters
+    allocations_data = common.get_allocations_data()
+    if allocations_data is None:
+        alert("Erreur chargement allocations")
+        return None
+    allocations_data = dict(allocations_data)
+
+    masters_alloc = allocations_data['game_masters_dict']
+
+    # get the game it self
+    for master_id, games_id in masters_alloc.items():
+        if game_id in games_id:
+            for pseudo, identifier in g_players_dict.items():
+                if str(identifier) == master_id:
+                    return pseudo
+
+    return None
 
 
 def get_game_status():
@@ -745,28 +748,6 @@ def get_game_status_histo(variant_data, game_parameters_loaded, advancement_sele
 
     game_status_table <= row
     return game_status_table
-
-
-def get_game_master(game_id):
-    """ get_game_master """
-
-    # get the link (allocations) of game masters
-    allocations_data = common.get_allocations_data()
-    if allocations_data is None:
-        alert("Erreur chargement allocations")
-        return None
-    allocations_data = dict(allocations_data)
-
-    masters_alloc = allocations_data['game_masters_dict']
-
-    # get the game it self
-    for master_id, games_id in masters_alloc.items():
-        if game_id in games_id:
-            for pseudo, identifier in g_players_dict.items():
-                if str(identifier) == master_id:
-                    return pseudo
-
-    return None
 
 
 def get_game_players_data(game_id):
@@ -4324,7 +4305,10 @@ def show_game_parameters():
 def show_game_master_in_game():
     """ show_players_in_game """
 
-    id2pseudo = {v: k for k, v in g_players_dict.items()}
+    game_master_pseudo = get_game_master(int(g_game_id))
+    if game_master_pseudo is None:
+        alert("Pas d'arbitre pour cette partie ou erreur au chargement de l'arbitre de la partie")
+        return
 
     game_master_table = html.TABLE()
 
@@ -4337,8 +4321,6 @@ def show_game_master_in_game():
         col = html.TD(field_fr)
         thead <= col
     game_master_table <= thead
-
-    role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
     role_id = 0
 
@@ -4363,11 +4345,7 @@ def show_game_master_in_game():
     row <= col
 
     # player
-    pseudo_there = ""
-    if role_id in role2pseudo:
-        player_id_str = role2pseudo[role_id]
-        player_id = int(player_id_str)
-        pseudo_there = id2pseudo[player_id]
+    pseudo_there = game_master_pseudo
     col = html.TD(pseudo_there)
     row <= col
 
@@ -4625,6 +4603,16 @@ def show_incidents_in_game():
     # just to avoid a warning
     submitted_data = dict(submitted_data)
 
+    # get the actual incidents of the game
+    game_incidents = get_game_incidents(g_game_id)
+
+    if game_incidents is None:
+        alert("Erreur chargement incidents")
+        return
+
+    # just to prevent a erroneous pylint warning
+    game_incidents = list(game_incidents)
+
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
     id2pseudo = {v: k for k, v in g_players_dict.items()}
@@ -4641,9 +4629,7 @@ def show_incidents_in_game():
         thead <= col
     game_incidents_table <= thead
 
-    for incident in g_incidents_loaded:
-
-        role_id, advancement, date_incident = incident
+    for role_id, advancement, date_incident in game_incidents:
 
         row = html.TR()
 
@@ -4698,7 +4684,7 @@ def show_incidents_in_game():
     my_sub_panel <= html.BR()
 
     # a bit of humour !
-    if g_incidents_loaded:
+    if game_incidents:
         humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
         my_sub_panel <= humour_img
 
