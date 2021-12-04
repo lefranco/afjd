@@ -4,7 +4,7 @@
 
 import datetime
 
-from browser import html  # pylint: disable=import-error
+from browser import html, alert  # pylint: disable=import-error
 
 import config
 import common
