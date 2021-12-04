@@ -1,3 +1,5 @@
+""" faq """
+
 
 FAQ_CONTENT_TABLE = {  # pylint: disable=invalid-name
 
