@@ -25,15 +25,10 @@ import lists    # noqa: E402
 import admin    # noqa: E402
 
 
-# TITLE
-TITLE = "Front end générique Serveurs REST AJFD"
-title = html.TITLE(TITLE, id='title')
-title.attrs['style'] = 'text-align: center'
-document <= title
-
+# TITLE is in index.html
 
 # H2
-H2 = "Moteur de jeu du site Diplomania. Version BETA (graphisme simplifié)"
+H2 = "Front end générique du site Diplomania (graphisme simplifié)."
 h2 = html.H2(H2, id='h2')
 h2.attrs['style'] = 'text-align: center'
 document <= h2
