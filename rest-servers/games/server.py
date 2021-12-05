@@ -491,9 +491,9 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be the game master of the game")
 
         # check game state
-        if game.current_state != 2:
+        if game.current_state == 1:
             del sql_executor
-            flask_restful.abort(400, msg=f"Game {name} is not terminated")
+            flask_restful.abort(400, msg=f"Game {name} is ongoing. Terminate it first.")
 
         # delete allocations
         game.delete_allocations(sql_executor)
