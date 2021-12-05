@@ -6,13 +6,14 @@ import json
 import time
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
 import config
 
 OPTIONS = ['créer les parties']
+
+DESCRIPTION = "partie créée par batch"
 
 
 def check_batch(current_pseudo, games_to_create):
@@ -61,28 +62,45 @@ def check_batch(current_pseudo, games_to_create):
                     already_warned.add(player_name)
                     error = True
 
-    # check the roles are complete
+    # check all games have same number of roles
+    reference_size = None
     for game_name, allocations in games_to_create.items():
-        if len(allocations.keys()) != 8:
-            alert(f"Il semble que la partie {game_name} n'a pas ses 8 joueurs")
+        size = len(allocations)
+        if reference_size is None:
+            reference_size = size
+        elif size != reference_size:
+            alert(f"Il semble que la partie {game_name} n'a pas le même nombre de joueurs que la première partie")
             error = True
 
     # check the players in games are not duplicated
     for game_name, allocations in games_to_create.items():
-        if len(set(allocations.keys())) != 8:
+        if len(set(allocations.values())) != len(allocations.values()):
             alert(f"Il semble que la partie {game_name} n'a pas 8 joueurs différents")
             error = True
 
-    # check the game master is pseudo (to check last)
+    # check players are in same number of games
+    presence_table = dict()
+    for allocations in games_to_create.values():
+        for player_name in allocations.values():
+            if player_name in presence_table:
+                presence_table[player_name] += 1
+            else:
+                presence_table[player_name] = 1
+    for player_name1 in presence_table:
+        for player_name2 in presence_table:
+            if player_name2 != player_name1 and presence_table[player_name2] != presence_table[player_name1]:
+                alert(f"Il semble que {player_name1} et {player_name2} jouent dans un nombre de parties différent")
+                error = True
+
+    # game master does not have to be pseudo but still warning
     for game_name, allocations in games_to_create.items():
         if allocations[0] != current_pseudo:
-            alert(f"Il semble que vous ne soyez pas l'arbitre créateur de la partie {game_name}. Je ne pourrais donc pas la crééer. ")
-            error = True
+            alert(f"Vous n'êtes pas l'arbitre désiré de la partie {game_name}. Il faudra demander à l'abitre désiré de venir prendre l'arbitrage de cette partie")
 
     return not error
 
 
-def perform_batch(current_pseudo, current_game_name, games_to_create_data, games_description):
+def perform_batch(current_pseudo, current_game_name, games_to_create_data, description):
     """ perform_batch """
 
     def create_game(current_pseudo, current_game_name, game_to_create_name, description):
@@ -209,7 +227,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, games
         game_id_int = common.get_game_id(game_name)
         if not game_id_int:
             alert(f"Erreur chargement identifiant partie {game_name}. Cette partie existe ?")
-            return
+            return False
 
         json_dict = {
             'game_id': game_id_int,
@@ -251,7 +269,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, games
         game_id_int = common.get_game_id(game_name)
         if not game_id_int:
             alert(f"Erreur chargement identifiant partie {game_name}. Cette partie existe ?")
-            return
+            return False
 
         json_dict = {
             'game_id': game_id_int,
@@ -270,6 +288,48 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, games
 
         return status
 
+    def quit_mastering_game(current_pseudo, game_name):
+
+        status = None
+
+        def reply_callback(req):
+            nonlocal status
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la démission de l'arbitrage de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la démission de l'arbitrage de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                return
+
+            alert(f"Vous avez démissionné de l'arbitrage de la partie {game_name}")
+            status = True
+
+        game_id_int = common.get_game_id(game_name)
+        if not game_id_int:
+            alert(f"Erreur chargement identifiant partie {game_name}. Cette partie existe ?")
+            return False
+
+        json_dict = {
+            'game_id': game_id_int,
+            'role_id': 0,
+            'player_pseudo': current_pseudo,
+            'pseudo': current_pseudo,
+            'delete': 1
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/role-allocations"
+
+        # giving up game mastering : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return status
+
     # do the work using the three previous functions
 
     alert(f"Travail à faire : {games_to_create_data}")
@@ -279,7 +339,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, games
         alert(f"Partie {game_to_create_name}...")
 
         # create game
-        status = create_game(current_pseudo, current_game_name, game_to_create_name, games_description)
+        status = create_game(current_pseudo, current_game_name, game_to_create_name, description)
         if not status:
             alert(f"Echec à la création de la partie {game_to_create_name}")
             return
@@ -305,8 +365,21 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, games
                 alert(f"Echec à l'attribution du role {role_id} à {player_name} dans la partie {game_to_create_name}")
                 return
 
+    # give up mastering for games not mastered
+    for game_to_create_name, game_to_create_data in games_to_create_data.items():
+        # game master already has its role
+        game_master_expected = game_to_create_data[0]
+        # I am game master
+        if game_master_expected == current_pseudo:
+            continue
+        status = quit_mastering_game(current_pseudo, game_to_create_name)
+        if not status:
+            alert(f"Echec à la démission de l'arbitrage dans la partie {game_to_create_name}")
+            return
+
     nb_parties = len(games_to_create_data)
     alert(f"Les {nb_parties} parties du tournoi on été créée. Tout s'est bien passé. Incroyable, non ?")
+
 
 def create_games():
     """ ratings """
@@ -346,11 +419,12 @@ def create_games():
                 # create dictionnary
                 games_to_create[game_name] = {n: tab[n + 1] for n in range(len(tab) - 1)}
 
-            games_description = input_description.value
+            global DESCRIPTION
+            DESCRIPTION = input_description.value
 
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create):
-                perform_batch(pseudo, game, games_to_create, games_description)
+                perform_batch(pseudo, game, games_to_create, DESCRIPTION)
 
             # back to where we started
             my_sub_panel.clear()
@@ -395,6 +469,7 @@ def create_games():
     legend_description = html.LEGEND("description", title="Ce sera la description de toutes les parties créées")
     fieldset <= legend_description
     input_description = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_description <= DESCRIPTION
     fieldset <= input_description
     form <= fieldset
 
