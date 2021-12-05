@@ -82,10 +82,10 @@ def check_batch(current_pseudo, games_to_create):
     return not error
 
 
-def perform_batch(current_pseudo, current_game_name, games_to_create_data):
+def perform_batch(current_pseudo, current_game_name, games_to_create_data, games_description):
     """ perform_batch """
 
-    def create_game(current_pseudo, current_game_name, game_to_create_name):
+    def create_game(current_pseudo, current_game_name, game_to_create_name, description):
         """ create_game """
 
         create_status = None
@@ -159,7 +159,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         json_dict['name'] = game_to_create_name
 
         # obviously different description
-        description = f"Partie créé par batch par {current_pseudo} pour le tournoi XXX"
         json_dict['description'] = description
 
         # can only be manual
@@ -280,7 +279,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         alert(f"Partie {game_to_create_name}...")
 
         # create game
-        status = create_game(current_pseudo, current_game_name, game_to_create_name)
+        status = create_game(current_pseudo, current_game_name, game_to_create_name, games_description)
         if not status:
             alert(f"Echec à la création de la partie {game_to_create_name}")
             return
@@ -347,9 +346,11 @@ def create_games():
                 # create dictionnary
                 games_to_create[game_name] = {n: tab[n + 1] for n in range(len(tab) - 1)}
 
+            games_description = input_description.value
+
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create):
-                perform_batch(pseudo, game, games_to_create)
+                perform_batch(pseudo, game, games_to_create, games_description)
 
             # back to where we started
             my_sub_panel.clear()
@@ -389,6 +390,13 @@ def create_games():
     game = storage['GAME']
 
     form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_description = html.LEGEND("description", title="Ce sera la description de toutes les parties créées")
+    fieldset <= legend_description
+    input_description = html.TEXTAREA(type="text", rows=5, cols=80)
+    fieldset <= input_description
+    form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_name = html.LEGEND("Ficher CSV")
