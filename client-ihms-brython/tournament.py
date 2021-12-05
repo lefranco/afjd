@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
+import time
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -14,17 +15,14 @@ import config
 OPTIONS = ['créer les parties']
 
 
-def check_batch(pseudo, games_to_create):
+def check_batch(current_pseudo, games_to_create):
     """ check_batch """
-
-    alert("Ok, on tente le truc..")
 
     games_dict = common.get_games_data()
     if not games_dict:
         alert("Erreur chargement dictionnaire parties")
         return False
     games_dict = dict(games_dict)
-    #  print(f"{games_dict=}")
     games_set = {d['name'] for d in games_dict.values()}
 
     players_dict = common.get_players_data()
@@ -32,7 +30,6 @@ def check_batch(pseudo, games_to_create):
         alert("Erreur chargement dictionnaire joueurs")
         return False
     players_dict = dict(players_dict)
-    #  print(f"{players_dict=}")
     players_set = {d['pseudo'] for d in players_dict.values()}
 
     error = False
@@ -52,8 +49,6 @@ def check_batch(pseudo, games_to_create):
     already_warned = set()
     for ligne, allocations in enumerate(games_to_create.values()):
         for player_name in allocations.values():
-
-            print(f"verif '{player_name}'")
 
             if not player_name:
                 alert(f"Il y a un nom de joueur vide dans le fichier en ligne {ligne+1}")
@@ -80,20 +75,25 @@ def check_batch(pseudo, games_to_create):
 
     # check the game master is pseudo (to check last)
     for game_name, allocations in games_to_create.items():
-        if allocations[0] != pseudo:
+        if allocations[0] != current_pseudo:
             alert(f"Il semble que vous ne soyez pas l'arbitre créateur de la partie {game_name}. Je ne pourrais donc pas la crééer. ")
             error = True
 
     return not error
 
 
-def perform_batch(pseudo, games_to_create):
+def perform_batch(current_pseudo, current_game_name, games_to_create_data):
     """ perform_batch """
 
-    def create_game(pseudo, game_name):
+    def create_game(current_pseudo, current_game_name, game_to_create_name):
         """ create_game """
 
+        create_status = None
+        load_status = None
+        parameters_loaded = None
+
         def reply_callback(req):
+            nonlocal create_status
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -102,49 +102,80 @@ def perform_batch(pseudo, games_to_create):
                     alert(f"Problème à la création de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
+                create_status = False
                 return
 
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La partie a été créé : {messages}", remove_after=config.REMOVE_AFTER)
+            alert(f"Création de la partie {game_to_create_name} réalisée !")
+            create_status = True
 
-        json_dict = {
-            'name': game_name,
-            'variant': 'standard',
-            'archive': False,
-            'manual': True,
+        def game_parameters_reload():
+            """ game_parameters_reload """
 
-            'anonymous': True,
-            'nomessage': True,
-            'nopress': True,
-            'fast': False,
+            def local_noreply_callback(_):
+                """ local_noreply_callback """
+                nonlocal load_status
+                alert("Problème (pas de réponse de la part du serveur)")
+                load_status = False
 
-            'scoring': 'CDIP',
+            def reply_callback(req):
+                nonlocal load_status
+                nonlocal parameters_loaded
+                req_result = json.loads(req.text)
+                if req.status != 200:
+                    if 'message' in req_result:
+                        alert(f"Erreur à la récupération du paramètre de la partie modèle : {req_result['message']}")
+                    elif 'msg' in req_result:
+                        alert(f"Problème à la récupération du paramètre de la partie modèle : {req_result['msg']}")
+                    else:
+                        alert("Réponse du serveur imprévue et non documentée")
+                    load_status = False
+                    return
 
-            'deadline_hour': 21,
-            'deadline_sync': True,
-            'grace_duration': 1,
-            'speed_moves': 3,
-            'cd_possible_moves': False,
-            'speed_retreats': 1,
-            'cd_possible_retreats': True,
-            'speed_adjustments': 1,
-            'cd_possible_builds': False,
-            'cd_possible_removals': True,
-            'play_weekend': False,
+                parameters_loaded = req_result
+                load_status = True
 
-            'access_code': 0,
-            'access_restriction_reliability': 0,
-            'access_restriction_regularity': 0,
-            'access_restriction_performance': 0,
+            json_dict = dict()
 
-            'nb_max_cycles_to_play': 7,
-            'victory_centers': 18,
+            host = config.SERVER_CONFIG['GAME']['HOST']
+            port = config.SERVER_CONFIG['GAME']['PORT']
+            url = f"{host}:{port}/games/{current_game_name}"
 
-            'description': "TODO",
-            'current_state': 0,
+            # getting game data : no need for token
+            ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
 
-            'pseudo': pseudo
-        }
+        game_parameters_reload()
+        if not load_status:
+            alert("Impossible de récupérer les paramètres de la partie modèle")
+            return False
+
+        # copy
+        json_dict = dict()
+
+        json_dict.update(parameters_loaded)
+
+        # but changes
+
+        # obviously different name
+        json_dict['name'] = game_to_create_name
+
+        # obviously different description
+        description = f"Partie créé par batch par {current_pseudo} pour le tournoi XXX"
+        json_dict['description'] = description
+
+        # can only be manual
+        json_dict['manual'] = True
+
+        # obviously different deadline - set it to now
+        timestamp = time.time()
+        deadline = int(timestamp)
+        json_dict['deadline'] = deadline
+
+        # obviously different state (starting)
+        json_dict['current_state'] = 0
+        json_dict['current_advancement'] = 0
+
+        # and addition
+        json_dict['pseudo'] = current_pseudo
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -153,10 +184,15 @@ def perform_batch(pseudo, games_to_create):
         # creating a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def put_player_in_game(pseudo, game_name, player_name):
+        return create_status
+
+    def put_player_in_game(current_pseudo, game_name, player_name):
         """ put_player_in_game """
 
+        status = None
+
         def reply_callback(req):
+            nonlocal status
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -165,11 +201,11 @@ def perform_batch(pseudo, games_to_create):
                     alert(f"Problème putting player in game: {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
-
+                status = False
                 return
 
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur a été mis dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
+            alert(f"Le joueur {player_name} a été mis dans la partie {game_name} !")
+            status = True
 
         game_id_int = common.get_game_id(game_name)
         if not game_id_int:
@@ -179,7 +215,7 @@ def perform_batch(pseudo, games_to_create):
         json_dict = {
             'game_id': game_id_int,
             'player_pseudo': player_name,
-            'pseudo': pseudo,
+            'pseudo': current_pseudo,
             'delete': 0
         }
 
@@ -190,10 +226,15 @@ def perform_batch(pseudo, games_to_create):
         # putting a player in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def allocate_role(pseudo, game_name, player_pseudo, role_id):
+        return status
+
+    def allocate_role(current_pseudo, game_name, player_pseudo, role_id):
         """ allocate_role """
 
+        status = None
+
         def reply_callback(req):
+            nonlocal status
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -202,10 +243,11 @@ def perform_batch(pseudo, games_to_create):
                     alert(f"Problème à l'allocation de rôle dans la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
+                status = False
                 return
 
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur s'est vu attribuer le rôle dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
+            alert(f"Le joueur {player_pseudo} s'est vu attribuer le rôle {role_id} dans la partie {game_name}")
+            status = True
 
         game_id_int = common.get_game_id(game_name)
         if not game_id_int:
@@ -217,7 +259,7 @@ def perform_batch(pseudo, games_to_create):
             'role_id': role_id,
             'player_pseudo': player_pseudo,
             'delete': 0,
-            'pseudo': pseudo,
+            'pseudo': current_pseudo,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -227,15 +269,45 @@ def perform_batch(pseudo, games_to_create):
         # put role : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    # TODO
+        return status
+
     # do the work using the three previous functions
 
-    # create_game(pseudo, game_name)
-    # put_player_in_game(pseudo, game_name, player_name)
-    # allocate_role(pseudo, game_name, player_pseudo, role_id)
+    alert(f"Travail à faire : {games_to_create_data}")
 
-    alert("Mouais. Ca pourrait être jouable ton truc ;-) - c'est pas encore pret")
+    for game_to_create_name, game_to_create_data in games_to_create_data.items():
 
+        alert(f"Partie {game_to_create_name}...")
+
+        # create game
+        status = create_game(current_pseudo, current_game_name, game_to_create_name)
+        if not status:
+            alert(f"Echec à la création de la partie {game_to_create_name}")
+            return
+
+        # put players in
+        for role_id, player_name in game_to_create_data.items():
+            # game master already there
+            if role_id == 0:
+                continue
+            # put player
+            status = put_player_in_game(current_pseudo, game_to_create_name, player_name)
+            if not status:
+                alert(f"Echec à l'appariement de {player_name} dans la partie {game_to_create_name}")
+                return
+
+        # allocate roles to players
+        for role_id, player_name in game_to_create_data.items():
+            # game master already has its role
+            if role_id == 0:
+                continue
+            status = allocate_role(current_pseudo, game_to_create_name, player_name, role_id)
+            if not status:
+                alert(f"Echec à l'attribution du role {role_id} à {player_name} dans la partie {game_to_create_name}")
+                return
+
+    nb_parties = len(games_to_create_data)
+    alert(f"Les {nb_parties} parties du tournoi on été créée. Tout s'est bien passé. Incroyable, non ?")
 
 def create_games():
     """ ratings """
@@ -277,7 +349,7 @@ def create_games():
 
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create):
-                perform_batch(pseudo, games_to_create)
+                perform_batch(pseudo, game, games_to_create)
 
             # back to where we started
             my_sub_panel.clear()
@@ -309,6 +381,12 @@ def create_games():
         return
 
     pseudo = storage['PSEUDO']
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
 
     form = html.FORM()
 
