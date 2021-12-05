@@ -2,16 +2,19 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
+import json
 
-from browser import html, alert, window  # pylint: disable=import-error
+from browser import html, alert, ajax, window  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
+import config
 
 OPTIONS = ['créer les parties']
 
 
-def check_batch(games_to_create):
+def check_batch(pseudo, games_to_create):
     """ check_batch """
 
     alert("Ok, on tente le truc..")
@@ -75,12 +78,6 @@ def check_batch(games_to_create):
             alert(f"Il semble que la partie {game_name} n'a pas 8 joueurs différents")
             error = True
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter pour créer les parties")
-        error = True
-
-    pseudo = storage['PSEUDO']
-
     # check the game master is pseudo (to check last)
     for game_name, allocations in games_to_create.items():
         if allocations[0] != pseudo:
@@ -89,10 +86,156 @@ def check_batch(games_to_create):
 
     return not error
 
-def perform_batch(games_to_create):
+
+def perform_batch(pseudo, games_to_create):
     """ perform_batch """
 
+    def create_game(pseudo, game_name):
+        """ create_game """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la création de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la création de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La partie a été créé : {messages}", remove_after=config.REMOVE_AFTER)
+
+        json_dict = {
+            'name': game_name,
+            'variant': 'standard',
+            'archive': False,
+            'manual': True,
+
+            'anonymous': True,
+            'nomessage': True,
+            'nopress': True,
+            'fast': False,
+
+            'scoring': 'CDIP',
+
+            'deadline_hour': 21,
+            'deadline_sync': True,
+            'grace_duration': 1,
+            'speed_moves': 3,
+            'cd_possible_moves': False,
+            'speed_retreats': 1,
+            'cd_possible_retreats': True,
+            'speed_adjustments': 1,
+            'cd_possible_builds': False,
+            'cd_possible_removals': True,
+            'play_weekend': False,
+
+            'access_code': 0,
+            'access_restriction_reliability': 0,
+            'access_restriction_regularity': 0,
+            'access_restriction_performance': 0,
+
+            'nb_max_cycles_to_play': 7,
+            'victory_centers': 18,
+
+            'description': "TODO",
+            'current_state': 0,
+
+            'pseudo': pseudo
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games"
+
+        # creating a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def put_player_in_game(pseudo, game_name, player_name):
+        """ put_player_in_game """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la mise d'un joueur dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème putting player in game: {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur a été mis dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
+
+        game_id_int = common.get_game_id(game_name)
+        if not game_id_int:
+            alert(f"Erreur chargement identifiant partie {game_name}. Cette partie existe ?")
+            return
+
+        json_dict = {
+            'game_id': game_id_int,
+            'player_pseudo': player_name,
+            'pseudo': pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/allocations"
+
+        # putting a player in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def allocate_role(pseudo, game_name, player_pseudo, role_id):
+        """ allocate_role """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'allocation de rôle dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'allocation de rôle dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur s'est vu attribuer le rôle dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
+
+        game_id_int = common.get_game_id(game_name)
+        if not game_id_int:
+            alert(f"Erreur chargement identifiant partie {game_name}. Cette partie existe ?")
+            return
+
+        json_dict = {
+            'game_id': game_id_int,
+            'role_id': role_id,
+            'player_pseudo': player_pseudo,
+            'delete': 0,
+            'pseudo': pseudo,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/role-allocations"
+
+        # put role : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    # TODO
+    # do the work using the three previous functions
+
+    # create_game(pseudo, game_name)
+    # put_player_in_game(pseudo, game_name, player_name)
+    # allocate_role(pseudo, game_name, player_pseudo, role_id)
+
     alert("Mouais. Ca pourrait être jouable ton truc ;-) - c'est pas encore pret")
+
 
 def create_games():
     """ ratings """
@@ -133,8 +276,8 @@ def create_games():
                 games_to_create[game_name] = {n: tab[n + 1] for n in range(len(tab) - 1)}
 
             #  actual creation of all the games
-            if check_batch(games_to_create):
-                perform_batch(games_to_create)
+            if check_batch(pseudo, games_to_create):
+                perform_batch(pseudo, games_to_create)
 
             # back to where we started
             my_sub_panel.clear()
@@ -160,6 +303,12 @@ def create_games():
         create_games()
 
     my_sub_panel <= html.H3("Création des parties")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter pour créer des parties")
+        return
+
+    pseudo = storage['PSEUDO']
 
     form = html.FORM()
 
