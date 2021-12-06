@@ -143,10 +143,14 @@ def create_account():
         create_account()
 
     my_sub_panel <= html.H3("Création du compte")
+    my_sub_panel <= html.BR()
+
+    my_sub_panel <= information_about_account()
+    my_sub_panel <= html.BR()
 
     form = html.FORM()
 
-    form <= information_about_account()
+    form <= html.DIV("Pas d'espaces dans le pseudo",  Class='note')
     form <= html.BR()
 
     fieldset = html.FIELDSET()

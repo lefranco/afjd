@@ -257,16 +257,19 @@ def create_game():
 
     pseudo = storage['PSEUDO']
 
+    my_sub_panel <= information_about_playing()
+    my_sub_panel <= html.BR()
+
+    my_sub_panel <= information_about_input()
+    my_sub_panel <= html.BR()
+
     form = html.FORM()
-
-    form <= information_about_playing()
-    form <= html.BR()
-
-    form <= information_about_input()
-    form <= html.BR()
 
     legend_title_main = html.H3("Paramètres principaux de la partie - ne peuvent plus être changés la partie créée")
     form <= legend_title_main
+
+    form <= html.DIV("Pas d'espaces dans le nom de la partie",  Class='note')
+    form <= html.BR()
 
     fieldset = html.FIELDSET()
     legend_name = html.LEGEND("nom")
