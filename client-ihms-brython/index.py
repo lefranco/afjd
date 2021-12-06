@@ -169,6 +169,6 @@ document <= html.B("Contactez le support par e-mail en cas de problème (cf page
 
 
 END_TIME = time.time()
-ELAPSED = START_TIME - END_TIME
+ELAPSED = END_TIME - START_TIME
 STATS = f"Temps de chargement de la page initiale {ELAPSED} sec"
 document <= html.DIV(STATS, Class='load')
