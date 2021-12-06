@@ -459,7 +459,7 @@ def create_games():
 
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create):
-                dialog = Dialog(f"On créér vraiment toutes ces parties?", ok_cancel=True)
+                dialog = Dialog("On créér vraiment toutes ces parties?", ok_cancel=True)
                 dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
                 dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
 

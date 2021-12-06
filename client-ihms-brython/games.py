@@ -268,7 +268,7 @@ def create_game():
     legend_title_main = html.H3("Paramètres principaux de la partie - ne peuvent plus être changés la partie créée")
     form <= legend_title_main
 
-    form <= html.DIV("Pas d'espaces dans le nom de la partie",  Class='note')
+    form <= html.DIV("Pas d'espaces dans le nom de la partie", Class='note')
     form <= html.BR()
 
     fieldset = html.FIELDSET()
