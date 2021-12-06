@@ -4691,7 +4691,7 @@ my_panel <= menu_left
 menu_selection = html.UL()
 menu_left <= menu_selection
 
-item_name_selected = None  # pylint: disable=invalid-name
+ITEM_NAME_SELECTED = None
 
 my_sub_panel = html.DIV(id="play")
 my_panel <= my_sub_panel
@@ -4735,15 +4735,15 @@ def load_option(_, item_name):
     if not status:
         return
 
-    global item_name_selected  # pylint: disable=invalid-name
-    item_name_selected = item_name
+    global ITEM_NAME_SELECTED
+    ITEM_NAME_SELECTED = item_name
 
     menu_left.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
 
-        if possible_item_name == item_name_selected:
+        if possible_item_name == ITEM_NAME_SELECTED:
             item_name_bold_or_not = html.B(possible_item_name)
         else:
             item_name_bold_or_not = possible_item_name
@@ -4755,14 +4755,14 @@ def load_option(_, item_name):
 
     # quitting superviser : clear timer
     global supervise_refresh_timer  # pylint: disable=invalid-name
-    if item_name_selected != 'superviser':
+    if ITEM_NAME_SELECTED != 'superviser':
         if supervise_refresh_timer is not None:
             timer.clear_interval(supervise_refresh_timer)
             supervise_refresh_timer = None
 
     # quitting observer : clear timer
     global observe_refresh_timer  # pylint: disable=invalid-name
-    if item_name_selected != 'observer':
+    if ITEM_NAME_SELECTED != 'observer':
         if observe_refresh_timer is not None:
             timer.clear_interval(observe_refresh_timer)
             observe_refresh_timer = None
@@ -4778,7 +4778,7 @@ def render(panel_middle):
     profile_data = profiler.Profiler()
 
     # always back to top
-    global item_name_selected  # pylint: disable=invalid-name
+    global ITEM_NAME_SELECTED
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -4798,7 +4798,7 @@ def render(panel_middle):
 
     # Connecté mais pas joueur
     # Pas connecté
-    item_name_selected = 'position'  # pylint: disable=invalid-name
+    ITEM_NAME_SELECTED = 'position'
 
     global g_pseudo  # pylint: disable=invalid-name
     g_pseudo = None
@@ -4830,11 +4830,11 @@ def render(panel_middle):
 
     # game not started, visiting probably to see parameters
     if g_game_parameters_loaded['current_state'] == 0:
-        item_name_selected = 'paramètres'
+        ITEM_NAME_SELECTED = 'paramètres'
 
     # game finished, visiting probably to see history
     elif g_game_parameters_loaded['current_state'] == 2:
-        item_name_selected = 'historique'
+        ITEM_NAME_SELECTED = 'historique'
 
     else:
 
@@ -4842,10 +4842,10 @@ def render(panel_middle):
 
             if g_role_id == 0:
                 # Arbitre
-                item_name_selected = 'arbitrer'
+                ITEM_NAME_SELECTED = 'arbitrer'
             else:
                 # Joueur
-                item_name_selected = 'ordonner'
+                ITEM_NAME_SELECTED = 'ordonner'
 
         else:
 
@@ -4853,11 +4853,11 @@ def render(panel_middle):
             # TODO improve this with real admin account
             if g_pseudo == "Palpatine":
                 # Admin
-                item_name_selected = 'ordres'
+                ITEM_NAME_SELECTED = 'ordres'
 
-    profile_data.start(f'load_option({item_name_selected})')
+    profile_data.start(f'load_option({ITEM_NAME_SELECTED})')
 
-    load_option(None, item_name_selected)
+    load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= my_panel
 
     # stop profiling

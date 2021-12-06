@@ -55,7 +55,7 @@ menu_selection = html.UL()
 menu_left <= menu_selection
 
 
-item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
+ITEM_NAME_SELECTED = OPTIONS[0]
 
 
 def load_game(game_name):
@@ -116,15 +116,15 @@ def load_option(_, item_name):
         lists.render(panel_middle)
     if item_name == 'administration':
         admin.render(panel_middle)
-    global item_name_selected  # pylint: disable=invalid-name
-    item_name_selected = item_name
+    global ITEM_NAME_SELECTED
+    ITEM_NAME_SELECTED = item_name
 
     menu_left.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
 
-        if possible_item_name == item_name_selected:
+        if possible_item_name == ITEM_NAME_SELECTED:
             item_name_bold_or_not = html.B(possible_item_name)
         else:
             item_name_bold_or_not = possible_item_name
@@ -135,7 +135,7 @@ def load_option(_, item_name):
         menu_left <= menu_item
 
     # quitting superviser : clear timer
-    if item_name_selected != 'jouer la partie sélectionnée':
+    if ITEM_NAME_SELECTED != 'jouer la partie sélectionnée':
         if play.supervise_refresh_timer is not None:
             timer.clear_interval(play.supervise_refresh_timer)
             play.supervise_refresh_timer = None
@@ -154,9 +154,9 @@ if 'game' in document.query:
     if load_game(query_game_name):
         load_option(None, 'jouer la partie sélectionnée')
     else:
-        load_option(None, item_name_selected)
+        load_option(None, ITEM_NAME_SELECTED)
 else:
-    load_option(None, item_name_selected)
+    load_option(None, ITEM_NAME_SELECTED)
 
 document <= html.BR()
 document <= html.BR()

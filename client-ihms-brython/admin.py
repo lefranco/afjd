@@ -1384,7 +1384,7 @@ my_panel <= menu_left
 menu_selection = html.UL()
 menu_left <= menu_selection
 
-item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
+ITEM_NAME_SELECTED = OPTIONS[0]
 
 my_sub_panel = html.DIV(id="admin")
 my_panel <= my_sub_panel
@@ -1413,15 +1413,15 @@ def load_option(_, item_name):
     if item_name == 'récupérer un téléphone':
         get_phone_number()
 
-    global item_name_selected  # pylint: disable=invalid-name
-    item_name_selected = item_name
+    global ITEM_NAME_SELECTED
+    ITEM_NAME_SELECTED = item_name
 
     menu_left.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
 
-        if possible_item_name == item_name_selected:
+        if possible_item_name == ITEM_NAME_SELECTED:
             item_name_bold_or_not = html.B(possible_item_name)
         else:
             item_name_bold_or_not = possible_item_name
@@ -1439,8 +1439,8 @@ def render(panel_middle):
     """ render """
 
     # always back to top
-    global item_name_selected  # pylint: disable=invalid-name
-    item_name_selected = OPTIONS[0]  # pylint: disable=invalid-name
+    global ITEM_NAME_SELECTED
+    ITEM_NAME_SELECTED = OPTIONS[0]
 
-    load_option(None, item_name_selected)
+    load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= my_panel
