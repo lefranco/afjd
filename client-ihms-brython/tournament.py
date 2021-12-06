@@ -498,6 +498,30 @@ def create_games():
         alert("Il faut choisir la partie au préalable")
         return
 
+    information = html.DIV(Class='note')
+    information <= "Vous devez composer un fichier CSV"
+    information <= html.BR()
+    information <= "Une ligne par partie"
+    information <= html.BR()
+    information <= "Sur chaque ligne, séparés pas des virgules (ou des points-virgules):"
+    items = html.UL()
+    items <= html.LI("le nom de la partie")
+    items <= html.LI("l'arbitre de la partie")
+    items <= html.LI("le premier joueur de la partie")
+    items <= html.LI("le deuxième joueur de la partie")
+    items <= html.LI("etc....")
+    information <= items
+    information <= "Utiliser l'ordre suivant pour la variante standard : Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie"
+    information <= html.BR()
+    information <= "Comme il est impossible d'attribuer l'arbitrage d'une partie à un autre joueur, vous serez retiré de l'arbitrage des parties dont vous n'êtes pas arbitre"
+    information <= html.BR()
+    information <= "Il faut remplir soigneusement la description qui s'appliquera à toutes les parties !"
+    information <= html.BR()
+    information <= "Enfin, les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée..."
+
+    my_sub_panel <= information
+    my_sub_panel <= html.BR()
+
     game = storage['GAME']
 
     form = html.FORM()
