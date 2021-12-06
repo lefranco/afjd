@@ -26,8 +26,6 @@ my_panel.attrs['style'] = 'display: table'
 my_sub_panel = html.DIV(id="sub")
 my_panel <= my_sub_panel
 
-initial_orders = {'fake_units': dict(), 'orders': dict(), }
-
 
 @enum.unique
 class AutomatonStateEnum(enum.Enum):
@@ -79,8 +77,8 @@ def create_initial_position():
     # digest the position
     position_data = mapping.Position(position_loaded, variant_data)
 
-    # get the orders from server
-    orders_loaded = initial_orders
+    # get the orders from server (actually no)
+    orders_loaded = {'fake_units': dict(), 'orders': dict()}
 
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, position_data)
@@ -121,8 +119,8 @@ def import_position(new_position_data):
     # copy position
     position_data = mapping.Position(position_imported, variant_data)
 
-    # get the orders from server
-    orders_loaded = initial_orders
+    # get the orders from server (actually no)
+    orders_loaded = {'fake_units': dict(), 'orders': dict()}
 
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, position_data)
