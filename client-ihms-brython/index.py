@@ -4,7 +4,7 @@
 # pylint: disable=wrong-import-position
 
 import time
-start = time.time()
+START_TIME = time.time()
 
 from browser import document, html, alert, timer  # pylint: disable=import-error # noqa: E402
 from browser.local_storage import storage  # pylint: disable=import-error # noqa: E402
@@ -28,31 +28,30 @@ import admin    # noqa: E402
 # TITLE is in index.html
 
 # H2
-H2 = "Front end générique du site Diplomania (graphisme simplifié)."
-h2 = html.H2(H2, id='h2')
-h2.attrs['style'] = 'text-align: center'
-document <= h2
+H2 = html.DIV("Front end générique du site Diplomania (graphisme simplifié).")
+H2.attrs['style'] = 'text-align: center'
+document <= H2
 
 OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'listes', 'administration']
 
 # overall_top
-overall_top = html.DIV()
-overall_top.attrs['style'] = 'display:table; width:100%'
-document <= overall_top
+OVERALL_TOP = html.DIV()
+OVERALL_TOP.attrs['style'] = 'display:table; width:100%'
+document <= OVERALL_TOP
 
 # overall
-overall = html.DIV()
-overall.attrs['style'] = 'display: table-row'
-overall_top <= overall
+OVERALL = html.DIV()
+OVERALL.attrs['style'] = 'display: table-row'
+OVERALL_TOP <= OVERALL
 
 # menu-left
-menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width: 10%; vertical-align: top;'
-overall <= menu_left
+MENU_LEFT = html.DIV()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width: 10%; vertical-align: top;'
+OVERALL <= MENU_LEFT
 
 # menu-selection
-menu_selection = html.UL()
-menu_left <= menu_selection
+MENU_SELECTION = html.UL()
+MENU_LEFT <= MENU_SELECTION
 
 
 ITEM_NAME_SELECTED = OPTIONS[0]
@@ -89,37 +88,37 @@ def load_game(game_name):
 def load_option(_, item_name):
     """ load_option """
 
-    panel_middle.clear()
+    PANEL_MIDDLE.clear()
     if item_name == 'accueil':
-        home.render(panel_middle)
+        home.render(PANEL_MIDDLE)
     if item_name == 'connexion':
-        login.render(panel_middle)
+        login.render(PANEL_MIDDLE)
     if item_name == 'sélectionner partie':
-        selection.render(panel_middle)
+        selection.render(PANEL_MIDDLE)
     if item_name == 'mon compte':
-        account.render(panel_middle)
+        account.render(PANEL_MIDDLE)
     if item_name == 'rejoindre une partie':
-        opportunities.render(panel_middle)
+        opportunities.render(PANEL_MIDDLE)
     if item_name == 'mes parties':
-        mygames.render(panel_middle)
+        mygames.render(PANEL_MIDDLE)
     if item_name == 'éditer partie':
-        games.render(panel_middle)
+        games.render(PANEL_MIDDLE)
     if item_name == 'appariement':
-        pairing.render(panel_middle)
+        pairing.render(PANEL_MIDDLE)
     if item_name == 'jouer la partie sélectionnée':
-        play.render(panel_middle)
+        play.render(PANEL_MIDDLE)
     if item_name == 'interface tournois':
-        tournament.render(panel_middle)
+        tournament.render(PANEL_MIDDLE)
     if item_name == 'bac à sable':
-        sandbox.render(panel_middle)
+        sandbox.render(PANEL_MIDDLE)
     if item_name == 'listes':
-        lists.render(panel_middle)
+        lists.render(PANEL_MIDDLE)
     if item_name == 'administration':
-        admin.render(panel_middle)
+        admin.render(PANEL_MIDDLE)
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
-    menu_left.clear()
+    MENU_LEFT.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
@@ -132,7 +131,7 @@ def load_option(_, item_name):
         button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
-        menu_left <= menu_item
+        MENU_LEFT <= menu_item
 
     # quitting superviser : clear timer
     if ITEM_NAME_SELECTED != 'jouer la partie sélectionnée':
@@ -145,13 +144,13 @@ def load_option(_, item_name):
 
 
 # panel-middle
-panel_middle = html.DIV(id='panel_middle')
-overall <= panel_middle
+PANEL_MIDDLE = html.DIV()
+OVERALL <= PANEL_MIDDLE
 
 # starts here
 if 'game' in document.query:
-    query_game_name = document.query['game']
-    if load_game(query_game_name):
+    QUERY_GAME_NAME = document.query['game']
+    if load_game(QUERY_GAME_NAME):
         load_option(None, 'jouer la partie sélectionnée')
     else:
         load_option(None, ITEM_NAME_SELECTED)
@@ -169,6 +168,7 @@ selection.show_game_selected()
 document <= html.B("Contactez le support par e-mail en cas de problème (cf page d'accueil). Merci !")
 
 
-end = time.time()
-stats = f"Temps de chargement de la page initiale  {(end-start)} sec"
-document <= html.DIV(stats, Class='load')
+END_TIME = time.time()
+ELAPSED = START_TIME - END_TIME
+STATS = f"Temps de chargement de la page initiale {ELAPSED} sec"
+document <= html.DIV(STATS, Class='load')
