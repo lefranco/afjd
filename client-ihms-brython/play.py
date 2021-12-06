@@ -377,7 +377,7 @@ def load_static_stuff():
     if not g_players_dict:
         alert("Erreur chargement info joueurs")
         return
-    g_players_dict = dict(g_players_dict)  # avoids a warning
+    g_players_dict = dict(g_players_dict)
 
     # from game name get variant name
 
@@ -395,18 +395,18 @@ def load_static_stuff():
     profile_data.start('load_static_stuff - chargement du contenu de la variante')
 
     # optimization
+    global VARIANT_CONTENT_MEMOIZE_TABLE
     global g_variant_content_loaded  # pylint: disable=invalid-name
     if g_variant_name_loaded in VARIANT_CONTENT_MEMOIZE_TABLE:
+        profile_data.start('contenu de la variante memoized !')
         g_variant_content_loaded = VARIANT_CONTENT_MEMOIZE_TABLE[g_variant_name_loaded]
     else:
         g_variant_content_loaded = common.game_variant_content_reload(g_variant_name_loaded)
         if not g_variant_content_loaded:
             alert("Erreur chargement contenu variante")
             return
+        g_variant_content_loaded = dict(g_variant_content_loaded)
         VARIANT_CONTENT_MEMOIZE_TABLE[g_variant_name_loaded] = g_variant_content_loaded
-
-    # just to prevent a erroneous pylint warning
-    g_variant_content_loaded = dict(g_variant_content_loaded)
 
     profile_data.start('load_static_stuff - lecture tableau interface_from_variant()')
 
@@ -414,13 +414,15 @@ def load_static_stuff():
     global g_interface_chosen  # pylint: disable=invalid-name
     g_interface_chosen = interface.get_interface_from_variant(g_variant_name_loaded)
 
-    profile_data.start('load_static_stuff - lecture fichier parametres affichage 1')
+    profile_data.start(f'load_static_stuff - lecture fichier parametres affichage 1 (interface={g_interface_chosen})')
 
     # from display chose get display parameters
 
     # optimization
+    global PARAMETERS_READ_MEMOIZE_TABLE
     global g_interface_parameters_read  # pylint: disable=invalid-name
     if (g_variant_name_loaded, g_interface_chosen) in PARAMETERS_READ_MEMOIZE_TABLE:
+        profile_data.start('fichier parametres affichage 1 memoized !')
         g_interface_parameters_read = PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
     else:
         g_interface_parameters_read = common.read_parameters(g_variant_name_loaded, g_interface_chosen)
@@ -432,7 +434,9 @@ def load_static_stuff():
     global g_variant_data  # pylint: disable=invalid-name
 
     # optimization
+    global VARIANT_DATA_MEMOIZE_TABLE
     if (g_variant_name_loaded, g_interface_chosen) in VARIANT_DATA_MEMOIZE_TABLE:
+        profile_data.start('objet Variant 1 memoized !')
         g_variant_data = VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
     else:
         g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_interface_parameters_read)
@@ -449,6 +453,7 @@ def load_static_stuff():
 
     # optimization
     if (g_variant_name_loaded, interface_inforced) in PARAMETERS_READ_MEMOIZE_TABLE:
+        profile_data.start('parametres affichage 2 memoized !')
         inforced_interface_parameters_read = PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
     else:
         inforced_interface_parameters_read = common.read_parameters(g_variant_name_loaded, interface_inforced)
@@ -461,6 +466,7 @@ def load_static_stuff():
 
     # optimization
     if (g_variant_name_loaded, interface_inforced) in VARIANT_DATA_MEMOIZE_TABLE:
+        profile_data.start('objet Variant 2 memoized !')
         g_inforced_variant_data = VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
     else:
         g_inforced_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, inforced_interface_parameters_read)
@@ -478,8 +484,6 @@ def load_dynamic_stuff():
     if not g_game_parameters_loaded:
         alert("Erreur chargement paramètres")
         return
-
-    # just to prevent a erroneous pylint warning
     g_game_parameters_loaded = dict(g_game_parameters_loaded)
 
     profile_data.start('load_dynamic_stuff - calcul get_game_status()')
@@ -1769,8 +1773,6 @@ def submit_orders():
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
-
-    # just to avoid a warning
     submitted_data = dict(submitted_data)
 
     if g_role_id == 0:
@@ -1792,7 +1794,7 @@ def submit_orders():
     # now we can display
 
     # header
-    profile_data.start('submit_orders() - affichage')
+    profile_data.start('submit_orders() - affichage 1')
 
     # game status
     my_sub_panel <= g_game_status
@@ -1815,6 +1817,8 @@ def submit_orders():
     # to catch keyboard
     document.bind("keypress", callback_keypress)
 
+    profile_data.start('chargement des ordres')
+
     # get the orders from server
     orders_loaded = game_orders_reload(g_game_id)
     if not orders_loaded:
@@ -1822,8 +1826,12 @@ def submit_orders():
         load_option(None, 'position')
         return False
 
+    profile_data.start('submit_orders() - digestion ordres')
+
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, g_position_data)
+
+    profile_data.start('submit_orders() - affichage 2')
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -1833,12 +1841,16 @@ def submit_orders():
     img = common.read_image(g_variant_name_loaded, g_interface_chosen)
     img.bind('load', callback_render)
 
+    profile_data.start('submit_orders() - affichage 3')
+
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
     game_scoring = g_game_parameters_loaded['scoring']
     rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
 
     report_window = common.make_report_window(g_report_loaded)
+
+    profile_data.start('submit_orders() - affichage 4')
 
     # left side
 
@@ -2466,8 +2478,6 @@ def submit_communication_orders():
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
-
-    # just to avoid a warning
     submitted_data = dict(submitted_data)
 
     if g_role_id not in submitted_data['needed']:
@@ -2723,8 +2733,6 @@ def negotiate():
         alert("Erreur chargement messages")
         load_option(None, 'position')
         return False
-
-    # to avoid warning
     messages = list(messages)
 
     messages_table = html.TABLE()
@@ -2922,8 +2930,6 @@ def declare():
         alert("Erreur chargement déclarations")
         load_option(None, 'position')
         return False
-
-    # to avoid warning
     declarations = list(declarations)
 
     declarations_table = html.TABLE()
@@ -3053,8 +3059,6 @@ def vote():
         alert("Erreur chargement votes")
         load_option(None, 'position')
         return False
-
-    # avoids a warning
     votes = list(votes)
 
     vote_value = False
@@ -3125,8 +3129,6 @@ def show_history():
         transition_loaded = game_transition_reload(g_game_id, advancement_selected)
         if transition_loaded is None:
             return
-
-        # clears a pylint warning
         transition_loaded = dict(transition_loaded)
 
         position_loaded = transition_loaded['situation']
@@ -3612,8 +3614,6 @@ def game_master():
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
-
-    # just to avoid a warning
     submitted_data = dict(submitted_data)
 
     profile_data.start('game_master() - chargement roles possibles')
@@ -3629,8 +3629,6 @@ def game_master():
         alert("Erreur chargement votes")
         load_option(None, 'position')
         return False
-
-    # avoids a warning
     votes = list(votes)
 
     vote_values_table = dict()
@@ -3960,7 +3958,7 @@ def supervise():
     def refresh():
         """ refresh """
 
-        submitted_data = None
+        submitted_data = dict()
         votes = None
 
         def refresh_subroutine():
@@ -3972,6 +3970,7 @@ def supervise():
             if submitted_data is None:
                 alert("Erreur chargement données de soumission")
                 return
+            submitted_data = dict(submitted_data)
 
             # votes
             nonlocal votes
@@ -3979,8 +3978,6 @@ def supervise():
             if votes is None:
                 alert("Erreur chargement votes")
                 return
-
-            # avoids a warning
             votes = list(votes)
 
             my_sub_panel.clear()
@@ -4008,9 +4005,6 @@ def supervise():
 
         # are we past ?
         if time_stamp_now > force_point:
-
-            # avoids a warning
-            submitted_data = dict(submitted_data)
 
             submitted_roles_list = submitted_data['submitted']
             agreed_roles_list = submitted_data['agreed']
@@ -4478,8 +4472,6 @@ def show_orders_submitted_in_game():
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
-
-    # just to avoid a warning
     submitted_data = dict(submitted_data)
 
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
@@ -4599,8 +4591,6 @@ def show_incidents_in_game():
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
-
-    # just to avoid a warning
     submitted_data = dict(submitted_data)
 
     # get the actual incidents of the game
@@ -4609,8 +4599,6 @@ def show_incidents_in_game():
     if game_incidents is None:
         alert("Erreur chargement incidents")
         return False
-
-    # just to prevent a erroneous pylint warning
     game_incidents = list(game_incidents)
 
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
@@ -4799,7 +4787,7 @@ def render(panel_middle):
     global g_game  # pylint: disable=invalid-name
     g_game = storage['GAME']
 
-    profile_data.start('lecture du game_id')
+    profile_data.start(f'lecture du game_id ({g_game})')
 
     if 'GAME_ID' not in storage:
         alert("ERREUR : identifiant de partie introuvable")
