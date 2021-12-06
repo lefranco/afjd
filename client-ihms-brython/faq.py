@@ -1,7 +1,7 @@
 """ faq """
 
 
-FAQ_CONTENT_TABLE = {  # pylint: disable=invalid-name
+FAQ_CONTENT_TABLE = {
 
     "Pourquoi certaines messages sont en français, certains en angals, voire certains dans un mélange des deux  ?":
     "Les messages issus de l'interface 'front end' sont en français (sauf omission à corriger rapidement). Les messages issus du serveur 'back end' sont en anglais",
