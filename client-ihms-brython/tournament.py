@@ -6,6 +6,7 @@ import json
 import time
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
+from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
@@ -16,6 +17,8 @@ import mapping
 OPTIONS = ['créer les parties']
 
 DESCRIPTION = "partie créée par batch"
+
+LEN_GAME_MAX = 20
 
 
 def check_batch(current_pseudo, games_to_create):
@@ -401,6 +404,15 @@ def create_games():
         def onload_callback(_):
             """ onload_callback """
 
+            def cancel_create_games_callback(_, dialog):
+                """ cancel_create_games_callback """
+                dialog.close()
+
+            def create_games_callback2(_, dialog):
+                """ create_games_callback2 """
+                dialog.close()
+                perform_batch(pseudo, game, games_to_create, DESCRIPTION)
+
             games_to_create = dict()
 
             content = str(reader.result)
@@ -427,6 +439,18 @@ def create_games():
                 # name of game is first column
                 game_name = tab[0]
 
+                if not game_name.isidentifier():
+                    alert(f"Le nom de partie {game_name} est incorrect pour le site")
+                    return
+
+                if len(game_name) > LEN_GAME_MAX:
+                    alert(f"Le nom de partie {game_name} est trop long")
+                    return
+
+                if game_name in games_to_create:
+                    alert(f"La partie {game_name} est définie plusieurs fois dans votre fichier")
+                    return
+
                 # create dictionnary
                 games_to_create[game_name] = {n: tab[n + 1] for n in range(len(tab) - 1)}
 
@@ -435,7 +459,9 @@ def create_games():
 
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create):
-                perform_batch(pseudo, game, games_to_create, DESCRIPTION)
+                dialog = Dialog(f"On créér vraiment toutes ces parties?", ok_cancel=True)
+                dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
+                dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
 
             # back to where we started
             my_sub_panel.clear()
