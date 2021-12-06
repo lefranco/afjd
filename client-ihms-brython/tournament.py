@@ -10,6 +10,8 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
 import config
+import interface
+import mapping
 
 OPTIONS = ['créer les parties']
 
@@ -263,7 +265,9 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
                 status = False
                 return
 
-            alert(f"Le joueur {player_pseudo} s'est vu attribuer le rôle {role_id} dans la partie {game_name}")
+            role = variant_data.roles[role_id]
+            role_name = variant_data.name_table[role]
+            alert(f"Le joueur {player_pseudo} s'est vu attribuer le rôle {role_name} dans la partie {game_name}")
             status = True
 
         game_id_int = common.get_game_id(game_name)
@@ -330,9 +334,14 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
 
         return status
 
-    # do the work using the three previous functions
+    # just to display role correctly
+    variant_name_loaded = storage['GAME_VARIANT']
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+    parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
-    alert(f"Travail à faire : {games_to_create_data}")
+    # do the work using the three previous functions
 
     for game_to_create_name, game_to_create_data in games_to_create_data.items():
 
@@ -362,7 +371,9 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
                 continue
             status = allocate_role(current_pseudo, game_to_create_name, player_name, role_id)
             if not status:
-                alert(f"Echec à l'attribution du role {role_id} à {player_name} dans la partie {game_to_create_name}")
+                role = variant_data.roles[role_id]
+                role_name = variant_data.name_table[role]
+                alert(f"Echec à l'attribution du role {role_name} à {player_name} dans la partie {game_to_create_name}")
                 return
 
     # give up mastering for games not mastered
