@@ -62,29 +62,29 @@ CONTENT_BACKUP = None
 # global data below
 
 # loaded in render()
-g_game = None
-g_game_id = None
-g_pseudo = None
-g_role_id = None
+GAME = None
+GAME_ID = None
+PSEUDO = None
+ROLE_ID = None
 
 # loaded in load_static_stuff
-g_players_dict = None
-g_variant_name_loaded = None
-g_variant_content_loaded = None
-g_interface_chosen = None
-g_interface_parameters_read = None
-g_variant_data = None
-g_inforced_variant_data = None
+PLAYERS_DICT = None
+VARIANT_NAME_LOADED = None
+VARIANT_CONTENT_LOADED = None
+INTERFACE_CHOSEN = None
+INTERFACE_PARAMETERS_READ = None
+VARIANT_DATA = None
+INFORCED_VARIANT_DATA = None
 
 # loaded in load_dynamic_stuff
-g_game_parameters_loaded = None
-g_game_status = None
-g_position_loaded = None
-g_position_data = None
-g_report_loaded = None
+GAME_PARAMETERS_LOADED = None
+GAME_STATUS = None
+POSITION_LOADED = None
+POSITION_DATA = None
+REPORT_LOADED = None
 
 # loaded in load_special_stuff
-g_game_players_dict = None
+GAME_PLAYERS_DICT = None
 
 
 def game_report_reload(game_id):
@@ -372,9 +372,9 @@ def load_static_stuff():
 
     # need to be first since used in get_game_status()
     # get the players (all players)
-    global g_players_dict
-    g_players_dict = common.get_players()
-    if not g_players_dict:
+    global PLAYERS_DICT
+    PLAYERS_DICT = common.get_players()
+    if not PLAYERS_DICT:
         alert("Erreur chargement info joueurs")
         return
 
@@ -386,8 +386,8 @@ def load_static_stuff():
         alert("ERREUR : variante introuvable")
         return
 
-    global g_variant_name_loaded
-    g_variant_name_loaded = storage['GAME_VARIANT']
+    global VARIANT_NAME_LOADED
+    VARIANT_NAME_LOADED = storage['GAME_VARIANT']
 
     # from variant name get variant content
 
@@ -395,80 +395,80 @@ def load_static_stuff():
 
     # optimization
     global VARIANT_CONTENT_MEMOIZE_TABLE
-    global g_variant_content_loaded
-    if g_variant_name_loaded in VARIANT_CONTENT_MEMOIZE_TABLE:
+    global VARIANT_CONTENT_LOADED
+    if VARIANT_NAME_LOADED in VARIANT_CONTENT_MEMOIZE_TABLE:
         PROFILE_DATA.start('contenu de la variante memoized !')
-        g_variant_content_loaded = VARIANT_CONTENT_MEMOIZE_TABLE[g_variant_name_loaded]
+        VARIANT_CONTENT_LOADED = VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED]
     else:
-        g_variant_content_loaded = common.game_variant_content_reload(g_variant_name_loaded)
-        if not g_variant_content_loaded:
+        VARIANT_CONTENT_LOADED = common.game_variant_content_reload(VARIANT_NAME_LOADED)
+        if not VARIANT_CONTENT_LOADED:
             alert("Erreur chargement contenu variante")
             return
-        VARIANT_CONTENT_MEMOIZE_TABLE[g_variant_name_loaded] = g_variant_content_loaded
+        VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED] = VARIANT_CONTENT_LOADED
 
     PROFILE_DATA.start('load_static_stuff - lecture tableau interface_from_variant()')
 
     # selected interface (user choice)
-    global g_interface_chosen
-    g_interface_chosen = interface.get_interface_from_variant(g_variant_name_loaded)
+    global INTERFACE_CHOSEN
+    INTERFACE_CHOSEN = interface.get_interface_from_variant(VARIANT_NAME_LOADED)
 
-    PROFILE_DATA.start(f'load_static_stuff - lecture fichier parametres affichage 1 (interface={g_interface_chosen})')
+    PROFILE_DATA.start(f'load_static_stuff - lecture fichier parametres affichage 1 (interface={INTERFACE_CHOSEN})')
 
     # from display chose get display parameters
 
     # optimization
     global PARAMETERS_READ_MEMOIZE_TABLE
-    global g_interface_parameters_read
-    if (g_variant_name_loaded, g_interface_chosen) in PARAMETERS_READ_MEMOIZE_TABLE:
+    global INTERFACE_PARAMETERS_READ
+    if (VARIANT_NAME_LOADED, INTERFACE_CHOSEN) in PARAMETERS_READ_MEMOIZE_TABLE:
         PROFILE_DATA.start('fichier parametres affichage 1 memoized !')
-        g_interface_parameters_read = PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
+        INTERFACE_PARAMETERS_READ = PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)]
     else:
-        g_interface_parameters_read = common.read_parameters(g_variant_name_loaded, g_interface_chosen)
-        PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)] = g_interface_parameters_read
+        INTERFACE_PARAMETERS_READ = common.read_parameters(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+        PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = INTERFACE_PARAMETERS_READ
 
     PROFILE_DATA.start('load_static_stuff - creation objet Variant 1')
 
     # build variant data
-    global g_variant_data
+    global VARIANT_DATA
 
     # optimization
     global VARIANT_DATA_MEMOIZE_TABLE
-    if (g_variant_name_loaded, g_interface_chosen) in VARIANT_DATA_MEMOIZE_TABLE:
+    if (VARIANT_NAME_LOADED, INTERFACE_CHOSEN) in VARIANT_DATA_MEMOIZE_TABLE:
         PROFILE_DATA.start('objet Variant 1 memoized !')
-        g_variant_data = VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
+        VARIANT_DATA = VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)]
     else:
-        g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_interface_parameters_read)
-        VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)] = g_variant_data
+        VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, INTERFACE_PARAMETERS_READ)
+        VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = VARIANT_DATA
 
     # now for official map
 
     PROFILE_DATA.start('load_static_stuff - lecture tableau inforced_interface_from_variant()')
 
     # like above
-    interface_inforced = interface.get_inforced_interface_from_variant(g_variant_name_loaded)
+    interface_inforced = interface.get_inforced_interface_from_variant(VARIANT_NAME_LOADED)
 
     PROFILE_DATA.start('load_static_stuff - lecture fichier parametres affichage 2')
 
     # optimization
-    if (g_variant_name_loaded, interface_inforced) in PARAMETERS_READ_MEMOIZE_TABLE:
+    if (VARIANT_NAME_LOADED, interface_inforced) in PARAMETERS_READ_MEMOIZE_TABLE:
         PROFILE_DATA.start('parametres affichage 2 memoized !')
-        inforced_interface_parameters_read = PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
+        inforced_interface_parameters_read = PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
     else:
-        inforced_interface_parameters_read = common.read_parameters(g_variant_name_loaded, interface_inforced)
-        PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)] = inforced_interface_parameters_read
+        inforced_interface_parameters_read = common.read_parameters(VARIANT_NAME_LOADED, interface_inforced)
+        PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = inforced_interface_parameters_read
 
     PROFILE_DATA.start('load_static_stuff - creation objet Variant 2')
 
     # build variant data
-    global g_inforced_variant_data
+    global INFORCED_VARIANT_DATA
 
     # optimization
-    if (g_variant_name_loaded, interface_inforced) in VARIANT_DATA_MEMOIZE_TABLE:
+    if (VARIANT_NAME_LOADED, interface_inforced) in VARIANT_DATA_MEMOIZE_TABLE:
         PROFILE_DATA.start('objet Variant 2 memoized !')
-        g_inforced_variant_data = VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
+        INFORCED_VARIANT_DATA = VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
     else:
-        g_inforced_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, inforced_interface_parameters_read)
-        VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)] = g_inforced_variant_data
+        INFORCED_VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, inforced_interface_parameters_read)
+        VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = INFORCED_VARIANT_DATA
 
 
 def load_dynamic_stuff():
@@ -477,38 +477,38 @@ def load_dynamic_stuff():
     PROFILE_DATA.start('load_dynamic_stuff - chargement paramètres de la partie')
 
     # now game parameters (dynamic since advancement is dynamic)
-    global g_game_parameters_loaded
-    g_game_parameters_loaded = game_parameters_reload(g_game)
-    if not g_game_parameters_loaded:
+    global GAME_PARAMETERS_LOADED
+    GAME_PARAMETERS_LOADED = game_parameters_reload(GAME)
+    if not GAME_PARAMETERS_LOADED:
         alert("Erreur chargement paramètres")
         return
 
     PROFILE_DATA.start('load_dynamic_stuff - calcul get_game_status()')
 
-    global g_game_status
-    g_game_status = get_game_status()
+    global GAME_STATUS
+    GAME_STATUS = get_game_status()
 
     PROFILE_DATA.start('load_dynamic_stuff - chargement de la position')
 
     # get the position from server
-    global g_position_loaded
-    g_position_loaded = common.game_position_reload(g_game_id)
-    if not g_position_loaded:
+    global POSITION_LOADED
+    POSITION_LOADED = common.game_position_reload(GAME_ID)
+    if not POSITION_LOADED:
         alert("Erreur chargement position")
         return
 
     PROFILE_DATA.start('load_dynamic_stuff - creation objet Position')
 
     # digest the position
-    global g_position_data
-    g_position_data = mapping.Position(g_position_loaded, g_variant_data)
+    global POSITION_DATA
+    POSITION_DATA = mapping.Position(POSITION_LOADED, VARIANT_DATA)
 
     PROFILE_DATA.start('load_dynamic_stuff - chargement du rapport de resolution')
 
     # need to be after game parameters (advancement -> season)
-    global g_report_loaded
-    g_report_loaded = game_report_reload(g_game_id)
-    if g_report_loaded is None:
+    global REPORT_LOADED
+    REPORT_LOADED = game_report_reload(GAME_ID)
+    if REPORT_LOADED is None:
         alert("Erreur chargement rapport")
         return
 
@@ -517,15 +517,15 @@ def load_special_stuff():
     """ load_special_stuff : loads global data """
 
     # TODO improve this with real admin account
-    if g_pseudo is not None and (g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
+    if PSEUDO is not None and (PSEUDO == 'Palpatine' or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
 
         PROFILE_DATA.start('load_special_stuff - chargement des joueurs de la partie')
 
-        global g_game_players_dict
+        global GAME_PLAYERS_DICT
         # get the players of the game
         # need a token for this
-        g_game_players_dict = get_game_players_data(g_game_id)
-        if not g_game_players_dict:
+        GAME_PLAYERS_DICT = get_game_players_data(GAME_ID)
+        if not GAME_PLAYERS_DICT:
             alert("Erreur chargement joueurs de la partie")
             return
 
@@ -541,29 +541,29 @@ def stack_role_flag(frame):
     """ stack_role_flag """
 
     # role flag
-    role = g_variant_data.roles[g_role_id]
-    role_name = g_variant_data.name_table[role]
-    role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{g_role_id}.jpg", title=role_name)
+    role = VARIANT_DATA.roles[ROLE_ID]
+    role_name = VARIANT_DATA.name_table[role]
+    role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{ROLE_ID}.jpg", title=role_name)
     frame <= role_icon_img
 
 
-g_deadline_col = None
-g_countdown_col = None
+DEADLINE_COL = None
+COUNTDOWN_COL = None
 
 
 def countdown():
     """ countdown """
 
-    deadline_loaded = g_game_parameters_loaded['deadline']
+    deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
 
     # calculate display colour for deadline and countdown
 
-    time_unit = 60 if g_game_parameters_loaded['fast'] else 24 * 60 * 60
+    time_unit = 60 if GAME_PARAMETERS_LOADED['fast'] else 24 * 60 * 60
 
     colour = None
     time_stamp_now = time.time()
     # we are after deadline + grace
-    if time_stamp_now > deadline_loaded + time_unit * g_game_parameters_loaded['grace_duration']:
+    if time_stamp_now > deadline_loaded + time_unit * GAME_PARAMETERS_LOADED['grace_duration']:
         colour = config.PASSED_GRACE_COLOUR
     # we are after deadline
     elif time_stamp_now > deadline_loaded:
@@ -574,7 +574,7 @@ def countdown():
 
     # set the colour
     if colour is not None:
-        g_deadline_col.style = {
+        DEADLINE_COL.style = {
             'background-color': colour
         }
 
@@ -603,11 +603,11 @@ def countdown():
         countdown_text = f"~ {remains // (24 * 3600)}j"
 
     # insert text
-    g_countdown_col.text = countdown_text
+    COUNTDOWN_COL.text = countdown_text
 
     # set the colour
     if colour is not None:
-        g_countdown_col.style = {
+        COUNTDOWN_COL.style = {
             'background-color': colour
         }
 
@@ -657,7 +657,7 @@ def get_game_master(game_id):
     # get the game it self
     for master_id, games_id in masters_alloc.items():
         if game_id in games_id:
-            for pseudo, identifier in g_players_dict.items():
+            for pseudo, identifier in PLAYERS_DICT.items():
                 if str(identifier) == master_id:
                     return pseudo
 
@@ -667,22 +667,22 @@ def get_game_master(game_id):
 def get_game_status():
     """ get_game__status """
 
-    game_name = g_game_parameters_loaded['name']
-    game_description = g_game_parameters_loaded['description']
-    game_variant = g_game_parameters_loaded['variant']
+    game_name = GAME_PARAMETERS_LOADED['name']
+    game_description = GAME_PARAMETERS_LOADED['description']
+    game_variant = GAME_PARAMETERS_LOADED['variant']
 
-    state_loaded = g_game_parameters_loaded['current_state']
+    state_loaded = GAME_PARAMETERS_LOADED['current_state']
     for possible_state in config.STATE_CODE_TABLE:
         if config.STATE_CODE_TABLE[possible_state] == state_loaded:
             game_state_readable = possible_state
             break
 
-    advancement_loaded = g_game_parameters_loaded['current_advancement']
-    advancement_season, advancement_year = common.get_season(advancement_loaded, g_variant_data)
-    advancement_season_readable = g_variant_data.name_table[advancement_season]
+    advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
+    advancement_season, advancement_year = common.get_season(advancement_loaded, VARIANT_DATA)
+    advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
     game_season = f"{advancement_season_readable} {advancement_year}"
 
-    deadline_loaded = g_game_parameters_loaded['deadline']
+    deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
     datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
     deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
     deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
@@ -699,13 +699,13 @@ def get_game_status():
     col = html.TD(f"Saison {game_season}")
     row <= col
 
-    global g_deadline_col
-    g_deadline_col = html.TD(f"DL {game_deadline_str}")
-    row <= g_deadline_col
+    global DEADLINE_COL
+    DEADLINE_COL = html.TD(f"DL {game_deadline_str}")
+    row <= DEADLINE_COL
 
-    global g_countdown_col
-    g_countdown_col = html.TD("")
-    row <= g_countdown_col
+    global COUNTDOWN_COL
+    COUNTDOWN_COL = html.TD("")
+    row <= COUNTDOWN_COL
 
     game_status_table <= row
 
@@ -715,7 +715,7 @@ def get_game_status():
     row <= col
     game_status_table <= row
 
-    if g_game_parameters_loaded['fast']:
+    if GAME_PARAMETERS_LOADED['fast']:
         row = html.TR()
         specific_information = html.DIV("Partie temps réel : rafraichissez la position etc... avec le bouton 'Jouer la partie sélectionnée'", Class='note')
         col = html.TD(specific_information, colspan="6")
@@ -819,19 +819,19 @@ def show_position():
         ctx.drawImage(img, 0, 0)
 
         # put the centers
-        g_variant_data.render(ctx)
+        VARIANT_DATA.render(ctx)
 
         # put the position
-        g_position_data.render(ctx)
+        POSITION_DATA.render(ctx)
 
         # put the legends at the end
-        g_variant_data.render_legends(ctx)
+        VARIANT_DATA.render_legends(ctx)
 
     def callback_export_sandbox(_):
         """ callback_export_sandbox """
 
         # action on importing game
-        sandbox.import_position(g_position_data)
+        sandbox.import_position(POSITION_DATA)
 
         # action of going to sandbox page
         index.load_option(None, 'bac à sable')
@@ -850,10 +850,10 @@ def show_position():
     # header
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
 
     # create canvas
-    map_size = g_variant_data.map_size
+    map_size = VARIANT_DATA.map_size
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
     ctx = canvas.getContext("2d")
     if ctx is None:
@@ -861,15 +861,15 @@ def show_position():
         return True
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(g_variant_name_loaded, g_interface_chosen)
+    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', callback_render)
 
-    ratings = g_position_data.role_ratings()
-    colours = g_position_data.role_colours()
-    game_scoring = g_game_parameters_loaded['scoring']
-    rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
+    ratings = POSITION_DATA.role_ratings()
+    colours = POSITION_DATA.role_colours()
+    game_scoring = GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
 
-    report_window = common.make_report_window(g_report_loaded)
+    report_window = common.make_report_window(REPORT_LOADED)
 
     # left side
 
@@ -888,7 +888,7 @@ def show_position():
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
     # role flag if applicable
-    if g_role_id is not None:
+    if ROLE_ID is not None:
         stack_role_flag(buttons_right)
         buttons_right <= html.BR()
 
@@ -946,10 +946,10 @@ def submit_orders():
                 MY_SUB_PANEL.clear()
                 submit_orders()
 
-        names_dict = g_variant_data.extract_names()
+        names_dict = VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
 
-        inforced_names_dict = g_inforced_variant_data.extract_names()
+        inforced_names_dict = INFORCED_VARIANT_DATA.extract_names()
         inforced_names_dict_json = json.dumps(inforced_names_dict)
 
         orders_list_dict = orders_data.save_json()
@@ -958,8 +958,8 @@ def submit_orders():
         definitive_value = input_definitive.checked
 
         json_dict = {
-            'role_id': g_role_id,
-            'pseudo': g_pseudo,
+            'role_id': ROLE_ID,
+            'pseudo': PSEUDO,
             'orders': orders_list_dict_json,
             'definitive': definitive_value,
             'names': names_dict_json,
@@ -968,7 +968,7 @@ def submit_orders():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-orders/{g_game_id}"
+        url = f"{host}:{port}/game-orders/{GAME_ID}"
 
         # submitting orders : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -980,7 +980,7 @@ def submit_orders():
         nonlocal buttons_right
 
         # complete orders
-        orders_data.rest_hold(g_role_id if g_role_id != 0 else None)
+        orders_data.rest_hold(ROLE_ID if ROLE_ID != 0 else None)
 
         # update displayed map
         callback_render(None)
@@ -1036,7 +1036,7 @@ def submit_orders():
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
-                    input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
+                    input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
                     buttons_right <= html.BR()
                     input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
@@ -1110,7 +1110,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
-                order_name = g_variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1122,7 +1122,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
-                order_name = g_variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1134,7 +1134,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
-                order_name = g_variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1147,7 +1147,7 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
 
                 # insert hold order
-                order = mapping.Order(g_position_data, order_type, selected_active_unit, None, None)
+                order = mapping.Order(POSITION_DATA, order_type, selected_active_unit, None, None)
                 orders_data.insert_order(order)
 
                 # update map
@@ -1163,7 +1163,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
-                order_name = g_variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1175,7 +1175,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
 
-                order_name = g_variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1188,7 +1188,7 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.DISBAND_ORDER:
 
                 # insert disband order
-                order = mapping.Order(g_position_data, order_type, selected_active_unit, None, None)
+                order = mapping.Order(POSITION_DATA, order_type, selected_active_unit, None, None)
                 orders_data.insert_order(order)
 
                 # update map
@@ -1208,7 +1208,7 @@ def submit_orders():
                 buttons_right <= legend_select_active
 
                 for unit_type in mapping.UnitTypeEnum:
-                    input_select = html.INPUT(type="submit", value=g_variant_data.name_table[unit_type])
+                    input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[unit_type])
                     buttons_right <= html.BR()
                     input_select.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
                     buttons_right <= html.BR()
@@ -1218,7 +1218,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.REMOVE_ORDER:
 
-                order_name = g_variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1266,9 +1266,9 @@ def submit_orders():
         if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
-                selected_active_unit = g_position_data.closest_unit(pos, False)
+                selected_active_unit = POSITION_DATA.closest_unit(pos, False)
             if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                selected_active_unit = g_position_data.closest_unit(pos, True)
+                selected_active_unit = POSITION_DATA.closest_unit(pos, True)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -1277,7 +1277,7 @@ def submit_orders():
             stack_role_flag(buttons_right)
 
             # gm can pass orders on archive games
-            if g_role_id != 0 and selected_active_unit.role != g_variant_data.roles[g_role_id]:
+            if ROLE_ID != 0 and selected_active_unit.role != VARIANT_DATA.roles[ROLE_ID]:
 
                 alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
 
@@ -1295,7 +1295,7 @@ def submit_orders():
                     buttons_right <= legend_select_unit
                     for order_type in mapping.OrderTypeEnum:
                         if order_type.compatible(advancement_season):
-                            input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
+                            input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
                             buttons_right <= html.BR()
                             input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                             buttons_right <= html.BR()
@@ -1325,14 +1325,14 @@ def submit_orders():
 
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
-                        input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
+                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
                         buttons_right <= input_select
 
                 if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                    order = mapping.Order(g_position_data, selected_order_type, selected_active_unit, None, None)
+                    order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, None, None)
                     orders_data.insert_order(order)
 
                     # update map
@@ -1357,9 +1357,9 @@ def submit_orders():
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                selected_dest_zone = g_variant_data.closest_zone(pos)
+                selected_dest_zone = VARIANT_DATA.closest_zone(pos)
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                selected_build_zone = g_variant_data.closest_zone(pos)
+                selected_build_zone = VARIANT_DATA.closest_zone(pos)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -1373,17 +1373,17 @@ def submit_orders():
                 if selected_dest_zone == selected_active_unit.zone:
                     selected_order_type = mapping.OrderTypeEnum.HOLD_ORDER
                     selected_dest_zone = None
-                order = mapping.Order(g_position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone)
                 orders_data.insert_order(order)
             if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
-                order = mapping.Order(g_position_data, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
                 orders_data.insert_order(order)
             if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
                 # little shortcut if dest = origin
                 if selected_dest_zone == selected_active_unit.zone:
                     selected_order_type = mapping.OrderTypeEnum.DISBAND_ORDER
                     selected_dest_zone = None
-                order = mapping.Order(g_position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone)
                 orders_data.insert_order(order)
             if selected_order_type is mapping.OrderTypeEnum.BUILD_ORDER:
                 # create fake unit
@@ -1393,11 +1393,11 @@ def submit_orders():
                     deducted_role = center.owner_start
                     if deducted_role is not None:
                         if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
-                            fake_unit = mapping.Army(g_position_data, deducted_role, selected_build_zone, None)
+                            fake_unit = mapping.Army(POSITION_DATA, deducted_role, selected_build_zone, None)
                         if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
-                            fake_unit = mapping.Fleet(g_position_data, deducted_role, selected_build_zone, None)
+                            fake_unit = mapping.Fleet(POSITION_DATA, deducted_role, selected_build_zone, None)
                         # create order
-                        order = mapping.Order(g_position_data, selected_order_type, fake_unit, None, None)
+                        order = mapping.Order(POSITION_DATA, selected_order_type, fake_unit, None, None)
                         orders_data.insert_order(order)
                     else:
                         alert("On ne peut pas construire sur ce centre")
@@ -1416,7 +1416,7 @@ def submit_orders():
                 buttons_right <= legend_select_unit
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
-                        input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
+                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
@@ -1443,7 +1443,7 @@ def submit_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
 
-            selected_passive_unit = g_position_data.closest_unit(pos, False)
+            selected_passive_unit = POSITION_DATA.closest_unit(pos, False)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -1454,7 +1454,7 @@ def submit_orders():
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
                 # insert def support order
-                order = mapping.Order(g_position_data, selected_order_type, selected_active_unit, selected_passive_unit, None)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, None)
                 orders_data.insert_order(order)
 
                 # update map
@@ -1525,11 +1525,11 @@ def submit_orders():
 
             # moves : select unit : easy case
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
-                selected_erase_unit = g_position_data.closest_unit(pos, False)
+                selected_erase_unit = POSITION_DATA.closest_unit(pos, False)
 
             # retreat : select dislodged unit : easy case
             if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
-                selected_erase_unit = g_position_data.closest_unit(pos, True)
+                selected_erase_unit = POSITION_DATA.closest_unit(pos, True)
 
             #  builds : tougher case : we take the build units into account
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
@@ -1569,7 +1569,7 @@ def submit_orders():
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
-                    input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
+                    input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
                     buttons_right <= html.BR()
                     input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
@@ -1645,7 +1645,7 @@ def submit_orders():
 
         # find where is mouse
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        selected_hovered_object = g_position_data.closest_object(pos)
+        selected_hovered_object = POSITION_DATA.closest_object(pos)
 
         if selected_hovered_object != prev_selected_hovered_object:
 
@@ -1670,16 +1670,16 @@ def submit_orders():
         ctx.drawImage(img, 0, 0)
 
         # put the centers
-        g_variant_data.render(ctx)
+        VARIANT_DATA.render(ctx)
 
         # put the position
-        g_position_data.render(ctx)
+        POSITION_DATA.render(ctx)
 
         # put the orders
         orders_data.render(ctx)
 
         # put the legends at the end
-        g_variant_data.render_legends(ctx)
+        VARIANT_DATA.render_legends(ctx)
 
     def stack_orders(buttons_right):
         """ stack_orders """
@@ -1718,7 +1718,7 @@ def submit_orders():
         label_definitive = html.LABEL("Prêt pour la résolution ?")
         buttons_right <= label_definitive
 
-        definitive_value = g_role_id in submitted_data['agreed']
+        definitive_value = ROLE_ID in submitted_data['agreed']
 
         input_definitive = html.INPUT(type="checkbox", checked=definitive_value)
         buttons_right <= input_definitive
@@ -1729,31 +1729,31 @@ def submit_orders():
         buttons_right <= input_submit
 
     # need to be connected
-    if g_pseudo is None:
+    if PSEUDO is None:
         alert("Il faut se connecter au préalable")
         load_option(None, 'position')
         return False
 
     # need to have a role
-    if g_role_id is None:
+    if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         load_option(None, 'position')
         return False
 
     # cannot be game master unless archive game
-    if g_role_id == 0 and not g_game_parameters_loaded['archive']:
+    if ROLE_ID == 0 and not GAME_PARAMETERS_LOADED['archive']:
         alert("Ordonner pour un arbitre n'est possible que pour les parties archive")
         load_option(None, 'position')
         return False
 
     # game needs to be ongoing - not waiting
-    if g_game_parameters_loaded['current_state'] == 0:
+    if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
         load_option(None, 'position')
         return False
 
     # game needs to be ongoing - not finished
-    if g_game_parameters_loaded['current_state'] == 2:
+    if GAME_PARAMETERS_LOADED['current_state'] == 2:
         alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
@@ -1762,19 +1762,19 @@ def submit_orders():
 
     PROFILE_DATA.start('submit_orders() - chargement données de soumission')
 
-    submitted_data = get_roles_submitted_orders(g_game_id)
+    submitted_data = get_roles_submitted_orders(GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
 
-    if g_role_id == 0:
+    if ROLE_ID == 0:
         if not submitted_data['needed']:
             alert("Il n'y a pas d'ordre à passer")
             load_option(None, 'position')
             return False
     else:
-        if g_role_id not in submitted_data['needed']:
+        if ROLE_ID not in submitted_data['needed']:
             alert("Vous n'avez pas d'ordre à passer")
             load_option(None, 'position')
             return False
@@ -1790,13 +1790,13 @@ def submit_orders():
     PROFILE_DATA.start('submit_orders() - affichage 1')
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
 
-    advancement_loaded = g_game_parameters_loaded['current_advancement']
-    advancement_season, _ = common.get_season(advancement_loaded, g_variant_data)
+    advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
+    advancement_season, _ = common.get_season(advancement_loaded, VARIANT_DATA)
 
     # create canvas
-    map_size = g_variant_data.map_size
+    map_size = VARIANT_DATA.map_size
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
     ctx = canvas.getContext("2d")
     if ctx is None:
@@ -1813,7 +1813,7 @@ def submit_orders():
     PROFILE_DATA.start('chargement des ordres')
 
     # get the orders from server
-    orders_loaded = game_orders_reload(g_game_id)
+    orders_loaded = game_orders_reload(GAME_ID)
     if not orders_loaded:
         alert("Erreur chargement ordres")
         load_option(None, 'position')
@@ -1822,7 +1822,7 @@ def submit_orders():
     PROFILE_DATA.start('submit_orders() - digestion ordres')
 
     # digest the orders
-    orders_data = mapping.Orders(orders_loaded, g_position_data)
+    orders_data = mapping.Orders(orders_loaded, POSITION_DATA)
 
     PROFILE_DATA.start('submit_orders() - affichage 2')
 
@@ -1831,17 +1831,17 @@ def submit_orders():
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(g_variant_name_loaded, g_interface_chosen)
+    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', callback_render)
 
     PROFILE_DATA.start('submit_orders() - affichage 3')
 
-    ratings = g_position_data.role_ratings()
-    colours = g_position_data.role_colours()
-    game_scoring = g_game_parameters_loaded['scoring']
-    rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
+    ratings = POSITION_DATA.role_ratings()
+    colours = POSITION_DATA.role_colours()
+    game_scoring = GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
 
-    report_window = common.make_report_window(g_report_loaded)
+    report_window = common.make_report_window(REPORT_LOADED)
 
     PROFILE_DATA.start('submit_orders() - affichage 4')
 
@@ -1873,7 +1873,7 @@ def submit_orders():
         buttons_right <= legend_select_order
         for order_type in mapping.OrderTypeEnum:
             if order_type.compatible(advancement_season):
-                input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
+                input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
                 buttons_right <= html.BR()
                 input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                 buttons_right <= html.BR()
@@ -1935,14 +1935,14 @@ def submit_communication_orders():
         orders_list_dict_json = json.dumps(orders_list_dict)
 
         json_dict = {
-            'role_id': g_role_id,
-            'pseudo': g_pseudo,
+            'role_id': ROLE_ID,
+            'pseudo': PSEUDO,
             'orders': orders_list_dict_json,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-communication-orders/{g_game_id}"
+        url = f"{host}:{port}/game-communication-orders/{GAME_ID}"
 
         # submitting orders : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -1995,7 +1995,7 @@ def submit_communication_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
-                order_name = g_variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -2007,7 +2007,7 @@ def submit_communication_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
-                order_name = g_variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -2019,7 +2019,7 @@ def submit_communication_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
-                order_name = g_variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -2032,7 +2032,7 @@ def submit_communication_orders():
             if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
 
                 # insert hold order
-                order = mapping.Order(g_position_data, order_type, selected_active_unit, None, None)
+                order = mapping.Order(POSITION_DATA, order_type, selected_active_unit, None, None)
                 orders_data.insert_order(order)
 
                 # update map
@@ -2048,7 +2048,7 @@ def submit_communication_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
-                order_name = g_variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -2089,7 +2089,7 @@ def submit_communication_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
 
-            selected_active_unit = g_position_data.closest_unit(pos, None)
+            selected_active_unit = POSITION_DATA.closest_unit(pos, None)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -2098,7 +2098,7 @@ def submit_communication_orders():
             stack_role_flag(buttons_right)
 
             # gm can pass orders on archive games
-            if g_role_id != 0 and selected_active_unit.role != g_variant_data.roles[g_role_id]:
+            if ROLE_ID != 0 and selected_active_unit.role != VARIANT_DATA.roles[ROLE_ID]:
 
                 alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
 
@@ -2130,7 +2130,7 @@ def submit_communication_orders():
 
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(mapping.SeasonEnum.SPRING_SEASON):
-                        input_select = html.INPUT(type="submit", value=g_variant_data.name_table[order_type])
+                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
@@ -2151,7 +2151,7 @@ def submit_communication_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
 
-            selected_dest_zone = g_variant_data.closest_zone(pos)
+            selected_dest_zone = VARIANT_DATA.closest_zone(pos)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -2165,10 +2165,10 @@ def submit_communication_orders():
                 if selected_dest_zone == selected_active_unit.zone:
                     selected_order_type = mapping.OrderTypeEnum.HOLD_ORDER
                     selected_dest_zone = None
-                order = mapping.Order(g_position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone)
                 orders_data.insert_order(order)
             if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
-                order = mapping.Order(g_position_data, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
                 orders_data.insert_order(order)
 
             # update map
@@ -2192,7 +2192,7 @@ def submit_communication_orders():
 
         if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
 
-            selected_passive_unit = g_position_data.closest_unit(pos, None)
+            selected_passive_unit = POSITION_DATA.closest_unit(pos, None)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -2203,7 +2203,7 @@ def submit_communication_orders():
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
                 # insert def support order
-                order = mapping.Order(g_position_data, selected_order_type, selected_active_unit, selected_passive_unit, None)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, None)
                 orders_data.insert_order(order)
 
                 # update map
@@ -2267,7 +2267,7 @@ def submit_communication_orders():
             pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
             # moves : select unit : easy case
-            selected_erase_unit = g_position_data.closest_unit(pos, None)
+            selected_erase_unit = POSITION_DATA.closest_unit(pos, None)
 
         # event is None when coming from x pressed, then take 'selected_active_unit' (that can be None)
         if selected_erase_unit is None:
@@ -2363,7 +2363,7 @@ def submit_communication_orders():
 
         # find where is mouse
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        selected_hovered_object = g_position_data.closest_object(pos)
+        selected_hovered_object = POSITION_DATA.closest_object(pos)
 
         if selected_hovered_object != prev_selected_hovered_object:
 
@@ -2388,16 +2388,16 @@ def submit_communication_orders():
         ctx.drawImage(img, 0, 0)
 
         # put the centers
-        g_variant_data.render(ctx)
+        VARIANT_DATA.render(ctx)
 
         # put the position
-        g_position_data.render(ctx)
+        POSITION_DATA.render(ctx)
 
         # put the orders
         orders_data.render(ctx)
 
         # put the legends at the end
-        g_variant_data.render_legends(ctx)
+        VARIANT_DATA.render_legends(ctx)
 
         warning = html.DIV("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution pourvu que l'unité en question ait reçu l'ordre *réel* de rester en place ou de se disperser.", Class='important')
         buttons_right <= html.P()
@@ -2435,44 +2435,44 @@ def submit_communication_orders():
         buttons_right <= input_submit
 
     # need to be connected
-    if g_pseudo is None:
+    if PSEUDO is None:
         alert("Il faut se connecter au préalable")
         load_option(None, 'position')
         return False
 
     # need to have a role
-    if g_role_id is None:
+    if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         load_option(None, 'position')
         return False
 
     # cannot be game master
-    if g_role_id == 0:
+    if ROLE_ID == 0:
         alert("Ce n'est pas possible pour l'arbitre de cette partie")
         load_option(None, 'position')
         return False
 
     # game needs to be ongoing - not waiting
-    if g_game_parameters_loaded['current_state'] == 0:
+    if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
         load_option(None, 'position')
         return False
 
     # game needs to be ongoing - not finished
-    if g_game_parameters_loaded['current_state'] == 2:
+    if GAME_PARAMETERS_LOADED['current_state'] == 2:
         alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
 
     # need to have orders to submit
 
-    submitted_data = get_roles_submitted_orders(g_game_id)
+    submitted_data = get_roles_submitted_orders(GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
 
-    if g_role_id not in submitted_data['needed']:
+    if ROLE_ID not in submitted_data['needed']:
         alert("Vous n'avez pas d'ordre à passer")
         load_option(None, 'position')
         return False
@@ -2485,10 +2485,10 @@ def submit_communication_orders():
     # header
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
 
     # create canvas
-    map_size = g_variant_data.map_size
+    map_size = VARIANT_DATA.map_size
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
     ctx = canvas.getContext("2d")
     if ctx is None:
@@ -2503,29 +2503,29 @@ def submit_communication_orders():
     document.bind("keypress", callback_keypress)
 
     # get the orders from server
-    communication_orders_loaded = game_communication_orders_reload(g_game_id)
+    communication_orders_loaded = game_communication_orders_reload(GAME_ID)
     if not communication_orders_loaded:
         alert("Erreur chargement ordres communication")
         load_option(None, 'position')
         return False
 
     # digest the orders
-    orders_data = mapping.Orders(communication_orders_loaded, g_position_data)
+    orders_data = mapping.Orders(communication_orders_loaded, POSITION_DATA)
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(g_variant_name_loaded, g_interface_chosen)
+    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', callback_render)
 
-    ratings = g_position_data.role_ratings()
-    colours = g_position_data.role_colours()
-    game_scoring = g_game_parameters_loaded['scoring']
-    rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
+    ratings = POSITION_DATA.role_ratings()
+    colours = POSITION_DATA.role_colours()
+    game_scoring = GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
 
-    report_window = common.make_report_window(g_report_loaded)
+    report_window = common.make_report_window(REPORT_LOADED)
 
     # left side
 
@@ -2610,14 +2610,14 @@ def negotiate():
 
         json_dict = {
             'dest_role_ids': dest_role_ids,
-            'role_id': g_role_id,
-            'pseudo': g_pseudo,
+            'role_id': ROLE_ID,
+            'pseudo': PSEUDO,
             'content': content
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-messages/{g_game_id}"
+        url = f"{host}:{port}/game-messages/{GAME_ID}"
 
         # adding a message in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -2652,7 +2652,7 @@ def negotiate():
 
         return messages
 
-    if g_role_id is None:
+    if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         load_option(None, 'position')
         return False
@@ -2661,10 +2661,10 @@ def negotiate():
     login.check_token()
 
     # get time stamp of last visit of declarations
-    time_stamp_last_visit = common.date_last_visit_load(g_game_id, config.MESSAGES_TYPE)
+    time_stamp_last_visit = common.date_last_visit_load(GAME_ID, config.MESSAGES_TYPE)
 
     # put time stamp of last visit of declarations as now
-    date_last_visit_update(g_game_id, g_pseudo, g_role_id, config.MESSAGES_TYPE)
+    date_last_visit_update(GAME_ID, PSEUDO, ROLE_ID, config.MESSAGES_TYPE)
 
     form = html.FORM()
 
@@ -2684,16 +2684,16 @@ def negotiate():
     table = html.TABLE()
     row = html.TR()
     selected = dict()
-    for role_id_dest in range(g_variant_content_loaded['roles']['number'] + 1):
+    for role_id_dest in range(VARIANT_CONTENT_LOADED['roles']['number'] + 1):
 
         # dest only if allowed
-        if g_game_parameters_loaded['nomessage']:
-            if not (g_role_id == 0 or role_id_dest == 0):
+        if GAME_PARAMETERS_LOADED['nomessage']:
+            if not (ROLE_ID == 0 or role_id_dest == 0):
                 continue
 
-        role_dest = g_variant_data.roles[role_id_dest]
-        role_name = g_variant_data.name_table[role_dest]
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id_dest}.jpg", title=role_name)
+        role_dest = VARIANT_DATA.roles[role_id_dest]
+        role_name = VARIANT_DATA.name_table[role_dest]
+        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id_dest}.jpg", title=role_name)
 
         # the alternative
         input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), name="destinees")
@@ -2720,7 +2720,7 @@ def negotiate():
 
     # now we display messages
 
-    messages = messages_reload(g_game_id)
+    messages = messages_reload(GAME_ID)
     if messages is None:
         alert("Erreur chargement messages")
         load_option(None, 'position')
@@ -2743,9 +2743,9 @@ def negotiate():
         col = html.TD(f"{date_desc}")
         row <= col
 
-        role = g_variant_data.roles[from_role_id_msg]
-        role_name = g_variant_data.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{from_role_id_msg}.jpg", title=role_name)
+        role = VARIANT_DATA.roles[from_role_id_msg]
+        role_name = VARIANT_DATA.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{from_role_id_msg}.jpg", title=role_name)
         col = html.TD(role_icon_img)
         row <= col
 
@@ -2753,9 +2753,9 @@ def negotiate():
 
         for dest_role_id_msg in dest_role_id_msgs:
 
-            role = g_variant_data.roles[dest_role_id_msg]
-            role_name = g_variant_data.name_table[role]
-            role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{dest_role_id_msg}.jpg", title=role_name)
+            role = VARIANT_DATA.roles[dest_role_id_msg]
+            role_name = VARIANT_DATA.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{dest_role_id_msg}.jpg", title=role_name)
             col <= role_icon_img
 
             # separator
@@ -2783,7 +2783,7 @@ def negotiate():
     # header
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
     # role
@@ -2836,15 +2836,15 @@ def declare():
             return
 
         json_dict = {
-            'role_id': g_role_id,
-            'pseudo': g_pseudo,
+            'role_id': ROLE_ID,
+            'pseudo': PSEUDO,
             'anonymous': anonymous,
             'content': content
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-declarations/{g_game_id}"
+        url = f"{host}:{port}/game-declarations/{GAME_ID}"
 
         # adding a declaration in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -2879,7 +2879,7 @@ def declare():
 
         return declarations
 
-    if g_role_id is None:
+    if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         load_option(None, 'position')
         return False
@@ -2888,10 +2888,10 @@ def declare():
     login.check_token()
 
     # get time stamp of last visit of declarations
-    time_stamp_last_visit = common.date_last_visit_load(g_game_id, config.DECLARATIONS_TYPE)
+    time_stamp_last_visit = common.date_last_visit_load(GAME_ID, config.DECLARATIONS_TYPE)
 
     # put time stamp of last visit of declarations as now
-    date_last_visit_update(g_game_id, g_pseudo, g_role_id, config.DECLARATIONS_TYPE)
+    date_last_visit_update(GAME_ID, PSEUDO, ROLE_ID, config.DECLARATIONS_TYPE)
 
     form = html.FORM()
 
@@ -2917,7 +2917,7 @@ def declare():
 
     # now we display declarations
 
-    declarations = declarations_reload(g_game_id)
+    declarations = declarations_reload(GAME_ID)
     if declarations is None:
         alert("Erreur chargement déclarations")
         load_option(None, 'position')
@@ -2941,9 +2941,9 @@ def declare():
         row <= col
 
         if role_id_msg != -1:
-            role = g_variant_data.roles[role_id_msg]
-            role_name = g_variant_data.name_table[role]
-            role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id_msg}.jpg", title=role_name)
+            role = VARIANT_DATA.roles[role_id_msg]
+            role_name = VARIANT_DATA.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id_msg}.jpg", title=role_name)
         else:
             role_icon_img = ""
         col = html.TD(role_icon_img)
@@ -2972,7 +2972,7 @@ def declare():
     # header
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
     # role
@@ -2982,7 +2982,7 @@ def declare():
     MY_SUB_PANEL <= html.BR()
 
     # form only if allowed
-    if g_game_parameters_loaded['nopress'] and g_role_id != 0:
+    if GAME_PARAMETERS_LOADED['nopress'] and ROLE_ID != 0:
         MY_SUB_PANEL <= html.P("Cette partie est sans presse des joueurs")
     else:
         # form
@@ -3022,31 +3022,31 @@ def vote():
         vote_value = input_vote.checked
 
         json_dict = {
-            'role_id': g_role_id,
-            'pseudo': g_pseudo,
+            'role_id': ROLE_ID,
+            'pseudo': PSEUDO,
             'value': vote_value
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-votes/{g_game_id}"
+        url = f"{host}:{port}/game-votes/{GAME_ID}"
 
         # adding a vote in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     # from game id and token get role_id of player
 
-    if g_role_id is None:
+    if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         load_option(None, 'position')
         return False
 
-    if g_role_id == 0:
+    if ROLE_ID == 0:
         alert("Ce n'est pas possible pour l'arbitre de cette partie")
         load_option(None, 'position')
         return False
 
-    votes = game_votes_reload(g_game_id)
+    votes = game_votes_reload(GAME_ID)
     if votes is None:
         alert("Erreur chargement votes")
         load_option(None, 'position')
@@ -3055,7 +3055,7 @@ def vote():
 
     vote_value = False
     for _, role, vote_val in votes:
-        if role == g_role_id:
+        if role == ROLE_ID:
             vote_value = bool(vote_val)
             break
 
@@ -3080,7 +3080,7 @@ def vote():
     MY_SUB_PANEL.clear()
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
     # role
@@ -3107,7 +3107,7 @@ def show_history():
             ctx.drawImage(img, 0, 0)
 
             # put the centers
-            g_variant_data.render(ctx)
+            VARIANT_DATA.render(ctx)
 
             # put the position
             position_data.render(ctx)
@@ -3116,9 +3116,9 @@ def show_history():
             orders_data.render(ctx)
 
             # put the legends at the end
-            g_variant_data.render_legends(ctx)
+            VARIANT_DATA.render_legends(ctx)
 
-        transition_loaded = game_transition_reload(g_game_id, advancement_selected)
+        transition_loaded = game_transition_reload(GAME_ID, advancement_selected)
         if not transition_loaded:
             return
 
@@ -3127,7 +3127,7 @@ def show_history():
         report_loaded = transition_loaded['report_txt']
 
         # digest the position
-        position_data = mapping.Position(position_loaded, g_variant_data)
+        position_data = mapping.Position(position_loaded, VARIANT_DATA)
 
         # digest the orders
         orders_data = mapping.Orders(orders_loaded, position_data)
@@ -3135,7 +3135,7 @@ def show_history():
         # now we can display
 
         # create canvas
-        map_size = g_variant_data.map_size
+        map_size = VARIANT_DATA.map_size
         canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
         ctx = canvas.getContext("2d")
         if ctx is None:
@@ -3143,13 +3143,13 @@ def show_history():
             return
 
         # put background (this will call the callback that display the whole map)
-        img = common.read_image(g_variant_name_loaded, g_interface_chosen)
+        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
         ratings = position_data.role_ratings()
         colours = position_data.role_colours()
-        game_scoring = g_game_parameters_loaded['scoring']
-        rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
+        game_scoring = GAME_PARAMETERS_LOADED['scoring']
+        rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
         MY_SUB_PANEL <= rating_colours_window
 
         report_window = common.make_report_window(report_loaded)
@@ -3159,7 +3159,7 @@ def show_history():
         display_left = html.DIV(id='display_left')
         display_left.attrs['style'] = 'display: table-cell; width:500px; vertical-align: top; table-layout: fixed;'
 
-        game_status = get_game_status_histo(g_variant_data, g_game_parameters_loaded, advancement_selected)
+        game_status = get_game_status_histo(VARIANT_DATA, GAME_PARAMETERS_LOADED, advancement_selected)
 
         display_left <= game_status
         display_left <= canvas
@@ -3183,7 +3183,7 @@ def show_history():
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
         # role flag if applicable
-        if g_role_id is not None:
+        if ROLE_ID is not None:
             stack_role_flag(buttons_right)
 
         buttons_right <= html.BR()
@@ -3212,8 +3212,8 @@ def show_history():
 
         for adv_sample in range(4, last_advancement, 5):
 
-            adv_sample_season, adv_sample_year = common.get_season(adv_sample, g_variant_data)
-            adv_sample_season_readable = g_variant_data.name_table[adv_sample_season]
+            adv_sample_season, adv_sample_year = common.get_season(adv_sample, VARIANT_DATA)
+            adv_sample_season_readable = VARIANT_DATA.name_table[adv_sample_season]
 
             buttons_right <= html.BR()
             input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}")
@@ -3225,7 +3225,7 @@ def show_history():
 
         MY_SUB_PANEL <= my_sub_panel2
 
-    advancement_loaded = g_game_parameters_loaded['current_advancement']
+    advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
     last_advancement = advancement_loaded - 1
     if not last_advancement >= 0:
         alert("Rien pour le moment !")
@@ -3268,7 +3268,7 @@ def game_master():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{g_game}"
+        url = f"{host}:{port}/games/{GAME}"
 
         # getting game data : no need for token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -3304,19 +3304,19 @@ def game_master():
         deadline_used = max(deadline_now, deadline_loaded)
 
         # add one day - if fast game change to one minute
-        time_unit = 60 if g_game_parameters_loaded['fast'] else 24 * 60 * 60
+        time_unit = 60 if GAME_PARAMETERS_LOADED['fast'] else 24 * 60 * 60
         deadline_forced = deadline_used + time_unit
 
         # push on server
         json_dict = {
-            'pseudo': g_pseudo,
-            'name': g_game,
+            'pseudo': PSEUDO,
+            'name': GAME,
             'deadline': deadline_forced,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{g_game}"
+        url = f"{host}:{port}/games/{GAME}"
 
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -3340,24 +3340,24 @@ def game_master():
 
             InfoDialog("OK", f"Message de rappel émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
 
-        subject = f"Message de la part de l'arbitre de la partie {g_game} sur le site https://diplomania-gen.fr (AFJD)"
+        subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
         body = "Bonjour !"
         body += "\n"
         body += "Il manque vos ordres et la date limite est passée. Merci d'aviser rapidement."
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
-        body += f"https://diplomania-gen.fr?game={g_game}"
+        body += f"https://diplomania-gen.fr?game={GAME}"
 
         player_id_str = role2pseudo[role_id]
         player_id = int(player_id_str)
         pseudo_there = id2pseudo[player_id]
 
-        addressed_id = g_players_dict[pseudo_there]
+        addressed_id = PLAYERS_DICT[pseudo_there]
         addressees = [addressed_id]
 
         json_dict = {
-            'pseudo': g_pseudo,
+            'pseudo': PSEUDO,
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
@@ -3392,18 +3392,18 @@ def game_master():
             MY_SUB_PANEL.clear()
             game_master()
 
-        names_dict = g_variant_data.extract_names()
+        names_dict = VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
 
         json_dict = {
             'role_id': role_id,
-            'pseudo': g_pseudo,
+            'pseudo': PSEUDO,
             'names': names_dict_json
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-force-no-orders/{g_game_id}"
+        url = f"{host}:{port}/game-force-no-orders/{GAME_ID}"
 
         # submitting civil disorder : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -3434,21 +3434,21 @@ def game_master():
             load_special_stuff()
             game_master()
 
-        inforced_names_dict = g_inforced_variant_data.extract_names()
+        inforced_names_dict = INFORCED_VARIANT_DATA.extract_names()
         inforced_names_dict_json = json.dumps(inforced_names_dict)
 
         definitive_value = True
 
         json_dict = {
             'role_id': role_id,
-            'pseudo': g_pseudo,
+            'pseudo': PSEUDO,
             'definitive': definitive_value,
             'adjudication_names': inforced_names_dict_json
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-force-agree-solve/{g_game_id}"
+        url = f"{host}:{port}/game-force-agree-solve/{GAME_ID}"
 
         # submitting force agreement : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -3476,11 +3476,11 @@ def game_master():
             game_master()
 
         json_dict = {
-            'game_id': g_game_id,
+            'game_id': GAME_ID,
             'role_id': role_id,
             'player_pseudo': pseudo_removed,
             'delete': 1,
-            'pseudo': g_pseudo,
+            'pseudo': PSEUDO,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -3515,11 +3515,11 @@ def game_master():
         player_pseudo = input_for_role.value
 
         json_dict = {
-            'game_id': g_game_id,
+            'game_id': GAME_ID,
             'role_id': role_id,
             'player_pseudo': player_pseudo,
             'delete': 0,
-            'pseudo': g_pseudo,
+            'pseudo': PSEUDO,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -3553,7 +3553,7 @@ def game_master():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-allocations/{g_game_id}"
+        url = f"{host}:{port}/game-allocations/{GAME_ID}"
 
         # get roles that are allocated to game : do not need token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -3561,25 +3561,25 @@ def game_master():
         return pseudo_list
 
     # need to be connected
-    if g_pseudo is None:
+    if PSEUDO is None:
         alert("Il faut se connecter au préalable")
         load_option(None, 'position')
         return False
 
     # need to be game master
-    if g_role_id != 0:
+    if ROLE_ID != 0:
         alert("Vous ne semblez pas être l'arbitre de cette partie")
         load_option(None, 'position')
         return False
 
     # game needs to be ongoing - not waiting
-    if g_game_parameters_loaded['current_state'] == 0:
+    if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
         load_option(None, 'position')
         return False
 
     # game needs to be ongoing - not finished
-    if g_game_parameters_loaded['current_state'] == 2:
+    if GAME_PARAMETERS_LOADED['current_state'] == 2:
         alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
@@ -3589,18 +3589,18 @@ def game_master():
     # header
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
     stack_role_flag(MY_SUB_PANEL)
     MY_SUB_PANEL <= html.BR()
 
-    id2pseudo = {v: k for k, v in g_players_dict.items()}
-    role2pseudo = {v: k for k, v in g_game_players_dict.items()}
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
     PROFILE_DATA.start('game_master() - chargement données soumission')
 
-    submitted_data = get_roles_submitted_orders(g_game_id)
+    submitted_data = get_roles_submitted_orders(GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
@@ -3614,7 +3614,7 @@ def game_master():
     PROFILE_DATA.start('game_master() - chargement votes')
     # votes
 
-    votes = game_votes_reload(g_game_id)
+    votes = game_votes_reload(GAME_ID)
     if votes is None:
         alert("Erreur chargement votes")
         load_option(None, 'position')
@@ -3631,7 +3631,7 @@ def game_master():
 
     game_admin_table = html.TABLE()
 
-    for role_id in g_variant_data.roles:
+    for role_id in VARIANT_DATA.roles:
 
         # discard game master
         if role_id == 0:
@@ -3639,12 +3639,12 @@ def game_master():
 
         row = html.TR()
 
-        role = g_variant_data.roles[role_id]
-        role_name = g_variant_data.name_table[role]
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
 
         # flag
         col = html.TD()
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
+        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
         col <= role_icon_img
         row <= col
 
@@ -3811,18 +3811,18 @@ def supervise():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-        names_dict = g_variant_data.extract_names()
+        names_dict = VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
 
         json_dict = {
             'role_id': role_id,
-            'pseudo': g_pseudo,
+            'pseudo': PSEUDO,
             'names': names_dict_json
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-force-no-orders/{g_game_id}"
+        url = f"{host}:{port}/game-force-no-orders/{GAME_ID}"
 
         # submitting civil disorder : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -3847,21 +3847,21 @@ def supervise():
                 message = "Résolution forcée par la console suite forçage accord"
                 log_stack.insert(message)
 
-        inforced_names_dict = g_inforced_variant_data.extract_names()
+        inforced_names_dict = INFORCED_VARIANT_DATA.extract_names()
         inforced_names_dict_json = json.dumps(inforced_names_dict)
 
         definitive_value = True
 
         json_dict = {
             'role_id': role_id,
-            'pseudo': g_pseudo,
+            'pseudo': PSEUDO,
             'definitive': definitive_value,
             'adjudication_names': inforced_names_dict_json
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-force-agree-solve/{g_game_id}"
+        url = f"{host}:{port}/game-force-agree-solve/{GAME_ID}"
 
         # submitting force agreement : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -3879,7 +3879,7 @@ def supervise():
 
         game_admin_table = html.TABLE()
 
-        for role_id in g_variant_data.roles:
+        for role_id in VARIANT_DATA.roles:
 
             # discard game master
             if role_id == 0:
@@ -3887,12 +3887,12 @@ def supervise():
 
             row = html.TR()
 
-            role = g_variant_data.roles[role_id]
-            role_name = g_variant_data.name_table[role]
+            role = VARIANT_DATA.roles[role_id]
+            role_name = VARIANT_DATA.name_table[role]
 
             # flag
             col = html.TD()
-            role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
+            role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
             col <= role_icon_img
             row <= col
 
@@ -3957,14 +3957,14 @@ def supervise():
             # reload from server to see what changed from outside
             load_dynamic_stuff()
             nonlocal submitted_data
-            submitted_data = get_roles_submitted_orders(g_game_id)
+            submitted_data = get_roles_submitted_orders(GAME_ID)
             if not submitted_data:
                 alert("Erreur chargement données de soumission")
                 return
 
             # votes
             nonlocal votes
-            votes = game_votes_reload(g_game_id)
+            votes = game_votes_reload(GAME_ID)
             if votes is None:
                 alert("Erreur chargement votes")
                 return
@@ -3977,7 +3977,7 @@ def supervise():
             MY_SUB_PANEL <= html.BR()
 
             # game status
-            MY_SUB_PANEL <= g_game_status
+            MY_SUB_PANEL <= GAME_STATUS
             MY_SUB_PANEL <= html.BR()
 
             stack_role_flag(MY_SUB_PANEL)
@@ -3987,9 +3987,9 @@ def supervise():
         refresh_subroutine()
 
         # calculate deadline + grace
-        time_unit = 60 if g_game_parameters_loaded['fast'] else 24 * 60 * 60
-        deadline_loaded = g_game_parameters_loaded['deadline']
-        grace_duration_loaded = g_game_parameters_loaded['grace_duration']
+        time_unit = 60 if GAME_PARAMETERS_LOADED['fast'] else 24 * 60 * 60
+        deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
+        grace_duration_loaded = GAME_PARAMETERS_LOADED['grace_duration']
         force_point = deadline_loaded + time_unit * grace_duration_loaded
         time_stamp_now = time.time()
 
@@ -4001,7 +4001,7 @@ def supervise():
             needed_roles_list = submitted_data['needed']
 
             missing_orders = list()
-            for role_id in g_variant_data.roles:
+            for role_id in VARIANT_DATA.roles:
                 if role_id in needed_roles_list and role_id not in submitted_roles_list:
                     missing_orders.append(role_id)
 
@@ -4009,20 +4009,20 @@ def supervise():
             if missing_orders:
                 role_id = random.choice(missing_orders)
                 civil_disorder_callback(None, role_id)
-                role = g_variant_data.roles[role_id]
-                role_name = g_variant_data.name_table[role]
+                role = VARIANT_DATA.roles[role_id]
+                role_name = VARIANT_DATA.name_table[role]
                 message = f"Désordre civil pour {role_name}"
                 alterated = True
             else:
                 missing_agreements = list()
-                for role_id in g_variant_data.roles:
+                for role_id in VARIANT_DATA.roles:
                     if role_id in submitted_roles_list and role_id not in agreed_roles_list:
                         missing_agreements.append(role_id)
                 if missing_agreements:
                     role_id = random.choice(missing_agreements)
                     force_agreement_callback(None, role_id)
-                    role = g_variant_data.roles[role_id]
-                    role_name = g_variant_data.name_table[role]
+                    role = VARIANT_DATA.roles[role_id]
+                    role_name = VARIANT_DATA.name_table[role]
                     message = f"Forçage accord pour {role_name}"
                     alterated = True
 
@@ -4057,10 +4057,10 @@ def supervise():
         dialog.close()
 
         nonlocal id2pseudo
-        id2pseudo = {v: k for k, v in g_players_dict.items()}
+        id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
         nonlocal role2pseudo
-        role2pseudo = {v: k for k, v in g_game_players_dict.items()}
+        role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
         nonlocal log_stack
         log_stack = Logger()
@@ -4078,31 +4078,31 @@ def supervise():
     log_stack = None
 
     # need to be connected
-    if g_pseudo is None:
+    if PSEUDO is None:
         alert("Il faut se connecter au préalable")
         load_option(None, 'position')
         return False
 
     # need to be game master
-    if g_role_id != 0:
+    if ROLE_ID != 0:
         alert("Vous ne semblez pas être l'arbitre de cette partie")
         load_option(None, 'position')
         return False
 
     # game needs to be ongoing - not waiting
-    if g_game_parameters_loaded['current_state'] == 0:
+    if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
         load_option(None, 'position')
         return False
 
     # game needs to be ongoing - not finished
-    if g_game_parameters_loaded['current_state'] == 2:
+    if GAME_PARAMETERS_LOADED['current_state'] == 2:
         alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
 
     # game needs to be fast
-    if not g_game_parameters_loaded['fast']:
+    if not GAME_PARAMETERS_LOADED['fast']:
         alert("Cette partie n'est pas une partie rapide")
         load_option(None, 'position')
         return False
@@ -4131,13 +4131,13 @@ def observe():
         ctx.drawImage(img, 0, 0)
 
         # put the centers
-        g_variant_data.render(ctx)
+        VARIANT_DATA.render(ctx)
 
         # put the position
-        g_position_data.render(ctx)
+        POSITION_DATA.render(ctx)
 
         # put the legends at the end
-        g_variant_data.render_legends(ctx)
+        VARIANT_DATA.render_legends(ctx)
 
     def refresh():
         """ refresh """
@@ -4151,10 +4151,10 @@ def observe():
         MY_SUB_PANEL <= html.BR()
 
         # game status
-        MY_SUB_PANEL <= g_game_status
+        MY_SUB_PANEL <= GAME_STATUS
 
         # create canvas
-        map_size = g_variant_data.map_size
+        map_size = VARIANT_DATA.map_size
         canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
         nonlocal ctx
         ctx = canvas.getContext("2d")
@@ -4164,15 +4164,15 @@ def observe():
 
         # put background (this will call the callback that display the whole map)
         nonlocal img
-        img = common.read_image(g_variant_name_loaded, g_interface_chosen)
+        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
-        ratings = g_position_data.role_ratings()
-        colours = g_position_data.role_colours()
-        game_scoring = g_game_parameters_loaded['scoring']
-        rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
+        ratings = POSITION_DATA.role_ratings()
+        colours = POSITION_DATA.role_colours()
+        game_scoring = GAME_PARAMETERS_LOADED['scoring']
+        rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
 
-        report_window = common.make_report_window(g_report_loaded)
+        report_window = common.make_report_window(REPORT_LOADED)
 
         # left side
 
@@ -4183,13 +4183,13 @@ def observe():
         MY_SUB_PANEL <= report_window
 
     # game needs to be ongoing - not waiting
-    if g_game_parameters_loaded['current_state'] == 0:
+    if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
         load_option(None, 'position')
         return False
 
     # game needs to be ongoing - not finished
-    if g_game_parameters_loaded['current_state'] == 2:
+    if GAME_PARAMETERS_LOADED['current_state'] == 2:
         alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
@@ -4209,7 +4209,7 @@ def show_game_parameters():
     """ show_game_parameters """
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
     game_params_table = html.TABLE()
@@ -4221,7 +4221,7 @@ def show_game_parameters():
         thead <= col
     game_params_table <= thead
 
-    for key, value in g_game_parameters_loaded.items():
+    for key, value in GAME_PARAMETERS_LOADED.items():
 
         if key in ['name', 'description', 'variant', 'deadline', 'current_state', 'current_advancement']:
             continue
@@ -4289,7 +4289,7 @@ def show_game_parameters():
 def show_game_master_in_game():
     """ show_players_in_game """
 
-    game_master_pseudo = get_game_master(int(g_game_id))
+    game_master_pseudo = get_game_master(int(GAME_ID))
     if game_master_pseudo is None:
         alert("Pas d'arbitre pour cette partie ou erreur au chargement de l'arbitre de la partie")
         return False
@@ -4311,9 +4311,9 @@ def show_game_master_in_game():
     row = html.TR()
 
     # role flag
-    role = g_variant_data.roles[role_id]
-    role_name = g_variant_data.name_table[role]
-    role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
+    role = VARIANT_DATA.roles[role_id]
+    role_name = VARIANT_DATA.name_table[role]
+    role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
 
     if role_icon_img:
         col = html.TD(role_icon_img)
@@ -4322,8 +4322,8 @@ def show_game_master_in_game():
     row <= col
 
     # role name
-    role = g_variant_data.roles[role_id]
-    role_name = g_variant_data.name_table[role]
+    role = VARIANT_DATA.roles[role_id]
+    role_name = VARIANT_DATA.name_table[role]
 
     col = html.TD(role_name)
     row <= col
@@ -4336,7 +4336,7 @@ def show_game_master_in_game():
     game_master_table <= row
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= game_master_table
@@ -4348,19 +4348,19 @@ def show_players_in_game():
     """ show_players_in_game """
 
     # need to be connected
-    if g_pseudo is None:
+    if PSEUDO is None:
         alert("Il faut se connecter au préalable")
         load_option(None, 'position')
         return False
 
     # is game anonymous
     # TODO improve this with real admin account
-    if not(g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
+    if not(PSEUDO == 'Palpatine' or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         alert("Seul l'arbitre (ou l'administrateur du site) peut voir les joueurs d'une partie anonyme")
         load_option(None, 'position')
         return False
 
-    id2pseudo = {v: k for k, v in g_players_dict.items()}
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
     game_players_table = html.TABLE()
 
@@ -4374,9 +4374,9 @@ def show_players_in_game():
         thead <= col
     game_players_table <= thead
 
-    role2pseudo = {v: k for k, v in g_game_players_dict.items()}
+    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
-    for role_id in g_variant_data.roles:
+    for role_id in VARIANT_DATA.roles:
 
         row = html.TR()
 
@@ -4384,9 +4384,9 @@ def show_players_in_game():
             continue
 
         # role flag
-        role = g_variant_data.roles[role_id]
-        role_name = g_variant_data.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)
@@ -4395,8 +4395,8 @@ def show_players_in_game():
         row <= col
 
         # role name
-        role = g_variant_data.roles[role_id]
-        role_name = g_variant_data.name_table[role]
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
 
         col = html.TD(role_name)
         row <= col
@@ -4413,13 +4413,13 @@ def show_players_in_game():
         game_players_table <= row
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= game_players_table
 
     # add the non allocated players
-    dangling_players = [p for p in g_game_players_dict.keys() if g_game_players_dict[p] == - 1]
+    dangling_players = [p for p in GAME_PLAYERS_DICT.keys() if GAME_PLAYERS_DICT[p] == - 1]
     if dangling_players:
         MY_SUB_PANEL <= html.BR()
         info = html.EM("Les pseudos suivants sont alloués à la partie sans rôle : ")
@@ -4437,35 +4437,35 @@ def show_orders_submitted_in_game():
     """ show_orders_submitted_in_game """
 
     # if user identified ?
-    if g_pseudo is None:
+    if PSEUDO is None:
         alert("Il faut se connecter au préalable")
         load_option(None, 'position')
         return False
 
     # is player in game ?
     # TODO improve this with real admin account
-    if not(g_pseudo == 'Palpatine' or g_role_id is not None):
+    if not(PSEUDO == 'Palpatine' or ROLE_ID is not None):
         alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir le statut des ordres pour une partie non anonyme")
         load_option(None, 'position')
         return False
 
     # game anonymous
     # TODO improve this with real admin account
-    if not(g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
+    if not(PSEUDO == 'Palpatine' or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         alert("Seul l'arbitre (ou l'administrateur du site) peut voir le statut des ordres  pour une partie anonyme")
         load_option(None, 'position')
         return False
 
     # you will at least get your own role
-    submitted_data = get_roles_submitted_orders(g_game_id)
+    submitted_data = get_roles_submitted_orders(GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
 
-    role2pseudo = {v: k for k, v in g_game_players_dict.items()}
+    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
-    id2pseudo = {v: k for k, v in g_players_dict.items()}
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
     game_players_table = html.TABLE()
 
@@ -4479,7 +4479,7 @@ def show_orders_submitted_in_game():
         thead <= col
     game_players_table <= thead
 
-    for role_id in g_variant_data.roles:
+    for role_id in VARIANT_DATA.roles:
 
         row = html.TR()
 
@@ -4487,9 +4487,9 @@ def show_orders_submitted_in_game():
             continue
 
         # role flag
-        role = g_variant_data.roles[role_id]
-        role_name = g_variant_data.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)
@@ -4497,8 +4497,8 @@ def show_orders_submitted_in_game():
             col = html.TD()
         row <= col
 
-        role = g_variant_data.roles[role_id]
-        role_name = g_variant_data.name_table[role]
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
 
         col = html.TD(role_name)
         row <= col
@@ -4543,7 +4543,7 @@ def show_orders_submitted_in_game():
         game_players_table <= row
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= game_players_table
@@ -4555,43 +4555,43 @@ def show_incidents_in_game():
     """ show_incidents_in_game """
 
     # if user identified ?
-    if g_pseudo is None:
+    if PSEUDO is None:
         alert("Il faut se connecter au préalable")
         load_option(None, 'position')
         return False
 
     # is player in game ?
     # TODO improve this with real admin account
-    if not(g_pseudo == 'Palpatine' or g_role_id is not None):
+    if not(PSEUDO == 'Palpatine' or ROLE_ID is not None):
         alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir les retards pour une partie non anonyme")
         load_option(None, 'position')
         return False
 
     # game anonymous
     # TODO improve this with real admin account
-    if not(g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
+    if not(PSEUDO == 'Palpatine' or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         alert("Seul l'arbitre (ou l'administrateur du site) peut voir les retards pour une partie anonyme")
         load_option(None, 'position')
         return False
 
     # you will at least get your own role
-    submitted_data = get_roles_submitted_orders(g_game_id)
+    submitted_data = get_roles_submitted_orders(GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
 
     # get the actual incidents of the game
-    game_incidents = get_game_incidents(g_game_id)
+    game_incidents = get_game_incidents(GAME_ID)
 
     if game_incidents is None:
         alert("Erreur chargement incidents")
         return False
     game_incidents = list(game_incidents)
 
-    role2pseudo = {v: k for k, v in g_game_players_dict.items()}
+    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
-    id2pseudo = {v: k for k, v in g_players_dict.items()}
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
     game_incidents_table = html.TABLE()
 
@@ -4610,9 +4610,9 @@ def show_incidents_in_game():
         row = html.TR()
 
         # role flag
-        role = g_variant_data.roles[role_id]
-        role_name = g_variant_data.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{g_variant_name_loaded}/{g_interface_chosen}/roles/{role_id}.jpg", title=role_name)
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)
@@ -4620,8 +4620,8 @@ def show_incidents_in_game():
             col = html.TD()
         row <= col
 
-        role = g_variant_data.roles[role_id]
-        role_name = g_variant_data.name_table[role]
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
 
         col = html.TD(role_name)
         row <= col
@@ -4636,8 +4636,8 @@ def show_incidents_in_game():
         row <= col
 
         # season
-        advancement_season, advancement_year = common.get_season(advancement, g_variant_data)
-        advancement_season_readable = g_variant_data.name_table[advancement_season]
+        advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
+        advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
         game_season = f"{advancement_season_readable} {advancement_year}"
         col = html.TD(game_season)
         row <= col
@@ -4653,7 +4653,7 @@ def show_incidents_in_game():
         game_incidents_table <= row
 
     # game status
-    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= game_incidents_table
@@ -4772,35 +4772,35 @@ def render(panel_middle):
         alert("Il faut choisir la partie au préalable")
         return
 
-    global g_game
-    g_game = storage['GAME']
+    global GAME
+    GAME = storage['GAME']
 
-    PROFILE_DATA.start(f'lecture du game_id ({g_game})')
+    PROFILE_DATA.start(f'lecture du game_id ({GAME})')
 
     if 'GAME_ID' not in storage:
         alert("ERREUR : identifiant de partie introuvable")
         return
 
-    global g_game_id
-    g_game_id = storage['GAME_ID']
+    global GAME_ID
+    GAME_ID = storage['GAME_ID']
 
     # Connecté mais pas joueur
     # Pas connecté
     ITEM_NAME_SELECTED = 'position'
 
-    global g_pseudo
-    g_pseudo = None
+    global PSEUDO
+    PSEUDO = None
     if 'PSEUDO' in storage:
-        g_pseudo = storage['PSEUDO']
+        PSEUDO = storage['PSEUDO']
 
     # from game_id and token get role
 
     PROFILE_DATA.start('chargement du role alloué au joueur')
 
-    global g_role_id
-    g_role_id = None
-    if g_pseudo is not None:
-        g_role_id = common.get_role_allocated_to_player_in_game(g_game_id)
+    global ROLE_ID
+    ROLE_ID = None
+    if PSEUDO is not None:
+        ROLE_ID = common.get_role_allocated_to_player_in_game(GAME_ID)
 
     load_static_stuff()
     load_dynamic_stuff()
@@ -4817,18 +4817,18 @@ def render(panel_middle):
         COUNTDOWN_TIMER = timer.set_interval(countdown, 1000)
 
     # game not started, visiting probably to see parameters
-    if g_game_parameters_loaded['current_state'] == 0:
+    if GAME_PARAMETERS_LOADED['current_state'] == 0:
         ITEM_NAME_SELECTED = 'paramètres'
 
     # game finished, visiting probably to see history
-    elif g_game_parameters_loaded['current_state'] == 2:
+    elif GAME_PARAMETERS_LOADED['current_state'] == 2:
         ITEM_NAME_SELECTED = 'historique'
 
     else:
 
-        if g_role_id is not None:
+        if ROLE_ID is not None:
 
-            if g_role_id == 0:
+            if ROLE_ID == 0:
                 # Arbitre
                 ITEM_NAME_SELECTED = 'arbitrer'
             else:
@@ -4839,7 +4839,7 @@ def render(panel_middle):
 
             # Admin wants to see whose orders are missing
             # TODO improve this with real admin account
-            if g_pseudo == "Palpatine":
+            if PSEUDO == "Palpatine":
                 # Admin
                 ITEM_NAME_SELECTED = 'ordres'
 
@@ -4853,5 +4853,5 @@ def render(panel_middle):
 
     # send report
     if SEND_REPORT:
-        if g_pseudo:
-            PROFILE_DATA.send_report(g_pseudo)
+        if PSEUDO:
+            PROFILE_DATA.send_report(PSEUDO)
