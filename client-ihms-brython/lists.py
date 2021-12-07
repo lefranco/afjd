@@ -10,7 +10,7 @@ import config
 import common
 
 
-OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les tournois', 'les arbitres', 'les parties sans arbitres']
+OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres']
 
 
 def show_registered_data():
@@ -215,14 +215,6 @@ def show_games_data(game_state_name):
     MY_SUB_PANEL <= html.P(f"Il y a {count} parties")
 
 
-def show_tournaments_data():
-    """ show_tournaments_data """
-
-    MY_SUB_PANEL <= html.H3("Les tournois")
-    # TODO : liste des tournois
-    MY_SUB_PANEL <= "ICI liste des tournois avec leurs parties - Pas encore implémenté, désolé !"
-
-
 def show_game_masters_data():
     """ show_game_masters_data """
 
@@ -383,8 +375,6 @@ def load_option(_, item_name):
         show_games_data('en cours')
     if item_name == 'les parties terminées':
         show_games_data('terminée')
-    if item_name == 'les tournois':
-        show_tournaments_data()
     if item_name == 'les arbitres':
         show_game_masters_data()
     if item_name == 'les parties sans arbitres':

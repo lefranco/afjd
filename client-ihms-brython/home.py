@@ -30,7 +30,6 @@ def show_home():
     title2 = html.H4("Note importante", Class='important')
     MY_SUB_PANEL <= title2
 
-
     note_bene_content = html.DIV(Class='important')
     for line in NOTE_CONTENT_STATED.split("\n"):
         note_bene_content <= line

@@ -22,10 +22,6 @@ VARIANT_NAME = "standard"
 MY_PANEL = html.DIV(id="sandbox")
 MY_PANEL.attrs['style'] = 'display: table'
 
-# TODO : remove this sub_panel
-MY_SUB_PANEL = html.DIV(id="sub")
-MY_PANEL <= MY_SUB_PANEL
-
 
 @enum.unique
 class AutomatonStateEnum(enum.Enum):
@@ -170,7 +166,7 @@ def sandbox():
             put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        MY_SUB_PANEL <= my_sub_panel2
+        MY_PANEL <= my_sub_panel2
 
     def erase_all_callback(_):
         """ erase_all_callback """
@@ -204,7 +200,7 @@ def sandbox():
             put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        MY_SUB_PANEL <= my_sub_panel2
+        MY_PANEL <= my_sub_panel2
 
     def submit_callback(_):
         """ submit_callback """
@@ -335,7 +331,7 @@ def sandbox():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                MY_SUB_PANEL <= my_sub_panel2
+                MY_PANEL <= my_sub_panel2
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -361,7 +357,7 @@ def sandbox():
                 put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            MY_SUB_PANEL <= my_sub_panel2
+            MY_PANEL <= my_sub_panel2
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -427,7 +423,7 @@ def sandbox():
                 put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            MY_SUB_PANEL <= my_sub_panel2
+            MY_PANEL <= my_sub_panel2
 
             # can be None if no retreating unit on board
             if selected_active_unit is not None:
@@ -471,7 +467,7 @@ def sandbox():
                 put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            MY_SUB_PANEL <= my_sub_panel2
+            MY_PANEL <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -498,7 +494,7 @@ def sandbox():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                MY_SUB_PANEL <= my_sub_panel2
+                MY_PANEL <= my_sub_panel2
 
                 stack_orders(buttons_right)
                 if not POSITION_DATA.empty():
@@ -534,7 +530,7 @@ def sandbox():
                 put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            MY_SUB_PANEL <= my_sub_panel2
+            MY_PANEL <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
@@ -605,7 +601,7 @@ def sandbox():
             put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        MY_SUB_PANEL <= my_sub_panel2
+        MY_PANEL <= my_sub_panel2
 
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
@@ -851,7 +847,7 @@ def sandbox():
             put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        MY_SUB_PANEL <= my_sub_panel2
+        MY_PANEL <= my_sub_panel2
 
     # starts here
 
@@ -979,13 +975,13 @@ def sandbox():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    MY_SUB_PANEL <= html.H2("Le bac à sable : \"what if ?\"")
-    MY_SUB_PANEL <= my_sub_panel2
+    MY_PANEL <= html.H2("Le bac à sable : \"what if ?\"")
+    MY_PANEL <= my_sub_panel2
 
 
 def render(panel_middle):
     """ render """
 
-    MY_SUB_PANEL.clear()
+    MY_PANEL.clear()
     panel_middle <= MY_PANEL
     sandbox()
