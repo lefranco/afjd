@@ -379,7 +379,7 @@ def all_games(state_name):
 
     # get the link (allocations) of game masters
     allocations_data = common.get_allocations_data()
-    if allocations_data is None:
+    if not allocations_data:
         alert("Erreur chargement allocations")
         return
     masters_alloc = allocations_data['game_masters_dict']
