@@ -119,9 +119,9 @@ def game_report_reload(game_id):
 
 
 def game_transition_reload(game_id, advancement):
-    """ game_transition_reload """
+    """ game_transition_reload : returns empty dict if problem (or no data) """
 
-    transition_loaded = None
+    transition_loaded = dict()
 
     def reply_callback(req):
         nonlocal transition_loaded
@@ -3119,7 +3119,7 @@ def show_history():
             g_variant_data.render_legends(ctx)
 
         transition_loaded = game_transition_reload(g_game_id, advancement_selected)
-        if transition_loaded is None:
+        if not transition_loaded:
             return
 
         position_loaded = transition_loaded['situation']
