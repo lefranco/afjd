@@ -63,7 +63,7 @@ def check_batch(current_pseudo, games_to_create):
             if player_name not in players_set:
 
                 if player_name not in already_warned:
-                    alert(f"Il semble que le pseudo '{player_name}' n'existe pas")
+                    alert(f"Il semble que le pseudo '{player_name}' n'existe pas sur le site")
                     already_warned.add(player_name)
                     error = True
 
@@ -80,7 +80,7 @@ def check_batch(current_pseudo, games_to_create):
     # check the players in games are not duplicated
     for game_name, allocations in games_to_create.items():
         if len(set(allocations.values())) != len(allocations.values()):
-            alert(f"Il semble que la partie {game_name} n'a pas 8 joueurs différents")
+            alert(f"Il semble que la partie {game_name} n'a pas des joueurs tous différents")
             error = True
 
     # check players are in same number of games
@@ -100,7 +100,8 @@ def check_batch(current_pseudo, games_to_create):
     # game master does not have to be pseudo but still warning
     for game_name, allocations in games_to_create.items():
         if allocations[0] != current_pseudo:
-            alert(f"Vous n'êtes pas l'arbitre désiré de la partie {game_name}. Il faudra demander à l'abitre désiré de venir prendre l'arbitrage de cette partie")
+            alert(f"Vous n'êtes pas l'arbitre de la partie {game_name}. Il faudra demander à l'abitre désiré de venir sur le site réaliser la création de la partie")
+            error = True
 
     return not error
 
@@ -290,47 +291,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
 
         return status
 
-    def quit_mastering_game(current_pseudo, game_name):
-
-        status = None
-
-        def reply_callback(req):
-            nonlocal status
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la démission de l'arbitrage de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la démission de l'arbitrage de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-
-                return
-
-            status = True
-
-        game_id_int = common.get_game_id(game_name)
-        if not game_id_int:
-            alert(f"Erreur chargement identifiant partie {game_name}. Cette partie existe ?")
-            return False
-
-        json_dict = {
-            'game_id': game_id_int,
-            'role_id': 0,
-            'player_pseudo': current_pseudo,
-            'pseudo': current_pseudo,
-            'delete': 1
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/role-allocations"
-
-        # giving up game mastering : need a token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        return status
-
     # just to display role correctly
     variant_name_loaded = storage['GAME_VARIANT']
     variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
@@ -370,18 +330,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
                 role_name = variant_data.name_table[role]
                 alert(f"Echec à l'attribution du role {role_name} à {player_name} dans la partie {game_to_create_name}")
                 return
-
-    # give up mastering for games not mastered
-    for game_to_create_name, game_to_create_data in games_to_create_data.items():
-        # game master already has its role
-        game_master_expected = game_to_create_data[0]
-        # I am game master
-        if game_master_expected == current_pseudo:
-            continue
-        status = quit_mastering_game(current_pseudo, game_to_create_name)
-        if not status:
-            alert(f"Echec à la démission de l'arbitrage dans la partie {game_to_create_name}")
-            return
 
     nb_parties = len(games_to_create_data)
     alert(f"Les {nb_parties} parties du tournoi on été créée. Tout s'est bien passé. Incroyable, non ?")
@@ -498,7 +446,7 @@ def create_games():
     information <= "Sur chaque ligne, séparés pas des virgules (ou des points-virgules):"
     items = html.UL()
     items <= html.LI("le nom de la partie")
-    items <= html.LI("l'arbitre de la partie")
+    items <= html.LI("l'arbitre de la partie (cette colonne est redondante : c'est forcément votre pseudo)")
     items <= html.LI("le premier joueur de la partie")
     items <= html.LI("le deuxième joueur de la partie")
     items <= html.LI("etc....")
