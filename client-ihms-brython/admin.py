@@ -291,7 +291,7 @@ def usurp():
         return
 
     players_dict = common.get_players()
-    if players_dict is None:
+    if not players_dict:
         return
 
     # all players can be usurped
@@ -1246,7 +1246,7 @@ def sendmail():
         return
 
     players_dict = common.get_players()
-    if players_dict is None:
+    if not players_dict:
         return
 
     # all players can be usurped
@@ -1333,7 +1333,7 @@ def display_phone_number():
         return
 
     players_dict = common.get_players()
-    if players_dict is None:
+    if not players_dict:
         return
 
     # all players can be usurped

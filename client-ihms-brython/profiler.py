@@ -79,7 +79,7 @@ class Profiler:
         addressed_user_name = 'Palpatine'
 
         players_dict = common.get_players()
-        if players_dict is None:
+        if not players_dict:
             return
 
         addressed_id = players_dict[addressed_user_name]

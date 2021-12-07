@@ -298,7 +298,7 @@ def move_players_in_game():
     game_id = storage['GAME_ID']
 
     players_dict = common.get_players()
-    if players_dict is None:
+    if not players_dict:
         return
 
     id2pseudo = {v: k for k, v in players_dict.items()}
