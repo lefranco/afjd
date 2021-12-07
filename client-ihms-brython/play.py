@@ -41,7 +41,7 @@ VARIANT_CONTENT_MEMOIZE_TABLE = dict()
 PARAMETERS_READ_MEMOIZE_TABLE = dict()
 VARIANT_DATA_MEMOIZE_TABLE = dict()
 
-profile_data = None  # pylint: disable=invalid-name
+PROFILE_DATA = None
 
 
 @enum.unique
@@ -56,35 +56,35 @@ class AutomatonStateEnum(enum.Enum):
 
 
 # the idea is not to loose the content of a message if not destinee were specified
-content_backup = None  # pylint: disable=invalid-name
+CONTENT_BACKUP = None
 
 
 # global data below
 
 # loaded in render()
-g_game = None  # pylint: disable=invalid-name
-g_game_id = None  # pylint: disable=invalid-name
-g_pseudo = None  # pylint: disable=invalid-name
-g_role_id = None  # pylint: disable=invalid-name
+g_game = None
+g_game_id = None
+g_pseudo = None
+g_role_id = None
 
 # loaded in load_static_stuff
-g_players_dict = None  # pylint: disable=invalid-name
-g_variant_name_loaded = None  # pylint: disable=invalid-name
-g_variant_content_loaded = None  # pylint: disable=invalid-name
-g_interface_chosen = None  # pylint: disable=invalid-name
-g_interface_parameters_read = None  # pylint: disable=invalid-name
-g_variant_data = None  # pylint: disable=invalid-name
-g_inforced_variant_data = None  # pylint: disable=invalid-name
+g_players_dict = None
+g_variant_name_loaded = None
+g_variant_content_loaded = None
+g_interface_chosen = None
+g_interface_parameters_read = None
+g_variant_data = None
+g_inforced_variant_data = None
 
 # loaded in load_dynamic_stuff
-g_game_parameters_loaded = None  # pylint: disable=invalid-name
-g_game_status = None  # pylint: disable=invalid-name
-g_position_loaded = None  # pylint: disable=invalid-name
-g_position_data = None  # pylint: disable=invalid-name
-g_report_loaded = None  # pylint: disable=invalid-name
+g_game_parameters_loaded = None
+g_game_status = None
+g_position_loaded = None
+g_position_data = None
+g_report_loaded = None
 
 # loaded in load_special_stuff
-g_game_players_dict = None  # pylint: disable=invalid-name
+g_game_players_dict = None
 
 
 def game_report_reload(game_id):
@@ -368,11 +368,11 @@ def game_votes_reload(game_id):
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
-    profile_data.start('load_static_stuff - chargement de la liste des joueurs')
+    PROFILE_DATA.start('load_static_stuff - chargement de la liste des joueurs')
 
     # need to be first since used in get_game_status()
     # get the players (all players)
-    global g_players_dict  # pylint: disable=invalid-name
+    global g_players_dict
     g_players_dict = common.get_players()
     if not g_players_dict:
         alert("Erreur chargement info joueurs")
@@ -381,24 +381,24 @@ def load_static_stuff():
 
     # from game name get variant name
 
-    profile_data.start('load_static_stuff - lecture de la variante')
+    PROFILE_DATA.start('load_static_stuff - lecture de la variante')
 
     if 'GAME_VARIANT' not in storage:
         alert("ERREUR : variante introuvable")
         return
 
-    global g_variant_name_loaded  # pylint: disable=invalid-name
+    global g_variant_name_loaded
     g_variant_name_loaded = storage['GAME_VARIANT']
 
     # from variant name get variant content
 
-    profile_data.start('load_static_stuff - chargement du contenu de la variante')
+    PROFILE_DATA.start('load_static_stuff - chargement du contenu de la variante')
 
     # optimization
     global VARIANT_CONTENT_MEMOIZE_TABLE
-    global g_variant_content_loaded  # pylint: disable=invalid-name
+    global g_variant_content_loaded
     if g_variant_name_loaded in VARIANT_CONTENT_MEMOIZE_TABLE:
-        profile_data.start('contenu de la variante memoized !')
+        PROFILE_DATA.start('contenu de la variante memoized !')
         g_variant_content_loaded = VARIANT_CONTENT_MEMOIZE_TABLE[g_variant_name_loaded]
     else:
         g_variant_content_loaded = common.game_variant_content_reload(g_variant_name_loaded)
@@ -408,35 +408,35 @@ def load_static_stuff():
         g_variant_content_loaded = dict(g_variant_content_loaded)
         VARIANT_CONTENT_MEMOIZE_TABLE[g_variant_name_loaded] = g_variant_content_loaded
 
-    profile_data.start('load_static_stuff - lecture tableau interface_from_variant()')
+    PROFILE_DATA.start('load_static_stuff - lecture tableau interface_from_variant()')
 
     # selected interface (user choice)
-    global g_interface_chosen  # pylint: disable=invalid-name
+    global g_interface_chosen
     g_interface_chosen = interface.get_interface_from_variant(g_variant_name_loaded)
 
-    profile_data.start(f'load_static_stuff - lecture fichier parametres affichage 1 (interface={g_interface_chosen})')
+    PROFILE_DATA.start(f'load_static_stuff - lecture fichier parametres affichage 1 (interface={g_interface_chosen})')
 
     # from display chose get display parameters
 
     # optimization
     global PARAMETERS_READ_MEMOIZE_TABLE
-    global g_interface_parameters_read  # pylint: disable=invalid-name
+    global g_interface_parameters_read
     if (g_variant_name_loaded, g_interface_chosen) in PARAMETERS_READ_MEMOIZE_TABLE:
-        profile_data.start('fichier parametres affichage 1 memoized !')
+        PROFILE_DATA.start('fichier parametres affichage 1 memoized !')
         g_interface_parameters_read = PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
     else:
         g_interface_parameters_read = common.read_parameters(g_variant_name_loaded, g_interface_chosen)
         PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)] = g_interface_parameters_read
 
-    profile_data.start('load_static_stuff - creation objet Variant 1')
+    PROFILE_DATA.start('load_static_stuff - creation objet Variant 1')
 
     # build variant data
-    global g_variant_data  # pylint: disable=invalid-name
+    global g_variant_data
 
     # optimization
     global VARIANT_DATA_MEMOIZE_TABLE
     if (g_variant_name_loaded, g_interface_chosen) in VARIANT_DATA_MEMOIZE_TABLE:
-        profile_data.start('objet Variant 1 memoized !')
+        PROFILE_DATA.start('objet Variant 1 memoized !')
         g_variant_data = VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, g_interface_chosen)]
     else:
         g_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, g_interface_parameters_read)
@@ -444,29 +444,29 @@ def load_static_stuff():
 
     # now for official map
 
-    profile_data.start('load_static_stuff - lecture tableau inforced_interface_from_variant()')
+    PROFILE_DATA.start('load_static_stuff - lecture tableau inforced_interface_from_variant()')
 
     # like above
     interface_inforced = interface.get_inforced_interface_from_variant(g_variant_name_loaded)
 
-    profile_data.start('load_static_stuff - lecture fichier parametres affichage 2')
+    PROFILE_DATA.start('load_static_stuff - lecture fichier parametres affichage 2')
 
     # optimization
     if (g_variant_name_loaded, interface_inforced) in PARAMETERS_READ_MEMOIZE_TABLE:
-        profile_data.start('parametres affichage 2 memoized !')
+        PROFILE_DATA.start('parametres affichage 2 memoized !')
         inforced_interface_parameters_read = PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
     else:
         inforced_interface_parameters_read = common.read_parameters(g_variant_name_loaded, interface_inforced)
         PARAMETERS_READ_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)] = inforced_interface_parameters_read
 
-    profile_data.start('load_static_stuff - creation objet Variant 2')
+    PROFILE_DATA.start('load_static_stuff - creation objet Variant 2')
 
     # build variant data
-    global g_inforced_variant_data  # pylint: disable=invalid-name
+    global g_inforced_variant_data
 
     # optimization
     if (g_variant_name_loaded, interface_inforced) in VARIANT_DATA_MEMOIZE_TABLE:
-        profile_data.start('objet Variant 2 memoized !')
+        PROFILE_DATA.start('objet Variant 2 memoized !')
         g_inforced_variant_data = VARIANT_DATA_MEMOIZE_TABLE[(g_variant_name_loaded, interface_inforced)]
     else:
         g_inforced_variant_data = mapping.Variant(g_variant_name_loaded, g_variant_content_loaded, inforced_interface_parameters_read)
@@ -476,40 +476,40 @@ def load_static_stuff():
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
 
-    profile_data.start('load_dynamic_stuff - chargement paramètres de la partie')
+    PROFILE_DATA.start('load_dynamic_stuff - chargement paramètres de la partie')
 
     # now game parameters (dynamic since advancement is dynamic)
-    global g_game_parameters_loaded  # pylint: disable=invalid-name
+    global g_game_parameters_loaded
     g_game_parameters_loaded = game_parameters_reload(g_game)
     if not g_game_parameters_loaded:
         alert("Erreur chargement paramètres")
         return
     g_game_parameters_loaded = dict(g_game_parameters_loaded)
 
-    profile_data.start('load_dynamic_stuff - calcul get_game_status()')
+    PROFILE_DATA.start('load_dynamic_stuff - calcul get_game_status()')
 
-    global g_game_status  # pylint: disable=invalid-name
+    global g_game_status
     g_game_status = get_game_status()
 
-    profile_data.start('load_dynamic_stuff - chargement de la position')
+    PROFILE_DATA.start('load_dynamic_stuff - chargement de la position')
 
     # get the position from server
-    global g_position_loaded  # pylint: disable=invalid-name
+    global g_position_loaded
     g_position_loaded = common.game_position_reload(g_game_id)
     if not g_position_loaded:
         alert("Erreur chargement position")
         return
 
-    profile_data.start('load_dynamic_stuff - creation objet Position')
+    PROFILE_DATA.start('load_dynamic_stuff - creation objet Position')
 
     # digest the position
-    global g_position_data  # pylint: disable=invalid-name
+    global g_position_data
     g_position_data = mapping.Position(g_position_loaded, g_variant_data)
 
-    profile_data.start('load_dynamic_stuff - chargement du rapport de resolution')
+    PROFILE_DATA.start('load_dynamic_stuff - chargement du rapport de resolution')
 
     # need to be after game parameters (advancement -> season)
-    global g_report_loaded  # pylint: disable=invalid-name
+    global g_report_loaded
     g_report_loaded = game_report_reload(g_game_id)
     if g_report_loaded is None:
         alert("Erreur chargement rapport")
@@ -522,9 +522,9 @@ def load_special_stuff():
     # TODO improve this with real admin account
     if g_pseudo is not None and (g_pseudo == 'Palpatine' or g_role_id == 0 or not g_game_parameters_loaded['anonymous']):
 
-        profile_data.start('load_special_stuff - chargement des joueurs de la partie')
+        PROFILE_DATA.start('load_special_stuff - chargement des joueurs de la partie')
 
-        global g_game_players_dict  # pylint: disable=invalid-name
+        global g_game_players_dict
         # get the players of the game
         # need a token for this
         g_game_players_dict = get_game_players_data(g_game_id)
@@ -552,8 +552,8 @@ def stack_role_flag(frame):
     frame <= role_icon_img
 
 
-g_deadline_col = None  # pylint: disable=invalid-name
-g_countdown_col = None  # pylint: disable=invalid-name
+g_deadline_col = None
+g_countdown_col = None
 
 
 def countdown():
@@ -705,11 +705,11 @@ def get_game_status():
     col = html.TD(f"Saison {game_season}")
     row <= col
 
-    global g_deadline_col  # pylint: disable=invalid-name
+    global g_deadline_col
     g_deadline_col = html.TD(f"DL {game_deadline_str}")
     row <= g_deadline_col
 
-    global g_countdown_col  # pylint: disable=invalid-name
+    global g_countdown_col
     g_countdown_col = html.TD("")
     row <= g_countdown_col
 
@@ -1766,7 +1766,7 @@ def submit_orders():
 
     # need to have orders to submit
 
-    profile_data.start('submit_orders() - chargement données de soumission')
+    PROFILE_DATA.start('submit_orders() - chargement données de soumission')
 
     submitted_data = get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
@@ -1786,7 +1786,7 @@ def submit_orders():
             load_option(None, 'position')
             return False
 
-    profile_data.start('submit_orders() - check_token()')
+    PROFILE_DATA.start('submit_orders() - check_token()')
 
     # because we do not want the token stale in the middle of the process
     login.check_token()
@@ -1794,7 +1794,7 @@ def submit_orders():
     # now we can display
 
     # header
-    profile_data.start('submit_orders() - affichage 1')
+    PROFILE_DATA.start('submit_orders() - affichage 1')
 
     # game status
     MY_SUB_PANEL <= g_game_status
@@ -1817,7 +1817,7 @@ def submit_orders():
     # to catch keyboard
     document.bind("keypress", callback_keypress)
 
-    profile_data.start('chargement des ordres')
+    PROFILE_DATA.start('chargement des ordres')
 
     # get the orders from server
     orders_loaded = game_orders_reload(g_game_id)
@@ -1826,12 +1826,12 @@ def submit_orders():
         load_option(None, 'position')
         return False
 
-    profile_data.start('submit_orders() - digestion ordres')
+    PROFILE_DATA.start('submit_orders() - digestion ordres')
 
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, g_position_data)
 
-    profile_data.start('submit_orders() - affichage 2')
+    PROFILE_DATA.start('submit_orders() - affichage 2')
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -1841,7 +1841,7 @@ def submit_orders():
     img = common.read_image(g_variant_name_loaded, g_interface_chosen)
     img.bind('load', callback_render)
 
-    profile_data.start('submit_orders() - affichage 3')
+    PROFILE_DATA.start('submit_orders() - affichage 3')
 
     ratings = g_position_data.role_ratings()
     colours = g_position_data.role_colours()
@@ -1850,7 +1850,7 @@ def submit_orders():
 
     report_window = common.make_report_window(g_report_loaded)
 
-    profile_data.start('submit_orders() - affichage 4')
+    PROFILE_DATA.start('submit_orders() - affichage 4')
 
     # left side
 
@@ -2594,8 +2594,8 @@ def negotiate():
             InfoDialog("OK", f"Le message a été envoyé ! {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            global content_backup  # pylint: disable=invalid-name
-            content_backup = None
+            global CONTENT_BACKUP
+            CONTENT_BACKUP = None
             negotiate()
 
         dest_role_ids = ' '.join([str(role_num) for (role_num, button) in selected.items() if button.checked])
@@ -2603,8 +2603,8 @@ def negotiate():
         content = input_message.value
 
         # keep a backup
-        global content_backup  # pylint: disable=invalid-name
-        content_backup = content
+        global CONTENT_BACKUP
+        CONTENT_BACKUP = content
 
         if not content:
             alert("Pas de contenu pour ce message !")
@@ -2680,8 +2680,8 @@ def negotiate():
     legend_declaration = html.LEGEND("Votre message", title="Qu'avez vous à lui/leur dire ?")
     fieldset <= legend_declaration
     input_message = html.TEXTAREA(type="text", rows=5, cols=80)
-    if content_backup is not None:
-        input_message <= content_backup
+    if CONTENT_BACKUP is not None:
+        input_message <= CONTENT_BACKUP
     fieldset <= input_message
     form <= fieldset
 
@@ -3607,7 +3607,7 @@ def game_master():
     id2pseudo = {v: k for k, v in g_players_dict.items()}
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
-    profile_data.start('game_master() - chargement données soumission')
+    PROFILE_DATA.start('game_master() - chargement données soumission')
 
     submitted_data = get_roles_submitted_orders(g_game_id)
     if submitted_data is None:
@@ -3616,12 +3616,12 @@ def game_master():
         return False
     submitted_data = dict(submitted_data)
 
-    profile_data.start('game_master() - chargement roles possibles')
+    PROFILE_DATA.start('game_master() - chargement roles possibles')
 
     # who can I put in this role
     possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
 
-    profile_data.start('game_master() - chargement votes')
+    PROFILE_DATA.start('game_master() - chargement votes')
     # votes
 
     votes = game_votes_reload(g_game_id)
@@ -3779,7 +3779,7 @@ def game_master():
     return True
 
 
-supervise_refresh_timer = None  # pylint: disable=invalid-name
+SUPERVISE_REFRESH_TIMER = None
 
 
 class Logger(list):
@@ -3857,15 +3857,16 @@ def supervise():
                 message = "Résolution forcée par la console suite forçage accord"
                 log_stack.insert(message)
 
-        names_dict = g_variant_data.extract_names()
-        names_dict_json = json.dumps(names_dict)
+        inforced_names_dict = g_inforced_variant_data.extract_names()
+        inforced_names_dict_json = json.dumps(inforced_names_dict)
+
         definitive_value = True
 
         json_dict = {
             'role_id': role_id,
             'pseudo': g_pseudo,
             'definitive': definitive_value,
-            'names': names_dict_json
+            'adjudication_names': inforced_names_dict_json
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -4079,9 +4080,9 @@ def supervise():
         refresh()
 
         # repeat
-        global supervise_refresh_timer  # pylint: disable=invalid-name
-        if supervise_refresh_timer is None:
-            supervise_refresh_timer = timer.set_interval(refresh, SUPERVISE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
+        global SUPERVISE_REFRESH_TIMER
+        if SUPERVISE_REFRESH_TIMER is None:
+            SUPERVISE_REFRESH_TIMER = timer.set_interval(refresh, SUPERVISE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
 
     id2pseudo = dict()
     role2pseudo = dict()
@@ -4125,7 +4126,7 @@ def supervise():
     return True
 
 
-observe_refresh_timer = None  # pylint: disable=invalid-name
+OBSERVE_REFRESH_TIMER = None
 
 
 def observe():
@@ -4208,9 +4209,9 @@ def observe():
     refresh()
 
     # repeat
-    global observe_refresh_timer  # pylint: disable=invalid-name
-    if observe_refresh_timer is None:
-        observe_refresh_timer = timer.set_interval(refresh, OBSERVE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
+    global OBSERVE_REFRESH_TIMER
+    if OBSERVE_REFRESH_TIMER is None:
+        OBSERVE_REFRESH_TIMER = timer.set_interval(refresh, OBSERVE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
 
     return True
 
@@ -4754,28 +4755,28 @@ def load_option(_, item_name):
         MENU_LEFT <= menu_item
 
     # quitting superviser : clear timer
-    global supervise_refresh_timer  # pylint: disable=invalid-name
+    global SUPERVISE_REFRESH_TIMER
     if ITEM_NAME_SELECTED != 'superviser':
-        if supervise_refresh_timer is not None:
-            timer.clear_interval(supervise_refresh_timer)
-            supervise_refresh_timer = None
+        if SUPERVISE_REFRESH_TIMER is not None:
+            timer.clear_interval(SUPERVISE_REFRESH_TIMER)
+            SUPERVISE_REFRESH_TIMER = None
 
     # quitting observer : clear timer
-    global observe_refresh_timer  # pylint: disable=invalid-name
+    global OBSERVE_REFRESH_TIMER
     if ITEM_NAME_SELECTED != 'observer':
-        if observe_refresh_timer is not None:
-            timer.clear_interval(observe_refresh_timer)
-            observe_refresh_timer = None
+        if OBSERVE_REFRESH_TIMER is not None:
+            timer.clear_interval(OBSERVE_REFRESH_TIMER)
+            OBSERVE_REFRESH_TIMER = None
 
 
-countdown_timer = None  # pylint: disable=invalid-name
+COUNTDOWN_TIMER = None
 
 
 def render(panel_middle):
     """ render """
 
-    global profile_data  # pylint: disable=invalid-name
-    profile_data = profiler.Profiler()
+    global PROFILE_DATA
+    PROFILE_DATA = profiler.Profiler()
 
     # always back to top
     global ITEM_NAME_SELECTED
@@ -4784,32 +4785,32 @@ def render(panel_middle):
         alert("Il faut choisir la partie au préalable")
         return
 
-    global g_game  # pylint: disable=invalid-name
+    global g_game
     g_game = storage['GAME']
 
-    profile_data.start(f'lecture du game_id ({g_game})')
+    PROFILE_DATA.start(f'lecture du game_id ({g_game})')
 
     if 'GAME_ID' not in storage:
         alert("ERREUR : identifiant de partie introuvable")
         return
 
-    global g_game_id  # pylint: disable=invalid-name
+    global g_game_id
     g_game_id = storage['GAME_ID']
 
     # Connecté mais pas joueur
     # Pas connecté
     ITEM_NAME_SELECTED = 'position'
 
-    global g_pseudo  # pylint: disable=invalid-name
+    global g_pseudo
     g_pseudo = None
     if 'PSEUDO' in storage:
         g_pseudo = storage['PSEUDO']
 
     # from game_id and token get role
 
-    profile_data.start('chargement du role alloué au joueur')
+    PROFILE_DATA.start('chargement du role alloué au joueur')
 
-    global g_role_id  # pylint: disable=invalid-name
+    global g_role_id
     g_role_id = None
     if g_pseudo is not None:
         g_role_id = common.get_role_allocated_to_player_in_game(g_game_id)
@@ -4818,15 +4819,15 @@ def render(panel_middle):
     load_dynamic_stuff()
     load_special_stuff()
 
-    profile_data.start('programme principal')
+    PROFILE_DATA.start('programme principal')
 
     # initiates new countdown
     countdown()
 
     # start countdown (must not be inside a timed function !)
-    global countdown_timer  # pylint: disable=invalid-name
-    if countdown_timer is None:
-        countdown_timer = timer.set_interval(countdown, 1000)
+    global COUNTDOWN_TIMER
+    if COUNTDOWN_TIMER is None:
+        COUNTDOWN_TIMER = timer.set_interval(countdown, 1000)
 
     # game not started, visiting probably to see parameters
     if g_game_parameters_loaded['current_state'] == 0:
@@ -4855,15 +4856,15 @@ def render(panel_middle):
                 # Admin
                 ITEM_NAME_SELECTED = 'ordres'
 
-    profile_data.start(f'load_option({ITEM_NAME_SELECTED})')
+    PROFILE_DATA.start(f'load_option({ITEM_NAME_SELECTED})')
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
 
     # stop profiling
-    profile_data.stop()
+    PROFILE_DATA.stop()
 
     # send report
     if SEND_REPORT:
         if g_pseudo:
-            profile_data.send_report(g_pseudo)
+            PROFILE_DATA.send_report(g_pseudo)
