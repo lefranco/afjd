@@ -52,9 +52,9 @@ def get_all_roles_allocated_to_player():
 
 
 def date_last_visit_load_all_games(visit_type):
-    """ date_last_visit_load_all_games """
+    """ date_last_visit_load_all_games : returns empty dct if problem """
 
-    dict_time_stamp = None
+    dict_time_stamp = dict()
 
     def reply_callback(req):
         nonlocal dict_time_stamp
@@ -83,9 +83,9 @@ def date_last_visit_load_all_games(visit_type):
 
 
 def date_last_declarations():
-    """ date_last_declarations """
+    """ date_last_declarations : returns empty dict if problem """
 
-    dict_time_stamp = None
+    dict_time_stamp = dict()
 
     def reply_callback(req):
         nonlocal dict_time_stamp
@@ -114,9 +114,9 @@ def date_last_declarations():
 
 
 def date_last_messages():
-    """ date_last_messages """
+    """ date_last_messages : returns empty dict if problem """
 
-    dict_time_stamp = None
+    dict_time_stamp = dict()
 
     def reply_callback(req):
         nonlocal dict_time_stamp
@@ -145,9 +145,9 @@ def date_last_messages():
 
 
 def get_all_player_games_roles_submitted_orders():
-    """ get_all_player_games_roles_submitted_orders """
+    """ get_all_player_games_roles_submitted_orders : retuens empty dict if problem """
 
-    dict_submitted_data = None
+    dict_submitted_data = dict()
 
     def reply_callback(req):
         nonlocal dict_submitted_data
@@ -259,27 +259,27 @@ def my_games(state_name):
         return
 
     dict_submitted_data = get_all_player_games_roles_submitted_orders()
-    if dict_submitted_data is None:
+    if not dict_submitted_data:
         alert("Erreur chargement des soumissions dans les parties")
         return
 
     dict_time_stamp_last_declarations = date_last_declarations()
-    if dict_time_stamp_last_declarations is None:
+    if not dict_time_stamp_last_declarations:
         alert("Erreur chargement dates dernières déclarations des parties")
         return
 
     dict_time_stamp_last_messages = date_last_messages()
-    if dict_time_stamp_last_messages is None:
+    if not dict_time_stamp_last_messages:
         alert("Erreur chargement dates derniers messages des parties")
         return
 
     dict_time_stamp_last_visits_declarations = date_last_visit_load_all_games(config.DECLARATIONS_TYPE)
-    if dict_time_stamp_last_visits_declarations is None:
+    if not dict_time_stamp_last_visits_declarations:
         alert("Erreur chargement dates visites dernières declarations des parties")
         return
 
     dict_time_stamp_last_visits_messages = date_last_visit_load_all_games(config.MESSAGES_TYPE)
-    if dict_time_stamp_last_visits_messages is None:
+    if not dict_time_stamp_last_visits_messages:
         alert("Erreur chargement dates visites derniers messages des parties")
         return
 
