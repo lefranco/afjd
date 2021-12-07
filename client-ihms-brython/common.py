@@ -232,13 +232,20 @@ DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
 
 def get_season(advancement, variant) -> None:
-    """ store season """
+    """ get_season """
 
     len_season_cycle = len(DIPLOMACY_SEASON_CYCLE)
     advancement_season_num = advancement % len_season_cycle + 1
     advancement_season = mapping.SeasonEnum.from_code(advancement_season_num)
     advancement_year = (advancement // len_season_cycle) + 1 + variant.year_zero
     return advancement_season, advancement_year
+
+
+def get_last_year(nb_max_cycles_to_play, variant) -> None:
+    """ get_last_year """
+
+    last_year = nb_max_cycles_to_play + variant.year_zero
+    return last_year
 
 
 def get_role_allocated_to_player_in_game(game_id):
