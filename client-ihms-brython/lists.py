@@ -24,7 +24,6 @@ def show_registered_data():
 
     players_table = html.TABLE()
 
-    # TODO : make it possible to sort etc...
     fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone']
 
     # header
@@ -98,7 +97,6 @@ def show_players_data():
 
     players_table = html.TABLE()
 
-    # TODO : make it possible to sort etc...
     fields = ['player', 'games']
 
     # header
@@ -141,7 +139,6 @@ def show_replacement_data():
 
     players_table = html.TABLE()
 
-    # TODO : make it possible to sort etc...
     fields = ['pseudo']
 
     # header
@@ -181,7 +178,6 @@ def show_games_data(game_state_name):
 
     games_table = html.TABLE()
 
-    # TODO : make it possible to sort etc...
     fields = ['name', 'variant', 'deadline', 'current_advancement']
 
     # header
@@ -266,7 +262,6 @@ def show_game_masters_data():
 
     masters_table = html.TABLE()
 
-    # TODO : make it possible to sort etc...
     fields = ['master', 'games']
 
     # header
@@ -329,7 +324,6 @@ def show_no_game_masters_data():
 
     no_game_masters_table = html.TABLE()
 
-    # TODO : make it possible to sort etc...
     fields = ['game']
 
     # header
