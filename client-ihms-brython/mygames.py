@@ -21,9 +21,9 @@ MY_PANEL.attrs['style'] = 'display: table'
 
 
 def get_all_roles_allocated_to_player():
-    """ get all roles the player has in all the games """
+    """ get all roles the player has in all the games : returns empty dict if problem"""
 
-    dict_role_id = None
+    dict_role_id = dict()
 
     def reply_callback(req):
         nonlocal dict_role_id
@@ -254,7 +254,7 @@ def my_games(state_name):
         return
 
     dict_role_id = get_all_roles_allocated_to_player()
-    if dict_role_id is None:
+    if not dict_role_id:
         alert("Erreur chargement des roles dans les parties")
         return
 
