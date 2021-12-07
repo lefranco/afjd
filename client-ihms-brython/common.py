@@ -79,7 +79,7 @@ def get_player_id(pseudo):
 def get_players():
     """ get_players returns an empy dict on error """
 
-    players_dict = dict
+    players_dict = dict()
 
     def reply_callback(req):
         nonlocal players_dict
