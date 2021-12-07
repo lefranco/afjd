@@ -379,9 +379,9 @@ def get_allocations_data():
 
 
 def get_game_data(game):
-    """ get_game_data """
+    """ get_game_data : returns empty dict if problem """
 
-    game_data = None
+    game_data = dict()
 
     def reply_callback(req):
         nonlocal game_data
