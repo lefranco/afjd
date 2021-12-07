@@ -612,37 +612,6 @@ def countdown():
         }
 
 
-def get_game_incidents(game_id):
-    """ get_game_incidents """
-
-    incidents = None
-
-    def reply_callback(req):
-        nonlocal incidents
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des incidents de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des incidents de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        incidents = req_result['incidents']
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-incidents/{game_id}"
-
-    # extracting incidents from a game : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return incidents
-
-
 def get_game_master(game_id):
     """ get_game_master """
 
@@ -2630,7 +2599,7 @@ def negotiate():
     def messages_reload(game_id):
         """ messages_reload """
 
-        messages = None
+        messages = list()
 
         def reply_callback(req):
             nonlocal messages
@@ -2726,11 +2695,7 @@ def negotiate():
     # now we display messages
 
     messages = messages_reload(GAME_ID)
-    if messages is None:
-        alert("Erreur chargement messages")
-        load_option(None, 'position')
-        return False
-    messages = list(messages)
+    # there can be no message (if no message of failed to load)
 
     messages_table = html.TABLE()
 
@@ -2857,7 +2822,7 @@ def declare():
     def declarations_reload(game_id):
         """ declarations_reload """
 
-        declarations = None
+        declarations = list()
 
         def reply_callback(req):
             nonlocal declarations
@@ -2923,11 +2888,7 @@ def declare():
     # now we display declarations
 
     declarations = declarations_reload(GAME_ID)
-    if declarations is None:
-        alert("Erreur chargement déclarations")
-        load_option(None, 'position')
-        return False
-    declarations = list(declarations)
+    # there can be no message (if no declaration of failed to load)
 
     declarations_table = html.TABLE()
 
@@ -4559,6 +4520,36 @@ def show_orders_submitted_in_game():
 def show_incidents_in_game():
     """ show_incidents_in_game """
 
+    def game_incidents_reload(game_id):
+        """ game_incidents_reload """
+
+        incidents = list()
+
+        def reply_callback(req):
+            nonlocal incidents
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération des incidents de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération des incidents de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            incidents = req_result['incidents']
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-incidents/{game_id}"
+
+        # extracting incidents from a game : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return incidents
+
     # if user identified ?
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -4587,12 +4578,8 @@ def show_incidents_in_game():
         return False
 
     # get the actual incidents of the game
-    game_incidents = get_game_incidents(GAME_ID)
-
-    if game_incidents is None:
-        alert("Erreur chargement incidents")
-        return False
-    game_incidents = list(game_incidents)
+    game_incidents = game_incidents_reload(GAME_ID)
+    # there can be no incidents (if no incident of failed to load)
 
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
