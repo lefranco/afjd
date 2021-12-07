@@ -682,6 +682,9 @@ def get_game_status():
     advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
     game_season = f"{advancement_season_readable} {advancement_year}"
 
+    nb_max_cycles_to_play = GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
+    last_year_played = common.get_last_year(nb_max_cycles_to_play, VARIANT_DATA)
+
     deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
     datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
     deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
@@ -697,6 +700,8 @@ def get_game_status():
     col = html.TD(f"Etat {game_state_readable}")
     row <= col
     col = html.TD(f"Saison {game_season}")
+    row <= col
+    col = html.TD(f"Fin {last_year_played}")
     row <= col
 
     global DEADLINE_COL
