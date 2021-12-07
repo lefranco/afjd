@@ -16,8 +16,8 @@ import mapping
 import selection
 import index  # circular import
 
-my_panel = html.DIV(id="mygames")
-my_panel.attrs['style'] = 'display: table'
+MY_PANEL = html.DIV(id="mygames")
+MY_PANEL.attrs['style'] = 'display: table'
 
 
 def get_all_roles_allocated_to_player():
@@ -225,10 +225,10 @@ def my_games(state_name):
 
     overall_time_before = time.time()
 
-    my_panel.clear()
+    MY_PANEL.clear()
 
     # title
-    my_panel <= html.H2(f"Parties que je joue dans l'état : {state_name}")
+    MY_PANEL <= html.H2(f"Parties que je joue dans l'état : {state_name}")
 
     state = config.STATE_CODE_TABLE[state_name]
 
@@ -524,16 +524,16 @@ def my_games(state_name):
 
         games_table <= row
 
-    my_panel <= games_table
-    my_panel <= html.BR()
+    MY_PANEL <= games_table
+    MY_PANEL <= html.BR()
 
     # get GMT date and time
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
     special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
-    my_panel <= special_legend
-    my_panel <= html.BR()
+    MY_PANEL <= special_legend
+    MY_PANEL <= html.BR()
 
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
@@ -542,8 +542,8 @@ def my_games(state_name):
     if number_games:
         stats += f" soit {elapsed/number_games} par partie"
 
-    my_panel <= html.DIV(stats, Class='load')
-    my_panel <= html.BR()
+    MY_PANEL <= html.DIV(stats, Class='load')
+    MY_PANEL <= html.BR()
 
     for other_state_name in config.STATE_CODE_TABLE:
 
@@ -552,12 +552,12 @@ def my_games(state_name):
             input_change_state = html.INPUT(type="submit", value=other_state_name)
             input_change_state.bind("click", lambda _, s=other_state_name: my_games(s))
 
-            my_panel <= input_change_state
-            my_panel <= html.BR()
-            my_panel <= html.BR()
+            MY_PANEL <= input_change_state
+            MY_PANEL <= html.BR()
+            MY_PANEL <= html.BR()
 
 
 def render(panel_middle):
     """ render """
     my_games('en cours')
-    panel_middle <= my_panel
+    panel_middle <= MY_PANEL

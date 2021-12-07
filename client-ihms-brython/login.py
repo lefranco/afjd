@@ -14,8 +14,8 @@ import config
 import common
 
 
-my_panel = html.DIV(id="login")
-my_panel.attrs['style'] = 'display: table'
+MY_PANEL = html.DIV(id="login")
+MY_PANEL.attrs['style'] = 'display: table'
 
 
 def login():
@@ -35,7 +35,7 @@ def login():
                     alert("Réponse du serveur imprévue et non documentée")
 
                 # failed but still refresh window
-                render(g_panel_middle)
+                render(PANEL_MIDDLE)
 
                 return
             storage['PSEUDO'] = pseudo
@@ -45,23 +45,23 @@ def login():
             InfoDialog("OK", f"Connecté avec succès en tant que {pseudo}", remove_after=config.REMOVE_AFTER)
             show_login()
 
-            render(g_panel_middle)
+            render(PANEL_MIDDLE)
 
         pseudo = input_pseudo.value
         if not pseudo:
             alert("Il manque le pseudo !")
-            render(g_panel_middle)
+            render(PANEL_MIDDLE)
             return
 
         password = input_password.value
         if not password:
             alert("Il manque le mot de passe !")
-            render(g_panel_middle)
+            render(PANEL_MIDDLE)
             return
 
         if pseudo.find("@") != -1:
             alert("Attention, c'est le pseudo qui est demandé, pas l'adresse e-mail !")
-            render(g_panel_middle)
+            render(PANEL_MIDDLE)
             return
 
         host = config.SERVER_CONFIG['USER']['HOST']
@@ -81,7 +81,7 @@ def login():
 
         alert("Désolé: la récupération du mot de passe n'est pas encore implémentée - vous pouvez contacter le support (cf. page d'accueil) qui vous forcera un nouveau mot de passe")
 
-        render(g_panel_middle)
+        render(PANEL_MIDDLE)
 
     def logout_callback(_):
         """ logout_callback """
@@ -93,7 +93,7 @@ def login():
         else:
             InfoDialog("OK", "Déconnecté avec succès", remove_after=config.REMOVE_AFTER)
 
-        render(g_panel_middle)
+        render(PANEL_MIDDLE)
 
     # begins here
 
@@ -172,7 +172,7 @@ def logout():
 
     show_login()
 
-    render(g_panel_middle)
+    render(PANEL_MIDDLE)
 
     return effective
 
@@ -242,21 +242,21 @@ def show_login():
     document <= show_login_panel
 
 
-g_panel_middle = None  # pylint: disable=invalid-name
+PANEL_MIDDLE = None
 
 
 def render(panel_middle):
     """ render """
 
-    global g_panel_middle  # pylint: disable=invalid-name
-    g_panel_middle = panel_middle
+    global PANEL_MIDDLE
+    PANEL_MIDDLE = panel_middle
 
-    my_panel.clear()
+    MY_PANEL.clear()
 
-    my_sub_panel = login()
+    login_panel = login()
 
-    if my_sub_panel:
-        my_panel <= html.H2("Identifiez vous pour accéder aux ressources protégées")
-        my_panel <= my_sub_panel
+    if login_panel:
+        MY_PANEL <= html.H2("Identifiez vous pour accéder aux ressources protégées")
+        MY_PANEL <= login_panel
 
-    panel_middle <= my_panel
+    PANEL_MIDDLE <= MY_PANEL

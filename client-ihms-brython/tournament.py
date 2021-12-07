@@ -464,14 +464,14 @@ def create_games():
                 dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_games()
 
         if not input_file.files:
             alert("Pas de fichier")
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_games()
             return
 
@@ -483,10 +483,10 @@ def create_games():
         reader.bind("load", onload_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         create_games()
 
-    my_sub_panel <= html.H3("Création des parties")
+    MY_SUB_PANEL <= html.H3("Création des parties")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter pour créer des parties")
@@ -519,8 +519,8 @@ def create_games():
     information <= html.BR()
     information <= "Enfin, les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée..."
 
-    my_sub_panel <= information
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= information
+    MY_SUB_PANEL <= html.BR()
 
     game = storage['GAME']
 
@@ -549,38 +549,38 @@ def create_games():
     input_create_games.bind("click", create_games_callback)
     form <= input_create_games
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
-my_panel = html.DIV()
-my_panel.attrs['style'] = 'display: table-row'
+MY_PANEL = html.DIV()
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 # menu-left
-menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-my_panel <= menu_left
+MENU_LEFT = html.DIV()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+MY_PANEL <= MENU_LEFT
 
 # menu-selection
-menu_selection = html.UL()
-menu_left <= menu_selection
+MENU_SELECTION = html.UL()
+MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
-my_sub_panel = html.DIV(id="tournament")
-my_panel <= my_sub_panel
+MY_SUB_PANEL = html.DIV(id="tournament")
+MY_PANEL <= MY_SUB_PANEL
 
 
 def load_option(_, item_name):
     """ load_option """
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
     if item_name == 'créer les parties':
         create_games()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
-    menu_left.clear()
+    MENU_LEFT.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
@@ -593,7 +593,7 @@ def load_option(_, item_name):
         button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
-        menu_left <= menu_item
+        MENU_LEFT <= menu_item
 
 
 def render(panel_middle):
@@ -604,4 +604,4 @@ def render(panel_middle):
     ITEM_NAME_SELECTED = OPTIONS[0]
 
     load_option(None, ITEM_NAME_SELECTED)
-    panel_middle <= my_panel
+    panel_middle <= MY_PANEL

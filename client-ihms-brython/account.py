@@ -72,13 +72,13 @@ def create_account():
 
         if not pseudo:
             alert("Pseudo manquant")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_account()
             return
 
         if len(pseudo) > MAX_LEN_PSEUDO:
             alert("Pseudo trop long")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_account()
             return
 
@@ -90,20 +90,20 @@ def create_account():
         password_again = input_password_again.value
         if password_again != password:
             alert("Les mots de passe ne correspondent pas")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_account()
             return
 
         email = input_email.value
         if not email:
             alert("e-mail manquant")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_account()
             return
 
         if email.find('@') == -1:
             alert("@ dans e-mail manquant")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_account()
             return
 
@@ -139,14 +139,14 @@ def create_account():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         create_account()
 
-    my_sub_panel <= html.H3("Création du compte")
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= html.H3("Création du compte")
+    MY_SUB_PANEL <= html.BR()
 
-    my_sub_panel <= information_about_account()
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= information_about_account()
+    MY_SUB_PANEL <= html.BR()
 
     form = html.FORM()
 
@@ -264,11 +264,11 @@ def create_account():
     input_create_account.bind("click", create_account_callback)
     form <= input_create_account
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.BR()
-    my_sub_panel <= information_about_emails()
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= information_about_emails()
 
 
 def change_password():
@@ -294,14 +294,14 @@ def change_password():
         new_password = input_new_password.value
         if not new_password:
             alert("Nouveau mot de passe manquant")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             change_password()
             return
 
         new_password_again = input_new_password_again.value
         if new_password_again != new_password:
             alert("Les mots de passe ne correspondent pas")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             change_password()
             return
 
@@ -318,14 +318,14 @@ def change_password():
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         change_password()
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
 
-    my_sub_panel <= html.H3("Changement de mot de passe")
+    MY_SUB_PANEL <= html.H3("Changement de mot de passe")
 
     pseudo = storage['PSEUDO']
 
@@ -354,7 +354,7 @@ def change_password():
     input_change_password.bind("click", change_password_callback)
     form <= input_change_password
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def validate_email():
@@ -379,7 +379,7 @@ def validate_email():
 
         if not input_confirmation_code.value:
             alert("Code de confirmation mal saisi")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             validate_email()
             return
 
@@ -387,13 +387,13 @@ def validate_email():
             confirmation_code_int = int(input_confirmation_code.value)
         except:  # noqa: E722 pylint: disable=bare-except
             alert("Code de confirmation incorrect")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             validate_email()
             return
 
         if not 1000 <= confirmation_code_int <= 9999:
             alert("Le code de confirmation doit utiliser 4 chiffres")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             validate_email()
             return
 
@@ -410,10 +410,10 @@ def validate_email():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         validate_email()
 
-    my_sub_panel <= html.H3("Validation du e-mail")
+    MY_SUB_PANEL <= html.H3("Validation du e-mail")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -440,7 +440,7 @@ def validate_email():
     form <= input_validate_email
     form <= html.BR()
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def edit_account():
@@ -540,13 +540,13 @@ def edit_account():
         email = input_email.value
         if not email:
             alert("email manquant")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             edit_account()
             return
 
         if email.find('@') == -1:
             alert("@ dans email manquant")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             edit_account()
             return
 
@@ -580,10 +580,10 @@ def edit_account():
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         edit_account()
 
-    my_sub_panel <= html.H3("Edition du compte")
+    MY_SUB_PANEL <= html.H3("Edition du compte")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -707,7 +707,7 @@ def edit_account():
     input_change_account.bind("click", change_account_callback)
     form <= input_change_account
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def delete_account():
@@ -738,7 +738,7 @@ def delete_account():
             login.logout()
 
             # back to the top
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_account()
 
         dialog.close()
@@ -762,10 +762,10 @@ def delete_account():
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_account_callback(e, d))
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         delete_account()
 
-    my_sub_panel <= html.H3("Suppression du compte")
+    MY_SUB_PANEL <= html.H3("Suppression du compte")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -775,7 +775,7 @@ def delete_account():
 
     form = html.FORM()
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
     input_delete_account = html.INPUT(type="submit", value="supprimer le compte")
     input_delete_account.bind("click", delete_account_callback_confirm)
@@ -783,28 +783,28 @@ def delete_account():
     form <= html.BR()
 
 
-my_panel = html.DIV()
-my_panel.attrs['style'] = 'display: table-row'
+MY_PANEL = html.DIV()
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 # menu-left
-menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-my_panel <= menu_left
+MENU_LEFT = html.DIV()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+MY_PANEL <= MENU_LEFT
 
 # menu-selection
-menu_selection = html.UL()
-menu_left <= menu_selection
+MENU_SELECTION = html.UL()
+MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
-my_sub_panel = html.DIV(id="account")
-my_panel <= my_sub_panel
+MY_SUB_PANEL = html.DIV(id="account")
+MY_PANEL <= MY_SUB_PANEL
 
 
 def load_option(_, item_name):
     """ load_option """
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
     if item_name == 'créer':
         create_account()
     if item_name == 'mot de passe':
@@ -819,7 +819,7 @@ def load_option(_, item_name):
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
-    menu_left.clear()
+    MENU_LEFT.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
@@ -832,7 +832,7 @@ def load_option(_, item_name):
         button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
-        menu_left <= menu_item
+        MENU_LEFT <= menu_item
 
 
 def render(panel_middle):
@@ -843,4 +843,4 @@ def render(panel_middle):
     ITEM_NAME_SELECTED = OPTIONS[0]
 
     load_option(None, ITEM_NAME_SELECTED)
-    panel_middle <= my_panel
+    panel_middle <= MY_PANEL

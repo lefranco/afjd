@@ -19,12 +19,12 @@ LONG_DURATION_LIMIT_SEC = 1.0
 
 VARIANT_NAME = "standard"
 
-my_panel = html.DIV(id="sandbox")
-my_panel.attrs['style'] = 'display: table'
+MY_PANEL = html.DIV(id="sandbox")
+MY_PANEL.attrs['style'] = 'display: table'
 
 # TODO : remove this sub_panel
-my_sub_panel = html.DIV(id="sub")
-my_panel <= my_sub_panel
+MY_SUB_PANEL = html.DIV(id="sub")
+MY_PANEL <= MY_SUB_PANEL
 
 
 @enum.unique
@@ -39,59 +39,59 @@ class AutomatonStateEnum(enum.Enum):
 
 
 # this will not change
-variant_name_loaded = VARIANT_NAME  # pylint: disable=invalid-name
+VARIANT_NAME_LOADED = VARIANT_NAME
 
 # this will
-interface_chosen = None  # pylint: disable=invalid-name
-variant_data = None  # pylint: disable=invalid-name
-position_data = None  # pylint: disable=invalid-name
-orders_data = None  # pylint: disable=invalid-name
+INTERFACE_CHOSEN = None
+VARIANT_DATA = None
+POSITION_DATA = None
+ORDERS_DATA = None
 
 
 def create_initial_position():
     """ create_initial_position """
 
-    global interface_chosen  # pylint: disable=invalid-name
-    global variant_data  # pylint: disable=invalid-name
-    global position_data  # pylint: disable=invalid-name
-    global orders_data  # pylint: disable=invalid-name
+    global INTERFACE_CHOSEN
+    global VARIANT_DATA
+    global POSITION_DATA
+    global ORDERS_DATA
 
     # from variant name get variant content
 
-    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    variant_content_loaded = common.game_variant_content_reload(VARIANT_NAME_LOADED)
     if not variant_content_loaded:
         return
 
     # selected interface (user choice)
-    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+    INTERFACE_CHOSEN = interface.get_interface_from_variant(VARIANT_NAME_LOADED)
 
     # from display chose get display parameters
-    parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+    parameters_read = common.read_parameters(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
 
     # build variant data
-    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+    VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, variant_content_loaded, parameters_read)
 
     # get the position
     position_loaded = {'ownerships': dict(), 'units': dict(), 'forbiddens': dict(), 'dislodged_ones': dict()}
 
     # digest the position
-    position_data = mapping.Position(position_loaded, variant_data)
+    POSITION_DATA = mapping.Position(position_loaded, VARIANT_DATA)
 
     # get the orders from server (actually no)
     orders_loaded = {'fake_units': dict(), 'orders': dict()}
 
     # digest the orders
-    orders_data = mapping.Orders(orders_loaded, position_data)
+    ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA)
 
 
 def import_position(new_position_data):
     """ import position from play/position """
 
-    global position_data  # pylint: disable=invalid-name
-    global orders_data  # pylint: disable=invalid-name
+    global POSITION_DATA
+    global ORDERS_DATA
 
     # make sure we are ready
-    if not position_data:
+    if not POSITION_DATA:
         create_initial_position()
 
     # get loaded units
@@ -117,13 +117,13 @@ def import_position(new_position_data):
     position_imported = {'ownerships': dict_loaded_ownerships, 'units': dict_loaded_units, 'forbiddens': dict(), 'dislodged_ones': dict()}
 
     # copy position
-    position_data = mapping.Position(position_imported, variant_data)
+    POSITION_DATA = mapping.Position(position_imported, VARIANT_DATA)
 
     # get the orders from server (actually no)
     orders_loaded = {'fake_units': dict(), 'orders': dict()}
 
     # digest the orders
-    orders_data = mapping.Orders(orders_loaded, position_data)
+    ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA)
 
 
 def sandbox():
@@ -146,7 +146,7 @@ def sandbox():
         nonlocal buttons_right
 
         # complete orders
-        orders_data.rest_hold(None)
+        ORDERS_DATA.rest_hold(None)
 
         # update displayed map
         callback_render(None)
@@ -161,16 +161,16 @@ def sandbox():
 
         stack_orders(buttons_right)
 
-        if not orders_data.empty():
+        if not ORDERS_DATA.empty():
             put_erase_all(buttons_right)
         # do not put all rest hold
-        if not orders_data.empty():
+        if not ORDERS_DATA.empty():
             put_submit(buttons_right)
-        if not position_data.empty():
+        if not POSITION_DATA.empty():
             put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
+        MY_SUB_PANEL <= my_sub_panel2
 
     def erase_all_callback(_):
         """ erase_all_callback """
@@ -179,10 +179,10 @@ def sandbox():
         nonlocal buttons_right
 
         # erase orders
-        orders_data.erase_orders()
+        ORDERS_DATA.erase_orders()
 
         # erase units
-        position_data.erase_units()
+        POSITION_DATA.erase_units()
 
         # update displayed map
         callback_render(None)
@@ -198,13 +198,13 @@ def sandbox():
         stack_orders(buttons_right)
 
         # do not put erase all
-        if not orders_data.empty():
+        if not ORDERS_DATA.empty():
             put_submit(buttons_right)
-        if not position_data.empty():
+        if not POSITION_DATA.empty():
             put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
+        MY_SUB_PANEL <= my_sub_panel2
 
     def submit_callback(_):
         """ submit_callback """
@@ -234,20 +234,20 @@ def sandbox():
                 report_window = common.make_report_window(report_loaded)
                 display_left <= report_window
 
-        variant_name = variant_name_loaded
+        variant_name = VARIANT_NAME_LOADED
 
-        names_dict = variant_data.extract_names()
+        names_dict = VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
 
-        orders_list_dict = orders_data.save_json()
+        orders_list_dict = ORDERS_DATA.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
 
         # units
-        units_list_dict = position_data.save_json()
+        units_list_dict = POSITION_DATA.save_json()
         units_list_dict_json = json.dumps(units_list_dict)
 
         # orders
-        orders_list_dict = orders_data.save_json()
+        orders_list_dict = ORDERS_DATA.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
 
         json_dict = {
@@ -288,7 +288,7 @@ def sandbox():
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
-                order_name = variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -300,7 +300,7 @@ def sandbox():
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
-                order_name = variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -312,7 +312,7 @@ def sandbox():
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
-                order_name = variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -325,8 +325,8 @@ def sandbox():
             if selected_order_type is mapping.OrderTypeEnum.HOLD_ORDER:
 
                 # insert hold order
-                order = mapping.Order(position_data, order_type, selected_active_unit, None, None)
-                orders_data.insert_order(order)
+                order = mapping.Order(POSITION_DATA, order_type, selected_active_unit, None, None)
+                ORDERS_DATA.insert_order(order)
 
                 # update map
                 callback_render(None)
@@ -335,13 +335,13 @@ def sandbox():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                my_sub_panel <= my_sub_panel2
+                MY_SUB_PANEL <= my_sub_panel2
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
-                order_name = variant_data.name_table[order_type]
+                order_name = VARIANT_DATA.name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -352,16 +352,16 @@ def sandbox():
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
 
             stack_orders(buttons_right)
-            if not position_data.empty():
+            if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
             put_rest_hold(buttons_right)
-            if not orders_data.empty():
+            if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
-            if not position_data.empty():
+            if not POSITION_DATA.empty():
                 put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -384,7 +384,7 @@ def sandbox():
 
         if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
 
-            selected_active_unit = position_data.closest_unit(pos, False)
+            selected_active_unit = POSITION_DATA.closest_unit(pos, False)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -411,23 +411,23 @@ def sandbox():
 
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(mapping.SeasonEnum.AUTUMN_SEASON):
-                        input_select = html.INPUT(type="submit", value=variant_data.name_table[order_type])
+                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
                         buttons_right <= input_select
 
             stack_orders(buttons_right)
-            if not position_data.empty():
+            if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
             put_rest_hold(buttons_right)
-            if not orders_data.empty():
+            if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
-            if not position_data.empty():
+            if not POSITION_DATA.empty():
                 put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
             # can be None if no retreating unit on board
             if selected_active_unit is not None:
@@ -437,7 +437,7 @@ def sandbox():
 
         if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
 
-            selected_dest_zone = variant_data.closest_zone(pos)
+            selected_dest_zone = VARIANT_DATA.closest_zone(pos)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -449,11 +449,11 @@ def sandbox():
                 if selected_dest_zone == selected_active_unit.zone:
                     selected_order_type = mapping.OrderTypeEnum.HOLD_ORDER
                     selected_dest_zone = None
-                order = mapping.Order(position_data, selected_order_type, selected_active_unit, None, selected_dest_zone)
-                orders_data.insert_order(order)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone)
+                ORDERS_DATA.insert_order(order)
             if selected_order_type in [mapping.OrderTypeEnum.OFF_SUPPORT_ORDER, mapping.OrderTypeEnum.CONVOY_ORDER]:
-                order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
-                orders_data.insert_order(order)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, selected_dest_zone)
+                ORDERS_DATA.insert_order(order)
 
             # update map
             callback_render(None)
@@ -462,16 +462,16 @@ def sandbox():
             buttons_right <= legend_select_unit
 
             stack_orders(buttons_right)
-            if not position_data.empty():
+            if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
             put_rest_hold(buttons_right)
-            if not orders_data.empty():
+            if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
-            if not position_data.empty():
+            if not POSITION_DATA.empty():
                 put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -479,7 +479,7 @@ def sandbox():
 
         if automaton_state is AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE:
 
-            selected_passive_unit = position_data.closest_unit(pos, False)
+            selected_passive_unit = POSITION_DATA.closest_unit(pos, False)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -488,8 +488,8 @@ def sandbox():
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
                 # insert def support order
-                order = mapping.Order(position_data, selected_order_type, selected_active_unit, selected_passive_unit, None)
-                orders_data.insert_order(order)
+                order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, selected_passive_unit, None)
+                ORDERS_DATA.insert_order(order)
 
                 # update map
                 callback_render(None)
@@ -498,15 +498,15 @@ def sandbox():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                my_sub_panel <= my_sub_panel2
+                MY_SUB_PANEL <= my_sub_panel2
 
                 stack_orders(buttons_right)
-                if not position_data.empty():
+                if not POSITION_DATA.empty():
                     put_erase_all(buttons_right)
                 put_rest_hold(buttons_right)
-                if not orders_data.empty():
+                if not ORDERS_DATA.empty():
                     put_submit(buttons_right)
-                if not position_data.empty():
+                if not POSITION_DATA.empty():
                     put_consult(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -525,16 +525,16 @@ def sandbox():
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
-            if not position_data.empty():
+            if not POSITION_DATA.empty():
                 put_erase_all(buttons_right)
             put_rest_hold(buttons_right)
-            if not orders_data.empty():
+            if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
-            if not position_data.empty():
+            if not POSITION_DATA.empty():
                 put_consult(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
@@ -558,7 +558,7 @@ def sandbox():
             pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
             # moves : select unit : easy case
-            selected_erase_unit = position_data.closest_unit(pos, False)
+            selected_erase_unit = POSITION_DATA.closest_unit(pos, False)
 
         # event is None when coming from x pressed, then take 'selected_active_unit' (that can be None)
         if selected_erase_unit is None:
@@ -569,10 +569,10 @@ def sandbox():
             return
 
         # if unit does not have an order... remove unit
-        if not orders_data.is_ordered(selected_erase_unit):
+        if not ORDERS_DATA.is_ordered(selected_erase_unit):
 
             # remove unit
-            position_data.remove_unit(selected_erase_unit)
+            POSITION_DATA.remove_unit(selected_erase_unit)
 
             # tricky
             nonlocal selected_hovered_object
@@ -582,7 +582,7 @@ def sandbox():
         else:
 
             # remove order
-            orders_data.remove_order(selected_erase_unit)
+            ORDERS_DATA.remove_order(selected_erase_unit)
 
         # update map
         callback_render(None)
@@ -596,16 +596,16 @@ def sandbox():
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         stack_orders(buttons_right)
-        if not position_data.empty():
+        if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
         put_rest_hold(buttons_right)
-        if not orders_data.empty():
+        if not ORDERS_DATA.empty():
             put_submit(buttons_right)
-        if not position_data.empty():
+        if not POSITION_DATA.empty():
             put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
+        MY_SUB_PANEL <= my_sub_panel2
 
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
@@ -664,7 +664,7 @@ def sandbox():
 
         # find where is mouse
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        selected_hovered_object = position_data.closest_object(pos)
+        selected_hovered_object = POSITION_DATA.closest_object(pos)
 
         if selected_hovered_object != prev_selected_hovered_object:
 
@@ -688,22 +688,22 @@ def sandbox():
         ctx.drawImage(img, 0, 0)
 
         # put the centers
-        variant_data.render(ctx)
+        VARIANT_DATA.render(ctx)
 
         # put the position
-        position_data.render(ctx)
+        POSITION_DATA.render(ctx)
 
         # put the orders
-        orders_data.render(ctx)
+        ORDERS_DATA.render(ctx)
 
         # put the legends at the end
-        variant_data.render_legends(ctx)
+        VARIANT_DATA.render_legends(ctx)
 
     def stack_orders(buttons_right):
         """ stack_orders """
 
         buttons_right <= html.P()
-        lines = str(orders_data).split('\n')
+        lines = str(ORDERS_DATA).split('\n')
         orders = html.DIV()
         for line in lines:
             orders <= html.B(line)
@@ -788,7 +788,7 @@ def sandbox():
         (type_unit, role) = unit_info_table[src_id]
         # get zone
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
-        selected_drop_zone = variant_data.closest_zone(pos)
+        selected_drop_zone = VARIANT_DATA.closest_zone(pos)
 
         # get region
         selected_drop_region = selected_drop_zone.region
@@ -807,28 +807,28 @@ def sandbox():
                 type_unit = mapping.UnitTypeEnum.FLEET_UNIT
         else:
             # we are not on a specific cosat
-            if len([z for z in variant_data.zones.values() if z.region == selected_drop_region]) > 1:
+            if len([z for z in VARIANT_DATA.zones.values() if z.region == selected_drop_region]) > 1:
                 # prevent putting fleet on non specific coasts if exists
                 if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
                     type_unit = mapping.UnitTypeEnum.ARMY_UNIT
 
         # create unit
         if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
-            new_unit = mapping.Army(position_data, role, selected_drop_zone, None)
+            new_unit = mapping.Army(POSITION_DATA, role, selected_drop_zone, None)
         if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-            new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None)
+            new_unit = mapping.Fleet(POSITION_DATA, role, selected_drop_zone, None)
 
         # remove previous occupant if applicable
-        if selected_drop_region in position_data.occupant_table:
-            previous_unit = position_data.occupant_table[selected_drop_region]
-            position_data.remove_unit(previous_unit)
+        if selected_drop_region in POSITION_DATA.occupant_table:
+            previous_unit = POSITION_DATA.occupant_table[selected_drop_region]
+            POSITION_DATA.remove_unit(previous_unit)
 
             # and the order too
-            if orders_data.is_ordered(previous_unit):
-                orders_data.remove_order(previous_unit)
+            if ORDERS_DATA.is_ordered(previous_unit):
+                ORDERS_DATA.remove_order(previous_unit)
 
         # add to position
-        position_data.add_unit(new_unit)
+        POSITION_DATA.add_unit(new_unit)
 
         # refresh
         callback_render(ctx)
@@ -842,21 +842,21 @@ def sandbox():
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         stack_orders(buttons_right)
-        if not position_data.empty():
+        if not POSITION_DATA.empty():
             put_erase_all(buttons_right)
         put_rest_hold(buttons_right)
-        if not orders_data.empty():
+        if not ORDERS_DATA.empty():
             put_submit(buttons_right)
-        if not position_data.empty():
+        if not POSITION_DATA.empty():
             put_consult(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
+        MY_SUB_PANEL <= my_sub_panel2
 
     # starts here
 
     # make sure we are ready
-    if not position_data:
+    if not POSITION_DATA:
         create_initial_position()
 
     # finds data about the dragged unit
@@ -865,7 +865,7 @@ def sandbox():
     reserve_table = html.TABLE()
 
     num = 1
-    for role in variant_data.roles.values():
+    for role in VARIANT_DATA.roles.values():
 
         # ignore GM
         if role.identifier == 0:
@@ -875,7 +875,7 @@ def sandbox():
 
         # country name
         col = html.TD()
-        col <= html.B(variant_data.name_table[role])
+        col <= html.B(VARIANT_DATA.name_table[role])
         row <= col
 
         for type_unit in mapping.UnitTypeEnum:
@@ -883,9 +883,9 @@ def sandbox():
             col = html.TD()
 
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
-                draggable_unit = mapping.Army(position_data, role, None, None)
+                draggable_unit = mapping.Army(POSITION_DATA, role, None, None)
             if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-                draggable_unit = mapping.Fleet(position_data, role, None, None)
+                draggable_unit = mapping.Fleet(POSITION_DATA, role, None, None)
 
             identifier = f"unit_{num}"
             unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Draguez moi!")
@@ -915,7 +915,7 @@ def sandbox():
     display_very_left <= html.DIV("Glissez/déposez ces unités sur la carte", Class='instruction')
     display_very_left <= html.BR()
 
-    map_size = variant_data.map_size
+    map_size = VARIANT_DATA.map_size
 
     # create canvas
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
@@ -940,7 +940,7 @@ def sandbox():
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(variant_name_loaded, interface_chosen)
+    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', callback_render)
 
     # left side
@@ -964,12 +964,12 @@ def sandbox():
     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     stack_orders(buttons_right)
-    if not position_data.empty():
+    if not POSITION_DATA.empty():
         put_erase_all(buttons_right)
     put_rest_hold(buttons_right)
-    if not orders_data.empty():
+    if not ORDERS_DATA.empty():
         put_submit(buttons_right)
-    if not position_data.empty():
+    if not POSITION_DATA.empty():
         put_consult(buttons_right)
 
     # overall
@@ -979,13 +979,13 @@ def sandbox():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    my_sub_panel <= html.H2("Le bac à sable : \"what if ?\"")
-    my_sub_panel <= my_sub_panel2
+    MY_SUB_PANEL <= html.H2("Le bac à sable : \"what if ?\"")
+    MY_SUB_PANEL <= my_sub_panel2
 
 
 def render(panel_middle):
     """ render """
 
-    my_sub_panel.clear()
-    panel_middle <= my_panel
+    MY_SUB_PANEL.clear()
+    panel_middle <= MY_PANEL
     sandbox()

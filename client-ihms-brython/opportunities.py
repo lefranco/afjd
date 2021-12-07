@@ -18,8 +18,8 @@ import selection
 import index  # circular import
 
 
-my_panel = html.DIV(id="opportunities")
-my_panel.attrs['style'] = 'display: table'
+MY_PANEL = html.DIV(id="opportunities")
+MY_PANEL.attrs['style'] = 'display: table'
 
 
 def get_recruiting_games():
@@ -115,7 +115,7 @@ def my_opportunities():
 
     overall_time_before = time.time()
 
-    my_panel.clear()
+    MY_PANEL.clear()
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -275,10 +275,10 @@ def my_opportunities():
         games_table <= row
 
     # Title
-    my_panel <= html.H2("Parties qui recrutent des joueurs")
+    MY_PANEL <= html.H2("Parties qui recrutent des joueurs")
 
-    my_panel <= games_table
-    my_panel <= html.BR()
+    MY_PANEL <= games_table
+    MY_PANEL <= html.BR()
 
     # get GMT date and time
     time_stamp = time.time()
@@ -286,9 +286,9 @@ def my_opportunities():
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
     special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
-    my_panel <= special_legend
+    MY_PANEL <= special_legend
 
-    my_panel <= html.BR()
+    MY_PANEL <= html.BR()
 
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
@@ -297,11 +297,11 @@ def my_opportunities():
     if number_games:
         stats += f" soit {elapsed/number_games} par partie"
 
-    my_panel <= html.DIV(stats, Class='load')
-    my_panel <= html.BR()
+    MY_PANEL <= html.DIV(stats, Class='load')
+    MY_PANEL <= html.BR()
 
 
 def render(panel_middle):
     """ render """
     my_opportunities()
-    panel_middle <= my_panel
+    panel_middle <= MY_PANEL

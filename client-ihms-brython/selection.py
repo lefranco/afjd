@@ -10,8 +10,8 @@ import config
 import common
 
 
-my_panel = html.DIV(id="selection")
-my_panel.attrs['style'] = 'display: table'
+MY_PANEL = html.DIV(id="selection")
+MY_PANEL.attrs['style'] = 'display: table'
 
 
 def select_game():
@@ -30,7 +30,7 @@ def select_game():
         InfoDialog("OK", f"Partie sélectionnée : {game_name}", remove_after=config.REMOVE_AFTER)
         show_game_selected()
 
-        render(g_panel_middle)
+        render(PANEL_MIDDLE)
 
     games_data = common.get_games_data()
     if not games_data:
@@ -123,21 +123,21 @@ def show_game_selected():
     document <= show_game_selected_panel
 
 
-g_panel_middle = None  # pylint: disable=invalid-name
+PANEL_MIDDLE = None
 
 
 def render(panel_middle):
     """ render """
 
-    global g_panel_middle  # pylint: disable=invalid-name
-    g_panel_middle = panel_middle
+    global PANEL_MIDDLE
+    PANEL_MIDDLE = panel_middle
 
-    my_panel.clear()
+    MY_PANEL.clear()
 
-    my_sub_panel = select_game()
+    select_panel = select_game()
 
-    if my_sub_panel:
-        my_panel <= html.H2("Sélectionnez la partie (au sens partie de Diplomatie ou variante) avec laquelle vous souhaitez interagir")
-        my_panel <= my_sub_panel
+    if select_panel:
+        MY_PANEL <= html.H2("Sélectionnez la partie (au sens partie de Diplomatie ou variante) avec laquelle vous souhaitez interagir")
+        MY_PANEL <= select_panel
 
-    panel_middle <= my_panel
+    panel_middle <= MY_PANEL
