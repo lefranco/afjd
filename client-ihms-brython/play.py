@@ -648,7 +648,7 @@ def get_game_master(game_id):
 
     # get the link (allocations) of game masters
     allocations_data = common.get_allocations_data()
-    if allocations_data is None:
+    if not allocations_data:
         alert("Erreur chargement allocations")
         return None
 

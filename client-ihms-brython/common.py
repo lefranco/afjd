@@ -348,9 +348,9 @@ def read_image(variant_name_loaded, interface_chosen):
 
 
 def get_allocations_data():
-    """ get_allocations_data """
+    """ get_allocations_data : returns empty dict on error """
 
-    allocation_data = None
+    allocation_data = dict()
 
     def reply_callback(req):
         nonlocal allocation_data
