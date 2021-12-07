@@ -128,7 +128,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
                 create_status = False
                 return
 
-            alert(f"Création de la partie {game_to_create_name} réalisée !")
             create_status = True
 
         def game_parameters_reload():
@@ -226,7 +225,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
                 status = False
                 return
 
-            alert(f"Le joueur {player_name} a été mis dans la partie {game_name} !")
             status = True
 
         game_id_int = common.get_game_id(game_name)
@@ -268,9 +266,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
                 status = False
                 return
 
-            role = variant_data.roles[role_id]
-            role_name = variant_data.name_table[role]
-            alert(f"Le joueur {player_pseudo} s'est vu attribuer le rôle {role_name} dans la partie {game_name}")
             status = True
 
         game_id_int = common.get_game_id(game_name)
@@ -312,7 +307,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
 
                 return
 
-            alert(f"Vous avez démissionné de l'arbitrage de la partie {game_name}")
             status = True
 
         game_id_int = common.get_game_id(game_name)
@@ -347,8 +341,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
     # do the work using the three previous functions
 
     for game_to_create_name, game_to_create_data in games_to_create_data.items():
-
-        alert(f"Partie {game_to_create_name}...")
 
         # create game
         status = create_game(current_pseudo, current_game_name, game_to_create_name, description)
