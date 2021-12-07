@@ -370,9 +370,6 @@ def all_games(state_name):
         alert("Erreur chargement dictionnaire parties")
         return
 
-    # avoids a warning
-    games_dict = dict(games_dict)
-
     # get the players (masters)
     players_dict = common.get_players_data()
 
@@ -385,14 +382,12 @@ def all_games(state_name):
     if allocations_data is None:
         alert("Erreur chargement allocations")
         return
-    allocations_data = dict(allocations_data)
     masters_alloc = allocations_data['game_masters_dict']
 
     dict_submitted_data = get_all_games_roles_submitted_orders()
     if dict_submitted_data is None:
         alert("Erreur chargement des soumissions dans les parties")
         return
-    dict_submitted_data = dict(dict_submitted_data)
 
     # fill table game -> master
     game_master_dict = dict()
@@ -1254,9 +1249,6 @@ def sendmail():
     if players_dict is None:
         return
 
-    # clears a warnng
-    players_dict = dict(players_dict)
-
     # all players can be usurped
     possible_addressed = set(players_dict.keys())
 
@@ -1288,10 +1280,10 @@ def sendmail():
     MY_SUB_PANEL <= form
 
 
-def get_phone_number():
+def display_phone_number():
     """ get_phone_number """
 
-    def get_phone_number_callback(_):
+    def display_phone_number_callback(_):
         """ get_phone_number_callback """
 
         def reply_callback(req):
@@ -1344,9 +1336,6 @@ def get_phone_number():
     if players_dict is None:
         return
 
-    # clears a warnng
-    players_dict = dict(players_dict)
-
     # all players can be usurped
     possible_contacts = set(players_dict.keys())
 
@@ -1365,7 +1354,7 @@ def get_phone_number():
     form <= html.BR()
 
     input_select_player = html.INPUT(type="submit", value="récupérer son numéro de téléphone")
-    input_select_player.bind("click", get_phone_number_callback)
+    input_select_player.bind("click", display_phone_number_callback)
     form <= input_select_player
 
     MY_SUB_PANEL <= form
@@ -1410,7 +1399,7 @@ def load_option(_, item_name):
     if item_name == 'envoyer un e-mail':
         sendmail()
     if item_name == 'récupérer un téléphone':
-        get_phone_number()
+        display_phone_number()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name

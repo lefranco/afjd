@@ -81,7 +81,7 @@ class Profiler:
         players_dict = common.get_players()
         if players_dict is None:
             return
-        players_dict = dict(players_dict)
+
         addressed_id = players_dict[addressed_user_name]
         addressees = [addressed_id]
         json_dict = {

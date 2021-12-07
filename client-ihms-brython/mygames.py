@@ -257,37 +257,31 @@ def my_games(state_name):
     if dict_role_id is None:
         alert("Erreur chargement des roles dans les parties")
         return
-    dict_role_id = dict(dict_role_id)
 
     dict_submitted_data = get_all_player_games_roles_submitted_orders()
     if dict_submitted_data is None:
         alert("Erreur chargement des soumissions dans les parties")
         return
-    dict_submitted_data = dict(dict_submitted_data)
 
     dict_time_stamp_last_declarations = date_last_declarations()
     if dict_time_stamp_last_declarations is None:
         alert("Erreur chargement dates dernières déclarations des parties")
         return
-    dict_time_stamp_last_declarations = dict(dict_time_stamp_last_declarations)
 
     dict_time_stamp_last_messages = date_last_messages()
     if dict_time_stamp_last_messages is None:
         alert("Erreur chargement dates derniers messages des parties")
         return
-    dict_time_stamp_last_messages = dict(dict_time_stamp_last_messages)
 
     dict_time_stamp_last_visits_declarations = date_last_visit_load_all_games(config.DECLARATIONS_TYPE)
     if dict_time_stamp_last_visits_declarations is None:
         alert("Erreur chargement dates visites dernières declarations des parties")
         return
-    dict_time_stamp_last_visits_declarations = dict(dict_time_stamp_last_visits_declarations)
 
     dict_time_stamp_last_visits_messages = date_last_visit_load_all_games(config.MESSAGES_TYPE)
     if dict_time_stamp_last_visits_messages is None:
         alert("Erreur chargement dates visites derniers messages des parties")
         return
-    dict_time_stamp_last_visits_messages = dict(dict_time_stamp_last_visits_messages)
 
     time_stamp_now = time.time()
 
@@ -303,7 +297,7 @@ def my_games(state_name):
         thead <= col
     games_table <= thead
 
-    games_id_player = {int(n) for n in player_games.keys()}
+    games_id_player = {int(n) for n in player_games}
 
     # for optimization
     variant_content_memoize_table = dict()
