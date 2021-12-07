@@ -97,7 +97,7 @@ def check_batch(current_pseudo, games_to_create):
                 alert(f"Il semble que {player_name1} et {player_name2} jouent dans un nombre de parties différent")
                 error = True
 
-    # game master does not have to be pseudo but still warning
+    # game master has to be pseudo
     for game_name, allocations in games_to_create.items():
         if allocations[0] != current_pseudo:
             alert(f"Vous n'êtes pas l'arbitre de la partie {game_name}. Il faudra demander à l'abitre désiré de venir sur le site réaliser la création de la partie")
