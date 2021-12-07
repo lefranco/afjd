@@ -67,9 +67,6 @@ def show_players_data():
         alert("Erreur chargement dictionnaire parties")
         return
 
-    # to avoid a warning
-    games_dict = dict(games_dict)
-
     players_dict = common.get_players_data()
 
     if not players_dict:
@@ -81,7 +78,6 @@ def show_players_data():
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
-    allocations_data = dict(allocations_data)
 
     players_alloc = allocations_data['players_dict']
 
@@ -224,11 +220,7 @@ def show_game_masters_data():
         alert("Erreur chargement dictionnaire parties")
         return
 
-    # to avoid a warning
-    games_dict = dict(games_dict)
-
     players_dict = common.get_players_data()
-
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
         return
@@ -238,7 +230,6 @@ def show_game_masters_data():
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
-    allocations_data = dict(allocations_data)
 
     masters_alloc = allocations_data['game_masters_dict']
 
@@ -292,9 +283,6 @@ def show_no_game_masters_data():
         alert("Erreur chargement dictionnaire parties")
         return
 
-    # to avoid a warning
-    games_dict = dict(games_dict)
-
     # get the players (masters)
     players_dict = common.get_players_data()
 
@@ -307,7 +295,6 @@ def show_no_game_masters_data():
     if not allocations_data:
         alert("Erreur chargement allocations")
         return
-    allocations_data = dict(allocations_data)
 
     masters_alloc = allocations_data['game_masters_dict']
     games_with_master = list()

@@ -166,7 +166,7 @@ def game_orders_reload(game_id):
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        orders_loaded = dict(req_result)
+        orders_loaded = req_result
 
     json_dict = dict()
 
@@ -197,7 +197,7 @@ def game_communication_orders_reload(game_id):
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        orders_loaded = dict(req_result)
+        orders_loaded = req_result
 
     json_dict = dict()
 
@@ -228,7 +228,7 @@ def game_parameters_reload(game):
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        game_parameters_loaded = dict(req_result)
+        game_parameters_loaded = req_result
 
     json_dict = dict()
 
@@ -377,7 +377,6 @@ def load_static_stuff():
     if not g_players_dict:
         alert("Erreur chargement info joueurs")
         return
-    g_players_dict = dict(g_players_dict)
 
     # from game name get variant name
 
@@ -405,7 +404,6 @@ def load_static_stuff():
         if not g_variant_content_loaded:
             alert("Erreur chargement contenu variante")
             return
-        g_variant_content_loaded = dict(g_variant_content_loaded)
         VARIANT_CONTENT_MEMOIZE_TABLE[g_variant_name_loaded] = g_variant_content_loaded
 
     PROFILE_DATA.start('load_static_stuff - lecture tableau interface_from_variant()')
@@ -484,7 +482,6 @@ def load_dynamic_stuff():
     if not g_game_parameters_loaded:
         alert("Erreur chargement paramètres")
         return
-    g_game_parameters_loaded = dict(g_game_parameters_loaded)
 
     PROFILE_DATA.start('load_dynamic_stuff - calcul get_game_status()')
 
@@ -531,8 +528,6 @@ def load_special_stuff():
         if not g_game_players_dict:
             alert("Erreur chargement joueurs de la partie")
             return
-
-        g_game_players_dict = dict(g_game_players_dict)
 
 
 def stack_clock(frame, period):
@@ -656,7 +651,6 @@ def get_game_master(game_id):
     if allocations_data is None:
         alert("Erreur chargement allocations")
         return None
-    allocations_data = dict(allocations_data)
 
     masters_alloc = allocations_data['game_masters_dict']
 
@@ -1773,7 +1767,6 @@ def submit_orders():
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
-    submitted_data = dict(submitted_data)
 
     if g_role_id == 0:
         if not submitted_data['needed']:
@@ -2478,7 +2471,6 @@ def submit_communication_orders():
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
-    submitted_data = dict(submitted_data)
 
     if g_role_id not in submitted_data['needed']:
         alert("Vous n'avez pas d'ordre à passer")
@@ -3129,7 +3121,6 @@ def show_history():
         transition_loaded = game_transition_reload(g_game_id, advancement_selected)
         if transition_loaded is None:
             return
-        transition_loaded = dict(transition_loaded)
 
         position_loaded = transition_loaded['situation']
         orders_loaded = transition_loaded['orders']
@@ -3614,7 +3605,6 @@ def game_master():
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
-    submitted_data = dict(submitted_data)
 
     PROFILE_DATA.start('game_master() - chargement roles possibles')
 
@@ -3971,7 +3961,6 @@ def supervise():
             if submitted_data is None:
                 alert("Erreur chargement données de soumission")
                 return
-            submitted_data = dict(submitted_data)
 
             # votes
             nonlocal votes
@@ -4473,7 +4462,6 @@ def show_orders_submitted_in_game():
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
-    submitted_data = dict(submitted_data)
 
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
 
@@ -4592,7 +4580,6 @@ def show_incidents_in_game():
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
-    submitted_data = dict(submitted_data)
 
     # get the actual incidents of the game
     game_incidents = get_game_incidents(g_game_id)

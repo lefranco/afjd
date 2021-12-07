@@ -64,7 +64,6 @@ def load_game(game_name):
     if not game_data:
         alert(f"Erreur chargement données partie {game_name}. Cette partie existe ?")
         return False
-    game_data = dict(game_data)
 
     game_id_int = common.get_game_id(game_name)
     if not game_id_int:

@@ -152,7 +152,7 @@ def get_games_data():
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-        games_dict = dict(req_result)
+        games_dict = req_result
 
     json_dict = dict()
 
@@ -214,7 +214,7 @@ def game_position_reload(game_id):
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        position_loaded = dict(req_result)
+        position_loaded = req_result
 
     json_dict = dict()
 
