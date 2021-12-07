@@ -54,9 +54,9 @@ def show_registered_data():
         players_table <= row
         count += 1
 
-    my_sub_panel <= html.H3("Les inscrits")
-    my_sub_panel <= players_table
-    my_sub_panel <= html.P(f"Il y a {count} inscrits")
+    MY_SUB_PANEL <= html.H3("Les inscrits")
+    MY_SUB_PANEL <= players_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
 
 
 def show_players_data():
@@ -123,15 +123,15 @@ def show_players_data():
         players_table <= row
         count += 1
 
-    my_sub_panel <= html.H3("Les joueurs")
-    my_sub_panel <= players_table
-    my_sub_panel <= html.P(f"Il y a {count} joueurs")
+    MY_SUB_PANEL <= html.H3("Les joueurs")
+    MY_SUB_PANEL <= players_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} joueurs")
 
 
 def show_replacement_data():
     """ show_replacement_data """
 
-    my_sub_panel <= html.H3("Liste des candidats au remplacement")
+    MY_SUB_PANEL <= html.H3("Liste des candidats au remplacement")
 
     players_dict = common.get_players_data()
 
@@ -166,7 +166,7 @@ def show_replacement_data():
 
         players_table <= row
 
-    my_sub_panel <= players_table
+    MY_SUB_PANEL <= players_table
 
 
 def show_games_data(game_state_name):
@@ -214,17 +214,17 @@ def show_games_data(game_state_name):
         games_table <= row
         count += 1
 
-    my_sub_panel <= html.H3(f"Les parties dans l'état : {game_state_name}")
-    my_sub_panel <= games_table
-    my_sub_panel <= html.P(f"Il y a {count} parties")
+    MY_SUB_PANEL <= html.H3(f"Les parties dans l'état : {game_state_name}")
+    MY_SUB_PANEL <= games_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} parties")
 
 
 def show_tournaments_data():
     """ show_tournaments_data """
 
-    my_sub_panel <= html.H3("Les tournois")
+    MY_SUB_PANEL <= html.H3("Les tournois")
     # TODO : liste des tournois
-    my_sub_panel <= "ICI liste des tournois avec leurs parties - Pas encore implémenté, désolé !"
+    MY_SUB_PANEL <= "ICI liste des tournois avec leurs parties - Pas encore implémenté, désolé !"
 
 
 def show_game_masters_data():
@@ -291,9 +291,9 @@ def show_game_masters_data():
         masters_table <= row
         count += 1
 
-    my_sub_panel <= html.H3("Les arbitres")
-    my_sub_panel <= masters_table
-    my_sub_panel <= html.P(f"Il y a {count} arbitres")
+    MY_SUB_PANEL <= html.H3("Les arbitres")
+    MY_SUB_PANEL <= masters_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} arbitres")
 
 
 def show_no_game_masters_data():
@@ -351,32 +351,32 @@ def show_no_game_masters_data():
         row <= col
         no_game_masters_table <= row
 
-    my_sub_panel <= html.H3("Les parties sans arbitre")
-    my_sub_panel <= no_game_masters_table
+    MY_SUB_PANEL <= html.H3("Les parties sans arbitre")
+    MY_SUB_PANEL <= no_game_masters_table
 
 
-my_panel = html.DIV()
-my_panel.attrs['style'] = 'display: table-row'
+MY_PANEL = html.DIV()
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 # menu-left
-menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-my_panel <= menu_left
+MENU_LEFT = html.DIV()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+MY_PANEL <= MENU_LEFT
 
 # menu-selection
-menu_selection = html.UL()
-menu_left <= menu_selection
+MENU_SELECTION = html.UL()
+MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
-my_sub_panel = html.DIV(id="lists")
-my_panel <= my_sub_panel
+MY_SUB_PANEL = html.DIV(id="lists")
+MY_PANEL <= MY_SUB_PANEL
 
 
 def load_option(_, item_name):
     """ load_option """
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
     if item_name == 'les inscrits':
         show_registered_data()
     if item_name == 'les joueurs':
@@ -399,7 +399,7 @@ def load_option(_, item_name):
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
-    menu_left.clear()
+    MENU_LEFT.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
@@ -412,7 +412,7 @@ def load_option(_, item_name):
         button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
-        menu_left <= menu_item
+        MENU_LEFT <= menu_item
 
 
 def render(panel_middle):
@@ -423,4 +423,4 @@ def render(panel_middle):
     ITEM_NAME_SELECTED = OPTIONS[0]
 
     load_option(None, ITEM_NAME_SELECTED)
-    panel_middle <= my_panel
+    panel_middle <= MY_PANEL

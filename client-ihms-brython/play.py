@@ -856,7 +856,7 @@ def show_position():
     # header
 
     # game status
-    my_sub_panel <= g_game_status
+    MY_SUB_PANEL <= g_game_status
 
     # create canvas
     map_size = g_variant_data.map_size
@@ -906,7 +906,7 @@ def show_position():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    my_sub_panel <= my_sub_panel2
+    MY_SUB_PANEL <= my_sub_panel2
 
     return True
 
@@ -949,7 +949,7 @@ def submit_orders():
             if adjudicated:
                 alert("La position de la partie a changé !")
                 load_dynamic_stuff()
-                my_sub_panel.clear()
+                MY_SUB_PANEL.clear()
                 submit_orders()
 
         names_dict = g_variant_data.extract_names()
@@ -1002,7 +1002,7 @@ def submit_orders():
         buttons_right <= legend_select_unit
 
         my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
+        MY_SUB_PANEL <= my_sub_panel2
 
         stack_orders(buttons_right)
 
@@ -1059,7 +1059,7 @@ def submit_orders():
             put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
+        MY_SUB_PANEL <= my_sub_panel2
 
     def select_built_unit_type_callback(_, build_unit_type):
         """ select_built_unit_type_callback """
@@ -1091,7 +1091,7 @@ def submit_orders():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
             # it is a zone we need now
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -1163,7 +1163,7 @@ def submit_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                my_sub_panel <= my_sub_panel2
+                MY_SUB_PANEL <= my_sub_panel2
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -1204,7 +1204,7 @@ def submit_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                my_sub_panel <= my_sub_panel2
+                MY_SUB_PANEL <= my_sub_panel2
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -1244,7 +1244,7 @@ def submit_orders():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -1356,7 +1356,7 @@ def submit_orders():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
             return
 
@@ -1438,7 +1438,7 @@ def submit_orders():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -1470,7 +1470,7 @@ def submit_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                my_sub_panel <= my_sub_panel2
+                MY_SUB_PANEL <= my_sub_panel2
 
                 stack_orders(buttons_right)
                 if not orders_data.empty():
@@ -1506,7 +1506,7 @@ def submit_orders():
                 put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
@@ -1592,7 +1592,7 @@ def submit_orders():
             put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
+        MY_SUB_PANEL <= my_sub_panel2
 
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
@@ -1797,7 +1797,7 @@ def submit_orders():
     profile_data.start('submit_orders() - affichage 1')
 
     # game status
-    my_sub_panel <= g_game_status
+    MY_SUB_PANEL <= g_game_status
 
     advancement_loaded = g_game_parameters_loaded['current_advancement']
     advancement_season, _ = common.get_season(advancement_loaded, g_variant_data)
@@ -1902,7 +1902,7 @@ def submit_orders():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    my_sub_panel <= my_sub_panel2
+    MY_SUB_PANEL <= my_sub_panel2
 
     return True
 
@@ -1981,7 +1981,7 @@ def submit_communication_orders():
         put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
+        MY_SUB_PANEL <= my_sub_panel2
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
@@ -2049,7 +2049,7 @@ def submit_communication_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                my_sub_panel <= my_sub_panel2
+                MY_SUB_PANEL <= my_sub_panel2
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -2072,7 +2072,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -2152,7 +2152,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
             return
 
@@ -2191,7 +2191,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
@@ -2220,7 +2220,7 @@ def submit_communication_orders():
                 buttons_right <= legend_select_unit
 
                 my_sub_panel2 <= buttons_right
-                my_sub_panel <= my_sub_panel2
+                MY_SUB_PANEL <= my_sub_panel2
 
                 stack_orders(buttons_right)
                 if not orders_data.empty():
@@ -2250,7 +2250,7 @@ def submit_communication_orders():
             put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
-            my_sub_panel <= my_sub_panel2
+            MY_SUB_PANEL <= my_sub_panel2
 
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
             return
@@ -2311,7 +2311,7 @@ def submit_communication_orders():
         put_submit(buttons_right)
 
         my_sub_panel2 <= buttons_right
-        my_sub_panel <= my_sub_panel2
+        MY_SUB_PANEL <= my_sub_panel2
 
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
@@ -2493,7 +2493,7 @@ def submit_communication_orders():
     # header
 
     # game status
-    my_sub_panel <= g_game_status
+    MY_SUB_PANEL <= g_game_status
 
     # create canvas
     map_size = g_variant_data.map_size
@@ -2568,7 +2568,7 @@ def submit_communication_orders():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    my_sub_panel <= my_sub_panel2
+    MY_SUB_PANEL <= my_sub_panel2
 
     return True
 
@@ -2786,27 +2786,27 @@ def negotiate():
 
     # now we can display
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
 
     # header
 
     # game status
-    my_sub_panel <= g_game_status
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= html.BR()
 
     # role
-    stack_role_flag(my_sub_panel)
+    stack_role_flag(MY_SUB_PANEL)
 
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     # form
-    my_sub_panel <= form
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= form
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     # declarations already
-    my_sub_panel <= messages_table
+    MY_SUB_PANEL <= messages_table
 
     return True
 
@@ -2975,31 +2975,31 @@ def declare():
 
     # now we can display
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
 
     # header
 
     # game status
-    my_sub_panel <= g_game_status
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= html.BR()
 
     # role
-    stack_role_flag(my_sub_panel)
+    stack_role_flag(MY_SUB_PANEL)
 
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     # form only if allowed
     if g_game_parameters_loaded['nopress'] and g_role_id != 0:
-        my_sub_panel <= html.P("Cette partie est sans presse des joueurs")
+        MY_SUB_PANEL <= html.P("Cette partie est sans presse des joueurs")
     else:
         # form
-        my_sub_panel <= form
-        my_sub_panel <= html.BR()
-        my_sub_panel <= html.BR()
+        MY_SUB_PANEL <= form
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
 
     # declarations already
-    my_sub_panel <= declarations_table
+    MY_SUB_PANEL <= declarations_table
 
     return True
 
@@ -3085,20 +3085,20 @@ def vote():
 
     # now we can display
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
 
     # game status
-    my_sub_panel <= g_game_status
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= html.BR()
 
     # role
-    stack_role_flag(my_sub_panel)
+    stack_role_flag(MY_SUB_PANEL)
 
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     # form
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
     return True
 
@@ -3159,7 +3159,7 @@ def show_history():
         colours = position_data.role_colours()
         game_scoring = g_game_parameters_loaded['scoring']
         rating_colours_window = make_rating_colours_window(g_variant_data, ratings, colours, game_scoring)
-        my_sub_panel <= rating_colours_window
+        MY_SUB_PANEL <= rating_colours_window
 
         report_window = common.make_report_window(report_loaded)
 
@@ -3180,7 +3180,7 @@ def show_history():
         nonlocal my_sub_panel2
 
         # overall
-        my_sub_panel.removeChild(my_sub_panel2)
+        MY_SUB_PANEL.removeChild(my_sub_panel2)
 
         my_sub_panel2 = html.DIV()
         my_sub_panel2.attrs['style'] = 'display:table-row'
@@ -3232,7 +3232,7 @@ def show_history():
 
         my_sub_panel2 <= buttons_right
 
-        my_sub_panel <= my_sub_panel2
+        MY_SUB_PANEL <= my_sub_panel2
 
     advancement_loaded = g_game_parameters_loaded['current_advancement']
     last_advancement = advancement_loaded - 1
@@ -3243,7 +3243,7 @@ def show_history():
 
     # put it there to remove it at first display
     my_sub_panel2 = html.DIV()
-    my_sub_panel <= my_sub_panel2
+    MY_SUB_PANEL <= my_sub_panel2
 
     # initiates callback
     transition_display_callback(None, last_advancement)
@@ -3301,7 +3301,7 @@ def game_master():
             InfoDialog("OK", f"La date limite a été reportée : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             load_dynamic_stuff()
             game_master()
 
@@ -3398,7 +3398,7 @@ def game_master():
             InfoDialog("OK", f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             game_master()
 
         names_dict = g_variant_data.extract_names()
@@ -3439,7 +3439,7 @@ def game_master():
                 alert("La position de la partie a changé !")
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             load_special_stuff()
             game_master()
 
@@ -3480,7 +3480,7 @@ def game_master():
             InfoDialog("OK", f"Le joueur s'est vu retirer le rôle dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             load_special_stuff()
             game_master()
 
@@ -3517,7 +3517,7 @@ def game_master():
             InfoDialog("OK", f"Le joueur s'est vu attribuer le rôle dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             load_special_stuff()
             game_master()
 
@@ -3598,11 +3598,11 @@ def game_master():
     # header
 
     # game status
-    my_sub_panel <= g_game_status
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= html.BR()
 
-    stack_role_flag(my_sub_panel)
-    my_sub_panel <= html.BR()
+    stack_role_flag(MY_SUB_PANEL)
+    MY_SUB_PANEL <= html.BR()
 
     id2pseudo = {v: k for k, v in g_players_dict.items()}
     role2pseudo = {v: k for k, v in g_game_players_dict.items()}
@@ -3764,17 +3764,17 @@ def game_master():
 
         game_admin_table <= row
 
-    my_sub_panel <= game_admin_table
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= game_admin_table
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
-    my_sub_panel <= html.DIV("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie temps réel). Ce, à partir de maintenant si la date limite est passée. Pour une gestion plus fine de cette date limite vous devez éditer la partie.", Class='note')
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie temps réel). Ce, à partir de maintenant si la date limite est passée. Pour une gestion plus fine de cette date limite vous devez éditer la partie.", Class='note')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     input_push_deadline = html.INPUT(type="submit", value="Reporter la date limite")
     input_push_deadline.bind("click", push_deadline_game_callback)
-    my_sub_panel <= input_push_deadline
+    MY_SUB_PANEL <= input_push_deadline
 
     return True
 
@@ -3980,18 +3980,18 @@ def supervise():
                 return
             votes = list(votes)
 
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
 
             # clock
-            stack_clock(my_sub_panel, SUPERVISE_REFRESH_PERIOD_SEC)
-            my_sub_panel <= html.BR()
+            stack_clock(MY_SUB_PANEL, SUPERVISE_REFRESH_PERIOD_SEC)
+            MY_SUB_PANEL <= html.BR()
 
             # game status
-            my_sub_panel <= g_game_status
-            my_sub_panel <= html.BR()
+            MY_SUB_PANEL <= g_game_status
+            MY_SUB_PANEL <= html.BR()
 
-            stack_role_flag(my_sub_panel)
-            my_sub_panel <= html.BR()
+            stack_role_flag(MY_SUB_PANEL)
+            MY_SUB_PANEL <= html.BR()
 
         # changed from outside
         refresh_subroutine()
@@ -4044,15 +4044,15 @@ def supervise():
                 refresh_subroutine()
 
         game_admin_table = reload_game_admin_table(submitted_data, votes)
-        my_sub_panel <= game_admin_table
-        my_sub_panel <= html.BR()
+        MY_SUB_PANEL <= game_admin_table
+        MY_SUB_PANEL <= html.BR()
 
         # put stack in log window
         log_window = html.DIV(id="log")
         log_stack.display(log_window)
 
         # display
-        my_sub_panel <= log_window
+        MY_SUB_PANEL <= log_window
 
     def cancel_supervise_callback(_, dialog):
         """ cancel_supervise_callback """
@@ -4154,14 +4154,14 @@ def observe():
 
         # reload from server to see what changed from outside
         load_dynamic_stuff()
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
 
         # clock
-        stack_clock(my_sub_panel, OBSERVE_REFRESH_PERIOD_SEC)
-        my_sub_panel <= html.BR()
+        stack_clock(MY_SUB_PANEL, OBSERVE_REFRESH_PERIOD_SEC)
+        MY_SUB_PANEL <= html.BR()
 
         # game status
-        my_sub_panel <= g_game_status
+        MY_SUB_PANEL <= g_game_status
 
         # create canvas
         map_size = g_variant_data.map_size
@@ -4186,11 +4186,11 @@ def observe():
 
         # left side
 
-        my_sub_panel <= canvas
-        my_sub_panel <= html.BR()
-        my_sub_panel <= rating_colours_window
-        my_sub_panel <= html.BR()
-        my_sub_panel <= report_window
+        MY_SUB_PANEL <= canvas
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= rating_colours_window
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= report_window
 
     # game needs to be ongoing - not waiting
     if g_game_parameters_loaded['current_state'] == 0:
@@ -4219,8 +4219,8 @@ def show_game_parameters():
     """ show_game_parameters """
 
     # game status
-    my_sub_panel <= g_game_status
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= html.BR()
 
     game_params_table = html.TABLE()
 
@@ -4291,7 +4291,7 @@ def show_game_parameters():
 
         game_params_table <= row
 
-    my_sub_panel <= game_params_table
+    MY_SUB_PANEL <= game_params_table
 
     return True
 
@@ -4346,10 +4346,10 @@ def show_game_master_in_game():
     game_master_table <= row
 
     # game status
-    my_sub_panel <= g_game_status
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= html.BR()
 
-    my_sub_panel <= game_master_table
+    MY_SUB_PANEL <= game_master_table
 
     return True
 
@@ -4423,22 +4423,22 @@ def show_players_in_game():
         game_players_table <= row
 
     # game status
-    my_sub_panel <= g_game_status
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= html.BR()
 
-    my_sub_panel <= game_players_table
+    MY_SUB_PANEL <= game_players_table
 
     # add the non allocated players
     dangling_players = [p for p in g_game_players_dict.keys() if g_game_players_dict[p] == - 1]
     if dangling_players:
-        my_sub_panel <= html.BR()
+        MY_SUB_PANEL <= html.BR()
         info = html.EM("Les pseudos suivants sont alloués à la partie sans rôle : ")
         roles_less = html.DIV(info, Class='note')
         for dangling_player_id_str in dangling_players:
             dangling_player_id = int(dangling_player_id_str)
             dangling_player = id2pseudo[dangling_player_id]
             roles_less <= html.EM(f"{dangling_player} ")
-        my_sub_panel <= roles_less
+        MY_SUB_PANEL <= roles_less
 
     return True
 
@@ -4554,10 +4554,10 @@ def show_orders_submitted_in_game():
         game_players_table <= row
 
     # game status
-    my_sub_panel <= g_game_status
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= html.BR()
 
-    my_sub_panel <= game_players_table
+    MY_SUB_PANEL <= game_players_table
 
     return True
 
@@ -4665,42 +4665,42 @@ def show_incidents_in_game():
         game_incidents_table <= row
 
     # game status
-    my_sub_panel <= g_game_status
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= g_game_status
+    MY_SUB_PANEL <= html.BR()
 
-    my_sub_panel <= game_incidents_table
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= game_incidents_table
+    MY_SUB_PANEL <= html.BR()
 
     # a bit of humour !
     if game_incidents:
         humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
-        my_sub_panel <= humour_img
+        MY_SUB_PANEL <= humour_img
 
     return True
 
 
-my_panel = html.DIV()
-my_panel.attrs['style'] = 'display: table-row'
+MY_PANEL = html.DIV()
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 # menu-left
-menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-my_panel <= menu_left
+MENU_LEFT = html.DIV()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+MY_PANEL <= MENU_LEFT
 
 # menu-selection
-menu_selection = html.UL()
-menu_left <= menu_selection
+MENU_SELECTION = html.UL()
+MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = None
 
-my_sub_panel = html.DIV(id="play")
-my_panel <= my_sub_panel
+MY_SUB_PANEL = html.DIV(id="play")
+MY_PANEL <= MY_SUB_PANEL
 
 
 def load_option(_, item_name):
     """ load_option """
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
     if item_name == 'position':
         status = show_position()
     if item_name == 'ordonner':
@@ -4738,7 +4738,7 @@ def load_option(_, item_name):
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
-    menu_left.clear()
+    MENU_LEFT.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
@@ -4751,7 +4751,7 @@ def load_option(_, item_name):
         button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
-        menu_left <= menu_item
+        MENU_LEFT <= menu_item
 
     # quitting superviser : clear timer
     global supervise_refresh_timer  # pylint: disable=invalid-name
@@ -4858,7 +4858,7 @@ def render(panel_middle):
     profile_data.start(f'load_option({ITEM_NAME_SELECTED})')
 
     load_option(None, ITEM_NAME_SELECTED)
-    panel_middle <= my_panel
+    panel_middle <= MY_PANEL
 
     # stop profiling
     profile_data.stop()

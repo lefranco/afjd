@@ -199,10 +199,10 @@ def change_news():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         change_news()
 
-    my_sub_panel <= html.H3("Editer les nouvelles")
+    MY_SUB_PANEL <= html.H3("Editer les nouvelles")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -234,7 +234,7 @@ def change_news():
     form <= input_change_news_content
     form <= html.BR()
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def usurp():
@@ -279,7 +279,7 @@ def usurp():
         # note : since we access directly to the user server, we present the token in a slightly different way
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    my_sub_panel <= html.H3("Usurper un inscrit")
+    MY_SUB_PANEL <= html.H3("Usurper un inscrit")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -315,7 +315,7 @@ def usurp():
     input_select_player.bind("click", usurp_callback)
     form <= input_select_player
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def all_games(state_name):
@@ -338,11 +338,11 @@ def all_games(state_name):
 
     overall_time_before = time.time()
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
 
     # title
     title = html.H3(f"Parties dans l'état: {state_name}")
-    my_sub_panel <= title
+    MY_SUB_PANEL <= title
 
     state = config.STATE_CODE_TABLE[state_name]
 
@@ -562,16 +562,16 @@ def all_games(state_name):
 
         games_table <= row
 
-    my_sub_panel <= games_table
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= games_table
+    MY_SUB_PANEL <= html.BR()
 
     # get GMT date and time
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
     special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
-    my_sub_panel <= special_info
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= special_info
+    MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
@@ -580,8 +580,8 @@ def all_games(state_name):
     if number_games:
         stats += f" soit {elapsed/number_games} par partie"
 
-    my_sub_panel <= html.DIV(stats, Class='load')
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= html.DIV(stats, Class='load')
+    MY_SUB_PANEL <= html.BR()
 
     for other_state_name in config.STATE_CODE_TABLE:
 
@@ -590,9 +590,9 @@ def all_games(state_name):
             input_change_state = html.INPUT(type="submit", value=other_state_name)
             input_change_state.bind("click", lambda _, s=other_state_name: all_games(s))
 
-            my_sub_panel <= input_change_state
-            my_sub_panel <= html.BR()
-            my_sub_panel <= html.BR()
+            MY_SUB_PANEL <= input_change_state
+            MY_SUB_PANEL <= html.BR()
+            MY_SUB_PANEL <= html.BR()
 
 
 def last_logins():
@@ -602,7 +602,7 @@ def last_logins():
         alert("Il faut se connecter au préalable")
         return
 
-    my_sub_panel <= html.H3("Liste des dernières connexions")
+    MY_SUB_PANEL <= html.H3("Liste des dernières connexions")
 
     pseudo = storage['PSEUDO']
 
@@ -633,7 +633,7 @@ def last_logins():
 
         logins_table <= row
 
-    my_sub_panel <= logins_table
+    MY_SUB_PANEL <= logins_table
 
 
 def last_failures():
@@ -643,7 +643,7 @@ def last_failures():
         alert("Il faut se connecter au préalable")
         return
 
-    my_sub_panel <= html.H3("Liste des connexions manquées")
+    MY_SUB_PANEL <= html.H3("Liste des connexions manquées")
 
     pseudo = storage['PSEUDO']
 
@@ -674,7 +674,7 @@ def last_failures():
 
         failures_table <= row
 
-    my_sub_panel <= failures_table
+    MY_SUB_PANEL <= failures_table
 
 
 def rectify():
@@ -959,7 +959,7 @@ def rectify():
 
     # starts here
 
-    my_sub_panel <= html.H3("Rectifier une position")
+    MY_SUB_PANEL <= html.H3("Rectifier une position")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1134,13 +1134,13 @@ def rectify():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    my_sub_panel <= my_sub_panel2
+    MY_SUB_PANEL <= my_sub_panel2
 
 
 def show_non_confirmed_data():
     """ show_non_confirmed_data """
 
-    my_sub_panel <= html.H3("Liste des inscrits non confirmés")
+    MY_SUB_PANEL <= html.H3("Liste des inscrits non confirmés")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1183,7 +1183,7 @@ def show_non_confirmed_data():
 
         players_table <= row
 
-    my_sub_panel <= players_table
+    MY_SUB_PANEL <= players_table
 
 
 def sendmail():
@@ -1237,10 +1237,10 @@ def sendmail():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         sendmail()
 
-    my_sub_panel <= html.H3("Envoyer un e-mail")
+    MY_SUB_PANEL <= html.H3("Envoyer un e-mail")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1286,7 +1286,7 @@ def sendmail():
     input_select_player.bind("click", sendmail_callback)
     form <= input_select_player
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def get_phone_number():
@@ -1327,10 +1327,10 @@ def get_phone_number():
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         get_phone_number()
 
-    my_sub_panel <= html.H3("Un numéro de téléphone")
+    MY_SUB_PANEL <= html.H3("Un numéro de téléphone")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1369,31 +1369,31 @@ def get_phone_number():
     input_select_player.bind("click", get_phone_number_callback)
     form <= input_select_player
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
-my_panel = html.DIV()
-my_panel.attrs['style'] = 'display: table-row'
+MY_PANEL = html.DIV()
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 # menu-left
-menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width:15%; vertical-align: top;'
-my_panel <= menu_left
+MENU_LEFT = html.DIV()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width:15%; vertical-align: top;'
+MY_PANEL <= MENU_LEFT
 
 # menu-selection
-menu_selection = html.UL()
-menu_left <= menu_selection
+MENU_SELECTION = html.UL()
+MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
-my_sub_panel = html.DIV(id="admin")
-my_panel <= my_sub_panel
+MY_SUB_PANEL = html.DIV(id="admin")
+MY_PANEL <= MY_SUB_PANEL
 
 
 def load_option(_, item_name):
     """ load_option """
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
     if item_name == 'changer nouvelles':
         change_news()
     if item_name == 'usurper':
@@ -1416,7 +1416,7 @@ def load_option(_, item_name):
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
-    menu_left.clear()
+    MENU_LEFT.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
@@ -1429,7 +1429,7 @@ def load_option(_, item_name):
         button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
-        menu_left <= menu_item
+        MENU_LEFT <= menu_item
 
 
 # starts here
@@ -1443,4 +1443,4 @@ def render(panel_middle):
     ITEM_NAME_SELECTED = OPTIONS[0]
 
     load_option(None, ITEM_NAME_SELECTED)
-    panel_middle <= my_panel
+    panel_middle <= MY_PANEL

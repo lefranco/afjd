@@ -74,13 +74,13 @@ def create_game():
 
         if not name:
             alert("Nom manquant")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_game()
             return
 
         if len(name) > MAX_LEN_NAME:
             alert("Nom trop long")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_game()
             return
 
@@ -88,13 +88,13 @@ def create_game():
 
         if not variant:
             alert("Variante manquante")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_game()
             return
 
         if len(variant) > MAX_LEN_NAME:
             alert("Variante trop longue")
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             create_game()
             return
 
@@ -246,10 +246,10 @@ def create_game():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         create_game()
 
-    my_sub_panel <= html.H3("Création de partie")
+    MY_SUB_PANEL <= html.H3("Création de partie")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -257,11 +257,11 @@ def create_game():
 
     pseudo = storage['PSEUDO']
 
-    my_sub_panel <= information_about_playing()
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= information_about_playing()
+    MY_SUB_PANEL <= html.BR()
 
-    my_sub_panel <= information_about_input()
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= information_about_input()
+    MY_SUB_PANEL <= html.BR()
 
     form = html.FORM()
 
@@ -497,7 +497,7 @@ def create_game():
     input_create_game.bind("click", create_game_callback)
     form <= input_create_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def change_description_game():
@@ -576,10 +576,10 @@ def change_description_game():
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         change_description_game()
 
-    my_sub_panel <= html.H3("Changement de la description")
+    MY_SUB_PANEL <= html.H3("Changement de la description")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -616,7 +616,7 @@ def change_description_game():
     input_change_description_game.bind("click", change_description_game_callback)
     form <= input_change_description_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def change_scoring_game():
@@ -695,10 +695,10 @@ def change_scoring_game():
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         change_scoring_game()
 
-    my_sub_panel <= html.H3("Changement du scorage")
+    MY_SUB_PANEL <= html.H3("Changement du scorage")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -741,7 +741,7 @@ def change_scoring_game():
     input_change_scoring_game.bind("click", change_scoring_game_callback)
     form <= input_change_scoring_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def change_access_parameters_game():
@@ -835,10 +835,10 @@ def change_access_parameters_game():
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         change_access_parameters_game()
 
-    my_sub_panel <= html.H3("Changement des paramètres d'accès")
+    MY_SUB_PANEL <= html.H3("Changement des paramètres d'accès")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -895,7 +895,7 @@ def change_access_parameters_game():
     input_change_access_game.bind("click", change_access_parameters_game_callback)
     form <= input_change_access_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def change_deadline_game():
@@ -986,10 +986,10 @@ def change_deadline_game():
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         change_deadline_game()
 
-    my_sub_panel <= html.H3("Changement de la date limite")
+    MY_SUB_PANEL <= html.H3("Changement de la date limite")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -1046,7 +1046,7 @@ def change_deadline_game():
     input_change_deadline_game.bind("click", change_deadline_game_callback)
     form <= input_change_deadline_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def change_pace_parameters_game():
@@ -1198,10 +1198,10 @@ def change_pace_parameters_game():
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         change_pace_parameters_game()
 
-    my_sub_panel <= html.H3("Changement de paramètres de cadence")
+    MY_SUB_PANEL <= html.H3("Changement de paramètres de cadence")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -1321,7 +1321,7 @@ def change_pace_parameters_game():
     input_change_pace_game.bind("click", change_pace_parameters_game_callback)
     form <= input_change_pace_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def change_state_game():
@@ -1400,10 +1400,10 @@ def change_state_game():
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         change_state_game()
 
-    my_sub_panel <= html.H3("Changement d'état")
+    MY_SUB_PANEL <= html.H3("Changement d'état")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -1445,7 +1445,7 @@ def change_state_game():
     input_change_state_game.bind("click", change_state_game_callback)
     form <= input_change_state_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def delete_game():
@@ -1496,10 +1496,10 @@ def delete_game():
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_game_callback(e, d))
 
         # back to where we started
-        my_sub_panel.clear()
+        MY_SUB_PANEL.clear()
         delete_game()
 
-    my_sub_panel <= html.H3("Suppression")
+    MY_SUB_PANEL <= html.H3("Suppression")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -1519,31 +1519,31 @@ def delete_game():
     input_delete_game.bind("click", delete_game_callback_confirm)
     form <= input_delete_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
-my_panel = html.DIV()
-my_panel.attrs['style'] = 'display: table-row'
+MY_PANEL = html.DIV()
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 # menu-left
-menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-my_panel <= menu_left
+MENU_LEFT = html.DIV()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+MY_PANEL <= MENU_LEFT
 
 # menu-selection
-menu_selection = html.UL()
-menu_left <= menu_selection
+MENU_SELECTION = html.UL()
+MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
-my_sub_panel = html.DIV(id="games")
-my_panel <= my_sub_panel
+MY_SUB_PANEL = html.DIV(id="games")
+MY_PANEL <= MY_SUB_PANEL
 
 
 def load_option(_, item_name):
     """ load_option """
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
     if item_name == 'créer':
         create_game()
     if item_name == 'changer description':
@@ -1564,7 +1564,7 @@ def load_option(_, item_name):
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
-    menu_left.clear()
+    MENU_LEFT.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
@@ -1577,7 +1577,7 @@ def load_option(_, item_name):
         button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
-        menu_left <= menu_item
+        MENU_LEFT <= menu_item
 
 
 def render(panel_middle):
@@ -1587,4 +1587,4 @@ def render(panel_middle):
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = OPTIONS[0]
     load_option(None, ITEM_NAME_SELECTED)
-    panel_middle <= my_panel
+    panel_middle <= MY_PANEL

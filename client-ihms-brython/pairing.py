@@ -69,7 +69,7 @@ def join_game():
                     alert("Réponse du serveur imprévue et non documentée")
 
                 # failed but refresh
-                my_sub_panel.clear()
+                MY_SUB_PANEL.clear()
                 join_game()
 
                 return
@@ -78,7 +78,7 @@ def join_game():
             InfoDialog("OK", f"Vous avez rejoint la partie : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             join_game()
 
         json_dict = {
@@ -95,7 +95,7 @@ def join_game():
         # adding allocation : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    my_sub_panel <= html.H3("Se mettre dans la partie")
+    MY_SUB_PANEL <= html.H3("Se mettre dans la partie")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -119,7 +119,7 @@ def join_game():
     input_join_game.bind("click", join_game_callback)
     form <= input_join_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def quit_game():
@@ -138,7 +138,7 @@ def quit_game():
                     alert("Réponse du serveur imprévue et non documentée")
 
                 # failed but refresh
-                my_sub_panel.clear()
+                MY_SUB_PANEL.clear()
                 quit_game()
 
                 return
@@ -147,7 +147,7 @@ def quit_game():
             InfoDialog("OK", f"Vous avez quitté la partie : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             quit_game()
 
         json_dict = {
@@ -165,7 +165,7 @@ def quit_game():
         # quitting a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    my_sub_panel <= html.H3("Se retirer de la partie")
+    MY_SUB_PANEL <= html.H3("Se retirer de la partie")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -189,7 +189,7 @@ def quit_game():
     input_quit_game.bind("click", quit_game_callback)
     form <= input_quit_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def move_players_in_game():
@@ -209,7 +209,7 @@ def move_players_in_game():
                     alert("Réponse du serveur imprévue et non documentée")
 
                 # failed but refresh
-                my_sub_panel.clear()
+                MY_SUB_PANEL.clear()
                 move_players_in_game()
 
                 return
@@ -218,7 +218,7 @@ def move_players_in_game():
             InfoDialog("OK", f"Le joueur a été mis dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             move_players_in_game()
 
         player_pseudo = input_incomer.value
@@ -251,7 +251,7 @@ def move_players_in_game():
                     alert("Réponse du serveur imprévue et non documentée")
 
                 # failed but refresh
-                my_sub_panel.clear()
+                MY_SUB_PANEL.clear()
                 move_players_in_game()
 
                 return
@@ -260,7 +260,7 @@ def move_players_in_game():
             InfoDialog("OK", f"Le joueur a été retiré de la partie: {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             move_players_in_game()
 
         player_pseudo = input_outcomer.value
@@ -279,7 +279,7 @@ def move_players_in_game():
         # removing a player from a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    my_sub_panel <= html.H3("Mettre dans ou enlever des joueurs de la partie")
+    MY_SUB_PANEL <= html.H3("Mettre dans ou enlever des joueurs de la partie")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -394,7 +394,7 @@ def move_players_in_game():
     input_remove_from_game.bind("click", remove_from_game_callback)
     form <= input_remove_from_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def take_mastering_game():
@@ -414,7 +414,7 @@ def take_mastering_game():
                     alert("Réponse du serveur imprévue et non documentée")
 
                 # failed but refresh
-                my_sub_panel.clear()
+                MY_SUB_PANEL.clear()
                 take_mastering_game()
 
                 return
@@ -423,7 +423,7 @@ def take_mastering_game():
             InfoDialog("OK", f"Vous avez pris l'arbitrage de la partie : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             take_mastering_game()
 
         json_dict = {
@@ -441,7 +441,7 @@ def take_mastering_game():
         # taking game mastering : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    my_sub_panel <= html.H3("Prendre l'arbitrage de la partie")
+    MY_SUB_PANEL <= html.H3("Prendre l'arbitrage de la partie")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -465,7 +465,7 @@ def take_mastering_game():
     input_join_game.bind("click", take_mastering_game_callback)
     form <= input_join_game
 
-    my_sub_panel <= form
+    MY_SUB_PANEL <= form
 
 
 def quit_mastering_game():
@@ -484,7 +484,7 @@ def quit_mastering_game():
                     alert("Réponse du serveur imprévue et non documentée")
 
                 # failed but refresh
-                my_sub_panel.clear()
+                MY_SUB_PANEL.clear()
                 quit_mastering_game()
 
                 return
@@ -493,7 +493,7 @@ def quit_mastering_game():
             InfoDialog("OK", f"Vous avez quitté l'arbitrage de la partie : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
-            my_sub_panel.clear()
+            MY_SUB_PANEL.clear()
             quit_mastering_game()
 
         json_dict = {
@@ -511,7 +511,7 @@ def quit_mastering_game():
         # giving up game mastering : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    my_sub_panel <= html.H3("Quitter l'arbitrage de la partie")
+    MY_SUB_PANEL <= html.H3("Quitter l'arbitrage de la partie")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -535,36 +535,36 @@ def quit_mastering_game():
     input_join_game.bind("click", quit_mastering_game_callback)
     form <= input_join_game
 
-    my_sub_panel <= form
-    my_sub_panel <= html.BR()
-    my_sub_panel <= html.BR()
+    MY_SUB_PANEL <= form
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     warning = html.DIV("Attention : Créer une partie anonyme, se retirer de l'arbitrage après avoir consulté la liste des joueurs et ensuite jouer dans cette partie... est considéré comme tricher !", Class='note')
-    my_sub_panel <= warning
+    MY_SUB_PANEL <= warning
 
 
-my_panel = html.DIV()
-my_panel.attrs['style'] = 'display: table-row'
+MY_PANEL = html.DIV()
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 # menu-left
-menu_left = html.DIV()
-menu_left.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-my_panel <= menu_left
+MENU_LEFT = html.DIV()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+MY_PANEL <= MENU_LEFT
 
 # menu-selection
-menu_selection = html.UL()
-menu_left <= menu_selection
+MENU_SELECTION = html.UL()
+MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
-my_sub_panel = html.DIV(id="pairing")
-my_panel <= my_sub_panel
+MY_SUB_PANEL = html.DIV(id="pairing")
+MY_PANEL <= MY_SUB_PANEL
 
 
 def load_option(_, item_name):
     """ load_option """
 
-    my_sub_panel.clear()
+    MY_SUB_PANEL.clear()
     if item_name == 'se mettre dans les joueurs potentiels de la partie':
         join_game()
     if item_name == 'se retirer des joueurs potentiels de la partie':
@@ -579,7 +579,7 @@ def load_option(_, item_name):
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
-    menu_left.clear()
+    MENU_LEFT.clear()
 
     # items in menu
     for possible_item_name in OPTIONS:
@@ -592,7 +592,7 @@ def load_option(_, item_name):
         button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
         button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
         menu_item = html.LI(button)
-        menu_left <= menu_item
+        MENU_LEFT <= menu_item
 
 
 def render(panel_middle):
@@ -603,4 +603,4 @@ def render(panel_middle):
     ITEM_NAME_SELECTED = OPTIONS[0]
 
     load_option(None, ITEM_NAME_SELECTED)
-    panel_middle <= my_panel
+    panel_middle <= MY_PANEL
