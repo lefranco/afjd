@@ -780,9 +780,9 @@ def get_game_players_data(game_id):
 
 
 def get_roles_submitted_orders(game_id):
-    """ get_roles_submitted_orders """
+    """ get_roles_submitted_orders : returns empty dict if problem """
 
-    submitted_data = None
+    submitted_data = dict()
 
     def reply_callback(req):
         nonlocal submitted_data
@@ -1763,7 +1763,7 @@ def submit_orders():
     PROFILE_DATA.start('submit_orders() - chargement données de soumission')
 
     submitted_data = get_roles_submitted_orders(g_game_id)
-    if submitted_data is None:
+    if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
@@ -2467,7 +2467,7 @@ def submit_communication_orders():
     # need to have orders to submit
 
     submitted_data = get_roles_submitted_orders(g_game_id)
-    if submitted_data is None:
+    if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
@@ -3601,7 +3601,7 @@ def game_master():
     PROFILE_DATA.start('game_master() - chargement données soumission')
 
     submitted_data = get_roles_submitted_orders(g_game_id)
-    if submitted_data is None:
+    if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
@@ -3958,7 +3958,7 @@ def supervise():
             load_dynamic_stuff()
             nonlocal submitted_data
             submitted_data = get_roles_submitted_orders(g_game_id)
-            if submitted_data is None:
+            if not submitted_data:
                 alert("Erreur chargement données de soumission")
                 return
 
@@ -4458,7 +4458,7 @@ def show_orders_submitted_in_game():
 
     # you will at least get your own role
     submitted_data = get_roles_submitted_orders(g_game_id)
-    if submitted_data is None:
+    if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
@@ -4576,7 +4576,7 @@ def show_incidents_in_game():
 
     # you will at least get your own role
     submitted_data = get_roles_submitted_orders(g_game_id)
-    if submitted_data is None:
+    if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False

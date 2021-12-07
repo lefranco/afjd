@@ -26,9 +26,9 @@ LONG_DURATION_LIMIT_SEC = 1.0
 
 
 def get_all_games_roles_submitted_orders():
-    """ get_all_games_roles_submitted_orders """
+    """ get_all_games_roles_submitted_orders : returns empty dict on error """
 
-    dict_submitted_data = None
+    dict_submitted_data = dict()
 
     def reply_callback(req):
         nonlocal dict_submitted_data
@@ -385,7 +385,7 @@ def all_games(state_name):
     masters_alloc = allocations_data['game_masters_dict']
 
     dict_submitted_data = get_all_games_roles_submitted_orders()
-    if dict_submitted_data is None:
+    if not dict_submitted_data:
         alert("Erreur chargement des soumissions dans les parties")
         return
 
@@ -1319,7 +1319,7 @@ def display_phone_number():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        get_phone_number()
+        display_phone_number()
 
     MY_SUB_PANEL <= html.H3("Un numéro de téléphone")
 
