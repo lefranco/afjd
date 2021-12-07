@@ -1158,7 +1158,6 @@ def show_non_confirmed_data():
 
     players_table = html.TABLE()
 
-    # TODO : make it possible to sort etc...
     fields = ['pseudo']
 
     # header
