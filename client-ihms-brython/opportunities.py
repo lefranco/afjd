@@ -23,9 +23,9 @@ MY_PANEL.attrs['style'] = 'display: table'
 
 
 def get_recruiting_games():
-    """ get_recruiting_games """
+    """ get_recruiting_games : retuens empty list if erroro or not game"""
 
-    recruiting_games_list = None
+    recruiting_games_list = list()
 
     def reply_callback(req):
         nonlocal recruiting_games_list
@@ -124,11 +124,7 @@ def my_opportunities():
     pseudo = storage['PSEUDO']
 
     recruiting_games_list = get_recruiting_games()
-    if recruiting_games_list is None:
-        return
-
-    # to avoid warning
-    recruiting_games_list = list(recruiting_games_list)
+    # there can be no message (if no game of failed to load)
 
     recruiting_games_dict = {tr[0]: {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
 
