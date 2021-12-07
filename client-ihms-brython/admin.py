@@ -366,7 +366,7 @@ def all_games(state_name):
         return
 
     games_dict = common.get_games_data()
-    if games_dict is None:
+    if not games_dict:
         alert("Erreur chargement dictionnaire parties")
         return
 

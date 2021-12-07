@@ -133,7 +133,7 @@ def my_opportunities():
     recruiting_games_dict = {tr[0]: {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
 
     games_dict = common.get_games_data()
-    if games_dict is None:
+    if not games_dict:
         alert("Erreur chargement dictionnaire parties")
         return
 

@@ -137,9 +137,9 @@ def get_players_data():
 
 
 def get_games_data():
-    """ get_games_data """
+    """ get_games_data : returnes empty dict if problem """
 
-    games_dict = None
+    games_dict = dict()
 
     def reply_callback(req):
         nonlocal games_dict
