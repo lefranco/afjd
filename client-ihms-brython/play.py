@@ -77,14 +77,14 @@ VARIANT_DATA = None
 INFORCED_VARIANT_DATA = None
 
 # loaded in load_dynamic_stuff
-GAME_PARAMETERS_LOADED = None
+GAME_PARAMETERS_LOADED = dict()
 GAME_STATUS = None
 POSITION_LOADED = None
 POSITION_DATA = None
 REPORT_LOADED = None
 
 # loaded in load_special_stuff
-GAME_PLAYERS_DICT = None
+GAME_PLAYERS_DICT = dict()
 
 
 def game_report_reload(game_id):
@@ -212,9 +212,9 @@ def game_communication_orders_reload(game_id):
 
 
 def game_parameters_reload(game):
-    """ display_main_parameters_reload """
+    """ display_main_parameters_reload : returns empty dict if error"""
 
-    game_parameters_loaded = None
+    game_parameters_loaded = dict()
 
     def reply_callback(req):
         nonlocal game_parameters_loaded
@@ -723,9 +723,9 @@ def get_game_status_histo(variant_data, game_parameters_loaded, advancement_sele
 
 
 def get_game_players_data(game_id):
-    """ get_game_players_data """
+    """ get_game_players_data : returns empty dict if problem """
 
-    game_players_dict = None
+    game_players_dict = dict()
 
     def reply_callback(req):
         nonlocal game_players_dict
@@ -4385,7 +4385,7 @@ def show_players_in_game():
     MY_SUB_PANEL <= game_players_table
 
     # add the non allocated players
-    dangling_players = [p for p in GAME_PLAYERS_DICT.keys() if GAME_PLAYERS_DICT[p] == - 1]
+    dangling_players = [p for p in GAME_PLAYERS_DICT if GAME_PLAYERS_DICT[p] == - 1]
     if dangling_players:
         MY_SUB_PANEL <= html.BR()
         info = html.EM("Les pseudos suivants sont alloués à la partie sans rôle : ")
