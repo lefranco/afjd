@@ -18,7 +18,8 @@ import index  # circular import
 
 OPTIONS = ['créer', 'changer description', 'changer scorage', 'changer paramètres accès', 'changer date limite', 'changer paramètre cadence', 'changer état', 'supprimer']
 
-MAX_LEN_NAME = 30
+MAX_LEN_GAME_NAME = 50
+MAX_LEN_VARIANT_NAME = 20
 
 DEFAULT_VARIANT = 'standard'
 DEFAULT_SCORING_CODE = "CDIP"
@@ -73,13 +74,13 @@ def create_game():
         name = input_name.value
 
         if not name:
-            alert("Nom manquant")
+            alert("Nom de partie manquant")
             MY_SUB_PANEL.clear()
             create_game()
             return
 
-        if len(name) > MAX_LEN_NAME:
-            alert("Nom trop long")
+        if len(name) > MAX_LEN_GAME_NAME:
+            alert("Nom de partie trop long")
             MY_SUB_PANEL.clear()
             create_game()
             return
@@ -87,13 +88,13 @@ def create_game():
         variant = input_variant.value
 
         if not variant:
-            alert("Variante manquante")
+            alert("Nom de variante manquante")
             MY_SUB_PANEL.clear()
             create_game()
             return
 
-        if len(variant) > MAX_LEN_NAME:
-            alert("Variante trop longue")
+        if len(variant) > MAX_LEN_VARIANT_NAME:
+            alert("Nom de variante trop long")
             MY_SUB_PANEL.clear()
             create_game()
             return
@@ -271,7 +272,7 @@ def create_game():
     fieldset = html.FIELDSET()
     legend_name = html.LEGEND("nom")
     fieldset <= legend_name
-    input_name = html.INPUT(type="text", value="", title="Nom de la partie (faites court et simple)")
+    input_name = html.INPUT(type="text", value="", size=MAX_LEN_GAME_NAME, title="Nom de la partie (faites court et simple)")
     fieldset <= input_name
     form <= fieldset
 

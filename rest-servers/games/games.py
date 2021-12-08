@@ -22,7 +22,7 @@ import forbiddens
 import variants
 
 # need to have a limit in sizes of fields
-LEN_NAME_MAX = 20
+LEN_NAME_MAX = 50
 LEN_SCORING_MAX = 5
 
 # for safety

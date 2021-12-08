@@ -18,7 +18,7 @@ OPTIONS = ['créer les parties']
 
 DESCRIPTION = "partie créée par batch"
 
-LEN_GAME_MAX = 20
+MAX_LEN_GAME_NAME = 50
 
 
 def check_batch(current_pseudo, games_to_create):
@@ -380,11 +380,11 @@ def create_games():
                 game_name = tab[0]
 
                 if not game_name.isidentifier():
-                    alert(f"Le nom de partie {game_name} est incorrect pour le site")
+                    alert(f"Le nom de partie '{game_name}' est incorrect pour le site")
                     return
 
-                if len(game_name) > LEN_GAME_MAX:
-                    alert(f"Le nom de partie {game_name} est trop long")
+                if len(game_name) > MAX_LEN_GAME_NAME:
+                    alert(f"Le nom de partie '{game_name}' est trop long (limite : {MAX_LEN_GAME_NAME})")
                     return
 
                 if game_name in games_to_create:
