@@ -14,6 +14,7 @@ import interface
 import config
 import mapping
 import selection
+import memoize
 import index  # circular import
 
 MY_PANEL = html.DIV(id="mygames")
@@ -299,11 +300,6 @@ def my_games(state_name):
 
     games_id_player = {int(n) for n in player_games}
 
-    # for optimization
-    variant_content_memoize_table = dict()
-    parameters_read_memoize_table = dict()
-    variant_data_memoize_table = dict()
-
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
@@ -323,33 +319,33 @@ def my_games(state_name):
         variant_name_loaded = data['variant']
 
         # from variant name get variant content
-        if variant_name_loaded not in variant_content_memoize_table:
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
             variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
             if not variant_content_loaded:
                 alert("Erreur chargement données variante de la partie")
                 return
-            variant_content_memoize_table[variant_name_loaded] = variant_content_loaded
-        else:
-            variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
 
         # selected display (user choice)
         interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
 
         # parameters
 
-        if (variant_name_loaded, interface_chosen) in parameters_read_memoize_table:
-            parameters_read = parameters_read_memoize_table[(variant_name_loaded, interface_chosen)]
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
         else:
             parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
-            parameters_read_memoize_table[(variant_name_loaded, interface_chosen)] = parameters_read
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
 
         # build variant data
 
-        if variant_name_loaded not in variant_data_memoize_table:
-            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-            variant_data_memoize_table[variant_name_loaded] = variant_data
+        if variant_name_loaded in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[variant_name_loaded]
         else:
-            variant_data = variant_data_memoize_table[variant_name_loaded]
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[variant_name_loaded] = variant_data
 
         number_games += 1
 
