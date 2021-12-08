@@ -14,7 +14,9 @@ import login
 
 OPTIONS = ['créer', 'mot de passe', 'valider mon e-mail', 'editer', 'supprimer']
 
+
 MAX_LEN_PSEUDO = 20
+MAX_LEN_EMAIL = 100
 
 DEFAULT_COUNTRY_CODE = "FRA"
 DEFAULT_TIMEZONE_CODE = "UTC+01:00"
@@ -177,7 +179,7 @@ def create_account():
     fieldset = html.FIELDSET()
     legend_email = html.LEGEND("email (privé)", title="Le site vous notifiera de quelques très rares événements")
     fieldset <= legend_email
-    input_email = html.INPUT(type="email", value="", size="80")
+    input_email = html.INPUT(type="email", value="", size=MAX_LEN_EMAIL)
     fieldset <= input_email
     form <= fieldset
 
@@ -613,7 +615,7 @@ def edit_account():
     fieldset = html.FIELDSET()
     legend_email = html.LEGEND("email", title="Le site vous notifiera de quelques très rares événements")
     fieldset <= legend_email
-    input_email = html.INPUT(type="email", value=email_loaded, size="40")
+    input_email = html.INPUT(type="email", value=email_loaded, size=MAX_LEN_EMAIL)
     fieldset <= input_email
     form <= fieldset
 
