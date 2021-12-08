@@ -4656,6 +4656,8 @@ def show_incidents_in_game():
         humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
         MY_SUB_PANEL <= humour_img
 
+        MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) ont réalisé la transition 'pas prêt -> prêt pour résoudre' après la date limite", Class='note')
+
     return True
 
 
