@@ -341,11 +341,11 @@ def my_games(state_name):
 
         # build variant data
 
-        if variant_name_loaded in memoize.VARIANT_DATA_MEMOIZE_TABLE:
-            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[variant_name_loaded]
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
         else:
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-            memoize.VARIANT_DATA_MEMOIZE_TABLE[variant_name_loaded] = variant_data
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
 
         number_games += 1
 

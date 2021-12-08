@@ -452,13 +452,11 @@ def all_games(state_name):
         # build variant data
 
         variant_name_loaded_str = str(variant_name_loaded)
-        variant_content_loaded_str = str(variant_content_loaded)
-        parameters_read_str = str(parameters_read)
-        if (variant_name_loaded_str, variant_content_loaded_str, parameters_read_str) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
-            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)]
+        if (variant_name_loaded_str, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)]
         else:
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)] = variant_data
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
         submitted_data = dict()
         submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
