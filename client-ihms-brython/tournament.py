@@ -17,9 +17,10 @@ import mapping
 OPTIONS = ['créer les parties']
 
 DESCRIPTION = "partie créée par batch"
-FILES = None
 
 MAX_LEN_GAME_NAME = 50
+
+INPUT_FILE = None
 
 
 def check_batch(current_pseudo, games_to_create):
@@ -53,7 +54,7 @@ def check_batch(current_pseudo, games_to_create):
             if player_name not in players_set:
 
                 if player_name not in already_warned:
-                    alert(f"Il semble que le pseudo '{player_name}' n'existe pas sur le site")
+                    alert(f"Il semble que le joueur '{player_name}' n'existe pas sur le site")
                     already_warned.add(player_name)
                     error = True
 
@@ -84,13 +85,13 @@ def check_batch(current_pseudo, games_to_create):
     for player_name1 in presence_table:
         for player_name2 in presence_table:
             if player_name2 != player_name1 and presence_table[player_name2] != presence_table[player_name1]:
-                alert(f"Il semble que {player_name1} et {player_name2} jouent dans un nombre de parties différent")
+                alert(f"Il semble que les joueurs '{player_name1}' et '{player_name2}' jouent dans un nombre de parties différent")
                 return False
 
     # game master has to be pseudo
     for game_name, allocations in games_to_create.items():
         if allocations[0] != current_pseudo:
-            alert(f"Vous n'êtes pas l'arbitre de la partie {game_name}. Il faudra demander à l'arbitre désiré de venir lui-même sur le site réaliser la création de ses parties")
+            alert(f"Vous n'êtes pas l'arbitre indiqué dans le fichier pour la partie {game_name}. Il faudra donc demander à l'arbitre en question de venir lui-même sur le site réaliser la création de ses parties")
             error = True
 
     return not error
@@ -322,7 +323,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
                 return
 
     nb_parties = len(games_to_create_data)
-    alert(f"Les {nb_parties} parties du tournoi on été créée. Tout s'est bien passé. Incroyable, non ?")
+    alert(f"Les {nb_parties} parties du tournoi ont bien été créée. Tout s'est bien passé. Incroyable, non ?")
 
 
 def create_games():
@@ -378,14 +379,14 @@ def create_games():
                     return
 
                 if game_name in games_to_create:
-                    alert(f"La partie {game_name} est définie plusieurs fois dans votre fichier")
+                    alert(f"La partie {game_name} est définie plusieurs fois dans le fichier")
                     return
 
                 # create dictionnary
                 games_to_create[game_name] = {n: tab[n + 1] for n in range(len(tab) - 1)}
 
             if not games_to_create:
-                alert("Pas de partie dans le fichier")
+                alert("Aucune partie dans le fichier")
                 return
 
             global DESCRIPTION
@@ -393,7 +394,7 @@ def create_games():
 
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create):
-                dialog = Dialog("On créér vraiment toutes ces parties?", ok_cancel=True)
+                dialog = Dialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
                 dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
                 dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
 
@@ -401,7 +402,7 @@ def create_games():
             MY_SUB_PANEL.clear()
             create_games()
 
-        if not input_file.files:
+        if not INPUT_FILE.files:
             alert("Pas de fichier")
 
             # back to where we started
@@ -409,14 +410,12 @@ def create_games():
             create_games()
             return
 
-        global FILES
-        FILES = input_file.files
-
-        file = input_file.files[0]
         # Create a new DOM FileReader instance
         reader = window.FileReader.new()
+        # Extract the file
+        file_name = INPUT_FILE.files[0]
         # Read the file content as text
-        reader.readAsBinaryString(file)
+        reader.readAsBinaryString(file_name)
         reader.bind("load", onload_callback)
 
         # back to where we started
@@ -476,8 +475,11 @@ def create_games():
     fieldset <= legend_name
     form <= fieldset
 
-    input_file = html.INPUT(type="file", accept='.csv', files=FILES[0] if FILES else None)
-    form <= input_file
+    # need to make this global to keep it (only way it seems)
+    global INPUT_FILE
+    if INPUT_FILE is None:
+        INPUT_FILE = html.INPUT(type="file", accept='.csv')
+    form <= INPUT_FILE
     form <= html.BR()
 
     form <= html.BR()
