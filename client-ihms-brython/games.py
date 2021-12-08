@@ -270,9 +270,9 @@ def create_game():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_name = html.LEGEND("nom")
+    legend_name = html.LEGEND("nom", title="Nom de la partie (faites court et simple)")
     fieldset <= legend_name
-    input_name = html.INPUT(type="text", value="", size=MAX_LEN_GAME_NAME, title="Nom de la partie (faites court et simple)")
+    input_name = html.INPUT(type="text", value="", size=MAX_LEN_GAME_NAME)
     fieldset <= input_name
     form <= fieldset
 
