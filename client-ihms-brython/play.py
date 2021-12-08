@@ -20,6 +20,7 @@ import geometry
 import mapping
 import login
 import sandbox
+import memoize
 import index  # circular import
 
 import profiler
@@ -36,10 +37,6 @@ LONG_DURATION_LIMIT_SEC = 1.0
 
 OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'observer', 'paramètres', 'arbitre', 'joueurs', 'ordres', 'retards']
 
-# to optimize a bit
-VARIANT_CONTENT_MEMOIZE_TABLE = dict()
-PARAMETERS_READ_MEMOIZE_TABLE = dict()
-VARIANT_DATA_MEMOIZE_TABLE = dict()
 
 PROFILE_DATA = None
 
@@ -393,18 +390,19 @@ def load_static_stuff():
 
     PROFILE_DATA.start('load_static_stuff - chargement du contenu de la variante')
 
-    # optimization
-    global VARIANT_CONTENT_MEMOIZE_TABLE
     global VARIANT_CONTENT_LOADED
-    if VARIANT_NAME_LOADED in VARIANT_CONTENT_MEMOIZE_TABLE:
-        PROFILE_DATA.start('contenu de la variante memoized !')
-        VARIANT_CONTENT_LOADED = VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED]
+
+    # optimization
+    if VARIANT_NAME_LOADED in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+        PROFILE_DATA.start('+++ contenu de la variante memoized !')
+        VARIANT_CONTENT_LOADED = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED]
     else:
+        PROFILE_DATA.start('--- contenu de la variante téléchargé !')
         VARIANT_CONTENT_LOADED = common.game_variant_content_reload(VARIANT_NAME_LOADED)
         if not VARIANT_CONTENT_LOADED:
             alert("Erreur chargement contenu variante")
             return
-        VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED] = VARIANT_CONTENT_LOADED
+        memoize.VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED] = VARIANT_CONTENT_LOADED
 
     PROFILE_DATA.start('load_static_stuff - lecture tableau interface_from_variant()')
 
@@ -416,15 +414,16 @@ def load_static_stuff():
 
     # from display chose get display parameters
 
-    # optimization
-    global PARAMETERS_READ_MEMOIZE_TABLE
     global INTERFACE_PARAMETERS_READ
-    if (VARIANT_NAME_LOADED, INTERFACE_CHOSEN) in PARAMETERS_READ_MEMOIZE_TABLE:
-        PROFILE_DATA.start('fichier parametres affichage 1 memoized !')
-        INTERFACE_PARAMETERS_READ = PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)]
+
+    # optimization
+    if (VARIANT_NAME_LOADED, INTERFACE_CHOSEN) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+        PROFILE_DATA.start('+++ fichier parametres affichage 1 memoized !')
+        INTERFACE_PARAMETERS_READ = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)]
     else:
+        PROFILE_DATA.start('--- fichier parametres affichage 1 téléchargé !')
         INTERFACE_PARAMETERS_READ = common.read_parameters(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-        PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = INTERFACE_PARAMETERS_READ
+        memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = INTERFACE_PARAMETERS_READ
 
     PROFILE_DATA.start('load_static_stuff - creation objet Variant 1')
 
@@ -432,13 +431,13 @@ def load_static_stuff():
     global VARIANT_DATA
 
     # optimization
-    global VARIANT_DATA_MEMOIZE_TABLE
-    if (VARIANT_NAME_LOADED, INTERFACE_CHOSEN) in VARIANT_DATA_MEMOIZE_TABLE:
-        PROFILE_DATA.start('objet Variant 1 memoized !')
-        VARIANT_DATA = VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)]
+    if (VARIANT_NAME_LOADED, INTERFACE_CHOSEN) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+        PROFILE_DATA.start('+++ objet Variant 1 memoized !')
+        VARIANT_DATA = memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)]
     else:
+        PROFILE_DATA.start('--- objet Variant 1 téléchargé !')
         VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, INTERFACE_PARAMETERS_READ)
-        VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = VARIANT_DATA
+        memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = VARIANT_DATA
 
     # now for official map
 
@@ -450,12 +449,13 @@ def load_static_stuff():
     PROFILE_DATA.start('load_static_stuff - lecture fichier parametres affichage 2')
 
     # optimization
-    if (VARIANT_NAME_LOADED, interface_inforced) in PARAMETERS_READ_MEMOIZE_TABLE:
-        PROFILE_DATA.start('parametres affichage 2 memoized !')
-        inforced_interface_parameters_read = PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
+    if (VARIANT_NAME_LOADED, interface_inforced) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+        PROFILE_DATA.start('+++ parametres affichage 2 memoized !')
+        inforced_interface_parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
     else:
+        PROFILE_DATA.start('--- parametres affichage 2 téléchargé !')
         inforced_interface_parameters_read = common.read_parameters(VARIANT_NAME_LOADED, interface_inforced)
-        PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = inforced_interface_parameters_read
+        memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = inforced_interface_parameters_read
 
     PROFILE_DATA.start('load_static_stuff - creation objet Variant 2')
 
@@ -463,12 +463,13 @@ def load_static_stuff():
     global INFORCED_VARIANT_DATA
 
     # optimization
-    if (VARIANT_NAME_LOADED, interface_inforced) in VARIANT_DATA_MEMOIZE_TABLE:
-        PROFILE_DATA.start('objet Variant 2 memoized !')
-        INFORCED_VARIANT_DATA = VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
+    if (VARIANT_NAME_LOADED, interface_inforced) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+        PROFILE_DATA.start('+++ objet Variant 2 memoized !')
+        INFORCED_VARIANT_DATA = memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
     else:
+        PROFILE_DATA.start('--- objet Variant 2 téléchargé !')
         INFORCED_VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, inforced_interface_parameters_read)
-        VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = INFORCED_VARIANT_DATA
+        memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = INFORCED_VARIANT_DATA
 
 
 def load_dynamic_stuff():
