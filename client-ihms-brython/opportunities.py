@@ -15,6 +15,7 @@ import interface
 import common
 import mapping
 import selection
+import memoize
 import index  # circular import
 
 
@@ -149,10 +150,6 @@ def my_opportunities():
         thead <= col
     games_table <= thead
 
-    # for optimization
-    variant_data_memoize_table = dict()
-    variant_content_memoize_table = dict()
-
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
@@ -169,13 +166,13 @@ def my_opportunities():
         # this is an optimisation
 
         # new code after optimization
-        if variant_name_loaded not in variant_content_memoize_table:
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
             variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
             if not variant_content_loaded:
                 return
-            variant_content_memoize_table[variant_name_loaded] = variant_content_loaded
-        else:
-            variant_content_loaded = variant_content_memoize_table[variant_name_loaded]
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
 
         # selected interface (user choice)
         interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
@@ -187,11 +184,12 @@ def my_opportunities():
         variant_name_loaded_str = str(variant_name_loaded)
         variant_content_loaded_str = str(variant_content_loaded)
         parameters_read_str = str(parameters_read)
-        if (variant_name_loaded_str, variant_content_loaded_str, parameters_read_str) not in variant_data_memoize_table:
-            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-            variant_data_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)] = variant_data
+        if (variant_name_loaded_str, variant_content_loaded_str, parameters_read_str) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)]
         else:
-            variant_data = variant_data_memoize_table[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)]
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, variant_content_loaded_str, parameters_read_str)] = variant_data
+
 
         data['allocated'] = None
         data['capacity'] = None
