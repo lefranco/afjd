@@ -17,6 +17,7 @@ import mapping
 OPTIONS = ['créer les parties']
 
 DESCRIPTION = "partie créée par batch"
+FILES = None
 
 MAX_LEN_GAME_NAME = 50
 
@@ -29,7 +30,6 @@ def check_batch(current_pseudo, games_to_create):
         alert("Erreur chargement dictionnaire parties")
         return False
     games_dict = dict(games_dict)
-    games_set = {d['name'] for d in games_dict.values()}
 
     players_dict = common.get_players_data()
     if not players_dict:
@@ -40,25 +40,15 @@ def check_batch(current_pseudo, games_to_create):
 
     error = False
 
-    # check the game does not exist
-    for ligne, game_name in enumerate(games_to_create):
-
-        if not game_name:
-            alert(f"Il y a un nom de partie vide dans le fichier en ligne {ligne+1}")
-            error = True
-
-        if game_name in games_set:
-            alert(f"Il semble que la partie '{game_name}' existe déjà")
-            error = True
-
     # check the players exist
     already_warned = set()
     for ligne, allocations in enumerate(games_to_create.values()):
         for player_name in allocations.values():
 
+            # empty player (fatal)
             if not player_name:
                 alert(f"Il y a un nom de joueur vide dans le fichier en ligne {ligne+1}")
-                error = True
+                return False
 
             if player_name not in players_set:
 
@@ -67,7 +57,7 @@ def check_batch(current_pseudo, games_to_create):
                     already_warned.add(player_name)
                     error = True
 
-    # check all games have same number of roles
+    # check all games have same number of roles (fatal)
     reference_size = None
     for game_name, allocations in games_to_create.items():
         size = len(allocations)
@@ -75,15 +65,15 @@ def check_batch(current_pseudo, games_to_create):
             reference_size = size
         elif size != reference_size:
             alert(f"Il semble que la partie {game_name} n'a pas le même nombre de joueurs que la première partie")
-            error = True
+            return False
 
-    # check the players in games are not duplicated
+    # check the players in games are not duplicated (fatal)
     for game_name, allocations in games_to_create.items():
         if len(set(allocations.values())) != len(allocations.values()):
             alert(f"Il semble que la partie {game_name} n'a pas des joueurs tous différents")
-            error = True
+            return False
 
-    # check players are in same number of games
+    # check players are in same number of games (fatal)
     presence_table = dict()
     for allocations in games_to_create.values():
         for player_name in allocations.values():
@@ -95,12 +85,12 @@ def check_batch(current_pseudo, games_to_create):
         for player_name2 in presence_table:
             if player_name2 != player_name1 and presence_table[player_name2] != presence_table[player_name1]:
                 alert(f"Il semble que {player_name1} et {player_name2} jouent dans un nombre de parties différent")
-                error = True
+                return False
 
     # game master has to be pseudo
     for game_name, allocations in games_to_create.items():
         if allocations[0] != current_pseudo:
-            alert(f"Vous n'êtes pas l'arbitre de la partie {game_name}. Il faudra demander à l'abitre désiré de venir sur le site réaliser la création de la partie")
+            alert(f"Vous n'êtes pas l'arbitre de la partie {game_name}. Il faudra demander à l'arbitre désiré de venir lui-même sur le site réaliser la création de ses parties")
             error = True
 
     return not error
@@ -358,10 +348,6 @@ def create_games():
             content = str(reader.result)
             lines = content.splitlines()
 
-            if not len(lines) >= 1:
-                alert("Votre fichier n'a pas de lignes")
-                return
-
             for line in lines:
 
                 # ignore empty lines
@@ -379,6 +365,10 @@ def create_games():
                 # name of game is first column
                 game_name = tab[0]
 
+                if not game_name:
+                    alert("Un nom de partie est vide dans le fichier")
+                    return
+
                 if not game_name.isidentifier():
                     alert(f"Le nom de partie '{game_name}' est incorrect pour le site")
                     return
@@ -393,6 +383,10 @@ def create_games():
 
                 # create dictionnary
                 games_to_create[game_name] = {n: tab[n + 1] for n in range(len(tab) - 1)}
+
+            if not games_to_create:
+                alert("Pas de partie dans le fichier")
+                return
 
             global DESCRIPTION
             DESCRIPTION = input_description.value
@@ -414,6 +408,9 @@ def create_games():
             MY_SUB_PANEL.clear()
             create_games()
             return
+
+        global FILES
+        FILES = input_file.files
 
         file = input_file.files[0]
         # Create a new DOM FileReader instance
@@ -479,7 +476,7 @@ def create_games():
     fieldset <= legend_name
     form <= fieldset
 
-    input_file = html.INPUT(type="file")
+    input_file = html.INPUT(type="file", accept='.csv', files=FILES[0] if FILES else None)
     form <= input_file
     form <= html.BR()
 
