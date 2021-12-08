@@ -449,7 +449,7 @@ def create_games():
     information <= items
     information <= "Utiliser l'ordre suivant pour la variante standard : Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie"
     information <= html.BR()
-    information <= "Comme il est impossible d'attribuer l'arbitrage d'une partie à un autre joueur, vous serez retiré de l'arbitrage des parties dont vous n'êtes pas arbitre"
+    information <= "Il est impossible d'attribuer l'arbitrage d'une partie à un autre joueur, donc vous pouvez mettre un arbitre différent à des fins de vérification mais la création des parties n'aura pas lieu."
     information <= html.BR()
     information <= "Il faut remplir soigneusement la description qui s'appliquera à toutes les parties !"
     information <= html.BR()
