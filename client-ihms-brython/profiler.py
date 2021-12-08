@@ -10,7 +10,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import common
 import config
 
-VERSION = "optimisée v1"
+VERSION = "optimisée v2"
 
 
 class Measure:
