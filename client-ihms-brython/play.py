@@ -435,7 +435,7 @@ def load_static_stuff():
         PROFILE_DATA.start('+++ objet Variant 1 memoized !')
         VARIANT_DATA = memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)]
     else:
-        PROFILE_DATA.start('--- objet Variant 1 téléchargé !')
+        PROFILE_DATA.start('--- objet Variant 1 création instance !')
         VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, INTERFACE_PARAMETERS_READ)
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = VARIANT_DATA
 
@@ -467,7 +467,7 @@ def load_static_stuff():
         PROFILE_DATA.start('+++ objet Variant 2 memoized !')
         INFORCED_VARIANT_DATA = memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
     else:
-        PROFILE_DATA.start('--- objet Variant 2 téléchargé !')
+        PROFILE_DATA.start('--- objet Variant 2 création instance !')
         INFORCED_VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, inforced_interface_parameters_read)
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = INFORCED_VARIANT_DATA
 
