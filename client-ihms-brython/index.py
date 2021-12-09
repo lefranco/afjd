@@ -1,10 +1,6 @@
 """ index """
 
 # pylint: disable=pointless-statement, expression-not-assigned
-# pylint: disable=wrong-import-position
-
-import time
-START_TIME = time.time()
 
 from browser import document, html, alert, timer  # pylint: disable=import-error # noqa: E402
 from browser.local_storage import storage  # pylint: disable=import-error # noqa: E402
@@ -163,11 +159,4 @@ login.check_token()
 login.show_login()
 selection.show_game_selected()
 
-
 document <= html.B("Contactez le support par e-mail en cas de problème (cf page d'accueil). Merci !")
-
-
-END_TIME = time.time()
-ELAPSED = END_TIME - START_TIME
-STATS = f"Temps de chargement de la page initiale {ELAPSED} sec"
-document <= html.DIV(STATS, Class='load')
