@@ -23,9 +23,6 @@ import sandbox
 import memoize
 import index  # circular import
 
-import profiler
-
-SEND_REPORT = True
 
 # how long between two consecutives refresh
 SUPERVISE_REFRESH_PERIOD_SEC = 15
@@ -36,9 +33,6 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 LONG_DURATION_LIMIT_SEC = 1.0
 
 OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'observer', 'paramètres', 'arbitre', 'joueurs', 'ordres', 'retards']
-
-
-PROFILE_DATA = None
 
 
 @enum.unique
@@ -365,8 +359,6 @@ def game_votes_reload(game_id):
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
-    PROFILE_DATA.start('load_static_stuff - chargement de la liste des joueurs')
-
     # need to be first since used in get_game_status()
     # get the players (all players)
     global PLAYERS_DICT
@@ -377,8 +369,6 @@ def load_static_stuff():
 
     # from game name get variant name
 
-    PROFILE_DATA.start('load_static_stuff - lecture de la variante')
-
     if 'GAME_VARIANT' not in storage:
         alert("ERREUR : variante introuvable")
         return
@@ -388,29 +378,21 @@ def load_static_stuff():
 
     # from variant name get variant content
 
-    PROFILE_DATA.start('load_static_stuff - chargement du contenu de la variante')
-
     global VARIANT_CONTENT_LOADED
 
     # optimization
     if VARIANT_NAME_LOADED in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
-        PROFILE_DATA.start('+++ contenu de la variante memoized !')
         VARIANT_CONTENT_LOADED = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED]
     else:
-        PROFILE_DATA.start('--- contenu de la variante téléchargé !')
         VARIANT_CONTENT_LOADED = common.game_variant_content_reload(VARIANT_NAME_LOADED)
         if not VARIANT_CONTENT_LOADED:
             alert("Erreur chargement contenu variante")
             return
         memoize.VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED] = VARIANT_CONTENT_LOADED
 
-    PROFILE_DATA.start('load_static_stuff - lecture tableau interface_from_variant()')
-
     # selected interface (user choice)
     global INTERFACE_CHOSEN
     INTERFACE_CHOSEN = interface.get_interface_from_variant(VARIANT_NAME_LOADED)
-
-    PROFILE_DATA.start(f'load_static_stuff - lecture fichier parametres affichage 1 (interface={INTERFACE_CHOSEN})')
 
     # from display chose get display parameters
 
@@ -418,64 +400,46 @@ def load_static_stuff():
 
     # optimization
     if (VARIANT_NAME_LOADED, INTERFACE_CHOSEN) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
-        PROFILE_DATA.start('+++ fichier parametres affichage 1 memoized !')
         INTERFACE_PARAMETERS_READ = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)]
     else:
-        PROFILE_DATA.start('--- fichier parametres affichage 1 lu !')
         INTERFACE_PARAMETERS_READ = common.read_parameters(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = INTERFACE_PARAMETERS_READ
-
-    PROFILE_DATA.start('load_static_stuff - creation objet Variant 1')
 
     # build variant data
     global VARIANT_DATA
 
     # optimization
     if (VARIANT_NAME_LOADED, INTERFACE_CHOSEN) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
-        PROFILE_DATA.start('+++ objet Variant 1 memoized !')
         VARIANT_DATA = memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)]
     else:
-        PROFILE_DATA.start('--- objet Variant 1 création instance !')
         VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, INTERFACE_PARAMETERS_READ)
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = VARIANT_DATA
 
     # now for official map
 
-    PROFILE_DATA.start('load_static_stuff - lecture tableau inforced_interface_from_variant()')
-
     # like above
     interface_inforced = interface.get_inforced_interface_from_variant(VARIANT_NAME_LOADED)
 
-    PROFILE_DATA.start('load_static_stuff - lecture fichier parametres affichage 2')
-
     # optimization
     if (VARIANT_NAME_LOADED, interface_inforced) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
-        PROFILE_DATA.start('+++ parametres affichage 2 memoized !')
         inforced_interface_parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
     else:
-        PROFILE_DATA.start('--- parametres affichage 2 lu !')
         inforced_interface_parameters_read = common.read_parameters(VARIANT_NAME_LOADED, interface_inforced)
         memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = inforced_interface_parameters_read
-
-    PROFILE_DATA.start('load_static_stuff - creation objet Variant 2')
 
     # build variant data
     global INFORCED_VARIANT_DATA
 
     # optimization
     if (VARIANT_NAME_LOADED, interface_inforced) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
-        PROFILE_DATA.start('+++ objet Variant 2 memoized !')
         INFORCED_VARIANT_DATA = memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
     else:
-        PROFILE_DATA.start('--- objet Variant 2 création instance !')
         INFORCED_VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, inforced_interface_parameters_read)
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = INFORCED_VARIANT_DATA
 
 
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
-
-    PROFILE_DATA.start('load_dynamic_stuff - chargement paramètres de la partie')
 
     # now game parameters (dynamic since advancement is dynamic)
     global GAME_PARAMETERS_LOADED
@@ -484,12 +448,8 @@ def load_dynamic_stuff():
         alert("Erreur chargement paramètres")
         return
 
-    PROFILE_DATA.start('load_dynamic_stuff - calcul get_game_status()')
-
     global GAME_STATUS
     GAME_STATUS = get_game_status()
-
-    PROFILE_DATA.start('load_dynamic_stuff - chargement de la position')
 
     # get the position from server
     global POSITION_LOADED
@@ -498,13 +458,9 @@ def load_dynamic_stuff():
         alert("Erreur chargement position")
         return
 
-    PROFILE_DATA.start('load_dynamic_stuff - creation objet Position')
-
     # digest the position
     global POSITION_DATA
     POSITION_DATA = mapping.Position(POSITION_LOADED, VARIANT_DATA)
-
-    PROFILE_DATA.start('load_dynamic_stuff - chargement du rapport de resolution')
 
     # need to be after game parameters (advancement -> season)
     global REPORT_LOADED
@@ -519,8 +475,6 @@ def load_special_stuff():
 
     # TODO improve this with real admin account
     if PSEUDO is not None and (PSEUDO == 'Palpatine' or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
-
-        PROFILE_DATA.start('load_special_stuff - chargement des joueurs de la partie')
 
         global GAME_PLAYERS_DICT
         # get the players of the game
@@ -1735,8 +1689,6 @@ def submit_orders():
 
     # need to have orders to submit
 
-    PROFILE_DATA.start('submit_orders() - chargement données de soumission')
-
     submitted_data = get_roles_submitted_orders(GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
@@ -1754,15 +1706,12 @@ def submit_orders():
             load_option(None, 'position')
             return False
 
-    PROFILE_DATA.start('submit_orders() - check_token()')
-
     # because we do not want the token stale in the middle of the process
     login.check_token()
 
     # now we can display
 
     # header
-    PROFILE_DATA.start('submit_orders() - affichage 1')
 
     # game status
     MY_SUB_PANEL <= GAME_STATUS
@@ -1785,8 +1734,6 @@ def submit_orders():
     # to catch keyboard
     document.bind("keypress", callback_keypress)
 
-    PROFILE_DATA.start('chargement des ordres')
-
     # get the orders from server
     orders_loaded = game_orders_reload(GAME_ID)
     if not orders_loaded:
@@ -1794,12 +1741,8 @@ def submit_orders():
         load_option(None, 'position')
         return False
 
-    PROFILE_DATA.start('submit_orders() - digestion ordres')
-
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, POSITION_DATA)
-
-    PROFILE_DATA.start('submit_orders() - affichage 2')
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -1809,16 +1752,12 @@ def submit_orders():
     img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
     img.bind('load', callback_render)
 
-    PROFILE_DATA.start('submit_orders() - affichage 3')
-
     ratings = POSITION_DATA.role_ratings()
     colours = POSITION_DATA.role_colours()
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
     rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
 
     report_window = common.make_report_window(REPORT_LOADED)
-
-    PROFILE_DATA.start('submit_orders() - affichage 4')
 
     # left side
 
@@ -3565,20 +3504,15 @@ def game_master():
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
-    PROFILE_DATA.start('game_master() - chargement données soumission')
-
     submitted_data = get_roles_submitted_orders(GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'position')
         return False
 
-    PROFILE_DATA.start('game_master() - chargement roles possibles')
-
     # who can I put in this role
     possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
 
-    PROFILE_DATA.start('game_master() - chargement votes')
     # votes
 
     votes = game_votes_reload(GAME_ID)
@@ -4757,9 +4691,6 @@ COUNTDOWN_TIMER = None
 def render(panel_middle):
     """ render """
 
-    global PROFILE_DATA
-    PROFILE_DATA = profiler.Profiler()
-
     # always back to top
     global ITEM_NAME_SELECTED
 
@@ -4769,8 +4700,6 @@ def render(panel_middle):
 
     global GAME
     GAME = storage['GAME']
-
-    PROFILE_DATA.start(f'lecture du game_id ({GAME})')
 
     if 'GAME_ID' not in storage:
         alert("ERREUR : identifiant de partie introuvable")
@@ -4790,8 +4719,6 @@ def render(panel_middle):
 
     # from game_id and token get role
 
-    PROFILE_DATA.start('chargement du role alloué au joueur')
-
     global ROLE_ID
     ROLE_ID = None
     if PSEUDO is not None:
@@ -4800,8 +4727,6 @@ def render(panel_middle):
     load_static_stuff()
     load_dynamic_stuff()
     load_special_stuff()
-
-    PROFILE_DATA.start('programme principal')
 
     # initiates new countdown
     countdown()
@@ -4838,15 +4763,5 @@ def render(panel_middle):
                 # Admin
                 ITEM_NAME_SELECTED = 'ordres'
 
-    PROFILE_DATA.start(f'load_option({ITEM_NAME_SELECTED})')
-
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
-
-    # stop profiling
-    PROFILE_DATA.stop()
-
-    # send report
-    if SEND_REPORT:
-        if PSEUDO:
-            PROFILE_DATA.send_report(PSEUDO)
