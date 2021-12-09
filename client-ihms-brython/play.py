@@ -421,7 +421,7 @@ def load_static_stuff():
         PROFILE_DATA.start('+++ fichier parametres affichage 1 memoized !')
         INTERFACE_PARAMETERS_READ = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)]
     else:
-        PROFILE_DATA.start('--- fichier parametres affichage 1 téléchargé !')
+        PROFILE_DATA.start('--- fichier parametres affichage 1 lu !')
         INTERFACE_PARAMETERS_READ = common.read_parameters(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)] = INTERFACE_PARAMETERS_READ
 
@@ -453,7 +453,7 @@ def load_static_stuff():
         PROFILE_DATA.start('+++ parametres affichage 2 memoized !')
         inforced_interface_parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)]
     else:
-        PROFILE_DATA.start('--- parametres affichage 2 téléchargé !')
+        PROFILE_DATA.start('--- parametres affichage 2 lu !')
         inforced_interface_parameters_read = common.read_parameters(VARIANT_NAME_LOADED, interface_inforced)
         memoize.PARAMETERS_READ_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = inforced_interface_parameters_read
 
