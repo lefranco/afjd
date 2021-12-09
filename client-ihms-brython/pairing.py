@@ -204,7 +204,7 @@ def move_players_in_game():
                 if 'message' in req_result:
                     alert(f"Erreur à la mise d'un joueur dans la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème putting player in game: {req_result['msg']}")
+                    alert(f"Problème à la mise d'un joueur dans la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
 
