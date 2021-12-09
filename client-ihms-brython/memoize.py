@@ -28,6 +28,6 @@ class MemoizeTable:
         del self._data[key]
 
 
-VARIANT_CONTENT_MEMOIZE_TABLE = MemoizeTable()
 VARIANT_DATA_MEMOIZE_TABLE = MemoizeTable()
 PARAMETERS_READ_MEMOIZE_TABLE = MemoizeTable()
+VARIANT_CONTENT_MEMOIZE_TABLE = MemoizeTable()
