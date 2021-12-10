@@ -46,6 +46,7 @@ import definitives
 import incidents
 import lowdata
 import agree
+import tournaments
 
 # a little welcome message to new games
 WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
@@ -166,6 +167,10 @@ VOTE_PARSER = flask_restful.reqparse.RequestParser()
 VOTE_PARSER.add_argument('role_id', type=int, required=True)
 VOTE_PARSER.add_argument('value', type=int, required=True)
 VOTE_PARSER.add_argument('pseudo', type=str, required=False)
+
+TOURNAMENT_PARSER = flask_restful.reqparse.RequestParser()
+TOURNAMENT_PARSER.add_argument('name', type=str, required=True)
+TOURNAMENT_PARSER.add_argument('pseudo', type=str, required=False)
 
 
 @API.resource('/variants/<name>')
@@ -3713,6 +3718,171 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
 
         data = {'incidents': late_list}
         return data, 200
+
+
+@API.resource('/tournaments/<name>')
+class TournamentRessource(flask_restful.Resource):  # type: ignore
+    """ TournamentRessource """
+
+    def get(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Get all information about tournament
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournaments/<name> - GET- retrieving data of tournament name=%s", name)
+
+        # find the tournament
+        sql_executor = database.SqlExecutor()
+        tournament = tournaments.Tournament.find_by_name(sql_executor, name)
+        del sql_executor
+
+        if tournament is None:
+            flask_restful.abort(404, msg=f"Tournament {name} doesn't exist")
+
+        assert tournament is not None
+        data = tournament.save_json()
+        return data, 200
+
+    def delete(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Deletes a tournament
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournaments/<name> - DELETE - deleting tournament name=%s", name)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        # we do not check pseudo, we read it from token
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the tournament
+        tournament = tournaments.Tournament.find_by_name(sql_executor, name)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Tournament {name} doesn't exist")
+
+        # TODO : check that this is the creator of the tournament
+        # use 'user_id'
+
+        # delete groupings
+        assert tournament is not None
+        tournament.delete_groupings(sql_executor)
+
+        # finally delete tournament
+        assert tournament is not None
+        tournament.delete_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'name': name, 'msg': 'Ok removed'}
+        return data, 200
+
+
+@API.resource('/tournaments')
+class TournamentListRessource(flask_restful.Resource):  # type: ignore
+    """ TournamentListRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Creates a new tournament
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournaments - POST - creating new game tournament")
+
+        args = TOURNAMENT_PARSER.parse_args(strict=True)
+
+        name = args['name']
+        pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("name=%s", name)
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
+
+        if pseudo is None:
+            flask_restful.abort(401, msg="Need a pseudo to create tournament")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        if not name.isidentifier():
+            flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
+
+        sql_executor = database.SqlExecutor()
+
+        # find the tournament
+        tournament = tournaments.Tournament.find_by_name(sql_executor, name)
+
+        if tournament is not None:
+            del sql_executor
+            flask_restful.abort(400, msg=f"Tournament {name} already exists")
+
+        # create tournament here
+        identifier = tournaments.Tournament.free_identifier(sql_executor)
+        tournament = tournaments.Tournament(identifier, '', )
+        _ = tournament.load_json(args)
+        tournament.update_database(sql_executor)
+
+        # TODO : take a note of the creator of the tournament
+        # use 'user_id'
+
+        # TODO : there must be a game to put in tournament
+        # a game not alreay in another tournament
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'name': name, 'msg': 'Ok tournament created'}
+        return data, 201
 
 
 def main() -> None:
