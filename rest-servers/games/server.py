@@ -3787,15 +3787,20 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Tournament {name} doesn't exist")
 
-        # TODO : check that this is the creator of the tournament
-        # use 'user_id'
+        assert tournament is not None
+
+        # check that this is the creator of the tournament
+        if user_id != tournament.get_director(sql_executor):
+            del sql_executor
+            flask_restful.abort(404, msg=f"You do not seem to own that tournament")
+
+        # delete assignments (there should be only one actually)
+        tournament.delete_assignments(sql_executor)
 
         # delete groupings
-        assert tournament is not None
         tournament.delete_groupings(sql_executor)
 
         # finally delete tournament
-        assert tournament is not None
         tournament.delete_database(sql_executor)
 
         sql_executor.commit()
@@ -3872,11 +3877,8 @@ class TournamentListRessource(flask_restful.Resource):  # type: ignore
         _ = tournament.load_json(args)
         tournament.update_database(sql_executor)
 
-        # TODO : take a note of the creator of the tournament
-        # use 'user_id'
-
-        # TODO : there must be a game to put in tournament
-        # a game not alreay in another tournament
+        # allocate director to tournament
+        tournament.put_director(sql_executor, user_id)
 
         sql_executor.commit()
         del sql_executor
