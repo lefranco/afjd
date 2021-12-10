@@ -558,8 +558,6 @@ def create_tournament():
         alert("Il faut se connecter au préalable")
         return
 
-    pseudo = storage['PSEUDO']
-
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -794,7 +792,7 @@ def delete_tournament():
     def delete_tournament_callback_confirm(_):
         """ delete_tournament_callback_confirm """
 
-        dialog = Dialog(f"On supprime vraiment le tournoi ?", ok_cancel=True)
+        dialog = Dialog("On supprime vraiment le tournoi ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_tournament_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_tournament_callback(e, d))
 
