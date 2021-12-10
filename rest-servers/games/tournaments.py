@@ -11,6 +11,7 @@ import sqlite3
 
 import database
 import groupings
+import assignments
 
 # need to have a limit in sizes of fields
 LEN_NAME_MAX = 50
@@ -74,6 +75,22 @@ class Tournament:
         assert isinstance(name, str), "name must be a str"
         self._name = name
 
+    def put_director(self, sql_executor: database.SqlExecutor, user_id: int) -> None:
+        """ put director in tournament """
+
+        tournament_id = self.identifier
+        assignment = assignments.Assignment(tournament_id, user_id)
+        assignment.update_database(sql_executor)
+
+    def get_director(self, sql_executor: database.SqlExecutor) -> typing.Optional[int]:
+        """ retrieves director id in tournament """
+
+        tournament_id = self.identifier
+        assignments_list = assignments.Assignment.list_by_tournament_id(sql_executor, tournament_id)
+        for _, player_id in assignments_list:
+            return player_id
+        return None
+
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
         sql_executor.execute("INSERT OR REPLACE INTO tournaments (identifier, name, tournament_data) VALUES (?, ?, ?)", (self._identifier, self._name, self))
@@ -102,6 +119,15 @@ class Tournament:
             'name': self._name,
         }
         return json_dict
+
+    def delete_assignments(self, sql_executor: database.SqlExecutor) -> None:
+        """  delete assignments """
+
+        tournament_id = self.identifier
+        assigments_list = assignments.Assignment.list_by_tournament_id(sql_executor, tournament_id)
+        for tournament_id, player_id in assigments_list:
+            assigment = assignments.Assignment(tournament_id, player_id)
+            assigment.delete_database(sql_executor)
 
     def delete_groupings(self, sql_executor: database.SqlExecutor) -> None:
         """  delete groupings """

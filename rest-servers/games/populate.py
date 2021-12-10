@@ -27,6 +27,9 @@ import visits
 import definitives
 import incidents
 import votes
+import assignments
+import tournaments
+import groupings
 import database
 
 
@@ -125,6 +128,21 @@ def populate_incidents(sql_executor: database.SqlExecutor) -> None:
     incidents.Incident.create_table(sql_executor)
 
 
+def populate_tournaments(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    tournaments.Tournament.create_table(sql_executor)
+
+
+def populate_assignements(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    assignments.Assignment.create_table(sql_executor)
+
+
+def populate_groupings(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    groupings.Grouping.create_table(sql_executor)
+
+
 def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
@@ -149,6 +167,9 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_votes(sql_executor)
     populate_definitives(sql_executor)
     populate_incidents(sql_executor)
+    populate_tournaments(sql_executor)
+    populate_assignements(sql_executor)
+    populate_groupings(sql_executor)
 
 
 if __name__ == '__main__':
