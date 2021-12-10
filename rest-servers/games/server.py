@@ -3721,29 +3721,50 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/tournaments/<name>')
+@API.resource('/tournaments/<game_name>')
 class TournamentRessource(flask_restful.Resource):  # type: ignore
     """ TournamentRessource """
 
-    def get(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self, game_name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         Get all information about tournament
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/tournaments/<name> - GET- retrieving data of tournament name=%s", name)
+        mylogger.LOGGER.info("/tournaments/<game_name> - GET- retrieving data of tournament from game name=%s", game_name)
 
-        # find the tournament
         sql_executor = database.SqlExecutor()
-        tournament = tournaments.Tournament.find_by_name(sql_executor, name)
+
+        # find the game
+        game = games.Game.find_by_name(sql_executor, game_name)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Game {game_name} doesn't exist")
+
+        assert game is not None
+
+        game_id = game.identifier
+
+        # find the tournament from game
+        game_tournaments = groupings.Grouping.list_by_game_id(sql_executor, game_id)
+        if not game_tournaments:
+            del sql_executor
+            flask_restful.abort(400, msg="The game appears not to be in any tournament")
+
+        # the id of tournament
+        tournament_id: typing.Optional[int] = None
+        for tourn_id, _ in game_tournaments:
+            tournament_id = tourn_id
+            break
+        assert tournament_id is not None
+
+        # list the games of that tournament
+        games_tournament = groupings.Grouping.list_by_tournament_id(sql_executor, tournament_id)
+        games_list = [e[1] for e in games_tournament]
+
         del sql_executor
 
-        if tournament is None:
-            flask_restful.abort(404, msg=f"Tournament {name} doesn't exist")
-
-        assert tournament is not None
-        data = tournament.save_json()
-        return data, 200
+        return games_list, 200
 
     def delete(self, game_name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
@@ -3788,17 +3809,22 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Game {game_name} doesn't exist")
 
+        assert game is not None
+
         game_id = game.identifier
 
-        # find the tournament fro game
+        # find the tournament from game
         game_tournaments = groupings.Grouping.list_by_game_id(sql_executor, game_id)
         if not game_tournaments:
             del sql_executor
-            flask_restful.abort(400, msg=f"The game appears not to be in any tournament")
+            flask_restful.abort(400, msg="The game appears not to be in any tournament")
 
         # the id of tournament
-        for tournament_id, _ in game_tournaments:
+        tournament_id: typing.Optional[int] = None
+        for tourn_id, _ in game_tournaments:
+            tournament_id = tourn_id
             break
+        assert tournament_id is not None
 
         # the object tournament
         tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
@@ -3808,10 +3834,12 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
 
         assert tournament is not None
 
+        name = tournament.name
+
         # check that user is the creator of the tournament
         if user_id != tournament.get_director(sql_executor):
             del sql_executor
-            flask_restful.abort(404, msg=f"You do not seem to be director of that tournament")
+            flask_restful.abort(404, msg="You do not seem to be director of that tournament")
 
         # delete assignments (there should be only one actually)
         tournament.delete_assignments(sql_executor)
@@ -3847,9 +3875,6 @@ class TournamentListRessource(flask_restful.Resource):  # type: ignore
         game_id = args['game_id']
 
         mylogger.LOGGER.info("name=%s", name)
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to create tournament")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -3894,7 +3919,7 @@ class TournamentListRessource(flask_restful.Resource):  # type: ignore
         game_tournaments = groupings.Grouping.list_by_game_id(sql_executor, game_id)
         if game_tournaments:
             del sql_executor
-            flask_restful.abort(400, msg=f"The game appears to already be in some other tournament")
+            flask_restful.abort(400, msg="The game appears to already be in some other tournament")
 
         # create tournament here
         identifier = tournaments.Tournament.free_identifier(sql_executor)
