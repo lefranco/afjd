@@ -356,16 +356,6 @@ def all_games(state_name):
     if not check_admin(pseudo):
         return
 
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        alert("Erreur chargement identifiants des joueurs")
-        return
-
-    player_games = get_all_games()
-    if player_games is None:
-        alert("Erreur chargement joueurs des parties")
-        return
-
     games_dict = common.get_games_data()
     if not games_dict:
         alert("Erreur chargement dictionnaire parties")
