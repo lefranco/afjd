@@ -14,7 +14,7 @@ import config
 import interface
 import mapping
 
-OPTIONS = ['créer les parties', 'créer le tournoi', 'éditer le tournoi', 'consulter les retards', 'supprimer le tournoi']
+OPTIONS = ['les parties', 'les retards', 'créer les parties', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi']
 
 DESCRIPTION = "partie créée par batch"
 
@@ -327,6 +327,16 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
     alert(f"Les {nb_parties} parties du tournoi ont bien été créée. Tout s'est bien passé. Incroyable, non ?")
 
 
+def show_games():
+    """ show_games """
+    # TODO
+
+
+def show_incidents():
+    """ show_incidents """
+    # TODO
+
+
 def create_games():
     """ create_games """
 
@@ -528,8 +538,7 @@ def create_tournament():
 
         json_dict = {
             'name': name,
-
-            'pseudo': pseudo
+            'game_id': game_id,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -550,6 +559,16 @@ def create_tournament():
         return
 
     pseudo = storage['PSEUDO']
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
 
     form = html.FORM()
 
@@ -738,11 +757,6 @@ def edit_tournament():
     MY_SUB_PANEL <= form
 
 
-def show_incidents():
-    """ show_incidents """
-    pass
-
-
 def delete_tournament():
     """ delete_tournament """
 
@@ -768,13 +782,11 @@ def delete_tournament():
 
         dialog.close()
 
-        json_dict = {
-            'pseudo': pseudo
-        }
+        json_dict = dict()
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/tournaments/{tournament}"
+        url = f"{host}:{port}/tournaments/{game}"
 
         # deleting tournament : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -782,7 +794,7 @@ def delete_tournament():
     def delete_tournament_callback_confirm(_):
         """ delete_tournament_callback_confirm """
 
-        dialog = Dialog(f"On supprime vraiment le tournoi {tournament} ?", ok_cancel=True)
+        dialog = Dialog(f"On supprime vraiment le tournoi ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_tournament_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_tournament_callback(e, d))
 
@@ -798,14 +810,9 @@ def delete_tournament():
 
     game = storage['GAME']
 
-    # TODO : get the tournament name from the game name
-    tournament = game
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
-
-    pseudo = storage['PSEUDO']
 
     form = html.FORM()
 
@@ -838,14 +845,16 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
+    if item_name == 'les parties':
+        show_games()
+    if item_name == 'les retards':
+        show_incidents()
     if item_name == 'créer les parties':
         create_games()
     if item_name == 'créer le tournoi':
         create_tournament()
     if item_name == 'éditer le tournoi':
         edit_tournament()
-    if item_name == 'consulter les retards':
-        show_incidents()
     if item_name == 'supprimer le tournoi':
         delete_tournament()
 
