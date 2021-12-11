@@ -3725,7 +3725,7 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
 class TournamentRessource(flask_restful.Resource):  # type: ignore
     """ TournamentRessource """
 
-    def get(self, game_name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self, game_name: str) -> typing.Tuple[typing.List[int], int]:  # pylint: disable=no-self-use
         """
         Get all information about tournament
         EXPOSED
@@ -3747,20 +3747,21 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
 
         # find the tournament from game
         game_tournaments = groupings.Grouping.list_by_game_id(sql_executor, game_id)
-        if not game_tournaments:
-            del sql_executor
-            flask_restful.abort(400, msg="The game appears not to be in any tournament")
+
+        # Note : at this point 'game_tournaments' can be empty list
 
         # the id of tournament
         tournament_id: typing.Optional[int] = None
         for tourn_id, _ in game_tournaments:
             tournament_id = tourn_id
             break
-        assert tournament_id is not None
 
         # list the games of that tournament
-        games_tournament = groupings.Grouping.list_by_tournament_id(sql_executor, tournament_id)
-        games_list = [e[1] for e in games_tournament]
+        if tournament_id is not None:
+            games_tournament = groupings.Grouping.list_by_tournament_id(sql_executor, tournament_id)
+            games_list = [e[1] for e in games_tournament]
+        else:
+            games_list = list()
 
         del sql_executor
 
@@ -3860,6 +3861,22 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
 @API.resource('/tournaments')
 class TournamentListRessource(flask_restful.Resource):  # type: ignore
     """ TournamentListRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
+        """
+        Get list of tournament
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournaments - GET- retrieving list of tournaments")
+
+        sql_executor = database.SqlExecutor()
+        tournaments_list = tournaments.Tournament.inventory(sql_executor)
+        del sql_executor
+
+        data = {str(t.identifier): {'name': t.name} for t in tournaments_list}
+
+        return data, 200
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """

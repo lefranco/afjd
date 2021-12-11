@@ -10,7 +10,7 @@ import config
 import common
 
 
-OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres']
+OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres', 'les tournois']
 
 
 def show_registered_data():
@@ -328,6 +328,49 @@ def show_no_game_masters_data():
     MY_SUB_PANEL <= no_game_masters_table
 
 
+def show_tournaments_data():
+    """ show_tournaments_data """
+
+    # get the tournaments
+    tournaments_dict = common.get_tournaments_data()
+    if not tournaments_dict:
+        alert("Pas de tournoi ou erreur chargement dictionnaire tournois")
+        return
+
+    tournaments_table = html.TABLE()
+
+    fields = ['tournament', 'games']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'tournament': 'tournoi', 'games': 'parties'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    tournaments_table <= thead
+
+    print(f"{tournaments_dict=}")
+
+    count = 0
+    # TODO : add the games
+    for tournament_id, data in sorted(tournaments_dict.items(), key=lambda m: m[0].upper()):
+        row = html.TR()
+        for field in fields:
+            if field == 'tournament':
+                value = data['name']
+            if field == 'games':
+                value = "???"
+            col = html.TD(value)
+            row <= col
+
+        tournaments_table <= row
+        count += 1
+
+    MY_SUB_PANEL <= html.H3("Les tournois")
+    MY_SUB_PANEL <= tournaments_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} tournois")
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -366,6 +409,8 @@ def load_option(_, item_name):
         show_game_masters_data()
     if item_name == 'les parties sans arbitres':
         show_no_game_masters_data()
+    if item_name == 'les tournois':
+        show_tournaments_data()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
