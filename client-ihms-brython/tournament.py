@@ -24,6 +24,37 @@ MAX_LEN_TOURNAMENT_NAME = 50
 INPUT_FILE = None
 
 
+def tournament_games(game):
+    """ tournament_games : returns empty list if problem """
+
+    games_list = list()
+
+    def reply_callback(req):
+        nonlocal games_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des parties du tournoi : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des parties du tournoi : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        games_list = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/tournaments/{game}"
+
+    # getting tournament data : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return games_list
+
+
 def check_batch(current_pseudo, games_to_create):
     """ check_batch """
 
@@ -329,7 +360,20 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
 
 def show_games():
     """ show_games """
-    # TODO
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    games_list = tournament_games(game)
+    if not games_list:
+        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
+
+    MY_SUB_PANEL <= "PAS PRET !"
+    MY_SUB_PANEL <= games_list
 
 
 def show_incidents():
@@ -445,6 +489,8 @@ def create_games():
         alert("Il faut choisir la partie au préalable")
         return
 
+    game = storage['GAME']
+
     information = html.DIV(Class='note')
     information <= "Vous devez composer un fichier CSV"
     information <= html.BR()
@@ -468,8 +514,6 @@ def create_games():
 
     MY_SUB_PANEL <= information
     MY_SUB_PANEL <= html.BR()
-
-    game = storage['GAME']
 
     form = html.FORM()
 
