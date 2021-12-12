@@ -14,7 +14,7 @@ import config
 import interface
 import mapping
 
-OPTIONS = ['le classement', 'les parties', 'les retards', 'créer les parties', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi']
+OPTIONS = ['le classement', 'les parties', 'les retards', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'créer plusieurs parties']
 
 DESCRIPTION = "partie créée par batch"
 
@@ -360,7 +360,10 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
 
 def show_ratings():
     """ show_ratings """
+
+    # TODO
     MY_SUB_PANEL <= "PAS PRET !"
+
 
 def show_games():
     """ show_games """
@@ -376,7 +379,6 @@ def show_games():
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
-
     print(f"{tournament_dict=}")
 
     MY_SUB_PANEL <= "PAS PRET !"
@@ -384,172 +386,9 @@ def show_games():
 
 def show_incidents():
     """ show_incidents """
+
     # TODO
-
-
-def create_games():
-    """ create_games """
-
-    def create_games_callback(_):
-        """ create_games_callback """
-
-        def onload_callback(_):
-            """ onload_callback """
-
-            def cancel_create_games_callback(_, dialog):
-                """ cancel_create_games_callback """
-                dialog.close()
-
-            def create_games_callback2(_, dialog):
-                """ create_games_callback2 """
-                dialog.close()
-                perform_batch(pseudo, game, games_to_create, DESCRIPTION)
-
-            games_to_create = dict()
-
-            content = str(reader.result)
-            lines = content.splitlines()
-
-            for line in lines:
-
-                # ignore empty lines
-                if not line:
-                    continue
-
-                if line.find(',') != -1:
-                    tab = line.split(',')
-                elif line.find(';') != -1:
-                    tab = line.split(';')
-                else:
-                    alert("Votre fichier n'est pas un CSV (il faut séparer les champs par des virgules ou des point-virgule)")
-                    return
-
-                # name of game is first column
-                game_name = tab[0]
-
-                if not game_name:
-                    alert("Un nom de partie est vide dans le fichier")
-                    return
-
-                if not game_name.isidentifier():
-                    alert(f"Le nom de partie '{game_name}' est incorrect pour le site")
-                    return
-
-                if len(game_name) > MAX_LEN_GAME_NAME:
-                    alert(f"Le nom de partie '{game_name}' est trop long (limite : {MAX_LEN_GAME_NAME})")
-                    return
-
-                if game_name in games_to_create:
-                    alert(f"La partie {game_name} est définie plusieurs fois dans le fichier")
-                    return
-
-                # create dictionnary
-                games_to_create[game_name] = {n: tab[n + 1] for n in range(len(tab) - 1)}
-
-            if not games_to_create:
-                alert("Aucune partie dans le fichier")
-                return
-
-            global DESCRIPTION
-            DESCRIPTION = input_description.value
-
-            #  actual creation of all the games
-            if check_batch(pseudo, games_to_create):
-                dialog = Dialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
-                dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
-                dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            create_games()
-
-        if not INPUT_FILE.files:
-            alert("Pas de fichier")
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            create_games()
-            return
-
-        # Create a new DOM FileReader instance
-        reader = window.FileReader.new()
-        # Extract the file
-        file_name = INPUT_FILE.files[0]
-        # Read the file content as text
-        reader.readAsBinaryString(file_name)
-        reader.bind("load", onload_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        create_games()
-
-    MY_SUB_PANEL <= html.H3("Création des parties")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    information = html.DIV(Class='note')
-    information <= "Vous devez composer un fichier CSV"
-    information <= html.BR()
-    information <= "Une ligne par partie"
-    information <= html.BR()
-    information <= "Sur chaque ligne, séparés pas des virgules (ou des points-virgules):"
-    items = html.UL()
-    items <= html.LI("le nom de la partie")
-    items <= html.LI("l'arbitre de la partie (cette colonne est redondante : c'est forcément votre pseudo)")
-    items <= html.LI("le premier joueur de la partie")
-    items <= html.LI("le deuxième joueur de la partie")
-    items <= html.LI("etc....")
-    information <= items
-    information <= "Utiliser l'ordre suivant pour la variante standard : Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie"
-    information <= html.BR()
-    information <= "Il est impossible d'attribuer l'arbitrage d'une partie à un autre joueur, donc vous pouvez mettre un arbitre différent à des fins de vérification mais la création des parties n'aura pas lieu."
-    information <= html.BR()
-    information <= "Il faut remplir soigneusement la description qui s'appliquera à toutes les parties !"
-    information <= html.BR()
-    information <= "Enfin, les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée..."
-
-    MY_SUB_PANEL <= information
-    MY_SUB_PANEL <= html.BR()
-
-    form = html.FORM()
-
-    fieldset = html.FIELDSET()
-    legend_description = html.LEGEND("description", title="Ce sera la description de toutes les parties créées")
-    fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", rows=5, cols=80)
-    input_description <= DESCRIPTION
-    fieldset <= input_description
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_name = html.LEGEND("Ficher CSV")
-    fieldset <= legend_name
-    form <= fieldset
-
-    # need to make this global to keep it (only way it seems)
-    global INPUT_FILE
-    if INPUT_FILE is None:
-        INPUT_FILE = html.INPUT(type="file", accept='.csv')
-    form <= INPUT_FILE
-    form <= html.BR()
-
-    form <= html.BR()
-
-    input_create_games = html.INPUT(type="submit", value="créer les parties")
-    input_create_games.bind("click", create_games_callback)
-    form <= input_create_games
-
-    MY_SUB_PANEL <= form
+    MY_SUB_PANEL <= "PAS PRET !"
 
 
 def create_tournament():
@@ -871,6 +710,171 @@ def delete_tournament():
     MY_SUB_PANEL <= form
 
 
+def create_many_games():
+    """ create_many_games """
+
+    def create_games_callback(_):
+        """ create_games_callback """
+
+        def onload_callback(_):
+            """ onload_callback """
+
+            def cancel_create_games_callback(_, dialog):
+                """ cancel_create_games_callback """
+                dialog.close()
+
+            def create_games_callback2(_, dialog):
+                """ create_games_callback2 """
+                dialog.close()
+                perform_batch(pseudo, game, games_to_create, DESCRIPTION)
+
+            games_to_create = dict()
+
+            content = str(reader.result)
+            lines = content.splitlines()
+
+            for line in lines:
+
+                # ignore empty lines
+                if not line:
+                    continue
+
+                if line.find(',') != -1:
+                    tab = line.split(',')
+                elif line.find(';') != -1:
+                    tab = line.split(';')
+                else:
+                    alert("Votre fichier n'est pas un CSV (il faut séparer les champs par des virgules ou des point-virgule)")
+                    return
+
+                # name of game is first column
+                game_name = tab[0]
+
+                if not game_name:
+                    alert("Un nom de partie est vide dans le fichier")
+                    return
+
+                if not game_name.isidentifier():
+                    alert(f"Le nom de partie '{game_name}' est incorrect pour le site")
+                    return
+
+                if len(game_name) > MAX_LEN_GAME_NAME:
+                    alert(f"Le nom de partie '{game_name}' est trop long (limite : {MAX_LEN_GAME_NAME})")
+                    return
+
+                if game_name in games_to_create:
+                    alert(f"La partie {game_name} est définie plusieurs fois dans le fichier")
+                    return
+
+                # create dictionnary
+                games_to_create[game_name] = {n: tab[n + 1] for n in range(len(tab) - 1)}
+
+            if not games_to_create:
+                alert("Aucune partie dans le fichier")
+                return
+
+            global DESCRIPTION
+            DESCRIPTION = input_description.value
+
+            #  actual creation of all the games
+            if check_batch(pseudo, games_to_create):
+                dialog = Dialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
+                dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
+                dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            create_many_games()
+
+        if not INPUT_FILE.files:
+            alert("Pas de fichier")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            create_many_games()
+            return
+
+        # Create a new DOM FileReader instance
+        reader = window.FileReader.new()
+        # Extract the file
+        file_name = INPUT_FILE.files[0]
+        # Read the file content as text
+        reader.readAsBinaryString(file_name)
+        reader.bind("load", onload_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        create_many_games()
+
+    MY_SUB_PANEL <= html.H3("Création des parties")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    information = html.DIV(Class='note')
+    information <= "Vous devez composer un fichier CSV"
+    information <= html.BR()
+    information <= "Une ligne par partie"
+    information <= html.BR()
+    information <= "Sur chaque ligne, séparés pas des virgules (ou des points-virgules):"
+    items = html.UL()
+    items <= html.LI("le nom de la partie")
+    items <= html.LI("l'arbitre de la partie (cette colonne est redondante : c'est forcément votre pseudo)")
+    items <= html.LI("le premier joueur de la partie")
+    items <= html.LI("le deuxième joueur de la partie")
+    items <= html.LI("etc....")
+    information <= items
+    information <= "Utiliser l'ordre suivant pour la variante standard : Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie"
+    information <= html.BR()
+    information <= "Il est impossible d'attribuer l'arbitrage d'une partie à un autre joueur, donc vous pouvez mettre un arbitre différent à des fins de vérification mais la création des parties n'aura pas lieu."
+    information <= html.BR()
+    information <= "Il faut remplir soigneusement la description qui s'appliquera à toutes les parties !"
+    information <= html.BR()
+    information <= "Enfin, les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée..."
+
+    MY_SUB_PANEL <= information
+    MY_SUB_PANEL <= html.BR()
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_description = html.LEGEND("description", title="Ce sera la description de toutes les parties créées")
+    fieldset <= legend_description
+    input_description = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_description <= DESCRIPTION
+    fieldset <= input_description
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_name = html.LEGEND("Ficher CSV")
+    fieldset <= legend_name
+    form <= fieldset
+
+    # need to make this global to keep it (only way it seems)
+    global INPUT_FILE
+    if INPUT_FILE is None:
+        INPUT_FILE = html.INPUT(type="file", accept='.csv')
+    form <= INPUT_FILE
+    form <= html.BR()
+
+    form <= html.BR()
+
+    input_create_games = html.INPUT(type="submit", value="créer les parties")
+    input_create_games.bind("click", create_games_callback)
+    form <= input_create_games
+
+    MY_SUB_PANEL <= form
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -893,20 +897,20 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    if item_name == 'les classement':
+    if item_name == 'le classement':
         show_ratings()
     if item_name == 'les parties':
         show_games()
     if item_name == 'les retards':
         show_incidents()
-    if item_name == 'créer les parties':
-        create_games()
     if item_name == 'créer le tournoi':
         create_tournament()
     if item_name == 'éditer le tournoi':
         edit_tournament()
     if item_name == 'supprimer le tournoi':
         delete_tournament()
+    if item_name == 'créer plusieurs parties':
+        create_many_games()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
