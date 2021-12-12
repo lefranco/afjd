@@ -4,6 +4,7 @@
 
 import json
 import time
+import datetime
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
@@ -13,6 +14,10 @@ import common
 import config
 import interface
 import mapping
+import selection
+import memoize
+import index  # circular import
+
 
 OPTIONS = ['le classement', 'les parties', 'les retards', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'créer plusieurs parties']
 
@@ -368,6 +373,29 @@ def show_ratings():
 def show_games():
     """ show_games """
 
+    def select_game_callback(_, game_name, game_data_sel):
+        """ select_game_callback """
+
+        # action of selecting game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        selection.show_game_selected()
+
+        # action of going to game page
+        index.load_option(None, 'jouer la partie sélectionnée')
+
+    overall_time_before = time.time()
+
+    MY_SUB_PANEL.clear()
+
+    # title
+    title = html.H3("Parties du tournoi")
+    MY_SUB_PANEL <= title
+
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -379,8 +407,183 @@ def show_games():
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
-    MY_SUB_PANEL <= "PAS PRET !"
+    games_in = tournament_dict['games']
 
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    # get the players (masters)
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        alert("Erreur chargement dictionnaire des joueurs")
+        return
+
+    # get the link (allocations) of game masters
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+    masters_alloc = allocations_data['game_masters_dict']
+
+    # fill table game -> master
+    game_master_dict = dict()
+    for master_id, games_id in masters_alloc.items():
+        master = players_dict[str(master_id)]['pseudo']
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            game_master_dict[game] = master
+
+    time_stamp_now = time.time()
+
+    games_table = html.TABLE()
+
+    fields = ['name', 'master', 'variant', 'deadline', 'current_advancement', 'jump_here', 'go_away']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'name': 'nom', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'jump_here': 'partie', 'go_away': 'partie (nouvel onglet)'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    games_table <= thead
+
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
+    number_games = 0
+    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0])):
+
+        if int(game_id_str) not in games_in:
+            continue
+
+        number_games += 1
+
+        game_id = int(game_id_str)
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected interface (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        variant_name_loaded_str = str(variant_name_loaded)
+        if (variant_name_loaded_str, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
+
+        data['master'] = None
+        data['all_orders_submitted'] = None
+        data['all_agreed'] = None
+        data['jump_here'] = None
+        data['go_away'] = None
+
+        row = html.TR()
+        for field in fields:
+
+            value = data[field]
+            colour = None
+
+            if field == 'master':
+                game_name = data['name']
+                # some games do not have a game master
+                master_name = game_master_dict.get(game_name, '')
+                value = master_name
+
+            if field == 'deadline':
+                deadline_loaded = value
+                datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
+                deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+                deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
+                deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
+                value = deadline_loaded_str
+
+                time_unit = 60 if data['fast'] else 24 * 60 * 60
+
+                # we are after deadline + grace
+                if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
+                    colour = config.PASSED_GRACE_COLOUR
+                # we are after deadline
+                elif time_stamp_now > deadline_loaded:
+                    colour = config.PASSED_DEADLINE_COLOUR
+                # deadline is today
+                elif time_stamp_now > deadline_loaded - time_unit:
+                    colour = config.APPROACHING_DEADLINE_COLOUR
+
+            if field == 'current_advancement':
+                advancement_loaded = value
+                advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
+                advancement_season_readable = variant_data.name_table[advancement_season]
+                value = f"{advancement_season_readable} {advancement_year}"
+
+            if field == 'jump_here':
+                game_name = data['name']
+                form = html.FORM()
+                input_jump_game = html.INPUT(type="submit", value="sauter")
+                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                form <= input_jump_game
+                value = form
+
+            if field == 'go_away':
+
+                link = html.A(href=f"?game={game_name}", target="_blank")
+                link <= "y aller"
+                value = link
+
+            col = html.TD(value)
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+
+            row <= col
+
+        games_table <= row
+
+    MY_SUB_PANEL <= games_table
+    MY_SUB_PANEL <= html.BR()
+
+    # get GMT date and time
+    time_stamp = time.time()
+    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+    special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
+    MY_SUB_PANEL <= special_info
+    MY_SUB_PANEL <= html.BR()
+
+    overall_time_after = time.time()
+    elapsed = overall_time_after - overall_time_before
+
+    stats = f"Temps de chargement de la page {elapsed} avec {number_games} partie(s)"
+    if number_games:
+        stats += f" soit {elapsed/number_games} par partie"
+
+    MY_SUB_PANEL <= html.DIV(stats, Class='load')
+    MY_SUB_PANEL <= html.BR()
 
 def show_incidents():
     """ show_incidents """
@@ -512,7 +715,7 @@ def edit_tournament():
         game_id = common.get_game_id(game_name)
         if not game_id:
             alert("Erreur chargement identifiant partie")
-            return False
+            return
 
         json_dict = {
             'game_id': game_id,
@@ -556,7 +759,7 @@ def edit_tournament():
         game_id = common.get_game_id(game_name)
         if not game_id:
             alert("Erreur chargement identifiant partie")
-            return False
+            return
 
         json_dict = {
             'game_id': game_id,
