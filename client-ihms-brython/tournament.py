@@ -669,14 +669,6 @@ def show_incidents():
     tournament_name = tournament_dict['name']
     tournament_id = tournament_dict['identifier']
 
-    # get the games
-    games_dict = common.get_games_data()
-    if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
-        return
-
-    id2name = {int(k): v['name'] for k, v in games_dict.items()}
-
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()
 
@@ -693,12 +685,12 @@ def show_incidents():
 
     tournament_incidents_table = html.TABLE()
 
-    fields = ['date', 'player', 'game']
+    fields = ['date', 'player']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'date': 'date', 'game': 'partie', 'player': 'joueur'}[field]
+        field_fr = {'date': 'date', 'player': 'joueur'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournament_incidents_table <= thead
@@ -726,11 +718,6 @@ def show_incidents():
             counter[pseudo_there] = 1
         else:
             counter[pseudo_there] += 1
-
-        # game
-        game_name = id2name[game_id]
-        col = html.TD(game_name)
-        row <= col
 
         tournament_incidents_table <= row
 
