@@ -693,7 +693,7 @@ def show_incidents():
 
     tournament_incidents_table = html.TABLE()
 
-    fields = ['date', 'game', 'player']
+    fields = ['date', 'player', 'game']
 
     # header
     thead = html.THEAD()
