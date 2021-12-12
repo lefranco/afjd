@@ -648,8 +648,6 @@ def edit_tournament():
     fieldset <= html.DIV(" ".join(sorted(map(lambda i: id2name[i], games_in), key=lambda g: g.upper())), Class='note')
     form <= fieldset
 
-    form <= html.BR()
-
     # ---
     form <= html.BR()
 
@@ -674,7 +672,8 @@ def edit_tournament():
     input_remove_from_tournament.bind("click", remove_from_tournament_callback)
     form <= input_remove_from_tournament
 
-    MY_SUB_PANEL <= html.H4(tournament_name)
+    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= form
 
 
