@@ -384,8 +384,6 @@ def show_ratings():
         return
 
     tournament_name = tournament_dict['name']
-    games_in = tournament_dict['games']
-
 
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()
@@ -613,6 +611,7 @@ def show_games():
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()
 
+
 def show_incidents():
     """ show_incidents """
 
@@ -635,7 +634,6 @@ def show_incidents():
 
     tournament_name = tournament_dict['name']
     games_in = tournament_dict['games']
-
 
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()
