@@ -474,3 +474,65 @@ def get_tournaments_data():
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return tournaments_dict
+
+
+def get_assignments_data():
+    """ get_assignments_data : returns empty dict on error """
+
+    assignment_data = dict()
+
+    def reply_callback(req):
+        nonlocal assignment_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des assignations : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des assignations : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        assignment_data = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/assignments"
+
+    # getting allocations : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return assignment_data
+
+
+def get_groupings_data():
+    """ get_groupings_data : returns empty dict on error """
+
+    grouping_data = dict()
+
+    def reply_callback(req):
+        nonlocal grouping_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des regroupements : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des regroupements : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        grouping_data = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/groupings"
+
+    # getting allocations : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return grouping_data

@@ -220,6 +220,7 @@ def show_game_masters_data():
         alert("Erreur chargement dictionnaire parties")
         return
 
+    # get the players
     players_dict = common.get_players_data()
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
@@ -285,7 +286,6 @@ def show_no_game_masters_data():
 
     # get the players (masters)
     players_dict = common.get_players_data()
-
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
         return
@@ -331,35 +331,62 @@ def show_no_game_masters_data():
 def show_tournaments_data():
     """ show_tournaments_data """
 
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    # get the players (masters)
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
     # get the tournaments
     tournaments_dict = common.get_tournaments_data()
     if not tournaments_dict:
         alert("Pas de tournoi ou erreur chargement dictionnaire tournois")
         return
 
+    # get the assignments
+    assignments_dict = common.get_assignments_data()
+    if not assignments_dict:
+        alert("Pas d'assignations ou erreur chargement dictionnaire assignations")
+        return
+
+    # get the groupings
+    groupings_dict = common.get_groupings_data()
+    if not groupings_dict:
+        alert("Pas de groupements ou erreur chargement dictionnaire groupements")
+        return
+
     tournaments_table = html.TABLE()
 
-    fields = ['tournament', 'games']
+    fields = ['tournament', 'director', 'games']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'tournament': 'tournoi', 'games': 'parties'}[field]
+        field_fr = {'tournament': 'tournoi', 'director': 'directeur', 'games': 'parties'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournaments_table <= thead
 
-    print(f"{tournaments_dict=}")
-
     count = 0
-    # TODO : add the games
     for tournament_id, data in sorted(tournaments_dict.items(), key=lambda m: m[0].upper()):
         row = html.TR()
         for field in fields:
             if field == 'tournament':
                 value = data['name']
+            if field == 'director':
+                director_id = assignments_dict[str(tournament_id)]
+                director_pseudo = players_dict[str(director_id)]['pseudo']
+                value = director_pseudo
             if field == 'games':
-                value = "???"
+                games_ids = groupings_dict[str(tournament_id)]
+                games_names = [games_dict[str(i)]['name'] for i in games_ids]
+                value = '/'.join(games_names)
             col = html.TD(value)
             row <= col
 

@@ -48,6 +48,7 @@ import lowdata
 import agree
 import tournaments
 import groupings
+import assignments
 
 # a little welcome message to new games
 WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
@@ -172,6 +173,10 @@ VOTE_PARSER.add_argument('pseudo', type=str, required=False)
 TOURNAMENT_PARSER = flask_restful.reqparse.RequestParser()
 TOURNAMENT_PARSER.add_argument('name', type=str, required=True)
 TOURNAMENT_PARSER.add_argument('game_id', type=int, required=True)
+
+GROUPING_PARSER = flask_restful.reqparse.RequestParser()
+GROUPING_PARSER.add_argument('game_id', type=int, required=True)
+GROUPING_PARSER.add_argument('delete', type=int, required=True)
 
 
 @API.resource('/variants/<name>')
@@ -3725,7 +3730,7 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
 class TournamentRessource(flask_restful.Resource):  # type: ignore
     """ TournamentRessource """
 
-    def get(self, game_name: str) -> typing.Tuple[typing.List[int], int]:  # pylint: disable=no-self-use
+    def get(self, game_name: str) -> typing.Tuple[typing.Optional[typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
         """
         Get all information about tournament
         EXPOSED
@@ -3748,24 +3753,49 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
         # find the tournament from game
         game_tournaments = groupings.Grouping.list_by_game_id(sql_executor, game_id)
 
-        # Note : at this point 'game_tournaments' can be empty list
+        # no tournament for that game : legal (return empty dict)
+        if not game_tournaments:
+            data = None
+            return data, 200
+
+        # more than one tournament for that game : internal error actually
+        if len(game_tournaments) != 1:
+            del sql_executor
+            flask_restful.abort(404, msg=f"ERROR : Game {game_name} has more than one tournament")
 
         # the id of tournament
-        tournament_id: typing.Optional[int] = None
-        for tourn_id, _ in game_tournaments:
-            tournament_id = tourn_id
-            break
+        tournament_ids = [g[0] for g in game_tournaments]
+        tournament_id = tournament_ids[0]
 
-        # list the games of that tournament
-        if tournament_id is not None:
-            games_tournament = groupings.Grouping.list_by_tournament_id(sql_executor, tournament_id)
-            games_list = [e[1] for e in games_tournament]
-        else:
-            games_list = list()
+        # the tournament
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a tournament with identifier {tournament_id}")
+
+        assert tournament is not None
+
+        tournament_name = tournament.name
+
+        # director of that tournament
+        tournament_directors = assignments.Assignment.list_by_tournament_id(sql_executor, tournament_id)
+
+        # more than one director for that game : internal error actually
+        if len(tournament_directors) != 1:
+            del sql_executor
+            flask_restful.abort(404, msg=f"ERROR : Tournament {tournament_name} has more than one director")
+
+        director_ids = [a[1] for a in tournament_directors]
+        director_id = director_ids[0]
+
+        # games of that tournament
+        games_list = [g[1] for g in game_tournaments]
 
         del sql_executor
 
-        return games_list, 200
+        data = {'name': tournament_name, 'director_id': director_id, 'games': games_list}
+
+        return data, 200
 
     def delete(self, game_name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
@@ -3957,6 +3987,137 @@ class TournamentListRessource(flask_restful.Resource):  # type: ignore
 
         data = {'name': name, 'msg': 'Ok tournament created'}
         return data, 201
+
+
+@API.resource('/groupings/<tournament_id>')
+class GroupingTournamentRessource(flask_restful.Resource):  # type: ignore
+    """ GroupingTournamentRessource """
+
+    def post(self, tournament_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Creates or deletes a grouping (a relation game-tournament)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/groupings - POST - creating/deleting new grouping")
+
+        args = GROUPING_PARSER.parse_args(strict=True)
+
+        game_id = args['game_id']
+        delete = args['delete']
+
+        mylogger.LOGGER.info("tournament_id=%s game_id=%s delete=%s", tournament_id, game_id, delete)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to add allocation - must be director
+
+        sql_executor = database.SqlExecutor()
+
+        # find the tournament
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a tournament with identifier {tournament_id}")
+
+        # find the game master
+        assert tournament is not None
+        director_id = tournament.get_director(sql_executor)
+
+        # check is allowed
+        if user_id not in [director_id]:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the director of the tournament")
+
+        # check the game exists
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # action
+
+        if not delete:
+            grouping = groupings.Grouping(tournament_id, game_id)
+            grouping.update_database(sql_executor)
+
+            sql_executor.commit()
+            del sql_executor
+
+            data = {'msg': 'Ok grouping updated or created'}
+            return data, 201
+
+        grouping = groupings.Grouping(tournament_id, game_id)
+        grouping.delete_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': 'Ok grouping deleted if present'}
+        return data, 200
+
+
+@API.resource('/groupings')
+class GroupingListRessource(flask_restful.Resource):  # type: ignore
+    """ GroupingListRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Get list of all groupings (dictionary identifier -> list of games ids)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/groupings - GET - getting all groupings ")
+
+        sql_executor = database.SqlExecutor()
+        groupings_list = groupings.Grouping.inventory(sql_executor)
+        del sql_executor
+
+        data = {str(g[0]): [gg[1] for gg in groupings_list if gg[0] == g[0]] for g in groupings_list}
+        return data, 200
+
+
+@API.resource('/assignments')
+class AssignmentListRessource(flask_restful.Resource):  # type: ignore
+    """ AssignmentListRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Get list of all assignements (dictionary identifier -> director_id)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/assignments - GET - getting all assignments ")
+
+        sql_executor = database.SqlExecutor()
+        assignments_list = assignments.Assignment.inventory(sql_executor)
+        del sql_executor
+
+        data = {str(a[0]): a[1] for a in assignments_list}
+        return data, 200
 
 
 def main() -> None:
