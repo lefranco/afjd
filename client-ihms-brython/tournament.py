@@ -366,6 +366,30 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
 def show_ratings():
     """ show_ratings """
 
+    MY_SUB_PANEL.clear()
+
+    # title
+    title = html.H3("Classement du tournoi")
+    MY_SUB_PANEL <= title
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    tournament_dict = tournament_data(game)
+    if not tournament_dict:
+        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
+
+    tournament_name = tournament_dict['name']
+    games_in = tournament_dict['games']
+
+
+    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
     # TODO
     MY_SUB_PANEL <= "PAS PRET !"
 
@@ -407,6 +431,7 @@ def show_games():
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
+    tournament_name = tournament_dict['name']
     games_in = tournament_dict['games']
 
     games_dict = common.get_games_data()
@@ -564,6 +589,9 @@ def show_games():
 
         games_table <= row
 
+    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
 
@@ -587,6 +615,30 @@ def show_games():
 
 def show_incidents():
     """ show_incidents """
+
+    MY_SUB_PANEL.clear()
+
+    # title
+    title = html.H3("Classement du tournoi")
+    MY_SUB_PANEL <= title
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    tournament_dict = tournament_data(game)
+    if not tournament_dict:
+        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
+
+    tournament_name = tournament_dict['name']
+    games_in = tournament_dict['games']
+
+
+    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
 
     # TODO
     MY_SUB_PANEL <= "PAS PRET !"
@@ -937,12 +989,21 @@ def delete_tournament():
         alert("Il faut se connecter au préalable")
         return
 
+    tournament_dict = tournament_data(game)
+    if not tournament_dict:
+        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
+
+    tournament_name = tournament_dict['name']
+
     form = html.FORM()
 
     input_delete_tournament = html.INPUT(type="submit", value="supprimer le tournoi")
     input_delete_tournament.bind("click", delete_tournament_callback_confirm)
     form <= input_delete_tournament
 
+    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= form
 
 
