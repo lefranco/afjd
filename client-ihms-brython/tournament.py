@@ -14,7 +14,7 @@ import config
 import interface
 import mapping
 
-OPTIONS = ['les parties', 'les retards', 'créer les parties', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi']
+OPTIONS = ['le classement', 'les parties', 'les retards', 'créer les parties', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi']
 
 DESCRIPTION = "partie créée par batch"
 
@@ -24,24 +24,24 @@ MAX_LEN_TOURNAMENT_NAME = 50
 INPUT_FILE = None
 
 
-def tournament_games(game):
-    """ tournament_games : returns empty list if problem """
+def tournament_data(game):
+    """ tournament_data : returns None if problem """
 
-    games_list = list()
+    tournament_dict = dict()
 
     def reply_callback(req):
-        nonlocal games_list
+        nonlocal tournament_dict
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération des parties du tournoi : {req_result['message']}")
+                alert(f"Erreur à la récupération des informations du tournoi : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération des parties du tournoi : {req_result['msg']}")
+                alert(f"Problème à la récupération des informations du tournoi : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        games_list = req_result
+        tournament_dict = req_result
 
     json_dict = dict()
 
@@ -52,7 +52,7 @@ def tournament_games(game):
     # getting tournament data : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    return games_list
+    return tournament_dict
 
 
 def check_batch(current_pseudo, games_to_create):
@@ -358,6 +358,10 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
     alert(f"Les {nb_parties} parties du tournoi ont bien été créée. Tout s'est bien passé. Incroyable, non ?")
 
 
+def show_ratings():
+    """ show_ratings """
+    MY_SUB_PANEL <= "PAS PRET !"
+
 def show_games():
     """ show_games """
 
@@ -367,13 +371,15 @@ def show_games():
 
     game = storage['GAME']
 
-    games_list = tournament_games(game)
-    if not games_list:
+    tournament_dict = tournament_data(game)
+    if not tournament_dict:
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
+
+    print(f"{tournament_dict=}")
+
     MY_SUB_PANEL <= "PAS PRET !"
-    MY_SUB_PANEL <= games_list
 
 
 def show_incidents():
@@ -480,7 +486,7 @@ def create_games():
     MY_SUB_PANEL <= html.H3("Création des parties")
 
     if 'PSEUDO' not in storage:
-        alert("Il faut se connecter pour créer des parties")
+        alert("Il faut se connecter au préalable")
         return
 
     pseudo = storage['PSEUDO']
@@ -887,6 +893,8 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
+    if item_name == 'les classement':
+        show_ratings()
     if item_name == 'les parties':
         show_games()
     if item_name == 'les retards':
