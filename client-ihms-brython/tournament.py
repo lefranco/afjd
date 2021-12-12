@@ -651,6 +651,10 @@ def show_incidents():
     title = html.H3("Incidents du tournoi")
     MY_SUB_PANEL <= title
 
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -699,6 +703,8 @@ def show_incidents():
         thead <= col
     tournament_incidents_table <= thead
 
+    counter = dict()
+
     for game_id, player_id, date_incident in sorted(tournament_incidents, key=lambda i: i[2]):
 
         row = html.TR()
@@ -716,6 +722,11 @@ def show_incidents():
         col = html.TD(pseudo_there)
         row <= col
 
+        if pseudo_there not in counter:
+            counter[pseudo_there] = 1
+        else:
+            counter[pseudo_there] += 1
+
         # game
         game_name = id2name[game_id]
         col = html.TD(game_name)
@@ -723,6 +734,18 @@ def show_incidents():
 
         tournament_incidents_table <= row
 
+    recap_table = html.TABLE()
+    for pseudo, number in sorted(counter.items(), key=lambda i: (- i[1], i[0])):
+        row = html.TR()
+        col = html.TD(pseudo)
+        row <= col
+        col = html.TD(number)
+        row <= col
+        recap_table <= row
+
+    MY_SUB_PANEL <= html.H3("Récapitulatif")
+    MY_SUB_PANEL <= recap_table
+    MY_SUB_PANEL <= html.H3("Détail")
     MY_SUB_PANEL <= tournament_incidents_table
 
 
