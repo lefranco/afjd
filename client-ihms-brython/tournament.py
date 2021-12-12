@@ -693,12 +693,12 @@ def show_incidents():
 
     tournament_incidents_table = html.TABLE()
 
-    fields = ['game', 'player', 'date']
+    fields = ['date', 'game', 'player']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'game': 'partie', 'player': 'joueur', 'date': 'date'}[field]
+        field_fr = {'date': 'date', 'game': 'partie', 'player': 'joueur'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournament_incidents_table <= thead
