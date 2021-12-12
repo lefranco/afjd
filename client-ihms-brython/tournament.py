@@ -615,10 +615,40 @@ def show_games():
 def show_incidents():
     """ show_incidents """
 
+    def game_incidents_reload(tournament_id):
+        """ game_incidents_reload """
+
+        incidents = list()
+
+        def reply_callback(req):
+            nonlocal incidents
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération des incidents du tournoi : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération des incidents du tournoi : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            incidents = req_result['incidents']
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/tournament-incidents/{tournament_id}"
+
+        # extracting incidents from a tournament : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return incidents
+
     MY_SUB_PANEL.clear()
 
     # title
-    title = html.H3("Classement du tournoi")
+    title = html.H3("Incidents du tournoi")
     MY_SUB_PANEL <= title
 
     if 'GAME' not in storage:
@@ -633,13 +663,67 @@ def show_incidents():
         return
 
     tournament_name = tournament_dict['name']
-    games_in = tournament_dict['games']
+    tournament_id = tournament_dict['identifier']
+
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    id2name = {int(k): v['name'] for k, v in games_dict.items()}
 
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()
 
-    # TODO
-    MY_SUB_PANEL <= "PAS PRET !"
+    # get the actual incidents of the tournament
+    tournament_incidents = game_incidents_reload(tournament_id)
+    # there can be no incidents (if no incident of failed to load)
+
+    players_dict = common.get_players()
+    if not players_dict:
+        alert("Erreur chargement info joueurs")
+        return
+
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
+    tournament_incidents_table = html.TABLE()
+
+    fields = ['game', 'player', 'date']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'game': 'partie', 'player': 'joueur', 'date': 'date'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    tournament_incidents_table <= thead
+
+    for game_id, player_id, date_incident in sorted(tournament_incidents, key=lambda i: i[2]):
+
+        row = html.TR()
+
+        # date
+        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
+        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
+        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
+        incident_str = f"{incident_day} {incident_hour} GMT"
+        col = html.TD(incident_str)
+        row <= col
+
+        # player
+        pseudo_there = id2pseudo[player_id]
+        col = html.TD(pseudo_there)
+        row <= col
+
+        # game
+        game_name = id2name[game_id]
+        col = html.TD(game_name)
+        row <= col
+
+        tournament_incidents_table <= row
+
+    MY_SUB_PANEL <= tournament_incidents_table
 
 
 def create_tournament():
@@ -805,7 +889,8 @@ def edit_tournament():
             MY_SUB_PANEL.clear()
             edit_tournament()
 
-        game_name = input_incomer.value
+        game_name = input_outcomer.value
+
         game_id = common.get_game_id(game_name)
         if not game_id:
             alert("Erreur chargement identifiant partie")

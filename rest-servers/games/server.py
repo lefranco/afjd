@@ -4044,7 +4044,7 @@ class GroupingTournamentRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a tournament with identifier {tournament_id}")
 
-        # find the game master
+        # find the director
         assert tournament is not None
         director_id = tournament.get_director(sql_executor)
 
@@ -4118,6 +4118,85 @@ class AssignmentListRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {str(a[0]): a[1] for a in assignments_list}
+        return data, 200
+
+
+@API.resource('/tournament-incidents/<tournament_id>')
+class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
+    """ TournamentIncidentsRessource """
+
+    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:  # pylint: disable=no-self-use
+        """
+        Gets list of pseudo which have produced an incident for given tournament
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournament-incidents/<game_id> - GET - getting which incidents occured for tournament id=%s", tournament_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # check user has right to get status of orders - must be game master or player in game - or admin
+
+        sql_executor = database.SqlExecutor()
+
+        # find the tournament
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a tournament with identifier {tournament_id}")
+
+        # find the director
+        assert tournament is not None
+        director_id = tournament.get_director(sql_executor)
+
+        # check is allowed
+        if user_id not in [director_id]:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the director of the tournament")
+
+        # games of that tournament
+        tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
+        tournament_game_ids = [g[1] for g in tournament_games]
+
+        # all games
+        games_list = games.Game.inventory(sql_executor)
+        all_game_ids = [g.identifier for g in games_list]
+
+        # incidents_list : those who submitted orders after deadline
+        late_list: typing.List[typing.Tuple[int, int, float]] = list()
+        for game_id in all_game_ids:
+            if game_id not in tournament_game_ids:
+                continue
+            incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
+            late_list += [(o[0], o[3], o[4]) for o in incidents_list]
+
+        del sql_executor
+
+        data = {'incidents': late_list}
         return data, 200
 
 
