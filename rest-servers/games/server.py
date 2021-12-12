@@ -3789,11 +3789,12 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
         director_id = director_ids[0]
 
         # games of that tournament
-        games_list = [g[1] for g in game_tournaments]
+        tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
+        game_ids = [g[1] for g in tournament_games]
 
         del sql_executor
 
-        data = {'name': tournament_name, 'director_id': director_id, 'games': games_list}
+        data = {'identifier': tournament_id, 'name': tournament_name, 'director_id': director_id, 'games': game_ids}
 
         return data, 200
 
@@ -4061,7 +4062,7 @@ class GroupingTournamentRessource(flask_restful.Resource):  # type: ignore
         # action
 
         if not delete:
-            grouping = groupings.Grouping(tournament_id, game_id)
+            grouping = groupings.Grouping(int(tournament_id), int(game_id))
             grouping.update_database(sql_executor)
 
             sql_executor.commit()
@@ -4070,7 +4071,7 @@ class GroupingTournamentRessource(flask_restful.Resource):  # type: ignore
             data = {'msg': 'Ok grouping updated or created'}
             return data, 201
 
-        grouping = groupings.Grouping(tournament_id, game_id)
+        grouping = groupings.Grouping(int(tournament_id), int(game_id))
         grouping.delete_database(sql_executor)
 
         sql_executor.commit()

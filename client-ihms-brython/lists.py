@@ -385,7 +385,7 @@ def show_tournaments_data():
                 value = director_pseudo
             if field == 'games':
                 games_ids = groupings_dict[str(tournament_id)]
-                games_names = [games_dict[str(i)]['name'] for i in games_ids]
+                games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
                 value = '/'.join(games_names)
             col = html.TD(value)
             row <= col

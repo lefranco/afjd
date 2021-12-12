@@ -379,8 +379,6 @@ def show_games():
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
-    print(f"{tournament_dict=}")
-
     MY_SUB_PANEL <= "PAS PRET !"
 
 
@@ -510,22 +508,23 @@ def edit_tournament():
             MY_SUB_PANEL.clear()
             edit_tournament()
 
-        player_pseudo = input_incomer.value
+        game_name = input_incomer.value
+        game_id = common.get_game_id(game_name)
+        if not game_id:
+            alert("Erreur chargement identifiant partie")
+            return False
 
         json_dict = {
             'game_id': game_id,
-            'player_pseudo': player_pseudo,
-            'pseudo': pseudo,
             'delete': 0
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/tournament-allocations"
+        url = f"{host}:{port}/groupings/{tournament_id}"
 
         # putting a game in a tournament : need token
-        if False:  # TODO
-            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def remove_from_tournament_callback(_):
         """remove_from_tournament_callback"""
@@ -553,22 +552,23 @@ def edit_tournament():
             MY_SUB_PANEL.clear()
             edit_tournament()
 
-        player_pseudo = input_outcomer.value
+        game_name = input_incomer.value
+        game_id = common.get_game_id(game_name)
+        if not game_id:
+            alert("Erreur chargement identifiant partie")
+            return False
 
         json_dict = {
             'game_id': game_id,
-            'player_pseudo': player_pseudo,
-            'pseudo': pseudo,
             'delete': 1
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/tournament-allocations"
+        url = f"{host}:{port}/groupings/{tournament_id}"
 
         # removing a game from a tournament : need token
-        if False:  # TODO
-            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     MY_SUB_PANEL <= html.H3("Mettre dans ou enlever des parties du tournoi")
 
@@ -576,19 +576,38 @@ def edit_tournament():
         alert("Il faut se connecter au préalable")
         return
 
-    pseudo = storage['PSEUDO']
-
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
 
-    if 'GAME_ID' not in storage:
-        alert("ERREUR : identifiant de partie introuvable")
+    game = storage['GAME']
+
+    # get the tournament_id
+
+    tournament_dict = tournament_data(game)
+    if not tournament_dict:
+        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
-    game_id = storage['GAME_ID']
+    tournament_name = tournament_dict['name']
+    tournament_id = tournament_dict['identifier']
+    games_in = tournament_dict['games']
 
-    # TODO : get necessary information
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    id2name = {int(k): v['name'] for k, v in games_dict.items()}
+
+    # get the groupings
+    groupings_dict = common.get_groupings_data()
+    if not groupings_dict:
+        alert("Pas de groupements ou erreur chargement dictionnaire groupements")
+        return
+
+    games_grouped_list = sum(groupings_dict.values(), [])
 
     form = html.FORM()
 
@@ -598,12 +617,16 @@ def edit_tournament():
     legend_incomer = html.LEGEND("Entrant", title="Sélectionner la partie à mettre dans le tournoi")
     fieldset <= legend_incomer
 
-    # TODO : put the games not in any tournament
-    possible_incomers = ["AAA", "BBB", "CCC"]
+    # put the games not in any tournament
+    # all games can come in
+    possible_incomers = set(map(int, games_dict.keys()))
+
+    # not those already in a tournament
+    possible_incomers -= set(games_grouped_list)
 
     input_incomer = html.SELECT(type="select-one", value="")
-    for play_pseudo in sorted(possible_incomers, key=lambda pi: pi.upper()):
-        option = html.OPTION(play_pseudo)
+    for game_name in sorted(map(lambda i: id2name[i], possible_incomers)):
+        option = html.OPTION(game_name)
         input_incomer <= option
 
     fieldset <= input_incomer
@@ -611,9 +634,19 @@ def edit_tournament():
 
     form <= html.BR()
 
-    input_put_in_game = html.INPUT(type="submit", value="mettre dans le tournoi")
-    input_put_in_game.bind("click", put_in_tournament_callback)
-    form <= input_put_in_game
+    input_put_in_tournament = html.INPUT(type="submit", value="mettre dans le tournoi")
+    input_put_in_tournament.bind("click", put_in_tournament_callback)
+    form <= input_put_in_tournament
+
+    form <= html.BR()
+    form <= html.BR()
+
+    # ---
+
+    fieldset = html.FIELDSET()
+    fieldset <= html.LEGEND("Sont dans le tournoi : ")
+    fieldset <= html.DIV(" ".join(sorted(map(lambda i: id2name[i], games_in), key=lambda g: g.upper())), Class='note')
+    form <= fieldset
 
     form <= html.BR()
 
@@ -624,12 +657,12 @@ def edit_tournament():
     legend_outcomer = html.LEGEND("Sortant", title="Sélectionner la partie à retirer du tournoi")
     fieldset <= legend_outcomer
 
-    # TODO : put the games in the tournament
-    possible_outcomers = ["aa", "bb", "cc"]
+    # put the games in the tournament
+    possible_outcomers = games_in
 
     input_outcomer = html.SELECT(type="select-one", value="")
-    for play_pseudo in sorted(possible_outcomers):
-        option = html.OPTION(play_pseudo)
+    for game_name in sorted(map(lambda i: id2name[i], possible_outcomers)):
+        option = html.OPTION(game_name)
         input_outcomer <= option
 
     fieldset <= input_outcomer
@@ -637,10 +670,11 @@ def edit_tournament():
 
     form <= html.BR()
 
-    input_remove_from_game = html.INPUT(type="submit", value="retirer du tournoi")
-    input_remove_from_game.bind("click", remove_from_tournament_callback)
-    form <= input_remove_from_game
+    input_remove_from_tournament = html.INPUT(type="submit", value="retirer du tournoi")
+    input_remove_from_tournament.bind("click", remove_from_tournament_callback)
+    form <= input_remove_from_tournament
 
+    MY_SUB_PANEL <= html.H4(tournament_name)
     MY_SUB_PANEL <= form
 
 
