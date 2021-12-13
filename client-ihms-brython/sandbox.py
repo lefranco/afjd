@@ -672,10 +672,17 @@ def sandbox():
             if selected_hovered_object is not None:
                 selected_hovered_object.highlite(ctx, True)
 
+            # redraw all arrows
+            if prev_selected_hovered_object is not None or selected_hovered_object is not None:
+                ORDERS_DATA.render(ctx)
+
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
+
         if selected_hovered_object is not None:
             selected_hovered_object.highlite(ctx, False)
+            # redraw all arrows
+            ORDERS_DATA.render(ctx)
 
     def callback_render(_):
         """ callback_render """
