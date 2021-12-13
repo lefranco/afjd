@@ -19,7 +19,7 @@ import memoize
 import index  # circular import
 
 
-OPTIONS = ['le classement', 'les parties', 'les retards', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'créer plusieurs parties']
+OPTIONS = ['les parties', 'le classement', 'les retards', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'créer plusieurs parties']
 
 DESCRIPTION = "partie créée par batch"
 
@@ -363,35 +363,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
     alert(f"Les {nb_parties} parties du tournoi ont bien été créée. Tout s'est bien passé. Incroyable, non ?")
 
 
-def show_ratings():
-    """ show_ratings """
-
-    MY_SUB_PANEL.clear()
-
-    # title
-    title = html.H3("Classement du tournoi")
-    MY_SUB_PANEL <= title
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    tournament_dict = tournament_data(game)
-    if not tournament_dict:
-        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-        return
-
-    tournament_name = tournament_dict['name']
-
-    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
-    MY_SUB_PANEL <= html.BR()
-
-    # TODO
-    MY_SUB_PANEL <= "PAS PRET !"
-
-
 def show_games():
     """ show_games """
 
@@ -610,6 +581,36 @@ def show_games():
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()
+
+
+
+def show_ratings():
+    """ show_ratings """
+
+    MY_SUB_PANEL.clear()
+
+    # title
+    title = html.H3("Classement du tournoi")
+    MY_SUB_PANEL <= title
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    tournament_dict = tournament_data(game)
+    if not tournament_dict:
+        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
+
+    tournament_name = tournament_dict['name']
+
+    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
+    # TODO
+    MY_SUB_PANEL <= "PAS PRET !"
 
 
 def show_incidents():
@@ -1287,10 +1288,10 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    if item_name == 'le classement':
-        show_ratings()
     if item_name == 'les parties':
         show_games()
+    if item_name == 'le classement':
+        show_ratings()
     if item_name == 'les retards':
         show_incidents()
     if item_name == 'créer le tournoi':
