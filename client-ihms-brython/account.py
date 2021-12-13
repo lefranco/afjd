@@ -34,9 +34,9 @@ def information_about_account():
     """ information_about_account """
 
     information = html.DIV(Class='note')
-    information <= "La plupart des champs sont privés et ne seront pas montrés sur le site et/ou facultatifs"
+    information <= html.B("Vous voulez rester discret ?")
     information <= html.BR()
-    information <= "Survolez les titres pour plus de détails"
+    information <= "La plupart des champs sont privés et ne seront pas montrés sur le site et/ou facultatifs"
     return information
 
 
@@ -145,7 +145,6 @@ def create_account():
         create_account()
 
     MY_SUB_PANEL <= html.H3("Création du compte")
-    MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= information_about_account()
     MY_SUB_PANEL <= html.BR()
@@ -597,13 +596,13 @@ def edit_account():
     if not status:
         return
 
+    MY_SUB_PANEL <= information_about_account()
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= information_about_input()
+    MY_SUB_PANEL <= html.BR()
+
     form = html.FORM()
-
-    form <= information_about_account()
-    form <= html.BR()
-
-    form <= information_about_input()
-    form <= html.BR()
 
     fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("pseudo", title="(pour rappel)")

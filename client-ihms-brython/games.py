@@ -45,9 +45,18 @@ def information_about_playing():
     """ information_about_playing """
 
     information = html.DIV(Class='note')
-    information <= "Vous voulez jouer ? Crééz-la partie et démissionez ensuite de l'arbitrage (appariement)"
+    information <= html.B("Vous voulez juste jouer ? ")
     information <= html.BR()
-    information <= "Un arbitre sera alloué automatiquement..."
+    information <= "Crééz-la partie et démissionez ensuite de l'arbitrage (appariement). Un arbitre sera alloué automatiquement..."
+    return information
+
+def information_about_anonymity():
+    """ information_about_playing """
+
+    information = html.DIV(Class='note')
+    information <= html.B("Vous crééez une partie anonyme ?")
+    information <= html.BR()
+    information <= "Il faut rapidement la mettre dans un tournoi. Sinon, il est possible de connaître les joueurs de manière détournée par le classement ou par les retards (en créant un tournoi englobant cette partie)..."
     return information
 
 
@@ -258,8 +267,10 @@ def create_game():
     MY_SUB_PANEL <= information_about_playing()
     MY_SUB_PANEL <= html.BR()
 
-    MY_SUB_PANEL <= information_about_input()
+    MY_SUB_PANEL <= information_about_anonymity()
     MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= information_about_input()
 
     form = html.FORM()
 
