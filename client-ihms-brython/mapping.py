@@ -1554,7 +1554,9 @@ class Order(Renderable):
             unit_position = self._position.variant.position_table[self._active_unit.zone]
             from_point = geometry.PositionRecord(x_pos=unit_position.x_pos + DISLODGED_SHIFT_X, y_pos=unit_position.y_pos + DISLODGED_SHIFT_Y)
             dest_point = self._position.variant.position_table[self._destination_zone]
-            draw_arrow(from_point.x_pos + DISLODGED_SHIFT_X, from_point.y_pos + DISLODGED_SHIFT_Y, dest_point.x_pos, dest_point.y_pos, ctx)
+            dest_point_closer_x, dest_point_closer_y = shorten_arrow(from_point.x_pos + DISLODGED_SHIFT_X, from_point.y_pos + DISLODGED_SHIFT_Y, dest_point.x_pos, dest_point.y_pos)
+            draw_arrow(from_point.x_pos + DISLODGED_SHIFT_X, from_point.y_pos + DISLODGED_SHIFT_Y, dest_point_closer_x, dest_point_closer_y, ctx)
+            # -- end
 
             # put back
             ctx.lineWidth = 1
