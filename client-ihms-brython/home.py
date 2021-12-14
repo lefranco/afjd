@@ -66,7 +66,7 @@ def show_links():
     link1 <= "Diplomania : Le site officiel de l'Association Francophone des Joueurs de Diplomacy (brique sociale)"
     MY_SUB_PANEL <= link1
 
-    title11 = html.H4("Parainage")
+    title11 = html.H4("Parrainage")
     MY_SUB_PANEL <= title11
 
     link11 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
