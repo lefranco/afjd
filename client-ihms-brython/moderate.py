@@ -1,0 +1,790 @@
+""" admin """
+
+# pylint: disable=pointless-statement, expression-not-assigned
+
+import json
+import time
+import datetime
+
+from browser import html, ajax, alert  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
+from browser.local_storage import storage  # pylint: disable=import-error
+
+import config
+import common
+import interface
+import mapping
+import selection
+import memoize
+import index  # circular import
+
+OPTIONS = ['toutes les parties', 'dernières connexions', 'connexions manquées', 'e-mails non confirmés', 'envoyer un e-mail', 'récupérer un téléphone']
+
+
+def check_moderator(pseudo):
+    """ check_moderator """
+
+    # TODO improve this with real admin account
+    if pseudo != "Palpatine":
+        alert("Pas le bon compte (pas admin)")
+        return False
+
+    return True
+
+
+def get_all_games_roles_submitted_orders():
+    """ get_all_games_roles_submitted_orders : returns empty dict on error """
+
+    dict_submitted_data = dict()
+
+    def reply_callback(req):
+        nonlocal dict_submitted_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour toutes les parties possibles : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour toutes les parties possibles : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        dict_submitted_data = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-games-orders-submitted"
+
+    # get roles that submitted orders : need token (but may change)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return dict_submitted_data
+
+
+def get_last_logins():
+    """ get_last_logins """
+
+    logins_list = None
+
+    def reply_callback(req):
+        nonlocal logins_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des connexions : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des connexions : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        logins_list = req_result['login_list']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['USER']['HOST']
+    port = config.SERVER_CONFIG['USER']['PORT']
+    url = f"{host}:{port}/logins_list"
+
+    # logins list : need token
+    # note : since we access directly to the user server, we present the token in a slightly different way
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return logins_list
+
+
+def get_last_failures():
+    """ get_last_failures """
+
+    failures_list = None
+
+    def reply_callback(req):
+        nonlocal failures_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des connexions manquées : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des connexions manquées : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        failures_list = req_result['failure_list']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['USER']['HOST']
+    port = config.SERVER_CONFIG['USER']['PORT']
+    url = f"{host}:{port}/failures_list"
+
+    # failures_list list : need token
+    # note : since we access directly to the user server, we present the token in a slightly different way
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return failures_list
+
+
+def get_all_games():
+    """ get_all_games """
+
+    games_dict = None
+
+    def reply_callback(req):
+        nonlocal games_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste de toutes les parties : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste de toutes les parties : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        games_dict = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/games"
+
+    # getting player games playing in list : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return games_dict.keys()
+
+
+def all_games(state_name):
+    """all_games """
+
+    def select_game_callback(_, game_name, game_data_sel):
+        """ select_game_callback """
+
+        # action of selecting game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        selection.show_game_selected()
+
+        # action of going to game page
+        index.load_option(None, 'jouer la partie sélectionnée')
+
+    overall_time_before = time.time()
+
+    MY_SUB_PANEL.clear()
+
+    # title
+    title = html.H3(f"Parties dans l'état: {state_name}")
+    MY_SUB_PANEL <= title
+
+    state = config.STATE_CODE_TABLE[state_name]
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_moderator(pseudo):
+        return
+
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    # get the players (masters)
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        alert("Erreur chargement dictionnaire des joueurs")
+        return
+
+    # get the link (allocations) of game masters
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+    masters_alloc = allocations_data['game_masters_dict']
+
+    dict_submitted_data = get_all_games_roles_submitted_orders()
+    if not dict_submitted_data:
+        alert("Erreur chargement des soumissions dans les parties")
+        return
+
+    # fill table game -> master
+    game_master_dict = dict()
+    for master_id, games_id in masters_alloc.items():
+        master = players_dict[str(master_id)]['pseudo']
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            game_master_dict[game] = master
+
+    time_stamp_now = time.time()
+
+    games_table = html.TABLE()
+
+    fields = ['name', 'master', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'all_agreed', 'jump_here', 'go_away']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'name': 'nom', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres', 'all_agreed': 'accords', 'jump_here': 'partie', 'go_away': 'partie (nouvel onglet)'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    games_table <= thead
+
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
+    number_games = 0
+    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0])):
+
+        if data['current_state'] != state:
+            continue
+
+        number_games += 1
+
+        game_id = int(game_id_str)
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected interface (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        variant_name_loaded_str = str(variant_name_loaded)
+        if (variant_name_loaded_str, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
+
+        submitted_data = dict()
+        submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
+        submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
+        submitted_data['agreed'] = dict_submitted_data['dict_agreed'][str(game_id)]
+
+        data['master'] = None
+        data['all_orders_submitted'] = None
+        data['all_agreed'] = None
+        data['jump_here'] = None
+        data['go_away'] = None
+
+        row = html.TR()
+        for field in fields:
+
+            value = data[field]
+            colour = None
+
+            if field == 'master':
+                game_name = data['name']
+                # some games do not have a game master
+                master_name = game_master_dict.get(game_name, '')
+                value = master_name
+
+            if field == 'deadline':
+                deadline_loaded = value
+                datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
+                deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+                deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
+                deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
+                value = deadline_loaded_str
+
+                time_unit = 60 if data['fast'] else 24 * 60 * 60
+
+                # we are after deadline + grace
+                if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
+                    colour = config.PASSED_GRACE_COLOUR
+                # we are after deadline
+                elif time_stamp_now > deadline_loaded:
+                    colour = config.PASSED_DEADLINE_COLOUR
+                # deadline is today
+                elif time_stamp_now > deadline_loaded - time_unit:
+                    colour = config.APPROACHING_DEADLINE_COLOUR
+
+            if field == 'current_advancement':
+                advancement_loaded = value
+                advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
+                advancement_season_readable = variant_data.name_table[advancement_season]
+                value = f"{advancement_season_readable} {advancement_year}"
+
+            if field == 'all_orders_submitted':
+                submitted_roles_list = submitted_data['submitted']
+                nb_submitted = len(submitted_roles_list)
+                needed_roles_list = submitted_data['needed']
+                nb_needed = len(needed_roles_list)
+                value = f"{nb_submitted}/{nb_needed}"
+                if nb_submitted >= nb_needed:
+                    # we have all orders : green
+                    colour = config.ALL_ORDERS_IN_COLOUR
+
+            if field == 'all_agreed':
+                agreed_roles_list = submitted_data['agreed']
+                nb_agreed = len(agreed_roles_list)
+                submitted_roles_list = submitted_data['submitted']
+                nb_submitted = len(submitted_roles_list)
+                value = f"{nb_agreed}/{nb_submitted}"
+                if nb_agreed >= nb_submitted:
+                    # we have all agreements : green
+                    colour = config.ALL_AGREEMENTS_IN_COLOUR
+
+            if field == 'jump_here':
+                game_name = data['name']
+                form = html.FORM()
+                input_jump_game = html.INPUT(type="submit", value="sauter")
+                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                form <= input_jump_game
+                value = form
+
+            if field == 'go_away':
+
+                link = html.A(href=f"?game={game_name}", target="_blank")
+                link <= "y aller"
+                value = link
+
+            col = html.TD(value)
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+
+            row <= col
+
+        games_table <= row
+
+    MY_SUB_PANEL <= games_table
+    MY_SUB_PANEL <= html.BR()
+
+    # get GMT date and time
+    time_stamp = time.time()
+    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+    special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
+    MY_SUB_PANEL <= special_info
+    MY_SUB_PANEL <= html.BR()
+
+    overall_time_after = time.time()
+    elapsed = overall_time_after - overall_time_before
+
+    stats = f"Temps de chargement de la page {elapsed} avec {number_games} partie(s)"
+    if number_games:
+        stats += f" soit {elapsed/number_games} par partie"
+
+    MY_SUB_PANEL <= html.DIV(stats, Class='load')
+    MY_SUB_PANEL <= html.BR()
+
+    for other_state_name in config.STATE_CODE_TABLE:
+
+        if other_state_name != state_name:
+
+            input_change_state = html.INPUT(type="submit", value=other_state_name)
+            input_change_state.bind("click", lambda _, s=other_state_name: all_games(s))
+
+            MY_SUB_PANEL <= input_change_state
+            MY_SUB_PANEL <= html.BR()
+            MY_SUB_PANEL <= html.BR()
+
+
+def last_logins():
+    """ logins """
+
+    MY_SUB_PANEL <= html.H3("Liste des dernières connexions")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_moderator(pseudo):
+        return
+
+    logins_list = get_last_logins()
+
+    logins_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'date']:
+        col = html.TD(field)
+        thead <= col
+    logins_table <= thead
+
+    for pseudo, date in sorted(logins_list, key=lambda l: l[1], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
+        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        col = html.TD(date_now_gmt_str)
+        row <= col
+
+        logins_table <= row
+
+    MY_SUB_PANEL <= logins_table
+
+
+def last_failures():
+    """ failures """
+
+    MY_SUB_PANEL <= html.H3("Liste des connexions manquées")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_moderator(pseudo):
+        return
+
+    failures_list = get_last_failures()
+
+    failures_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'date']:
+        col = html.TD(field)
+        thead <= col
+    failures_table <= thead
+
+    for pseudo, date in sorted(failures_list, key=lambda l: l[1], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
+        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        col = html.TD(date_now_gmt_str)
+        row <= col
+
+        failures_table <= row
+
+    MY_SUB_PANEL <= failures_table
+
+
+def show_non_confirmed_data():
+    """ show_non_confirmed_data """
+
+    MY_SUB_PANEL <= html.H3("Liste des inscrits non confirmés")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_moderator(pseudo):
+        return
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        return
+
+    players_table = html.TABLE()
+
+    fields = ['pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for data in sorted(players_dict.values(), key=lambda p: p['pseudo'].upper()):
+
+        if data['email_confirmed']:
+            continue
+
+        row = html.TR()
+        for field in fields:
+            value = data[field]
+
+            col = html.TD(value)
+            row <= col
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
+
+
+def sendmail():
+    """ sendmail """
+
+    def sendmail_callback(_):
+        """ sendmail_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'envoi de courrier électronique : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'envoi de courrier électronique : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            InfoDialog("OK", f"Message émis vers : {addressed_user_name}", remove_after=config.REMOVE_AFTER)
+
+        addressed_user_name = input_addressed.value
+        if not addressed_user_name:
+            alert("User name destinataire manquant")
+            return
+
+        subject = "Message de la part de l'administrateur du site https://diplomania-gen.fr (AFJD)"
+
+        if not input_message.value:
+            alert("Contenu du message vide")
+            return
+
+        body = input_message.value
+
+        addressed_id = players_dict[addressed_user_name]
+        addressees = [addressed_id]
+
+        json_dict = {
+            'pseudo': pseudo,
+            'addressees': " ".join([str(a) for a in addressees]),
+            'subject': subject,
+            'body': body,
+            'force': True,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+
+        # sending email : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        sendmail()
+
+    MY_SUB_PANEL <= html.H3("Envoyer un e-mail")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_moderator(pseudo):
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # all players can be usurped
+    possible_addressed = set(players_dict.keys())
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par e-mail")
+    fieldset <= legend_addressee
+    input_addressed = html.SELECT(type="select-one", value="")
+    for addressee_pseudo in sorted(possible_addressed, key=lambda pu: pu.upper()):
+        option = html.OPTION(addressee_pseudo)
+        input_addressed <= option
+    fieldset <= input_addressed
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_message = html.LEGEND("Votre message", title="Qu'avez vous à lui dire ?")
+    fieldset <= legend_message
+    input_message = html.TEXTAREA(type="text", rows=5, cols=80)
+    fieldset <= input_message
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_select_player = html.INPUT(type="submit", value="contacter")
+    input_select_player.bind("click", sendmail_callback)
+    form <= input_select_player
+
+    MY_SUB_PANEL <= form
+
+
+def display_phone_number():
+    """ get_phone_number """
+
+    def display_phone_number_callback(_):
+        """ get_phone_number_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération de numéro de téléphone : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération de numéro de téléphone : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            telephone = req_result['telephone']
+            if telephone:
+                alert(f"Son numéro est '{telephone}'")
+            else:
+                alert("Pas de numéro entré !")
+
+        contact_user_name = input_contact.value
+        if not contact_user_name:
+            alert("User name à contacter manquant")
+            return
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-telephone/{contact_user_name}"
+
+        # getting private phone number : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        display_phone_number()
+
+    MY_SUB_PANEL <= html.H3("Afficher un numéro de téléphone")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_moderator(pseudo):
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # all players can be usurped
+    possible_contacts = set(players_dict.keys())
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter par téléphone")
+    fieldset <= legend_contact
+    input_contact = html.SELECT(type="select-one", value="")
+    for contact_pseudo in sorted(possible_contacts, key=lambda pu: pu.upper()):
+        option = html.OPTION(contact_pseudo)
+        input_contact <= option
+    fieldset <= input_contact
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_select_player = html.INPUT(type="submit", value="récupérer son numéro de téléphone")
+    input_select_player.bind("click", display_phone_number_callback)
+    form <= input_select_player
+
+    MY_SUB_PANEL <= form
+
+
+MY_PANEL = html.DIV()
+MY_PANEL.attrs['style'] = 'display: table-row'
+
+# menu-left
+MENU_LEFT = html.DIV()
+MENU_LEFT.attrs['style'] = 'display: table-cell; width:15%; vertical-align: top;'
+MY_PANEL <= MENU_LEFT
+
+# menu-selection
+MENU_SELECTION = html.UL()
+MENU_LEFT <= MENU_SELECTION
+
+ITEM_NAME_SELECTED = OPTIONS[0]
+
+MY_SUB_PANEL = html.DIV(id="admin")
+MY_PANEL <= MY_SUB_PANEL
+
+
+def load_option(_, item_name):
+    """ load_option """
+
+    MY_SUB_PANEL.clear()
+    if item_name == 'toutes les parties':
+        all_games('en cours')
+    if item_name == 'dernières connexions':
+        last_logins()
+    if item_name == 'connexions manquées':
+        last_failures()
+    if item_name == 'e-mails non confirmés':
+        show_non_confirmed_data()
+    if item_name == 'envoyer un e-mail':
+        sendmail()
+    if item_name == 'récupérer un téléphone':
+        display_phone_number()
+
+    global ITEM_NAME_SELECTED
+    ITEM_NAME_SELECTED = item_name
+
+    MENU_LEFT.clear()
+
+    # items in menu
+    for possible_item_name in OPTIONS:
+
+        if possible_item_name == ITEM_NAME_SELECTED:
+            item_name_bold_or_not = html.B(possible_item_name)
+        else:
+            item_name_bold_or_not = possible_item_name
+
+        button = html.BUTTON(item_name_bold_or_not, Class='btn-menu')
+        button.bind("click", lambda e, i=possible_item_name: load_option(e, i))
+        menu_item = html.LI(button)
+        MENU_LEFT <= menu_item
+
+
+# starts here
+
+
+def render(panel_middle):
+    """ render """
+
+    # always back to top
+    global ITEM_NAME_SELECTED
+    ITEM_NAME_SELECTED = OPTIONS[0]
+
+    load_option(None, ITEM_NAME_SELECTED)
+    panel_middle <= MY_PANEL
