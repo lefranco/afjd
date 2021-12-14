@@ -473,7 +473,7 @@ def rectify():
 
     # starts here
 
-    MY_SUB_PANEL <= html.H3("Rectifier une position")
+    MY_SUB_PANEL <= html.H3("Rectifier la position")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
