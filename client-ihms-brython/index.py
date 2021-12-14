@@ -84,6 +84,10 @@ def load_game(game_name):
 def load_option(_, item_name):
     """ load_option """
 
+    pseudo = None
+    if 'PSEUDO' in storage:
+        pseudo = storage['PSEUDO']
+
     PANEL_MIDDLE.clear()
     if item_name == 'accueil':
         home.render(PANEL_MIDDLE)
@@ -120,6 +124,16 @@ def load_option(_, item_name):
 
     # items in menu
     for possible_item_name in OPTIONS:
+
+        # do not display menu moderate if not moderator
+        if possible_item_name == 'modération' :
+            if pseudo is None or not moderate.check_modo(pseudo):
+                continue
+
+        # do not display menu administrate if not administrator
+        if possible_item_name == 'administration':
+            if pseudo is None or not admin.check_admin(pseudo):
+                continue
 
         if possible_item_name == ITEM_NAME_SELECTED:
             item_name_bold_or_not = html.B(possible_item_name)
