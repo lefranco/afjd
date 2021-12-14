@@ -17,7 +17,7 @@ import mapping
 import geometry
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position', 'éditer les modérateurs']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -27,7 +27,6 @@ def check_admin(pseudo):
 
     # TODO improve this with real admin account
     if pseudo != "Palpatine":
-        alert("Pas le bon compte (pas admin)")
         return False
 
     return True
@@ -83,6 +82,7 @@ def change_news():
     pseudo = storage['PSEUDO']
 
     if not check_admin(pseudo):
+        alert("Pas le bon compte (pas admin)")
         return
 
     news_content_loaded = common.get_news_content()
@@ -160,6 +160,7 @@ def usurp():
     pseudo = storage['PSEUDO']
 
     if not check_admin(pseudo):
+        alert("Pas le bon compte (pas admin)")
         return
 
     players_dict = common.get_players()
@@ -481,6 +482,7 @@ def rectify():
     pseudo = storage['PSEUDO']
 
     if not check_admin(pseudo):
+        alert("Pas le bon compte (pas admin)")
         return
 
     if 'GAME' not in storage:
@@ -650,6 +652,24 @@ def rectify():
     MY_SUB_PANEL <= my_sub_panel2
 
 
+def edit_moderators():
+    """ edit_moderators """
+
+    MY_SUB_PANEL <= html.H3("Editer les modérateurs")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    MY_SUB_PANEL <= "PAS PRET"
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -678,6 +698,9 @@ def load_option(_, item_name):
         usurp()
     if item_name == 'rectifier la position':
         rectify()
+    if item_name == 'éditer les modérateurs':
+        edit_moderators()
+
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name

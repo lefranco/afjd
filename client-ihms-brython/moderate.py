@@ -21,12 +21,11 @@ import index  # circular import
 OPTIONS = ['toutes les parties', 'dernières connexions', 'connexions manquées', 'e-mails non confirmés', 'envoyer un e-mail', 'récupérer un téléphone']
 
 
-def check_moderator(pseudo):
-    """ check_moderator """
+def check_modo(pseudo):
+    """ check_modo """
 
     # TODO improve this with real admin account
     if pseudo != "Palpatine":
-        alert("Pas le bon compte (pas admin)")
         return False
 
     return True
@@ -191,7 +190,8 @@ def all_games(state_name):
 
     pseudo = storage['PSEUDO']
 
-    if not check_moderator(pseudo):
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
         return
 
     games_dict = common.get_games_data()
@@ -423,7 +423,8 @@ def last_logins():
 
     pseudo = storage['PSEUDO']
 
-    if not check_moderator(pseudo):
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
         return
 
     logins_list = get_last_logins()
@@ -464,7 +465,8 @@ def last_failures():
 
     pseudo = storage['PSEUDO']
 
-    if not check_moderator(pseudo):
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
         return
 
     failures_list = get_last_failures()
@@ -505,7 +507,8 @@ def show_non_confirmed_data():
 
     pseudo = storage['PSEUDO']
 
-    if not check_moderator(pseudo):
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
         return
 
     players_dict = common.get_players_data()
@@ -604,7 +607,8 @@ def sendmail():
 
     pseudo = storage['PSEUDO']
 
-    if not check_moderator(pseudo):
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
         return
 
     players_dict = common.get_players()
@@ -691,7 +695,8 @@ def display_phone_number():
 
     pseudo = storage['PSEUDO']
 
-    if not check_moderator(pseudo):
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
         return
 
     players_dict = common.get_players()
