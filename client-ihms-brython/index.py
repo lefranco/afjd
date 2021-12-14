@@ -18,6 +18,7 @@ import play    # noqa: E402
 import tournament    # noqa: E402
 import sandbox    # noqa: E402
 import lists    # noqa: E402
+import moderate    # noqa: E402
 import admin    # noqa: E402
 
 
@@ -28,7 +29,7 @@ H2 = html.DIV("Front end générique du site Diplomania (graphisme simplifié)."
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'listes', 'administration']
+OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'listes', 'modération', 'administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -108,6 +109,8 @@ def load_option(_, item_name):
         sandbox.render(PANEL_MIDDLE)
     if item_name == 'listes':
         lists.render(PANEL_MIDDLE)
+    if item_name == 'modération':
+        moderate.render(PANEL_MIDDLE)
     if item_name == 'administration':
         admin.render(PANEL_MIDDLE)
     global ITEM_NAME_SELECTED
