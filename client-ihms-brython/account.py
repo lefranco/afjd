@@ -12,7 +12,7 @@ import config
 import common
 import login
 
-OPTIONS = ['créer', 'mot de passe', 'valider mon e-mail', 'editer', 'supprimer']
+OPTIONS = ['créer un compte', 'mot de passe', 'valider mon e-mail', 'éditer', 'supprimer']
 
 
 MAX_LEN_PSEUDO = 20
@@ -806,13 +806,13 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    if item_name == 'créer':
+    if item_name == 'créer un compte':
         create_account()
     if item_name == 'mot de passe':
         change_password()
     if item_name == 'valider mon e-mail':
         validate_email()
-    if item_name == 'editer':
+    if item_name == 'éditer':
         edit_account()
     if item_name == 'supprimer':
         delete_account()
@@ -839,9 +839,12 @@ def load_option(_, item_name):
 def render(panel_middle):
     """ render """
 
-    # always back to top
     global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = OPTIONS[0]
+
+    if 'PSEUDO' in storage:
+        ITEM_NAME_SELECTED = 'éditer'
+    else:
+        ITEM_NAME_SELECTED = OPTIONS[0]
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
