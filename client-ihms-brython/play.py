@@ -32,7 +32,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'observer', 'paramètres', 'arbitre', 'joueurs', 'ordres', 'retards']
+OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'paramètres', 'arbitre', 'joueurs', 'ordres', 'retards', 'observer']
 
 
 @enum.unique
@@ -4028,96 +4028,6 @@ def supervise():
     return True
 
 
-OBSERVE_REFRESH_TIMER = None
-
-
-def observe():
-    """ observe """
-
-    ctx = None
-    img = None
-
-    def callback_render(_):
-        """ callback_render """
-
-        # put the background map first
-        ctx.drawImage(img, 0, 0)
-
-        # put the centers
-        VARIANT_DATA.render(ctx)
-
-        # put the position
-        POSITION_DATA.render(ctx)
-
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
-
-    def refresh():
-        """ refresh """
-
-        # reload from server to see what changed from outside
-        load_dynamic_stuff()
-        MY_SUB_PANEL.clear()
-
-        # clock
-        stack_clock(MY_SUB_PANEL, OBSERVE_REFRESH_PERIOD_SEC)
-        MY_SUB_PANEL <= html.BR()
-
-        # game status
-        MY_SUB_PANEL <= GAME_STATUS
-
-        # create canvas
-        map_size = VARIANT_DATA.map_size
-        canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
-        nonlocal ctx
-        ctx = canvas.getContext("2d")
-        if ctx is None:
-            alert("Il faudrait utiliser un navigateur plus récent !")
-            return
-
-        # put background (this will call the callback that display the whole map)
-        nonlocal img
-        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-        img.bind('load', callback_render)
-
-        ratings = POSITION_DATA.role_ratings()
-        colours = POSITION_DATA.role_colours()
-        game_scoring = GAME_PARAMETERS_LOADED['scoring']
-        rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
-
-        report_window = common.make_report_window(REPORT_LOADED)
-
-        # left side
-
-        MY_SUB_PANEL <= canvas
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= rating_colours_window
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= report_window
-
-    # game needs to be ongoing - not waiting
-    if GAME_PARAMETERS_LOADED['current_state'] == 0:
-        alert("La partie n'est pas encore démarrée")
-        load_option(None, 'position')
-        return False
-
-    # game needs to be ongoing - not finished
-    if GAME_PARAMETERS_LOADED['current_state'] == 2:
-        alert("La partie est déjà terminée")
-        load_option(None, 'position')
-        return False
-
-    # initiates refresh
-    refresh()
-
-    # repeat
-    global OBSERVE_REFRESH_TIMER
-    if OBSERVE_REFRESH_TIMER is None:
-        OBSERVE_REFRESH_TIMER = timer.set_interval(refresh, OBSERVE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
-
-    return True
-
-
 def show_game_parameters():
     """ show_game_parameters """
 
@@ -4608,6 +4518,96 @@ def show_incidents_in_game():
     return True
 
 
+OBSERVE_REFRESH_TIMER = None
+
+
+def observe():
+    """ observe """
+
+    ctx = None
+    img = None
+
+    def callback_render(_):
+        """ callback_render """
+
+        # put the background map first
+        ctx.drawImage(img, 0, 0)
+
+        # put the centers
+        VARIANT_DATA.render(ctx)
+
+        # put the position
+        POSITION_DATA.render(ctx)
+
+        # put the legends at the end
+        VARIANT_DATA.render_legends(ctx)
+
+    def refresh():
+        """ refresh """
+
+        # reload from server to see what changed from outside
+        load_dynamic_stuff()
+        MY_SUB_PANEL.clear()
+
+        # clock
+        stack_clock(MY_SUB_PANEL, OBSERVE_REFRESH_PERIOD_SEC)
+        MY_SUB_PANEL <= html.BR()
+
+        # game status
+        MY_SUB_PANEL <= GAME_STATUS
+
+        # create canvas
+        map_size = VARIANT_DATA.map_size
+        canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+        nonlocal ctx
+        ctx = canvas.getContext("2d")
+        if ctx is None:
+            alert("Il faudrait utiliser un navigateur plus récent !")
+            return
+
+        # put background (this will call the callback that display the whole map)
+        nonlocal img
+        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+        img.bind('load', callback_render)
+
+        ratings = POSITION_DATA.role_ratings()
+        colours = POSITION_DATA.role_colours()
+        game_scoring = GAME_PARAMETERS_LOADED['scoring']
+        rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+
+        report_window = common.make_report_window(REPORT_LOADED)
+
+        # left side
+
+        MY_SUB_PANEL <= canvas
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= rating_colours_window
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= report_window
+
+    # game needs to be ongoing - not waiting
+    if GAME_PARAMETERS_LOADED['current_state'] == 0:
+        alert("La partie n'est pas encore démarrée")
+        load_option(None, 'position')
+        return False
+
+    # game needs to be ongoing - not finished
+    if GAME_PARAMETERS_LOADED['current_state'] == 2:
+        alert("La partie est déjà terminée")
+        load_option(None, 'position')
+        return False
+
+    # initiates refresh
+    refresh()
+
+    # repeat
+    global OBSERVE_REFRESH_TIMER
+    if OBSERVE_REFRESH_TIMER is None:
+        OBSERVE_REFRESH_TIMER = timer.set_interval(refresh, OBSERVE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
+
+    return True
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -4648,8 +4648,6 @@ def load_option(_, item_name):
         status = game_master()
     if item_name == 'superviser':
         status = supervise()
-    if item_name == 'observer':
-        status = observe()
     if item_name == 'paramètres':
         status = show_game_parameters()
     if item_name == 'arbitre':
@@ -4660,6 +4658,8 @@ def load_option(_, item_name):
         status = show_orders_submitted_in_game()
     if item_name == 'retards':
         status = show_incidents_in_game()
+    if item_name == 'observer':
+        status = observe()
 
     if not status:
         return
