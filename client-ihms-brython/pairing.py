@@ -12,7 +12,7 @@ import config
 import common
 
 
-OPTIONS = ['se mettre dans les joueurs potentiels de la partie', 'se retirer des joueurs potentiels de la partie', 'déplacer des joueurs potentiels de la partie', 'prendre l\'arbitrage de la partie', 'démissionner de l\'arbitrage de la partie']
+OPTIONS = ['rejoindre la partie', 'quitter la partie', 'déplacer des joueurs', 'prendre l\'arbitrage', 'démissionner de l\'arbitrage']
 
 
 def get_game_allocated_players(game_id):
@@ -565,15 +565,15 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    if item_name == 'se mettre dans les joueurs potentiels de la partie':
+    if item_name == 'rejoindre la partie':
         join_game()
-    if item_name == 'se retirer des joueurs potentiels de la partie':
+    if item_name == 'quitter la partie':
         quit_game()
-    if item_name == 'déplacer des joueurs potentiels de la partie':
+    if item_name == 'déplacer des joueurs':
         move_players_in_game()
-    if item_name == 'prendre l\'arbitrage de la partie':
+    if item_name == 'prendre l\'arbitrage':
         take_mastering_game()
-    if item_name == 'démissionner de l\'arbitrage de la partie':
+    if item_name == 'démissionner de l\'arbitrage':
         quit_mastering_game()
 
     global ITEM_NAME_SELECTED
