@@ -701,7 +701,6 @@ def load_option(_, item_name):
     if item_name == 'éditer les modérateurs':
         edit_moderators()
 
-
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 

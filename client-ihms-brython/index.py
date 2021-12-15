@@ -126,7 +126,7 @@ def load_option(_, item_name):
     for possible_item_name in OPTIONS:
 
         # do not display menu moderate if not moderator
-        if possible_item_name == 'modération' :
+        if possible_item_name == 'modération':
             if pseudo is None or not moderate.check_modo(pseudo):
                 continue
 

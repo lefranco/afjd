@@ -140,12 +140,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'description', 'deadline', 'current_state', 'current_advancement', 'allocated', 'capacity', 'jump_here', 'join']
+    fields = ['jump_here', 'join', 'variant', 'description', 'deadline', 'current_state', 'current_advancement', 'allocated', 'capacity']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'description': 'description', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'capacity': 'capacité (dont arbitre)', 'jump_here': 'partie', 'join': 'rejoindre'}[field]
+        field_fr = {'jump_here': 'aller voir', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'capacity': 'capacité (dont arbitre)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -188,16 +188,32 @@ def my_opportunities():
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
-        data['allocated'] = None
-        data['capacity'] = None
         data['jump_here'] = None
         data['join'] = None
+        data['allocated'] = None
+        data['capacity'] = None
 
         row = html.TR()
         for field in fields:
 
             value = data[field]
             colour = None
+
+            if field == 'jump_here':
+                game_name = data['name']
+                form = html.FORM()
+                input_jump_game = html.INPUT(type="submit", value=game_name)
+                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                form <= input_jump_game
+                value = form
+
+            if field == 'join':
+                game_name = data['name']
+                form = html.FORM()
+                input_join_game = html.INPUT(type="submit", value="J'en profite !")
+                input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
+                form <= input_join_game
+                value = form
 
             if field == 'deadline':
                 deadline_loaded = value
@@ -238,22 +254,6 @@ def my_opportunities():
 
             if field == 'capacity':
                 value = recruiting_games_dict[int(game_id_str)]['capacity']
-
-            if field == 'jump_here':
-                game_name = data['name']
-                form = html.FORM()
-                input_jump_game = html.INPUT(type="submit", value="consulter")
-                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                form <= input_jump_game
-                value = form
-
-            if field == 'join':
-                game_name = data['name']
-                form = html.FORM()
-                input_join_game = html.INPUT(type="submit", value="Eh, il y a de la place. J'en profite !")
-                input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
-                form <= input_join_game
-                value = form
 
             col = html.TD(value)
             if colour is not None:

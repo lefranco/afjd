@@ -230,12 +230,12 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'master', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'all_agreed', 'jump_here', 'go_away']
+    fields = ['jump_here', 'go_away', 'master', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'all_agreed']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres', 'all_agreed': 'accords', 'jump_here': 'partie', 'go_away': 'partie (nouvel onglet)'}[field]
+        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres', 'all_agreed': 'accords'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -303,6 +303,19 @@ def all_games(state_name):
             value = data[field]
             colour = None
 
+            if field == 'jump_here':
+                game_name = data['name']
+                form = html.FORM()
+                input_jump_game = html.INPUT(type="submit", value=game_name)
+                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                form <= input_jump_game
+                value = form
+
+            if field == 'go_away':
+                link = html.A(href=f"?game={game_name}", target="_blank")
+                link <= game_name
+                value = link
+
             if field == 'master':
                 game_name = data['name']
                 # some games do not have a game master
@@ -354,20 +367,6 @@ def all_games(state_name):
                 if nb_agreed >= nb_submitted:
                     # we have all agreements : green
                     colour = config.ALL_AGREEMENTS_IN_COLOUR
-
-            if field == 'jump_here':
-                game_name = data['name']
-                form = html.FORM()
-                input_jump_game = html.INPUT(type="submit", value="sauter")
-                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                form <= input_jump_game
-                value = form
-
-            if field == 'go_away':
-
-                link = html.A(href=f"?game={game_name}", target="_blank")
-                link <= "y aller"
-                value = link
 
             col = html.TD(value)
             if colour is not None:
