@@ -434,12 +434,12 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'master', 'variant', 'deadline', 'current_advancement', 'jump_here', 'go_away']
+    fields = ['jump_here', 'go_away', 'master', 'variant', 'deadline', 'current_advancement']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'jump_here': 'partie', 'go_away': 'partie (nouvel onglet)'}[field]
+        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -490,17 +490,30 @@ def show_games():
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
+        data['jump_here'] = None
+        data['go_away'] = None
         data['master'] = None
         data['all_orders_submitted'] = None
         data['all_agreed'] = None
-        data['jump_here'] = None
-        data['go_away'] = None
 
         row = html.TR()
         for field in fields:
 
             value = data[field]
             colour = None
+
+            if field == 'jump_here':
+                game_name = data['name']
+                form = html.FORM()
+                input_jump_game = html.INPUT(type="submit", value=game_name)
+                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                form <= input_jump_game
+                value = form
+
+            if field == 'go_away':
+                link = html.A(href=f"?game={game_name}", target="_blank")
+                link <= game_name
+                value = link
 
             if field == 'master':
                 game_name = data['name']
@@ -533,20 +546,6 @@ def show_games():
                 advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
                 advancement_season_readable = variant_data.name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
-
-            if field == 'jump_here':
-                game_name = data['name']
-                form = html.FORM()
-                input_jump_game = html.INPUT(type="submit", value="sauter")
-                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                form <= input_jump_game
-                value = form
-
-            if field == 'go_away':
-
-                link = html.A(href=f"?game={game_name}", target="_blank")
-                link <= "y aller"
-                value = link
 
             col = html.TD(value)
             if colour is not None:
@@ -581,7 +580,6 @@ def show_games():
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
     MY_SUB_PANEL <= html.BR()
-
 
 
 def show_ratings():
@@ -698,7 +696,7 @@ def show_incidents():
 
     counter = dict()
 
-    for game_id, player_id, date_incident in sorted(tournament_incidents, key=lambda i: i[2]):
+    for _, player_id, date_incident in sorted(tournament_incidents, key=lambda i: i[2]):
 
         row = html.TR()
 

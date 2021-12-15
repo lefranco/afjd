@@ -50,6 +50,7 @@ def information_about_playing():
     information <= "Crééz-la partie et démissionez ensuite de l'arbitrage (appariement). Un arbitre sera alloué automatiquement..."
     return information
 
+
 def information_about_anonymity():
     """ information_about_playing """
 

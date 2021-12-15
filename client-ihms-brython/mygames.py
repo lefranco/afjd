@@ -288,12 +288,12 @@ def my_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'variant', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'jump_here', 'go_away']
+    fields = ['jump_here', 'go_away', 'variant', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres', 'all_agreed': 'accords', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'jump_here': 'partie', 'go_away': 'partie (nouvel onglet)'}[field]
+        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres', 'all_agreed': 'accords', 'new_declarations': 'déclarations', 'new_messages': 'messages'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -359,20 +359,35 @@ def my_games(state_name):
         submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
         submitted_data['agreed'] = dict_submitted_data['dict_agreed'][str(game_id)]
 
+        data['jump_here'] = None
+        data['go_away'] = None
         data['orders_submitted'] = None
         data['agreed'] = None
         data['all_orders_submitted'] = None
         data['all_agreed'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
-        data['jump_here'] = None
-        data['go_away'] = None
 
         row = html.TR()
         for field in fields:
 
             value = data[field]
             colour = None
+
+            if field == 'jump_here':
+
+                game_name = data['name']
+                form = html.FORM()
+                input_jump_game = html.INPUT(type="submit", value=game_name)
+                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                form <= input_jump_game
+                value = form
+
+            if field == 'go_away':
+
+                link = html.A(href=f"?game={game_name}", target="_blank")
+                link <= game_name
+                value = link
 
             if field == 'deadline':
 
@@ -488,21 +503,6 @@ def my_games(state_name):
                     if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
                         popup = html.IMG(src="./images/messages_received.jpg", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
-
-            if field == 'jump_here':
-
-                game_name = data['name']
-                form = html.FORM()
-                input_jump_game = html.INPUT(type="submit", value="sauter")
-                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                form <= input_jump_game
-                value = form
-
-            if field == 'go_away':
-
-                link = html.A(href=f"?game={game_name}", target="_blank")
-                link <= "y aller"
-                value = link
 
             col = html.TD(value)
             if colour is not None:
