@@ -506,13 +506,19 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg=f"Game {name} is ongoing. Terminate it first.")
 
+        game_id = game.identifier
+
+        # check game not in tournament
+        tournaments_game = groupings.Grouping.list_by_game_id(sql_executor, game_id)
+        if tournaments_game:
+            del sql_executor
+            flask_restful.abort(400, msg="Seems the game is in some tournament. Remove it from tournament first.")
+
         # delete allocations
         game.delete_allocations(sql_executor)
 
         # and position
         game.delete_position(sql_executor)
-
-        game_id = game.identifier
 
         # and report
         report = reports.Report.find_by_identifier(sql_executor, game_id)
@@ -4062,6 +4068,13 @@ class GroupingTournamentRessource(flask_restful.Resource):  # type: ignore
         # action
 
         if not delete:
+
+            # check the game is not already in another tournament
+            tournaments_game = groupings.Grouping.list_by_game_id(sql_executor, game_id)
+            if tournaments_game:
+                del sql_executor
+                flask_restful.abort(400, msg="Seems the game is already in some other tournament")
+
             grouping = groupings.Grouping(int(tournament_id), int(game_id))
             grouping.update_database(sql_executor)
 
@@ -4070,6 +4083,12 @@ class GroupingTournamentRessource(flask_restful.Resource):  # type: ignore
 
             data = {'msg': 'Ok grouping updated or created'}
             return data, 201
+
+        # check the game is not alone in its tournament
+        games_tournament = groupings.Grouping.list_by_tournament_id(sql_executor, tournament_id)
+        if len(games_tournament) == 1:
+            del sql_executor
+            flask_restful.abort(400, msg="Seems removing the game from the tournament would make it empty")
 
         grouping = groupings.Grouping(int(tournament_id), int(game_id))
         grouping.delete_database(sql_executor)
