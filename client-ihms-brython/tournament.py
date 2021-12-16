@@ -15,6 +15,7 @@ import config
 import interface
 import mapping
 import selection
+import scoring
 import memoize
 import index  # circular import
 
@@ -603,12 +604,104 @@ def show_ratings():
         return
 
     tournament_name = tournament_dict['name']
+    games_in = tournament_dict['games']
+
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    rating_dict = dict()
+
+    for game_id_str, data in games_dict.items():
+
+        game_id = int(game_id_str)
+        game_name = data['name']
+
+        if game_id not in games_in:
+            continue
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        # build position data
+        position_loaded = common.game_position_reload(game_id)
+        if not position_loaded:
+            alert("Erreur chargement position")
+            return
+
+        position_data = mapping.Position(position_loaded, variant_data)
+
+        ratings = position_data.role_ratings()
+
+        # calculate ratings
+        scoring_name, score_table = scoring.c_diplo(variant_data, ratings)
+
+        for role_name,points in score_table.items():
+            rating_dict[(game_name,role_name)] = points
+
+
+    ratings_table = html.TABLE()
+
+    fields = ['points', 'alias']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'points': 'points', 'alias': 'alias'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    ratings_table <= thead
+
+    for (game, role), points in sorted(rating_dict.items(), key=lambda i:i[1], reverse=True):
+
+        row = html.TR()
+
+        # points
+        points_str = f"{points:.2f}"
+        col = html.TD(points_str)
+        row <= col
+
+        # player
+        alias = f"{game}##{role}"
+        col = html.TD(alias)
+        row <= col
+
+        ratings_table <= row
 
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()
 
-    # TODO
-    MY_SUB_PANEL <= "PAS PRET !"
+    MY_SUB_PANEL <= ratings_table
 
 
 def show_incidents():
