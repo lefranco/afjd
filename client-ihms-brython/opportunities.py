@@ -140,12 +140,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'join', 'variant', 'description', 'deadline', 'current_state', 'current_advancement', 'allocated', 'capacity']
+    fields = ['jump_here', 'join', 'variant', 'description', 'deadline', 'current_state', 'current_advancement', 'allocated']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'aller voir', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'capacity': 'capacité (dont arbitre)'}[field]
+        field_fr = {'jump_here': 'aller voir', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -191,7 +191,6 @@ def my_opportunities():
         data['jump_here'] = None
         data['join'] = None
         data['allocated'] = None
-        data['capacity'] = None
 
         row = html.TR()
         for field in fields:
@@ -250,10 +249,11 @@ def my_opportunities():
                 value = f"{advancement_season_readable} {advancement_year}"
 
             if field == 'allocated':
-                value = recruiting_games_dict[int(game_id_str)]['allocated']
-
-            if field == 'capacity':
-                value = recruiting_games_dict[int(game_id_str)]['capacity']
+                allocated = recruiting_games_dict[int(game_id_str)]['allocated']
+                capacity = recruiting_games_dict[int(game_id_str)]['capacity']
+                value = f"{allocated}/{capacity}"
+                if allocated == capacity:
+                    colour = config.ALL_ORDERS_IN_COLOUR
 
             col = html.TD(value)
             if colour is not None:
