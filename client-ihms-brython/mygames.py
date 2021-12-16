@@ -175,6 +175,36 @@ def get_all_player_games_roles_submitted_orders():
     return dict_submitted_data
 
 
+def get_player_id(pseudo):
+    """ get_player_id """
+
+    player_id = None
+
+    def reply_callback(req):
+        nonlocal player_id
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération d'identifiant de joueur : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération d'identifiant de joueur : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        player_id = int(req_result)
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/player-identifiers/{pseudo}"
+
+    # get player id : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return player_id
+
+
 def get_player_games_playing_in(player_id):
     """ get_player_games_playing_in """
 
@@ -239,9 +269,9 @@ def my_games(state_name):
 
     pseudo = storage['PSEUDO']
 
-    player_id = common.get_player_id(pseudo)
+    player_id = get_player_id(pseudo)
     if player_id is None:
-        alert("Erreur chargement identifiants joueurs")
+        alert("Erreur chargement identifiant joueur")
         return
 
     player_games = get_player_games_playing_in(player_id)
