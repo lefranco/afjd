@@ -631,7 +631,7 @@ def show_incidents():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            incidents = req_result['incidents']
+            incidents = req_result
 
         json_dict = dict()
 
@@ -649,10 +649,6 @@ def show_incidents():
     # title
     title = html.H3("Incidents du tournoi")
     MY_SUB_PANEL <= title
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -675,28 +671,21 @@ def show_incidents():
     tournament_incidents = game_incidents_reload(tournament_id)
     # there can be no incidents (if no incident of failed to load)
 
-    players_dict = common.get_players()
-    if not players_dict:
-        alert("Erreur chargement info joueurs")
-        return
-
-    id2pseudo = {v: k for k, v in players_dict.items()}
-
     tournament_incidents_table = html.TABLE()
 
-    fields = ['date', 'player']
+    fields = ['date', 'alias']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'date': 'date', 'player': 'joueur'}[field]
+        field_fr = {'date': 'date', 'alias': 'alias'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournament_incidents_table <= thead
 
     counter = dict()
 
-    for _, player_id, date_incident in sorted(tournament_incidents, key=lambda i: i[2]):
+    for alias, date_incident in sorted(tournament_incidents, key=lambda i: i[1]):
 
         row = html.TR()
 
@@ -709,14 +698,13 @@ def show_incidents():
         row <= col
 
         # player
-        pseudo_there = id2pseudo[player_id]
-        col = html.TD(pseudo_there)
+        col = html.TD(alias)
         row <= col
 
-        if pseudo_there not in counter:
-            counter[pseudo_there] = 1
+        if alias not in counter:
+            counter[alias] = 1
         else:
-            counter[pseudo_there] += 1
+            counter[alias] += 1
 
         tournament_incidents_table <= row
 
@@ -734,6 +722,8 @@ def show_incidents():
     MY_SUB_PANEL <= html.H3("Détail")
     MY_SUB_PANEL <= tournament_incidents_table
 
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;numéro du rôle&gt;", Class='note')
 
 def create_tournament():
     """ create_tournament """
