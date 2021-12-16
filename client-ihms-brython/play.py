@@ -4454,6 +4454,8 @@ def show_incidents_in_game():
         thead <= col
     game_incidents_table <= thead
 
+    counter = dict()
+
     for role_id, advancement, date_incident in game_incidents:
 
         row = html.TR()
@@ -4484,6 +4486,11 @@ def show_incidents_in_game():
         col = html.TD(pseudo_there)
         row <= col
 
+        if pseudo_there not in counter:
+            counter[pseudo_there] = 1
+        else:
+            counter[pseudo_there] += 1
+
         # season
         advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
         advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
@@ -4501,10 +4508,23 @@ def show_incidents_in_game():
 
         game_incidents_table <= row
 
+    recap_table = html.TABLE()
+    for pseudo_there, number in sorted(counter.items(), key=lambda i: (- i[1], i[0])):
+        row = html.TR()
+        col = html.TD(pseudo_there)
+        row <= col
+        col = html.TD(number)
+        row <= col
+        recap_table <= row
+
     # game status
     MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
+    MY_SUB_PANEL <= html.H3("Récapitulatif")
+    MY_SUB_PANEL <= recap_table
+
+    MY_SUB_PANEL <= html.H3("Détail")
     MY_SUB_PANEL <= game_incidents_table
     MY_SUB_PANEL <= html.BR()
 
