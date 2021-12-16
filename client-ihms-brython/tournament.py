@@ -709,9 +709,9 @@ def show_incidents():
         tournament_incidents_table <= row
 
     recap_table = html.TABLE()
-    for pseudo, number in sorted(counter.items(), key=lambda i: (- i[1], i[0])):
+    for alias, number in sorted(counter.items(), key=lambda i: (- i[1], i[0])):
         row = html.TR()
-        col = html.TD(pseudo)
+        col = html.TD(alias)
         row <= col
         col = html.TD(number)
         row <= col
