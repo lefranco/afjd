@@ -725,6 +725,7 @@ def show_incidents():
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;numéro du rôle&gt;", Class='note')
 
+
 def create_tournament():
     """ create_tournament """
 
