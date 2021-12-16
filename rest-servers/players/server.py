@@ -665,7 +665,7 @@ class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/news - GET - get the phone number of player pseudo=%s", pseudo)
+        mylogger.LOGGER.info("/player-telephone - GET - get the phone number of player pseudo=%s", pseudo)
 
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -706,6 +706,60 @@ class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
         telephone = contact.telephone
 
         data = {'telephone': telephone}
+        return data, 200
+
+
+@API.resource('/player-email/<pseudo>')
+class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
+    """ PlayerEmailRessource """
+
+    def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, str], int]:  # pylint: disable=no-self-use
+        """
+        Provides the email address of a player
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/player-email - GET - get the email address of player pseudo=%s", pseudo)
+
+        # check from user server user is pseudo
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+        pseudo_requester = req_result.json()['logged_in_as']
+
+        sql_executor = database.SqlExecutor()
+
+        requester = players.Player.find_by_pseudo(sql_executor, pseudo_requester)
+
+        if requester is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
+
+        # TODO improve this with real admin account
+        if pseudo_requester != 'Palpatine':
+            del sql_executor
+            flask_restful.abort(403, msg="You are not allowed to get email address!")
+
+        contact = players.Player.find_by_pseudo(sql_executor, pseudo)
+
+        if contact is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Contact player {pseudo} does not exist")
+
+        del sql_executor
+
+        assert contact is not None
+        email = contact.email
+
+        data = {'email': email}
         return data, 200
 
 

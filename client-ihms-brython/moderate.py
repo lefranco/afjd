@@ -7,7 +7,6 @@ import time
 import datetime
 
 from browser import html, ajax, alert  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -18,7 +17,7 @@ import selection
 import memoize
 import index  # circular import
 
-OPTIONS = ['toutes les parties', 'dernières connexions', 'connexions manquées', 'e-mails non confirmés', 'envoyer un e-mail', 'récupérer un téléphone']
+OPTIONS = ['toutes les parties', 'dernières connexions', 'connexions manquées', 'e-mails non confirmés', 'récupérer une adresse email', 'récupérer un téléphone']
 
 
 def check_modo(pseudo):
@@ -544,61 +543,45 @@ def show_non_confirmed_data():
     MY_SUB_PANEL <= players_table
 
 
-def sendmail():
-    """ sendmail """
+def display_email_address():
+    """ display_email_address """
 
-    def sendmail_callback(_):
-        """ sendmail_callback """
+    def display_email_address_callback(_):
+        """ display_email_address_callback """
 
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à l'envoi de courrier électronique : {req_result['message']}")
+                    alert(f"Erreur à la récupération de l'adresse e-mail : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à l'envoi de courrier électronique : {req_result['msg']}")
+                    alert(f"Problème à la récupération de l'adresse e-mail : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", f"Message émis vers : {addressed_user_name}", remove_after=config.REMOVE_AFTER)
+            email = req_result['email']
+            alert(f"Son adresse email est '{email}'")
 
-        addressed_user_name = input_addressed.value
-        if not addressed_user_name:
-            alert("User name destinataire manquant")
+        contact_user_name = input_contact.value
+        if not contact_user_name:
+            alert("User name à contacter manquant")
             return
 
-        subject = "Message de la part de l'administrateur du site https://diplomania-gen.fr (AFJD)"
-
-        if not input_message.value:
-            alert("Contenu du message vide")
-            return
-
-        body = input_message.value
-
-        addressed_id = players_dict[addressed_user_name]
-        addressees = [addressed_id]
-
-        json_dict = {
-            'pseudo': pseudo,
-            'addressees': " ".join([str(a) for a in addressees]),
-            'subject': subject,
-            'body': body,
-            'force': True,
-        }
+        json_dict = dict()
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/mail-players"
+        url = f"{host}:{port}/player-email/{contact_user_name}"
 
-        # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        # getting private phone number : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        sendmail()
+        display_email_address()
 
-    MY_SUB_PANEL <= html.H3("Envoyer un e-mail")
+    MY_SUB_PANEL <= html.H3("Afficher une adresse e-mail")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -614,32 +597,25 @@ def sendmail():
     if not players_dict:
         return
 
-    # all players can be usurped
-    possible_addressed = set(players_dict.keys())
+    # all players can be contacted
+    possible_contacts = set(players_dict.keys())
 
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par e-mail")
-    fieldset <= legend_addressee
-    input_addressed = html.SELECT(type="select-one", value="")
-    for addressee_pseudo in sorted(possible_addressed, key=lambda pu: pu.upper()):
-        option = html.OPTION(addressee_pseudo)
-        input_addressed <= option
-    fieldset <= input_addressed
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_message = html.LEGEND("Votre message", title="Qu'avez vous à lui dire ?")
-    fieldset <= legend_message
-    input_message = html.TEXTAREA(type="text", rows=5, cols=80)
-    fieldset <= input_message
+    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter par e-mail")
+    fieldset <= legend_contact
+    input_contact = html.SELECT(type="select-one", value="")
+    for contact_pseudo in sorted(possible_contacts, key=lambda pu: pu.upper()):
+        option = html.OPTION(contact_pseudo)
+        input_contact <= option
+    fieldset <= input_contact
     form <= fieldset
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="contacter")
-    input_select_player.bind("click", sendmail_callback)
+    input_select_player = html.INPUT(type="submit", value="récupérer son adresse e-mail")
+    input_select_player.bind("click", display_email_address_callback)
     form <= input_select_player
 
     MY_SUB_PANEL <= form
@@ -702,7 +678,7 @@ def display_phone_number():
     if not players_dict:
         return
 
-    # all players can be usurped
+    # all players can be contacted
     possible_contacts = set(players_dict.keys())
 
     form = html.FORM()
@@ -756,8 +732,8 @@ def load_option(_, item_name):
         last_failures()
     if item_name == 'e-mails non confirmés':
         show_non_confirmed_data()
-    if item_name == 'envoyer un e-mail':
-        sendmail()
+    if item_name == 'récupérer une adresse email':
+        display_email_address()
     if item_name == 'récupérer un téléphone':
         display_phone_number()
 
