@@ -142,8 +142,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
         """ create_game """
 
         create_status = None
-        load_status = None
-        parameters_loaded = None
 
         def reply_callback(req):
             nonlocal create_status
@@ -160,43 +158,8 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
 
             create_status = True
 
-        def game_parameters_reload():
-            """ game_parameters_reload """
-
-            def local_noreply_callback(_):
-                """ local_noreply_callback """
-                nonlocal load_status
-                alert("Problème (pas de réponse de la part du serveur)")
-                load_status = False
-
-            def reply_callback(req):
-                nonlocal load_status
-                nonlocal parameters_loaded
-                req_result = json.loads(req.text)
-                if req.status != 200:
-                    if 'message' in req_result:
-                        alert(f"Erreur à la récupération du paramètre de la partie modèle : {req_result['message']}")
-                    elif 'msg' in req_result:
-                        alert(f"Problème à la récupération du paramètre de la partie modèle : {req_result['msg']}")
-                    else:
-                        alert("Réponse du serveur imprévue et non documentée")
-                    load_status = False
-                    return
-
-                parameters_loaded = req_result
-                load_status = True
-
-            json_dict = dict()
-
-            host = config.SERVER_CONFIG['GAME']['HOST']
-            port = config.SERVER_CONFIG['GAME']['PORT']
-            url = f"{host}:{port}/games/{current_game_name}"
-
-            # getting game data : no need for token
-            ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        game_parameters_reload()
-        if not load_status:
+        parameters_loaded = common.game_parameters_reload(current_game_name)
+        if not parameters_loaded:
             alert("Impossible de récupérer les paramètres de la partie modèle")
             return False
 
@@ -660,35 +623,49 @@ def show_ratings():
             return
 
         position_data = mapping.Position(position_loaded, variant_data)
-
         ratings = position_data.role_ratings()
 
-        # calculate ratings
-        scoring_name, score_table = scoring.c_diplo(variant_data, ratings)
+        parameters_reload = common.game_parameters_reload(game_name)
+        if not parameters_reload:
+            alert("Errur chargement paramètres partie")
+            return
 
-        for role_name,points in score_table.items():
-            rating_dict[(game_name,role_name)] = points
+        game_scoring = parameters_reload['scoring']
 
+        # selected scoring game parameter
+        if game_scoring == 'CDIP':
+            scoring_name, score_table = scoring.c_diplo(variant_data, ratings)
+        if game_scoring == 'WNAM':
+            scoring_name, score_table = scoring.win_namur(variant_data, ratings)
+        if game_scoring == 'DLIG':
+            scoring_name, score_table = scoring.diplo_league(variant_data, ratings)
+
+        for role_name, points in score_table.items():
+            rating_dict[(game_name, role_name)] = (points, scoring_name)
 
     ratings_table = html.TABLE()
 
-    fields = ['points', 'alias']
+    fields = ['points', 'scoring', 'alias']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'points': 'points', 'alias': 'alias'}[field]
+        field_fr = {'points': 'points', 'scoring': 'scorage', 'alias': 'alias'}[field]
         col = html.TD(field_fr)
         thead <= col
     ratings_table <= thead
 
-    for (game, role), points in sorted(rating_dict.items(), key=lambda i:i[1], reverse=True):
+    for (game, role), (points, scoring_name) in sorted(rating_dict.items(), key=lambda i: i[1], reverse=True):
 
         row = html.TR()
 
         # points
         points_str = f"{points:.2f}"
         col = html.TD(points_str)
+        row <= col
+
+        # scoring
+        col = html.TD(scoring_name)
         row <= col
 
         # player
@@ -700,15 +677,16 @@ def show_ratings():
 
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()
-
     MY_SUB_PANEL <= ratings_table
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
 
 
 def show_incidents():
     """ show_incidents """
 
-    def game_incidents_reload(tournament_id):
-        """ game_incidents_reload """
+    def tournament_incidents_reload(tournament_id):
+        """ tournament_incidents_reload """
 
         incidents = list()
 
@@ -757,11 +735,13 @@ def show_incidents():
     tournament_name = tournament_dict['name']
     tournament_id = tournament_dict['identifier']
 
-    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
-    MY_SUB_PANEL <= html.BR()
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
 
     # get the actual incidents of the tournament
-    tournament_incidents = game_incidents_reload(tournament_id)
+    tournament_incidents = tournament_incidents_reload(tournament_id)
     # there can be no incidents (if no incident of failed to load)
 
     tournament_incidents_table = html.TABLE()
@@ -776,9 +756,41 @@ def show_incidents():
         thead <= col
     tournament_incidents_table <= thead
 
-    counter = dict()
+    for game_id, role_num, date_incident in sorted(tournament_incidents, key=lambda i: i[1]):
 
-    for alias, date_incident in sorted(tournament_incidents, key=lambda i: i[1]):
+        data = games_dict[str(game_id)]
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
 
         row = html.TR()
 
@@ -791,32 +803,20 @@ def show_incidents():
         row <= col
 
         # player
+        game_name = data['name']
+        role = variant_data.roles[role_num]
+        role_name = variant_data.name_table[role]
+        alias = f"{game_name}##{role_name}"
         col = html.TD(alias)
         row <= col
-
-        if alias not in counter:
-            counter[alias] = 1
-        else:
-            counter[alias] += 1
 
         tournament_incidents_table <= row
 
-    recap_table = html.TABLE()
-    for alias, number in sorted(counter.items(), key=lambda i: (- i[1], i[0])):
-        row = html.TR()
-        col = html.TD(alias)
-        row <= col
-        col = html.TD(number)
-        row <= col
-        recap_table <= row
-
-    MY_SUB_PANEL <= html.H3("Récapitulatif")
-    MY_SUB_PANEL <= recap_table
-    MY_SUB_PANEL <= html.H3("Détail")
-    MY_SUB_PANEL <= tournament_incidents_table
-
+    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;numéro du rôle&gt;", Class='note')
+    MY_SUB_PANEL <= tournament_incidents_table
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
 
 
 def create_tournament():
