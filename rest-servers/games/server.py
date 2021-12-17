@@ -3721,11 +3721,6 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
         incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
         late_list = [(o[1], o[2], o[4]) for o in incidents_list]
 
-        # game is anonymous : you get only information for your own role
-        if game.anonymous:
-            if role_id is not None and role_id != 0:
-                late_list = [ll for ll in late_list if ll[0] == role_id]
-
         del sql_executor
 
         data = {'incidents': late_list}
@@ -4168,19 +4163,13 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
         games_list = games.Game.inventory(sql_executor)
         id2name = {g.identifier: g.name for g in games_list}
 
-        late_list: typing.List[typing.Tuple[str, float]] = list()
+        late_list: typing.List[typing.Tuple[int, int, float]] = list()
 
         player_table = dict()
-        alias_table = dict()
         for game_id in tournament_game_ids:
             incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
             for _, role_num, _, player_id, date_incident in incidents_list:
-                player_table[game_id, role_num] = player_id
-                if player_id not in alias_table:
-                    game_name = id2name[game_id]
-                    alias_table[player_id] = f"{game_name}##{role_num}"
-                alias = alias_table[player_id]
-                late_list.append((alias, date_incident))
+                late_list.append((game_id, role_num, date_incident))
 
         del sql_executor
 

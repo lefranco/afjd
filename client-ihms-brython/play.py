@@ -202,37 +202,6 @@ def game_communication_orders_reload(game_id):
     return orders_loaded
 
 
-def game_parameters_reload(game):
-    """ display_main_parameters_reload : returns empty dict if error"""
-
-    game_parameters_loaded = dict()
-
-    def reply_callback(req):
-        nonlocal game_parameters_loaded
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur au chargement des paramètres de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème au chargement des paramètres de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        game_parameters_loaded = req_result
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games/{game}"
-
-    # getting game data : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return game_parameters_loaded
-
-
 def make_rating_colours_window(variant, ratings, colours, game_scoring):
     """ make_rating_window """
 
@@ -443,7 +412,7 @@ def load_dynamic_stuff():
 
     # now game parameters (dynamic since advancement is dynamic)
     global GAME_PARAMETERS_LOADED
-    GAME_PARAMETERS_LOADED = game_parameters_reload(GAME)
+    GAME_PARAMETERS_LOADED = common.game_parameters_reload(GAME)
     if not GAME_PARAMETERS_LOADED:
         alert("Erreur chargement paramètres")
         return
@@ -4377,36 +4346,6 @@ def show_orders_submitted_in_game():
 def show_incidents_in_game():
     """ show_incidents_in_game """
 
-    def game_incidents_reload(game_id):
-        """ game_incidents_reload """
-
-        incidents = list()
-
-        def reply_callback(req):
-            nonlocal incidents
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération des incidents de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération des incidents de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            incidents = req_result['incidents']
-
-        json_dict = dict()
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-incidents/{game_id}"
-
-        # extracting incidents from a game : need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        return incidents
-
     # if user identified ?
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -4416,26 +4355,12 @@ def show_incidents_in_game():
     # is player in game ?
     # TODO improve this with real admin account
     if not(PSEUDO == 'Palpatine' or ROLE_ID is not None):
-        alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir les retards pour une partie non anonyme")
-        load_option(None, 'position')
-        return False
-
-    # game anonymous
-    # TODO improve this with real admin account
-    if not(PSEUDO == 'Palpatine' or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
-        alert("Seul l'arbitre (ou l'administrateur du site) peut voir les retards pour une partie anonyme")
-        load_option(None, 'position')
-        return False
-
-    # you will at least get your own role
-    submitted_data = get_roles_submitted_orders(GAME_ID)
-    if not submitted_data:
-        alert("Erreur chargement données de soumission")
+        alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir les retards")
         load_option(None, 'position')
         return False
 
     # get the actual incidents of the game
-    game_incidents = game_incidents_reload(GAME_ID)
+    game_incidents = common.game_incidents_reload(GAME_ID)
     # there can be no incidents (if no incident of failed to load)
 
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
@@ -4483,6 +4408,8 @@ def show_incidents_in_game():
             player_id_str = role2pseudo[role_id]
             player_id = int(player_id_str)
             pseudo_there = id2pseudo[player_id]
+        else:
+            pseudo_there = f"{GAME}##{role_name}"
         col = html.TD(pseudo_there)
         row <= col
 
