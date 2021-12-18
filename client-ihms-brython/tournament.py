@@ -543,11 +543,12 @@ def show_games():
         stats += f" soit {elapsed/number_games} par partie"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
-    MY_SUB_PANEL <= html.BR()
 
 
 def show_ratings():
     """ show_ratings """
+
+    overall_time_before = time.time()
 
     MY_SUB_PANEL.clear()
 
@@ -567,11 +568,18 @@ def show_ratings():
         return
 
     tournament_name = tournament_dict['name']
+    tournament_id = tournament_dict['identifier']
     games_in = tournament_dict['games']
 
     games_dict = common.get_games_data()
     if not games_dict:
         alert("Erreur chargement dictionnaire parties")
+        return
+
+    # build dict of positions
+    positions_dict_loaded = common.tournament_position_reload(tournament_id)
+    if not positions_dict_loaded:
+        alert("Erreur chargement positions des parties du tournoi")
         return
 
     rating_dict = dict()
@@ -616,18 +624,15 @@ def show_ratings():
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
 
-        # build position data
-        position_loaded = common.game_position_reload(game_id)
-        if not position_loaded:
-            alert("Erreur chargement position")
-            return
+        # position previously loaded
+        position_loaded = positions_dict_loaded[str(game_id)]
 
         position_data = mapping.Position(position_loaded, variant_data)
         ratings = position_data.role_ratings()
 
         parameters_reload = common.game_parameters_reload(game_name)
         if not parameters_reload:
-            alert("Errur chargement paramètres partie")
+            alert("Erreur chargement paramètres partie")
             return
 
         game_scoring = parameters_reload['scoring']
@@ -680,6 +685,14 @@ def show_ratings():
     MY_SUB_PANEL <= ratings_table
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
+    overall_time_after = time.time()
+    elapsed = overall_time_after - overall_time_before
+
+    stats = f"Temps de chargement de la page {elapsed}"
+
+    MY_SUB_PANEL <= html.DIV(stats, Class='load')
 
 
 def show_incidents():
@@ -714,6 +727,8 @@ def show_incidents():
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         return incidents
+
+    overall_time_before = time.time()
 
     MY_SUB_PANEL.clear()
 
@@ -817,6 +832,14 @@ def show_incidents():
     MY_SUB_PANEL <= tournament_incidents_table
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
+    overall_time_after = time.time()
+    elapsed = overall_time_after - overall_time_before
+
+    stats = f"Temps de chargement de la page {elapsed}"
+
+    MY_SUB_PANEL <= html.DIV(stats, Class='load')
 
 
 def create_tournament():
