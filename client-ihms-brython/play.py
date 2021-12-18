@@ -2669,8 +2669,6 @@ def negotiate():
 
     # now we can display
 
-    MY_SUB_PANEL.clear()
-
     # header
 
     # game status
@@ -2854,8 +2852,6 @@ def declare():
 
     # now we can display
 
-    MY_SUB_PANEL.clear()
-
     # header
 
     # game status
@@ -2963,8 +2959,6 @@ def vote():
     form <= input_vote_in_game
 
     # now we can display
-
-    MY_SUB_PANEL.clear()
 
     # game status
     MY_SUB_PANEL <= GAME_STATUS

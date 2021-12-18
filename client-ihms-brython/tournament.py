@@ -347,8 +347,6 @@ def show_games():
 
     overall_time_before = time.time()
 
-    MY_SUB_PANEL.clear()
-
     # title
     title = html.H3("Parties du tournoi")
     MY_SUB_PANEL <= title
@@ -550,8 +548,6 @@ def show_ratings():
 
     overall_time_before = time.time()
 
-    MY_SUB_PANEL.clear()
-
     # title
     title = html.H3("Classement du tournoi")
     MY_SUB_PANEL <= title
@@ -724,8 +720,6 @@ def show_incidents():
         return incidents
 
     overall_time_before = time.time()
-
-    MY_SUB_PANEL.clear()
 
     # title
     title = html.H3("Incidents du tournoi")
