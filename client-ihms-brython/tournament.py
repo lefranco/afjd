@@ -630,12 +630,7 @@ def show_ratings():
         position_data = mapping.Position(position_loaded, variant_data)
         ratings = position_data.role_ratings()
 
-        parameters_reload = common.game_parameters_reload(game_name)
-        if not parameters_reload:
-            alert("Erreur chargement paramètres partie")
-            return
-
-        game_scoring = parameters_reload['scoring']
+        game_scoring = data['scoring']
 
         # selected scoring game parameter
         if game_scoring == 'CDIP':
