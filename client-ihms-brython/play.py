@@ -2527,11 +2527,13 @@ def negotiate():
 
         if not content:
             alert("Pas de contenu pour ce message !")
+            MY_SUB_PANEL.clear()
             negotiate()
             return
 
         if not dest_role_ids:
             alert("Pas de destinataire pour ce message !")
+            MY_SUB_PANEL.clear()
             negotiate()
             return
 
@@ -2754,6 +2756,7 @@ def declare():
 
         if not content:
             alert("Pas de contenu pour cette déclaration !")
+            MY_SUB_PANEL.clear()
             declare()
             return
 
