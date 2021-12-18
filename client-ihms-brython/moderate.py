@@ -440,8 +440,8 @@ def all_games(state_name):
             MY_SUB_PANEL <= html.BR()
 
 
-def tournament_info():
-    """ tournament_info """
+def tournament_result():
+    """ tournament_result """
 
     MY_SUB_PANEL <= html.H3("Informations détaillées du tournoi")
 
@@ -930,7 +930,7 @@ def load_option(_, item_name):
     if item_name == 'toutes les parties':
         all_games('en cours')
     if item_name == 'résultats tournoi':
-        tournament_info()
+        tournament_result()
     if item_name == 'dernières connexions':
         last_logins()
     if item_name == 'connexions manquées':
