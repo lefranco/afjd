@@ -17,7 +17,7 @@ import selection
 import memoize
 import index  # circular import
 
-OPTIONS = ['toutes les parties', 'dernières connexions', 'connexions manquées', 'e-mails non confirmés', 'récupérer une adresse email', 'récupérer un téléphone']
+OPTIONS = ['toutes les parties', 'infos tournoi', 'dernières connexions', 'connexions manquées', 'e-mails non confirmés', 'récupérer une adresse email', 'récupérer un téléphone']
 
 
 def check_modo(pseudo):
@@ -174,8 +174,6 @@ def all_games(state_name):
         index.load_option(None, 'jouer la partie sélectionnée')
 
     overall_time_before = time.time()
-
-    MY_SUB_PANEL.clear()
 
     # title
     title = html.H3(f"Parties dans l'état: {state_name}")
@@ -408,6 +406,37 @@ def all_games(state_name):
             MY_SUB_PANEL <= input_change_state
             MY_SUB_PANEL <= html.BR()
             MY_SUB_PANEL <= html.BR()
+
+
+def tournament_info():
+    """ tournament_info """
+
+    MY_SUB_PANEL <= html.H3("Informations détaillées du tournoi")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    tournament_dict = tournament_data(game)
+    if not tournament_dict:
+        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
+
+    tournament_name = tournament_dict['name']
+    tournament_id = tournament_dict['identifier']
+    games_in = tournament_dict['games']
 
 
 def last_logins():
@@ -726,6 +755,8 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     if item_name == 'toutes les parties':
         all_games('en cours')
+    if item_name == 'infos tournoi':
+        tournament_info()
     if item_name == 'dernières connexions':
         last_logins()
     if item_name == 'connexions manquées':
