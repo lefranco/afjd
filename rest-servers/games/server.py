@@ -4171,6 +4171,72 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/tournament-positions/<tournament_id>')
+class TournamentPositionRessource(flask_restful.Resource):  # type: ignore
+    """ TournamentPositionRessource """
+
+    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
+        """
+        Gets list of positions of the games of the tournament
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournament-positions/<tournament_id> - GET - getting positions for games of tournament id=%s", tournament_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # find the tournament
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a tournament with identifier {tournament_id}")
+
+        # games of that tournament
+        tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
+        tournament_game_ids = [g[1] for g in tournament_games]
+
+        position_dict: typing.Dict[int, typing.Dict[str, typing.Any]] = dict()
+        for game_id in tournament_game_ids:
+
+            # get ownerships
+            ownership_dict = dict()
+            game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
+            for _, center_num, role_num in game_ownerships:
+                ownership_dict[str(center_num)] = role_num
+
+            # get units
+            unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+            dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+            game_units = units.Unit.list_by_game_id(sql_executor, game_id)
+            for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+                if fake:
+                    pass  # this is confidential
+                elif region_dislodged_from_num:
+                    dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
+                else:
+                    unit_dict[str(role_num)].append([type_num, zone_num])
+
+            # get forbiddens
+            forbidden_list = list()
+            game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
+            for _, region_num in game_forbiddens:
+                forbidden_list.append(region_num)
+
+            position = {
+                'ownerships': ownership_dict,
+                'dislodged_ones': dislodged_unit_dict,
+                'units': unit_dict,
+                'forbiddens': forbidden_list,
+            }
+
+            position_dict[game_id] = position
+
+        del sql_executor
+
+        data = position_dict
+        return data, 200
+
+
 def main() -> None:
     """ main """
 
