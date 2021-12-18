@@ -30,37 +30,6 @@ MAX_LEN_TOURNAMENT_NAME = 50
 INPUT_FILE = None
 
 
-def tournament_data(game):
-    """ tournament_data : returns None if problem """
-
-    tournament_dict = dict()
-
-    def reply_callback(req):
-        nonlocal tournament_dict
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des informations du tournoi : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des informations du tournoi : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        tournament_dict = req_result
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/tournaments/{game}"
-
-    # getting tournament data : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return tournament_dict
-
-
 def check_batch(current_pseudo, games_to_create):
     """ check_batch """
 
@@ -357,7 +326,7 @@ def show_games():
 
     game = storage['GAME']
 
-    tournament_dict = tournament_data(game)
+    tournament_dict = common.tournament_data(game)
     if not tournament_dict:
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
@@ -558,7 +527,7 @@ def show_ratings():
 
     game = storage['GAME']
 
-    tournament_dict = tournament_data(game)
+    tournament_dict = common.tournament_data(game)
     if not tournament_dict:
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
@@ -731,7 +700,7 @@ def show_incidents():
 
     game = storage['GAME']
 
-    tournament_dict = tournament_data(game)
+    tournament_dict = common.tournament_data(game)
     if not tournament_dict:
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
@@ -1027,7 +996,7 @@ def edit_tournament():
 
     # get the tournament_id
 
-    tournament_dict = tournament_data(game)
+    tournament_dict = common.tournament_data(game)
     if not tournament_dict:
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
@@ -1177,7 +1146,7 @@ def delete_tournament():
         alert("Il faut se connecter au préalable")
         return
 
-    tournament_dict = tournament_data(game)
+    tournament_dict = common.tournament_data(game)
     if not tournament_dict:
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
