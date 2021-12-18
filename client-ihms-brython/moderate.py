@@ -18,7 +18,7 @@ import memoize
 import scoring
 import index  # circular import
 
-OPTIONS = ['toutes les parties', 'infos tournoi', 'dernières connexions', 'connexions manquées', 'e-mails non confirmés', 'récupérer une adresse email', 'récupérer un téléphone']
+OPTIONS = ['toutes les parties', 'résultats tournoi', 'dernières connexions', 'connexions manquées', 'e-mails non confirmés', 'récupérer une adresse email', 'récupérer un téléphone']
 
 
 def check_modo(pseudo):
@@ -929,7 +929,7 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     if item_name == 'toutes les parties':
         all_games('en cours')
-    if item_name == 'infos tournoi':
+    if item_name == 'résultats tournoi':
         tournament_info()
     if item_name == 'dernières connexions':
         last_logins()
