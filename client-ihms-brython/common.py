@@ -538,6 +538,7 @@ def get_groupings_data():
 
     return grouping_data
 
+
 def game_parameters_reload(game):
     """ display_main_parameters_reload : returns empty dict if error"""
 
@@ -567,4 +568,3 @@ def game_parameters_reload(game):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return game_parameters_loaded
-
