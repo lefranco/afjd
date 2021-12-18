@@ -2514,6 +2514,7 @@ def negotiate():
             # back to where we started
             global CONTENT_BACKUP
             CONTENT_BACKUP = None
+            MY_SUB_PANEL.clear()
             negotiate()
 
         dest_role_ids = ' '.join([str(role_num) for (role_num, button) in selected.items() if button.checked])
@@ -2744,6 +2745,7 @@ def declare():
             InfoDialog("OK", f"La déclaration a été faite ! {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
+            MY_SUB_PANEL.clear()
             declare()
 
         anonymous = input_anonymous.checked
@@ -2931,6 +2933,7 @@ def vote():
             InfoDialog("OK", f"Le vote a été enregistré ! {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
+            MY_SUB_PANEL.clear()
             vote()
 
         vote_value = input_vote.checked
