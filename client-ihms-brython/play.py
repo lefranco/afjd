@@ -4402,8 +4402,6 @@ def show_incidents_in_game():
             player_id_str = role2pseudo[role_id]
             player_id = int(player_id_str)
             pseudo_there = id2pseudo[player_id]
-        else:
-            pseudo_there = f"{GAME}##{role_name}"
         col = html.TD(pseudo_there)
         row <= col
 
