@@ -4237,6 +4237,72 @@ class TournamentPositionRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/tournament-allocations/<tournament_id>')
+class TournamentGameRessource(flask_restful.Resource):  # type: ignore
+    """ TournamentGameRessource """
+
+    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
+        """
+        Gets all allocations for the game of the tournamnet
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournament-allocations/<game_id> - GET - get getting allocations for game of tournament id=%s", tournament_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # check user has right to see this  - must be admin
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed get all players from tournament !")
+
+        sql_executor = database.SqlExecutor()
+
+        # find the tournament
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a tournament with identifier {tournament_id}")
+
+        # games of that tournament
+        tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
+        tournament_game_ids = [g[1] for g in tournament_games]
+
+        allocation_dict: typing.Dict[int, typing.Dict[str, typing.Any]] = dict()
+        for game_id in tournament_game_ids:
+
+            # find the game
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            if game is None:
+                del sql_executor
+                flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+            # get answer
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            allocation = {str(a[1]): a[2] for a in allocations_list}
+
+            allocation_dict[game_id] = allocation
+
+        del sql_executor
+
+        data = allocation_dict
+
+        return data, 200
+
+
 def main() -> None:
     """ main """
 
