@@ -443,7 +443,7 @@ def all_games(state_name):
 def tournament_result():
     """ tournament_result """
 
-    MY_SUB_PANEL <= html.H3("Informations détaillées du tournoi")
+    MY_SUB_PANEL <= html.H3("Résultat intermédiaire du tournoi")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
