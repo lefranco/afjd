@@ -34,22 +34,28 @@ FAQ_CONTENT_TABLE = {
     "C'est le rôle de l'arbitre. Il faut lui retirer le rôle dans la console d'arbitrage et attribuer le rôle à un autre joueur dans la partie, qu'il aura fallu faire venir au préalable. Faire venir ou partir les joueurs de la partie se réalise par contre dans le menu appariement",
 
     "Que peut faire l'arbitre ?":
-    "L'arbitre démarre et arrête la partie. L'arbitre force une résolution quand il n'y a pas besoin d'ordres. Il peut forcer des ordres de désordre civil pour un pays. Il peut forcer un accord pour résoudre pour un pays. Il peut retirer ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
+    "L'arbitre démarre et arrête la partie. L'arbitre peut forcer des ordres de désordre civil pour un pays. Il peut forcer un accord pour résoudre pour un pays. Il peut retirer ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
+
+    "Que peut faire un modérateur ?":
+    " (PAS IMPLEMENTE) Un modérateur peut voir l'email et le numéro de téléphone d'un inscrit. Il peut voir qui a soumis les ordres sur toutes les parties du site. Il peut voir le résultat complet d'un tournoi (anonyme ou pas). Enfin, dans les parties : il voit les rôles même si la partie est anonyme, il voit les soumissions et les incidents même s'il n'est pas dans la partie.",
+
+    "Que peut faire un administrateur ?":
+    "Il peut rectifier la position d'une partie. Il peut modifier les nouvelles. Il peut savoir les dates de dernière connexions et les connexions manquées (erreur de pseudo/mot de passe). Il peut se substituer à un inscrit. Il peut envoyer un email de la part du site. Enfin, il gère les modérateurs.",
 
     "Comment créér une partie dans laquelle je joue ?":
     "Il faut créer la partie, puis se retirer de l'arbitrage et demander à un arbitre de parties du site d'en prendre l'arbitrage",
 
-    "C'est quoi ce truc : l'oracle ?":
+    "C'est quoi ce truc : 'consulter l'oracle sur cette position' ?":
     "Pas encore développé. Fournira une suggestion de jeux d'ordres à partir d'une position...",
 
     "Est-il prévu de développer des variantes ?":
     "Certainement. Hundred tient la corde pour le moment",
 
     "Je veux donner de l'argent pour le site. Que faire ?":
-    "Reportez vous à la page d'accueil du site pour le lien vers le site de recueil des dons",
+    "Reportez vous à la page d'accueil/liens du site pour le lien vers le site de recueil des dons",
 
     "Comment discuter avec les membres de la communauté":
-    "Reportez vous à la page d'accueil du site pour le lien vers la brique sociale.",
+    "Reportez vous à la page accueil/liens du site pour le lien vers la brique sociale.",
 
     "Ce site est-il le site de jeu officiel de l'AFJD ?":
     "Oui. Une autre interface moins rustique est prévue mais plus tard.",
