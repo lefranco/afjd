@@ -1846,6 +1846,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
         for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
             if fake:
+                # ignore units built by other roles (otrherwise may guess other builds)
+                if role_num != role_id:
+                    continue
                 fake_unit_dict[str(role_num)].append([type_num, zone_num])
             elif region_dislodged_from_num:
                 dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
