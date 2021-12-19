@@ -582,5 +582,6 @@ def my_games(state_name):
 
 def render(panel_middle):
     """ render """
+    MY_PANEL.clear()
     my_games('en cours')
     panel_middle <= MY_PANEL
