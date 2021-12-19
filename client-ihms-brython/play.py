@@ -1330,7 +1330,7 @@ def submit_orders():
                             order = mapping.Order(POSITION_DATA, selected_order_type, fake_unit, None, None)
                             orders_data.insert_order(order)
                         else:
-                            alert(f"Bien essayé, mais ce centre ne vous appartient pas !")
+                            alert("Bien essayé, mais ce centre ne vous appartient pas !")
                     else:
                         alert("On ne peut pas construire sur ce centre !")
                 else:
