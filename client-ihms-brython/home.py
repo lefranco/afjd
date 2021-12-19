@@ -118,6 +118,7 @@ def show_faq():
         """ reveal_callback """
 
         FAQ_DISPLAYED_TABLE[question] = not FAQ_DISPLAYED_TABLE[question]
+        MY_SUB_PANEL.clear()
         show_faq()
 
     title1 = html.H3("Foire aux questions")
