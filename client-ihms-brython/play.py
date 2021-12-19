@@ -1321,17 +1321,20 @@ def submit_orders():
                 if center is not None:
                     deducted_role = center.owner_start
                     if deducted_role is not None:
-                        if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
-                            fake_unit = mapping.Army(POSITION_DATA, deducted_role, selected_build_zone, None)
-                        if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
-                            fake_unit = mapping.Fleet(POSITION_DATA, deducted_role, selected_build_zone, None)
-                        # create order
-                        order = mapping.Order(POSITION_DATA, selected_order_type, fake_unit, None, None)
-                        orders_data.insert_order(order)
+                        if deducted_role.identifier == ROLE_ID:
+                            if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
+                                fake_unit = mapping.Army(POSITION_DATA, deducted_role, selected_build_zone, None)
+                            if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                                fake_unit = mapping.Fleet(POSITION_DATA, deducted_role, selected_build_zone, None)
+                            # create order
+                            order = mapping.Order(POSITION_DATA, selected_order_type, fake_unit, None, None)
+                            orders_data.insert_order(order)
+                        else:
+                            alert(f"Bien essayé, mais ce centre ne vous appartient pas !")
                     else:
-                        alert("On ne peut pas construire sur ce centre")
+                        alert("On ne peut pas construire sur ce centre !")
                 else:
-                    alert("Pas de centre à cet endroit")
+                    alert("Pas de centre à cet endroit !")
 
             # update map
             callback_render(None)
