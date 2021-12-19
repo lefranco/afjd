@@ -116,8 +116,6 @@ def my_opportunities():
 
     overall_time_before = time.time()
 
-    MY_PANEL.clear()
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return

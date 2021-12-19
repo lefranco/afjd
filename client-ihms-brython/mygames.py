@@ -254,9 +254,12 @@ def my_games(state_name):
         # action of going to game page
         index.load_option(None, 'jouer la partie sélectionnée')
 
-    overall_time_before = time.time()
+    def again(state_name):
+        """ again """
+        MY_PANEL.clear()
+        my_games(state_name)
 
-    MY_PANEL.clear()
+    overall_time_before = time.time()
 
     # title
     MY_PANEL <= html.H2(f"Parties que je joue dans l'état : {state_name}")
@@ -570,7 +573,7 @@ def my_games(state_name):
         if other_state_name != state_name:
 
             input_change_state = html.INPUT(type="submit", value=other_state_name)
-            input_change_state.bind("click", lambda _, s=other_state_name: my_games(s))
+            input_change_state.bind("click", lambda _, s=other_state_name: again(s))
 
             MY_PANEL <= input_change_state
             MY_PANEL <= html.BR()

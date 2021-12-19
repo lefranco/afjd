@@ -205,6 +205,11 @@ def all_games(state_name):
         # action of going to game page
         index.load_option(None, 'jouer la partie sélectionnée')
 
+    def again(state_name):
+        """ again """
+        MY_SUB_PANEL.clear()
+        all_games(state_name)
+
     overall_time_before = time.time()
 
     # title
@@ -433,7 +438,7 @@ def all_games(state_name):
         if other_state_name != state_name:
 
             input_change_state = html.INPUT(type="submit", value=other_state_name)
-            input_change_state.bind("click", lambda _, s=other_state_name: all_games(s))
+            input_change_state.bind("click", lambda _, s=other_state_name: again(s))
 
             MY_SUB_PANEL <= input_change_state
             MY_SUB_PANEL <= html.BR()
