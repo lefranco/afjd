@@ -4,6 +4,7 @@
 
 import json
 import time
+import datetime
 
 from browser import document, html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -17,7 +18,7 @@ import mapping
 import geometry
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position', 'envoyer un e-mail', 'éditer les modérateurs']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position', 'envoyer un e-mail', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -30,6 +31,70 @@ def check_admin(pseudo):
         return False
 
     return True
+
+
+def get_last_logins():
+    """ get_last_logins """
+
+    logins_list = None
+
+    def reply_callback(req):
+        nonlocal logins_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des connexions : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des connexions : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        logins_list = req_result['login_list']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['USER']['HOST']
+    port = config.SERVER_CONFIG['USER']['PORT']
+    url = f"{host}:{port}/logins_list"
+
+    # logins list : need token
+    # note : since we access directly to the user server, we present the token in a slightly different way
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return logins_list
+
+
+def get_last_failures():
+    """ get_last_failures """
+
+    failures_list = None
+
+    def reply_callback(req):
+        nonlocal failures_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des connexions manquées : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des connexions manquées : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        failures_list = req_result['failure_list']
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['USER']['HOST']
+    port = config.SERVER_CONFIG['USER']['PORT']
+    url = f"{host}:{port}/failures_list"
+
+    # failures_list list : need token
+    # note : since we access directly to the user server, we present the token in a slightly different way
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return failures_list
 
 
 def change_news():
@@ -753,6 +818,90 @@ def sendmail():
     MY_SUB_PANEL <= form
 
 
+def last_logins():
+    """ logins """
+
+    MY_SUB_PANEL <= html.H3("Liste des dernières connexions")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    logins_list = get_last_logins()
+
+    logins_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'date']:
+        col = html.TD(field)
+        thead <= col
+    logins_table <= thead
+
+    for pseudo, date in sorted(logins_list, key=lambda l: l[1], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
+        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        col = html.TD(date_now_gmt_str)
+        row <= col
+
+        logins_table <= row
+
+    MY_SUB_PANEL <= logins_table
+
+
+def last_failures():
+    """ failures """
+
+    MY_SUB_PANEL <= html.H3("Liste des connexions manquées")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    failures_list = get_last_failures()
+
+    failures_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'date']:
+        col = html.TD(field)
+        thead <= col
+    failures_table <= thead
+
+    for pseudo, date in sorted(failures_list, key=lambda l: l[1], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
+        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        col = html.TD(date_now_gmt_str)
+        row <= col
+
+        failures_table <= row
+
+    MY_SUB_PANEL <= failures_table
+
+
 def edit_moderators():
     """ edit_moderators """
 
@@ -801,6 +950,10 @@ def load_option(_, item_name):
         rectify()
     if item_name == 'envoyer un e-mail':
         sendmail()
+    if item_name == 'dernières connexions':
+        last_logins()
+    if item_name == 'connexions manquées':
+        last_failures()
     if item_name == 'éditer les modérateurs':
         edit_moderators()
 

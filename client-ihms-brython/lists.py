@@ -10,7 +10,7 @@ import config
 import common
 
 
-OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres', 'les tournois']
+OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres', 'les tournois', 'e-mails non confirmés']
 
 
 def show_registered_data():
@@ -398,6 +398,45 @@ def show_tournaments_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} tournois")
 
 
+def show_non_confirmed_data():
+    """ show_non_confirmed_data """
+
+    MY_SUB_PANEL <= html.H3("Les inscrits non confirmés")
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        return
+
+    players_table = html.TABLE()
+
+    fields = ['pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for data in sorted(players_dict.values(), key=lambda p: p['pseudo'].upper()):
+
+        if data['email_confirmed']:
+            continue
+
+        row = html.TR()
+        for field in fields:
+            value = data[field]
+
+            col = html.TD(value)
+            row <= col
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -438,6 +477,8 @@ def load_option(_, item_name):
         show_no_game_masters_data()
     if item_name == 'les tournois':
         show_tournaments_data()
+    if item_name == 'e-mails non confirmés':
+        show_non_confirmed_data()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
