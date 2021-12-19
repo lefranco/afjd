@@ -24,6 +24,7 @@ import populate
 import mailer
 import players
 import newss
+import moderators
 import database
 
 
@@ -64,6 +65,10 @@ SENDMAIL_PARSER.add_argument('force', type=int, required=True)
 NEWS_PARSER = flask_restful.reqparse.RequestParser()
 NEWS_PARSER.add_argument('pseudo', type=str, required=True)
 NEWS_PARSER.add_argument('content', type=str, required=True)
+
+MODERATOR_PARSER = flask_restful.reqparse.RequestParser()
+MODERATOR_PARSER.add_argument('player_pseudo', type=str, required=True)
+MODERATOR_PARSER.add_argument('delete', type=int, required=True)
 
 # to avoid sending emails in debug phase
 PREVENT_MAIL_CHECKING = False
@@ -760,6 +765,88 @@ class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
         email = contact.email
 
         data = {'email': email}
+        return data, 200
+
+
+@API.resource('/moderators')
+class ModeratorListRessource(flask_restful.Resource):  # type: ignore
+    """ ModeratorListRessource """
+
+    def get(self) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=no-self-use
+        """
+        Provides list of all moderators
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/moderators - GET - get getting all moderators")
+
+        sql_executor = database.SqlExecutor()
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        del sql_executor
+
+        data = [m[0] for m in moderators_list]
+
+        return data, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Creates/Deletes a moderator
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/moderators - POST - creating/deleting new moderator")
+
+        args = MODERATOR_PARSER.parse_args(strict=True)
+        player_pseudo = args['player_pseudo']
+        delete = args['delete']
+
+        mylogger.LOGGER.info("player_pseudo=%s delete=%s", player_pseudo, delete)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # check user has right to add/remove moderator (admin)
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You are not allowed to add/remove moderator!")
+
+        sql_executor = database.SqlExecutor()
+
+        player = players.Player.find_by_pseudo(sql_executor, player_pseudo)
+
+        if player is None:
+            del sql_executor
+            flask_restful.abort(400, msg=f"Player {player_pseudo} does not exist")
+
+        if not delete:
+            moderator = moderators.Moderator(player_pseudo)
+            moderator.update_database(sql_executor)
+
+            sql_executor.commit()
+            del sql_executor
+
+            data = {'msg': 'Ok moderator updated or created'}
+            return data, 201
+
+        moderator = moderators.Moderator(player_pseudo)
+        moderator.delete_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': 'Ok moderator deleted if present'}
         return data, 200
 
 

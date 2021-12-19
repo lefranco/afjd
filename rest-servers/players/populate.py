@@ -9,6 +9,7 @@ Data : populate database
 
 import mylogger
 import newss
+import moderators
 import players
 import database
 
@@ -25,6 +26,12 @@ def populate_players(sql_executor: database.SqlExecutor) -> None:
     players.Player.create_table(sql_executor)
 
 
+def populate_moderators(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+
+    moderators.Moderator.create_table(sql_executor)
+
+
 def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
@@ -32,6 +39,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
 
     populate_newss(sql_executor)
     populate_players(sql_executor)
+    populate_moderators(sql_executor)
 
 
 if __name__ == '__main__':

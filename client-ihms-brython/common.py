@@ -630,3 +630,33 @@ def tournament_incidents_reload(tournament_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return incidents
+
+
+def get_moderators():
+    """ get_moderators : returns empty list if problem """
+
+    moderators_list = list()
+
+    def reply_callback(req):
+        nonlocal moderators_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des modérateurs : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des modérateurs : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        moderators_list = req_result
+
+    json_dict = dict()
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/moderators"
+
+    # getting moderators list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return moderators_list
