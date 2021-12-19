@@ -40,6 +40,9 @@ APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 # Seems JWT variable is not used in this implementation but could be later on...
 JWT = flask_jwt_extended.JWTManager(APP)
 
+# Account allowed to usupr, to see logins and failed logins
+ADMIN_ACCOUNT_NAME = 'Palpatine'
+
 # ---------------------------------
 # users
 # ---------------------------------
@@ -250,8 +253,7 @@ def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
 
-    # TODO improve this with real admin account
-    if logged_in_as != 'Palpatine':
+    if logged_in_as != ADMIN_ACCOUNT_NAME:
         return {"msg": "Wrong user_name to perform operation"}, 403
 
     usurped_user_name = flask.request.json.get('usurped_user_name', None)
@@ -284,8 +286,7 @@ def logins_list() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
 
-    # TODO improve this with real admin account
-    if logged_in_as != 'Palpatine':
+    if logged_in_as != ADMIN_ACCOUNT_NAME:
         return {"msg": "Wrong user_name to perform operation"}, 403
 
     sql_executor = database.SqlExecutor()
@@ -309,8 +310,7 @@ def failures_list() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
 
-    # TODO improve this with real admin account
-    if logged_in_as != 'Palpatine':
+    if logged_in_as != ADMIN_ACCOUNT_NAME:
         return {"msg": "Wrong user_name to perform operation"}, 403
 
     sql_executor = database.SqlExecutor()
