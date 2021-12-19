@@ -18,7 +18,8 @@ import memoize
 import scoring
 import index  # circular import
 
-OPTIONS = ['toutes les parties', 'résultats tournoi', 'dernières connexions', 'connexions manquées', 'e-mails non confirmés', 'récupérer une adresse email', 'récupérer un téléphone']
+
+OPTIONS = ['toutes les parties', 'résultats tournoi', 'récupérer une adresse email', 'récupérer un téléphone']
 
 
 def check_modo(pseudo):
@@ -90,70 +91,6 @@ def get_all_games_roles_submitted_orders():
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict_submitted_data
-
-
-def get_last_logins():
-    """ get_last_logins """
-
-    logins_list = None
-
-    def reply_callback(req):
-        nonlocal logins_list
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des connexions : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des connexions : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        logins_list = req_result['login_list']
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['USER']['HOST']
-    port = config.SERVER_CONFIG['USER']['PORT']
-    url = f"{host}:{port}/logins_list"
-
-    # logins list : need token
-    # note : since we access directly to the user server, we present the token in a slightly different way
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return logins_list
-
-
-def get_last_failures():
-    """ get_last_failures """
-
-    failures_list = None
-
-    def reply_callback(req):
-        nonlocal failures_list
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des connexions manquées : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des connexions manquées : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        failures_list = req_result['failure_list']
-
-    json_dict = dict()
-
-    host = config.SERVER_CONFIG['USER']['HOST']
-    port = config.SERVER_CONFIG['USER']['PORT']
-    url = f"{host}:{port}/failures_list"
-
-    # failures_list list : need token
-    # note : since we access directly to the user server, we present the token in a slightly different way
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return failures_list
 
 
 def all_games(state_name):
@@ -586,139 +523,6 @@ def tournament_result():
     MY_SUB_PANEL <= recap_table
 
 
-def last_logins():
-    """ logins """
-
-    MY_SUB_PANEL <= html.H3("Liste des dernières connexions")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    logins_list = get_last_logins()
-
-    logins_table = html.TABLE()
-
-    # header
-    thead = html.THEAD()
-    for field in ['pseudo', 'date']:
-        col = html.TD(field)
-        thead <= col
-    logins_table <= thead
-
-    for pseudo, date in sorted(logins_list, key=lambda l: l[1], reverse=True):
-        row = html.TR()
-
-        col = html.TD(pseudo)
-        row <= col
-
-        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
-        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
-        col = html.TD(date_now_gmt_str)
-        row <= col
-
-        logins_table <= row
-
-    MY_SUB_PANEL <= logins_table
-
-
-def last_failures():
-    """ failures """
-
-    MY_SUB_PANEL <= html.H3("Liste des connexions manquées")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    failures_list = get_last_failures()
-
-    failures_table = html.TABLE()
-
-    # header
-    thead = html.THEAD()
-    for field in ['pseudo', 'date']:
-        col = html.TD(field)
-        thead <= col
-    failures_table <= thead
-
-    for pseudo, date in sorted(failures_list, key=lambda l: l[1], reverse=True):
-        row = html.TR()
-
-        col = html.TD(pseudo)
-        row <= col
-
-        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
-        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
-        col = html.TD(date_now_gmt_str)
-        row <= col
-
-        failures_table <= row
-
-    MY_SUB_PANEL <= failures_table
-
-
-def show_non_confirmed_data():
-    """ show_non_confirmed_data """
-
-    MY_SUB_PANEL <= html.H3("Liste des inscrits non confirmés")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    players_dict = common.get_players_data()
-
-    if not players_dict:
-        return
-
-    players_table = html.TABLE()
-
-    fields = ['pseudo']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    players_table <= thead
-
-    for data in sorted(players_dict.values(), key=lambda p: p['pseudo'].upper()):
-
-        if data['email_confirmed']:
-            continue
-
-        row = html.TR()
-        for field in fields:
-            value = data[field]
-
-            col = html.TD(value)
-            row <= col
-
-        players_table <= row
-
-    MY_SUB_PANEL <= players_table
-
-
 def display_email_address():
     """ display_email_address """
 
@@ -904,12 +708,6 @@ def load_option(_, item_name):
         all_games('en cours')
     if item_name == 'résultats tournoi':
         tournament_result()
-    if item_name == 'dernières connexions':
-        last_logins()
-    if item_name == 'connexions manquées':
-        last_failures()
-    if item_name == 'e-mails non confirmés':
-        show_non_confirmed_data()
     if item_name == 'récupérer une adresse email':
         display_email_address()
     if item_name == 'récupérer un téléphone':
