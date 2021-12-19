@@ -10,7 +10,7 @@ import config
 import common
 
 
-OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres', 'les tournois', 'e-mails non confirmés']
+OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres', 'les tournois', 'les modérateurs', 'les e-mails non confirmés']
 
 
 def show_registered_data():
@@ -398,6 +398,39 @@ def show_tournaments_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} tournois")
 
 
+def show_moderators():
+    """ show_moderators """
+
+    MY_SUB_PANEL <= html.H3("Les modérateurs")
+
+    moderator_list = common.get_moderators()
+
+    if not moderator_list:
+        return
+
+    moderators_table = html.TABLE()
+
+    fields = ['pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    moderators_table <= thead
+
+    for moderator in sorted(moderator_list, key=lambda m: m.upper()):
+
+        row = html.TR()
+        col = html.TD(moderator)
+        row <= col
+
+        moderators_table <= row
+
+    MY_SUB_PANEL <= moderators_table
+
+
 def show_non_confirmed_data():
     """ show_non_confirmed_data """
 
@@ -477,7 +510,9 @@ def load_option(_, item_name):
         show_no_game_masters_data()
     if item_name == 'les tournois':
         show_tournaments_data()
-    if item_name == 'e-mails non confirmés':
+    if item_name == 'les modérateurs':
+        show_moderators()
+    if item_name == 'les e-mails non confirmés':
         show_non_confirmed_data()
 
     global ITEM_NAME_SELECTED

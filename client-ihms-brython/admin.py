@@ -830,7 +830,7 @@ def last_logins():
     pseudo = storage['PSEUDO']
 
     if not check_admin(pseudo):
-        alert("Pas le bon compte (pas modo)")
+        alert("Pas le bon compte (pas admin)")
         return
 
     logins_list = get_last_logins()
@@ -872,7 +872,7 @@ def last_failures():
     pseudo = storage['PSEUDO']
 
     if not check_admin(pseudo):
-        alert("Pas le bon compte (pas modo)")
+        alert("Pas le bon compte (pas admin)")
         return
 
     failures_list = get_last_failures()
@@ -905,6 +905,86 @@ def last_failures():
 def edit_moderators():
     """ edit_moderators """
 
+    def add_moderator_callback(_):
+        """ add_moderator_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la mise d'un modérateur : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la mise d'un modérateur : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                edit_moderators()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur a été mis dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            edit_moderators()
+
+        player_pseudo = input_incomer.value
+
+        json_dict = {
+            'player_pseudo': player_pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+
+        # putting a moderator : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def remove_moderator_callback(_):
+        """remove_moderator_callback"""
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au retrait d'un modérateur : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au retrait d'un modérateur : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                edit_moderators()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur a été retiré de la partie: {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            edit_moderators()
+
+        player_pseudo = input_outcomer.value
+
+        json_dict = {
+            'player_pseudo': player_pseudo,
+            'delete': 1
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+
+        # removing a moderator : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     MY_SUB_PANEL <= html.H3("Editer les modérateurs")
 
     if 'PSEUDO' not in storage:
@@ -917,7 +997,75 @@ def edit_moderators():
         alert("Pas le bon compte (pas admin)")
         return
 
-    MY_SUB_PANEL <= "PAS PRET"
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    moderators_list = common.get_moderators()
+
+    form = html.FORM()
+
+    # ---
+
+    fieldset = html.FIELDSET()
+    legend_incomer = html.LEGEND("Entrant", title="Sélectionner le joueur à promouvoir")
+    fieldset <= legend_incomer
+
+    # all players can come in
+    possible_incomers = set(players_dict.keys())
+
+    # not those already in
+    possible_incomers -= set(moderators_list)
+
+    input_incomer = html.SELECT(type="select-one", value="")
+    for play_pseudo in sorted(possible_incomers, key=lambda pi: pi.upper()):
+        option = html.OPTION(play_pseudo)
+        input_incomer <= option
+
+    fieldset <= input_incomer
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_put_in_game = html.INPUT(type="submit", value="mettre dans les modérateur")
+    input_put_in_game.bind("click", add_moderator_callback)
+    form <= input_put_in_game
+
+    form <= html.BR()
+    form <= html.BR()
+
+    # ---
+
+    fieldset = html.FIELDSET()
+    fieldset <= html.LEGEND("Sont modérateurs : ")
+    fieldset <= html.DIV(" ".join(sorted(list(set(moderators_list)), key=lambda p: p.upper())), Class='note')
+    form <= fieldset
+
+    # ---
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_outcomer = html.LEGEND("Sortant", title="Sélectionner le joueur à destituer")
+    fieldset <= legend_outcomer
+
+    # players can come out are the ones not assigned
+    possible_outcomers = moderators_list
+
+    input_outcomer = html.SELECT(type="select-one", value="")
+    for play_pseudo in sorted(possible_outcomers):
+        option = html.OPTION(play_pseudo)
+        input_outcomer <= option
+
+    fieldset <= input_outcomer
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_remove_from_game = html.INPUT(type="submit", value="retirer des modérateurs")
+    input_remove_from_game.bind("click", remove_moderator_callback)
+    form <= input_remove_from_game
+
+    MY_SUB_PANEL <= form
 
 
 MY_PANEL = html.DIV()
