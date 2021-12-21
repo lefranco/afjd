@@ -5,11 +5,11 @@
 
 # simplest is to hard code displays of variants here
 SCORING_TABLE = {
-    'standard': ['c diplo', 'win namur', 'diplo league']
+    'standard': ['c diplo', 'win namur', 'diplo league', 'nexus omg']
 }
 
 
-def c_diplo(variant, ratings):
+def c_diplo(variant_data, ratings):
     """ the c-diplo scoring system """
 
     rank_points_list = [38, 14, 7]
@@ -20,7 +20,7 @@ def c_diplo(variant, ratings):
 
     # detect solo
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > variant.number_centers() // 2:
+    if ratings[best_role_name] > variant_data.number_centers() // 2:
         ratings[best_role_name] = solo_reward
         return score
 
@@ -52,7 +52,7 @@ def c_diplo(variant, ratings):
     return "C-Diplo73", score
 
 
-def win_namur(variant, ratings):
+def win_namur(variant_data, ratings):
     """ the win namur scoring system """
 
     center_bonus_list = [0, 5, 9, 12, 14, 16, 18]
@@ -66,7 +66,7 @@ def win_namur(variant, ratings):
 
     # detect solo
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > variant.number_centers() // 2:
+    if ratings[best_role_name] > variant_data.number_centers() // 2:
         score[best_role_name] = solo_reward
         return score
 
@@ -110,7 +110,7 @@ def win_namur(variant, ratings):
 
 
 def diplo_league(_, ratings):
-    """ the diplo_league scoring system """
+    """ the diplo_league scoring system (variant_data is not used) """
 
     rank_points_list = [16, 14, 12, 10, 8, 6, 4]
     bonus_alone = 4
@@ -143,6 +143,68 @@ def diplo_league(_, ratings):
     return "Diplo Ligue", score
 
 
+def nexus_omg(variant_data, ratings):
+    """ the nexus_omg scoring system
+
+    . 5. Scoring system - Open Mind the Gap (OMG): a) each supply center (SC) is worth 1.5 points (total = 51 points) b) surviving in a draw is worth 9 points (average = 40.5 points per game) c) bonuses for the Top 3: 4.5 points for 1st, 3 points for 2nd, 1.5 points for 3rd d) tribute paid to the board topper is equal to 1st place SCs - 2nd place SCs, capped at 50% of a players score from a, b, and c e) a solo victory is worth 100 points. .
+
+    """
+
+    solo_reward = 100
+    center_worth = 1.5
+    survival_worth = 9.
+    rank_points_list = [4.5, 3, 1.5]
+    bonus_percent_cap = 50.
+
+    # default score
+    score = {role_name: 0 for role_name in ratings}
+
+    # detect solo
+    best_role_name = list(ratings.keys())[0]
+    if ratings[best_role_name] > variant_data.number_centers() // 2:
+        ratings[best_role_name] = solo_reward
+        return score
+
+    # center points (and survival)
+    for role_name in score:
+        center_num = ratings[role_name]
+        if center_num:
+            score[role_name] += survival_worth + center_num * center_worth
+
+    # rank points
+
+    # calculate rank and rank share
+    rank_table = {role_name: 1 + len([ro for ro in ratings if ratings[ro] > ratings[role_name]]) for role_name in ratings}
+    rank_share_table = {ra: len([ro for ro in rank_table if rank_table[ro] == ra]) for ra in rank_table.values()}
+
+    # give points
+    for role_name in ratings:
+        rank = rank_table[role_name]
+        if rank - 1 not in range(len(rank_points_list)):
+            continue
+        sharers = rank_share_table[rank]
+        for rank2 in range(rank, rank + sharers):
+            if rank2 - 1 in range(len(rank_points_list)):
+                score[role_name] += rank_points_list[rank2 - 1] / sharers
+
+    # extra points for lone winner
+    winners = [r for r in rank_table if rank_table[r] == 1]
+    if len(winners) == 1:
+        # the lone winner
+        winner = winners[0]
+        winner_centers = ratings[winner]
+        # the runner(s) (second)
+        runners = [r for r in rank_table if rank_table[r] == 2]
+        runner = runners[0]
+        runner_centers = ratings[runner]
+        # SCs difference
+        difference = winner_centers - runner_centers
+        # bonus
+        score[winner] += min(difference, score[winner] * (bonus_percent_cap / 100.))
+
+    return "Nexus Open Mind the Gap", score
+
+
 def scoring(game_scoring, variant_data, ratings):
     """ scoring """
 
@@ -153,5 +215,7 @@ def scoring(game_scoring, variant_data, ratings):
         scoring_name, score_table = win_namur(variant_data, ratings)
     if game_scoring == 'DLIG':
         scoring_name, score_table = diplo_league(variant_data, ratings)
+    if game_scoring == 'NOMG':
+        scoring_name, score_table = nexus_omg(variant_data, ratings)
 
     return scoring_name, score_table
