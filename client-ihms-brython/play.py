@@ -233,7 +233,7 @@ def game_communication_orders_reload(game_id):
     return orders_loaded
 
 
-def make_rating_colours_window(variant, ratings, colours, game_scoring):
+def make_rating_colours_window(variant_data, ratings, colours, game_scoring):
     """ make_rating_window """
 
     rating_table = html.TABLE()
@@ -276,13 +276,8 @@ def make_rating_colours_window(variant, ratings, colours, game_scoring):
         col <= f"{ncenters}"
         rating_centers_row <= col
 
-    # selected scoring game parameter
-    if game_scoring == 'CDIP':
-        scoring_name, score_table = scoring.c_diplo(variant, ratings)
-    if game_scoring == 'WNAM':
-        scoring_name, score_table = scoring.win_namur(variant, ratings)
-    if game_scoring == 'DLIG':
-        scoring_name, score_table = scoring.diplo_league(variant, ratings)
+    # scoring
+    scoring_name, score_table = scoring.scoring(game_scoring, variant_data, ratings)
 
     # scoring
     rating_scoring_row = html.TR()
@@ -4057,8 +4052,8 @@ def show_game_parameters():
         parameter_name, explanation, effect, implemented = {
             'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de e-mails de notification aux joueurs", "OUI"),
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres - effacé à la fin de la partie", "OUI"),
-            'nomessage': ("pas de message", "on peut pas négocier - sauf avec l'arbitre", "Tout message joueur vers joueur est impossible - effacé à la fin de la partie", "OUI"),
-            'nopress': ("pas de presse", "on ne peut pas déclarer - sauf l'arbitre", "Toute déclaration de joueur est impossible - effacé à la fin de la partie", "OUI"),
+            'nomessage': ("pas de message privé (négociation)", "on peut pas négocier - sauf avec l'arbitre", "Tout message privé joueur vers joueur est impossible - effacé à la fin de la partie", "OUI"),
+            'nopress': ("pas de message public (déclaration)", "on ne peut pas déclarer - sauf l'arbitre", "Tout message public de joueur est impossible - effacé à la fin de la partie", "OUI"),
             'fast': ("temps réel", "la partie est jouée comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en jours, pas de e-mails de notification aux joueurs", "OUI"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
             'scoring': ("code du scorage", "le système de scorage appliqué", "Actuellement CDIP = C-Diplo, WNAM = WIN Namur et DLIG = Diplo Ligue. Note : Le calcul est réalisé dans l'interface", "OUI"),

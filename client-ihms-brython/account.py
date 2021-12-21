@@ -197,7 +197,7 @@ def create_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_replace = html.LEGEND("D'accord pour remplacer - à effacer après usage !", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandonné ?")
+    legend_replace = html.LEGEND("D'accord pour remplacer - à effacer après avoir été mis dans une partie de remplacement !", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandonné ?")
     fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_replace
@@ -208,7 +208,7 @@ def create_account():
     fieldset <= legend_family_name
     input_family_name = html.INPUT(type="text", value="")
     fieldset <= input_family_name
-    form <= html.BR()
+    form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_first_name = html.LEGEND("prénom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
@@ -640,7 +640,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_replace = html.LEGEND("D'accord pour remplacer - à effacer après usage !", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandoné ?")
+    legend_replace = html.LEGEND("D'accord pour remplacer - à effacer après avoir été mis dans une partie de remplacement !", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandoné ?")
     fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
     fieldset <= input_replace

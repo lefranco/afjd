@@ -141,3 +141,17 @@ def diplo_league(_, ratings):
         score[role_name] += bonus_alone if len(winners) == 1 else bonus_not_alone
 
     return "Diplo Ligue", score
+
+
+def scoring(game_scoring, variant_data, ratings):
+    """ scoring """
+
+    # selected scoring game parameter
+    if game_scoring == 'CDIP':
+        scoring_name, score_table = c_diplo(variant_data, ratings)
+    if game_scoring == 'WNAM':
+        scoring_name, score_table = win_namur(variant_data, ratings)
+    if game_scoring == 'DLIG':
+        scoring_name, score_table = diplo_league(variant_data, ratings)
+
+    return scoring_name, score_table

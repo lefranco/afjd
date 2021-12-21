@@ -26,7 +26,7 @@ LEN_NAME_MAX = 50
 LEN_SCORING_MAX = 5
 
 # for safety
-MIN_CYCLES_TO_PLAY = 7
+MIN_CYCLES_TO_PLAY = 5
 MAX_CYCLES_TO_PLAY = 99
 
 # for safety (diplomacy standard)

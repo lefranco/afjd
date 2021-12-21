@@ -3,22 +3,22 @@
 
 FAQ_CONTENT_TABLE = {
 
-    "Pourquoi certaines messages sont en français, certains en angals, voire certains dans un mélange des deux  ?":
+    "Pourquoi certains messages sont en français, certains en anglais, voire certains dans un mélange des deux ?":
     "Les messages issus de l'interface 'front end' sont en français (sauf omission à corriger rapidement). Les messages issus du serveur 'back end' sont en anglais",
 
-    "Peut-on jouer plusieurs rôles sur une partie  ?":
+    "Peut-on jouer plusieurs rôles sur une partie ?":
     "Non, cela n'est pas prévu. Il doit y avoir 8 intervenants distincts sur une partie (arbitre y compris)",
 
     "Peut-on faire des erreurs d'ordres ?":
     "Eh non. Les ordres sont 100% vérifiés avant d'être enregistrés. Par contre le menu 'taguer' dans une partie permet une communcation par ordres 'ésotériques'. Cela ne presente un intérêt que dans les parties sans communication",
 
     "Quand a lieu la résolution ?":
-    "Quand le dernier joueur qui a des ordres a rendre coche sur la case 'prêt à résoudre' tout simplement (ou quand l'arbitre le fait à sa place pour éviter que la partie ne s'éternise)",
+    "Quand le dernier joueur qui a des ordres à rendre coche sur la case 'prêt à résoudre' tout simplement (ou quand l'arbitre le fait à sa place pour éviter que la partie ne s'éternise)",
 
     "Pourquoi les dates limites changent-elles de couleur ?":
     "Le code de couleur est asez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée. Rouge que la grâce est aussi passée. Soyez ponctuels !",
 
-    "Il y a des retards indiqués. Dans quel cas un joueur est -il marqué en retard ?":
+    "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
     "Passer ses ordres signifie réaliser une transition 'pas prêt à résoudre' (ou pas d'information) -> 'prêt à résoudre'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels !",
 
     "Pourquoi les unités ne se déplacent pas dans le bac à sable ?":
@@ -37,7 +37,7 @@ FAQ_CONTENT_TABLE = {
     "L'arbitre démarre et arrête la partie. L'arbitre peut forcer des ordres de désordre civil pour un pays. Il peut forcer un accord pour résoudre pour un pays. Il peut retirer ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
 
     "Que peut faire un modérateur ?":
-    " (PAS IMPLEMENTE) Un modérateur peut voir l'email et le numéro de téléphone d'un inscrit. Il peut voir qui a soumis les ordres sur toutes les parties du site. Il peut voir le résultat complet d'un tournoi (anonyme ou pas). Enfin, dans les parties : il voit les rôles même si la partie est anonyme, il voit les soumissions et les incidents même s'il n'est pas dans la partie.",
+    " (PAS IMPLEMENTE MAIS TRES BIENTOT) Un modérateur peut voir l'email et le numéro de téléphone d'un inscrit. Il peut voir qui a soumis les ordres sur toutes les parties du site. Il peut voir le résultat complet d'un tournoi (anonyme ou pas). Enfin, dans les parties : il voit les rôles même si la partie est anonyme, il voit les soumissions et les incidents même s'il n'est pas dans la partie.",
 
     "Que peut faire un administrateur ?":
     "Il peut rectifier la position d'une partie. Il peut modifier les nouvelles. Il peut savoir les dates de dernière connexions et les connexions manquées (erreur de pseudo/mot de passe). Il peut se substituer à un inscrit. Il peut envoyer un email de la part du site. Enfin, il gère les modérateurs.",

@@ -457,15 +457,9 @@ def tournament_result():
         position_data = mapping.Position(position_loaded, variant_data)
         ratings = position_data.role_ratings()
 
+        # scoring
         game_scoring = data['scoring']
-
-        # selected scoring game parameter
-        if game_scoring == 'CDIP':
-            _, score_table = scoring.c_diplo(variant_data, ratings)
-        if game_scoring == 'WNAM':
-            _, score_table = scoring.win_namur(variant_data, ratings)
-        if game_scoring == 'DLIG':
-            _, score_table = scoring.diplo_league(variant_data, ratings)
+        _, score_table = scoring.scoring(game_scoring, variant_data, ratings)
 
         rolename2num = {variant_data.name_table[r]: n for n, r in variant_data.roles.items()}
 
@@ -497,13 +491,17 @@ def tournament_result():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'score', 'incidents']:
+    for field in ['rang', 'pseudo', 'score', 'incidents']:
         col = html.TD(field)
         thead <= col
     recap_table <= thead
 
+    rang = 1
     for pseudo, score in sorted(points.items(), key=lambda p: p[1], reverse=True):
         row = html.TR()
+
+        col = html.TD(rang)
+        row <= col
 
         col = html.TD(pseudo)
         row <= col
@@ -516,6 +514,7 @@ def tournament_result():
         row <= col
 
         recap_table <= row
+        rang += 1
 
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()

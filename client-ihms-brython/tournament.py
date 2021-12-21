@@ -595,15 +595,9 @@ def show_ratings():
         position_data = mapping.Position(position_loaded, variant_data)
         ratings = position_data.role_ratings()
 
+        # scoring
         game_scoring = data['scoring']
-
-        # selected scoring game parameter
-        if game_scoring == 'CDIP':
-            scoring_name, score_table = scoring.c_diplo(variant_data, ratings)
-        if game_scoring == 'WNAM':
-            scoring_name, score_table = scoring.win_namur(variant_data, ratings)
-        if game_scoring == 'DLIG':
-            scoring_name, score_table = scoring.diplo_league(variant_data, ratings)
+        scoring_name, score_table = scoring.scoring(game_scoring, variant_data, ratings)
 
         for role_name, score in score_table.items():
             rating_dict[(game_name, role_name)] = (score, scoring_name)

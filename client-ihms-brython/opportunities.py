@@ -292,5 +292,6 @@ def my_opportunities():
 
 def render(panel_middle):
     """ render """
+    MY_PANEL.clear()
     my_opportunities()
     panel_middle <= MY_PANEL
