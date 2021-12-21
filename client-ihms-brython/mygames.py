@@ -289,7 +289,7 @@ def my_games(state_name):
 
     dict_role_id = get_all_roles_allocated_to_player()
     if not dict_role_id:
-        alert("Erreur chargement des roles dans les parties")
+        alert("Vous ne jouez dans aucune partie ! (ou erreur chargement des roles dans les parties)")
         return
 
     dict_submitted_data = get_all_player_games_roles_submitted_orders()

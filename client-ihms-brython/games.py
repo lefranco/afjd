@@ -320,14 +320,14 @@ def create_game():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_nomessage = html.LEGEND("pas de message", title="Les joueurs ne peuvent pas communiquer par message avant la fin de la partie")
+    legend_nomessage = html.LEGEND("pas de message privé", title="Les joueurs ne peuvent pas communiquer (négocier) par message privé avant la fin de la partie")
     fieldset <= legend_nomessage
     input_nomessage = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_nomessage
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_nopress = html.LEGEND("pas de presse", title="Les joueurs ne peuvent pas communiquer par presse avant la fin de la partie")
+    legend_nopress = html.LEGEND("pas de message public", title="Les joueurs ne peuvent pas communiquer (déclarer) par message public avant la fin de la partie")
     fieldset <= legend_nopress
     input_nopress = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_nopress

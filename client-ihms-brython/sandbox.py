@@ -918,6 +918,10 @@ def sandbox():
     display_very_left <= html.DIV("Glissez/déposez ces unités sur la carte", Class='instruction')
     display_very_left <= html.BR()
 
+    display_very_left <= html.BR()
+    display_very_left <= html.DIV("Pour une situation initiale (ou approchant), aller dans une partie puis cliquer 'exporter vers le bac à sable'", Class='note')
+    display_very_left <= html.BR()
+
     map_size = VARIANT_DATA.map_size
 
     # create canvas
