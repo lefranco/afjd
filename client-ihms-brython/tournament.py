@@ -1315,8 +1315,6 @@ def test_scoring():
                 pass
             ratings[name] = val
 
-        alert(f"{ratings=}")
-
         # scoring
         score_table = scoring.scoring(game_scoring, variant_data, ratings)
 
