@@ -174,7 +174,6 @@ class Game:
 
         if 'description' in json_dict and json_dict['description'] is not None and json_dict['description'] != self._description:
             self._description = json_dict['description']
-            self._description = database.sanitize_field(self._description)
             changed = True
 
         if 'variant' in json_dict and json_dict['variant'] is not None and json_dict['variant'] != self._variant:
