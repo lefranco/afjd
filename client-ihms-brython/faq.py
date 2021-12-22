@@ -37,7 +37,7 @@ FAQ_CONTENT_TABLE = {
     "L'arbitre connaît l'identité des joueurs de sa partie. Il démarre et arrête la partie. Il peut forcer des ordres de désordre civil pour un pays. Il peut forcer un accord pour résoudre pour un pays. Il peut retirer ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
 
     "Que peut faire un modérateur ?":
-    "Un modérateur peut voir le courriel et le numéro de téléphone d'un inscrit. Il peut voir qui a soumis les ordres sur toutes les parties du site. Il peut voir le résultat complet d'un tournoi (anonyme ou pas). Enfin, dans les parties : il voit les identités des joueurs même si la partie est anonyme, ainsi que les soumissions et les incidents même s'il n'est pas dans la partie.",
+    "Un modérateur peut voir le courriel et le numéro de téléphone d'un inscrit. Il peut retrouver un pseudo à partir d'une adresse courriel. Il peut voir qui a soumis les ordres sur toutes les parties du site. Il peut voir le résultat complet d'un tournoi (anonyme ou pas). Enfin, dans les parties : il voit les identités des joueurs même si la partie est anonyme, ainsi que les soumissions et les incidents même s'il n'est pas dans la partie.",
 
     "Que peut faire un administrateur ?":
     "Il peut rectifier la position d'une partie. Il peut modifier les nouvelles. Il peut savoir les dates des dernières connexions et les connexions manquées (erreur de pseudo/mot de passe). Il peut se substituer à un inscrit. Il peut envoyer un courriel de la part du site. Enfin, il gère les modérateurs.",

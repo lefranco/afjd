@@ -19,7 +19,9 @@ import scoring
 import index  # circular import
 
 
-OPTIONS = ['toutes les parties', 'résultats tournoi', 'récupérer un courriel', 'récupérer un téléphone']
+MAX_LEN_EMAIL = 100
+
+OPTIONS = ['toutes les parties', 'résultats tournoi', 'retrouver à partir du courriel', 'récupérer un courriel', 'récupérer un téléphone']
 
 
 def check_modo(pseudo):
@@ -522,6 +524,74 @@ def tournament_result():
     MY_SUB_PANEL <= recap_table
 
 
+def find_from_email_address():
+    """ find_from_email_address """
+
+    def find_from_email_addresss_callback(_):
+        """ find_from_email_addresss_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération du pseudo à partir du courriel : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération du pseudo à partir du courriel : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            email = req_result['pseudo']
+            alert(f"Son courriel est '{email}'")
+
+        email = input_email.value
+        if not email:
+            alert("Courriel à retrouver manquant")
+            return
+
+        json_dict = dict()
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/find-player-from-email/{email}"
+
+        # findin pseudo from email : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        find_from_email_address()
+
+    MY_SUB_PANEL <= html.H3("Retrouver un compte par courriel")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_email = html.LEGEND("courriel", title="Le courriel de la personne à identifier")
+    fieldset <= legend_email
+    input_email = html.INPUT(type="email", value="", size=MAX_LEN_EMAIL)
+    fieldset <= input_email
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_find_email = html.INPUT(type="submit", value="retrouver le compte")
+    input_find_email.bind("click", find_from_email_addresss_callback)
+    form <= input_find_email
+
+    MY_SUB_PANEL <= form
+
+
 def display_email_address():
     """ display_email_address """
 
@@ -553,7 +623,7 @@ def display_email_address():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/player-email/{contact_user_name}"
 
-        # getting private phone number : need token
+        # getting email: need token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
@@ -707,6 +777,8 @@ def load_option(_, item_name):
         all_games('en cours')
     if item_name == 'résultats tournoi':
         tournament_result()
+    if item_name == 'retrouver à partir du courriel':
+        find_from_email_address()
     if item_name == 'récupérer un courriel':
         display_email_address()
     if item_name == 'récupérer un téléphone':
