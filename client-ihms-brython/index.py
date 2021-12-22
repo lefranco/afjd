@@ -25,7 +25,7 @@ import admin    # noqa: E402
 # TITLE is in index.html
 
 # H2
-H2 = html.DIV("Front end du site Diplomania")
+H2 = html.DIV("Front end du site Diplomania (brique jeu)")
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
