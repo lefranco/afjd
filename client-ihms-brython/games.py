@@ -47,7 +47,7 @@ def information_about_playing():
     information = html.DIV(Class='note')
     information <= html.B("Vous voulez juste jouer ? ")
     information <= html.BR()
-    information <= "Crééz-la partie et démissionez ensuite de l'arbitrage (appariement). Un arbitre sera alloué automatiquement..."
+    information <= "Créez-la partie et démissionnez ensuite de l'arbitrage (appariement). Un arbitre sera alloué automatiquement..."
     return information
 
 
@@ -55,7 +55,7 @@ def information_about_anonymity():
     """ information_about_playing """
 
     information = html.DIV(Class='note')
-    information <= html.B("Vous crééez une partie anonyme ?")
+    information <= html.B("Vous créez une partie anonyme ?")
     information <= html.BR()
     information <= "Il faut rapidement la mettre dans un tournoi. Sinon, il est possible de connaître les joueurs de manière détournée par le classement ou par les retards (en créant un tournoi englobant cette partie)..."
     return information
@@ -204,7 +204,7 @@ def create_game():
         if not specific_data:
             specific_data = "(sans particularité) "
 
-        description = f"Partie créé à {time_creation_str} (gmt) par {pseudo} variante {variant}. Cette partie est {specific_data}. Scorage {scoring_code}"
+        description = f"Partie créée le {time_creation_str} (gmt) par {pseudo} variante {variant}. Cette partie est {specific_data}. Scorage {scoring_code}"
         state = 0
 
         json_dict = {
@@ -309,7 +309,7 @@ def create_game():
     fieldset <= input_manual
     form <= fieldset
 
-    title_terms = html.H3("Modalités de la partie - ne peuvent plus être changés la partie créée")
+    title_terms = html.H3("Modalités de la partie - ne peuvent plus être changées la partie créée")
     form <= title_terms
 
     fieldset = html.FIELDSET()
@@ -346,7 +346,7 @@ def create_game():
     # special : la marque
 
     fieldset = html.FIELDSET()
-    legend_scoring = html.LEGEND("scoring", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
+    legend_scoring = html.LEGEND("scorage", title="La méthode pour compter les points (applicable aux parties en tournoi uniquement)")
     fieldset <= legend_scoring
     input_scoring = html.SELECT(type="select-one", value="")
 
@@ -372,7 +372,7 @@ def create_game():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_deadline_sync = html.LEGEND("synchronisation des date limites", title="Faut-il synchroniser les dates limites à une heure donnée")
+    legend_deadline_sync = html.LEGEND("synchronisation des dates limites", title="Faut-il synchroniser les dates limites à une heure donnée")
     fieldset <= legend_deadline_sync
     input_deadline_sync = html.INPUT(type="checkbox", checked=True)
     fieldset <= input_deadline_sync

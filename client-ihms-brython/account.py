@@ -12,7 +12,7 @@ import config
 import common
 import login
 
-OPTIONS = ['créer un compte', 'mot de passe', 'valider mon e-mail', 'éditer', 'supprimer']
+OPTIONS = ['créer un compte', 'mot de passe', 'valider mon courriel', 'éditer', 'supprimer']
 
 
 MAX_LEN_PSEUDO = 20
@@ -44,7 +44,7 @@ def information_about_emails():
     """ information_about_emails """
 
     information = html.DIV(Class='important')
-    information <= "Vous recevrez un e-mail pour confimer votre adresse mail, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un e-mail de rappel de l'arbitre si vous êtes en retard sur les ordres. Un e-mail de notification de résolution mais dans ce dernier cas seulement si vous l'avez demandé."
+    information <= "Vous recevrez un courriel pour confimer votre adresse de courriel, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un courriel de rappel de l'arbitre si vous êtes en retard sur les ordres. Un courriel de notification de résolution mais dans ce dernier cas seulement si vous l'avez demandé."
     information <= html.BR()
     information <= "Rien de plus !"
     return information
@@ -98,13 +98,13 @@ def create_account():
 
         email = input_email.value
         if not email:
-            alert("e-mail manquant")
+            alert("courriel manquant")
             MY_SUB_PANEL.clear()
             create_account()
             return
 
         if email.find('@') == -1:
-            alert("@ dans e-mail manquant")
+            alert("@ dans courriel manquant")
             MY_SUB_PANEL.clear()
             create_account()
             return
@@ -176,7 +176,7 @@ def create_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("email (privé)", title="Le site vous notifiera de quelques très rares événements")
+    legend_email = html.LEGEND("courriel (privé)", title="Le site vous notifiera de quelques très rares événements")
     fieldset <= legend_email
     input_email = html.INPUT(type="email", value="", size=MAX_LEN_EMAIL)
     fieldset <= input_email
@@ -190,7 +190,7 @@ def create_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_notify = html.LEGEND("Notifiez-moi !", title="Devons nous vous envoyer un e-mail sur chaque résolution de vos parties ?")
+    legend_notify = html.LEGEND("Notifiez-moi !", title="Devons nous vous envoyer un courriel sur chaque résolution de vos parties ?")
     fieldset <= legend_notify
     input_notify = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_notify
@@ -376,7 +376,7 @@ def validate_email():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Félicitations, votre e-mail a été validé : {messages}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Félicitations, votre courriel a été validé : {messages}", remove_after=config.REMOVE_AFTER)
 
         if not input_confirmation_code.value:
             alert("Code de confirmation mal saisi")
@@ -414,7 +414,7 @@ def validate_email():
         MY_SUB_PANEL.clear()
         validate_email()
 
-    MY_SUB_PANEL <= html.H3("Validation du e-mail")
+    MY_SUB_PANEL <= html.H3("Validation du courriel")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -436,7 +436,7 @@ def validate_email():
 
     form <= html.BR()
 
-    input_validate_email = html.INPUT(type="submit", value="valider l'e-mail")
+    input_validate_email = html.INPUT(type="submit", value="valider le courriel")
     input_validate_email.bind("click", validate_email_callback)
     form <= input_validate_email
     form <= html.BR()
@@ -619,7 +619,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email_confirmed = html.LEGEND("e-mail confirmé", title="(pour information)")
+    legend_email_confirmed = html.LEGEND("courriel confirmé", title="(pour information)")
     fieldset <= legend_email_confirmed
     input_email_confirmed = html.INPUT(type="checkbox", readonly=True, checked=email_confirmed_loaded)
     fieldset <= input_email_confirmed
@@ -633,7 +633,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_notify = html.LEGEND("Notifiez-moi !", title="Devons nous vous envoyer un e-mail sur chaque résolution de vos parties ?")
+    legend_notify = html.LEGEND("Notifiez-moi !", title="Devons nous vous envoyer un courriel sur chaque résolution de vos parties ?")
     fieldset <= legend_notify
     input_notify = html.INPUT(type="checkbox", checked=notify_loaded)
     fieldset <= input_notify
@@ -810,7 +810,7 @@ def load_option(_, item_name):
         create_account()
     if item_name == 'mot de passe':
         change_password()
-    if item_name == 'valider mon e-mail':
+    if item_name == 'valider mon courriel':
         validate_email()
     if item_name == 'éditer':
         edit_account()

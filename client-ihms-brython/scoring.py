@@ -3,12 +3,6 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 
-# simplest is to hard code displays of variants here
-SCORING_TABLE = {
-    'standard': ['c diplo', 'win namur', 'diplo league', 'nexus omg']
-}
-
-
 def c_diplo(variant_data, ratings):
     """ the c-diplo scoring system """
 
@@ -49,7 +43,7 @@ def c_diplo(variant_data, ratings):
             if rank2 - 1 in range(len(rank_points_list)):
                 score[role_name] += rank_points_list[rank2 - 1] / sharers
 
-    return "C-Diplo73", score
+    return score
 
 
 def win_namur(variant_data, ratings):
@@ -106,7 +100,7 @@ def win_namur(variant_data, ratings):
     for role_name in wave_sharers:
         score[role_name] += wave_bonus / len(wave_sharers)
 
-    return "WIN Namur", score
+    return score
 
 
 def diplo_league(_, ratings):
@@ -140,7 +134,7 @@ def diplo_league(_, ratings):
     for role_name in winners:
         score[role_name] += bonus_alone if len(winners) == 1 else bonus_not_alone
 
-    return "Diplo Ligue", score
+    return score
 
 
 def nexus_omg(variant_data, ratings):
@@ -190,32 +184,94 @@ def nexus_omg(variant_data, ratings):
     # extra points for lone winner
     winners = [r for r in rank_table if rank_table[r] == 1]
     if len(winners) == 1:
+
         # the lone winner
         winner = winners[0]
         winner_centers = ratings[winner]
+
         # the runner(s) (second)
         runners = [r for r in rank_table if rank_table[r] == 2]
         runner = runners[0]
         runner_centers = ratings[runner]
-        # SCs difference
-        difference = winner_centers - runner_centers
-        # bonus
-        score[winner] += min(difference, score[winner] * (bonus_percent_cap / 100.))
 
-    return "Nexus Open Mind the Gap", score
+        # SCs difference
+        sc_difference = winner_centers - runner_centers
+
+        # all pay tribute
+        for other in ratings:
+            if other == winner:
+                continue
+            other_tribute = min(sc_difference, score[other] * (bonus_percent_cap / 100.))
+            score[winner] += other_tribute
+            score[other] -= other_tribute
+
+    return score
+
+
+def c_diplo_namur(variant_data, ratings):
+    """ the c-diplo namur scoring system """
+
+    rank_points_list = [38, 14, 7]
+    center_bonus_list = [0, 5, 9, 12, 14, 16, 18]
+    solo_reward = 85
+
+    # default score
+    score = {role_name: 0 for role_name in ratings}
+
+    # detect solo
+    best_role_name = list(ratings.keys())[0]
+    if ratings[best_role_name] > variant_data.number_centers() // 2:
+        ratings[best_role_name] = solo_reward
+        return score
+
+    # participation point
+    for role_name in score:
+        score[role_name] += 1
+
+    # center points
+    for role_name in score:
+        center_num = ratings[role_name]
+        if center_num in range(len(center_bonus_list)):
+            score[role_name] += center_bonus_list[center_num]
+        else:
+            best_bonus = center_bonus_list[-1]
+            score[role_name] += best_bonus
+            score[role_name] += 1 + center_num - len(center_bonus_list)
+
+    # rank points
+
+    # calculate rank and rank share
+    rank_table = {role_name: 1 + len([ro for ro in ratings if ratings[ro] > ratings[role_name]]) for role_name in ratings}
+    rank_share_table = {ra: len([ro for ro in rank_table if rank_table[ro] == ra]) for ra in rank_table.values()}
+
+    # give points
+    for role_name in ratings:
+        rank = rank_table[role_name]
+        if rank - 1 not in range(len(rank_points_list)):
+            continue
+        sharers = rank_share_table[rank]
+        for rank2 in range(rank, rank + sharers):
+            if rank2 - 1 in range(len(rank_points_list)):
+                score[role_name] += rank_points_list[rank2 - 1] / sharers
+
+    return score
 
 
 def scoring(game_scoring, variant_data, ratings):
     """ scoring """
 
+    score_table = dict()
+
     # selected scoring game parameter
     if game_scoring == 'CDIP':
-        scoring_name, score_table = c_diplo(variant_data, ratings)
+        score_table = c_diplo(variant_data, ratings)
     if game_scoring == 'WNAM':
-        scoring_name, score_table = win_namur(variant_data, ratings)
+        score_table = win_namur(variant_data, ratings)
     if game_scoring == 'DLIG':
-        scoring_name, score_table = diplo_league(variant_data, ratings)
+        score_table = diplo_league(variant_data, ratings)
     if game_scoring == 'NOMG':
-        scoring_name, score_table = nexus_omg(variant_data, ratings)
+        score_table = nexus_omg(variant_data, ratings)
+    if game_scoring == 'CNAM':
+        score_table = c_diplo_namur(variant_data, ratings)
 
-    return scoring_name, score_table
+    return score_table

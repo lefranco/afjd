@@ -10,7 +10,7 @@ import config
 import common
 
 
-OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres', 'les tournois', 'les modérateurs', 'les e-mails non confirmés']
+OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres', 'les tournois', 'les modérateurs', 'les courriels non confirmés']
 
 
 def show_registered_data():
@@ -512,7 +512,7 @@ def load_option(_, item_name):
         show_tournaments_data()
     if item_name == 'les modérateurs':
         show_moderators()
-    if item_name == 'les e-mails non confirmés':
+    if item_name == 'les courriels non confirmés':
         show_non_confirmed_data()
 
     global ITEM_NAME_SELECTED

@@ -18,7 +18,7 @@ import mapping
 import geometry
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position', 'envoyer un e-mail', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -771,7 +771,7 @@ def sendmail():
         MY_SUB_PANEL.clear()
         sendmail()
 
-    MY_SUB_PANEL <= html.H3("Envoyer un e-mail")
+    MY_SUB_PANEL <= html.H3("Envoyer un courriel")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -793,7 +793,7 @@ def sendmail():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par e-mail")
+    legend_addressee = html.LEGEND("Destinataire", title="Sélectionner le joueur à contacter par courriel")
     fieldset <= legend_addressee
     input_addressed = html.SELECT(type="select-one", value="")
     for addressee_pseudo in sorted(possible_addressed, key=lambda pu: pu.upper()):
@@ -811,7 +811,7 @@ def sendmail():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="contacter")
+    input_select_player = html.INPUT(type="submit", value="envoyer le courriel")
     input_select_player.bind("click", sendmail_callback)
     form <= input_select_player
 
@@ -1096,7 +1096,7 @@ def load_option(_, item_name):
         usurp()
     if item_name == 'rectifier la position':
         rectify()
-    if item_name == 'envoyer un e-mail':
+    if item_name == 'envoyer un courriel':
         sendmail()
     if item_name == 'dernières connexions':
         last_logins()

@@ -549,6 +549,8 @@ def show_ratings():
 
     rating_dict = dict()
 
+    name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}
+
     for game_id_str, data in games_dict.items():
 
         game_id = int(game_id_str)
@@ -597,7 +599,10 @@ def show_ratings():
 
         # scoring
         game_scoring = data['scoring']
-        scoring_name, score_table = scoring.scoring(game_scoring, variant_data, ratings)
+        score_table = scoring.scoring(game_scoring, variant_data, ratings)
+
+        # get scoring name
+        scoring_name = name2code[game_scoring]
 
         for role_name, score in score_table.items():
             rating_dict[(game_name, role_name)] = (score, scoring_name)
@@ -832,7 +837,7 @@ def create_tournament():
 
     form = html.FORM()
 
-    legend_title_main = html.H3("Paramètres principaux du tournoi - ne peuvent plus être changés le tournoi créée")
+    legend_title_main = html.H3("Paramètres principaux du tournoi - ne peuvent plus être changés le tournoi crée")
     form <= legend_title_main
 
     form <= html.DIV("Pas d'espaces dans le nom du tournoi", Class='note')
@@ -1257,7 +1262,9 @@ def create_many_games():
     information <= html.BR()
     information <= "Il faut remplir soigneusement la description qui s'appliquera à toutes les parties !"
     information <= html.BR()
-    information <= "Enfin, les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée..."
+    information <= "Les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée..."
+    information <= html.BR()
+    information <= "Note : Soit vous utilisez comme modèle une partie existante, soit vous la créez pour l'occasion et la supprimez à la fin"
 
     MY_SUB_PANEL <= information
     MY_SUB_PANEL <= html.BR()

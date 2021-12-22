@@ -15,9 +15,9 @@ import common
 OPTIONS = ['accueil', 'liens', 'support', 'foire aux question', 'coin technique', 'choix d\'interface']
 
 NOTE_CONTENT_STATED = """
-Bienvenue dans la version Beta du site diplomania.
+Bienvenue dans la version bêta du site Diplomania.
 Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu. Une version avec un design plus élaboré est espérée pour plus tard.
-Merci de nous remonter vos remarques sur le forum de diplomania ou sur le serveur Discord.
+Merci de nous remonter vos remarques sur le forum de Diplomania ou sur le serveur Discord.
 """
 
 
@@ -90,13 +90,13 @@ def show_support():
     title4 = html.H3("Support")
     MY_SUB_PANEL <= title4
 
-    text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la DL est ce soir ? Votre partie n'avance pas depuis des jours et il semble que votre arbitre se soit endormi ?")
+    text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la date limite est ce soir ? Votre partie n'avance pas depuis des jours et il semble que votre arbitre se soit endormi ?")
     MY_SUB_PANEL <= text21
 
-    text22 = html.P("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs) et n'oubliez pas de bien préciser une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu ...")
+    text22 = html.P("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs) et n'oubliez pas de bien préciser une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu...")
     MY_SUB_PANEL <= text22
 
-    text23 = html.P("Vous pouvez utiliser le lien ci-dessous pour envoyer un e-mail :")
+    text23 = html.P("Vous pouvez utiliser le lien ci-dessous pour envoyer un courriel :")
     MY_SUB_PANEL <= text23
 
     email_support = html.A(href=f"mailto:{EMAIL_SUPPORT}")
@@ -179,13 +179,13 @@ def show_technical():
     MY_SUB_PANEL <= title4
 
     link4 = html.A(href="https://brython.info/", target="_blank")
-    link4 <= "Outil utilisé pour ce front end"
+    link4 <= "Outil utilisé pour ce site web"
     MY_SUB_PANEL <= link4
 
     MY_SUB_PANEL <= html.P()
 
     link5 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link5 <= "Icones utilisées pour ce front end"
+    link5 <= "Icônes utilisées pour ce site web"
     MY_SUB_PANEL <= link5
 
     title5 = html.H4("Les spécifications des systèmes de scorage sur le site")
@@ -196,7 +196,7 @@ def show_technical():
     iframe1 = html.IFRAME(src="./docs/Scorings.pdf", width=1000, height=1000)
     MY_SUB_PANEL <= iframe1
 
-    title6 = html.H4("Une version simplifiée des règles du Jeu")
+    title6 = html.H4("Une version simplifiée des règles du jeu")
     MY_SUB_PANEL <= title6
 
     MY_SUB_PANEL <= html.BR()
@@ -234,7 +234,7 @@ def select_interface():
     variant_name_loaded = storage['GAME_VARIANT']
 
     information = html.DIV(Class='important')
-    information <= "Une 'interface' vous permet d'avoir une carte et des trigrammes de désignation des régions spécifiques c'est à dire différents de ceux pratiqués sur le site"
+    information <= "Une 'interface' vous permet d'avoir une carte et des trigrammes de désignation des régions spécifiques c'est-à-dire différents de ceux pratiqués sur le site"
     MY_SUB_PANEL <= information
     MY_SUB_PANEL <= html.BR()
 
