@@ -1300,29 +1300,36 @@ def create_many_games():
     MY_SUB_PANEL <= form
 
 
+RATING_TABLE = dict()
+
+
 def test_scoring():
     """ test_scoring """
 
     def test_scoring_callback(_, game_scoring, ratings_input):
         """ test_scoring_callback """
 
-        ratings = dict()
         for name, element in ratings_input.items():
             val = 0
             try:
                 val = int(element.value)
-            except:
+            except:  # noqa: E722 pylint: disable=bare-except
                 pass
-            ratings[name] = val
+            RATING_TABLE[name] = val
 
         # scoring
-        score_table = scoring.scoring(game_scoring, variant_data, ratings)
+        score_table = scoring.scoring(game_scoring, variant_data, RATING_TABLE)
 
-        alert(f"{score_table=}")
+        score_desc = "\n".join([f"{k} : {v} points" for k,v in score_table.items()])
+        alert(f"Dans cette configuration la marque est :\n{score_desc}")
 
         # back to where we started
         MY_SUB_PANEL.clear()
         test_scoring()
+
+    # title
+    title = html.H3("Test de scorage")
+    MY_SUB_PANEL <= title
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -1351,6 +1358,9 @@ def test_scoring():
 
     form = html.FORM()
 
+    title_enter_centers = html.H4("Entrer les nombre de centres")
+    form <= title_enter_centers
+
     ratings_input = dict()
     for num in variant_data.roles:
 
@@ -1361,16 +1371,15 @@ def test_scoring():
         role_name = variant_data.name_table[role]
 
         fieldset = html.FIELDSET()
-        legend_centers = html.LEGEND(f"centres {role_name}", title="nombre de centres")
+        legend_centers = html.LEGEND(role_name, title="nombre de centres")
         fieldset <= legend_centers
-        input_centers = html.INPUT(type="number", value="")
-        input_centers <= 0  # TODO get back previous value
+        input_centers = html.INPUT(type="number", value=str(RATING_TABLE[role_name]) if role_name in RATING_TABLE else "")
         fieldset <= input_centers
         form <= fieldset
 
         ratings_input[role_name] = input_centers
 
-    input_test_scoring = html.INPUT(type="submit", value="tester")
+    input_test_scoring = html.INPUT(type="submit", value="calculer le scorage")
     input_test_scoring.bind("click", lambda e, gs=game_scoring, ri=ratings_input: test_scoring_callback(e, gs, ri))
     form <= input_test_scoring
 
