@@ -7,7 +7,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 # simplest is to hard code displays of variants here
 INTERFACE_TABLE = {
-    'standard': ['diplomania', 'diplomatie_online', '18_centres', 'stabbeurfou']
+    'standard': ['diplomania', 'Diplomatie-online', '18centres', 'stabbeurfou']
 }
 
 
