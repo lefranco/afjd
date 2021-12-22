@@ -1379,9 +1379,17 @@ def test_scoring():
 
         ratings_input[role_name] = input_centers
 
+    # get scoring name
+    name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}
+    scoring_name = name2code[game_scoring]
+
+    form <= html.DIV(f"Pour cette partie le scorage est {scoring_name}", Class='note')
+    form <= html.BR()
+
     input_test_scoring = html.INPUT(type="submit", value="calculer le scorage")
     input_test_scoring.bind("click", lambda e, gs=game_scoring, ri=ratings_input: test_scoring_callback(e, gs, ri))
     form <= input_test_scoring
+
 
     MY_SUB_PANEL <= form
 
