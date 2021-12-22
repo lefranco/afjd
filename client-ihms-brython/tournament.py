@@ -1307,13 +1307,15 @@ def test_scoring():
         """ test_scoring_callback """
 
         ratings = dict()
-        for name, value in ratings_input.items():
+        for name, element in ratings_input.items():
             val = 0
             try:
-                val = int(value)
+                val = int(element.value)
             except:
                 pass
             ratings[name] = val
+
+        alert(f"{ratings=}")
 
         # scoring
         score_table = scoring.scoring(game_scoring, variant_data, ratings)
