@@ -138,11 +138,7 @@ def diplo_league(_, ratings):
 
 
 def nexus_omg(variant_data, ratings):
-    """ the nexus_omg scoring system
-
-    . 5. Scoring system - Open Mind the Gap (OMG): a) each supply center (SC) is worth 1.5 points (total = 51 points) b) surviving in a draw is worth 9 points (average = 40.5 points per game) c) bonuses for the Top 3: 4.5 points for 1st, 3 points for 2nd, 1.5 points for 3rd d) tribute paid to the board topper is equal to 1st place SCs - 2nd place SCs, capped at 50% of a players score from a, b, and c e) a solo victory is worth 100 points. .
-
-    """
+    """ the nexus_omg scoring system """
 
     solo_reward = 100
     center_worth = 1.5
