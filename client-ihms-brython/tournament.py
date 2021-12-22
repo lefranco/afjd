@@ -20,7 +20,7 @@ import memoize
 import index  # circular import
 
 
-OPTIONS = ['les parties', 'le classement', 'les retards', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'créer plusieurs parties']
+OPTIONS = ['les parties', 'le classement', 'les retards', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'créer plusieurs parties', 'tester un scorage']
 
 DESCRIPTION = "partie créée par batch"
 
@@ -1300,6 +1300,83 @@ def create_many_games():
     MY_SUB_PANEL <= form
 
 
+def test_scoring():
+    """ test_scoring """
+
+    def test_scoring_callback(_, game_scoring, ratings_input):
+        """ test_scoring_callback """
+
+        ratings = dict()
+        for name, value in ratings_input.items():
+            val = 0
+            try:
+                val = int(value)
+            except:
+                pass
+            ratings[name] = val
+
+        # scoring
+        score_table = scoring.scoring(game_scoring, variant_data, ratings)
+
+        alert(f"{score_table=}")
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        test_scoring()
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    game_parameters_loaded = common.game_parameters_reload(game)
+
+    variant_name_loaded = storage['GAME_VARIANT']
+
+    # from variant name get variant content
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+
+    # selected interface (user choice)
+    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+    interface_parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, interface_parameters_read)
+
+    # this comes from game
+    game_scoring = game_parameters_loaded['scoring']
+
+    form = html.FORM()
+
+    ratings_input = dict()
+    for num in variant_data.roles:
+
+        if num == 0:
+            continue
+
+        role = variant_data.roles[num]
+        role_name = variant_data.name_table[role]
+
+        fieldset = html.FIELDSET()
+        legend_centers = html.LEGEND(f"centres {role_name}", title="nombre de centres")
+        fieldset <= legend_centers
+        input_centers = html.INPUT(type="number", value="")
+        input_centers <= 0  # TODO get back previous value
+        fieldset <= input_centers
+        form <= fieldset
+
+        ratings_input[role_name] = input_centers
+
+    input_test_scoring = html.INPUT(type="submit", value="tester")
+    input_test_scoring.bind("click", lambda e, gs=game_scoring, ri=ratings_input: test_scoring_callback(e, gs, ri))
+    form <= input_test_scoring
+
+    MY_SUB_PANEL <= form
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -1336,6 +1413,8 @@ def load_option(_, item_name):
         delete_tournament()
     if item_name == 'créer plusieurs parties':
         create_many_games()
+    if item_name == 'tester un scorage':
+        test_scoring()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
