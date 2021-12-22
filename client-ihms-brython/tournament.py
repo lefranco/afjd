@@ -1320,7 +1320,7 @@ def test_scoring():
         # scoring
         score_table = scoring.scoring(game_scoring, variant_data, RATING_TABLE)
 
-        score_desc = "\n".join([f"{k} : {v} points" for k,v in score_table.items()])
+        score_desc = "\n".join([f"{k} : {v} points" for k, v in score_table.items()])
         alert(f"Dans cette configuration la marque est :\n{score_desc}")
 
         # back to where we started
@@ -1389,7 +1389,6 @@ def test_scoring():
     input_test_scoring = html.INPUT(type="submit", value="calculer le scorage")
     input_test_scoring.bind("click", lambda e, gs=game_scoring, ri=ratings_input: test_scoring_callback(e, gs, ri))
     form <= input_test_scoring
-
 
     MY_SUB_PANEL <= form
 
