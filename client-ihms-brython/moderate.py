@@ -19,7 +19,7 @@ import scoring
 import index  # circular import
 
 
-OPTIONS = ['toutes les parties', 'résultats tournoi', 'récupérer une adresse email', 'récupérer un téléphone']
+OPTIONS = ['toutes les parties', 'résultats tournoi', 'récupérer un courriel', 'récupérer un téléphone']
 
 
 def check_modo(pseudo):
@@ -459,7 +459,7 @@ def tournament_result():
 
         # scoring
         game_scoring = data['scoring']
-        _, score_table = scoring.scoring(game_scoring, variant_data, ratings)
+        score_table = scoring.scoring(game_scoring, variant_data, ratings)
 
         rolename2num = {variant_data.name_table[r]: n for n, r in variant_data.roles.items()}
 
@@ -532,15 +532,15 @@ def display_email_address():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la récupération de l'adresse e-mail : {req_result['message']}")
+                    alert(f"Erreur à la récupération du courriel : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la récupération de l'adresse e-mail : {req_result['msg']}")
+                    alert(f"Problème à la récupération du courriel : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
             email = req_result['email']
-            alert(f"Son adresse email est '{email}'")
+            alert(f"Son courriel est '{email}'")
 
         contact_user_name = input_contact.value
         if not contact_user_name:
@@ -560,7 +560,7 @@ def display_email_address():
         MY_SUB_PANEL.clear()
         display_email_address()
 
-    MY_SUB_PANEL <= html.H3("Afficher une adresse e-mail")
+    MY_SUB_PANEL <= html.H3("Afficher un courriel")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -582,7 +582,7 @@ def display_email_address():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter par e-mail")
+    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter par courriel")
     fieldset <= legend_contact
     input_contact = html.SELECT(type="select-one", value="")
     for contact_pseudo in sorted(possible_contacts, key=lambda pu: pu.upper()):
@@ -593,7 +593,7 @@ def display_email_address():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="récupérer son adresse e-mail")
+    input_select_player = html.INPUT(type="submit", value="récupérer son courriel")
     input_select_player.bind("click", display_email_address_callback)
     form <= input_select_player
 
@@ -707,7 +707,7 @@ def load_option(_, item_name):
         all_games('en cours')
     if item_name == 'résultats tournoi':
         tournament_result()
-    if item_name == 'récupérer une adresse email':
+    if item_name == 'récupérer un courriel':
         display_email_address()
     if item_name == 'récupérer un téléphone':
         display_phone_number()

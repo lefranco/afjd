@@ -277,7 +277,11 @@ def make_rating_colours_window(variant_data, ratings, colours, game_scoring):
         rating_centers_row <= col
 
     # scoring
-    scoring_name, score_table = scoring.scoring(game_scoring, variant_data, ratings)
+    score_table = scoring.scoring(game_scoring, variant_data, ratings)
+
+    # get scoring name
+    name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}
+    scoring_name = name2code[game_scoring]
 
     # scoring
     rating_scoring_row = html.TR()
@@ -3588,7 +3592,7 @@ def game_master():
         input_send_recall_email = ""
         if role_id in needed_roles_list:
             if role_id not in submitted_roles_list:
-                input_send_recall_email = html.INPUT(type="submit", value="e-mail de rappel")
+                input_send_recall_email = html.INPUT(type="submit", value="courriel de rappel")
                 input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_email_callback(e, r))
         col <= input_send_recall_email
         row <= col
@@ -4050,11 +4054,11 @@ def show_game_parameters():
         row = html.TR()
 
         parameter_name, explanation, effect, implemented = {
-            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de e-mails de notification aux joueurs", "OUI"),
+            'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de courriel de notification aux joueurs", "OUI"),
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres - effacé à la fin de la partie", "OUI"),
             'nomessage': ("pas de message privé (négociation)", "on peut pas négocier - sauf avec l'arbitre", "Tout message privé joueur vers joueur est impossible - effacé à la fin de la partie", "OUI"),
             'nopress': ("pas de message public (déclaration)", "on ne peut pas déclarer - sauf l'arbitre", "Tout message public de joueur est impossible - effacé à la fin de la partie", "OUI"),
-            'fast': ("temps réel", "la partie est jouée comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en jours, pas de e-mails de notification aux joueurs", "OUI"),
+            'fast': ("temps réel", "la partie est jouée comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en jours, pas de courriel de notification aux joueurs", "OUI"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
             'scoring': ("code du scorage", "le système de scorage appliqué", "Actuellement CDIP = C-Diplo, WNAM = WIN Namur et DLIG = Diplo Ligue. Note : Le calcul est réalisé dans l'interface", "OUI"),
             'deadline_hour': ("heure de la date limite", "entre 0 et 23", "Heure à laquelle le système placera la date limite dans la journée si la synchronisation est souhaitée", "OUI"),
@@ -4122,7 +4126,7 @@ def show_game_master_in_game():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'role'}[field]
+        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'rôle'}[field]
         col = html.TD(field_fr)
         thead <= col
     game_master_table <= thead
@@ -4190,7 +4194,7 @@ def show_players_in_game():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'role'}[field]
+        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'rôle'}[field]
         col = html.TD(field_fr)
         thead <= col
     game_players_table <= thead
@@ -4295,7 +4299,7 @@ def show_orders_submitted_in_game():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'role': 'role', 'player': 'joueur', 'orders': 'ordres', 'agreement': 'accord'}[field]
+        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'orders': 'ordres', 'agreement': 'accord'}[field]
         col = html.TD(field_fr)
         thead <= col
     game_players_table <= thead
@@ -4403,7 +4407,7 @@ def show_incidents_in_game():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'role': 'role', 'player': 'joueur', 'season': 'saison', 'date': 'date'}[field]
+        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'season': 'saison', 'date': 'date'}[field]
         col = html.TD(field_fr)
         thead <= col
     game_incidents_table <= thead

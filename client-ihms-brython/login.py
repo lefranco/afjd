@@ -60,7 +60,7 @@ def login():
             return
 
         if pseudo.find("@") != -1:
-            alert("Attention, c'est le pseudo qui est demandé, pas l'adresse e-mail !")
+            alert("Attention, c'est le pseudo qui est demandé, pas le courriel !")
             render(PANEL_MIDDLE)
             return
 
@@ -79,7 +79,7 @@ def login():
     def forgot_callback(_):
         """ forgot_callback """
 
-        alert("Désolé: la récupération du mot de passe n'est pas encore implémentée - vous pouvez contacter le support (cf. page d'accueil) qui vous forcera un nouveau mot de passe")
+        alert("Désolé: la récupération du mot de passe n'est pas encore implémentée - vous pouvez contacter le support (cf. page d'accueil / onglet support) qui vous forcera un nouveau mot de passe")
 
         render(PANEL_MIDDLE)
 
@@ -102,7 +102,7 @@ def login():
     # --
     form1 = html.FORM()
 
-    form1 <= html.DIV("Pas de compte ? Crééz-le à partir du menu 'mon compte'...", Class='note')
+    form1 <= html.DIV("Pas de compte ? Créez-le à partir du menu 'mon compte'...", Class='note')
     form1 <= html.BR()
 
     fieldset = html.FIELDSET()
@@ -228,7 +228,7 @@ def show_login():
 
     if 'LOGIN_TIME' in storage:
         # this is local time
-        time_stamp = float(storage['LOGIN_TIME'])
+        time_stamp = round(float(storage['LOGIN_TIME']))
         date_desc = datetime.datetime.fromtimestamp(time_stamp)
         log_message <= f", depuis {date_desc} (temps local)"
 
@@ -256,7 +256,7 @@ def render(panel_middle):
     login_panel = login()
 
     if login_panel:
-        MY_PANEL <= html.H2("Identifiez vous pour accéder aux ressources protégées")
+        MY_PANEL <= html.H2("Identifiez-vous pour accéder aux ressources protégées")
         MY_PANEL <= login_panel
 
     PANEL_MIDDLE <= MY_PANEL

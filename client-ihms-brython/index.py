@@ -25,7 +25,7 @@ import admin    # noqa: E402
 # TITLE is in index.html
 
 # H2
-H2 = html.DIV("Front end générique du site Diplomania (graphisme simplifié).")
+H2 = html.DIV("Front end du site Diplomania")
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
@@ -176,4 +176,4 @@ login.check_token()
 login.show_login()
 selection.show_game_selected()
 
-document <= html.B("Contactez le support par e-mail en cas de problème (cf page d'accueil). Merci !")
+document <= html.B("Contactez le support par courriel en cas de problème (cf. page d'accueil / onglet support). Merci !")
