@@ -42,7 +42,7 @@ def login():
             storage['JWT_TOKEN'] = req_result['AccessToken']
             time_stamp = time.time()
             storage['LOGIN_TIME'] = str(time_stamp)
-            InfoDialog("OK", f"Connecté avec succès en tant que {pseudo}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
             show_login()
 
             render(PANEL_MIDDLE)

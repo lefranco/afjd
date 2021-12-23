@@ -7,6 +7,7 @@ import time
 import datetime
 
 from browser import html, ajax, alert  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -108,6 +109,7 @@ def all_games(state_name):
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
+        InfoDialog("OK", f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
         selection.show_game_selected()
 
         # action of going to game page
