@@ -541,8 +541,8 @@ def find_from_email_address():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            email = req_result['pseudo']
-            alert(f"Son courriel est '{email}'")
+            pseudo_found = req_result['pseudo']
+            alert(f"Son pseudo est '{pseudo_found}'")
 
         email = input_email.value
         if not email:
