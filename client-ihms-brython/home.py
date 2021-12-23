@@ -145,8 +145,8 @@ def show_faq():
 def show_technical():
     """ show_technical """
 
-    title1 = html.H3("Coin technique")
-    MY_SUB_PANEL <= title1
+    title = html.H3("Coin technique")
+    MY_SUB_PANEL <= title
 
     title1 = html.H4("Règles du jeu officielles")
     MY_SUB_PANEL <= title1
@@ -175,34 +175,36 @@ def show_technical():
 
     # --
 
-    title4 = html.H4("Remerciements")
+    title4 = html.H4("Le scorage (la marque sur un tournoi)")
     MY_SUB_PANEL <= title4
 
-    link4 = html.A(href="https://brython.info/", target="_blank")
-    link4 <= "Outil utilisé pour ce site web"
+    link4 = html.A(href="./docs/Scorings.pdf", target="_blank")
+    link4 <= "Lien vers les spécifications des systèmes de scorage sur le site"
     MY_SUB_PANEL <= link4
+
+    # --
+
+    title5 = html.H4("Règles simplifiées")
+    MY_SUB_PANEL <= title5
+
+    link5 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
+    link5 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
+    MY_SUB_PANEL <= link5
+
+    # --
+
+    title6 = html.H4("Remerciements")
+    MY_SUB_PANEL <= title6
+
+    link6 = html.A(href="https://brython.info/", target="_blank")
+    link6 <= "Outil utilisé pour ce site web"
+    MY_SUB_PANEL <= link6
 
     MY_SUB_PANEL <= html.P()
 
-    link5 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link5 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link5
-
-    title5 = html.H4("Les spécifications des systèmes de scorage sur le site")
-    MY_SUB_PANEL <= title5
-
-    MY_SUB_PANEL <= html.BR()
-
-    iframe1 = html.IFRAME(src="./docs/Scorings.pdf", width=1000, height=1000)
-    MY_SUB_PANEL <= iframe1
-
-    title6 = html.H4("Une version simplifiée des règles du jeu")
-    MY_SUB_PANEL <= title6
-
-    MY_SUB_PANEL <= html.BR()
-
-    iframe2 = html.IFRAME(src="./docs/Summary_rules_fr.pdf", width=1000, height=1000)
-    MY_SUB_PANEL <= iframe2
+    link7 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link7 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link7
 
 
 def select_interface():
