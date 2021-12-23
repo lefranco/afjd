@@ -4060,7 +4060,7 @@ def show_game_parameters():
             'nopress': ("pas de message public (déclaration)", "on ne peut pas déclarer - sauf l'arbitre", "Tout message public de joueur est impossible - effacé à la fin de la partie", "OUI"),
             'fast': ("temps réel", "la partie est jouée comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en jours, pas de courriel de notification aux joueurs", "OUI"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
-            'scoring': ("code du scorage", "le système de scorage appliqué", "Actuellement CDIP = C-Diplo, WNAM = WIN Namur et DLIG = Diplo Ligue. Note : Le calcul est réalisé dans l'interface", "OUI"),
+            'scoring': ("code du scorage", "le système de scorage appliqué", "Se reporter à Accueil/Coin technique pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface", "OUI"),
             'deadline_hour': ("heure de la date limite", "entre 0 et 23", "Heure à laquelle le système placera la date limite dans la journée si la synchronisation est souhaitée", "OUI"),
             'deadline_sync': ("synchronisation de la date limite", "oui ou non", "Le système synchronise la date limite à une heure précise dans la journée", "OUI"),
             'grace_duration': ("durée de la grâce", "en jours", "L'arbitre tolère un retard d'autant de jours avant de placer des désordres civils", "OUI"),
