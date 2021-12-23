@@ -309,6 +309,7 @@ def show_games():
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
+        InfoDialog("OK", f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
         selection.show_game_selected()
 
         # action of going to game page
