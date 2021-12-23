@@ -105,21 +105,19 @@ def login():
     form1 <= html.DIV("Pas de compte ? Créez-le à partir du menu 'mon compte'...", Class='note')
     form1 <= html.BR()
 
-    fieldset = html.FIELDSET()
-    legend_pseudo = html.LEGEND("pseudo")
-    fieldset <= legend_pseudo
-
     proposed_pseudo = ""
     if 'PSEUDO' in storage:
         proposed_pseudo = storage['PSEUDO']
 
+    fieldset = html.FIELDSET()
+    legend_pseudo = html.LEGEND("Pseudo", title="Attention la casse est importante")
+    fieldset <= legend_pseudo
     input_pseudo = html.INPUT(type="text", value=proposed_pseudo)
     fieldset <= input_pseudo
     form1 <= fieldset
-    form1 <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_password = html.LEGEND("mot de passe")
+    legend_password = html.LEGEND("Mot de passe", title="Notez le dans un coin !")
     fieldset <= legend_password
     input_password = html.INPUT(type="password", value="")
     fieldset <= input_password
