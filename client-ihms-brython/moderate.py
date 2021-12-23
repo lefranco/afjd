@@ -467,7 +467,10 @@ def tournament_result():
 
         for role_name, score in score_table.items():
             role_num = rolename2num[role_name]
-            pseudo = gamerole2pseudo[(game_id, role_num)]
+            if (game_id, role_num) in gamerole2pseudo:
+                pseudo = gamerole2pseudo[(game_id, role_num)]
+            else:
+                pseudo = "&lt;pas alloué&gt;"
             if pseudo not in points:
                 points[pseudo] = score
             else:
