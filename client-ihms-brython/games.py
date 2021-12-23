@@ -16,7 +16,7 @@ import common
 import selection
 import index  # circular import
 
-OPTIONS = ['créer', 'changer description', 'changer scorage', 'changer paramètres accès', 'changer date limite', 'changer paramètre cadence', 'changer état', 'supprimer']
+OPTIONS = ['créer', 'changer description', 'changer scorage', 'changer paramètres accès', 'changer date limite', 'changer paramètres cadence', 'changer état', 'supprimer']
 
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_VARIANT_NAME = 20
@@ -1564,7 +1564,7 @@ def load_option(_, item_name):
         change_access_parameters_game()
     if item_name == 'changer date limite':
         change_deadline_game()
-    if item_name == 'changer paramètre cadence':
+    if item_name == 'changer paramètres cadence':
         change_pace_parameters_game()
     if item_name == 'changer état':
         change_state_game()
