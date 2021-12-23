@@ -612,7 +612,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("email", title="Le site vous notifiera de quelques très rares événements")
+    legend_email = html.LEGEND("courriel", title="Le site vous notifiera de quelques très rares événements")
     fieldset <= legend_email
     input_email = html.INPUT(type="email", value=email_loaded, size=MAX_LEN_EMAIL)
     fieldset <= input_email
