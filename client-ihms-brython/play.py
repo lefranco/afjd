@@ -512,7 +512,8 @@ def countdown():
 
     # calculate display colour for deadline and countdown
 
-    time_unit = 60 if GAME_PARAMETERS_LOADED['fast'] else 24 * 60 * 60
+    time_unit = 60 if GAME_PARAMETERS_LOADED['fast'] else 60 * 60
+    approach_duration = 24 * 60 * 60
 
     colour = None
     time_stamp_now = time.time()
@@ -523,7 +524,7 @@ def countdown():
     elif time_stamp_now > deadline_loaded:
         colour = config.PASSED_DEADLINE_COLOUR
     # deadline is today
-    elif time_stamp_now > deadline_loaded - time_unit:
+    elif time_stamp_now > deadline_loaded - approach_duration:
         colour = config.APPROACHING_DEADLINE_COLOUR
 
     # set the colour
@@ -3351,6 +3352,7 @@ def game_master():
 
             # back to where we started
             MY_SUB_PANEL.clear()
+            load_dynamic_stuff()
             load_special_stuff()
             game_master()
 

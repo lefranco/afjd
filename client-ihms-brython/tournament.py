@@ -461,7 +461,8 @@ def show_games():
                 deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
                 value = deadline_loaded_str
 
-                time_unit = 60 if data['fast'] else 24 * 60 * 60
+                time_unit = 60 if data['fast'] else 60 * 60
+                approach_duration = 24 * 60 * 60
 
                 # we are after deadline + grace
                 if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
@@ -470,7 +471,7 @@ def show_games():
                 elif time_stamp_now > deadline_loaded:
                     colour = config.PASSED_DEADLINE_COLOUR
                 # deadline is today
-                elif time_stamp_now > deadline_loaded - time_unit:
+                elif time_stamp_now > deadline_loaded - approach_duration:
                     colour = config.APPROACHING_DEADLINE_COLOUR
 
             if field == 'current_advancement':
