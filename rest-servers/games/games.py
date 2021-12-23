@@ -237,15 +237,15 @@ class Game:
         if 'grace_duration' in json_dict and json_dict['grace_duration'] is not None and json_dict['grace_duration'] != self._grace_duration:
             self._grace_duration = json_dict['grace_duration']
             # safety
-            if self._grace_duration < 0:
-                self._grace_duration = 0
+            if self._grace_duration <= 0:
+                self._grace_duration = 1
             changed = True
 
         if 'speed_moves' in json_dict and json_dict['speed_moves'] is not None and json_dict['speed_moves'] != self._speed_moves:
             self._speed_moves = json_dict['speed_moves']
             # safety
-            if self._speed_moves < 0:
-                self._speed_moves = 0
+            if self._speed_moves <= 0:
+                self._speed_moves = 1
             changed = True
 
         if 'cd_possible_moves' in json_dict and json_dict['cd_possible_moves'] is not None and json_dict['cd_possible_moves'] != self._cd_possible_moves:
@@ -255,8 +255,8 @@ class Game:
         if 'speed_retreats' in json_dict and json_dict['speed_retreats'] is not None and json_dict['speed_retreats'] != self._speed_retreats:
             self._speed_retreats = json_dict['speed_retreats']
             # safety
-            if self._speed_retreats < 0:
-                self._speed_retreats = 0
+            if self._speed_retreats <= 0:
+                self._speed_retreats = 1
             changed = True
 
         if 'cd_possible_retreats' in json_dict and json_dict['cd_possible_retreats'] is not None and json_dict['cd_possible_retreats'] != self._cd_possible_retreats:
@@ -266,8 +266,8 @@ class Game:
         if 'speed_adjustments' in json_dict and json_dict['speed_adjustments'] is not None and json_dict['speed_adjustments'] != self._speed_adjustments:
             self._speed_adjustments = json_dict['speed_adjustments']
             # safety
-            if self._speed_adjustments < 0:
-                self._speed_adjustments = 0
+            if self._speed_adjustments <= 0:
+                self._speed_adjustments = 1
             changed = True
 
         if 'cd_possible_builds' in json_dict and json_dict['cd_possible_builds'] is not None and json_dict['cd_possible_builds'] != self._cd_possible_builds:
@@ -523,56 +523,71 @@ class Game:
         if self._archive:
             return
 
-        # set start deadline
+        # set start deadline from where we start
         now = time.time()
         if self._fast:
             # round it to next minute
             self._deadline = (int(now) // 60) * 60 + 60
+            # increment is one minute
+            deadline_increment = 60
         else:
-            if self._deadline_sync:
-                # time in day now
-                now_time_in_day = int(now) % (24 * 3600)
-                # time in day of deadline wished
-                deadline_time_in_day = self._deadline_hour * 3600
-                # increment or decrement (depending on which is later)
-                self._deadline = int(now) + (deadline_time_in_day - now_time_in_day)
-                if now_time_in_day > deadline_time_in_day:
-                    # expected deadline time is earlier in day :  we set our deadline next day
-                    self._deadline += 24 * 3600
-            else:
-                # round it to next hour
-                self._deadline = (int(now) // 3600) * 3600 + 3600
+            # round it to next hour
+            self._deadline = (int(now) // 3600) * 3600 + 3600
+            # increment is one hour
+            deadline_increment = 3600
 
         # increment deadline
 
         # what is the season next to play ?
         if self._current_advancement % 5 in [0, 2]:
-            days_add = self._speed_moves
+            hours_or_minute_add = self._speed_moves
         elif self._current_advancement % 5 in [1, 3]:
-            days_add = self._speed_retreats
+            hours_or_minute_add = self._speed_retreats
         else:
-            days_add = self._speed_adjustments
+            hours_or_minute_add = self._speed_adjustments
 
-        while True:
+        # increment deadline
+        self._deadline += hours_or_minute_add * deadline_increment
 
-            # add a day (a minute for fast games)
-            if self._fast:
-                self._deadline += 60
-            else:
+        # if fast we are done
+        if self._fast:
+            return
+
+        # pass the week end if applicable
+        if not self._play_weekend:
+
+            # keep passing a day until out of week end
+            while True:
+
+                # extract deadline to datetime
+                datetime_deadline_extracted = datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)
+
+                # datetime to date
+                deadline_day = datetime_deadline_extracted.date()
+
+                # accept if we are out of the weekend
+                if not deadline_day.weekday() in [5, 6]:
+                    break
+
+                # pass a day
                 self._deadline += 24 * 3600
 
-            # extract deadline to datetime
-            datetime_deadline_extracted = datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)
+        # eventually sync the deadline to the proper hour of a day
+        if self._deadline_sync:
 
-            # datetime to date
-            deadline_day = datetime_deadline_extracted.date()
+            # time in day of deadline so far
+            current_deadline_time_in_day = int(self._deadline) % (24 * 3600)
 
-            # consume
-            days_add -= 1
+            # time in day of deadline wished
+            wished_deadline_time_in_day = self._deadline_hour * 3600
 
-            # accept if enough days passed and not in weekend when no play at weekend
-            if days_add <= 0 and not (deadline_day.weekday() in [5, 6] and not self._play_weekend):
-                break
+            # increment or decrement (depending on which is later)
+            if wished_deadline_time_in_day > current_deadline_time_in_day:
+                # expected deadline time is later in day :  we set our deadline accordingly
+                self._deadline += wished_deadline_time_in_day - current_deadline_time_in_day
+            else:
+                # expected deadline time is earlier in day :  we set our deadline next day
+                self._deadline += 24 * 3600 + wished_deadline_time_in_day - current_deadline_time_in_day
 
     def past_deadline(self) -> bool:
         """ past_deadline """
