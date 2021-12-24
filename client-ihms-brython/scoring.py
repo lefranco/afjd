@@ -152,7 +152,7 @@ def nexus_omg(variant_data, ratings):
     # detect solo
     best_role_name = list(ratings.keys())[0]
     if ratings[best_role_name] > variant_data.number_centers() // 2:
-        ratings[best_role_name] = solo_reward
+        score[best_role_name] = solo_reward
         return score
 
     # center points (and survival)
@@ -217,7 +217,7 @@ def c_diplo_namur(variant_data, ratings):
     # detect solo
     best_role_name = list(ratings.keys())[0]
     if ratings[best_role_name] > variant_data.number_centers() // 2:
-        ratings[best_role_name] = solo_reward
+        score[best_role_name] = solo_reward
         return score
 
     # participation point
