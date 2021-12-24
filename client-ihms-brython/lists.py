@@ -125,7 +125,11 @@ def show_players_data():
 def show_replacement_data():
     """ show_replacement_data """
 
-    MY_SUB_PANEL <= html.H3("Liste des candidats au remplacement")
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
 
     players_dict = common.get_players_data()
 
@@ -133,33 +137,55 @@ def show_replacement_data():
         alert("Erreur chargement dictionnaire joueurs")
         return
 
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
+    players_alloc = allocations_data['players_dict']
+
+    # gather games to players
+    player_games_dict = dict()
+    for player_id, games_id in players_alloc.items():
+        if not players_dict[str(player_id)]['replace']:
+            continue
+        player = players_dict[str(player_id)]['pseudo']
+        if player not in player_games_dict:
+            player_games_dict[player] = list()
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            player_games_dict[player].append(game)
+
     players_table = html.TABLE()
 
-    fields = ['pseudo']
+    fields = ['player', 'games']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo'}[field]
+        field_fr = {'player': 'joueur', 'games': 'parties'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_table <= thead
 
-    for data in sorted(players_dict.values(), key=lambda p: p['pseudo'].upper()):
-
-        if not data['replace']:
-            continue
-
+    count = 0
+    for player, games in sorted(player_games_dict.items(), key=lambda p: p[0].upper()):
         row = html.TR()
         for field in fields:
-            value = data[field]
-
+            if field == 'player':
+                value = player
+            if field == 'games':
+                value = '/'.join(games)
             col = html.TD(value)
             row <= col
 
         players_table <= row
+        count += 1
 
+    MY_SUB_PANEL <= html.H3("Les remplaçants")
     MY_SUB_PANEL <= players_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} remplaçants")
 
 
 def show_games_data(game_state_name):
