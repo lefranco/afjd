@@ -3217,16 +3217,13 @@ def game_master():
             load_dynamic_stuff()
             game_master()
 
-        # get deadline from server (change to now if in the past)
+        # get deadline from server
         deadline_loaded = change_deadline_reload()
-        time_stamp_now = time.time()
         # round to end of minute to avoid little surprises
-        deadline_now = (time_stamp_now // 60) * 60 + 60
-        deadline_used = max(deadline_now, deadline_loaded)
 
         # add one day - if fast game change to one minute
         time_unit = 60 if GAME_PARAMETERS_LOADED['fast'] else 24 * 60 * 60
-        deadline_forced = deadline_used + time_unit
+        deadline_forced = deadline_loaded + time_unit
 
         # push on server
         json_dict = {
