@@ -3219,7 +3219,6 @@ def game_master():
 
         # get deadline from server
         deadline_loaded = change_deadline_reload()
-        # round to end of minute to avoid little surprises
 
         # add one day - if fast game change to one minute
         time_unit = 60 if GAME_PARAMETERS_LOADED['fast'] else 24 * 60 * 60
