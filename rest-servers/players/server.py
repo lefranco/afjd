@@ -502,7 +502,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        addressees: typing.List[str] = list()
+        addressees: typing.List[str] = []
         for addressee_id in addressees_list:
             pseudo_dest = players.Player.find_by_identifier(sql_executor, addressee_id)
             if pseudo_dest is None:

@@ -36,8 +36,6 @@ SERVER_CONFIG: typing.Dict[str, typing.Dict[str, typing.Any]] = collections.defa
 def load_servers_config() -> None:
     """ read servers config """
 
-    global SERVER_CONFIG
-
     servers_config = ConfigFile('./config/servers.ini')
     for server in servers_config.section_list():
         server_data = servers_config.section(server)

@@ -22,7 +22,7 @@ SEASON_NAME_TABLE = ["PRINTEMPS", "ETE", "AUTOMNE", "HIVER", "BILAN"]
 def build_variant_file(variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any]) -> typing.List[str]:
     """ This will build the diplo.dat file """
 
-    result: typing.List[str] = list()
+    result: typing.List[str] = []
 
     result.append("; -------")
     result.append("; ANNEEZERO")
@@ -133,7 +133,7 @@ def build_variant_file(variant: typing.Dict[str, typing.Any], names: typing.Dict
 def build_situation_file(advancement: int, situation: typing.Dict[str, typing.Any], variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any]) -> typing.List[str]:
     """ This will build the situ.dat file """
 
-    result: typing.List[str] = list()
+    result: typing.List[str] = []
 
     year_zero = variant['year_zero']
     season = advancement % len(SEASON_NAME_TABLE)
@@ -147,7 +147,7 @@ def build_situation_file(advancement: int, situation: typing.Dict[str, typing.An
     zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}" for r, c in variant['coastal_zones']]
 
     # build a table zone name -> region name
-    region_table = dict()
+    region_table = {}
     for zone in names['zones'].values():
         if zone:
             region_table[zone] = zone
@@ -170,7 +170,7 @@ def build_situation_file(advancement: int, situation: typing.Dict[str, typing.An
 
     # normal units
     result.append("; non delogees")
-    executioner_table = dict()
+    executioner_table = {}
     for role_num, units in situation['units'].items():
         role_name, _, _ = names['roles'][str(role_num)]
 
@@ -236,24 +236,24 @@ def build_situation_file(advancement: int, situation: typing.Dict[str, typing.An
 def build_orders_file(orders: typing.List[typing.List[int]], situation: typing.Dict[str, typing.Any], variant: typing.Dict[str, typing.Any], names: typing.Dict[str, typing.Any]) -> typing.List[str]:
     """ This will build the orders.txt file """
 
-    result: typing.List[str] = list()
+    result: typing.List[str] = []
 
     zone_names = [r for r in names['zones'].values() if r]
     zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}" for r, c in variant['coastal_zones']]
 
-    unit_type_table = dict()
+    unit_type_table = {}
     for _, units in situation['units'].items():
         for unit_type, zone_num in units:
             unit_name = "A" if unit_type == 1 else "F"
             unit_type_table[zone_num] = unit_name
 
-    dislodged_unit_type_table = dict()
+    dislodged_unit_type_table = {}
     for _, dislodged_units in situation['dislodged_ones'].items():
         for unit_type, zone_num, _ in dislodged_units:
             unit_name = "A" if unit_type == 1 else "F"
             dislodged_unit_type_table[zone_num] = unit_name
 
-    fake_unit_type_table = dict()
+    fake_unit_type_table = {}
     for _, fake_units in situation['fake_units'].items():
         for unit_type, zone_num in fake_units:
             fake_unit_name = "A" if unit_type == 1 else "F"
@@ -339,10 +339,10 @@ def read_situation(situation_result_content: typing.List[str], variant: typing.D
     center_table = variant['centers']
     type_names = ["A", "F"]
 
-    ownership_dict: typing.Dict[str, typing.Any] = dict()
+    ownership_dict: typing.Dict[str, typing.Any] = {}
     unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
     dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-    forbidden_list: typing.List[int] = list()
+    forbidden_list: typing.List[int] = []
 
     for line in situation_result_content:
 
@@ -407,7 +407,7 @@ def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[st
     zone_names = [r.upper() for r in names['zones'].values() if r]
     zone_names += [f"{names['zones'][str(r)]}{names['coasts'][str(c)]}".upper() for r, c in variant['coastal_zones']]
 
-    orders_list: typing.List[typing.Dict[str, typing.Any]] = list()
+    orders_list: typing.List[typing.Dict[str, typing.Any]] = []
 
     for line in orders_result_content:
 
@@ -451,7 +451,7 @@ def read_orders(orders_result_content: typing.List[str], variant: typing.Dict[st
 def read_actives(active_roles_content: typing.List[str], names: typing.Dict[str, typing.Any]) -> typing.List[int]:
     """ This will read the situ_result.dat file """
 
-    active_list: typing.List[int] = list()
+    active_list: typing.List[int] = []
 
     role_names = [v[0].upper() for k, v in names['roles'].items() if int(k)]
 
@@ -498,15 +498,15 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
         os.mkdir(f"{tmpdirname}/DIPLOCOM/DEFAULT")
 
         # copy DATA
-        with open(f"{tmpdirname}/DIPLOCOM/DEFAULT/DIPLO.DAT", "w") as outfile:
+        with open(f"{tmpdirname}/DIPLOCOM/DEFAULT/DIPLO.DAT", "w", encoding="utf-8") as outfile:
             outfile.write("\n".join(diplo_dat_content))
 
         # copy situation
-        with open(f"{tmpdirname}/situation.dat", "w") as outfile:
+        with open(f"{tmpdirname}/situation.dat", "w", encoding="utf-8") as outfile:
             outfile.write("\n".join(situation_content))
 
         # copy orders
-        with open(f"{tmpdirname}/orders.txt", "w") as outfile:
+        with open(f"{tmpdirname}/orders.txt", "w", encoding="utf-8") as outfile:
             outfile.write("\n".join(orders_content))
 
         # affect env variable
@@ -539,17 +539,17 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
             return result.returncode, result.stderr.decode(), result.stdout.decode(), None, None, None
 
         # copy back situation
-        with open(f"{tmpdirname}/situation_result.dat", "r") as infile:
+        with open(f"{tmpdirname}/situation_result.dat", "r", encoding="utf-8") as infile:
             situation_result_content = infile.readlines()
         situation_result = read_situation(situation_result_content, variant, names)
 
         # copy back orders
-        with open(f"{tmpdirname}/orders_result.txt", "r") as infile:
+        with open(f"{tmpdirname}/orders_result.txt", "r", encoding="utf-8") as infile:
             orders_result_content = infile.readlines()
             orders_result = ''.join(orders_result_content)
 
         # copy back actives
-        with open(f"{tmpdirname}/active_roles.txt", "r") as infile:
+        with open(f"{tmpdirname}/active_roles.txt", "r", encoding="utf-8") as infile:
             active_roles_content = infile.readlines()
         active_roles_list = read_actives(active_roles_content, names)
 
@@ -574,11 +574,11 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
         os.mkdir(f"{tmpdirname}/DIPLOCOM/DEFAULT")
 
         # copy DATA
-        with open(f"{tmpdirname}/DIPLOCOM/DEFAULT/DIPLO.DAT", "w") as outfile:
+        with open(f"{tmpdirname}/DIPLOCOM/DEFAULT/DIPLO.DAT", "w", encoding="utf-8") as outfile:
             outfile.write("\n".join(diplo_dat_content))
 
         # copy situation
-        with open(f"{tmpdirname}/situation.dat", "w") as outfile:
+        with open(f"{tmpdirname}/situation.dat", "w", encoding="utf-8") as outfile:
             outfile.write("\n".join(situation_content))
 
         # affect env variable
@@ -603,7 +603,7 @@ def disorder(variant: typing.Dict[str, typing.Any], advancement: int, situation:
             return result.returncode, result.stderr.decode(), result.stdout.decode(), None
 
         # copy back orders
-        with open(f"{tmpdirname}/orders_result.txt", "r") as infile:
+        with open(f"{tmpdirname}/orders_result.txt", "r", encoding="utf-8") as infile:
             orders_result_content = infile.readlines()
 
         orders_list = read_orders(orders_result_content, variant, names, role)

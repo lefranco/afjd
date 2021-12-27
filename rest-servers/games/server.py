@@ -378,7 +378,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     subject = f"La partie {game.name} a démarré !"
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-                    addressees = list()
+                    addressees = []
                     for _, player_id, __ in allocations_list:
                         addressees.append(player_id)
                     body = "Vous pouvez commencer à jouer dans cette partie !"
@@ -417,7 +417,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     subject = f"La partie {game.name} s'est terminée !"
                     game_id = game.identifier
                     allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-                    addressees = list()
+                    addressees = []
                     for _, player_id, __ in allocations_list:
                         addressees.append(player_id)
                     body = "Vous ne pouvez plus jouer dans cette partie !"
@@ -1182,7 +1182,7 @@ class AllGamesRolesRessource(flask_restful.Resource):  # type: ignore
         allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
         del sql_executor
 
-        dict_role_id: typing.Dict[int, int] = dict()
+        dict_role_id: typing.Dict[int, int] = {}
         for game_id, _, role_id in allocations_list:
             dict_role_id[game_id] = role_id
 
@@ -1447,7 +1447,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         sql_executor = database.SqlExecutor()
 
         # get ownerships
-        ownership_dict = dict()
+        ownership_dict = {}
         game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
         for _, center_num, role_num in game_ownerships:
             ownership_dict[str(center_num)] = role_num
@@ -1465,7 +1465,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
                 unit_dict[str(role_num)].append([type_num, zone_num])
 
         # get forbiddens
-        forbidden_list = list()
+        forbidden_list = []
         game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
@@ -1655,7 +1655,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 subject = f"La partie {game.name} a avancé (avec l'aide de l'arbitre)!"
                 game_id = game.identifier
                 allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-                addressees = list()
+                addressees = []
                 for _, player_id, __ in allocations_list:
                     addressees.append(player_id)
                 body = "Vous pouvez continuer à jouer dans cette partie !"
@@ -1810,7 +1810,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     flask_restful.abort(400, msg="Trying to build in a zone where there is already a unit")
 
         # then we put the incoming ones in the database
-        inserted_fake_unit_list: typing.List[typing.List[int]] = list()
+        inserted_fake_unit_list: typing.List[typing.List[int]] = []
         for the_order in the_orders:
             if the_order['order_type'] == 8:
                 type_num = the_order['active_unit']['type_unit']
@@ -1834,7 +1834,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # evaluate situation
 
         # situation: get ownerships
-        ownership_dict: typing.Dict[str, int] = dict()
+        ownership_dict: typing.Dict[str, int] = {}
         game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)  # noqa: F821
         for _, center_num, role_num in game_ownerships:
             ownership_dict[str(center_num)] = role_num
@@ -1856,7 +1856,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 unit_dict[str(role_num)].append([type_num, zone_num])
 
         # situation: get forbiddens
-        forbidden_list = list()
+        forbidden_list = []
         game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)  # noqa: F821
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
@@ -1870,7 +1870,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         }
         situation_dict_json = json.dumps(situation_dict)
 
-        orders_list = list()
+        orders_list = []
         for the_order in the_orders:
             order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
             order.load_json(the_order)
@@ -1962,7 +1962,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 subject = f"La partie {game.name} a avancé !"
                 game_id = game.identifier
                 allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)  # noqa: F821
-                addressees = list()
+                addressees = []
                 for _, player_id, __ in allocations_list:
                     addressees.append(player_id)
                 body = "Vous pouvez continuer à jouer dans cette partie !"
@@ -2169,7 +2169,7 @@ class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
         # evaluate situation
 
         # situation: get ownerships
-        ownership_dict: typing.Dict[str, int] = dict()
+        ownership_dict: typing.Dict[str, int] = {}
         game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
         for _, center_num, role_num in game_ownerships:
             ownership_dict[str(center_num)] = role_num
@@ -2188,7 +2188,7 @@ class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
                 unit_dict[str(role_num)].append([type_num, zone_num])
 
         # situation: get forbiddens
-        forbidden_list = list()
+        forbidden_list = []
         game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
@@ -2469,7 +2469,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         assert role_id is not None
         communication_orders_list = communication_orders.CommunicationOrder.list_by_game_id_role_num(sql_executor, game_id, role_id)
 
-        fake_units_list: typing.List[int] = list()
+        fake_units_list: typing.List[int] = []
 
         del sql_executor
 
@@ -2607,9 +2607,9 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
         # get list of games in which player is involved
         allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
 
-        dict_submitted_list: typing.Dict[int, typing.List[int]] = dict()
-        dict_agreed_list: typing.Dict[int, typing.List[int]] = dict()
-        dict_needed_list: typing.Dict[int, typing.List[int]] = dict()
+        dict_submitted_list: typing.Dict[int, typing.List[int]] = {}
+        dict_agreed_list: typing.Dict[int, typing.List[int]] = {}
+        dict_needed_list: typing.Dict[int, typing.List[int]] = {}
         for game_id, _, role_id in allocations_list:
 
             # submissions_list : those who submitted orders
@@ -2681,9 +2681,9 @@ class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         # extract list of all games identifiers
         game_id_list = list(set(a[0] for a in allocations_list))
 
-        dict_submitted_list: typing.Dict[int, typing.List[int]] = dict()
-        dict_agreed_list: typing.Dict[int, typing.List[int]] = dict()
-        dict_needed_list: typing.Dict[int, typing.List[int]] = dict()
+        dict_submitted_list: typing.Dict[int, typing.List[int]] = {}
+        dict_agreed_list: typing.Dict[int, typing.List[int]] = {}
+        dict_needed_list: typing.Dict[int, typing.List[int]] = {}
         for game_id in game_id_list:
 
             # submissions_list : those who submitted orders
@@ -2743,7 +2743,7 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg="Did you convert units from json to text ?")
 
         # situation: get ownerships
-        ownership_dict: typing.Dict[str, int] = dict()
+        ownership_dict: typing.Dict[str, int] = {}
 
         # situation: get units
         unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
@@ -2754,13 +2754,13 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
             unit_dict[str(role_num)].append([type_num, zone_num])
 
         # no fake unit at this point
-        fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = dict()
+        fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = {}
 
         # no dislodged unit at this point
-        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = dict()
+        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = {}
 
         # no forbiddens at this point
-        forbidden_list: typing.List[int] = list()
+        forbidden_list: typing.List[int] = []
 
         # need to have one
         game_fake_advancement = 0
@@ -2775,7 +2775,7 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
         situation_dict_json = json.dumps(situation_dict)
 
         # evaluate orders
-        orders_list = list()
+        orders_list = []
 
         try:
             the_orders = json.loads(orders_submitted)
@@ -2990,7 +2990,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         messages_extracted_list = messages.Message.list_with_content_by_game_id(sql_executor, game_id)
 
         # get all message
-        messages_dict_mess: typing.Dict[int, typing.Tuple[int, int, contents.Content]] = dict()
+        messages_dict_mess: typing.Dict[int, typing.Tuple[int, int, contents.Content]] = {}
         messages_dict_dest: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
         for _, identifier, author_num, addressee_num, time_stamp, content in messages_extracted_list:
             if identifier not in messages_dict_mess:
@@ -2998,9 +2998,8 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             messages_dict_dest[identifier].append(addressee_num)
 
         # extract the ones not concerned
-        messages_list: typing.List[typing.Tuple[int, int, typing.List[int], str]] = list()
-        for identifier in messages_dict_mess:
-            author_num, time_stamp, content = messages_dict_mess[identifier]
+        messages_list: typing.List[typing.Tuple[int, int, typing.List[int], str]] = []
+        for identifier, (author_num, time_stamp, content) in messages_dict_mess.items():
             addressees_num = messages_dict_dest[identifier]
             if role_id == author_num or role_id in addressees_num:
                 messages_list.append((author_num, time_stamp, addressees_num, content.payload))
@@ -3166,7 +3165,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         # gather declarations
         declarations_list = declarations.Declaration.list_with_content_by_game_id(sql_executor, game_id)
 
-        declarations_list_ret = list()
+        declarations_list_ret = []
         for _, author_num, anonymous, time_stamp, content in declarations_list:
             if anonymous and role_id != 0:
                 declarations_list_ret.append((anonymous, -1, time_stamp, content.payload))
@@ -3221,7 +3220,7 @@ class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
         # get list of games in which player is involved
         allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
 
-        dict_time_stamp: typing.Dict[int, int] = dict()
+        dict_time_stamp: typing.Dict[int, int] = {}
         for game_id, _, _ in allocations_list:
 
             # serves as default value (long time ago)
@@ -3283,7 +3282,7 @@ class DateLastGameMessagesRessource(flask_restful.Resource):  # type: ignore
         # get list of games in which player is involved
         allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
 
-        dict_time_stamp: typing.Dict[int, int] = dict()
+        dict_time_stamp: typing.Dict[int, int] = {}
         for game_id, _, role_id in allocations_list:
 
             # serves as default value (long time ago)
@@ -3495,7 +3494,7 @@ class AllGameVisitsRessource(flask_restful.Resource):  # type: ignore
         # get list of games in which player is involved
         allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
 
-        dict_time_stamp: typing.Dict[int, int] = dict()
+        dict_time_stamp: typing.Dict[int, int] = {}
         for game_id, _, role_id in allocations_list:
 
             # serves as default (very long time ago)
@@ -4162,7 +4161,7 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
         tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
         tournament_game_ids = [g[1] for g in tournament_games]
 
-        late_list: typing.List[typing.Tuple[int, int, float]] = list()
+        late_list: typing.List[typing.Tuple[int, int, float]] = []
         for game_id in tournament_game_ids:
             incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
             for _, role_num, _, _, date_incident in incidents_list:
@@ -4198,11 +4197,11 @@ class TournamentPositionRessource(flask_restful.Resource):  # type: ignore
         tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
         tournament_game_ids = [g[1] for g in tournament_games]
 
-        position_dict: typing.Dict[int, typing.Dict[str, typing.Any]] = dict()
+        position_dict: typing.Dict[int, typing.Dict[str, typing.Any]] = {}
         for game_id in tournament_game_ids:
 
             # get ownerships
-            ownership_dict = dict()
+            ownership_dict = {}
             game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
             for _, center_num, role_num in game_ownerships:
                 ownership_dict[str(center_num)] = role_num
@@ -4220,7 +4219,7 @@ class TournamentPositionRessource(flask_restful.Resource):  # type: ignore
                     unit_dict[str(role_num)].append([type_num, zone_num])
 
             # get forbiddens
-            forbidden_list = list()
+            forbidden_list = []
             game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
             for _, region_num in game_forbiddens:
                 forbidden_list.append(region_num)
@@ -4284,7 +4283,7 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
         tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
         tournament_game_ids = [g[1] for g in tournament_games]
 
-        allocation_dict: typing.Dict[int, typing.Dict[str, typing.Any]] = dict()
+        allocation_dict: typing.Dict[int, typing.Dict[str, typing.Any]] = {}
         for game_id in tournament_game_ids:
 
             # find the game

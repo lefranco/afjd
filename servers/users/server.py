@@ -34,7 +34,7 @@ SECRET_CONFIG = lowdata.ConfigFile('./config/secret.ini')
 SECRET_DATA = SECRET_CONFIG.section('JWT_SECRET_KEY')
 APP.config['JWT_SECRET_KEY'] = SECRET_DATA['key']
 
-# default is 15 minutes - put it to one hour !
+# default is 15 minutes - put it to one day !
 APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 
 # Seems JWT variable is not used in this implementation but could be later on...
@@ -49,7 +49,7 @@ ADMIN_ACCOUNT_NAME = 'Palpatine'
 
 
 @APP.route('/add', methods=['POST'])
-def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+def add_user() -> typing.Tuple[typing.Any, int]:
     """
     add an user account
     PROTECTED (called by players block)
@@ -60,6 +60,7 @@ def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
 
+    assert flask.request.json is not None
     user_name = flask.request.json.get('user_name', None)
     if not user_name:
         return flask.jsonify({"msg": "Missing user_name parameter"}), 400
@@ -89,7 +90,7 @@ def add_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 @APP.route('/remove', methods=['POST'])
 @flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
-def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+def remove_user() -> typing.Tuple[typing.Any, int]:
     """
     remove an user account
     PROTECTED (called by players block)
@@ -100,6 +101,7 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
 
+    assert flask.request.json is not None
     user_name = flask.request.json.get('user_name', None)
     if not user_name:
         return {"msg": "Missing user_name parameter"}, 400
@@ -129,7 +131,7 @@ def remove_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 @APP.route('/change', methods=['POST'])
 @flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
-def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+def change_user() -> typing.Tuple[typing.Any, int]:
     """
     change password of an account
     PROTECTED (called by players block)
@@ -140,6 +142,7 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
 
+    assert flask.request.json is not None
     user_name = flask.request.json.get('user_name', None)
     if not user_name:
         return {"msg": "Missing user_name parameter"}, 400
@@ -174,7 +177,7 @@ def change_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 
 @APP.route('/login', methods=['POST'])
-def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+def login_user() -> typing.Tuple[typing.Any, int]:
     """
     Provide a method to create access tokens. The create_access_token()
     function is used to actually generate the token, and you can return
@@ -187,6 +190,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if not flask.request.is_json:
         return flask.jsonify({"msg": "Missing JSON in request"}), 400
 
+    assert flask.request.json is not None
     user_name = flask.request.json.get('user_name', None)
     if not user_name:
         return {"msg": "Missing user_name parameter"}, 400
@@ -199,7 +203,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
     user = users.User.find_by_name(sql_executor, user_name)
 
-    if user is None or not werkzeug.security.check_password_hash(user.pwd_hash, password):  # type: ignore
+    if user is None or not werkzeug.security.check_password_hash(user.pwd_hash, password):
 
         # we keep a trace of the failure
         failure = failures.Failure(user_name)
@@ -224,7 +228,7 @@ def login_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 @APP.route('/verify', methods=['GET'])
 @flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
-def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+def verify_user() -> typing.Tuple[typing.Any, int]:
     """
     Protect a view with jwt_required, which requires a valid access token
     in the request to access.
@@ -241,7 +245,7 @@ def verify_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 @APP.route('/usurp', methods=['POST'])
 @flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
-def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+def usurp_user() -> typing.Tuple[typing.Any, int]:
     """
     Protect a view with jwt_required, which requires a valid access token
     in the request to access.
@@ -256,6 +260,7 @@ def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
     if logged_in_as != ADMIN_ACCOUNT_NAME:
         return {"msg": "Wrong user_name to perform operation"}, 403
 
+    assert flask.request.json is not None
     usurped_user_name = flask.request.json.get('usurped_user_name', None)
     if not usurped_user_name:
         return {"msg": "Missing usurped_user_name parameter"}, 400
@@ -274,7 +279,7 @@ def usurp_user() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 @APP.route('/logins_list', methods=['POST'])
 @flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
-def logins_list() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+def logins_list() -> typing.Tuple[typing.Any, int]:
     """
     Protect a view with jwt_required, which requires a valid access token
     in the request to access.
@@ -298,7 +303,7 @@ def logins_list() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
 
 @APP.route('/failures_list', methods=['POST'])
 @flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
-def failures_list() -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+def failures_list() -> typing.Tuple[typing.Any, int]:
     """
     Protect a view with jwt_required, which requires a valid access token
     in the request to access.
