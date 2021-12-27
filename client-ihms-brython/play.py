@@ -3293,7 +3293,6 @@ def game_master():
         # sending email : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-
     def send_welcome_email_callback(_, role_id):
         """ send_welcome_email_callback """
 
