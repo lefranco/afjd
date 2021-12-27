@@ -34,7 +34,7 @@ def get_news_content():
             return
         news_content = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -49,7 +49,7 @@ def get_news_content():
 def get_players():
     """ get_players returns an empy dict on error """
 
-    players_dict = dict()
+    players_dict = {}
 
     def reply_callback(req):
         nonlocal players_dict
@@ -64,7 +64,7 @@ def get_players():
             return
         players_dict = {v['pseudo']: int(k) for k, v in req_result.items()}
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -94,7 +94,7 @@ def get_players_data():
             return
         players_dict = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -109,7 +109,7 @@ def get_players_data():
 def get_games_data():
     """ get_games_data : returnes empty dict if problem """
 
-    games_dict = dict()
+    games_dict = {}
 
     def reply_callback(req):
         nonlocal games_dict
@@ -124,7 +124,7 @@ def get_games_data():
             return
         games_dict = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -155,7 +155,7 @@ def game_variant_content_reload(variant_name):
 
         variant_content_loaded = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -186,7 +186,7 @@ def game_position_reload(game_id):
 
         position_loaded = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -201,7 +201,7 @@ def game_position_reload(game_id):
 def tournament_position_reload(tournament_id):
     """ tournament_position_reload : returns empty dict on error """
 
-    positions_loaded = dict()
+    positions_loaded = {}
 
     def reply_callback(req):
         nonlocal positions_loaded
@@ -217,7 +217,7 @@ def tournament_position_reload(tournament_id):
 
         positions_loaded = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -301,7 +301,7 @@ def date_last_visit_load(game_id, visit_type):
 
         time_stamp = req_result['time_stamp']
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -343,7 +343,7 @@ def read_parameters(variant_name_loaded, interface_chosen):
     """ read_parameters """
 
     parameters_file_name = f"./variants/{variant_name_loaded}/{interface_chosen}/parameters.json"
-    with open(parameters_file_name, "r") as read_file2:
+    with open(parameters_file_name, "r", encoding="utf-8") as read_file2:
         parameters_read = json.load(read_file2)
 
     return parameters_read
@@ -358,7 +358,7 @@ def read_image(variant_name_loaded, interface_chosen):
 def get_allocations_data():
     """ get_allocations_data : returns empty dict on error """
 
-    allocation_data = dict()
+    allocation_data = {}
 
     def reply_callback(req):
         nonlocal allocation_data
@@ -374,7 +374,7 @@ def get_allocations_data():
 
         allocation_data = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -389,7 +389,7 @@ def get_allocations_data():
 def get_game_data(game):
     """ get_game_data : returns empty dict if problem """
 
-    game_data = dict()
+    game_data = {}
 
     def reply_callback(req):
         nonlocal game_data
@@ -405,7 +405,7 @@ def get_game_data(game):
 
         game_data = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -435,7 +435,7 @@ def get_game_id(name):
             return
         game_id = int(req_result)
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -450,7 +450,7 @@ def get_game_id(name):
 def get_tournaments_data():
     """ get_tournaments_data : returnes empty dict if problem """
 
-    tournaments_dict = dict()
+    tournaments_dict = {}
 
     def reply_callback(req):
         nonlocal tournaments_dict
@@ -465,7 +465,7 @@ def get_tournaments_data():
             return
         tournaments_dict = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -480,7 +480,7 @@ def get_tournaments_data():
 def get_assignments_data():
     """ get_assignments_data : returns empty dict on error """
 
-    assignment_data = dict()
+    assignment_data = {}
 
     def reply_callback(req):
         nonlocal assignment_data
@@ -496,7 +496,7 @@ def get_assignments_data():
 
         assignment_data = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -511,7 +511,7 @@ def get_assignments_data():
 def get_groupings_data():
     """ get_groupings_data : returns empty dict on error """
 
-    grouping_data = dict()
+    grouping_data = {}
 
     def reply_callback(req):
         nonlocal grouping_data
@@ -527,7 +527,7 @@ def get_groupings_data():
 
         grouping_data = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -542,7 +542,7 @@ def get_groupings_data():
 def game_parameters_reload(game):
     """ game_parameters_reload : returns empty dict if error"""
 
-    game_parameters_loaded = dict()
+    game_parameters_loaded = {}
 
     def reply_callback(req):
         nonlocal game_parameters_loaded
@@ -558,7 +558,7 @@ def game_parameters_reload(game):
 
         game_parameters_loaded = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -573,7 +573,7 @@ def game_parameters_reload(game):
 def tournament_data(game):
     """ tournament_data : returns empty dict if problem """
 
-    tournament_dict = dict()
+    tournament_dict = {}
 
     def reply_callback(req):
         nonlocal tournament_dict
@@ -589,7 +589,7 @@ def tournament_data(game):
 
         tournament_dict = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -604,7 +604,7 @@ def tournament_data(game):
 def tournament_incidents_reload(tournament_id):
     """ tournament_incidents_reload """
 
-    incidents = list()
+    incidents = []
 
     def reply_callback(req):
         nonlocal incidents
@@ -620,7 +620,7 @@ def tournament_incidents_reload(tournament_id):
 
         incidents = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -635,7 +635,7 @@ def tournament_incidents_reload(tournament_id):
 def get_moderators():
     """ get_moderators : returns empty list if problem """
 
-    moderators_list = list()
+    moderators_list = []
 
     def reply_callback(req):
         nonlocal moderators_list
@@ -650,7 +650,7 @@ def get_moderators():
             return
         moderators_list = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']

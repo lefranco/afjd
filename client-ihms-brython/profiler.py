@@ -37,7 +37,7 @@ class Profiler:
     """ Profiler """
 
     def __init__(self):
-        self._table = dict()
+        self._table = {}
         self._current = None
         self._start = time.time()
         self._stop = None

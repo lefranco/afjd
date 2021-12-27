@@ -82,11 +82,11 @@ def show_players_data():
     players_alloc = allocations_data['players_dict']
 
     # gather games to players
-    player_games_dict = dict()
+    player_games_dict = {}
     for player_id, games_id in players_alloc.items():
         player = players_dict[str(player_id)]['pseudo']
         if player not in player_games_dict:
-            player_games_dict[player] = list()
+            player_games_dict[player] = []
         for game_id in games_id:
             game = games_dict[str(game_id)]['name']
             player_games_dict[player].append(game)
@@ -146,13 +146,13 @@ def show_replacement_data():
     players_alloc = allocations_data['players_dict']
 
     # gather games to players
-    player_games_dict = dict()
+    player_games_dict = {}
     for player_id, games_id in players_alloc.items():
         if not players_dict[str(player_id)]['replace']:
             continue
         player = players_dict[str(player_id)]['pseudo']
         if player not in player_games_dict:
-            player_games_dict[player] = list()
+            player_games_dict[player] = []
         for game_id in games_id:
             game = games_dict[str(game_id)]['name']
             player_games_dict[player].append(game)
@@ -261,11 +261,11 @@ def show_game_masters_data():
     masters_alloc = allocations_data['game_masters_dict']
 
     # gather games to masters
-    master_games_dict = dict()
+    master_games_dict = {}
     for master_id, games_id in masters_alloc.items():
         master = players_dict[str(master_id)]['pseudo']
         if master not in master_games_dict:
-            master_games_dict[master] = list()
+            master_games_dict[master] = []
         for game_id in games_id:
             game = games_dict[str(game_id)]['name']
             master_games_dict[master].append(game)
@@ -323,7 +323,7 @@ def show_no_game_masters_data():
         return
 
     masters_alloc = allocations_data['game_masters_dict']
-    games_with_master = list()
+    games_with_master = []
     for load in masters_alloc.values():
         games_with_master += load
 

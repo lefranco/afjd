@@ -7,7 +7,7 @@ class MemoizeTable:
     """ MemoizeTable :  uses storage to share a dictionary """
 
     def __init__(self):
-        self._data = dict()
+        self._data = {}
 
     def __contains__(self, key):
         return key in self._data

@@ -292,7 +292,7 @@ class Zone(Highliteable):
         self._coast_type = coast_type
 
         # other zones one may access by fleet and army
-        self._neighbours = {u: list() for u in UnitTypeEnum}
+        self._neighbours = {u: [] for u in UnitTypeEnum}
 
         # variant
         self._variant = variant
@@ -381,7 +381,7 @@ class Role:
         self._identifier = identifier
 
         # start centers the role have
-        self._start_centers = list()
+        self._start_centers = []
 
     @property
     def identifier(self) -> int:
@@ -488,7 +488,7 @@ class Variant(Renderable):
         self._raw_variant_content = raw_variant_content
 
         # load the regions
-        self._regions = dict()
+        self._regions = {}
         for num, code in enumerate(self._raw_variant_content['regions']):
             number = num + 1
             region_type = RegionTypeEnum.from_code(code)
@@ -497,7 +497,7 @@ class Variant(Renderable):
             self._regions[number] = region
 
         # load the centers
-        self._centers = dict()
+        self._centers = {}
         for num, num_region in enumerate(self._raw_variant_content['centers']):
             number = num + 1
             region = self._regions[num_region]
@@ -506,7 +506,7 @@ class Variant(Renderable):
             self._centers[number] = center
 
         # load the roles (starts at zero)
-        self._roles = dict()
+        self._roles = {}
         for num in range(self._raw_variant_content['roles']['number']):
             number = num + 1
             role = Role(number)
@@ -515,7 +515,7 @@ class Variant(Renderable):
         assert len(self._raw_variant_content['start_centers']) == len(self._roles)
 
         # load start centers
-        self._start_centers = dict()
+        self._start_centers = {}
         for num, role_start_centers in enumerate(self._raw_variant_content['start_centers']):
             number = num + 1
             role = self._roles[number]
@@ -525,7 +525,7 @@ class Variant(Renderable):
                 role.start_centers.append(start_center)
 
         # load the coast types
-        self._coast_types = dict()
+        self._coast_types = {}
         for num in range(self._raw_variant_content['type_coasts']['number']):
             number = num + 1
             coast_type = CoastType(number)
@@ -534,7 +534,7 @@ class Variant(Renderable):
         # load the zones
 
         # first the standard zones
-        self._zones = dict()
+        self._zones = {}
         for num, region in enumerate(self._regions.values()):
             number = num + 1
             zone = Zone(number, region, None, self)
@@ -588,12 +588,12 @@ class Variant(Renderable):
         # load the parameters content
         self._raw_parameters_content = raw_parameters_content
 
-        self._name_table = dict()
-        self._full_name_table = dict()
-        self._colour_table = dict()
-        self._position_table = dict()
-        self._legend_position_table = dict()
-        self._role_add_table = dict()
+        self._name_table = {}
+        self._full_name_table = {}
+        self._colour_table = {}
+        self._position_table = {}
+        self._legend_position_table = {}
+        self._role_add_table = {}
 
         # load the map size
         data_dict = self._raw_parameters_content['map']
@@ -1141,11 +1141,11 @@ class Position(Renderable):
         self._variant = variant
 
         # dict that says which ownership owns a center
-        self._owner_table = dict()
+        self._owner_table = {}
 
         # ownerships
         ownerships = server_dict['ownerships']
-        self._ownerships = list()
+        self._ownerships = []
         for center_num_str, role_num in ownerships.items():
             center_num = int(center_num_str)
             center = variant._centers[center_num]
@@ -1155,11 +1155,11 @@ class Position(Renderable):
             self._owner_table[center] = ownership
 
         # dict that says which unit is on a region
-        self._occupant_table = dict()
+        self._occupant_table = {}
 
         # units
         units = server_dict['units']
-        self._units = list()
+        self._units = []
         for role_num_str, role_units in units.items():
             role_num = int(role_num_str)
             role = variant._roles[role_num]
@@ -1176,7 +1176,7 @@ class Position(Renderable):
 
         # forbiddens
         forbiddens = server_dict['forbiddens']
-        self._forbiddens = list()
+        self._forbiddens = []
         for region_num in forbiddens:
             region = variant._regions[region_num]
             forbidden = Forbidden(self, region)
@@ -1184,7 +1184,7 @@ class Position(Renderable):
 
         # dislodged_units
         dislodged_ones = server_dict['dislodged_ones']
-        self._dislodged_units = list()
+        self._dislodged_units = []
         for role_num_str, role_units in dislodged_ones.items():
             role_num = int(role_num_str)
             role = variant._roles[role_num]
@@ -1204,8 +1204,8 @@ class Position(Renderable):
 
     def erase_units(self) -> None:
         """ erase all units """
-        self._units = list()
-        self._occupant_table = dict()
+        self._units = []
+        self._occupant_table = {}
 
     def render(self, ctx, active=False) -> None:
 
@@ -1227,14 +1227,14 @@ class Position(Renderable):
 
     def save_json(self) -> str:
         """ export as list of dict """
-        json_data = list()
+        json_data = []
         for unit in self._units:
             json_data.append(unit.save_json())
         return json_data
 
     def save_json2(self) -> str:
         """ export as list of dict """
-        json_data = list()
+        json_data = []
         for ownership in self._ownerships:
             json_data.append(ownership.save_json())
         return json_data
@@ -1627,7 +1627,7 @@ class Order(Renderable):
     def save_json(self):
         """ Save to  dict """
 
-        json_dict = dict()
+        json_dict = {}
         if self._order_type is not None:
             json_dict.update({"order_type": self._order_type.value})
         if self._active_unit is not None:
@@ -1688,7 +1688,7 @@ class Orders(Renderable):
         self._position = position
 
         # these fake units are local here - they belong to orders, not the position
-        self._fake_units = dict()
+        self._fake_units = {}
 
         # fake units - they must go first
         #  (they serve for our handling of ihm)
@@ -1705,7 +1705,7 @@ class Orders(Renderable):
 
         # orders
         orders = server_dict['orders']
-        self._orders = list()
+        self._orders = []
         for _, _, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders:
 
             order_type = OrderTypeEnum.from_code(order_type_num)
@@ -1798,8 +1798,8 @@ class Orders(Renderable):
     def erase_orders(self) -> None:
         """ erase all orders """
 
-        self._orders = list()
-        self._fake_units = dict()
+        self._orders = []
+        self._fake_units = {}
 
     def rest_hold(self, role_id) -> None:
         """ set the unordered units orders to hold """
@@ -1827,7 +1827,7 @@ class Orders(Renderable):
     def save_json(self):
         """ export as list of dict """
         # Note : we do not export fake units
-        json_data = list()
+        json_data = []
         for order in self._orders:
             json_data.append(order.save_json())
         return json_data

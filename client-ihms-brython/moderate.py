@@ -38,7 +38,7 @@ def check_modo(pseudo):
 def get_tournament_players_data(tournament_id):
     """ get_tournament_players_data : returns empty dict if problem """
 
-    tournament_players_dict = dict()
+    tournament_players_dict = {}
 
     def reply_callback(req):
         nonlocal tournament_players_dict
@@ -54,7 +54,7 @@ def get_tournament_players_data(tournament_id):
 
         tournament_players_dict = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -69,7 +69,7 @@ def get_tournament_players_data(tournament_id):
 def get_all_games_roles_submitted_orders():
     """ get_all_games_roles_submitted_orders : returns empty dict on error """
 
-    dict_submitted_data = dict()
+    dict_submitted_data = {}
 
     def reply_callback(req):
         nonlocal dict_submitted_data
@@ -84,7 +84,7 @@ def get_all_games_roles_submitted_orders():
             return
         dict_submitted_data = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -163,7 +163,7 @@ def all_games(state_name):
         return
 
     # fill table game -> master
-    game_master_dict = dict()
+    game_master_dict = {}
     for master_id, games_id in masters_alloc.items():
         master = players_dict[str(master_id)]['pseudo']
         for game_id in games_id:
@@ -230,7 +230,7 @@ def all_games(state_name):
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
-        submitted_data = dict()
+        submitted_data = {}
         submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
         submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
         submitted_data['agreed'] = dict_submitted_data['dict_agreed'][str(game_id)]
@@ -415,7 +415,7 @@ def tournament_result():
         alert("Erreur chargement positions des parties du tournoi")
         return
 
-    points = dict()
+    points = {}
 
     for game_id_str, data in games_dict.items():
 
@@ -487,7 +487,7 @@ def tournament_result():
     tournament_incidents = common.tournament_incidents_reload(tournament_id)
     # there can be no incidents (if no incident of failed to load)
 
-    count = dict()
+    count = {}
     for game_id, role_num, _ in tournament_incidents:
         pseudo = gamerole2pseudo[(game_id, role_num)]
         if pseudo not in count:
@@ -555,7 +555,7 @@ def find_from_email_address():
             alert("Courriel à retrouver manquant")
             return
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -623,7 +623,7 @@ def display_email_address():
             alert("User name à contacter manquant")
             return
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -704,7 +704,7 @@ def display_phone_number():
             alert("User name à contacter manquant")
             return
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']

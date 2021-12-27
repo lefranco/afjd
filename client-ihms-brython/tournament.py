@@ -82,16 +82,16 @@ def check_batch(current_pseudo, games_to_create):
             return False
 
     # check players are in same number of games (fatal)
-    presence_table = dict()
+    presence_table = {}
     for allocations in games_to_create.values():
         for player_name in allocations.values():
             if player_name in presence_table:
                 presence_table[player_name] += 1
             else:
                 presence_table[player_name] = 1
-    for player_name1 in presence_table:
-        for player_name2 in presence_table:
-            if player_name2 != player_name1 and presence_table[player_name2] != presence_table[player_name1]:
+    for player_name1, occurences_player1 in presence_table.items():
+        for player_name2, occurences_player2 in presence_table.items():
+            if player_name2 != player_name1 and occurences_player2 != occurences_player1:
                 alert(f"Il semble que les joueurs '{player_name1}' et '{player_name2}' jouent dans un nombre de parties différent")
                 return False
 
@@ -133,7 +133,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
             return False
 
         # copy
-        json_dict = dict()
+        json_dict = {}
 
         json_dict.update(parameters_loaded)
 
@@ -355,7 +355,7 @@ def show_games():
     masters_alloc = allocations_data['game_masters_dict']
 
     # fill table game -> master
-    game_master_dict = dict()
+    game_master_dict = {}
     for master_id, games_id in masters_alloc.items():
         master = players_dict[str(master_id)]['pseudo']
         for game_id in games_id:
@@ -549,7 +549,7 @@ def show_ratings():
         alert("Erreur chargement positions des parties du tournoi")
         return
 
-    rating_dict = dict()
+    rating_dict = {}
 
     name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}
 
@@ -1085,7 +1085,7 @@ def delete_tournament():
 
         dialog.close()
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -1153,7 +1153,7 @@ def create_many_games():
                 dialog.close()
                 perform_batch(pseudo, game, games_to_create, DESCRIPTION)
 
-            games_to_create = dict()
+            games_to_create = {}
 
             content = str(reader.result)
             lines = content.splitlines()
@@ -1302,7 +1302,7 @@ def create_many_games():
     MY_SUB_PANEL <= form
 
 
-RATING_TABLE = dict()
+RATING_TABLE = {}
 
 
 def test_scoring():
@@ -1363,13 +1363,12 @@ def test_scoring():
     title_enter_centers = html.H4("Entrer les nombre de centres")
     form <= title_enter_centers
 
-    ratings_input = dict()
-    for num in variant_data.roles:
+    ratings_input = {}
+    for num, role in variant_data.roles.items():
 
         if num == 0:
             continue
 
-        role = variant_data.roles[num]
         role_name = variant_data.name_table[role]
 
         fieldset = html.FIELDSET()

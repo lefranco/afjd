@@ -52,7 +52,7 @@ def get_last_logins():
 
         logins_list = req_result['login_list']
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['USER']['HOST']
     port = config.SERVER_CONFIG['USER']['PORT']
@@ -84,7 +84,7 @@ def get_last_failures():
 
         failures_list = req_result['failure_list']
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['USER']['HOST']
     port = config.SERVER_CONFIG['USER']['PORT']
@@ -590,10 +590,10 @@ def rectify():
     position_data = mapping.Position(position_loaded, variant_data)
 
     # finds data about the dragged unit
-    unit_info_table = dict()
+    unit_info_table = {}
 
     # finds data about the dragged ownership
-    ownership_info_table = dict()
+    ownership_info_table = {}
 
     reserve_table = html.TABLE()
 

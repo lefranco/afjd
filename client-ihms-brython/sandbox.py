@@ -68,13 +68,13 @@ def create_initial_position():
     VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, variant_content_loaded, parameters_read)
 
     # get the position
-    position_loaded = {'ownerships': dict(), 'units': dict(), 'forbiddens': dict(), 'dislodged_ones': dict()}
+    position_loaded = {'ownerships': {}, 'units': {}, 'forbiddens': {}, 'dislodged_ones': {}}
 
     # digest the position
     POSITION_DATA = mapping.Position(position_loaded, VARIANT_DATA)
 
     # get the orders from server (actually no)
-    orders_loaded = {'fake_units': dict(), 'orders': dict()}
+    orders_loaded = {'fake_units': {}, 'orders': {}}
 
     # digest the orders
     ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA)
@@ -92,31 +92,31 @@ def import_position(new_position_data):
 
     # get loaded units
     loaded_units = new_position_data.save_json()
-    dict_loaded_units = dict()
+    dict_loaded_units = {}
     for loaded_unit in loaded_units:
         type_num = loaded_unit['type_unit']
         role_num = loaded_unit['role']
         zone_num = loaded_unit['zone']
         if role_num not in dict_loaded_units:
-            dict_loaded_units[role_num] = list()
+            dict_loaded_units[role_num] = []
         dict_loaded_units[role_num].append([type_num, zone_num])
 
     # get loaded centers for convenience
     loaded_ownerships = new_position_data.save_json2()
-    dict_loaded_ownerships = dict()
+    dict_loaded_ownerships = {}
     for loaded_ownership in loaded_ownerships:
         center_num = loaded_ownership['center_num']
         role_num = loaded_ownership['role']
         dict_loaded_ownerships[center_num] = role_num
 
     # get the position
-    position_imported = {'ownerships': dict_loaded_ownerships, 'units': dict_loaded_units, 'forbiddens': dict(), 'dislodged_ones': dict()}
+    position_imported = {'ownerships': dict_loaded_ownerships, 'units': dict_loaded_units, 'forbiddens': {}, 'dislodged_ones': {}}
 
     # copy position
     POSITION_DATA = mapping.Position(position_imported, VARIANT_DATA)
 
     # get the orders from server (actually no)
-    orders_loaded = {'fake_units': dict(), 'orders': dict()}
+    orders_loaded = {'fake_units': {}, 'orders': {}}
 
     # digest the orders
     ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA)
@@ -863,7 +863,7 @@ def sandbox():
         create_initial_position()
 
     # finds data about the dragged unit
-    unit_info_table = dict()
+    unit_info_table = {}
 
     reserve_table = html.TABLE()
 

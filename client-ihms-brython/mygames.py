@@ -25,7 +25,7 @@ MY_PANEL.attrs['style'] = 'display: table'
 def get_all_roles_allocated_to_player():
     """ get all roles the player has in all the games : returns empty dict if problem"""
 
-    dict_role_id = dict()
+    dict_role_id = {}
 
     def reply_callback(req):
         nonlocal dict_role_id
@@ -41,7 +41,7 @@ def get_all_roles_allocated_to_player():
         # a player has never more than one role
         dict_role_id = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -56,7 +56,7 @@ def get_all_roles_allocated_to_player():
 def date_last_visit_load_all_games(visit_type):
     """ date_last_visit_load_all_games : returns empty dct if problem """
 
-    dict_time_stamp = dict()
+    dict_time_stamp = {}
 
     def reply_callback(req):
         nonlocal dict_time_stamp
@@ -72,7 +72,7 @@ def date_last_visit_load_all_games(visit_type):
 
         dict_time_stamp = req_result['dict_time_stamp']
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -87,7 +87,7 @@ def date_last_visit_load_all_games(visit_type):
 def date_last_declarations():
     """ date_last_declarations : returns empty dict if problem """
 
-    dict_time_stamp = dict()
+    dict_time_stamp = {}
 
     def reply_callback(req):
         nonlocal dict_time_stamp
@@ -103,7 +103,7 @@ def date_last_declarations():
 
         dict_time_stamp = req_result['dict_time_stamp']
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -118,7 +118,7 @@ def date_last_declarations():
 def date_last_messages():
     """ date_last_messages : returns empty dict if problem """
 
-    dict_time_stamp = dict()
+    dict_time_stamp = {}
 
     def reply_callback(req):
         nonlocal dict_time_stamp
@@ -134,7 +134,7 @@ def date_last_messages():
 
         dict_time_stamp = req_result['dict_time_stamp']
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -149,7 +149,7 @@ def date_last_messages():
 def get_all_player_games_roles_submitted_orders():
     """ get_all_player_games_roles_submitted_orders : retuens empty dict if problem """
 
-    dict_submitted_data = dict()
+    dict_submitted_data = {}
 
     def reply_callback(req):
         nonlocal dict_submitted_data
@@ -164,7 +164,7 @@ def get_all_player_games_roles_submitted_orders():
             return
         dict_submitted_data = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -194,7 +194,7 @@ def get_player_id(pseudo):
             return
         player_id = int(req_result)
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['PLAYER']['HOST']
     port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -225,7 +225,7 @@ def get_player_games_playing_in(player_id):
 
         player_games_dict = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -389,7 +389,7 @@ def my_games(state_name):
             role_id = None
         data['role_played'] = role_id
 
-        submitted_data = dict()
+        submitted_data = {}
         submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
         submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
         submitted_data['agreed'] = dict_submitted_data['dict_agreed'][str(game_id)]
