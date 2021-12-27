@@ -256,7 +256,7 @@ def c_diplo_namur(variant_data, ratings):
 def scoring(game_scoring, variant_data, ratings):
     """ scoring """
 
-    score_table = dict()
+    score_table = {}
 
     # selected scoring game parameter
     if game_scoring == 'CDIP':

@@ -41,7 +41,7 @@ def get_game_allocated_players(game_id):
         players_allocated_list = [int(k) for k, v in req_result.items() if v == -1]
         players_assigned_list = [int(k) for k, v in req_result.items() if v > 0]
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']

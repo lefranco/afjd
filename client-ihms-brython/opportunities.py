@@ -26,23 +26,23 @@ MY_PANEL.attrs['style'] = 'display: table'
 def get_recruiting_games():
     """ get_recruiting_games : retuens empty list if erroro or not game"""
 
-    recruiting_games_list = list()
+    recruiting_games_list = []
 
     def reply_callback(req):
         nonlocal recruiting_games_list
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupartion de la liste des parties qui recrutent : {req_result['message']}")
+                alert(f"Erreur à la récupération de la liste des parties qui recrutent : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupartion de la liste des parties qui recrutent : {req_result['msg']}")
+                alert(f"Problème à la récupération de la liste des parties qui recrutent : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
         recruiting_games_list = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -236,9 +236,9 @@ def my_opportunities():
 
             if field == 'current_state':
                 state_loaded = value
-                for possible_state in config.STATE_CODE_TABLE:
-                    if config.STATE_CODE_TABLE[possible_state] == state_loaded:
-                        state_loaded = possible_state
+                for possible_state_code, possible_state_desc in config.STATE_CODE_TABLE.items():
+                    if possible_state_desc == state_loaded:
+                        state_loaded = possible_state_code
                         break
                 value = state_loaded
 

@@ -245,7 +245,7 @@ def select_interface():
     for user_interface in interface.INTERFACE_TABLE[variant_name_loaded]:
 
         # get description
-        with open(f"./variants/{variant_name_loaded}/{user_interface}/README", "r") as file_ptr:
+        with open(f"./variants/{variant_name_loaded}/{user_interface}/README", "r", encoding="utf-8") as file_ptr:
             lines = file_ptr.readlines()
         description = html.DIV(Class='note')
         for line in lines:

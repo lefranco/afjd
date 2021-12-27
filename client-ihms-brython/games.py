@@ -543,7 +543,7 @@ def change_description_game():
 
             description_loaded = req_result['description']
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -662,7 +662,7 @@ def change_scoring_game():
 
             scoring_code_loaded = req_result['scoring']
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -796,7 +796,7 @@ def change_access_parameters_game():
             access_restriction_regularity_loaded = req_result['access_restriction_regularity']
             access_restriction_performance_loaded = req_result['access_restriction_performance']
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -947,7 +947,7 @@ def change_deadline_game():
             deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
             deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -1122,7 +1122,7 @@ def change_pace_parameters_game():
             cd_possible_removals_loaded = req_result['cd_possible_removals']
             play_weekend_loaded = req_result['play_weekend']
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -1367,7 +1367,7 @@ def change_state_game():
 
             state_loaded = req_result['current_state']
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -1441,9 +1441,9 @@ def change_state_game():
     fieldset <= legend_state
 
     input_state = html.SELECT(type="select-one", value="")
-    for possible_state in config.STATE_CODE_TABLE:
-        option = html.OPTION(possible_state)
-        if config.STATE_CODE_TABLE[possible_state] == state_loaded:
+    for possible_state_code, possible_state_code_desc in config.STATE_CODE_TABLE.items():
+        option = html.OPTION(possible_state_code)
+        if possible_state_code_desc == state_loaded:
             option.selected = True
         input_state <= option
     fieldset <= input_state

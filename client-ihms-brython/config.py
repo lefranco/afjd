@@ -16,19 +16,19 @@ DECLARATIONS_TYPE = 0
 MESSAGES_TYPE = 1
 
 # load servers list from json data file
-with open("./config/servers.json", "r") as read_file:
+with open("./config/servers.json", "r", encoding="utf-8") as read_file:
     SERVER_CONFIG = json.load(read_file)
 
 # load country list from json data file
-with open("./data/country_list.json", "r") as read_file:
+with open("./data/country_list.json", "r", encoding="utf-8") as read_file:
     COUNTRY_CODE_TABLE = json.load(read_file)
 
 # load timezone list from json data file
-with open("./data/timezone_list.json", "r") as read_file:
+with open("./data/timezone_list.json", "r", encoding="utf-8") as read_file:
     TIMEZONE_CODE_TABLE = json.load(read_file)
 
 # load scoring list from json data file
-with open("./data/scoring_list.json", "r") as read_file:
+with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
     SCORING_CODE_TABLE = json.load(read_file)
 
 # colours

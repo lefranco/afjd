@@ -510,7 +510,7 @@ def edit_account():
             nationality_loaded_code = req_result['nationality']
             timezone_loaded_code = req_result['time_zone']
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']

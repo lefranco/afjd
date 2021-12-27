@@ -68,20 +68,20 @@ VARIANT_DATA = None
 INFORCED_VARIANT_DATA = None
 
 # loaded in load_dynamic_stuff
-GAME_PARAMETERS_LOADED = dict()
+GAME_PARAMETERS_LOADED = {}
 GAME_STATUS = None
 POSITION_LOADED = None
 POSITION_DATA = None
 REPORT_LOADED = None
 
 # loaded in load_special_stuff
-GAME_PLAYERS_DICT = dict()
+GAME_PLAYERS_DICT = {}
 
 
 def game_incidents_reload(game_id):
     """ game_incidents_reload """
 
-    incidents = list()
+    incidents = []
 
     def reply_callback(req):
         nonlocal incidents
@@ -97,7 +97,7 @@ def game_incidents_reload(game_id):
 
         incidents = req_result['incidents']
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -128,7 +128,7 @@ def game_report_reload(game_id):
 
         report_loaded = req_result['content']
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -143,7 +143,7 @@ def game_report_reload(game_id):
 def game_transition_reload(game_id, advancement):
     """ game_transition_reload : returns empty dict if problem (or no data) """
 
-    transition_loaded = dict()
+    transition_loaded = {}
 
     def reply_callback(req):
         nonlocal transition_loaded
@@ -159,7 +159,7 @@ def game_transition_reload(game_id, advancement):
 
         transition_loaded = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -190,7 +190,7 @@ def game_orders_reload(game_id):
 
         orders_loaded = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -221,7 +221,7 @@ def game_communication_orders_reload(game_id):
 
         orders_loaded = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -343,7 +343,7 @@ def game_votes_reload(game_id):
 
         votes = req_result['votes']
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -596,9 +596,9 @@ def get_game_status():
     game_variant = GAME_PARAMETERS_LOADED['variant']
 
     state_loaded = GAME_PARAMETERS_LOADED['current_state']
-    for possible_state in config.STATE_CODE_TABLE:
-        if config.STATE_CODE_TABLE[possible_state] == state_loaded:
-            game_state_readable = possible_state
+    for possible_state_code, possible_state_desc in config.STATE_CODE_TABLE.items():
+        if possible_state_desc == state_loaded:
+            game_state_readable = possible_state_code
             break
 
     advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
@@ -680,7 +680,7 @@ def get_game_status_histo(variant_data, game_parameters_loaded, advancement_sele
 def get_game_players_data(game_id):
     """ get_game_players_data : returns empty dict if problem """
 
-    game_players_dict = dict()
+    game_players_dict = {}
 
     def reply_callback(req):
         nonlocal game_players_dict
@@ -696,7 +696,7 @@ def get_game_players_data(game_id):
 
         game_players_dict = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -711,7 +711,7 @@ def get_game_players_data(game_id):
 def get_roles_submitted_orders(game_id):
     """ get_roles_submitted_orders : returns empty dict if problem """
 
-    submitted_data = dict()
+    submitted_data = {}
 
     def reply_callback(req):
         nonlocal submitted_data
@@ -726,7 +726,7 @@ def get_roles_submitted_orders(game_id):
             return
         submitted_data = req_result
 
-    json_dict = dict()
+    json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
@@ -2557,7 +2557,7 @@ def negotiate():
     def messages_reload(game_id):
         """ messages_reload """
 
-        messages = list()
+        messages = []
 
         def reply_callback(req):
             nonlocal messages
@@ -2573,7 +2573,7 @@ def negotiate():
 
             messages = req_result['messages_list']
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -2615,7 +2615,7 @@ def negotiate():
 
     table = html.TABLE()
     row = html.TR()
-    selected = dict()
+    selected = {}
     for role_id_dest in range(VARIANT_CONTENT_LOADED['roles']['number'] + 1):
 
         # dest only if allowed
@@ -2780,7 +2780,7 @@ def declare():
     def declarations_reload(game_id):
         """ declarations_reload """
 
-        declarations = list()
+        declarations = []
 
         def reply_callback(req):
             nonlocal declarations
@@ -2796,7 +2796,7 @@ def declare():
 
             declarations = req_result['declarations_list']
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -3185,7 +3185,7 @@ def game_master():
 
             deadline_loaded = req_result['deadline']
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -3527,7 +3527,7 @@ def game_master():
             pseudo_list = [id2pseudo[int(k)] for k, v in req_result.items() if v == -1]
             return pseudo_list
 
-        json_dict = dict()
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
@@ -3594,7 +3594,7 @@ def game_master():
         return False
     votes = list(votes)
 
-    vote_values_table = dict()
+    vote_values_table = {}
     for _, role, vote_val in votes:
         vote_values_table[role] = bool(vote_val)
 
@@ -3851,7 +3851,7 @@ def supervise():
     def reload_game_admin_table(submitted_data, votes):
         """ reload_game_admin_table """
 
-        vote_values_table = dict()
+        vote_values_table = {}
         for _, role, vote_val in votes:
             vote_values_table[role] = bool(vote_val)
 
@@ -3931,7 +3931,7 @@ def supervise():
     def refresh():
         """ refresh """
 
-        submitted_data = dict()
+        submitted_data = {}
         votes = None
 
         def refresh_subroutine():
@@ -3982,7 +3982,7 @@ def supervise():
             agreed_roles_list = submitted_data['agreed']
             needed_roles_list = submitted_data['needed']
 
-            missing_orders = list()
+            missing_orders = []
             for role_id in VARIANT_DATA.roles:
                 if role_id in needed_roles_list and role_id not in submitted_roles_list:
                     missing_orders.append(role_id)
@@ -3996,7 +3996,7 @@ def supervise():
                 message = f"Désordre civil pour {role_name}"
                 alterated = True
             else:
-                missing_agreements = list()
+                missing_agreements = []
                 for role_id in VARIANT_DATA.roles:
                     if role_id in submitted_roles_list and role_id not in agreed_roles_list:
                         missing_agreements.append(role_id)
@@ -4055,8 +4055,8 @@ def supervise():
         if SUPERVISE_REFRESH_TIMER is None:
             SUPERVISE_REFRESH_TIMER = timer.set_interval(refresh, SUPERVISE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
 
-    id2pseudo = dict()
-    role2pseudo = dict()
+    id2pseudo = {}
+    role2pseudo = {}
     log_stack = None
 
     # need to be connected
@@ -4311,7 +4311,7 @@ def show_players_in_game():
     MY_SUB_PANEL <= game_players_table
 
     # add the non allocated players
-    dangling_players = [p for p in GAME_PLAYERS_DICT if GAME_PLAYERS_DICT[p] == - 1]
+    dangling_players = [p for p, d in GAME_PLAYERS_DICT.items() if d == - 1]
     if dangling_players:
         MY_SUB_PANEL <= html.BR()
         info = html.EM("Les pseudos suivants sont alloués à la partie sans rôle : ")
@@ -4479,7 +4479,7 @@ def show_incidents_in_game():
         thead <= col
     game_incidents_table <= thead
 
-    counter = dict()
+    counter = {}
 
     for role_id, advancement, date_incident in game_incidents:
 

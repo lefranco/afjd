@@ -207,7 +207,7 @@ def check_token():
     port = config.SERVER_CONFIG['USER']['PORT']
     url = f"{host}:{port}/verify"
 
-    json_dict = dict()
+    json_dict = {}
 
     # check token : need token
     # note : since we access directly to the user server, we present the token in a slightly different way
