@@ -47,7 +47,7 @@ def check_scoring(scoring: str) -> bool:
     name = "scoring_list"
     full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
     assert full_name_file.exists(), "Missing file to check scorings"
-    with open(full_name_file, 'r') as file_ptr:
+    with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check scorings is not a dict"
     return scoring in json_data.values()
@@ -59,7 +59,7 @@ def default_scoring() -> str:
     name = "scoring_list"
     full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
     assert full_name_file.exists(), "Missing file to check scorings"
-    with open(full_name_file, 'r') as file_ptr:
+    with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check scorings is not a dict"
     return str(list(json_data.values())[0])
@@ -224,10 +224,8 @@ class Game:
         if 'deadline_hour' in json_dict and json_dict['deadline_hour'] is not None and json_dict['deadline_hour'] != self._deadline_hour:
             self._deadline_hour = json_dict['deadline_hour']
             # safety
-            if self._deadline_hour < 0:
-                self._deadline_hour = 0
-            if self._deadline_hour > 23:
-                self._deadline_hour = 23
+            self._deadline_hour = max(self._deadline_hour, 0)
+            self._deadline_hour = min(self._deadline_hour, 23)
             changed = True
 
         if 'deadline_sync' in json_dict and json_dict['deadline_sync'] is not None and json_dict['deadline_sync'] != self._deadline_sync:
@@ -296,22 +294,19 @@ class Game:
         if 'access_restriction_reliability' in json_dict and json_dict['access_restriction_reliability'] is not None and json_dict['access_restriction_reliability'] != self._access_restriction_reliability:
             self._access_restriction_reliability = json_dict['access_restriction_reliability']
             # safety
-            if self._access_restriction_reliability < 0:
-                self._access_restriction_reliability = 0
+            self._access_restriction_reliability = max(self._access_restriction_reliability, 0)
             changed = True
 
         if 'access_restriction_regularity' in json_dict and json_dict['access_restriction_regularity'] is not None and json_dict['access_restriction_regularity'] != self._access_restriction_regularity:
             self._access_restriction_regularity = json_dict['access_restriction_regularity']
             # safety
-            if self._access_restriction_regularity < 0:
-                self._access_restriction_regularity = 0
+            self._access_restriction_regularity = max(self._access_restriction_regularity, 0)
             changed = True
 
         if 'access_restriction_performance' in json_dict and json_dict['access_restriction_performance'] is not None and json_dict['access_restriction_performance'] != self._access_restriction_performance:
             self._access_restriction_performance = json_dict['access_restriction_performance']
             # safety
-            if self._access_restriction_performance < 0:
-                self._access_restriction_performance = 0
+            self._access_restriction_performance = max(self._access_restriction_performance, 0)
             changed = True
 
         # current_advancement cannot be set directly
@@ -319,19 +314,15 @@ class Game:
         if 'nb_max_cycles_to_play' in json_dict and json_dict['nb_max_cycles_to_play'] is not None and json_dict['nb_max_cycles_to_play'] != self._nb_max_cycles_to_play:
             self._nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play']
             # safety
-            if self._nb_max_cycles_to_play < MIN_CYCLES_TO_PLAY:
-                self._nb_max_cycles_to_play = MIN_CYCLES_TO_PLAY
-            if self._nb_max_cycles_to_play > MAX_CYCLES_TO_PLAY:
-                self._nb_max_cycles_to_play = MAX_CYCLES_TO_PLAY
+            self._nb_max_cycles_to_play = max(MIN_CYCLES_TO_PLAY, self._nb_max_cycles_to_play)
+            self._nb_max_cycles_to_play = min(MAX_CYCLES_TO_PLAY, self._nb_max_cycles_to_play)
             changed = True
 
         if 'victory_centers' in json_dict and json_dict['victory_centers'] is not None and json_dict['victory_centers'] != self._victory_centers:
             self._victory_centers = json_dict['victory_centers']
             # safety
-            if self._victory_centers < MIN_VICTORY_CENTERS:
-                self._victory_centers = MIN_VICTORY_CENTERS
-            if self._victory_centers > MAX_VICTORY_CENTERS:
-                self._victory_centers = MAX_VICTORY_CENTERS
+            self._victory_centers = max(MIN_VICTORY_CENTERS, self._victory_centers)
+            self._victory_centers = min(MAX_VICTORY_CENTERS, self._victory_centers)
             changed = True
 
         if 'current_state' in json_dict and json_dict['current_state'] is not None and json_dict['current_state'] != self._current_state:

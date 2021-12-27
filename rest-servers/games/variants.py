@@ -30,7 +30,7 @@ class Variant:
             mylogger.LOGGER.error("File variant is not a file %s", name)
             return None
 
-        with open(full_name_file, 'r') as file_ptr:
+        with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
             try:
                 json_data = json.load(file_ptr)
             except:  # noqa: E722 pylint: disable=bare-except
@@ -44,7 +44,7 @@ class Variant:
     def get_list() -> typing.List[str]:
         """ class lookup : return list of available variants """
 
-        variant_list = list()
+        variant_list = []
         for name_file in os.listdir(LOCATION):
 
             full_name_file = pathlib.Path(name_file)

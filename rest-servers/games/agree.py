@@ -48,7 +48,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
     # evaluate situation
 
     # situation: get ownerships
-    ownership_dict = dict()
+    ownership_dict = {}
     game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
     for _, center_num, role_num in game_ownerships:
         ownership_dict[str(center_num)] = role_num
@@ -67,7 +67,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
             unit_dict[str(role_num)].append([type_num, zone_num])
 
     # situation: get forbiddens
-    forbidden_list = list()
+    forbidden_list = []
     game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
     for _, region_num in game_forbiddens:
         forbidden_list.append(region_num)
@@ -82,7 +82,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
     situation_dict_json = json.dumps(situation_dict)
 
     # evaluate orders
-    orders_list = list()
+    orders_list = []
     orders_from_game = orders.Order.list_by_game_id(sql_executor, game_id)
     for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders_from_game:
         orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
@@ -118,7 +118,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
     # position for transition
 
     # get ownerships
-    ownership_dict = dict()
+    ownership_dict = {}
     game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
     for _, center_num, role_num in game_ownerships:
         ownership_dict[str(center_num)] = role_num
@@ -136,7 +136,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
             unit_dict2[str(role_num)].append([type_num, zone_num])
 
     # get forbiddens
-    forbidden_list = list()
+    forbidden_list = []
     game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
     for _, region_num in game_forbiddens:
         forbidden_list.append(region_num)
@@ -233,7 +233,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
         active.update_database(sql_executor)
 
     # keep a copy of orders eligible for communication orders
-    communication_eligibles = list()
+    communication_eligibles = []
     for (_, _, order_type, zone_num, _, _) in orders.Order.list_by_game_id(sql_executor, game_id):
         if order_type in [4, 7]:
             communication_eligibles.append(zone_num)
@@ -251,7 +251,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
     # get communication orders
 
     # evaluate communication_orders (only the units with a hld of disperse order)
-    communication_orders_list = list()
+    communication_orders_list = []
     communication_orders_from_game = communication_orders.CommunicationOrder.list_by_game_id(sql_executor, game_id)
     for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in communication_orders_from_game:
         if active_unit_zone_num in communication_eligibles:
@@ -401,7 +401,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: bool, names: str, sq
         return True, adj_status, adj_message
 
     # get all messages
-    adj_messages: typing.List[str] = list()
+    adj_messages: typing.List[str] = []
 
     # keep list of messages
     adj_messages.append(adj_message)

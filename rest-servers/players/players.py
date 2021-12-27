@@ -33,7 +33,7 @@ def check_country(country: str) -> bool:
     name = "country_list"
     full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
     assert full_name_file.exists(), "Missing file to check countries"
-    with open(full_name_file, 'r') as file_ptr:
+    with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check countries is not a dict"
     return country in json_data.values()
@@ -45,7 +45,7 @@ def default_country() -> str:
     name = "country_list"
     full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
     assert full_name_file.exists(), "Missing file to check countries"
-    with open(full_name_file, 'r') as file_ptr:
+    with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check countries is not a dict"
     return str(list(json_data.values())[0])
@@ -57,7 +57,7 @@ def check_timezone(timezone: str) -> bool:
     name = "timezone_list"
     full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
     assert full_name_file.exists(), "Missing file to check timezones"
-    with open(full_name_file, 'r') as file_ptr:
+    with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check timezones is not a dict"
     return timezone in json_data.values()
@@ -69,7 +69,7 @@ def default_timezone() -> str:
     name = "timezone_list"
     full_name_file = pathlib.Path(LOCATION, name).with_suffix(EXTENSION)
     assert full_name_file.exists(), "Missing file to check timezones"
-    with open(full_name_file, 'r') as file_ptr:
+    with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
         json_data = json.load(file_ptr)
     assert isinstance(json_data, dict), "File to check timezones is not a dict"
     return str(list(json_data.values())[0])
