@@ -15,9 +15,9 @@ import common
 OPTIONS = ['accueil', 'liens', 'support', 'foire aux question', 'coin technique', 'choix d\'interface']
 
 NOTE_CONTENT_STATED = """
-Bienvenue dans la version bêta du site Diplomania.
-Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu. Une version avec un design plus élaboré est espérée pour plus tard.
-Merci de nous remonter vos remarques sur le forum de Diplomania ou sur le serveur Discord.
+Bienvenue dans la première version du site Diplomania.
+Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu.
+Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/liens) ou sur le serveur Discord.
 """
 
 
