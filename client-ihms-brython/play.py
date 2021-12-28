@@ -3726,11 +3726,8 @@ def game_master():
         row <= col
 
         col = html.TD()
-        input_send_welcome_email = ""
-        if role_id in needed_roles_list:
-            if role_id not in submitted_roles_list:
-                input_send_welcome_email = html.INPUT(type="submit", value="courriel de bienvenue")
-                input_send_welcome_email.bind("click", lambda e, r=role_id: send_welcome_email_callback(e, r))
+        input_send_welcome_email = html.INPUT(type="submit", value="courriel de bienvenue")
+        input_send_welcome_email.bind("click", lambda e, r=role_id: send_welcome_email_callback(e, r))
         col <= input_send_welcome_email
         row <= col
 
