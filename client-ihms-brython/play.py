@@ -3802,7 +3802,7 @@ def game_master():
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
-    MY_SUB_PANEL <= html.DIV("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie temps réel). Ce, à partir de maintenant si la date limite est passée. Pour une gestion plus fine de cette date limite vous devez éditer la partie.", Class='note')
+    MY_SUB_PANEL <= html.DIV("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie temps réel). Pour une gestion plus fine de cette date limite vous devez éditer la partie.", Class='note')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
