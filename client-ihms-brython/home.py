@@ -66,15 +66,22 @@ def show_links():
     link1 <= "Diplomania : Le site officiel de l'Association Francophone des Joueurs de Diplomacy (brique sociale)"
     MY_SUB_PANEL <= link1
 
-    title11 = html.H4("Parrainage")
-    MY_SUB_PANEL <= title11
+    title2 = html.H4("Parrainage")
+    MY_SUB_PANEL <= title2
 
-    link11 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
-    link11 <= "Participer au financement du développement du site"
-    MY_SUB_PANEL <= link11
+    link2 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
+    link2 <= "Participer au financement du développement du site"
+    MY_SUB_PANEL <= link2
 
-    title5 = html.H4("Copinage")
-    MY_SUB_PANEL <= title5
+    title3 = html.H4("Document d'interface de l'API")
+    MY_SUB_PANEL <= title3
+
+    link3 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
+    link3 <= "Si vous voulez vous aussi développer votre front end..."
+    MY_SUB_PANEL <= link3
+
+    title4 = html.H4("Copinage")
+    MY_SUB_PANEL <= title4
 
     link4 = html.A(href="https://visitercracovie.wordpress.com/", target="_blank")
     link4 <= "Si vous savez pas quoi faire pendant vos vacances..."
