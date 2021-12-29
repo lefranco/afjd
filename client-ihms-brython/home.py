@@ -226,8 +226,7 @@ def select_interface():
         InfoDialog("OK", f"Interface sélectionnée pour la variante {variant_name_loaded} : {user_interface}", remove_after=config.REMOVE_AFTER)
 
         # we do not go back to where we started
-        #MY_SUB_PANEL.clear()
-        #select_interface()
+        # this is intended otherwise the new maps are not active
 
     title1 = html.H3("Choix d'interface")
     MY_SUB_PANEL <= title1
