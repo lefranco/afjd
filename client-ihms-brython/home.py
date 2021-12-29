@@ -225,9 +225,9 @@ def select_interface():
         interface.set_interface(variant_name_loaded, user_interface)
         InfoDialog("OK", f"Interface sélectionnée pour la variante {variant_name_loaded} : {user_interface}", remove_after=config.REMOVE_AFTER)
 
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        select_interface()
+        # we do not go back to where we started
+        #MY_SUB_PANEL.clear()
+        #select_interface()
 
     title1 = html.H3("Choix d'interface")
     MY_SUB_PANEL <= title1
