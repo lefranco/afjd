@@ -3720,7 +3720,7 @@ def game_master():
         input_civil_disorder = ""
         if role_id in needed_roles_list:
             if role_id not in submitted_roles_list:
-                input_civil_disorder = html.INPUT(type="submit", value="mettre en désordre civil")
+                input_civil_disorder = html.INPUT(type="submit", value="désordre civil")
                 input_civil_disorder.bind("click", lambda e, r=role_id: civil_disorder_callback(e, r))
         col <= input_civil_disorder
         row <= col
@@ -3771,7 +3771,7 @@ def game_master():
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
                 if role_id not in agreed_roles_list:
-                    input_force_agreement = html.INPUT(type="submit", value="forcer son accord")
+                    input_force_agreement = html.INPUT(type="submit", value="forcer accord")
                     input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
         col <= input_force_agreement
         row <= col
