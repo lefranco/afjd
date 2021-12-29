@@ -3238,8 +3238,8 @@ def game_master():
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def send_recall_email_callback(_, role_id):
-        """ send_recall_email_callback """
+    def send_recall_orders_email_callback(_, role_id):
+        """ send_recall_orders_email_callback """
 
         pseudo_there = None
 
@@ -3248,14 +3248,14 @@ def game_master():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à l'envoi de courrier électronique message de rappel : {req_result['message']}")
+                    alert(f"Erreur à l'envoi de courrier électronique message de rappel (ordres présents) : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à l'envoi de courrier électronique message de rappel: {req_result['msg']}")
+                    alert(f"Problème à l'envoi de courrier électronique message de rappel (ordres présents) : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", f"Message de rappel émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Message de rappel (manque ordres) émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
 
         subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
@@ -3265,6 +3265,61 @@ def game_master():
         body = "Bonjour !"
         body += "\n"
         body += "Il manque vos ordres et la date limite est passée. Merci d'aviser rapidement !"
+        body += "\n"
+        body += f"Pour rappel votre rôle est {role_name}."
+        body += "\n"
+        body += "Pour se rendre directement sur la partie :\n"
+        body += f"https://diplomania-gen.fr?game={GAME}"
+
+        player_id_str = role2pseudo[role_id]
+        player_id = int(player_id_str)
+        pseudo_there = id2pseudo[player_id]
+
+        addressed_id = PLAYERS_DICT[pseudo_there]
+        addressees = [addressed_id]
+
+        json_dict = {
+            'pseudo': PSEUDO,
+            'addressees': " ".join([str(a) for a in addressees]),
+            'subject': subject,
+            'body': body,
+            'force': True,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+
+        # sending email : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def send_recall_ready_email_callback(_, role_id):
+        """ send_recall_ready_email_callback """
+
+        pseudo_there = None
+
+        def reply_callback(req):
+            nonlocal pseudo_there
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'envoi de courrier électronique message de rappel (prêt à résoudre) : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'envoi de courrier électronique message de rappel (prêt à résoudre) : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            InfoDialog("OK", f"Message de rappel (manque prêt à résoudre) émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
+
+        subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
+
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
+
+        body = "Bonjour !"
+        body += "\n"
+        body += "Il manque votre confirmation d'être prêt à résoudre et la date limite est passée. Merci d'aviser rapidement !"
         body += "\n"
         body += f"Pour rappel votre rôle est {role_name}."
         body += "\n"
@@ -3637,6 +3692,12 @@ def game_master():
         row <= col
 
         col = html.TD()
+        input_send_welcome_email = html.INPUT(type="submit", value="courriel bienvenue")
+        input_send_welcome_email.bind("click", lambda e, r=role_id: send_welcome_email_callback(e, r))
+        col <= input_send_welcome_email
+        row <= col
+
+        col = html.TD()
         flag = ""
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
@@ -3650,8 +3711,8 @@ def game_master():
         input_send_recall_email = ""
         if role_id in needed_roles_list:
             if role_id not in submitted_roles_list:
-                input_send_recall_email = html.INPUT(type="submit", value="courriel de rappel")
-                input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_email_callback(e, r))
+                input_send_recall_email = html.INPUT(type="submit", value="courriel rappel ordres")
+                input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_orders_email_callback(e, r))
         col <= input_send_recall_email
         row <= col
 
@@ -3716,6 +3777,16 @@ def game_master():
         row <= col
 
         col = html.TD()
+        input_send_recall_email = ""
+        if role_id in needed_roles_list:
+            if role_id in submitted_roles_list:
+                if role_id not in agreed_roles_list:
+                    input_send_recall_email = html.INPUT(type="submit", value="courriel rappel prêt")
+                    input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_ready_email_callback(e, r))
+        col <= input_send_recall_email
+        row <= col
+
+        col = html.TD()
         flag = ""
         if role_id in vote_values_table:
             if vote_values_table[role_id]:
@@ -3723,12 +3794,6 @@ def game_master():
             else:
                 flag = html.IMG(src="./images/continue.jpg", title="Continuer la partie")
         col <= flag
-        row <= col
-
-        col = html.TD()
-        input_send_welcome_email = html.INPUT(type="submit", value="courriel de bienvenue")
-        input_send_welcome_email.bind("click", lambda e, r=role_id: send_welcome_email_callback(e, r))
-        col <= input_send_welcome_email
         row <= col
 
         game_admin_table <= row
