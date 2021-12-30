@@ -62,6 +62,10 @@ SENDMAIL_PARSER.add_argument('subject', type=str, required=True)
 SENDMAIL_PARSER.add_argument('body', type=str, required=True)
 SENDMAIL_PARSER.add_argument('force', type=int, required=True)
 
+SENDMAIL_PARSER2 = flask_restful.reqparse.RequestParser()
+SENDMAIL_PARSER2.add_argument('subject', type=str, required=True)
+SENDMAIL_PARSER2.add_argument('body', type=str, required=True)
+
 NEWS_PARSER = flask_restful.reqparse.RequestParser()
 NEWS_PARSER.add_argument('pseudo', type=str, required=True)
 NEWS_PARSER.add_argument('content', type=str, required=True)
@@ -528,6 +532,34 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         nb_mails = len(addressees)
         data = {'msg': f"Ok {nb_mails} email(s) successfully sent"}
+        return data, 200
+
+
+EMAIL_SUPPORT = "jeremie.lefrancois@gmail.com"
+
+
+@API.resource('/mail-support')
+class MailSupportRessource(flask_restful.Resource):  # type: ignore
+    """ MailSupportRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Sends an email to support
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/mail-support - POST - sending email to support")
+
+        args = SENDMAIL_PARSER2.parse_args(strict=True)
+
+        subject = args['subject']
+        body = args['body']
+
+        status = mailer.send_mail(subject, body, [EMAIL_SUPPORT])
+        if not status:
+            flask_restful.abort(400, msg="Failed to send message to support")
+
+        data = {'msg': "Ok email successfully sent to support"}
         return data, 200
 
 
