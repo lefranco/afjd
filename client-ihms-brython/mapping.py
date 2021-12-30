@@ -1318,12 +1318,12 @@ class Position(Renderable):
 
     def role_ratings(self):
         """ a rating of roles """
-        raw_dict = {self._variant.name_table[r]: len([o for o in self._ownerships if o.role == r]) for r in {o.role for o in self._ownerships}}
+        raw_dict = {self._variant.name_table[self._variant.roles[i]]: len([o for o in self._ownerships if o.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0}
         return {r: raw_dict[r] for r in sorted(raw_dict.keys(), key=lambda r: raw_dict[r], reverse=True)}
 
     def role_colours(self):
         """ a rating of roles """
-        return {self._variant.name_table[r]: self._variant.colour_table[r] for r in {o.role for o in self._ownerships}}
+        return {self._variant.name_table[r]: self._variant.colour_table[r] for r in self._variant.roles.values()}
 
     def add_unit(self, unit: Unit):
         """ add_unit (sandbox and rectification)"""
