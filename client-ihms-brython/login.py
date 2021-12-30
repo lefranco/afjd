@@ -12,7 +12,6 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 import common
-import mygames
 import index  # circular import
 
 MY_PANEL = html.DIV(id="login")
