@@ -197,7 +197,7 @@ def create_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_replace = html.LEGEND("D'accord pour remplacer - à effacer après avoir été mis dans une partie de remplacement !", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandonné ?")
+    legend_replace = html.LEGEND("D'accord pour remplacer - ATTENTION ENGAGEMENT A REMPLACER DANS N'IMPORTE QUELLE PARTIE !", title="Pouvons-nous vous mettre DIRECTEMENT dans une partie pour remplacer un joueur qui a abandonné (ne pas cocher à la légère) ?")
     fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_replace
@@ -640,7 +640,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_replace = html.LEGEND("D'accord pour remplacer - à effacer après avoir été mis dans une partie de remplacement !", title="Pouvons-nous vous mettre dans une partie pour remplacer un joueur qui a abandoné ?")
+    legend_replace = html.LEGEND("D'accord pour remplacer - ATTENTION ENGAGEMENT A REMPLACER DANS N'IMPORTE QUELLE PARTIE !", title="Pouvons-nous vous mettre DIRECTEMENT dans une partie pour remplacer un joueur qui a abandonné (ne pas cocher à la légère) ?")
     fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
     fieldset <= input_replace
