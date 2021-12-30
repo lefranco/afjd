@@ -29,6 +29,8 @@ MAX_LEN_TOURNAMENT_NAME = 50
 
 INPUT_FILE = None
 
+TOURNAMENT_DICT = None
+
 
 def check_batch(current_pseudo, games_to_create):
     """ check_batch """
@@ -327,13 +329,15 @@ def show_games():
 
     game = storage['GAME']
 
-    tournament_dict = common.tournament_data(game)
-    if not tournament_dict:
-        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-        return
+    global TOURNAMENT_DICT
+    if not TOURNAMENT_DICT:
+        TOURNAMENT_DICT = common.tournament_data(game)
+        if not TOURNAMENT_DICT:
+            alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+            return
 
-    tournament_name = tournament_dict['name']
-    games_in = tournament_dict['games']
+    tournament_name = TOURNAMENT_DICT['name']
+    games_in = TOURNAMENT_DICT['games']
 
     games_dict = common.get_games_data()
     if not games_dict:
@@ -529,14 +533,16 @@ def show_ratings():
 
     game = storage['GAME']
 
-    tournament_dict = common.tournament_data(game)
-    if not tournament_dict:
-        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-        return
+    global TOURNAMENT_DICT
+    if not TOURNAMENT_DICT:
+        TOURNAMENT_DICT = common.tournament_data(game)
+        if not TOURNAMENT_DICT:
+            alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+            return
 
-    tournament_name = tournament_dict['name']
-    tournament_id = tournament_dict['identifier']
-    games_in = tournament_dict['games']
+    tournament_name = TOURNAMENT_DICT['name']
+    tournament_id = TOURNAMENT_DICT['identifier']
+    games_in = TOURNAMENT_DICT['games']
 
     games_dict = common.get_games_data()
     if not games_dict:
@@ -671,13 +677,15 @@ def show_incidents():
 
     game = storage['GAME']
 
-    tournament_dict = common.tournament_data(game)
-    if not tournament_dict:
-        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-        return
+    global TOURNAMENT_DICT
+    if not TOURNAMENT_DICT:
+        TOURNAMENT_DICT = common.tournament_data(game)
+        if not TOURNAMENT_DICT:
+            alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+            return
 
-    tournament_name = tournament_dict['name']
-    tournament_id = tournament_dict['identifier']
+    tournament_name = TOURNAMENT_DICT['name']
+    tournament_id = TOURNAMENT_DICT['identifier']
 
     games_dict = common.get_games_data()
     if not games_dict:
@@ -967,14 +975,16 @@ def edit_tournament():
 
     # get the tournament_id
 
-    tournament_dict = common.tournament_data(game)
-    if not tournament_dict:
-        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-        return
+    global TOURNAMENT_DICT
+    if not TOURNAMENT_DICT:
+        TOURNAMENT_DICT = common.tournament_data(game)
+        if not TOURNAMENT_DICT:
+            alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+            return
 
-    tournament_name = tournament_dict['name']
-    tournament_id = tournament_dict['identifier']
-    games_in = tournament_dict['games']
+    tournament_name = TOURNAMENT_DICT['name']
+    tournament_id = TOURNAMENT_DICT['identifier']
+    games_in = TOURNAMENT_DICT['games']
 
     # get the games
     games_dict = common.get_games_data()
@@ -1117,12 +1127,14 @@ def delete_tournament():
         alert("Il faut se connecter au préalable")
         return
 
-    tournament_dict = common.tournament_data(game)
-    if not tournament_dict:
-        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-        return
+    global TOURNAMENT_DICT
+    if not TOURNAMENT_DICT:
+        TOURNAMENT_DICT = common.tournament_data(game)
+        if not TOURNAMENT_DICT:
+            alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+            return
 
-    tournament_name = tournament_dict['name']
+    tournament_name = TOURNAMENT_DICT['name']
 
     form = html.FORM()
 
@@ -1529,7 +1541,15 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = OPTIONS[0]
+
+    ITEM_NAME_SELECTED = 'créer un tournoi'
+
+    if 'GAME' in storage:
+        game = storage['GAME']
+        global TOURNAMENT_DICT
+        TOURNAMENT_DICT = common.tournament_data(game)
+        if TOURNAMENT_DICT:
+            ITEM_NAME_SELECTED = 'parties du tournoi'
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
