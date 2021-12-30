@@ -20,7 +20,7 @@ import memoize
 import index  # circular import
 
 
-OPTIONS = ['les parties', 'le classement', 'les retards', 'créer le tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'créer plusieurs parties', 'tester un scorage']
+OPTIONS = ['parties du tournoi', 'classement du tournoi', 'retards du tournoi', 'créer un tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'les tournois du site', 'créer plusieurs parties', 'tester un scorage']
 
 DESCRIPTION = "partie créée par batch"
 
@@ -1135,6 +1135,76 @@ def delete_tournament():
     MY_SUB_PANEL <= form
 
 
+def show_tournaments_data():
+    """ show_tournaments_data """
+
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    # get the players (masters)
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    # get the tournaments
+    tournaments_dict = common.get_tournaments_data()
+    if not tournaments_dict:
+        alert("Pas de tournoi ou erreur chargement dictionnaire tournois")
+        return
+
+    # get the assignments
+    assignments_dict = common.get_assignments_data()
+    if not assignments_dict:
+        alert("Pas d'assignations ou erreur chargement dictionnaire assignations")
+        return
+
+    # get the groupings
+    groupings_dict = common.get_groupings_data()
+    if not groupings_dict:
+        alert("Pas de groupements ou erreur chargement dictionnaire groupements")
+        return
+
+    tournaments_table = html.TABLE()
+
+    fields = ['tournament', 'director', 'games']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'tournament': 'tournoi', 'director': 'directeur', 'games': 'parties'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    tournaments_table <= thead
+
+    count = 0
+    for tournament_id, data in sorted(tournaments_dict.items(), key=lambda m: m[0].upper()):
+        row = html.TR()
+        for field in fields:
+            if field == 'tournament':
+                value = data['name']
+            if field == 'director':
+                director_id = assignments_dict[str(tournament_id)]
+                director_pseudo = players_dict[str(director_id)]['pseudo']
+                value = director_pseudo
+            if field == 'games':
+                games_ids = groupings_dict[str(tournament_id)]
+                games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
+                value = '/'.join(games_names)
+            col = html.TD(value)
+            row <= col
+
+        tournaments_table <= row
+        count += 1
+
+    MY_SUB_PANEL <= html.H3("Les tournois")
+    MY_SUB_PANEL <= tournaments_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} tournois")
+
+
 def create_many_games():
     """ create_many_games """
 
@@ -1416,18 +1486,20 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    if item_name == 'les parties':
+    if item_name == 'parties du tournoi':
         show_games()
-    if item_name == 'le classement':
+    if item_name == 'classement du tournoi':
         show_ratings()
-    if item_name == 'les retards':
+    if item_name == 'retards du tournoi':
         show_incidents()
-    if item_name == 'créer le tournoi':
+    if item_name == 'créer un tournoi':
         create_tournament()
     if item_name == 'éditer le tournoi':
         edit_tournament()
     if item_name == 'supprimer le tournoi':
         delete_tournament()
+    if item_name == 'les tournois du site':
+        show_tournaments_data()
     if item_name == 'créer plusieurs parties':
         create_many_games()
     if item_name == 'tester un scorage':

@@ -17,7 +17,7 @@ import pairing    # noqa: E402
 import play    # noqa: E402
 import tournament    # noqa: E402
 import sandbox    # noqa: E402
-import lists    # noqa: E402
+import players    # noqa: E402
 import moderate    # noqa: E402
 import admin    # noqa: E402
 
@@ -29,7 +29,7 @@ H2 = html.DIV("Front end du site Diplomania (brique jeu)")
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'listes', 'modération', 'administration']
+OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'joueurs', 'modération', 'administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -111,8 +111,8 @@ def load_option(_, item_name):
         tournament.render(PANEL_MIDDLE)
     if item_name == 'bac à sable':
         sandbox.render(PANEL_MIDDLE)
-    if item_name == 'listes':
-        lists.render(PANEL_MIDDLE)
+    if item_name == 'joueurs':
+        players.render(PANEL_MIDDLE)
     if item_name == 'modération':
         moderate.render(PANEL_MIDDLE)
     if item_name == 'administration':

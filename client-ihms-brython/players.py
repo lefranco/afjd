@@ -2,15 +2,13 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import datetime
-
 from browser import html, alert  # pylint: disable=import-error
 
 import config
 import common
 
 
-OPTIONS = ['les inscrits', 'les joueurs', 'les remplaçants', 'les parties en attente', 'les parties en cours', 'les parties terminées', 'les arbitres', 'les parties sans arbitres', 'les tournois', 'les modérateurs', 'les courriels non confirmés']
+OPTIONS = ['inscrits', 'joueurs', 'remplaçants', 'arbitres', 'modérateurs', 'courriels non confirmés']
 
 
 def show_registered_data():
@@ -188,55 +186,6 @@ def show_replacement_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} remplaçants")
 
 
-def show_games_data(game_state_name):
-    """ show_games_data """
-
-    game_state = config.STATE_CODE_TABLE[game_state_name]
-
-    games_dict = common.get_games_data()
-    if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
-        return
-
-    games_table = html.TABLE()
-
-    fields = ['name', 'variant', 'deadline', 'current_advancement']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'name': 'nom', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'avancement'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    games_table <= thead
-
-    count = 0
-    for data in sorted(games_dict.values(), key=lambda g: g['name'].upper()):
-
-        # restrict to proper state
-        if data['current_state'] != game_state:
-            continue
-
-        row = html.TR()
-        for field in fields:
-            value = data[field]
-            if field == 'deadline':
-                deadline_loaded = value
-                datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
-                deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-                deadline_loaded_hour = f"{datetime_deadline_loaded.hour}:{datetime_deadline_loaded.minute}"
-                deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
-                value = deadline_loaded_str
-            col = html.TD(value)
-            row <= col
-        games_table <= row
-        count += 1
-
-    MY_SUB_PANEL <= html.H3(f"Les parties dans l'état : {game_state_name}")
-    MY_SUB_PANEL <= games_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} parties")
-
-
 def show_game_masters_data():
     """ show_game_masters_data """
 
@@ -299,129 +248,6 @@ def show_game_masters_data():
     MY_SUB_PANEL <= html.H3("Les arbitres")
     MY_SUB_PANEL <= masters_table
     MY_SUB_PANEL <= html.P(f"Il y a {count} arbitres")
-
-
-def show_no_game_masters_data():
-    """ show_no_game_masters_data """
-
-    # get the games
-    games_dict = common.get_games_data()
-    if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
-        return
-
-    # get the players (masters)
-    players_dict = common.get_players_data()
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-        return
-
-    # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
-    if not allocations_data:
-        alert("Erreur chargement allocations")
-        return
-
-    masters_alloc = allocations_data['game_masters_dict']
-    games_with_master = []
-    for load in masters_alloc.values():
-        games_with_master += load
-
-    no_game_masters_table = html.TABLE()
-
-    fields = ['game']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'game': 'partie'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    no_game_masters_table <= thead
-
-    for identifier, data in sorted(games_dict.items(), key=lambda g: g[1]['name'].upper()):
-
-        if int(identifier) in games_with_master:
-            continue
-
-        row = html.TR()
-        value = data['name']
-        col = html.TD(value)
-        row <= col
-        no_game_masters_table <= row
-
-    MY_SUB_PANEL <= html.H3("Les parties sans arbitre")
-    MY_SUB_PANEL <= no_game_masters_table
-
-
-def show_tournaments_data():
-    """ show_tournaments_data """
-
-    # get the games
-    games_dict = common.get_games_data()
-    if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
-        return
-
-    # get the players (masters)
-    players_dict = common.get_players_data()
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-        return
-
-    # get the tournaments
-    tournaments_dict = common.get_tournaments_data()
-    if not tournaments_dict:
-        alert("Pas de tournoi ou erreur chargement dictionnaire tournois")
-        return
-
-    # get the assignments
-    assignments_dict = common.get_assignments_data()
-    if not assignments_dict:
-        alert("Pas d'assignations ou erreur chargement dictionnaire assignations")
-        return
-
-    # get the groupings
-    groupings_dict = common.get_groupings_data()
-    if not groupings_dict:
-        alert("Pas de groupements ou erreur chargement dictionnaire groupements")
-        return
-
-    tournaments_table = html.TABLE()
-
-    fields = ['tournament', 'director', 'games']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'tournament': 'tournoi', 'director': 'directeur', 'games': 'parties'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    tournaments_table <= thead
-
-    count = 0
-    for tournament_id, data in sorted(tournaments_dict.items(), key=lambda m: m[0].upper()):
-        row = html.TR()
-        for field in fields:
-            if field == 'tournament':
-                value = data['name']
-            if field == 'director':
-                director_id = assignments_dict[str(tournament_id)]
-                director_pseudo = players_dict[str(director_id)]['pseudo']
-                value = director_pseudo
-            if field == 'games':
-                games_ids = groupings_dict[str(tournament_id)]
-                games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
-                value = '/'.join(games_names)
-            col = html.TD(value)
-            row <= col
-
-        tournaments_table <= row
-        count += 1
-
-    MY_SUB_PANEL <= html.H3("Les tournois")
-    MY_SUB_PANEL <= tournaments_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} tournois")
 
 
 def show_moderators():
@@ -518,27 +344,17 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    if item_name == 'les inscrits':
+    if item_name == 'inscrits':
         show_registered_data()
-    if item_name == 'les joueurs':
+    if item_name == 'joueurs':
         show_players_data()
-    if item_name == 'les remplaçants':
+    if item_name == 'remplaçants':
         show_replacement_data()
-    if item_name == 'les parties en attente':
-        show_games_data('en attente')
-    if item_name == 'les parties en cours':
-        show_games_data('en cours')
-    if item_name == 'les parties terminées':
-        show_games_data('terminée')
-    if item_name == 'les arbitres':
+    if item_name == 'arbitres':
         show_game_masters_data()
-    if item_name == 'les parties sans arbitres':
-        show_no_game_masters_data()
-    if item_name == 'les tournois':
-        show_tournaments_data()
-    if item_name == 'les modérateurs':
+    if item_name == 'modérateurs':
         show_moderators()
-    if item_name == 'les courriels non confirmés':
+    if item_name == 'courriels non confirmés':
         show_non_confirmed_data()
 
     global ITEM_NAME_SELECTED
