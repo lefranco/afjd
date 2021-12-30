@@ -531,6 +531,47 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/players-emails')
+class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
+    """ PlayerEmailsListRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Provides list of all pseudo (all players) and the emails
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/players-emails - GET - get getting all players pseudo and email")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # check user has right to add/remove moderator (admin)
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You are not allowed to get lists of emails!")
+
+        sql_executor = database.SqlExecutor()
+        players_list = players.Player.inventory(sql_executor)
+        del sql_executor
+
+        data = {p.pseudo: p.email for p in players_list}
+
+        return data, 200
+
+
 @API.resource('/emails')
 class EmailRessource(flask_restful.Resource):  # type: ignore
     """ EmailRessource """
