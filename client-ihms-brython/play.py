@@ -4829,8 +4829,8 @@ def render(panel_middle):
     global GAME_ID
     GAME_ID = storage['GAME_ID']
 
-    # Connecté mais pas joueur
-    # Pas connecté
+    # Connected but not player
+    # Not connected
     ITEM_NAME_SELECTED = 'position'
 
     global PSEUDO
