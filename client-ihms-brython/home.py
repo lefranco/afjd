@@ -20,7 +20,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['nouvelles', 'liens', 'voir les parties', 'déclarer un incident', 'foire aux question', 'coin technique', 'choix d\'interface']
+OPTIONS = ['nouvelles', 'liens', 'voir les parties', 'déclarer un incident', 'foire aux question', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
 
 NOTE_CONTENT_STATED = """
 Bienvenue dans la première version du site Diplomania.
@@ -594,6 +594,59 @@ def select_interface():
     MY_SUB_PANEL <= select_table
 
 
+def show_no_game_masters_data():
+    """ show_no_game_masters_data """
+
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    # get the players (masters)
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
+    masters_alloc = allocations_data['game_masters_dict']
+    games_with_master = []
+    for load in masters_alloc.values():
+        games_with_master += load
+
+    no_game_masters_table = html.TABLE()
+
+    fields = ['game']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'game': 'partie'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    no_game_masters_table <= thead
+
+    for identifier, data in sorted(games_dict.items(), key=lambda g: g[1]['name'].upper()):
+
+        if int(identifier) in games_with_master:
+            continue
+
+        row = html.TR()
+        value = data['name']
+        col = html.TD(value)
+        row <= col
+        no_game_masters_table <= row
+
+    MY_SUB_PANEL <= html.H3("Les parties sans arbitre")
+    MY_SUB_PANEL <= no_game_masters_table
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -630,6 +683,8 @@ def load_option(_, item_name):
         show_technical()
     if item_name == 'choix d\'interface':
         select_interface()
+    if item_name == 'parties sans arbitres':
+        show_no_game_masters_data()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
