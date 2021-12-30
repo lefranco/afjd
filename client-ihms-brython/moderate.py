@@ -3,26 +3,21 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
-import time
-import datetime
 
 from browser import html, ajax, alert  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 import common
 import interface
 import mapping
-import selection
 import memoize
 import scoring
-import index  # circular import
 
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['toutes les parties', 'résultats tournoi', 'retrouver à partir du courriel', 'récupérer un courriel', 'récupérer un téléphone']
+OPTIONS = ['résultats tournoi', 'retrouver à partir du courriel', 'récupérer un courriel', 'récupérer un téléphone']
 
 
 def check_modo(pseudo):
@@ -64,296 +59,6 @@ def get_tournament_players_data(tournament_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return tournament_players_dict
-
-
-def get_all_games_roles_submitted_orders():
-    """ get_all_games_roles_submitted_orders : returns empty dict on error """
-
-    dict_submitted_data = {}
-
-    def reply_callback(req):
-        nonlocal dict_submitted_data
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour toutes les parties possibles : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour toutes les parties possibles : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        dict_submitted_data = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/all-games-orders-submitted"
-
-    # get roles that submitted orders : need token (but may change)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return dict_submitted_data
-
-
-def all_games(state_name):
-    """all_games """
-
-    def select_game_callback(_, game_name, game_data_sel):
-        """ select_game_callback """
-
-        # action of selecting game
-        storage['GAME'] = game_name
-        game_id = game_data_sel[game_name][0]
-        storage['GAME_ID'] = game_id
-        game_variant = game_data_sel[game_name][1]
-        storage['GAME_VARIANT'] = game_variant
-
-        InfoDialog("OK", f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
-        selection.show_game_selected()
-
-        # action of going to game page
-        index.load_option(None, 'jouer la partie sélectionnée')
-
-    def again(state_name):
-        """ again """
-        MY_SUB_PANEL.clear()
-        all_games(state_name)
-
-    overall_time_before = time.time()
-
-    # title
-    title = html.H3(f"Parties dans l'état: {state_name}")
-    MY_SUB_PANEL <= title
-
-    state = config.STATE_CODE_TABLE[state_name]
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    games_dict = common.get_games_data()
-    if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
-        return
-
-    # get the players (masters)
-    players_dict = common.get_players_data()
-
-    if not players_dict:
-        alert("Erreur chargement dictionnaire des joueurs")
-        return
-
-    # get the link (allocations) of game masters
-    allocations_data = common.get_allocations_data()
-    if not allocations_data:
-        alert("Erreur chargement allocations")
-        return
-    masters_alloc = allocations_data['game_masters_dict']
-
-    dict_submitted_data = get_all_games_roles_submitted_orders()
-    if not dict_submitted_data:
-        alert("Erreur chargement des soumissions dans les parties")
-        return
-
-    # fill table game -> master
-    game_master_dict = {}
-    for master_id, games_id in masters_alloc.items():
-        master = players_dict[str(master_id)]['pseudo']
-        for game_id in games_id:
-            game = games_dict[str(game_id)]['name']
-            game_master_dict[game] = master
-
-    time_stamp_now = time.time()
-
-    games_table = html.TABLE()
-
-    fields = ['jump_here', 'go_away', 'master', 'variant', 'deadline', 'current_advancement', 'all_orders_submitted', 'all_agreed']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres', 'all_agreed': 'prêts'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    games_table <= thead
-
-    # create a table to pass information about selected game
-    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
-
-    number_games = 0
-    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0])):
-
-        if data['current_state'] != state:
-            continue
-
-        number_games += 1
-
-        game_id = int(game_id_str)
-
-        # variant is available
-        variant_name_loaded = data['variant']
-
-        # from variant name get variant content
-
-        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
-            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
-        else:
-            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-            if not variant_content_loaded:
-                return
-            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
-
-        # selected interface (user choice)
-        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
-
-        # parameters
-
-        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
-            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
-        else:
-            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
-            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
-
-        # build variant data
-
-        variant_name_loaded_str = str(variant_name_loaded)
-        if (variant_name_loaded_str, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
-            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)]
-        else:
-            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
-
-        submitted_data = {}
-        submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
-        submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
-        submitted_data['agreed'] = dict_submitted_data['dict_agreed'][str(game_id)]
-
-        data['master'] = None
-        data['all_orders_submitted'] = None
-        data['all_agreed'] = None
-        data['jump_here'] = None
-        data['go_away'] = None
-
-        row = html.TR()
-        for field in fields:
-
-            value = data[field]
-            colour = None
-
-            if field == 'jump_here':
-                game_name = data['name']
-                form = html.FORM()
-                input_jump_game = html.INPUT(type="submit", value=game_name)
-                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                form <= input_jump_game
-                value = form
-
-            if field == 'go_away':
-                link = html.A(href=f"?game={game_name}", target="_blank")
-                link <= game_name
-                value = link
-
-            if field == 'master':
-                game_name = data['name']
-                # some games do not have a game master
-                master_name = game_master_dict.get(game_name, '')
-                value = master_name
-
-            if field == 'deadline':
-                deadline_loaded = value
-                datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
-                deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-                deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
-                deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
-                value = deadline_loaded_str
-
-                time_unit = 60 if data['fast'] else 60 * 60
-                approach_duration = 24 * 60 * 60
-
-                # we are after deadline + grace
-                if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
-                    colour = config.PASSED_GRACE_COLOUR
-                # we are after deadline
-                elif time_stamp_now > deadline_loaded:
-                    colour = config.PASSED_DEADLINE_COLOUR
-                # deadline is today
-                elif time_stamp_now > deadline_loaded - approach_duration:
-                    colour = config.APPROACHING_DEADLINE_COLOUR
-
-            if field == 'current_advancement':
-                advancement_loaded = value
-                advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
-                advancement_season_readable = variant_data.name_table[advancement_season]
-                value = f"{advancement_season_readable} {advancement_year}"
-
-            if field == 'all_orders_submitted':
-                submitted_roles_list = submitted_data['submitted']
-                nb_submitted = len(submitted_roles_list)
-                needed_roles_list = submitted_data['needed']
-                nb_needed = len(needed_roles_list)
-                value = f"{nb_submitted}/{nb_needed}"
-                if nb_submitted >= nb_needed:
-                    # we have all orders : green
-                    colour = config.ALL_ORDERS_IN_COLOUR
-
-            if field == 'all_agreed':
-                agreed_roles_list = submitted_data['agreed']
-                nb_agreed = len(agreed_roles_list)
-                submitted_roles_list = submitted_data['submitted']
-                nb_submitted = len(submitted_roles_list)
-                value = f"{nb_agreed}/{nb_submitted}"
-                if nb_agreed >= nb_submitted:
-                    # we have all agreements : green
-                    colour = config.ALL_AGREEMENTS_IN_COLOUR
-
-            col = html.TD(value)
-            if colour is not None:
-                col.style = {
-                    'background-color': colour
-                }
-
-            row <= col
-
-        games_table <= row
-
-    MY_SUB_PANEL <= games_table
-    MY_SUB_PANEL <= html.BR()
-
-    # get GMT date and time
-    time_stamp = time.time()
-    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
-    special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
-    MY_SUB_PANEL <= special_info
-    MY_SUB_PANEL <= html.BR()
-
-    overall_time_after = time.time()
-    elapsed = overall_time_after - overall_time_before
-
-    stats = f"Temps de chargement de la page {elapsed} avec {number_games} partie(s)"
-    if number_games:
-        stats += f" soit {elapsed/number_games} par partie"
-
-    MY_SUB_PANEL <= html.DIV(stats, Class='load')
-    MY_SUB_PANEL <= html.BR()
-
-    for other_state_name in config.STATE_CODE_TABLE:
-
-        if other_state_name != state_name:
-
-            input_change_state = html.INPUT(type="submit", value=other_state_name)
-            input_change_state.bind("click", lambda _, s=other_state_name: again(s))
-
-            MY_SUB_PANEL <= input_change_state
-            MY_SUB_PANEL <= html.BR()
-            MY_SUB_PANEL <= html.BR()
 
 
 def tournament_result():
@@ -779,8 +484,6 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    if item_name == 'toutes les parties':
-        all_games('en cours')
     if item_name == 'résultats tournoi':
         tournament_result()
     if item_name == 'retrouver à partir du courriel':
