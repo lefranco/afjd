@@ -147,7 +147,7 @@ def declare_incident():
     if not players_dict:
         return
 
-    text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la date limite est ce soir ? Votre partie n'avance pas depuis des jours et il semble que votre arbitre se soit endormi ? Vous n'êtes pas convaincu par les explications de l'arbitre sur la résolution dans la partie ? Vous êtes persuadé qu'il y a de la triche quelque part...")
+    text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la date limite est ce soir ? Votre partie n'avance pas depuis des jours et il semble que votre arbitre se soit endormi ? Vous n'êtes pas convaincu par les explications de l'arbitre sur la résolution dans la partie ? Vous êtes persuadé qu'il y a de la triche quelque part ?")
     MY_SUB_PANEL <= text21
 
     text22 = html.P("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs) et n'oubliez pas de bien préciser une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu...")
