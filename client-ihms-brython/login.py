@@ -12,7 +12,8 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
 import common
-
+import mygames
+import index  # circular import
 
 MY_PANEL = html.DIV(id="login")
 MY_PANEL.attrs['style'] = 'display: table'
@@ -38,14 +39,15 @@ def login():
                 render(PANEL_MIDDLE)
 
                 return
+
             storage['PSEUDO'] = pseudo
             storage['JWT_TOKEN'] = req_result['AccessToken']
             time_stamp = time.time()
             storage['LOGIN_TIME'] = str(time_stamp)
             InfoDialog("OK", f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
-            show_login()
 
-            render(PANEL_MIDDLE)
+            # goto directly to page my games
+            index.load_option(None, 'mes parties')
 
         pseudo = input_pseudo.value
         if not pseudo:
