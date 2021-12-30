@@ -2,7 +2,9 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import html, alert  # pylint: disable=import-error
+import json
+
+from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -12,7 +14,7 @@ import config
 import common
 
 
-OPTIONS = ['accueil', 'liens', 'support', 'foire aux question', 'coin technique', 'choix d\'interface']
+OPTIONS = ['accueil', 'liens', 'déclarer un incident', 'foire aux question', 'coin technique', 'choix d\'interface']
 
 NOTE_CONTENT_STATED = """
 Bienvenue dans la première version du site Diplomania.
@@ -88,30 +90,112 @@ def show_links():
     MY_SUB_PANEL <= link4
 
 
-EMAIL_SUPPORT = "jeremie.lefrancois@gmail.com"
+MAX_LEN_GAME_NAME = 50
+MAX_LEN_EMAIL = 100
 
 
-def show_support():
-    """ show_support """
+def declare_incident():
+    """ declare_incident """
 
-    title4 = html.H3("Support")
+    def submit_incident_callback(_):
+        """ submit_incident_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'envoi de courrier électronique : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'envoi de courrier électronique : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+        subject = "Déclaration d'incident de la part du site https://diplomania-gen.fr (AFJD)"
+        body = ""
+        body += f"pseudo : {input_pseudo.value}"
+        body += "\n\n"
+        body += f"courriel : {input_email.value}"
+        body += "\n\n"
+        body += f"partie : {input_game.value}"
+        body += "\n\n"
+        body += f"description : {input_description.value}"
+        body += "\n\n"
+
+        json_dict = {
+            'subject': subject,
+            'body': body,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-support"
+
+        # sending email to support : do not need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        alert("Votre incident va être examiné dans les plus brefs délais")
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        declare_incident()
+
+    title4 = html.H3("Déclarer un incident")
     MY_SUB_PANEL <= title4
 
-    text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la date limite est ce soir ? Votre partie n'avance pas depuis des jours et il semble que votre arbitre se soit endormi ?")
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la date limite est ce soir ? Votre partie n'avance pas depuis des jours et il semble que votre arbitre se soit endormi ? Vous n'êtes pas convaincu par les explications de l'arbitre sur la résolution dans la partie ? Vous êtes persuadé qu'il y a de la triche quelque part...")
     MY_SUB_PANEL <= text21
 
     text22 = html.P("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs) et n'oubliez pas de bien préciser une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu...")
     MY_SUB_PANEL <= text22
 
-    text23 = html.P("Vous pouvez utiliser le lien ci-dessous pour envoyer un courriel :")
+    text23 = html.P("Vous pouvez utiliser le formulaire ci-dessous pour déclarer un incident :")
     MY_SUB_PANEL <= text23
 
-    email_support = html.A(href=f"mailto:{EMAIL_SUPPORT}")
-    email_support <= "Contacter le support"
-    MY_SUB_PANEL <= email_support
+    form = html.FORM()
 
-    text3 = html.P("S'il s'agit d'une partie, précisez bien la partie et le rôle que vous y jouez.")
-    MY_SUB_PANEL <= text3
+    form <= html.DIV("Pas d'espaces dans le pseudo", Class='note')
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_pseudo = html.LEGEND("pseudo (facultatif)", title="Votre pseudo (si applicable)")
+    fieldset <= legend_pseudo
+    input_pseudo = html.INPUT(type="text", value=storage['PSEUDO'] if 'PSEUDO' in storage else "")
+    fieldset <= input_pseudo
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_email = html.LEGEND("courriel (facultatif)", title="Votre courriel (si pas de pseudo)")
+    fieldset <= legend_email
+    input_email = html.INPUT(type="text", value="", size=MAX_LEN_EMAIL)
+    fieldset <= input_email
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_game = html.LEGEND("partie (facultatif)", title="La partie (si applicable)")
+    fieldset <= legend_game
+    input_game = html.INPUT(type="text", value=storage['GAME'] if 'GAME' in storage else "", size=MAX_LEN_GAME_NAME)
+    fieldset <= input_game
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_description = html.LEGEND("description", title="Description du problème")
+    fieldset <= legend_description
+    input_description = html.TEXTAREA(type="text", rows=5, cols=80)
+    fieldset <= input_description
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_submit_incident = html.INPUT(type="submit", value="soumettre l'incident")
+    input_submit_incident.bind("click", submit_incident_callback)
+    form <= input_submit_incident
+
+    MY_SUB_PANEL <= form
 
 
 FAQ_DISPLAYED_TABLE = {k: False for k in faq.FAQ_CONTENT_TABLE}
@@ -312,8 +396,8 @@ def load_option(_, item_name):
         show_home()
     if item_name == 'liens':
         show_links()
-    if item_name == 'support':
-        show_support()
+    if item_name == 'déclarer un incident':
+        declare_incident()
     if item_name == 'foire aux question':
         show_faq()
     if item_name == 'coin technique':
