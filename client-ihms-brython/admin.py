@@ -933,7 +933,6 @@ def last_failures():
     MY_SUB_PANEL <= failures_table
 
 
-
 def all_emails():
     """ all_emails """
 
