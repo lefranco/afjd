@@ -20,7 +20,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['accueil', 'liens', 'voir les parties', 'déclarer un incident', 'foire aux question', 'coin technique', 'choix d\'interface']
+OPTIONS = ['nouvelles', 'liens', 'voir les parties', 'déclarer un incident', 'foire aux question', 'coin technique', 'choix d\'interface']
 
 NOTE_CONTENT_STATED = """
 Bienvenue dans la première version du site Diplomania.
@@ -29,7 +29,7 @@ Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/lien
 """
 
 
-def show_home():
+def show_news():
     """ show_home """
 
     title = html.H3("Accueil")
@@ -616,8 +616,8 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    if item_name == 'accueil':
-        show_home()
+    if item_name == 'nouvelles':
+        show_news()
     if item_name == 'voir les parties':
         all_games('en cours')
     if item_name == 'liens':

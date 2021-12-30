@@ -274,6 +274,11 @@ def my_games(state_name):
 
     pseudo = storage['PSEUDO']
 
+    dict_role_id = get_all_roles_allocated_to_player()
+    if not dict_role_id:
+        alert("Il semble que vous ne jouiez dans aucune partie... Quel dommage !")
+        return
+
     player_id = get_player_id(pseudo)
     if player_id is None:
         alert("Erreur chargement identifiant joueur")
@@ -287,11 +292,6 @@ def my_games(state_name):
     games_dict = common.get_games_data()
     if not games_dict:
         alert("Erreur chargement dictionnaire parties")
-        return
-
-    dict_role_id = get_all_roles_allocated_to_player()
-    if not dict_role_id:
-        alert("Vous ne jouez dans aucune partie ! (ou erreur chargement des roles dans les parties)")
         return
 
     dict_submitted_data = get_all_player_games_roles_submitted_orders()
