@@ -1660,6 +1660,8 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                     addressees.append(player_id)
                 body = "Vous pouvez continuer à jouer dans cette partie !"
                 body += "\n"
+                body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
+                body += "\n"
                 body += "Pour se rendre directement sur la partie :\n"
                 body += f"https://diplomania-gen.fr?game={game.name}"
 
@@ -1966,6 +1968,8 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 for _, player_id, __ in allocations_list:
                     addressees.append(player_id)
                 body = "Vous pouvez continuer à jouer dans cette partie !"
+                body += "\n"
+                body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
                 body += "\n"
                 body += "Pour se rendre directement sur la partie :\n"
                 body += f"https://diplomania-gen.fr?game={game.name}"
