@@ -37,6 +37,10 @@ SESSION = requests.Session()
 def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, str]:
     """ this will perform game adjudication """
 
+    # check game over
+    if game.game_over():
+        return False, "INFORMATION : game over !"
+
     # evaluate variant
     variant_name = game.variant
     variant_dict = variants.Variant.get_by_name(variant_name)
