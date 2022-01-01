@@ -381,7 +381,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     addressees = []
                     for _, player_id, __ in allocations_list:
                         addressees.append(player_id)
-                    body = "Vous pouvez commencer à jouer dans cette partie !"
+                    body = "Vous pouvez commencer à jouer dans cette partie !\n"
                     body += "\n"
                     body += "Pour se rendre directement sur la partie :\n"
                     body += f"https://diplomania-gen.fr?game={game.name}"
@@ -420,7 +420,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     addressees = []
                     for _, player_id, __ in allocations_list:
                         addressees.append(player_id)
-                    body = "Vous ne pouvez plus jouer dans cette partie !"
+                    body = "Vous ne pouvez plus jouer dans cette partie !\n"
                     body += "\n"
                     body += "Pour se rendre directement sur la partie :\n"
                     body += f"https://diplomania-gen.fr?game={game.name}"
@@ -1658,7 +1658,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 addressees = []
                 for _, player_id, __ in allocations_list:
                     addressees.append(player_id)
-                body = "Vous pouvez continuer à jouer dans cette partie !"
+                body = "Vous pouvez continuer à jouer dans cette partie !\n"
                 body += "\n"
                 body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
                 body += "\n"
@@ -1967,7 +1967,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 addressees = []
                 for _, player_id, __ in allocations_list:
                     addressees.append(player_id)
-                body = "Vous pouvez continuer à jouer dans cette partie !"
+                body = "Vous pouvez continuer à jouer dans cette partie !\n"
                 body += "\n"
                 body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
                 body += "\n"
