@@ -586,6 +586,19 @@ class Game:
         now = time.time()
         return now > self._deadline
 
+    def game_over(self) -> bool:
+        """ game_over """
+
+        # game over when adjustments to play
+        if self._current_advancement % 5 != 4:
+            return False
+
+        # game over when last year
+        if (self._current_advancement + 1) // 5 < self._nb_max_cycles_to_play:
+            return False
+
+        return True
+
     def terminate(self) -> None:
         """ start the game """
 
