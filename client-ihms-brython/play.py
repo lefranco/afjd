@@ -1715,6 +1715,16 @@ def submit_orders():
             load_option(None, 'position')
             return False
 
+    # check gameover
+    # game over when adjustments to play
+    # game over when last year
+    current_advancement = GAME_PARAMETERS_LOADED['current_advancement']
+    nb_max_cycles_to_play = GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
+    if current_advancement % 5 == 4 and (current_advancement + 1) // 5 >= nb_max_cycles_to_play:
+        alert("La partie est arrivée à échéance")
+        load_option(None, 'position')
+        return False
+
     # because we do not want the token stale in the middle of the process
     login.check_token()
 
@@ -2403,6 +2413,16 @@ def submit_communication_orders():
 
     if ROLE_ID not in submitted_data['needed']:
         alert("Vous n'avez pas d'ordre à passer")
+        load_option(None, 'position')
+        return False
+
+    # check gameover
+    # game over when adjustments to play
+    # game over when last year
+    current_advancement = GAME_PARAMETERS_LOADED['current_advancement']
+    nb_max_cycles_to_play = GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
+    if current_advancement % 5 == 4 and (current_advancement + 1) // 5 >= nb_max_cycles_to_play:
+        alert("La partie est arrivée à échéance")
         load_option(None, 'position')
         return False
 
