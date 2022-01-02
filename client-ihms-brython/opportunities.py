@@ -245,8 +245,9 @@ def my_opportunities():
 
             if field == 'master':
                 game_name = data['name']
-                game_master = game_master_dict[game_name]
-                value = game_master
+                # some games do not have a game master
+                master_name = game_master_dict.get(game_name, '')
+                value = master_name
 
             if field == 'deadline':
                 deadline_loaded = value
