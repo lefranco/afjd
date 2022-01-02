@@ -17,7 +17,7 @@ import scoring
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['résultats tournoi', 'retrouver à partir du courriel', 'récupérer un courriel', 'récupérer un téléphone']
+OPTIONS = ['retrouver à partir du courriel', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi']
 
 
 def check_modo(pseudo):
@@ -59,180 +59,6 @@ def get_tournament_players_data(tournament_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return tournament_players_dict
-
-
-def tournament_result():
-    """ tournament_result """
-
-    MY_SUB_PANEL <= html.H3("Résultat intermédiaire du tournoi")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    tournament_dict = common.tournament_data(game)
-    if not tournament_dict:
-        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-        return
-
-    tournament_name = tournament_dict['name']
-    tournament_id = tournament_dict['identifier']
-    games_in = tournament_dict['games']
-
-    games_dict = common.get_games_data()
-    if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
-        return
-
-    players_dict = common.get_players()
-    if not players_dict:
-        alert("Erreur chargement info joueurs")
-        return
-
-    id2pseudo = {v: k for k, v in players_dict.items()}
-
-    tournament_players_dict = get_tournament_players_data(tournament_id)
-    if not tournament_players_dict:
-        alert("Erreur chargement allocation tournois")
-        return
-
-    gamerole2pseudo = {(int(g), r): id2pseudo[int(p)] for g, d in tournament_players_dict.items() for p, r in d.items()}
-
-    # =====
-    # points
-    # =====
-
-    # build dict of positions
-    positions_dict_loaded = common.tournament_position_reload(tournament_id)
-    if not positions_dict_loaded:
-        alert("Erreur chargement positions des parties du tournoi")
-        return
-
-    points = {}
-
-    for game_id_str, data in games_dict.items():
-
-        game_id = int(game_id_str)
-
-        if game_id not in games_in:
-            continue
-
-        # variant is available
-        variant_name_loaded = data['variant']
-
-        # from variant name get variant content
-        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
-            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
-        else:
-            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
-            if not variant_content_loaded:
-                alert("Erreur chargement données variante de la partie")
-                return
-            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
-
-        # selected display (user choice)
-        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
-
-        # parameters
-
-        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
-            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
-        else:
-            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
-            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
-
-        # build variant data
-
-        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
-            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
-        else:
-            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
-            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
-
-        # position previously loaded
-        position_loaded = positions_dict_loaded[game_id_str]
-
-        position_data = mapping.Position(position_loaded, variant_data)
-        ratings = position_data.role_ratings()
-
-        # scoring
-        game_scoring = data['scoring']
-        score_table = scoring.scoring(game_scoring, variant_data, ratings)
-
-        rolename2num = {variant_data.name_table[r]: n for n, r in variant_data.roles.items()}
-
-        for role_name, score in score_table.items():
-            role_num = rolename2num[role_name]
-            if (game_id, role_num) in gamerole2pseudo:
-                pseudo = gamerole2pseudo[(game_id, role_num)]
-            else:
-                pseudo = "&lt;pas alloué&gt;"
-            if pseudo not in points:
-                points[pseudo] = score
-            else:
-                points[pseudo] += score
-
-    # =====
-    # incidents
-    # =====
-
-    # get the actual incidents of the tournament
-    tournament_incidents = common.tournament_incidents_reload(tournament_id)
-    # there can be no incidents (if no incident of failed to load)
-
-    count = {}
-    for game_id, role_num, _ in tournament_incidents:
-        pseudo = gamerole2pseudo[(game_id, role_num)]
-        if pseudo not in count:
-            count[pseudo] = 1
-        else:
-            count[pseudo] += 1
-
-    recap_table = html.TABLE()
-
-    # header
-    thead = html.THEAD()
-    for field in ['rang', 'pseudo', 'score', 'incidents']:
-        col = html.TD(field)
-        thead <= col
-    recap_table <= thead
-
-    rang = 1
-    for pseudo, score in sorted(points.items(), key=lambda p: p[1], reverse=True):
-        row = html.TR()
-
-        col = html.TD(rang)
-        row <= col
-
-        col = html.TD(pseudo)
-        row <= col
-
-        col = html.TD(score)
-        row <= col
-
-        nb_incidents = count.get(pseudo, 0)
-        col = html.TD(nb_incidents)
-        row <= col
-
-        recap_table <= row
-        rang += 1
-
-    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= recap_table
 
 
 def find_from_email_address():
@@ -462,6 +288,180 @@ def display_phone_number():
     MY_SUB_PANEL <= form
 
 
+def tournament_result():
+    """ tournament_result """
+
+    MY_SUB_PANEL <= html.H3("Résultat intermédiaire du tournoi")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    tournament_dict = common.tournament_data(game)
+    if not tournament_dict:
+        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
+
+    tournament_name = tournament_dict['name']
+    tournament_id = tournament_dict['identifier']
+    games_in = tournament_dict['games']
+
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        alert("Erreur chargement info joueurs")
+        return
+
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
+    tournament_players_dict = get_tournament_players_data(tournament_id)
+    if not tournament_players_dict:
+        alert("Erreur chargement allocation tournois")
+        return
+
+    gamerole2pseudo = {(int(g), r): id2pseudo[int(p)] for g, d in tournament_players_dict.items() for p, r in d.items()}
+
+    # =====
+    # points
+    # =====
+
+    # build dict of positions
+    positions_dict_loaded = common.tournament_position_reload(tournament_id)
+    if not positions_dict_loaded:
+        alert("Erreur chargement positions des parties du tournoi")
+        return
+
+    points = {}
+
+    for game_id_str, data in games_dict.items():
+
+        game_id = int(game_id_str)
+
+        if game_id not in games_in:
+            continue
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        # position previously loaded
+        position_loaded = positions_dict_loaded[game_id_str]
+
+        position_data = mapping.Position(position_loaded, variant_data)
+        ratings = position_data.role_ratings()
+
+        # scoring
+        game_scoring = data['scoring']
+        score_table = scoring.scoring(game_scoring, variant_data, ratings)
+
+        rolename2num = {variant_data.name_table[r]: n for n, r in variant_data.roles.items()}
+
+        for role_name, score in score_table.items():
+            role_num = rolename2num[role_name]
+            if (game_id, role_num) in gamerole2pseudo:
+                pseudo = gamerole2pseudo[(game_id, role_num)]
+            else:
+                pseudo = "&lt;pas alloué&gt;"
+            if pseudo not in points:
+                points[pseudo] = score
+            else:
+                points[pseudo] += score
+
+    # =====
+    # incidents
+    # =====
+
+    # get the actual incidents of the tournament
+    tournament_incidents = common.tournament_incidents_reload(tournament_id)
+    # there can be no incidents (if no incident of failed to load)
+
+    count = {}
+    for game_id, role_num, _ in tournament_incidents:
+        pseudo = gamerole2pseudo[(game_id, role_num)]
+        if pseudo not in count:
+            count[pseudo] = 1
+        else:
+            count[pseudo] += 1
+
+    recap_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['rang', 'pseudo', 'score', 'incidents']:
+        col = html.TD(field)
+        thead <= col
+    recap_table <= thead
+
+    rang = 1
+    for pseudo, score in sorted(points.items(), key=lambda p: p[1], reverse=True):
+        row = html.TR()
+
+        col = html.TD(rang)
+        row <= col
+
+        col = html.TD(pseudo)
+        row <= col
+
+        col = html.TD(score)
+        row <= col
+
+        nb_incidents = count.get(pseudo, 0)
+        col = html.TD(nb_incidents)
+        row <= col
+
+        recap_table <= row
+        rang += 1
+
+    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= recap_table
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -484,14 +484,14 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    if item_name == 'résultats tournoi':
-        tournament_result()
     if item_name == 'retrouver à partir du courriel':
         find_from_email_address()
     if item_name == 'récupérer un courriel':
         display_email_address()
     if item_name == 'récupérer un téléphone':
         display_phone_number()
+    if item_name == 'résultats tournoi':
+        tournament_result()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
