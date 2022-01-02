@@ -135,16 +135,45 @@ def my_opportunities():
 
     games_dict_recruiting = {k: v for k, v in games_dict.items() if int(k) in recruiting_games_dict}
 
+
+
+
+
+    # get the players
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
+    masters_alloc = allocations_data['game_masters_dict']
+
+    # gather game to master
+    game_master_dict = {}
+    for master_id, games_id in masters_alloc.items():
+        master = players_dict[str(master_id)]['pseudo']
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            game_master_dict[game] = master
+
+
+
+
     time_stamp_now = time.time()
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'join', 'variant', 'description', 'deadline', 'current_state', 'current_advancement', 'allocated']
+    fields = ['jump_here', 'join', 'master', 'variant', 'description', 'deadline', 'current_state', 'current_advancement', 'allocated']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'aller voir', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué'}[field]
+        field_fr = {'jump_here': 'aller voir', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -187,6 +216,7 @@ def my_opportunities():
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
+        data['master'] = None
         data['jump_here'] = None
         data['join'] = None
         data['allocated'] = None
@@ -212,6 +242,11 @@ def my_opportunities():
                 input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
                 form <= input_join_game
                 value = form
+
+            if field == 'master':
+                game_name = data['name']
+                game_master = game_master_dict[game_name]
+                value = game_master
 
             if field == 'deadline':
                 deadline_loaded = value
