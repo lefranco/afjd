@@ -870,10 +870,11 @@ def submit_orders():
 
             adjudicated = req_result['adjudicated']
             if adjudicated:
+                # seems to be things not updated if back to orders
                 alert("La position de la partie a changé !")
                 load_dynamic_stuff()
                 MY_SUB_PANEL.clear()
-                submit_orders()
+                load_option(None, 'position')
 
         names_dict = VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
