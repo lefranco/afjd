@@ -1322,7 +1322,7 @@ def submit_orders():
                 if center is not None:
                     deducted_role = center.owner_start
                     if deducted_role is not None:
-                        if ROLE_ID == 0 or deducted_role.identifier == ROLE_ID:
+                        if ROLE_ID in (0, deducted_role.identifier):
                             if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
                                 fake_unit = mapping.Army(POSITION_DATA, deducted_role, selected_build_zone, None)
                             if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
