@@ -44,6 +44,7 @@ def login():
             time_stamp = time.time()
             storage['LOGIN_TIME'] = str(time_stamp)
             InfoDialog("OK", f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
+            show_login()
 
             # goto directly to page my games
             index.load_option(None, 'mes parties')
@@ -80,7 +81,7 @@ def login():
     def forgot_callback(_):
         """ forgot_callback """
 
-        alert("Désolé: la récupération du mot de passe n'est pas encore implémentée - vous pouvez contacter le support (cf. page d'accueil / onglet support) qui vous forcera un nouveau mot de passe")
+        alert("Désolé: la récupération du mot de passe n'est pas encore implémentée - vous pouvez contacter le support (cf. page d'accueil / onglet 'déclarer un incident') qui vous forcera un nouveau mot de passe")
 
         render(PANEL_MIDDLE)
 
