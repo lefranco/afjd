@@ -1378,7 +1378,7 @@ def change_state_game():
 
         return status
 
-    def change_state_game_callback(_):
+    def change_state_game_callback(_, expected_state):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1394,12 +1394,10 @@ def change_state_game():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"L'état de la partie a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
 
-        state = config.STATE_CODE_TABLE[input_state.value]
-
         json_dict = {
             'pseudo': pseudo,
             'name': game,
-            'current_state': state,
+            'current_state': expected_state,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -1440,20 +1438,15 @@ def change_state_game():
     legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours ou terminée.")
     fieldset <= legend_state
 
-    input_state = html.SELECT(type="select-one", value="")
-    for possible_state_code, possible_state_code_desc in config.STATE_CODE_TABLE.items():
-        option = html.OPTION(possible_state_code)
-        if possible_state_code_desc == state_loaded:
-            option.selected = True
-        input_state <= option
-    fieldset <= input_state
-    form <= fieldset
+    if state_loaded == 0:
+        input_start_game = html.INPUT(type="submit", value="démarrer la partie")
+        input_start_game.bind("click", lambda e, s=1 : change_state_game_callback(e, s))
+        form <= input_start_game
 
-    form <= html.BR()
-
-    input_change_state_game = html.INPUT(type="submit", value="changer l'état de la partie")
-    input_change_state_game.bind("click", change_state_game_callback)
-    form <= input_change_state_game
+    if state_loaded == 1:
+        input_stop_game = html.INPUT(type="submit", value="arrêter la partie")
+        input_stop_game.bind("click", lambda e, s=2 : change_state_game_callback(e, s))
+        form <= input_stop_game
 
     MY_SUB_PANEL <= form
 
