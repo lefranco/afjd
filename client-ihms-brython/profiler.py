@@ -77,7 +77,7 @@ class Profiler:
         body += f"version : {VERSION}"
         body += "\n\n"
 
-        addressed_user_name = moderate.MODO_PSEUDO
+        addressed_user_name = admin.ADMIN_PSEUDO
 
         players_dict = common.get_players()
         if not players_dict:
