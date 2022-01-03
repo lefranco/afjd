@@ -21,6 +21,7 @@ import mapping
 import login
 import sandbox
 import memoize
+import moderate
 import index  # circular import
 
 
@@ -472,16 +473,19 @@ def load_dynamic_stuff():
 def load_special_stuff():
     """ load_special_stuff : loads global data """
 
-    # TODO improve this with real admin account
-    if PSEUDO is not None and (PSEUDO == 'Palpatine' or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+    if PSEUDO is None:
+        return
 
-        global GAME_PLAYERS_DICT
-        # get the players of the game
-        # need a token for this
-        GAME_PLAYERS_DICT = get_game_players_data(GAME_ID)
-        if not GAME_PLAYERS_DICT:
-            alert("Erreur chargement joueurs de la partie")
-            return
+    if not (moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+        return
+
+    global GAME_PLAYERS_DICT
+    # get the players of the game
+    # need a token for this
+    GAME_PLAYERS_DICT = get_game_players_data(GAME_ID)
+    if not GAME_PLAYERS_DICT:
+        alert("Erreur chargement joueurs de la partie")
+        return
 
 
 def stack_clock(frame, period):
@@ -4329,8 +4333,7 @@ def show_players_in_game():
         return False
 
     # is game anonymous
-    # TODO improve this with real admin account
-    if not(PSEUDO == 'Palpatine' or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+    if not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         alert("Seul l'arbitre (ou l'administrateur du site) peut voir les joueurs d'une partie anonyme")
         load_option(None, 'position')
         return False
@@ -4418,15 +4421,13 @@ def show_orders_submitted_in_game():
         return False
 
     # is player in game ?
-    # TODO improve this with real admin account
-    if not(PSEUDO == 'Palpatine' or ROLE_ID is not None):
+    if not(moderate.check_modo(PSEUDO) or ROLE_ID is not None):
         alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir le statut des ordres pour une partie non anonyme")
         load_option(None, 'position')
         return False
 
     # game anonymous
-    # TODO improve this with real admin account
-    if not(PSEUDO == 'Palpatine' or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+    if not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         alert("Seul l'arbitre (ou l'administrateur du site) peut voir le statut des ordres  pour une partie anonyme")
         load_option(None, 'position')
         return False
@@ -4536,8 +4537,7 @@ def show_incidents_in_game():
         return False
 
     # is player in game ?
-    # TODO improve this with real admin account
-    if not(PSEUDO == 'Palpatine' or ROLE_ID is not None):
+    if not(moderate.check_modo(PSEUDO) or ROLE_ID is not None):
         alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir les retards")
         load_option(None, 'position')
         return False
@@ -4899,9 +4899,8 @@ def render(panel_middle):
 
         else:
 
-            # Admin wants to see whose orders are missing
-            # TODO improve this with real admin account
-            if PSEUDO == "Palpatine":
+            # moderator wants to see whose orders are missing
+            if moderate.check_modo(PSEUDO):
                 # Admin
                 ITEM_NAME_SELECTED = 'ordres'
 
