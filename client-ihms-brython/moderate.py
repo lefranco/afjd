@@ -94,7 +94,7 @@ def find_from_email_address():
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/find-player-from-email/{email}"
 
-        # findin pseudo from email : need token
+        # finding pseudo from email : need token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
