@@ -1248,9 +1248,9 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
             user_id = req_result.json()
 
             if user_id != game_master_id:
-                # TODO improve this with real admin account
+                # TODO improve this with real moderator account
                 if pseudo != 'Palpatine':
-                    flask_restful.abort(403, msg="You need to be the game master of the game (or site administrator) to see the roles of this anonymous game")
+                    flask_restful.abort(403, msg="You need to be the game master of the game (or site moderator) so you are not allowed to see the roles of this anonymous game")
 
         return data, 200
 
@@ -1401,7 +1401,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         # TODO improve this with real admin account
         if pseudo != 'Palpatine':
             del sql_executor
-            flask_restful.abort(403, msg="You do noty seem to be site administrator so you are not allowed to rectify a position!")
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to rectify a position!")
 
         # store position
 
@@ -2537,12 +2537,10 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         role_id = game.find_role(sql_executor, player_id)
         if role_id is None:
 
-            # TODO improve this with real admin account
-            # Admin can still see who passed orders
+            # TODO improve this with real moderator account
             if pseudo != 'Palpatine':
-
                 del sql_executor
-                flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id} or to be site administrator!")
+                flask_restful.abort(403, msg="You do not seem to play or master the game (or to be site moderator) so you are not allowed to see the submissions!")
 
         # submissions_list : those who submitted orders
         submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
@@ -2633,71 +2631,6 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
                     agreed_list = [r for r in agreed_list if r == role_id]
 
             dict_submitted_list[game_id] = submitted_list
-            dict_agreed_list[game_id] = agreed_list
-
-            # needed list : those who need to submit orders
-            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
-            needed_list = [o[1] for o in actives_list]
-            dict_needed_list[game_id] = needed_list
-
-        del sql_executor
-
-        data = {'dict_submitted': dict_submitted_list, 'dict_agreed': dict_agreed_list, 'dict_needed': dict_needed_list}
-        return data, 200
-
-
-@API.resource('/all-games-orders-submitted')
-class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
-    """ AllGamesOrdersSubmittedRessource """
-
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[int, typing.List[int]]], int]:  # pylint: disable=no-self-use
-        """
-        Gets list of roles which have submitted orders, orders are missing, orders are not needed for all possible games
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/all-games-orders-submitted - GET - getting which orders submitted, missing, not needed for all possible games")
-
-        # check authentication from user server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-
-        pseudo = req_result.json()['logged_in_as']
-
-        # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
-            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to get all games all players submitted!")
-
-        sql_executor = database.SqlExecutor()
-
-        # get list of all games
-        allocations_list = allocations.Allocation.inventory(sql_executor)
-
-        # extract list of all games identifiers
-        game_id_list = list(set(a[0] for a in allocations_list))
-
-        dict_submitted_list: typing.Dict[int, typing.List[int]] = {}
-        dict_agreed_list: typing.Dict[int, typing.List[int]] = {}
-        dict_needed_list: typing.Dict[int, typing.List[int]] = {}
-        for game_id in game_id_list:
-
-            # submissions_list : those who submitted orders
-            submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
-            submitted_list = [o[1] for o in submissions_list]
-            dict_submitted_list[game_id] = submitted_list
-
-            # definitives_list : those who agreed to adjudicate with their orders
-            definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
-            agreed_list = [o[1] for o in definitives_list if o[2]]
             dict_agreed_list[game_id] = agreed_list
 
             # needed list : those who need to submit orders
@@ -3716,12 +3649,10 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
         role_id = game.find_role(sql_executor, player_id)
         if role_id is None:
 
-            # TODO improve this with real admin account
-            # Admin can still see who passed orders
+            # TODO improve this with real moderator account
             if pseudo != 'Palpatine':
-
                 del sql_executor
-                flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id} or to be site administrator!")
+                flask_restful.abort(403, msg=f"You do not seem to play or master game (or to be site moderator) so you cannot see the incidents!")
 
         # incidents_list : those who submitted orders after deadline
         incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
@@ -4271,9 +4202,9 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
 
         # check user has right to see this  - must be admin
 
-        # TODO improve this with real admin account
+        # TODO improve this with real moderator account
         if pseudo != 'Palpatine':
-            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed get all players from tournament !")
+            flask_restful.abort(403, msg="You do not seem to be site moderator so you are not allowed get all players from tournament !")
 
         sql_executor = database.SqlExecutor()
 

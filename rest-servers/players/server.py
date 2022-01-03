@@ -767,7 +767,7 @@ class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
 
-        # TODO improve this with real admin account
+        # TODO improve this with real moderator account
         if pseudo_requester != 'Palpatine':
             del sql_executor
             flask_restful.abort(403, msg="You are not allowed to get phone number!")
@@ -821,7 +821,7 @@ class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
 
-        # TODO improve this with real admin account
+        # TODO improve this with real moderator account
         if pseudo_requester != 'Palpatine':
             del sql_executor
             flask_restful.abort(403, msg="You are not allowed to get email address!")
@@ -946,7 +946,7 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
 
         # TODO improve this with real admin account
         if pseudo != 'Palpatine':
-            flask_restful.abort(403, msg="You are not allowed to add/remove moderator!")
+            flask_restful.abort(403, msg="You are not allowed to edit the list of moderators!")
 
         sql_executor = database.SqlExecutor()
 
