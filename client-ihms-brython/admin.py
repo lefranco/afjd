@@ -22,12 +22,14 @@ OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position', 'envoyer un 
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
+ADMIN_PSEUDO = 'Palpatine'
+
 
 def check_admin(pseudo):
     """ check_admin """
 
     # TODO improve this with real admin account
-    if pseudo != "Palpatine":
+    if pseudo != ADMIN_PSEUDO:
         return False
 
     return True

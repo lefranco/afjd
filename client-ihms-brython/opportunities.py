@@ -135,10 +135,6 @@ def my_opportunities():
 
     games_dict_recruiting = {k: v for k, v in games_dict.items() if int(k) in recruiting_games_dict}
 
-
-
-
-
     # get the players
     players_dict = common.get_players_data()
     if not players_dict:
@@ -160,9 +156,6 @@ def my_opportunities():
         for game_id in games_id:
             game = games_dict[str(game_id)]['name']
             game_master_dict[game] = master
-
-
-
 
     time_stamp_now = time.time()
 

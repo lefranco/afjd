@@ -8,6 +8,7 @@ from browser import ajax   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
+import moderate
 import config
 
 VERSION = "tbd"
@@ -76,7 +77,7 @@ class Profiler:
         body += f"version : {VERSION}"
         body += "\n\n"
 
-        addressed_user_name = 'Palpatine'
+        addressed_user_name = moderate.MODO_PSEUDO
 
         players_dict = common.get_players()
         if not players_dict:

@@ -19,12 +19,14 @@ MAX_LEN_EMAIL = 100
 
 OPTIONS = ['retrouver à partir du courriel', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi']
 
+MODO_PSEUDO = 'Palpatine'
+
 
 def check_modo(pseudo):
     """ check_modo """
 
     # TODO improve this with real admin account
-    if pseudo != "Palpatine":
+    if pseudo != MODO_PSEUDO:
         return False
 
     return True
