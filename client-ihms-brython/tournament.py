@@ -83,23 +83,7 @@ def check_batch(current_pseudo, games_to_create):
             alert(f"Il semble que la partie {game_name} n'a pas des joueurs tous différents")
             return False
 
-    # check players are in same number of games (fatal)
-    # first we collect
-    presence_table = {}
-    for allocations in games_to_create.values():
-        for num_role, player_name in allocations.items():
-            if num_role:
-                if player_name in presence_table:
-                    presence_table[player_name] += 1
-                else:
-                    presence_table[player_name] = 1
-    # second we check
-    for player_name1, occurences_player1 in presence_table.items():
-        for player_name2, occurences_player2 in presence_table.items():
-            if player_name2 != player_name1 and occurences_player2 != occurences_player1:
-                pass
-                ##### alert(f"Il semble que les joueurs '{player_name1}' et '{player_name2}' jouent dans un nombre de parties différent")
-                ##### return False
+    # Note : we do not check players are in same number of games because games may be split amongst several masters
 
     # game master has to be pseudo
     for game_name, allocations in games_to_create.items():
