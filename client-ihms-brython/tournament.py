@@ -22,8 +22,6 @@ import index  # circular import
 
 OPTIONS = ['parties du tournoi', 'classement du tournoi', 'retards du tournoi', 'créer un tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'les tournois du site', 'créer plusieurs parties', 'tester un scorage']
 
-DESCRIPTION = "partie créée par batch"
-
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_TOURNAMENT_NAME = 50
 
@@ -94,10 +92,10 @@ def check_batch(current_pseudo, games_to_create):
     return not error
 
 
-def perform_batch(current_pseudo, current_game_name, games_to_create_data, description):
+def perform_batch(current_pseudo, current_game_name, games_to_create_data):
     """ perform_batch """
 
-    def create_game(current_pseudo, current_game_name, game_to_create_name, description):
+    def create_game(current_pseudo, current_game_name, game_to_create_name):
         """ create_game """
 
         create_status = None
@@ -131,9 +129,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
 
         # obviously different name
         json_dict['name'] = game_to_create_name
-
-        # obviously different description
-        json_dict['description'] = description
 
         # can only be manual
         json_dict['manual'] = True
@@ -254,7 +249,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data, descr
     for game_to_create_name, game_to_create_data in games_to_create_data.items():
 
         # create game
-        status = create_game(current_pseudo, current_game_name, game_to_create_name, description)
+        status = create_game(current_pseudo, current_game_name, game_to_create_name)
         if not status:
             alert(f"Echec à la création de la partie {game_to_create_name}")
             return
@@ -1221,7 +1216,7 @@ def create_many_games():
             def create_games_callback2(_, dialog):
                 """ create_games_callback2 """
                 dialog.close()
-                perform_batch(pseudo, game, games_to_create, DESCRIPTION)
+                perform_batch(pseudo, game, games_to_create)
 
             games_to_create = {}
 
@@ -1267,9 +1262,6 @@ def create_many_games():
             if not games_to_create:
                 alert("Aucune partie dans le fichier")
                 return
-
-            global DESCRIPTION
-            DESCRIPTION = input_description.value
 
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create):
@@ -1332,9 +1324,7 @@ def create_many_games():
     information <= html.BR()
     information <= "Il est impossible d'attribuer l'arbitrage d'une partie à un autre joueur, donc vous pouvez mettre un arbitre différent à des fins de vérification mais la création des parties n'aura pas lieu."
     information <= html.BR()
-    information <= "Il faut remplir soigneusement la description qui s'appliquera à toutes les parties !"
-    information <= html.BR()
-    information <= "Les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée..."
+    information <= "Les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée, dont la description - donc pensez bien à la modifier dans la partie modèle avant de créer les parties..."
     information <= html.BR()
     information <= "Note : Soit vous utilisez comme modèle une partie existante, soit vous la créez pour l'occasion et la supprimez à la fin"
 
@@ -1342,14 +1332,6 @@ def create_many_games():
     MY_SUB_PANEL <= html.BR()
 
     form = html.FORM()
-
-    fieldset = html.FIELDSET()
-    legend_description = html.LEGEND("description", title="Ce sera la description de toutes les parties créées")
-    fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", rows=5, cols=80)
-    input_description <= DESCRIPTION
-    fieldset <= input_description
-    form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_name = html.LEGEND("Ficher CSV")
