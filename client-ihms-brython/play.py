@@ -1665,11 +1665,19 @@ def submit_orders():
 
         input_definitive = html.INPUT(type="checkbox", checked=definitive_value)
         buttons_right <= input_definitive
+        buttons_right <= html.BR()
 
         input_submit = html.INPUT(type="submit", value="soumettre ces ordres")
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+        buttons_right <= html.DIV("La soumission des ordres prend également en compte le fait d'être prêt pour la résolution", Class='instruction')
+        buttons_right <= html.BR()
+        buttons_right <= html.DIV("Le coche 'prêt pour la résolution' est obligatoire à un moment donné (de préférence avant la date limite)", Class='important')
+
 
     # need to be connected
     if PSEUDO is None:
@@ -2373,7 +2381,7 @@ def submit_communication_orders():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="déposer ces ordres de communication")
+        input_submit = html.INPUT(type="submit", value="enregistrer ces ordres")
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
