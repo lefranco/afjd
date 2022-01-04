@@ -328,7 +328,7 @@ def my_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis prêt', 'all_orders_submitted': 'ordres', 'all_agreed': 'tous prêts', 'new_declarations': 'déclarations', 'new_messages': 'messages'}[field]
+        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis prêt', 'all_orders_submitted': 'ordres(*)', 'all_agreed': 'tous prêts', 'new_declarations': 'déclarations', 'new_messages': 'messages'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -551,6 +551,9 @@ def my_games(state_name):
         games_table <= row
 
     MY_PANEL <= games_table
+    MY_PANEL <= html.BR()
+
+    MY_PANEL <= html.DIV("(*) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
     MY_PANEL <= html.BR()
 
     # get GMT date and time
