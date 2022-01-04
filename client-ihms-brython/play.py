@@ -650,7 +650,7 @@ def get_game_status():
 
     if GAME_PARAMETERS_LOADED['fast']:
         row = html.TR()
-        specific_information = html.DIV("Partie temps réel : rafraichissez la position etc... avec le bouton 'Jouer la partie sélectionnée'", Class='note')
+        specific_information = html.DIV("Partie en direct : rafraichissez la position etc... avec le bouton 'Jouer la partie sélectionnée'", Class='note')
         col = html.TD(specific_information, colspan="6")
         row <= col
         game_status_table <= row
@@ -3827,7 +3827,7 @@ def game_master():
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
-    MY_SUB_PANEL <= html.DIV("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie temps réel). Pour une gestion plus fine de cette date limite vous devez éditer la partie.", Class='note')
+    MY_SUB_PANEL <= html.DIV("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie en direct). Pour une gestion plus fine de cette date limite vous devez éditer la partie.", Class='note')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
@@ -4212,7 +4212,7 @@ def show_game_parameters():
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres - effacé à la fin de la partie", "OUI"),
             'nomessage': ("pas de message privé (négociation)", "on peut pas négocier - sauf avec l'arbitre", "Tout message privé joueur vers joueur est impossible - effacé à la fin de la partie", "OUI"),
             'nopress': ("pas de message public (déclaration)", "on ne peut pas déclarer - sauf l'arbitre", "Tout message public de joueur est impossible - effacé à la fin de la partie", "OUI"),
-            'fast': ("temps réel", "la partie est jouée comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs", "OUI"),
+            'fast': ("en direct", "la partie est jouée comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs", "OUI"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
             'scoring': ("code du scorage", "le système de scorage appliqué", "Se reporter à Accueil/Coin technique pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface", "OUI"),
             'deadline_hour': ("heure de la date limite", "entre 0 et 23", "Heure à laquelle le système placera la date limite dans la journée si la synchronisation est souhaitée", "OUI"),

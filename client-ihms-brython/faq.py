@@ -45,8 +45,8 @@ FAQ_CONTENT_TABLE = {
     "Comment créer une partie dans laquelle je joue ?":
     "Il faut créer la partie, puis se retirer de l'arbitrage et demander à un arbitre de parties du site d'en prendre l'arbitrage.",
 
-    "Qu'est ce qui change pour une partie 'temps réel' ?":
-    "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en jour. Il est possible d'observer la partie (mise à jour régulière du plateau). Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres pour les joueurs automtiquement après la grâce. Pas de message de notification pour une telle partie.",
+    "Qu'est ce qui change pour une partie 'en direct' ?":
+    "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en heures. Il est possible d'observer la partie (mise à jour régulière du plateau). Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres pour les joueurs automtiquement après la grâce. Pas de message de notification pour une telle partie.",
 
     "C'est quoi ce truc : 'consulter l'oracle sur cette position' ?":
     "Pas encore développé. Fournira une suggestion de jeux d'ordres à partir d'une position...",
