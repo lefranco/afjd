@@ -966,7 +966,7 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.DIV("Sélectionner l'ordre d'adjustement (clic-long pour effacer)", Class='instruction')
+            legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
@@ -1225,7 +1225,7 @@ def submit_orders():
                     automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
                 if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                    legend_select_unit = html.DIV("Sélectionner l'ordre d'adjustement (clic-long pour effacer)", Class='instruction')
+                    legend_select_unit = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
                     buttons_right <= legend_select_unit
                     for order_type in mapping.OrderTypeEnum:
                         if order_type.compatible(advancement_season):
@@ -1349,7 +1349,7 @@ def submit_orders():
                 buttons_right <= legend_select_unit
 
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-                legend_select_unit = html.DIV("Sélectionner l'ordre d'adjustement (clic-long pour effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
@@ -1502,7 +1502,7 @@ def submit_orders():
             automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-            legend_select_order = html.DIV("Sélectionner l'ordre d'adjustement (clic-long pour effacer)", Class='instruction')
+            legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
             buttons_right <= legend_select_order
             for order_type in mapping.OrderTypeEnum:
                 if order_type.compatible(advancement_season):
@@ -1807,7 +1807,7 @@ def submit_orders():
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
-        legend_select_order = html.DIV("Sélectionner l'ordre d'adjustement (clic-long pour effacer)", Class='instruction')
+        legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_order
         for order_type in mapping.OrderTypeEnum:
             if order_type.compatible(advancement_season):
