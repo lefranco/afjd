@@ -9,7 +9,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
 import moderate
-import config
+import admin
 
 VERSION = "tbd"
 
