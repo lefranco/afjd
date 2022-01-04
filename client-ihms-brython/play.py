@@ -1678,7 +1678,6 @@ def submit_orders():
         buttons_right <= html.BR()
         buttons_right <= html.DIV("Le coche 'prêt pour la résolution' est obligatoire à un moment donné (de préférence avant la date limite)", Class='important')
 
-
     # need to be connected
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
