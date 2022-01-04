@@ -8,8 +8,8 @@ from browser import ajax   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
-import moderate
 import admin
+import config
 
 VERSION = "tbd"
 
