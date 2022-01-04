@@ -1378,7 +1378,11 @@ def change_state_game():
 
         return status
 
-    def change_state_game_callback(_, expected_state):
+    def cancel_change_state_game_callback(_, dialog):
+        """ cancel_delete_account_callback """
+        dialog.close()
+
+    def change_state_game_callback(_, dialog, expected_state):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1394,6 +1398,9 @@ def change_state_game():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"L'état de la partie a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
 
+        if dialog is not None:
+            dialog.close()
+
         json_dict = {
             'pseudo': pseudo,
             'name': game,
@@ -1406,6 +1413,15 @@ def change_state_game():
 
         # changing game state : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        change_state_game()
+
+    def change_state_game_callback_confirm(_, expected_state):
+        dialog = Dialog(f"On arrête vraiment la partie {game} ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog, es=expected_state: change_state_game_callback(e, d, es))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_change_state_game_callback(e, d))
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -1440,12 +1456,12 @@ def change_state_game():
 
     if state_loaded == 0:
         input_start_game = html.INPUT(type="submit", value="démarrer la partie")
-        input_start_game.bind("click", lambda e, s=1 : change_state_game_callback(e, s))
+        input_start_game.bind("click", lambda e, s=1: change_state_game_callback(e, None, s))
         form <= input_start_game
 
     if state_loaded == 1:
         input_stop_game = html.INPUT(type="submit", value="arrêter la partie")
-        input_stop_game.bind("click", lambda e, s=2 : change_state_game_callback(e, s))
+        input_stop_game.bind("click", lambda e, s=2: change_state_game_callback_confirm(e, s))
         form <= input_stop_game
 
     MY_SUB_PANEL <= form
