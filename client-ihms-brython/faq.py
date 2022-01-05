@@ -13,13 +13,13 @@ FAQ_CONTENT_TABLE = {
     "Eh non. Les ordres sont 100% vérifiés avant d'être enregistrés. Par contre le menu 'taguer' dans une partie permet une communcation par ordres 'ésotériques'. Cela ne presente un intérêt que dans les parties sans communication.",
 
     "Quand a lieu la résolution ?":
-    "Quand le dernier joueur qui a des ordres à rendre coche sur la case 'prêt à résoudre' tout simplement (ou quand l'arbitre le fait à sa place pour éviter que la partie ne s'éternise).",
+    "Quand le dernier joueur qui a des ordres à rendre coche sur la case 'prêt pour la résolution' tout simplement (ou quand l'arbitre le fait à sa place pour éviter que la partie ne s'éternise).",
 
     "Pourquoi les dates limites changent-elles de couleur ?":
     "Le code de couleur est assez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée. Rouge que la grâce est aussi passée. Soyez ponctuels !",
 
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
-    "Passer ses ordres signifie réaliser une transition 'pas prêt à résoudre' (ou pas d'information) -> 'prêt à résoudre'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels !",
+    "Passer ses ordres signifie réaliser une transition 'pas prêt à résoudre' (ou pas d'information) -> 'prêt pour la résolution'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels !",
 
     "Pourquoi les unités ne se déplacent pas dans le bac à sable ?":
     "Le bac à sable n'a pas vocation à déplacer les unités, il cherche à répondre à la question 'que se passerait-il si...'. Il faut bien lire le compte rendu des ordres sous forme de texte sous la carte.",
@@ -60,6 +60,6 @@ FAQ_CONTENT_TABLE = {
     "Comment discuter avec les membres de la communauté":
     "Reportez-vous à la page accueil/liens du site pour le lien vers la brique sociale.",
 
-    "Ce site est-il le site de jeu officiel de l'AFJD ?":
-    "Oui. Une autre interface moins rustique est prévue mais plus tard. En principe...",
+    "Ce site est-il le site de jeu officiel de l'Association Francophone des Joueurs de Diplomatie ?":
+    "Oui.",
 }
