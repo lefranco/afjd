@@ -256,6 +256,39 @@ def my_games(state_name):
         # action of going to game page
         index.load_option(None, 'jouer la partie sélectionnée')
 
+    def start_game_callback(_, game):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au démarrage de la partie {game}: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au démarrage de la partie {game}: {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La partie a été démarrée : {messages}", remove_after=config.REMOVE_AFTER)
+
+        json_dict = {
+            'pseudo': pseudo,
+            'name': game,
+            'current_state': 1,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # changing game state : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_PANEL.clear()
+        my_games(state_name)
+
     def again(state_name):
         """ again """
         MY_PANEL.clear()
@@ -323,12 +356,12 @@ def my_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'variant', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
+    fields = ['jump_here', 'go_away', 'variant', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'start']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis prêt', 'all_orders_submitted': 'ordres(*)', 'all_agreed': 'tous prêts', 'new_declarations': 'déclarations', 'new_messages': 'messages'}[field]
+        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis prêt', 'all_orders_submitted': 'ordres(*)', 'all_agreed': 'tous prêts', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'start': 'démarrer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -402,6 +435,7 @@ def my_games(state_name):
         data['all_agreed'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
+        data['start'] = None
 
         row = html.TR()
         for field in fields:
@@ -539,6 +573,15 @@ def my_games(state_name):
                     if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
                         popup = html.IMG(src="./images/messages_received.jpg", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
+
+            if field == 'start':
+                value = ""
+                if state == 0 and role_id == 0:
+                    form = html.FORM()
+                    input_start_game = html.INPUT(type="submit", value="démarrer")
+                    input_start_game.bind("click", lambda e, g=game_name: start_game_callback(e, g))
+                    form <= input_start_game
+                    value = form
 
             col = html.TD(value)
             if colour is not None:
