@@ -652,8 +652,6 @@ def show_incidents():
         alert("Il faut choisir la partie au préalable")
         return
 
-    game = storage['GAME']
-
     if not TOURNAMENT_DICT:
         alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
@@ -773,6 +771,12 @@ def create_tournament():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Le tournoi a été créé : {messages}", remove_after=config.REMOVE_AFTER)
 
+            # we may have just created so need to reload
+            global TOURNAMENT_DICT
+            TOURNAMENT_DICT = common.tournament_data(game)
+            if not TOURNAMENT_DICT:
+                alert("Impossible de retrouver le cournoi qui vient juste d'être créée.")
+
         name = input_name.value
 
         if not name:
@@ -812,6 +816,8 @@ def create_tournament():
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
+
+    game = storage['GAME']
 
     if 'GAME_ID' not in storage:
         alert("ERREUR : identifiant de partie introuvable")
@@ -1067,6 +1073,12 @@ def delete_tournament():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Le tournoi a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
 
+            global TOURNAMENT_DICT
+            TOURNAMENT_DICT = common.tournament_data(game)
+            if not TOURNAMENT_DICT:
+                alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+                return
+
         dialog.close()
 
         json_dict = {}
@@ -1101,7 +1113,6 @@ def delete_tournament():
         alert("Il faut se connecter au préalable")
         return
 
-    # we propbably deleted it so need reload
     global TOURNAMENT_DICT
     TOURNAMENT_DICT = common.tournament_data(game)
     if not TOURNAMENT_DICT:
