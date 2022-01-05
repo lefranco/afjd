@@ -312,12 +312,9 @@ def show_games():
 
     game = storage['GAME']
 
-    global TOURNAMENT_DICT
     if not TOURNAMENT_DICT:
-        TOURNAMENT_DICT = common.tournament_data(game)
-        if not TOURNAMENT_DICT:
-            alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-            return
+        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
 
     tournament_name = TOURNAMENT_DICT['name']
     games_in = TOURNAMENT_DICT['games']
@@ -516,12 +513,9 @@ def show_ratings():
 
     game = storage['GAME']
 
-    global TOURNAMENT_DICT
     if not TOURNAMENT_DICT:
-        TOURNAMENT_DICT = common.tournament_data(game)
-        if not TOURNAMENT_DICT:
-            alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-            return
+        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
 
     tournament_name = TOURNAMENT_DICT['name']
     tournament_id = TOURNAMENT_DICT['identifier']
@@ -660,12 +654,9 @@ def show_incidents():
 
     game = storage['GAME']
 
-    global TOURNAMENT_DICT
     if not TOURNAMENT_DICT:
-        TOURNAMENT_DICT = common.tournament_data(game)
-        if not TOURNAMENT_DICT:
-            alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-            return
+        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
 
     tournament_name = TOURNAMENT_DICT['name']
     tournament_id = TOURNAMENT_DICT['identifier']
@@ -958,12 +949,12 @@ def edit_tournament():
 
     # get the tournament_id
 
+    # we probably just changed so need to reload
     global TOURNAMENT_DICT
+    TOURNAMENT_DICT = common.tournament_data(game)
     if not TOURNAMENT_DICT:
-        TOURNAMENT_DICT = common.tournament_data(game)
-        if not TOURNAMENT_DICT:
-            alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-            return
+        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
 
     tournament_name = TOURNAMENT_DICT['name']
     tournament_id = TOURNAMENT_DICT['identifier']
@@ -1110,12 +1101,12 @@ def delete_tournament():
         alert("Il faut se connecter au préalable")
         return
 
+    # we propbably deleted it so need reload
     global TOURNAMENT_DICT
+    TOURNAMENT_DICT = common.tournament_data(game)
     if not TOURNAMENT_DICT:
-        TOURNAMENT_DICT = common.tournament_data(game)
-        if not TOURNAMENT_DICT:
-            alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
-            return
+        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
 
     tournament_name = TOURNAMENT_DICT['name']
 
@@ -1165,12 +1156,12 @@ def show_tournaments_data():
 
     tournaments_table = html.TABLE()
 
-    fields = ['tournament', 'director', 'games']
+    fields = ['tournament', 'creator', 'games']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'tournament': 'tournoi', 'director': 'directeur', 'games': 'parties'}[field]
+        field_fr = {'tournament': 'tournoi', 'creator': 'créateur', 'games': 'parties'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournaments_table <= thead
