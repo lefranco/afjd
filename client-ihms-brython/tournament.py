@@ -1172,7 +1172,7 @@ def show_tournaments_data():
         for field in fields:
             if field == 'tournament':
                 value = data['name']
-            if field == 'director':
+            if field == 'creator':
                 director_id = assignments_dict[str(tournament_id)]
                 director_pseudo = players_dict[str(director_id)]['pseudo']
                 value = director_pseudo
