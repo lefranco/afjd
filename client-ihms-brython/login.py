@@ -172,7 +172,8 @@ def logout():
 
     show_login()
 
-    render(PANEL_MIDDLE)
+    if PANEL_MIDDLE is not None:
+        render(PANEL_MIDDLE)
 
     return effective
 
