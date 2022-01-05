@@ -1677,6 +1677,9 @@ def submit_orders():
         buttons_right <= html.DIV("La soumission des ordres prend également en compte le fait d'être prêt pour la résolution", Class='instruction')
         buttons_right <= html.BR()
         buttons_right <= html.DIV("Le coche 'prêt pour la résolution' est obligatoire à un moment donné (de préférence avant la date limite)", Class='important')
+        if GAME_PARAMETERS_LOADED['nomessage']:
+            buttons_right <= html.BR()
+            buttons_right <= html.DIV("Pour communiquer avec des ordres (ordres invalides) utilisez le sous menu 'taguer'", Class='Note')
 
     # need to be connected
     if PSEUDO is None:
@@ -2350,10 +2353,6 @@ def submit_communication_orders():
         # put the legends at the end
         VARIANT_DATA.render_legends(ctx)
 
-        warning = html.DIV("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution pourvu que l'unité en question ait reçu l'ordre *réel* de rester en place ou de se disperser.", Class='important')
-        buttons_right <= html.P()
-        buttons_right <= warning
-
     def stack_orders(buttons_right):
         """ stack_orders """
 
@@ -2384,6 +2383,10 @@ def submit_communication_orders():
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+        buttons_right <= html.DIV("ATTENTION ! Ce sont des ordres pour communiquer avec les autres joueurs, pas des ordres pour les unités. Ils seront publiés à la prochaine résolution pourvu que l'unité en question ait reçu l'ordre *réel* de rester en place ou de se disperser.", Class='important')
 
     # need to be connected
     if PSEUDO is None:
