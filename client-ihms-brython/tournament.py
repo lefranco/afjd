@@ -833,7 +833,7 @@ def create_tournament():
     legend_title_main = html.H3("Paramètres principaux du tournoi - ne peuvent plus être changés le tournoi crée")
     form <= legend_title_main
 
-    form <= html.DIV("Pas d'espaces dans le nom du tournoi", Class='note')
+    form <= html.DIV("Pas d'espaces ni de tirets dans le nom du tournoi", Class='note')
     form <= html.BR()
 
     fieldset = html.FIELDSET()
