@@ -11,6 +11,7 @@ from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import faq
+import whynot
 import interface
 import config
 import mapping
@@ -20,7 +21,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['nouvelles', 'liens', 'voir les parties', 'déclarer un incident', 'foire aux question', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
+OPTIONS = ['nouvelles', 'liens', 'toutes les parties', 'déclarer un incident', 'foire aux question', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
 
 NOTE_CONTENT_STATED = """
 Bienvenue dans la première version du site Diplomania.
@@ -446,6 +447,9 @@ FAQ_CONTENT = html.DIV("faq")
 def show_faq():
     """ show_faq """
 
+    global FAQ_DISPLAYED_TABLE
+    global FAQ_CONTENT
+
     def reveal_callback(_, question):
         """ reveal_callback """
 
@@ -472,6 +476,46 @@ def show_faq():
         FAQ_CONTENT <= html.P()
 
     MY_SUB_PANEL <= FAQ_CONTENT
+
+
+
+WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
+WHYNOT_CONTENT = html.DIV("faq")
+
+
+def show_whynot():
+    """ show_whynot """
+
+    global WHYNOT_DISPLAYED_TABLE
+    global WHYNOT_CONTENT
+
+    def reveal_callback(_, question):
+        """ reveal_callback """
+
+        WHYNOT_DISPLAYED_TABLE[question] = not WHYNOT_DISPLAYED_TABLE[question]
+        MY_SUB_PANEL.clear()
+        show_whynot()
+
+    title1 = html.H3("Pourquoi c'est pas comme ça ?")
+    MY_SUB_PANEL <= title1
+
+    WHYNOT_CONTENT.clear()
+
+    for question_txt, answer_txt in whynot.WHYNOT_CONTENT_TABLE.items():
+
+        reveal_button = html.INPUT(type="submit", value=question_txt)
+        reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
+        WHYNOT_CONTENT <= reveal_button
+
+        if WHYNOT_DISPLAYED_TABLE[question_txt]:
+
+            whynot_elt = html.DIV(answer_txt)
+            WHYNOT_CONTENT <= whynot_elt
+
+        WHYNOT_CONTENT <= html.P()
+
+    MY_SUB_PANEL <= WHYNOT_CONTENT
+
 
 
 def show_technical():
@@ -688,7 +732,7 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     if item_name == 'nouvelles':
         show_news()
-    if item_name == 'voir les parties':
+    if item_name == 'toutes les parties':
         all_games('en cours')
     if item_name == 'liens':
         show_links()
@@ -696,6 +740,8 @@ def load_option(_, item_name):
         declare_incident()
     if item_name == 'foire aux question':
         show_faq()
+    if item_name == 'pourquoi yapa':
+        show_whynot()
     if item_name == 'coin technique':
         show_technical()
     if item_name == 'choix d\'interface':
