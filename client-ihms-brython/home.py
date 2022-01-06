@@ -67,12 +67,16 @@ def show_links():
     title = html.H3("Liens")
     MY_SUB_PANEL <= title
 
+    # ----
+
     title1 = html.H4("Lien utile : Diplomania")
     MY_SUB_PANEL <= title1
 
     link1 = html.A(href="http://www.diplomania.fr", target="_blank")
     link1 <= "Diplomania : Le site officiel de l'Association Francophone des Joueurs de Diplomacy (brique sociale)"
     MY_SUB_PANEL <= link1
+
+    # ----
 
     title2 = html.H4("Parrainage")
     MY_SUB_PANEL <= title2
@@ -81,19 +85,32 @@ def show_links():
     link2 <= "Participer au financement du développement du site"
     MY_SUB_PANEL <= link2
 
-    title3 = html.H4("Document d'interface de l'API")
+    # ----
+
+    title3 = html.H4("Tutoriel youtube")
     MY_SUB_PANEL <= title3
 
-    link3 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
-    link3 <= "Si vous voulez vous aussi développer votre front end..."
+    link3 = html.A(href="https://youtu.be/luOiAz9i7Ls", target="_blank")
+    link3 <= "Si vous comprenez rien à ce site, ce tutoriel va vous éclairer sur les points essentiels..."
     MY_SUB_PANEL <= link3
 
-    title4 = html.H4("Copinage")
+    # ----
+
+    title4 = html.H4("Document d'interface de l'API")
     MY_SUB_PANEL <= title4
 
-    link4 = html.A(href="https://visitercracovie.wordpress.com/", target="_blank")
-    link4 <= "Si vous savez pas quoi faire pendant vos vacances..."
+    link4 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
+    link4 <= "Si vous voulez vous aussi développer votre front end..."
     MY_SUB_PANEL <= link4
+
+    # ----
+
+    title5 = html.H4("Copinage")
+    MY_SUB_PANEL <= title5
+
+    link5 = html.A(href="https://visitercracovie.wordpress.com/", target="_blank")
+    link5 <= "Si vous savez pas quoi faire pendant vos vacances..."
+    MY_SUB_PANEL <= link5
 
 
 def all_games(state_name):
