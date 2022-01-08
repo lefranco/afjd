@@ -621,7 +621,7 @@ def edit_account():
     fieldset = html.FIELDSET()
     legend_email_confirmed = html.LEGEND("courriel confirmé", title="(pour information)")
     fieldset <= legend_email_confirmed
-    input_email_confirmed = html.INPUT(type="checkbox", readonly=True, checked=email_confirmed_loaded)
+    input_email_confirmed = html.INPUT(type="checkbox", disabled=True, checked=email_confirmed_loaded)
     fieldset <= input_email_confirmed
     form <= fieldset
 
