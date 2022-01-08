@@ -3652,7 +3652,7 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
             # TODO improve this with real moderator account
             if pseudo != 'Palpatine':
                 del sql_executor
-                flask_restful.abort(403, msg=f"You do not seem to play or master game (or to be site moderator) so you cannot see the incidents!")
+                flask_restful.abort(403, msg="You do not seem to play or master game (or to be site moderator) so you cannot see the incidents!")
 
         # incidents_list : those who submitted orders after deadline
         incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
