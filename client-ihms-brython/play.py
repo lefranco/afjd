@@ -4892,10 +4892,6 @@ def render(panel_middle):
     if GAME_PARAMETERS_LOADED['current_state'] == 0:
         ITEM_NAME_SELECTED = 'paramètres'
 
-    # game finished, visiting probably to see history
-    elif GAME_PARAMETERS_LOADED['current_state'] == 2:
-        ITEM_NAME_SELECTED = 'historique'
-
     else:
 
         if ROLE_ID is not None:
