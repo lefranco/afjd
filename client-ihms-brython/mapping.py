@@ -452,8 +452,8 @@ RETREAT_COLOUR = ColourRecord(red=255, green=127, blue=0)  # orange
 ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 # legend
-LEGEND_COLOUR = ColourRecord(red=50, green=50, blue=50)  # black-ish
-LEGEND_COLOUR_HIGHLITED = ColourRecord(red=0, green=0, blue=0)  # black
+LEGEND_COLOUR = ColourRecord(red=42, green=42, blue=42)  # black-ish
+LEGEND_COLOUR_HIGHLITED = ColourRecord(red=212, green=212, blue=212)  # white-ish
 
 
 def legend_font() -> str:
