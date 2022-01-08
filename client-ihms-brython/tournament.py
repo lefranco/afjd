@@ -363,6 +363,11 @@ def show_games():
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
+    # get advancment scale
+    advancements = [data['current_advancement'] for game_id_str, data in games_dict.items() if int(game_id_str) in games_in]
+    min_advancement = min(advancements)
+    max_advancement = max(advancements)
+
     number_games = 0
     # exception : games are sortded by name, not identifier
     for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
@@ -418,6 +423,7 @@ def show_games():
 
             value = data[field]
             colour = None
+            fg_colour = None
 
             if field == 'jump_here':
                 game_name = data['name']
@@ -465,10 +471,18 @@ def show_games():
                 advancement_season_readable = variant_data.name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
 
+                # special : a colour to see how far games have got
+                col_val = round(((max_advancement - advancement_loaded) / (max_advancement - min_advancement)) * 255)
+                fg_colour = f"#{col_val:02x}0000"
+
             col = html.TD(value)
             if colour is not None:
                 col.style = {
                     'background-color': colour
+                }
+            if fg_colour is not None:
+                col.style = {
+                    'color': fg_colour
                 }
 
             row <= col
