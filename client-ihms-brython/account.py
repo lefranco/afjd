@@ -738,10 +738,6 @@ def delete_account():
             # logout
             login.logout()
 
-            # back to the top
-            MY_SUB_PANEL.clear()
-            create_account()
-
         dialog.close()
 
         json_dict = {
