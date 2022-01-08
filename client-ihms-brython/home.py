@@ -447,9 +447,6 @@ FAQ_CONTENT = html.DIV("faq")
 def show_faq():
     """ show_faq """
 
-    global FAQ_DISPLAYED_TABLE
-    global FAQ_CONTENT
-
     def reveal_callback(_, question):
         """ reveal_callback """
 
@@ -484,9 +481,6 @@ WHYNOT_CONTENT = html.DIV("faq")
 
 def show_whynot():
     """ show_whynot """
-
-    global WHYNOT_DISPLAYED_TABLE
-    global WHYNOT_CONTENT
 
     def reveal_callback(_, question):
         """ reveal_callback """
