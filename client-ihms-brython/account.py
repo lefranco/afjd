@@ -151,7 +151,7 @@ def create_account():
 
     form = html.FORM()
 
-    form <= html.DIV("Pas d'espaces ni de tirets dans le pseudo", Class='note')
+    form <= html.DIV("Pas d'accents, d'espaces ni de tirets dans le pseudo", Class='note')
     form <= html.BR()
 
     fieldset = html.FIELDSET()
