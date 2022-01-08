@@ -589,11 +589,11 @@ class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
         pseudo = req_result.json()['logged_in_as']
 
-        # check user has right to add/remove moderator (admin)
+        # check user has right to get list of emails (moderator)
 
-        # TODO improve this with real admin account
+        # TODO improve this with real moderator account
         if pseudo != 'Palpatine':
-            flask_restful.abort(403, msg="You are not allowed to get lists of emails!")
+            flask_restful.abort(403, msg="You are not allowed to get list of emails!")
 
         sql_executor = database.SqlExecutor()
         players_list = players.Player.inventory(sql_executor)
