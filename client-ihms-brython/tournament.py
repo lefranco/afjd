@@ -364,7 +364,8 @@ def show_games():
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     number_games = 0
-    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0])):
+    # exception : games are sortded by name, not identifier
+    for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
 
         if int(game_id_str) not in games_in:
             continue
