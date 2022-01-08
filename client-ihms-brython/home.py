@@ -478,7 +478,6 @@ def show_faq():
     MY_SUB_PANEL <= FAQ_CONTENT
 
 
-
 WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
 WHYNOT_CONTENT = html.DIV("faq")
 
@@ -515,7 +514,6 @@ def show_whynot():
         WHYNOT_CONTENT <= html.P()
 
     MY_SUB_PANEL <= WHYNOT_CONTENT
-
 
 
 def show_technical():
