@@ -18,7 +18,7 @@ import mapping
 import geometry
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'tous les courriels', 'éditer les modérateurs']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -97,37 +97,6 @@ def get_last_failures():
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return failures_list
-
-
-def get_all_emails():
-    """ get_all_emails returns empty dict if error """
-
-    emails_dict = {}
-
-    def reply_callback(req):
-        nonlocal emails_dict
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des courriels : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des courriels : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        emails_dict = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/players-emails"
-
-    # changing news : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return emails_dict
 
 
 def change_news():
@@ -935,46 +904,6 @@ def last_failures():
     MY_SUB_PANEL <= failures_table
 
 
-def all_emails():
-    """ all_emails """
-
-    MY_SUB_PANEL <= html.H3("Liste joueurs avec leurs courriels")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
-        alert("Pas le bon compte (pas admin)")
-        return
-
-    emails_dict = get_all_emails()
-
-    emails_table = html.TABLE()
-
-    # header
-    thead = html.THEAD()
-    for field in ['pseudo', 'email']:
-        col = html.TD(field)
-        thead <= col
-    emails_table <= thead
-
-    for pseudo, email in emails_dict.items():
-        row = html.TR()
-
-        col = html.TD(pseudo)
-        row <= col
-
-        col = html.TD(email)
-        row <= col
-
-        emails_table <= row
-
-    MY_SUB_PANEL <= emails_table
-
-
 def edit_moderators():
     """ edit_moderators """
 
@@ -1175,8 +1104,6 @@ def load_option(_, item_name):
         last_logins()
     if item_name == 'connexions manquées':
         last_failures()
-    if item_name == 'tous les courriels':
-        all_emails()
     if item_name == 'éditer les modérateurs':
         edit_moderators()
 
