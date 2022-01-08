@@ -192,7 +192,7 @@ def create_account():
     fieldset = html.FIELDSET()
     legend_notify = html.LEGEND("Notifiez-moi !", title="Devons nous vous envoyer un courriel sur chaque résolution de vos parties ?")
     fieldset <= legend_notify
-    input_notify = html.INPUT(type="checkbox", checked=False)
+    input_notify = html.INPUT(type="checkbox", checked=True)
     fieldset <= input_notify
     form <= fieldset
 
