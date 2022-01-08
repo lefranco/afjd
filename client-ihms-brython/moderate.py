@@ -17,7 +17,7 @@ import scoring
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['retrouver à partir du courriel', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi']
+OPTIONS = ['retrouver à partir du courriel', 'tous les courriels', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi']
 
 MODO_PSEUDO = 'Palpatine'
 
@@ -61,6 +61,37 @@ def get_tournament_players_data(tournament_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return tournament_players_dict
+
+
+def get_all_emails():
+    """ get_all_emails returns empty dict if error """
+
+    emails_dict = {}
+
+    def reply_callback(req):
+        nonlocal emails_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des courriels : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des courriels : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        emails_dict = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/players-emails"
+
+    # changing news : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return emails_dict
 
 
 def find_from_email_address():
@@ -129,6 +160,46 @@ def find_from_email_address():
     form <= input_find_email
 
     MY_SUB_PANEL <= form
+
+
+def all_emails():
+    """ all_emails """
+
+    MY_SUB_PANEL <= html.H3("Liste joueurs avec leurs courriels")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    emails_dict = get_all_emails()
+
+    emails_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'email']:
+        col = html.TD(field)
+        thead <= col
+    emails_table <= thead
+
+    for pseudo, email in emails_dict.items():
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        col = html.TD(email)
+        row <= col
+
+        emails_table <= row
+
+    MY_SUB_PANEL <= emails_table
 
 
 def display_email_address():
@@ -458,10 +529,34 @@ def tournament_result():
         recap_table <= row
         rang += 1
 
-    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
-    MY_SUB_PANEL <= html.BR()
+    incident_table = html.TABLE()
 
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'incidents']:
+        col = html.TD(field)
+        thead <= col
+    incident_table <= thead
+
+    rang = 1
+    for pseudo, nb_incidents in sorted(count.items(), key=lambda p: p[1], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        col = html.TD(nb_incidents)
+        row <= col
+
+        incident_table <= row
+        rang += 1
+
+    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
+
+    MY_SUB_PANEL <= html.H4("Classement")
     MY_SUB_PANEL <= recap_table
+    MY_SUB_PANEL <= html.H4("Incidents")
+    MY_SUB_PANEL <= incident_table
 
 
 MY_PANEL = html.DIV()
@@ -488,6 +583,8 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     if item_name == 'retrouver à partir du courriel':
         find_from_email_address()
+    if item_name == 'tous les courriels':
+        all_emails()
     if item_name == 'récupérer un courriel':
         display_email_address()
     if item_name == 'récupérer un téléphone':
