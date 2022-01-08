@@ -31,7 +31,7 @@ WHYNOT_CONTENT_TABLE = {
     "C'est assez long à réaliser. C'est prévu dans un avenir assez proche.",
 
     "Pourquoi il n'y a pas de calcul de ELO des joueurs ?":
-    "C'est prévu dans un avenir assez proche. Le principal obstacle sera la compréhension de la formule par le codeur (ainsi que ce mettre d'accord sur cette formule) !",
+    "C'est prévu dans un avenir assez proche. Le principal obstacle sera la compréhension de la formule par le codeur (ainsi que se mettre d'accord sur cette formule) !",
 
     "Pourquoi il n'y a pas de fiche joueur ?":
     "C'est prévu dans un avenir très proche. Néanmoins les participations aux parties anonymes resteront invisibles...",
