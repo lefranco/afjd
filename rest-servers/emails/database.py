@@ -19,14 +19,31 @@ STR_SEPARATOR = ';'
 STR_SEPARATOR_SUBSTITUTE = ':'
 
 
+def rmdiacritics(field_content: str) -> str:
+    '''
+    Return the base character of field_content, by "removing" any
+    diacritics like accents or curls and strokes and the like.
+    '''
+    result = ''
+    for char in field_content:
+        desc = unicodedata.name(char)
+        cutoff = desc.find(' WITH ')
+        if cutoff != -1:
+            desc = desc[:cutoff]
+            try:
+                char = unicodedata.lookup(desc)
+            except KeyError:
+                assert False, f"Removing WITH ... produced an invalid name for {char}"
+        result += char
+    return result
+
+
 def sanitize_field(field_content: str) -> str:
     """ Any str to something that goes into the database """
 
     assert isinstance(field_content, str), "Sanitize applicable only to strings"
-    nfkd_form = unicodedata.normalize('NFKD', field_content)
-    only_ascii = nfkd_form.encode('ASCII', 'ignore')
-    back_str = only_ascii.decode()
-    without_separator = back_str.replace(STR_SEPARATOR, STR_SEPARATOR_SUBSTITUTE)
+    without_diacritics = rmdiacritics(field_content)
+    without_separator = without_diacritics.replace(STR_SEPARATOR, STR_SEPARATOR_SUBSTITUTE)
     return without_separator
 
 

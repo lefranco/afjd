@@ -37,7 +37,8 @@ class User:
     def __init__(self, user_name: str, pwd_hash: str) -> None:
 
         assert isinstance(user_name, str), "identifier must be an str"
-        self._user_name = user_name
+        safe_user_name = database.sanitize_field(user_name)
+        self._user_name = safe_user_name
 
         assert isinstance(pwd_hash, str), "pwd_hash must be a str"
         self._pwd_hash = pwd_hash
