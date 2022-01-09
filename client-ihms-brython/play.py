@@ -924,6 +924,8 @@ def submit_orders():
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
         stack_role_flag(buttons_right)
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
         # we are in spring or autumn
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
@@ -959,6 +961,8 @@ def submit_orders():
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
         stack_role_flag(buttons_right)
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
@@ -1005,6 +1009,8 @@ def submit_orders():
             buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
             legend_select_active = html.DIV("Sélectionner la zone où construire (cliquer sous la légende)", Class='instruction')
             buttons_right <= legend_select_active
@@ -1041,6 +1047,8 @@ def submit_orders():
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
@@ -1209,6 +1217,8 @@ def submit_orders():
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
             # gm can pass orders on archive games
             if ROLE_ID != 0 and selected_active_unit.role != VARIANT_DATA.roles[ROLE_ID]:
@@ -1300,6 +1310,8 @@ def submit_orders():
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
@@ -1387,6 +1399,8 @@ def submit_orders():
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -1495,6 +1509,8 @@ def submit_orders():
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
         stack_role_flag(buttons_right)
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
@@ -1810,6 +1826,8 @@ def submit_orders():
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
     stack_role_flag(buttons_right)
+    buttons_right <= html.BR()
+    buttons_right <= html.BR()
 
     if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
@@ -1912,6 +1930,8 @@ def submit_communication_orders():
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
         stack_role_flag(buttons_right)
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
@@ -1940,6 +1960,8 @@ def submit_communication_orders():
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
@@ -2044,6 +2066,8 @@ def submit_communication_orders():
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
             # gm can pass orders on archive games
             if ROLE_ID != 0 and selected_active_unit.role != VARIANT_DATA.roles[ROLE_ID]:
@@ -2106,6 +2130,8 @@ def submit_communication_orders():
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
@@ -2147,6 +2173,8 @@ def submit_communication_orders():
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
             stack_role_flag(buttons_right)
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -2240,6 +2268,8 @@ def submit_communication_orders():
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
         stack_role_flag(buttons_right)
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
@@ -2508,6 +2538,8 @@ def submit_communication_orders():
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
     stack_role_flag(buttons_right)
+    buttons_right <= html.BR()
+    buttons_right <= html.BR()
 
     legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
     buttons_right <= legend_select_unit
