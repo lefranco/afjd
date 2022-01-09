@@ -505,6 +505,13 @@ def stack_role_flag(frame):
     frame <= role_icon_img
 
 
+def stack_role_builds(frame):
+    """ stack_role_builds """
+    role = VARIANT_DATA.roles[ROLE_ID]
+    nb_builds, nb_ownerships, nb_units, nb_free_centers = POSITION_DATA.role_builds(role)
+    frame <= html.DIV(f"Vous avez {nb_ownerships} centre(s) pour {nb_units} unité(s) et {nb_free_centers} emplacement(s) libre(s). Vous {'construisez' if nb_builds > 0 else 'détruisez'} donc {abs(nb_builds)} fois.", Class='note')
+
+
 DEADLINE_COL = None
 COUNTDOWN_COL = None
 
@@ -1828,6 +1835,12 @@ def submit_orders():
     stack_role_flag(buttons_right)
     buttons_right <= html.BR()
     buttons_right <= html.BR()
+
+    # first time : we alert about build stat
+    if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+        stack_role_builds(buttons_right)
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
     if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
