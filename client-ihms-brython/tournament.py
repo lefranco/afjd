@@ -472,8 +472,9 @@ def show_games():
                 value = f"{advancement_season_readable} {advancement_year}"
 
                 # special : a colour to see how far games have got
-                col_val = round(((max_advancement - advancement_loaded) / (max_advancement - min_advancement)) * 255)
-                fg_colour = f"#{col_val:02x}0000"
+                col_val_red = round(((max_advancement - advancement_loaded) / (max_advancement - min_advancement)) * 255)
+                col_val_green = round(((advancement_loaded - min_advancement) / (max_advancement - min_advancement)) * 255)
+                fg_colour = f"#{col_val_red:02x}{col_val_green:02x}00"
 
             col = html.TD(value)
             if colour is not None:
