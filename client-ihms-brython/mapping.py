@@ -515,7 +515,6 @@ class Variant(Renderable):
         assert len(self._raw_variant_content['start_centers']) == len(self._roles)
 
         # load start centers
-        self._start_centers = {}
         for num, role_start_centers in enumerate(self._raw_variant_content['start_centers']):
             number = num + 1
             role = self._roles[number]
@@ -1311,6 +1310,16 @@ class Position(Renderable):
                 distance_closest = distance
 
         return closest_object
+
+    def role_builds(self, role: Role):
+        """ how many builds allowed (positive or negative) for the role """
+
+        nb_ownerships = len([o for o in self._ownerships if o.role == role])
+        nb_units = len([u for u in self._units if u.role == role])
+        nb_free_centers = len([c for c in role.start_centers if c in self._owner_table and self._owner_table[c].role == role and c.region not in self._occupant_table])
+
+        nb_builds = min(nb_ownerships - nb_units, nb_free_centers)
+        return nb_builds, nb_ownerships, nb_units, nb_free_centers
 
     def units_list(self):
         """ units_list """
