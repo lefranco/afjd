@@ -1841,5 +1841,9 @@ class Orders(Renderable):
             json_data.append(order.save_json())
         return json_data
 
+    def number(self):
+        """" how many (builds) """
+        return len(self._orders)
+
     def __str__(self) -> str:
         return '\n'.join([str(o) for o in self._orders])

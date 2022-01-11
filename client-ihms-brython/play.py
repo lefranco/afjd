@@ -862,7 +862,10 @@ def submit_orders():
 
     input_definitive = None
 
-    def submit_orders_callback(_):
+    def cancel_submit_orders_callback(_, dialog):
+        dialog.close()
+
+    def submit_orders_callback(_, warned=False, dialog2=None):
         """ submit_orders_callback """
 
         def reply_callback(req):
@@ -886,6 +889,21 @@ def submit_orders():
                 load_dynamic_stuff()
                 MY_SUB_PANEL.clear()
                 load_option(None, 'position')
+
+        if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
+            role = VARIANT_DATA.roles[ROLE_ID]
+            nb_builds, _, _, _ = POSITION_DATA.role_builds(role)
+            if nb_builds > 0:
+                nb_builds_done = orders_data.number()
+                if nb_builds_done < nb_builds:
+                    if not warned:
+                        dialog = Dialog(f"Vous construisez {nb_builds_done} unités alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
+                        dialog.ok_button.bind("click", lambda e, w=True, d=dialog: submit_orders_callback(e, w, d))
+                        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_submit_orders_callback(e, d))
+                        return
+
+        if dialog2:
+            dialog2.close()
 
         names_dict = VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
