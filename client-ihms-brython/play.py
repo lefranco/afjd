@@ -780,6 +780,7 @@ def show_position():
 
         if game_parameters_loaded['current_advancement'] == GAME_PARAMETERS_LOADED['current_advancement']:
             # no change it seeems
+            InfoDialog("OK", "Rien de nouveau sous le soleil !", remove_after=config.REMOVE_AFTER)
             return
 
         alert("La position de la partie a changé !")
