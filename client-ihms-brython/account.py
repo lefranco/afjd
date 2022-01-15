@@ -36,7 +36,7 @@ def information_about_account():
     information = html.DIV(Class='note')
     information <= html.B("Vous voulez rester discret ?")
     information <= html.BR()
-    information <= "La plupart des champs sont privés et ne seront pas montrés sur le site et/ou facultatifs"
+    information <= "La plupart des champs sont privés et ne seront pas montrés sur le site et/ou facultatifs."
     return information
 
 
@@ -44,7 +44,7 @@ def information_about_emails():
     """ information_about_emails """
 
     information = html.DIV(Class='important')
-    information <= "Vous recevrez un courriel pour confimer votre adresse de courriel, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un courriel de rappel de l'arbitre si vous êtes en retard sur les ordres. Un courriel de notification de résolution mais dans ce dernier cas seulement si vous l'avez demandé."
+    information <= "Vous recevrez un courriel pour confimer votre adresse de courriel, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un courriel de rappel de l'arbitre si vous êtes en retard sur les ordres. Un courriel de notification de résolution mais dans ce dernier cas seulement si vous l'avez demandé. A noter : il vous est déconseillé d'utiliser une adresse courriel professionelle."
     information <= html.BR()
     information <= "Rien de plus !"
     return information
@@ -176,7 +176,7 @@ def create_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("courriel (privé)", title="Le site vous notifiera de quelques très rares événements")
+    legend_email = html.LEGEND("courriel (privé)", title="Le site vous notifiera de quelques très rares événements (sauf si vous demandez les notifications)")
     fieldset <= legend_email
     input_email = html.INPUT(type="email", value="", size=MAX_LEN_EMAIL)
     fieldset <= input_email
@@ -612,7 +612,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("courriel", title="Le site vous notifiera de quelques très rares événements")
+    legend_email = html.LEGEND("courriel", title="Le site vous notifiera de quelques très rares événements (sauf si vous demandez les notifications)")
     fieldset <= legend_email
     input_email = html.INPUT(type="email", value=email_loaded, size=MAX_LEN_EMAIL)
     fieldset <= input_email
