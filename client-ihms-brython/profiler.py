@@ -70,7 +70,7 @@ class Profiler:
         def reply_callback(_):
             pass
 
-        subject = f"stats jouer la partie pour {pseudo}"
+        subject = f"stats pour {pseudo}"
         body = ""
         body += f"{self}"
         body += "\n\n"
