@@ -686,17 +686,17 @@ def show_incidents():
 
     tournament_incidents_table = html.TABLE()
 
-    fields = ['date', 'alias']
+    fields = ['alias', 'season', 'date']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'date': 'date', 'alias': 'alias'}[field]
+        field_fr = {'alias': 'alias', 'season': 'saison', 'date': 'date'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournament_incidents_table <= thead
 
-    for game_id, role_num, date_incident in sorted(tournament_incidents, key=lambda i: i[2]):
+    for game_id, role_num, advancement, date_incident in sorted(tournament_incidents, key=lambda i: i[2]):
 
         data = games_dict[str(game_id)]
 
@@ -734,20 +734,27 @@ def show_incidents():
 
         row = html.TR()
 
-        # date
-        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
-        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
-        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
-        incident_str = f"{incident_day} {incident_hour} GMT"
-        col = html.TD(incident_str)
-        row <= col
-
         # player
         game_name = data['name']
         role = variant_data.roles[role_num]
         role_name = variant_data.name_table[role]
         alias = f"{game_name}##{role_name}"
         col = html.TD(alias)
+        row <= col
+
+        # season
+        advancement_season, advancement_year = common.get_season(advancement, variant_data)
+        advancement_season_readable = variant_data.name_table[advancement_season]
+        game_season = f"{advancement_season_readable} {advancement_year}"
+        col = html.TD(game_season)
+        row <= col
+
+        # date
+        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
+        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
+        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
+        incident_str = f"{incident_day} {incident_hour} GMT"
+        col = html.TD(incident_str)
         row <= col
 
         tournament_incidents_table <= row

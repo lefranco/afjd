@@ -4076,7 +4076,7 @@ class AssignmentListRessource(flask_restful.Resource):  # type: ignore
 class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
     """ TournamentIncidentsRessource """
 
-    def get(self, tournament_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, float]], int]:  # pylint: disable=no-self-use
+    def get(self, tournament_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, float]], int]:  # pylint: disable=no-self-use
         """
         Gets list of pseudo/alias which have produced an incident for given tournament
         EXPOSED
@@ -4096,11 +4096,11 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
         tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
         tournament_game_ids = [g[1] for g in tournament_games]
 
-        late_list: typing.List[typing.Tuple[int, int, float]] = []
+        late_list: typing.List[typing.Tuple[int, int, int, float]] = []
         for game_id in tournament_game_ids:
             incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
-            for _, role_num, _, _, date_incident in incidents_list:
-                late_list.append((game_id, role_num, date_incident))
+            for _, role_num, advancement, _, date_incident in incidents_list:
+                late_list.append((game_id, role_num, advancement, date_incident))
 
         del sql_executor
 
