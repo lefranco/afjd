@@ -493,7 +493,7 @@ def tournament_result():
     # there can be no incidents (if no incident of failed to load)
 
     count = {}
-    for game_id, role_num, _ in tournament_incidents:
+    for game_id, role_num, _, _ in tournament_incidents:
         pseudo = gamerole2pseudo[(game_id, role_num)]
         if pseudo not in count:
             count[pseudo] = 1
