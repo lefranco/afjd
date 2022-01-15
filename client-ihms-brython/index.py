@@ -153,6 +153,9 @@ def load_option(_, item_name):
         if play.OBSERVE_REFRESH_TIMER is not None:
             timer.clear_interval(play.OBSERVE_REFRESH_TIMER)
             play.OBSERVE_REFRESH_TIMER = None
+        document.unbind("keypress")
+    if ITEM_NAME_SELECTED != 'bac à sable':
+        document.unbind("keypress")
 
 
 # panel-middle
