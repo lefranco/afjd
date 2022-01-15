@@ -473,13 +473,15 @@ def load_dynamic_stuff():
 def load_special_stuff():
     """ load_special_stuff : loads global data """
 
+    global GAME_PLAYERS_DICT
+    GAME_PLAYERS_DICT = dict()
+
     if PSEUDO is None:
         return
 
     if not (moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         return
 
-    global GAME_PLAYERS_DICT
     # get the players of the game
     # need a token for this
     GAME_PLAYERS_DICT = get_game_players_data(GAME_ID)
