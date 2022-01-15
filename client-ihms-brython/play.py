@@ -474,7 +474,7 @@ def load_special_stuff():
     """ load_special_stuff : loads global data """
 
     global GAME_PLAYERS_DICT
-    GAME_PLAYERS_DICT = dict()
+    GAME_PLAYERS_DICT = {}
 
     if PSEUDO is None:
         return
@@ -773,9 +773,19 @@ def show_position():
     def callback_refresh(_):
         """ callback_refresh """
 
-        # TODO
-        alert("Pas opérationnel pour le moment.. désolé !")
+        game_parameters_loaded = common.game_parameters_reload(GAME)
+        if not game_parameters_loaded:
+            alert("Erreur chargement paramètres")
+            return
 
+        if game_parameters_loaded['current_advancement'] == GAME_PARAMETERS_LOADED['current_advancement']:
+            # no change it seeems
+            return
+
+        alert("La position de la partie a changé !")
+        load_dynamic_stuff()
+        MY_SUB_PANEL.clear()
+        load_option(None, 'position')
 
     def callback_export_sandbox(_):
         """ callback_export_sandbox """
