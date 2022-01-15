@@ -660,7 +660,7 @@ def get_game_status():
 
     if GAME_PARAMETERS_LOADED['fast']:
         row = html.TR()
-        specific_information = html.DIV("Partie en direct : rafraichissez la position etc... avec le bouton 'Jouer la partie sélectionnée'", Class='note')
+        specific_information = html.DIV("Partie en direct : utiliser le bouton 'recharger la partie' du menu 'position'", Class='note')
         col = html.TD(specific_information, colspan="6")
         row <= col
         game_status_table <= row
@@ -770,6 +770,13 @@ def show_position():
         # put the legends at the end
         VARIANT_DATA.render_legends(ctx)
 
+    def callback_refresh(_):
+        """ callback_refresh """
+
+        # TODO
+        alert("Pas opérationnel pour le moment.. désolé !")
+
+
     def callback_export_sandbox(_):
         """ callback_export_sandbox """
 
@@ -779,6 +786,15 @@ def show_position():
         # action of going to sandbox page
         index.load_option(None, 'bac à sable')
 
+    def put_refresh(buttons_right):
+        """ put_refresh """
+
+        input_refresh = html.INPUT(type="submit", value="recharger la partie")
+        input_refresh.bind("click", callback_refresh)
+        buttons_right <= html.BR()
+        buttons_right <= input_refresh
+        buttons_right <= html.BR()
+
     def put_export_sandbox(buttons_right):
         """ put_export_sandbox """
 
@@ -787,6 +803,7 @@ def show_position():
         buttons_right <= html.BR()
         buttons_right <= input_export_sandbox
         buttons_right <= html.BR()
+
 
     # now we can display
 
@@ -835,6 +852,7 @@ def show_position():
         stack_role_flag(buttons_right)
         buttons_right <= html.BR()
 
+    put_refresh(buttons_right)
     put_export_sandbox(buttons_right)
 
     # overall
