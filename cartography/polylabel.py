@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 polylabel
 from site :
@@ -174,3 +176,4 @@ def polylabel(polygon, precision=1.0, debug=False, with_distance=False):
     if with_distance:
         return [best_cell.x, best_cell.y], best_cell.d
     return [best_cell.x, best_cell.y]
+
