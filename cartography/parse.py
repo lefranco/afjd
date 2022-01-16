@@ -13,7 +13,6 @@ import sys
 import json
 import copy
 import struct
-import os
 
 import xml.dom.minidom
 
@@ -129,7 +128,7 @@ def main() -> None:
     parser.add_argument('-p', '--parameters_input', required=True, help='Input parameters (names) json file')
     parser.add_argument('-s', '--svg_input', required=True, help='Input map svg file')
     parser.add_argument('-F', '--first_format_json_output', required=True, help='Output json file for first format (jeremie)')
-    parser.add_argument('-S', '--second_format_json_output', required=True, help='Output json file for second format (wenz)')
+    parser.add_argument('-S', '--second_format_json_output', required=False, help='Output json file for second format (wenz)')
     args = parser.parse_args()
 
     map_png_input = args.map_png_input
@@ -500,13 +499,14 @@ def main() -> None:
     with open(first_format_json_output, 'w', encoding='utf-8') as file_ptr:
         file_ptr.write(output)
 
-    result2: typing.Dict[str, typing.Any] = {}
-    result2['svg_dim'] = svg_dim
-    result2['map_elements'] = map_elements
-    result2['zones'] = zone_table
-    output = json.dumps(result2, indent=4, ensure_ascii=False)
-    with open(second_format_json_output, 'w', encoding='utf-8') as file_ptr:
-        file_ptr.write(output)
+    if second_format_json_output is not None:
+        result2: typing.Dict[str, typing.Any] = {}
+        result2['svg_dim'] = svg_dim
+        result2['map_elements'] = map_elements
+        result2['zones'] = zone_table
+        output = json.dumps(result2, indent=4, ensure_ascii=False)
+        with open(second_format_json_output, 'w', encoding='utf-8') as file_ptr:
+            file_ptr.write(output)
 
 
 if __name__ == '__main__':
