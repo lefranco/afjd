@@ -117,7 +117,9 @@ def load_option(_, item_name):
         moderate.render(PANEL_MIDDLE)
     if item_name == 'administration':
         admin.render(PANEL_MIDDLE)
+
     global ITEM_NAME_SELECTED
+    prev_item_selected = ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
     MENU_LEFT.clear()
@@ -153,8 +155,9 @@ def load_option(_, item_name):
         if play.OBSERVE_REFRESH_TIMER is not None:
             timer.clear_interval(play.OBSERVE_REFRESH_TIMER)
             play.OBSERVE_REFRESH_TIMER = None
-        document.unbind("keypress")
-    if ITEM_NAME_SELECTED != 'bac à sable':
+
+    # these cause some problems
+    if prev_item_selected in ['jouer la partie sélectionnée', 'bac à sable']:
         document.unbind("keypress")
 
 

@@ -815,7 +815,6 @@ def show_position():
         buttons_right <= input_export_sandbox
         buttons_right <= html.BR()
 
-
     # now we can display
 
     # header
@@ -4900,6 +4899,7 @@ def load_option(_, item_name):
         return
 
     global ITEM_NAME_SELECTED
+    prev_item_selected = ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
     MENU_LEFT.clear()
@@ -4930,6 +4930,10 @@ def load_option(_, item_name):
         if OBSERVE_REFRESH_TIMER is not None:
             timer.clear_interval(OBSERVE_REFRESH_TIMER)
             OBSERVE_REFRESH_TIMER = None
+
+    # these cause some problems
+    if prev_item_selected in ['ordonner', 'taguer']:
+        document.unbind("keypress")
 
 
 COUNTDOWN_TIMER = None
