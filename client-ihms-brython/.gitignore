@@ -1,4 +1,2 @@
-*.wpr
 /.mypy_cache/
-/reserve/
 /brython_modules.js
