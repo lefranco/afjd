@@ -327,7 +327,9 @@ def make_report_window(report_loaded):
         report_col = html.TD()
         chunk_content = lines[chunk_num * split_size: (chunk_num + 1) * split_size]
         for line in chunk_content:
-            if line.find("(échec)") != -1 or line.find("(coupé)") != -1 or line.find("(délogée)") != -1 or line.find("(détruite)") != -1 or line.find("(invalide)") != -1:
+            if line == "":
+                report_col <= html.DIV("&nbsp", Class='code_info')
+            elif line.find("(échec)") != -1 or line.find("(coupé)") != -1 or line.find("(délogée)") != -1 or line.find("(détruite)") != -1 or line.find("(invalide)") != -1:
                 report_col <= html.DIV(line, Class='code_failed')
             elif line.find(":") != -1:
                 report_col <= html.DIV(line, Class='code_info')
