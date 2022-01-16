@@ -297,10 +297,13 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
     # date for report in database (actually unused)
     time_stamp = int(time.time())
 
+    datetime_adjudication = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+    adjudication_day = f"{datetime_adjudication.year:04}-{datetime_adjudication.month:02}-{datetime_adjudication.day:02}"
+    adjudication_hour = f"{datetime_adjudication.hour:02}:{datetime_adjudication.minute:02}"
+    adjudication_str = f"{adjudication_day} {adjudication_hour} GMT"
+
     # make report
-    date_now = datetime.datetime.now()
-    date_desc = date_now.strftime('%Y-%m-%d %H:%M:%S')
-    report_txt = f"{date_desc}:\n{orders_result_simplified}\n{communication_orders_content_tagged}"
+    report_txt = f"{adjudication_str}:\n{orders_result_simplified}\n{communication_orders_content_tagged}"
 
     # put report in database
     report = reports.Report(int(game_id), time_stamp, report_txt)
