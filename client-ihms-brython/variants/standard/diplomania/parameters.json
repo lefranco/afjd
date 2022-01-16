@@ -135,9 +135,9 @@
         "5": {
             "name": "Apu",
             "full_name": "Apulie",
-            "x_pos": 417,
+            "x_pos": 421,
             "y_pos": 568,
-            "x_legend_pos": 417,
+            "x_legend_pos": 421,
             "y_legend_pos": 554
         },
         "6": {
@@ -239,10 +239,10 @@
         "18": {
             "name": "Cly",
             "full_name": "Clyde",
-            "x_pos": 227,
-            "y_pos": 269,
-            "x_legend_pos": 227,
-            "y_legend_pos": 255
+            "x_pos": 225,
+            "y_pos": 265,
+            "x_legend_pos": 225,
+            "y_legend_pos": 251
         },
         "19": {
             "name": "Con",
@@ -271,10 +271,10 @@
         "22": {
             "name": "Edi",
             "full_name": "Édimbourg",
-            "x_pos": 235,
-            "y_pos": 290,
-            "x_legend_pos": 235,
-            "y_legend_pos": 276
+            "x_pos": 237,
+            "y_pos": 295,
+            "x_legend_pos": 237,
+            "y_legend_pos": 281
         },
         "23": {
             "name": "Man",
@@ -367,10 +367,10 @@
         "34": {
             "name": "Lon",
             "full_name": "Londres",
-            "x_pos": 259,
-            "y_pos": 382,
-            "x_legend_pos": 259,
-            "y_legend_pos": 368
+            "x_pos": 261,
+            "y_pos": 386,
+            "x_legend_pos": 261,
+            "y_legend_pos": 372
         },
         "35": {
             "name": "Lvn",
@@ -511,10 +511,10 @@
         "52": {
             "name": "Rom",
             "full_name": "Rome",
-            "x_pos": 396,
-            "y_pos": 567,
-            "x_legend_pos": 396,
-            "y_legend_pos": 553
+            "x_pos": 393,
+            "y_pos": 571,
+            "x_legend_pos": 393,
+            "y_legend_pos": 557
         },
         "53": {
             "name": "Ruh",
@@ -623,10 +623,10 @@
         "66": {
             "name": "Tos",
             "full_name": "Toscane",
-            "x_pos": 380,
-            "y_pos": 546,
-            "x_legend_pos": 380,
-            "y_legend_pos": 532
+            "x_pos": 376,
+            "y_pos": 545,
+            "x_legend_pos": 376,
+            "y_legend_pos": 531
         },
         "67": {
             "name": "MTy",
@@ -655,10 +655,10 @@
         "70": {
             "name": "Ven",
             "full_name": "Venise",
-            "x_pos": 383,
-            "y_pos": 521,
-            "x_legend_pos": 383,
-            "y_legend_pos": 507
+            "x_pos": 384,
+            "y_pos": 516,
+            "x_legend_pos": 384,
+            "y_legend_pos": 502
         },
         "71": {
             "name": "Vie",
@@ -695,10 +695,10 @@
         "75": {
             "name": "Yor",
             "full_name": "Yorkshire",
-            "x_pos": 249,
-            "y_pos": 364,
-            "x_legend_pos": 249,
-            "y_legend_pos": 350
+            "x_pos": 247,
+            "y_pos": 360,
+            "x_legend_pos": 247,
+            "y_legend_pos": 346
         },
         "76": {
             "name": "",
