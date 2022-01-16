@@ -4931,10 +4931,6 @@ def load_option(_, item_name):
             timer.clear_interval(OBSERVE_REFRESH_TIMER)
             OBSERVE_REFRESH_TIMER = None
 
-    # these cause some problems
-    if prev_item_selected in ['ordonner', 'taguer']:
-        document.unbind("keypress")
-
 
 COUNTDOWN_TIMER = None
 
