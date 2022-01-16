@@ -8,7 +8,6 @@ parses a svg file to make json information
 """
 
 import argparse
-import dataclasses
 import typing
 import sys
 import json
@@ -24,16 +23,14 @@ import polylabel
 def get_image_info(file_name: str) -> typing.Tuple[int, int]:
     """ get_image_info """
 
-    size = os.path.getsize(file_name)
-
     with open(file_name, 'rb') as file_ptr:
         data = file_ptr.read()
 
     assert data.startswith(b'\211PNG\r\n\032\n') and data[12:16] == b'IHDR', "Not a PNG file"
     # PNGs
-    w, h = struct.unpack(">LL", data[16:24])
-    width = int(w)
-    height = int(h)
+    width_extracted, height_extracted = struct.unpack(">LL", data[16:24])
+    width = int(width_extracted)
+    height = int(height_extracted)
 
     return width, height
 
@@ -43,15 +40,15 @@ class Path:
 
     def __init__(self, text: str):
         self._text = text
-        self.points: typing.List[Point] = list()
-        self._list_x = list()
-        self._list_y = list()
+        self.points: typing.List[float] = []
+        self._list_x = []
+        self._list_y = []
         self._inner_path: typing.Optional['Path'] = None
 
         #  print(f"{text=}")
 
         # first we standardize path
-        elements = list()
+        elements = []
         for elt in self._text.split():
             if len(elt) == 1:
                 letter = elt
@@ -105,7 +102,7 @@ class Path:
         # calculate polylabel
 
         # list of polygons we pass
-        polygons = list()
+        polygons = []
 
         # the one of the region first
         outer_polygon = self.polygon()
@@ -143,11 +140,11 @@ def main() -> None:
     second_format_json_output = args.second_format_json_output
 
     # load variant from json data file
-    with open(json_variant_input, "r") as read_file:
+    with open(json_variant_input, "r", encoding='utf-8') as read_file:
         json_variant_data = json.load(read_file)
 
     # load parameters from json data file
-    with open(json_parameters_input, "r") as read_file:
+    with open(json_parameters_input, "r", encoding='utf-8') as read_file:
         json_parameters_data = json.load(read_file)
 
     # make center table from input json file
@@ -163,7 +160,7 @@ def main() -> None:
     coastal_zones_name2num_table = {f"{json_parameters_data['zones'][str(r)]['name']}{json_parameters_data['coasts'][str(c)]['name']}".upper(): len(json_variant_data['regions']) + 1 + n for n, (r, c) in enumerate(json_variant_data['coastal_zones'])}
 
     # make table coastal zone2region
-    coastal_zone2region_table = {len(json_variant_data['regions']) + 1 + n : r for n, (r, _) in enumerate(json_variant_data['coastal_zones'])}
+    coastal_zone2region_table = {len(json_variant_data['regions']) + 1 + n: r for n, (r, _) in enumerate(json_variant_data['coastal_zones'])}
 
     # parse svg map to find paths
     doc = xml.dom.minidom.parse(svg_input_file)
@@ -172,8 +169,6 @@ def main() -> None:
 
     svg_nodes = doc.getElementsByTagName("svg")
     svg_node = svg_nodes[0]
-    svg_height = svg_node.getAttribute('height')
-    svg_width = svg_node.getAttribute('width')
     viewbox = svg_node.getAttribute("viewBox")
     _, _, viewbox_width_str, viewbox_height_str = viewbox.split()
     viewbox_width = float(viewbox_width_str)
@@ -183,7 +178,7 @@ def main() -> None:
 
     # svg for wenz
     svg_dim = {
-        'width' : viewbox_width,
+        'width': viewbox_width,
         'height': viewbox_height
     }
 
@@ -196,9 +191,9 @@ def main() -> None:
 
     # ====== parse input svg file =====
 
-    centers_path_table: typing.Dict[int, Path] = dict()
-    regions_path_table: typing.Dict[int, Path] = dict()
-    coastal_zones_path_table: typing.Dict[int, Path] = dict()
+    centers_path_table: typing.Dict[int, Path] = {}
+    regions_path_table: typing.Dict[int, Path] = {}
+    coastal_zones_path_table: typing.Dict[int, Path] = {}
 
     for path in doc.getElementsByTagName("path"):
 
@@ -304,8 +299,8 @@ def main() -> None:
     # ====== make centers_pos_table =====
     #  for jeremie
 
-    centers_raw_pos_table = dict()
-    centers_pos_table = dict()
+    centers_raw_pos_table = {}
+    centers_pos_table = {}
     for num, path in sorted(centers_path_table.items(), key=lambda kv: int(kv[0])):
 
         # for centers : middle is OK
@@ -322,8 +317,8 @@ def main() -> None:
     # ====== make regions_pos_table =====
     #  for jeremie
 
-    regions_raw_pos_table = dict()
-    regions_pos_table = dict()
+    regions_raw_pos_table = {}
+    regions_pos_table = {}
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
 
         # for regions :  the polylabel
@@ -339,18 +334,18 @@ def main() -> None:
         # BEGIN alternate strategy - to be further tested
 
         # make a path for unit to put label in center of region without unit
-        #d = f"M {x_chosen-10},{y_chosen-10} L {x_chosen+10},{y_chosen-10} L {x_chosen+10},{y_chosen+10} L {x_chosen-10},{y_chosen+10} {x_chosen-10},{y_chosen-10}"
-        #unit_path =  Path(d)
+        #  d = f"M {x_chosen-10},{y_chosen-10} L {x_chosen+10},{y_chosen-10} L {x_chosen+10},{y_chosen+10} L {x_chosen-10},{y_chosen+10} {x_chosen-10},{y_chosen-10}"
+        #  unit_path =  Path(d)
 
-        #path2 = copy.deepcopy(path)
-        #path2.add_inner(unit_path)
+        #  path2 = copy.deepcopy(path)
+        #  path2.add_inner(unit_path)
 
         # for regions label :  the polylabel
-        #x_chosen, y_chosen = path2.polylabel()
+        #  x_chosen, y_chosen = path2.polylabel()
 
         # legend in png coords
-        #x_legend_pos = round(x_chosen * png_width / viewbox_width)
-        #y_legend_pos = round(y_chosen * png_height / viewbox_height)
+        #  x_legend_pos = round(x_chosen * png_width / viewbox_width)
+        #  y_legend_pos = round(y_chosen * png_height / viewbox_height)
 
         # END alternate strategy - to be further tested
 
@@ -371,7 +366,7 @@ def main() -> None:
             "y_legend_pos": y_legend_pos
         }
 
-    coastal_zones_raw_pos_table = dict()
+    coastal_zones_raw_pos_table = {}
     for num, path in sorted(coastal_zones_path_table.items(), key=lambda kv: int(kv[0])):
 
         # for special coasts : middle
@@ -404,17 +399,17 @@ def main() -> None:
     # ====== make map_elements =====
     #  for wenz
 
-    map_elements: typing.List[typing.List[typing.Any]] = list()
+    map_elements: typing.List[typing.List[typing.Any]] = []
 
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
 
-        map_element: typing.List[typing.Any] = list()
+        map_element: typing.List[typing.Any] = []
 
         # put 'path' (always)
         map_element.append(["path"])
 
         # build infos
-        infos = list()
+        infos = []
 
         infos.append("a")
         region_type_code = json_variant_data['regions'][num - 1]
@@ -439,7 +434,7 @@ def main() -> None:
     # uses regions_pos_table and center_pos_table
     # uses regions_raw_pos_table and center_raw_pos_table
 
-    zone_table = dict()
+    zone_table: typing.Dict[int, typing.Dict[str, typing.Any]] = {}
 
     for num, data in sorted(regions_pos_table.items(), key=lambda kv: int(kv[0])):
 
@@ -462,7 +457,7 @@ def main() -> None:
                 'city': -1,
                 'coord_city': [],
                 'unit_pos': [coord_coasts],
-                'pos_labels':  ["d"],
+                'pos_labels': ["d"],
                 'center': int(num_region in region2center_table)
             }
 
@@ -491,7 +486,7 @@ def main() -> None:
             'city': city,
             'coord_city': coord_city,
             'unit_pos': [coords],
-            'pos_labels':  ["d"],
+            'pos_labels': ["d"],
             'center': int(num in region2center_table)
         }
 
@@ -502,15 +497,15 @@ def main() -> None:
     result1['zones'] = regions_pos_table
     result1['centers'] = centers_pos_table
     output = json.dumps(result1, indent=4, ensure_ascii=False)
-    with open(first_format_json_output, 'w') as file_ptr:
+    with open(first_format_json_output, 'w', encoding='utf-8') as file_ptr:
         file_ptr.write(output)
 
-    result2 = dict()
+    result2: typing.Dict[str, typing.Any] = {}
     result2['svg_dim'] = svg_dim
     result2['map_elements'] = map_elements
     result2['zones'] = zone_table
     output = json.dumps(result2, indent=4, ensure_ascii=False)
-    with open(second_format_json_output, 'w') as file_ptr:
+    with open(second_format_json_output, 'w', encoding='utf-8') as file_ptr:
         file_ptr.write(output)
 
 

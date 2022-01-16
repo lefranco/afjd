@@ -12,7 +12,10 @@ import math
 
 # pylint: disable=invalid-name
 
+
 def _point_to_polygon_distance(x, y, polygon):
+    """ _point_to_polygon_distance """
+
     inside = False
     min_dist_sq = math.inf
 
@@ -33,6 +36,8 @@ def _point_to_polygon_distance(x, y, polygon):
 
 
 def _get_seg_dist_sq(px, py, a, b):
+    """ _get_seg_dist_sq """
+
     x = a[0]
     y = a[1]
     dx = b[0] - x
@@ -82,6 +87,8 @@ class Cell:
 
 
 def _get_centroid_cell(polygon):
+    """ _get_centroid_cell """
+
     area = 0
     x = 0
     y = 0
@@ -153,8 +160,7 @@ def polylabel(polygon, precision=1.0, debug=False, with_distance=False):
             best_cell = cell
 
             if debug:
-                print('found best {} after {} probes'.format(
-                    round(1e4 * cell.d) / 1e4, num_of_probes))
+                print(f"found best {round(1e4 * cell.d) / 1e4} after {num_of_probes} probes")
 
         if cell.max - best_cell.d <= precision:
             continue
@@ -171,9 +177,8 @@ def polylabel(polygon, precision=1.0, debug=False, with_distance=False):
         num_of_probes += 4
 
     if debug:
-        print('num probes: {}'.format(num_of_probes))
-        print('best distance: {}'.format(best_cell.d))
+        print(f"num probes: {num_of_probes}")
+        print(f"best distance: {best_cell.d}")
     if with_distance:
         return [best_cell.x, best_cell.y], best_cell.d
     return [best_cell.x, best_cell.y]
-
