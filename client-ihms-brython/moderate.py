@@ -509,11 +509,11 @@ def tournament_result():
         thead <= col
     recap_table <= thead
 
-    rang = 1
+    rank = 1
     for pseudo, score in sorted(points.items(), key=lambda p: p[1], reverse=True):
         row = html.TR()
 
-        col = html.TD(rang)
+        col = html.TD(rank)
         row <= col
 
         col = html.TD(pseudo)
@@ -527,7 +527,7 @@ def tournament_result():
         row <= col
 
         recap_table <= row
-        rang += 1
+        rank += 1
 
     incident_table = html.TABLE()
 
@@ -538,7 +538,6 @@ def tournament_result():
         thead <= col
     incident_table <= thead
 
-    rang = 1
     for pseudo, nb_incidents in sorted(count.items(), key=lambda p: p[1], reverse=True):
         row = html.TR()
 
@@ -549,7 +548,6 @@ def tournament_result():
         row <= col
 
         incident_table <= row
-        rang += 1
 
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
 
