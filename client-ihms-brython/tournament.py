@@ -610,19 +610,24 @@ def show_ratings():
 
     ratings_table = html.TABLE()
 
-    fields = ['points', 'scoring', 'alias']
+    fields = ['rank', 'points', 'scoring', 'alias']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'points': 'points', 'scoring': 'scorage', 'alias': 'alias'}[field]
+        field_fr = {'rank': 'rang', 'points': 'points', 'scoring': 'scorage', 'alias': 'alias'}[field]
         col = html.TD(field_fr)
         thead <= col
     ratings_table <= thead
 
+    rank = 1
     for (game, role), (points, scoring_name) in sorted(rating_dict.items(), key=lambda i: i[1], reverse=True):
 
         row = html.TR()
+
+        # rank
+        col = html.TD(rank)
+        row <= col
 
         # points
         points_str = f"{points:.2f}"
@@ -639,6 +644,7 @@ def show_ratings():
         row <= col
 
         ratings_table <= row
+        rank += 1
 
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()
