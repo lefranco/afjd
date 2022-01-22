@@ -191,7 +191,7 @@ def all_games(state_name):
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     number_games = 0
-    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0])):
+    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0]), reverse=(state_name=='terminée')):
 
         if data['current_state'] != state:
             continue

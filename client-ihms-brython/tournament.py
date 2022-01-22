@@ -350,12 +350,12 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'master', 'variant', 'deadline', 'current_advancement']
+    fields = ['jump_here', 'go_away', 'master', 'variant', 'deadline', 'current_advancement', 'current_state']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
+        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -363,10 +363,12 @@ def show_games():
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
-    # get advancment scale
+    # get advanment scale
     advancements = [data['current_advancement'] for game_id_str, data in games_dict.items() if int(game_id_str) in games_in]
     min_advancement = min(advancements)
     max_advancement = max(advancements)
+
+    rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
 
     number_games = 0
     # exception : games are sortded by name, not identifier
@@ -475,6 +477,10 @@ def show_games():
                 col_val_red = round(((max_advancement - advancement_loaded) / (max_advancement - min_advancement)) * 255)
                 col_val_green = round(((advancement_loaded - min_advancement) / (max_advancement - min_advancement)) * 255)
                 fg_colour = f"#{col_val_red:02x}{col_val_green:02x}00"
+
+            if field == 'current_state':
+                state_name = data[field]
+                value = rev_state_code_table[state_name]
 
             col = html.TD(value)
             if colour is not None:
