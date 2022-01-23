@@ -1,4 +1,4 @@
-""" submit """
+""" tournament """
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
