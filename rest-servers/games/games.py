@@ -576,7 +576,7 @@ class Game:
             if wished_deadline_time_in_day > current_deadline_time_in_day:
                 # expected deadline time is later in day :  we set our deadline accordingly
                 self._deadline += wished_deadline_time_in_day - current_deadline_time_in_day
-            else:
+            elif wished_deadline_time_in_day < current_deadline_time_in_day:
                 # expected deadline time is earlier in day :  we set our deadline next day
                 self._deadline += 24 * 3600 + wished_deadline_time_in_day - current_deadline_time_in_day
 
