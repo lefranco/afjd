@@ -4899,7 +4899,6 @@ def load_option(_, item_name):
         return
 
     global ITEM_NAME_SELECTED
-    prev_item_selected = ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
     MENU_LEFT.clear()
