@@ -176,67 +176,6 @@ def get_all_player_games_roles_submitted_orders():
     return dict_submitted_data
 
 
-def get_player_id(pseudo):
-    """ get_player_id """
-
-    player_id = None
-
-    def reply_callback(req):
-        nonlocal player_id
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération d'identifiant de joueur : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération d'identifiant de joueur : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        player_id = int(req_result)
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/player-identifiers/{pseudo}"
-
-    # get player id : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return player_id
-
-
-def get_player_games_playing_in(player_id):
-    """ get_player_games_playing_in """
-
-    player_games_dict = None
-
-    def reply_callback(req):
-        nonlocal player_games_dict
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récuperation de la liste des parties du joueur : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récuperation de la liste des parties du joueur : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        player_games_dict = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/player-allocations/{player_id}"
-
-    # getting player games playing in list : need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return dict(player_games_dict)
-
-
 def my_games(state_name):
     """ my_games """
 
@@ -312,12 +251,12 @@ def my_games(state_name):
         alert("Il semble que vous ne jouiez dans aucune partie... Quel dommage !")
         return
 
-    player_id = get_player_id(pseudo)
+    player_id = common.get_player_id(pseudo)
     if player_id is None:
         alert("Erreur chargement identifiant joueur")
         return
 
-    player_games = get_player_games_playing_in(player_id)
+    player_games = common.get_player_games_playing_in(player_id)
     if player_games is None:
         alert("Erreur chargement liste parties joueés")
         return
@@ -372,7 +311,7 @@ def my_games(state_name):
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     number_games = 0
-    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0]), reverse=(state_name=='terminée')):
+    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0]), reverse=(state_name == 'terminée')):
 
         # do not display finished games
         if data['current_state'] != state:

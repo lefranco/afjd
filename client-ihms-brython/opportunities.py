@@ -123,6 +123,16 @@ def my_opportunities():
 
     pseudo = storage['PSEUDO']
 
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        alert("Erreur chargement identifiant joueur")
+        return
+
+    player_games = common.get_player_games_playing_in(player_id)
+    if player_games is None:
+        alert("Erreur chargement liste parties joueés")
+        return
+
     recruiting_games_list = get_recruiting_games()
     # there can be no message (if no game of failed to load)
 
@@ -175,7 +185,7 @@ def my_opportunities():
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     number_games = 0
-    for game_id_str, data in sorted(games_dict_recruiting.items(), key=lambda g: g[1]['name']):
+    for game_id_str, data in sorted(games_dict_recruiting.items(), key=lambda g: g[0]):
 
         number_games += 1
 
@@ -229,12 +239,15 @@ def my_opportunities():
                 value = form
 
             if field == 'join':
-                game_name = data['name']
-                form = html.FORM()
-                input_join_game = html.INPUT(type="submit", value="J'en profite !")
-                input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
-                form <= input_join_game
-                value = form
+                if game_id_str in player_games:
+                    value = "(déjà dedans !)"
+                else:
+                    game_name = data['name']
+                    form = html.FORM()
+                    input_join_game = html.INPUT(type="submit", value="J'en profite !")
+                    input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
+                    form <= input_join_game
+                    value = form
 
             if field == 'master':
                 game_name = data['name']
