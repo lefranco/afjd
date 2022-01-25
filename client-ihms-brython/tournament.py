@@ -473,9 +473,9 @@ def show_games():
                 advancement_season_readable = variant_data.name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
 
-                # special : a colour to see how far games have got
-                col_val_red = round(((max_advancement - advancement_loaded) / (max_advancement - min_advancement)) * 255)
-                col_val_green = round(((advancement_loaded - min_advancement) / (max_advancement - min_advancement)) * 255)
+                # special : a colour to see how far games have got (cannot go up to 255 - not readable)
+                col_val_red = round(((max_advancement - advancement_loaded) / (max_advancement - min_advancement)) * 168)
+                col_val_green = round(((advancement_loaded - min_advancement) / (max_advancement - min_advancement)) * 168)
                 fg_colour = f"#{col_val_red:02x}{col_val_green:02x}00"
 
             if field == 'current_state':
