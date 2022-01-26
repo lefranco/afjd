@@ -698,17 +698,17 @@ def show_incidents():
 
     tournament_incidents_table = html.TABLE()
 
-    fields = ['alias', 'season', 'date']
+    fields = ['alias', 'season', 'duration', 'date']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'alias': 'alias', 'season': 'saison', 'date': 'date'}[field]
+        field_fr = {'alias': 'alias', 'season': 'saison', 'duration': 'durée', 'date': 'date'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournament_incidents_table <= thead
 
-    for game_id, role_num, advancement, date_incident in sorted(tournament_incidents, key=lambda i: i[3]):
+    for game_id, role_num, advancement, duration, date_incident in sorted(tournament_incidents, key=lambda i: i[4]):
 
         data = games_dict[str(game_id)]
 
@@ -759,6 +759,10 @@ def show_incidents():
         advancement_season_readable = variant_data.name_table[advancement_season]
         game_season = f"{advancement_season_readable} {advancement_year}"
         col = html.TD(game_season)
+        row <= col
+
+        # duration
+        col = html.TD(f"{duration} h")
         row <= col
 
         # date
