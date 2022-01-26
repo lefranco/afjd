@@ -4656,19 +4656,19 @@ def show_incidents_in_game():
 
     game_incidents_table = html.TABLE()
 
-    fields = ['flag', 'role', 'player', 'season', 'date']
+    fields = ['flag', 'role', 'player', 'season', 'duration', 'date']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'season': 'saison', 'date': 'date'}[field]
+        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'season': 'saison', 'duration': 'durée', 'date': 'date'}[field]
         col = html.TD(field_fr)
         thead <= col
     game_incidents_table <= thead
 
     counter = {}
 
-    for role_id, advancement, date_incident in game_incidents:
+    for role_id, advancement, duration, date_incident in sorted(game_incidents, key=lambda i: i[3]):
 
         row = html.TR()
 
@@ -4710,6 +4710,10 @@ def show_incidents_in_game():
         advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
         game_season = f"{advancement_season_readable} {advancement_year}"
         col = html.TD(game_season)
+        row <= col
+
+        # duration
+        col = html.TD(f"{duration} h")
         row <= col
 
         # date
