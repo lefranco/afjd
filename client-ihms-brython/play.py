@@ -4701,9 +4701,8 @@ def show_incidents_in_game():
         row <= col
 
         if pseudo_there not in counter:
-            counter[pseudo_there] = 1
-        else:
-            counter[pseudo_there] += 1
+            counter[pseudo_there] = []
+        counter[pseudo_there].append(duration)
 
         # season
         advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
@@ -4727,11 +4726,11 @@ def show_incidents_in_game():
         game_incidents_table <= row
 
     recap_table = html.TABLE()
-    for pseudo_there, number in sorted(counter.items(), key=lambda i: (- i[1], i[0])):
+    for pseudo_there, incidents_list in sorted(counter.items(), key=lambda i: len(i[1]), reverse=True):
         row = html.TR()
         col = html.TD(pseudo_there)
         row <= col
-        col = html.TD(number)
+        col = html.TD(" ".join([f"{i}h" for i in incidents_list]))
         row <= col
         recap_table <= row
 
