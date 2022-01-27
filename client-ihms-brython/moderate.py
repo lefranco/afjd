@@ -537,7 +537,7 @@ def tournament_result():
         thead <= col
     incident_table <= thead
 
-    for pseudo, incidents_list in sorted(count.items(), key=lambda p: p[1], reverse=True):
+    for pseudo, incidents_list in sorted(count.items(), key=lambda p: len(p[1]), reverse=True):
         row = html.TR()
 
         col = html.TD(pseudo)
