@@ -52,7 +52,7 @@ class Incident:
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
         sql_executor.execute("DELETE FROM incidents WHERE game_id = ? AND role_num = ? AND advancement = ?", (self._game_id, self._role_num, self._advancement))
-        sql_executor.execute("INSERT OR REPLACE INTO incidents (game_id, role_num, advancement, player_id, date) VALUES (?, ?, ?, ?, ?, ?)", (self._game_id, self._role_num, self._advancement, self._player_id, self._duration, self._date))
+        sql_executor.execute("INSERT OR REPLACE INTO incidents (game_id, role_num, advancement, player_id, duration, date) VALUES (?, ?, ?, ?, ?, ?)", (self._game_id, self._role_num, self._advancement, self._player_id, self._duration, self._date))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
