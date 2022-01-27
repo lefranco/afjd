@@ -586,6 +586,14 @@ class Game:
         now = time.time()
         return now > self._deadline
 
+    def hours_after_deadline(self) -> int:
+        """ how many hours after deadline """
+
+        now = time.time()
+        if self._deadline <= now:
+            return 0
+        return round((now - self._deadline) / 3600)
+
     def game_over(self) -> bool:
         """ game_over """
 

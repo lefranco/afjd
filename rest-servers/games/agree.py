@@ -364,8 +364,8 @@ def fake_post(game_id: int, role_id: int, definitive_value: bool, names: str, sq
             if player_id is None:
                 return False, False, "ERROR : Could not find the player identifier"
 
-            default_duration = 12
-            incident = incidents.Incident(int(game_id), int(role_id), advancement, player_id, default_duration)
+            duration = game.hours_after_deadline()
+            incident = incidents.Incident(int(game_id), int(role_id), advancement, player_id, duration)
             incident.update_database(sql_executor)  # noqa: F821
 
     # needed list : those who need to submit orders
