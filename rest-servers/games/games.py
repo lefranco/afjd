@@ -590,7 +590,7 @@ class Game:
         """ how many hours after deadline """
 
         now = time.time()
-        if self._deadline <= now:
+        if now <= self._deadline:
             return 0
         return round((now - self._deadline) / 3600)
 
