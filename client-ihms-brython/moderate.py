@@ -493,12 +493,11 @@ def tournament_result():
     # there can be no incidents (if no incident of failed to load)
 
     count = {}
-    for game_id, role_num, _, _, _ in tournament_incidents:
+    for game_id, role_num, _, duration, _ in tournament_incidents:
         pseudo = gamerole2pseudo[(game_id, role_num)]
         if pseudo not in count:
-            count[pseudo] = 1
-        else:
-            count[pseudo] += 1
+            count[pseudo] = []
+        count[pseudo].append(duration)
 
     recap_table = html.TABLE()
 
@@ -522,8 +521,8 @@ def tournament_result():
         col = html.TD(f"{score:.2f}")
         row <= col
 
-        nb_incidents = count.get(pseudo, 0)
-        col = html.TD(nb_incidents)
+        incidents_list = count.get(pseudo, [])
+        col = html.TD(" ".join([f"{i}h" for i in incidents_list]))
         row <= col
 
         recap_table <= row
@@ -538,13 +537,14 @@ def tournament_result():
         thead <= col
     incident_table <= thead
 
-    for pseudo, nb_incidents in sorted(count.items(), key=lambda p: p[1], reverse=True):
+    for pseudo, incidents_list in sorted(count.items(), key=lambda p: p[1], reverse=True):
         row = html.TR()
 
         col = html.TD(pseudo)
         row <= col
 
-        col = html.TD(nb_incidents)
+        incidents_list = count.get(pseudo, [])
+        col = html.TD(" ".join([f"{i}h" for i in incidents_list]))
         row <= col
 
         incident_table <= row
