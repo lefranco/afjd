@@ -13,6 +13,7 @@ import json
 import random
 import datetime
 import time
+import math
 
 import database
 import allocations
@@ -592,7 +593,7 @@ class Game:
         now = time.time()
         if now <= self._deadline:
             return 0
-        return round((now - self._deadline) / 3600)
+        return math.ceil((now - self._deadline) / 3600.)
 
     def game_over(self) -> bool:
         """ game_over """
