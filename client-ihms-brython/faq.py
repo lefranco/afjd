@@ -21,6 +21,9 @@ FAQ_CONTENT_TABLE = {
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
     "Passer ses ordres signifie réaliser une transition 'pas prêt à résoudre' (ou pas d'information) -> 'prêt pour la résolution'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels !",
 
+    "Comment sont comptés les retards ?":
+    " Toute heure de retard entamée est due. Cela signifie qu'un retard indiqué '2h' est un retard de plus d'une heure et d'au plus deux heures (par rapport à la date limite au moment de la soumission)",
+
     "Pourquoi les unités ne se déplacent pas dans le bac à sable ?":
     "Le bac à sable n'a pas vocation à déplacer les unités, il cherche à répondre à la question 'que se passerait-il si...'. Il faut bien lire le compte rendu des ordres sous forme de texte sous la carte.",
 
