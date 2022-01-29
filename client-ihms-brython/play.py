@@ -635,6 +635,8 @@ def get_game_status():
 
     col = html.TD(f"Partie {game_name} ({game_variant})")
     row <= col
+    col = html.TD(f"id={GAME_ID}")
+    row <= col
     col = html.TD(f"Etat {game_state_readable}")
     row <= col
     col = html.TD(f"Saison {game_season}")
@@ -654,7 +656,7 @@ def get_game_status():
 
     row = html.TR()
 
-    col = html.TD(game_description, colspan="6")
+    col = html.TD(game_description, colspan="7")
     row <= col
     game_status_table <= row
 

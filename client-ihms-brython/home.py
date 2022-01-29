@@ -21,7 +21,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['nouvelles', 'liens', 'toutes les parties', 'déclarer un incident', 'foire aux question', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
+OPTIONS = ['nouvelles', 'liens', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
 
 NOTE_CONTENT_STATED = """
 Bienvenue dans la première version du site Diplomania.
@@ -177,12 +177,12 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'master', 'variant', 'deadline', 'current_advancement']
+    fields = ['id', 'jump_here', 'go_away', 'master', 'variant', 'deadline', 'current_advancement']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
+        field_fr = {'id':'id', 'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -233,15 +233,19 @@ def all_games(state_name):
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
-        data['master'] = None
+        data['id'] = None
         data['jump_here'] = None
         data['go_away'] = None
+        data['master'] = None
 
         row = html.TR()
         for field in fields:
 
             value = data[field]
             colour = None
+
+            if field == 'id':
+                value = game_id
 
             if field == 'jump_here':
                 game_name = data['name']
@@ -730,7 +734,7 @@ def load_option(_, item_name):
         show_links()
     if item_name == 'déclarer un incident':
         declare_incident()
-    if item_name == 'foire aux question':
+    if item_name == 'foire aux questions':
         show_faq()
     if item_name == 'pourquoi yapa':
         show_whynot()
