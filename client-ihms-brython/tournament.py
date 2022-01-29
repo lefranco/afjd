@@ -474,8 +474,9 @@ def show_games():
                 value = f"{advancement_season_readable} {advancement_year}"
 
                 # special : a colour to see how far games have got (cannot go up to 255 - not readable)
-                col_val_red = round(((max_advancement - advancement_loaded) / (max_advancement - min_advancement)) * 168)
-                col_val_green = round(((advancement_loaded - min_advancement) / (max_advancement - min_advancement)) * 168)
+                delta = max(1, max_advancement - min_advancement)
+                col_val_red = round(((max_advancement - advancement_loaded) / delta) * 168)
+                col_val_green = round(((advancement_loaded - min_advancement) / delta) * 168)
                 fg_colour = f"#{col_val_red:02x}{col_val_green:02x}00"
 
             if field == 'current_state':
@@ -612,22 +613,23 @@ def show_ratings():
         scoring_name = name2code[game_scoring]
 
         for role_name, score in score_table.items():
-            rating_dict[(game_name, role_name)] = (score, scoring_name)
+            centers = ratings[role_name]
+            rating_dict[(game_name, role_name)] = (score, centers, scoring_name)
 
     ratings_table = html.TABLE()
 
-    fields = ['rank', 'points', 'scoring', 'alias']
+    fields = ['rank', 'points', 'centers', 'scoring', 'alias']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'rank': 'rang', 'points': 'points', 'scoring': 'scorage', 'alias': 'alias'}[field]
+        field_fr = {'rank': 'rang', 'points': 'points', 'centers': 'centres', 'scoring': 'scorage', 'alias': 'alias'}[field]
         col = html.TD(field_fr)
         thead <= col
     ratings_table <= thead
 
     rank = 1
-    for (game, role), (points, scoring_name) in sorted(rating_dict.items(), key=lambda i: i[1], reverse=True):
+    for (game, role), (points, centers, scoring_name) in sorted(rating_dict.items(), key=lambda i: i[1], reverse=True):
 
         row = html.TR()
 
@@ -638,6 +640,10 @@ def show_ratings():
         # points
         points_str = f"{points:.2f}"
         col = html.TD(points_str)
+        row <= col
+
+        # centers
+        col = html.TD(centers)
         row <= col
 
         # scoring
