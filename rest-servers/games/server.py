@@ -907,6 +907,45 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
             allocation.update_database(sql_executor)
 
+            # is if full now ?
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+
+            game_capacity = capacities.Capacity.find_by_identifier(sql_executor, game_id)
+            if game_capacity is None:
+                del sql_executor
+                flask_restful.abort(400, msg="Error cound not find capacity of the game")
+
+            assert game_capacity is not None
+            if len(allocations_list) >= game_capacity:
+
+                # it is : send notification to game master
+
+                subject = f"La partie {game.name} est maintenant complète !"
+                addressees = [game_master_id]
+                body = "Vous pouvez donc démarrer cette partie !\n"
+                body += "\n"
+                body += "Pour se rendre directement sur la partie :\n"
+                body += f"https://diplomania-gen.fr?game={game.name}"
+
+                json_dict = {
+                    'pseudo': pseudo,
+                    'addressees': " ".join([str(a) for a in addressees]),
+                    'subject': subject,
+                    'body': body,
+                    'force': 1,
+                }
+
+                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                url = f"{host}:{port}/mail-players"
+                # for a rest API headers are presented differently
+                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                if req_result.status_code != 200:
+                    print(f"ERROR from server  : {req_result.text}")
+                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                    del sql_executor
+                    flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
             sql_executor.commit()
             del sql_executor
 
