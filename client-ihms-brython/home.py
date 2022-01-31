@@ -21,7 +21,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['nouvelles', 'liens', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
+OPTIONS = ['dernières nouvelles', 'autres liens', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
 
 NOTE_CONTENT_STATED = """
 Bienvenue dans la première version du site Diplomania.
@@ -33,8 +33,20 @@ Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/lien
 def show_news():
     """ show_home """
 
+
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
+
+    # ----
+
+    title1 = html.H4("Lien utile : Diplomania")
+    MY_SUB_PANEL <= title1
+
+    link1 = html.A(href="http://www.diplomania.fr", target="_blank")
+    link1 <= "Diplomania : Le site officiel de l'Association Francophone des Joueurs de Diplomacy (brique sociale)"
+    MY_SUB_PANEL <= link1
+
+    # ----
 
     title2 = html.H4("Note importante", Class='important')
     MY_SUB_PANEL <= title2
@@ -49,6 +61,8 @@ def show_news():
     col = html.TD(note_bene_content)
     row <= col
     MY_SUB_PANEL <= note_content_table
+
+    # ----
 
     title3 = html.H4("Dernières nouvelles", Class='news')
     MY_SUB_PANEL <= title3
@@ -65,17 +79,8 @@ def show_news():
 def show_links():
     """ show_links """
 
-    title = html.H3("Liens")
+    title = html.H3("Autres liens")
     MY_SUB_PANEL <= title
-
-    # ----
-
-    title1 = html.H4("Lien utile : Diplomania")
-    MY_SUB_PANEL <= title1
-
-    link1 = html.A(href="http://www.diplomania.fr", target="_blank")
-    link1 <= "Diplomania : Le site officiel de l'Association Francophone des Joueurs de Diplomacy (brique sociale)"
-    MY_SUB_PANEL <= link1
 
     # ----
 
@@ -726,11 +731,11 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    if item_name == 'nouvelles':
+    if item_name == 'dernières nouvelles':
         show_news()
     if item_name == 'toutes les parties':
         all_games('en cours')
-    if item_name == 'liens':
+    if item_name == 'autres liens':
         show_links()
     if item_name == 'déclarer un incident':
         declare_incident()
