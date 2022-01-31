@@ -768,7 +768,8 @@ def show_incidents():
         row <= col
 
         # duration
-        col = html.TD(f"{duration} h")
+        unit = "xxx"
+        col = html.TD(f"{duration}{unit}")
         row <= col
 
         # date

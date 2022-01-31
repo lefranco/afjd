@@ -522,7 +522,8 @@ def tournament_result():
         row <= col
 
         incidents_list = count.get(pseudo, [])
-        col = html.TD(" ".join([f"{i}h" for i in incidents_list]))
+        unit = "xxx"
+        col = html.TD(" ".join([f"{i}{unit}" for i in incidents_list]))
         row <= col
 
         recap_table <= row
