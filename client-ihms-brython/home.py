@@ -182,7 +182,7 @@ def all_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'id':'id', 'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
+        field_fr = {'id': 'id', 'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -191,7 +191,7 @@ def all_games(state_name):
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     number_games = 0
-    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0]), reverse=(state_name == 'terminée')):
+    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0]), reverse=(state_name in ['terminée', 'distinguée'])):
 
         if data['current_state'] != state:
             continue

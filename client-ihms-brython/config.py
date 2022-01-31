@@ -10,7 +10,7 @@ TIMEOUT_SERVER = 2
 REMOVE_AFTER = 5
 
 # to display state of a game
-STATE_CODE_TABLE = {'en attente': 0, 'en cours': 1, 'terminée': 2}
+STATE_CODE_TABLE = {'en attente': 0, 'en cours': 1, 'terminée': 2, 'distinguée': 3}
 
 DECLARATIONS_TYPE = 0
 MESSAGES_TYPE = 1

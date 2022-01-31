@@ -1570,7 +1570,7 @@ def change_state_game():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours ou terminée.")
+    legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours, terminée ou distinguée.")
     fieldset <= legend_state
 
     if state_loaded == 0:
@@ -1581,6 +1581,16 @@ def change_state_game():
     if state_loaded == 1:
         input_stop_game = html.INPUT(type="submit", value="arrêter la partie")
         input_stop_game.bind("click", lambda e, s=2: change_state_game_callback_confirm(e, s))
+        form <= input_stop_game
+
+    if state_loaded == 2:
+        input_stop_game = html.INPUT(type="submit", value="distinguer la partie")
+        input_stop_game.bind("click", lambda e, s=3: change_state_game_callback(e, None, s))
+        form <= input_stop_game
+
+    if state_loaded == 3:
+        input_stop_game = html.INPUT(type="submit", value="ne plus distinguer la partie")
+        input_stop_game.bind("click", lambda e, s=2: change_state_game_callback(e, None, s))
         form <= input_stop_game
 
     MY_SUB_PANEL <= form

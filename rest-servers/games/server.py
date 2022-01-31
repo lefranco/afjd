@@ -339,12 +339,11 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         # special : game changed state
         if game.current_state != current_state_before:
 
-            if not game.current_state > current_state_before:
-                data = {'name': name, 'msg': 'Transition not allowed'}
-                del sql_executor
-                return data, 400
-
             if current_state_before == 0 and game.current_state == 1:
+
+                # ----
+                # we are starting the game
+                # ----
 
                 # check enough players
 
@@ -405,7 +404,11 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                         del sql_executor
                         flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
-            if current_state_before == 1 and game.current_state == 2:
+            elif current_state_before == 1 and game.current_state == 2:
+
+                # ----
+                # we are finishing the game
+                # ----
 
                 # no check ?
                 game.terminate()
@@ -443,6 +446,29 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                         del sql_executor
                         flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+            elif current_state_before == 2 and game.current_state == 3:
+
+                # ----
+                # we are distinguishing the game
+                # ----
+
+                # nothing to do actually
+                pass
+
+            elif current_state_before == 3 and game.current_state == 2:
+
+                # ----
+                # we are undistinguishing the game
+                # ----
+
+                # nothing to do actually
+                pass
+
+            else:
+                data = {'name': name, 'msg': 'Transition not allowed'}
+                del sql_executor
+                return data, 400
 
         game.update_database(sql_executor)
         sql_executor.commit()
@@ -505,6 +531,11 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         if game.current_state == 1:
             del sql_executor
             flask_restful.abort(400, msg=f"Game {name} is ongoing. Terminate it first.")
+
+        # check game state
+        if game.current_state == 3:
+            del sql_executor
+            flask_restful.abort(400, msg=f"Game {name} is distinguished. Undistinguish it first.")
 
         game_id = game.identifier
 
