@@ -768,8 +768,7 @@ def show_incidents():
         row <= col
 
         # duration
-        unit = "xxx"
-        col = html.TD(f"{duration}{unit}")
+        col = html.TD(f"{duration}")
         row <= col
 
         # date
@@ -787,6 +786,8 @@ def show_incidents():
     MY_SUB_PANEL <= tournament_incidents_table
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes)", Class='note')
     MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time.time()

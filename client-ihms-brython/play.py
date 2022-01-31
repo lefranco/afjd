@@ -4714,7 +4714,7 @@ def show_incidents_in_game():
         row <= col
 
         # duration
-        col = html.TD(f"{duration} h")
+        col = html.TD(f"{duration}")
         row <= col
 
         # date
@@ -4732,8 +4732,7 @@ def show_incidents_in_game():
         row = html.TR()
         col = html.TD(pseudo_there)
         row <= col
-        unit = "xxx"
-        col = html.TD(" ".join([f"{i}{unit}" for i in incidents_list]))
+        col = html.TD(" ".join([f"{i}" for i in incidents_list]))
         row <= col
         recap_table <= row
 
@@ -4754,6 +4753,9 @@ def show_incidents_in_game():
         MY_SUB_PANEL <= humour_img
 
         MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) ont réalisé la transition 'pas prêt -> 'prêt pour résoudre' après la date limite", Class='note')
+
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes)", Class='note')
 
     return True
 

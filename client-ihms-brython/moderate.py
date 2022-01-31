@@ -522,8 +522,7 @@ def tournament_result():
         row <= col
 
         incidents_list = count.get(pseudo, [])
-        unit = "xxx"
-        col = html.TD(" ".join([f"{i}{unit}" for i in incidents_list]))
+        col = html.TD(" ".join([f"{i}" for i in incidents_list]))
         row <= col
 
         recap_table <= row
@@ -545,7 +544,7 @@ def tournament_result():
         row <= col
 
         incidents_list = count.get(pseudo, [])
-        col = html.TD(" ".join([f"{i}h" for i in incidents_list]))
+        col = html.TD(" ".join([f"{i}" for i in incidents_list]))
         row <= col
 
         incident_table <= row
@@ -556,6 +555,9 @@ def tournament_result():
     MY_SUB_PANEL <= recap_table
     MY_SUB_PANEL <= html.H4("Incidents")
     MY_SUB_PANEL <= incident_table
+
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes)", Class='note')
 
 
 MY_PANEL = html.DIV()
