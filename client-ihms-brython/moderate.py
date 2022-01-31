@@ -25,7 +25,7 @@ MODO_PSEUDO = 'Palpatine'
 def check_modo(pseudo):
     """ check_modo """
 
-    # TODO improve this with real admin account
+    # TODO improve this with real moderator account
     if pseudo != MODO_PSEUDO:
         return False
 
