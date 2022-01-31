@@ -875,7 +875,7 @@ class FindPlayerFromEmailRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
 
-        # TODO improve this with real admin account
+        # TODO improve this with real moderator account
         if pseudo_requester != 'Palpatine':
             del sql_executor
             flask_restful.abort(403, msg="You are not allowed to get pseudo from email address!")
