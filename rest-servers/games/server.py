@@ -1318,8 +1318,22 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
             user_id = req_result.json()
 
             if user_id != game_master_id:
-                # TODO improve this with real moderator account
-                if pseudo != 'Palpatine':
+
+                # check moderator rights
+
+                # get moderator list
+                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                url = f"{host}:{port}/moderators"
+                req_result = SESSION.get(url)
+                if req_result.status_code != 200:
+                    del sql_executor
+                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                    flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+                the_moderators = req_result.json()
+
+                # check pseudo in moderator list
+                if pseudo not in the_moderators:
                     flask_restful.abort(403, msg="You need to be the game master of the game (or site moderator) so you are not allowed to see the roles of this anonymous game")
 
         return data, 200
@@ -2607,8 +2621,21 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         role_id = game.find_role(sql_executor, player_id)
         if role_id is None:
 
-            # TODO improve this with real moderator account
-            if pseudo != 'Palpatine':
+            # check moderator rights
+
+            # get moderator list
+            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/moderators"
+            req_result = SESSION.get(url)
+            if req_result.status_code != 200:
+                del sql_executor
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+            the_moderators = req_result.json()
+
+            # check pseudo in moderator list
+            if pseudo not in the_moderators:
                 del sql_executor
                 flask_restful.abort(403, msg="You do not seem to play or master the game (or to be site moderator) so you are not allowed to see the submissions!")
 
@@ -3719,8 +3746,21 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
         role_id = game.find_role(sql_executor, player_id)
         if role_id is None:
 
-            # TODO improve this with real moderator account
-            if pseudo != 'Palpatine':
+            # check moderator rights
+
+            # get moderator list
+            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/moderators"
+            req_result = SESSION.get(url)
+            if req_result.status_code != 200:
+                del sql_executor
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+            the_moderators = req_result.json()
+
+            # check pseudo in moderator list
+            if pseudo not in the_moderators:
                 del sql_executor
                 flask_restful.abort(403, msg="You do not seem to play or master game (or to be site moderator) so you cannot see the incidents!")
 
@@ -4270,10 +4310,20 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
         pseudo = req_result.json()['logged_in_as']
 
-        # check user has right to see this  - must be admin
+        # check moderator rights
+        # get moderator list
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            del sql_executor
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+        the_moderators = req_result.json()
 
-        # TODO improve this with real moderator account
-        if pseudo != 'Palpatine':
+        # check pseudo in moderator list
+        if pseudo not in the_moderators:
             flask_restful.abort(403, msg="You do not seem to be site moderator so you are not allowed get all players from tournament !")
 
         sql_executor = database.SqlExecutor()
