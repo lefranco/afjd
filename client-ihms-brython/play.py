@@ -4732,7 +4732,8 @@ def show_incidents_in_game():
         row = html.TR()
         col = html.TD(pseudo_there)
         row <= col
-        col = html.TD(" ".join([f"{i}h" for i in incidents_list]))
+        unit = "xxx"
+        col = html.TD(" ".join([f"{i}{unit}" for i in incidents_list]))
         row <= col
         recap_table <= row
 

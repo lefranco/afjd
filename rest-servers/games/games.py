@@ -593,7 +593,11 @@ class Game:
         now = time.time()
         if now <= self._deadline:
             return 0
-        return math.ceil((now - self._deadline) / 3600.)
+        if self._fast:
+            hours_or_minute_add = 60.
+        else:
+            hours_or_minute_add = 3600.
+        return math.ceil((now - self._deadline) / hours_or_minute_add)
 
     def game_over(self) -> bool:
         """ game_over """
