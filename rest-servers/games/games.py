@@ -329,7 +329,7 @@ class Game:
         if 'current_state' in json_dict and json_dict['current_state'] is not None and json_dict['current_state'] != self._current_state:
             self._current_state = json_dict['current_state']
             # safety
-            if self._current_state not in [0, 1, 2]:
+            if self._current_state not in [0, 1, 2, 3]:
                 self._current_state = 0
             changed = True
 

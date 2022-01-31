@@ -1780,7 +1780,7 @@ def submit_orders():
         return False
 
     # game needs to be ongoing - not finished
-    if GAME_PARAMETERS_LOADED['current_state'] == 2:
+    if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
@@ -2507,7 +2507,7 @@ def submit_communication_orders():
         return False
 
     # game needs to be ongoing - not finished
-    if GAME_PARAMETERS_LOADED['current_state'] == 2:
+    if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
@@ -3743,7 +3743,7 @@ def game_master():
         return False
 
     # game needs to be ongoing - not finished
-    if GAME_PARAMETERS_LOADED['current_state'] == 2:
+    if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
@@ -4271,7 +4271,7 @@ def supervise():
         return False
 
     # game needs to be ongoing - not finished
-    if GAME_PARAMETERS_LOADED['current_state'] == 2:
+    if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
@@ -4834,7 +4834,7 @@ def observe():
         return False
 
     # game needs to be ongoing - not finished
-    if GAME_PARAMETERS_LOADED['current_state'] == 2:
+    if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
