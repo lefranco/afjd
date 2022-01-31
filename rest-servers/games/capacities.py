@@ -15,7 +15,7 @@ class Capacity:
     """ Class for handling a capacity """
 
     @staticmethod
-    def find_by_identifier(sql_executor: database.SqlExecutor, identifier: int) -> typing.Optional['Capacity']:
+    def find_by_identifier(sql_executor: database.SqlExecutor, identifier: int) -> typing.Optional[int]:
         """ class lookup : finds the object in database from identifier """
         capacities_found = sql_executor.execute("SELECT value FROM capacities where game_id = ?", (identifier,), need_result=True)
         if not capacities_found:
@@ -34,7 +34,7 @@ class Capacity:
         assert isinstance(game_id, int), "game_id must be an int"
         self._game_id = game_id
 
-        assert isinstance(value, int), "time_stamp must be an int"
+        assert isinstance(value, int), "value must be an int"
         self._value = value
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
