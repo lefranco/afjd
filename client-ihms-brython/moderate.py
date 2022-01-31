@@ -19,14 +19,12 @@ MAX_LEN_EMAIL = 100
 
 OPTIONS = ['retrouver à partir du courriel', 'tous les courriels', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi']
 
-MODO_PSEUDO = 'Palpatine'
-
 
 def check_modo(pseudo):
     """ check_modo """
 
-    # TODO improve this with real moderator account
-    if pseudo != MODO_PSEUDO:
+    moderator_list = common.get_moderators()
+    if pseudo not in moderator_list:
         return False
 
     return True

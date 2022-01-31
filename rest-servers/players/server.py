@@ -589,13 +589,15 @@ class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
         pseudo = req_result.json()['logged_in_as']
 
+        sql_executor = database.SqlExecutor()
+
         # check user has right to get list of emails (moderator)
 
-        # TODO improve this with real moderator account
-        if pseudo != 'Palpatine':
-            flask_restful.abort(403, msg="You are not allowed to get list of emails!")
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        the_moderators = [m[0] for m in moderators_list]
+        if pseudo not in the_moderators:
+            flask_restful.abort(403, msg="You are not allowed to get list of emails (need to be moderator)!")
 
-        sql_executor = database.SqlExecutor()
         players_list = players.Player.inventory(sql_executor)
         del sql_executor
 
@@ -767,10 +769,11 @@ class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
 
-        # TODO improve this with real moderator account
-        if pseudo_requester != 'Palpatine':
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        the_moderators = [m[0] for m in moderators_list]
+        if pseudo_requester not in the_moderators:
             del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to get phone number!")
+            flask_restful.abort(403, msg="You are not allowed to get phone number! (need to be moderator)")
 
         contact = players.Player.find_by_pseudo(sql_executor, pseudo)
 
@@ -821,10 +824,11 @@ class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
 
-        # TODO improve this with real moderator account
-        if pseudo_requester != 'Palpatine':
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        the_moderators = [m[0] for m in moderators_list]
+        if pseudo_requester not in the_moderators:
             del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to get email address!")
+            flask_restful.abort(403, msg="You are not allowed to get email address! (need to be moderator)")
 
         contact = players.Player.find_by_pseudo(sql_executor, pseudo)
 
@@ -875,10 +879,11 @@ class FindPlayerFromEmailRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
 
-        # TODO improve this with real moderator account
-        if pseudo_requester != 'Palpatine':
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        the_moderators = [m[0] for m in moderators_list]
+        if pseudo_requester not in the_moderators:
             del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to get pseudo from email address!")
+            flask_restful.abort(403, msg=f"You are not allowed to get pseudo from email address! (need to be moderator)")
 
         email2pseudo = {p.email: p.pseudo for p in players.Player.inventory(sql_executor)}
 
