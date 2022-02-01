@@ -56,7 +56,7 @@ def sanitize_field(field_content: str) -> str:
 
 def compress_text(text: str) -> str:
     """ compresses text that can be long """
-    byte_form = text.encode()
+    byte_form = text.encode(errors='ignore')
     compressed = lzma.compress(byte_form)
     a85 = base64.a85encode(compressed)
     assert BYTES_SEPARATOR_SUBSTITUTE_FOR_UNREADABLE not in a85
