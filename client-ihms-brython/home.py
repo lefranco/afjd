@@ -181,12 +181,12 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['id', 'jump_here', 'go_away', 'master', 'variant', 'deadline', 'current_advancement']
+    fields = ['id', 'jump_here', 'go_away', 'master', 'variant', 'nopress', 'nomessage', 'deadline', 'current_advancement']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'id': 'id', 'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
+        field_fr = {'id': 'id', 'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'nopress': 'm. publics', 'nomessage': 'm. privés', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -290,6 +290,12 @@ def all_games(state_name):
                 # deadline is today
                 elif time_stamp_now > deadline_loaded - approach_duration:
                     colour = config.APPROACHING_DEADLINE_COLOUR
+
+            if field == 'nopress':
+                value = "Non" if value else "Oui"
+
+            if field == 'nomessage':
+                value = "Non" if value else "Oui"
 
             if field == 'current_advancement':
                 advancement_loaded = value
