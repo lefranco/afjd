@@ -629,7 +629,7 @@ def show_ratings():
     ratings_table <= thead
 
     rank = 1
-    for (game, role), (points, centers, scoring_name) in sorted(rating_dict.items(), key=lambda i: i[1], reverse=True):
+    for (game, role), (points, centers, scoring_name) in sorted(rating_dict.items(), key=lambda i: (i[1][0], -i[1][1]), reverse=True):
 
         row = html.TR()
 
