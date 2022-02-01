@@ -4636,6 +4636,52 @@ def show_orders_submitted_in_game():
 def show_incidents_in_game():
     """ show_incidents_in_game """
 
+    def cancel_remove_incident_callback(_, dialog, ):
+        """ cancel_remove_incident_callback """
+        dialog.close()
+
+    def remove_incident_callback(_, dialog, role_id, advancement):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la suppression de l'incident : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la suppression de l'incident : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"L'incident a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            show_incidents_in_game()
+
+        dialog.close()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-incidents-manage/{GAME_ID}/{role_id}/{advancement}"
+
+        # deleting incident : need token
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def remove_incident_callback_confirm(_, role_id, advancement, text):
+        """ remove_incident_callback_confirm """
+
+        dialog = Dialog(f"On supprime vraiment cet incident pour {text} ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, a=advancement: remove_incident_callback(e, d, r, a))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_incident_callback(e, d))
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        show_incidents_in_game()
+
     # if user identified ?
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -4658,12 +4704,12 @@ def show_incidents_in_game():
 
     game_incidents_table = html.TABLE()
 
-    fields = ['flag', 'role', 'player', 'season', 'duration', 'date']
+    fields = ['flag', 'role', 'player', 'season', 'duration', 'date', 'remove']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'season': 'saison', 'duration': 'durée', 'date': 'date'}[field]
+        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'season': 'saison', 'duration': 'durée', 'date': 'date', 'remove': 'supprimer'}[field]
         col = html.TD(field_fr)
         thead <= col
     game_incidents_table <= thead
@@ -4723,6 +4769,17 @@ def show_incidents_in_game():
         incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
         incident_str = f"{incident_day} {incident_hour} GMT"
         col = html.TD(incident_str)
+        row <= col
+
+        # remove
+        form = ''
+        if ROLE_ID == 0:
+            form = html.FORM()
+            input_remove_incident = html.INPUT(type="submit", value="supprimer")
+            text = f"Rôle {role_name} en saison {game_season}"
+            input_remove_incident.bind("click", lambda e, r=role_id, a=advancement, t=text: remove_incident_callback_confirm(e, r, a, t))
+            form <= input_remove_incident
+        col = html.TD(form)
         row <= col
 
         game_incidents_table <= row
