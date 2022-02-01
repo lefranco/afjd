@@ -33,7 +33,6 @@ Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/lien
 def show_news():
     """ show_home """
 
-
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
 
