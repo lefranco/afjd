@@ -3774,6 +3774,73 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/game-incidents-manage/<game_id>/<role_id>/<advancement>')
+class GameIncidentsManageRessource(flask_restful.Resource):  # type: ignore
+    """ GameIncidentsManageRessource """
+
+    def delete(self, game_id: int, role_id: int, advancement: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Deletes an incident in game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-incidents/<game_id> - DELETE - deleting incident for game id=%s", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        # we do not check pseudo, we read it from token
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Game with id {game_id} doesn't exist")
+
+        # check this is game_master
+        assert game is not None
+        if game.get_role(sql_executor, 0) != user_id:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the game master of the game")
+
+        # find incident
+        incident = incidents.Incident(int(game_id), int(role_id), int(advancement), 0, 0)
+
+        # delete incident
+        assert incident is not None
+        incident.delete_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': 'Ok incident removed if present'}
+        return data, 200
+
+
 @API.resource('/tournaments/<game_name>')
 class TournamentRessource(flask_restful.Resource):  # type: ignore
     """ TournamentRessource """
@@ -4317,7 +4384,6 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
         url = f"{host}:{port}/moderators"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
-            del sql_executor
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
         the_moderators = req_result.json()
