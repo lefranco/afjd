@@ -3,7 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 
-def c_diplo(variant_data, ratings):
+def c_diplo(solo_threshold, ratings):
     """ the c-diplo scoring system """
 
     rank_points_list = [38, 14, 7]
@@ -14,7 +14,7 @@ def c_diplo(variant_data, ratings):
 
     # detect solo
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > variant_data.number_centers() // 2:
+    if ratings[best_role_name] > solo_threshold:
         ratings[best_role_name] = solo_reward
         return score
 
@@ -46,7 +46,7 @@ def c_diplo(variant_data, ratings):
     return score
 
 
-def win_namur(variant_data, ratings):
+def win_namur(solo_threshold, ratings):
     """ the win namur scoring system """
 
     center_bonus_list = [0, 5, 9, 12, 14, 16, 18]
@@ -60,7 +60,7 @@ def win_namur(variant_data, ratings):
 
     # detect solo
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > variant_data.number_centers() // 2:
+    if ratings[best_role_name] > solo_threshold:
         score[best_role_name] = solo_reward
         return score
 
@@ -137,7 +137,7 @@ def diplo_league(_, ratings):
     return score
 
 
-def nexus_omg(variant_data, ratings):
+def nexus_omg(solo_threshold, ratings):
     """ the nexus_omg scoring system """
 
     solo_reward = 100
@@ -151,7 +151,7 @@ def nexus_omg(variant_data, ratings):
 
     # detect solo
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > variant_data.number_centers() // 2:
+    if ratings[best_role_name] > solo_threshold:
         score[best_role_name] = solo_reward
         return score
 
@@ -204,7 +204,7 @@ def nexus_omg(variant_data, ratings):
     return score
 
 
-def c_diplo_namur(variant_data, ratings):
+def c_diplo_namur(solo_threshold, ratings):
     """ the c-diplo namur scoring system """
 
     rank_points_list = [38, 14, 7]
@@ -216,7 +216,7 @@ def c_diplo_namur(variant_data, ratings):
 
     # detect solo
     best_role_name = list(ratings.keys())[0]
-    if ratings[best_role_name] > variant_data.number_centers() // 2:
+    if ratings[best_role_name] > solo_threshold:
         score[best_role_name] = solo_reward
         return score
 
@@ -253,21 +253,21 @@ def c_diplo_namur(variant_data, ratings):
     return score
 
 
-def scoring(game_scoring, variant_data, ratings):
+def scoring(game_scoring, solo_threshold, ratings):
     """ scoring """
 
     score_table = {}
 
     # selected scoring game parameter
     if game_scoring == 'CDIP':
-        score_table = c_diplo(variant_data, ratings)
+        score_table = c_diplo(solo_threshold, ratings)
     if game_scoring == 'WNAM':
-        score_table = win_namur(variant_data, ratings)
+        score_table = win_namur(solo_threshold, ratings)
     if game_scoring == 'DLIG':
-        score_table = diplo_league(variant_data, ratings)
+        score_table = diplo_league(solo_threshold, ratings)
     if game_scoring == 'NOMG':
-        score_table = nexus_omg(variant_data, ratings)
+        score_table = nexus_omg(solo_threshold, ratings)
     if game_scoring == 'CNAM':
-        score_table = c_diplo_namur(variant_data, ratings)
+        score_table = c_diplo_namur(solo_threshold, ratings)
 
     return score_table
