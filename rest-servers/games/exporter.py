@@ -175,7 +175,10 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         role_id = role_num + 1
         result['ResultSummary'][power_name] = {}
         result['ResultSummary'][power_name]['CenterCount'] = ratings[power_name]
+
+        # this will be superseded later on
         result['ResultSummary'][power_name]['YearOfElimination'] = None
+
         result['ResultSummary'][power_name]['InGameAtEnd'] = bool(ratings[power_name])
         result['ResultSummary'][power_name]['Score'] = score_table[power_name]
         result['ResultSummary'][power_name]['Rank'] = ranking[power_name]
@@ -216,6 +219,10 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                 role_id = role_num + 1
                 n_centers = len([_ for __, r in ownership_dict.items() if r == role_id])
                 ratings_phase[power_name] = n_centers
+
+                if result['ResultSummary'][power_name]['YearOfElimination'] is None and not n_centers:
+                    result['ResultSummary'][power_name]['YearOfElimination'] = game_year
+
             phase_data['CenterCounts'] = ratings_phase
 
             centers_phase = {}
@@ -234,7 +241,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         report_lines = report_txt.split('\n')
 
         report_header = report_lines[0]
-        report_date, _, _ = report_header.partition(':')
+        report_date, _, _ = report_header.partition(' ')
         # so the begin date will be the date of the first report
         if result['DateBegan'] is None:
             result['DateBegan'] = report_date
