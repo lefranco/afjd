@@ -200,8 +200,6 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                 assert zone_num not in justification_table
                 justification_table[zone_num] = justification
 
-        print(f"{justification_table=}")
-
         orders_phase: typing.Dict[str, typing.Any] = {}
         actual_orders_list = the_orders['orders']
         fake_units_list = the_orders['fake_units']
@@ -249,8 +247,6 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         result['GamePhases'].append(phase_data)
 
         advancement += 1
-
-        print("====================")
 
     del sql_executor
 
