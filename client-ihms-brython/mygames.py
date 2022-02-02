@@ -295,12 +295,12 @@ def my_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'variant', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'start']
+    fields = ['jump_here', 'go_away', 'variant', 'nopress', 'nomessage', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'start']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis prêt', 'all_orders_submitted': 'ordres(*)', 'all_agreed': 'tous prêts', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'start': 'démarrer'}[field]
+        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'nopress': 'm. publics', 'nomessage': 'm. privés','current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis prêt', 'all_orders_submitted': 'ordres(*)', 'all_agreed': 'tous prêts', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'start': 'démarrer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -396,6 +396,12 @@ def my_games(state_name):
                 link = html.A(href=f"?game={game_name}", target="_blank")
                 link <= game_name
                 value = link
+
+            if field == 'nopress':
+                value = "Non" if value else "Oui"
+
+            if field == 'nomessage':
+                value = "Non" if value else "Oui"
 
             if field == 'deadline':
 

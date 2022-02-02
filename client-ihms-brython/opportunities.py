@@ -171,12 +171,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'join', 'master', 'variant', 'description', 'deadline', 'current_state', 'current_advancement', 'allocated']
+    fields = ['jump_here', 'join', 'master', 'variant', 'description', 'nopress', 'nomessage', 'deadline', 'current_state', 'current_advancement', 'allocated']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'aller voir', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(*)'}[field]
+        field_fr = {'jump_here': 'aller voir', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description',  'nopress': 'm. publics', 'nomessage': 'm. privés','deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(*)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -254,6 +254,12 @@ def my_opportunities():
                 # some games do not have a game master
                 master_name = game_master_dict.get(game_name, '')
                 value = master_name
+
+            if field == 'nopress':
+                value = "Non" if value else "Oui"
+
+            if field == 'nomessage':
+                value = "Non" if value else "Oui"
 
             if field == 'deadline':
                 deadline_loaded = value
