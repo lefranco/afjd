@@ -17,6 +17,8 @@ import database
 import games  # noqa: F401 pylint: disable=unused-import
 import ownerships
 import transitions
+import groupings
+import tournaments
 import scoring
 
 # TODO : in production, put False and test we get the players data
@@ -69,9 +71,21 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     games_found = sql_executor.execute("SELECT game_data FROM games where name = ?", (game_name,), need_result=True)
     assert games_found, "Did not find game"
     game = games_found[0][0]
+    game_id = game.identifier
 
     # extract
     result = {}
+
+    # competition = tournament
+    result['Competition'] = ''
+    game_tournaments = groupings.Grouping.list_by_game_id(sql_executor, game_id)
+    if game_tournaments:
+        # the id of tournament
+        tournament_ids = [g[0] for g in game_tournaments]
+        tournament_id = tournament_ids[0]
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        assert tournament is not None, "Tournament could not be found"
+        result['Competition'] = tournament.name
 
     # game label
     result['GameLabel'] = game.name
@@ -121,7 +135,6 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         assert False, "DONE"
 
     # get the players from database
-    game_id = game.identifier
     allocations_found = sql_executor.execute("SELECT * FROM allocations where game_id = ?", (game_id,), need_result=True)
     assert allocations_found, "Did not find allocations"
     result['Players'] = {}
