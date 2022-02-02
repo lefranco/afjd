@@ -2,6 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
+# no mypy on this file
+# mypy: ignore-errors
 
 def c_diplo(solo_threshold, ratings):
     """ the c-diplo scoring system """
