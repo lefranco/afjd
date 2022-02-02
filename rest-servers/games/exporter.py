@@ -15,24 +15,11 @@ import database
 import games
 import ownerships
 
-POWER_NAME = { 1: "England", 2: "France", 3: "Germany", 4: "Italy", 5: "Austria", 6: "Russia", 7: "Turkey" }
+POWER_NAME = {1: "England", 2: "France", 3: "Germany", 4: "Italy", 5: "Austria", 6: "Russia", 7: "Turkey"}
 
-def main() -> None:
-    """ main """
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--name', required=True, help='Name of game')
-    parser.add_argument('-v', '--variant_input', required=True, help='Input variant json file')
-    parser.add_argument('-J', '--json_output', required=False, help='Output json file')
-    args = parser.parse_args()
-
-    game_name = args.name
-    json_variant_input = args.variant_input
-    json_output = args.json_output
-
-    # load variant from json data file
-    with open(json_variant_input, "r", encoding='utf-8') as read_file:
-        json_variant_data = json.load(read_file)
+def export_data(game_name: str, json_variant_data: str) -> typing.Dict[str, typing.Any]:
+    """ exports all information about a game in format for DIPLOBN """
 
     # open database
     sql_executor = database.SqlExecutor()
@@ -94,15 +81,39 @@ def main() -> None:
     for _, center_num, role_num in game_ownerships:
         ownership_dict[center_num] = role_num
     for role_id, power_name in POWER_NAME.items():
-        result['ResultSummary'][power_name] = dict()
-        result['ResultSummary'][power_name]['CenterCount'] = len([c for c in ownership_dict if ownership_dict[c] == role_id])
+        result['ResultSummary'][power_name] = {}
+        result['ResultSummary'][power_name]['CenterCount'] = len([_ for c, r in ownership_dict.items() if r == role_id])
         result['ResultSummary'][power_name]['YearOfElimination'] = None
         result['ResultSummary'][power_name]['InGameAtEnd'] = True
-        result['ResultSummary'][power_name]['Score'] = 0 # TODO
-        result['ResultSummary'][power_name]['Rank'] = 0 # TODO
+        result['ResultSummary'][power_name]['Score'] = 0  # TODO
+        result['ResultSummary'][power_name]['Rank'] = 0  # TODO
 
     # get the games phases
     # TODO
+
+    del sql_executor
+
+    return result
+
+
+def main() -> None:
+    """ main """
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--name', required=True, help='Name of game')
+    parser.add_argument('-v', '--variant_input', required=True, help='Input variant json file')
+    parser.add_argument('-J', '--json_output', required=False, help='Output json file')
+    args = parser.parse_args()
+
+    game_name = args.name
+    json_variant_input = args.variant_input
+    json_output = args.json_output
+
+    # load variant from json data file
+    with open(json_variant_input, "r", encoding='utf-8') as read_file:
+        json_variant_data = json.load(read_file)
+
+    result = export_data(game_name, json_variant_data)
 
     # output
     if json_output is not None:
