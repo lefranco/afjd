@@ -117,7 +117,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         req_result = SESSION.get(url)
         assert req_result.status_code == 200, "Failed to access players API"
         players_dict = req_result.json()
-        print(f"{players_list=}")
+        print(f"{players_dict=}")
         assert False, "DONE"
 
     # get the players from database
@@ -134,7 +134,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                 player_pseudo = player_data['pseudo']
                 player_first_name = player_data['first_name']
                 player_family_name = player_data['family_name']
-                result['Players'][power_name] = f"{player_first_name} {player_family_name} (player_pseudo)"
+                result['Players'][power_name] = f"{player_first_name} {player_family_name} ({player_pseudo})"
             else:
                 result['Players'][power_name] = f"Unknown!"
 
@@ -181,36 +181,41 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         unit_dict = the_situation['units']
         the_orders = json.loads(transition.orders_json)
 
-        phase_data: typing.Dict[str, typing.Any] = {}
-
         game_year = 1901 + advancement // 5
-        if advancement % 5 in [0, 1]:
-            game_season = 1
-        elif advancement % 5 in [2, 3]:
-            game_season = 2
-        elif advancement % 5 in [4]:
-            game_season = 3
-        phase_data['Phase'] = game_year * 10 + game_season
-        phase_data['Status'] = 'Completed'
-        ratings_phase = {}
 
-        for role_num, power_name in enumerate(POWER_NAME):
-            role_id = role_num + 1
-            n_centers = len([_ for __, r in ownership_dict.items() if r == role_id])
-            ratings_phase[power_name] = n_centers
-        phase_data['CenterCounts'] = ratings_phase
+        if advancement % 5 in [0, 2, 4]:
 
-        centers_phase = {}
-        for role_num, power_name in enumerate(POWER_NAME):
-            role_id = role_num + 1
-            centers_phase[power_name] = [CENTER_NAME[int(c) - 1] for c, r in ownership_dict.items() if r == role_id]
-        phase_data['SupplyCenters'] = centers_phase
+            phase_data: typing.Dict[str, typing.Any] = {}
 
-        units_phase = {}
-        for role_num, power_name in enumerate(POWER_NAME):
-            role_id = role_num + 1
-            units_phase[power_name] = [[TYPE_NAME[int(t) - 1], ZONE_NAME[int(z) - 1]] for t, z in unit_dict[str(POWER_NAME.index(power_name) + 1)]] if str(POWER_NAME.index(power_name) + 1) in unit_dict else []
-        phase_data['Units'] = units_phase
+            if advancement % 5 == 0:
+                game_season = 1
+            elif advancement % 5 == 2:
+                game_season = 2
+            elif advancement % 5 == 4:
+                game_season = 3
+
+            phase_data['Phase'] = game_year * 10 + game_season
+            phase_data['Status'] = 'Completed'
+
+            ratings_phase = {}
+
+            for role_num, power_name in enumerate(POWER_NAME):
+                role_id = role_num + 1
+                n_centers = len([_ for __, r in ownership_dict.items() if r == role_id])
+                ratings_phase[power_name] = n_centers
+            phase_data['CenterCounts'] = ratings_phase
+
+            centers_phase = {}
+            for role_num, power_name in enumerate(POWER_NAME):
+                role_id = role_num + 1
+                centers_phase[power_name] = [CENTER_NAME[int(c) - 1] for c, r in ownership_dict.items() if r == role_id]
+            phase_data['SupplyCenters'] = centers_phase
+
+            units_phase = {}
+            for role_num, power_name in enumerate(POWER_NAME):
+                role_id = role_num + 1
+                units_phase[power_name] = [[TYPE_NAME[int(t) - 1], ZONE_NAME[int(z) - 1]] for t, z in unit_dict[str(POWER_NAME.index(power_name) + 1)]] if str(POWER_NAME.index(power_name) + 1) in unit_dict else []
+            phase_data['Units'] = units_phase
 
         report_txt = transition.report_txt
         report_lines = report_txt.split('\n')
@@ -233,6 +238,10 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                 assert zone_num not in justification_table
                 justification_table[zone_num] = justification
 
+        if advancement % 5 in [0, 2, 4]:
+            # remember stuff from moves for retreats
+            orders_table = {}
+
         orders_phase: typing.Dict[str, typing.Any] = {}
         actual_orders_list = the_orders['orders']
         fake_units_list = the_orders['fake_units']
@@ -249,39 +258,50 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
 
             # parse the orders
             for _, role, order, active, passive, destination in actual_orders_list:
+
                 if role != role_id:
                     continue
+
                 adj_justif = justification_table.get(active, "")
                 adj_result = "f" if adj_justif else "s"
                 active_design = ZONE_NAME[int(active) - 1] if isinstance(ZONE_NAME[int(active) - 1], str) else ZONE_NAME[int(active) - 1][0]
+
                 if order == 1:  # move
                     order_description = [active_design, ['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    orders_table[active_design] = order_description
                 if order == 2:  # attack support
                     order_description = [active_design, ['sm', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    orders_table[active_design] = order_description
                 if order == 3:  # attack support
                     order_description = [active_design, ['sh', ZONE_NAME[int(passive) - 1]], [adj_result, adj_justif]]
+                    orders_table[active_design] = order_description
                 if order == 4:  # hold
                     order_description = [active_design, ['h'], [adj_result, adj_justif]]
+                    orders_table[active_design] = order_description
                 if order == 5:  # convoy
                     order_description = [active_design, ['c', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    orders_table[active_design] = order_description
+
                 if order == 6:  # retreat
-                    # unsure
-                    order_description = [active_design, ['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    # we need to complete
+                    order_description = orders_table[active_design]
+                    order_description.extend([['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]])
                 if order == 7:  # disband
-                    # unsure
-                    order_description = [active_design, ['d'], [adj_result, adj_justif]]
+                    # we need to complete
+                    order_description = orders_table[active_design]
+                    order_description.extend([['d'], [adj_result, adj_justif]])
+
                 if order == 8:  # build
                     type_ = fake_table[active]
                     order_description = [active_design, ['b', TYPE_NAME[int(type_) - 1]], [adj_result, adj_justif]]
                 if order == 9:  # remove
                     order_description = [active_design, ['d'], [adj_result, adj_justif]]
-                orders_phase[power_name].append(order_description)
-        phase_data['Orders'] = orders_phase
 
-        # TODO : unclear, probably will need to revise how to enter retreats
+                if advancement % 5 in [0, 2, 4]:
+                    orders_phase[power_name].append(order_description)
 
-        # TODO : remove we need a smaller sample
-        if True:#☻21 <= advancement <= 25:
+        if advancement % 5 in [0, 2, 4]:
+            phase_data['Orders'] = orders_phase
             result['GamePhases'].append(phase_data)
 
         advancement += 1
