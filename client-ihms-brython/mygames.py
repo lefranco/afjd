@@ -446,28 +446,36 @@ def my_games(state_name):
             if field == 'orders_submitted':
 
                 value = ""
-                submitted_roles_list = submitted_data['submitted']
-                needed_roles_list = submitted_data['needed']
-                if role_id is not None:
-                    if role_id in submitted_roles_list:
-                        flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
-                        value = flag
-                    elif role_id in needed_roles_list:
-                        flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
-                        value = flag
+                if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                    flag = html.IMG(src="./images/game_over.png", title="Partie finie")
+                    value = flag
+                else:
+                    submitted_roles_list = submitted_data['submitted']
+                    needed_roles_list = submitted_data['needed']
+                    if role_id is not None:
+                        if role_id in submitted_roles_list:
+                            flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
+                            value = flag
+                        elif role_id in needed_roles_list:
+                            flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
+                            value = flag
 
             if field == 'agreed':
 
                 value = ""
-                submitted_roles_list = submitted_data['submitted']
-                agreed_roles_list = submitted_data['agreed']
-                if role_id is not None:
-                    if role_id in agreed_roles_list:
-                        flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
-                        value = flag
-                    elif role_id in needed_roles_list:
-                        flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
-                        value = flag
+                if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                    flag = html.IMG(src="./images/game_over.png", title="Partie finie")
+                    value = flag
+                else:
+                    submitted_roles_list = submitted_data['submitted']
+                    agreed_roles_list = submitted_data['agreed']
+                    if role_id is not None:
+                        if role_id in agreed_roles_list:
+                            flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
+                            value = flag
+                        elif role_id in needed_roles_list:
+                            flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
+                            value = flag
 
             if field == 'all_orders_submitted':
 
