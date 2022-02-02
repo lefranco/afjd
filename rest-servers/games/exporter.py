@@ -12,13 +12,15 @@ import typing
 import json
 
 import database
-import games
+import games  # noqa: F401 pylint: disable=unused-import
 import ownerships
+import scoring
 
+SOLO_THRESHOLD = 18
 POWER_NAME = {1: "England", 2: "France", 3: "Germany", 4: "Italy", 5: "Austria", 6: "Russia", 7: "Turkey"}
 
 
-def export_data(game_name: str, json_variant_data: str) -> typing.Dict[str, typing.Any]:
+def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     """ exports all information about a game in format for DIPLOBN """
 
     # open database
@@ -41,7 +43,8 @@ def export_data(game_name: str, json_variant_data: str) -> typing.Dict[str, typi
     result['URL'] = f'https://diplomania-gen.fr?game={game.name}'
 
     # scoring system
-    result['ScoringSystem'] = game.scoring
+    game_scoring = game.scoring
+    result['ScoringSystem'] = game_scoring
 
     # communication
     if game.nomessage and game.nopress:
@@ -80,13 +83,25 @@ def export_data(game_name: str, json_variant_data: str) -> typing.Dict[str, typi
     ownership_dict = {}
     for _, center_num, role_num in game_ownerships:
         ownership_dict[center_num] = role_num
+
+    ratings = {}
+    for role_id, power_name in POWER_NAME.items():
+        n_centers = len([_ for c, r in ownership_dict.items() if r == role_id])
+        ratings[power_name] = n_centers
+
+    ranking = {}
+    for role_id, power_name in POWER_NAME.items():
+        ranking[power_name] = 1 + len([_ for p in ratings if ratings[p] > ratings[power_name]])
+
+    score_table = scoring.scoring(game_scoring, SOLO_THRESHOLD, ratings)
+
     for role_id, power_name in POWER_NAME.items():
         result['ResultSummary'][power_name] = {}
-        result['ResultSummary'][power_name]['CenterCount'] = len([_ for c, r in ownership_dict.items() if r == role_id])
+        result['ResultSummary'][power_name]['CenterCount'] = ratings[power_name]
         result['ResultSummary'][power_name]['YearOfElimination'] = None
-        result['ResultSummary'][power_name]['InGameAtEnd'] = True
-        result['ResultSummary'][power_name]['Score'] = 0  # TODO
-        result['ResultSummary'][power_name]['Rank'] = 0  # TODO
+        result['ResultSummary'][power_name]['InGameAtEnd'] = bool(ratings[power_name])
+        result['ResultSummary'][power_name]['Score'] = score_table[power_name]
+        result['ResultSummary'][power_name]['Rank'] = ranking[power_name]
 
     # get the games phases
     # TODO
@@ -101,19 +116,13 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--name', required=True, help='Name of game')
-    parser.add_argument('-v', '--variant_input', required=True, help='Input variant json file')
     parser.add_argument('-J', '--json_output', required=False, help='Output json file')
     args = parser.parse_args()
 
     game_name = args.name
-    json_variant_input = args.variant_input
     json_output = args.json_output
 
-    # load variant from json data file
-    with open(json_variant_input, "r", encoding='utf-8') as read_file:
-        json_variant_data = json.load(read_file)
-
-    result = export_data(game_name, json_variant_data)
+    result = export_data(game_name)
 
     # output
     if json_output is not None:
