@@ -64,6 +64,9 @@ assert len(FRENCH_ZONE_NAME) == 81
 def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     """ exports all information about a game in format for DIPLOBN """
 
+    # extract
+    result: typing.Dict[str, typing.Any] = {}
+
     # open database
     sql_executor = database.SqlExecutor()
 
@@ -72,9 +75,6 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     assert games_found, "Did not find game"
     game = games_found[0][0]
     game_id = game.identifier
-
-    # extract
-    result = {}
 
     # competition = tournament
     result['Competition'] = ''
@@ -153,7 +153,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                 player_family_name = player_data['family_name']
                 result['Players'][power_name] = f"{player_first_name} {player_family_name} ({player_pseudo})"
             else:
-                result['Players'][power_name] = f"Unknown!"
+                result['Players'][power_name] = "Unknown!"
 
     # get the result from database
     result['ResultSummary'] = {}
