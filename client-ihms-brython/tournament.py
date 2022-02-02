@@ -607,7 +607,8 @@ def show_ratings():
 
         # scoring
         game_scoring = data['scoring']
-        score_table = scoring.scoring(game_scoring, variant_data, ratings)
+        solo_threshold = variant_data.number_centers() // 2
+        score_table = scoring.scoring(game_scoring, solo_threshold, ratings)
 
         # get scoring name
         scoring_name = name2code[game_scoring]
@@ -1421,7 +1422,8 @@ def test_scoring():
             RATING_TABLE[name] = val
 
         # scoring
-        score_table = scoring.scoring(game_scoring, variant_data, RATING_TABLE)
+        solo_threshold = variant_data.number_centers() // 2
+        score_table = scoring.scoring(game_scoring, solo_threshold, RATING_TABLE)
 
         score_desc = "\n".join([f"{k} : {v} points" for k, v in score_table.items()])
         alert(f"Dans cette configuration la marque est :\n{score_desc}")
