@@ -121,7 +121,10 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         result['DeadlineType'] = 'Extended'
 
     # limit of game
-    result['LimitType'] = 'YearLimited'
+    if game.nb_max_cycles_to_play == 99:
+        result['LimitType'] = 'Unlimited'
+    else:
+        result['LimitType'] = 'YearLimited'
 
     # note
     result['Note'] = game.description
@@ -162,20 +165,26 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     for _, center_num, role_id in game_ownerships:
         ownership_dict[center_num] = role_id
 
+    # how many centers every power hass
     center_table = {}
     for role_num, power_name in enumerate(POWER_NAME):
         role_id = role_num + 1
         n_centers = len([_ for c, r in ownership_dict.items() if r == role_id])
         center_table[power_name] = n_centers
+
+    # need to be sorted
     ratings = dict(sorted(center_table.items(), key=lambda i: i[1], reverse=True))
 
+    # use clone of unit in front end (scoring)
     score_table = scoring.scoring(game_scoring, SOLO_THRESHOLD, ratings)  # type: ignore
 
+    # need ranking
     ranking = {}
     for role_num, power_name in enumerate(POWER_NAME):
         role_id = role_num + 1
         ranking[power_name] = 1 + len([_ for p in score_table if score_table[p] > score_table[power_name]])
 
+    # fill information required
     for role_num, power_name in enumerate(POWER_NAME):
         role_id = role_num + 1
         result['ResultSummary'][power_name] = {}
@@ -202,8 +211,10 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         unit_dict = the_situation['units']
         the_orders = json.loads(transition.orders_json)
 
+        # game year : easy
         game_year = 1901 + advancement // 5
 
+        # season : not so easy
         if advancement % 5 in [0, 2, 4]:
 
             phase_data: typing.Dict[str, typing.Any] = {}
@@ -242,17 +253,20 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                 units_phase[power_name] = [[TYPE_NAME[int(t) - 1], ZONE_NAME[int(z) - 1]] for t, z in unit_dict[str(POWER_NAME.index(power_name) + 1)]] if str(POWER_NAME.index(power_name) + 1) in unit_dict else []
             phase_data['Units'] = units_phase
 
+        # this is text information
         report_txt = transition.report_txt
         report_lines = report_txt.split('\n')
 
         report_header = report_lines[0]
         report_date, _, _ = report_header.partition(' ')
+
         # so the begin date will be the date of the first report
         if result['DateBegan'] is None:
             result['DateBegan'] = report_date
         # so the end date will be the date of the last report
         result['DateEnded'] = report_date
 
+        # extract justification at end of line
         justification_table: typing.Dict[int, str] = {}
         for line in report_lines:
             if ';' in line:
@@ -266,6 +280,8 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         if advancement % 5 in [0, 2, 4]:
             # remember stuff from moves for retreats
             orders_table = {}
+
+        # now extract all the orders
 
         orders_phase: typing.Dict[str, typing.Any] = {}
         actual_orders_list = the_orders['orders']
@@ -308,11 +324,11 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                     orders_table[active_design] = order_description
 
                 if order == 6:  # retreat
-                    # we need to complete
+                    # we need to complete previously created element
                     order_description = orders_table[active_design]
                     order_description.extend([['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]])
                 if order == 7:  # disband
-                    # we need to complete
+                    # we need to complete previously created element
                     order_description = orders_table[active_design]
                     order_description.extend([['d'], [adj_result, adj_justif]])
 
@@ -325,6 +341,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                 if advancement % 5 in [0, 2, 4]:
                     orders_phase[power_name].append(order_description)
 
+        # retreat phases do not exist actually
         if advancement % 5 in [0, 2, 4]:
             phase_data['Orders'] = orders_phase
             result['GamePhases'].append(phase_data)
@@ -337,7 +354,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
 
 
 def main() -> None:
-    """ main """
+    """ main : for unitary testing """
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--name', required=True, help='Name of game')
