@@ -93,7 +93,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     for role_id, power_name in POWER_NAME.items():
         ranking[power_name] = 1 + len([_ for p in ratings if ratings[p] > ratings[power_name]])
 
-    score_table = scoring.scoring(game_scoring, SOLO_THRESHOLD, ratings)
+    score_table = scoring.scoring(game_scoring, SOLO_THRESHOLD, ratings)  # type: ignore
 
     for role_id, power_name in POWER_NAME.items():
         result['ResultSummary'][power_name] = {}
