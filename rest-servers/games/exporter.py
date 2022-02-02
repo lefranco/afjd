@@ -26,7 +26,7 @@ DEBUG = True
 
 SESSION = requests.Session()
 
-SOLO_THRESHOLD = 18
+SOLO_THRESHOLD = 17
 
 POWER_NAME = [
     'England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey'
@@ -94,7 +94,11 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     result['URL'] = f'https://diplomania-gen.fr?game={game.name}'
 
     # date begin
+    # will be filled in later
     result['DateBegan'] = None
+
+    # date end
+    # will be filled in later
     result['DateEnded'] = None
 
     # scoring system
@@ -158,18 +162,19 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     for _, center_num, role_id in game_ownerships:
         ownership_dict[center_num] = role_id
 
-    ratings = {}
+    center_table = {}
     for role_num, power_name in enumerate(POWER_NAME):
         role_id = role_num + 1
         n_centers = len([_ for c, r in ownership_dict.items() if r == role_id])
-        ratings[power_name] = n_centers
+        center_table[power_name] = n_centers
+    ratings = dict(sorted(center_table.items(), key=lambda i: i[1], reverse=True))
+
+    score_table = scoring.scoring(game_scoring, SOLO_THRESHOLD, ratings)  # type: ignore
 
     ranking = {}
     for role_num, power_name in enumerate(POWER_NAME):
         role_id = role_num + 1
-        ranking[power_name] = 1 + len([_ for p in ratings if ratings[p] > ratings[power_name]])
-
-    score_table = scoring.scoring(game_scoring, SOLO_THRESHOLD, ratings)  # type: ignore
+        ranking[power_name] = 1 + len([_ for p in score_table if score_table[p] > score_table[power_name]])
 
     for role_num, power_name in enumerate(POWER_NAME):
         role_id = role_num + 1
