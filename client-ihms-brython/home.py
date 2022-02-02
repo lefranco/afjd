@@ -270,6 +270,12 @@ def all_games(state_name):
                 master_name = game_master_dict.get(game_name, '')
                 value = master_name
 
+            if field == 'nopress':
+                value = "Non" if value else "Oui"
+
+            if field == 'nomessage':
+                value = "Non" if value else "Oui"
+
             if field == 'deadline':
                 deadline_loaded = value
                 datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
@@ -290,12 +296,6 @@ def all_games(state_name):
                 # deadline is today
                 elif time_stamp_now > deadline_loaded - approach_duration:
                     colour = config.APPROACHING_DEADLINE_COLOUR
-
-            if field == 'nopress':
-                value = "Non" if value else "Oui"
-
-            if field == 'nomessage':
-                value = "Non" if value else "Oui"
 
             if field == 'current_advancement':
                 advancement_loaded = value
