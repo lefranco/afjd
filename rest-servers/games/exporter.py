@@ -33,7 +33,7 @@ assert len(POWER_NAME) == 7
 
 CENTER_NAME = [
     'Ank', 'Bel', 'Ber', 'Bre', 'Bud', 'Bul', 'Con', 'Den', 'Edi', 'Gre', 'Hol', 'Kie', 'Lon', 'Lvp', 'Mar', 'Mos',
-    'Mun', 'Nap', 'Nwy', 'Par', 'Por', 'Rom', 'Rum', 'Ser', 'Sev', 'Smy', 'Spa', 'Stp', 'Wwe', 'Tri', 'Tun', 'Ven',
+    'Mun', 'Nap', 'Nwy', 'Par', 'Por', 'Rom', 'Rum', 'Ser', 'Sev', 'Smy', 'Spa', 'Stp', 'Swe', 'Tri', 'Tun', 'Ven',
     'Vie', 'War']
 assert len(CENTER_NAME) == 34
 
@@ -41,12 +41,12 @@ TYPE_NAME = ['A', 'F']
 assert len(TYPE_NAME) == 2
 
 ZONE_NAME = [
-    'Adr', 'Aeg', 'Alb', 'Ank', 'Apu', 'Arm', 'Bal', 'Bar', 'Bel', 'Ber', 'Bla', 'Boh', 'Bot', 'Bre', 'Bud', 'Bul',
-    'Bur', 'Cly', 'Con', 'Den', 'Eas', 'Edi', 'Eng', 'Fin', 'Gal', 'Gas', 'Gol', 'Gre', 'Hel', 'Hol', 'Ion', 'Iri',
-    'Kie', 'lon', 'Lvn', 'Lvp', 'mar', 'Mid', 'Mos', 'Mun', 'Naf', 'Nap', 'Nat', 'Nrg', 'Nth', 'Nwy', 'Par', 'Pic',
-    'Pie', 'Por', 'Pru', 'Rom', 'Ruh', 'Rum', 'Ser', 'Sev', 'Sil', 'Ska', 'Smy', 'Spa', 'Stp', 'Swe', 'Syr', 'Tri',
-    'Tun', 'Tus', 'Tyn', 'Tyr', 'Ukr', 'Ven', 'Vie', 'Wal', 'War', 'Wed', 'Yor',
-    'Bul ec', 'Bul sc', 'Spa nc', 'Spa sc', 'Stp nc', 'Stp sc']
+    'ADR', 'AEG', 'Alb', 'Ank', 'Apu', 'Arm', 'BAL', 'BAR', 'Bel', 'Ber', 'BLA', 'Boh', 'BOT', 'Bre', 'Bud', 'Bul',
+    'Bur', 'Cly', 'Con', 'Den', 'EAS', 'Edi', 'ENG', 'Fin', 'Gal', 'Gas', 'LYO', 'Gre', 'HEL', 'Hol', 'ION', 'IRI',
+    'Kie', 'Lon', 'Lvn', 'Lvp', 'Mar', 'MAO', 'Mos', 'Mun', 'Naf', 'Nap', 'NAO', 'NWG', 'NTH', 'Nwy', 'Par', 'Pic',
+    'Pie', 'Por', 'Pru', 'Rom', 'Ruh', 'Rum', 'Ser', 'Sev', 'Sil', 'SKA', 'Smy', 'Spa', 'Stp', 'Swe', 'Syr', 'Tri',
+    'Tun', 'Tus', 'TYS', 'Tyr', 'Ukr', 'Ven', 'Vie', 'Wal', 'War', 'WES', 'Yor',
+    ['Bul', 'ec'], ['Bul', 'sc'], ['Spa', 'nc'], ['Spa', 'sc'], ['Stp', 'nc'], ['Stp', 'sc']]
 assert len(ZONE_NAME) == 81
 
 FRENCH_ZONE_NAME = [
@@ -190,7 +190,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
             game_season = 2
         elif advancement % 5 in [4]:
             game_season = 3
-        phase_data['Phase'] = f"{game_year}{game_season}"
+        phase_data['Phase'] = game_year * 10 + game_season
         phase_data['Status'] = 'Completed'
         ratings_phase = {}
 
@@ -217,8 +217,10 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
 
         report_header = report_lines[0]
         report_date, _, _ = report_header.partition(':')
+        # so the begin date will be the date of the first report
         if result['DateBegan'] is None:
             result['DateBegan'] = report_date
+        # so the end date will be the date of the last report
         result['DateEnded'] = report_date
 
         justification_table: typing.Dict[int, str] = {}
@@ -238,7 +240,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
             role_id = role_num + 1
             orders_phase[power_name] = []
 
-            # build the table fake untis zone -> type
+            # build the table fake units zone -> type
             fake_table = {}
             for _, type_, zone, role, _, _ in fake_units_list:
                 if role != role_id:
@@ -251,33 +253,36 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                     continue
                 adj_justif = justification_table.get(active, "")
                 adj_result = "f" if adj_justif else "s"
+                active_design = ZONE_NAME[int(active) - 1] if isinstance(ZONE_NAME[int(active) - 1], str) else ZONE_NAME[int(active) - 1][0]
                 if order == 1:  # move
-                    order_description = [ZONE_NAME[int(active) - 1], ['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    order_description = [active_design, ['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
                 if order == 2:  # attack support
-                    order_description = [ZONE_NAME[int(active) - 1], ['sm', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    order_description = [active_design, ['sm', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
                 if order == 3:  # attack support
-                    order_description = [ZONE_NAME[int(active) - 1], ['sh', ZONE_NAME[int(passive) - 1]], [adj_result, adj_justif]]
+                    order_description = [active_design, ['sh', ZONE_NAME[int(passive) - 1]], [adj_result, adj_justif]]
                 if order == 4:  # hold
-                    order_description = [ZONE_NAME[int(active) - 1], ['h'], [adj_result, adj_justif]]
+                    order_description = [active_design, ['h'], [adj_result, adj_justif]]
                 if order == 5:  # convoy
-                    order_description = [ZONE_NAME[int(active) - 1], ['c', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    order_description = [active_design, ['c', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
                 if order == 6:  # retreat
                     # unsure
-                    order_description = [ZONE_NAME[int(active) - 1], ['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    order_description = [active_design, ['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
                 if order == 7:  # disband
                     # unsure
-                    order_description = [ZONE_NAME[int(active) - 1], ['d'], [adj_result, adj_justif]]
+                    order_description = [active_design, ['d'], [adj_result, adj_justif]]
                 if order == 8:  # build
                     type_ = fake_table[active]
-                    order_description = [ZONE_NAME[int(active) - 1], ['b', TYPE_NAME[int(type_) - 1]], [adj_result, adj_justif]]
+                    order_description = [active_design, ['b', TYPE_NAME[int(type_) - 1]], [adj_result, adj_justif]]
                 if order == 9:  # remove
-                    order_description = [ZONE_NAME[int(active) - 1], ['d'], [adj_result, adj_justif]]
+                    order_description = [active_design, ['d'], [adj_result, adj_justif]]
                 orders_phase[power_name].append(order_description)
         phase_data['Orders'] = orders_phase
 
         # TODO : unclear, probably will need to revise how to enter retreats
 
-        result['GamePhases'].append(phase_data)
+        # TODO : remove we need a smaller sample
+        if True:#☻21 <= advancement <= 25:
+            result['GamePhases'].append(phase_data)
 
         advancement += 1
 
