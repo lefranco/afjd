@@ -71,11 +71,16 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     # url
     result['URL'] = f'https://diplomania-gen.fr?game={game.name}'
 
+    # date begin
+    result['DateBegan'] = None
+    result['DateEnded'] = None
+
     # scoring system
     game_scoring = game.scoring
     result['ScoringSystem'] = game_scoring
 
     # communication
+    # TODO : we have an issue here since we open presse at end of all games...
     if game.nomessage and game.nopress:
         result['CommunicationType'] = 'None'
     elif game.nomessage and game.nopress:
@@ -140,6 +145,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     result['GamePhases'] = []
     advancement = 0
     while True:
+
         transition = transitions.Transition.find_by_identifier_advancement(sql_executor, game_id, advancement)
         if transition is None:
             break
@@ -150,7 +156,10 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         the_orders = json.loads(transition.orders_json)
 
         phase_data: typing.Dict[str, typing.Any] = {}
-        phase_data['Phase'] = f"xxx {advancement=}"
+
+        game_year = 1901 + advancement//5
+        game_season = advancement%5+1 # TODO
+        phase_data['Phase'] = f"{game_year}{game_season}"
         phase_data['Status'] = 'Completed'
         ratings_phase = {}
 
@@ -172,22 +181,26 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
             units_phase[power_name] = [[TYPE_NAME[int(t)-1], ZONE_NAME[int(z)-1]] for t, z in unit_dict[str(POWER_NAME.index(power_name) + 1)]] if str(POWER_NAME.index(power_name) + 1) in unit_dict else []
         phase_data['Units'] = units_phase
 
-
-        justification_table = {}
         report_txt = transition.report_txt
         report_lines=report_txt.split('\n')
+
+        report_header = report_lines[0]
+        report_date, _, _ = report_header.partition(':')
+        if result['DateBegan'] is None:
+            result['DateBegan'] = report_date
+        result['DateEnded'] = report_date
+
+        justification_table = {}
         for line in report_lines:
             if ';' in line:
                 words = line.split(' ')
                 french_unit = words[1]
-                zone_num = FRENCH_ZONE_NAME.index(french_unit)
+                zone_num = FRENCH_ZONE_NAME.index(french_unit) + 1
                 _, _, justification = line.partition(';')
                 assert zone_num not in justification_table
                 justification_table[zone_num] = justification
 
-        print("------------")
-        print('\n'.join(report_lines))
-
+        print(f"{justification_table=}")
 
         orders_phase: typing.Dict[str, typing.Any] = {}
         actual_orders_list = the_orders['orders']
@@ -210,18 +223,20 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                 adj_justif = justification_table.get(active, "")
                 adj_result = "f" if adj_justif else "s"
                 if order == 1: # move
-                    order_description = [ZONE_NAME[int(active)-1], [['m', ZONE_NAME[int(destination)-1], [adj_result, adj_justif]]]]
+                    order_description = [ZONE_NAME[int(active)-1], ['m', ZONE_NAME[int(destination)-1]], [adj_result, adj_justif]]
                 if order == 2: # attack support
-                    order_description = [ZONE_NAME[int(active)-1], [['sm', ZONE_NAME[int(passive)-1], ZONE_NAME[int(destination)-1], [adj_result, adj_justif]]]]
+                    order_description = [ZONE_NAME[int(active)-1], ['sm', ZONE_NAME[int(passive)-1], ZONE_NAME[int(destination)-1]], [adj_result, adj_justif]]
                 if order == 3: # attack support
-                    order_description = [ZONE_NAME[int(active)-1], [['sh', ZONE_NAME[int(passive)-1], [adj_result, adj_justif]]]]
+                    order_description = [ZONE_NAME[int(active)-1], ['sh', ZONE_NAME[int(passive)-1]], [adj_result, adj_justif]]
                 if order == 4: # hold
-                    order_description = [ZONE_NAME[int(active)-1], [adj_result, adj_justif]]
+                    order_description = [ZONE_NAME[int(active)-1], ['h'], [adj_result, adj_justif]]
                 if order == 5: # convoy
-                    order_description = [ZONE_NAME[int(active)-1], [['c', ZONE_NAME[int(passive)-1], ZONE_NAME[int(destination)-1], [adj_result, adj_justif]]]]
+                    order_description = [ZONE_NAME[int(active)-1], ['c', ZONE_NAME[int(passive)-1], ZONE_NAME[int(destination)-1]], [adj_result, adj_justif]]
                 if order == 6: # retreat
+                    # TODO : retreat
                     pass
                 if order == 7: # disband
+                    # TODO : disband
                     pass
                 if order == 8: # build
                     type_ = fake_table[active]
@@ -234,6 +249,8 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         result['GamePhases'].append(phase_data)
 
         advancement += 1
+
+        print("====================")
 
     del sql_executor
 
