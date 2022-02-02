@@ -22,25 +22,25 @@ SOLO_THRESHOLD = 18
 POWER_NAME = [
     'England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey'
 ]
-assert(len(POWER_NAME) == 7)
+assert len(POWER_NAME) == 7
 
 CENTER_NAME = [
-    'ank', 'bel', 'ber', 'bre', 'bud', 'bul', 'con', 'den', 'edi', 'gre', 'hol', 'kie', 'lon', 'lvp', 'mar', 'mos',
-    'mun', 'nap', 'nwy', 'par', 'por', 'rom', 'rum', 'ser', 'sev', 'smy', 'spa', 'stp', 'swe', 'tri', 'tun', 'ven',
-    'vie', 'war']
-assert(len(CENTER_NAME) == 34)
+    'Ank', 'Bel', 'Ber', 'Bre', 'Bud', 'Bul', 'Con', 'Den', 'Edi', 'Gre', 'Hol', 'Kie', 'Lon', 'Lvp', 'Mar', 'Mos',
+    'Mun', 'Nap', 'Nwy', 'Par', 'Por', 'Rom', 'Rum', 'Ser', 'Sev', 'Smy', 'Spa', 'Stp', 'Wwe', 'Tri', 'Tun', 'Ven',
+    'Vie', 'War']
+assert len(CENTER_NAME) == 34
 
 TYPE_NAME = ['A', 'F']
-assert(len(TYPE_NAME) == 2)
+assert len(TYPE_NAME) == 2
 
 ZONE_NAME = [
-    'ADR',  'AEG', 'alb', 'ank', 'APU', 'ARM', 'BAL', 'BAR', 'BEL', 'BER', 'BLA', 'BOH', 'BOT', 'BRE', 'BUD', 'BUL',
-    'bur',  'cly', 'CON', 'den', 'EAS', 'EDI', 'ENG', 'FIN', 'GAL', 'GAS', 'GOL', 'GRE', 'HEL', 'hol', 'ION', 'IRI',
-    'KIE',  'lon', 'lvn', 'lvp', 'mar', 'MID', 'MOS', 'MUN', 'naf', 'NAP', 'NAT', 'NRG', 'NTH', 'nwy', 'PAR', 'PIC',
-    'PIE',  'POR', 'PRU', 'ROM', 'ruh', 'rum', 'SER', 'sev', 'SIL', 'SKA', 'SMY', 'spa', 'STP', 'swe', 'SYR', 'TRI',
-    'TUN',  'tus', 'TYN', 'TYR', 'UKR', 'VEN', 'VIE', 'wal', 'war', 'WES', 'YOR',
-    'bulec', 'BULsc', 'spanc', 'spasc', 'STPnc', 'STPsc']
-assert(len(ZONE_NAME) == 81)
+    'Adr', 'Aeg', 'Alb', 'Ank', 'Apu', 'Arm', 'Bal', 'Bar', 'Bel', 'Ber', 'Bla', 'Boh', 'Bot', 'Bre', 'Bud', 'Bul',
+    'Bur', 'Cly', 'Con', 'Den', 'Eas', 'Edi', 'Eng', 'Fin', 'Gal', 'Gas', 'Gol', 'Gre', 'Hel', 'Hol', 'Ion', 'Iri',
+    'Kie', 'lon', 'Lvn', 'Lvp', 'mar', 'Mid', 'Mos', 'Mun', 'Naf', 'Nap', 'Nat', 'Nrg', 'Nth', 'Nwy', 'Par', 'Pic',
+    'Pie', 'Por', 'Pru', 'Rom', 'Ruh', 'Rum', 'Ser', 'Sev', 'Sil', 'Ska', 'Smy', 'Spa', 'Stp', 'Swe', 'Syr', 'Tri',
+    'Tun', 'Tus', 'Tyn', 'Tyr', 'Ukr', 'Ven', 'Vie', 'Wal', 'War', 'Wed', 'Yor',
+    'Bul ec', 'Bul sc', 'Spa nc', 'Spa sc', 'Stp nc', 'Stp sc']
+assert len(ZONE_NAME) == 81
 
 FRENCH_ZONE_NAME = [
     'ADR', 'EGE', 'ALB', 'ANK', 'APU', 'ARM', 'BAL', 'BAR', 'BEL', 'BER', 'NOI', 'BOH', 'BOT', 'BRE', 'BUD', 'BUL',
@@ -49,7 +49,8 @@ FRENCH_ZONE_NAME = [
     'PIE', 'POR', 'PRU', 'ROM', 'RUH', 'ROU', 'SER', 'SEB', 'SIL', 'SKA', 'SMY', 'ESP', 'STP', 'SUE', 'SYR', 'TRI',
     'TUN', 'TOS', 'MTY', 'TYR', 'UKR', 'VEN', 'VIE', 'PGA', 'VAR', 'MOC', 'YOR',
     'BULce', 'BULcs', 'ESPcn', 'ESPcs', 'STPcn', 'STPcs']
-assert(len(FRENCH_ZONE_NAME) == 81)
+assert len(FRENCH_ZONE_NAME) == 81
+
 
 def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     """ exports all information about a game in format for DIPLOBN """
@@ -80,7 +81,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     result['ScoringSystem'] = game_scoring
 
     # communication
-    # TODO : we have an issue here since we open presse at end of all games...
+    # TODO : we have an issue here since we open press at end of all games...
     if game.nomessage and game.nopress:
         result['CommunicationType'] = 'None'
     elif game.nomessage and game.nopress:
@@ -157,8 +158,8 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
 
         phase_data: typing.Dict[str, typing.Any] = {}
 
-        game_year = 1901 + advancement//5
-        game_season = advancement%5+1 # TODO
+        game_year = 1901 + advancement // 5
+        game_season = advancement % 5 + 1  # TODO get proper value
         phase_data['Phase'] = f"{game_year}{game_season}"
         phase_data['Status'] = 'Completed'
         ratings_phase = {}
@@ -172,17 +173,17 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         centers_phase = {}
         for role_num, power_name in enumerate(POWER_NAME):
             role_id = role_num + 1
-            centers_phase[power_name] = [CENTER_NAME[int(c)-1] for c, r in ownership_dict.items() if r == role_id]
+            centers_phase[power_name] = [CENTER_NAME[int(c) - 1] for c, r in ownership_dict.items() if r == role_id]
         phase_data['SupplyCenters'] = centers_phase
 
         units_phase = {}
         for role_num, power_name in enumerate(POWER_NAME):
             role_id = role_num + 1
-            units_phase[power_name] = [[TYPE_NAME[int(t)-1], ZONE_NAME[int(z)-1]] for t, z in unit_dict[str(POWER_NAME.index(power_name) + 1)]] if str(POWER_NAME.index(power_name) + 1) in unit_dict else []
+            units_phase[power_name] = [[TYPE_NAME[int(t) - 1], ZONE_NAME[int(z) - 1]] for t, z in unit_dict[str(POWER_NAME.index(power_name) + 1)]] if str(POWER_NAME.index(power_name) + 1) in unit_dict else []
         phase_data['Units'] = units_phase
 
         report_txt = transition.report_txt
-        report_lines=report_txt.split('\n')
+        report_lines = report_txt.split('\n')
 
         report_header = report_lines[0]
         report_date, _, _ = report_header.partition(':')
@@ -190,7 +191,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
             result['DateBegan'] = report_date
         result['DateEnded'] = report_date
 
-        justification_table = {}
+        justification_table: typing.Dict[int, str] = {}
         for line in report_lines:
             if ';' in line:
                 words = line.split(' ')
@@ -209,7 +210,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
 
             # build the table fake untis zone -> type
             fake_table = {}
-            for _, type_, zone,  role, _, _ in fake_units_list:
+            for _, type_, zone, role, _, _ in fake_units_list:
                 if role != role_id:
                     continue
                 fake_table[zone] = type_
@@ -220,27 +221,27 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                     continue
                 adj_justif = justification_table.get(active, "")
                 adj_result = "f" if adj_justif else "s"
-                if order == 1: # move
-                    order_description = [ZONE_NAME[int(active)-1], ['m', ZONE_NAME[int(destination)-1]], [adj_result, adj_justif]]
-                if order == 2: # attack support
-                    order_description = [ZONE_NAME[int(active)-1], ['sm', ZONE_NAME[int(passive)-1], ZONE_NAME[int(destination)-1]], [adj_result, adj_justif]]
-                if order == 3: # attack support
-                    order_description = [ZONE_NAME[int(active)-1], ['sh', ZONE_NAME[int(passive)-1]], [adj_result, adj_justif]]
-                if order == 4: # hold
-                    order_description = [ZONE_NAME[int(active)-1], ['h'], [adj_result, adj_justif]]
-                if order == 5: # convoy
-                    order_description = [ZONE_NAME[int(active)-1], ['c', ZONE_NAME[int(passive)-1], ZONE_NAME[int(destination)-1]], [adj_result, adj_justif]]
-                if order == 6: # retreat
-                    # TODO : retreat
-                    pass
-                if order == 7: # disband
-                    # TODO : disband
-                    pass
-                if order == 8: # build
+                if order == 1:  # move
+                    order_description = [ZONE_NAME[int(active) - 1], ['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                if order == 2:  # attack support
+                    order_description = [ZONE_NAME[int(active) - 1], ['sm', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                if order == 3:  # attack support
+                    order_description = [ZONE_NAME[int(active) - 1], ['sh', ZONE_NAME[int(passive) - 1]], [adj_result, adj_justif]]
+                if order == 4:  # hold
+                    order_description = [ZONE_NAME[int(active) - 1], ['h'], [adj_result, adj_justif]]
+                if order == 5:  # convoy
+                    order_description = [ZONE_NAME[int(active) - 1], ['c', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                if order == 6:  # retreat
+                    # unsure
+                    order_description = [ZONE_NAME[int(active) - 1], ['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                if order == 7:  # disband
+                    # unsure
+                    order_description = [ZONE_NAME[int(active) - 1], ['d'], [adj_result, adj_justif]]
+                if order == 8:  # build
                     type_ = fake_table[active]
-                    order_description = [ZONE_NAME[int(active)-1], [['b', TYPE_NAME[int(type_)-1]], [adj_result, adj_justif]]]
-                if order == 9: # remove
-                    order_description = [ZONE_NAME[int(active)-1], [['d'], [adj_result, adj_justif]]]
+                    order_description = [ZONE_NAME[int(active) - 1], ['b', TYPE_NAME[int(type_) - 1]], [adj_result, adj_justif]]
+                if order == 9:  # remove
+                    order_description = [ZONE_NAME[int(active) - 1], ['d'], [adj_result, adj_justif]]
                 orders_phase[power_name].append(order_description)
         phase_data['Orders'] = orders_phase
 
