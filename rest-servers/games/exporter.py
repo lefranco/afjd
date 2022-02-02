@@ -10,12 +10,19 @@ gather information to make json file
 import argparse
 import typing
 import json
+import requests
 
+import lowdata
 import database
 import games  # noqa: F401 pylint: disable=unused-import
 import ownerships
 import transitions
 import scoring
+
+# TODO : in production, put False and test we get the players data
+DEBUG = True
+
+SESSION = requests.Session()
 
 SOLO_THRESHOLD = 18
 
@@ -101,6 +108,18 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     # note
     result['Note'] = game.description
 
+    # get all players
+    players_dict = {}
+    if not DEBUG:
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/players"
+        req_result = SESSION.get(url)
+        assert req_result.status_code == 200, "Failed to access players API"
+        players_dict = req_result.json()
+        print(f"{players_list=}")
+        assert False, "DONE"
+
     # get the players from database
     game_id = game.identifier
     allocations_found = sql_executor.execute("SELECT * FROM allocations where game_id = ?", (game_id,), need_result=True)
@@ -110,8 +129,14 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         if role_id > 0:
             role_num = role_id - 1
             power_name = POWER_NAME[role_num]
-            # TODO : find a way to get pseudo, first name and last name
-            result['Players'][power_name] = f"Player with id {player_id} !"
+            if players_dict:
+                player_data = players_dict[player_id]
+                player_pseudo = player_data['pseudo']
+                player_first_name = player_data['first_name']
+                player_family_name = player_data['family_name']
+                result['Players'][power_name] = f"{player_first_name} {player_family_name} (player_pseudo)"
+            else:
+                result['Players'][power_name] = f"Unknown!"
 
     # get the result from database
     result['ResultSummary'] = {}
@@ -159,7 +184,12 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         phase_data: typing.Dict[str, typing.Any] = {}
 
         game_year = 1901 + advancement // 5
-        game_season = advancement % 5 + 1  # TODO get proper value
+        if advancement % 5 in [0, 1]:
+            game_season = 1
+        elif advancement % 5 in [2, 3]:
+            game_season = 2
+        elif advancement % 5 in [4]:
+            game_season = 3
         phase_data['Phase'] = f"{game_year}{game_season}"
         phase_data['Status'] = 'Completed'
         ratings_phase = {}
@@ -245,6 +275,8 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                 orders_phase[power_name].append(order_description)
         phase_data['Orders'] = orders_phase
 
+        # TODO : unclear, probably will need to revise how to enter retreats
+
         result['GamePhases'].append(phase_data)
 
         advancement += 1
@@ -264,6 +296,8 @@ def main() -> None:
 
     game_name = args.name
     json_output = args.json_output
+
+    lowdata.load_servers_config()
 
     result = export_data(game_name)
 
