@@ -14,11 +14,18 @@ import json
 import database
 import games  # noqa: F401 pylint: disable=unused-import
 import ownerships
+import transitions
 import scoring
 
 SOLO_THRESHOLD = 18
-POWER_NAME = {1: "England", 2: "France", 3: "Germany", 4: "Italy", 5: "Austria", 6: "Russia", 7: "Turkey"}
-
+POWER_NAME = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
+assert(len(POWER_NAME) == 7)
+CENTER_NAME = ['ank', 'bel', 'ber', 'bre', 'bud', 'bul', 'con', 'den', 'edi', 'gre', 'hol', 'kie', 'lon', 'lvp', 'mar', 'mos', 'mun', 'nap', 'nwy', 'par', 'por', 'rom', 'rum', 'ser', 'sev', 'smy', 'spa', 'stp', 'swe', 'tri', 'tun', 'ven', 'vie', 'war']
+assert(len(CENTER_NAME) == 34)
+TYPE_NAME = ['A', 'F']
+assert(len(TYPE_NAME) == 2)
+ZONE_NAME = [  'ADR',  'AEG',  'alb',  'ank',  'APU',  'ARM',  'BAL',  'BAR',  'BEL',  'BER',  'BLA',  'BOH',  'BOT',  'BRE',  'BUD',  'BUL',  'bur',  'cly',  'CON',  'den',  'EAS',  'EDI',  'ENG',  'FIN',  'GAL',  'GAS',  'GOL',  'GRE',  'HEL',  'hol',  'ION',  'IRI',  'KIE',  'lon',  'lvn',  'lvp',  'mar',  'MID',  'MOS',  'MUN',  'naf',  'NAP',  'NAT',  'NRG',  'NTH',  'nwy',  'PAR',  'PIC',  'PIE',  'POR',  'PRU',  'ROM',  'ruh',  'rum',  'SER',  'sev',  'SIL',  'SKA',  'SMY',  'spa',  'STP',  'swe',  'SYR',  'TRI',  'TUN',  'tus',  'TYN',  'TYR',  'UKR',  'VEN',  'VIE',  'wal',  'war',  'WES',  'YOR', 'bulec', 'BULsc', 'spanc', 'spasc', 'STPnc', 'STPsc']
+assert(len(ZONE_NAME) == 81)
 
 def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     """ exports all information about a game in format for DIPLOBN """
@@ -73,7 +80,8 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     result['Players'] = {}
     for _, player_id, role_id in allocations_found:
         if role_id > 0:
-            power_name = POWER_NAME[role_id]
+            role_num = role_id - 1
+            power_name = POWER_NAME[role_num]
             # TODO : find a way to get pseudo, first name and last name
             result['Players'][power_name] = f"Player with id {player_id} !"
 
@@ -81,21 +89,24 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
     result['ResultSummary'] = {}
     game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
     ownership_dict = {}
-    for _, center_num, role_num in game_ownerships:
-        ownership_dict[center_num] = role_num
+    for _, center_num, role_id in game_ownerships:
+        ownership_dict[center_num] = role_id
 
     ratings = {}
-    for role_id, power_name in POWER_NAME.items():
+    for role_num, power_name in enumerate(POWER_NAME):
+        role_id = role_num + 1
         n_centers = len([_ for c, r in ownership_dict.items() if r == role_id])
         ratings[power_name] = n_centers
 
     ranking = {}
-    for role_id, power_name in POWER_NAME.items():
+    for role_num, power_name in enumerate(POWER_NAME):
+        role_id = role_num + 1
         ranking[power_name] = 1 + len([_ for p in ratings if ratings[p] > ratings[power_name]])
 
     score_table = scoring.scoring(game_scoring, SOLO_THRESHOLD, ratings)  # type: ignore
 
-    for role_id, power_name in POWER_NAME.items():
+    for role_num, power_name in enumerate(POWER_NAME):
+        role_id = role_num + 1
         result['ResultSummary'][power_name] = {}
         result['ResultSummary'][power_name]['CenterCount'] = ratings[power_name]
         result['ResultSummary'][power_name]['YearOfElimination'] = None
@@ -104,7 +115,52 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         result['ResultSummary'][power_name]['Rank'] = ranking[power_name]
 
     # get the games phases
-    # TODO
+    result['GamePhases'] = []
+    advancement = 0
+    while True:
+        transition = transitions.Transition.find_by_identifier_advancement(sql_executor, game_id, advancement)
+        if transition is None:
+            break
+
+        phase_data: typing.Dict[str, typing.Any] = {}
+
+        phase_data['Phase'] = f"xxx {advancement=}"
+        phase_data['Status'] = 'Completed'
+
+        the_situation = json.loads(transition.situation_json)
+
+        ownership_dict = the_situation['ownerships']
+        unit_dict = the_situation['units']
+
+        ratings_phase = {}
+        for role_num, power_name in enumerate(POWER_NAME):
+            role_id = role_num + 1
+            n_centers = len([_ for __, r in ownership_dict.items() if r == role_id])
+            ratings_phase[power_name] = n_centers
+        phase_data['CenterCounts'] = ratings_phase
+
+        centers_phase = {}
+        for role_num, power_name in enumerate(POWER_NAME):
+            role_id = role_num + 1
+            centers_phase[power_name] = [CENTER_NAME[int(c)-1] for c, r in ownership_dict.items() if r == role_id]
+        phase_data['SupplyCenters'] = centers_phase
+
+        units_phase = {}
+        for role_num, power_name in enumerate(POWER_NAME):
+            role_id = role_num + 1
+            units_phase[power_name] = [[TYPE_NAME[int(t)-1], ZONE_NAME[int(z)-1]] for t, z in unit_dict[str(POWER_NAME.index(power_name) + 1)]] if str(POWER_NAME.index(power_name) + 1) in unit_dict else []
+        phase_data['Units'] = units_phase
+
+
+        the_orders = json.loads(transition.orders_json)
+        report_txt = transition.report_txt
+
+        # print(f"{the_orders=}")
+        # print()
+
+        result['GamePhases'].append(phase_data)
+
+        advancement += 1
 
     del sql_executor
 
