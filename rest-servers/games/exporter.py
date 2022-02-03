@@ -117,6 +117,7 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
 
     # communication
     # TODO : we have an issue here since we open press at end of all games...
+    # TODO : we need confirmation that anonymity of games is not exported
     if game.nomessage and game.nopress:
         result['CommunicationType'] = 'None'
     elif game.nomessage and game.nopress:
