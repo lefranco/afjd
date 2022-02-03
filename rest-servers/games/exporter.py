@@ -358,10 +358,18 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
             phase_data['Orders'] = orders_phase
             result['GamePhases'].append(phase_data)
 
+        last_year = game_year
+
         advancement += 1
 
     if not transitions_found:
         return False, "Did not find any transitions for game", None
+
+    # need to mark players gthat were elimianted last game year
+    for role_num, power_name in enumerate(POWER_NAME):
+        if result['ResultSummary'][power_name]['YearOfElimination'] is None and not ratings[power_name]:
+            result['ResultSummary'][power_name]['YearOfElimination'] = last_year
+
 
     return True, f"Game {game_name} was exported successfully!", result
 
