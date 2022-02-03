@@ -97,8 +97,8 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
 
         result['Competition'] = tournament.name
 
-    # game label
-    result['GameLabel'] = game.name
+    # game label : we put the number too
+    result['GameLabel'] = f"{game.name} ({game_id})"
 
     # url
     result['URL'] = f'https://diplomania-gen.fr?game={game.name}'
@@ -125,18 +125,12 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
         result['CommunicationType'] = 'Full'
 
     # deadline
-    if game.fast:
-        result['DeadlineType'] = 'Live'
-    else:
-        result['DeadlineType'] = 'Extended'
+    result['DeadlineType'] = 'Live' if game.fast else 'Extended'
 
     # limit of game
-    if game.nb_max_cycles_to_play == 99:
-        result['LimitType'] = 'Unlimited'
-    else:
-        result['LimitType'] = 'YearLimited'
+    result['LimitType'] = 'Unlimited' if game.nb_max_cycles_to_play == 99 else 'YearLimited'
 
-    # note
+    # note: just take description
     result['Note'] = game.description
 
     # get all players
@@ -149,7 +143,7 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
         if req_result.status_code != 200:
             return False, "Internal error : Failed to access players API!", None
 
-        # TODO : need coding here
+        # TODO : need some coding here
         players_dict = req_result.json()
         print(f"{players_dict=}")
         return False, "Internal error : Getting players is not implemented YET!", None
@@ -160,17 +154,18 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
         return False, "Internal error : Did not find allocations for game", None
     result['Players'] = {}
     for _, player_id, role_id in allocations_found:
-        if role_id > 0:
-            role_num = role_id - 1
-            power_name = POWER_NAME[role_num]
-            if players_dict:
-                player_data = players_dict[player_id]
-                player_pseudo = player_data['pseudo']
-                player_first_name = player_data['first_name']
-                player_family_name = player_data['family_name']
-                result['Players'][power_name] = f"{player_first_name} {player_family_name} ({player_pseudo})"
-            else:
-                result['Players'][power_name] = "Unknown!"
+        if not role_id > 0:
+            continue
+        role_num = role_id - 1
+        power_name = POWER_NAME[role_num]
+        if players_dict:
+            player_data = players_dict[player_id]
+            player_pseudo = player_data['pseudo']
+            player_first_name = player_data['first_name']
+            player_family_name = player_data['family_name']
+            result['Players'][power_name] = f"{player_first_name} {player_family_name} ({player_pseudo})"
+        else:
+            result['Players'][power_name] = "Unknown!"
 
     # get the result from database
     result['ResultSummary'] = {}
@@ -179,7 +174,7 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
     for _, center_num, role_id in game_ownerships:
         ownership_dict[center_num] = role_id
 
-    # how many centers every power hass
+    # how many centers every power has
     center_table = {}
     for role_num, power_name in enumerate(POWER_NAME):
         role_id = role_num + 1
