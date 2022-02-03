@@ -10,6 +10,7 @@ gather information to make json file
 import argparse
 import typing
 import json
+import sys
 import requests
 
 import lowdata
@@ -61,7 +62,7 @@ FRENCH_ZONE_NAME = [
 assert len(FRENCH_ZONE_NAME) == 81
 
 
-def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
+def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typing.Dict[str, typing.Any]]]:
     """ exports all information about a game in format for DIPLOBN """
 
     # extract
@@ -72,9 +73,16 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
 
     # get the game from database
     games_found = sql_executor.execute("SELECT game_data FROM games where name = ?", (game_name,), need_result=True)
-    assert games_found, "Did not find game"
+    if not games_found:
+        return False, "Game could not be found!", None
     game = games_found[0][0]
     game_id = game.identifier
+
+    # game not finished : abort
+    if game.current_state == 0:
+        return False, "Game is waiting to start!", None
+    if game.current_state == 1:
+        return False, "Game is ongoing, terminate it first!", None
 
     # competition = tournament
     result['Competition'] = ''
@@ -84,7 +92,9 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         tournament_ids = [g[0] for g in game_tournaments]
         tournament_id = tournament_ids[0]
         tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
-        assert tournament is not None, "Tournament could not be found"
+        if tournament is None:
+            return False, "Internal error : Game has a tournament but the tournament could not be found!", None
+
         result['Competition'] = tournament.name
 
     # game label
@@ -136,14 +146,18 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players"
         req_result = SESSION.get(url)
-        assert req_result.status_code == 200, "Failed to access players API"
+        if req_result.status_code != 200:
+            return False, "Internal error : Failed to access players API!", None
+
+        # TODO : need coding here
         players_dict = req_result.json()
         print(f"{players_dict=}")
-        assert False, "DONE"
+        return False, "Internal error : Getting players is not implemented YET!", None
 
     # get the players from database
     allocations_found = sql_executor.execute("SELECT * FROM allocations where game_id = ?", (game_id,), need_result=True)
-    assert allocations_found, "Did not find allocations"
+    if not allocations_found:
+        return False, "Internal error : Did not find allocations for game", None
     result['Players'] = {}
     for _, player_id, role_id in allocations_found:
         if role_id > 0:
@@ -194,7 +208,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
         result['ResultSummary'][power_name]['YearOfElimination'] = None
 
         result['ResultSummary'][power_name]['InGameAtEnd'] = bool(ratings[power_name])
-        result['ResultSummary'][power_name]['Score'] = score_table[power_name]
+        result['ResultSummary'][power_name]['Score'] = round(score_table[power_name], 2)
         result['ResultSummary'][power_name]['Rank'] = ranking[power_name]
 
     # get the games phases
@@ -274,7 +288,6 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
                 french_unit = words[1]
                 zone_num = FRENCH_ZONE_NAME.index(french_unit) + 1
                 _, _, justification = line.partition(';')
-                assert zone_num not in justification_table
                 justification_table[zone_num] = justification
 
         if advancement % 5 in [0, 2, 4]:
@@ -350,7 +363,7 @@ def export_data(game_name: str) -> typing.Dict[str, typing.Any]:
 
     del sql_executor
 
-    return result
+    return True, "", result
 
 
 def main() -> None:
@@ -366,7 +379,11 @@ def main() -> None:
 
     lowdata.load_servers_config()
 
-    result = export_data(game_name)
+    status, message, result = export_data(game_name)
+
+    if not status:
+        print(message)
+        sys.exit(1)
 
     # output
     if json_output is not None:
