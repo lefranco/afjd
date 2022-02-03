@@ -28,6 +28,7 @@ DEBUG = True
 SESSION = requests.Session()
 
 SOLO_THRESHOLD = 17
+IMPOSED_VARIANT = 'standard'
 
 POWER_NAME = [
     'England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey'
@@ -77,6 +78,10 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
         return False, "Game could not be found!", None
     game = games_found[0][0]
     game_id = game.identifier
+
+    # game not standard : abort
+    if game.variant != IMPOSED_VARIANT:
+        return False, f"Game variant is '{game.variant}' - this is not standard Diplomacy!", None
 
     # game not finished : abort
     if game.current_state == 0:
