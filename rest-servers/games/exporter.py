@@ -158,7 +158,7 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
         role_num = role_id - 1
         power_name = POWER_NAME[role_num]
         if players_dict:
-            player_data = players_dict[player_id]
+            player_data = players_dict[str(player_id)]
             player_pseudo = player_data['pseudo']
             player_first_name = player_data['first_name']
             player_family_name = player_data['family_name']
