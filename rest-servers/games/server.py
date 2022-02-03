@@ -1328,7 +1328,6 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
                 url = f"{host}:{port}/moderators"
                 req_result = SESSION.get(url)
                 if req_result.status_code != 200:
-                    del sql_executor
                     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                     flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
                 the_moderators = req_result.json()
