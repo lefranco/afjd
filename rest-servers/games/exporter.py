@@ -22,8 +22,6 @@ import groupings
 import tournaments
 import scoring
 
-# TODO : in production, put False and test we get the players data
-DEBUG = True
 
 SESSION = requests.Session()
 
@@ -63,7 +61,7 @@ FRENCH_ZONE_NAME = [
 assert len(FRENCH_ZONE_NAME) == 81
 
 
-def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typing.Dict[str, typing.Any]]]:
+def export_data(game_name: str, debug_mode: bool) -> typing.Tuple[bool, str, typing.Optional[typing.Dict[str, typing.Any]]]:
     """ exports all information about a game in format for DIPLOBN """
 
     # extract
@@ -144,9 +142,10 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
     # note: just take description
     result['Note'] = game.description
 
-    # get all players
     players_dict = {}
-    if not DEBUG:
+    if not debug_mode:
+
+        # get all players
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players"
@@ -159,7 +158,7 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
         players_dict = req_result.json()
         print(f"{players_dict=}")
         del sql_executor
-        return False, "Internal error : Getting players is not implemented YET!", None
+        return False, f"Internal error : Getting players is not implemented YET  ::{players_dict=} :: !", None
 
     # get the players from database
     allocations_found = sql_executor.execute("SELECT * FROM allocations where game_id = ?", (game_id,), need_result=True)
@@ -388,15 +387,17 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--name', required=True, help='Name of game')
+    parser.add_argument('-d', '--debug_mode', required=False, action='store_true', help='Debug mode : do not load players')
     parser.add_argument('-J', '--json_output', required=False, help='Output json file')
     args = parser.parse_args()
 
     game_name = args.name
+    debug_mode = args.debug_mode
     json_output = args.json_output
 
     lowdata.load_servers_config()
 
-    status, message, result = export_data(game_name)
+    status, message, result = export_data(game_name, debug_mode)
 
     if not status:
         print(message)
