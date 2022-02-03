@@ -75,18 +75,22 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
     # get the game from database
     games_found = sql_executor.execute("SELECT game_data FROM games where name = ?", (game_name,), need_result=True)
     if not games_found:
+        del sql_executor
         return False, "Game could not be found!", None
     game = games_found[0][0]
     game_id = game.identifier
 
     # game not standard : abort
     if game.variant != IMPOSED_VARIANT:
+        del sql_executor
         return False, f"Game variant is '{game.variant}' - this is not standard Diplomacy!", None
 
     # game not finished : abort
     if game.current_state == 0:
+        del sql_executor
         return False, "Game is waiting to start!", None
     if game.current_state == 1:
+        del sql_executor
         return False, "Game is ongoing, terminate it first!", None
 
     # competition = tournament
@@ -98,6 +102,7 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
         tournament_id = tournament_ids[0]
         tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
         if tournament is None:
+            del sql_executor
             return False, "Internal error : Game has a tournament but the tournament could not be found!", None
 
         result['Competition'] = tournament.name
@@ -147,16 +152,19 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
         url = f"{host}:{port}/players"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
+            del sql_executor
             return False, "Internal error : Failed to access players API!", None
 
         # TODO : need some coding here
         players_dict = req_result.json()
         print(f"{players_dict=}")
+        del sql_executor
         return False, "Internal error : Getting players is not implemented YET!", None
 
     # get the players from database
     allocations_found = sql_executor.execute("SELECT * FROM allocations where game_id = ?", (game_id,), need_result=True)
     if not allocations_found:
+        del sql_executor
         return False, "Internal error : Did not find allocations for game", None
     result['Players'] = {}
     for _, player_id, role_id in allocations_found:
@@ -176,6 +184,8 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
     # get the result from database
     result['ResultSummary'] = {}
     game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
+    if not game_ownerships:
+        return False, "Internal error : Did not find ownerships for game", None
     ownership_dict = {}
     for _, center_num, role_id in game_ownerships:
         ownership_dict[center_num] = role_id
@@ -215,11 +225,14 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
     # get the games phases
     result['GamePhases'] = []
     advancement = 0
+    transitions_found = 0
     while True:
 
         transition = transitions.Transition.find_by_identifier_advancement(sql_executor, game_id, advancement)
         if transition is None:
             break
+
+        transitions_found += 1
 
         the_situation = json.loads(transition.situation_json)
         ownership_dict = the_situation['ownerships']
@@ -362,8 +375,11 @@ def export_data(game_name: str) -> typing.Tuple[bool, str, typing.Optional[typin
 
         advancement += 1
 
-    del sql_executor
+    if not transitions_found:
+        del sql_executor
+        return False, "Did not find any transitions for game", None
 
+    del sql_executor
     return True, "", result
 
 
