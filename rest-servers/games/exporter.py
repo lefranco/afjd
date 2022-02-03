@@ -370,7 +370,6 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
         if result['ResultSummary'][power_name]['YearOfElimination'] is None and not ratings[power_name]:
             result['ResultSummary'][power_name]['YearOfElimination'] = last_year
 
-
     return True, f"Game {game_name} was exported successfully!", result
 
 
