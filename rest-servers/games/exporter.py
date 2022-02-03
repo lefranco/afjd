@@ -61,34 +61,27 @@ FRENCH_ZONE_NAME = [
 assert len(FRENCH_ZONE_NAME) == 81
 
 
-def export_data(game_name: str, debug_mode: bool) -> typing.Tuple[bool, str, typing.Optional[typing.Dict[str, typing.Any]]]:
+def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: bool) -> typing.Tuple[bool, str, typing.Optional[typing.Dict[str, typing.Any]]]:
     """ exports all information about a game in format for DIPLOBN """
 
     # extract
     result: typing.Dict[str, typing.Any] = {}
 
-    # open database
-    sql_executor = database.SqlExecutor()
-
     # get the game from database
     games_found = sql_executor.execute("SELECT game_data FROM games where name = ?", (game_name,), need_result=True)
     if not games_found:
-        del sql_executor
         return False, "Game could not be found!", None
     game = games_found[0][0]
     game_id = game.identifier
 
     # game not standard : abort
     if game.variant != IMPOSED_VARIANT:
-        del sql_executor
         return False, f"Game variant is '{game.variant}' - this is not standard Diplomacy!", None
 
     # game not finished : abort
     if game.current_state == 0:
-        del sql_executor
         return False, "Game is waiting to start!", None
     if game.current_state == 1:
-        del sql_executor
         return False, "Game is ongoing, terminate it first!", None
 
     # competition = tournament
@@ -100,7 +93,6 @@ def export_data(game_name: str, debug_mode: bool) -> typing.Tuple[bool, str, typ
         tournament_id = tournament_ids[0]
         tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
         if tournament is None:
-            del sql_executor
             return False, "Internal error : Game has a tournament but the tournament could not be found!", None
 
         result['Competition'] = tournament.name
@@ -151,19 +143,13 @@ def export_data(game_name: str, debug_mode: bool) -> typing.Tuple[bool, str, typ
         url = f"{host}:{port}/players"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
-            del sql_executor
             return False, "Internal error : Failed to access players API!", None
 
-        # TODO : need some coding here
         players_dict = req_result.json()
-        print(f"{players_dict=}")
-        del sql_executor
-        return False, f"Internal error : Getting players is not implemented YET  ::{players_dict=} :: !", None
 
     # get the players from database
     allocations_found = sql_executor.execute("SELECT * FROM allocations where game_id = ?", (game_id,), need_result=True)
     if not allocations_found:
-        del sql_executor
         return False, "Internal error : Did not find allocations for game", None
     result['Players'] = {}
     for _, player_id, role_id in allocations_found:
@@ -375,11 +361,9 @@ def export_data(game_name: str, debug_mode: bool) -> typing.Tuple[bool, str, typ
         advancement += 1
 
     if not transitions_found:
-        del sql_executor
         return False, "Did not find any transitions for game", None
 
-    del sql_executor
-    return True, "", result
+    return True, f"Game {game_name} was exported successfully!", result
 
 
 def main() -> None:
@@ -397,10 +381,15 @@ def main() -> None:
 
     lowdata.load_servers_config()
 
-    status, message, result = export_data(game_name, debug_mode)
+    # open database
+    sql_executor = database.SqlExecutor()
+    status, message, result = export_data(game_name, sql_executor, debug_mode)
+    # no commit : all accesses were read only
+    del sql_executor
+
+    print(message)
 
     if not status:
-        print(message)
         sys.exit(1)
 
     # output

@@ -49,6 +49,7 @@ import agree
 import tournaments
 import groupings
 import assignments
+import exporter
 
 # a little welcome message to new games
 WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
@@ -3771,6 +3772,45 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'incidents': late_list}
+        return data, 200
+
+
+@API.resource('/game-export/<game_id>')
+class GameExportRessource(flask_restful.Resource):  # type: ignore
+    """ GameExportRessource """
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, float]]], int]:  # pylint: disable=no-self-use
+        """
+        Export all data about a game in JSON format
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-export/<game_id> - GET - getting JSON export game id=%s", game_id)
+
+        # create an executor
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}!")
+
+        # get the name of game
+        assert game is not None
+        game_name = game.name
+        debug_mode = False
+
+        # perform the extraction
+        status, message, content = exporter.export_data(game_name, sql_executor, debug_mode)
+
+        # delete executor
+        del sql_executor
+
+        if not status:
+            flask_restful.abort(400, msg=f"Exportation failed with error: '{message}'!")
+
+        data = {'msg': message , 'content': content}
         return data, 200
 
 
