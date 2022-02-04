@@ -344,7 +344,7 @@ def my_opportunities():
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(*) Messagerie sur la partie, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
+    MY_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("(**) On prend en compte l'arbitre dans le nombre de joueurs", Class='note')

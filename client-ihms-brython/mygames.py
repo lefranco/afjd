@@ -295,7 +295,11 @@ def my_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'start']
+    fields = ['jump_here', 'go_away', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
+
+    # column for start buttons only available for non started games
+    if state == 0:
+        fields.extend(['start'])
 
     # header
     thead = html.THEAD()
@@ -550,7 +554,7 @@ def my_games(state_name):
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(*) Messagerie sur la partie, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
+    MY_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("(**) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
