@@ -241,6 +241,13 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
             phase_data['Phase'] = game_year * 10 + game_season
             phase_data['Status'] = 'Completed'
 
+            # actually we do not keep history of votes so this is useless
+            # could be relevant if a draw vote succeeds
+            # but we are unsure human game master was able to detect it
+            votes_phase = {}
+            votes_phase['Passed'] = False
+            phase_data['DrawVote'] = votes_phase
+
             ratings_phase = {}
 
             for role_num, power_name in enumerate(POWER_NAME):
@@ -364,10 +371,14 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
     if not transitions_found:
         return False, "Did not find any transitions for game", None
 
-    # need to mark players gthat were elimianted last game year
+    # need to mark players that were elimianted last game year
     for role_num, power_name in enumerate(POWER_NAME):
         if result['ResultSummary'][power_name]['YearOfElimination'] is None and not ratings[power_name]:
             result['ResultSummary'][power_name]['YearOfElimination'] = last_year
+
+    # mark the last phase as 'Game Ended'
+    phase_data = result['GamePhases'][-1]
+    phase_data['Status'] = 'GameEnded'
 
     return True, f"Game {game_name} was exported successfully!", result
 
