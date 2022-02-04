@@ -295,12 +295,12 @@ def my_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'variant', 'nopress', 'nomessage', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'start']
+    fields = ['jump_here', 'go_away', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'start']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'nopress': 'm. publics', 'nomessage': 'm. privés', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis prêt', 'all_orders_submitted': 'ordres(*)', 'all_agreed': 'tous prêts', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'start': 'démarrer'}[field]
+        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis prêt', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous prêts', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'start': 'démarrer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -397,10 +397,10 @@ def my_games(state_name):
                 link <= game_name
                 value = link
 
-            if field == 'nopress':
+            if field == 'nopress_game':
                 value = "Non" if value else "Oui"
 
-            if field == 'nomessage':
+            if field == 'nomessage_game':
                 value = "Non" if value else "Oui"
 
             if field == 'deadline':
@@ -549,7 +549,10 @@ def my_games(state_name):
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(*) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
+    MY_PANEL <= html.DIV("(*) Messages sur la partie en général, peut être différent si la partie est terminée", Class='note')
+    MY_PANEL <= html.BR()
+
+    MY_PANEL <= html.DIV("(**) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
     MY_PANEL <= html.BR()
 
     # get GMT date and time

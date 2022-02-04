@@ -1752,7 +1752,7 @@ def submit_orders():
         buttons_right <= html.DIV("La soumission des ordres prend également en compte le fait d'être prêt pour la résolution", Class='instruction')
         buttons_right <= html.BR()
         buttons_right <= html.DIV("Le coche 'prêt pour la résolution' est obligatoire à un moment donné (de préférence avant la date limite)", Class='important')
-        if GAME_PARAMETERS_LOADED['nomessage']:
+        if GAME_PARAMETERS_LOADED['nomessage_current']:
             buttons_right <= html.BR()
             buttons_right <= html.DIV("Pour communiquer avec des ordres (ordres invalides) utilisez le sous menu 'taguer'", Class='Note')
 
@@ -2751,7 +2751,7 @@ def negotiate():
     for role_id_dest in range(VARIANT_CONTENT_LOADED['roles']['number'] + 1):
 
         # dest only if allowed
-        if GAME_PARAMETERS_LOADED['nomessage']:
+        if GAME_PARAMETERS_LOADED['nomessage_current']:
             if not (ROLE_ID == 0 or role_id_dest == 0):
                 continue
 
@@ -3036,7 +3036,7 @@ def declare():
     MY_SUB_PANEL <= html.BR()
 
     # form only if allowed
-    if GAME_PARAMETERS_LOADED['nopress'] and ROLE_ID != 0:
+    if GAME_PARAMETERS_LOADED['nopress_current'] and ROLE_ID != 0:
         MY_SUB_PANEL <= html.P("Cette partie est sans presse des joueurs")
     else:
         # form
@@ -4317,8 +4317,10 @@ def show_game_parameters():
         parameter_name, explanation, effect, implemented = {
             'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de courriel de notification aux joueurs", "OUI"),
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres - effacé à la fin de la partie", "OUI"),
-            'nomessage': ("pas de message privé (négociation)", "on ne peut pas négocier - sauf avec l'arbitre", "Tout message privé joueur vers joueur est impossible - effacé à la fin de la partie", "OUI"),
-            'nopress': ("pas de message public (déclaration)", "on ne peut pas déclarer - sauf l'arbitre", "Tout message public de joueur est impossible - effacé à la fin de la partie", "OUI"),
+            'nomessage_game': ("pas de message privé (négociation) pour la partie", "on ne peut pas négocier - sauf avec l'arbitre", "Tout message privé joueur vers joueur est impossible", "OUI"),
+            'nopress_game': ("pas de message public (déclaration) pour la partie", "on ne peut pas déclarer - sauf l'arbitre", "Tout message public de joueur est impossible", "OUI"),
+            'nomessage_current': ("pas de message privé (négociation) pour le moment", "valeur utilisée pour accorder l'accès ou pas", "effacé en fin de partie", "OUI"),
+            'nopress_current': ("pas de message public (déclaration) pour le moment", "valeur utilisée pour accorder l'accès ou pas - cette valeur est modificable pendant la partie", "effacé en fin de partie", "OUI"),
             'fast': ("en direct", "la partie est jouée comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs", "OUI"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
             'scoring': ("code du scorage", "le système de scorage appliqué", "Se reporter à Accueil/Coin technique pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface", "OUI"),
@@ -4939,6 +4941,7 @@ def export():
     # getting game json export : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    return True
 
 
 MY_PANEL = html.DIV()

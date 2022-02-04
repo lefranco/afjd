@@ -68,8 +68,10 @@ GAME_PARSER.add_argument('description', type=str, required=False)
 GAME_PARSER.add_argument('variant', type=str, required=False)
 GAME_PARSER.add_argument('archive', type=int, required=False)
 GAME_PARSER.add_argument('anonymous', type=int, required=False)
-GAME_PARSER.add_argument('nomessage', type=int, required=False)
-GAME_PARSER.add_argument('nopress', type=int, required=False)
+GAME_PARSER.add_argument('nomessage_game', type=int, required=False)
+GAME_PARSER.add_argument('nomessage_current', type=int, required=False)  # not used
+GAME_PARSER.add_argument('nopress_game', type=int, required=False)
+GAME_PARSER.add_argument('nopress_current', type=int, required=False)
 GAME_PARSER.add_argument('fast', type=int, required=False)
 GAME_PARSER.add_argument('scoring', type=str, required=False)
 GAME_PARSER.add_argument('deadline', type=int, required=False)
@@ -618,7 +620,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         games_list = games.Game.inventory(sql_executor)
         del sql_executor
 
-        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'fast': g.fast, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress': g.nopress, 'nomessage': g.nomessage, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play} for g in games_list}
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'fast': g.fast, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_game': g.nopress_game, 'nomessage_game': g.nomessage_game, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play} for g in games_list}
         return data, 200
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
@@ -2937,7 +2939,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg="Bad list of addresses identifiers. Use a space separated list of numbers")
 
         # checks relative to no message
-        if game.nomessage:
+        if game.nomessage_current:
 
             # find game master
             assert game is not None
@@ -3117,7 +3119,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be the game master of the game or the player in charge of the role")
 
         # checks relative to no press
-        if game.nopress:
+        if game.nopress_current:
 
             # find game master
             assert game is not None
@@ -3778,7 +3780,7 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
 class GameExportRessource(flask_restful.Resource):  # type: ignore
     """ GameExportRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, float]]], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         Export all data about a game in JSON format
         EXPOSED

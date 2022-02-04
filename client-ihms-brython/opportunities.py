@@ -171,12 +171,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'join', 'master', 'variant', 'description', 'nopress', 'nomessage', 'deadline', 'current_state', 'current_advancement', 'allocated']
+    fields = ['jump_here', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'aller voir', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'nopress': 'm. publics', 'nomessage': 'm. privés', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(*)'}[field]
+        field_fr = {'jump_here': 'aller voir', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(**)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -255,10 +255,10 @@ def my_opportunities():
                 master_name = game_master_dict.get(game_name, '')
                 value = master_name
 
-            if field == 'nopress':
+            if field == 'nopress_game':
                 value = "Non" if value else "Oui"
 
-            if field == 'nomessage':
+            if field == 'nomessage_game':
                 value = "Non" if value else "Oui"
 
             if field == 'deadline':
@@ -319,7 +319,10 @@ def my_opportunities():
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(*) On prend en compte l'arbitre dans le nombre de joueurs", Class='note')
+    MY_PANEL <= html.DIV("(*) Messages sur la partie en général, peut être différent si la partie est terminée", Class='note')
+    MY_PANEL <= html.BR()
+
+    MY_PANEL <= html.DIV("(**) On prend en compte l'arbitre dans le nombre de joueurs", Class='note')
     MY_PANEL <= html.BR()
 
     # get GMT date and time

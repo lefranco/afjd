@@ -181,12 +181,12 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['id', 'jump_here', 'go_away', 'master', 'variant', 'nopress', 'nomessage', 'deadline', 'current_advancement']
+    fields = ['id', 'jump_here', 'go_away', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'id': 'id', 'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'nopress': 'm. publics', 'nomessage': 'm. privés', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
+        field_fr = {'id': 'id', 'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -270,10 +270,10 @@ def all_games(state_name):
                 master_name = game_master_dict.get(game_name, '')
                 value = master_name
 
-            if field == 'nopress':
+            if field == 'nopress_game':
                 value = "Non" if value else "Oui"
 
-            if field == 'nomessage':
+            if field == 'nomessage_game':
                 value = "Non" if value else "Oui"
 
             if field == 'deadline':
@@ -314,6 +314,9 @@ def all_games(state_name):
         games_table <= row
 
     MY_SUB_PANEL <= games_table
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= html.DIV("(*) Messages sur la partie en général, peut être différent si la partie est terminée", Class='note')
     MY_SUB_PANEL <= html.BR()
 
     # get GMT date and time
