@@ -398,10 +398,24 @@ def my_games(state_name):
                 value = link
 
             if field == 'nopress_game':
-                value = "Non" if value else "Oui"
+                value1 = value
+                value2 = data['nopress_current']
+                if value2 == value1:
+                    value = "Non" if value1 else "Oui"
+                else:
+                    value1 = "Non" if value1 else "Oui"
+                    value2 = "Non" if value2 else "Oui"
+                    value = f"{value1} ({value2})"
 
             if field == 'nomessage_game':
-                value = "Non" if value else "Oui"
+                value1 = value
+                value2 = data['nomessage_current']
+                if value2 == value1:
+                    value = "Non" if value1 else "Oui"
+                else:
+                    value1 = "Non" if value1 else "Oui"
+                    value2 = "Non" if value2 else "Oui"
+                    value = f"{value1} ({value2})"
 
             if field == 'deadline':
 
@@ -549,7 +563,7 @@ def my_games(state_name):
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(*) Messages sur la partie en général, peut être différent si la partie est terminée", Class='note')
+    MY_PANEL <= html.DIV("(*) Messages sur la partie en général, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("(**) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
