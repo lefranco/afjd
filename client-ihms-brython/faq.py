@@ -55,8 +55,8 @@ FAQ_CONTENT_TABLE = {
     """
       Super facile ! <br>
      <br>
-     1- creer une partie modèle corrspondant à ce que l'on veut pour le tournoi <br>
-     2- sélectionner cette partie
+     1- créer une partie modèle correspondant à ce que l'on veut pour le tournoi <br>
+     2- sélectionner cette partie <br>
      3- mettre des joueurs quelconques dans cette partie pour pouvoir la démarrer (one, two, three, four, five, six, seven par exemple) <br>
      4- démarrer cette partie <br>
      5- terminer cette partie <br>
