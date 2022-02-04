@@ -4956,7 +4956,6 @@ def export():
         # needed too for some reason
         MY_SUB_PANEL <= html.A(id='download_link')
 
-
     json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
