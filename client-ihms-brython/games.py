@@ -16,7 +16,7 @@ import common
 import selection
 import index  # circular import
 
-OPTIONS = ['créer', 'changer description', 'changer accès messages publics', 'changer scorage', 'changer paramètres accès', 'changer date limite', 'changer paramètres cadence', 'changer état', 'supprimer']
+OPTIONS = ['créer', 'changer description', 'changer accès messagerie', 'changer scorage', 'changer paramètres accès', 'changer date limite', 'changer paramètres cadence', 'changer état', 'supprimer']
 
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_VARIANT_NAME = 20
@@ -309,7 +309,14 @@ def create_game():
     fieldset <= input_manual
     form <= fieldset
 
-    title_terms = html.H3("Modalités de la partie - ne peuvent plus être changées la partie créée")
+    fieldset = html.FIELDSET()
+    legend_fast = html.LEGEND("en direct", title="Le calcul des dates limites se fait en minutes au lieu d'heures. (Ne cocher que pour une partie comme sur un plateau)")
+    fieldset <= legend_fast
+    input_fast = html.INPUT(type="checkbox", checked=False)
+    fieldset <= input_fast
+    form <= fieldset
+
+    title_terms = html.H3("Modalités de la partie - peuvent être changées la partie créée")
     form <= title_terms
 
     fieldset = html.FIELDSET()
@@ -317,13 +324,6 @@ def create_game():
     fieldset <= legend_anonymous
     input_anonymous = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_anonymous
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_fast = html.LEGEND("en direct", title="Le calcul des dates limites se fait en minutes au lieu d'heures. (Ne cocher que pour une partie comme sur un plateau)")
-    fieldset <= legend_fast
-    input_fast = html.INPUT(type="checkbox", checked=False)
-    fieldset <= input_fast
     form <= fieldset
 
     fieldset = html.FIELDSET()
@@ -340,8 +340,7 @@ def create_game():
     fieldset <= input_nopress
     form <= fieldset
 
-    form <= html.DIV("Même si le paramètre 'pas de message public' est fixé pour l'exportation des modalités de la partie, il reste toutefois possible pendant la partie de modifier à tout moment la possibilité d'échanger des messages publics", Class='note')
-
+    form <= html.DIV("Les paramètres 'pas de message public/privé' sont fixés pour l'exportation des modalités de la partie, il restent toutefois modifiables à tout moment par l'arbitre dans leur version applicable...", Class='note')
 
     title_scoring = html.H3("Système de marque")
     form <= title_scoring
@@ -632,11 +631,12 @@ def change_description_game():
     MY_SUB_PANEL <= form
 
 
-def change_access_public_messages_game():
-    """ change_access_public_messages_game """
+def change_access_messages_game():
+    """ change_access_messages_game """
 
     # declare the values
-    access_loaded = None
+    access_nopress_loaded = None
+    access_nomessage_loaded = None
 
     def change_access_public_messages_reload():
         """ change_access_public_messages_reload """
@@ -651,20 +651,22 @@ def change_access_public_messages_game():
 
         def reply_callback(req):
             nonlocal status
-            nonlocal access_loaded
+            nonlocal access_nopress_loaded
+            nonlocal access_nomessage_loaded
             req_result = json.loads(req.text)
 
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la récupération acces messages publics de la partie : {req_result['message']}")
+                    alert(f"Erreur à la récupération acces messagerie de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la récupération acces messages publics de la partie : {req_result['msg']}")
+                    alert(f"Problème à la récupération acces messagerie de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 status = False
                 return
 
-            access_loaded = req_result['nopress_current']
+            access_nopress_loaded = req_result['nopress_current']
+            access_nomessage_loaded = req_result['nomessage_current']
 
         json_dict = {}
 
@@ -677,15 +679,15 @@ def change_access_public_messages_game():
 
         return status
 
-    def change_access_public_messages_games_callback(_):
+    def change_access_messages_games_callback(_):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la modification acces messages publics de la partie : {req_result['message']}")
+                    alert(f"Erreur à la modification acces messagerie de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la modification acces messages publics de la partie : {req_result['msg']}")
+                    alert(f"Problème à la modification acces messagerie de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
@@ -697,6 +699,7 @@ def change_access_public_messages_game():
             'pseudo': pseudo,
             'name': game,
             'nopress_current': input_nopress.checked,
+            'nomessage_current': input_nomessage.checked,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -708,9 +711,9 @@ def change_access_public_messages_game():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        change_access_public_messages_game()
+        change_access_messages_game()
 
-    MY_SUB_PANEL <= html.H3("Changement de l'accès aux messages publics")
+    MY_SUB_PANEL <= html.H3("Changement de l'accès aux messagerie")
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
@@ -736,14 +739,23 @@ def change_access_public_messages_game():
     fieldset = html.FIELDSET()
     legend_nopress = html.LEGEND("pas de message public", title="Les joueurs ne peuvent pas communiquer (déclarer) par message public avant la fin de la partie")
     fieldset <= legend_nopress
-    input_nopress = html.INPUT(type="checkbox", checked=access_loaded)
+    input_nopress = html.INPUT(type="checkbox", checked=access_nopress_loaded)
     fieldset <= input_nopress
     form <= fieldset
 
     form <= html.BR()
 
-    input_change_scoring_game = html.INPUT(type="submit", value="changer l'accès aux messages publics de la partie")
-    input_change_scoring_game.bind("click", change_access_public_messages_games_callback)
+    fieldset = html.FIELDSET()
+    legend_nomessage = html.LEGEND("pas de message privé", title="Les joueurs ne peuvent pas communiquer (négocier) par message privé avant la fin de la partie")
+    fieldset <= legend_nomessage
+    input_nomessage = html.INPUT(type="checkbox", checked=access_nomessage_loaded)
+    fieldset <= input_nomessage
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_scoring_game = html.INPUT(type="submit", value="changer l'accès aux messages publics et privés de la partie")
+    input_change_scoring_game.bind("click", change_access_messages_games_callback)
     form <= input_change_scoring_game
 
     MY_SUB_PANEL <= form
@@ -1697,8 +1709,8 @@ def load_option(_, item_name):
         create_game()
     if item_name == 'changer description':
         change_description_game()
-    if item_name == 'changer accès messages publics':
-        change_access_public_messages_game()
+    if item_name == 'changer accès messagerie':
+        change_access_messages_game()
     if item_name == 'changer scorage':
         change_scoring_game()
     if item_name == 'changer paramètres accès':
