@@ -187,6 +187,10 @@ def my_opportunities():
     number_games = 0
     for game_id_str, data in sorted(games_dict_recruiting.items(), key=lambda g: g[0]):
 
+        # ignore finished (or distinguished) games
+        if data['current_state'] in [2, 3]:
+            continue
+
         number_games += 1
 
         # variant is available
