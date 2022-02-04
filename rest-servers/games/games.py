@@ -195,7 +195,7 @@ class Game:
             changed = True
 
         if 'anonymous' in json_dict and json_dict['anonymous'] is not None and json_dict['anonymous'] != self._anonymous:
-            self._anonymous = json_dict['variant']
+            self._anonymous = json_dict['anonymous']
             changed = True
 
         if 'nomessage_game' in json_dict and json_dict['nomessage_game'] is not None and json_dict['nomessage_game'] != self._nomessage_game:

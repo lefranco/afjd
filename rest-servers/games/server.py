@@ -69,7 +69,7 @@ GAME_PARSER.add_argument('variant', type=str, required=False)
 GAME_PARSER.add_argument('archive', type=int, required=False)
 GAME_PARSER.add_argument('anonymous', type=int, required=False)
 GAME_PARSER.add_argument('nomessage_game', type=int, required=False)
-GAME_PARSER.add_argument('nomessage_current', type=int, required=False)  # not used
+GAME_PARSER.add_argument('nomessage_current', type=int, required=False)
 GAME_PARSER.add_argument('nopress_game', type=int, required=False)
 GAME_PARSER.add_argument('nopress_current', type=int, required=False)
 GAME_PARSER.add_argument('fast', type=int, required=False)
