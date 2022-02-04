@@ -171,12 +171,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
+    fields = ['jump_here', 'go_away', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'aller voir', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(**)'}[field]
+        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(**)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -225,6 +225,7 @@ def my_opportunities():
 
         data['master'] = None
         data['jump_here'] = None
+        data['go_away'] = None
         data['join'] = None
         data['allocated'] = None
 
@@ -241,6 +242,12 @@ def my_opportunities():
                 input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                 form <= input_jump_game
                 value = form
+
+            if field == 'go_away':
+                link = html.A(href=f"?game={game_name}")
+#                link = html.A(href=f"?game={game_name}", target="_blank")
+                link <= game_name
+                value = link
 
             if field == 'join':
                 if game_id_str in player_games:
@@ -337,7 +344,7 @@ def my_opportunities():
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(*) Messages sur la partie en général, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
+    MY_PANEL <= html.DIV("(*) Messagerie sur la partie, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("(**) On prend en compte l'arbitre dans le nombre de joueurs", Class='note')

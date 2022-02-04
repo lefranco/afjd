@@ -260,7 +260,8 @@ def all_games(state_name):
                 value = form
 
             if field == 'go_away':
-                link = html.A(href=f"?game={game_name}", target="_blank")
+                link = html.A(href=f"?game={game_name}")
+#                link = html.A(href=f"?game={game_name}", target="_blank")
                 link <= game_name
                 value = link
 
@@ -330,7 +331,7 @@ def all_games(state_name):
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
 
-    MY_SUB_PANEL <= html.DIV("(*) Messages sur la partie en général, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
+    MY_SUB_PANEL <= html.DIV("(*) Messagerie sur la partie, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_SUB_PANEL <= html.BR()
 
     # get GMT date and time
