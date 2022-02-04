@@ -51,6 +51,29 @@ FAQ_CONTENT_TABLE = {
     "Comment créer une partie dans laquelle je joue ?":
     "Il faut créer la partie, puis se retirer de l'arbitrage et demander à un arbitre de parties du site d'en prendre l'arbitrage.",
 
+    "Comment créer un gros tournoi ?":
+    """
+      Super facile ! <br>
+     <br>
+     1- creer une partie modèle corrspondant à ce que l'on veut pour le tournoi <br>
+     2- sélectionner cette partie
+     3- mettre des joueurs quelconques dans cette partie pour pouvoir la démarrer (one, two, three, four, five, six, seven par exemple) <br>
+     4- démarrer cette partie <br>
+     5- terminer cette partie <br>
+     6- distinguer cette partie (pas obligatoire mais pratique) <br>
+     7- retirer les joueurs de la partie (pas obligatoire mais plus propre) <br>
+     8- ATTENTION : modifier l'anonymat sur cette partie si besoin (il a pu changer lorsque la partie a été terminée) <br>
+     9- remplir un document CSV (avec EXCEL par exemple) décrivant les parties cf. la page tournoi/créer plusieurs parties <br>
+    10- si plusieurs arbitres, fournir à chaque arbitre le fichier avec les lignes correspondant à ses parties <br>
+    11- chaque arbitre créé ses parties : <br>
+             - sélectionne la partie modèle <br>
+             - utilise la page tournoi/créer plusieurs parties <br>
+    12- chaque arbitre démarre ses parties au moment opportun : <br>
+             - sélectionne la page mes parties <br>
+             - sélectionne les parties en attente <br>
+             - clique sur démarrer pour chaque partie
+    """,
+
     "Qu'est ce qui change pour une partie 'en direct' ?":
     "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en heures. Les retards sont comptés en minutes et non en heures entamées. Il est possible d'observer la partie (mise à jour régulière du plateau). Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres pour les joueurs automtiquement après la grâce. Pas de message de notification pour une telle partie.",
 
