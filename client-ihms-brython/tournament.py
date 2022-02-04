@@ -130,9 +130,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # obviously different name
         json_dict['name'] = game_to_create_name
 
-        # can only be manual
-        json_dict['manual'] = True
-
         # obviously different deadline - set it to now
         timestamp = time.time()
         deadline = int(timestamp)
@@ -141,6 +138,10 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # obviously different state (starting)
         json_dict['current_state'] = 0
         json_dict['current_advancement'] = 0
+
+        # remove these two so that they get copied from their xxx_game clone
+        del json_dict['nopress_current']
+        del json_dict['nomessage_current']
 
         # and addition
         json_dict['pseudo'] = current_pseudo

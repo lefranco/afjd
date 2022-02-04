@@ -116,7 +116,7 @@ class Game:
         sql_executor.execute("CREATE TABLE games (identifier INTEGER UNIQUE PRIMARY KEY, name STR, game_data game)")
         sql_executor.execute("CREATE UNIQUE INDEX name_game ON games (name)")
 
-    def __init__(self, identifier: int, name: str, description: str, variant: str, archive: bool, anonymous: bool, nomessage: bool, nopress: bool, nomessage_current: bool, nopress_current: bool, fast: bool, scoring: str, deadline: int, deadline_hour: int, deadline_sync: bool, grace_duration: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, cd_possible_removals: bool, play_weekend: bool, manual: bool, access_code: int, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, victory_centers: int, current_state: int) -> None:
+    def __init__(self, identifier: int, name: str, description: str, variant: str, archive: bool, anonymous: bool, nomessage_game: bool, nopress_game: bool, nomessage_current: bool, nopress_current: bool, fast: bool, scoring: str, deadline: int, deadline_hour: int, deadline_sync: bool, grace_duration: int, speed_moves: int, cd_possible_moves: bool, speed_retreats: int, cd_possible_retreats: bool, speed_adjustments: int, cd_possible_builds: bool, cd_possible_removals: bool, play_weekend: bool, manual: bool, access_code: int, access_restriction_reliability: int, access_restriction_regularity: int, access_restriction_performance: int, current_advancement: int, nb_max_cycles_to_play: int, victory_centers: int, current_state: int) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -128,8 +128,8 @@ class Game:
         self._variant = variant
         self._archive = archive
         self._anonymous = anonymous
-        self._nomessage = nomessage
-        self._nopress = nopress
+        self._nomessage_game = nomessage_game
+        self._nopress_game = nopress_game
         self._nomessage_current = nomessage_current
         self._nopress_current = nopress_current
         self._fast = fast
@@ -198,20 +198,23 @@ class Game:
             self._anonymous = json_dict['variant']
             changed = True
 
-        if 'nomessage' in json_dict and json_dict['nomessage'] is not None and json_dict['nomessage'] != self._nomessage:
-            self._nomessage = json_dict['nomessage']
+        if 'nomessage_game' in json_dict and json_dict['nomessage_game'] is not None and json_dict['nomessage_game'] != self._nomessage_game:
+            self._nomessage_game = json_dict['nomessage_game']
+            self._nomessage_current = self._nomessage_game
             changed = True
 
-        if 'nopress' in json_dict and json_dict['nopress'] is not None and json_dict['nopress'] != self._nopress:
-            self._nopress = json_dict['nopress']
+        if 'nopress_game' in json_dict and json_dict['nopress_game'] is not None and json_dict['nopress_game'] != self._nopress_game:
+            self._nopress_game = json_dict['nopress_game']
+            self._nopress_current = self._nopress_game
             changed = True
 
+        # should not happen
         if 'nomessage_current' in json_dict and json_dict['nomessage_current'] is not None and json_dict['nomessage_current'] != self._nomessage_current:
             self._nomessage_current = json_dict['nomessage_current']
             changed = True
 
         if 'nopress_current' in json_dict and json_dict['nopress_current'] is not None and json_dict['nopress_current'] != self._nopress_current:
-            self._nopress = json_dict['nopress_current']
+            self._nopress_current = json_dict['nopress_current']
             changed = True
 
         if 'fast' in json_dict and json_dict['fast'] is not None and json_dict['fast'] != self._fast:
@@ -354,8 +357,8 @@ class Game:
             'variant': self._variant,
             'archive': self._archive,
             'anonymous': self._anonymous,
-            'nomessage': self._nomessage,
-            'nopress': self._nopress,
+            'nomessage_game': self._nomessage_game,
+            'nopress_game': self._nopress_game,
             'nomessage_current': self._nomessage_current,
             'nopress_current': self._nopress_current,
             'fast': self._fast,
@@ -676,14 +679,14 @@ class Game:
         return self._anonymous
 
     @property
-    def nomessage(self) -> bool:
+    def nomessage_game(self) -> bool:
         """ property """
-        return self._nomessage
+        return self._nomessage_game
 
     @property
-    def nopress(self) -> bool:
+    def nopress_game(self) -> bool:
         """ property """
-        return self._nopress
+        return self._nopress_game
 
     @property
     def nomessage_current(self) -> bool:
@@ -721,12 +724,12 @@ class Game:
         return self._nb_max_cycles_to_play
 
     def __str__(self) -> str:
-        return f"name={self._name} variant={self._variant} description={self._description} archive={self._archive} anonymous={self._anonymous} nomessage={self._nomessage} nopress={self._nopress} nomessage_current={self._nomessage_current} nopress_current={self._nopress_current} fast={self._fast} scoring={self._scoring} deadline={self._deadline} deadline_hour={self._deadline_hour} deadline_sync={self._deadline_sync} grace_duration={self._grace_duration} speed_moves={self._speed_moves} cd_possible_moves={self._cd_possible_moves} speed_retreats={self._speed_retreats} cd_possible_retreats={self._cd_possible_retreats} speed_adjustments={self._speed_adjustments} cd_possible_builds={self._cd_possible_builds} cd_possible_removals={self._cd_possible_removals} play_weekend={self._play_weekend} manual={self._manual} access_code={self._access_code} access_restriction_reliability={self._access_restriction_reliability} access_restriction_regularity={self._access_restriction_regularity} access_restriction_performance={self._access_restriction_performance} current_advancement={self._current_advancement} nb_max_cycles_to_play={self._nb_max_cycles_to_play} victory_centers={self._victory_centers} current_state={self._current_state}"
+        return f"name={self._name} variant={self._variant} description={self._description} archive={self._archive} anonymous={self._anonymous} nomessage_game={self._nomessage_game} nopress_game={self._nopress_game} nomessage_current={self._nomessage_current} nopress_current={self._nopress_current} fast={self._fast} scoring={self._scoring} deadline={self._deadline} deadline_hour={self._deadline_hour} deadline_sync={self._deadline_sync} grace_duration={self._grace_duration} speed_moves={self._speed_moves} cd_possible_moves={self._cd_possible_moves} speed_retreats={self._speed_retreats} cd_possible_retreats={self._cd_possible_retreats} speed_adjustments={self._speed_adjustments} cd_possible_builds={self._cd_possible_builds} cd_possible_removals={self._cd_possible_removals} play_weekend={self._play_weekend} manual={self._manual} access_code={self._access_code} access_restriction_reliability={self._access_restriction_reliability} access_restriction_regularity={self._access_restriction_regularity} access_restriction_performance={self._access_restriction_performance} current_advancement={self._current_advancement} nb_max_cycles_to_play={self._nb_max_cycles_to_play} victory_centers={self._victory_centers} current_state={self._current_state}"
 
     def adapt_game(self) -> bytes:
         """ To put an object in database """
         compressed_description = database.compress_text(self._description)
-        return (f"{self._identifier}{database.STR_SEPARATOR}{self._name}{database.STR_SEPARATOR}{compressed_description}{database.STR_SEPARATOR}{self._variant}{database.STR_SEPARATOR}{int(bool(self._archive))}{database.STR_SEPARATOR}{int(bool(self._anonymous))}{database.STR_SEPARATOR}{int(bool(self._nomessage))}{database.STR_SEPARATOR}{int(bool(self._nopress))}{database.STR_SEPARATOR}{int(bool(self._nomessage_current))}{database.STR_SEPARATOR}{int(bool(self._nopress_current))}{database.STR_SEPARATOR}{int(bool(self._fast))}{database.STR_SEPARATOR}{self._scoring}{database.STR_SEPARATOR}{self._deadline}{database.STR_SEPARATOR}{self._deadline_hour}{database.STR_SEPARATOR}{int(bool(self._deadline_sync))}{database.STR_SEPARATOR}{self._grace_duration}{database.STR_SEPARATOR}{self._speed_moves}{database.STR_SEPARATOR}{int(bool(self._cd_possible_moves))}{database.STR_SEPARATOR}{self._speed_retreats}{database.STR_SEPARATOR}{int(bool(self._cd_possible_retreats))}{database.STR_SEPARATOR}{self._speed_adjustments}{database.STR_SEPARATOR}{int(bool(self._cd_possible_builds))}{database.STR_SEPARATOR}{int(bool(self._cd_possible_removals))}{database.STR_SEPARATOR}{int(bool(self._play_weekend))}{database.STR_SEPARATOR}{int(bool(self._manual))}{database.STR_SEPARATOR}{self._access_code}{database.STR_SEPARATOR}{self._access_restriction_reliability}{database.STR_SEPARATOR}{self._access_restriction_regularity}{database.STR_SEPARATOR}{self._access_restriction_performance}{database.STR_SEPARATOR}{self._current_advancement}{database.STR_SEPARATOR}{self._nb_max_cycles_to_play}{database.STR_SEPARATOR}{self._victory_centers}{database.STR_SEPARATOR}{self._current_state}").encode('ascii')
+        return (f"{self._identifier}{database.STR_SEPARATOR}{self._name}{database.STR_SEPARATOR}{compressed_description}{database.STR_SEPARATOR}{self._variant}{database.STR_SEPARATOR}{int(bool(self._archive))}{database.STR_SEPARATOR}{int(bool(self._anonymous))}{database.STR_SEPARATOR}{int(bool(self._nomessage_game))}{database.STR_SEPARATOR}{int(bool(self._nopress_game))}{database.STR_SEPARATOR}{int(bool(self._nomessage_current))}{database.STR_SEPARATOR}{int(bool(self._nopress_current))}{database.STR_SEPARATOR}{int(bool(self._fast))}{database.STR_SEPARATOR}{self._scoring}{database.STR_SEPARATOR}{self._deadline}{database.STR_SEPARATOR}{self._deadline_hour}{database.STR_SEPARATOR}{int(bool(self._deadline_sync))}{database.STR_SEPARATOR}{self._grace_duration}{database.STR_SEPARATOR}{self._speed_moves}{database.STR_SEPARATOR}{int(bool(self._cd_possible_moves))}{database.STR_SEPARATOR}{self._speed_retreats}{database.STR_SEPARATOR}{int(bool(self._cd_possible_retreats))}{database.STR_SEPARATOR}{self._speed_adjustments}{database.STR_SEPARATOR}{int(bool(self._cd_possible_builds))}{database.STR_SEPARATOR}{int(bool(self._cd_possible_removals))}{database.STR_SEPARATOR}{int(bool(self._play_weekend))}{database.STR_SEPARATOR}{int(bool(self._manual))}{database.STR_SEPARATOR}{self._access_code}{database.STR_SEPARATOR}{self._access_restriction_reliability}{database.STR_SEPARATOR}{self._access_restriction_regularity}{database.STR_SEPARATOR}{self._access_restriction_performance}{database.STR_SEPARATOR}{self._current_advancement}{database.STR_SEPARATOR}{self._nb_max_cycles_to_play}{database.STR_SEPARATOR}{self._victory_centers}{database.STR_SEPARATOR}{self._current_state}").encode('ascii')
 
 
 def convert_game(buffer: bytes) -> Game:
@@ -742,8 +745,8 @@ def convert_game(buffer: bytes) -> Game:
     variant = tab[3].decode()
     archive = bool(int(tab[4].decode()))
     anonymous = bool(int(tab[5].decode()))
-    nomessage = bool(int(tab[6].decode()))
-    nopress = bool(int(tab[7].decode()))
+    nomessage_game = bool(int(tab[6].decode()))
+    nopress_game = bool(int(tab[7].decode()))
     nomessage_current = bool(int(tab[8].decode()))
     nopress_current = bool(int(tab[9].decode()))
     fast = bool(int(tab[10].decode()))
@@ -769,7 +772,7 @@ def convert_game(buffer: bytes) -> Game:
     nb_max_cycles_to_play = int(tab[30].decode())
     victory_centers = int(tab[31].decode())
     current_state = int(tab[32].decode())
-    game = Game(identifier, name, description, variant, archive, anonymous, nomessage, nopress, nomessage_current, nopress_current, fast, scoring, deadline, deadline_hour, deadline_sync, grace_duration, speed_moves, cd_possible_moves, speed_retreats, cd_possible_retreats, speed_adjustments, cd_possible_builds, cd_possible_removals, play_weekend, manual, access_code, access_restriction_reliability, access_restriction_regularity, access_restriction_performance, current_advancement, nb_max_cycles_to_play, victory_centers, current_state)
+    game = Game(identifier, name, description, variant, archive, anonymous, nomessage_game, nopress_game, nomessage_current, nopress_current, fast, scoring, deadline, deadline_hour, deadline_sync, grace_duration, speed_moves, cd_possible_moves, speed_retreats, cd_possible_retreats, speed_adjustments, cd_possible_builds, cd_possible_removals, play_weekend, manual, access_code, access_restriction_reliability, access_restriction_regularity, access_restriction_performance, current_advancement, nb_max_cycles_to_play, victory_centers, current_state)
     return game
 
 

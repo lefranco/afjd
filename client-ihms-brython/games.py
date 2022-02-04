@@ -214,8 +214,8 @@ def create_game():
             'manual': manual,
 
             'anonymous': anonymous,
-            'nomessage': nomessage,
-            'nopress': nopress,
+            'nomessage_game': nomessage,
+            'nopress_game': nopress,
             'fast': fast,
 
             'scoring': scoring_code,
@@ -320,6 +320,13 @@ def create_game():
     form <= fieldset
 
     fieldset = html.FIELDSET()
+    legend_fast = html.LEGEND("en direct", title="Le calcul des dates limites se fait en minutes au lieu d'heures. (Ne cocher que pour une partie comme sur un plateau)")
+    fieldset <= legend_fast
+    input_fast = html.INPUT(type="checkbox", checked=False)
+    fieldset <= input_fast
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
     legend_nomessage = html.LEGEND("pas de message privé", title="Les joueurs ne peuvent pas communiquer (négocier) par message privé avant la fin de la partie")
     fieldset <= legend_nomessage
     input_nomessage = html.INPUT(type="checkbox", checked=False)
@@ -327,21 +334,14 @@ def create_game():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_fast = html.LEGEND("en direct", title="Le calcul des dates limites se fait en minutes au lieu d'heures. (Ne cocher que pour une partie comme sur un plateau)")
-    fieldset <= legend_fast
-    input_fast = html.INPUT(type="checkbox", checked=False)
-    fieldset <= input_fast
-    form <= fieldset
-
-    title_terms2 = html.H3("Modalités de la partie - peuvent être changées la partie créée")
-    form <= title_terms2
-
-    fieldset = html.FIELDSET()
     legend_nopress = html.LEGEND("pas de message public", title="Les joueurs ne peuvent pas communiquer (déclarer) par message public avant la fin de la partie")
     fieldset <= legend_nopress
     input_nopress = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_nopress
     form <= fieldset
+
+    form <= html.DIV("Même si le paramètre 'pas de message public' est fixé pour l'exportation des modalités de la partie, il reste toutefois possible pendant la partie de modifier à tout moment la possibilité d'échanger des messages publics", Class='note')
+
 
     title_scoring = html.H3("Système de marque")
     form <= title_scoring
@@ -653,6 +653,7 @@ def change_access_public_messages_game():
             nonlocal status
             nonlocal access_loaded
             req_result = json.loads(req.text)
+
             if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la récupération acces messages publics de la partie : {req_result['message']}")
@@ -663,7 +664,7 @@ def change_access_public_messages_game():
                 status = False
                 return
 
-            access_loaded = req_result['nopress']
+            access_loaded = req_result['nopress_current']
 
         json_dict = {}
 
@@ -695,7 +696,7 @@ def change_access_public_messages_game():
         json_dict = {
             'pseudo': pseudo,
             'name': game,
-            'nopress': input_nopress.checked,
+            'nopress_current': input_nopress.checked,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']

@@ -116,11 +116,10 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
     result['ScoringSystem'] = game_scoring
 
     # communication
-    # TODO : we have an issue here since we open press at end of all games...
     # TODO : we need confirmation that anonymity of games is not exported
-    if game.nomessage and game.nopress:
+    if game.nomessage_game and game.nopress_game:
         result['CommunicationType'] = 'None'
-    elif game.nomessage and game.nopress:
+    elif game.nomessage_game and game.nopress_game:
         result['CommunicationType'] = 'PublicOnly'
     else:
         result['CommunicationType'] = 'Full'
