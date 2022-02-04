@@ -631,13 +631,6 @@ def change_description_game():
     MY_SUB_PANEL <= form
 
 
-
-
-
-
-
-
-
 def change_anonymity_game():
     """ change_anonymity_game """
 
@@ -753,15 +746,6 @@ def change_anonymity_game():
     form <= input_change_anonymity_game
 
     MY_SUB_PANEL <= form
-
-
-
-
-
-
-
-
-
 
 
 def change_access_messages_game():
