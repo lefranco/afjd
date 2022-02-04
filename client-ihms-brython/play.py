@@ -8,7 +8,7 @@ import enum
 import time
 import random
 
-from browser import document, html, ajax, alert, timer   # pylint: disable=import-error
+from browser import document, html, ajax, alert, timer, window   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -812,7 +812,7 @@ def show_position():
     def put_export_sandbox(buttons_right):
         """ put_export_sandbox """
 
-        input_export_sandbox = html.INPUT(type="submit", value="exportervers le bac à sable")
+        input_export_sandbox = html.INPUT(type="submit", value="exporter vers le bac à sable")
         input_export_sandbox.bind("click", callback_export_sandbox)
         buttons_right <= html.BR()
         buttons_right <= input_export_sandbox
@@ -4915,6 +4915,16 @@ def export():
 
     json_dict = None
 
+    def callback_download(_):
+        """ callback_download """
+
+        text_to_write = document['text_area_json'].value
+        text_file_as_blob = window.Blob.new([text_to_write], {'type': 'text/plain'})
+        download_link = document['download_link']
+        download_link.download = f"diplomania_{GAME}_{GAME_ID}_json.txt"
+        download_link.href = window.URL.createObjectURL(text_file_as_blob)
+        document['download_link'].click()
+
     def reply_callback(req):
         nonlocal json_dict
         req_result = json.loads(req.text)
@@ -4930,7 +4940,22 @@ def export():
         json_text = json.dumps(json_dict, indent=4, ensure_ascii=False)
 
         MY_SUB_PANEL.clear()
-        MY_SUB_PANEL <= html.PRE(json_text)
+
+        MY_SUB_PANEL <= html.DIV("Vous pouvez modifier le contenu avant de le télécharger...", Class='note')
+        MY_SUB_PANEL <= html.BR()
+
+        download_button = html.BUTTON("télécharger le fichier", type="submit", value="download")
+        MY_SUB_PANEL <= download_button
+        download_button.bind("click", callback_download)
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+
+        MY_SUB_PANEL <= html.TEXTAREA(json_text, type='text', rows=30, cols=80, id='text_area_json')
+        MY_SUB_PANEL <= html.BR()
+
+        # needed too for some reason
+        MY_SUB_PANEL <= html.A(id='download_link')
+
 
     json_dict = {}
 
