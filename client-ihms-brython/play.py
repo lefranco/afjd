@@ -4316,11 +4316,11 @@ def show_game_parameters():
 
         parameter_name, explanation, effect, implemented = {
             'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de courriel de notification aux joueurs", "OUI"),
-            'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres - effacé à la fin de la partie", "OUI"),
+            'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres  - cette valeur est modifiable pendant la partie - effacé à la fin de la partie", "OUI"),
             'nomessage_game': ("pas de message privé (négociation) pour la partie", "on ne peut pas négocier - sauf avec l'arbitre", "Tout message privé joueur vers joueur est impossible", "OUI"),
             'nopress_game': ("pas de message public (déclaration) pour la partie", "on ne peut pas déclarer - sauf l'arbitre", "Tout message public de joueur est impossible", "OUI"),
-            'nomessage_current': ("pas de message privé (négociation) pour le moment", "valeur utilisée pour accorder l'accès ou pas - cette valeur est modificable pendant la partie", "effacé en fin de partie", "OUI"),
-            'nopress_current': ("pas de message public (déclaration) pour le moment", "valeur utilisée pour accorder l'accès ou pas - cette valeur est modificable pendant la partie", "effacé en fin de partie", "OUI"),
+            'nomessage_current': ("pas de message privé (négociation) pour le moment", "valeur utilisée pour accorder l'accès ou pas - cette valeur est modifiable pendant la partie", "effacé en fin de partie", "OUI"),
+            'nopress_current': ("pas de message public (déclaration) pour le moment", "valeur utilisée pour accorder l'accès ou pas - cette valeur est modifiable pendant la partie", "effacé en fin de partie", "OUI"),
             'fast': ("en direct", "la partie est jouée comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs", "OUI"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie", "OUI"),
             'scoring': ("code du scorage", "le système de scorage appliqué", "Se reporter à Accueil/Coin technique pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface", "OUI"),
