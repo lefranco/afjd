@@ -382,7 +382,6 @@ def my_games(state_name):
             colour = None
 
             if field == 'jump_here':
-
                 game_name = data['name']
                 form = html.FORM()
                 input_jump_game = html.INPUT(type="submit", value=game_name)
@@ -391,8 +390,8 @@ def my_games(state_name):
                 value = form
 
             if field == 'go_away':
-
-                link = html.A(href=f"?game={game_name}", target="_blank")
+                link = html.A(href=f"?game={game_name}")
+#                link = html.A(href=f"?game={game_name}", target="_blank")
                 link <= game_name
                 value = link
 
@@ -417,7 +416,6 @@ def my_games(state_name):
                     value = f"{value1} ({value2})"
 
             if field == 'deadline':
-
                 deadline_loaded = value
                 datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
                 deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
@@ -439,14 +437,12 @@ def my_games(state_name):
                     colour = config.APPROACHING_DEADLINE_COLOUR
 
             if field == 'current_advancement':
-
                 advancement_loaded = value
                 advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
                 advancement_season_readable = variant_data.name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
 
             if field == 'role_played':
-
                 value = ""
                 if role_id is None:
                     role_icon_img = html.IMG(src="./images/assigned.png", title="Affecté à la partie")
@@ -457,7 +453,6 @@ def my_games(state_name):
                 value = role_icon_img
 
             if field == 'orders_submitted':
-
                 value = ""
                 if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
                     flag = html.IMG(src="./images/game_over.png", title="Partie finie")
@@ -474,7 +469,6 @@ def my_games(state_name):
                             value = flag
 
             if field == 'agreed':
-
                 value = ""
                 if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
                     flag = html.IMG(src="./images/game_over.png", title="Partie finie")
@@ -491,7 +485,6 @@ def my_games(state_name):
                             value = flag
 
             if field == 'all_orders_submitted':
-
                 value = ""
                 if role_id is not None:
                     submitted_roles_list = submitted_data['submitted']
@@ -505,7 +498,6 @@ def my_games(state_name):
                         colour = config.ALL_ORDERS_IN_COLOUR
 
             if field == 'all_agreed':
-
                 value = ""
                 if role_id is not None:
                     agreed_roles_list = submitted_data['agreed']
@@ -519,10 +511,8 @@ def my_games(state_name):
                         colour = config.ALL_AGREEMENTS_IN_COLOUR
 
             if field == 'new_declarations':
-
                 value = ""
                 if role_id is not None:
-
                     # popup if new
                     popup = ""
                     if dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
@@ -530,10 +520,8 @@ def my_games(state_name):
                     value = popup
 
             if field == 'new_messages':
-
                 value = ""
                 if role_id is not None:
-
                     # popup if new
                     popup = ""
                     if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
@@ -562,7 +550,7 @@ def my_games(state_name):
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(*) Messages sur la partie en général, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
+    MY_PANEL <= html.DIV("(*) Messagerie sur la partie, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("(**) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
