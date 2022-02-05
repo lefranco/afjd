@@ -15,7 +15,7 @@ class Vote:
     """ Class for handling an vote """
 
     @staticmethod
-    def list_by_game_id(sql_executor: database.SqlExecutor, game_id: int) -> typing.List[typing.Tuple[int, int, int, int]]:
+    def list_by_game_id(sql_executor: database.SqlExecutor, game_id: int) -> typing.List[typing.Tuple[int, int, int]]:
         """ class lookup : finds the object in database from fame id """
         votes_found = sql_executor.execute("SELECT * FROM votes where game_id = ?", (game_id,), need_result=True)
         if not votes_found:
@@ -23,7 +23,7 @@ class Vote:
         return votes_found
 
     @staticmethod
-    def list_by_game_id_role_num(sql_executor: database.SqlExecutor, game_id: int, role_num: int) -> typing.List[typing.Tuple[int, int, int, int]]:
+    def list_by_game_id_role_num(sql_executor: database.SqlExecutor, game_id: int, role_num: int) -> typing.List[typing.Tuple[int, int, int]]:
         """ class lookup : finds the object in database from fame id """
         votes_found = sql_executor.execute("SELECT * FROM votes where game_id = ? and role_num = ?", (game_id, role_num), need_result=True)
         if not votes_found:

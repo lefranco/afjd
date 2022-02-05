@@ -578,6 +578,11 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             definitive = definitives.Definitive(int(game_id), role_num, False)
             definitive.delete_database(sql_executor)
 
+        # delete votes
+        for (_, role_num, _) in votes.Vote.list_by_game_id(sql_executor, int(game_id)):
+            vote = votes.Vote(int(game_id), role_num, False)
+            vote.delete_database(sql_executor)
+
         # delete contents
         for (identifier, _, _, _) in contents.Content.list_by_game_id(sql_executor, int(game_id)):
             content = contents.Content(identifier, 0, 0, '')
