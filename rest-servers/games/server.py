@@ -3627,6 +3627,11 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
 
+        # game must be ongoing
+        if game.current_state != 1:
+            del sql_executor
+            flask_restful.abort(403, msg="Game does not seem to be ongoing")
+
         # create vote here
         vote = votes.Vote(int(game_id), role_id, bool(value))
         vote.update_database(sql_executor)

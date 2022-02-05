@@ -3214,6 +3214,10 @@ def vote():
         # adding a vote in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        vote()
+
     # from game id and token get role_id of player
 
     if ROLE_ID is None:
@@ -3223,6 +3227,18 @@ def vote():
 
     if ROLE_ID == 0:
         alert("Ce n'est pas possible pour l'arbitre de cette partie")
+        load_option(None, 'position')
+        return False
+
+    # game needs to be ongoing - not waiting
+    if GAME_PARAMETERS_LOADED['current_state'] == 0:
+        alert("La partie n'est pas encore démarrée")
+        load_option(None, 'position')
+        return False
+
+    # game needs to be ongoing - not finished
+    if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
+        alert("La partie est déjà terminée")
         load_option(None, 'position')
         return False
 
