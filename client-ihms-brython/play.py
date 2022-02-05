@@ -931,14 +931,14 @@ def show_position():
         # role flag if applicable
         if ROLE_ID is not None:
             stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+
+        buttons_right <= html.H3("Position")
 
         input_refresh = html.INPUT(type="submit", value="recharger la partie")
         input_refresh.bind("click", callback_refresh)
         buttons_right <= input_refresh
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+
+        buttons_right <= html.H3("Historique")
 
         input_first = html.INPUT(type="submit", value="||<<")
         input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
@@ -972,8 +972,11 @@ def show_position():
             input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}")
             input_last.bind("click", lambda e, a=adv_sample: transition_display_callback(e, a))
             buttons_right <= input_last
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+            if adv_sample + 5 < last_advancement:
+                buttons_right <= html.BR()
+                buttons_right <= html.BR()
+
+        buttons_right <= html.H3("Divers")
 
         input_export_sandbox = html.INPUT(type="submit", value="exporter vers le bac à sable")
         input_export_sandbox.bind("click", callback_export_sandbox)
