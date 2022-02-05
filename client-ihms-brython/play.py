@@ -33,7 +33,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'arbitrer', 'superviser', 'paramètres', 'arbitre', 'joueurs', 'ordres', 'retards', 'observer']
+OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'arbitrer', 'superviser', 'paramètres', 'participants', 'observer']
 
 
 @enum.unique
@@ -671,7 +671,7 @@ def get_game_status():
     return game_status_table
 
 
-def get_game_status_histo(variant_data, game_parameters_loaded, advancement_selected):
+def get_game_status_histo(variant_data, advancement_selected):
     """ get_game_status_histo """
 
     advancement_selected_season, advancement_selected_year = common.get_season(advancement_selected, variant_data)
@@ -904,7 +904,7 @@ def show_position():
 
         if advancement_selected != last_advancement:
             # display only if from history
-            game_status = get_game_status_histo(VARIANT_DATA, GAME_PARAMETERS_LOADED, advancement_selected)
+            game_status = get_game_status_histo(VARIANT_DATA, advancement_selected)
             display_left <= game_status
             display_left <= html.BR()
 
@@ -4368,270 +4368,8 @@ def show_game_parameters():
     return True
 
 
-def show_game_master_in_game():
-    """ show_players_in_game """
-
-    game_master_pseudo = get_game_master(int(GAME_ID))
-    if game_master_pseudo is None:
-        alert("Pas d'arbitre pour cette partie ou erreur au chargement de l'arbitre de la partie")
-        return False
-
-    game_master_table = html.TABLE()
-
-    fields = ['flag', 'role', 'player']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'rôle'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    game_master_table <= thead
-
-    role_id = 0
-
-    row = html.TR()
-
-    # role flag
-    role = VARIANT_DATA.roles[role_id]
-    role_name = VARIANT_DATA.name_table[role]
-    role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
-
-    if role_icon_img:
-        col = html.TD(role_icon_img)
-    else:
-        col = html.TD()
-    row <= col
-
-    # role name
-    role = VARIANT_DATA.roles[role_id]
-    role_name = VARIANT_DATA.name_table[role]
-
-    col = html.TD(role_name)
-    row <= col
-
-    # player
-    pseudo_there = game_master_pseudo
-    col = html.TD(pseudo_there)
-    row <= col
-
-    game_master_table <= row
-
-    # game status
-    MY_SUB_PANEL <= GAME_STATUS
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= game_master_table
-
-    return True
-
-
-def show_players_in_game():
-    """ show_players_in_game """
-
-    # need to be connected
-    if PSEUDO is None:
-        alert("Il faut se connecter au préalable")
-        load_option(None, 'position')
-        return False
-
-    # is game anonymous
-    if not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
-        alert("Seul l'arbitre (ou l'administrateur du site) peut voir les joueurs d'une partie anonyme")
-        load_option(None, 'position')
-        return False
-
-    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
-
-    game_players_table = html.TABLE()
-
-    fields = ['flag', 'role', 'player']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'rôle'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    game_players_table <= thead
-
-    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
-
-    for role_id in VARIANT_DATA.roles:
-
-        row = html.TR()
-
-        if role_id <= 0:
-            continue
-
-        # role flag
-        role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
-
-        if role_icon_img:
-            col = html.TD(role_icon_img)
-        else:
-            col = html.TD()
-        row <= col
-
-        # role name
-        role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
-
-        col = html.TD(role_name)
-        row <= col
-
-        # player
-        pseudo_there = ""
-        if role_id in role2pseudo:
-            player_id_str = role2pseudo[role_id]
-            player_id = int(player_id_str)
-            pseudo_there = id2pseudo[player_id]
-        col = html.TD(pseudo_there)
-        row <= col
-
-        game_players_table <= row
-
-    # game status
-    MY_SUB_PANEL <= GAME_STATUS
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= game_players_table
-
-    # add the non allocated players
-    dangling_players = [p for p, d in GAME_PLAYERS_DICT.items() if d == - 1]
-    if dangling_players:
-        MY_SUB_PANEL <= html.BR()
-        info = html.EM("Les pseudos suivants sont alloués à la partie sans rôle : ")
-        roles_less = html.DIV(info, Class='note')
-        for dangling_player_id_str in dangling_players:
-            dangling_player_id = int(dangling_player_id_str)
-            dangling_player = id2pseudo[dangling_player_id]
-            roles_less <= html.EM(f"{dangling_player} ")
-        MY_SUB_PANEL <= roles_less
-
-    return True
-
-
-def show_orders_submitted_in_game():
-    """ show_orders_submitted_in_game """
-
-    # if user identified ?
-    if PSEUDO is None:
-        alert("Il faut se connecter au préalable")
-        load_option(None, 'position')
-        return False
-
-    # is player in game ?
-    if not(moderate.check_modo(PSEUDO) or ROLE_ID is not None):
-        alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir le statut des ordres pour une partie non anonyme")
-        load_option(None, 'position')
-        return False
-
-    # game anonymous
-    if not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
-        alert("Seul l'arbitre (ou l'administrateur du site) peut voir le statut des ordres  pour une partie anonyme")
-        load_option(None, 'position')
-        return False
-
-    # you will at least get your own role
-    submitted_data = get_roles_submitted_orders(GAME_ID)
-    if not submitted_data:
-        alert("Erreur chargement données de soumission")
-        load_option(None, 'position')
-        return False
-
-    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
-
-    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
-
-    game_players_table = html.TABLE()
-
-    fields = ['flag', 'role', 'player', 'orders', 'agreement']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'orders': 'ordres', 'agreement': 'accord'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    game_players_table <= thead
-
-    for role_id in VARIANT_DATA.roles:
-
-        row = html.TR()
-
-        if role_id <= 0:
-            continue
-
-        # role flag
-        role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
-
-        if role_icon_img:
-            col = html.TD(role_icon_img)
-        else:
-            col = html.TD()
-        row <= col
-
-        role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
-
-        col = html.TD(role_name)
-        row <= col
-
-        # player
-        pseudo_there = ""
-        if role_id in role2pseudo:
-            player_id_str = role2pseudo[role_id]
-            player_id = int(player_id_str)
-            pseudo_there = id2pseudo[player_id]
-        col = html.TD(pseudo_there)
-        row <= col
-
-        # orders are in
-        submitted_roles_list = submitted_data['submitted']
-        needed_roles_list = submitted_data['needed']
-        if role_id in needed_roles_list:
-            if role_id in submitted_roles_list:
-                flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
-            else:
-                flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
-        else:
-            flag = ""
-        col = html.TD(flag)
-        row <= col
-
-        # agreed
-        col = html.TD()
-        flag = ""
-        submitted_roles_list = submitted_data['submitted']
-        agreed_roles_list = submitted_data['agreed']
-        needed_roles_list = submitted_data['needed']
-        if role_id in needed_roles_list:
-            if role_id in submitted_roles_list:
-                if role_id in agreed_roles_list:
-                    flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
-                else:
-                    flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
-        col <= flag
-        row <= col
-
-        game_players_table <= row
-
-    # game status
-    MY_SUB_PANEL <= GAME_STATUS
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= game_players_table
-
-    return True
-
-
-def show_incidents_in_game():
-    """ show_incidents_in_game """
+def show_participants_in_game():
+    """ show_participants_in_game """
 
     def cancel_remove_incident_callback(_, dialog, ):
         """ cancel_remove_incident_callback """
@@ -4655,7 +4393,7 @@ def show_incidents_in_game():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            show_incidents_in_game()
+            show_participants_in_game()
 
         dialog.close()
 
@@ -4677,43 +4415,33 @@ def show_incidents_in_game():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        show_incidents_in_game()
+        show_participants_in_game()
 
-    # if user identified ?
-    if PSEUDO is None:
-        alert("Il faut se connecter au préalable")
-        load_option(None, 'position')
-        return False
+    # game status
+    MY_SUB_PANEL <= GAME_STATUS
+    MY_SUB_PANEL <= html.BR()
 
-    # is player in game ?
-    if not(moderate.check_modo(PSEUDO) or ROLE_ID is not None):
-        alert("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir les retards")
-        load_option(None, 'position')
-        return False
+    # game master
+    MY_SUB_PANEL <= html.H3("Arbitre")
 
-    # get the actual incidents of the game
-    game_incidents = game_incidents_reload(GAME_ID)
-    # there can be no incidents (if no incident of failed to load)
+    game_master_pseudo = get_game_master(int(GAME_ID))
+    if game_master_pseudo is None:
+        MY_SUB_PANEL <= html.DIV("Pas d'arbitre pour cette partie ou erreur au chargement de l'arbitre de la partie", Class='important')
+    else:
 
-    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
+        game_master_table = html.TABLE()
 
-    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+        fields = ['flag', 'role', 'player']
 
-    game_incidents_table = html.TABLE()
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'rôle'}[field]
+            col = html.TD(field_fr)
+            thead <= col
+        game_master_table <= thead
 
-    fields = ['flag', 'role', 'player', 'season', 'duration', 'date', 'remove']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'season': 'saison', 'duration': 'durée', 'date': 'date', 'remove': 'supprimer'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    game_incidents_table <= thead
-
-    counter = {}
-
-    for role_id, advancement, duration, date_incident in sorted(game_incidents, key=lambda i: i[3]):
+        role_id = 0
 
         row = html.TR()
 
@@ -4728,6 +4456,7 @@ def show_incidents_in_game():
             col = html.TD()
         row <= col
 
+        # role name
         role = VARIANT_DATA.roles[role_id]
         role_name = VARIANT_DATA.name_table[role]
 
@@ -4735,81 +4464,324 @@ def show_incidents_in_game():
         row <= col
 
         # player
-        pseudo_there = ""
-        if role_id in role2pseudo:
-            player_id_str = role2pseudo[role_id]
-            player_id = int(player_id_str)
-            pseudo_there = id2pseudo[player_id]
-        else:
-            pseudo_there = f"{GAME}##{role_name}"
+        pseudo_there = game_master_pseudo
         col = html.TD(pseudo_there)
         row <= col
 
-        if pseudo_there not in counter:
-            counter[pseudo_there] = []
-        counter[pseudo_there].append(duration)
+        game_master_table <= row
 
-        # season
-        advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
-        advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
-        game_season = f"{advancement_season_readable} {advancement_year}"
-        col = html.TD(game_season)
-        row <= col
+        MY_SUB_PANEL <= game_master_table
 
-        # duration
-        col = html.TD(f"{duration}")
-        row <= col
+    # players
+    MY_SUB_PANEL <= html.H3("Joueurs")
 
-        # date
-        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
-        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
-        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
-        incident_str = f"{incident_day} {incident_hour} GMT"
-        col = html.TD(incident_str)
-        row <= col
+    # need to be connected
+    if PSEUDO is None:
+        MY_SUB_PANEL <= html.DIV("Il faut se connecter au préalable", Class='important')
 
-        # remove
-        form = ''
-        if ROLE_ID == 0:
-            form = html.FORM()
-            input_remove_incident = html.INPUT(type="submit", value="supprimer")
-            text = f"Rôle {role_name} en saison {game_season}"
-            input_remove_incident.bind("click", lambda e, r=role_id, a=advancement, t=text: remove_incident_callback_confirm(e, r, a, t))
-            form <= input_remove_incident
-        col = html.TD(form)
-        row <= col
+    # is game anonymous
+    elif not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+        MY_SUB_PANEL <= html.DIV("Seul l'arbitre (ou l'administrateur du site) peut voir les joueurs d'une partie anonyme", Class='important')
 
-        game_incidents_table <= row
+    else:
+        id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    recap_table = html.TABLE()
-    for pseudo_there, incidents_list in sorted(counter.items(), key=lambda i: len(i[1]), reverse=True):
-        row = html.TR()
-        col = html.TD(pseudo_there)
-        row <= col
-        col = html.TD(" ".join([f"{i}" for i in incidents_list]))
-        row <= col
-        recap_table <= row
+        game_players_table = html.TABLE()
 
-    # game status
-    MY_SUB_PANEL <= GAME_STATUS
-    MY_SUB_PANEL <= html.BR()
+        fields = ['flag', 'role', 'player']
 
-    MY_SUB_PANEL <= html.H3("Récapitulatif")
-    MY_SUB_PANEL <= recap_table
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'rôle'}[field]
+            col = html.TD(field_fr)
+            thead <= col
+        game_players_table <= thead
 
-    MY_SUB_PANEL <= html.H3("Détail")
-    MY_SUB_PANEL <= game_incidents_table
-    MY_SUB_PANEL <= html.BR()
+        role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
-    # a bit of humour !
-    if game_incidents:
-        humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
-        MY_SUB_PANEL <= humour_img
+        for role_id in VARIANT_DATA.roles:
 
-        MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) ont réalisé la transition 'pas prêt -> 'prêt pour résoudre' après la date limite", Class='note')
+            row = html.TR()
 
+            if role_id <= 0:
+                continue
+
+            # role flag
+            role = VARIANT_DATA.roles[role_id]
+            role_name = VARIANT_DATA.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+
+            if role_icon_img:
+                col = html.TD(role_icon_img)
+            else:
+                col = html.TD()
+            row <= col
+
+            # role name
+            role = VARIANT_DATA.roles[role_id]
+            role_name = VARIANT_DATA.name_table[role]
+
+            col = html.TD(role_name)
+            row <= col
+
+            # player
+            pseudo_there = ""
+            if role_id in role2pseudo:
+                player_id_str = role2pseudo[role_id]
+                player_id = int(player_id_str)
+                pseudo_there = id2pseudo[player_id]
+            col = html.TD(pseudo_there)
+            row <= col
+
+            game_players_table <= row
+
+        MY_SUB_PANEL <= game_players_table
+
+        # add the non allocated players
+        dangling_players = [p for p, d in GAME_PLAYERS_DICT.items() if d == - 1]
+        if dangling_players:
+            MY_SUB_PANEL <= html.BR()
+            info = html.EM("Les pseudos suivants sont alloués à la partie sans rôle : ")
+            roles_less = html.DIV(info, Class='note')
+            for dangling_player_id_str in dangling_players:
+                dangling_player_id = int(dangling_player_id_str)
+                dangling_player = id2pseudo[dangling_player_id]
+                roles_less <= html.EM(f"{dangling_player} ")
+            MY_SUB_PANEL <= roles_less
+
+    # orders
+    MY_SUB_PANEL <= html.H3("Ordres")
+
+    # if user identified ?
+    if PSEUDO is None:
+        MY_SUB_PANEL <= html.DIV("Il faut se connecter au préalable", Class='important')
+
+    # is player in game ?
+    elif not(moderate.check_modo(PSEUDO) or ROLE_ID is not None):
+        MY_SUB_PANEL <= html.DIV("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir le statut des ordres pour une partie non anonyme", Class='important')
+
+    # game anonymous
+    elif not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+        MY_SUB_PANEL <= html.DIV("Seul l'arbitre (ou l'administrateur du site) peut voir le statut des ordres  pour une partie anonyme", Class='important')
+
+    else:
+        # you will at least get your own role
+        submitted_data = get_roles_submitted_orders(GAME_ID)
+        if not submitted_data:
+            alert("Erreur chargement données de soumission")
+            load_option(None, 'position')
+            return False
+
+        role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
+
+        id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+
+        game_players_table = html.TABLE()
+
+        fields = ['flag', 'role', 'player', 'orders', 'agreement']
+
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'orders': 'ordres', 'agreement': 'accord'}[field]
+            col = html.TD(field_fr)
+            thead <= col
+        game_players_table <= thead
+
+        for role_id in VARIANT_DATA.roles:
+
+            row = html.TR()
+
+            if role_id <= 0:
+                continue
+
+            # role flag
+            role = VARIANT_DATA.roles[role_id]
+            role_name = VARIANT_DATA.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+
+            if role_icon_img:
+                col = html.TD(role_icon_img)
+            else:
+                col = html.TD()
+            row <= col
+
+            role = VARIANT_DATA.roles[role_id]
+            role_name = VARIANT_DATA.name_table[role]
+
+            col = html.TD(role_name)
+            row <= col
+
+            # player
+            pseudo_there = ""
+            if role_id in role2pseudo:
+                player_id_str = role2pseudo[role_id]
+                player_id = int(player_id_str)
+                pseudo_there = id2pseudo[player_id]
+            col = html.TD(pseudo_there)
+            row <= col
+
+            # orders are in
+            submitted_roles_list = submitted_data['submitted']
+            needed_roles_list = submitted_data['needed']
+            if role_id in needed_roles_list:
+                if role_id in submitted_roles_list:
+                    flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
+                else:
+                    flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
+            else:
+                flag = ""
+            col = html.TD(flag)
+            row <= col
+
+            # agreed
+            col = html.TD()
+            flag = ""
+            submitted_roles_list = submitted_data['submitted']
+            agreed_roles_list = submitted_data['agreed']
+            needed_roles_list = submitted_data['needed']
+            if role_id in needed_roles_list:
+                if role_id in submitted_roles_list:
+                    if role_id in agreed_roles_list:
+                        flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
+                    else:
+                        flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
+            col <= flag
+            row <= col
+
+            game_players_table <= row
+
+        MY_SUB_PANEL <= game_players_table
+
+    # incidents
+    MY_SUB_PANEL <= html.H3("Incidents")
+
+    # if user identified ?
+    if PSEUDO is None:
+        MY_SUB_PANEL <= html.DIV("Il faut se connecter au préalable", Class='important')
+
+    # is player in game ?
+    elif not(moderate.check_modo(PSEUDO) or ROLE_ID is not None):
+        MY_SUB_PANEL <= html.DIV("Seuls les participants à une partie (ou l'administrateur du site) peuvent voir les retards", Class='important')
+
+    else:
+
+        # get the actual incidents of the game
+        game_incidents = game_incidents_reload(GAME_ID)
+        # there can be no incidents (if no incident of failed to load)
+
+        role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
+
+        id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+
+        game_incidents_table = html.TABLE()
+
+        fields = ['flag', 'role', 'player', 'season', 'duration', 'date', 'remove']
+
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'season': 'saison', 'duration': 'durée', 'date': 'date', 'remove': 'supprimer'}[field]
+            col = html.TD(field_fr)
+            thead <= col
+        game_incidents_table <= thead
+
+        counter = {}
+
+        for role_id, advancement, duration, date_incident in sorted(game_incidents, key=lambda i: i[3]):
+
+            row = html.TR()
+
+            # role flag
+            role = VARIANT_DATA.roles[role_id]
+            role_name = VARIANT_DATA.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+
+            if role_icon_img:
+                col = html.TD(role_icon_img)
+            else:
+                col = html.TD()
+            row <= col
+
+            role = VARIANT_DATA.roles[role_id]
+            role_name = VARIANT_DATA.name_table[role]
+
+            col = html.TD(role_name)
+            row <= col
+
+            # player
+            pseudo_there = ""
+            if role_id in role2pseudo:
+                player_id_str = role2pseudo[role_id]
+                player_id = int(player_id_str)
+                pseudo_there = id2pseudo[player_id]
+            else:
+                pseudo_there = f"{GAME}##{role_name}"
+            col = html.TD(pseudo_there)
+            row <= col
+
+            if pseudo_there not in counter:
+                counter[pseudo_there] = []
+            counter[pseudo_there].append(duration)
+
+            # season
+            advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
+            advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
+            game_season = f"{advancement_season_readable} {advancement_year}"
+            col = html.TD(game_season)
+            row <= col
+
+            # duration
+            col = html.TD(f"{duration}")
+            row <= col
+
+            # date
+            datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
+            incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
+            incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
+            incident_str = f"{incident_day} {incident_hour} GMT"
+            col = html.TD(incident_str)
+            row <= col
+
+            # remove
+            form = ''
+            if ROLE_ID == 0:
+                form = html.FORM()
+                input_remove_incident = html.INPUT(type="submit", value="supprimer")
+                text = f"Rôle {role_name} en saison {game_season}"
+                input_remove_incident.bind("click", lambda e, r=role_id, a=advancement, t=text: remove_incident_callback_confirm(e, r, a, t))
+                form <= input_remove_incident
+            col = html.TD(form)
+            row <= col
+
+            game_incidents_table <= row
+
+        recap_table = html.TABLE()
+        for pseudo_there, incidents_list in sorted(counter.items(), key=lambda i: len(i[1]), reverse=True):
+            row = html.TR()
+            col = html.TD(pseudo_there)
+            row <= col
+            col = html.TD(" ".join([f"{i}" for i in incidents_list]))
+            row <= col
+            recap_table <= row
+
+        MY_SUB_PANEL <= html.H4("Récapitulatif")
+        MY_SUB_PANEL <= recap_table
+
+        MY_SUB_PANEL <= html.H4("Détail")
+        MY_SUB_PANEL <= game_incidents_table
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes)", Class='note')
+
+        # a bit of humour !
+        if game_incidents:
+            humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
+            MY_SUB_PANEL <= humour_img
+
+            MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) ont réalisé la transition 'pas prêt -> 'prêt pour résoudre' après la date limite", Class='note')
+
+            MY_SUB_PANEL <= html.BR()
+            MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes)", Class='note')
 
     return True
 
@@ -4944,14 +4916,8 @@ def load_option(_, item_name):
         status = supervise()
     if item_name == 'paramètres':
         status = show_game_parameters()
-    if item_name == 'arbitre':
-        status = show_game_master_in_game()
-    if item_name == 'joueurs':
-        status = show_players_in_game()
-    if item_name == 'ordres':
-        status = show_orders_submitted_in_game()
-    if item_name == 'retards':
-        status = show_incidents_in_game()
+    if item_name == 'participants':
+        status = show_participants_in_game()
     if item_name == 'observer':
         status = observe()
 
@@ -5062,7 +5028,7 @@ def render(panel_middle):
             # moderator wants to see whose orders are missing
             if moderate.check_modo(PSEUDO):
                 # Admin
-                ITEM_NAME_SELECTED = 'ordres'
+                ITEM_NAME_SELECTED = 'participants'
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
