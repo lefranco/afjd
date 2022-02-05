@@ -370,10 +370,28 @@ MAX_LEN_EMAIL = 100
 def declare_incident():
     """ declare_incident """
 
+    game = ""
+    email_loaded = ""
+    pseudo = ""
+
+    def reply_callback(req):
+        nonlocal email_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement courriel du compte : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement courriel compte : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        email_loaded = req_result['email']
+
     def submit_incident_callback(_):
         """ submit_incident_callback """
 
-        def reply_callback(req):
+        def submit_incident_reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -405,7 +423,7 @@ def declare_incident():
         url = f"{host}:{port}/mail-support"
 
         # sending email to support : do not need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=submit_incident_reply_callback, ontimeout=common.noreply_callback)
 
         alert("Votre incident va être examiné dans les plus brefs délais")
 
@@ -413,12 +431,26 @@ def declare_incident():
         MY_SUB_PANEL.clear()
         declare_incident()
 
+    # get game if possible
+    if 'GAME' in storage:
+        game = storage['GAME']
+
+    # get email if possible
+    if 'PSEUDO' in storage:
+
+        pseudo = storage['PSEUDO']
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/players/{pseudo}"
+
+        # reading data about account : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     title4 = html.H3("Déclarer un incident")
     MY_SUB_PANEL <= title4
-
-    players_dict = common.get_players()
-    if not players_dict:
-        return
 
     text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la date limite est ce soir ? Votre partie n'avance pas depuis des jours et il semble que votre arbitre se soit endormi ? Vous n'êtes pas convaincu par les explications de l'arbitre sur la résolution dans la partie ? Vous êtes persuadé qu'il y a de la triche quelque part ?")
     MY_SUB_PANEL <= text21
@@ -437,21 +469,21 @@ def declare_incident():
     fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("pseudo (facultatif)", title="Votre pseudo (si applicable)")
     fieldset <= legend_pseudo
-    input_pseudo = html.INPUT(type="text", value=storage['PSEUDO'] if 'PSEUDO' in storage else "")
+    input_pseudo = html.INPUT(type="text", value=pseudo)
     fieldset <= input_pseudo
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("courriel (facultatif)", title="Votre courriel (si pas de pseudo)")
+    legend_email = html.LEGEND("courriel (facultatif mais bienvenu pour répondre facilement)", title="Votre courriel (si pas de pseudo)")
     fieldset <= legend_email
-    input_email = html.INPUT(type="text", value="", size=MAX_LEN_EMAIL)
+    input_email = html.INPUT(type="text", value=email_loaded, size=MAX_LEN_EMAIL)
     fieldset <= input_email
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_game = html.LEGEND("partie (facultatif)", title="La partie (si applicable)")
     fieldset <= legend_game
-    input_game = html.INPUT(type="text", value=storage['GAME'] if 'GAME' in storage else "", size=MAX_LEN_GAME_NAME)
+    input_game = html.INPUT(type="text", value=game, size=MAX_LEN_GAME_NAME)
     fieldset <= input_game
     form <= fieldset
 
