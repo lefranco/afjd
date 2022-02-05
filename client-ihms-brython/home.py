@@ -186,7 +186,7 @@ def all_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'id': 'id', 'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
+        field_fr = {'id': 'id', 'jump_here': 'même onglet (rapide)', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
