@@ -685,8 +685,6 @@ def get_game_status_histo(variant_data, game_parameters_loaded, advancement_sele
 
     row = html.TR()
 
-    col = html.TD(f"Partie {game_name} ({game_variant})")
-    row <= col
     col = html.TD(f"Saison {game_season}")
     row <= col
 
@@ -819,6 +817,7 @@ def show_position():
         if advancement_selected != last_advancement:
 
             transition_loaded = game_transition_reload(GAME_ID, advancement_selected)
+
             if transition_loaded:
 
                 # retrieve stuff from history
@@ -832,7 +831,16 @@ def show_position():
                 # digest the orders
                 orders_data = mapping.Orders(orders_loaded, position_data)
 
+            else:
+
+                # to force current map to be displayed
+                advancement_selected = last_advancement
+
         # now we can display
+
+        # game status
+        MY_SUB_PANEL <= GAME_STATUS
+        MY_SUB_PANEL <= html.BR()
 
         # create canvas
         map_size = VARIANT_DATA.map_size
@@ -859,14 +867,12 @@ def show_position():
         display_left = html.DIV(id='display_left')
         display_left.attrs['style'] = 'display: table-cell; width:500px; vertical-align: top; table-layout: fixed;'
 
-        # game status
-        display_left <= GAME_STATUS
-        display_left <= html.BR()
-        display_left <= html.BR()
+        if advancement_selected != last_advancement:
+            # display only if from history
+            game_status = get_game_status_histo(VARIANT_DATA, GAME_PARAMETERS_LOADED, advancement_selected)
+            display_left <= game_status
+            display_left <= html.BR()
 
-        game_status = get_game_status_histo(VARIANT_DATA, GAME_PARAMETERS_LOADED, advancement_selected)
-
-        display_left <= game_status
         display_left <= canvas
         display_left <= html.BR()
         display_left <= rating_colours_window
