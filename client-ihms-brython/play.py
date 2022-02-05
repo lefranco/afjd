@@ -33,7 +33,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'arbitrer', 'superviser', 'paramètres', 'arbitre', 'joueurs', 'ordres', 'retards', 'observer', 'exporter']
+OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'arbitrer', 'superviser', 'paramètres', 'arbitre', 'joueurs', 'ordres', 'retards', 'observer']
 
 
 @enum.unique
@@ -676,19 +676,14 @@ def get_game_status_histo(variant_data, game_parameters_loaded, advancement_sele
 
     advancement_selected_season, advancement_selected_year = common.get_season(advancement_selected, variant_data)
     advancement_selected_season_readable = variant_data.name_table[advancement_selected_season]
-
-    game_name = game_parameters_loaded['name']
-    game_variant = game_parameters_loaded['variant']
     game_season = f"{advancement_selected_season_readable} {advancement_selected_year}"
 
     game_status_table = html.TABLE()
-
     row = html.TR()
-
     col = html.TD(f"Saison {game_season}")
     row <= col
-
     game_status_table <= row
+
     return game_status_table
 
 
@@ -784,6 +779,46 @@ def show_position():
 
         # action of going to sandbox page
         index.load_option(None, 'bac à sable')
+
+    def callback_export_game_json(_):
+        """ callback_export_game_json """
+
+        json_return_dict = None
+
+        def reply_callback(req):
+            nonlocal json_return_dict
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération de l'export json de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération de l'export json de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+            json_return_dict = req_result['content']
+            json_text = json.dumps(json_return_dict, indent=4, ensure_ascii=False)
+
+            # needed too for some reason
+            MY_SUB_PANEL <= html.A(id='download_link')
+
+            # perform actual exportation
+            text_file_as_blob = window.Blob.new([json_text], {'type': 'text/plain'})
+            download_link = document['download_link']
+            download_link.download = f"diplomania_{GAME}_{GAME_ID}_json.txt"
+            download_link.href = window.URL.createObjectURL(text_file_as_blob)
+            document['download_link'].click()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-export/{GAME_ID}"
+
+        # getting game json export : no need for token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return True
 
     def transition_display_callback(_, advancement_selected):
 
@@ -905,33 +940,28 @@ def show_position():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        input_export_sandbox = html.INPUT(type="submit", value="exporter vers le bac à sable")
-        input_export_sandbox.bind("click", callback_export_sandbox)
-        buttons_right <= input_export_sandbox
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
-
         input_first = html.INPUT(type="submit", value="||<<")
         input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
         buttons_right <= input_first
         buttons_right <= html.BR()
-
         buttons_right <= html.BR()
+
         input_previous = html.INPUT(type="submit", value="<")
         input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
         buttons_right <= input_previous
         buttons_right <= html.BR()
-
         buttons_right <= html.BR()
+
         input_next = html.INPUT(type="submit", value=">")
         input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
         buttons_right <= input_next
         buttons_right <= html.BR()
-
         buttons_right <= html.BR()
+
         input_last = html.INPUT(type="submit", value=">>||")
         input_last.bind("click", lambda e, a=last_advancement: transition_display_callback(e, a))
         buttons_right <= input_last
+        buttons_right <= html.BR()
         buttons_right <= html.BR()
 
         for adv_sample in range(4, last_advancement, 5):
@@ -939,11 +969,23 @@ def show_position():
             adv_sample_season, adv_sample_year = common.get_season(adv_sample, VARIANT_DATA)
             adv_sample_season_readable = VARIANT_DATA.name_table[adv_sample_season]
 
-            buttons_right <= html.BR()
             input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}")
             input_last.bind("click", lambda e, a=adv_sample: transition_display_callback(e, a))
             buttons_right <= input_last
             buttons_right <= html.BR()
+            buttons_right <= html.BR()
+
+        input_export_sandbox = html.INPUT(type="submit", value="exporter vers le bac à sable")
+        input_export_sandbox.bind("click", callback_export_sandbox)
+        buttons_right <= input_export_sandbox
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+        input_download_game_json = html.INPUT(type="submit", value="télécharger la partie au format JSON")
+        input_download_game_json.bind("click", callback_export_game_json)
+        buttons_right <= input_download_game_json
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
         my_sub_panel2 <= buttons_right
 
@@ -4846,64 +4888,6 @@ def observe():
     return True
 
 
-def export():
-    """ export """
-
-    json_dict = None
-
-    def callback_download(_):
-        """ callback_download """
-
-        text_to_write = document['text_area_json'].value
-        text_file_as_blob = window.Blob.new([text_to_write], {'type': 'text/plain'})
-        download_link = document['download_link']
-        download_link.download = f"diplomania_{GAME}_{GAME_ID}_json.txt"
-        download_link.href = window.URL.createObjectURL(text_file_as_blob)
-        document['download_link'].click()
-
-    def reply_callback(req):
-        nonlocal json_dict
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération de l'export json de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération de l'export json de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        json_dict = req_result['content']
-        json_text = json.dumps(json_dict, indent=4, ensure_ascii=False)
-
-        MY_SUB_PANEL.clear()
-
-        MY_SUB_PANEL <= html.DIV("Vous pouvez modifier le contenu avant de le télécharger...", Class='note')
-        MY_SUB_PANEL <= html.BR()
-
-        download_button = html.BUTTON("télécharger le fichier", type="submit", value="download")
-        MY_SUB_PANEL <= download_button
-        download_button.bind("click", callback_download)
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.BR()
-
-        MY_SUB_PANEL <= html.TEXTAREA(json_text, type='text', rows=30, cols=80, id='text_area_json')
-        MY_SUB_PANEL <= html.BR()
-
-        # needed too for some reason
-        MY_SUB_PANEL <= html.A(id='download_link')
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-export/{GAME_ID}"
-
-    # getting game json export : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return True
-
-
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -4954,8 +4938,6 @@ def load_option(_, item_name):
         status = show_incidents_in_game()
     if item_name == 'observer':
         status = observe()
-    if item_name == 'exporter':
-        status = export()
 
     if not status:
         return
