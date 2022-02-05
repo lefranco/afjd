@@ -33,7 +33,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'arbitrer', 'superviser', 'paramètres', 'arbitre', 'joueurs', 'ordres', 'retards', 'observer', 'exporter']
+OPTIONS = ['position', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'historique', 'arbitrer', 'superviser', 'paramètres', 'arbitre', 'joueurs', 'ordres', 'retards', 'observer', 'exporter']
 
 
 @enum.unique
@@ -758,6 +758,21 @@ def get_roles_submitted_orders(game_id):
 def show_position():
     """ show_position """
 
+    def callback_render(_):
+        """ callback_render """
+
+        # put the background map first
+        ctx.drawImage(img, 0, 0)
+
+        # put the centers
+        VARIANT_DATA.render(ctx)
+
+        # put the position
+        POSITION_DATA.render(ctx)
+
+        # put the legends at the end
+        VARIANT_DATA.render_legends(ctx)
+
     def callback_refresh(_):
         """ callback_refresh """
 
@@ -785,164 +800,81 @@ def show_position():
         # action of going to sandbox page
         index.load_option(None, 'bac à sable')
 
-    def transition_display_callback(_, advancement_selected):
-
-        def callback_render(_):
-            """ callback_render """
-
-            # put the background map first
-            ctx.drawImage(img, 0, 0)
-
-            # put the centers
-            VARIANT_DATA.render(ctx)
-
-            # put the position
-            position_data.render(ctx)
-
-            # put the orders
-            orders_data.render(ctx)
-
-            # put the legends at the end
-            VARIANT_DATA.render_legends(ctx)
-
-        transition_loaded = game_transition_reload(GAME_ID, advancement_selected)
-        if not transition_loaded:
-            return
-
-        position_loaded = transition_loaded['situation']
-        orders_loaded = transition_loaded['orders']
-        report_loaded = transition_loaded['report_txt']
-
-        # digest the position
-        position_data = mapping.Position(position_loaded, VARIANT_DATA)
-
-        # digest the orders
-        orders_data = mapping.Orders(orders_loaded, position_data)
-
-        # now we can display
-
-        # create canvas
-        map_size = VARIANT_DATA.map_size
-        canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
-        ctx = canvas.getContext("2d")
-        if ctx is None:
-            alert("Il faudrait utiliser un navigateur plus récent !")
-            return
-
-        # put background (this will call the callback that display the whole map)
-        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-        img.bind('load', callback_render)
-
-        ratings = position_data.role_ratings()
-        colours = position_data.role_colours()
-        game_scoring = GAME_PARAMETERS_LOADED['scoring']
-        rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
-        MY_SUB_PANEL <= rating_colours_window
-
-        report_window = common.make_report_window(report_loaded)
-
-        # left side
-
-        display_left = html.DIV(id='display_left')
-        display_left.attrs['style'] = 'display: table-cell; width:500px; vertical-align: top; table-layout: fixed;'
-
-        # game status
-        display_left <= GAME_STATUS
-        display_left <= html.BR()
-        display_left <= html.BR()
-
-        game_status = get_game_status_histo(VARIANT_DATA, GAME_PARAMETERS_LOADED, advancement_selected)
-
-        display_left <= game_status
-        display_left <= canvas
-        display_left <= html.BR()
-        display_left <= rating_colours_window
-        display_left <= html.BR()
-        display_left <= report_window
-
-        nonlocal my_sub_panel2
-
-        # overall
-        MY_SUB_PANEL.removeChild(my_sub_panel2)
-
-        my_sub_panel2 = html.DIV()
-        my_sub_panel2.attrs['style'] = 'display:table-row'
-        my_sub_panel2 <= display_left
-
-        # new buttons right
-
-        buttons_right = html.DIV(id='buttons_right')
-        buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-
-        # role flag if applicable
-        if ROLE_ID is not None:
-            stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+    def put_refresh(buttons_right):
+        """ put_refresh """
 
         input_refresh = html.INPUT(type="submit", value="recharger la partie")
         input_refresh.bind("click", callback_refresh)
+        buttons_right <= html.BR()
         buttons_right <= input_refresh
         buttons_right <= html.BR()
-        buttons_right <= html.BR()
+
+    def put_export_sandbox(buttons_right):
+        """ put_export_sandbox """
 
         input_export_sandbox = html.INPUT(type="submit", value="exporter vers le bac à sable")
         input_export_sandbox.bind("click", callback_export_sandbox)
+        buttons_right <= html.BR()
         buttons_right <= input_export_sandbox
         buttons_right <= html.BR()
+
+    # now we can display
+
+    # header
+
+    # game status
+    MY_SUB_PANEL <= GAME_STATUS
+
+    # create canvas
+    map_size = VARIANT_DATA.map_size
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return True
+
+    # put background (this will call the callback that display the whole map)
+    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    img.bind('load', callback_render)
+
+    ratings = POSITION_DATA.role_ratings()
+    colours = POSITION_DATA.role_colours()
+    game_scoring = GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+
+    report_window = common.make_report_window(REPORT_LOADED)
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    display_left <= canvas
+    display_left <= html.BR()
+    display_left <= rating_colours_window
+    display_left <= html.BR()
+    display_left <= report_window
+
+    # right side
+
+    buttons_right = html.DIV(id='buttons_right')
+    buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+    # role flag if applicable
+    if ROLE_ID is not None:
+        stack_role_flag(buttons_right)
         buttons_right <= html.BR()
 
-        input_first = html.INPUT(type="submit", value="||<<")
-        input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
-        buttons_right <= input_first
-        buttons_right <= html.BR()
+    put_refresh(buttons_right)
+    put_export_sandbox(buttons_right)
 
-        buttons_right <= html.BR()
-        input_previous = html.INPUT(type="submit", value="<")
-        input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
-        buttons_right <= input_previous
-        buttons_right <= html.BR()
-
-        buttons_right <= html.BR()
-        input_next = html.INPUT(type="submit", value=">")
-        input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
-        buttons_right <= input_next
-        buttons_right <= html.BR()
-
-        buttons_right <= html.BR()
-        input_last = html.INPUT(type="submit", value=">>||")
-        input_last.bind("click", lambda e, a=last_advancement: transition_display_callback(e, a))
-        buttons_right <= input_last
-        buttons_right <= html.BR()
-
-        for adv_sample in range(4, last_advancement, 5):
-
-            adv_sample_season, adv_sample_year = common.get_season(adv_sample, VARIANT_DATA)
-            adv_sample_season_readable = VARIANT_DATA.name_table[adv_sample_season]
-
-            buttons_right <= html.BR()
-            input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}")
-            input_last.bind("click", lambda e, a=adv_sample: transition_display_callback(e, a))
-            buttons_right <= input_last
-            buttons_right <= html.BR()
-
-        my_sub_panel2 <= buttons_right
-
-        MY_SUB_PANEL <= my_sub_panel2
-
-    advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
-    last_advancement = advancement_loaded - 1
-    if not last_advancement >= 0:
-        alert("Rien pour le moment !")
-        load_option(None, 'position')
-        return False
-
-    # put it there to remove it at first display
+    # overall
     my_sub_panel2 = html.DIV()
-    MY_SUB_PANEL <= my_sub_panel2
+    my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left
+    my_sub_panel2 <= buttons_right
 
-    # initiates callback
-    transition_display_callback(None, last_advancement)
+    MY_SUB_PANEL <= my_sub_panel2
 
     return True
 
@@ -3216,6 +3148,153 @@ def vote():
     return True
 
 
+def show_history():
+    """ show_history """
+
+    def transition_display_callback(_, advancement_selected):
+
+        def callback_render(_):
+            """ callback_render """
+
+            # put the background map first
+            ctx.drawImage(img, 0, 0)
+
+            # put the centers
+            VARIANT_DATA.render(ctx)
+
+            # put the position
+            position_data.render(ctx)
+
+            # put the orders
+            orders_data.render(ctx)
+
+            # put the legends at the end
+            VARIANT_DATA.render_legends(ctx)
+
+        transition_loaded = game_transition_reload(GAME_ID, advancement_selected)
+        if not transition_loaded:
+            return
+
+        position_loaded = transition_loaded['situation']
+        orders_loaded = transition_loaded['orders']
+        report_loaded = transition_loaded['report_txt']
+
+        # digest the position
+        position_data = mapping.Position(position_loaded, VARIANT_DATA)
+
+        # digest the orders
+        orders_data = mapping.Orders(orders_loaded, position_data)
+
+        # now we can display
+
+        # create canvas
+        map_size = VARIANT_DATA.map_size
+        canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+        ctx = canvas.getContext("2d")
+        if ctx is None:
+            alert("Il faudrait utiliser un navigateur plus récent !")
+            return
+
+        # put background (this will call the callback that display the whole map)
+        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+        img.bind('load', callback_render)
+
+        ratings = position_data.role_ratings()
+        colours = position_data.role_colours()
+        game_scoring = GAME_PARAMETERS_LOADED['scoring']
+        rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+        MY_SUB_PANEL <= rating_colours_window
+
+        report_window = common.make_report_window(report_loaded)
+
+        # left side
+
+        display_left = html.DIV(id='display_left')
+        display_left.attrs['style'] = 'display: table-cell; width:500px; vertical-align: top; table-layout: fixed;'
+
+        game_status = get_game_status_histo(VARIANT_DATA, GAME_PARAMETERS_LOADED, advancement_selected)
+
+        display_left <= game_status
+        display_left <= canvas
+        display_left <= html.BR()
+        display_left <= rating_colours_window
+        display_left <= html.BR()
+        display_left <= report_window
+
+        nonlocal my_sub_panel2
+
+        # overall
+        MY_SUB_PANEL.removeChild(my_sub_panel2)
+
+        my_sub_panel2 = html.DIV()
+        my_sub_panel2.attrs['style'] = 'display:table-row'
+        my_sub_panel2 <= display_left
+
+        # new buttons right
+
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+        # role flag if applicable
+        if ROLE_ID is not None:
+            stack_role_flag(buttons_right)
+
+        buttons_right <= html.BR()
+        input_first = html.INPUT(type="submit", value="||<<")
+        input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
+        buttons_right <= html.BR()
+        buttons_right <= input_first
+
+        buttons_right <= html.BR()
+        input_previous = html.INPUT(type="submit", value="<")
+        input_previous.bind("click", lambda e, a=advancement_selected - 1: transition_display_callback(e, a))
+        buttons_right <= html.BR()
+        buttons_right <= input_previous
+
+        buttons_right <= html.BR()
+        input_next = html.INPUT(type="submit", value=">")
+        input_next.bind("click", lambda e, a=advancement_selected + 1: transition_display_callback(e, a))
+        buttons_right <= html.BR()
+        buttons_right <= input_next
+
+        buttons_right <= html.BR()
+        input_last = html.INPUT(type="submit", value=">>||")
+        input_last.bind("click", lambda e, a=last_advancement: transition_display_callback(e, a))
+        buttons_right <= html.BR()
+        buttons_right <= input_last
+
+        for adv_sample in range(4, last_advancement, 5):
+
+            adv_sample_season, adv_sample_year = common.get_season(adv_sample, VARIANT_DATA)
+            adv_sample_season_readable = VARIANT_DATA.name_table[adv_sample_season]
+
+            buttons_right <= html.BR()
+            input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}")
+            input_last.bind("click", lambda e, a=adv_sample: transition_display_callback(e, a))
+            buttons_right <= html.BR()
+            buttons_right <= input_last
+
+        my_sub_panel2 <= buttons_right
+
+        MY_SUB_PANEL <= my_sub_panel2
+
+    advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
+    last_advancement = advancement_loaded - 1
+    if not last_advancement >= 0:
+        alert("Rien pour le moment !")
+        load_option(None, 'position')
+        return False
+
+    # put it there to remove it at first display
+    my_sub_panel2 = html.DIV()
+    MY_SUB_PANEL <= my_sub_panel2
+
+    # initiates callback
+    transition_display_callback(None, last_advancement)
+
+    return True
+
+
 def game_master():
     """ game_master """
 
@@ -4923,6 +5002,8 @@ def load_option(_, item_name):
         status = declare()
     if item_name == 'voter':
         status = vote()
+    if item_name == 'historique':
+        status = show_history()
     if item_name == 'arbitrer':
         status = game_master()
     if item_name == 'superviser':
