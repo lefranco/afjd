@@ -20,6 +20,7 @@ import ownerships
 import transitions
 import groupings
 import tournaments
+import votes
 import scoring
 
 
@@ -243,9 +244,6 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
             phase_data['Phase'] = game_year * 10 + game_season
             phase_data['Status'] = 'Completed'
 
-            # actually we do not keep history of votes so this is useless
-            # could be relevant if a draw vote succeeds
-            # but we are unsure human game master was able to detect it
             votes_phase = {}
             votes_phase['Passed'] = False
             phase_data['DrawVote'] = votes_phase
@@ -378,9 +376,25 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
         if result['ResultSummary'][power_name]['YearOfElimination'] is None and not ratings[power_name]:
             result['ResultSummary'][power_name]['YearOfElimination'] = last_year
 
-    # mark the last phase as 'Game Ended'
     phase_data = result['GamePhases'][-1]
+
+    # mark the last phase as 'Game Ended'
     phase_data['Status'] = 'GameEnded'
+
+    # mark the last phase as Drax vote passed if applicable
+    votes_phase = phase_data['DrawVote']
+
+    # extract votes at the end
+    game_votes_list = votes.Vote.list_by_game_id(sql_executor, int(game_id))
+    draw_voters = {n for (_, n, v) in game_votes_list if v}
+    votes_dict = {}
+    for role_num, power_name in enumerate(POWER_NAME):
+        role_id = role_num + 1
+        votes_dict[power_name] = role_id in draw_voters
+
+    # detect that a draw made unanimity at the end
+    if all(votes_dict[p] for p in POWER_NAME if ratings[p]):
+        votes_phase['Passed'] = True
 
     return True, f"Game {game_name} was exported successfully!", result
 
