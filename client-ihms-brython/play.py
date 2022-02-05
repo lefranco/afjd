@@ -994,8 +994,7 @@ def show_position():
 
         MY_SUB_PANEL <= my_sub_panel2
 
-    advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
-    last_advancement = advancement_loaded
+    last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
 
     # put it there to remove it at first display
     my_sub_panel2 = html.DIV()
