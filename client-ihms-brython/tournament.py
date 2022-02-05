@@ -356,7 +356,7 @@ def show_games():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'même onglet', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état'}[field]
+        field_fr = {'jump_here': 'même onglet (rapide)', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
