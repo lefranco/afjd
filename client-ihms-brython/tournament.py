@@ -351,12 +351,12 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'master', 'variant', 'deadline', 'current_advancement', 'current_state']
+    fields = ['jump_here', 'go_away', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'même onglet (rapide)', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état'}[field]
+        field_fr = {'jump_here': 'même onglet (rapide)', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'current_state': 'état'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -446,6 +446,26 @@ def show_games():
                 # some games do not have a game master
                 master_name = game_master_dict.get(game_name, '')
                 value = master_name
+
+            if field == 'nopress_game':
+                value1 = value
+                value2 = data['nopress_current']
+                if value2 == value1:
+                    value = "Non" if value1 else "Oui"
+                else:
+                    value1 = "Non" if value1 else "Oui"
+                    value2 = "Non" if value2 else "Oui"
+                    value = f"{value1} ({value2})"
+
+            if field == 'nomessage_game':
+                value1 = value
+                value2 = data['nomessage_current']
+                if value2 == value1:
+                    value = "Non" if value1 else "Oui"
+                else:
+                    value1 = "Non" if value1 else "Oui"
+                    value2 = "Non" if value2 else "Oui"
+                    value = f"{value1} ({value2})"
 
             if field == 'deadline':
                 deadline_loaded = value
