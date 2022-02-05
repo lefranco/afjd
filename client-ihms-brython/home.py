@@ -260,8 +260,7 @@ def all_games(state_name):
                 value = form
 
             if field == 'go_away':
-                link = html.A(href=f"?game={game_name}")
-#                link = html.A(href=f"?game={game_name}", target="_blank")
+                link = html.A(href=f"?game={game_name}", target="_blank")
                 link <= game_name
                 value = link
 
