@@ -81,8 +81,6 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
     # game not finished : abort
     if game.current_state == 0:
         return False, "Game is waiting to start!", None
-    if game.current_state == 1:
-        return False, "Game is ongoing, terminate it first!", None
 
     # competition = tournament
     result['Competition'] = ''
@@ -115,8 +113,10 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
     game_scoring = game.scoring
     result['ScoringSystem'] = game_scoring
 
-    # communication
+    # anonymity
     # TODO : we need confirmation that anonymity of games is not exported
+
+    # communication
     if game.nomessage_game and game.nopress_game:
         result['CommunicationType'] = 'None'
     elif game.nomessage_game and game.nopress_game:
@@ -132,6 +132,8 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
 
     # note: just take description
     result['Note'] = game.description
+    if game.current_state == 1:
+        result['Note'] = "BEWARE GAME WAS EXTRACTED BUT NOT COMPLETED !!!\n" + result['Note']
 
     players_dict = {}
     if not debug_mode:
@@ -156,7 +158,7 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
             continue
         role_num = role_id - 1
         power_name = POWER_NAME[role_num]
-        if players_dict:
+        if not game.anonymous and players_dict:
             player_data = players_dict[str(player_id)]
             player_pseudo = player_data['pseudo']
             player_first_name = player_data['first_name']
