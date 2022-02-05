@@ -2004,7 +2004,26 @@ def submit_orders():
     display_left <= html.BR()
     display_left <= rating_colours_window
     display_left <= html.BR()
-    display_left <= report_window
+
+    # all reports until last moves
+    advancement_selected = GAME_PARAMETERS_LOADED['current_advancement']
+
+    while True:
+
+        advancement_selected -= 1
+        transition_loaded = game_transition_reload(GAME_ID, advancement_selected)
+        if not transition_loaded:
+            break
+        report_loaded = transition_loaded['report_txt']
+        report_window = common.make_report_window(report_loaded)
+
+        game_status = get_game_status_histo(VARIANT_DATA, advancement_selected)
+        display_left <= game_status
+        display_left <= report_window
+        display_left <= html.BR()
+
+        if advancement_selected % 5 in [0, 2]:
+            break
 
     # right side
 
