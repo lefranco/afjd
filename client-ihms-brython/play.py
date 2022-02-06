@@ -760,6 +760,7 @@ def show_position():
     """ show_position """
 
     position_data = None
+    adv_last_moves = None
 
     def callback_refresh(_):
         """ callback_refresh """
@@ -821,7 +822,6 @@ def show_position():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-export/{GAME_ID}"
 
         # getting game json export : no need for token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -949,6 +949,12 @@ def show_position():
 
         buttons_right <= html.H3("Historique")
 
+        input_first = html.INPUT(type="submit", value="Derniers mouvements")
+        input_first.bind("click", lambda e, a=adv_last_moves: transition_display_callback(e, a))
+        buttons_right <= input_first
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
         input_first = html.INPUT(type="submit", value="||<<")
         input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
         buttons_right <= input_first
@@ -999,7 +1005,19 @@ def show_position():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-export/{GAME_ID}"
+        buttons_right <= f"Pour une extraction automatique depuis le back-end utiliser : '{url}'"
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
     last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
+    adv_last_moves = last_advancement
+    while True:
+        adv_last_moves -= 1
+        if adv_last_moves % 5 in [0, 2]:
+            break
 
     # initiates callback
     transition_display_callback(None, last_advancement)
