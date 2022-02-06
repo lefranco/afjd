@@ -114,9 +114,6 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
     game_scoring = game.scoring
     result['ScoringSystem'] = game_scoring
 
-    # anonymity
-    # TODO : we need confirmation that anonymity of games is not exported
-
     # communication
     if game.nomessage_game and game.nopress_game:
         result['CommunicationType'] = 'None'
@@ -130,6 +127,9 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
 
     # limit of game
     result['LimitType'] = 'Unlimited' if game.nb_max_cycles_to_play == 99 else 'YearLimited'
+
+    # anonymity of game
+    result['AnonymityType'] = 'Full' if game.anonymous else 'None'
 
     # note: just take description
     result['Note'] = game.description
@@ -244,10 +244,6 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
             phase_data['Phase'] = game_year * 10 + game_season
             phase_data['Status'] = 'Completed'
 
-            votes_phase = {}
-            votes_phase['Passed'] = False
-            phase_data['DrawVote'] = votes_phase
-
             ratings_phase = {}
 
             for role_num, power_name in enumerate(POWER_NAME):
@@ -326,35 +322,62 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
                 active_design = ZONE_NAME[int(active) - 1] if isinstance(ZONE_NAME[int(active) - 1], str) else ZONE_NAME[int(active) - 1][0]
 
                 if order == 1:  # move
-                    order_description = [active_design, ['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    adj_data = [adj_result]
+                    if adj_justif:
+                        adj_data.extend([adj_justif])
+                    order_description = [active_design, ['m', ZONE_NAME[int(destination) - 1]], adj_data]
                     orders_table[active_design] = order_description
                 if order == 2:  # attack support
-                    order_description = [active_design, ['sm', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    adj_data = [adj_result]
+                    if adj_justif:
+                        adj_data.extend([adj_justif])
+                    order_description = [active_design, ['sm', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], adj_data]
                     orders_table[active_design] = order_description
                 if order == 3:  # attack support
-                    order_description = [active_design, ['sh', ZONE_NAME[int(passive) - 1]], [adj_result, adj_justif]]
+                    adj_data = [adj_result]
+                    if adj_justif:
+                        adj_data.extend([adj_justif])
+                    order_description = [active_design, ['sh', ZONE_NAME[int(passive) - 1]], adj_data]
                     orders_table[active_design] = order_description
                 if order == 4:  # hold
-                    order_description = [active_design, ['h'], [adj_result, adj_justif]]
+                    adj_data = [adj_result]
+                    if adj_justif:
+                        adj_data.extend([adj_justif])
+                    order_description = [active_design, ['h'], adj_data]
                     orders_table[active_design] = order_description
                 if order == 5:  # convoy
-                    order_description = [active_design, ['c', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]]
+                    adj_data = [adj_result]
+                    if adj_justif:
+                        adj_data.extend([adj_justif])
+                    order_description = [active_design, ['c', ZONE_NAME[int(passive) - 1], ZONE_NAME[int(destination) - 1]], adj_data]
                     orders_table[active_design] = order_description
 
                 if order == 6:  # retreat
                     # we need to complete previously created element
                     order_description = orders_table[active_design]
-                    order_description.extend([['m', ZONE_NAME[int(destination) - 1]], [adj_result, adj_justif]])
+                    adj_data = [adj_result]
+                    if adj_justif:
+                        adj_data.extend([adj_justif])
+                    order_description.extend([['m', ZONE_NAME[int(destination) - 1]], adj_data])
                 if order == 7:  # disband
                     # we need to complete previously created element
                     order_description = orders_table[active_design]
-                    order_description.extend([['d'], [adj_result, adj_justif]])
+                    adj_data = [adj_result]
+                    if adj_justif:
+                        adj_data.extend([adj_justif])
+                    order_description.extend([['d'], adj_data])
 
                 if order == 8:  # build
                     type_ = fake_table[active]
-                    order_description = [active_design, ['b', TYPE_NAME[int(type_) - 1]], [adj_result, adj_justif]]
+                    adj_data = [adj_result]
+                    if adj_justif:
+                        adj_data.extend([adj_justif])
+                    order_description = [active_design, ['b', TYPE_NAME[int(type_) - 1]], adj_data]
                 if order == 9:  # remove
-                    order_description = [active_design, ['d'], [adj_result, adj_justif]]
+                    adj_data = [adj_result]
+                    if adj_justif:
+                        adj_data.extend([adj_justif])
+                    order_description = [active_design, ['d'], adj_data]
 
                 if advancement % 5 in [0, 2, 4]:
                     orders_phase[power_name].append(order_description)
@@ -381,9 +404,6 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
     # mark the last phase as 'Game Ended'
     phase_data['Status'] = 'GameEnded'
 
-    # mark the last phase as Drax vote passed if applicable
-    votes_phase = phase_data['DrawVote']
-
     # extract votes at the end
     game_votes_list = votes.Vote.list_by_game_id(sql_executor, int(game_id))
     draw_voters = {n for (_, n, v) in game_votes_list if v}
@@ -394,7 +414,9 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
 
     # detect that a draw made unanimity at the end
     if all(votes_dict[p] for p in POWER_NAME if ratings[p]):
+        votes_phase = {}
         votes_phase['Passed'] = True
+        phase_data['DrawVote'] = votes_phase
 
     return True, f"Game {game_name} was exported successfully!", result
 
