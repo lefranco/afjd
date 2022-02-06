@@ -872,10 +872,27 @@ def show_position():
                 advancement_selected = last_advancement
 
         # now we can display
+        MY_SUB_PANEL.clear()
+        #  MY_SUB_PANEL.attrs['style'] = 'display:table-row'
 
-        # game status
+        # title
         MY_SUB_PANEL <= GAME_STATUS
         MY_SUB_PANEL <= html.BR()
+
+        # create left side
+        display_left = html.DIV(id='display_left')
+        display_left.attrs['style'] = 'display: table-cell; width:500px; vertical-align: top; table-layout: fixed;'
+
+        # put it in
+        MY_SUB_PANEL <= display_left
+
+        # put stuff in left side
+
+        if advancement_selected != last_advancement:
+            # display only if from history
+            game_status = get_game_status_histo(VARIANT_DATA, advancement_selected)
+            display_left <= game_status
+            display_left <= html.BR()
 
         # create canvas
         map_size = VARIANT_DATA.map_size
@@ -889,44 +906,28 @@ def show_position():
         img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
         img.bind('load', callback_render)
 
+        display_left <= canvas
+        display_left <= html.BR()
+
         ratings = position_data.role_ratings()
         colours = position_data.role_colours()
         game_scoring = GAME_PARAMETERS_LOADED['scoring']
         rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
-        MY_SUB_PANEL <= rating_colours_window
 
-        report_window = common.make_report_window(report_loaded)
-
-        # left side
-
-        display_left = html.DIV(id='display_left')
-        display_left.attrs['style'] = 'display: table-cell; width:500px; vertical-align: top; table-layout: fixed;'
-
-        if advancement_selected != last_advancement:
-            # display only if from history
-            game_status = get_game_status_histo(VARIANT_DATA, advancement_selected)
-            display_left <= game_status
-            display_left <= html.BR()
-
-        display_left <= canvas
-        display_left <= html.BR()
         display_left <= rating_colours_window
         display_left <= html.BR()
+
+        report_window = common.make_report_window(report_loaded)
         display_left <= report_window
 
-        nonlocal my_sub_panel2
-
-        # overall
-        MY_SUB_PANEL.removeChild(my_sub_panel2)
-
-        my_sub_panel2 = html.DIV()
-        my_sub_panel2.attrs['style'] = 'display:table-row'
-        my_sub_panel2 <= display_left
-
-        # new buttons right
-
+        # create right part
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+        # put it in
+        MY_SUB_PANEL <= buttons_right
+
+        # put stuff in right side
 
         # role flag if applicable
         if ROLE_ID is not None:
@@ -990,15 +991,7 @@ def show_position():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        my_sub_panel2 <= buttons_right
-
-        MY_SUB_PANEL <= my_sub_panel2
-
     last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
-
-    # put it there to remove it at first display
-    my_sub_panel2 = html.DIV()
-    MY_SUB_PANEL <= my_sub_panel2
 
     # initiates callback
     transition_display_callback(None, last_advancement)
