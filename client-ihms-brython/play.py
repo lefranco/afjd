@@ -822,6 +822,7 @@ def show_position():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-export/{GAME_ID}"
 
         # getting game json export : no need for token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
