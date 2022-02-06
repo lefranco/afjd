@@ -2003,6 +2003,9 @@ def submit_orders():
 
     while True:
 
+        if advancement_selected % 5 in [0, 2]:
+            break
+
         advancement_selected -= 1
         transition_loaded = game_transition_reload(GAME_ID, advancement_selected)
         if not transition_loaded:
@@ -2014,9 +2017,6 @@ def submit_orders():
         display_left <= game_status
         display_left <= report_window
         display_left <= html.BR()
-
-        if advancement_selected % 5 in [0, 2]:
-            break
 
     # right side
 
@@ -2723,8 +2723,6 @@ def submit_communication_orders():
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
     rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
 
-    report_window = common.make_report_window(REPORT_LOADED)
-
     # left side
 
     display_left = html.DIV(id='display_left')
@@ -2733,8 +2731,6 @@ def submit_communication_orders():
     display_left <= canvas
     display_left <= html.BR()
     display_left <= rating_colours_window
-    display_left <= html.BR()
-    display_left <= report_window
 
     # right side
 
