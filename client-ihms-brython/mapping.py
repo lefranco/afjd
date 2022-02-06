@@ -929,6 +929,11 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
         """ property """
         return self._role
 
+    @property
+    def dislodged_origin(self) -> Region:
+        """ property """
+        return self._dislodged_origin
+
     def __str__(self) -> str:
         variant = self._position.variant
         zone = self._zone
@@ -1310,6 +1315,26 @@ class Position(Renderable):
                 distance_closest = distance
 
         return closest_object
+
+    def role_retreats(self, role: Role):
+        """ informations about retreats for the role """
+
+        information = ""
+
+        for dislodged_unit in self._dislodged_units:
+
+            if dislodged_unit.role != role:
+                continue
+
+            if isinstance(dislodged_unit, Fleet):
+                type_name = self._variant.name_table[UnitTypeEnum.FLEET_UNIT].lower()
+                where_to = " ".join([self._variant.full_name_table[z] for z in dislodged_unit.zone.neighbours[UnitTypeEnum.FLEET_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
+            if isinstance(dislodged_unit, Army):
+                type_name = self._variant.name_table[UnitTypeEnum.ARMY_UNIT].lower()
+                where_to = " ".join([self._variant.full_name_table[z] for z in dislodged_unit.zone.neighbours[UnitTypeEnum.ARMY_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
+            information += f"Votre {type_name} en {self._variant.full_name_table[dislodged_unit.zone]} peut retraiter en : {where_to}"
+
+        return information
 
     def role_builds(self, role: Role):
         """ how many builds allowed (positive or negative) for the role """

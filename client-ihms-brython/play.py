@@ -508,6 +508,14 @@ def stack_role_flag(frame):
     frame <= role_icon_img
 
 
+def stack_role_retreats(frame):
+    """ stack_role_retreats """
+    if ROLE_ID != 0:
+        role = VARIANT_DATA.roles[ROLE_ID]
+        info_retreats = POSITION_DATA.role_retreats(role)
+        frame <= html.DIV(info_retreats, Class='note')
+
+
 def stack_role_builds(frame):
     """ stack_role_builds """
     if ROLE_ID != 0:
@@ -2026,6 +2034,12 @@ def submit_orders():
     stack_role_flag(buttons_right)
     buttons_right <= html.BR()
     buttons_right <= html.BR()
+
+    # first time : we alert about retreat possibilities
+    if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
+        stack_role_retreats(buttons_right)
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
     # first time : we alert about build stat
     if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
