@@ -701,7 +701,7 @@ def show_incidents():
     overall_time_before = time.time()
 
     # title
-    title = html.H3("Incidents du tournoi")
+    title = html.H3("Retards du tournoi")
     MY_SUB_PANEL <= title
 
     if 'GAME' not in storage:

@@ -4410,7 +4410,7 @@ def show_participants_in_game():
         MY_SUB_PANEL <= game_players_table
 
     # incidents2
-    MY_SUB_PANEL <= html.H3("Incidents (desordres civils)")
+    MY_SUB_PANEL <= html.H3("Désordres civils")
 
     # if user identified ?
     if PSEUDO is None:
@@ -4426,25 +4426,23 @@ def show_participants_in_game():
         game_incidents2 = game_incidents2_reload(GAME_ID)
         # there can be no incidents (if no incident of failed to load)
 
-        alert(f"{game_incidents2=}")
-
         role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
         id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
         game_incidents2_table = html.TABLE()
 
-        fields = ['flag', 'role', 'player', 'season', 'game_master', 'date']
+        fields = ['flag', 'role', 'season', 'date']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'season': 'saison', 'game_master': 'arbitre', 'date': 'date', 'remove': 'supprimer'}[field]
+            field_fr = {'flag': 'drapeau', 'role': 'rôle', 'season': 'saison', 'date': 'date'}[field]
             col = html.TD(field_fr)
             thead <= col
         game_incidents2_table <= thead
 
-        for role_id, advancement, date_incident in sorted(game_incidents2, key=lambda i: i[3]):
+        for role_id, advancement, date_incident in sorted(game_incidents2, key=lambda i: i[2]):
 
             row = html.TR()
 
@@ -4482,12 +4480,15 @@ def show_participants_in_game():
 
             game_incidents2_table <= row
 
-        MY_SUB_PANEL <= html.H4("Détail")
         MY_SUB_PANEL <= game_incidents2_table
-        MY_SUB_PANEL <= html.BR()
+
+        if game_incidents2:
+            MY_SUB_PANEL <= html.BR()
+            MY_SUB_PANEL <= html.DIV("Un désordre civil signifie que l'arbitre a forcé des ordres pour le joueur", Class='note')
+
 
     # incidents
-    MY_SUB_PANEL <= html.H3("Incidents (retards)")
+    MY_SUB_PANEL <= html.H3("Retards")
 
     # if user identified ?
     if PSEUDO is None:
@@ -4591,21 +4592,7 @@ def show_participants_in_game():
 
             game_incidents_table <= row
 
-        recap_table = html.TABLE()
-        for pseudo_there, incidents_list in sorted(counter.items(), key=lambda i: len(i[1]), reverse=True):
-            row = html.TR()
-            col = html.TD(pseudo_there)
-            row <= col
-            col = html.TD(" ".join([f"{i}" for i in incidents_list]))
-            row <= col
-            recap_table <= row
-
-        MY_SUB_PANEL <= html.H4("Récapitulatif")
-        MY_SUB_PANEL <= recap_table
-
-        MY_SUB_PANEL <= html.H4("Détail")
         MY_SUB_PANEL <= game_incidents_table
-        MY_SUB_PANEL <= html.BR()
 
         # a bit of humour !
         if game_incidents:
