@@ -214,6 +214,7 @@ tr{
 }
 
 td{
+	white-space: nowrap;
     border: 1px solid black;
     background-color: #83B9CC;
 }
