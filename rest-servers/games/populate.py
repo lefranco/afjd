@@ -26,6 +26,7 @@ import allocations
 import visits
 import definitives
 import incidents
+import incidents2
 import votes
 import assignments
 import tournaments
@@ -126,6 +127,11 @@ def populate_definitives(sql_executor: database.SqlExecutor) -> None:
 def populate_incidents(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
     incidents.Incident.create_table(sql_executor)
+
+
+def populate_incidents2(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    incidents2.Incident2.create_table(sql_executor)
 
 
 def populate_tournaments(sql_executor: database.SqlExecutor) -> None:

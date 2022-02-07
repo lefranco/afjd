@@ -110,6 +110,37 @@ def game_incidents_reload(game_id):
     return incidents
 
 
+def game_incidents2_reload(game_id):
+    """ game_incidents2_reload """
+
+    incidents = []
+
+    def reply_callback(req):
+        nonlocal incidents
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des incidents2 de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des incidents2 de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        incidents = req_result['incidents']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-incidents2/{game_id}"
+
+    # extracting incidents from a game : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return incidents
+
+
 def game_report_reload(game_id):
     """ game_report_reload """
 
@@ -4378,8 +4409,85 @@ def show_participants_in_game():
 
         MY_SUB_PANEL <= game_players_table
 
+    # incidents2
+    MY_SUB_PANEL <= html.H3("Incidents (desordres civils)")
+
+    # if user identified ?
+    if PSEUDO is None:
+        MY_SUB_PANEL <= html.DIV("Il faut se connecter au préalable", Class='important')
+
+    # is player in game ?
+    elif not(moderate.check_modo(PSEUDO) or ROLE_ID is not None):
+        MY_SUB_PANEL <= html.DIV("Seuls les participants à une partie (ou un modérateur du site) peuvent voir les désordres civils", Class='important')
+
+    else:
+
+        # get the actual incidents of the game
+        game_incidents2 = game_incidents2_reload(GAME_ID)
+        # there can be no incidents (if no incident of failed to load)
+
+        alert(f"{game_incidents2=}")
+
+        role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
+
+        id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+
+        game_incidents2_table = html.TABLE()
+
+        fields = ['flag', 'role', 'player', 'season', 'game_master', 'date']
+
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'flag': 'drapeau', 'role': 'rôle', 'player': 'joueur', 'season': 'saison', 'game_master': 'arbitre', 'date': 'date', 'remove': 'supprimer'}[field]
+            col = html.TD(field_fr)
+            thead <= col
+        game_incidents2_table <= thead
+
+        for role_id, advancement, date_incident in sorted(game_incidents2, key=lambda i: i[3]):
+
+            row = html.TR()
+
+            # role flag
+            role = VARIANT_DATA.roles[role_id]
+            role_name = VARIANT_DATA.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+
+            if role_icon_img:
+                col = html.TD(role_icon_img)
+            else:
+                col = html.TD()
+            row <= col
+
+            role = VARIANT_DATA.roles[role_id]
+            role_name = VARIANT_DATA.name_table[role]
+
+            col = html.TD(role_name)
+            row <= col
+
+            # season
+            advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
+            advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
+            game_season = f"{advancement_season_readable} {advancement_year}"
+            col = html.TD(game_season)
+            row <= col
+
+            # date
+            datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
+            incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
+            incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
+            incident_str = f"{incident_day} {incident_hour} GMT"
+            col = html.TD(incident_str)
+            row <= col
+
+            game_incidents2_table <= row
+
+        MY_SUB_PANEL <= html.H4("Détail")
+        MY_SUB_PANEL <= game_incidents2_table
+        MY_SUB_PANEL <= html.BR()
+
     # incidents
-    MY_SUB_PANEL <= html.H3("Incidents")
+    MY_SUB_PANEL <= html.H3("Incidents (retards)")
 
     # if user identified ?
     if PSEUDO is None:
