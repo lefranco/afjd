@@ -1728,8 +1728,6 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg="This role does not seem to have submitted orders yet")
 
-        sql_executor = database.SqlExecutor()
-
         # handle definitive boolean
         # game master forced player to agree to adjudicate
         status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), adjudication_names, sql_executor)
