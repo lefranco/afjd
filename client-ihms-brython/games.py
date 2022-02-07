@@ -150,7 +150,6 @@ def create_game():
             speed_adjustments = None
 
         cd_possible_builds = int(input_cd_possible_builds.checked)
-        cd_possible_removals = int(input_cd_possible_removals.checked)
         play_weekend = int(input_play_weekend.checked)
 
         try:
@@ -229,7 +228,6 @@ def create_game():
             'cd_possible_retreats': cd_possible_retreats,
             'speed_adjustments': speed_adjustments,
             'cd_possible_builds': cd_possible_builds,
-            'cd_possible_removals': cd_possible_removals,
             'play_weekend': play_weekend,
 
             'access_code': access_code,
@@ -428,22 +426,13 @@ def create_game():
     fieldset <= input_speed_adjustments
     form <= fieldset
 
-    # builds
+    # builds/removals
 
     fieldset = html.FIELDSET()
-    legend_cd_possible_builds = html.LEGEND("DC possible constructions", title="Désordre civil possible pour une résolution d'ajustements - constructions")
+    legend_cd_possible_builds = html.LEGEND("DC possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
     fieldset <= legend_cd_possible_builds
     input_cd_possible_builds = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_cd_possible_builds
-    form <= fieldset
-
-    # removals
-
-    fieldset = html.FIELDSET()
-    legend_cd_possible_removals = html.LEGEND("DC possible suppressions", title="Désordre civil possible pour une résolution d'ajustements - suppressions")
-    fieldset <= legend_cd_possible_removals
-    input_cd_possible_removals = html.INPUT(type="checkbox", checked=True)
-    fieldset <= input_cd_possible_removals
     form <= fieldset
 
     # ---
@@ -1321,7 +1310,6 @@ def change_pace_parameters_game():
     cd_possible_retreats_loaded = None
     speed_adjustments_loaded = None
     cd_possible_builds_loaded = None
-    cd_possible_removals_loaded = None
     play_weekend_loaded = None
 
     def change_pace_parameters_reload():
@@ -1346,7 +1334,6 @@ def change_pace_parameters_game():
             nonlocal cd_possible_retreats_loaded
             nonlocal speed_adjustments_loaded
             nonlocal cd_possible_builds_loaded
-            nonlocal cd_possible_removals_loaded
             nonlocal play_weekend_loaded
             req_result = json.loads(req.text)
             if req.status != 200:
@@ -1368,7 +1355,6 @@ def change_pace_parameters_game():
             cd_possible_retreats_loaded = req_result['cd_possible_retreats']
             speed_adjustments_loaded = req_result['speed_adjustments']
             cd_possible_builds_loaded = req_result['cd_possible_builds']
-            cd_possible_removals_loaded = req_result['cd_possible_removals']
             play_weekend_loaded = req_result['play_weekend']
 
         json_dict = {}
@@ -1430,7 +1416,6 @@ def change_pace_parameters_game():
             speed_adjustments = None
 
         cd_possible_builds = int(input_cd_possible_builds.checked)
-        cd_possible_removals = int(input_cd_possible_removals.checked)
         play_weekend = int(input_play_weekend.checked)
 
         json_dict = {
@@ -1445,7 +1430,6 @@ def change_pace_parameters_game():
             'cd_possible_retreats': cd_possible_retreats,
             'speed_adjustments': speed_adjustments,
             'cd_possible_builds': cd_possible_builds,
-            'cd_possible_removals': cd_possible_removals,
             'play_weekend': play_weekend,
         }
 
@@ -1547,22 +1531,13 @@ def change_pace_parameters_game():
     fieldset <= input_speed_adjustments
     form <= fieldset
 
-    # builds
+    # builds/removals
 
     fieldset = html.FIELDSET()
-    legend_cd_possible_builds = html.LEGEND("DC possible constructions", title="Désordre civil possible pour une résolution d'ajustements - constructions")
+    legend_cd_possible_builds = html.LEGEND("DC possible ajustements", title="Désordre civil possible pour une résolution d'ajustements")
     fieldset <= legend_cd_possible_builds
     input_cd_possible_builds = html.INPUT(type="checkbox", checked=cd_possible_builds_loaded)
     fieldset <= input_cd_possible_builds
-    form <= fieldset
-
-    # removals
-
-    fieldset = html.FIELDSET()
-    legend_cd_possible_removals = html.LEGEND("DC possible suppressions", title="Désordre civil possible pour une résolution d'ajustements - suppressions")
-    fieldset <= legend_cd_possible_removals
-    input_cd_possible_removals = html.INPUT(type="checkbox", checked=cd_possible_removals_loaded)
-    fieldset <= input_cd_possible_removals
     form <= fieldset
 
     # ---
