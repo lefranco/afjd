@@ -32,16 +32,16 @@ IMPOSED_VARIANT = 'standard'
 POWER_NAME = [
     'England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey'
 ]
-assert len(POWER_NAME) == 7
+assert len(POWER_NAME) == 7, "Bad number of powers"
 
 CENTER_NAME = [
     'Ank', 'Bel', 'Ber', 'Bre', 'Bud', 'Bul', 'Con', 'Den', 'Edi', 'Gre', 'Hol', 'Kie', 'Lon', 'Lvp', 'Mar', 'Mos',
     'Mun', 'Nap', 'Nwy', 'Par', 'Por', 'Rom', 'Rum', 'Ser', 'Sev', 'Smy', 'Spa', 'Stp', 'Swe', 'Tri', 'Tun', 'Ven',
     'Vie', 'War']
-assert len(CENTER_NAME) == 34
+assert len(CENTER_NAME) == 34, "Bad number of centers"
 
 TYPE_NAME = ['A', 'F']
-assert len(TYPE_NAME) == 2
+assert len(TYPE_NAME) == 2, "Bad number of types of units"
 
 ZONE_NAME = [
     'ADR', 'AEG', 'Alb', 'Ank', 'Apu', 'Arm', 'BAL', 'BAR', 'Bel', 'Ber', 'BLA', 'Boh', 'BOT', 'Bre', 'Bud', 'Bul',
@@ -50,7 +50,7 @@ ZONE_NAME = [
     'Pie', 'Por', 'Pru', 'Rom', 'Ruh', 'Rum', 'Ser', 'Sev', 'Sil', 'SKA', 'Smy', 'Spa', 'Stp', 'Swe', 'Syr', 'Tri',
     'Tun', 'Tus', 'TYS', 'Tyr', 'Ukr', 'Ven', 'Vie', 'Wal', 'War', 'WES', 'Yor',
     ['Bul', 'ec'], ['Bul', 'sc'], ['Spa', 'nc'], ['Spa', 'sc'], ['Stp', 'nc'], ['Stp', 'sc']]
-assert len(ZONE_NAME) == 81
+assert len(ZONE_NAME) == 81, "Bad number of zones"
 
 FRENCH_ZONE_NAME = [
     'ADR', 'EGE', 'ALB', 'ANK', 'APU', 'ARM', 'BAL', 'BAR', 'BEL', 'BER', 'NOI', 'BOH', 'BOT', 'BRE', 'BUD', 'BUL',
@@ -59,14 +59,14 @@ FRENCH_ZONE_NAME = [
     'PIE', 'POR', 'PRU', 'ROM', 'RUH', 'ROU', 'SER', 'SEB', 'SIL', 'SKA', 'SMY', 'ESP', 'STP', 'SUE', 'SYR', 'TRI',
     'TUN', 'TOS', 'MTY', 'TYR', 'UKR', 'VEN', 'VIE', 'PGA', 'VAR', 'MOC', 'YOR',
     'BULce', 'BULcs', 'ESPcn', 'ESPcs', 'STPcn', 'STPcs']
-assert len(FRENCH_ZONE_NAME) == 81
+assert len(FRENCH_ZONE_NAME) == 81, "Bad number of french zones"
 
 
 # TODO : remove this at some point
-# for old games, some times other codes were used
+# for old games, sometimes some other codes were used
 TRANSLATE = {'ODE' : 'SEB', 'TOU': 'MAR', 'CAU': 'ARM', 'PAY': 'HOL', 'COR': 'PGA', 'RHE': 'RUH', 'ALP': 'TYR', 'LIO': 'GLI', 'STG': 'IRL', 'NRG': 'MNG', 'NWY': 'NGE', 'AEG': 'EGE'}
-assert not set(TRANSLATE.keys()) & set(FRENCH_ZONE_NAME)
-assert set(TRANSLATE.values()) <= set(FRENCH_ZONE_NAME)
+assert not set(TRANSLATE.keys()) & set(FRENCH_ZONE_NAME), "Translator : a key is a standard french name"
+assert set(TRANSLATE.values()) <= set(FRENCH_ZONE_NAME), "Translator : a value is not a standard french name"
 
 def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bool) -> typing.Tuple[bool, str, typing.Optional[typing.Dict[str, typing.Any]]]:
     """ exports all information about a game in format for DIPLOBN """
@@ -291,7 +291,10 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
             if ';' in line:
                 words = line.split(' ')
                 french_unit = words[1]
-                french_unit = TRANSLATE.get(french_unit, french_unit)
+                if french_unit not in FRENCH_ZONE_NAME:
+                    orig_french_unit = french_unit
+                    french_unit = TRANSLATE[french_unit]
+                    #  print(f"Translated {orig_french_unit} to {french_unit}")
                 zone_num = FRENCH_ZONE_NAME.index(french_unit) + 1
                 _, _, justification = line.partition(';')
                 justification_table[zone_num] = justification
