@@ -502,7 +502,7 @@ def tournament_result():
 
     # header
     thead = html.THEAD()
-    for field in ['rang', 'pseudo', 'score', 'incidents']:
+    for field in ['rang', 'pseudo', 'score', 'retards']:
         col = html.TD(field)
         thead <= col
     recap_table <= thead
@@ -531,7 +531,7 @@ def tournament_result():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'incidents']:
+    for field in ['pseudo', 'retards']:
         col = html.TD(field)
         thead <= col
     incident_table <= thead
@@ -552,7 +552,7 @@ def tournament_result():
 
     MY_SUB_PANEL <= html.H4("Classement")
     MY_SUB_PANEL <= recap_table
-    MY_SUB_PANEL <= html.H4("Incidents")
+    MY_SUB_PANEL <= html.H4("Retards")
     MY_SUB_PANEL <= incident_table
 
     MY_SUB_PANEL <= html.BR()
