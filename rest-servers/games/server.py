@@ -3801,19 +3801,11 @@ class GameExportRessource(flask_restful.Resource):  # type: ignore
         # create an executor
         sql_executor = database.SqlExecutor()
 
-        # find the game
-        game = games.Game.find_by_identifier(sql_executor, game_id)
-        if game is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}!")
-
-        # get the name of game
-        assert game is not None
-        game_name = game.name
+        # to access really database of players
         debug_mode = False
 
         # perform the extraction
-        status, message, content = exporter.export_data(game_name, sql_executor, debug_mode)
+        status, message, content = exporter.export_data(game_id, sql_executor, debug_mode)
 
         # delete executor
         del sql_executor

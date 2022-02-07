@@ -62,26 +62,24 @@ FRENCH_ZONE_NAME = [
 assert len(FRENCH_ZONE_NAME) == 81
 
 
-def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: bool) -> typing.Tuple[bool, str, typing.Optional[typing.Dict[str, typing.Any]]]:
+def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bool) -> typing.Tuple[bool, str, typing.Optional[typing.Dict[str, typing.Any]]]:
     """ exports all information about a game in format for DIPLOBN """
 
     # extract
     result: typing.Dict[str, typing.Any] = {}
 
     # get the game from database
-    games_found = sql_executor.execute("SELECT game_data FROM games where name = ?", (game_name,), need_result=True)
-    if not games_found:
-        return False, "Game could not be found!", None
-    game = games_found[0][0]
-    game_id = game.identifier
+    game = games.Game.find_by_identifier(sql_executor, game_id)
+    if game is None:
+        return False, "ERROR : Could not find the game with this identifier", None
 
     # game not standard : abort
     if game.variant != IMPOSED_VARIANT:
-        return False, f"Game variant is '{game.variant}' - this is not standard Diplomacy!", None
+        return False, f"Variant of this game is '{game.variant}' - this is not standard Diplomacy!", None
 
     # game not finished : abort
     if game.current_state == 0:
-        return False, "Game is waiting to start!", None
+        return False, "This game is waiting to start - start it first!", None
 
     # competition = tournament
     result['Competition'] = ''
@@ -92,7 +90,7 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
         tournament_id = tournament_ids[0]
         tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
         if tournament is None:
-            return False, "Internal error : Game has a tournament but the tournament could not be found!", None
+            return False, "Internal error : This game has a tournament but the tournament could not be found!", None
 
         result['Competition'] = tournament.name
 
@@ -418,19 +416,19 @@ def export_data(game_name: str, sql_executor: database.SqlExecutor, debug_mode: 
         votes_phase['Passed'] = True
         phase_data['DrawVote'] = votes_phase
 
-    return True, f"Game {game_name} was exported successfully!", result
+    return True, f"Game with id '{game_id}' and name '{game.name}' was exported successfully!", result
 
 
 def main() -> None:
     """ main : for unitary testing """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-n', '--name', required=True, help='Name of game')
+    parser.add_argument('-i', '--identifier', required=True, help='Id (number) of game')
     parser.add_argument('-d', '--debug_mode', required=False, action='store_true', help='Debug mode : do not load players')
     parser.add_argument('-J', '--json_output', required=False, help='Output json file')
     args = parser.parse_args()
 
-    game_name = args.name
+    game_id = args.identifier
     debug_mode = args.debug_mode
     json_output = args.json_output
 
@@ -438,7 +436,7 @@ def main() -> None:
 
     # open database
     sql_executor = database.SqlExecutor()
-    status, message, result = export_data(game_name, sql_executor, debug_mode)
+    status, message, result = export_data(game_id, sql_executor, debug_mode)
     # no commit : all accesses were read only
     del sql_executor
 
