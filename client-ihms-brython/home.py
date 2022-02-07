@@ -181,7 +181,7 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['id', 'jump_here', 'go_away', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']
+    fields = ['id', 'jump_here', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'go_away']
 
     # header
     thead = html.THEAD()
