@@ -2970,7 +2970,7 @@ def negotiate():
         row = html.TR()
 
         date_desc = datetime.datetime.fromtimestamp(time_stamp)
-        col = html.TD(f"{date_desc}")
+        col = html.TD(f"{date_desc} GMT")
         row <= col
 
         role = VARIANT_DATA.roles[from_role_id_msg]
@@ -3163,7 +3163,7 @@ def declare():
         row = html.TR()
 
         date_desc = datetime.datetime.fromtimestamp(time_stamp)
-        col = html.TD(f"{date_desc}")
+        col = html.TD(f"{date_desc} GMT")
         row <= col
 
         if role_id_msg != -1:
