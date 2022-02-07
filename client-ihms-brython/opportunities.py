@@ -171,7 +171,7 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
+    fields = ['jump_here', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated', 'go_away']
 
     # header
     thead = html.THEAD()

@@ -351,7 +351,7 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']
+    fields = ['jump_here', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state', 'go_away']
 
     # header
     thead = html.THEAD()

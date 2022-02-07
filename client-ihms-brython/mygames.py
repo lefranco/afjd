@@ -295,7 +295,7 @@ def my_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
+    fields = ['jump_here', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'go_away']
 
     # column for start buttons only available for non started games
     if state == 0:
