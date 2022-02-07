@@ -40,7 +40,7 @@ FAQ_CONTENT_TABLE = {
     "C'est le rôle de l'arbitre. Il faut lui retirer le rôle dans la console d'arbitrage et attribuer le rôle à un autre joueur dans la partie, qu'il aura fallu faire venir au préalable. Faire venir ou partir les joueurs de la partie se réalise par contre dans le menu appariement.",
 
     "Que peut faire l'arbitre ?":
-    "L'arbitre connaît l'identité des joueurs de sa partie. Il démarre et arrête la partie. Il peut forcer des ordres de désordre civil pour un pays. Il peut forcer un accord pour résoudre pour un pays. Il peut retirer ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
+    "L'arbitre connaît l'identité des joueurs de sa partie. Il démarre et arrête la partie. Il peut distinguer la partie. Il peut forcer des ordres de désordre civil pour un pays (si les paramètres de la partie le permettent). Il peut forcer un accord pour résoudre pour un pays (après la date limite). Il peut retirer ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
 
     "Que peut faire un modérateur ?":
     "Un modérateur peut voir le courriel et le numéro de téléphone d'un inscrit. Il peut retrouver un pseudo à partir d'une adresse courriel. Il peut lister toutes les adresses courriel du site. Il peut voir le résultat complet d'un tournoi (anonyme ou pas). Enfin, dans les parties : il voit les identités des joueurs même si la partie est anonyme, ainsi que les soumissions et les incidents même s'il n'est pas dans la partie.",
@@ -76,6 +76,9 @@ FAQ_CONTENT_TABLE = {
 
     "Qu'est ce qui change pour une partie 'en direct' ?":
     "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en heures. Les retards sont comptés en minutes et non en heures entamées. Il est possible d'observer la partie (mise à jour régulière du plateau). Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres pour les joueurs automtiquement après la grâce. Pas de message de notification pour une telle partie.",
+
+    "Pourquoi des parties sont distinguées ?":
+    "Ce sont soit des parties modèles de tournoi que l'on veut retrouver plus rapidement, soit des parties archives sur lesquelles on veut attirer l'attention du badaud.",
 
     "C'est quoi ce truc : 'consulter l'oracle sur cette position' ?":
     "Pas encore développé. Fournira une suggestion de jeux d'ordres à partir d'une position...",

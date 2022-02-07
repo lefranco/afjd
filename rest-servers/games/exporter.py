@@ -61,12 +61,12 @@ FRENCH_ZONE_NAME = [
     'BULce', 'BULcs', 'ESPcn', 'ESPcs', 'STPcn', 'STPcs']
 assert len(FRENCH_ZONE_NAME) == 81, "Bad number of french zones"
 
-
 # TODO : remove this at some point
 # for old games, sometimes some other codes were used
-TRANSLATE = {'ODE' : 'SEB', 'TOU': 'MAR', 'CAU': 'ARM', 'PAY': 'HOL', 'COR': 'PGA', 'RHE': 'RUH', 'ALP': 'TYR', 'LIO': 'GLI', 'STG': 'IRL', 'NRG': 'MNG', 'NWY': 'NGE', 'AEG': 'EGE'}
+TRANSLATE = {'ODE': 'SEB', 'TOU': 'MAR', 'CAU': 'ARM', 'PAY': 'HOL', 'COR': 'PGA', 'RHE': 'RUH', 'ALP': 'TYR', 'LIO': 'GLI', 'STG': 'IRL', 'NRG': 'MNG', 'NWY': 'NGE', 'AEG': 'EGE'}
 assert not set(TRANSLATE.keys()) & set(FRENCH_ZONE_NAME), "Translator : a key is a standard french name"
 assert set(TRANSLATE.values()) <= set(FRENCH_ZONE_NAME), "Translator : a value is not a standard french name"
+
 
 def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bool) -> typing.Tuple[bool, str, typing.Optional[typing.Dict[str, typing.Any]]]:
     """ exports all information about a game in format for DIPLOBN """
@@ -292,9 +292,8 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
                 words = line.split(' ')
                 french_unit = words[1]
                 if french_unit not in FRENCH_ZONE_NAME:
-                    orig_french_unit = french_unit
+                    # perform translation using little table
                     french_unit = TRANSLATE[french_unit]
-                    #  print(f"Translated {orig_french_unit} to {french_unit}")
                 zone_num = FRENCH_ZONE_NAME.index(french_unit) + 1
                 _, _, justification = line.partition(';')
                 justification_table[zone_num] = justification

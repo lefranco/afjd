@@ -144,7 +144,7 @@ class Game:
         self._cd_possible_retreats = cd_possible_retreats
         self._speed_adjustments = speed_adjustments
         self._cd_possible_builds = cd_possible_builds
-        self._cd_possible_removals = cd_possible_removals
+        self._cd_possible_removals = cd_possible_removals  # NOT USED
         self._play_weekend = play_weekend
         self._manual = manual
         self._access_code = access_code
@@ -286,6 +286,7 @@ class Game:
             self._cd_possible_builds = json_dict['cd_possible_builds']
             changed = True
 
+        # NOT USED
         if 'cd_possible_removals' in json_dict and json_dict['cd_possible_removals'] is not None and json_dict['cd_possible_removals'] != self._cd_possible_removals:
             self._cd_possible_removals = json_dict['cd_possible_removals']
             changed = True
@@ -374,7 +375,7 @@ class Game:
             'cd_possible_retreats': self._cd_possible_retreats,
             'speed_adjustments': self._speed_adjustments,
             'cd_possible_builds': self._cd_possible_builds,
-            'cd_possible_removals': self._cd_possible_removals,
+            'cd_possible_removals': self._cd_possible_removals,  # NOT USED
             'play_weekend': self._play_weekend,
             'access_code': self._access_code,
             'access_restriction_reliability': self._access_restriction_reliability,
@@ -614,6 +615,16 @@ class Game:
             hours_or_minute_add = 3600.
         return math.ceil((now - self._deadline) / hours_or_minute_add)
 
+    def civil_disorder_allowed(self) -> bool:
+        """ civil_disorder_allowed """
+
+        # what is the season next to play ?
+        if self._current_advancement % 5 in [0, 2]:
+            return self._cd_possible_moves
+        if self._current_advancement % 5 in [1, 3]:
+            return self._cd_possible_retreats
+        return self._cd_possible_builds
+
     def game_over(self) -> bool:
         """ game_over """
 
@@ -761,7 +772,7 @@ def convert_game(buffer: bytes) -> Game:
     cd_possible_retreats = bool(int(tab[19].decode()))
     speed_adjustments = int(tab[20].decode())
     cd_possible_builds = bool(int(tab[21].decode()))
-    cd_possible_removals = bool(int(tab[22].decode()))
+    cd_possible_removals = bool(int(tab[22].decode()))  # NOT USED
     play_weekend = bool(int(tab[23].decode()))
     manual = bool(int(tab[24].decode()))
     access_code = int(tab[25].decode())

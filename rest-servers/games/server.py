@@ -1728,6 +1728,10 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg="This role does not seem to have submitted orders yet")
 
+        if not game.past_deadline():
+            del sql_executor
+            flask_restful.abort(400, msg="We are not after deadline, please change deadline first.")
+
         # handle definitive boolean
         # game master forced player to agree to adjudicate
         status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), adjudication_names, sql_executor)
@@ -2248,7 +2252,12 @@ class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
         needed_list = [o[1] for o in actives_list]
         if role_id not in needed_list:
             del sql_executor
-            flask_restful.abort(403, msg="This role does not seem to require any orders")
+            flask_restful.abort(400, msg="This role does not seem to require any orders")
+
+        # are civil disorders allowed for the game ?
+        if not game.civil_disorder_allowed():
+            del sql_executor
+            flask_restful.abort(400, msg="Civil disorder in this game, for this season, does not seem to be allowed. Replace player.")
 
         # evaluate variant
         variant_name = game.variant
