@@ -513,7 +513,9 @@ def stack_role_retreats(frame):
     if ROLE_ID != 0:
         role = VARIANT_DATA.roles[ROLE_ID]
         info_retreats = POSITION_DATA.role_retreats(role)
-        frame <= html.DIV(info_retreats, Class='note')
+        for info_retreat in info_retreats:
+            frame <= html.DIV(info_retreat, Class='note')
+            frame <= html.BR()
 
 
 def stack_role_builds(frame):
