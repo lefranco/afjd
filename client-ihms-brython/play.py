@@ -4401,7 +4401,10 @@ def show_participants_in_game():
 
         game_incidents_table = html.TABLE()
 
-        fields = ['flag', 'role', 'player', 'season', 'duration', 'date', 'remove']
+        fields = ['flag', 'role', 'player', 'season', 'duration', 'date']
+
+        if ROLE_ID == 0:
+            fields.extend(['remove'])
 
         # header
         thead = html.THEAD()
@@ -4469,15 +4472,14 @@ def show_participants_in_game():
             row <= col
 
             # remove
-            form = ''
             if ROLE_ID == 0:
                 form = html.FORM()
                 input_remove_incident = html.INPUT(type="submit", value="supprimer")
                 text = f"Rôle {role_name} en saison {game_season}"
                 input_remove_incident.bind("click", lambda e, r=role_id, a=advancement, t=text: remove_incident_callback_confirm(e, r, a, t))
                 form <= input_remove_incident
-            col = html.TD(form)
-            row <= col
+                col = html.TD(form)
+                row <= col
 
             game_incidents_table <= row
 
