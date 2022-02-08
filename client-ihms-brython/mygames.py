@@ -295,7 +295,7 @@ def my_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'go_away']
+    fields = ['go_away', 'jump_here', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
 
     # column for start buttons only available for non started games
     if state == 0:
@@ -384,9 +384,9 @@ def my_games(state_name):
 
             value = data[field]
             colour = None
+            game_name = data['name']
 
             if field == 'jump_here':
-                game_name = data['name']
                 form = html.FORM()
                 input_jump_game = html.INPUT(type="submit", value=game_name)
                 input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))

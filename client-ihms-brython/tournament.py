@@ -351,7 +351,7 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state', 'go_away']
+    fields = ['go_away', 'jump_here', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']
 
     # header
     thead = html.THEAD()
@@ -427,9 +427,9 @@ def show_games():
             value = data[field]
             colour = None
             fg_colour = None
+            game_name = data['name']
 
             if field == 'jump_here':
-                game_name = data['name']
                 form = html.FORM()
                 input_jump_game = html.INPUT(type="submit", value=game_name)
                 input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
