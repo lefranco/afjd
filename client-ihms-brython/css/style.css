@@ -33,9 +33,6 @@ a:visited{
     color: #333;
 }
 
-li{
-    list-style-type: none;
-}
 
 #panel{
     display:table-cell;
