@@ -531,8 +531,9 @@ def my_games(state_name):
                         popup = html.IMG(src="./images/messages_received.jpg", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
 
-            if state == 0 and role_id == 0:
-                if field == 'start':
+            if field == 'start':
+                value = ""
+                if state == 0 and role_id == 0:
                     form = html.FORM()
                     input_start_game = html.INPUT(type="submit", value="démarrer")
                     input_start_game.bind("click", lambda e, g=game_name: start_game_callback(e, g))
