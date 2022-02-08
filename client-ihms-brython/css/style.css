@@ -17,31 +17,9 @@ a{
     color: blue;
 }
 
-a.menu{
-    text-decoration: none;
-}
-
-a.menu:hover{
-    background-color: #ccc;
-}
-
-a.selected{
-    font-weight: bold;
-}
-
 a:visited{
-    color: #333;
+    color: green;
 }
-
-
-#panel{
-    display:table-cell;
-    width:65%;
-    padding-right:2%;
-    text-align: left;
-}
-
-
 .btn-menu {
     width: 100%;
     display: inline-block;
@@ -51,53 +29,21 @@ a:visited{
     border: 1px solid rgba(0,0,0,0.3);
 }
 
-    .btn-menu:hover {
-        background-color: #e3e3e3;
-        border-color: rgba(0,0,0,0.5);
-    }
-
-    .btn-menu:active {
-        background-color: #CCC;
-        border-color: rgba(0,0,0,0.9);
-    }
-
-div.example{
-    margin-top: 2em;
-    display: none;
+.btn-menu:hover {
+    background-color: #e3e3e3;
+    border-color: rgba(0,0,0,0.5);
 }
 
-pre{
-    display: inline-block;
-    padding: 1em;
-    font-family: Consolas, Courier New;
-    color: #ff9;
-    background-color: #114;
-    border-radius: 10px;
-    margin-top: 2em;
-    width: 100%;
+.btn-menu:active {
+    background-color: #CCC;
+    border-color: rgba(0,0,0,0.9);
 }
-
-pre.html{
-    padding: 0.5em;
-}
-
-.zone{
-    margin-left: 5em;
-    padding: 1em;
-    border-width: 1px;
-    border-color: #333;
-    border-style: solid;
-    width: 20em;
-}
-
 
 .code_failed{
     color: grey;
     font-weight: bold;
     font-family: Courier New;
     background-color: white;
-    padding-left: 0.2em;
-    padding-right: 0.2em;
 }
 
 .code_info{
@@ -105,8 +51,6 @@ pre.html{
     font-weight: bold;
     font-family: Courier New;
     background-color: white;
-    padding-left: 0.2em;
-    padding-right: 0.2em;
 }
 
 .code_communication{
@@ -114,8 +58,6 @@ pre.html{
     font-weight: bold;
     font-family: Courier New;
     background-color: white;
-    padding-left: 0.2em;
-    padding-right: 0.2em;
 }
 
 .code_success{
@@ -123,27 +65,8 @@ pre.html{
     font-weight: bold;
     font-family: Courier New;
     background-color: white;
-    padding-left: 0.2em;
-    padding-right: 0.2em;
 }
 
-
-#moving{
-    position: relative;
-    left:140px;
-    top:10px;
-    font-size:16px;
-    padding: 3px;
-    background-color: var(--clear-2);
-    border-radius: 4px;
-}
-
-.up{
-    font-size: 1.2em;
-}
-.down{
-    font-size:0.8em;
-}
 
 /* color of germany in diplomania map CEB087 */
 
@@ -151,8 +74,6 @@ pre.html{
 
 legend{
     display: block;
-    padding-left: 10px;
-    padding-right: 10px;
     background-color:#CEB087;
 }
 
@@ -171,35 +92,29 @@ legend{
     font-family: cursive;
 }
 
-
 /* color of italy in diplomania map A8EDA5 */
 .instruction{
-    color: #101010;
     background-color: #A8EDA5;
 }
 
 /* color of france in diplomania map 98E4ED */
 .note{
-    color: #101010;
     background-color: #98E4ED;
 }
 
 /* color of austria in diplomania map EDA89E */
 .important{
-    color: #101010;
     font-weight: bold;
     background-color: #EDA89E;
 }
 
 /* color of turkey in diplomania map EDE585 */
 .news{
-    color: #101010;
     background-color: #EDE585;
 }
 
 /* color of england in diplomania map 83B9CC */
 table{
-    color: #101010;
     border: 1px solid black;
     border-collapse: collapse;
     background-color: #83B9CC;
@@ -234,66 +149,53 @@ fieldset{
 
 #home {
     background-color: #BBD9DC;
-/*    color: #101010;  */
 }
 
 #login {
     background-color: #BBD9DC;
-/*    color: #101010; */
 }
 
 #selection {
    background-color: #BBD9DC;
-/*    color: #101010; */
 }
 
 #account {
     background-color: #BBD9DC;
-/*    color: #101010; */
 }
 
 #opportunities {
     background-color: #BBD9DC;
-    color: #101010; */
 }
 
 #mygames {
     background-color: #BBD9DC;
-/*    color: #101010; */
 }
 
 #games {
     background-color: #BBD9DC;
-/*    color: #101010; */
 }
 
 #pairing {
     background-color: #BBD9DC;
-/*    color: #101010; */
 }
 
 #play {
     background-color: #BBD9DC;
-/*    color: #101010; */
 }
 
 #tournament {
     background-color: #BBD9DC;
-/*    color: #101010; */
 }
 
 #sandbox {
     background-color: #BBD9DC;
-/*    color: #101010; */
 }
 
 
 #lists {
     background-color: #BBD9DC;
-/*    color: #101010; */
 }
 
 #admin {
     background-color: #BBD9DC;
-/*    color: #101010; */
 }
