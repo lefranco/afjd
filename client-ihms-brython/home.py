@@ -68,10 +68,32 @@ def show_news():
 
     news_content_loaded = common.get_news_content()
     news_content = html.DIV(Class='news')
+
     if news_content_loaded is not None:
         for line in news_content_loaded.split("\n"):
-            news_content <= line
-            news_content <= html.BR()
+            if line.startswith("HR"):
+                separator = html.HR()
+                news_content <= separator
+            elif line.startswith("STRONG"):
+                _, _, extracted = line.partition("STRONG ")
+                bold = html.STRONG(extracted)
+                news_content <= bold
+                news_content <= html.BR()
+            elif line.startswith("KBD"):
+                _, _, extracted = line.partition("KBD ")
+                kbd = html.KBD(extracted)
+                news_content <= kbd
+                news_content <= html.BR()
+            elif line.startswith("LINK"):
+                _, _, extracted = line.partition("LINK ")
+                link = html.A(href=extracted, target="_blank")
+                link <= extracted
+                news_content <= link
+                news_content <= html.BR()
+            else:
+                news_content <= line
+                news_content <= html.BR()
+
     MY_SUB_PANEL <= news_content
 
 
