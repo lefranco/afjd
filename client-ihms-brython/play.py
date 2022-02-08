@@ -3894,8 +3894,10 @@ def game_master():
         row <= col
 
         col = html.TD()
-        input_send_welcome_email = html.INPUT(type="submit", value="courriel bienvenue")
-        input_send_welcome_email.bind("click", lambda e, r=role_id: send_welcome_email_callback(e, r))
+        input_send_welcome_email = ""
+        if pseudo_there:
+            input_send_welcome_email = html.INPUT(type="submit", value="courriel bienvenue")
+            input_send_welcome_email.bind("click", lambda e, r=role_id: send_welcome_email_callback(e, r))
         col <= input_send_welcome_email
         row <= col
 
@@ -3913,8 +3915,9 @@ def game_master():
         input_send_recall_email = ""
         if role_id in needed_roles_list:
             if role_id not in submitted_roles_list:
-                input_send_recall_email = html.INPUT(type="submit", value="courriel rappel ordres")
-                input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_orders_email_callback(e, r))
+                if pseudo_there:
+                    input_send_recall_email = html.INPUT(type="submit", value="courriel rappel ordres")
+                    input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_orders_email_callback(e, r))
         col <= input_send_recall_email
         row <= col
 
@@ -3922,8 +3925,9 @@ def game_master():
         input_civil_disorder = ""
         if role_id in needed_roles_list:
             if role_id not in submitted_roles_list:
-                input_civil_disorder = html.INPUT(type="submit", value="désordre civil")
-                input_civil_disorder.bind("click", lambda e, r=role_id: civil_disorder_callback(e, r))
+                if pseudo_there:
+                    input_civil_disorder = html.INPUT(type="submit", value="désordre civil")
+                    input_civil_disorder.bind("click", lambda e, r=role_id: civil_disorder_callback(e, r))
         col <= input_civil_disorder
         row <= col
 
@@ -4485,7 +4489,6 @@ def show_participants_in_game():
         if game_incidents2:
             MY_SUB_PANEL <= html.BR()
             MY_SUB_PANEL <= html.DIV("Un désordre civil signifie que l'arbitre a forcé des ordres pour le joueur", Class='note')
-
 
     # incidents
     MY_SUB_PANEL <= html.H3("Retards")
