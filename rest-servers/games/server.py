@@ -599,6 +599,16 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             message = messages.Message(0, 0, 0, content_id)
             message.delete_database(sql_executor)
 
+        # delete incidents
+        for (_, role_num, advancement, _, _, _) in incidents.Incident.list_by_game_id(sql_executor, int(game_id)):
+            incident = incidents.Incident(0, role_num, advancement, 0, 0)
+            incident.delete_database(sql_executor)
+
+        # delete incidents2
+        for (_, role_num, advancement, _) in incidents2.Incident2.list_by_game_id(sql_executor, int(game_id)):
+            incident2 = incidents2.Incident2(0, role_num, advancement)
+            incident2.delete_database(sql_executor)
+
         # finally delete game
         assert game is not None
         game.delete_database(sql_executor)
@@ -3799,13 +3809,11 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-
-
 @API.resource('/game-incidents2/<game_id>')
 class GameIncidents2Ressource(flask_restful.Resource):  # type: ignore
     """ GameIncidents2Ressource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, float]]], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:  # pylint: disable=no-self-use
         """
         Gets list of roles which have produced an incident2 for given game
         EXPOSED
@@ -3880,9 +3888,6 @@ class GameIncidents2Ressource(flask_restful.Resource):  # type: ignore
 
         data = {'incidents': late_list}
         return data, 200
-
-
-
 
 
 @API.resource('/game-export/<game_id>')
