@@ -4528,7 +4528,7 @@ def show_participants_in_game():
 
         counter = {}
 
-        for role_id, advancement, duration, date_incident in sorted(game_incidents, key=lambda i: i[3]):
+        for role_id, advancement, player_id, duration, date_incident in sorted(game_incidents, key=lambda i: i[3]):
 
             row = html.TR()
 
@@ -4550,13 +4550,10 @@ def show_participants_in_game():
             row <= col
 
             # player
-            pseudo_there = ""
-            if role_id in role2pseudo:
-                player_id_str = role2pseudo[role_id]
-                player_id = int(player_id_str)
+            pseudo_there = f"{GAME}##{role_name}"
+            if player_id is not None and player_id in id2pseudo:
+                # it changes : we take it from incident, not from role
                 pseudo_there = id2pseudo[player_id]
-            else:
-                pseudo_there = f"{GAME}##{role_name}"
             col = html.TD(pseudo_there)
             row <= col
 

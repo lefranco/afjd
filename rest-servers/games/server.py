@@ -3732,7 +3732,7 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
 class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
     """ GameIncidentsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, float]]], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, typing.Optional[int], int, float]]], int]:  # pylint: disable=no-self-use
         """
         Gets list of roles which have produced an incident for given game
         EXPOSED
@@ -3776,9 +3776,22 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
+        # boolean to decide if we show player
+        see_player = False
+
+        # game not anonymous will show
+        assert game is not None
+        if not game.anonymous:
+            see_player = True
+
         # get the role
         assert game is not None
         role_id = game.find_role(sql_executor, player_id)
+
+        # game master will see
+        if role_id == 0:
+            see_player = True
+
         if role_id is None:
 
             # check moderator rights
@@ -3799,9 +3812,12 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(403, msg="You do not seem to play or master game (or to be site moderator) so you cannot see the incidents!")
 
+            # moderator will see
+            see_player = True
+
         # incidents_list : those who submitted orders after deadline
         incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
-        late_list = [(o[1], o[2], o[4], o[5]) for o in incidents_list]
+        late_list = [(o[1], o[2], o[3] if see_player else None, o[4], o[5]) for o in incidents_list]
 
         del sql_executor
 
