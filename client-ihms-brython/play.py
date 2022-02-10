@@ -5040,6 +5040,8 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
+    window.scrollTo(0, 0);
+
     if item_name == 'position':
         status = show_position()
     if item_name == 'ordonner':
