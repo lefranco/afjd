@@ -4,7 +4,7 @@
 
 import json
 
-from browser import html, ajax, alert  # pylint: disable=import-error
+from browser import html, ajax, alert, window  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
