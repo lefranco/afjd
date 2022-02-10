@@ -1797,6 +1797,8 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
+    window.scrollTo(0, 0)
+
     if item_name == 'créer':
         create_game()
     if item_name == 'changer description':
