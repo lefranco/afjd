@@ -565,7 +565,7 @@ def load_option(_, item_name):
     """ load_option """
 
     MY_SUB_PANEL.clear()
-    window.scrollTo(0, 0)
+    window.scroll(0, 0)
 
     if item_name == 'rejoindre la partie':
         join_game()
