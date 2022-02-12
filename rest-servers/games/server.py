@@ -4438,9 +4438,20 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
 
         late_list: typing.List[typing.Tuple[int, int, int, int, float]] = []
         for game_id in tournament_game_ids:
+
+            # get current allocation of players
+            current_allocation = {}
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            for _, player_id, role_id in allocations_list:
+                current_allocation[role_id] = player_id
+
             incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
-            for _, role_num, advancement, _, duration_incident, date_incident in incidents_list:
-                late_list.append((game_id, role_num, advancement, duration_incident, date_incident))
+            for _, role_id, advancement, player_id, duration_incident, date_incident in incidents_list:
+                # note : if the incident was not performed by current player, it is ignored
+                cur_player_id = current_allocation[role_id]
+                if player_id != cur_player_id:
+                    continue
+                late_list.append((game_id, role_id, advancement, duration_incident, date_incident))
 
         del sql_executor
 
