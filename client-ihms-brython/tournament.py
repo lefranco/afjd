@@ -885,6 +885,9 @@ def show_incidents():
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()
 
+    MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
     title2 = html.H4("Désordres civils du tournoi")
     MY_SUB_PANEL <= title2
     MY_SUB_PANEL <= tournament_incidents2_table
@@ -892,10 +895,11 @@ def show_incidents():
     title2 = html.H4("Retards du tournoi")
     MY_SUB_PANEL <= title2
     MY_SUB_PANEL <= tournament_incidents_table
+    MY_SUB_PANEL <= html.BR()
 
+    MY_SUB_PANEL <= html.DIV("Les retards des joueurs qui depuis ont été remplacés n'apparaissent pas", Class='note')
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
-    MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes)", Class='note')
     MY_SUB_PANEL <= html.BR()
 
