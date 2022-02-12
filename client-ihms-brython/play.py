@@ -89,9 +89,9 @@ def game_incidents_reload(game_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération des incidents de la partie : {req_result['message']}")
+                alert(f"Erreur à la récupération des incidents retards de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération des incidents de la partie : {req_result['msg']}")
+                alert(f"Problème à la récupération des incidents retards de la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
@@ -120,9 +120,9 @@ def game_incidents2_reload(game_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération des incidents2 de la partie : {req_result['message']}")
+                alert(f"Erreur à la récupération des incidents désordres civils  de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération des incidents2 de la partie : {req_result['msg']}")
+                alert(f"Problème à la récupération des incidents désordres civils de la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
