@@ -10,26 +10,13 @@ players allocation in a tournament
 import typing
 import argparse
 import sys
+import random
 
-# profiling
-import cProfile
-import pstats
-
-# Set this to true to profile functions (but program will be slow)
-PROFILE = False
 
 def panic() -> None:
     """ panic """
 
     print('You pressed Ctrl+C!')
-
-    if PROFILE:
-        PR.disable()
-        # stats
-        PS = pstats.Stats(PR)
-        PS.strip_dirs()
-        PS.sort_stats('time')
-        PS.print_stats()  # uncomment to have profile stats
 
     sys.exit(0)
 
@@ -111,6 +98,7 @@ class Player:
         self._name = PLAYERS_DATA[player_id]
         self._allocation: typing.Dict[int, Game] = {}
         self._fully_allocated = False
+        self._is_director = False
 
     def put_in_game(self, role: int, game: Game) -> None:
         """ put_in_game """
@@ -144,11 +132,14 @@ class Player:
         """ has_role """
         return role in self._allocation
 
+    @property
+    def name(self) -> str:
+        """ name """
+        return self._name
+
     def __str__(self) -> str:
         return self._name
 
-
-BEST_GAMES_COMPLETED = 0
 
 def attempt() -> bool:
     """ attempt """
@@ -166,12 +157,6 @@ def attempt() -> bool:
         # we are done
         return True
 
-    global BEST_GAMES_COMPLETED
-    completed_now = game.number
-    if completed_now > BEST_GAMES_COMPLETED:
-        print(f"{completed_now=}", file=sys.stderr)
-        BEST_GAMES_COMPLETED = completed_now
-
     # find a role
     role = None
     for role_poss in range(len(POWERS)):
@@ -184,7 +169,9 @@ def attempt() -> bool:
         assert False, "Internal error : game has role or not !?"
 
     # find a player to put in
-    for player_poss in PLAYERS:
+    players = PLAYERS.copy()
+    random.shuffle(players)
+    for player_poss in players:
 
         # player already has a game for this role
         if player_poss.has_role(role):
@@ -249,8 +236,17 @@ def main() -> None:
     with open(args.masters_file, "r", encoding='utf-8') as read_file:
         MASTERS_DATA = [m.rstrip() for m in read_file.readlines()]
 
-    print(f"{MASTERS_DATA=}")
     assert len(set(MASTERS_DATA)) == len(MASTERS_DATA), "Duplicate in masters"
+
+    # must be less than  7
+    assert len(MASTERS_DATA) < len(POWERS), "Number of masters is unsafe"
+
+    player_table = {p.name: p for p in PLAYERS}
+    masters_list = []
+    for master_name in MASTERS_DATA:
+        assert master_name in player_table, f"{master_name} not in players !"
+        player = player_table[master_name]
+        masters_list.append(player)
 
     try:
         status = attempt()
@@ -259,27 +255,22 @@ def main() -> None:
 
     assert status, "Failed to make tournament !"
 
+    # put masters
+    master_game_table: typing.Dict[Game, Player] = {}
+    for game in GAMES:
+        master_select = sorted(masters_list, key=lambda m: len([g for g in GAMES if g in master_game_table and master_game_table[g] == m]))
+        for master_poss in master_select:
+            if not game.player_in_game(master_poss):
+                master = master_poss
+                break
+        master_game_table[game] = master
+
     # show stuff
     print("========================")
     for game in GAMES:
-        print(f"{game} : {game.describe_players()}")
-
-
-if __name__ == '__main__':
-
-    # this if script too slow and profile it
-    if PROFILE:
-        PR = cProfile.Profile()
-        PR.enable()  # uncomment to have profile stats
-
-    main()
-
-    if PROFILE:
-        PR.disable()
-        # stats
-        PS = pstats.Stats(PR)
-        PS.strip_dirs()
-        PS.sort_stats('time')
-        PS.print_stats()  # uncomment to have profile stats
+        print(f"{game} : {game.describe_players()} [{master_game_table[game].name}]")
 
     sys.exit(0)
+
+if __name__ == '__main__':
+    main()
