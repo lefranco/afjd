@@ -13,13 +13,13 @@ FAQ_CONTENT_TABLE = {
     "Eh non. Les ordres sont 100% vérifiés avant d'être enregistrés. Par contre le menu 'taguer' dans une partie permet une communcation par ordres 'ésotériques'. Cela ne presente un intérêt que dans les parties sans communication.",
 
     "Quand a lieu la résolution ?":
-    "Quand le dernier joueur qui a des ordres à rendre coche sur la case 'prêt pour la résolution' tout simplement (ou quand l'arbitre le fait à sa place pour éviter que la partie ne s'éternise).",
+    "Quand le dernier joueur qui a des ordres à rendre coche sur la case 'd'accord pour la résolution' tout simplement (ou quand l'arbitre le fait à sa place pour éviter que la partie ne s'éternise).",
 
     "Pourquoi les dates limites changent-elles de couleur ?":
     "Le code de couleur est assez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée. Rouge que la grâce est aussi passée. Soyez ponctuels !",
 
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
-    "Passer ses ordres signifie réaliser une transition 'pas prêt à résoudre' (ou pas d'information) -> 'prêt pour la résolution'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels !",
+    "Passer ses ordres signifie réaliser une transition 'pas d'accord pour la résoltion' (ou pas d'information) -> 'd'accord pour la résolution'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels !",
 
     "Comment sont comptés les retards ?":
     " Toute heure de retard entamée est due. Cela signifie qu'un retard indiqué '2h' est un retard de plus d'une heure et d'au plus deux heures (par rapport à la date limite au moment de la soumission)",
