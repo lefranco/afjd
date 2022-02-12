@@ -4418,11 +4418,11 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
 
     def get(self, tournament_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, float]], int]:  # pylint: disable=no-self-use
         """
-        Gets list of pseudo/alias which have produced an incident for given tournament
+        Gets list of pseudo/alias which have produced an incident delay for given tournament
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/tournament-incidents/<game_id> - GET - getting which incidents occured for tournament id=%s", tournament_id)
+        mylogger.LOGGER.info("/tournament-incidents/<game_id> - GET - getting which incidents delay occured for tournament id=%s", tournament_id)
 
         sql_executor = database.SqlExecutor()
 
@@ -4441,6 +4441,42 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
             incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
             for _, role_num, advancement, _, duration_incident, date_incident in incidents_list:
                 late_list.append((game_id, role_num, advancement, duration_incident, date_incident))
+
+        del sql_executor
+
+        data = late_list
+        return data, 200
+
+
+@API.resource('/tournament-incidents2/<tournament_id>')
+class TournamentIncidents2Ressource(flask_restful.Resource):  # type: ignore
+    """ TournamentIncidents2Ressource """
+
+    def get(self, tournament_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, float]], int]:  # pylint: disable=no-self-use
+        """
+        Gets list of pseudo/alias which have produced an incident civil disorder for given tournament
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournament-incidents2/<game_id> - GET - getting which incidents civil disorder occured for tournament id=%s", tournament_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # find the tournament
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a tournament with identifier {tournament_id}")
+
+        # games of that tournament
+        tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
+        tournament_game_ids = [g[1] for g in tournament_games]
+
+        late_list: typing.List[typing.Tuple[int, int, int, float]] = []
+        for game_id in tournament_game_ids:
+            incidents_list = incidents2.Incident2.list_by_game_id(sql_executor, game_id)
+            for _, role_num, advancement, date_incident in incidents_list:
+                late_list.append((game_id, role_num, advancement, date_incident))
 
         del sql_executor
 

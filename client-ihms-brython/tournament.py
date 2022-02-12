@@ -20,7 +20,7 @@ import memoize
 import index  # circular import
 
 
-OPTIONS = ['parties du tournoi', 'classement du tournoi', 'retards du tournoi', 'créer un tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'les tournois du site', 'créer plusieurs parties', 'tester un scorage']
+OPTIONS = ['parties du tournoi', 'classement du tournoi', 'incidents du tournoi', 'créer un tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'les tournois du site', 'créer plusieurs parties', 'tester un scorage']
 
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_TOURNAMENT_NAME = 50
@@ -701,7 +701,7 @@ def show_incidents():
     overall_time_before = time.time()
 
     # title
-    title = html.H3("Retards du tournoi")
+    title = html.H3("Incidents du tournoi")
     MY_SUB_PANEL <= title
 
     if 'GAME' not in storage:
@@ -720,7 +720,86 @@ def show_incidents():
         alert("Erreur chargement dictionnaire parties")
         return
 
-    # get the actual incidents of the tournament
+    # get the actual incidents (civil disorders) of the tournament
+    tournament_incidents2 = common.tournament_incidents2_reload(tournament_id)
+    # there can be no incidents (if no incident of failed to load)
+
+    tournament_incidents2_table = html.TABLE()
+
+    fields = ['alias', 'season', 'date']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'alias': 'alias', 'season': 'saison', 'date': 'date'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    tournament_incidents2_table <= thead
+
+    for game_id, role_num, advancement, date_incident in sorted(tournament_incidents2, key=lambda i: i[3]):
+
+        data = games_dict[str(game_id)]
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        row = html.TR()
+
+        # player
+        game_name = data['name']
+        role = variant_data.roles[role_num]
+        role_name = variant_data.name_table[role]
+        alias = f"{game_name}##{role_name}"
+        col = html.TD(alias)
+        row <= col
+
+        # season
+        advancement_season, advancement_year = common.get_season(advancement, variant_data)
+        advancement_season_readable = variant_data.name_table[advancement_season]
+        game_season = f"{advancement_season_readable} {advancement_year}"
+        col = html.TD(game_season)
+        row <= col
+
+        # date
+        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
+        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
+        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
+        incident_str = f"{incident_day} {incident_hour} GMT"
+        col = html.TD(incident_str)
+        row <= col
+
+        tournament_incidents2_table <= row
+
+    # get the actual incidents (delays) of the tournament
     tournament_incidents = common.tournament_incidents_reload(tournament_id)
     # there can be no incidents (if no incident of failed to load)
 
@@ -805,7 +884,15 @@ def show_incidents():
 
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
     MY_SUB_PANEL <= html.BR()
+
+    title2 = html.H4("Désordres civils du tournoi")
+    MY_SUB_PANEL <= title2
+    MY_SUB_PANEL <= tournament_incidents2_table
+
+    title2 = html.H4("Retards du tournoi")
+    MY_SUB_PANEL <= title2
     MY_SUB_PANEL <= tournament_incidents_table
+
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
     MY_SUB_PANEL <= html.BR()
@@ -1546,7 +1633,7 @@ def load_option(_, item_name):
         show_games()
     if item_name == 'classement du tournoi':
         show_ratings()
-    if item_name == 'retards du tournoi':
+    if item_name == 'incidents du tournoi':
         show_incidents()
     if item_name == 'créer un tournoi':
         create_tournament()
