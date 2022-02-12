@@ -351,6 +351,12 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg=f"Player {pseudo} already exists")
 
+        player2 = players.Player.find_by_similar_pseudo(sql_executor, pseudo)
+        if player2 is not None:
+            pseudo2 = player2.pseudo
+            del sql_executor
+            flask_restful.abort(400, msg=f"Player with similar pseudo '{pseudo2}' already exists")
+
         if not pseudo.isidentifier():
             del sql_executor
             flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is not a valid pseudo")
@@ -883,7 +889,7 @@ class FindPlayerFromEmailRessource(flask_restful.Resource):  # type: ignore
         the_moderators = [m[0] for m in moderators_list]
         if pseudo_requester not in the_moderators:
             del sql_executor
-            flask_restful.abort(403, msg=f"You are not allowed to get pseudo from email address! (need to be moderator)")
+            flask_restful.abort(403, msg="You are not allowed to get pseudo from email address! (need to be moderator)")
 
         email2pseudo = {p.email: p.pseudo for p in players.Player.inventory(sql_executor)}
 

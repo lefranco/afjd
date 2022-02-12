@@ -103,6 +103,14 @@ class Player:
         return players_found[0][0]  # type: ignore
 
     @staticmethod
+    def find_by_similar_pseudo(sql_executor: database.SqlExecutor, pseudo: str) -> typing.Optional['Player']:
+        """ class lookup : finds the object in database from pseudo """
+        players_found = sql_executor.execute("SELECT player_data FROM players where pseudo = ? COLLATE NOCASE", (pseudo,), need_result=True)
+        if not players_found:
+            return None
+        return players_found[0][0]  # type: ignore
+
+    @staticmethod
     def inventory(sql_executor: database.SqlExecutor) -> typing.List['Player']:
         """ class inventory : gives a list of all objects in database """
         players_found = sql_executor.execute("SELECT player_data FROM players", need_result=True)
