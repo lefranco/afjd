@@ -33,7 +33,7 @@ def login():
                     alert(f"Problème à la connexion : {req_result['msg']}")
 
                     # Too expensive to load list of players and see which is same with different case so just provide a little tip
-                    InfoDialog("Astuce", f"Vous vous trompez peut-être sur la casse de votre pseudo (et non sur le mote de passe), allez donc consulter la liste des joueurs pour vous rafraichir la mémoire...", remove_after=config.REMOVE_AFTER)
+                    InfoDialog("Astuce", f"Vous vous trompez peut-être sur la casse de votre pseudo (et non sur le mot de passe), allez donc consulter la liste des joueurs pour vous rafraichir la mémoire...", remove_after=config.REMOVE_AFTER)
 
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
