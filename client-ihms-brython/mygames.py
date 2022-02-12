@@ -304,7 +304,7 @@ def my_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'même onglet (rapide)', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis prêt', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous prêts', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'start': 'démarrer'}[field]
+        field_fr = {'jump_here': 'même onglet (rapide)', 'go_away': 'nouvel onglet', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis d\'accord', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous d\'accord', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'start': 'démarrer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -481,10 +481,10 @@ def my_games(state_name):
                     agreed_roles_list = submitted_data['agreed']
                     if role_id is not None:
                         if role_id in agreed_roles_list:
-                            flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
+                            flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre")
                             value = flag
                         elif role_id in needed_roles_list:
-                            flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
+                            flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
                             value = flag
 
             if field == 'all_orders_submitted':

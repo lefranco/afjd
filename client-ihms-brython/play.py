@@ -1929,9 +1929,9 @@ def submit_orders():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        buttons_right <= html.DIV("La soumission des ordres prend également en compte le fait d'être prêt pour la résolution", Class='instruction')
+        buttons_right <= html.DIV("La soumission des ordres prend également en compte le fait d'être d\'accord pour la résolution", Class='instruction')
         buttons_right <= html.BR()
-        buttons_right <= html.DIV("Le coche 'prêt pour la résolution' est obligatoire à un moment donné (de préférence avant la date limite)", Class='important')
+        buttons_right <= html.DIV("Le coche 'd\'accord pour la résolution' est obligatoire à un moment donné (de préférence avant la date limite)", Class='important')
         if GAME_PARAMETERS_LOADED['nomessage_current']:
             buttons_right <= html.BR()
             buttons_right <= html.DIV("Pour communiquer avec des ordres (ordres invalides) utilisez le sous menu 'taguer'", Class='Note')
@@ -3495,8 +3495,8 @@ def game_master():
         # sending email : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def send_recall_ready_email_callback(_, role_id):
-        """ send_recall_ready_email_callback """
+    def send_recall_agreed_email_callback(_, role_id):
+        """ send_recall_agreed_email_callback """
 
         pseudo_there = None
 
@@ -3505,14 +3505,14 @@ def game_master():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à l'envoi de courrier électronique message de rappel (prêt à résoudre) : {req_result['message']}")
+                    alert(f"Erreur à l'envoi de courrier électronique message de rappel (accord pour résoudre) : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à l'envoi de courrier électronique message de rappel (prêt à résoudre) : {req_result['msg']}")
+                    alert(f"Problème à l'envoi de courrier électronique message de rappel (accord pour résoudre) : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", f"Message de rappel (manque prêt à résoudre) émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Message de rappel (manque d'accord pour résoudre) émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
 
         subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
@@ -3521,7 +3521,7 @@ def game_master():
 
         body = "Bonjour !"
         body += "\n"
-        body += "Il manque votre confirmation d'être prêt à résoudre et la date limite est passée. Merci d'aviser rapidement !"
+        body += "Il manque votre confirmation d'être d'accord pour résoudre et la date limite est passée. Merci d'aviser rapidement !"
         body += "\n"
         body += f"Pour rappel votre rôle est {role_name}."
         body += "\n"
@@ -3861,6 +3861,12 @@ def game_master():
 
     game_admin_table = html.TABLE()
 
+    thead = html.THEAD()
+    for field in ['drapeau', 'rôle', 'joueur', 'communiquer la bienvenue', '', 'ordres du joueur', 'demander les ordres', 'mettre en désordre civil', '', 'accord du joueur', 'demander l\'accord', 'forcer l\'accord', '', 'vote du joueur', '', 'retirer le rôle', 'attribuer le rôle']:
+        col = html.TD(field)
+        thead <= col
+    game_admin_table <= thead
+
     for role_id in VARIANT_DATA.roles:
 
         # discard game master
@@ -3901,6 +3907,10 @@ def game_master():
         col <= input_send_welcome_email
         row <= col
 
+        # separator
+        col = html.TD()
+        row <= col
+
         col = html.TD()
         flag = ""
         if role_id in needed_roles_list:
@@ -3931,34 +3941,8 @@ def game_master():
         col <= input_civil_disorder
         row <= col
 
+        # separator
         col = html.TD()
-        input_unallocate_role = ""
-        if pseudo_there:
-            input_unallocate_role = html.INPUT(type="submit", value="retirer le rôle")
-            input_unallocate_role.bind("click", lambda e, p=pseudo_there, r=role_id: unallocate_role_callback(e, p, r))
-        col <= input_unallocate_role
-        row <= col
-
-        col = html.TD()
-        form = ""
-        if not pseudo_there:
-
-            form = html.FORM()
-
-            input_for_role = html.SELECT(type="select-one", value="", display='inline')
-            for play_role_pseudo in sorted(possible_given_role):
-                option = html.OPTION(play_role_pseudo)
-                input_for_role <= option
-
-            form <= input_for_role
-            form <= " "
-
-            input_put_in_role = html.INPUT(type="submit", value="attribuer le rôle", display='inline')
-            input_put_in_role.bind("click", lambda e, i=input_for_role, r=role_id: allocate_role_callback(e, i, r))
-
-            form <= input_put_in_role
-
-        col <= form
         row <= col
 
         col = html.TD()
@@ -3966,10 +3950,20 @@ def game_master():
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
                 if role_id in agreed_roles_list:
-                    flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
+                    flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre")
                 else:
-                    flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
+                    flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
         col <= flag
+        row <= col
+
+        col = html.TD()
+        input_send_recall_email = ""
+        if role_id in needed_roles_list:
+            if role_id in submitted_roles_list:
+                if role_id not in agreed_roles_list:
+                    input_send_recall_email = html.INPUT(type="submit", value="courriel rappel accord")
+                    input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_agreed_email_callback(e, r))
+        col <= input_send_recall_email
         row <= col
 
         col = html.TD()
@@ -3982,24 +3976,46 @@ def game_master():
         col <= input_force_agreement
         row <= col
 
+        # separator
         col = html.TD()
-        input_send_recall_email = ""
-        if role_id in needed_roles_list:
-            if role_id in submitted_roles_list:
-                if role_id not in agreed_roles_list:
-                    input_send_recall_email = html.INPUT(type="submit", value="courriel rappel prêt")
-                    input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_ready_email_callback(e, r))
-        col <= input_send_recall_email
         row <= col
-
         col = html.TD()
+
         flag = ""
         if role_id in vote_values_table:
             if vote_values_table[role_id]:
-                flag = html.IMG(src="./images/stop.png", title="Arrêter la partie")
+                flag = html.IMG(src="./images/stop.png", title="Le joueur a voté pour arrêter la partie")
             else:
-                flag = html.IMG(src="./images/continue.jpg", title="Continuer la partie")
+                flag = html.IMG(src="./images/continue.jpg", title="Le joueur a voté pour continuer la partie")
         col <= flag
+        row <= col
+
+        # separator
+        col = html.TD()
+        row <= col
+
+        col = html.TD()
+        input_unallocate_role = ""
+        if pseudo_there:
+            input_unallocate_role = html.INPUT(type="submit", value="retirer le rôle")
+            input_unallocate_role.bind("click", lambda e, p=pseudo_there, r=role_id: unallocate_role_callback(e, p, r))
+        col <= input_unallocate_role
+        row <= col
+
+        col = html.TD()
+        form = ""
+        if not pseudo_there:
+            form = html.FORM()
+            input_for_role = html.SELECT(type="select-one", value="", display='inline')
+            for play_role_pseudo in sorted(possible_given_role):
+                option = html.OPTION(play_role_pseudo)
+                input_for_role <= option
+            form <= input_for_role
+            form <= " "
+            input_put_in_role = html.INPUT(type="submit", value="attribuer le rôle", display='inline')
+            input_put_in_role.bind("click", lambda e, i=input_for_role, r=role_id: allocate_role_callback(e, i, r))
+            form <= input_put_in_role
+        col <= form
         row <= col
 
         game_admin_table <= row
@@ -4403,9 +4419,9 @@ def show_participants_in_game():
             if role_id in needed_roles_list:
                 if role_id in submitted_roles_list:
                     if role_id in agreed_roles_list:
-                        flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
+                        flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre")
                     else:
-                        flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
+                        flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
             col <= flag
             row <= col
 
@@ -4599,7 +4615,7 @@ def show_participants_in_game():
             humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
             MY_SUB_PANEL <= humour_img
 
-            MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) ont réalisé la transition 'pas prêt -> 'prêt pour résoudre' après la date limite", Class='note')
+            MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) ont réalisé la transition 'pas d'accord -> 'd'accord pour résoudre' après la date limite", Class='note')
 
             MY_SUB_PANEL <= html.BR()
             MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes)", Class='note')
@@ -4739,9 +4755,9 @@ def supervise():
             if role_id in needed_roles_list:
                 if role_id in submitted_roles_list:
                     if role_id in agreed_roles_list:
-                        flag = html.IMG(src="./images/ready.jpg", title="Prêt pour résoudre")
+                        flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre")
                     else:
-                        flag = html.IMG(src="./images/not_ready.jpg", title="Pas prêt pour résoudre")
+                        flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
             col <= flag
             row <= col
 
