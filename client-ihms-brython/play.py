@@ -4622,16 +4622,22 @@ def show_participants_in_game():
             game_incidents_table <= row
 
         MY_SUB_PANEL <= game_incidents_table
+        MY_SUB_PANEL <= html.BR()
 
         # a bit of humour !
         if game_incidents:
-            humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
-            MY_SUB_PANEL <= humour_img
 
             MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) ont réalisé la transition 'pas d'accord -> 'd'accord pour résoudre' après la date limite", Class='note')
-
             MY_SUB_PANEL <= html.BR()
+
+            MY_SUB_PANEL <= html.DIV("Les retards des joueurs qui depuis ont été remplacés apparaissent", Class='note')
+            MY_SUB_PANEL <= html.BR()
+
             MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes)", Class='note')
+            MY_SUB_PANEL <= html.BR()
+
+            humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
+            MY_SUB_PANEL <= humour_img
 
     return True
 
