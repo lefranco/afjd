@@ -1913,7 +1913,7 @@ def submit_orders():
 
         nonlocal input_definitive
 
-        label_definitive = html.LABEL("Prêt pour la résolution ?")
+        label_definitive = html.LABEL("D'accord pour la résolution ?")
         buttons_right <= label_definitive
 
         definitive_value = ROLE_ID in submitted_data['agreed']
