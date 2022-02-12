@@ -3450,14 +3450,20 @@ def game_master():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à l'envoi de courrier électronique message de rappel (ordres présents) : {req_result['message']}")
+                    alert(f"Erreur à l'envoi de courrier électronique message de rappel (ordres manquants) : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à l'envoi de courrier électronique message de rappel (ordres présents) : {req_result['msg']}")
+                    alert(f"Problème à l'envoi de courrier électronique message de rappel (ordres manquants) : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
             InfoDialog("OK", f"Message de rappel (manque ordres) émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
+
+        deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
+        time_stamp_now = time.time()
+        if not time_stamp_now > deadline_loaded:
+            alert("Attendez que la date limite soit passée pour réclamer les ordres, sinon le joueur va crier à l'injustice :-)")
+            return
 
         subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
@@ -3505,14 +3511,20 @@ def game_master():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à l'envoi de courrier électronique message de rappel (accord pour résoudre) : {req_result['message']}")
+                    alert(f"Erreur à l'envoi de courrier électronique message de rappel (manque accord pour résoudre) : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à l'envoi de courrier électronique message de rappel (accord pour résoudre) : {req_result['msg']}")
+                    alert(f"Problème à l'envoi de courrier électronique message de rappel (manque accord pour résoudre) : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
             InfoDialog("OK", f"Message de rappel (manque d'accord pour résoudre) émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
+
+        deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
+        time_stamp_now = time.time()
+        if not time_stamp_now > deadline_loaded:
+            alert("Attendez que la date limite soit passée pour réclamer l'accord, sinon le joueur va crier à l'injustice :-)")
+            return
 
         subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
