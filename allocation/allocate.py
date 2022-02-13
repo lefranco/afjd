@@ -321,10 +321,13 @@ def main() -> None:
         for game in GAMES:
             read_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
 
-    print("Worst interaction : ")
+    print("Worst interactions : ")
+    prev_num = None
     for interaction, number in INTERACTION.most_common():
+        if prev_num is not None and number < prev_num:
+            break
+        prev_num = number
         print(f"{list(interaction)[0]} <> {list(interaction)[1]} : {number}")
-        break
 
     sys.exit(0)
 
