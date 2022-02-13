@@ -211,7 +211,7 @@ def main() -> None:
 
     if args.seed:
         random.seed(args.seed)
-        print(f"Forced random seed to {my_seed}", file=sys.stderr)
+        print(f"Forced random seed to {args.seed}", file=sys.stderr)
 
     # load players file
     with open(args.players_file, "r", encoding='utf-8') as read_file:
@@ -262,7 +262,8 @@ def main() -> None:
     print("", file=sys.stderr)
 
     if args.randomize:
-        print(f"Randomizing players !", file=sys.stderr)
+        print("Randomizing players !", file=sys.stderr)
+        print("", file=sys.stderr)
         random.shuffle(PLAYERS)
 
     # if badly designed, we may calculate for too long
