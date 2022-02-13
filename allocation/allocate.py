@@ -4,28 +4,28 @@
 """
 File : allocate.py
 
-players allocation in a tournament
+Solves the problem of allocating players in a Diplomacy tournament
 """
 
 import typing
 import argparse
 import sys
+import collections
 import random
+
+
+# this is a standard diplomacy constant
+POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
+
+# as extracted from input file
+PLAYERS_DATA: typing.List[str] = []
+MASTERS_DATA: typing.List[str] = []
 
 
 def panic() -> None:
     """ panic """
     print('You pressed Ctrl+C!')
     sys.exit(1)
-
-
-POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
-
-PLAYERS_DATA: typing.List[str] = []
-MASTERS_DATA: typing.List[str] = []
-
-GAMES: typing.List['Game'] = []
-PLAYERS: typing.List['Player'] = []
 
 
 class Game:
@@ -44,6 +44,12 @@ class Game:
         assert isinstance(player, Player), "player should be a Player"
 
         assert role not in self._allocation, "role in game should be free"
+        assert player not in self._allocation.values(), "player should not be in game already"
+
+        # increase interaction
+        for other_player in self._allocation.values():
+            INTERACTION[frozenset([player, other_player])] += 1
+
         self._allocation[role] = player
 
     def take_player_out(self, role: int, player: 'Player') -> None:
@@ -53,9 +59,14 @@ class Game:
         assert 0 <= role < len(POWERS), "role should be in range"
 
         assert isinstance(player, Player), "player should be a Player"
+        assert player in self._allocation.values(), "player should be in game already"
 
         assert role in self._allocation, "role in game should be in"
         del self._allocation[role]
+
+        # decrease interaction
+        for other_player in self._allocation.values():
+            INTERACTION[frozenset([player, other_player])] -= 1
 
     def player_in_game(self, player: 'Player') -> bool:
         """ player_in_game """
@@ -77,6 +88,10 @@ class Game:
     def name(self) -> str:
         """ name """
         return self._name
+
+
+# list of games
+GAMES: typing.List[Game] = []
 
 
 class Player:
@@ -130,6 +145,13 @@ class Player:
 
     def __str__(self) -> str:
         return self._name
+
+
+# list of players
+PLAYERS: typing.List[Player] = []
+
+# says how many times two players are in same game
+INTERACTION = collections.Counter()
 
 
 def try_and_error() -> bool:
@@ -211,7 +233,7 @@ def main() -> None:
 
     if args.seed:
         random.seed(args.seed)
-        print(f"Forced random seed to {args.seed}", file=sys.stderr)
+        print(f"Forced random seed to {args.seed}")
 
     # load players file
     with open(args.players_file, "r", encoding='utf-8') as read_file:
@@ -219,8 +241,8 @@ def main() -> None:
 
     # all players must be different
     assert len(set(PLAYERS_DATA)) == len(PLAYERS_DATA), "Duplicate in players"
-    print(f"We have {len(PLAYERS_DATA)} players", file=sys.stderr)
-    print("", file=sys.stderr)
+    print(f"We have {len(PLAYERS_DATA)} players")
+    print("")
 
     # must be enough = more than 7
     assert len(PLAYERS_DATA) >= len(POWERS), "You need more players to hope success!"
@@ -242,8 +264,8 @@ def main() -> None:
         MASTERS_DATA = [m.rstrip() for m in read_file.readlines() if m.rstrip()]
 
     assert len(set(MASTERS_DATA)) == len(MASTERS_DATA), "Duplicate in masters"
-    print(f"We have {len(MASTERS_DATA)} masters", file=sys.stderr)
-    print("", file=sys.stderr)
+    print(f"We have {len(MASTERS_DATA)} masters")
+    print("")
 
     # must be safe = less than  7
     assert len(MASTERS_DATA) < len(POWERS), "Number of masters is unsafe"
@@ -253,17 +275,17 @@ def main() -> None:
     for master_name in MASTERS_DATA:
         # a game master may not be playing
         if master_name not in player_table:
-            print(f"Game master {master_name} is not playing !", file=sys.stderr)
+            print(f"Game master {master_name} is not playing !")
             player = Player(master_name)
         else:
-            print(f"Game master {master_name} is playing !", file=sys.stderr)
+            print(f"Game master {master_name} is playing !")
             player = player_table[master_name]
         masters_list.append(player)
-    print("", file=sys.stderr)
+    print("")
 
     if args.randomize:
-        print("Randomizing players !", file=sys.stderr)
-        print("", file=sys.stderr)
+        print("Randomizing players !")
+        print("")
         random.shuffle(PLAYERS)
 
     # if badly designed, we may calculate for too long
@@ -286,13 +308,18 @@ def main() -> None:
         master_game_table[game] = master
 
     for master in masters_list:
-        print(f"Game master {master.name} has {len([g for g in GAMES if master_game_table[g] == master])} games!", file=sys.stderr)
-    print("", file=sys.stderr)
+        print(f"Game master {master.name} has {len([g for g in GAMES if master_game_table[g] == master])} games!")
+    print("")
 
     # output stuff
     with open(args.output_file, "w", encoding='utf-8') as read_file:
         for game in GAMES:
             read_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
+
+    print("Worst interaction : ")
+    for interaction, number in INTERACTION.most_common():
+        print(f"{list(interaction)[0]} <> {list(interaction)[1]} : {number}")
+        break
 
     sys.exit(0)
 
