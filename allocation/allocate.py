@@ -46,10 +46,6 @@ class Game:
         assert role not in self._allocation, "role in game should be free"
         assert player not in self._allocation.values(), "player should not be in game already"
 
-        # increase interaction
-        for other_player in self._allocation.values():
-            INTERACTION[frozenset([player, other_player])] += 1
-
         self._allocation[role] = player
 
     def take_player_out(self, role: int, player: 'Player') -> None:
@@ -63,10 +59,6 @@ class Game:
 
         assert role in self._allocation, "role in game should be in"
         del self._allocation[role]
-
-        # decrease interaction
-        for other_player in self._allocation.values():
-            INTERACTION[frozenset([player, other_player])] -= 1
 
     def is_player_in_game(self, player: 'Player') -> bool:
         """ is_player_in_game """
@@ -187,9 +179,12 @@ def try_and_error() -> bool:
     if role is None:
         assert False, "Internal error : game has role or not !?"
 
-    # find a player to put in
+    # players will be selected according to:
+    # 1) fewest interactions with the ones in the game
+    # 2) players which are in fewest games
     players_sorted = sorted(PLAYERS, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), p.number_games_already_in()))
 
+    # find a player to put in
     for player_poss in players_sorted:
 
         # player already has a game for this role
@@ -204,8 +199,13 @@ def try_and_error() -> bool:
 
         # player_poss
         #  print(f"put {player} in {game}")
-        player.put_in_game(role, game)
+
+        # increase interaction
+        for other_player in game.players_in_game():
+            INTERACTION[frozenset([player, other_player])] += 1
+
         game.put_player_in(role, player)
+        player.put_in_game(role, game)
 
         # if we fail, we try otherwise !
         if try_and_error():
@@ -214,6 +214,10 @@ def try_and_error() -> bool:
         #  print(f"remove {player} from {game}")
         player.remove_from_game(role, game)
         game.take_player_out(role, player)
+
+        # decrease interaction
+        for other_player in game.players_in_game():
+            INTERACTION[frozenset([player, other_player])] -= 1
 
     return False
 
