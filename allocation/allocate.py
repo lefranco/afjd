@@ -68,16 +68,20 @@ class Game:
         for other_player in self._allocation.values():
             INTERACTION[frozenset([player, other_player])] -= 1
 
-    def player_in_game(self, player: 'Player') -> bool:
-        """ player_in_game """
+    def is_player_in_game(self, player: 'Player') -> bool:
+        """ is_player_in_game """
         return player in self._allocation.values()
 
-    def has_role(self, role: int) -> bool:
+    def players_in_game(self) -> typing.List['Player']:
+        """ players_in_game """
+        return list(self._allocation.values())
+
+    def has_role_in_game(self, role: int) -> bool:
         """ has_role """
         return role in self._allocation
 
     def list_players(self) -> str:
-        """ describe_players """
+        """ list_players """
         return ";".join([str(p) for p in self._allocation.values()])
 
     def complete(self) -> bool:
@@ -151,7 +155,7 @@ class Player:
 PLAYERS: typing.List[Player] = []
 
 # says how many times two players are in same game
-INTERACTION = collections.Counter()
+INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 
 
 def try_and_error() -> bool:
@@ -170,11 +174,13 @@ def try_and_error() -> bool:
         # we are done
         return True
 
+    assert game is not None
+
     # find a role
     role = None
     for role_poss in range(len(POWERS)):
         # game already has someone for this role
-        if not game.has_role(role_poss):
+        if not game.has_role_in_game(role_poss):
             role = role_poss
             break
 
@@ -182,8 +188,7 @@ def try_and_error() -> bool:
         assert False, "Internal error : game has role or not !?"
 
     # find a player to put in
-
-    players_sorted = sorted(PLAYERS, key=lambda p: p.number_games_already_in())
+    players_sorted = sorted(PLAYERS, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), p.number_games_already_in()))
 
     for player_poss in players_sorted:
 
@@ -192,7 +197,7 @@ def try_and_error() -> bool:
             continue
 
         # player is already in this game
-        if game.player_in_game(player_poss):
+        if game.is_player_in_game(player_poss):
             continue
 
         player = player_poss
@@ -302,7 +307,7 @@ def main() -> None:
     for game in GAMES:
         master_select = sorted(masters_list, key=lambda m: len([g for g in GAMES if g in master_game_table and master_game_table[g] == m]))
         for master_poss in master_select:
-            if not game.player_in_game(master_poss):
+            if not game.is_player_in_game(master_poss):
                 master = master_poss
                 break
         master_game_table[game] = master
