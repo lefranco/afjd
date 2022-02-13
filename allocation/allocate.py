@@ -34,7 +34,6 @@ class Game:
     def __init__(self, name: str) -> None:
         self._name = name
         self._allocation: typing.Dict[int, Player] = {}
-        self._complete = False
 
     def put_player_in(self, role: int, player: 'Player') -> None:
         """ put_player_in """
@@ -47,8 +46,6 @@ class Game:
         assert role not in self._allocation, "role in game should be free"
         self._allocation[role] = player
 
-        self._complete = len(self._allocation) == len(POWERS)
-
     def take_player_out(self, role: int, player: 'Player') -> None:
         """ put_player """
 
@@ -59,7 +56,6 @@ class Game:
 
         assert role in self._allocation, "role in game should be in"
         del self._allocation[role]
-        self._complete = False
 
     def player_in_game(self, player: 'Player') -> bool:
         """ player_in_game """
@@ -75,7 +71,7 @@ class Game:
 
     def complete(self) -> bool:
         """ complete """
-        return self._complete
+        return len(self._allocation) == len(POWERS)
 
     @property
     def name(self) -> str:
@@ -92,7 +88,6 @@ class Player:
         self._name = name
         self._allocation: typing.Dict[int, Game] = {}
         self._fully_allocated = False
-        self._is_director = False
 
     def put_in_game(self, role: int, game: Game) -> None:
         """ put_in_game """
@@ -104,7 +99,6 @@ class Player:
 
         assert role not in self._allocation, "role for player should be free"
         self._allocation[role] = game
-        self._fully_allocated = len(self._allocation) == len(POWERS)
 
     def remove_from_game(self, role: int, game: Game) -> None:
         """ remove_from_game """
@@ -116,11 +110,14 @@ class Player:
 
         assert role in self._allocation, "role for player should be in"
         del self._allocation[role]
-        self._fully_allocated = False
+
+    def number_games_already_in(self) -> int:
+        """ number_games_already_in """
+        return len(self._allocation)
 
     def fully_allocated(self) -> bool:
         """ fully_allocated """
-        return self._fully_allocated
+        return len(self._allocation) == len(POWERS)
 
     def has_role(self, role: int) -> bool:
         """ has_role """
@@ -163,9 +160,10 @@ def try_and_error() -> bool:
         assert False, "Internal error : game has role or not !?"
 
     # find a player to put in
-    players = PLAYERS.copy()
-    random.shuffle(players)
-    for player_poss in players:
+
+    players_sorted = sorted(PLAYERS, key=lambda p: p.number_games_already_in())
+
+    for player_poss in players_sorted:
 
         # player already has a game for this role
         if player_poss.has_role(role):
@@ -203,10 +201,17 @@ def main() -> None:
     global MASTERS_DATA
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-s', '--seed', required=False, help='force seed for random')
+    parser.add_argument('-r', '--randomize', required=False, action='store_true', help='randomize players before making tournament (to avoid predictibility)')
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
-    parser.add_argument('-p', '--players_file', required=True, help='names of players')
-    parser.add_argument('-m', '--masters_file', required=True, help='names of game master')
+    parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
+    parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
+    parser.add_argument('-o', '--output_file', required=True, help='resulting file')
     args = parser.parse_args()
+
+    if args.seed:
+        random.seed(args.seed)
+        print(f"Forced random seed to {my_seed}", file=sys.stderr)
 
     # load players file
     with open(args.players_file, "r", encoding='utf-8') as read_file:
@@ -214,6 +219,8 @@ def main() -> None:
 
     # all players must be different
     assert len(set(PLAYERS_DATA)) == len(PLAYERS_DATA), "Duplicate in players"
+    print(f"We have {len(PLAYERS_DATA)} players", file=sys.stderr)
+    print("", file=sys.stderr)
 
     # must be enough = more than 7
     assert len(PLAYERS_DATA) >= len(POWERS), "You need more players to hope success!"
@@ -224,11 +231,9 @@ def main() -> None:
         player = Player(name)
         PLAYERS.append(player)
 
-    game_names_prefix = args.game_names_prefix
-
     # make games (as many as players)
     for game_id, _ in enumerate(PLAYERS):
-        name = f"{game_names_prefix}_{game_id}"
+        name = f"{args.game_names_prefix}_{game_id+1}"
         game = Game(name)
         GAMES.append(game)
 
@@ -237,6 +242,8 @@ def main() -> None:
         MASTERS_DATA = [m.rstrip() for m in read_file.readlines() if m.rstrip()]
 
     assert len(set(MASTERS_DATA)) == len(MASTERS_DATA), "Duplicate in masters"
+    print(f"We have {len(MASTERS_DATA)} masters", file=sys.stderr)
+    print("", file=sys.stderr)
 
     # must be safe = less than  7
     assert len(MASTERS_DATA) < len(POWERS), "Number of masters is unsafe"
@@ -252,6 +259,11 @@ def main() -> None:
             print(f"Game master {master_name} is playing !", file=sys.stderr)
             player = player_table[master_name]
         masters_list.append(player)
+    print("", file=sys.stderr)
+
+    if args.randomize:
+        print(f"Randomizing players !", file=sys.stderr)
+        random.shuffle(PLAYERS)
 
     # if badly designed, we may calculate for too long
     # so this allows us to interrupt gracefully
@@ -272,9 +284,14 @@ def main() -> None:
                 break
         master_game_table[game] = master
 
-    # show stuff
-    for game in GAMES:
-        print(f"{game.name};{master_game_table[game].name};{game.list_players()}")
+    for master in masters_list:
+        print(f"Game master {master.name} has {len([g for g in GAMES if master_game_table[g] == master])} games!", file=sys.stderr)
+    print("", file=sys.stderr)
+
+    # output stuff
+    with open(args.output_file, "w", encoding='utf-8') as read_file:
+        for game in GAMES:
+            read_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
 
     sys.exit(0)
 
