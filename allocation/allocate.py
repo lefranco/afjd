@@ -15,10 +15,8 @@ import random
 
 def panic() -> None:
     """ panic """
-
     print('You pressed Ctrl+C!')
-
-    sys.exit(0)
+    sys.exit(1)
 
 
 POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
@@ -33,8 +31,8 @@ PLAYERS: typing.List['Player'] = []
 class Game:
     """ a game """
 
-    def __init__(self, game_id: int) -> None:
-        self._number = game_id
+    def __init__(self, name: str) -> None:
+        self._name = name
         self._allocation: typing.Dict[int, Player] = {}
         self._complete = False
 
@@ -71,31 +69,27 @@ class Game:
         """ has_role """
         return role in self._allocation
 
-    def describe_players(self) -> str:
+    def list_players(self) -> str:
         """ describe_players """
-        return " ".join([f"{POWERS[k]} : {v}" for k, v in self._allocation.items()])
+        return ";".join([str(p) for p in self._allocation.values()])
 
     def complete(self) -> bool:
         """ complete """
         return self._complete
 
     @property
-    def number(self) -> int:
-        """ number """
-        return self._number
-
-    def __str__(self) -> str:
-        return f"Game n°{self._number}"
+    def name(self) -> str:
+        """ name """
+        return self._name
 
 
 class Player:
     """ a player """
 
-    def __init__(self, player_id: int) -> None:
+    def __init__(self, name: str) -> None:
 
-        assert isinstance(player_id, int)
-        assert 0 <= player_id < len(PLAYERS_DATA), "player_id should be in range"
-        self._name = PLAYERS_DATA[player_id]
+        assert isinstance(name, str)
+        self._name = name
         self._allocation: typing.Dict[int, Game] = {}
         self._fully_allocated = False
         self._is_director = False
@@ -141,10 +135,10 @@ class Player:
         return self._name
 
 
-def attempt() -> bool:
-    """ attempt """
+def try_and_error() -> bool:
+    """ try_and_error """
 
-    #  print("attempt()")
+    #  print("try_and_error()")
 
     # find a game where to fill up
     game = None
@@ -189,7 +183,7 @@ def attempt() -> bool:
         game.put_player_in(role, player)
 
         # if we fail, we try otherwise !
-        if attempt():
+        if try_and_error():
             return True
 
         #  print(f"remove {player} from {game}")
@@ -202,60 +196,73 @@ def attempt() -> bool:
 def main() -> None:
     """ main """
 
+    # we make big use of recursion here
     sys.setrecursionlimit(10000)
 
     global PLAYERS_DATA
     global MASTERS_DATA
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
     parser.add_argument('-p', '--players_file', required=True, help='names of players')
     parser.add_argument('-m', '--masters_file', required=True, help='names of game master')
     args = parser.parse_args()
 
     # load players file
     with open(args.players_file, "r", encoding='utf-8') as read_file:
-        PLAYERS_DATA = [p.rstrip() for p in read_file.readlines()]
+        PLAYERS_DATA = [p.rstrip() for p in read_file.readlines() if p.rstrip()]
 
     # all players must be different
     assert len(set(PLAYERS_DATA)) == len(PLAYERS_DATA), "Duplicate in players"
 
-    # must divide 7
-    assert len(PLAYERS_DATA) % len(POWERS) == 0, "Number of players does not allow success"
+    # must be enough = more than 7
+    assert len(PLAYERS_DATA) >= len(POWERS), "You need more players to hope success!"
 
     # make players
     for player_id, _ in enumerate(PLAYERS_DATA):
-        player = Player(player_id)
+        name = PLAYERS_DATA[player_id]
+        player = Player(name)
         PLAYERS.append(player)
+
+    game_names_prefix = args.game_names_prefix
 
     # make games (as many as players)
     for game_id, _ in enumerate(PLAYERS):
-        game = Game(game_id)
+        name = f"{game_names_prefix}_{game_id}"
+        game = Game(name)
         GAMES.append(game)
 
     # load masters file
     with open(args.masters_file, "r", encoding='utf-8') as read_file:
-        MASTERS_DATA = [m.rstrip() for m in read_file.readlines()]
+        MASTERS_DATA = [m.rstrip() for m in read_file.readlines() if m.rstrip()]
 
     assert len(set(MASTERS_DATA)) == len(MASTERS_DATA), "Duplicate in masters"
 
-    # must be less than  7
+    # must be safe = less than  7
     assert len(MASTERS_DATA) < len(POWERS), "Number of masters is unsafe"
 
     player_table = {p.name: p for p in PLAYERS}
     masters_list = []
     for master_name in MASTERS_DATA:
-        assert master_name in player_table, f"{master_name} not in players !"
-        player = player_table[master_name]
+        # a game master may not be playing
+        if master_name not in player_table:
+            print(f"Game master {master_name} is not playing !", file=sys.stderr)
+            player = Player(master_name)
+        else:
+            print(f"Game master {master_name} is playing !", file=sys.stderr)
+            player = player_table[master_name]
         masters_list.append(player)
 
+    # if badly designed, we may calculate for too long
+    # so this allows us to interrupt gracefully
     try:
-        status = attempt()
+        status = try_and_error()
     except KeyboardInterrupt:
         panic()
 
     assert status, "Failed to make tournament !"
 
-    # put masters
+    # assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
     for game in GAMES:
         master_select = sorted(masters_list, key=lambda m: len([g for g in GAMES if g in master_game_table and master_game_table[g] == m]))
@@ -266,11 +273,11 @@ def main() -> None:
         master_game_table[game] = master
 
     # show stuff
-    print("========================")
     for game in GAMES:
-        print(f"{game} : {game.describe_players()} [{master_game_table[game].name}]")
+        print(f"{game.name};{master_game_table[game].name};{game.list_players()}")
 
     sys.exit(0)
+
 
 if __name__ == '__main__':
     main()
