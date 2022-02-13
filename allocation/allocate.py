@@ -36,7 +36,7 @@ class Game:
         self._allocation: typing.Dict[int, Player] = {}
 
     def put_player_in(self, role: int, player: 'Player') -> None:
-        """ put_player_in """
+        """ puts the player in this game """
 
         assert isinstance(role, int), "role should be an int"
         assert 0 <= role < len(POWERS), "role should be in range"
@@ -46,10 +46,14 @@ class Game:
         assert role not in self._allocation, "role in game should be free"
         assert player not in self._allocation.values(), "player should not be in game already"
 
+        # increase interaction
+        for other_player in self._allocation.values():
+            INTERACTION[frozenset([player, other_player])] += 1
+
         self._allocation[role] = player
 
     def take_player_out(self, role: int, player: 'Player') -> None:
-        """ put_player """
+        """ takes the player ou of this game """
 
         assert isinstance(role, int), "role should be an int"
         assert 0 <= role < len(POWERS), "role should be in range"
@@ -60,8 +64,13 @@ class Game:
         assert role in self._allocation, "role in game should be in"
         del self._allocation[role]
 
+        # decrease interaction
+        for other_player in self._allocation.values():
+            INTERACTION[frozenset([player, other_player])] -= 1
+
     def is_player_in_game(self, player: 'Player') -> bool:
-        """ is_player_in_game """
+        """ tells if player plays in this game """
+        assert isinstance(player, Player), "player should be a Player"
         return player in self._allocation.values()
 
     def players_in_game(self) -> typing.List['Player']:
@@ -70,19 +79,38 @@ class Game:
 
     def has_role_in_game(self, role: int) -> bool:
         """ has_role """
+        assert 0 <= role < len(POWERS), "role should be in range"
         return role in self._allocation
 
-    def list_players(self) -> str:
-        """ list_players """
-        return ";".join([str(p) for p in self._allocation.values()])
-
-    def complete(self) -> bool:
-        """ complete """
+    def is_complete(self) -> bool:
+        """ is the game complete ? """
         return len(self._allocation) == len(POWERS)
+
+    def role_in_game(self, player: 'Player') -> int:
+        """ tells which role this players has i nthis game """
+        assert isinstance(player, Player), "player should be a Player"
+        for role, player2 in self._allocation.items():
+            if player2 == player:
+                return role
+        assert False, "Internal error in role_in_game()"
+        return -1
+
+    def player_with_role(self, role: int) -> 'Player':
+        """ tells which player has this role in this game """
+        assert 0 <= role < len(POWERS), "role should be in range"
+        assert role in self._allocation, "Internal error in player_with_role()"
+        return self._allocation[role]
+
+    def list_players(self) -> str:
+        """ display list of players of the game """
+        return ";".join([str(self._allocation[r]) for r in range(len(POWERS))])
 
     @property
     def name(self) -> str:
         """ name """
+        return self._name
+
+    def __str__(self) -> str:
         return self._name
 
 
@@ -101,7 +129,7 @@ class Player:
         self._fully_allocated = False
 
     def put_in_game(self, role: int, game: Game) -> None:
-        """ put_in_game """
+        """ put the player in a game """
 
         assert isinstance(role, int)
         assert 0 <= role < len(POWERS), "role should be in range"
@@ -112,7 +140,7 @@ class Player:
         self._allocation[role] = game
 
     def remove_from_game(self, role: int, game: Game) -> None:
-        """ remove_from_game """
+        """ remove the player from a game """
 
         assert isinstance(role, int)
         assert 0 <= role < len(POWERS), "role should be in range"
@@ -122,16 +150,17 @@ class Player:
         assert role in self._allocation, "role for player should be in"
         del self._allocation[role]
 
-    def number_games_already_in(self) -> int:
-        """ number_games_already_in """
-        return len(self._allocation)
+    def games_in(self) -> typing.Set[Game]:
+        """ set of games the player plays in  """
+        return set(self._allocation.values())
 
-    def fully_allocated(self) -> bool:
-        """ fully_allocated """
+    def is_fully_allocated(self) -> bool:
+        """ is the player fully allocated ? """
         return len(self._allocation) == len(POWERS)
 
     def has_role(self, role: int) -> bool:
-        """ has_role """
+        """ does the players has this role ? """
+        assert 0 <= role < len(POWERS), "role should be in range"
         return role in self._allocation
 
     @property
@@ -158,11 +187,11 @@ def try_and_error() -> bool:
     # find a game where to fill up
     game = None
     for game_poss in GAMES:
-        if not game_poss.complete():
+        if not game_poss.is_complete():
             game = game_poss
             break
 
-    if not game:
+    if game is None:
         # we are done
         return True
 
@@ -182,7 +211,7 @@ def try_and_error() -> bool:
     # players will be selected according to:
     # 1) fewest interactions with the ones in the game
     # 2) players which are in fewest games
-    players_sorted = sorted(PLAYERS, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), p.number_games_already_in()))
+    players_sorted = sorted(PLAYERS, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in())))  # type: ignore
 
     # find a player to put in
     for player_poss in players_sorted:
@@ -200,10 +229,6 @@ def try_and_error() -> bool:
         # player_poss
         #  print(f"put {player} in {game}")
 
-        # increase interaction
-        for other_player in game.players_in_game():
-            INTERACTION[frozenset([player, other_player])] += 1
-
         game.put_player_in(role, player)
         player.put_in_game(role, game)
 
@@ -215,11 +240,83 @@ def try_and_error() -> bool:
         player.remove_from_game(role, game)
         game.take_player_out(role, player)
 
-        # decrease interaction
-        for other_player in game.players_in_game():
-            INTERACTION[frozenset([player, other_player])] -= 1
-
     return False
+
+
+def improve_interactions() -> None:
+    """ improve_interactions """
+
+    assert False, "Sorry, improve interactions is just not working... (yet ?)"
+
+    # try to improve interactivity between players
+    n = 0
+    while True:
+
+        # get the interactions between players of more than 1 (bad ones)
+        bad_interactions = [i[0] for i in INTERACTION.items() if i[1] > 1]
+
+        # nothing to do
+        if not bad_interactions:
+            break
+
+        print(f"we have now {len(bad_interactions)} bad interactions")
+
+        # let's kill one of them
+        changed = False
+        for interaction in bad_interactions:
+
+            # common games between these players
+            player1 = list(interaction)[0]
+            player2 = list(interaction)[1]
+
+            common_games = player1.games_in() & player2.games_in()
+            assert len(common_games) > 1, "Interaction is bad or not !?"
+
+            # try to make a swap by moving player1
+            for game in common_games:
+
+                role = game.role_in_game(player1)
+
+                for other_game in GAMES:
+
+                    if other_game == game:
+                        continue
+                    player3 = other_game.player_with_role(role)
+
+                    if player3 == player1:
+                        continue
+
+                    if game.is_player_in_game(player3) or other_game.is_player_in_game(player1):
+                        continue
+
+                    # swap
+                    # in games
+                    game.take_player_out(role, player1)
+                    other_game.take_player_out(role, player3)
+                    other_game.put_player_in(role, player1)
+                    game.put_player_in(role, player3)
+
+                    # for players
+                    player1.remove_from_game(role, game)
+                    player3.remove_from_game(role, other_game)
+                    player3.put_in_game(role, game)
+                    player1.put_in_game(role, other_game)
+
+                    n += 1
+                    print(f"{n} swapping {player1}/{game} and {player3}/{other_game} (role={role})\n")
+                    with open(f"state_{n}", "w", encoding='utf-8') as write_file:
+                        write_file.write(f"swapping {player1}/{game} and {player3}/{other_game} (role={role})\n")
+                        for game2 in GAMES:
+                            write_file.write(f"{game2.name};xxx;{game2.list_players()}\n")
+
+                    changed = True
+                    break
+
+                if changed:
+                    break
+
+            if changed:
+                break
 
 
 def main() -> None:
@@ -237,6 +334,9 @@ def main() -> None:
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
     parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
+    parser.add_argument('-O', '--optimize', required=False, action='store_true', help='try to optimize interactions')
+    parser.add_argument('-S', '--show_interactions', required=False, action='store_true', help='show interactions at the end of the process')
+
     parser.add_argument('-o', '--output_file', required=True, help='resulting file')
     args = parser.parse_args()
 
@@ -306,6 +406,10 @@ def main() -> None:
 
     assert status, "Failed to make tournament !"
 
+    # improve interactions (make less)
+    if args.optimize:
+        improve_interactions()
+
     # assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
     for game in GAMES:
@@ -321,15 +425,16 @@ def main() -> None:
     print("")
 
     # output stuff
-    with open(args.output_file, "w", encoding='utf-8') as read_file:
+    with open(args.output_file, "w", encoding='utf-8') as write_file:
         for game in GAMES:
-            read_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
+            write_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
 
-    print("Worst interactions  > 1: ")
-    for interaction, number in INTERACTION.most_common():
-        if number == 1:
-            break
-        print(f"{list(interaction)[0]} <> {list(interaction)[1]} : {number}")
+    if args.show_interactions:
+        print("Worst interactions  > 1: ")
+        for interaction, number in INTERACTION.most_common():
+            if number == 1:
+                break
+            print(f"{list(interaction)[0]} <> {list(interaction)[1]} : {number}")
 
     sys.exit(0)
 
