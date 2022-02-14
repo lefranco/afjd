@@ -12,6 +12,7 @@ import typing
 import argparse
 import sys
 import collections
+import time
 import random
 
 
@@ -161,7 +162,7 @@ PLAYERS: typing.List[Player] = []
 INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 
 
-def try_and_error(threshold_interactions: int) -> bool:
+def try_and_error(threshold_interactions: typing.Optional[int]) -> bool:
     """ try_and_error """
 
     #  print("try_and_error()")
@@ -194,11 +195,12 @@ def try_and_error(threshold_interactions: int) -> bool:
     # 1) fewest interactions with the ones in the game
     # 2) players which are in fewest games
 
-    acceptable_players = [p for p in PLAYERS if all([INTERACTION[frozenset([pg, p])] < threshold_interactions for pg in game.players_in_game()])]
-    #acceptable_players = PLAYERS
+    if threshold_interactions is not None:
+        acceptable_players = [p for p in PLAYERS if all([INTERACTION[frozenset([pg, p])] < threshold_interactions for pg in game.players_in_game()])]
+    else:
+        acceptable_players = PLAYERS
 
     players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in())))  # type: ignore
-
 
     # find a player to put in
     for player_poss in players_sorted:
@@ -232,6 +234,8 @@ def try_and_error(threshold_interactions: int) -> bool:
 
 def main() -> None:
     """ main """
+
+    start_time = time.time()
 
     # we make big use of recursion here
     sys.setrecursionlimit(10000)
@@ -316,12 +320,10 @@ def main() -> None:
         print("")
         random.shuffle(PLAYERS)
 
-    threshold_interactions = args.threshold_interactions if args.threshold_interactions else 0
-
     # if badly designed, we may calculate for too long
     # so this allows us to interrupt gracefully
     try:
-        status = try_and_error(threshold_interactions)
+        status = try_and_error(args.threshold_interactions)
     except KeyboardInterrupt:
         panic()
 
@@ -353,6 +355,9 @@ def main() -> None:
                 break
             print(f"{list(interaction)[0]} <> {list(interaction)[1]} : {number}")
 
+    finished_time = time.time()
+    elapsed = finished_time - start_time
+    print(f"Elapsed time : {elapsed} sec.")
     sys.exit(0)
 
 
