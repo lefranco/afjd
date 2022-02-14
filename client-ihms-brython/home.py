@@ -646,18 +646,27 @@ def show_technical():
 
     # --
 
-    title6 = html.H4("Remerciements")
+    title6 = html.H4("Création de fichier de tournoi")
     MY_SUB_PANEL <= title6
 
-    link6 = html.A(href="https://brython.info/", target="_blank")
-    link6 <= "Outil utilisé pour ce site web"
+    link6 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
+    link6 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
     MY_SUB_PANEL <= link6
+
+    # --
+
+    title7 = html.H4("Remerciements")
+    MY_SUB_PANEL <= title7
+
+    link7 = html.A(href="https://brython.info/", target="_blank")
+    link7 <= "Outil utilisé pour ce site web"
+    MY_SUB_PANEL <= link7
 
     MY_SUB_PANEL <= html.P()
 
-    link7 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link7 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link7
+    link8 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link8 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link8
 
 
 def select_interface():
