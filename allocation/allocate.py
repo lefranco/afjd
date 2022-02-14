@@ -162,10 +162,15 @@ PLAYERS: typing.List[Player] = []
 INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 
 
-def try_and_error(threshold_interactions: typing.Optional[int]) -> bool:
+MAX_DEPTH = 0
+
+def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> bool:
     """ try_and_error """
 
-    #  print("try_and_error()")
+    global MAX_DEPTH
+    if depth // len(POWERS) > MAX_DEPTH:
+        print(f"{depth // len(POWERS)} ", end='', flush=True)
+        MAX_DEPTH = depth // len(POWERS)
 
     # find a game where to fill up
     game = None
@@ -200,7 +205,7 @@ def try_and_error(threshold_interactions: typing.Optional[int]) -> bool:
     else:
         acceptable_players = PLAYERS
 
-    players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in())))  # type: ignore
+    players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in()), p.name))  # type: ignore
 
     # find a player to put in
     for player_poss in players_sorted:
@@ -215,17 +220,13 @@ def try_and_error(threshold_interactions: typing.Optional[int]) -> bool:
 
         player = player_poss
 
-        # player_poss
-        #  print(f"put {player} in {game}")
-
         game.put_player_in(role, player)
         player.put_in_game(role, game)
 
         # if we fail, we try otherwise !
-        if try_and_error(threshold_interactions):
+        if try_and_error(depth + 1, threshold_interactions):
             return True
 
-        #  print(f"remove {player} from {game}")
         player.remove_from_game(role, game)
         game.take_player_out(role, player)
 
@@ -323,9 +324,12 @@ def main() -> None:
     # if badly designed, we may calculate for too long
     # so this allows us to interrupt gracefully
     try:
-        status = try_and_error(args.threshold_interactions)
+        status = try_and_error(0, args.threshold_interactions)
     except KeyboardInterrupt:
         panic()
+
+    # end line after displaying depth
+    print("")
 
     assert status, "Failed to make tournament !"
 
