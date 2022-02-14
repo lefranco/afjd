@@ -1493,6 +1493,11 @@ def create_many_games():
     MY_SUB_PANEL <= information
     MY_SUB_PANEL <= html.BR()
 
+    information2 = html.DIV(Class='important')
+    information2 <= "Le site peut vous fournir une ressource pour vous aider à créer le fichier CSV pour votre tournoi. Si vous êtes intéressé, allez dans accueil/coin technique"
+    MY_SUB_PANEL <= information2
+    MY_SUB_PANEL <= html.BR()
+
     form = html.FORM()
 
     fieldset = html.FIELDSET()
