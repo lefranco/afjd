@@ -161,7 +161,7 @@ PLAYERS: typing.List[Player] = []
 INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 
 
-def try_and_error() -> bool:
+def try_and_error(threshold_interactions: int) -> bool:
     """ try_and_error """
 
     #  print("try_and_error()")
@@ -193,7 +193,12 @@ def try_and_error() -> bool:
     # players will be selected according to:
     # 1) fewest interactions with the ones in the game
     # 2) players which are in fewest games
-    players_sorted = sorted(PLAYERS, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in())))  # type: ignore
+
+    acceptable_players = [p for p in PLAYERS if all([INTERACTION[frozenset([pg, p])] < threshold_interactions for pg in game.players_in_game()])]
+    #acceptable_players = PLAYERS
+
+    players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in())))  # type: ignore
+
 
     # find a player to put in
     for player_poss in players_sorted:
@@ -215,7 +220,7 @@ def try_and_error() -> bool:
         player.put_in_game(role, game)
 
         # if we fail, we try otherwise !
-        if try_and_error():
+        if try_and_error(threshold_interactions):
             return True
 
         #  print(f"remove {player} from {game}")
@@ -235,14 +240,19 @@ def main() -> None:
     global MASTERS_DATA
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
+    parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players')
+    parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
+
     parser.add_argument('-s', '--seed', required=False, help='force seed for random')
     parser.add_argument('-r', '--randomize', required=False, action='store_true', help='randomize players before making tournament (to avoid predictibility)')
+
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
-    parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
-    parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
+
+    parser.add_argument('-t', '--threshold_interactions', required=False, type=int, help='threshold of acceptable interactions : ')
     parser.add_argument('-S', '--show_interactions', required=False, action='store_true', help='show interactions at the end of the process')
 
-    parser.add_argument('-o', '--output_file', required=True, help='resulting file')
+    parser.add_argument('-o', '--output_file', required=False, help='resulting file')
     args = parser.parse_args()
 
     if args.seed:
@@ -253,12 +263,16 @@ def main() -> None:
     with open(args.players_file, "r", encoding='utf-8') as read_file:
         PLAYERS_DATA = [p.rstrip() for p in read_file.readlines() if p.rstrip()]
 
+    # for testing pupose we may limit to fewer players
+    if args.limit:
+        PLAYERS_DATA = PLAYERS_DATA[:args.limit]
+
     # all players must be different
     assert len(set(PLAYERS_DATA)) == len(PLAYERS_DATA), "Duplicate in players"
     print(f"We have {len(PLAYERS_DATA)} players")
     print("")
 
-    # must be enough = more than 7
+    # must be enough more than 7
     assert len(PLAYERS_DATA) >= len(POWERS), "You need more players to hope success!"
 
     # make players
@@ -281,7 +295,7 @@ def main() -> None:
     print(f"We have {len(MASTERS_DATA)} masters")
     print("")
 
-    # must be safe = less than  7
+    # must be less than  7 (otherwise if 7 in same game game cannot be mastered)
     assert len(MASTERS_DATA) < len(POWERS), "Number of masters is unsafe"
 
     player_table = {p.name: p for p in PLAYERS}
@@ -302,10 +316,12 @@ def main() -> None:
         print("")
         random.shuffle(PLAYERS)
 
+    threshold_interactions = args.threshold_interactions if args.threshold_interactions else 0
+
     # if badly designed, we may calculate for too long
     # so this allows us to interrupt gracefully
     try:
-        status = try_and_error()
+        status = try_and_error(threshold_interactions)
     except KeyboardInterrupt:
         panic()
 
