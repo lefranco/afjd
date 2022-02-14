@@ -5,6 +5,7 @@
 File : allocate.py
 
 Solves the problem of allocating players in a Diplomacy tournament
+For 1000 players takes 35 seconds on an average laptop
 """
 
 import typing
@@ -74,32 +75,17 @@ class Game:
         return player in self._allocation.values()
 
     def players_in_game(self) -> typing.List['Player']:
-        """ players_in_game """
+        """ extracts players allocated in this game """
         return list(self._allocation.values())
 
     def has_role_in_game(self, role: int) -> bool:
-        """ has_role """
+        """ hios the someone with this role in the game ? """
         assert 0 <= role < len(POWERS), "role should be in range"
         return role in self._allocation
 
     def is_complete(self) -> bool:
         """ is the game complete ? """
         return len(self._allocation) == len(POWERS)
-
-    def role_in_game(self, player: 'Player') -> int:
-        """ tells which role this players has i nthis game """
-        assert isinstance(player, Player), "player should be a Player"
-        for role, player2 in self._allocation.items():
-            if player2 == player:
-                return role
-        assert False, "Internal error in role_in_game()"
-        return -1
-
-    def player_with_role(self, role: int) -> 'Player':
-        """ tells which player has this role in this game """
-        assert 0 <= role < len(POWERS), "role should be in range"
-        assert role in self._allocation, "Internal error in player_with_role()"
-        return self._allocation[role]
 
     def list_players(self) -> str:
         """ display list of players of the game """
@@ -153,10 +139,6 @@ class Player:
     def games_in(self) -> typing.Set[Game]:
         """ set of games the player plays in  """
         return set(self._allocation.values())
-
-    def is_fully_allocated(self) -> bool:
-        """ is the player fully allocated ? """
-        return len(self._allocation) == len(POWERS)
 
     def has_role(self, role: int) -> bool:
         """ does the players has this role ? """
@@ -243,82 +225,6 @@ def try_and_error() -> bool:
     return False
 
 
-def improve_interactions() -> None:
-    """ improve_interactions """
-
-    assert False, "Sorry, improve interactions is just not working... (yet ?)"
-
-    # try to improve interactivity between players
-    n = 0
-    while True:
-
-        # get the interactions between players of more than 1 (bad ones)
-        bad_interactions = [i[0] for i in INTERACTION.items() if i[1] > 1]
-
-        # nothing to do
-        if not bad_interactions:
-            break
-
-        print(f"we have now {len(bad_interactions)} bad interactions")
-
-        # let's kill one of them
-        changed = False
-        for interaction in bad_interactions:
-
-            # common games between these players
-            player1 = list(interaction)[0]
-            player2 = list(interaction)[1]
-
-            common_games = player1.games_in() & player2.games_in()
-            assert len(common_games) > 1, "Interaction is bad or not !?"
-
-            # try to make a swap by moving player1
-            for game in common_games:
-
-                role = game.role_in_game(player1)
-
-                for other_game in GAMES:
-
-                    if other_game == game:
-                        continue
-                    player3 = other_game.player_with_role(role)
-
-                    if player3 == player1:
-                        continue
-
-                    if game.is_player_in_game(player3) or other_game.is_player_in_game(player1):
-                        continue
-
-                    # swap
-                    # in games
-                    game.take_player_out(role, player1)
-                    other_game.take_player_out(role, player3)
-                    other_game.put_player_in(role, player1)
-                    game.put_player_in(role, player3)
-
-                    # for players
-                    player1.remove_from_game(role, game)
-                    player3.remove_from_game(role, other_game)
-                    player3.put_in_game(role, game)
-                    player1.put_in_game(role, other_game)
-
-                    n += 1
-                    print(f"{n} swapping {player1}/{game} and {player3}/{other_game} (role={role})\n")
-                    with open(f"state_{n}", "w", encoding='utf-8') as write_file:
-                        write_file.write(f"swapping {player1}/{game} and {player3}/{other_game} (role={role})\n")
-                        for game2 in GAMES:
-                            write_file.write(f"{game2.name};xxx;{game2.list_players()}\n")
-
-                    changed = True
-                    break
-
-                if changed:
-                    break
-
-            if changed:
-                break
-
-
 def main() -> None:
     """ main """
 
@@ -334,7 +240,6 @@ def main() -> None:
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
     parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
-    parser.add_argument('-O', '--optimize', required=False, action='store_true', help='try to optimize interactions')
     parser.add_argument('-S', '--show_interactions', required=False, action='store_true', help='show interactions at the end of the process')
 
     parser.add_argument('-o', '--output_file', required=True, help='resulting file')
@@ -405,10 +310,6 @@ def main() -> None:
         panic()
 
     assert status, "Failed to make tournament !"
-
-    # improve interactions (make less)
-    if args.optimize:
-        improve_interactions()
 
     # assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
