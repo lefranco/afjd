@@ -201,6 +201,7 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
     # 2) players which are in fewest games
 
     if threshold_interactions is not None:
+        assert threshold_interactions >= 1, "There will always be at least one interaction (of course)"
         acceptable_players = [p for p in PLAYERS if all([INTERACTION[frozenset([pg, p])] < threshold_interactions for pg in game.players_in_game()])]
     else:
         acceptable_players = PLAYERS
