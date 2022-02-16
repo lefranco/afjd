@@ -222,10 +222,10 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
 
     # players will be selected according to:
     # 1) fewest interactions with the ones in the game
-    # 2) players which are in fewest games
+    # 2) players which are in more games (more efficient than less games for some reason)
     # 3) idetifier of player (for readability)
 
-    players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in()), p.number))  # type: ignore
+    players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), - len(p.games_in()), p.number))  # type: ignore
 
     # find a player to put in
     for player in players_sorted:
