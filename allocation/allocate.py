@@ -15,6 +15,7 @@ import collections
 import time
 import random
 
+DEBUG = False
 
 # this is a standard diplomacy constant
 POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
@@ -90,7 +91,7 @@ class Game:
 
     def list_players(self) -> str:
         """ display list of players of the game """
-        return ";".join([str(self._allocation[r]) for r in range(len(POWERS))])
+        return ";".join([str(self._allocation[r] if r in self._allocation else "_") for r in range(len(POWERS))])
 
     @property
     def name(self) -> str:
@@ -108,10 +109,12 @@ GAMES: typing.List[Game] = []
 class Player:
     """ a player """
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, number: int) -> None:
 
         assert isinstance(name, str)
         self._name = name
+        assert isinstance(number, int)
+        self._number = number
         self._allocation: typing.Dict[int, Game] = {}
         self._fully_allocated = False
 
@@ -151,6 +154,11 @@ class Player:
         """ name """
         return self._name
 
+    @property
+    def number(self) -> int:
+        """ number """
+        return self._number
+
     def __str__(self) -> str:
         return self._name
 
@@ -163,6 +171,7 @@ INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 
 
 MAX_DEPTH = 0
+
 
 def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> bool:
     """ try_and_error """
@@ -196,37 +205,47 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
     if role is None:
         assert False, "Internal error : game has role or not !?"
 
+    # objective acceptable players
+    acceptable_players = [p for p in PLAYERS if not p.has_role(role) and not game.is_player_in_game(p)]
+
+    # we may be even more restrictive
+    if threshold_interactions is not None:
+        assert threshold_interactions >= 1, "There will always be at least one interaction (of course)"
+        acceptable_players = [p for p in acceptable_players if all([INTERACTION[frozenset([pg, p])] < threshold_interactions for pg in game.players_in_game()])]
+
+    # debug
+    if DEBUG:
+        print("HEURISTIC: crit= interact. / games in / id : ")
+        for play in acceptable_players:
+            print(f"{play} : crit={(sum([INTERACTION[frozenset([pp, play])] for pp in game.players_in_game()]), len(play.games_in()), play.number)}")
+        print("--")
+
     # players will be selected according to:
     # 1) fewest interactions with the ones in the game
     # 2) players which are in fewest games
+    # 3) idetifier of player (for readability)
 
-    if threshold_interactions is not None:
-        assert threshold_interactions >= 1, "There will always be at least one interaction (of course)"
-        acceptable_players = [p for p in PLAYERS if all([INTERACTION[frozenset([pg, p])] < threshold_interactions for pg in game.players_in_game()])]
-    else:
-        acceptable_players = PLAYERS
-
-    players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in()), p.name))  # type: ignore
+    players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in()), p.number))  # type: ignore
 
     # find a player to put in
-    for player_poss in players_sorted:
-
-        # player already has a game for this role
-        if player_poss.has_role(role):
-            continue
-
-        # player is already in this game
-        if game.is_player_in_game(player_poss):
-            continue
-
-        player = player_poss
+    for player in players_sorted:
 
         game.put_player_in(role, player)
         player.put_in_game(role, game)
 
+        if DEBUG:
+            print(f"after have put {player} in {game}")
+            for gam in GAMES:
+                print(f"{gam.name};xxx;{gam.list_players()}")
+
         # if we fail, we try otherwise !
         if try_and_error(depth + 1, threshold_interactions):
             return True
+
+        if DEBUG:
+            print(f"before remove {player} from {game}")
+            for gam in GAMES:
+                print(f"{gam.name};xxx;{gam.list_players()}")
 
         player.remove_from_game(role, game)
         game.take_player_out(role, player)
@@ -246,6 +265,9 @@ def main() -> None:
     global MASTERS_DATA
 
     parser = argparse.ArgumentParser()
+
+    parser.add_argument('-d', '--debug', required=False, action='store_true', help='switch to debug mode')
+
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
     parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players')
     parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
@@ -260,6 +282,10 @@ def main() -> None:
 
     parser.add_argument('-o', '--output_file', required=False, help='resulting file')
     args = parser.parse_args()
+
+    global DEBUG
+    if args.debug:
+        DEBUG = True
 
     if args.seed:
         random.seed(args.seed)
@@ -284,7 +310,7 @@ def main() -> None:
     # make players
     for player_id, _ in enumerate(PLAYERS_DATA):
         name = PLAYERS_DATA[player_id]
-        player = Player(name)
+        player = Player(name, player_id)
         PLAYERS.append(player)
 
     # make games (as many as players)
@@ -310,7 +336,7 @@ def main() -> None:
         # a game master may not be playing
         if master_name not in player_table:
             print(f"Game master {master_name} is not playing !")
-            player = Player(master_name)
+            player = Player(master_name, -1)
         else:
             print(f"Game master {master_name} is playing !")
             player = player_table[master_name]
