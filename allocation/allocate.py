@@ -170,16 +170,11 @@ PLAYERS: typing.List[Player] = []
 INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 
 
-MAX_DEPTH = 0
-
 
 def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> bool:
     """ try_and_error """
 
-    global MAX_DEPTH
-    if depth // len(POWERS) > MAX_DEPTH:
-        print(f"{depth // len(POWERS)} ", end='', flush=True)
-        MAX_DEPTH = depth // len(POWERS)
+    print(f"{depth // len(POWERS)} ", end='\r', flush=True)
 
     # find a game where to fill up
     game = None
@@ -375,9 +370,10 @@ def main() -> None:
     print("")
 
     # output stuff
-    with open(args.output_file, "w", encoding='utf-8') as write_file:
-        for game in GAMES:
-            write_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
+    if args.output_file:
+        with open(args.output_file, "w", encoding='utf-8') as write_file:
+            for game in GAMES:
+                write_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
 
     if args.show_interactions:
         print("Worst interactions  > 1: ")
