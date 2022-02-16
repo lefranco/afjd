@@ -2063,10 +2063,13 @@ def submit_orders():
 
     while True:
 
-        if advancement_selected % 5 in [0, 2]:
+        # one backwards
+        advancement_selected -= 1
+
+        # out of scope : done
+        if advancement_selected < 0:
             break
 
-        advancement_selected -= 1
         transition_loaded = game_transition_reload(GAME_ID, advancement_selected)
         if not transition_loaded:
             break
@@ -2077,6 +2080,10 @@ def submit_orders():
         display_left <= game_status
         display_left <= report_window
         display_left <= html.BR()
+
+        # just displayed last moves : done
+        if advancement_selected % 5 in [0, 2]:
+            break
 
     # right side
 
