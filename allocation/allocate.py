@@ -14,6 +14,7 @@ import sys
 import collections
 import time
 import random
+import faulthandler
 
 DEBUG = False
 
@@ -288,7 +289,6 @@ def main() -> None:
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
 
     parser.add_argument('-t', '--threshold_interactions', required=False, type=int, help='threshold of acceptable interactions : ')
-    parser.add_argument('-S', '--show_interactions', required=False, action='store_true', help='show interactions at the end of the process')
 
     parser.add_argument('-o', '--output_file', required=False, help='resulting file')
 
@@ -398,12 +398,10 @@ def main() -> None:
             for game in GAMES:
                 write_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
 
-    if args.show_interactions:
-        print("Worst interactions  > 1: ")
-        for interaction, number in INTERACTION.most_common():
-            if number == 1:
-                break
-            print(f"{list(interaction)[0]} <> {list(interaction)[1]} : {number}")
+    stats = {n: len([i for i in INTERACTION.values() if i == n]) for n in INTERACTION.values() if n > 1}
+    for number_interactions, number_occurence in sorted(stats.items(), key=lambda i: i[0], reverse=True):
+        print(f"We have {number_occurence} occurences of two players inteacting {number_interactions} times")
+    print("")
 
     finished_time = time.time()
     elapsed = finished_time - start_time
@@ -412,4 +410,5 @@ def main() -> None:
 
 
 if __name__ == '__main__':
+    faulthandler.enable()
     main()
