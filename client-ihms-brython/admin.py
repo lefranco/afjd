@@ -398,7 +398,7 @@ def rectify():
 
         if selected_hovered_object != prev_selected_hovered_object:
 
-            help.clear()
+            helper.clear()
 
             # put back previous
             if prev_selected_hovered_object is not None:
@@ -407,13 +407,12 @@ def rectify():
             # hightlite object where mouse is
             if selected_hovered_object is not None:
                 selected_hovered_object.highlite(ctx, True)
-                if isinstance(selected_hovered_object, mapping.Unit):
-                    help <= selected_hovered_object.description()
+                if isinstance(selected_hovered_object, mapping.Highliteable):
+                    helper <= selected_hovered_object.description()
                 else:
-                    help <= "."
+                    helper <= "."
             else:
-                help <= "."
-
+                helper <= "."
 
     def callback_canvas_mouse_leave(_):
         """ callback_canvas_mouse_leave """
@@ -706,8 +705,8 @@ def rectify():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    help = html.DIV(".")
-    display_left <= help
+    helper = html.DIV(".")
+    display_left <= helper
     display_left <= canvas
 
     # right side
