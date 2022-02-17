@@ -41,13 +41,13 @@ class Game:
     def put_player_in(self, role: int, player: 'Player') -> None:
         """ puts the player in this game """
 
-        assert isinstance(role, int), "role should be an int"
-        assert 0 <= role < len(POWERS), "role should be in range"
+        assert isinstance(role, int), "Internal error: role should be an int"
+        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
 
-        assert isinstance(player, Player), "player should be a Player"
+        assert isinstance(player, Player), "Internal error: player should be a Player"
 
-        assert role not in self._allocation, "role in game should be free"
-        assert player not in self._allocation.values(), "player should not be in game already"
+        assert role not in self._allocation, "Internal error: role in game should be free"
+        assert player not in self._allocation.values(), "Internal error: player should not be in game already"
 
         # increase interaction
         for other_player in self._allocation.values():
@@ -58,13 +58,13 @@ class Game:
     def take_player_out(self, role: int, player: 'Player') -> None:
         """ takes the player ou of this game """
 
-        assert isinstance(role, int), "role should be an int"
-        assert 0 <= role < len(POWERS), "role should be in range"
+        assert isinstance(role, int), "Internal error: role should be an int"
+        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
 
-        assert isinstance(player, Player), "player should be a Player"
-        assert player in self._allocation.values(), "player should be in game already"
+        assert isinstance(player, Player), "Internal error: player should be a Player"
+        assert player in self._allocation.values(), "Internal error: player should be in game already"
 
-        assert role in self._allocation, "role in game should be in"
+        assert role in self._allocation, "Internal error: role in game should be in"
         del self._allocation[role]
 
         # decrease interaction
@@ -73,7 +73,7 @@ class Game:
 
     def is_player_in_game(self, player: 'Player') -> bool:
         """ tells if player plays in this game """
-        assert isinstance(player, Player), "player should be a Player"
+        assert isinstance(player, Player), "Internal error: player should be a Player"
         return player in self._allocation.values()
 
     def players_in_game(self) -> typing.List['Player']:
@@ -82,7 +82,7 @@ class Game:
 
     def has_role_in_game(self, role: int) -> bool:
         """ hios the someone with this role in the game ? """
-        assert 0 <= role < len(POWERS), "role should be in range"
+        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
         return role in self._allocation
 
     def is_complete(self) -> bool:
@@ -111,33 +111,34 @@ class Player:
 
     def __init__(self, name: str, number: int) -> None:
 
-        assert isinstance(name, str)
+        assert isinstance(name, str), "Internal error: name should be str"
         self._name = name
-        assert isinstance(number, int)
+        assert isinstance(number, int), "Internal error: number should be int"
         self._number = number
         self._allocation: typing.Dict[int, Game] = {}
         self._fully_allocated = False
+        self._is_master = False
 
     def put_in_game(self, role: int, game: Game) -> None:
         """ put the player in a game """
 
-        assert isinstance(role, int)
-        assert 0 <= role < len(POWERS), "role should be in range"
+        assert isinstance(role, int), "Internal error: number should be int"
+        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
 
         assert isinstance(game, Game)
 
-        assert role not in self._allocation, "role for player should be free"
+        assert role not in self._allocation, "Internal error: role for player should be free"
         self._allocation[role] = game
 
     def remove_from_game(self, role: int, game: Game) -> None:
         """ remove the player from a game """
 
-        assert isinstance(role, int)
-        assert 0 <= role < len(POWERS), "role should be in range"
+        assert isinstance(role, int), "Internal error: role for player should be int"
+        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
 
-        assert isinstance(game, Game)
+        assert isinstance(game, Game), "Internal error: game for player should be a Game"
 
-        assert role in self._allocation, "role for player should be in"
+        assert role in self._allocation, "Internal error: role for player should be in"
         del self._allocation[role]
 
     def games_in(self) -> typing.Set[Game]:
@@ -146,7 +147,7 @@ class Player:
 
     def has_role(self, role: int) -> bool:
         """ does the players has this role ? """
-        assert 0 <= role < len(POWERS), "role should be in range"
+        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
         return role in self._allocation
 
     @property
@@ -159,6 +160,16 @@ class Player:
         """ number """
         return self._number
 
+    @property
+    def is_master(self) -> bool:
+        """ is_master """
+        return self._is_master
+
+    @is_master.setter
+    def is_master(self, is_master: bool) -> None:
+        """ setter """
+        self._is_master = is_master
+
     def __str__(self) -> str:
         return self._name
 
@@ -168,7 +179,6 @@ PLAYERS: typing.List[Player] = []
 
 # says how many times two players are in same game
 INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
-
 
 
 def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> bool:
@@ -187,6 +197,7 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
         # we are done
         return True
 
+    # for linter
     assert game is not None
 
     # find a role
@@ -203,9 +214,13 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
     # objective acceptable players
     acceptable_players = [p for p in PLAYERS if not p.has_role(role) and not game.is_player_in_game(p)]
 
+    # there cannot be more than one game master in the game
+    if any([p.is_master for p in game.players_in_game()]):
+        acceptable_players = [p for p in acceptable_players if not p.is_master]
+
     # we may be even more restrictive
     if threshold_interactions is not None:
-        assert threshold_interactions >= 1, "There will always be at least one interaction (of course)"
+        assert threshold_interactions >= 1, "There will always be at least one interaction (of course) so this thresold is not acceptable"
         acceptable_players = [p for p in acceptable_players if all([INTERACTION[frozenset([pg, p])] < threshold_interactions for pg in game.players_in_game()])]
 
     # debug
@@ -218,9 +233,9 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
     # players will be selected according to:
     # 1) fewest interactions with the ones in the game
     # 2) players which are in more games (more efficient than less games for some reason)
-    # 3) idetifier of player (for readability)
+    # 3) identifier of player (for readability)
 
-    players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), - len(p.games_in()), p.number))  # type: ignore
+    players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in()), p.number))  # type: ignore
 
     # find a player to put in
     for player in players_sorted:
@@ -229,7 +244,7 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
         player.put_in_game(role, game)
 
         if DEBUG:
-            print(f"after have put {player} in {game}")
+            print(f"Situation after have put {player} in {game}")
             for gam in GAMES:
                 print(f"{gam.name};xxx;{gam.list_players()}")
 
@@ -238,7 +253,7 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
             return True
 
         if DEBUG:
-            print(f"before remove {player} from {game}")
+            print(f"Situation before remove {player} from {game}")
             for gam in GAMES:
                 print(f"{gam.name};xxx;{gam.list_players()}")
 
@@ -261,14 +276,14 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('-d', '--debug', required=False, action='store_true', help='switch to debug mode')
-
-    parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
-    parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players')
-    parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
+    parser.add_argument('-d', '--debug', required=False, action='store_true', help='switch to debug mode, displays a lot of information')
 
     parser.add_argument('-s', '--seed', required=False, help='force seed for random')
     parser.add_argument('-r', '--randomize', required=False, action='store_true', help='randomize players before making tournament (to avoid predictibility)')
+
+    parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
+    parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players of the file')
+    parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
 
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
 
@@ -276,6 +291,7 @@ def main() -> None:
     parser.add_argument('-S', '--show_interactions', required=False, action='store_true', help='show interactions at the end of the process')
 
     parser.add_argument('-o', '--output_file', required=False, help='resulting file')
+
     args = parser.parse_args()
 
     global DEBUG
@@ -283,6 +299,7 @@ def main() -> None:
         DEBUG = True
 
     if args.seed:
+        assert args.randomize, "Specifying a seed is useless if you do not randomize players"
         random.seed(args.seed)
         print(f"Forced random seed to {args.seed}")
 
@@ -292,6 +309,7 @@ def main() -> None:
 
     # for testing pupose we may limit to fewer players
     if args.limit:
+        assert args.limit <= len(PLAYERS_DATA), "Please set the limit to less than the number of players in file"
         PLAYERS_DATA = PLAYERS_DATA[:args.limit]
 
     # all players must be different
@@ -299,14 +317,22 @@ def main() -> None:
     print(f"We have {len(PLAYERS_DATA)} players")
     print("")
 
-    # must be enough more than 7
-    assert len(PLAYERS_DATA) >= len(POWERS), "You need more players to hope success!"
+    # must be enough : that is at least 7
+    assert len(PLAYERS_DATA) >= len(POWERS), "You need more players than that to hope success!"
+
+    if args.randomize:
+        print("Randomizing players !")
+        print("")
+        random.shuffle(PLAYERS_DATA)
 
     # make players
     for player_id, _ in enumerate(PLAYERS_DATA):
         name = PLAYERS_DATA[player_id]
         player = Player(name, player_id)
         PLAYERS.append(player)
+
+    # check game identifiers prefix
+    assert args.game_names_prefix.isidentifier(), "Game prefix is incorrect, should look like an identifier"
 
     # make games (as many as players)
     for game_id, _ in enumerate(PLAYERS):
@@ -322,8 +348,8 @@ def main() -> None:
     print(f"We have {len(MASTERS_DATA)} masters")
     print("")
 
-    # must be less than  7 (otherwise if 7 in same game game cannot be mastered)
-    assert len(MASTERS_DATA) < len(POWERS), "Number of masters is unsafe"
+    # must be more than 1
+    assert len(MASTERS_DATA) >= 1, "There must be at least one master for these games"
 
     player_table = {p.name: p for p in PLAYERS}
     masters_list = []
@@ -335,13 +361,10 @@ def main() -> None:
         else:
             print(f"Game master {master_name} is playing !")
             player = player_table[master_name]
+            assert player.name == master_name, "Internal error: game master losts his/her name!"
+        player.is_master = True
         masters_list.append(player)
     print("")
-
-    if args.randomize:
-        print("Randomizing players !")
-        print("")
-        random.shuffle(PLAYERS)
 
     # if badly designed, we may calculate for too long
     # so this allows us to interrupt gracefully
@@ -353,7 +376,7 @@ def main() -> None:
     # end line after displaying depth
     print("")
 
-    assert status, "Failed to make tournament !"
+    assert status, "Sorry : failed to make tournament !"
 
     # assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
