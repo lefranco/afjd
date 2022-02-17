@@ -70,6 +70,9 @@ class Highliteable(Renderable):
     def highlite(self, ctx, active) -> None:
         """ highlited when mouses passes over """
 
+    @abc.abstractmethod
+    def description(self) -> str:
+        """ text to display when mouses passes over """
 
 @enum.unique
 class RegionTypeEnum(enum.Enum):
@@ -325,7 +328,7 @@ class Zone(Highliteable):
         ctx.fillText(legend, x_pos - text_width / 2, y_pos)
 
     def description(self):
-        """ description for helping - not used currently """
+        """ description for helping """
 
         variant = self._variant
 
@@ -893,7 +896,7 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
         self.render(ctx, active)
 
     def description(self):
-        """ description for helping - not used currently """
+        """ description for helping """
 
         variant = self._position.variant
 
@@ -1034,13 +1037,16 @@ class Fleet(Unit):
             self.render_as_dislodged(x, y, ctx)
 
 
-class Ownership(Renderable):
+class Ownership(Highliteable):
     """ OwnerShip """
 
     def __init__(self, position: 'Position', role: Role, center: Center) -> None:
         self._position = position
         self._role = role
         self._center = center
+
+    def highlite(self, ctx, active) -> None:
+        pass
 
     @property
     def role(self) -> Role:
@@ -1062,7 +1068,7 @@ class Ownership(Renderable):
         return json_dict
 
     def description(self):
-        """ description for helping - not used currently """
+        """ description for helping """
 
         variant = self._position.variant
 
@@ -1099,17 +1105,6 @@ class Forbidden(Renderable):
     def __init__(self, position: 'Position', region: Region) -> None:
         self._position = position
         self._region = region
-
-    def description(self):
-        """ description for helping - not used currently """
-
-        variant = self._position.variant
-
-        # zone
-        zone = self._region.zone
-        zone_full_name = variant.full_name_table[zone]
-
-        return f"Une région interdite en retraite en {zone_full_name}."
 
     def render(self, ctx, active=False) -> None:
 
@@ -1250,8 +1245,8 @@ class Position(Renderable):
         distance_closest = None
 
         for ownership in self._ownerships:
-            zone = ownership.center.region.zone
-            center_pos = self._variant.position_table[zone]
+            center = ownership.center
+            center_pos = self._variant.position_table[center]
             distance = designated_pos.distance(center_pos)
             if distance_closest is None or distance < distance_closest:
                 closest_ownership = ownership
@@ -1312,6 +1307,15 @@ class Position(Renderable):
             distance = designated_pos.distance(zone_pos)
             if distance_closest is None or distance < distance_closest:
                 closest_object = zone
+                distance_closest = distance
+
+        # search in the ownerships
+        for ownership in self._ownerships:
+            center = ownership.center
+            center_pos = self._variant.position_table[center]
+            distance = designated_pos.distance(center_pos)
+            if distance_closest is None or distance < distance_closest:
+                closest_object = ownership
                 distance_closest = distance
 
         return closest_object

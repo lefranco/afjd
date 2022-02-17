@@ -1841,7 +1841,7 @@ def submit_orders():
 
         if selected_hovered_object != prev_selected_hovered_object:
 
-            help.clear()
+            helper.clear()
 
             # put back previous
             if prev_selected_hovered_object is not None:
@@ -1850,12 +1850,12 @@ def submit_orders():
             # hightlite object where mouse is
             if selected_hovered_object is not None:
                 selected_hovered_object.highlite(ctx, True)
-                if isinstance(selected_hovered_object, mapping.Unit):
-                    help <= selected_hovered_object.description()
+                if isinstance(selected_hovered_object, mapping.Highliteable):
+                    helper <= selected_hovered_object.description()
                 else:
-                    help <= "."
+                    helper <= "."
             else:
-                help <= "."
+                helper <= "."
 
             # redraw all arrows
             if prev_selected_hovered_object is not None or selected_hovered_object is not None:
@@ -2061,8 +2061,8 @@ def submit_orders():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    help = html.DIV(".")
-    display_left <= help
+    helper = html.DIV(".")
+    display_left <= helper
     display_left <= canvas
     display_left <= html.BR()
     display_left <= rating_colours_window
@@ -2632,7 +2632,7 @@ def submit_communication_orders():
 
         if selected_hovered_object != prev_selected_hovered_object:
 
-            help.clear()
+            helper.clear()
 
             # put back previous
             if prev_selected_hovered_object is not None:
@@ -2641,12 +2641,12 @@ def submit_communication_orders():
             # hightlite object where mouse is
             if selected_hovered_object is not None:
                 selected_hovered_object.highlite(ctx, True)
-                if isinstance(selected_hovered_object, mapping.Unit):
-                    help <= selected_hovered_object.description()
+                if isinstance(selected_hovered_object, mapping.Highliteable):
+                    helper <= selected_hovered_object.description()
                 else:
-                    help <= "."
+                    helper <= "."
             else:
-                help <= "."
+                helper <= "."
 
             # redraw all arrows
             if prev_selected_hovered_object is not None or selected_hovered_object is not None:
@@ -2819,8 +2819,8 @@ def submit_communication_orders():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    help = html.DIV(".")
-    display_left <= help
+    helper = html.DIV(".")
+    display_left <= helper
     display_left <= canvas
     display_left <= html.BR()
     display_left <= rating_colours_window
