@@ -652,21 +652,27 @@ def show_technical():
     link6 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
     link6 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
     MY_SUB_PANEL <= link6
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    link7 = html.A(href="./docs/allocate.py", target="_blank")
+    link7 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
+    MY_SUB_PANEL <= link7
 
     # --
 
     title7 = html.H4("Remerciements")
     MY_SUB_PANEL <= title7
 
-    link7 = html.A(href="https://brython.info/", target="_blank")
-    link7 <= "Outil utilisé pour ce site web"
-    MY_SUB_PANEL <= link7
+    link8 = html.A(href="https://brython.info/", target="_blank")
+    link8 <= "Outil utilisé pour ce site web"
+    MY_SUB_PANEL <= link8
 
     MY_SUB_PANEL <= html.P()
 
-    link8 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link8 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link8
+    link9 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link9 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link9
 
 
 def select_interface():
