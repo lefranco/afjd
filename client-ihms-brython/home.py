@@ -655,7 +655,7 @@ def show_technical():
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
-    link7 = html.A(href="./docs/allocate.py", target="_blank")
+    link7 = html.A(href="./scripts/allocate.py", target="_blank")
     link7 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
     MY_SUB_PANEL <= link7
 
