@@ -74,6 +74,7 @@ class Highliteable(Renderable):
     def description(self) -> str:
         """ text to display when mouses passes over """
 
+
 @enum.unique
 class RegionTypeEnum(enum.Enum):
     """ RegionTypeEnum """
