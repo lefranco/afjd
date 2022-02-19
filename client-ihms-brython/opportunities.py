@@ -54,7 +54,7 @@ def get_recruiting_games():
     return recruiting_games_list
 
 
-def my_opportunities():
+def my_opportunities(sort_by=None):
     """ my_opportunities """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -115,6 +115,10 @@ def my_opportunities():
         # action of going to the game
         select_game_callback(evt, game_name, game_data_sel)
 
+    def sort_by_callback(_, sort_by):
+        MY_PANEL.clear()
+        my_opportunities(sort_by)
+
     overall_time_before = time.time()
 
     if 'PSEUDO' not in storage:
@@ -171,7 +175,7 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['go_away', 'jump_here', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
+    fields = ['jump_here', 'go_away', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
 
     # header
     thead = html.THEAD()
@@ -181,11 +185,47 @@ def my_opportunities():
         thead <= col
     games_table <= thead
 
+    row = html.TR()
+    for field in fields:
+        button = ""
+        if field in ['jump_here', 'go_away', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']:
+            if field == 'jump_here':
+                legend = "tri par date de création"
+            elif field == 'go_away':
+                legend = "tri par nom"
+            else:
+                legend = "<>"
+            button = html.BUTTON(legend)
+            button.bind("click", lambda e, f=field: sort_by_callback(e, f))
+        col = html.TD(button)
+        row <= col
+    games_table <= row
+
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     number_games = 0
-    for game_id_str, data in sorted(games_dict_recruiting.items(), key=lambda g: g[0]):
+
+    # default
+    if sort_by is None:
+        sort_by = 'jump_here'
+
+    if sort_by == 'jump_here':
+        def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'go_away':
+        def key_function(g): return g[1]['name'].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'master':
+        def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'variant':
+        def key_function(g): return g[1]['variant']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'nopress_game':
+        def key_function(g): return (g[1]['nopress_game'], g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'nomessage_game':
+        def key_function(g): return (g[1]['nomessage_game'], g[1]['nomessage_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    else:
+        def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+
+    for game_id_str, data in sorted(games_dict_recruiting.items(), key=key_function):
 
         # ignore finished (or distinguished) games
         if data['current_state'] in [2, 3]:
