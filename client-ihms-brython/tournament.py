@@ -282,7 +282,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
     alert(f"Les {nb_parties} parties du tournoi ont bien été créée. Tout s'est bien passé. Incroyable, non ?")
 
 
-def show_games():
+def show_games(sort_by=None):
     """ show_games """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -300,6 +300,10 @@ def show_games():
 
         # action of going to game page
         index.load_option(None, 'jouer la partie sélectionnée')
+
+    def sort_by_callback(_, sort_by):
+        MY_SUB_PANEL.clear()
+        show_games(sort_by)
 
     overall_time_before = time.time()
 
@@ -351,7 +355,7 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['go_away', 'jump_here', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']
+    fields = ['jump_here', 'go_away', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']
 
     # header
     thead = html.THEAD()
@@ -361,10 +365,26 @@ def show_games():
         thead <= col
     games_table <= thead
 
+    row = html.TR()
+    for field in fields:
+        button = ""
+        if field in ['jump_here', 'go_away', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']:
+            if field == 'jump_here':
+                legend = "tri par date de création"
+            elif field == 'go_away':
+                legend = "tri par nom"
+            else:
+                legend = "<>"
+            button = html.BUTTON(legend)
+            button.bind("click", lambda e, f=field: sort_by_callback(e, f))
+        col = html.TD(button)
+        row <= col
+    games_table <= row
+
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
-    # get advanment scale
+    # get advancement scale
     advancements = [data['current_advancement'] for game_id_str, data in games_dict.items() if int(game_id_str) in games_in]
     min_advancement = min(advancements)
     max_advancement = max(advancements)
@@ -372,8 +392,28 @@ def show_games():
     rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
 
     number_games = 0
-    # exception : games are sortded by name, not identifier
-    for game_id_str, data in sorted(games_dict.items(), key=lambda g: g[1]['name']):
+
+    # default
+    if sort_by is None:
+        sort_by = 'jump_here'
+
+    if sort_by == 'jump_here':
+        def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'go_away':
+        def key_function(g): return g[1]['name'].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'master':
+        def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'variant':
+        def key_function(g): return g[1]['variant']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'nopress_game':
+        def key_function(g): return (g[1]['nopress_game'], g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'nomessage_game':
+        def key_function(g): return (g[1]['nomessage_game'], g[1]['nomessage_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    else:
+        def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+
+    # exception : games are sorted by name, not identifier
+    for game_id_str, data in sorted(games_dict.items(), key=key_function):
 
         if int(game_id_str) not in games_in:
             continue

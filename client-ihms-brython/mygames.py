@@ -176,7 +176,7 @@ def get_all_player_games_roles_submitted_orders():
     return dict_submitted_data
 
 
-def my_games(state_name):
+def my_games(state_name, sort_by=None):
     """ my_games """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -226,12 +226,16 @@ def my_games(state_name):
 
         # back to where we started
         MY_PANEL.clear()
-        my_games(state_name)
+        my_games(state_name, sort_by)
 
     def again(state_name):
         """ again """
         MY_PANEL.clear()
-        my_games(state_name)
+        my_games(state_name, sort_by)
+
+    def sort_by_callback(_, sort_by):
+        MY_PANEL.clear()
+        my_games(state_name, sort_by)
 
     overall_time_before = time.time()
 
@@ -295,7 +299,7 @@ def my_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['go_away', 'jump_here', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
+    fields = ['jump_here', 'go_away', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
 
     # column for start buttons only available for non started games
     if state == 0:
@@ -309,13 +313,56 @@ def my_games(state_name):
         thead <= col
     games_table <= thead
 
+    row = html.TR()
+    for field in fields:
+        button = ""
+        if field in ['jump_here', 'go_away', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played']:
+            if field == 'jump_here':
+                legend = "tri par date de création"
+            elif field == 'go_away':
+                legend = "tri par nom"
+            else:
+                legend = "<>"
+            button = html.BUTTON(legend)
+            button.bind("click", lambda e, f=field: sort_by_callback(e, f))
+        col = html.TD(button)
+        row <= col
+    games_table <= row
+
     games_id_player = {int(n) for n in player_games}
 
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     number_games = 0
-    for game_id_str, data in sorted(games_dict.items(), key=lambda g: int(g[0]), reverse=(state_name in ['terminée', 'distinguée'])):
+
+    # default
+    if sort_by is None:
+        sort_by = 'jump_here'
+
+    if sort_by == 'jump_here':
+        def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        reverse_needed = False
+    elif sort_by == 'go_away':
+        def key_function(g): return g[1]['name'].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        reverse_needed = state_name in ['terminée', 'distinguée']
+    elif sort_by == 'variant':
+        def key_function(g): return g[1]['variant']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        reverse_needed = False
+    elif sort_by == 'nopress_game':
+        def key_function(g): return (g[1]['nopress_game'], g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        reverse_needed = False
+    elif sort_by == 'nomessage_game':
+        def key_function(g): return (g[1]['nomessage_game'], g[1]['nomessage_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        reverse_needed = False
+    elif sort_by == 'role_played':
+        def key_function(g): return int(dict_role_id.get(g[0], -1))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        reverse_needed = False
+    else:
+        def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        reverse_needed = False
+
+    for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
         if data['current_state'] != state:
             continue
