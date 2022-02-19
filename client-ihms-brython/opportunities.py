@@ -54,7 +54,7 @@ def get_recruiting_games():
     return recruiting_games_list
 
 
-def my_opportunities(sort_by=None):
+def my_opportunities(button_mode=True, sort_by=None):
     """ my_opportunities """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -115,9 +115,13 @@ def my_opportunities(sort_by=None):
         # action of going to the game
         select_game_callback(evt, game_name, game_data_sel)
 
+    def change_button_mode_callback(_):
+        MY_PANEL.clear()
+        my_opportunities(not button_mode, sort_by)
+
     def sort_by_callback(_, sort_by):
         MY_PANEL.clear()
-        my_opportunities(sort_by)
+        my_opportunities(button_mode, sort_by)
 
     overall_time_before = time.time()
 
@@ -171,33 +175,55 @@ def my_opportunities(sort_by=None):
             game = games_dict[str(game_id)]['name']
             game_master_dict[game] = master
 
+    # Title
+    MY_PANEL <= html.H2("Parties qui recrutent des joueurs")
+
     time_stamp_now = time.time()
+
+    # button for switching mode
+    if button_mode:
+        button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)")
+    else:
+        button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)")
+    button.bind("click", change_button_mode_callback)
+    MY_PANEL <= button
+    MY_PANEL <= html.BR()
+    MY_PANEL <= html.BR()
 
     games_table = html.TABLE()
 
-    fields = ['jump_here', 'go_away', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
+    fields = ['go_game', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'jump_here': 'même onglet (rapide)', 'go_away': 'nouvel onglet', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(**)'}[field]
+        field_fr = {'go_game': 'aller dans la partie', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(**)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
 
     row = html.TR()
     for field in fields:
-        button = ""
-        if field in ['jump_here', 'go_away', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']:
-            if field == 'jump_here':
-                legend = "tri par date de création"
-            elif field == 'go_away':
-                legend = "tri par nom"
+        buttons = html.DIV()
+        if field in ['go_game', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']:
+            if field == 'go_game':
+
+                # button for sorting by creation date
+                button = html.BUTTON("&lt;date de création&gt;")
+                button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
+                buttons <= button
+
+                # button for sorting by name
+                button = html.BUTTON("&lt;nom&gt;")
+                button.bind("click", lambda e, f='name': sort_by_callback(e, f))
+                buttons <= button
+
             else:
-                legend = "<>"
-            button = html.BUTTON(legend)
-            button.bind("click", lambda e, f=field: sort_by_callback(e, f))
-        col = html.TD(button)
+
+                button = html.BUTTON("<>")
+                button.bind("click", lambda e, f=field: sort_by_callback(e, f))
+                buttons <= button
+        col = html.TD(buttons)
         row <= col
     games_table <= row
 
@@ -208,11 +234,11 @@ def my_opportunities(sort_by=None):
 
     # default
     if sort_by is None:
-        sort_by = 'jump_here'
+        sort_by = 'creation'
 
-    if sort_by == 'jump_here':
+    if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'go_away':
+    elif sort_by == 'name':
         def key_function(g): return g[1]['name'].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'master':
         def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
@@ -263,9 +289,8 @@ def my_opportunities(sort_by=None):
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
+        data['go_game'] = None
         data['master'] = None
-        data['jump_here'] = None
-        data['go_away'] = None
         data['join'] = None
         data['allocated'] = None
 
@@ -276,17 +301,17 @@ def my_opportunities(sort_by=None):
             colour = None
             game_name = data['name']
 
-            if field == 'jump_here':
-                form = html.FORM()
-                input_jump_game = html.INPUT(type="submit", value=game_name)
-                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                form <= input_jump_game
-                value = form
-
-            if field == 'go_away':
-                link = html.A(href=f"?game={game_name}", target="_blank")
-                link <= game_name
-                value = link
+            if field == 'go_game':
+                if button_mode:
+                    form = html.FORM()
+                    input_jump_game = html.INPUT(type="submit", value=game_name)
+                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                    form <= input_jump_game
+                    value = form
+                else:
+                    link = html.A(href=f"?game={game_name}", target="_blank")
+                    link <= game_name
+                    value = link
 
             if field == 'join':
                 if game_id_str in player_games:
@@ -376,9 +401,6 @@ def my_opportunities(sort_by=None):
             row <= col
 
         games_table <= row
-
-    # Title
-    MY_PANEL <= html.H2("Parties qui recrutent des joueurs")
 
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
