@@ -54,7 +54,7 @@ def get_recruiting_games():
     return recruiting_games_list
 
 
-def my_opportunities(button_mode=True, sort_by=None):
+def my_opportunities(sort_by=None):
     """ my_opportunities """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -116,12 +116,16 @@ def my_opportunities(button_mode=True, sort_by=None):
         select_game_callback(evt, game_name, game_data_sel)
 
     def change_button_mode_callback(_):
+        if 'GAME_ACCESS_MODE' in storage and storage['GAME_ACCESS_MODE'] == 'button':
+            storage['GAME_ACCESS_MODE'] = 'link'
+        else:
+            storage['GAME_ACCESS_MODE'] = 'button'
         MY_PANEL.clear()
-        my_opportunities(not button_mode, sort_by)
+        my_opportunities(sort_by)
 
     def sort_by_callback(_, sort_by):
         MY_PANEL.clear()
-        my_opportunities(button_mode, sort_by)
+        my_opportunities(sort_by)
 
     overall_time_before = time.time()
 
@@ -181,6 +185,7 @@ def my_opportunities(button_mode=True, sort_by=None):
     time_stamp_now = time.time()
 
     # button for switching mode
+    button_mode = 'GAME_ACCESS_MODE' not in storage or storage['GAME_ACCESS_MODE'] == 'button'
     if button_mode:
         button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)")
     else:

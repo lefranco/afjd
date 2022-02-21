@@ -176,7 +176,7 @@ def get_all_player_games_roles_submitted_orders():
     return dict_submitted_data
 
 
-def my_games(state_name, button_mode=True, sort_by=None):
+def my_games(state_name, sort_by=None):
     """ my_games """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -231,15 +231,19 @@ def my_games(state_name, button_mode=True, sort_by=None):
     def again(state_name):
         """ again """
         MY_PANEL.clear()
-        my_games(state_name, button_mode, sort_by)
+        my_games(state_name, sort_by)
 
     def change_button_mode_callback(_):
+        if 'GAME_ACCESS_MODE' in storage and storage['GAME_ACCESS_MODE'] == 'button':
+            storage['GAME_ACCESS_MODE'] = 'link'
+        else:
+            storage['GAME_ACCESS_MODE'] = 'button'
         MY_PANEL.clear()
-        my_games(state_name, not button_mode, sort_by)
+        my_games(state_name, sort_by)
 
     def sort_by_callback(_, sort_by):
         MY_PANEL.clear()
-        my_games(state_name, button_mode, sort_by)
+        my_games(state_name, sort_by)
 
     overall_time_before = time.time()
 
@@ -302,6 +306,7 @@ def my_games(state_name, button_mode=True, sort_by=None):
     time_stamp_now = time.time()
 
     # button for switching mode
+    button_mode = 'GAME_ACCESS_MODE' not in storage or storage['GAME_ACCESS_MODE'] == 'button'
     if button_mode:
         button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)")
     else:
