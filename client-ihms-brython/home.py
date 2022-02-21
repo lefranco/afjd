@@ -165,7 +165,7 @@ def all_games(state_name, sort_by=None):
         all_games(state_name, sort_by)
 
     def change_button_mode_callback(_):
-        if 'GAME_ACCESS_MODE' in storage and storage['GAME_ACCESS_MODE'] == 'button':
+        if storage['GAME_ACCESS_MODE'] == 'button':
             storage['GAME_ACCESS_MODE'] = 'link'
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
@@ -214,8 +214,9 @@ def all_games(state_name, sort_by=None):
     time_stamp_now = time.time()
 
     # button for switching mode
-    button_mode = 'GAME_ACCESS_MODE' not in storage or storage['GAME_ACCESS_MODE'] == 'button'
-    if button_mode:
+    if 'GAME_ACCESS_MODE' not in storage:
+        storage['GAME_ACCESS_MODE'] = 'button'
+    if storage['GAME_ACCESS_MODE'] == 'button':
         button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)")
     else:
         button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)")
@@ -350,7 +351,7 @@ def all_games(state_name, sort_by=None):
                 value = game_id
 
             if field == 'go_game':
-                if button_mode:
+                if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
                     input_jump_game = html.INPUT(type="submit", value=game_name)
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
