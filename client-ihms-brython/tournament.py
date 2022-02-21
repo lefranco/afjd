@@ -282,7 +282,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
     alert(f"Les {nb_parties} parties du tournoi ont bien été créée. Tout s'est bien passé. Incroyable, non ?")
 
 
-def show_games(button_mode=True, sort_by=None):
+def show_games(sort_by=None):
     """ show_games """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -302,12 +302,16 @@ def show_games(button_mode=True, sort_by=None):
         index.load_option(None, 'jouer la partie sélectionnée')
 
     def change_button_mode_callback(_):
+        if 'GAME_ACCESS_MODE' in storage and storage['GAME_ACCESS_MODE'] == 'button':
+            storage['GAME_ACCESS_MODE'] = 'link'
+        else:
+            storage['GAME_ACCESS_MODE'] = 'button'
         MY_SUB_PANEL.clear()
-        show_games(not button_mode, sort_by)
+        show_games(sort_by)
 
     def sort_by_callback(_, sort_by):
         MY_SUB_PANEL.clear()
-        show_games(button_mode, sort_by)
+        show_games(sort_by)
 
     overall_time_before = time.time()
 
@@ -358,6 +362,7 @@ def show_games(button_mode=True, sort_by=None):
     time_stamp_now = time.time()
 
     # button for switching mode
+    button_mode = 'GAME_ACCESS_MODE' not in storage or storage['GAME_ACCESS_MODE'] == 'button'
     if button_mode:
         button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)")
     else:

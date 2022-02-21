@@ -140,7 +140,7 @@ def show_links():
     MY_SUB_PANEL <= link5
 
 
-def all_games(state_name, button_mode=True, sort_by=None):
+def all_games(state_name, sort_by=None):
     """all_games """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -162,15 +162,19 @@ def all_games(state_name, button_mode=True, sort_by=None):
     def again(state_name):
         """ again """
         MY_SUB_PANEL.clear()
-        all_games(state_name, button_mode, sort_by)
+        all_games(state_name, sort_by)
 
     def change_button_mode_callback(_):
+        if 'GAME_ACCESS_MODE' in storage and storage['GAME_ACCESS_MODE'] == 'button':
+            storage['GAME_ACCESS_MODE'] = 'link'
+        else:
+            storage['GAME_ACCESS_MODE'] = 'button'
         MY_SUB_PANEL.clear()
-        all_games(state_name, not button_mode, sort_by)
+        all_games(state_name, sort_by)
 
     def sort_by_callback(_, sort_by):
         MY_SUB_PANEL.clear()
-        all_games(state_name, button_mode, sort_by)
+        all_games(state_name, sort_by)
 
     overall_time_before = time.time()
 
@@ -210,6 +214,7 @@ def all_games(state_name, button_mode=True, sort_by=None):
     time_stamp_now = time.time()
 
     # button for switching mode
+    button_mode = 'GAME_ACCESS_MODE' not in storage or storage['GAME_ACCESS_MODE'] == 'button'
     if button_mode:
         button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)")
     else:
