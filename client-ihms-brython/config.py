@@ -4,7 +4,7 @@ import json
 
 
 # timeout for server requests
-TIMEOUT_SERVER = 2
+TIMEOUT_SERVER = 5
 
 # timeout for message when OK
 REMOVE_AFTER = 5
