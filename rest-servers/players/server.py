@@ -316,11 +316,11 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
     def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
-        Provides list of all pseudo (all players)
+        Provides list of all pseudo data (all players)
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/players - GET - get getting all players only pseudo (email and telephone are confidential)")
+        mylogger.LOGGER.info("/players - GET - get getting all players only public information (email and telephone are confidential)")
 
         sql_executor = database.SqlExecutor()
         players_list = players.Player.inventory(sql_executor)
@@ -436,6 +436,27 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
         data = {'pseudo': pseudo, 'msg': 'Ok player created'}
         return data, 201
+
+
+@API.resource('/players-short')
+class PlayerShortListRessource(flask_restful.Resource):  # type: ignore
+    """ PlayerShortListRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Provides list of all pseudo (all players) - only identifier
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/players - GET - get getting all players only identifier")
+
+        sql_executor = database.SqlExecutor()
+        players_list = players.Player.inventory(sql_executor)
+        del sql_executor
+
+        data = {str(p.identifier): {'pseudo': p.pseudo} for p in players_list}
+
+        return data, 200
 
 
 @API.resource('/players-select')
