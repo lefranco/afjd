@@ -54,7 +54,7 @@ def get_recruiting_games():
     return recruiting_games_list
 
 
-def my_opportunities(sort_by=None):
+def my_opportunities(sort_by=None, reverse_needed=False):
     """ my_opportunities """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -121,11 +121,13 @@ def my_opportunities(sort_by=None):
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
         MY_PANEL.clear()
-        my_opportunities(sort_by)
+        my_opportunities(sort_by, reverse_needed)
 
-    def sort_by_callback(_, sort_by):
+    def sort_by_callback(_, new_sort_by):
         MY_PANEL.clear()
-        my_opportunities(sort_by)
+        # if same sort criterion : inverse order otherwise back to normal order
+        new_reverse_needed = not reverse_needed if new_sort_by == sort_by else False
+        my_opportunities(new_sort_by, new_reverse_needed)
 
     overall_time_before = time.time()
 
@@ -257,7 +259,7 @@ def my_opportunities(sort_by=None):
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
-    for game_id_str, data in sorted(games_dict_recruiting.items(), key=key_function):
+    for game_id_str, data in sorted(games_dict_recruiting.items(), key=key_function, reverse=reverse_needed):
 
         # ignore finished (or distinguished) games
         if data['current_state'] in [2, 3]:
