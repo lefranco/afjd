@@ -140,7 +140,7 @@ def show_links():
     MY_SUB_PANEL <= link5
 
 
-def all_games(state_name, sort_by=None):
+def all_games(state_name, sort_by=None, reverse_needed=False):
     """all_games """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -162,7 +162,7 @@ def all_games(state_name, sort_by=None):
     def again(state_name):
         """ again """
         MY_SUB_PANEL.clear()
-        all_games(state_name, sort_by)
+        all_games(state_name, sort_by, reverse_needed)
 
     def change_button_mode_callback(_):
         if storage['GAME_ACCESS_MODE'] == 'button':
@@ -170,11 +170,13 @@ def all_games(state_name, sort_by=None):
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
         MY_SUB_PANEL.clear()
-        all_games(state_name, sort_by)
+        all_games(state_name, sort_by, reverse_needed)
 
-    def sort_by_callback(_, sort_by):
+    def sort_by_callback(_, new_sort_by):
         MY_SUB_PANEL.clear()
-        all_games(state_name, sort_by)
+        # if same sort criterion : inverse order otherwise back to normal order
+        new_reverse_needed = not reverse_needed if new_sort_by == sort_by else False
+        all_games(state_name, new_sort_by, new_reverse_needed)
 
     overall_time_before = time.time()
 
@@ -274,25 +276,18 @@ def all_games(state_name, sort_by=None):
 
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        reverse_needed = state_name in ['terminée', 'distinguée']
     elif sort_by == 'name':
         def key_function(g): return g[1]['name'].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        reverse_needed = False
     elif sort_by == 'master':
         def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        reverse_needed = False
     elif sort_by == 'variant':
         def key_function(g): return g[1]['variant']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        reverse_needed = False
     elif sort_by == 'nopress_game':
         def key_function(g): return (g[1]['nopress_game'], g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        reverse_needed = False
     elif sort_by == 'nomessage_game':
         def key_function(g): return (g[1]['nomessage_game'], g[1]['nomessage_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        reverse_needed = False
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        reverse_needed = False
 
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
