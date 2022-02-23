@@ -282,7 +282,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
     alert(f"Les {nb_parties} parties du tournoi ont bien été créée. Tout s'est bien passé. Incroyable, non ?")
 
 
-def show_games(sort_by=None, reverse_needed=False):
+def show_games():
     """ show_games """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -307,13 +307,19 @@ def show_games(sort_by=None, reverse_needed=False):
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
         MY_SUB_PANEL.clear()
-        show_games(sort_by, reverse_needed)
+        show_games()
 
     def sort_by_callback(_, new_sort_by):
-        MY_SUB_PANEL.clear()
+
         # if same sort criterion : inverse order otherwise back to normal order
-        new_reverse_needed = not reverse_needed if new_sort_by == sort_by else False
-        show_games(new_sort_by, new_reverse_needed)
+        if new_sort_by != storage['SORT_BY_TOURNAMENT']:
+            storage['SORT_BY_TOURNAMENT'] = new_sort_by
+            storage['REVERSE_NEEDED_TOURNAMENT'] = str(False)
+        else:
+            storage['REVERSE_NEEDED_TOURNAMENT'] = str(not bool(storage['REVERSE_NEEDED_TOURNAMENT'] == 'True'))
+
+        MY_SUB_PANEL.clear()
+        show_games()
 
     overall_time_before = time.time()
 
@@ -426,8 +432,13 @@ def show_games(sort_by=None, reverse_needed=False):
     number_games = 0
 
     # default
-    if sort_by is None:
-        sort_by = 'creation'
+    if 'SORT_BY_TOURNAMENT' not in storage:
+        storage['SORT_BY_TOURNAMENT'] = 'creation'
+    if 'REVERSE_NEEDED_TOURNAMENT' not in storage:
+        storage['REVERSE_NEEDED_TOURNAMENT'] = str(False)
+
+    sort_by = storage['SORT_BY_TOURNAMENT']
+    reverse_needed = bool(storage['REVERSE_NEEDED_TOURNAMENT'] == 'True')
 
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name

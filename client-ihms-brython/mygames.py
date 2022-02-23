@@ -176,7 +176,7 @@ def get_all_player_games_roles_submitted_orders():
     return dict_submitted_data
 
 
-def my_games(state_name, sort_by=None, reverse_needed=False):
+def my_games(state_name):
     """ my_games """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -226,12 +226,12 @@ def my_games(state_name, sort_by=None, reverse_needed=False):
 
         # back to where we started
         MY_PANEL.clear()
-        my_games(state_name, sort_by)
+        my_games(state_name)
 
     def again(state_name):
         """ again """
         MY_PANEL.clear()
-        my_games(state_name, sort_by, reverse_needed)
+        my_games(state_name)
 
     def change_button_mode_callback(_):
         if storage['GAME_ACCESS_MODE'] == 'button':
@@ -239,13 +239,19 @@ def my_games(state_name, sort_by=None, reverse_needed=False):
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
         MY_PANEL.clear()
-        my_games(state_name, sort_by, reverse_needed)
+        my_games(state_name)
 
     def sort_by_callback(_, new_sort_by):
-        MY_PANEL.clear()
+
         # if same sort criterion : inverse order otherwise back to normal order
-        new_reverse_needed = not reverse_needed if new_sort_by == sort_by else False
-        my_games(state_name, new_sort_by, new_reverse_needed)
+        if new_sort_by != storage['SORT_BY_MYGAMES']:
+            storage['SORT_BY_MYGAMES'] = new_sort_by
+            storage['REVERSE_NEEDED_MYGAMES'] = str(False)
+        else:
+            storage['REVERSE_NEEDED_MYGAMES'] = str(not bool(storage['REVERSE_NEEDED_MYGAMES'] == 'True'))
+
+        MY_PANEL.clear()
+        my_games(state_name)
 
     overall_time_before = time.time()
 
@@ -368,8 +374,13 @@ def my_games(state_name, sort_by=None, reverse_needed=False):
     number_games = 0
 
     # default
-    if sort_by is None:
-        sort_by = 'creation'
+    if 'SORT_BY_MYGAMES' not in storage:
+        storage['SORT_BY_MYGAMES'] = 'creation'
+    if 'REVERSE_NEEDED_MYGAMES' not in storage:
+        storage['REVERSE_NEEDED_MYGAMES'] = str(False)
+
+    sort_by = storage['SORT_BY_MYGAMES']
+    reverse_needed = bool(storage['REVERSE_NEEDED_MYGAMES'] == 'True')
 
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
