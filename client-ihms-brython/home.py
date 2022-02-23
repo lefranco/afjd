@@ -140,7 +140,7 @@ def show_links():
     MY_SUB_PANEL <= link5
 
 
-def all_games(state_name, sort_by=None, reverse_needed=False):
+def all_games(state_name):
     """all_games """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -162,7 +162,7 @@ def all_games(state_name, sort_by=None, reverse_needed=False):
     def again(state_name):
         """ again """
         MY_SUB_PANEL.clear()
-        all_games(state_name, sort_by, reverse_needed)
+        all_games(state_name)
 
     def change_button_mode_callback(_):
         if storage['GAME_ACCESS_MODE'] == 'button':
@@ -170,13 +170,19 @@ def all_games(state_name, sort_by=None, reverse_needed=False):
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
         MY_SUB_PANEL.clear()
-        all_games(state_name, sort_by, reverse_needed)
+        all_games(state_name)
 
     def sort_by_callback(_, new_sort_by):
-        MY_SUB_PANEL.clear()
+
         # if same sort criterion : inverse order otherwise back to normal order
-        new_reverse_needed = not reverse_needed if new_sort_by == sort_by else False
-        all_games(state_name, new_sort_by, new_reverse_needed)
+        if new_sort_by != storage['SORT_BY_HOME']:
+            storage['SORT_BY_HOME'] = new_sort_by
+            storage['REVERSE_NEEDED_HOME'] = str(False)
+        else:
+            storage['REVERSE_NEEDED_HOME'] = str(not bool(storage['REVERSE_NEEDED_HOME'] == 'True'))
+
+        MY_SUB_PANEL.clear()
+        all_games(state_name)
 
     overall_time_before = time.time()
 
@@ -271,8 +277,13 @@ def all_games(state_name, sort_by=None, reverse_needed=False):
     number_games = 0
 
     # default
-    if sort_by is None:
-        sort_by = 'creation'
+    if 'SORT_BY_HOME' not in storage:
+        storage['SORT_BY_HOME'] = 'creation'
+    if 'REVERSE_NEEDED_HOME' not in storage:
+        storage['REVERSE_NEEDED_HOME'] = str(False)
+
+    sort_by = storage['SORT_BY_HOME']
+    reverse_needed = bool(storage['REVERSE_NEEDED_HOME'] == 'True')
 
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name

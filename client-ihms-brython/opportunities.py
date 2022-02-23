@@ -54,7 +54,7 @@ def get_recruiting_games():
     return recruiting_games_list
 
 
-def my_opportunities(sort_by=None, reverse_needed=False):
+def my_opportunities():
     """ my_opportunities """
 
     def select_game_callback(_, game_name, game_data_sel):
@@ -121,13 +121,19 @@ def my_opportunities(sort_by=None, reverse_needed=False):
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
         MY_PANEL.clear()
-        my_opportunities(sort_by, reverse_needed)
+        my_opportunities()
 
     def sort_by_callback(_, new_sort_by):
-        MY_PANEL.clear()
+
         # if same sort criterion : inverse order otherwise back to normal order
-        new_reverse_needed = not reverse_needed if new_sort_by == sort_by else False
-        my_opportunities(new_sort_by, new_reverse_needed)
+        if new_sort_by != storage['SORT_BY_OPPORTUNITIES']:
+            storage['SORT_BY_OPPORTUNITIES'] = new_sort_by
+            storage['REVERSE_NEEDED_OPPORTUNITIES'] = str(False)
+        else:
+            storage['REVERSE_NEEDED_OPPORTUNITIES'] = str(not bool(storage['REVERSE_NEEDED_OPPORTUNITIES'] == 'True'))
+
+        MY_PANEL.clear()
+        my_opportunities()
 
     overall_time_before = time.time()
 
@@ -241,8 +247,13 @@ def my_opportunities(sort_by=None, reverse_needed=False):
     number_games = 0
 
     # default
-    if sort_by is None:
-        sort_by = 'creation'
+    if 'SORT_BY_OPPORTUNITIES' not in storage:
+        storage['SORT_BY_OPPORTUNITIES'] = 'creation'
+    if 'REVERSE_NEEDED_OPPORTUNITIES' not in storage:
+        storage['REVERSE_NEEDED_OPPORTUNITIES'] = str(False)
+
+    sort_by = storage['SORT_BY_OPPORTUNITIES']
+    reverse_needed = bool(storage['REVERSE_NEEDED_OPPORTUNITIES'] == 'True')
 
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
