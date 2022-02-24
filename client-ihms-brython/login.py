@@ -108,7 +108,7 @@ def login():
     # --
     form1 = html.FORM()
 
-    form1 <= html.DIV("Pas de compte ? Créez-le à partir du menu 'mon compte'...", Class='note')
+    form1 <= html.DIV("Pas de compte ? Créez-le à partir du menu 'mon compte/créér mon compte'...", Class='note')
     form1 <= html.BR()
 
     proposed_pseudo = ""

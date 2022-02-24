@@ -197,6 +197,9 @@ def my_opportunities():
     # Title
     MY_PANEL <= html.H2("Parties qui recrutent des joueurs")
 
+    MY_PANEL <= information_about_games()
+    MY_PANEL <= html.BR()
+
     time_stamp_now = time.time()
 
     # button for switching mode
@@ -437,8 +440,6 @@ def my_opportunities():
     MY_PANEL <= html.DIV("(**) On prend en compte l'arbitre dans le nombre de joueurs", Class='note')
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= information_about_games()
-    MY_PANEL <= html.BR()
 
     # get GMT date and time
     time_stamp = time.time()
