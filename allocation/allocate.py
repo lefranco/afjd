@@ -15,6 +15,7 @@ import collections
 import time
 import random
 import faulthandler
+import itertools
 
 DEBUG = False
 
@@ -151,6 +152,12 @@ class Player:
         assert 0 <= role < len(POWERS), "Internal error: role should be in range"
         return role in self._allocation
 
+    def game_where_has_role(self, role: int) -> Game:
+        """ game where the players has this role ? """
+        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
+        assert role in self._allocation, "Internal error: player should have the role"
+        return self._allocation[role]
+
     @property
     def name(self) -> str:
         """ name """
@@ -185,7 +192,7 @@ INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> bool:
     """ try_and_error """
 
-    print(f"{depth // len(POWERS)} ", end='\r', flush=True)
+    print(f"{depth // len(POWERS):5} ", end='\r', flush=True)
 
     # find a game where to fill up
     game = None
@@ -267,7 +274,93 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
 def hill_climb() -> None:
     """ hill_climb """
 
-    assert False, "Not implemented !"
+    n = 1
+
+    while True:
+
+        worst = max(INTERACTION.values())
+
+        # are we done
+        if worst == 1:
+            break
+
+        worst_number = len([cp for cp in INTERACTION if INTERACTION[cp] == worst])
+
+        print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
+
+        # find the candidates
+        candidates = list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1]))
+
+        assert candidates, "Internal error : no candidates "
+
+        # take two
+        couples = list(itertools.combinations(candidates, 2))
+        random.shuffle(couples)
+
+        for player1, player2 in couples:
+
+            roles = list(range(len(POWERS)))
+            random.shuffle(roles)
+
+            # find a swap
+            changed = False
+            for role in roles:
+
+                game1 = player1.game_where_has_role(role)
+                game2 = player2.game_where_has_role(role)
+
+                if game1 == game2:
+                    continue
+
+                if game1.is_player_in_game(player2) or game2.is_player_in_game(player1):
+                    continue
+
+                assert not (game2 in player1.games_in() or game1 in player2.games_in()), "Internal error"
+
+                # try the swap
+
+                # for games
+                game1.take_player_out(role, player1)
+                game2.take_player_out(role, player2)
+                game1.put_player_in(role, player2)
+                game2.put_player_in(role, player1)
+
+                # for players
+                player1.remove_from_game(role, game1)
+                player2.remove_from_game(role, game2)
+                player1.put_in_game(role, game2)
+                player2.put_in_game(role, game1)
+
+                # do we accept ?
+                new_worst = max(INTERACTION.values())
+                new_worst_number = len([cp for cp in INTERACTION if INTERACTION[cp] == new_worst])
+
+                if (new_worst, new_worst_number) < (worst, worst_number):
+                    changed = True
+                    break
+
+                # no : put it back
+                # for games
+                game1.take_player_out(role, player2)
+                game2.take_player_out(role, player1)
+                game1.put_player_in(role, player1)
+                game2.put_player_in(role, player2)
+
+                # for players
+                player1.remove_from_game(role, game2)
+                player2.remove_from_game(role, game1)
+                player1.put_in_game(role, game1)
+                player2.put_in_game(role, game2)
+
+            if changed:
+
+                with open(f"opt_{n}.txt", "w", encoding='utf-8') as write_file:
+                    write_file.write(f"Situation after have swapped {player1} and {player2}\n")
+                    for gam in GAMES:
+                        write_file.write(f"{gam.name};xxx;{gam.list_players()}\n")
+                n += 1
+
+                break
 
 
 def main() -> None:
@@ -386,7 +479,10 @@ def main() -> None:
     assert status, "Sorry : failed to make tournament !"
 
     if args.optimize_interactions:
-        hill_climb()
+        try:
+            hill_climb()
+        except KeyboardInterrupt:
+            panic()
 
     # assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
