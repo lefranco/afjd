@@ -22,6 +22,7 @@ import index  # circular import
 MY_PANEL = html.DIV(id="opportunities")
 MY_PANEL.attrs['style'] = 'display: table'
 
+
 def information_about_games():
     """ information_about_games """
 
@@ -439,7 +440,6 @@ def my_opportunities():
 
     MY_PANEL <= html.DIV("(**) On prend en compte l'arbitre dans le nombre de joueurs", Class='note')
     MY_PANEL <= html.BR()
-
 
     # get GMT date and time
     time_stamp = time.time()
