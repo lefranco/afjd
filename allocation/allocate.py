@@ -32,7 +32,6 @@ PLAYERS_DATA: typing.List[str] = []
 MASTERS_DATA: typing.List[str] = []
 
 
-
 class Game:
     """ a game """
 
@@ -145,7 +144,7 @@ class Player:
 
     def games_in(self) -> typing.List[Game]:
         """ games the player plays in  """
-        return self._allocation.values()
+        return list(self._allocation.values())
 
     def has_role(self, role: int) -> bool:
         """ does the players has this role ? """
@@ -187,6 +186,9 @@ PLAYERS: typing.List[Player] = []
 
 # says how many times two players are in same game
 INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
+
+# to be able to undo
+SWAPS: typing.List[typing.Tuple[int, Player, Player, Game, Game]] = []
 
 
 def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> bool:
@@ -271,10 +273,29 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
     return False
 
 
+def perform_swap(role: int, player1: Player, player2: Player, game1: Game, game2: Game, reverse: bool) -> None:
+    """ perform_swap """
+
+    if reverse:
+        player1, player2 = player2, player1
+
+    # for games
+    game1.take_player_out(role, player1)
+    game2.take_player_out(role, player2)
+    game1.put_player_in(role, player2)
+    game2.put_player_in(role, player1)
+
+    # for players
+    player1.remove_from_game(role, game1)
+    player2.remove_from_game(role, game2)
+    player1.put_in_game(role, game2)
+    player2.put_in_game(role, game1)
+
+
 def hill_climb() -> bool:
     """ hill_climb """
 
-    n = 1
+    num = 1
 
     while True:
 
@@ -290,7 +311,7 @@ def hill_climb() -> bool:
         print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
 
         # find the candidates (sorted to be deterministic)
-        candidates = sorted(list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])), key=lambda p:p.number)
+        candidates = sorted(list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])), key=lambda p: p.number)
 
         assert candidates, "Internal error : no candidates "
 
@@ -319,18 +340,7 @@ def hill_climb() -> bool:
                 assert not (game2 in player1.games_in() or game1 in player2.games_in()), "Internal error"
 
                 # try the swap
-
-                # for games
-                game1.take_player_out(role, player1)
-                game2.take_player_out(role, player2)
-                game1.put_player_in(role, player2)
-                game2.put_player_in(role, player1)
-
-                # for players
-                player1.remove_from_game(role, game1)
-                player2.remove_from_game(role, game2)
-                player1.put_in_game(role, game2)
-                player2.put_in_game(role, game1)
+                perform_swap(role, player1, player2, game1, game2, False)
 
                 # do we accept ?
                 new_worst = max(INTERACTION.values())
@@ -338,36 +348,27 @@ def hill_climb() -> bool:
                 new_worst_dump = [p.number for g in GAMES for p in g.players_in_game()]
 
                 if (new_worst, new_worst_number, new_worst_dump) < (worst, worst_number, worst_dump):
+                    # memorize the swap
+                    SWAPS.append((role, player1, player2, game1, game2))
                     changed = True
                     break
 
                 # no : put it back
-                # for games
-                game1.take_player_out(role, player2)
-                game2.take_player_out(role, player1)
-                game1.put_player_in(role, player1)
-                game2.put_player_in(role, player2)
-
-                # for players
-                player1.remove_from_game(role, game2)
-                player2.remove_from_game(role, game1)
-                player1.put_in_game(role, game1)
-                player2.put_in_game(role, game2)
+                perform_swap(role, player1, player2, game1, game2, True)
 
             if changed:
 
                 if DEBUG2:
-                    with open(f"opt_{n}.txt", "w", encoding='utf-8') as write_file:
+                    with open(f"opt_{num}.txt", "w", encoding='utf-8') as write_file:
                         write_file.write(f"Situation after have swapped {player1} and {player2}\n")
                         for gam in GAMES:
                             write_file.write(f"{gam.name};xxx;{gam.list_players()}\n")
-                    n += 1
+                    num += 1
 
                 break
 
         if not changed:
             print("")
-            print("Failed to optimize more!")
             return False
 
 
@@ -381,6 +382,7 @@ def main() -> None:
 
     global PLAYERS_DATA
     global MASTERS_DATA
+    global SWAPS
 
     parser = argparse.ArgumentParser()
 
@@ -401,7 +403,6 @@ def main() -> None:
     args = parser.parse_args()
 
     if args.seed:
-        assert args.randomize, "Specifying a seed is useless if you do not randomize players"
         random.seed(args.seed)
         print(f"Forced random seed to {args.seed}")
 
@@ -482,7 +483,15 @@ def main() -> None:
 
     if args.optimize_interactions:
         try:
-            status = hill_climb()
+            while True:
+                SWAPS = []
+                status = hill_climb()
+                if status:
+                    break
+                # undo everything for a new start
+                for (role, player1, player2, game1, game2) in reversed(SWAPS):
+                    perform_swap(role, player1, player2, game1, game2, True)
+
         except KeyboardInterrupt:
             return
 
