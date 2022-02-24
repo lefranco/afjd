@@ -33,14 +33,14 @@ def information_about_create_account():
     """ information_about_create_account """
 
     information = html.DIV(Class='note')
-    information <= "Pour se creer un compte, allez dans le menu mon compte/créer un compte"
+    information <= "Pour se creer un compte, utiliser le menu mon 'compte/créer un compte'"
     return information
 
 def information_about_ticket():
     """ information_about_ticket """
 
     information = html.DIV(Class='note')
-    information <= "Si vous avez un souci, pour déclarer un incident, allez dans le menu accueil / déclarer un incident"
+    information <= "Si vous avez un souci, pour déclarer un incident, utiliser dans le menu 'accueil/déclarer un incident'"
     return information
 
 def show_news():
@@ -110,11 +110,11 @@ def show_news():
     MY_SUB_PANEL <= news_content
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= information_about_create_account()
-    MY_PANEL <= html.BR()
+    MY_SUB_PANEL <= information_about_create_account()
+    MY_SUB_PANEL <= html.BR()
 
-    MY_PANEL <= information_about_ticket()
-    MY_PANEL <= html.BR()
+    MY_SUB_PANEL <= information_about_ticket()
+    MY_SUB_PANEL <= html.BR()
 
 
 def show_links():
