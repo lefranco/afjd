@@ -17,7 +17,12 @@ import random
 import faulthandler
 import itertools
 
+import cProfile
+import pstats
+
+PROFILE = False
 DEBUG = False
+DEBUG2 = True
 
 # this is a standard diplomacy constant
 POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
@@ -26,11 +31,6 @@ POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey'
 PLAYERS_DATA: typing.List[str] = []
 MASTERS_DATA: typing.List[str] = []
 
-
-def panic() -> None:
-    """ panic """
-    print('You pressed Ctrl+C!')
-    sys.exit(1)
 
 
 class Game:
@@ -143,9 +143,9 @@ class Player:
         assert role in self._allocation, "Internal error: role for player should be in"
         del self._allocation[role]
 
-    def games_in(self) -> typing.Set[Game]:
-        """ set of games the player plays in  """
-        return set(self._allocation.values())
+    def games_in(self) -> typing.List[Game]:
+        """ games the player plays in  """
+        return self._allocation.values()
 
     def has_role(self, role: int) -> bool:
         """ does the players has this role ? """
@@ -271,7 +271,7 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
     return False
 
 
-def hill_climb() -> None:
+def hill_climb() -> bool:
     """ hill_climb """
 
     n = 1
@@ -282,14 +282,15 @@ def hill_climb() -> None:
 
         # are we done
         if worst == 1:
-            break
+            return True
 
         worst_number = len([cp for cp in INTERACTION if INTERACTION[cp] == worst])
+        worst_dump = [p.number for g in GAMES for p in g.players_in_game()]
 
         print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
 
-        # find the candidates
-        candidates = list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1]))
+        # find the candidates (sorted to be deterministic)
+        candidates = sorted(list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])), key=lambda p:p.number)
 
         assert candidates, "Internal error : no candidates "
 
@@ -297,13 +298,13 @@ def hill_climb() -> None:
         couples = list(itertools.combinations(candidates, 2))
         random.shuffle(couples)
 
+        changed = False
         for player1, player2 in couples:
 
             roles = list(range(len(POWERS)))
             random.shuffle(roles)
 
             # find a swap
-            changed = False
             for role in roles:
 
                 game1 = player1.game_where_has_role(role)
@@ -334,8 +335,9 @@ def hill_climb() -> None:
                 # do we accept ?
                 new_worst = max(INTERACTION.values())
                 new_worst_number = len([cp for cp in INTERACTION if INTERACTION[cp] == new_worst])
+                new_worst_dump = [p.number for g in GAMES for p in g.players_in_game()]
 
-                if (new_worst, new_worst_number) < (worst, worst_number):
+                if (new_worst, new_worst_number, new_worst_dump) < (worst, worst_number, worst_dump):
                     changed = True
                     break
 
@@ -354,13 +356,19 @@ def hill_climb() -> None:
 
             if changed:
 
-                with open(f"opt_{n}.txt", "w", encoding='utf-8') as write_file:
-                    write_file.write(f"Situation after have swapped {player1} and {player2}\n")
-                    for gam in GAMES:
-                        write_file.write(f"{gam.name};xxx;{gam.list_players()}\n")
-                n += 1
+                if DEBUG2:
+                    with open(f"opt_{n}.txt", "w", encoding='utf-8') as write_file:
+                        write_file.write(f"Situation after have swapped {player1} and {player2}\n")
+                        for gam in GAMES:
+                            write_file.write(f"{gam.name};xxx;{gam.list_players()}\n")
+                    n += 1
 
                 break
+
+        if not changed:
+            print("")
+            print("Failed to optimize more!")
+            return False
 
 
 def main() -> None:
@@ -375,8 +383,6 @@ def main() -> None:
     global MASTERS_DATA
 
     parser = argparse.ArgumentParser()
-
-    parser.add_argument('-d', '--debug', required=False, action='store_true', help='switch to debug mode, displays a lot of information')
 
     parser.add_argument('-s', '--seed', required=False, help='force seed for random')
     parser.add_argument('-r', '--randomize', required=False, action='store_true', help='randomize players before making tournament (to avoid predictibility)')
@@ -393,10 +399,6 @@ def main() -> None:
     parser.add_argument('-o', '--output_file', required=False, help='resulting file')
 
     args = parser.parse_args()
-
-    global DEBUG
-    if args.debug:
-        DEBUG = True
 
     if args.seed:
         assert args.randomize, "Specifying a seed is useless if you do not randomize players"
@@ -471,7 +473,7 @@ def main() -> None:
     try:
         status = try_and_error(0, args.threshold_interactions)
     except KeyboardInterrupt:
-        panic()
+        return
 
     # end line after displaying depth
     print("")
@@ -480,9 +482,11 @@ def main() -> None:
 
     if args.optimize_interactions:
         try:
-            hill_climb()
+            status = hill_climb()
         except KeyboardInterrupt:
-            panic()
+            return
+
+    assert status, "Sorry : failed to make perfect tournament !"
 
     # assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
@@ -516,5 +520,28 @@ def main() -> None:
 
 
 if __name__ == '__main__':
+
     faulthandler.enable()
+
+    # this to know how long it takes
+    START = time.time()
+
+    # this if script too slow and profile it
+    if PROFILE:
+        PR = cProfile.Profile()
+        PR.enable()
+
     main()
+
+    if PROFILE:
+        PR.disable()
+        PS = pstats.Stats(PR)
+        PS.strip_dirs()
+        PS.sort_stats('time')
+        PS.print_stats()  # uncomment to have profile stats
+
+    # how long it took
+    DONE = time.time()
+    print(f"Time elapsed : {DONE - START:f}".format(), file=sys.stderr)
+
+    sys.exit(0)
