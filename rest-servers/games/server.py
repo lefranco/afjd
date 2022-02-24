@@ -1882,13 +1882,26 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(403, msg="This role does not seem to require any orders")
 
-        # put in database fake units - units for build orders
-
+        # extract orders from input
         try:
             the_orders = json.loads(orders_submitted)
         except json.JSONDecodeError:
             del sql_executor
             flask_restful.abort(400, msg="Did you convert orders from json to text ?")
+
+        # check the phase (sometimes two submission arrive simultanously)
+        for the_order in the_orders:
+            if game.current_advancement % 5 in [0, 2]:
+                if the_order['order_type'] not in [1, 2, 3, 4, 5]:
+                    flask_restful.abort(400, msg="Seems we have a move phase, you must provide move orders! (or more probably, you submitted twice or game changed just before you submitted)")
+            if game.current_advancement % 5 in [1, 3]:
+                if the_order['order_type'] not in [6, 7]:
+                    flask_restful.abort(400, msg="Seems we have a retreat phase, you must provide retreat orders! (or more probably, you submitted twice or game changed just before you submitted")
+            if game.current_advancement % 5 in [4]:
+                if the_order['order_type'] not in [8, 9]:
+                    flask_restful.abort(400, msg="Seems we have a adjustements phase, you must provide adjustments orders! (or more probably, you submitted twice or game changed just before you submitted")
+
+        # put in database fake units - units for build orders
 
         # first we remove the fake units of the role already present
         game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
