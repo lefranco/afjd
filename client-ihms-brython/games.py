@@ -1150,8 +1150,7 @@ def change_deadline_game():
     """ change_deadline_game """
 
     # declare the values
-    deadline_loaded_day = None
-    deadline_loaded_hour = None
+    deadline_loaded = None
 
     def change_deadline_reload():
         """ change_deadline_reload """
@@ -1166,8 +1165,7 @@ def change_deadline_game():
 
         def reply_callback(req):
             nonlocal status
-            nonlocal deadline_loaded_day
-            nonlocal deadline_loaded_hour
+            nonlocal deadline_loaded
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -1181,9 +1179,6 @@ def change_deadline_game():
 
             # convert deadline from server to humand editable deadline
             deadline_loaded = req_result['deadline']
-            datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
-            deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-            deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
 
         json_dict = {}
 
@@ -1273,6 +1268,12 @@ def change_deadline_game():
     special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     form <= special_info
     form <= html.BR()
+
+    # convert 'deadline_loaded' to human editable format
+
+    datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
+    deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+    deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
 
     fieldset = html.FIELDSET()
     legend_deadline_day = html.LEGEND("Jour de la date limite (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
