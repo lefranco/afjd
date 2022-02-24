@@ -22,7 +22,7 @@ import pstats
 
 PROFILE = False
 DEBUG = False
-DEBUG2 = True
+DEBUG2 = False
 
 # this is a standard diplomacy constant
 POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
@@ -486,7 +486,8 @@ def main() -> None:
         except KeyboardInterrupt:
             return
 
-    assert status, "Sorry : failed to make perfect tournament !"
+    if not status:
+        print("Sorry : failed to make perfect tournament !")
 
     # assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
