@@ -183,6 +183,7 @@ def information_about_quitting():
     information <= "Pour quitter une partie, utiliser le menu 'appariement / quitter la partie'"
     return information
 
+
 def my_games(state_name):
     """ my_games """
 

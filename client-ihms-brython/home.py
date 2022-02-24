@@ -29,6 +29,7 @@ Information importante : vous visualisez ici une interface au design rustique po
 Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/liens) ou sur le serveur Discord.
 """
 
+
 def information_about_create_account():
     """ information_about_create_account """
 
@@ -36,12 +37,14 @@ def information_about_create_account():
     information <= "Pour se creer un compte, utiliser le menu mon 'compte/créer un compte'"
     return information
 
+
 def information_about_ticket():
     """ information_about_ticket """
 
     information = html.DIV(Class='note')
     information <= "Si vous avez un souci, pour déclarer un incident, utiliser dans le menu 'accueil/déclarer un incident'"
     return information
+
 
 def show_news():
     """ show_home """
