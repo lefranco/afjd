@@ -42,7 +42,7 @@ def information_about_ticket():
     """ information_about_ticket """
 
     information = html.DIV(Class='note')
-    information <= "Si vous avez un souci, pour déclarer un incident, utiliser dans le menu 'accueil/déclarer un incident'"
+    information <= "Si vous avez un souci, pour déclarer un incident, utiliser le menu 'accueil/déclarer un incident'"
     return information
 
 
