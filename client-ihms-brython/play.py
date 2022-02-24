@@ -983,7 +983,7 @@ def show_position():
 
         buttons_right <= html.H3("Historique")
 
-        input_first = html.INPUT(type="submit", value="Derniers mouvements")
+        input_first = html.INPUT(type="submit", value="derniers mouvements")
         input_first.bind("click", lambda e, a=adv_last_moves: transition_display_callback(e, a))
         buttons_right <= input_first
         buttons_right <= html.BR()
