@@ -216,13 +216,13 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
     acceptable_players = [p for p in PLAYERS if not p.has_role(role) and not game.is_player_in_game(p)]
 
     # there cannot be more than one game master in the game
-    if any([p.is_master for p in game.players_in_game()]):
+    if any(p.is_master for p in game.players_in_game()):
         acceptable_players = [p for p in acceptable_players if not p.is_master]
 
     # we may be even more restrictive
     if threshold_interactions is not None:
         assert threshold_interactions >= 1, "There will always be at least one interaction (of course) so this thresold is not acceptable"
-        acceptable_players = [p for p in acceptable_players if all([INTERACTION[frozenset([pg, p])] < threshold_interactions for pg in game.players_in_game()])]
+        acceptable_players = [p for p in acceptable_players if all(INTERACTION[frozenset([pg, p])] < threshold_interactions for pg in game.players_in_game())]
 
     # debug
     if DEBUG:
@@ -264,6 +264,12 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
     return False
 
 
+def hill_climb() -> None:
+    """ hill_climb """
+
+    assert False, "Not implemented !"
+
+
 def main() -> None:
     """ main """
 
@@ -289,6 +295,7 @@ def main() -> None:
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
 
     parser.add_argument('-t', '--threshold_interactions', required=False, type=int, help='threshold of acceptable interactions : ')
+    parser.add_argument('-O', '--optimize_interactions', required=False, action='store_true', help='optimizes interactions to diminish them')
 
     parser.add_argument('-o', '--output_file', required=False, help='resulting file')
 
@@ -377,6 +384,9 @@ def main() -> None:
     print("")
 
     assert status, "Sorry : failed to make tournament !"
+
+    if args.optimize_interactions:
+        hill_climb()
 
     # assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
