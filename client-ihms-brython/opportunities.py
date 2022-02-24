@@ -22,6 +22,13 @@ import index  # circular import
 MY_PANEL = html.DIV(id="opportunities")
 MY_PANEL.attrs['style'] = 'display: table'
 
+def information_about_games():
+    """ information_about_games """
+
+    information = html.DIV(Class='note')
+    information <= "Pour connaître tous les paramètres de la partie, cliquez sur le bouton de la partie dans la colonne 'aller dans la partie'"
+    return information
+
 
 def get_recruiting_games():
     """ get_recruiting_games : retuens empty list if erroro or not game"""
@@ -430,12 +437,15 @@ def my_opportunities():
     MY_PANEL <= html.DIV("(**) On prend en compte l'arbitre dans le nombre de joueurs", Class='note')
     MY_PANEL <= html.BR()
 
+    MY_PANEL <= information_about_games()
+    MY_PANEL <= html.BR()
+
     # get GMT date and time
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
-    special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
+    special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     MY_PANEL <= special_legend
 
     MY_PANEL <= html.BR()

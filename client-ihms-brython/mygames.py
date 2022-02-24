@@ -176,6 +176,13 @@ def get_all_player_games_roles_submitted_orders():
     return dict_submitted_data
 
 
+def information_about_quitting():
+    """ information_about_quitting """
+
+    information = html.DIV(Class='note')
+    information <= "Pour quitter une partie, utiliser le menu appariement / quitter la partie "
+    return information
+
 def my_games(state_name):
     """ my_games """
 
@@ -640,11 +647,14 @@ def my_games(state_name):
     MY_PANEL <= html.DIV("(**) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
     MY_PANEL <= html.BR()
 
+    MY_PANEL <= information_about_quitting()
+    MY_PANEL <= html.BR()
+
     # get GMT date and time
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
-    special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
+    special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     MY_PANEL <= special_legend
     MY_PANEL <= html.BR()
 

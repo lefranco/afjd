@@ -29,6 +29,19 @@ Information importante : vous visualisez ici une interface au design rustique po
 Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/liens) ou sur le serveur Discord.
 """
 
+def information_about_create_account():
+    """ information_about_create_account """
+
+    information = html.DIV(Class='note')
+    information <= "Pour se creer un compte, allez dans le menu mon compte/créer un compte"
+    return information
+
+def information_about_ticket():
+    """ information_about_ticket """
+
+    information = html.DIV(Class='note')
+    information <= "Si vous avez un souci, pour déclarer un incident, allez dans le menu accueil / déclarer un incident"
+    return information
 
 def show_news():
     """ show_home """
@@ -47,10 +60,10 @@ def show_news():
 
     # ----
 
-    title2 = html.H4("Note importante", Class='important')
+    title2 = html.H4("Note importante")
     MY_SUB_PANEL <= title2
 
-    note_bene_content = html.DIV(Class='important')
+    note_bene_content = html.DIV()
     for line in NOTE_CONTENT_STATED.split("\n"):
         note_bene_content <= line
         note_bene_content <= html.BR()
@@ -95,6 +108,13 @@ def show_news():
                 news_content <= html.BR()
 
     MY_SUB_PANEL <= news_content
+    MY_PANEL <= html.BR()
+
+    MY_PANEL <= information_about_create_account()
+    MY_PANEL <= html.BR()
+
+    MY_PANEL <= information_about_ticket()
+    MY_PANEL <= html.BR()
 
 
 def show_links():
@@ -441,7 +461,7 @@ def all_games(state_name):
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
-    special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
+    special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     MY_SUB_PANEL <= special_info
     MY_SUB_PANEL <= html.BR()
 

@@ -1270,7 +1270,7 @@ def change_deadline_game():
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
     date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
-    special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
+    special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     form <= special_info
     form <= html.BR()
 
