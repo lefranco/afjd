@@ -16,6 +16,7 @@ import time
 import random
 import faulthandler
 import itertools
+import signal
 
 import cProfile
 import pstats
@@ -30,6 +31,14 @@ POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey'
 # as extracted from input file
 PLAYERS_DATA: typing.List[str] = []
 MASTERS_DATA: typing.List[str] = []
+
+INTERRUPT = False
+
+def user_interrupt(_, __):
+    """ user_interrupt """
+    print("CTRL+C was pressed.")
+    global INTERRUPT
+    INTERRUPT = True
 
 
 class Game:
@@ -345,6 +354,7 @@ def hill_climb() -> bool:
                 assert not (game2 in player1.games_in() or game1 in player2.games_in()), "Internal error"
 
                 # try the swap
+                #print(f"Swapping {role=} {player1.name=} {player2.name=}")
                 perform_swap(role, player1, player2, game1, game2, False)
 
                 # evaluate
@@ -358,6 +368,7 @@ def hill_climb() -> bool:
                     break
 
                 # no : put it back
+                #print(f"Unswapping {role=} {player1.name=} {player2.name=}")
                 perform_swap(role, player1, player2, game1, game2, True)
 
             if changed:
@@ -479,43 +490,42 @@ def main() -> None:
     if args.optimize_interactions:
 
         print("Press CTRL-C to interrupt")
+        signal.signal(signal.SIGINT, user_interrupt)
 
-        try:
+        best_worst, best_worst_number = nb_players, 0
 
-            done = False
-            best_worst, best_worst_number = nb_players, 0
+        while True:
 
-            while True:
+            # make a climb
+            SWAPS = []
+            status = hill_climb()
+            if status:
+                break
 
-                # make a climb
-                SWAPS = []
-                status = hill_climb()
-                if status:
-                    break
+            # evaluate
+            worst, worst_number, _ = evaluate()
 
-                # evaluate
-                worst, worst_number, _ = evaluate()
+            # is this our best so far ?
+            if (worst, worst_number) < (best_worst, best_worst_number):
+                best_worst, best_worst_number = worst, worst_number
+                BEST_SWAPS = SWAPS.copy()
 
-                # is this our best so far ?
-                if (worst, worst_number) < (best_worst, best_worst_number):
-                    best_worst, best_worst_number = worst, worst_number
-                    BEST_SWAPS = SWAPS.copy()
+            # undo everything for a new start
+            for (role, player1, player2, game1, game2) in reversed(SWAPS):
+                #print(f"Unswapping {role=} {player1.name=} {player2.name=}")
+                perform_swap(role, player1, player2, game1, game2, True)
 
-                # undo everything for a new start
-                for (role, player1, player2, game1, game2) in reversed(SWAPS):
-                    perform_swap(role, player1, player2, game1, game2, True)
+            # we were interrupted
+            if INTERRUPT:
+                break
 
-                # we were interrupted
-                if done:
-                    break
-
-        except KeyboardInterrupt:
-            done = True
+        signal.signal(signal.SIGINT, user_interrupt)
 
     if not status:
         print("Sorry : failed to make perfect tournament !")
         # still apply BEST SWAPS
         for (role, player1, player2, game1, game2) in BEST_SWAPS:
+            #print(f"Swapping {role=} {player1.name=} {player2.name=}")
             perform_swap(role, player1, player2, game1, game2, False)
 
     # assign game masters to games
