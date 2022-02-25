@@ -522,7 +522,7 @@ def main() -> None:
         signal.signal(signal.SIGINT, user_interrupt)
 
     if not status:
-        print("Sorry : failed to make perfect tournament !")
+        print("Sorry : failed to make a perfect tournament !")
         # still apply BEST SWAPS
         for (role, player1, player2, game1, game2) in BEST_SWAPS:
             #print(f"Swapping {role=} {player1.name=} {player2.name=}")
@@ -548,9 +548,13 @@ def main() -> None:
             for game in GAMES:
                 write_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
 
-    stats = {n: len([i for i in INTERACTION.values() if i == n]) for n in INTERACTION.values() if n > 1}
-    for number_interactions, number_occurence in sorted(stats.items(), key=lambda i: i[0], reverse=True):
-        print(f"We have {number_occurence} occurences of two players inteacting {number_interactions} times")
+
+    worst, worst_number, worst_dump = evaluate()
+    print(f"We have {worst_number} occurences of two players inteacting {worst} times")
+
+    conflicting = sorted(list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])), key=lambda p: p.name)  # type: ignore
+    print("Interacting players : ", end='')
+    print(" ".join([str(p) for p in conflicting]))
     print("")
 
     finished_time = time.time()
