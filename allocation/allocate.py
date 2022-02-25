@@ -191,7 +191,7 @@ INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 SWAPS: typing.List[typing.Tuple[int, Player, Player, Game, Game]] = []
 
 
-def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> bool:
+def try_and_error(depth: int) -> bool:
     """ try_and_error """
 
     print(f"{depth // len(POWERS):5} ", end='\r', flush=True)
@@ -228,11 +228,6 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
     if any(p.is_master for p in game.players_in_game()):
         acceptable_players = [p for p in acceptable_players if not p.is_master]
 
-    # we may be even more restrictive
-    if threshold_interactions is not None:
-        assert threshold_interactions >= 1, "There will always be at least one interaction (of course) so this thresold is not acceptable"
-        acceptable_players = [p for p in acceptable_players if all(INTERACTION[frozenset([pg, p])] < threshold_interactions for pg in game.players_in_game())]
-
     # debug
     if DEBUG:
         print("HEURISTIC: crit= interact. / games in / id : ")
@@ -259,7 +254,7 @@ def try_and_error(depth: int, threshold_interactions: typing.Optional[int]) -> b
                 print(f"{gam.name};xxx;{gam.list_players()}")
 
         # if we fail, we try otherwise !
-        if try_and_error(depth + 1, threshold_interactions):
+        if try_and_error(depth + 1):
             return True
 
         if DEBUG:
@@ -311,7 +306,7 @@ def hill_climb() -> bool:
         print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
 
         # find the candidates (sorted to be deterministic)
-        candidates = sorted(list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])), key=lambda p: p.number)
+        candidates = sorted(list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])), key=lambda p: p.number)  # type: ignore
 
         assert candidates, "Internal error : no candidates "
 
@@ -387,7 +382,6 @@ def main() -> None:
     parser = argparse.ArgumentParser()
 
     parser.add_argument('-s', '--seed', required=False, help='force seed for random')
-    parser.add_argument('-r', '--randomize', required=False, action='store_true', help='randomize players before making tournament (to avoid predictibility)')
 
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
     parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players of the file')
@@ -395,7 +389,6 @@ def main() -> None:
 
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
 
-    parser.add_argument('-t', '--threshold_interactions', required=False, type=int, help='threshold of acceptable interactions : ')
     parser.add_argument('-O', '--optimize_interactions', required=False, action='store_true', help='optimizes interactions to diminish them')
 
     parser.add_argument('-o', '--output_file', required=False, help='resulting file')
@@ -422,11 +415,6 @@ def main() -> None:
 
     # must be enough : that is at least 7
     assert len(PLAYERS_DATA) >= len(POWERS), "You need more players than that to hope success!"
-
-    if args.randomize:
-        print("Randomizing players !")
-        print("")
-        random.shuffle(PLAYERS_DATA)
 
     # make players
     for player_id, _ in enumerate(PLAYERS_DATA):
@@ -472,7 +460,7 @@ def main() -> None:
     # if badly designed, we may calculate for too long
     # so this allows us to interrupt gracefully
     try:
-        status = try_and_error(0, args.threshold_interactions)
+        status = try_and_error(0)
     except KeyboardInterrupt:
         return
 
