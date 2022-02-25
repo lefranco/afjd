@@ -189,6 +189,7 @@ INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 
 # to be able to undo
 SWAPS: typing.List[typing.Tuple[int, Player, Player, Game, Game]] = []
+BEST_SWAPS: typing.List[typing.Tuple[int, Player, Player, Game, Game]] = []
 
 
 def try_and_error(depth: int) -> bool:
@@ -268,6 +269,15 @@ def try_and_error(depth: int) -> bool:
     return False
 
 
+def evaluate() -> typing.Tuple[int, int, typing.List[int]]:
+    """ evaluate how good we have reached """
+
+    worst = max(INTERACTION.values())
+    worst_number = len([cp for cp in INTERACTION if INTERACTION[cp] == worst])
+    worst_dump = [p.number for g in GAMES for p in g.players_in_game()]
+    return worst, worst_number, worst_dump
+
+
 def perform_swap(role: int, player1: Player, player2: Player, game1: Game, game2: Game, reverse: bool) -> None:
     """ perform_swap """
 
@@ -290,20 +300,20 @@ def perform_swap(role: int, player1: Player, player2: Player, game1: Game, game2
 def hill_climb() -> bool:
     """ hill_climb """
 
+    global BEST_SWAPS
+
     num = 1
 
     while True:
 
-        worst = max(INTERACTION.values())
+        evaluate()
+
+        worst, worst_number, worst_dump = evaluate()
+        print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
 
         # are we done
         if worst == 1:
             return True
-
-        worst_number = len([cp for cp in INTERACTION if INTERACTION[cp] == worst])
-        worst_dump = [p.number for g in GAMES for p in g.players_in_game()]
-
-        print(f"{worst:2} ({worst_number:5})", end='\r', flush=True)
 
         # find the candidates (sorted to be deterministic)
         candidates = sorted(list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])), key=lambda p: p.number)  # type: ignore
@@ -337,11 +347,10 @@ def hill_climb() -> bool:
                 # try the swap
                 perform_swap(role, player1, player2, game1, game2, False)
 
-                # do we accept ?
-                new_worst = max(INTERACTION.values())
-                new_worst_number = len([cp for cp in INTERACTION if INTERACTION[cp] == new_worst])
-                new_worst_dump = [p.number for g in GAMES for p in g.players_in_game()]
+                # evaluate
+                new_worst, new_worst_number, new_worst_dump = evaluate()
 
+                # do we accept ?
                 if (new_worst, new_worst_number, new_worst_dump) < (worst, worst_number, worst_dump):
                     # memorize the swap
                     SWAPS.append((role, player1, player2, game1, game2))
@@ -378,21 +387,16 @@ def main() -> None:
     global PLAYERS_DATA
     global MASTERS_DATA
     global SWAPS
+    global BEST_SWAPS
 
     parser = argparse.ArgumentParser()
-
     parser.add_argument('-s', '--seed', required=False, help='force seed for random')
-
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
     parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players of the file')
     parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
-
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
-
     parser.add_argument('-O', '--optimize_interactions', required=False, action='store_true', help='optimizes interactions to diminish them')
-
     parser.add_argument('-o', '--output_file', required=False, help='resulting file')
-
     args = parser.parse_args()
 
     if args.seed:
@@ -460,7 +464,6 @@ def main() -> None:
     print(f"We have {nb_players} players, {nb_non_playing_masters} non playing masters and {nb_playing_masters} playing masters")
     assert not (nb_non_playing_masters == 0 and nb_playing_masters == 1), "This configuration will no succeed : need more than a single playing master"
 
-
     # if badly designed, we may calculate for too long
     # so this allows us to interrupt gracefully
     try:
@@ -474,23 +477,46 @@ def main() -> None:
     assert status, "Sorry : failed to make initial tournament !"
 
     if args.optimize_interactions:
-        # if badly designed, we may calculate for too long
-        # so this allows us to interrupt gracefully
+
+        print("Press CTRL-C to interrupt")
+
         try:
+
+            done = False
+            best_worst, best_worst_number = nb_players, 0
+
             while True:
+
+                # make a climb
                 SWAPS = []
                 status = hill_climb()
                 if status:
                     break
+
+                # evaluate
+                worst, worst_number, _ = evaluate()
+
+                # is this our best so far ?
+                if (worst, worst_number) < (best_worst, best_worst_number):
+                    best_worst, best_worst_number = worst, worst_number
+                    BEST_SWAPS = SWAPS.copy()
+
                 # undo everything for a new start
                 for (role, player1, player2, game1, game2) in reversed(SWAPS):
                     perform_swap(role, player1, player2, game1, game2, True)
 
+                # we were interrupted
+                if done:
+                    break
+
         except KeyboardInterrupt:
-            return
+            done = True
 
     if not status:
         print("Sorry : failed to make perfect tournament !")
+        # still apply BEST SWAPS
+        for (role, player1, player2, game1, game2) in BEST_SWAPS:
+            perform_swap(role, player1, player2, game1, game2, False)
 
     # assign game masters to games
     master_game_table: typing.Dict[Game, Player] = {}
