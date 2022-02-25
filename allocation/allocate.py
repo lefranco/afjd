@@ -410,8 +410,6 @@ def main() -> None:
 
     # all players must be different
     assert len(set(PLAYERS_DATA)) == len(PLAYERS_DATA), "Duplicate in players"
-    print(f"We have {len(PLAYERS_DATA)} players")
-    print("")
 
     # must be enough : that is at least 7
     assert len(PLAYERS_DATA) >= len(POWERS), "You need more players than that to hope success!"
@@ -436,8 +434,6 @@ def main() -> None:
         MASTERS_DATA = [m.rstrip() for m in read_file.readlines() if m.rstrip()]
 
     assert len(set(MASTERS_DATA)) == len(MASTERS_DATA), "Duplicate in masters"
-    print(f"We have {len(MASTERS_DATA)} masters")
-    print("")
 
     # must be more than 1
     assert len(MASTERS_DATA) >= 1, "There must be at least one master for these games"
@@ -455,7 +451,15 @@ def main() -> None:
             assert player.name == master_name, "Internal error: game master losts his/her name!"
         player.is_master = True
         masters_list.append(player)
-    print("")
+
+    # Print a recap
+    nb_players = len(PLAYERS)
+    nb_non_playing_masters = len([p for p in masters_list if p.number == 1])
+    nb_playing_masters = len([p for p in PLAYERS if p.is_master])
+
+    print(f"We have {nb_players} players, {nb_non_playing_masters} non playing masters and {nb_playing_masters} playing masters")
+    assert not (nb_non_playing_masters == 0 and nb_playing_masters == 1), "This configuration will no succeed : need more than a single playing master"
+
 
     # if badly designed, we may calculate for too long
     # so this allows us to interrupt gracefully
@@ -467,9 +471,11 @@ def main() -> None:
     # end line after displaying depth
     print("")
 
-    assert status, "Sorry : failed to make tournament !"
+    assert status, "Sorry : failed to make initial tournament !"
 
     if args.optimize_interactions:
+        # if badly designed, we may calculate for too long
+        # so this allows us to interrupt gracefully
         try:
             while True:
                 SWAPS = []
