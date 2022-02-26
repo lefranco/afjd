@@ -539,6 +539,9 @@ def declare_incident():
         body += "\n\n"
         body += f"description : {input_description.value}"
         body += "\n\n"
+        version = storage['VERSION']
+        body += f"version : {version}"
+        body += "\n\n"
 
         json_dict = {
             'subject': subject,
