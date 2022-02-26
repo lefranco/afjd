@@ -22,8 +22,6 @@ import cProfile
 import pstats
 
 PROFILE = False
-DEBUG = False
-DEBUG2 = False
 
 # this is a standard diplomacy constant
 POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
@@ -34,10 +32,18 @@ MASTERS_DATA: typing.List[str] = []
 
 INTERRUPT = False
 
-def user_interrupt(_, __):
+
+def user_interrupt(_, __) -> None:  # type: ignore
     """ user_interrupt """
-    print("CTRL+C was pressed.")
+
     global INTERRUPT
+
+    print("CTRL+C was pressed.")
+
+    if INTERRUPT:
+        print("Ok, stop everything!")
+        sys.exit(-1)
+
     INTERRUPT = True
 
 
@@ -238,13 +244,6 @@ def try_and_error(depth: int) -> bool:
     if any(p.is_master for p in game.players_in_game()):
         acceptable_players = [p for p in acceptable_players if not p.is_master]
 
-    # debug
-    if DEBUG:
-        print("HEURISTIC: crit= interact. / games in / id : ")
-        for play in acceptable_players:
-            print(f"{play} : crit={(sum([INTERACTION[frozenset([pp, play])] for pp in game.players_in_game()]), len(play.games_in()), play.number)}")
-        print("--")
-
     # players will be selected according to:
     # 1) fewest interactions with the ones in the game
     # 2) players which are in more games (more efficient than less games for some reason)
@@ -258,19 +257,9 @@ def try_and_error(depth: int) -> bool:
         game.put_player_in(role, player)
         player.put_in_game(role, game)
 
-        if DEBUG:
-            print(f"Situation after have put {player} in {game}")
-            for gam in GAMES:
-                print(f"{gam.name};xxx;{gam.list_players()}")
-
         # if we fail, we try otherwise !
         if try_and_error(depth + 1):
             return True
-
-        if DEBUG:
-            print(f"Situation before remove {player} from {game}")
-            for gam in GAMES:
-                print(f"{gam.name};xxx;{gam.list_players()}")
 
         player.remove_from_game(role, game)
         game.take_player_out(role, player)
@@ -309,10 +298,6 @@ def perform_swap(role: int, player1: Player, player2: Player, game1: Game, game2
 def hill_climb() -> bool:
     """ hill_climb """
 
-    global BEST_SWAPS
-
-    num = 1
-
     while True:
 
         evaluate()
@@ -324,13 +309,15 @@ def hill_climb() -> bool:
         if worst == 1:
             return True
 
-        # find the candidates (sorted to be deterministic)
-        candidates = sorted(list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])), key=lambda p: p.number)  # type: ignore
-
+        # find the candidates
+        candidates = set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])
         assert candidates, "Internal error : no candidates "
 
-        # take two
-        couples = list(itertools.combinations(candidates, 2))
+        complements = set(PLAYERS) - candidates
+        assert complements, "Internal error : no complements "
+
+        # take one from each
+        couples = list(itertools.product(candidates, complements))
         random.shuffle(couples)
 
         changed = False
@@ -354,7 +341,6 @@ def hill_climb() -> bool:
                 assert not (game2 in player1.games_in() or game1 in player2.games_in()), "Internal error"
 
                 # try the swap
-                #print(f"Swapping {role=} {player1.name=} {player2.name=}")
                 perform_swap(role, player1, player2, game1, game2, False)
 
                 # evaluate
@@ -368,18 +354,9 @@ def hill_climb() -> bool:
                     break
 
                 # no : put it back
-                #print(f"Unswapping {role=} {player1.name=} {player2.name=}")
                 perform_swap(role, player1, player2, game1, game2, True)
 
             if changed:
-
-                if DEBUG2:
-                    with open(f"opt_{num}.txt", "w", encoding='utf-8') as write_file:
-                        write_file.write(f"Situation after have swapped {player1} and {player2}\n")
-                        for gam in GAMES:
-                            write_file.write(f"{gam.name};xxx;{gam.list_players()}\n")
-                    num += 1
-
                 break
 
         if not changed:
@@ -391,9 +368,6 @@ def main() -> None:
     """ main """
 
     start_time = time.time()
-
-    # we make big use of recursion here
-    sys.setrecursionlimit(10000)
 
     global PLAYERS_DATA
     global MASTERS_DATA
@@ -512,7 +486,6 @@ def main() -> None:
 
             # undo everything for a new start
             for (role, player1, player2, game1, game2) in reversed(SWAPS):
-                #print(f"Unswapping {role=} {player1.name=} {player2.name=}")
                 perform_swap(role, player1, player2, game1, game2, True)
 
             # we were interrupted
@@ -525,7 +498,6 @@ def main() -> None:
         print("Sorry : failed to make a perfect tournament !")
         # still apply BEST SWAPS
         for (role, player1, player2, game1, game2) in BEST_SWAPS:
-            #print(f"Swapping {role=} {player1.name=} {player2.name=}")
             perform_swap(role, player1, player2, game1, game2, False)
 
     # assign game masters to games
@@ -548,14 +520,13 @@ def main() -> None:
             for game in GAMES:
                 write_file.write(f"{game.name};{master_game_table[game].name};{game.list_players()}\n")
 
+    worst, worst_number, _ = evaluate()
+    print(f"We have {worst_number} occurences of two players interacting {worst} times")
 
-    worst, worst_number, worst_dump = evaluate()
-    print(f"We have {worst_number} occurences of two players inteacting {worst} times")
-
-    conflicting = sorted(list(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])), key=lambda p: p.name)  # type: ignore
-    print("Interacting players : ", end='')
-    print(" ".join([str(p) for p in conflicting]))
-    print("")
+    print("Interactions : ")
+    for player1, player2 in [cp for cp in INTERACTION if INTERACTION[cp] > 1]:
+        games = set(player1.games_in()) & set(player2.games_in())
+        print(f"{player1} and {player2} in games {' '.join([g.name for g in games])}")
 
     finished_time = time.time()
     elapsed = finished_time - start_time
@@ -565,6 +536,10 @@ def main() -> None:
 
 if __name__ == '__main__':
 
+    # we make big use of recursion here
+    sys.setrecursionlimit(10000)
+
+    # windows can crash if too deep
     faulthandler.enable()
 
     # this to know how long it takes
@@ -586,6 +561,6 @@ if __name__ == '__main__':
 
     # how long it took
     DONE = time.time()
-    print(f"Time elapsed : {DONE - START:f}".format(), file=sys.stderr)
+    print(f"Time elapsed : {DONE - START:f}".format())
 
     sys.exit(0)
