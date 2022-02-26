@@ -28,5 +28,14 @@
 import index
 </script>
 
+<!-- version  -->
+<script language="JavaScript">
+var xhReq = new XMLHttpRequest();
+xhReq.open("HEAD", "brython_modules.js", false);
+xhReq.send(null);
+var lastModified = xhReq.getResponseHeader("Last-Modified");
+localStorage.setItem('VERSION', lastModified);
+</script>
+
 </body>
 </html>
