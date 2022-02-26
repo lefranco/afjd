@@ -310,16 +310,18 @@ def hill_climb() -> bool:
             return True
 
         # find the candidates
-        # sorted to be deterministic
-        candidates = sorted(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1]), key=lambda p: p.number)
+        candidates = set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])
         assert candidates, "Internal error : no candidates "
 
-        # sorted to be deterministic
-        complements = sorted(set(PLAYERS) - set(candidates), key=lambda p: p.number)
-        assert complements, "Internal error : no complements "
+        if len(candidates) != len(PLAYERS):
+            complements = set(PLAYERS) - set(candidates)
+            # take one from conflicting and one from not conflicting
+            couples = list(itertools.product(candidates, complements))
+        else:
+            # take any two from those conflicting
+            couples = list(itertools.combinations(candidates, 2))
 
-        # take one from each
-        couples = list(itertools.product(candidates, complements))
+        # works better with random
         random.shuffle(couples)
 
         changed = False
@@ -448,6 +450,8 @@ def main() -> None:
     print(f"We have {nb_players} players, {nb_non_playing_masters} non playing masters and {nb_playing_masters} playing masters")
     assert not (nb_non_playing_masters == 0 and nb_playing_masters == 1), "This configuration will no succeed : need more than a single playing master"
 
+    print("Showing <number of games completed>")
+
     # if badly designed, we may calculate for too long
     # so this allows us to interrupt gracefully
     try:
@@ -458,9 +462,11 @@ def main() -> None:
     # end line after displaying depth
     print("")
 
-    assert status, "Sorry : failed to make initial tournament !"
+    assert status, "Sorry : failed to make initial tournament ! Contact support !"
 
     print("Press CTRL-C to interrupt")
+    print("Showing <number of interactions> (<Number of occurences>)")
+
     signal.signal(signal.SIGINT, user_interrupt)
 
     best_worst, best_worst_number = nb_players, 0
@@ -493,7 +499,7 @@ def main() -> None:
     signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     if not status:
-        print("Sorry : failed to make a perfect tournament !")
+        print("Sorry : failed to make a perfect tournament ! Contact support !")
         # still apply BEST SWAPS
         for (role, player1, player2, game1, game2) in BEST_SWAPS:
             perform_swap(role, player1, player2, game1, game2, False)
@@ -502,10 +508,12 @@ def main() -> None:
     master_game_table: typing.Dict[Game, Player] = {}
     for game in GAMES:
         master_select = sorted(masters_list, key=lambda m: len([g for g in GAMES if g in master_game_table and master_game_table[g] == m]))
+        master = None
         for master_poss in master_select:
             if not game.is_player_in_game(master_poss):
                 master = master_poss
                 break
+        assert master, f"Sorry : Could not put a master in game {game} ! Contact support !"
         master_game_table[game] = master
 
     for master in masters_list:
