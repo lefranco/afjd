@@ -310,10 +310,12 @@ def hill_climb() -> bool:
             return True
 
         # find the candidates
-        candidates = set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1])
+        # sorted to be deterministic
+        candidates = sorted(set().union(*[cp for cp in INTERACTION if INTERACTION[cp] > 1]), key=lambda p: p.number)
         assert candidates, "Internal error : no candidates "
 
-        complements = set(PLAYERS) - candidates
+        # sorted to be deterministic
+        complements = sorted(set(PLAYERS) - set(candidates), key=lambda p: p.number)
         assert complements, "Internal error : no complements "
 
         # take one from each
@@ -375,18 +377,12 @@ def main() -> None:
     global BEST_SWAPS
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-s', '--seed', required=False, help='force seed for random')
     parser.add_argument('-p', '--players_file', required=True, help='file with names of players')
-    parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players of the file')
     parser.add_argument('-m', '--masters_file', required=True, help='file with names of game master')
     parser.add_argument('-g', '--game_names_prefix', required=True, help='prefix for name of games')
-    parser.add_argument('-O', '--optimize_interactions', required=False, action='store_true', help='optimizes interactions to diminish them')
-    parser.add_argument('-o', '--output_file', required=False, help='resulting file')
+    parser.add_argument('-o', '--output_file', required=True, help='resulting file')
+    parser.add_argument('-l', '--limit', required=False, type=int, help='limit to first players of the file (for testing)')
     args = parser.parse_args()
-
-    if args.seed:
-        random.seed(args.seed)
-        print(f"Forced random seed to {args.seed}")
 
     # load players file
     with open(args.players_file, "r", encoding='utf-8') as read_file:
@@ -402,6 +398,9 @@ def main() -> None:
 
     # must be enough : that is at least 7
     assert len(PLAYERS_DATA) >= len(POWERS), "You need more players than that to hope success!"
+
+    # make it harder to guess
+    random.shuffle(PLAYERS_DATA)
 
     # make players
     for player_id, _ in enumerate(PLAYERS_DATA):
@@ -461,38 +460,37 @@ def main() -> None:
 
     assert status, "Sorry : failed to make initial tournament !"
 
-    if args.optimize_interactions:
+    print("Press CTRL-C to interrupt")
+    signal.signal(signal.SIGINT, user_interrupt)
 
-        print("Press CTRL-C to interrupt")
-        signal.signal(signal.SIGINT, user_interrupt)
+    best_worst, best_worst_number = nb_players, 0
 
-        best_worst, best_worst_number = nb_players, 0
+    while True:
 
-        while True:
+        # make a climb
+        SWAPS = []
+        status = hill_climb()
+        if status:
+            break
 
-            # make a climb
-            SWAPS = []
-            status = hill_climb()
-            if status:
-                break
+        # evaluate
+        worst, worst_number, _ = evaluate()
 
-            # evaluate
-            worst, worst_number, _ = evaluate()
+        # is this our best so far ?
+        if (worst, worst_number) < (best_worst, best_worst_number):
+            best_worst, best_worst_number = worst, worst_number
+            BEST_SWAPS = SWAPS.copy()
 
-            # is this our best so far ?
-            if (worst, worst_number) < (best_worst, best_worst_number):
-                best_worst, best_worst_number = worst, worst_number
-                BEST_SWAPS = SWAPS.copy()
+        # undo everything for a new start
+        for (role, player1, player2, game1, game2) in reversed(SWAPS):
+            perform_swap(role, player1, player2, game1, game2, True)
 
-            # undo everything for a new start
-            for (role, player1, player2, game1, game2) in reversed(SWAPS):
-                perform_swap(role, player1, player2, game1, game2, True)
+        # we were interrupted
+        if INTERRUPT:
+            break
 
-            # we were interrupted
-            if INTERRUPT:
-                break
-
-        signal.signal(signal.SIGINT, user_interrupt)
+    # do not handle CTRL-C any more
+    signal.signal(signal.SIGINT, signal.SIG_DFL)
 
     if not status:
         print("Sorry : failed to make a perfect tournament !")
@@ -523,7 +521,7 @@ def main() -> None:
     worst, worst_number, _ = evaluate()
     print(f"We have {worst_number} occurences of two players interacting {worst} times")
 
-    print("Interactions : ")
+    print("Interactions more than once: ")
     for player1, player2 in [cp for cp in INTERACTION if INTERACTION[cp] > 1]:
         games = set(player1.games_in()) & set(player2.games_in())
         print(f"{player1} and {player2} in games {' '.join([g.name for g in games])}")
