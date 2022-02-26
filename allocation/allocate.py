@@ -336,13 +336,12 @@ def hill_climb() -> bool:
                 game1 = player1.game_where_has_role(role)
                 game2 = player2.game_where_has_role(role)
 
-                if game1 == game2:
-                    continue
+                assert game1 != game2, "Internal error hill climb 1"
 
                 if game1.is_player_in_game(player2) or game2.is_player_in_game(player1):
                     continue
 
-                assert not (game2 in player1.games_in() or game1 in player2.games_in()), "Internal error"
+                assert not (game2 in player1.games_in() or game1 in player2.games_in()), "Internal error hill climb 2"
 
                 # try the swap
                 perform_swap(role, player1, player2, game1, game2, False)
