@@ -108,7 +108,7 @@ def show_players_data():
             if field == 'player':
                 value = player
             if field == 'games':
-                value = '/'.join(games)
+                value = ' '.join(games)
             col = html.TD(value)
             row <= col
 
@@ -174,7 +174,7 @@ def show_replacement_data():
             if field == 'player':
                 value = player
             if field == 'games':
-                value = '/'.join(games)
+                value = ' '.join(games)
             col = html.TD(value)
             row <= col
 
@@ -238,7 +238,7 @@ def show_game_masters_data():
             if field == 'master':
                 value = master
             if field == 'games':
-                value = '/'.join(games)
+                value = ' '.join(games)
             col = html.TD(value)
             row <= col
 
