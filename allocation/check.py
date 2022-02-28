@@ -121,6 +121,9 @@ class Player:
     def __str__(self) -> str:
         return self._name
 
+# list of players
+PLAYERS: typing.List[Player] = []
+
 # says how many times two players are in same game
 INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 
@@ -129,8 +132,7 @@ def evaluate() -> typing.Tuple[int, int, typing.List[int]]:
 
     worst = max(INTERACTION.values())
     worst_number = len([cp for cp in INTERACTION if INTERACTION[cp] == worst])
-    worst_dump = [p.number for g in GAMES for p in g.players_in_game()]
-    return worst, worst_number, worst_dump
+    return worst, worst_number
 
 
 def main() -> None:
@@ -139,6 +141,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--tournament_file', required=True, help='file tournament description')
+    parser.add_argument('-p', '--print', action='store_true', required=False, help='output description for checking')
     args = parser.parse_args()
 
     # load players file
@@ -150,17 +153,19 @@ def main() -> None:
         for row in csv_reader:
             name = row[0]
             game = Game(name)
+            GAMES.append(game)
 
             for role, player_name in enumerate(row[1:]):
                 if player_name in player_table:
                     player = player_table[player_name]
                 else:
                     player = Player(player_name)
+                    PLAYERS.append(player)
                     player_table[player_name] = player
                 game.put_player_in(role, player)
 
 
-    worst, worst_number, _ = evaluate()
+    worst, worst_number = evaluate()
     print(f"We have {worst_number} occurences of two players interacting {worst} times")
 
     print("Interactions more than once: ")
@@ -169,8 +174,9 @@ def main() -> None:
         print(f"{player1} and {player2} in games {' '.join([g.name for g in games])}")
 
     # output stuff
-    for game in GAMES:
-        print(f"{game.name};{master_game_table[game].name};{game.list_players()}")
+    if args.print:
+        for game in GAMES:
+            print(f"{game.name};NA;{game.list_players()}")
 
 
 if __name__ == '__main__':
