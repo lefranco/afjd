@@ -161,6 +161,11 @@ def load_option(_, item_name):
     if prev_item_selected in ['jouer la partie sélectionnée', 'bac à sable']:
         document.unbind("keypress")
 
+    if ITEM_NAME_SELECTED == 'accueil':
+        MENU_LEFT <= html.BR()
+        emotion_img = html.IMG(src="./images/Flag-Ukraine.png", title="Solidarité avec l'Ukraine agressée !")
+        MENU_LEFT <= emotion_img
+
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
