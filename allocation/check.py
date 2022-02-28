@@ -17,6 +17,7 @@ import csv
 # this is a standard diplomacy constant
 POWERS = ['England', 'France', 'Germany', 'Italy', 'Austria', 'Russia', 'Turkey']
 
+
 class Game:
     """ a game """
 
@@ -40,7 +41,6 @@ class Game:
             INTERACTION[frozenset([player, other_player])] += 1
 
         self._allocation[role] = player
-
 
     def is_player_in_game(self, player: 'Player') -> bool:
         """ tells if player plays in this game """
@@ -75,6 +75,7 @@ class Game:
 
 # list of games
 GAMES: typing.List[Game] = []
+
 
 class Player:
     """ a player """
@@ -121,13 +122,15 @@ class Player:
     def __str__(self) -> str:
         return self._name
 
+
 # list of players
 PLAYERS: typing.List[Player] = []
 
 # says how many times two players are in same game
 INTERACTION: typing.Counter[typing.FrozenSet[Player]] = collections.Counter()
 
-def evaluate() -> typing.Tuple[int, int, typing.List[int]]:
+
+def evaluate() -> typing.Tuple[int, int]:
     """ evaluate how good we have reached """
 
     worst = max(INTERACTION.values())
@@ -138,7 +141,6 @@ def evaluate() -> typing.Tuple[int, int, typing.List[int]]:
 def main() -> None:
     """ main """
 
-
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--tournament_file', required=True, help='file tournament description')
     parser.add_argument('-p', '--print', action='store_true', required=False, help='output description for checking')
@@ -148,10 +150,11 @@ def main() -> None:
     with open(args.tournament_file, "r", encoding='utf-8') as csv_read_file:
         csv_reader = csv.reader(csv_read_file, delimiter=';')
 
-        player_table = dict()
+        player_table: typing.Dict[str, Player] = dict()
 
         for row in csv_reader:
             name = row[0]
+            name = name.replace(' ', '_')
             game = Game(name)
             GAMES.append(game)
 
@@ -163,7 +166,7 @@ def main() -> None:
                     PLAYERS.append(player)
                     player_table[player_name] = player
                 game.put_player_in(role, player)
-
+                player.put_in_game(role, game)
 
     worst, worst_number = evaluate()
     print(f"We have {worst_number} occurences of two players interacting {worst} times")
