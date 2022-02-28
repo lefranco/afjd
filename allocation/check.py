@@ -42,24 +42,6 @@ class Game:
 
         self._allocation[role] = player
 
-    def is_player_in_game(self, player: 'Player') -> bool:
-        """ tells if player plays in this game """
-        assert isinstance(player, Player), "Internal error: player should be a Player"
-        return player in self._allocation.values()
-
-    def players_in_game(self) -> typing.List['Player']:
-        """ extracts players allocated in this game """
-        return list(self._allocation.values())
-
-    def has_role_in_game(self, role: int) -> bool:
-        """ hios the someone with this role in the game ? """
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
-        return role in self._allocation
-
-    def is_complete(self) -> bool:
-        """ is the game complete ? """
-        return len(self._allocation) == len(POWERS)
-
     def list_players(self) -> str:
         """ display list of players of the game """
         return ";".join([str(self._allocation[r] if r in self._allocation else "_") for r in range(len(POWERS))])
@@ -85,8 +67,6 @@ class Player:
         assert isinstance(name, str), "Internal error: name should be str"
         self._name = name
         self._allocation: typing.Dict[int, Game] = {}
-        self._fully_allocated = False
-        self._is_master = False
 
     def put_in_game(self, role: int, game: Game) -> None:
         """ put the player in a game """
@@ -102,17 +82,6 @@ class Player:
     def games_in(self) -> typing.List[Game]:
         """ games the player plays in  """
         return list(self._allocation.values())
-
-    def has_role(self, role: int) -> bool:
-        """ does the players has this role ? """
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
-        return role in self._allocation
-
-    def game_where_has_role(self, role: int) -> Game:
-        """ game where the players has this role ? """
-        assert 0 <= role < len(POWERS), "Internal error: role should be in range"
-        assert role in self._allocation, "Internal error: player should have the role"
-        return self._allocation[role]
 
     @property
     def name(self) -> str:
@@ -146,11 +115,11 @@ def main() -> None:
     parser.add_argument('-p', '--print', action='store_true', required=False, help='output description for checking')
     args = parser.parse_args()
 
+    player_table: typing.Dict[str, Player] = dict()
+
     # load players file
     with open(args.tournament_file, "r", encoding='utf-8') as csv_read_file:
         csv_reader = csv.reader(csv_read_file, delimiter=';')
-
-        player_table: typing.Dict[str, Player] = dict()
 
         for row in csv_reader:
             name = row[0]
@@ -159,12 +128,16 @@ def main() -> None:
             GAMES.append(game)
 
             for role, player_name in enumerate(row[1:]):
+
+                # find or create player
                 if player_name in player_table:
                     player = player_table[player_name]
                 else:
                     player = Player(player_name)
                     PLAYERS.append(player)
                     player_table[player_name] = player
+
+                # assign player
                 game.put_player_in(role, player)
                 player.put_in_game(role, game)
 
