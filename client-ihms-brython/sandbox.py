@@ -27,7 +27,6 @@ MY_PANEL.attrs['style'] = 'display: table'
 class AutomatonStateEnum(enum.Enum):
     """ AutomatonStateEnum """
 
-    IDLE_STATE = enum.auto()
     SELECT_ACTIVE_STATE = enum.auto()
     SELECT_ORDER_STATE = enum.auto()
     SELECT_PASSIVE_UNIT_STATE = enum.auto()

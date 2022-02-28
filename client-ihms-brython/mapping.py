@@ -713,8 +713,7 @@ class Variant(Renderable):
         distance_closest = None
 
         for center in self._centers.values():
-            zone = center.region.zone
-            center_pos = self.position_table[zone]
+            center_pos = self.position_table[center]
             distance = designated_pos.distance(center_pos)
             if distance_closest is None or distance < distance_closest:
                 closest_center = center
