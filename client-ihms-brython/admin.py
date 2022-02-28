@@ -338,14 +338,19 @@ def rectify():
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         # select unit (cannot be dislodged - issue - maybe later)
-        selected_erase_unit = position_data.closest_unit(pos, None)
+        selected_erase_object = position_data.closest_object(pos)
 
-        # unit must be selected
-        if selected_erase_unit is None:
+        # must be unit or center
+        if isinstance(selected_erase_object, mapping.Unit):
+            # remove unit
+            selected_erase_unit = selected_erase_object
+            position_data.remove_unit(selected_erase_unit)
+        elif isinstance(selected_erase_object, mapping.Ownership):
+            # remove ownership
+            selected_erase_ownership = selected_erase_object
+            position_data.remove_ownership(selected_erase_ownership)
+        else:
             return
-
-        # remove unit
-        position_data.remove_unit(selected_erase_unit)
 
         # tricky
         nonlocal selected_hovered_object
