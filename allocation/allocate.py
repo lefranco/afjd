@@ -132,7 +132,6 @@ class Player:
         assert isinstance(number, int), "Internal error: number should be int"
         self._number = number
         self._allocation: typing.Dict[int, Game] = {}
-        self._fully_allocated = False
         self._is_master = False
 
     def put_in_game(self, role: int, game: Game) -> None:
