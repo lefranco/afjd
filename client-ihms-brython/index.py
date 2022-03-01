@@ -169,6 +169,7 @@ def load_option(_, item_name):
         msg = "Solidarité avec l'Ukraine agressée !"
         if 'flag' not in storage or storage['flag'] == 'True':
             emotion_img = html.IMG(src="./images/ukraine-flag-animation.gif", title=msg, alt=msg)
+            MENU_LEFT <= html.BR()
             MENU_LEFT <= emotion_img
             MENU_LEFT <= html.BR()
             button = html.BUTTON("-")
