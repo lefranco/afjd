@@ -163,9 +163,11 @@ def load_option(_, item_name):
 
     if ITEM_NAME_SELECTED == 'accueil':
         MENU_LEFT <= html.BR()
-        emotion_img = html.IMG(src="./images/Flag-Ukraine.png", title="Solidarité avec l'Ukraine agressée !")
+        msg = "Solidarité avec l'Ukraine agressée !"
+        emotion_img = html.IMG(src="./images/Flag-Ukraine.png", title=msg, alt=msg)
         MENU_LEFT <= emotion_img
-
+        emotion_txt = html.SMALL(msg)
+        MENU_LEFT <= emotion_txt
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
