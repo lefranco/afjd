@@ -81,6 +81,10 @@ def load_game(game_name):
     return True
 
 
+def set_flag(_, value):
+    storage['flag'] = value
+    load_option(_, ITEM_NAME_SELECTED)
+
 def load_option(_, item_name):
     """ load_option """
 
@@ -162,10 +166,19 @@ def load_option(_, item_name):
         document.unbind("keypress")
 
     if ITEM_NAME_SELECTED == 'accueil':
-        MENU_LEFT <= html.BR()
         msg = "Solidarité avec l'Ukraine agressée !"
-        emotion_img = html.IMG(src="./images/ukraine-flag-animation.gif", title=msg, alt=msg)
-        MENU_LEFT <= emotion_img
+        if 'flag' not in storage or storage['flag'] == 'True':
+            emotion_img = html.IMG(src="./images/ukraine-flag-animation.gif", title=msg, alt=msg)
+            MENU_LEFT <= emotion_img
+            MENU_LEFT <= html.BR()
+            button = html.BUTTON("-")
+            button.bind("click", lambda e: set_flag(e, 'False'))
+        else:
+            button = html.BUTTON("+")
+            button.bind("click", lambda e: set_flag(e, 'True'))
+        MENU_LEFT <= html.BR()
+        MENU_LEFT <= button
+        MENU_LEFT <= html.BR()
         emotion_txt = html.SMALL(msg)
         MENU_LEFT <= emotion_txt
 
