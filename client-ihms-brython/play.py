@@ -4381,6 +4381,7 @@ def show_participants_in_game():
         MY_SUB_PANEL <= html.DIV("Seul l'arbitre (ou un modérateur du site) peut voir le statut des ordres  pour une partie anonyme", Class='important')
 
     else:
+
         # you will at least get your own role
         submitted_data = get_roles_submitted_orders(GAME_ID)
         if not submitted_data:
@@ -4584,7 +4585,7 @@ def show_participants_in_game():
 
         counter = {}
 
-        for role_id, advancement, player_id, duration, date_incident in sorted(game_incidents, key=lambda i: i[3]):
+        for role_id, advancement, player_id, duration, date_incident in sorted(game_incidents, key=lambda i: i[4]):
 
             row = html.TR()
 
