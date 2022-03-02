@@ -166,9 +166,8 @@ def load_option(_, item_name):
         document.unbind("keypress")
 
     if ITEM_NAME_SELECTED == 'accueil':
-        msg = "Solidarité avec l'Ukraine agressée !"
         if 'flag' not in storage or storage['flag'] == 'True':
-            emotion_img = html.IMG(src="./images/ukraine-flag-animation.gif", title=msg, alt=msg)
+            emotion_img = html.IMG(src="./images/ukraine-flag-animation.gif")
             MENU_LEFT <= html.BR()
             MENU_LEFT <= emotion_img
             MENU_LEFT <= html.BR()
@@ -179,9 +178,6 @@ def load_option(_, item_name):
             button.bind("click", lambda e: set_flag(e, 'True'))
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
-        MENU_LEFT <= html.BR()
-        emotion_txt = html.SMALL(msg)
-        MENU_LEFT <= emotion_txt
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
