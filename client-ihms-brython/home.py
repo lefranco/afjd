@@ -87,23 +87,23 @@ def show_news():
 
     if news_content_loaded is not None:
         for line in news_content_loaded.split("\n"):
-            if line.startswith("HR"):
+            if line.startswith(".HR"):
                 separator = html.HR()
                 news_content <= separator
-            elif line.startswith("STRONG"):
-                _, _, extracted = line.partition("STRONG ")
+            elif line.startswith(".STRONG"):
+                _, _, extracted = line.partition(".STRONG ")
                 bold = html.STRONG(extracted)
                 news_content <= bold
-            elif line.startswith("KBD"):
-                _, _, extracted = line.partition("KBD ")
+            elif line.startswith(".KBD"):
+                _, _, extracted = line.partition(".KBD ")
                 kbd = html.KBD(extracted)
                 news_content <= kbd
-            elif line.startswith("LINK"):
-                _, _, extracted = line.partition("LINK ")
+            elif line.startswith(".LINK"):
+                _, _, extracted = line.partition(".LINK ")
                 link = html.A(href=extracted, target="_blank")
                 link <= extracted
                 news_content <= link
-            elif line.startswith("NL"):
+            elif line.startswith(".BR"):
                 news_content <= html.BR()
             else:
                 news_content <= line
