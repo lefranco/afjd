@@ -130,7 +130,8 @@ def diplo_league(_, ratings):
         sharers = rank_share_table[rank]
         for rank2 in range(rank, rank + sharers):
             if rank2 - 1 in range(len(rank_points_list)):
-                score[role_name] += rank_points_list[rank2 - 1] / sharers
+                if ratings[role_name]:  # cannot have point s if no center
+                    score[role_name] += rank_points_list[rank2 - 1] / sharers
 
     # extra points for winner(s)
     winners = [r for r in rank_table if rank_table[r] == 1]
