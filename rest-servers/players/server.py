@@ -29,6 +29,7 @@ import database
 
 
 SESSION = requests.Session()
+SESSION.timeout = None
 
 APP = flask.Flask(__name__)
 flask_cors.CORS(APP)
