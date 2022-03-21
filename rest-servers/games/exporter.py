@@ -26,6 +26,7 @@ import scoring
 
 
 SESSION = requests.Session()
+SESSION.timeout = None
 
 SOLO_THRESHOLD = 17
 IMPOSED_VARIANT = 'standard'

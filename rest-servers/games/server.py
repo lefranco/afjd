@@ -58,6 +58,7 @@ WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
 SESSION = requests.Session()
+SESSION.timeout = None
 
 APP = flask.Flask(__name__)
 flask_cors.CORS(APP)
