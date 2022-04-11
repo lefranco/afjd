@@ -84,6 +84,7 @@ def load_game(game_name):
 
 
 def set_flag(_, value):
+    """ set_flag """
     storage['flag'] = value
     load_option(_, ITEM_NAME_SELECTED)
 
