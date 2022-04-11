@@ -21,6 +21,8 @@ import players    # noqa: E402
 import moderate    # noqa: E402
 import admin    # noqa: E402
 
+# temporary
+import battleship    # noqa: E402
 
 # TITLE is in index.html
 
@@ -29,7 +31,7 @@ H2 = html.DIV("Front end du site Diplomania (brique jeu)")
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'joueurs', 'modération', 'administration']
+OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'joueurs', 'modération', 'administration', 'bataille_navale']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -121,6 +123,10 @@ def load_option(_, item_name):
         moderate.render(PANEL_MIDDLE)
     if item_name == 'administration':
         admin.render(PANEL_MIDDLE)
+
+    # temporary
+    if item_name == 'bataille_navale':
+        battleship.render(PANEL_MIDDLE)
 
     global ITEM_NAME_SELECTED
     prev_item_selected = ITEM_NAME_SELECTED
