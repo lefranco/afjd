@@ -87,6 +87,7 @@ def set_flag(_, value):
     storage['flag'] = value
     load_option(_, ITEM_NAME_SELECTED)
 
+
 def load_option(_, item_name):
     """ load_option """
 
@@ -184,6 +185,7 @@ def load_option(_, item_name):
             button.bind("click", lambda e: set_flag(e, 'True'))
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
+
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
