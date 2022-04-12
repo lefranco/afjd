@@ -13,6 +13,9 @@ import common
 import mapping
 import geometry
 
+MAX_LEN_NAME = 30
+MAX_LEN_EMAIL = 60
+
 
 MY_PANEL = html.DIV(id="battleship")
 MY_PANEL.attrs['style'] = 'display: table'
@@ -73,6 +76,10 @@ def battleship():
 
     pseudo = storage['PSEUDO']
 
+    stored_email_origin = ""
+    if 'EMAIL_ORIGIN' in storage:
+        stored_email_origin = storage['EMAIL_ORIGIN']
+
     stored_pirate_name = ""
     if 'PIRATE_NAME' in storage:
         stored_pirate_name = storage['PIRATE_NAME']
@@ -87,6 +94,7 @@ def battleship():
 
     stored_event = None
 
+    input_email_origin = None
     input_pirate_name = None
     orders_list = []
     input_buy_order = None
@@ -109,8 +117,8 @@ def battleship():
 
             InfoDialog("OK", f"Message émis vers : {addressed_user_name}", remove_after=config.REMOVE_AFTER)
 
-        # TODO : replace by schema account
-        addressed_user_name = "OrangeCar"
+        # will send the the official game masters !
+        addressed_user_name = SCHEMA_PSEUDO
 
         subject = "Rallye schema 2022 : ordres du bateau (par IHM)"
 
@@ -133,7 +141,12 @@ def battleship():
         # target
         body += f"Cible : {input_target.value}"
 
-        alert(body)
+        pretend_sender = input_email_origin.value
+
+        # keep a note of email origin
+        if input_email_origin.value:
+            stored_email_origin = input_email_origin.value
+            storage['EMAIL_ORIGIN'] = stored_email_origin
 
         # keep a note of pirate name
         if input_pirate_name.value:
@@ -149,6 +162,7 @@ def battleship():
             'subject': subject,
             'body': body,
             'force': True,
+            'pretend_sender': pretend_sender,
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -214,6 +228,7 @@ def battleship():
     def put_orders(buttons_right):
         """ put_orders """
 
+        nonlocal input_email_origin
         nonlocal input_pirate_name
         nonlocal input_buy_order
         nonlocal input_pavilion
@@ -221,14 +236,21 @@ def battleship():
 
         form = html.FORM()
 
+        # email origin
+        fieldset = html.FIELDSET()
+        legend_email_origin = html.LEGEND("Courriel origine", title="D'où envoyez vous le courriel ?")
+        fieldset <= legend_email_origin
+        input_email_origin = html.INPUT(type="text", value=stored_email_origin, required=True, size=MAX_LEN_EMAIL)
+        fieldset <= input_email_origin
+        form <= fieldset
+
         # pirate name
         fieldset = html.FIELDSET()
         legend_pirate_name = html.LEGEND("Nom de pirate", title="Quel est votre nom de pirate ?")
         fieldset <= legend_pirate_name
-        input_pirate_name = html.INPUT(type="text", value=stored_pirate_name, required=True)
+        input_pirate_name = html.INPUT(type="text", value=stored_pirate_name, required=True, size=MAX_LEN_NAME)
         fieldset <= input_pirate_name
         form <= fieldset
-        form <= html.BR()
 
         # first the move ordres from the map
         fieldset = html.FIELDSET()
@@ -237,7 +259,6 @@ def battleship():
         text = " ".join([str(o) for o in orders_list])
         fieldset <= orders_div
         form <= fieldset
-        form <= html.BR()
 
         # buy command
         fieldset = html.FIELDSET()
@@ -246,7 +267,6 @@ def battleship():
         input_buy_order = html.INPUT(type="text", value="", required=True)
         fieldset <= input_buy_order
         form <= fieldset
-        form <= html.BR()
 
         # pavilion command
         fieldset = html.FIELDSET()
@@ -255,7 +275,6 @@ def battleship():
         input_pavilion = html.INPUT(type="checkbox", checked=False)
         fieldset <= input_pavilion
         form <= fieldset
-        form <= html.BR()
 
         # target
         fieldset = html.FIELDSET()
@@ -273,7 +292,7 @@ def battleship():
     def put_erase_all(buttons_right):
         """ put_erase_all """
 
-        input_erase_all = html.INPUT(type="submit", value="effacer les ordres de mouvements")
+        input_erase_all = html.INPUT(type="submit", value="effacer les ordres de déplacement")
         input_erase_all.bind("click", erase_all_callback)
         buttons_right <= html.BR()
         buttons_right <= input_erase_all
