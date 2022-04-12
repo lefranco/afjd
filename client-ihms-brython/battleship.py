@@ -23,7 +23,7 @@ MAP_HEIGHT = 470
 ALPHABET = list(map(chr, range(ord('A'), ord('Z') + 1)))
 NUMBERS = list(map(str, range(1, 100)))
 
-POSSIBLE_TARGET_LIST = ALPHABET + NUMBERS
+POSSIBLE_TARGET_LIST = [' '] + ALPHABET + NUMBERS
 
 SCHEMA_PSEUDO = 'schema'
 
@@ -114,13 +114,31 @@ def battleship():
 
         subject = "Rallye schema 2022 : ordres du bateau (par IHM)"
 
-        # TODO : put the orders
-        body = f"{input_pirate_name=} {orders_list=} {input_buy_order=} {input_pavilion} {input_target=}"
+        body = ""
+
+        # pirate name
+        body += f"Nom de pirate : {input_pirate_name.value}\n"
+        body += "\n"
+
+        # move
+        text = " ".join([str(o) for o in orders_list])
+        body += f"Déplacement : {text}\n"
+
+        # buy order
+        body += f"Achat : {input_buy_order.value}\n"
+
+        # pavilion
+        body += f"Pavillon rouge : {'Oui' if input_pavilion.checked else 'Non'}\n"
+
+        # target
+        body += f"Cible : {input_target.value}"
+
         alert(body)
 
         # keep a note of pirate name
-        stored_pirate_name = input_pirate_name
-        storage['PIRATE_NAME'] = stored_pirate_name
+        if input_pirate_name.value:
+            stored_pirate_name = input_pirate_name.value
+            storage['PIRATE_NAME'] = stored_pirate_name
 
         addressed_id = players_dict[addressed_user_name]
         addressees = [addressed_id]
@@ -145,7 +163,7 @@ def battleship():
         nonlocal orders_list
         orders_list = []
         callback_render(None)
-        stack_orders(orders_div)
+        stack_orders()
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -162,7 +180,7 @@ def battleship():
 
         orders_list.append(best_coordinates)
         callback_render(None)
-        stack_orders(orders_div)
+        stack_orders()
 
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
@@ -187,7 +205,7 @@ def battleship():
             dest = REVERSE_MAP_LOCATION_TABLE[order2]
             mapping.draw_arrow(start.x_pos, start.y_pos, dest.x_pos, dest.y_pos, ctx)
 
-    def stack_orders(orders_div):
+    def stack_orders():
         """ stack_orders """
         orders_div.clear()
         text = " ".join([str(o) for o in orders_list])
@@ -195,6 +213,11 @@ def battleship():
 
     def put_orders(buttons_right):
         """ put_orders """
+
+        nonlocal input_pirate_name
+        nonlocal input_buy_order
+        nonlocal input_pavilion
+        nonlocal input_target
 
         form = html.FORM()
 
@@ -212,7 +235,7 @@ def battleship():
         legend_move_order = html.LEGEND("Ordres de déplacement", title="A entrer à la souris !")
         fieldset <= legend_move_order
         text = " ".join([str(o) for o in orders_list])
-        fieldset <= text
+        fieldset <= orders_div
         form <= fieldset
         form <= html.BR()
 
@@ -302,7 +325,8 @@ def battleship():
     # orders
     buttons_right <= html.P()
     orders_div = html.DIV()
-    stack_orders(orders_div)
+    buttons_right <= orders_div
+    stack_orders()
 
     put_orders(buttons_right)
     put_erase_all(buttons_right)
