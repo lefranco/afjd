@@ -3,11 +3,11 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 
-from browser import document, html, ajax, alert   # pylint: disable=import-error
+from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-import common
+import mapping
 import geometry
 
 
@@ -17,17 +17,16 @@ MY_PANEL.attrs['style'] = 'display: table'
 MAP_WIDTH = 545
 MAP_HEIGHT = 470
 
-ORDERS_DATA = ""
+ORDERS_DATA = []
 
 SCHEMA_PSEUDO = 'schema'
 
 TABLE = {}
 
+
 # build the table to locate clicks
 def build_table():
     """ build_table """
-
-    global TABLE
 
     # first the a c e etc...
     for delta_x in range(0, 20):
@@ -36,7 +35,7 @@ def build_table():
             y_center = 30 + 43.44 * delta_y
             number = 1 + delta_x
             letter = chr(ord('a') + 2 * delta_y)
-            center_point = geometry.PositionRecord(x_pos=x_center, y_pos = y_center)
+            center_point = geometry.PositionRecord(x_pos=x_center, y_pos=y_center)
             TABLE[center_point] = f"{letter}{number}"
 
     # then the b d f etc...
@@ -46,7 +45,7 @@ def build_table():
             y_center = 49 + 43.44 * delta_y
             number = 1 + delta_x
             letter = chr(ord('b') + 2 * delta_y)
-            center_point = geometry.PositionRecord(x_pos=x_center, y_pos = y_center)
+            center_point = geometry.PositionRecord(x_pos=x_center, y_pos=y_center)
             TABLE[center_point] = f"{letter}{number}"
 
 
@@ -57,6 +56,7 @@ def check_schema(pseudo):
         return False
 
     return True
+
 
 def battleship():
     """ battleship """
@@ -76,7 +76,9 @@ def battleship():
     def erase_all_callback(_):
         """ erase_all_callback """
         global ORDERS_DATA
-        ORDERS_DATA = ""
+        ORDERS_DATA = []
+        callback_render(None)
+        stack_orders(orders)
 
     def submit_callback(_):
         """ submit_callback """
@@ -88,15 +90,16 @@ def battleship():
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         best_coordinates = None
-        best_dist = 1000.
+        best_dist = None
         for point, coordinates in TABLE.items():
             dist = point.distance(pos)
-            if dist < best_dist:
+            if best_dist is None or dist < best_dist:
                 best_dist = dist
                 best_coordinates = coordinates
 
-        alert(f"You clicked on {best_coordinates} {pos.x_pos=} {pos.y_pos=} ")
-
+        ORDERS_DATA.append(best_coordinates)
+        callback_render(None)
+        stack_orders(orders)
 
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
@@ -116,16 +119,19 @@ def battleship():
         # put the background map first
         ctx.drawImage(img, 0, 0)
 
+        for order1, order2 in zip(ORDERS_DATA, ORDERS_DATA[1:]):
+            start = REVERSE_TABLE[order1]
+            dest = REVERSE_TABLE[order2]
+            mapping.draw_arrow(start.x_pos, start.y_pos, dest.x_pos, dest.y_pos, ctx)
 
-    def stack_orders(buttons_right):
+    def stack_orders(orders):
         """ stack_orders """
+        text = " ".join([str(o) for o in ORDERS_DATA])
+        orders.clear()
+        orders <= html.B(text)
 
-        buttons_right <= html.P()
-        lines = str(ORDERS_DATA).split('\n')
-        orders = html.DIV()
-        for line in lines:
-            orders <= html.B(line)
-            orders <= html.BR()
+    def put_orders(buttons_right):
+        """ put_orders """
         buttons_right <= orders
 
     def put_erase_all(buttons_right):
@@ -160,7 +166,7 @@ def battleship():
     canvas.bind("mousedown", callback_canvas_mousedown)
 
     # put background (this will call the callback that display the whole map)
-    img = html.IMG(src=f"./schema/map.png")
+    img = html.IMG(src="./schema/map.png")
     img.bind('load', callback_render)
 
     # left side
@@ -177,10 +183,15 @@ def battleship():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-    legend_select_unit = html.DIV("Cliquez sur le trajet", Class='instruction')
+    legend_select_unit = html.DIV("Cliquez sur votre flotte", Class='instruction')
     buttons_right <= legend_select_unit
 
-    stack_orders(buttons_right)
+    # orders
+    buttons_right <= html.P()
+    orders = html.DIV()
+    stack_orders(orders)
+
+    put_orders(buttons_right)
     put_erase_all(buttons_right)
     put_submit(buttons_right)
 
@@ -193,7 +204,10 @@ def battleship():
     MY_PANEL <= html.H2("Une bataille navale ")
     MY_PANEL <= my_sub_panel2
 
+
 build_table()
+REVERSE_TABLE = {v: k for k, v in TABLE.items()}
+
 
 def render(panel_middle):
     """ render """
