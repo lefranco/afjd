@@ -183,8 +183,8 @@ def battleship():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
-    legend_select_unit = html.DIV("Cliquez sur votre flotte", Class='instruction')
-    buttons_right <= legend_select_unit
+    legend_start = html.DIV("Cliquez sur votre flotte  puis sur ses cases de déplacement", Class='instruction')
+    buttons_right <= legend_start
 
     # orders
     buttons_right <= html.P()
