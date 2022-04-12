@@ -2,11 +2,14 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
+import json
 
 from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import config
+import common
 import mapping
 import geometry
 
@@ -17,11 +20,14 @@ MY_PANEL.attrs['style'] = 'display: table'
 MAP_WIDTH = 545
 MAP_HEIGHT = 470
 
-ORDERS_DATA = []
+ALPHABET = list(map(chr, range(ord('A'), ord('Z') + 1)))
+NUMBERS = list(map(str, range(1, 100)))
+
+POSSIBLE_TARGET_LIST = ALPHABET + NUMBERS
 
 SCHEMA_PSEUDO = 'schema'
 
-TABLE = {}
+MAP_LOCATION_TABLE = {}
 
 
 # build the table to locate clicks
@@ -36,7 +42,7 @@ def build_table():
             number = 1 + delta_x
             letter = chr(ord('a') + 2 * delta_y)
             center_point = geometry.PositionRecord(x_pos=x_center, y_pos=y_center)
-            TABLE[center_point] = f"{letter}{number}"
+            MAP_LOCATION_TABLE[center_point] = f"{letter}{number}"
 
     # then the b d f etc...
     for delta_x in range(0, 20):
@@ -46,7 +52,7 @@ def build_table():
             number = 1 + delta_x
             letter = chr(ord('b') + 2 * delta_y)
             center_point = geometry.PositionRecord(x_pos=x_center, y_pos=y_center)
-            TABLE[center_point] = f"{letter}{number}"
+            MAP_LOCATION_TABLE[center_point] = f"{letter}{number}"
 
 
 def check_schema(pseudo):
@@ -67,22 +73,79 @@ def battleship():
 
     pseudo = storage['PSEUDO']
 
+    stored_pirate_name = ""
+    if 'PIRATE_NAME' in storage:
+        stored_pirate_name = storage['PIRATE_NAME']
+
     if not check_schema(pseudo):
         alert("Pas le bon compte (pas schema)")
         return
 
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
     stored_event = None
 
-    def erase_all_callback(_):
-        """ erase_all_callback """
-        global ORDERS_DATA
-        ORDERS_DATA = []
-        callback_render(None)
-        stack_orders(orders)
+    input_pirate_name = None
+    orders_list = []
+    input_buy_order = None
+    input_pavilion = None
+    input_target = None
 
     def submit_callback(_):
         """ submit_callback """
-        alert("Will send an email. Not implemented")
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'envoi de courrier électronique : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'envoi de courrier électronique : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            InfoDialog("OK", f"Message émis vers : {addressed_user_name}", remove_after=config.REMOVE_AFTER)
+
+        # TODO : replace by schema account
+        addressed_user_name = "OrangeCar"
+
+        subject = "Rallye schema 2022 : ordres du bateau (par IHM)"
+
+        # TODO : put the orders
+        body = f"{input_pirate_name=} {orders_list=} {input_buy_order=} {input_pavilion} {input_target=}"
+        alert(body)
+
+        # keep a note of pirate name
+        stored_pirate_name = input_pirate_name
+        storage['PIRATE_NAME'] = stored_pirate_name
+
+        addressed_id = players_dict[addressed_user_name]
+        addressees = [addressed_id]
+
+        json_dict = {
+            'pseudo': pseudo,
+            'addressees': " ".join([str(a) for a in addressees]),
+            'subject': subject,
+            'body': body,
+            'force': True,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+
+        # sending email : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def erase_all_callback(_):
+        """ erase_all_callback """
+        nonlocal orders_list
+        orders_list = []
+        callback_render(None)
+        stack_orders(orders_div)
 
     def callback_canvas_click(event):
         """ called when there is a click down then a click up separated by less than 'LONG_DURATION_LIMIT_SEC' sec """
@@ -91,15 +154,15 @@ def battleship():
 
         best_coordinates = None
         best_dist = None
-        for point, coordinates in TABLE.items():
+        for point, coordinates in MAP_LOCATION_TABLE.items():
             dist = point.distance(pos)
             if best_dist is None or dist < best_dist:
                 best_dist = dist
                 best_coordinates = coordinates
 
-        ORDERS_DATA.append(best_coordinates)
+        orders_list.append(best_coordinates)
         callback_render(None)
-        stack_orders(orders)
+        stack_orders(orders_div)
 
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
@@ -119,25 +182,75 @@ def battleship():
         # put the background map first
         ctx.drawImage(img, 0, 0)
 
-        for order1, order2 in zip(ORDERS_DATA, ORDERS_DATA[1:]):
-            start = REVERSE_TABLE[order1]
-            dest = REVERSE_TABLE[order2]
+        for order1, order2 in zip(orders_list, orders_list[1:]):
+            start = REVERSE_MAP_LOCATION_TABLE[order1]
+            dest = REVERSE_MAP_LOCATION_TABLE[order2]
             mapping.draw_arrow(start.x_pos, start.y_pos, dest.x_pos, dest.y_pos, ctx)
 
-    def stack_orders(orders):
+    def stack_orders(orders_div):
         """ stack_orders """
-        text = " ".join([str(o) for o in ORDERS_DATA])
-        orders.clear()
-        orders <= html.B(text)
+        orders_div.clear()
+        text = " ".join([str(o) for o in orders_list])
+        orders_div <= html.B(text)
 
     def put_orders(buttons_right):
         """ put_orders """
-        buttons_right <= orders
+
+        form = html.FORM()
+
+        # pirate name
+        fieldset = html.FIELDSET()
+        legend_pirate_name = html.LEGEND("Nom de pirate", title="Quel est votre nom de pirate ?")
+        fieldset <= legend_pirate_name
+        input_pirate_name = html.INPUT(type="text", value=stored_pirate_name, required=True)
+        fieldset <= input_pirate_name
+        form <= fieldset
+        form <= html.BR()
+
+        # first the move ordres from the map
+        fieldset = html.FIELDSET()
+        legend_move_order = html.LEGEND("Ordres de déplacement", title="A entrer à la souris !")
+        fieldset <= legend_move_order
+        text = " ".join([str(o) for o in orders_list])
+        fieldset <= text
+        form <= fieldset
+        form <= html.BR()
+
+        # buy command
+        fieldset = html.FIELDSET()
+        legend_buy_order = html.LEGEND("Ordres d'achat", title="Escomptez vous acheter au port ?")
+        fieldset <= legend_buy_order
+        input_buy_order = html.INPUT(type="text", value="", required=True)
+        fieldset <= input_buy_order
+        form <= fieldset
+        form <= html.BR()
+
+        # pavilion command
+        fieldset = html.FIELDSET()
+        legend_pavilion = html.LEGEND("Pavillon rouge !", title="Attaquez vous tout ce qui bouge ?")
+        fieldset <= legend_pavilion
+        input_pavilion = html.INPUT(type="checkbox", checked=False)
+        fieldset <= input_pavilion
+        form <= fieldset
+        form <= html.BR()
+
+        # target
+        fieldset = html.FIELDSET()
+        legend_target = html.LEGEND("Cible particulière", title="Déclarez vous une intention d'attaque précise ?")
+        fieldset <= legend_target
+        input_target = html.SELECT(type="select-one", value="")
+        for target_name in POSSIBLE_TARGET_LIST:
+            option = html.OPTION(target_name)
+            input_target <= option
+        fieldset <= input_target
+        form <= fieldset
+
+        buttons_right <= form
 
     def put_erase_all(buttons_right):
         """ put_erase_all """
 
-        input_erase_all = html.INPUT(type="submit", value="effacer")
+        input_erase_all = html.INPUT(type="submit", value="effacer les ordres de mouvements")
         input_erase_all.bind("click", erase_all_callback)
         buttons_right <= html.BR()
         buttons_right <= input_erase_all
@@ -146,7 +259,7 @@ def battleship():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="soumettre")
+        input_submit = html.INPUT(type="submit", value="soumettre ces ordres")
         input_submit.bind("click", submit_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -188,8 +301,8 @@ def battleship():
 
     # orders
     buttons_right <= html.P()
-    orders = html.DIV()
-    stack_orders(orders)
+    orders_div = html.DIV()
+    stack_orders(orders_div)
 
     put_orders(buttons_right)
     put_erase_all(buttons_right)
@@ -206,7 +319,7 @@ def battleship():
 
 
 build_table()
-REVERSE_TABLE = {v: k for k, v in TABLE.items()}
+REVERSE_MAP_LOCATION_TABLE = {v: k for k, v in MAP_LOCATION_TABLE.items()}
 
 
 def render(panel_middle):
