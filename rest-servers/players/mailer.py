@@ -42,11 +42,16 @@ def load_mail_config(app: typing.Any) -> None:
     SENDER = app.config['MAIL_USERNAME']
 
 
-def send_mail(subject: str, body: str, addressees: typing.List[str]) -> bool:
+def send_mail(subject: str, body: str, addressees: typing.List[str], pretend_sender: typing.Optional[str]) -> bool:
     """ send_mail """
 
+    if pretend_sender is not None:
+        sender = pretend_sender
+    else:
+        sender = SENDER
+
     if len(addressees) == 1:
-        msg = flask_mail.Message(subject, sender=SENDER, recipients=addressees)
+        msg = flask_mail.Message(subject, sender=sender, recipients=addressees)
     else:
         # because we need to be fast so we send a single email
         # little drawback : it may get into the spam box...
@@ -81,7 +86,7 @@ def send_mail_checker(code: int, email_dest: str) -> bool:
     body += "\n"
     body += str(code)
 
-    return send_mail(subject, body, [email_dest])
+    return send_mail(subject, body, [email_dest], None)
 
 
 if __name__ == '__main__':
