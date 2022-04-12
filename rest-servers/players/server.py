@@ -62,6 +62,7 @@ SENDMAIL_PARSER.add_argument('addressees', type=str, required=True)
 SENDMAIL_PARSER.add_argument('subject', type=str, required=True)
 SENDMAIL_PARSER.add_argument('body', type=str, required=True)
 SENDMAIL_PARSER.add_argument('force', type=int, required=True)
+SENDMAIL_PARSER.add_argument('pretend_sender', type=str, required=False)
 
 SENDMAIL_PARSER2 = flask_restful.reqparse.RequestParser()
 SENDMAIL_PARSER2.add_argument('subject', type=str, required=True)
@@ -505,6 +506,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         args = SENDMAIL_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
         force = args['force']
+        pretend_sender = args['pretend_sender']
 
         mylogger.LOGGER.info("pseudo=%s", pseudo)
 
@@ -551,7 +553,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         # can happen that nobody is actually interested
         if addressees:
-            status = mailer.send_mail(subject, body, addressees)
+            status = mailer.send_mail(subject, body, addressees, pretend_sender)
             if not status:
                 del sql_executor
                 flask_restful.abort(400, msg="Failed to send at least one message")
@@ -583,7 +585,7 @@ class MailSupportRessource(flask_restful.Resource):  # type: ignore
         subject = args['subject']
         body = args['body']
 
-        status = mailer.send_mail(subject, body, [EMAIL_SUPPORT])
+        status = mailer.send_mail(subject, body, [EMAIL_SUPPORT], None)
         if not status:
             flask_restful.abort(400, msg="Failed to send message to support")
 
