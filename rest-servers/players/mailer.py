@@ -45,17 +45,27 @@ def load_mail_config(app: typing.Any) -> None:
 def send_mail(subject: str, body: str, addressees: typing.List[str], pretend_sender: typing.Optional[str]) -> bool:
     """ send_mail """
 
+    # mark pretend sender as sender if present
     if pretend_sender is not None:
         sender = pretend_sender
     else:
         sender = SENDER
 
+    # more than one addressee : send in bcc
+    # because we need to be fast so we send a single email
+    # little drawback : it may get into the spam box...
     if len(addressees) == 1:
-        msg = flask_mail.Message(subject, sender=sender, recipients=addressees)
+        recipients = addressees
+        bcc = []
     else:
-        # because we need to be fast so we send a single email
-        # little drawback : it may get into the spam box...
-        msg = flask_mail.Message(subject, sender=SENDER, bcc=addressees)
+        recipients = []
+        bcc = addressees
+
+    # add pretend sender in carbon copy if present
+    if pretend_sender is not None:
+        bcc.append(pretend_sender)
+
+    msg = flask_mail.Message(subject, sender=sender, recipients=recipients, bcc=bcc)
 
     msg.body = body
     msg.body += "\n"
