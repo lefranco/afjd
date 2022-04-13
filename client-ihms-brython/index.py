@@ -209,7 +209,7 @@ login.check_token()
 login.show_login()
 selection.show_game_selected()
 
-document <= html.B("Contactez le support par courriel en cas de problème (cf. page d'accueil / onglet support). Merci !")
+document <= html.B("Contactez le support par courriel en cas de problème (cf. page d'accueil / onglet 'déclarer un incident'). Merci !")
 document <= html.BR()
 version = storage['VERSION']
 document <= html.I(f"Vous utilisez la version du {version}")
