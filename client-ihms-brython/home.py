@@ -38,14 +38,6 @@ def information_about_create_account():
     return information
 
 
-def information_about_ticket():
-    """ information_about_ticket """
-
-    information = html.DIV(Class='note')
-    information <= "Si vous avez un souci, pour déclarer un incident, utiliser le menu 'accueil/déclarer un incident'"
-    return information
-
-
 def show_news():
     """ show_home """
 
@@ -112,9 +104,6 @@ def show_news():
     MY_PANEL <= html.BR()
 
     MY_SUB_PANEL <= information_about_create_account()
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= information_about_ticket()
     MY_SUB_PANEL <= html.BR()
 
 
