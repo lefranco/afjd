@@ -3,6 +3,8 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
+import datetime
+import time
 
 from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
@@ -116,6 +118,13 @@ def battleship():
                 return
 
             InfoDialog("OK", f"Message émis vers : {addressed_user_name}", remove_after=config.REMOVE_AFTER)
+
+            time_stamp = time.time()
+            storage['BATTLESHIP_ORDERS_VERSION'] = str(time_stamp)
+
+            # back to where we started
+            MY_PANEL.clear()
+            battleship()
 
         # will send the the official game masters !
         addressed_user_name = SCHEMA_PSEUDO
@@ -324,20 +333,44 @@ def battleship():
     img = html.IMG(src="./schema/map.png")
     img.bind('load', callback_render)
 
+    # put background (this will call the callback that display the whole map)
+    img2 = html.IMG(src="./schema/map_before.png")
+
     # left side
 
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    helper = html.DIV(".")
-    display_left <= helper
+    if 'BATTLESHIP_ORDERS_VERSION' in storage:
+        battleship_time_stamp = float(storage['BATTLESHIP_ORDERS_VERSION'])
+        date_orders_gmt = datetime.datetime.fromtimestamp(battleship_time_stamp, datetime.timezone.utc)
+        date_orders_gmt_str = datetime.datetime.strftime(date_orders_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        display_left <= html.P()
+        legend_now = html.DIV(f"Date d'envoi des derniers ordres : {date_orders_gmt_str}", Class='note')
+        display_left <= legend_now
+        display_left <= html.P()
+
+    # stored by javascript
+    battleship_map_version = storage['BATTLESHIP_MAP_VERSION']
+
+    display_left <= html.P()
+    legend_now = html.DIV(f"Date de la situation affichée : {battleship_map_version}", Class='important')
+    display_left <= legend_now
+    display_left <= html.P()
+
     display_left <= canvas
+
+    display_left <= html.P()
+    legend_previous = html.DIV("Situation précédente :", Class='note')
+    display_left <= legend_previous
+    display_left <= html.P()
+
+    display_left <= img2
 
     # right side
 
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-
     legend_start = html.DIV("Cliquez sur votre flotte  puis sur ses cases de déplacement", Class='instruction')
     buttons_right <= legend_start
 

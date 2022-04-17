@@ -37,5 +37,17 @@ var lastModified = xhReq.getResponseHeader("Last-Modified");
 localStorage.setItem('VERSION', lastModified);
 </script>
 
+
+<!-- version battleship map -->
+<script language="JavaScript">
+var xhReq = new XMLHttpRequest();
+xhReq.open("HEAD", "./schema/map.png", false);
+xhReq.send(null);
+var lastModified = xhReq.getResponseHeader("Last-Modified");
+localStorage.setItem('BATTLESHIP_MAP_VERSION', lastModified);
+</script>
+
+
+
 </body>
 </html>
