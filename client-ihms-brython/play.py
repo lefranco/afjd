@@ -3023,18 +3023,40 @@ def negotiate():
         thead <= col
     messages_table <= thead
 
+    game_master_pseudo = get_game_master(int(GAME_ID))
+    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+
     for from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
 
         row = html.TR()
 
-        date_desc = datetime.datetime.fromtimestamp(time_stamp)
-        col = html.TD(f"{date_desc} GMT")
+        date_desc_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+        date_desc_gmt_str = datetime.datetime.strftime(date_desc_gmt, "%d-%m-%Y %H:%M:%S")
+        col = html.TD(f"{date_desc_gmt_str} GMT")
         row <= col
 
         role = VARIANT_DATA.roles[from_role_id_msg]
         role_name = VARIANT_DATA.name_table[role]
         role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{from_role_id_msg}.jpg", title=role_name)
-        col = html.TD(role_icon_img)
+
+        # player
+        pseudo_there = ""
+        if from_role_id_msg == 0:
+            if game_master_pseudo:
+                pseudo_there = game_master_pseudo
+        elif from_role_id_msg in role2pseudo:
+            player_id_str = role2pseudo[from_role_id_msg]
+            player_id = int(player_id_str)
+            pseudo_there = id2pseudo[player_id]
+
+        col = html.TD()
+
+        col <= role_icon_img
+        if pseudo_there:
+            col <= html.BR()
+            col <= pseudo_there
+
         row <= col
 
         col = html.TD()
@@ -3216,21 +3238,43 @@ def declare():
         thead <= col
     declarations_table <= thead
 
+    game_master_pseudo = get_game_master(int(GAME_ID))
+    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+
     for anonymous, role_id_msg, time_stamp, content in declarations:
 
         row = html.TR()
 
-        date_desc = datetime.datetime.fromtimestamp(time_stamp)
-        col = html.TD(f"{date_desc} GMT")
+        date_desc_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+        date_desc_gmt_str = datetime.datetime.strftime(date_desc_gmt, "%d-%m-%Y %H:%M:%S")
+        col = html.TD(f"{date_desc_gmt_str} GMT")
         row <= col
 
+        role_icon_img = ""
         if role_id_msg != -1:
+
             role = VARIANT_DATA.roles[role_id_msg]
             role_name = VARIANT_DATA.name_table[role]
             role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id_msg}.jpg", title=role_name)
-        else:
-            role_icon_img = ""
-        col = html.TD(role_icon_img)
+
+            # player
+            pseudo_there = ""
+            if role_id_msg == 0:
+                if game_master_pseudo:
+                    pseudo_there = game_master_pseudo
+            elif role_id_msg in role2pseudo:
+                player_id_str = role2pseudo[role_id_msg]
+                player_id = int(player_id_str)
+                pseudo_there = id2pseudo[player_id]
+
+        col = html.TD()
+
+        col <= role_icon_img
+        if pseudo_there:
+            col <= html.BR()
+            col <= pseudo_there
+
         row <= col
 
         if anonymous:
