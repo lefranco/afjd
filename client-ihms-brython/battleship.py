@@ -103,6 +103,10 @@ def battleship():
     input_pavilion = None
     input_target = None
 
+    def render_orders():
+        """ render_orders """
+        return " ".join([f"{o}" if n else f"({o})" for n, o in enumerate(orders_list)])
+
     def submit_callback(_):
         """ submit_callback """
 
@@ -138,7 +142,7 @@ def battleship():
         body += "\n"
 
         # move
-        text = " ".join([str(o) for o in orders_list])
+        text = render_orders()
         body += f"Déplacement : {text}\n"
 
         # buy order
@@ -231,7 +235,7 @@ def battleship():
     def stack_orders():
         """ stack_orders """
         orders_div.clear()
-        text = " ".join([str(o) for o in orders_list])
+        text = render_orders()
         orders_div <= html.B(text)
 
     def put_orders(buttons_right):
@@ -265,7 +269,7 @@ def battleship():
         fieldset = html.FIELDSET()
         legend_move_order = html.LEGEND("Ordres de déplacement", title="A entrer à la souris !")
         fieldset <= legend_move_order
-        text = " ".join([str(o) for o in orders_list])
+        render_orders()
         fieldset <= orders_div
         form <= fieldset
 
