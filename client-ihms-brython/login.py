@@ -54,19 +54,25 @@ def login():
             index.load_option(None, 'mes parties')
 
         pseudo = input_pseudo.value
+
         if not pseudo:
             alert("Il manque le pseudo !")
+            render(PANEL_MIDDLE)
+            return
+
+        if pseudo.find(' ') != -1:
+            alert("Attention, il y a un espace dans le pseudo que vous avez saisi... retirez-le !")
+            render(PANEL_MIDDLE)
+            return
+
+        if pseudo.find("@") != -1:
+            alert("Attention, c'est le pseudo qui est demandé, pas le courriel !")
             render(PANEL_MIDDLE)
             return
 
         password = input_password.value
         if not password:
             alert("Il manque le mot de passe !")
-            render(PANEL_MIDDLE)
-            return
-
-        if pseudo.find("@") != -1:
-            alert("Attention, c'est le pseudo qui est demandé, pas le courriel !")
             render(PANEL_MIDDLE)
             return
 
