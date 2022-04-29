@@ -3252,6 +3252,7 @@ def declare():
         row <= col
 
         role_icon_img = ""
+        pseudo_there = ""
         if role_id_msg != -1:
 
             role = VARIANT_DATA.roles[role_id_msg]
@@ -3259,7 +3260,6 @@ def declare():
             role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id_msg}.jpg", title=role_name)
 
             # player
-            pseudo_there = ""
             if role_id_msg == 0:
                 if game_master_pseudo:
                     pseudo_there = game_master_pseudo
