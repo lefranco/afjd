@@ -3105,8 +3105,14 @@ def negotiate():
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
-    # declarations already
+    # messages already
     MY_SUB_PANEL <= messages_table
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    information = html.DIV(Class='note')
+    information <= "Le pseudo affiché est celui du joueur en cours, pas forcément celui de l'auteur réel du message"
+    MY_SUB_PANEL <= information
 
     return True
 
@@ -3318,6 +3324,12 @@ def declare():
 
     # declarations already
     MY_SUB_PANEL <= declarations_table
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    information = html.DIV(Class='note')
+    information <= "Le pseudo affiché est celui du joueur en cours, pas forcément celui de l'auteur réel du message"
+    MY_SUB_PANEL <= information
 
     return True
 
