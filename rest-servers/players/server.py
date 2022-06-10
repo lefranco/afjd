@@ -24,6 +24,7 @@ import populate
 import mailer
 import players
 import newss
+import news2s
 import moderators
 import database
 
@@ -762,6 +763,80 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'msg': 'Ok news created'}
+        return data, 201
+
+
+@API.resource('/news2')
+class News2Ressource(flask_restful.Resource):  # type: ignore
+    """ News2Ressource """
+
+    def get(self) -> typing.Tuple[typing.Any, int]:  # pylint: disable=no-self-use
+        """
+        Provides the latest news
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/news2 - GET - get the latest news (moderator)")
+
+        sql_executor = database.SqlExecutor()
+        news_content = news2s.News.content(sql_executor)
+        del sql_executor
+
+        data = news_content
+
+        return data, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Creates a new news
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/news2 - POST - changing the news (moderator)")
+
+        args = NEWS_PARSER.parse_args(strict=True)
+        pseudo = args['pseudo']
+
+        # check from user server user is pseudo
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+        pseudo_requester = req_result.json()['logged_in_as']
+
+        sql_executor = database.SqlExecutor()
+
+        requester = players.Player.find_by_pseudo(sql_executor, pseudo_requester)
+
+        if requester is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
+
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        the_moderators = [m[0] for m in moderators_list]
+        if pseudo_requester not in the_moderators:
+            del sql_executor
+            flask_restful.abort(403, msg="You are not allowed to change moderator news! (need to be moderator)")
+
+        content = args['content']
+
+        # create news here
+        news = news2s.News(content)
+        news.update_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': 'Ok news (moderator) created'}
         return data, 201
 
 
