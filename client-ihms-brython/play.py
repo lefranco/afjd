@@ -4444,7 +4444,7 @@ def show_participants_in_game():
 
     # is player in game ?
     elif not(moderate.check_modo(PSEUDO) or ROLE_ID is not None):
-        MY_SUB_PANEL <= html.DIV("Seuls les participants à une partie (ou un modérateur du site) peuvent voir le statut des ordres pour une partie non anonyme", Class='important')
+        MY_SUB_PANEL <= html.DIV("Seuls les participants à une partie (ou un modérateur du site) peuvent voir le statut des ordres", Class='important')
 
     # game anonymous
     elif not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
