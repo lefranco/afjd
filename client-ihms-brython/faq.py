@@ -27,6 +27,9 @@ FAQ_CONTENT_TABLE = {
     "Pourquoi les unités ne se déplacent pas dans le bac à sable ?":
     "Le bac à sable n'a pas vocation à déplacer les unités, il cherche à répondre à la question 'que se passerait-il si...'. Il faut bien lire le compte rendu des ordres sous forme de texte sous la carte.",
 
+    "Il me restait une dernière unité, je pouvais retraiter, mais le système m'a carrément supprimé mon unité. C'est quoi ce bug ?":
+    "Non, c'est normal. Le système, pour une retraite d'hiver, supprime les unités d'un joueur qui n'a plus de centre et ne peut retraiter sur un centre. Cela anticipe sa disparition et évite d'avoir à attendre son ordre de suppression de ses dernières unités par la suite. Une euthanasie en quelque sorte !",
+
     "Eh, je pense avoir trouvé un bug dans le moteur de résolution. Que faire ?":
     "Le moteur s'appuie sur le DATC. Il faut utiliser le lien en page d'accueil pour envoyer un courriel et signaler le problème. Reproduisez le soigneusement avec le bac à sable.",
 
