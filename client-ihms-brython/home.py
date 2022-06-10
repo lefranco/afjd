@@ -34,7 +34,7 @@ def information_about_create_account():
     """ information_about_create_account """
 
     information = html.DIV(Class='note')
-    information <= "Pour se creer un compte, utiliser le menu mon 'compte/créer un compte'"
+    information <= "Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'"
     return information
 
 
