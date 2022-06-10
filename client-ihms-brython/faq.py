@@ -97,4 +97,14 @@ FAQ_CONTENT_TABLE = {
 
     "Ce site est-il le site de jeu officiel de l'Association Francophone des Joueurs de Diplomatie ?":
     "Oui.",
+
+    "(Pour les modérateurs) Quels sont les codes pour écrire sur le mur ?"    :
+    """
+    .HR pour un trait vertical <br>
+    .STRONG pour écrire en gras <br>
+    .KBD pour écrire ce que l'on doit taper au clavier <br>
+    .LINK pour mettre un lien <br>
+    .BR pour aller à la ligne
+    """
+
 }
