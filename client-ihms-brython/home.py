@@ -38,6 +38,39 @@ def information_about_create_account():
     return information
 
 
+def formatted_news(news_content_loaded):
+    """ formatted_news """
+
+    # init
+    news_content = html.DIV(Class='news')
+
+    # format
+    if news_content_loaded is not None:
+        for line in news_content_loaded.split("\n"):
+            if line.startswith(".HR"):
+                separator = html.HR()
+                news_content <= separator
+            elif line.startswith(".STRONG"):
+                _, _, extracted = line.partition(".STRONG ")
+                bold = html.STRONG(extracted)
+                news_content <= bold
+            elif line.startswith(".KBD"):
+                _, _, extracted = line.partition(".KBD ")
+                kbd = html.KBD(extracted)
+                news_content <= kbd
+            elif line.startswith(".LINK"):
+                _, _, extracted = line.partition(".LINK ")
+                link = html.A(href=extracted, target="_blank")
+                link <= extracted
+                news_content <= link
+            elif line.startswith(".BR"):
+                news_content <= html.BR()
+            else:
+                news_content <= line
+
+    return news_content
+
+
 def show_news():
     """ show_home """
 
@@ -71,37 +104,25 @@ def show_news():
 
     # ----
 
-    title3 = html.H4("Dernières nouvelles", Class='news')
+    title3 = html.H4("Dernières nouvelles administrateur", Class='news')
     MY_SUB_PANEL <= title3
 
     news_content_loaded = common.get_news_content()
-    news_content = html.DIV(Class='news')
-
-    if news_content_loaded is not None:
-        for line in news_content_loaded.split("\n"):
-            if line.startswith(".HR"):
-                separator = html.HR()
-                news_content <= separator
-            elif line.startswith(".STRONG"):
-                _, _, extracted = line.partition(".STRONG ")
-                bold = html.STRONG(extracted)
-                news_content <= bold
-            elif line.startswith(".KBD"):
-                _, _, extracted = line.partition(".KBD ")
-                kbd = html.KBD(extracted)
-                news_content <= kbd
-            elif line.startswith(".LINK"):
-                _, _, extracted = line.partition(".LINK ")
-                link = html.A(href=extracted, target="_blank")
-                link <= extracted
-                news_content <= link
-            elif line.startswith(".BR"):
-                news_content <= html.BR()
-            else:
-                news_content <= line
-
+    news_content = formatted_news(news_content_loaded)
     MY_SUB_PANEL <= news_content
-    MY_PANEL <= html.BR()
+
+    # ----
+
+    title4 = html.H4("Dernières nouvelles moderateur", Class='news')
+    MY_SUB_PANEL <= title4
+
+    news_content_loaded2 = common.get_news_content2()
+    news_content2 = formatted_news(news_content_loaded2)
+    MY_SUB_PANEL <= news_content2
+
+    # ----
+    title5 = html.H4("Divers")
+    MY_SUB_PANEL <= title5
 
     MY_SUB_PANEL <= information_about_create_account()
     MY_SUB_PANEL <= html.BR()

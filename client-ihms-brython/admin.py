@@ -99,11 +99,11 @@ def get_last_failures():
     return failures_list
 
 
-def change_news():
-    """ change_news """
+def change_news_admin():
+    """ change_news_admin """
 
-    def change_news_callback(_):
-        """ change_news_callback """
+    def change_news_admin_callback(_):
+        """ change_news_admin_callback """
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -126,7 +126,7 @@ def change_news():
 
         json_dict = {
             'pseudo': pseudo,
-            'content': news_content,
+            'content': news_content
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -138,7 +138,7 @@ def change_news():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        change_news()
+        change_news_admin()
 
     MY_SUB_PANEL <= html.H3("Editer les nouvelles")
 
@@ -159,7 +159,7 @@ def change_news():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_news_content = html.LEGEND("nouvelles", title="Saisir le nouveau contenu de nouvelles")
+    legend_news_content = html.LEGEND("nouvelles", title="Saisir le nouveau contenu de nouvelles (admin)")
     fieldset <= legend_news_content
     input_news_content = html.TEXTAREA(type="text", rows=20, cols=100)
     input_news_content <= news_content_loaded
@@ -169,7 +169,7 @@ def change_news():
     form <= html.BR()
 
     input_change_news_content = html.INPUT(type="submit", value="mettre à jour")
-    input_change_news_content.bind("click", change_news_callback)
+    input_change_news_content.bind("click", change_news_admin_callback)
     form <= input_change_news_content
     form <= html.BR()
 
@@ -956,6 +956,7 @@ def last_failures():
     MY_SUB_PANEL <= html.H4("Chronologiquement")
     MY_SUB_PANEL <= failures_table
 
+
 def edit_moderators():
     """ edit_moderators """
 
@@ -1145,9 +1146,9 @@ def load_option(_, item_name):
 
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
-    if item_name == 'changer nouvelles':
 
-        change_news()
+    if item_name == 'changer nouvelles':
+        change_news_admin()
     if item_name == 'usurper':
         usurp()
     if item_name == 'rectifier la position':
