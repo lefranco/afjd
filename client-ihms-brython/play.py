@@ -3066,7 +3066,21 @@ def negotiate():
             role = VARIANT_DATA.roles[dest_role_id_msg]
             role_name = VARIANT_DATA.name_table[role]
             role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{dest_role_id_msg}.jpg", title=role_name)
+
+            # player
+            pseudo_there = ""
+            if dest_role_id_msg == 0:
+                if game_master_pseudo:
+                    pseudo_there = game_master_pseudo
+            elif dest_role_id_msg in role2pseudo:
+                player_id_str = role2pseudo[dest_role_id_msg]
+                player_id = int(player_id_str)
+                pseudo_there = id2pseudo[player_id]
+
             col <= role_icon_img
+            if pseudo_there:
+                col <= html.BR()
+                col <= pseudo_there
 
             # separator
             col <= html.BR()
