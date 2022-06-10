@@ -880,7 +880,7 @@ def last_logins():
 def last_failures():
     """ failures """
 
-    MY_SUB_PANEL <= html.H3("Liste des connexions manquées")
+    MY_SUB_PANEL <= html.H3("Connexions manquées")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -893,6 +893,11 @@ def last_failures():
         return
 
     failures_list = get_last_failures()
+
+    # to get the sum
+    failures_recap = {}
+
+    # chronologically
 
     failures_table = html.TABLE()
 
@@ -916,8 +921,40 @@ def last_failures():
 
         failures_table <= row
 
-    MY_SUB_PANEL <= failures_table
+        # to get the sum
+        if pseudo not in failures_recap:
+            failures_recap[pseudo] = 0
+        failures_recap[pseudo] += 1
 
+    # per player
+
+    failures_summary = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'number']:
+        col = html.TD(field)
+        thead <= col
+    failures_summary <= thead
+
+    for pseudo, number in sorted(failures_recap.items(), key=lambda l: l[1], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        col = html.TD(number)
+        row <= col
+
+        failures_summary <= row
+
+    # Now display
+
+    MY_SUB_PANEL <= html.H4("Par inscrit")
+    MY_SUB_PANEL <= failures_summary
+
+    MY_SUB_PANEL <= html.H4("Chronologiquement")
+    MY_SUB_PANEL <= failures_table
 
 def edit_moderators():
     """ edit_moderators """
