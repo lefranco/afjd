@@ -33,7 +33,7 @@ Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/lien
 def get_stats_content():
     """ get_stats_content """
 
-    stats_content = None
+    stats_content = {}
 
     def reply_callback(req):
         nonlocal stats_content
@@ -163,6 +163,7 @@ def show_news():
 
     MY_SUB_PANEL <= information_about_create_account()
     MY_SUB_PANEL <= html.BR()
+
 
 def show_links():
     """ show_links """
