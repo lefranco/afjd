@@ -4679,5 +4679,30 @@ def main() -> None:
         waitress.serve(APP, port=port)
 
 
+
+
+@API.resource('/statistics')
+class StatisticsRessource(flask_restful.Resource):  # type: ignore
+    """ StatisticsRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Get statistics of games, players etc...
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/statistics - GET - getting statistics ")
+
+        sql_executor = database.SqlExecutor()
+
+        # TODO
+
+        del sql_executor
+
+        data = "hello everyone !"
+        return data, 200
+
+
+
 if __name__ == '__main__':
     main()
