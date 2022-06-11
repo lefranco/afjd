@@ -626,15 +626,55 @@ def tournament_result():
 
         incident_table <= row
 
+    # =====
+    # incidents2
+    # =====
+
+    # get the actual incidents of the tournament
+    tournament_incidents2 = common.tournament_incidents2_reload(tournament_id)
+    # there can be no incidents (if no incident of failed to load)
+
+    count = {}
+    for game_id, role_num, _, _  in tournament_incidents2:
+        pseudo = gamerole2pseudo[(game_id, role_num)]
+        if pseudo not in count:
+            count[pseudo] = 0
+        count[pseudo] += 1
+
+    incident_table2 = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'Nombre de Désordres Civils']:
+        col = html.TD(field)
+        thead <= col
+    incident_table2 <= thead
+
+    for pseudo  in sorted(count, key=lambda p: count[p], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        nb_dc = count[pseudo]
+        col = html.TD(nb_dc)
+        row <= col
+
+        incident_table2 <= row
+
     MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
 
     MY_SUB_PANEL <= html.H4("Classement")
     MY_SUB_PANEL <= recap_table
+
     MY_SUB_PANEL <= html.H4("Retards")
     MY_SUB_PANEL <= incident_table
 
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes).  Un retard de 1 par exemple signifie un retard entre 1 seconde et 59 minutes, 59 secondes.", Class='note')
+
+    MY_SUB_PANEL <= html.H4("Désordres Civils")
+    MY_SUB_PANEL <= incident_table2
 
 
 MY_PANEL = html.DIV()
