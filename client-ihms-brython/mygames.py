@@ -236,6 +236,39 @@ def my_games(state_name):
         MY_PANEL.clear()
         my_games(state_name)
 
+    def stop_game_callback(_, game):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'arrêt de la partie {game}: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'arrêt de la partie {game}: {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La partie a été arrêtée : {messages}", remove_after=config.REMOVE_AFTER)
+
+        json_dict = {
+            'pseudo': pseudo,
+            'name': game,
+            'current_state': 2,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # changing game state : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_PANEL.clear()
+        my_games(state_name)
+
     def again(state_name):
         """ again """
         MY_PANEL.clear()
@@ -246,6 +279,14 @@ def my_games(state_name):
             storage['GAME_ACCESS_MODE'] = 'link'
         else:
             storage['GAME_ACCESS_MODE'] = 'button'
+        MY_PANEL.clear()
+        my_games(state_name)
+
+    def change_action_mode_callback(_):
+        if storage['ACTION_COLUMN_MODE'] == 'displayed':
+            storage['ACTION_COLUMN_MODE'] = 'not_displayed'
+        else:
+            storage['ACTION_COLUMN_MODE'] = 'displayed'
         MY_PANEL.clear()
         my_games(state_name)
 
@@ -330,6 +371,20 @@ def my_games(state_name):
         button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)")
     button.bind("click", change_button_mode_callback)
     MY_PANEL <= button
+
+    # separator
+    MY_PANEL <= " "
+
+    # button for switching mode (action)
+    if 'ACTION_COLUMN_MODE' not in storage:
+        storage['ACTION_COLUMN_MODE'] = 'not_displayed'
+    if storage['ACTION_COLUMN_MODE'] == 'not_displayed':
+        button = html.BUTTON("Basculer en mode avec colonne action")
+    else:
+        button = html.BUTTON("Basculer en mode sans colonne action")
+    button.bind("click", change_action_mode_callback)
+    MY_PANEL <= button
+
     MY_PANEL <= html.BR()
     MY_PANEL <= html.BR()
 
@@ -337,14 +392,13 @@ def my_games(state_name):
 
     fields = ['go_game', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
 
-    # column for start buttons only available for non started games
-    if state == 0:
-        fields.extend(['start'])
+    if storage['ACTION_COLUMN_MODE'] == 'displayed':
+        fields.extend(['action'])
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'go_game': 'aller dans la partie', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis d\'accord', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous d\'accord', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'start': 'démarrer'}[field]
+        field_fr = {'go_game': 'aller dans la partie', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis d\'accord', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous d\'accord', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'action': 'action'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -359,6 +413,9 @@ def my_games(state_name):
                 button = html.BUTTON("&lt;date de création&gt;")
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
+
+                # separator
+                buttons <= " "
 
                 # button for sorting by name
                 button = html.BUTTON("&lt;nom&gt;")
@@ -466,7 +523,7 @@ def my_games(state_name):
         data['all_agreed'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
-        data['start'] = None
+        data['action'] = None
 
         row = html.TR()
         for field in fields:
@@ -620,14 +677,22 @@ def my_games(state_name):
                         popup = html.IMG(src="./images/messages_received.jpg", title="Nouveau(x) message(s) dans cette partie !")
                     value = popup
 
-            if field == 'start':
+            if field == 'action':
                 value = ""
-                if state == 0 and role_id == 0:
-                    form = html.FORM()
-                    input_start_game = html.INPUT(type="submit", value="démarrer")
-                    input_start_game.bind("click", lambda e, g=game_name: start_game_callback(e, g))
-                    form <= input_start_game
-                    value = form
+                if storage['ACTION_COLUMN_MODE'] == 'displayed':
+                    if role_id == 0:
+                        if state == 0:
+                            form = html.FORM()
+                            input_start_game = html.INPUT(type="submit", value="démarrer")
+                            input_start_game.bind("click", lambda e, g=game_name: start_game_callback(e, g))
+                            form <= input_start_game
+                            value = form
+                        if state == 1:
+                            form = html.FORM()
+                            input_stop_game = html.INPUT(type="submit", value="arrêter")
+                            input_stop_game.bind("click", lambda e, g=game_name: stop_game_callback(e, g))
+                            form <= input_stop_game
+                            value = form
 
             col = html.TD(value)
             if colour is not None:
