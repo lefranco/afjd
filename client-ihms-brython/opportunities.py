@@ -238,6 +238,9 @@ def my_opportunities():
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
+                # separator
+                buttons <= " "
+
                 # button for sorting by name
                 button = html.BUTTON("&lt;nom&gt;")
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
