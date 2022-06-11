@@ -602,12 +602,12 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         # delete incidents
         for (_, role_num, advancement, _, _, _) in incidents.Incident.list_by_game_id(sql_executor, int(game_id)):
-            incident = incidents.Incident(0, role_num, advancement, 0, 0)
+            incident = incidents.Incident(int(game_id), role_num, advancement, 0, 0)
             incident.delete_database(sql_executor)
 
         # delete incidents2
         for (_, role_num, advancement, _) in incidents2.Incident2.list_by_game_id(sql_executor, int(game_id)):
-            incident2 = incidents2.Incident2(0, role_num, advancement)
+            incident2 = incidents2.Incident2(int(game_id), role_num, advancement)
             incident2.delete_database(sql_executor)
 
         # finally delete game
