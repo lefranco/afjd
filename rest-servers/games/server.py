@@ -4650,6 +4650,41 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/statistics')
+class StatisticsRessource(flask_restful.Resource):  # type: ignore
+    """ StatisticsRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Get statistics of games, players etc...
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/statistics - GET - getting statistics ")
+
+        sql_executor = database.SqlExecutor()
+        allocations_list = allocations.Allocation.inventory(sql_executor)
+        games_list = games.Game.inventory(sql_executor)
+        del sql_executor
+
+        # games we can speak about the players
+        allowed_games = {g.identifier for g in games_list if g.current_state == 1}
+
+        # players_dict
+        game_masters_set = set()
+        players_set = set()
+        for (game_id, player_id, role_id) in allocations_list:
+            if game_id not in allowed_games:
+                continue
+            if role_id == 0:
+                game_masters_set.add(player_id)
+            else:
+                players_set.add(player_id)
+
+        data = {'ongoing_games' : len(allowed_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set)}
+        return data, 200
+
+
 def main() -> None:
     """ main """
 
@@ -4677,31 +4712,6 @@ def main() -> None:
         APP.run(debug=True, port=port)
     else:
         waitress.serve(APP, port=port)
-
-
-
-
-@API.resource('/statistics')
-class StatisticsRessource(flask_restful.Resource):  # type: ignore
-    """ StatisticsRessource """
-
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """
-        Get statistics of games, players etc...
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/statistics - GET - getting statistics ")
-
-        sql_executor = database.SqlExecutor()
-
-        # TODO
-
-        del sql_executor
-
-        data = "hello everyone !"
-        return data, 200
-
 
 
 if __name__ == '__main__':
