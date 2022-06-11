@@ -155,7 +155,7 @@ def show_news():
     MY_SUB_PANEL <= title5
 
     stats_content = get_stats_content()
-    MY_SUB_PANEL <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité"
+    MY_SUB_PANEL <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité."
 
     # ----
     title6 = html.H4("Divers")
