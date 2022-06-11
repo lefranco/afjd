@@ -3754,34 +3754,6 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-incidents/<game_id> - GET - getting which incidents occured for game id=%s", game_id)
 
-        # check authentication from user server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-
-        pseudo = req_result.json()['logged_in_as']
-
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        player_id = req_result.json()
-
-        # check user has right to get status of incidents - must be game master or player in game - or admin
-
         sql_executor = database.SqlExecutor()
 
         # find the game
@@ -3790,48 +3762,10 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # boolean to decide if we show player
-        see_player = False
-
-        # game not anonymous will show
-        assert game is not None
-        if not game.anonymous:
-            see_player = True
-
-        # get the role
-        assert game is not None
-        role_id = game.find_role(sql_executor, player_id)
-
-        # game master will see
-        if role_id == 0:
-            see_player = True
-
-        if role_id is None:
-
-            # check moderator rights
-
-            # get moderator list
-            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-            url = f"{host}:{port}/moderators"
-            req_result = SESSION.get(url)
-            if req_result.status_code != 200:
-                del sql_executor
-                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
-            the_moderators = req_result.json()
-
-            # check pseudo in moderator list
-            if pseudo not in the_moderators:
-                del sql_executor
-                flask_restful.abort(403, msg="You do not seem to play or master game (or to be site moderator) so you cannot see the incidents!")
-
-            # moderator will see
-            see_player = True
-
         # incidents_list : those who submitted orders after deadline
+        # TODO : the player id is not used any more - replaced by None
         incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
-        late_list = [(o[1], o[2], o[3] if see_player else None, o[4], o[5]) for o in incidents_list]
+        late_list = [(o[1], o[2], None, o[4], o[5]) for o in incidents_list]
 
         del sql_executor
 
@@ -3851,34 +3785,6 @@ class GameIncidents2Ressource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/game-incidents2/<game_id> - GET - getting which incidents2 occured for game id=%s", game_id)
 
-        # check authentication from user server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-
-        pseudo = req_result.json()['logged_in_as']
-
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        player_id = req_result.json()
-
-        # check user has right to get status of incidents - must be game master or player in game - or admin
-
         sql_executor = database.SqlExecutor()
 
         # find the game
@@ -3886,29 +3792,6 @@ class GameIncidents2Ressource(flask_restful.Resource):  # type: ignore
         if game is None:
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
-
-        # get the role
-        assert game is not None
-        role_id = game.find_role(sql_executor, player_id)
-        if role_id is None:
-
-            # check moderator rights
-
-            # get moderator list
-            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-            url = f"{host}:{port}/moderators"
-            req_result = SESSION.get(url)
-            if req_result.status_code != 200:
-                del sql_executor
-                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
-            the_moderators = req_result.json()
-
-            # check pseudo in moderator list
-            if pseudo not in the_moderators:
-                del sql_executor
-                flask_restful.abort(403, msg="You do not seem to play or master game (or to be site moderator) so you cannot see the incidents!")
 
         # incidents_list : those who submitted orders after deadline
         incidents_list = incidents2.Incident2.list_by_game_id(sql_executor, game_id)
@@ -4452,19 +4335,8 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
 
         late_list: typing.List[typing.Tuple[int, int, int, int, float]] = []
         for game_id in tournament_game_ids:
-
-            # get current allocation of players
-            current_allocation = {}
-            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-            for _, player_id, role_id in allocations_list:
-                current_allocation[role_id] = player_id
-
             incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
             for _, role_id, advancement, player_id, duration_incident, date_incident in incidents_list:
-                # note : if the incident was not performed by current player, it is ignored
-                cur_player_id = current_allocation[role_id]
-                if player_id != cur_player_id:
-                    continue
                 late_list.append((game_id, role_id, advancement, duration_incident, date_incident))
 
         del sql_executor
