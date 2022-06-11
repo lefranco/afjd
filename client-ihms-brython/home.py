@@ -30,6 +30,36 @@ Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/lien
 """
 
 
+def get_stats_content():
+    """ get_stats_content """
+
+    stats_content = None
+
+    def reply_callback(req):
+        nonlocal stats_content
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération du contenu des statistiques : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération du contenu des statistiques : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        stats_content = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/statistics"
+
+    # get news : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return stats_content
+
+
 def information_about_create_account():
     """ information_about_create_account """
 
@@ -121,12 +151,18 @@ def show_news():
     MY_SUB_PANEL <= news_content2
 
     # ----
-    title5 = html.H4("Divers")
+    title5 = html.H4("Statistiques")
     MY_SUB_PANEL <= title5
+
+    stats_content = get_stats_content()
+    MY_SUB_PANEL <= stats_content
+
+    # ----
+    title6 = html.H4("Divers")
+    MY_SUB_PANEL <= title6
 
     MY_SUB_PANEL <= information_about_create_account()
     MY_SUB_PANEL <= html.BR()
-
 
 def show_links():
     """ show_links """
