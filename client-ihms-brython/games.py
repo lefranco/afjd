@@ -49,16 +49,6 @@ def information_about_playing():
     return information
 
 
-def information_about_anonymity():
-    """ information_about_playing """
-
-    information = html.DIV(Class='note')
-    information <= html.B("Vous créez une partie anonyme ?")
-    information <= html.BR()
-    information <= "Il faut rapidement la mettre dans un tournoi. Sinon, il est possible de connaître les joueurs de manière détournée par le classement ou par les retards (en créant un tournoi englobant cette partie)..."
-    return information
-
-
 def create_game():
     """ create_game """
 
@@ -262,9 +252,6 @@ def create_game():
     pseudo = storage['PSEUDO']
 
     MY_SUB_PANEL <= information_about_playing()
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= information_about_anonymity()
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= information_about_input()
