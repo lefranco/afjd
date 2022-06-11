@@ -75,6 +75,7 @@ def get_news_content2():
 
     return news_content
 
+
 def get_players():
     """ get_players returns an empy dict on error """
 
