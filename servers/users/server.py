@@ -11,11 +11,11 @@ import typing
 import argparse
 import datetime
 
+import waitress  # type: ignore
 import flask
 import flask_cors  # type: ignore
 import flask_jwt_extended  # type: ignore
 import werkzeug.security
-import waitress
 
 import lowdata
 import mylogger
@@ -206,7 +206,7 @@ def login_user() -> typing.Tuple[typing.Any, int]:
 
     user = users.User.find_by_name(sql_executor, user_name)
 
-    if user is None or not werkzeug.security.check_password_hash(user.pwd_hash, password):
+    if user is None or not werkzeug.security.check_password_hash(user.pwd_hash, password):  # type: ignore
 
         # we keep a trace of the failure
         failure = failures.Failure(user_name)
