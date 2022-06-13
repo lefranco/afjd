@@ -565,8 +565,6 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-EMAIL_SUPPORT = "jeremie.lefrancois@gmail.com"
-
 
 @API.resource('/mail-support')
 class MailSupportRessource(flask_restful.Resource):  # type: ignore
@@ -1085,6 +1083,21 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+EMAIL_SUPPORT = ''
+
+def load_support_config() -> None:
+    """ load_support_config """
+
+    support_config = lowdata.ConfigFile('./config/support.ini')
+    for support in support_config.section_list():
+
+        assert support == 'support', "Section name is not 'support' in support configuration file"
+        support_data = support_config.section(support)
+
+    global EMAIL_SUPPORT
+    EMAIL_SUPPORT = support_data['EMAIL_SUPPORT']
+
+
 def main() -> None:
     """ main """
 
@@ -1094,6 +1107,7 @@ def main() -> None:
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
+    load_support_config()
     mailer.load_mail_config(APP)
 
     # emergency
