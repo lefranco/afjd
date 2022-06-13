@@ -11,7 +11,7 @@ import typing
 import json
 import argparse
 
-import waitress
+import waitress  # type: ignore
 import flask
 import flask_cors  # type: ignore
 import flask_restful  # type: ignore
