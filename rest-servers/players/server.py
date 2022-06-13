@@ -11,7 +11,7 @@ import typing
 import random
 import argparse
 
-import waitress
+import waitress  # type: ignore
 import flask
 import flask_cors  # type: ignore
 import flask_restful  # type: ignore
@@ -30,7 +30,6 @@ import database
 
 
 SESSION = requests.Session()
-SESSION.timeout = None
 
 APP = flask.Flask(__name__)
 flask_cors.CORS(APP)
