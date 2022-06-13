@@ -188,7 +188,7 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
     if not allocations_found:
         return False, "Internal error : Did not find allocations for game", None
     result['Players'] = {}
-    for _, player_id, role_id in sorted(allocations_found, key=lambda p: p[2]):
+    for _, player_id, role_id in sorted(allocations_found, key=lambda p: p[2]):  # type: ignore
         if not role_id > 0:
             continue
         role_num = role_id - 1

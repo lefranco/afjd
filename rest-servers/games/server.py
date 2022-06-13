@@ -14,7 +14,7 @@ import datetime
 import time
 import argparse
 
-import waitress  # type: ignore
+import waitress
 import flask
 import flask_cors  # type: ignore
 import flask_restful  # type: ignore
@@ -4442,6 +4442,83 @@ class TournamentPositionRessource(flask_restful.Resource):  # type: ignore
 
         data = position_dict
         return data, 200
+
+
+@API.resource('/revoke/<game_id>')
+class RevokeRessource(flask_restful.Resource):  # type: ignore
+    """ RevokeRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Revoke game master of the game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/revoke/<game_id> - POST - revoke game master game id=%s", game_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # check moderator rights
+
+        # get moderator list
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+        the_moderators = req_result.json()
+
+        # check pseudo in moderator list
+        if pseudo not in the_moderators:
+            del sql_executor
+            flask_restful.abort(403, msg="You need to be the game master of the game (or site moderator) so you are not allowed to see the roles of this anonymous game")
+
+        # revoke actually
+
+        # get current game master
+        # find the game master
+        assert game is not None
+        game_master_id = game.get_role(sql_executor, 0)
+        if game_master_id is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game master of game with identifier {game_id}")
+
+        # put dangling
+        assert game_id is not None
+        assert game_master_id is not None
+        dangling_role_id = -1
+        allocation = allocations.Allocation(int(game_id), game_master_id, dangling_role_id)
+        allocation.update_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': 'Ok, game master revoked !'}
+        return data, 201
 
 
 @API.resource('/tournament-allocations/<tournament_id>')

@@ -18,7 +18,7 @@ import scoring
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['changer nouvelles', 'retrouver à partir du courriel', 'tous les courriels', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi']
+OPTIONS = ['changer nouvelles', 'retrouver à partir du courriel', 'tous les courriels', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi', 'destituer arbitre']
 
 
 def check_modo(pseudo):
@@ -677,6 +677,80 @@ def tournament_result():
     MY_SUB_PANEL <= incident_table2
 
 
+def revoke_master():
+    """ revoke_master """
+
+    def revoke_master_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la destitution de l'arbitre : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Erreur à la destitution de l'arbitre : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                revoke_master()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Vous avez destitué l'arbitre : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            revoke_master()
+
+        json_dict = {
+            'pseudo': pseudo,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/revoke/{game_id}"
+
+        # revoking master : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
+    MY_SUB_PANEL <= html.H3("Destituer l'arbitre")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    if 'GAME_VARIANT' not in storage:
+        alert("ERREUR : variante introuvable")
+        return
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
+    game_id = storage['GAME_ID']
+
+    form = html.FORM()
+
+    input_revoke_master = html.INPUT(type="submit", value="destituer l'arbitre de la partie sélectionnée")
+    input_revoke_master.bind("click", revoke_master_callback)
+    form <= input_revoke_master
+
+    MY_SUB_PANEL <= form
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -713,6 +787,8 @@ def load_option(_, item_name):
         display_phone_number()
     if item_name == 'résultats tournoi':
         tournament_result()
+    if item_name == 'destituer arbitre':
+        revoke_master()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
