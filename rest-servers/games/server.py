@@ -14,7 +14,7 @@ import datetime
 import time
 import argparse
 
-import waitress
+import waitress  # type: ignore
 import flask
 import flask_cors  # type: ignore
 import flask_restful  # type: ignore
@@ -58,7 +58,6 @@ WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
 SESSION = requests.Session()
-SESSION.timeout = None
 
 APP = flask.Flask(__name__)
 flask_cors.CORS(APP)
@@ -3746,7 +3745,7 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
 class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
     """ GameIncidentsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, typing.Optional[int], int, float]]], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, None, int, float]]], int]:  # pylint: disable=no-self-use
         """
         Gets list of roles which have produced an incident for given game
         EXPOSED
@@ -3763,7 +3762,7 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
         # incidents_list : those who submitted orders after deadline
-        # TODO : the player id is not used any more - replaced by None
+        # Note : the player id is not used any more - replaced by None
         incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
         late_list = [(o[1], o[2], None, o[4], o[5]) for o in incidents_list]
 
@@ -4336,7 +4335,7 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
         late_list: typing.List[typing.Tuple[int, int, int, int, float]] = []
         for game_id in tournament_game_ids:
             incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
-            for _, role_id, advancement, player_id, duration_incident, date_incident in incidents_list:
+            for _, role_id, advancement, _, duration_incident, date_incident in incidents_list:
                 late_list.append((game_id, role_id, advancement, duration_incident, date_incident))
 
         del sql_executor
@@ -4553,7 +4552,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
             else:
                 players_set.add(player_id)
 
-        data = {'ongoing_games' : len(allowed_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set)}
+        data = {'ongoing_games': len(allowed_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set)}
         return data, 200
 
 
