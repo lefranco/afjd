@@ -32,7 +32,6 @@ import lowdata
 
 
 SESSION = requests.Session()
-SESSION.timeout = None
 
 
 def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, str]:
