@@ -11,10 +11,6 @@ import sqlite3
 
 import database
 
-# need to have a limit in sizes of fields
-LEN_USER_NAME_MAX = 20
-LEN_PASSWORD_MAX = 20
-
 
 class User:
     """ Class for handling a User (password) """

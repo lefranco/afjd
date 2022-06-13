@@ -10,9 +10,6 @@ import typing
 
 import database
 
-DECLARATIONS_TYPE = 0
-MESSAGES_TYPE = 1
-
 
 class Visit:
     """ Class for handling an visit """

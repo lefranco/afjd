@@ -55,8 +55,6 @@ import exporter
 # a little welcome message to new games
 WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
 
-DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
-
 SESSION = requests.Session()
 
 APP = flask.Flask(__name__)

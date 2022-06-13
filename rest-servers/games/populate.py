@@ -173,6 +173,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_votes(sql_executor)
     populate_definitives(sql_executor)
     populate_incidents(sql_executor)
+    populate_incidents2(sql_executor)
     populate_tournaments(sql_executor)
     populate_assignements(sql_executor)
     populate_groupings(sql_executor)
