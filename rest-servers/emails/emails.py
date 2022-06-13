@@ -11,10 +11,6 @@ import sqlite3
 
 import database
 
-# need to have a limit in sizes of fields
-LEN_EMAIL_VALUE_MAX = 30
-LEN_CODE_MAX = 4
-
 
 class Email:
     """ Class for handling a Email (code) """
