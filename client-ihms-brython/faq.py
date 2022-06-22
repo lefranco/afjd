@@ -100,7 +100,7 @@ FAQ_CONTENT_TABLE = {
 
     "(Pour les modérateurs) Quels sont les codes pour écrire sur le mur ?":
     """
-    .HR pour un trait vertical <br>
+    .HR pour un trait horizontal <br>
     .STRONG pour écrire en gras <br>
     .KBD pour écrire ce que l'on doit taper au clavier <br>
     .LINK pour mettre un lien <br>
