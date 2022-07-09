@@ -635,7 +635,7 @@ def tournament_result():
     # there can be no incidents (if no incident of failed to load)
 
     count = {}
-    for game_id, role_num, _, _  in tournament_incidents2:
+    for game_id, role_num, _, _ in tournament_incidents2:
         pseudo = gamerole2pseudo[(game_id, role_num)]
         if pseudo not in count:
             count[pseudo] = 0
@@ -650,7 +650,7 @@ def tournament_result():
         thead <= col
     incident_table2 <= thead
 
-    for pseudo  in sorted(count, key=lambda p: count[p], reverse=True):
+    for pseudo in sorted(count, key=lambda p: count[p], reverse=True):
         row = html.TR()
 
         col = html.TD(pseudo)
@@ -716,7 +716,6 @@ def revoke_master():
         # revoking master : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-
     MY_SUB_PANEL <= html.H3("Destituer l'arbitre")
 
     if 'PSEUDO' not in storage:
@@ -750,6 +749,7 @@ def revoke_master():
     form <= input_revoke_master
 
     MY_SUB_PANEL <= form
+
 
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
