@@ -4631,6 +4631,47 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/maintain')
+class MaintainRessource(flask_restful.Resource):  # type: ignore
+    """ MaintainRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        maintain
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/maintain - POST - maintain")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
+
+        #sql_executor = database.SqlExecutor()
+
+        ## TODO
+
+        #sql_executor.commit()
+        #del sql_executor
+
+        data = {'msg': 'Ok, maintenance done'}
+        return data, 200
+
+
 def main() -> None:
     """ main """
 
