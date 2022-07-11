@@ -13,6 +13,7 @@ import json
 import datetime
 import time
 import argparse
+import sys
 
 import waitress
 import flask
@@ -4661,14 +4662,32 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
         if pseudo != 'Palpatine':
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
-        #sql_executor = database.SqlExecutor()
+        print("MAINTENANCE !!!", file=sys.stderr)
+        # TODO : insert specific code here
 
-        ## TODO
+        sql_executor = database.SqlExecutor()
 
-        #sql_executor.commit()
-        #del sql_executor
+        transitions_list = transitions.Transition.inventory(sql_executor)
+        for transition in transitions_list:
+            report_txt = transition.report_txt
+            print(f"{report_txt=}", file=sys.stderr)
+            tab = report_txt.split('\n')
+            print(f"{tab=}", file=sys.stderr)
+            line = tab[0]
+            print(f"{line=}", file=sys.stderr)
+            line2= line[:-1]
 
-        data = {'msg': 'Ok, maintenance done'}
+            time_stamp = int(datetime.datetime.strptime(line2, "%Y-%m-%d %H:%M:%S").replace(tzinfo=datetime.timezone.utc).timestamp())
+            print(f"{time_stamp=}", file=sys.stderr)
+
+            #  transition.update_database(sql_executor)
+
+            break
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': "maintenance done"}
         return data, 200
 
 
