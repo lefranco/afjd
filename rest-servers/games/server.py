@@ -4663,13 +4663,8 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
+
         # TODO : insert specific code here
-
-        #### sql_executor = database.SqlExecutor()
-
-
-        #### sql_executor.commit()
-        #### del sql_executor
 
         print("MAINTENANCE - done !!!", file=sys.stderr)
 
