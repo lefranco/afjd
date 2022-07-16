@@ -18,10 +18,19 @@ class Transition:
     @staticmethod
     def find_by_game_advancement(sql_executor: database.SqlExecutor, identifier: int, advancement: int) -> typing.Optional['Transition']:
         """ class lookup : finds the object in database from identifier """
-        reports_found = sql_executor.execute("SELECT transition_data FROM transitions where game_id = ? and advancement = ?", (identifier, advancement), need_result=True)
-        if not reports_found:
+        transitions_found = sql_executor.execute("SELECT transition_data FROM transitions where game_id = ? and advancement = ?", (identifier, advancement), need_result=True)
+        if not transitions_found:
             return None
-        return reports_found[0][0]  # type: ignore
+        return transitions_found[0][0]  # type: ignore
+
+    @staticmethod
+    def list_by_game_id(sql_executor: database.SqlExecutor, game_id: int) -> typing.List['Transition']:
+        """ class lookup : finds the object in database from fame id """
+        transitions_found = sql_executor.execute("SELECT transition_data FROM transitions where game_id = ?", (game_id,), need_result=True)
+        if not transitions_found:
+            return []
+        transitions_list = [t[0] for t in transitions_found]
+        return transitions_list
 
     @staticmethod
     def create_table(sql_executor: database.SqlExecutor) -> None:
@@ -62,6 +71,11 @@ class Transition:
     def time_stamp(self) -> int:
         """ property """
         return self._time_stamp
+
+    @property
+    def advancement(self) -> int:
+        """ property """
+        return self._advancement
 
     @property
     def situation_json(self) -> str:
