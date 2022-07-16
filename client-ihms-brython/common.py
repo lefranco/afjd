@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
+import datetime
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -346,9 +347,9 @@ def date_last_visit_load(game_id, visit_type):
 def make_report_window(report_loaded):
     """ make_report_window """
 
+    content = report_loaded['content']
     columns = 3
-
-    lines = report_loaded.split('\n')
+    lines = content.split('\n')
     split_size = (len(lines) + columns) // columns
     report_table = html.TABLE()
     report_row = html.TR()
@@ -368,6 +369,14 @@ def make_report_window(report_loaded):
             else:
                 report_col <= html.DIV(line, Class='code_success')
         report_row <= report_col
+
+    time_stamp = report_loaded['time_stamp']
+    date_report_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+    date_report_gmt_str = datetime.datetime.strftime(date_report_gmt, "%Y-%m-%d %H:%M:%S GMT")
+    report_elem = html.B(date_report_gmt_str)
+    caption = html.CAPTION(report_elem)
+    report_table <= caption
+
     return report_table
 
 

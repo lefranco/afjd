@@ -225,8 +225,10 @@ def sandbox():
                 display_left.removeChild(report_window)
 
                 # put new
-                report_loaded = req_result['result']
-                report_window = common.make_report_window(report_loaded)
+                time_stamp = time.time()
+                report_txt = req_result['result']
+                fake_report_loaded = {'time_stamp': time_stamp, 'content': report_txt}
+                report_window = common.make_report_window(fake_report_loaded)
                 display_left <= report_window
 
         variant_name = VARIANT_NAME_LOADED
@@ -914,7 +916,9 @@ def sandbox():
 
         reserve_table <= row
 
-    report_window = common.make_report_window("")
+    time_stamp = time.time()
+    fake_report_loaded = {'time_stamp': time_stamp, 'content': ""}
+    report_window = common.make_report_window(fake_report_loaded)
 
     display_very_left = html.DIV(id='display_very_left')
     display_very_left.attrs['style'] = 'display: table-cell; width=40px; vertical-align: top; table-layout: fixed;'
