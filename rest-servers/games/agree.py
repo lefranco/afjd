@@ -313,7 +313,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
     # important : need to be same as when getting situation
     position_transition_dict_json = json.dumps(position_transition_dict)
     orders_transition_dict_json = json.dumps(orders_transition_dict)
-    transition = transitions.Transition(int(game_id), game.current_advancement, position_transition_dict_json, orders_transition_dict_json, report_txt)
+    transition = transitions.Transition(int(game_id), game.current_advancement, time_stamp, position_transition_dict_json, orders_transition_dict_json, report_txt)
     transition.update_database(sql_executor)
 
     # update season

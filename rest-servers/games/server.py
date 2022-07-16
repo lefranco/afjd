@@ -1652,7 +1652,7 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
+        data = {'timestamp': transition.timestamp,  'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
         return data, 200
 
 
@@ -4662,30 +4662,16 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
         if pseudo != 'Palpatine':
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
-        print("MAINTENANCE !!!", file=sys.stderr)
+        print("MAINTENANCE - start !!!", file=sys.stderr)
         # TODO : insert specific code here
 
-        sql_executor = database.SqlExecutor()
+        #### sql_executor = database.SqlExecutor()
 
-        transitions_list = transitions.Transition.inventory(sql_executor)
-        for transition in transitions_list:
-            report_txt = transition.report_txt
-            print(f"{report_txt=}", file=sys.stderr)
-            tab = report_txt.split('\n')
-            print(f"{tab=}", file=sys.stderr)
-            line = tab[0]
-            print(f"{line=}", file=sys.stderr)
-            line2= line[:-1]
 
-            time_stamp = int(datetime.datetime.strptime(line2, "%Y-%m-%d %H:%M:%S").replace(tzinfo=datetime.timezone.utc).timestamp())
-            print(f"{time_stamp=}", file=sys.stderr)
+        #### sql_executor.commit()
+        #### del sql_executor
 
-            #  transition.update_database(sql_executor)
-
-            break
-
-        sql_executor.commit()
-        del sql_executor
+        print("MAINTENANCE - done !!!", file=sys.stderr)
 
         data = {'msg': "maintenance done"}
         return data, 200
