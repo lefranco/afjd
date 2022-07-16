@@ -1656,6 +1656,39 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/game-transitions/<game_id>')
+class GameTransitionsRessource(flask_restful.Resource):  # type: ignore
+    """ GameTransitionsRessource """
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Gets all existing transitions of that game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-transitions/<game_id> - GET - getting transitions game id=%s", game_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # find the transition
+        list_transitions = transitions.Transition.list_by_game_id(sql_executor, game_id)
+
+        del sql_executor
+
+        trans_dict = {}
+        for transition in list_transitions:
+            trans_dict[transition.advancement] = transition.time_stamp
+
+        data = trans_dict
+        return data, 200
+
+
 @API.resource('/game-force-agree-solve/<game_id>')
 class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
     """ GameForceAgreeSolveRessource """
@@ -4663,9 +4696,12 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
+        sql_executor = database.SqlExecutor()
 
         # TODO : insert specific code here
 
+
+        del sql_executor
         print("MAINTENANCE - done !!!", file=sys.stderr)
 
         data = {'msg': "maintenance done"}
