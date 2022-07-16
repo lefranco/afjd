@@ -50,6 +50,11 @@ class Report:
         sql_executor.execute("DELETE FROM reports WHERE game_id = ?", (self._game_id,))
 
     @property
+    def time_stamp(self) -> int:
+        """ property """
+        return self._time_stamp
+
+    @property
     def content(self) -> str:
         """ property """
         return self._content

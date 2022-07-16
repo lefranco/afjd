@@ -39,13 +39,16 @@ class Transition:
         sql_executor.execute("DROP TABLE IF EXISTS transitions")
         sql_executor.execute("CREATE TABLE transitions (game_id INTEGER, advancement INTEGER, transition_data transition, PRIMARY KEY(game_id, advancement))")
 
-    def __init__(self, game_id: int, advancement: int, situation_json: str, orders_json: str, report_txt: str) -> None:
+    def __init__(self, game_id: int, advancement: int, time_stamp: int, situation_json: str, orders_json: str, report_txt: str) -> None:
 
         assert isinstance(game_id, int), "game_id must be an int"
         self._game_id = game_id
 
         assert isinstance(advancement, int), "advancement must be an int"
         self._advancement = advancement
+
+        assert isinstance(time_stamp, int), "time_stamp must be an int"
+        self._time_stamp = time_stamp
 
         assert isinstance(situation_json, str), "situation_json must be an str"
         self._situation_json = situation_json
@@ -65,6 +68,11 @@ class Transition:
         sql_executor.execute("DELETE FROM transitions WHERE game_id = ? and advancement = ?", (self._game_id, self._advancement))
 
     @property
+    def time_stamp(self) -> int:
+        """ property """
+        return self._time_stamp
+
+    @property
     def situation_json(self) -> str:
         """ property """
         return self._situation_json
@@ -80,7 +88,7 @@ class Transition:
         return self._report_txt
 
     def __str__(self) -> str:
-        return f"game_id={self._game_id} advancement={self._advancement} situation_json={self._situation_json} orders_json={self._orders_json} report_txt={self._report_txt}"
+        return f"game_id={self._game_id} advancement={self._advancement} time_stamp={self._time_stamp} situation_json={self._situation_json} orders_json={self._orders_json} report_txt={self._report_txt}"
 
     def adapt_transition(self) -> bytes:
         """ To put an object in database """
@@ -89,7 +97,7 @@ class Transition:
         compressed_orders_json = database.compress_text(self._orders_json)
         compressed_report_txt = database.compress_text(self._report_txt)
 
-        return (f"{self._game_id}{database.STR_SEPARATOR}{self._advancement}{database.STR_SEPARATOR}{compressed_situation_json}{database.STR_SEPARATOR}{compressed_orders_json}{database.STR_SEPARATOR}{compressed_report_txt}").encode('ascii')
+        return (f"{self._game_id}{database.STR_SEPARATOR}{self._advancement}{database.STR_SEPARATOR}{self._time_stamp}{database.STR_SEPARATOR}{compressed_situation_json}{database.STR_SEPARATOR}{compressed_orders_json}{database.STR_SEPARATOR}{compressed_report_txt}").encode('ascii')
 
 
 def convert_transition(buffer: bytes) -> Transition:
@@ -98,17 +106,18 @@ def convert_transition(buffer: bytes) -> Transition:
     tab = buffer.split(database.BYTES_SEPARATOR)
     identifier = int(tab[0].decode())
     advancement = int(tab[1].decode())
+    time_stamp = int(tab[2].decode())
 
-    compressed_orders_json = tab[2].decode()
+    compressed_orders_json = tab[3].decode()
     orders_json = database.uncompress_text(compressed_orders_json)
 
-    compressed_situation_json = tab[3].decode()
+    compressed_situation_json = tab[4].decode()
     situation_json = database.uncompress_text(compressed_situation_json)
 
-    compressed_report_txt = tab[4].decode()
+    compressed_report_txt = tab[5].decode()
     report_txt = database.uncompress_text(compressed_report_txt)
 
-    transition = Transition(identifier, advancement, orders_json, situation_json, report_txt)
+    transition = Transition(identifier, advancement, time_stamp, orders_json, situation_json, report_txt)
     return transition
 
 
