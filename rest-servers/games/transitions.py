@@ -24,15 +24,6 @@ class Transition:
         return reports_found[0][0]  # type: ignore
 
     @staticmethod
-    def inventory(sql_executor: database.SqlExecutor) -> typing.List['Transition']:
-        """ class inventory : gives a list of all objects in transitions """
-        transitions_found = sql_executor.execute("SELECT transition_data FROM transitions", need_result=True)
-        if not transitions_found:
-            return []
-        transitions_list = [t[0] for t in transitions_found]
-        return transitions_list
-
-    @staticmethod
     def create_table(sql_executor: database.SqlExecutor) -> None:
         """ creation of table from scratch """
 
