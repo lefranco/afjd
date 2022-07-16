@@ -1614,7 +1614,7 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {'content': content}
+        data = {'time_stamp': report.time_stamp, 'content': content}
         return data, 200
 
 
@@ -1652,7 +1652,7 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {'timestamp': transition.timestamp,  'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
+        data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
         return data, 200
 
 
