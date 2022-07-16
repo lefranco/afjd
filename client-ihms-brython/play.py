@@ -73,7 +73,7 @@ GAME_PARAMETERS_LOADED = {}
 GAME_STATUS = None
 POSITION_LOADED = None
 POSITION_DATA = None
-REPORT_LOADED = None
+REPORT_LOADED = {}
 
 # loaded in load_special_stuff
 GAME_PLAYERS_DICT = {}
@@ -144,7 +144,7 @@ def game_incidents2_reload(game_id):
 def game_report_reload(game_id):
     """ game_report_reload """
 
-    report_loaded = None
+    report_loaded = {}
 
     def reply_callback(req):
         nonlocal report_loaded
@@ -158,7 +158,7 @@ def game_report_reload(game_id):
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        report_loaded = req_result['content']
+        report_loaded = req_result
 
     json_dict = {}
 
@@ -497,7 +497,7 @@ def load_dynamic_stuff():
     # need to be after game parameters (advancement -> season)
     global REPORT_LOADED
     REPORT_LOADED = game_report_reload(GAME_ID)
-    if REPORT_LOADED is None:
+    if not REPORT_LOADED:
         alert("Erreur chargement rapport")
         return
 
@@ -794,6 +794,7 @@ def show_position():
 
     position_data = None
     adv_last_moves = None
+    fake_report_loaded = None
 
     def callback_refresh(_):
         """ callback_refresh """
@@ -865,6 +866,7 @@ def show_position():
     def transition_display_callback(_, advancement_selected):
 
         nonlocal position_data
+        nonlocal fake_report_loaded
 
         def callback_render(_):
             """ callback_render """
@@ -887,7 +889,7 @@ def show_position():
 
         # current position is default
         orders_loaded = None
-        report_loaded = REPORT_LOADED
+        fake_report_loaded = REPORT_LOADED
         position_data = POSITION_DATA
         orders_data = None
 
@@ -898,14 +900,16 @@ def show_position():
             if transition_loaded:
 
                 # retrieve stuff from history
-                orders_loaded = transition_loaded['orders']
+                time_stamp = transition_loaded['time_stamp']
                 report_loaded = transition_loaded['report_txt']
-                position_loaded = transition_loaded['situation']
+                fake_report_loaded = {'time_stamp': time_stamp, 'content': report_loaded}
 
                 # digest the position
+                position_loaded = transition_loaded['situation']
                 position_data = mapping.Position(position_loaded, VARIANT_DATA)
 
                 # digest the orders
+                orders_loaded = transition_loaded['orders']
                 orders_data = mapping.Orders(orders_loaded, position_data)
 
             else:
@@ -959,7 +963,7 @@ def show_position():
         display_left <= rating_colours_window
         display_left <= html.BR()
 
-        report_window = common.make_report_window(report_loaded)
+        report_window = common.make_report_window(fake_report_loaded)
         display_left <= report_window
 
         # create right part
@@ -2083,8 +2087,12 @@ def submit_orders():
         transition_loaded = game_transition_reload(GAME_ID, advancement_selected)
         if not transition_loaded:
             break
+
+        time_stamp = transition_loaded['time_stamp']
         report_loaded = transition_loaded['report_txt']
-        report_window = common.make_report_window(report_loaded)
+
+        fake_report_loaded = {'time_stamp': time_stamp, 'content': report_loaded}
+        report_window = common.make_report_window(fake_report_loaded)
 
         game_status = get_game_status_histo(VARIANT_DATA, advancement_selected)
         display_left <= game_status
