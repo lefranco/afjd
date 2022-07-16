@@ -9,7 +9,6 @@ Handles the agreement to solve
 import typing
 import collections
 import json
-import datetime
 import time
 
 import requests
@@ -294,16 +293,11 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
 
     # --------------------------
 
-    # date for report in database (actually unused)
-    time_stamp = int(time.time())
-
-    datetime_adjudication = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-    adjudication_day = f"{datetime_adjudication.year:04}-{datetime_adjudication.month:02}-{datetime_adjudication.day:02}"
-    adjudication_hour = f"{datetime_adjudication.hour:02}:{datetime_adjudication.minute:02}"
-    adjudication_str = f"{adjudication_day} {adjudication_hour} GMT"
-
     # make report
-    report_txt = f"{adjudication_str}:\n{orders_result_simplified}\n{communication_orders_content_tagged}"
+    report_txt = f"{orders_result_simplified}\n{communication_orders_content_tagged}"
+
+    # date for report in database
+    time_stamp = int(time.time())
 
     # put report in database
     report = reports.Report(int(game_id), time_stamp, report_txt)
