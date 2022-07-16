@@ -1639,7 +1639,7 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
         # find the transition
-        transition = transitions.Transition.find_by_identifier_advancement(sql_executor, game_id, advancement)
+        transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, advancement)
         if transition is None:
             del sql_executor
             flask_restful.abort(404, msg=f"Transition happens to be missing for {game_id} / {advancement}")

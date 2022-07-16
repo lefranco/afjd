@@ -16,7 +16,7 @@ class Transition:
     """ Class for handling a transition """
 
     @staticmethod
-    def find_by_identifier_advancement(sql_executor: database.SqlExecutor, identifier: int, advancement: int) -> typing.Optional['Transition']:
+    def find_by_game_advancement(sql_executor: database.SqlExecutor, identifier: int, advancement: int) -> typing.Optional['Transition']:
         """ class lookup : finds the object in database from identifier """
         reports_found = sql_executor.execute("SELECT transition_data FROM transitions where game_id = ? and advancement = ?", (identifier, advancement), need_result=True)
         if not reports_found:
