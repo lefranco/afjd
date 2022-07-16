@@ -249,7 +249,7 @@ def export_data(game_id: int, sql_executor: database.SqlExecutor, debug_mode: bo
     transitions_found = 0
     while True:
 
-        transition = transitions.Transition.find_by_identifier_advancement(sql_executor, game_id, advancement)
+        transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, advancement)
         if transition is None:
             break
 
