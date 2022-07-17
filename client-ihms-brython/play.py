@@ -80,6 +80,7 @@ GAME_PLAYERS_DICT = {}
 
 
 def readable_season(advancement):
+    """ readable_season """
     advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
     advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
     value = f"{advancement_season_readable} {advancement_year}"
@@ -3062,15 +3063,15 @@ def negotiate():
     # there can be no message (if no message of failed to load)
 
     # insert new field 'synchro'
-    messages = [(False, f, t, d, c) for (f, t, d, c) in messages]
+    messages = [(False, 0, f, t, d, c) for (f, t, d, c) in messages]
 
     # get the transition table
     game_transitions = game_transitions_reload(GAME_ID)
 
     # add fake messages (game transitions) and sort
-    fake_messages = [(True, -1, v, [], readable_season(int(k))) for k, v in game_transitions.items()]
+    fake_messages = [(True, int(k), -1, v, [], readable_season(int(k))) for k, v in game_transitions.items()]
     messages.extend(fake_messages)
-    messages.sort(key=lambda d: d[2], reverse=True)
+    messages.sort(key=lambda d: (d[3], d[1]), reverse=True)
 
     messages_table = html.TABLE()
 
@@ -3084,7 +3085,7 @@ def negotiate():
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    for synchro, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
+    for synchro, _, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
 
         if synchro:
             class_ = 'synchro'
@@ -3316,15 +3317,15 @@ def declare():
     # there can be no message (if no declaration of failed to load)
 
     # insert new field 'synchro'
-    declarations = [(False, a, r, t, c) for (a, r, t, c) in declarations]
+    declarations = [(False, 0, a, r, t, c) for (a, r, t, c) in declarations]
 
     # get the transition table
     game_transitions = game_transitions_reload(GAME_ID)
 
     # add fake declarations (game transitions) and sort
-    fake_declarations = [(True, False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
+    fake_declarations = [(True, int(k), False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
     declarations.extend(fake_declarations)
-    declarations.sort(key=lambda d: d[3], reverse=True)
+    declarations.sort(key=lambda d: (d[4], d[1]), reverse=True)
 
     declarations_table = html.TABLE()
 
@@ -3338,7 +3339,7 @@ def declare():
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    for synchro, anonymous, role_id_msg, time_stamp, content in declarations:
+    for synchro, _, anonymous, role_id_msg, time_stamp, content in declarations:
 
         if synchro:
             class_ = 'synchro'
