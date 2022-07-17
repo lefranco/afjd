@@ -88,8 +88,12 @@ legend{
     font-family: cursive;
 }
 .text_anonymous{
-    color: darkred;
     font-family: cursive;
+    background-color: #EDA89E;
+}
+.synchro{
+    font-family: cursive;
+    background-color: #98E4ED;
 }
 
 /* color of italy in diplomania map A8EDA5 */

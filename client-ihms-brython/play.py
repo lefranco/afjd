@@ -79,6 +79,13 @@ REPORT_LOADED = {}
 GAME_PLAYERS_DICT = {}
 
 
+def readable_season(advancement):
+    advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
+    advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
+    value = f"{advancement_season_readable} {advancement_year}"
+    return value
+
+
 def game_incidents_reload(game_id):
     """ game_incidents_reload """
 
@@ -184,7 +191,7 @@ def game_transition_reload(game_id, advancement):
             if 'message' in req_result:
                 alert(f"Erreur au chargement de la transition de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Résolution introuvable: {req_result['msg']}")
+                alert(f"Problème au chargement de la transition de la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
@@ -263,6 +270,37 @@ def game_communication_orders_reload(game_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return orders_loaded
+
+
+def game_transitions_reload(game_id):
+    """ game_transitions_reload : returns empty dict if problem (or no data) """
+
+    transitions_loaded = {}
+
+    def reply_callback(req):
+        nonlocal transitions_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement des transitions de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement des transitions de la partie: {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        transitions_loaded = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-transitions/{game_id}"
+
+    # getting variant : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return transitions_loaded
 
 
 def make_rating_colours_window(variant_data, ratings, colours, game_scoring):
@@ -3023,6 +3061,17 @@ def negotiate():
     messages = messages_reload(GAME_ID)
     # there can be no message (if no message of failed to load)
 
+    # insert new field 'synchro'
+    messages = [(False, f, t, d, c) for (f, t, d, c) in messages]
+
+    # get the transition table
+    game_transitions = game_transitions_reload(GAME_ID)
+
+    # add fake messages (game transitions) and sort
+    fake_messages = [(True, -1, v, [], readable_season(int(k))) for k, v in game_transitions.items()]
+    messages.extend(fake_messages)
+    messages.sort(key=lambda d: d[2], reverse=True)
+
     messages_table = html.TABLE()
 
     thead = html.THEAD()
@@ -3035,39 +3084,47 @@ def negotiate():
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    for from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
+    for synchro, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
+
+        if synchro:
+            class_ = 'synchro'
+        else:
+            class_ = 'text'
 
         row = html.TR()
 
         date_desc_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
         date_desc_gmt_str = datetime.datetime.strftime(date_desc_gmt, "%d-%m-%Y %H:%M:%S")
-        col = html.TD(f"{date_desc_gmt_str} GMT")
+
+        col = html.TD(f"{date_desc_gmt_str} GMT", Class=class_)
         row <= col
 
-        role = VARIANT_DATA.roles[from_role_id_msg]
-        role_name = VARIANT_DATA.name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{from_role_id_msg}.jpg", title=role_name)
+        col = html.TD(Class=class_)
 
-        # player
-        pseudo_there = ""
-        if from_role_id_msg == 0:
-            if game_master_pseudo:
-                pseudo_there = game_master_pseudo
-        elif from_role_id_msg in role2pseudo:
-            player_id_str = role2pseudo[from_role_id_msg]
-            player_id = int(player_id_str)
-            pseudo_there = id2pseudo[player_id]
+        if from_role_id_msg != -1:
 
-        col = html.TD()
+            role = VARIANT_DATA.roles[from_role_id_msg]
+            role_name = VARIANT_DATA.name_table[role]
+            role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{from_role_id_msg}.jpg", title=role_name)
+            col <= role_icon_img
 
-        col <= role_icon_img
-        if pseudo_there:
-            col <= html.BR()
-            col <= pseudo_there
+            # player
+            pseudo_there = ""
+            if from_role_id_msg == 0:
+                if game_master_pseudo:
+                    pseudo_there = game_master_pseudo
+            elif from_role_id_msg in role2pseudo:
+                player_id_str = role2pseudo[from_role_id_msg]
+                player_id = int(player_id_str)
+                pseudo_there = id2pseudo[player_id]
+
+            if pseudo_there:
+                col <= html.BR()
+                col <= pseudo_there
 
         row <= col
 
-        col = html.TD()
+        col = html.TD(Class=class_)
 
         for dest_role_id_msg in dest_role_id_msgs:
 
@@ -3095,7 +3152,7 @@ def negotiate():
 
         row <= col
 
-        col = html.TD(Class='text')
+        col = html.TD(Class=class_)
 
         for line in content.split('\n'):
             # new so put in bold
@@ -3258,6 +3315,17 @@ def declare():
     declarations = declarations_reload(GAME_ID)
     # there can be no message (if no declaration of failed to load)
 
+    # insert new field 'synchro'
+    declarations = [(False, a, r, t, c) for (a, r, t, c) in declarations]
+
+    # get the transition table
+    game_transitions = game_transitions_reload(GAME_ID)
+
+    # add fake declarations (game transitions) and sort
+    fake_declarations = [(True, False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
+    declarations.extend(fake_declarations)
+    declarations.sort(key=lambda d: d[3], reverse=True)
+
     declarations_table = html.TABLE()
 
     thead = html.THEAD()
@@ -3270,13 +3338,21 @@ def declare():
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    for anonymous, role_id_msg, time_stamp, content in declarations:
+    for synchro, anonymous, role_id_msg, time_stamp, content in declarations:
+
+        if synchro:
+            class_ = 'synchro'
+        elif anonymous:
+            class_ = 'text_anonymous'
+        else:
+            class_ = 'text'
 
         row = html.TR()
 
         date_desc_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
         date_desc_gmt_str = datetime.datetime.strftime(date_desc_gmt, "%d-%m-%Y %H:%M:%S")
-        col = html.TD(f"{date_desc_gmt_str} GMT")
+
+        col = html.TD(f"{date_desc_gmt_str} GMT", Class=class_)
         row <= col
 
         role_icon_img = ""
@@ -3296,7 +3372,7 @@ def declare():
                 player_id = int(player_id_str)
                 pseudo_there = id2pseudo[player_id]
 
-        col = html.TD()
+        col = html.TD(Class=class_)
 
         col <= role_icon_img
         if pseudo_there:
@@ -3305,10 +3381,7 @@ def declare():
 
         row <= col
 
-        if anonymous:
-            col = html.TD(Class='text_anonymous')
-        else:
-            col = html.TD(Class='text')
+        col = html.TD(Class=class_)
 
         for line in content.split('\n'):
             # new so put in bold
