@@ -33,7 +33,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['consulter', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'arbitrer', 'paramètres', 'participants', 'superviser', 'observer']
+OPTIONS = ['consulter', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'arbitrer', 'paramètres', 'participants', 'noter', 'superviser', 'observer']
 
 
 @enum.unique
@@ -425,6 +425,37 @@ def game_votes_reload(game_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return votes
+
+
+def game_note_reload(game_id):
+    """ game_note_reload """
+
+    content = None
+
+    def reply_callback(req):
+        nonlocal content
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des notes de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des notes de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        content = req_result['content']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-notes/{game_id}"
+
+    # extracting vote from a game : need token (or not?)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return content
 
 
 def load_static_stuff():
@@ -4780,6 +4811,97 @@ def show_participants_in_game():
     return True
 
 
+def note():
+    """ note """
+
+    def add_note_callback(_):
+        """ add_note_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'ajout de la note dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'ajout de la note dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La note a été enregistrée ! {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            note()
+
+        content = input_note.value
+
+        json_dict = {
+            'role_id': ROLE_ID,
+            'pseudo': PSEUDO,
+            'content': content
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-notes/{GAME_ID}"
+
+        # adding a vote in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        note()
+
+    # from game id and token get role_id of player
+
+    if ROLE_ID is None:
+        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
+        load_option(None, 'consulter')
+        return False
+
+    content_loaded = game_note_reload(GAME_ID)
+    if content_loaded is None:
+        alert("Erreur chargement note")
+        load_option(None, 'consulter')
+        return False
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_note = html.LEGEND("Notes sur la partie", title="Notez ce dont vous avez besoin pour la partie")
+    fieldset <= legend_note
+    form <= fieldset
+    input_note = html.TEXTAREA(type="text", rows=20, cols=80)
+    input_note <= content_loaded
+    fieldset <= input_note
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_vote_in_game = html.INPUT(type="submit", value="enregistrer")
+    input_vote_in_game.bind("click", add_note_callback)
+    form <= input_vote_in_game
+
+    # now we can display
+
+    # game status
+    MY_SUB_PANEL <= GAME_STATUS
+    MY_SUB_PANEL <= html.BR()
+
+    # role
+    stack_role_flag(MY_SUB_PANEL)
+
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    # form
+    MY_SUB_PANEL <= form
+
+    return True
+
+
 def supervise():
     """ supervise """
 
@@ -5229,6 +5351,8 @@ def load_option(_, item_name):
         status = vote()
     if item_name == 'arbitrer':
         status = game_master()
+    if item_name == 'noter':
+        status = note()
     if item_name == 'superviser':
         status = supervise()
     if item_name == 'paramètres':
