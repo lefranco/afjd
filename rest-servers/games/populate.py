@@ -28,6 +28,7 @@ import definitives
 import incidents
 import incidents2
 import votes
+import notes
 import assignments
 import tournaments
 import groupings
@@ -117,6 +118,11 @@ def populate_visits(sql_executor: database.SqlExecutor) -> None:
 def populate_votes(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
     votes.Vote.create_table(sql_executor)
+
+
+def populate_notes(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+    notes.Note.create_table(sql_executor)
 
 
 def populate_definitives(sql_executor: database.SqlExecutor) -> None:

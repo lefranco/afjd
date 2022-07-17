@@ -43,6 +43,7 @@ import variants
 import database
 import visits
 import votes
+import notes
 import definitives
 import incidents
 import incidents2
@@ -172,6 +173,11 @@ VOTE_PARSER = flask_restful.reqparse.RequestParser()
 VOTE_PARSER.add_argument('role_id', type=int, required=True)
 VOTE_PARSER.add_argument('value', type=int, required=True)
 VOTE_PARSER.add_argument('pseudo', type=str, required=False)
+
+NOTE_PARSER = flask_restful.reqparse.RequestParser()
+NOTE_PARSER.add_argument('role_id', type=int, required=True)
+NOTE_PARSER.add_argument('content', type=str, required=True)
+NOTE_PARSER.add_argument('pseudo', type=str, required=False)
 
 TOURNAMENT_PARSER = flask_restful.reqparse.RequestParser()
 TOURNAMENT_PARSER.add_argument('name', type=str, required=True)
@@ -1660,7 +1666,7 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
 class GameTransitionsRessource(flask_restful.Resource):  # type: ignore
     """ GameTransitionsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[int, int], int]:  # pylint: disable=no-self-use
         """
         Gets all existing transitions of that game
         EXPOSED
@@ -3834,6 +3840,143 @@ class GameIncidents2Ressource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/game-notes/<game_id>')
+class GameNoteRessource(flask_restful.Resource):  # type: ignore
+    """  GameNoteRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Insert note in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-notes/<game_id> - POST - creating new note game id=%s", game_id)
+
+        args = NOTE_PARSER.parse_args(strict=True)
+
+        role_id = args['role_id']
+        content = args['content']
+        pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("role_id=%s content=%s", role_id, content)
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
+
+        if pseudo is None:
+            flask_restful.abort(401, msg="Need a pseudo to insert note in game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # who is player for role ?
+        assert game is not None
+        expected_id = game.get_role(sql_executor, role_id)
+
+        # must be player
+        if user_id != expected_id:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
+
+        # create note here
+        note = notes.Note(int(game_id), role_id, content)
+        note.update_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': "Ok note inserted"}
+        return data, 201
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Retrieve note in database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-notes/<game_id> - GET - retrieving note game id=%s", game_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # check user has right to read not - must be player of game master
+
+        # check there is a game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # get the role
+        assert game is not None
+        role_id = game.find_role(sql_executor, player_id)
+        if role_id is None:
+            del sql_executor
+            flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id}")
+
+        # retrieve note here
+        assert role_id is not None
+        content = notes.Note.content_by_game_id_role_num(sql_executor, game_id, role_id)
+
+        del sql_executor
+
+        data = {'content': content}
+        return data, 200
+
+
 @API.resource('/game-export/<game_id>')
 class GameExportRessource(flask_restful.Resource):  # type: ignore
     """ GameExportRessource """
@@ -4699,7 +4842,6 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
         sql_executor = database.SqlExecutor()
 
         # TODO : insert specific code here
-
 
         del sql_executor
         print("MAINTENANCE - done !!!", file=sys.stderr)
