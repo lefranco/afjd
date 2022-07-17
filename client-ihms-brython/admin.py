@@ -980,7 +980,7 @@ def edit_moderators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur a été mis dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Le joueur a été promu modérateur : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1020,7 +1020,7 @@ def edit_moderators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur a été retiré de la partie: {messages}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Le joueur a été déchu du rôle de modérateur : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
             MY_SUB_PANEL.clear()
