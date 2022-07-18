@@ -4870,7 +4870,7 @@ def note():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_note = html.LEGEND("Notes sur la partie", title="Notez ce dont vous avez besoin pour la partie")
+    legend_note = html.LEGEND("Prendre des notes", title="Notez ce dont vous avez besoin de vous souvenir au sujet de cette partie")
     fieldset <= legend_note
     form <= fieldset
     input_note = html.TEXTAREA(type="text", rows=20, cols=80)
@@ -4880,7 +4880,7 @@ def note():
 
     form <= html.BR()
 
-    input_vote_in_game = html.INPUT(type="submit", value="enregistrer")
+    input_vote_in_game = html.INPUT(type="submit", value="enregistrer dans la partie")
     input_vote_in_game.bind("click", add_note_callback)
     form <= input_vote_in_game
 
