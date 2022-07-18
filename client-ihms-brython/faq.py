@@ -78,7 +78,7 @@ FAQ_CONTENT_TABLE = {
     """,
 
     "Qu'est ce qui change pour une partie 'en direct' ?":
-    "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en heures. Les retards sont comptés en minutes et non en heures entamées. Il est possible d'observer la partie (mise à jour régulière du plateau). Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres pour les joueurs automtiquement après la grâce. Pas de message de notification pour une telle partie.",
+    "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en heures. Les retards sont comptés en minutes et non en heures entamées. Il est possible d'observer la partie (mise à jour régulière du plateau). Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres pour les joueurs automatiquement après la grâce. Pas de message de notification pour une telle partie.",
 
     "Pourquoi des parties sont distinguées ?":
     "Ce sont soit des parties modèles de tournoi que l'on veut retrouver plus rapidement, soit des parties archives sur lesquelles on veut attirer l'attention du badaud.",
