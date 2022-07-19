@@ -4793,6 +4793,52 @@ def show_participants_in_game():
     MY_SUB_PANEL <= game_incidents_table
     MY_SUB_PANEL <= html.BR()
 
+    count = {}
+
+    for role_id, advancement, player_id, duration, date_incident in game_incidents:
+        if role_id not in count:
+            count[role_id] = []
+        count[role_id].append(duration)
+
+    recap_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['rang', 'role', 'retards']:
+        col = html.TD(field)
+        thead <= col
+    recap_table <= thead
+
+    rank = 1
+    for role_id in sorted(count.keys(), key=lambda r: len(count[r]), reverse=True):
+        row = html.TR()
+
+        # rank
+        col = html.TD(rank)
+        row <= col
+
+        # role flag
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+
+        if role_icon_img:
+            col = html.TD(role_icon_img)
+        else:
+            col = html.TD()
+        row <= col
+
+        # incidents
+        incidents_list = count.get(role_id, [])
+        col = html.TD(" ".join([f"{i}" for i in incidents_list]))
+        row <= col
+
+        recap_table <= row
+        rank += 1
+
+    MY_SUB_PANEL <= recap_table
+    MY_SUB_PANEL <= html.BR()
+
     # a bit of humour !
     if game_incidents:
 
