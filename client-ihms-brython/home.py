@@ -505,7 +505,7 @@ def all_games(state_name):
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
 
-    MY_SUB_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
+    MY_SUB_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_SUB_PANEL <= html.BR()
 
     # get GMT date and time

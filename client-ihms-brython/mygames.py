@@ -707,7 +707,7 @@ def my_games(state_name):
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
+    MY_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("(**) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
