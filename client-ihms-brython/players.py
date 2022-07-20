@@ -8,7 +8,7 @@ import config
 import common
 
 
-OPTIONS = ['inscrits', 'joueurs', 'remplaçants', 'arbitres', 'modérateurs', 'courriels non confirmés']
+OPTIONS = ['inscrits', 'joueurs', 'arbitres', 'oisifs', 'remplaçants', 'modérateurs', 'courriels non confirmés']
 
 
 def show_registered_data():
@@ -118,6 +118,139 @@ def show_players_data():
     MY_SUB_PANEL <= html.H3("Les joueurs")
     MY_SUB_PANEL <= players_table
     MY_SUB_PANEL <= html.P(f"Il y a {count} joueurs")
+    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
+
+
+def show_game_masters_data():
+    """ show_game_masters_data """
+
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    # get the players
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
+    masters_alloc = allocations_data['game_masters_dict']
+
+    # gather games to masters
+    master_games_dict = {}
+    for master_id, games_id in masters_alloc.items():
+        master = players_dict[str(master_id)]['pseudo']
+        if master not in master_games_dict:
+            master_games_dict[master] = []
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            master_games_dict[master].append(game)
+
+    masters_table = html.TABLE()
+
+    fields = ['master', 'games']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'master': 'arbitre', 'games': 'parties'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    masters_table <= thead
+
+    count = 0
+    for master, games in sorted(master_games_dict.items(), key=lambda m: m[0].upper()):
+        row = html.TR()
+        for field in fields:
+            if field == 'master':
+                value = master
+            if field == 'games':
+                value = ' '.join(games)
+            col = html.TD(value)
+            row <= col
+
+        masters_table <= row
+        count += 1
+
+    MY_SUB_PANEL <= html.H3("Les arbitres")
+    MY_SUB_PANEL <= masters_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} arbitres")
+
+
+def show_idle_data():
+    """ show_idle_data """
+
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    idle_set = set()
+    for player_data in players_dict.values():
+        player = player_data['pseudo']
+        idle_set.add(player)
+
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
+    players_alloc = allocations_data['players_dict']
+    for player_id, _ in players_alloc.items():
+        player = players_dict[str(player_id)]['pseudo']
+        if player in idle_set:
+            idle_set.remove(player)
+
+    masters_alloc = allocations_data['game_masters_dict']
+    for player_id, _ in masters_alloc.items():
+        player = players_dict[str(player_id)]['pseudo']
+        if player in idle_set:
+            idle_set.remove(player)
+
+    idle_table = html.TABLE()
+
+    fields = ['player']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'player': 'joueur'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    idle_table <= thead
+
+    count = 0
+    for player in sorted(idle_set, key=lambda p: p.upper()):
+        row = html.TR()
+        for field in fields:
+            if field == 'player':
+                value = player
+            col = html.TD(value)
+            row <= col
+
+        idle_table <= row
+        count += 1
+
+    MY_SUB_PANEL <= html.H3("Les oisifs")
+    MY_SUB_PANEL <= idle_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
+    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
 
 
 def show_replacement_data():
@@ -184,70 +317,6 @@ def show_replacement_data():
     MY_SUB_PANEL <= html.H3("Les remplaçants")
     MY_SUB_PANEL <= players_table
     MY_SUB_PANEL <= html.P(f"Il y a {count} remplaçants")
-
-
-def show_game_masters_data():
-    """ show_game_masters_data """
-
-    # get the games
-    games_dict = common.get_games_data()
-    if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
-        return
-
-    # get the players
-    players_dict = common.get_players_data()
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-        return
-
-    # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
-    if not allocations_data:
-        alert("Erreur chargement allocations")
-        return
-
-    masters_alloc = allocations_data['game_masters_dict']
-
-    # gather games to masters
-    master_games_dict = {}
-    for master_id, games_id in masters_alloc.items():
-        master = players_dict[str(master_id)]['pseudo']
-        if master not in master_games_dict:
-            master_games_dict[master] = []
-        for game_id in games_id:
-            game = games_dict[str(game_id)]['name']
-            master_games_dict[master].append(game)
-
-    masters_table = html.TABLE()
-
-    fields = ['master', 'games']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'master': 'arbitre', 'games': 'parties'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    masters_table <= thead
-
-    count = 0
-    for master, games in sorted(master_games_dict.items(), key=lambda m: m[0].upper()):
-        row = html.TR()
-        for field in fields:
-            if field == 'master':
-                value = master
-            if field == 'games':
-                value = ' '.join(games)
-            col = html.TD(value)
-            row <= col
-
-        masters_table <= row
-        count += 1
-
-    MY_SUB_PANEL <= html.H3("Les arbitres")
-    MY_SUB_PANEL <= masters_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} arbitres")
 
 
 def show_moderators():
@@ -350,10 +419,12 @@ def load_option(_, item_name):
         show_registered_data()
     if item_name == 'joueurs':
         show_players_data()
-    if item_name == 'remplaçants':
-        show_replacement_data()
     if item_name == 'arbitres':
         show_game_masters_data()
+    if item_name == 'oisifs':
+        show_idle_data()
+    if item_name == 'remplaçants':
+        show_replacement_data()
     if item_name == 'modérateurs':
         show_moderators()
     if item_name == 'courriels non confirmés':
