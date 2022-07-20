@@ -609,6 +609,9 @@ def show_games():
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
 
+    MY_SUB_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
     # get GMT date and time
     time_stamp = time.time()
     date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
