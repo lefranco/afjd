@@ -162,7 +162,7 @@ def sandbox():
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
-            put_consult(buttons_right)
+            put_download(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -196,7 +196,7 @@ def sandbox():
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
-            put_consult(buttons_right)
+            put_download(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -261,12 +261,21 @@ def sandbox():
         # submitting position and orders for simulation : do not need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def consult_callback(_):
-        """ consult_callback """
+    def download_callback(_):
+        """ download_callback """
 
-        # TODO : calculate some interesting orders or advices here
+        # make a rendom like label
+        time_stamp = time.time()
+        label = int(time_stamp) % 1000
 
-        alert("Hélas, trois fois hélas, cette fonctionalité n'est pas encore prête...")
+        # needed too for some reason
+        MY_PANEL <= html.A(id='download_link')
+
+        # perform actual exportation
+        download_link = document['download_link']
+        download_link.download = f"diplomania_map_{label}.png"
+        download_link.href = canvas.toDataURL('image/png')
+        document['download_link'].click()
 
     def select_order_type_callback(_, order_type):
         """ select_order_type_callback """
@@ -355,7 +364,7 @@ def sandbox():
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
-                put_consult(buttons_right)
+                put_download(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -421,7 +430,7 @@ def sandbox():
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
-                put_consult(buttons_right)
+                put_download(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -465,7 +474,7 @@ def sandbox():
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
-                put_consult(buttons_right)
+                put_download(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -504,7 +513,7 @@ def sandbox():
                 if not ORDERS_DATA.empty():
                     put_submit(buttons_right)
                 if not POSITION_DATA.empty():
-                    put_consult(buttons_right)
+                    put_download(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
                 return
@@ -528,7 +537,7 @@ def sandbox():
             if not ORDERS_DATA.empty():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
-                put_consult(buttons_right)
+                put_download(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -599,7 +608,7 @@ def sandbox():
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
-            put_consult(buttons_right)
+            put_download(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -749,13 +758,13 @@ def sandbox():
         buttons_right <= input_submit
         buttons_right <= html.BR()
 
-    def put_consult(buttons_right):
-        """ put_consult """
+    def put_download(buttons_right):
+        """ put_export """
 
-        input_consult = html.INPUT(type="submit", value="consulter l'oracle sur cette position")
-        input_consult.bind("click", consult_callback)
+        input_export = html.INPUT(type="submit", value="télécharger cette position")
+        input_export.bind("click", download_callback)
         buttons_right <= html.BR()
-        buttons_right <= input_consult
+        buttons_right <= input_export
         buttons_right <= html.BR()
 
     # callbacks pour le glisser / deposer
@@ -860,7 +869,7 @@ def sandbox():
         if not ORDERS_DATA.empty():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
-            put_consult(buttons_right)
+            put_download(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -990,7 +999,7 @@ def sandbox():
     if not ORDERS_DATA.empty():
         put_submit(buttons_right)
     if not POSITION_DATA.empty():
-        put_consult(buttons_right)
+        put_download(buttons_right)
 
     # overall
     my_sub_panel2 = html.DIV()
