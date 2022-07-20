@@ -83,9 +83,6 @@ FAQ_CONTENT_TABLE = {
     "Pourquoi des parties sont distinguées ?":
     "Ce sont soit des parties modèles de tournoi que l'on veut retrouver plus rapidement, soit des parties archives sur lesquelles on veut attirer l'attention du badaud.",
 
-    "C'est quoi ce truc : 'consulter l'oracle sur cette position' ?":
-    "Pas encore développé. Fournira une suggestion de jeux d'ordres à partir d'une position...",
-
     "Est-il prévu de développer des variantes ?":
     "Certainement. Hundred tient la corde pour le moment...",
 
