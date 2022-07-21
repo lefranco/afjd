@@ -151,11 +151,27 @@ def show_news():
     MY_SUB_PANEL <= news_content2
 
     # ----
-    title5 = html.H4("Statistiques")
+    title5 = html.H4("Charte du bon diplomate")
     MY_SUB_PANEL <= title5
 
-    stats_content = get_stats_content()
-    MY_SUB_PANEL <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité."
+    chart = html.OL()
+
+    chart <= html.LI("Le bon diplomate respecte ses partenaires et échange avec eux de manière cordiale en toutes circonstances")
+    chart <= html.LI("Le bon diplomate cherche à obtenir les meilleurs résultats possibles sur la partie (hormis des considérations a étudier au cas par cas telles que par exemple le jeu d'équipe")
+    chart <= html.LI("Le bon diplomate ne s'inscrit pas plusieurs fois sur une partie")
+    chart <= html.LI("Le bon diplomate respecte scrupuleusement la règle de non communication par quelque moyen que ce soit sur les parties qui appliquent cette restriction")
+    chart <= html.LI("Le bon diplomate n’abandonne pas la partie sur laquelle il s'est engagé")
+    chart <= html.LI("Le bon diplomates est ponctuel dans les rendu d'ordres, et communique avec l'arbitre en cas de problème")
+    chart <= html.LI("Le bon diplomate ne cherche pas à pourrir une partie qui tourne à son désavantage")
+    chart <= html.LI("Le bon diplomate reste fair-play et se garde bien de tricher et de contourner les règles à son avantage")
+    chart <= html.LI("Le bon diplomate qui découvre une faille du système se doit de la signaler (de manière urgentissime si cette faille permet de tricher)")
+    chart <= html.LI("L’arbitre de la partie veille à son bon déroulement et au plus grand plaisir de chacun")
+    chart <= html.LI("L’arbitre est maître du choix des joueurs dans la partie")
+    chart <= html.LI("L’arbitre a toujours raison")
+    chart <= html.LI("Si la décision de l'arbitre est contestée, le bon diplomate lèvent un incident et/ou se rapproche du conseil de l'association qui statuera")
+    chart <= html.LI("Le bon diplomate accepte l’idée que le conseil de l’association, dans sa grande sagesse, a toujours raison, mais garde toujours la possibilité de venir candidater lors de la prochaine Assemblée Générale afin d’apporter sa contribution constructive à l’évolution de la jurisprudence")
+
+    MY_SUB_PANEL <= chart
 
     # ----
     title6 = html.H4("Divers")
@@ -164,6 +180,12 @@ def show_news():
     MY_SUB_PANEL <= information_about_create_account()
     MY_SUB_PANEL <= html.BR()
 
+    # ----
+    title7 = html.H4("Statistiques")
+    MY_SUB_PANEL <= title7
+
+    stats_content = get_stats_content()
+    MY_SUB_PANEL <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité."
 
 def show_links():
     """ show_links """
