@@ -33,7 +33,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['consulter', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'arbitrer', 'paramètres', 'participants', 'noter', 'superviser', 'observer']
+OPTIONS = ['consulter', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'noter', 'arbitrer', 'paramètres', 'participants', 'superviser', 'observer']
 
 
 @enum.unique
@@ -3235,6 +3235,14 @@ def negotiate():
     MY_SUB_PANEL <= canvas
     MY_SUB_PANEL <= html.BR()
 
+    # ratings
+    ratings = POSITION_DATA.role_ratings()
+    colours = POSITION_DATA.role_colours()
+    game_scoring = GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+    MY_SUB_PANEL <= rating_colours_window
+    MY_SUB_PANEL <= html.BR()
+
     # role
     stack_role_flag(MY_SUB_PANEL)
     MY_SUB_PANEL <= html.BR()
@@ -3493,6 +3501,14 @@ def declare():
     MY_SUB_PANEL <= canvas
     MY_SUB_PANEL <= html.BR()
 
+    # ratings
+    ratings = POSITION_DATA.role_ratings()
+    colours = POSITION_DATA.role_colours()
+    game_scoring = GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+    MY_SUB_PANEL <= rating_colours_window
+    MY_SUB_PANEL <= html.BR()
+
     # role
     stack_role_flag(MY_SUB_PANEL)
     MY_SUB_PANEL <= html.BR()
@@ -3649,6 +3665,142 @@ def vote():
     img.bind('load', callback_render)
 
     MY_SUB_PANEL <= canvas
+    MY_SUB_PANEL <= html.BR()
+
+    # ratings
+    ratings = POSITION_DATA.role_ratings()
+    colours = POSITION_DATA.role_colours()
+    game_scoring = GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+    MY_SUB_PANEL <= rating_colours_window
+    MY_SUB_PANEL <= html.BR()
+
+    # role
+    stack_role_flag(MY_SUB_PANEL)
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    # form
+    MY_SUB_PANEL <= form
+
+    return True
+
+
+def note():
+    """ note """
+
+    def callback_render(_):
+        """ callback_render """
+
+        # put the background map first
+        ctx.drawImage(img, 0, 0)
+
+        # put the centers
+        VARIANT_DATA.render(ctx)
+
+        # put the position
+        POSITION_DATA.render(ctx)
+
+        # put the legends at the end
+        VARIANT_DATA.render_legends(ctx)
+
+    def add_note_callback(_):
+        """ add_note_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'ajout de la note dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'ajout de la note dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La note a été enregistrée ! {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            note()
+
+        content = input_note.value
+
+        json_dict = {
+            'role_id': ROLE_ID,
+            'pseudo': PSEUDO,
+            'content': content
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-notes/{GAME_ID}"
+
+        # adding a vote in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        note()
+
+    # from game id and token get role_id of player
+
+    if ROLE_ID is None:
+        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
+        load_option(None, 'consulter')
+        return False
+
+    content_loaded = game_note_reload(GAME_ID)
+    if content_loaded is None:
+        alert("Erreur chargement note")
+        load_option(None, 'consulter')
+        return False
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_note = html.LEGEND("Prendre des notes", title="Notez ce dont vous avez besoin de vous souvenir au sujet de cette partie")
+    fieldset <= legend_note
+    form <= fieldset
+    input_note = html.TEXTAREA(type="text", rows=20, cols=80)
+    input_note <= content_loaded
+    fieldset <= input_note
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_vote_in_game = html.INPUT(type="submit", value="enregistrer dans la partie")
+    input_vote_in_game.bind("click", add_note_callback)
+    form <= input_vote_in_game
+
+    # now we can display
+
+    # game status
+    MY_SUB_PANEL <= GAME_STATUS
+    MY_SUB_PANEL <= html.BR()
+
+    # create canvas
+    map_size = VARIANT_DATA.map_size
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return False
+
+    # put background (this will call the callback that display the whole map)
+    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    img.bind('load', callback_render)
+
+    MY_SUB_PANEL <= canvas
+    MY_SUB_PANEL <= html.BR()
+
+    # ratings
+    ratings = POSITION_DATA.role_ratings()
+    colours = POSITION_DATA.role_colours()
+    game_scoring = GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+    MY_SUB_PANEL <= rating_colours_window
     MY_SUB_PANEL <= html.BR()
 
     # role
@@ -4940,126 +5092,6 @@ def show_participants_in_game():
 
         humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
         MY_SUB_PANEL <= humour_img
-
-    return True
-
-
-def note():
-    """ note """
-
-    def callback_render(_):
-        """ callback_render """
-
-        # put the background map first
-        ctx.drawImage(img, 0, 0)
-
-        # put the centers
-        VARIANT_DATA.render(ctx)
-
-        # put the position
-        POSITION_DATA.render(ctx)
-
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
-
-    def add_note_callback(_):
-        """ add_note_callback """
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 201:
-                if 'message' in req_result:
-                    alert(f"Erreur à l'ajout de la note dans la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à l'ajout de la note dans la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La note a été enregistrée ! {messages}", remove_after=config.REMOVE_AFTER)
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            note()
-
-        content = input_note.value
-
-        json_dict = {
-            'role_id': ROLE_ID,
-            'pseudo': PSEUDO,
-            'content': content
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-notes/{GAME_ID}"
-
-        # adding a vote in a game : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        note()
-
-    # from game id and token get role_id of player
-
-    if ROLE_ID is None:
-        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        load_option(None, 'consulter')
-        return False
-
-    content_loaded = game_note_reload(GAME_ID)
-    if content_loaded is None:
-        alert("Erreur chargement note")
-        load_option(None, 'consulter')
-        return False
-
-    form = html.FORM()
-
-    fieldset = html.FIELDSET()
-    legend_note = html.LEGEND("Prendre des notes", title="Notez ce dont vous avez besoin de vous souvenir au sujet de cette partie")
-    fieldset <= legend_note
-    form <= fieldset
-    input_note = html.TEXTAREA(type="text", rows=20, cols=80)
-    input_note <= content_loaded
-    fieldset <= input_note
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_vote_in_game = html.INPUT(type="submit", value="enregistrer dans la partie")
-    input_vote_in_game.bind("click", add_note_callback)
-    form <= input_vote_in_game
-
-    # now we can display
-
-    # game status
-    MY_SUB_PANEL <= GAME_STATUS
-    MY_SUB_PANEL <= html.BR()
-
-    # create canvas
-    map_size = VARIANT_DATA.map_size
-    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
-    ctx = canvas.getContext("2d")
-    if ctx is None:
-        alert("Il faudrait utiliser un navigateur plus récent !")
-        return False
-
-    # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-    img.bind('load', callback_render)
-
-    MY_SUB_PANEL <= canvas
-    MY_SUB_PANEL <= html.BR()
-
-    # role
-    stack_role_flag(MY_SUB_PANEL)
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    # form
-    MY_SUB_PANEL <= form
 
     return True
 
