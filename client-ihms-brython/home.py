@@ -168,7 +168,7 @@ def show_news():
     chart <= html.LI("L’arbitre de la partie veille à son bon déroulement et au plus grand plaisir de chacun")
     chart <= html.LI("L’arbitre est maître du choix des joueurs dans la partie")
     chart <= html.LI("L’arbitre a toujours raison")
-    chart <= html.LI("Si la décision de l'arbitre est contestée, le bon diplomate lèvent un incident et/ou se rapproche du conseil de l'association qui statuera")
+    chart <= html.LI("Si la décision de l'arbitre est contestée, le bon diplomate lève un incident et/ou se rapproche du conseil de l'association qui statuera")
     chart <= html.LI("Le bon diplomate accepte l’idée que le conseil de l’association, dans sa grande sagesse, a toujours raison, mais garde toujours la possibilité de venir candidater lors de la prochaine Assemblée Générale afin d’apporter sa contribution constructive à l’évolution de la jurisprudence")
 
     MY_SUB_PANEL <= chart
