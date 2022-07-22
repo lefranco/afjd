@@ -1,0 +1,936 @@
+{
+    "map": {
+        "width": 814,
+        "height": 720
+    },
+    "regions": {
+        "1": {
+            "name": "Cote"
+        },
+        "2": {
+            "name": "Terre"
+        },
+        "3": {
+            "name": "Mer"
+        }
+    },
+    "units": {
+        "1": {
+            "name": "Armee"
+        },
+        "2": {
+            "name": "Flotte"
+        }
+    },
+    "roles": {
+        "0": {
+            "name": "Arbitre",
+            "adjective_name": "Arbitre",
+            "letter_name": "M",
+            "red": 0,
+            "green": 0,
+            "blue": 255
+        },
+        "1": {
+            "name": "Angleterre",
+            "adjective_name": "anglais",
+            "letter_name": "E",
+            "red": 0,
+            "green": 0,
+            "blue": 0
+        },
+        "2": {
+            "name": "France",
+            "adjective_name": "francais",
+            "letter_name": "F",
+            "red": 170,
+            "green": 85,
+            "blue": 0
+        },
+        "3": {
+            "name": "Allemagne",
+            "adjective_name": "allemand",
+            "letter_name": "G",
+            "red": 85,
+            "green": 170,
+            "blue": 0
+        },
+        "4": {
+            "name": "Italie",
+            "adjective_name": "italien",
+            "letter_name": "I",
+            "red": 170,
+            "green": 255,
+            "blue": 0
+        },
+        "5": {
+            "name": "Autriche",
+            "adjective_name": "autrichien",
+            "letter_name": "A",
+            "red": 0,
+            "green": 255,
+            "blue": 0
+        },
+        "6": {
+            "name": "Russie",
+            "adjective_name": "russe",
+            "letter_name": "R",
+            "red": 255,
+            "green": 0,
+            "blue": 0
+        },
+        "7": {
+            "name": "Turquie",
+            "adjective_name": "turc",
+            "letter_name": "T",
+            "red": 255,
+            "green": 170,
+            "blue": 0
+        }
+    },
+    "coasts": {
+        "1": {
+            "name": "ce"
+        },
+        "2": {
+            "name": "cn"
+        },
+        "3": {
+            "name": "cs"
+        }
+    },
+    "zones": {
+        "1": {
+            "name": "Adr",
+            "full_name": "Mer Adriatique",
+            "x_pos": 468,
+            "y_pos": 570,
+            "x_legend_pos": 468,
+            "y_legend_pos": 556
+        },
+        "2": {
+            "name": "Ege",
+            "full_name": "Mer d'Egée",
+            "x_pos": 587,
+            "y_pos": 642,
+            "x_legend_pos": 587,
+            "y_legend_pos": 628
+        },
+        "3": {
+            "name": "Alb",
+            "full_name": "Albanie",
+            "x_pos": 503,
+            "y_pos": 588,
+            "x_legend_pos": 503,
+            "y_legend_pos": 574
+        },
+        "4": {
+            "name": "Ank",
+            "full_name": "Ankara",
+            "x_pos": 702,
+            "y_pos": 549,
+            "x_legend_pos": 702,
+            "y_legend_pos": 535
+        },
+        "5": {
+            "name": "Apu",
+            "full_name": "Apulie",
+            "x_pos": 421,
+            "y_pos": 568,
+            "x_legend_pos": 421,
+            "y_legend_pos": 554
+        },
+        "6": {
+            "name": "Arm",
+            "full_name": "Arménie",
+            "x_pos": 766,
+            "y_pos": 557,
+            "x_legend_pos": 766,
+            "y_legend_pos": 543
+        },
+        "7": {
+            "name": "Bal",
+            "full_name": "Mer Baltique",
+            "x_pos": 454,
+            "y_pos": 318,
+            "x_legend_pos": 454,
+            "y_legend_pos": 304
+        },
+        "8": {
+            "name": "Bar",
+            "full_name": "Mer de Barents",
+            "x_pos": 552,
+            "y_pos": 38,
+            "x_legend_pos": 552,
+            "y_legend_pos": 24
+        },
+        "9": {
+            "name": "Bel",
+            "full_name": "Belgique",
+            "x_pos": 309,
+            "y_pos": 420,
+            "x_legend_pos": 309,
+            "y_legend_pos": 406
+        },
+        "10": {
+            "name": "Ber",
+            "full_name": "Berlin",
+            "x_pos": 388,
+            "y_pos": 394,
+            "x_legend_pos": 388,
+            "y_legend_pos": 380
+        },
+        "11": {
+            "name": "Noi",
+            "full_name": "Mer Noire",
+            "x_pos": 638,
+            "y_pos": 507,
+            "x_legend_pos": 638,
+            "y_legend_pos": 493
+        },
+        "12": {
+            "name": "Boh",
+            "full_name": "Bohème",
+            "x_pos": 423,
+            "y_pos": 429,
+            "x_legend_pos": 423,
+            "y_legend_pos": 415
+        },
+        "13": {
+            "name": "Bot",
+            "full_name": "Golfe of Botnie",
+            "x_pos": 445,
+            "y_pos": 220,
+            "x_legend_pos": 445,
+            "y_legend_pos": 206
+        },
+        "14": {
+            "name": "Bre",
+            "full_name": "Brest",
+            "x_pos": 231,
+            "y_pos": 459,
+            "x_legend_pos": 231,
+            "y_legend_pos": 445
+        },
+        "15": {
+            "name": "Bud",
+            "full_name": "Budapest",
+            "x_pos": 505,
+            "y_pos": 476,
+            "x_legend_pos": 505,
+            "y_legend_pos": 462
+        },
+        "16": {
+            "name": "Bul",
+            "full_name": "Bulgarie",
+            "x_pos": 563,
+            "y_pos": 545,
+            "x_legend_pos": 563,
+            "y_legend_pos": 531
+        },
+        "17": {
+            "name": "Bou",
+            "full_name": "Bourgogne",
+            "x_pos": 304,
+            "y_pos": 469,
+            "x_legend_pos": 304,
+            "y_legend_pos": 455
+        },
+        "18": {
+            "name": "Cly",
+            "full_name": "Clyde",
+            "x_pos": 225,
+            "y_pos": 265,
+            "x_legend_pos": 225,
+            "y_legend_pos": 251
+        },
+        "19": {
+            "name": "Con",
+            "full_name": "Constantinople",
+            "x_pos": 645,
+            "y_pos": 575,
+            "x_legend_pos": 645,
+            "y_legend_pos": 561
+        },
+        "20": {
+            "name": "Dan",
+            "full_name": "Danemark",
+            "x_pos": 357,
+            "y_pos": 319,
+            "x_legend_pos": 357,
+            "y_legend_pos": 305
+        },
+        "21": {
+            "name": "MOr",
+            "full_name": "Méditerranée orientale",
+            "x_pos": 661,
+            "y_pos": 679,
+            "x_legend_pos": 661,
+            "y_legend_pos": 665
+        },
+        "22": {
+            "name": "Edi",
+            "full_name": "Édimbourg",
+            "x_pos": 237,
+            "y_pos": 295,
+            "x_legend_pos": 237,
+            "y_legend_pos": 281
+        },
+        "23": {
+            "name": "Man",
+            "full_name": "Manche",
+            "x_pos": 199,
+            "y_pos": 423,
+            "x_legend_pos": 199,
+            "y_legend_pos": 409
+        },
+        "24": {
+            "name": "Fin",
+            "full_name": "Finlande",
+            "x_pos": 497,
+            "y_pos": 190,
+            "x_legend_pos": 497,
+            "y_legend_pos": 176
+        },
+        "25": {
+            "name": "Gal",
+            "full_name": "Galicie",
+            "x_pos": 491,
+            "y_pos": 428,
+            "x_legend_pos": 491,
+            "y_legend_pos": 414
+        },
+        "26": {
+            "name": "Gas",
+            "full_name": "Gascogne",
+            "x_pos": 254,
+            "y_pos": 516,
+            "x_legend_pos": 254,
+            "y_legend_pos": 502
+        },
+        "27": {
+            "name": "GLi",
+            "full_name": "Golfe du Lion",
+            "x_pos": 300,
+            "y_pos": 578,
+            "x_legend_pos": 300,
+            "y_legend_pos": 564
+        },
+        "28": {
+            "name": "Gre",
+            "full_name": "Grèce",
+            "x_pos": 525,
+            "y_pos": 600,
+            "x_legend_pos": 525,
+            "y_legend_pos": 586
+        },
+        "29": {
+            "name": "Hel",
+            "full_name": "Baie de Helgoland",
+            "x_pos": 331,
+            "y_pos": 329,
+            "x_legend_pos": 331,
+            "y_legend_pos": 315
+        },
+        "30": {
+            "name": "Hol",
+            "full_name": "Hollande",
+            "x_pos": 321,
+            "y_pos": 380,
+            "x_legend_pos": 321,
+            "y_legend_pos": 366
+        },
+        "31": {
+            "name": "Ion",
+            "full_name": "Mer Ionienne",
+            "x_pos": 489,
+            "y_pos": 672,
+            "x_legend_pos": 489,
+            "y_legend_pos": 658
+        },
+        "32": {
+            "name": "Irl",
+            "full_name": "Mer d'Irlande",
+            "x_pos": 167,
+            "y_pos": 393,
+            "x_legend_pos": 167,
+            "y_legend_pos": 379
+        },
+        "33": {
+            "name": "Kie",
+            "full_name": "Kiel",
+            "x_pos": 352,
+            "y_pos": 389,
+            "x_legend_pos": 352,
+            "y_legend_pos": 375
+        },
+        "34": {
+            "name": "Lon",
+            "full_name": "Londres",
+            "x_pos": 261,
+            "y_pos": 386,
+            "x_legend_pos": 261,
+            "y_legend_pos": 372
+        },
+        "35": {
+            "name": "Lvn",
+            "full_name": "Livonie",
+            "x_pos": 516,
+            "y_pos": 312,
+            "x_legend_pos": 516,
+            "y_legend_pos": 298
+        },
+        "36": {
+            "name": "Lvp",
+            "full_name": "Liverpool",
+            "x_pos": 231,
+            "y_pos": 335,
+            "x_legend_pos": 231,
+            "y_legend_pos": 321
+        },
+        "37": {
+            "name": "Mar",
+            "full_name": "Marseille",
+            "x_pos": 305,
+            "y_pos": 523,
+            "x_legend_pos": 305,
+            "y_legend_pos": 509
+        },
+        "38": {
+            "name": "Atl",
+            "full_name": "Atlantique",
+            "x_pos": 91,
+            "y_pos": 458,
+            "x_legend_pos": 91,
+            "y_legend_pos": 444
+        },
+        "39": {
+            "name": "Mos",
+            "full_name": "Moscou",
+            "x_pos": 724,
+            "y_pos": 289,
+            "x_legend_pos": 724,
+            "y_legend_pos": 275
+        },
+        "40": {
+            "name": "Mun",
+            "full_name": "Munich",
+            "x_pos": 363,
+            "y_pos": 452,
+            "x_legend_pos": 363,
+            "y_legend_pos": 438
+        },
+        "41": {
+            "name": "AfN",
+            "full_name": "Afrique du Nord",
+            "x_pos": 278,
+            "y_pos": 690,
+            "x_legend_pos": 278,
+            "y_legend_pos": 676
+        },
+        "42": {
+            "name": "Nap",
+            "full_name": "Naples",
+            "x_pos": 439,
+            "y_pos": 598,
+            "x_legend_pos": 439,
+            "y_legend_pos": 584
+        },
+        "43": {
+            "name": "AtN",
+            "full_name": "Atlantique Nord",
+            "x_pos": 106,
+            "y_pos": 262,
+            "x_legend_pos": 106,
+            "y_legend_pos": 248
+        },
+        "44": {
+            "name": "MNg",
+            "full_name": "Mer de Norvège",
+            "x_pos": 286,
+            "y_pos": 112,
+            "x_legend_pos": 286,
+            "y_legend_pos": 98
+        },
+        "45": {
+            "name": "Nrd",
+            "full_name": "Mer du Nord",
+            "x_pos": 290,
+            "y_pos": 296,
+            "x_legend_pos": 290,
+            "y_legend_pos": 282
+        },
+        "46": {
+            "name": "Nge",
+            "full_name": "Norvège",
+            "x_pos": 357,
+            "y_pos": 223,
+            "x_legend_pos": 357,
+            "y_legend_pos": 209
+        },
+        "47": {
+            "name": "Par",
+            "full_name": "Paris",
+            "x_pos": 263,
+            "y_pos": 471,
+            "x_legend_pos": 263,
+            "y_legend_pos": 457
+        },
+        "48": {
+            "name": "Pic",
+            "full_name": "Picardie",
+            "x_pos": 279,
+            "y_pos": 427,
+            "x_legend_pos": 279,
+            "y_legend_pos": 413
+        },
+        "49": {
+            "name": "Pie",
+            "full_name": "Piémont",
+            "x_pos": 355,
+            "y_pos": 515,
+            "x_legend_pos": 355,
+            "y_legend_pos": 501
+        },
+        "50": {
+            "name": "Por",
+            "full_name": "Portugal",
+            "x_pos": 115,
+            "y_pos": 587,
+            "x_legend_pos": 115,
+            "y_legend_pos": 573
+        },
+        "51": {
+            "name": "Pru",
+            "full_name": "Prusse",
+            "x_pos": 437,
+            "y_pos": 370,
+            "x_legend_pos": 437,
+            "y_legend_pos": 356
+        },
+        "52": {
+            "name": "Rom",
+            "full_name": "Rome",
+            "x_pos": 393,
+            "y_pos": 571,
+            "x_legend_pos": 393,
+            "y_legend_pos": 557
+        },
+        "53": {
+            "name": "Ruh",
+            "full_name": "Ruhr",
+            "x_pos": 339,
+            "y_pos": 423,
+            "x_legend_pos": 339,
+            "y_legend_pos": 409
+        },
+        "54": {
+            "name": "Rou",
+            "full_name": "Roumanie",
+            "x_pos": 550,
+            "y_pos": 507,
+            "x_legend_pos": 550,
+            "y_legend_pos": 493
+        },
+        "55": {
+            "name": "Ser",
+            "full_name": "Serbie",
+            "x_pos": 507,
+            "y_pos": 533,
+            "x_legend_pos": 507,
+            "y_legend_pos": 519
+        },
+        "56": {
+            "name": "Seb",
+            "full_name": "Sébastopol",
+            "x_pos": 746,
+            "y_pos": 429,
+            "x_legend_pos": 746,
+            "y_legend_pos": 415
+        },
+        "57": {
+            "name": "Sil",
+            "full_name": "Silésie",
+            "x_pos": 460,
+            "y_pos": 417,
+            "x_legend_pos": 460,
+            "y_legend_pos": 403
+        },
+        "58": {
+            "name": "Ska",
+            "full_name": "Skaggerak",
+            "x_pos": 364,
+            "y_pos": 280,
+            "x_legend_pos": 364,
+            "y_legend_pos": 266
+        },
+        "59": {
+            "name": "Smy",
+            "full_name": "Smyrne",
+            "x_pos": 691,
+            "y_pos": 605,
+            "x_legend_pos": 691,
+            "y_legend_pos": 591
+        },
+        "60": {
+            "name": "Esp",
+            "full_name": "Espagne",
+            "x_pos": 158,
+            "y_pos": 614,
+            "x_legend_pos": 158,
+            "y_legend_pos": 600
+        },
+        "61": {
+            "name": "StP",
+            "full_name": "Saint-Pétersbourg",
+            "x_pos": 693,
+            "y_pos": 110,
+            "x_legend_pos": 693,
+            "y_legend_pos": 96
+        },
+        "62": {
+            "name": "Sue",
+            "full_name": "Suède",
+            "x_pos": 423,
+            "y_pos": 161,
+            "x_legend_pos": 423,
+            "y_legend_pos": 147
+        },
+        "63": {
+            "name": "Syr",
+            "full_name": "Syrie",
+            "x_pos": 763,
+            "y_pos": 696,
+            "x_legend_pos": 763,
+            "y_legend_pos": 682
+        },
+        "64": {
+            "name": "Tri",
+            "full_name": "Trieste",
+            "x_pos": 459,
+            "y_pos": 522,
+            "x_legend_pos": 459,
+            "y_legend_pos": 508
+        },
+        "65": {
+            "name": "Tun",
+            "full_name": "Tunis",
+            "x_pos": 351,
+            "y_pos": 691,
+            "x_legend_pos": 351,
+            "y_legend_pos": 677
+        },
+        "66": {
+            "name": "Tos",
+            "full_name": "Toscane",
+            "x_pos": 376,
+            "y_pos": 545,
+            "x_legend_pos": 376,
+            "y_legend_pos": 531
+        },
+        "67": {
+            "name": "MTy",
+            "full_name": "Mer Tyrrhénienne",
+            "x_pos": 389,
+            "y_pos": 615,
+            "x_legend_pos": 389,
+            "y_legend_pos": 601
+        },
+        "68": {
+            "name": "Tyr",
+            "full_name": "Tyrol",
+            "x_pos": 404,
+            "y_pos": 478,
+            "x_legend_pos": 404,
+            "y_legend_pos": 464
+        },
+        "69": {
+            "name": "Ukr",
+            "full_name": "Ukraine",
+            "x_pos": 576,
+            "y_pos": 404,
+            "x_legend_pos": 576,
+            "y_legend_pos": 390
+        },
+        "70": {
+            "name": "Ven",
+            "full_name": "Venise",
+            "x_pos": 384,
+            "y_pos": 516,
+            "x_legend_pos": 384,
+            "y_legend_pos": 502
+        },
+        "71": {
+            "name": "Vie",
+            "full_name": "Vienne",
+            "x_pos": 431,
+            "y_pos": 472,
+            "x_legend_pos": 431,
+            "y_legend_pos": 458
+        },
+        "72": {
+            "name": "PGa",
+            "full_name": "Pays de Galles",
+            "x_pos": 224,
+            "y_pos": 375,
+            "x_legend_pos": 224,
+            "y_legend_pos": 361
+        },
+        "73": {
+            "name": "Var",
+            "full_name": "Varsovie",
+            "x_pos": 496,
+            "y_pos": 366,
+            "x_legend_pos": 496,
+            "y_legend_pos": 352
+        },
+        "74": {
+            "name": "MOc",
+            "full_name": "Méditerranée occidentale",
+            "x_pos": 298,
+            "y_pos": 635,
+            "x_legend_pos": 298,
+            "y_legend_pos": 621
+        },
+        "75": {
+            "name": "Yor",
+            "full_name": "Yorkshire",
+            "x_pos": 247,
+            "y_pos": 360,
+            "x_legend_pos": 247,
+            "y_legend_pos": 346
+        },
+        "76": {
+            "name": "",
+            "full_name": "",
+            "x_pos": 592,
+            "y_pos": 528,
+            "x_legend_pos": 592,
+            "y_legend_pos": 514
+        },
+        "77": {
+            "name": "",
+            "full_name": "",
+            "x_pos": 564,
+            "y_pos": 560,
+            "x_legend_pos": 564,
+            "y_legend_pos": 546
+        },
+        "78": {
+            "name": "",
+            "full_name": "",
+            "x_pos": 182,
+            "y_pos": 535,
+            "x_legend_pos": 182,
+            "y_legend_pos": 521
+        },
+        "79": {
+            "name": "",
+            "full_name": "",
+            "x_pos": 183,
+            "y_pos": 638,
+            "x_legend_pos": 183,
+            "y_legend_pos": 624
+        },
+        "80": {
+            "name": "",
+            "full_name": "",
+            "x_pos": 617,
+            "y_pos": 90,
+            "x_legend_pos": 617,
+            "y_legend_pos": 76
+        },
+        "81": {
+            "name": "",
+            "full_name": "",
+            "x_pos": 540,
+            "y_pos": 248,
+            "x_legend_pos": 540,
+            "y_legend_pos": 234
+        }
+    },
+    "centers": {
+        "1": {
+            "x_pos": 674,
+            "y_pos": 556
+        },
+        "2": {
+            "x_pos": 300,
+            "y_pos": 404
+        },
+        "3": {
+            "x_pos": 401,
+            "y_pos": 376
+        },
+        "4": {
+            "x_pos": 196,
+            "y_pos": 434
+        },
+        "5": {
+            "x_pos": 473,
+            "y_pos": 461
+        },
+        "6": {
+            "x_pos": 539,
+            "y_pos": 537
+        },
+        "7": {
+            "x_pos": 611,
+            "y_pos": 548
+        },
+        "8": {
+            "x_pos": 386,
+            "y_pos": 318
+        },
+        "9": {
+            "x_pos": 232,
+            "y_pos": 307
+        },
+        "10": {
+            "x_pos": 552,
+            "y_pos": 615
+        },
+        "11": {
+            "x_pos": 308,
+            "y_pos": 378
+        },
+        "12": {
+            "x_pos": 364,
+            "y_pos": 358
+        },
+        "13": {
+            "x_pos": 251,
+            "y_pos": 391
+        },
+        "14": {
+            "x_pos": 232,
+            "y_pos": 347
+        },
+        "15": {
+            "x_pos": 306,
+            "y_pos": 537
+        },
+        "16": {
+            "x_pos": 635,
+            "y_pos": 266
+        },
+        "17": {
+            "x_pos": 383,
+            "y_pos": 455
+        },
+        "18": {
+            "x_pos": 422,
+            "y_pos": 584
+        },
+        "19": {
+            "x_pos": 378,
+            "y_pos": 238
+        },
+        "20": {
+            "x_pos": 273,
+            "y_pos": 444
+        },
+        "21": {
+            "x_pos": 101,
+            "y_pos": 589
+        },
+        "22": {
+            "x_pos": 405,
+            "y_pos": 572
+        },
+        "23": {
+            "x_pos": 570,
+            "y_pos": 499
+        },
+        "24": {
+            "x_pos": 491,
+            "y_pos": 513
+        },
+        "25": {
+            "x_pos": 665,
+            "y_pos": 458
+        },
+        "26": {
+            "x_pos": 616,
+            "y_pos": 605
+        },
+        "27": {
+            "x_pos": 177,
+            "y_pos": 577
+        },
+        "28": {
+            "x_pos": 559,
+            "y_pos": 217
+        },
+        "29": {
+            "x_pos": 432,
+            "y_pos": 248
+        },
+        "30": {
+            "x_pos": 420,
+            "y_pos": 498
+        },
+        "31": {
+            "x_pos": 365,
+            "y_pos": 662
+        },
+        "32": {
+            "x_pos": 393,
+            "y_pos": 496
+        },
+        "33": {
+            "x_pos": 440,
+            "y_pos": 451
+        },
+        "34": {
+            "x_pos": 480,
+            "y_pos": 373
+        }
+    },
+    "seasons": {
+        "1": {
+            "name": "Printemps"
+        },
+        "2": {
+            "name": "Ete"
+        },
+        "3": {
+            "name": "Automne"
+        },
+        "4": {
+            "name": "Hiver"
+        },
+        "5": {
+            "name": "Ajustements"
+        }
+    },
+    "orders": {
+        "1": {
+            "name": "Attaquer"
+        },
+        "2": {
+            "name": "Soutenir offensivement"
+        },
+        "3": {
+            "name": "Soutenir defensivement"
+        },
+        "4": {
+            "name": "Tenir"
+        },
+        "5": {
+            "name": "Convoyer"
+        },
+        "6": {
+            "name": "Retraiter"
+        },
+        "7": {
+            "name": "Disperser"
+        },
+        "8": {
+            "name": "Construire"
+        },
+        "9": {
+            "name": "Supprimer"
+        }
+    }
+}
