@@ -60,14 +60,6 @@ def get_stats_content():
     return stats_content
 
 
-def information_about_create_account():
-    """ information_about_create_account """
-
-    information = html.DIV(Class='note')
-    information <= "Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'"
-    return information
-
-
 def formatted_news(news_content_loaded):
     """ formatted_news """
 
@@ -177,8 +169,8 @@ def show_news():
     title6 = html.H4("Divers")
     MY_SUB_PANEL <= title6
 
-    MY_SUB_PANEL <= information_about_create_account()
-    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
+    MY_SUB_PANEL <= html.DIV("Pour les daltoniens, trois cartes avec des couleurs spécifiques ont été créées, allez dans 'accueil/choix d'interface'")
 
     # ----
     title7 = html.H4("Statistiques")
@@ -186,6 +178,7 @@ def show_news():
 
     stats_content = get_stats_content()
     MY_SUB_PANEL <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité."
+
 
 def show_links():
     """ show_links """
