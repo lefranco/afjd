@@ -29,63 +29,63 @@
             "letter_name": "M",
             "red": 0,
             "green": 0,
-            "blue": 255
+            "blue": 0
         },
         "1": {
             "name": "Angleterre",
             "adjective_name": "anglais",
             "letter_name": "E",
-            "red": 0,
-            "green": 0,
-            "blue": 0
+            "red": 68,
+            "green": 119,
+            "blue": 170
         },
         "2": {
             "name": "France",
             "adjective_name": "francais",
             "letter_name": "F",
-            "red": 170,
-            "green": 85,
-            "blue": 0
+            "red": 102,
+            "green": 204,
+            "blue": 238
         },
         "3": {
             "name": "Allemagne",
             "adjective_name": "allemand",
             "letter_name": "G",
-            "red": 85,
-            "green": 170,
-            "blue": 0
+            "red": 170,
+            "green": 51,
+            "blue": 119
         },
         "4": {
             "name": "Italie",
             "adjective_name": "italien",
             "letter_name": "I",
-            "red": 170,
-            "green": 255,
-            "blue": 0
+            "red": 34,
+            "green": 136,
+            "blue": 51
         },
         "5": {
             "name": "Autriche",
             "adjective_name": "autrichien",
             "letter_name": "A",
-            "red": 0,
-            "green": 255,
-            "blue": 0
+            "red": 238,
+            "green": 102,
+            "blue": 119
         },
         "6": {
             "name": "Russie",
             "adjective_name": "russe",
             "letter_name": "R",
-            "red": 255,
-            "green": 0,
-            "blue": 0
+            "red": 187,
+            "green": 187,
+            "blue": 187
         },
         "7": {
             "name": "Turquie",
             "adjective_name": "turc",
             "letter_name": "T",
-            "red": 255,
-            "green": 170,
-            "blue": 0
+            "red": 204,
+            "green": 187,
+            "blue": 68
         }
     },
     "coasts": {
