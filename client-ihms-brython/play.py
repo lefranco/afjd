@@ -3056,7 +3056,7 @@ def negotiate():
     fieldset = html.FIELDSET()
     legend_declaration = html.LEGEND("Votre message", title="Qu'avez vous à lui/leur dire ?")
     fieldset <= legend_declaration
-    input_message = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_message = html.TEXTAREA(type="text", rows=8, cols=80)
     if CONTENT_BACKUP is not None:
         input_message <= CONTENT_BACKUP
     fieldset <= input_message
@@ -3377,7 +3377,7 @@ def declare():
     fieldset = html.FIELDSET()
     legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer à tout le monde ?")
     fieldset <= legend_declaration
-    input_declaration = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_declaration = html.TEXTAREA(type="text", rows=8, cols=80)
     fieldset <= input_declaration
     form <= fieldset
 

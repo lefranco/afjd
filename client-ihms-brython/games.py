@@ -591,7 +591,7 @@ def change_description_game():
     fieldset = html.FIELDSET()
     legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'une partie entre étudiants de l'ETIAM'")
     fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_description = html.TEXTAREA(type="text", rows=8, cols=80)
     input_description <= description_loaded
     fieldset <= input_description
     form <= fieldset

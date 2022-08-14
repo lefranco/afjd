@@ -822,7 +822,7 @@ def sendmail():
     fieldset = html.FIELDSET()
     legend_message = html.LEGEND("Votre message", title="Qu'avez vous à lui dire ?")
     fieldset <= legend_message
-    input_message = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_message = html.TEXTAREA(type="text", rows=8, cols=80)
     fieldset <= input_message
     form <= fieldset
 
