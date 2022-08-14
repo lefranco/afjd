@@ -109,27 +109,13 @@ def show_news():
     MY_SUB_PANEL <= link1
 
     # ----
+
     title2 = html.H4("Charte du bon diplomate")
     MY_SUB_PANEL <= title2
 
-    chart = html.OL()
-
-    chart <= html.LI("Le bon diplomate respecte ses partenaires et échange avec eux de manière cordiale en toutes circonstances")
-    chart <= html.LI("Le bon diplomate ne s'inscrit pas plusieurs fois sur une partie")
-    chart <= html.LI("Le bon diplomate respecte scrupuleusement la règle de non communication par quelque moyen que ce soit sur les parties qui appliquent cette restriction (hormis la communication via les ordres passés)")
-    chart <= html.LI("Le bon diplomate n’abandonne pas la partie sur laquelle il s'est engagé")
-    chart <= html.LI("Le bon diplomate est ponctuel dans les rendu d'ordres, et communique avec l'arbitre en cas de problème")
-    chart <= html.LI("Le bon diplomate ne cherche pas à pourrir une partie qui tourne à son désavantage")
-    chart <= html.LI("Le bon diplomate reste fair-play et se garde bien de tricher et de contourner les règles à son avantage")
-    chart <= html.LI("Le bon diplomate qui découvre une faille du système se doit de la signaler - sans délai si cette faille permet de tricher")
-    chart <= html.LI("L’arbitre de la partie veille à son bon déroulement et au plus grand plaisir de chacun")
-    chart <= html.LI("L’arbitre est maître du choix des joueurs dans la partie")
-    chart <= html.LI("L’arbitre a toujours raison")
-    chart <= html.LI("Si la décision de l'arbitre est contestée, le bon diplomate lève un incident et/ou se rapproche du conseil de l'association qui statuera")
-    chart <= html.LI("Le bon diplomate accepte l’idée que le conseil de l’association, dans sa grande sagesse, a toujours raison, mais garde toujours la possibilité de venir candidater lors de la prochaine Assemblée Générale afin d’apporter sa contribution constructive à l’évolution de la jurisprudence")
-    chart <= html.LI("Le conseil se réserve le droit prononcer l'exclusion d'un joueur dans les cas extrêmes")
-
-    MY_SUB_PANEL <= chart
+    link2 = html.A(href="./docs/charte.pdf", target="_blank")
+    link2 <= "Lien vers la charte du bon diplomate"
+    MY_SUB_PANEL <= link2
 
     # ----
 
