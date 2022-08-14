@@ -614,6 +614,10 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             incident2 = incidents2.Incident2(int(game_id), role_num, advancement)
             incident2.delete_database(sql_executor)
 
+        # delete transitions
+        for transition in transitions.Transition.list_by_game_id(sql_executor, int(game_id)):
+            transition.delete_database(sql_executor)
+
         # finally delete game
         assert game is not None
         game.delete_database(sql_executor)
