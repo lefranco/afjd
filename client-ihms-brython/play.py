@@ -3253,6 +3253,12 @@ def negotiate():
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
+    # advice to report
+    label_unsuitable_content = html.DIV(Class="important")
+    label_unsuitable_content <= "Contenu inaproprié ? Déclarez un incident ! (reperez le message par sa date, son auteur et son destinataire)"
+    MY_SUB_PANEL <= label_unsuitable_content
+    MY_SUB_PANEL <= html.BR()
+
     # messages already
     MY_SUB_PANEL <= messages_table
     MY_SUB_PANEL <= html.BR()
@@ -3522,6 +3528,12 @@ def declare():
         MY_SUB_PANEL <= form
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
+
+    # advice to report
+    label_unsuitable_content = html.DIV(Class="important")
+    label_unsuitable_content <= "Contenu inaproprié ? Déclarez un incident ! (reperez le message par sa date)"
+    MY_SUB_PANEL <= label_unsuitable_content
+    MY_SUB_PANEL <= html.BR()
 
     # declarations already
     MY_SUB_PANEL <= declarations_table
