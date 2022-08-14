@@ -327,11 +327,18 @@ def my_opportunities():
         data['join'] = None
         data['allocated'] = None
 
+        # highlite ongoing games (replacement)
+        field = 'current_state'
+        value = data[field]
+        if value == 1:
+            colour = config.NEED_REPLACEMENT
+        else:
+            colour = None
+
         row = html.TR()
         for field in fields:
 
             value = data[field]
-            colour = None
             game_name = data['name']
 
             if field == 'go_game':
@@ -393,16 +400,6 @@ def my_opportunities():
 
                 time_unit = 60 if data['fast'] else 60 * 60
                 approach_duration = 24 * 60 * 60
-
-                # we are after deadline + grace
-                if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
-                    colour = config.PASSED_GRACE_COLOUR
-                # we are after deadline
-                elif time_stamp_now > deadline_loaded:
-                    colour = config.PASSED_DEADLINE_COLOUR
-                # deadline is today
-                elif time_stamp_now > deadline_loaded - approach_duration:
-                    colour = config.APPROACHING_DEADLINE_COLOUR
 
             if field == 'current_state':
                 state_loaded = value

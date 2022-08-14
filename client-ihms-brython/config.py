@@ -39,6 +39,7 @@ PASSED_GRACE_COLOUR = 'Red'
 PASSED_DEADLINE_COLOUR = 'DarkOrange'
 APPROACHING_DEADLINE_COLOUR = 'Yellow'
 
+NEED_REPLACEMENT = 'Pink'
 
 #  kept to show how to write json file
 #  x = json.dumps(SERVER_CONFIG, indent=4)
