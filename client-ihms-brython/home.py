@@ -669,7 +669,7 @@ def declare_incident():
     fieldset = html.FIELDSET()
     legend_description = html.LEGEND("description", title="Description du problème")
     fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_description = html.TEXTAREA(type="text", rows=8, cols=80)
     fieldset <= input_description
     form <= fieldset
 
