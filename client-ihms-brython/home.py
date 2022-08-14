@@ -199,15 +199,6 @@ def show_links():
     link4 <= "Si vous voulez vous aussi développer votre front end..."
     MY_SUB_PANEL <= link4
 
-    # ----
-
-    title5 = html.H4("Copinage")
-    MY_SUB_PANEL <= title5
-
-    link5 = html.A(href="https://visitercracovie.wordpress.com/", target="_blank")
-    link5 <= "Si vous savez pas quoi faire pendant vos vacances..."
-    MY_SUB_PANEL <= link5
-
 
 def all_games(state_name):
     """all_games """
