@@ -295,12 +295,12 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['id', 'go_game', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']
+    fields = ['id', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'go_game']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'id': 'id', 'go_game': 'aller dans la partie', 'master': 'arbitre', 'variant': 'variante', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
+        field_fr = {'id': 'id', 'master': 'arbitre', 'variant': 'variante', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'go_game': 'aller dans la partie'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -308,7 +308,7 @@ def all_games(state_name):
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['go_game', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']:
+        if field in ['master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'go_game']:
             if field == 'go_game':
 
                 # button for sorting by creation date
@@ -406,8 +406,8 @@ def all_games(state_name):
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
         data['id'] = None
-        data['go_game'] = None
         data['master'] = None
+        data['go_game'] = None
 
         row = html.TR()
         for field in fields:
@@ -418,18 +418,6 @@ def all_games(state_name):
 
             if field == 'id':
                 value = game_id
-
-            if field == 'go_game':
-                if storage['GAME_ACCESS_MODE'] == 'button':
-                    form = html.FORM()
-                    input_jump_game = html.INPUT(type="submit", value=game_name)
-                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                    form <= input_jump_game
-                    value = form
-                else:
-                    link = html.A(href=f"?game={game_name}", target="_blank")
-                    link <= game_name
-                    value = link
 
             if field == 'master':
                 game_name = data['name']
@@ -483,6 +471,18 @@ def all_games(state_name):
                 advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
                 advancement_season_readable = variant_data.name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
+
+            if field == 'go_game':
+                if storage['GAME_ACCESS_MODE'] == 'button':
+                    form = html.FORM()
+                    input_jump_game = html.INPUT(type="submit", value=game_name)
+                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                    form <= input_jump_game
+                    value = form
+                else:
+                    link = html.A(href=f"?game={game_name}", target="_blank")
+                    link <= game_name
+                    value = link
 
             col = html.TD(value)
             if colour is not None:

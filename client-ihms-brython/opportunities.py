@@ -201,8 +201,6 @@ def my_opportunities():
     MY_PANEL <= information_about_games()
     MY_PANEL <= html.BR()
 
-    time_stamp_now = time.time()
-
     # button for switching mode
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
@@ -217,12 +215,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['go_game', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
+    fields = ['join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated', 'go_game']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'go_game': 'aller dans la partie', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(**)'}[field]
+        field_fr = {'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(**)', 'go_game': 'aller dans la partie'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -230,7 +228,7 @@ def my_opportunities():
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['go_game', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']:
+        if field in ['master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'go_game']:
             if field == 'go_game':
 
                 # button for sorting by creation date
@@ -322,10 +320,10 @@ def my_opportunities():
             variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
             memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded_str, interface_chosen)] = variant_data
 
-        data['go_game'] = None
         data['master'] = None
         data['join'] = None
         data['allocated'] = None
+        data['go_game'] = None
 
         # highlite ongoing games (replacement)
         field = 'current_state'
@@ -340,18 +338,6 @@ def my_opportunities():
 
             value = data[field]
             game_name = data['name']
-
-            if field == 'go_game':
-                if storage['GAME_ACCESS_MODE'] == 'button':
-                    form = html.FORM()
-                    input_jump_game = html.INPUT(type="submit", value=game_name)
-                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                    form <= input_jump_game
-                    value = form
-                else:
-                    link = html.A(href=f"?game={game_name}", target="_blank")
-                    link <= game_name
-                    value = link
 
             if field == 'join':
                 if game_id_str in player_games:
@@ -398,9 +384,6 @@ def my_opportunities():
                 deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
                 value = deadline_loaded_str
 
-                time_unit = 60 if data['fast'] else 60 * 60
-                approach_duration = 24 * 60 * 60
-
             if field == 'current_state':
                 state_loaded = value
                 for possible_state_code, possible_state_desc in config.STATE_CODE_TABLE.items():
@@ -421,6 +404,18 @@ def my_opportunities():
                 value = f"{allocated}/{capacity}"
                 if allocated == capacity:
                     colour = config.ALL_ORDERS_IN_COLOUR
+
+            if field == 'go_game':
+                if storage['GAME_ACCESS_MODE'] == 'button':
+                    form = html.FORM()
+                    input_jump_game = html.INPUT(type="submit", value=game_name)
+                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                    form <= input_jump_game
+                    value = form
+                else:
+                    link = html.A(href=f"?game={game_name}", target="_blank")
+                    link <= game_name
+                    value = link
 
             col = html.TD(value)
             if colour is not None:
