@@ -78,6 +78,14 @@ REPORT_LOADED = {}
 # loaded in load_special_stuff
 GAME_PLAYERS_DICT = {}
 
+ARRIVAL = None
+
+
+def set_arrival(arrival):
+    """ set_arrival """
+    global ARRIVAL
+    ARRIVAL = arrival
+
 
 def readable_season(advancement):
     """ readable_season """
@@ -5664,12 +5672,17 @@ def render(panel_middle):
 
         if ROLE_ID is not None:
 
-            if ROLE_ID == 0:
-                # Arbitre
-                ITEM_NAME_SELECTED = 'arbitrer'
+            if ARRIVAL == 'declarations':
+                ITEM_NAME_SELECTED = 'déclarer'
+            elif ARRIVAL == 'messages':
+                ITEM_NAME_SELECTED = 'négocier'
             else:
-                # Joueur
-                ITEM_NAME_SELECTED = 'ordonner'
+                if ROLE_ID == 0:
+                    # Arbitre
+                    ITEM_NAME_SELECTED = 'arbitrer'
+                else:
+                    # Joueur
+                    ITEM_NAME_SELECTED = 'ordonner'
 
         else:
 
@@ -5678,5 +5691,6 @@ def render(panel_middle):
                 # Admin
                 ITEM_NAME_SELECTED = 'participants'
 
+    set_arrival(None)
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
