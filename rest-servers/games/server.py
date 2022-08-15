@@ -85,7 +85,7 @@ GAME_PARSER.add_argument('speed_retreats', type=int, required=False)
 GAME_PARSER.add_argument('cd_possible_retreats', type=int, required=False)
 GAME_PARSER.add_argument('speed_adjustments', type=int, required=False)
 GAME_PARSER.add_argument('cd_possible_builds', type=int, required=False)
-GAME_PARSER.add_argument('cd_possible_removals', type=int, required=False)
+GAME_PARSER.add_argument('used_for_elo', type=int, required=False)
 GAME_PARSER.add_argument('play_weekend', type=int, required=False)
 GAME_PARSER.add_argument('manual', type=int, required=False)
 GAME_PARSER.add_argument('access_code', type=int, required=False)
@@ -1443,7 +1443,7 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
 class GamesNeedingReplacementRessource(flask_restful.Resource):  # type: ignore
     """ GamesNeedingReplacementRessource """
 
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=no-self-use
         """
         Gets ongoing games that do not have all players (needing replacement)
         EXPOSED
@@ -1460,7 +1460,7 @@ class GamesNeedingReplacementRessource(flask_restful.Resource):  # type: ignore
         recruiting_games = [tr[0] for tr in full_games_data if tr[1] < tr[2]]
 
         # keep only the ongoing ones
-        data = list()
+        data = []
         for game_id in recruiting_games:
             game = games.Game.find_by_identifier(sql_executor, game_id)
             assert game is not None
