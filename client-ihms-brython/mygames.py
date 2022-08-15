@@ -684,7 +684,7 @@ def my_games(state_name):
                     form <= input_jump_game
                     value = form
                 else:
-                    link = html.A(href=f"?game={game_name}", target="_blank")
+                    link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
                     link <= game_name
                     value = link
 
