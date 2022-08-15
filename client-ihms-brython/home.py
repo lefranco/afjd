@@ -679,10 +679,20 @@ def declare_incident():
     title4 = html.H3("Déclarer un incident")
     MY_SUB_PANEL <= title4
 
-    text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ? Vous ne parvenez pas entrer vos ordres et la date limite est ce soir ? Votre partie n'avance pas depuis des jours et il semble que votre arbitre se soit endormi ? Vous n'êtes pas convaincu par les explications de l'arbitre sur la résolution dans la partie ? Un joueur sur la partie a un comportement antisocial et l'arbitre ne fait rien ? Vous êtes persuadé qu'il y a de la triche quelque part ?")
+    text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ?")
     MY_SUB_PANEL <= text21
 
-    text22 = html.P("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs) et n'oubliez pas de bien préciser une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu...")
+    possible_situations = html.UL()
+    possible_situations <= html.LI("Vous ne parvenez pas entrer vos ordres et la date limite est ce soir ?")
+    possible_situations <= html.LI("Votre partie n'avance pas depuis des jours et il semble que votre arbitre se soit endormi ?")
+    possible_situations <= html.LI("Vous n'êtes pas convaincu par les explications de l'arbitre sur la résolution dans la partie ?")
+    possible_situations <= html.LI("Vous soupçonnez un joueur d'utiliser plusieurs fois le même compte sur la partie ?")
+    possible_situations <= html.LI("Un joueur sur la partie a un comportement antisocial et l'arbitre ne fait rien ?")
+    possible_situations <= html.LI("Vous êtes arbitre et un joueur commence sérieusement à vous agacer ?")
+    possible_situations <= html.LI("Vous êtes persuadé qu'il y a de la triche quelque part ?")
+    MY_SUB_PANEL <= possible_situations
+
+    text22 = html.P("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs)")
     MY_SUB_PANEL <= text22
 
     text23 = html.P("Vous pouvez utiliser le formulaire ci-dessous pour déclarer un incident :")
@@ -721,7 +731,9 @@ def declare_incident():
     fieldset <= input_description
     form <= fieldset
 
-    form <= html.BR()
+    fieldset = html.FIELDSET()
+    fieldset <= "Il est toujours bienvenu de fournir une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu..."
+    form <= fieldset
 
     input_submit_incident = html.INPUT(type="submit", value="soumettre l'incident")
     input_submit_incident.bind("click", submit_incident_callback)
