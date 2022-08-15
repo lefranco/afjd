@@ -679,7 +679,7 @@ def declare_incident():
     title4 = html.H3("Déclarer un incident")
     MY_SUB_PANEL <= title4
 
-    text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté ?")
+    text21 = html.P("C'est arrivé, le système s'est bloqué ou le résultat n'était pas celui escompté...")
     MY_SUB_PANEL <= text21
 
     possible_situations = html.UL()
@@ -699,9 +699,6 @@ def declare_incident():
     MY_SUB_PANEL <= text23
 
     form = html.FORM()
-
-    form <= html.DIV("Pas d'espaces ni de tirets dans le pseudo", Class='note')
-    form <= html.BR()
 
     fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("pseudo (facultatif)", title="Votre pseudo (si applicable)")
