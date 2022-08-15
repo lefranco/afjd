@@ -278,12 +278,15 @@ def show_replacement_data():
 
     # gather games to players
     player_games_dict = {}
-    for player_id, games_id in players_alloc.items():
+    for player_id in players_dict:
         if not players_dict[str(player_id)]['replace']:
             continue
         player = players_dict[str(player_id)]['pseudo']
         if player not in player_games_dict:
             player_games_dict[player] = []
+        if player_id not in players_alloc:
+            continue
+        games_id = players_alloc[player_id]
         for game_id in games_id:
             game = games_dict[str(game_id)]['name']
             player_games_dict[player].append(game)
