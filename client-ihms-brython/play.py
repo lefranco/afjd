@@ -4103,7 +4103,11 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", f"Message de bienvenue émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", "Message de demande de remplacement émis vers les remplaçants potentiels", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            game_master()
 
         subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
@@ -4112,19 +4116,20 @@ def game_master():
 
         body = "Bonjour !"
         body += "\n"
-        body += "Cette partie a besoin d'un remplaçant. Vous aves demandé à être notifié dans de tel cas. Son arbitre vous sollicite !"
+        body += "Cette partie a besoin d'un remplaçant. Vous aves demandé à être notifié dans un tel cas. Son arbitre vous sollicite !"
         body += "\n"
         body += f"Le rôle qui est libre est {role_name}."
+        body += "\n"
+        body += "Si ces notifications vous agacent, allez sur le site modifier votre compte..."
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
         body += f"https://diplomania-gen.fr?game={GAME}"
 
-        player_id_str = role2pseudo[role_id]
-        player_id = int(player_id_str)
-        pseudo_there = id2pseudo[player_id]
-
-        addressed_id = PLAYERS_DICT[pseudo_there]
-        addressees = [addressed_id]
+        players_dict = common.get_players_data()
+        if not players_dict:
+            alert("Erreur chargement dictionnaire joueurs")
+            return
+        addressees = [p for p in players_dict if players_dict[str(p)]['replace']]
 
         json_dict = {
             'pseudo': PSEUDO,
@@ -4543,15 +4548,25 @@ def game_master():
         form = ""
         if not pseudo_there:
             form = html.FORM()
-            input_for_role = html.SELECT(type="select-one", value="", display='inline')
-            for play_role_pseudo in sorted(possible_given_role):
-                option = html.OPTION(play_role_pseudo)
-                input_for_role <= option
-            form <= input_for_role
-            form <= " "
-            input_put_in_role = html.INPUT(type="submit", value="attribuer le rôle", title="Ceci attribuera le rôle au joueur", display='inline')
-            input_put_in_role.bind("click", lambda e, i=input_for_role, r=role_id: allocate_role_callback(e, i, r))
-            form <= input_put_in_role
+
+            if not possible_given_role:
+
+                input_contact_replacers = html.INPUT(type="submit", value="contacter les remplaçants", title="Ceci contactera tous les remplaçants déclarés volontaires du site", display='inline')
+                input_contact_replacers.bind("click", lambda e, r=role_id: send_need_replacement_callback(e, r))
+                form <= input_contact_replacers
+
+            else:
+
+                input_for_role = html.SELECT(type="select-one", value="", display='inline')
+                for play_role_pseudo in sorted(possible_given_role):
+                    option = html.OPTION(play_role_pseudo)
+                    input_for_role <= option
+                form <= input_for_role
+                form <= " "
+                input_put_in_role = html.INPUT(type="submit", value="attribuer le rôle", title="Ceci attribuera le rôle au joueur", display='inline')
+                input_put_in_role.bind("click", lambda e, i=input_for_role, r=role_id: allocate_role_callback(e, i, r))
+                form <= input_put_in_role
+
         col <= form
         row <= col
 
