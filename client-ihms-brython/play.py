@@ -4574,6 +4574,9 @@ def game_master():
 
         game_admin_table <= row
 
+    MY_SUB_PANEL <= html.DIV("Pour bénéficier du bouton premettant de contacter tous les remplaçants, il faut retirer le rôle au joueur (ci-dessous) puis éjecter le joueur de la partie (dans le menu appariement.)", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= game_admin_table
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
