@@ -4642,6 +4642,7 @@ def show_game_parameters():
 
         parameter_name, explanation, effect, implemented = {
             'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de courriel de notification aux joueurs", "OUI"),
+            'used_for_elo': ("utilisée pour le calcul du élo", "oui ou non", "Le résultat de la partie est pris en compte dans le calcul du élo des joueurs du site", "NON"),
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie - cette valeur est modifiable pendant la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres  - effacé à la fin de la partie", "OUI"),
             'nomessage_game': ("blocage des messages privés (négociation) pour la partie", "si oui on ne peut pas négocier - sauf avec l'arbitre", "Tout message privé joueur vers joueur est impossible", "OUI"),
             'nopress_game': ("blocage des messages publics (déclaration) pour la partie", "si oui on ne peut pas déclarer - sauf l'arbitre", "Tout message public de joueur est impossible", "OUI"),
@@ -4659,7 +4660,6 @@ def show_game_parameters():
             'cd_possible_moves': ("désordre civil possible pour les mouvements", "oui ou non", "L'arbitre est en mesure d'imposer un désordre civil pour une phase de mouvements", "OUI"),
             'cd_possible_retreats': ("désordre civil possible pour les retraites", "oui ou non", "L'arbitre est en mesure d'imposer un désordre civil pour une phase de retraites", "OUI"),
             'cd_possible_builds': ("désordre civil possible pour les constructions", "oui ou non", "L'arbitre est en mesure d'imposer un désordre civil pour une phase d'ajustements", "OUI"),
-            'cd_possible_removals': ("désordre civil possible pour les suppressions", "oui ou non", "(Non applicable parce que fusionné avec les constructions)", "NON"),   #
             'play_weekend': ("on joue le week-end", "oui ou non", "Le système pourra placer une date limite pendant le week-end", "OUI"),
             'access_code': ("code d'accès pour la partie", "(code de quatre chiffres)", "Le système demande un code pour rejoindre la partie", "NON - c'est pourquoi le code apparaît ici en clair !"),
             'access_restriction_reliability': ("restriction d'accès sur la fiabilité", "(valeur)", "Un seuil de fiabilité est exigé pour rejoindre la partie", "NON"),

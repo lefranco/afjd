@@ -98,6 +98,7 @@ def create_game():
             return
 
         archive = int(input_archive.checked)
+        used_for_elo = int(input_used_for_elo.checked)
         manual = int(input_manual.checked)
         anonymous = int(input_anonymous.checked)
         nomessage = int(input_nomessage.checked)
@@ -191,13 +192,14 @@ def create_game():
         if not specific_data:
             specific_data = "(sans particularité) "
 
-        description = f"Partie créée le {time_creation_str} (gmt) par {pseudo} variante {variant}. Cette partie est {specific_data}. Scorage {scoring_code}"
+        description = f"Partie créée le {time_creation_str} (gmt) par {pseudo} variante {variant}. Cette partie est {specific_data}. Scorage {scoring_code}."
         state = 0
 
         json_dict = {
             'name': name,
             'variant': variant,
             'archive': archive,
+            'used_for_elo': used_for_elo,
             'manual': manual,
 
             'anonymous': anonymous,
@@ -283,6 +285,13 @@ def create_game():
     fieldset <= legend_archive
     input_archive = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_archive
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_used_for_elo = html.LEGEND("used_for_elo", title="Partie sérieuse - les résultats de la partie comptent pour le calcul du élo sur le site")
+    fieldset <= legend_used_for_elo
+    input_used_for_elo = html.INPUT(type="checkbox", checked=True)
+    fieldset <= input_used_for_elo
     form <= fieldset
 
     fieldset = html.FIELDSET()
