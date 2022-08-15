@@ -1439,6 +1439,40 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/games-needing-replacement')
+class GamesNeedingReplacementRessource(flask_restful.Resource):  # type: ignore
+    """ GamesNeedingReplacementRessource """
+
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:  # pylint: disable=no-self-use
+        """
+        Gets ongoing games that do not have all players (needing replacement)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/games-needing-replacement - GET - get getting games needing replacement")
+
+        sql_executor = database.SqlExecutor()
+
+        full_games_data = sql_executor.execute("select games.identifier, count(*) as filled_count, capacities.value from games join allocations on allocations.game_id=games.identifier join capacities on capacities.game_id=games.identifier group by identifier", need_result=True)
+
+        # keep only the ones where a role is missing
+        assert full_games_data is not None
+        recruiting_games = [tr[0] for tr in full_games_data if tr[1] < tr[2]]
+
+        # keep only the ongoing ones
+        data = list()
+        for game_id in recruiting_games:
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+            if game.current_state != 1:
+                continue
+            data.append(game.name)
+
+        del sql_executor
+
+        return data, 200
+
+
 @API.resource('/game-positions/<game_id>')
 class GamePositionRessource(flask_restful.Resource):  # type: ignore
     """ GamePositionRessource """
