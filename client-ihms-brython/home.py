@@ -91,7 +91,6 @@ def get_needing_replacement_games():
     return needing_replacement_games_list
 
 
-
 def formatted_news(news_content_loaded):
     """ formatted_news """
 
@@ -140,6 +139,7 @@ def formatted_games(suffering_games):
 
     games_content <= game_content_table
     return games_content
+
 
 def show_news():
     """ show_home """
