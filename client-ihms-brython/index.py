@@ -189,6 +189,10 @@ OVERALL <= PANEL_MIDDLE
 if 'game' in document.query:
     QUERY_GAME_NAME = document.query['game']
     if load_game(QUERY_GAME_NAME):
+        if 'arrival' in document.query:
+            arrival = document.query['arrival']
+            # so that will go to proper page
+            play.set_arrival(arrival)
         load_option(None, 'jouer la partie sélectionnée')
     else:
         load_option(None, ITEM_NAME_SELECTED)
