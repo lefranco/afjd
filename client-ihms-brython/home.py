@@ -60,6 +60,38 @@ def get_stats_content():
     return stats_content
 
 
+def get_needing_replacement_games():
+    """ get_needing_replacement_games : returns empty list if error or no game"""
+
+    needing_replacement_games_list = []
+
+    def reply_callback(req):
+        nonlocal needing_replacement_games_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des parties qui ont besoin de remplaçant : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des parties qui ont besoin de remplaçant : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        needing_replacement_games_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/games-needing-replacement"
+
+    # getting needing replacement games list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return needing_replacement_games_list
+
+
+
 def formatted_news(news_content_loaded):
     """ formatted_news """
 
@@ -92,6 +124,22 @@ def formatted_news(news_content_loaded):
 
     return news_content
 
+
+def formatted_games(suffering_games):
+    """ formatted_games """
+
+    # init
+    games_content = html.DIV()
+
+    game_content_table = html.TABLE()
+    row = html.TR()
+    for game in suffering_games:
+        game_content_table <= row
+        col = html.TD(game)
+        row <= col
+
+    games_content <= game_content_table
+    return games_content
 
 def show_news():
     """ show_home """
@@ -135,8 +183,17 @@ def show_news():
 
     # ----
 
-    title4 = html.H4("Dernières nouvelles administrateur", Class='news')
+    title4 = html.H4("Les parties en souffrance")
     MY_SUB_PANEL <= title4
+
+    suffering_games_loaded = get_needing_replacement_games()
+    suffering_games = formatted_games(suffering_games_loaded)
+    MY_SUB_PANEL <= suffering_games
+
+    # ----
+
+    title5 = html.H4("Dernières nouvelles administrateur", Class='news')
+    MY_SUB_PANEL <= title5
 
     news_content_loaded = common.get_news_content()
     news_content = formatted_news(news_content_loaded)
@@ -144,16 +201,16 @@ def show_news():
 
     # ----
 
-    title5 = html.H4("Dernières nouvelles moderateur", Class='news')
-    MY_SUB_PANEL <= title5
+    title6 = html.H4("Dernières nouvelles moderateur", Class='news')
+    MY_SUB_PANEL <= title6
 
     news_content_loaded2 = common.get_news_content2()
     news_content2 = formatted_news(news_content_loaded2)
     MY_SUB_PANEL <= news_content2
 
     # ----
-    title6 = html.H4("Divers")
-    MY_SUB_PANEL <= title6
+    title7 = html.H4("Divers")
+    MY_SUB_PANEL <= title7
 
     MY_SUB_PANEL <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
     MY_SUB_PANEL <= html.DIV("Pour les daltoniens, trois cartes avec des couleurs spécifiques ont été créées, allez dans 'accueil/choix d'interface'")
