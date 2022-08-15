@@ -32,7 +32,7 @@ def information_about_games():
 
 
 def get_recruiting_games():
-    """ get_recruiting_games : retuens empty list if erroro or not game"""
+    """ get_recruiting_games : returns empty list if error or no game"""
 
     recruiting_games_list = []
 
