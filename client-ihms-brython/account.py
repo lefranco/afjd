@@ -197,7 +197,7 @@ def create_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_replace = html.LEGEND("Prévenez moi par mail en cas de remplacement nécessaire sur une partie")
+    legend_replace = html.LEGEND("Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
     fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_replace
@@ -612,7 +612,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("courriel", title="Le site vous notifiera de quelques très rares événements (sauf si vous demandez les notifications)")
+    legend_email = html.LEGEND("courriel (privé)", title="Le site vous notifiera de quelques très rares événements (sauf si vous demandez les notifications)")
     fieldset <= legend_email
     input_email = html.INPUT(type="email", value=email_loaded, size=MAX_LEN_EMAIL)
     fieldset <= input_email
@@ -640,7 +640,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_replace = html.LEGEND("Prévenez moi par mail en cas de remplacement nécessaire sur une partie")
+    legend_replace = html.LEGEND("Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
     fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
     fieldset <= input_replace
