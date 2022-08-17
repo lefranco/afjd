@@ -942,6 +942,10 @@ def sandbox():
     display_very_left <= html.DIV("Pour une situation initiale (ou approchant), aller dans une partie puis cliquer 'exporter vers le bac à sable'", Class='note')
     display_very_left <= html.BR()
 
+    display_very_left <= html.BR()
+    display_very_left <= html.DIV("Vous pouvez exporter (bouton 'télécharger cette position') cette carte au format PNG pour vous en servir à titre d'illustration (dans un quizz par exemple)", Class='important')
+    display_very_left <= html.BR()
+
     map_size = VARIANT_DATA.map_size
 
     # create canvas
