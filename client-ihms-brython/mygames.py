@@ -395,7 +395,7 @@ def my_games(state_name):
     games_table = html.TABLE()
 
     # the display order
-    fields = ['go_game', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
+    fields = ['name', 'go_game', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
 
     if storage['ACTION_COLUMN_MODE'] == 'displayed':
         fields.extend(['action'])
@@ -403,7 +403,7 @@ def my_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'go_game': 'aller dans la partie', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis d\'accord', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous d\'accord', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'action': 'action'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis d\'accord', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous d\'accord', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'action': 'action'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -411,9 +411,9 @@ def my_games(state_name):
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['go_game', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played']:
+        if field in ['name', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played']:
 
-            if field == 'go_game':
+            if field == 'name':
 
                 # button for sorting by creation date
                 button = html.BUTTON("&lt;date de création&gt;")
@@ -531,8 +531,6 @@ def my_games(state_name):
         data['new_messages'] = None
         data['action'] = None
 
-        arrival = None
-
         row = html.TR()
         for field in fields:
 
@@ -540,24 +538,22 @@ def my_games(state_name):
             colour = None
             game_name = data['name']
 
+            if field == 'game_name':
+                value = game_name
+
             if field == 'go_game':
 
-                # calculate first where to send user
-                if role_id is not None:
-                    if dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
-                        arrival = "declarations"
-                    elif dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
-                        arrival = "messages"
-
                 if storage['GAME_ACCESS_MODE'] == 'button':
+
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="submit", value=game_name)
-                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=arrival: select_game_callback(e, gn, gds, a))
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png", legend="aller dans la partie")
+                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
                 else:
-                    link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
-                    link <= game_name
+                    img = html.IMG(src="./images/play.png")
+                    link = html.A(href=f"?game={game_name}", target="_blank")
+                    link <= img
                     value = link
 
             if field == 'nopress_game':
@@ -680,18 +676,44 @@ def my_games(state_name):
                 if role_id is not None:
                     # popup if new
                     popup = ""
+                    form = ""
+                    link = ""
                     if dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
-                        popup = html.IMG(src="./images/press_published.jpg", title="Nouvelle(s) déclaration(s) dans cette partie !")
-                    value = popup
+
+                        arrival = "declarations"
+                        if storage['GAME_ACCESS_MODE'] == 'button':
+                            form = html.FORM()
+                            input_jump_game = html.INPUT(type="image", src="./images/press_published.jpg", value="xxx")
+                            input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=arrival: select_game_callback(e, gn, gds, a))
+                            form <= input_jump_game
+                            value = form
+                        else:
+                            img = html.IMG(src="./images/press_published.jpg")
+                            link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
+                            link <= img
+                            value = link
 
             if field == 'new_messages':
                 value = ""
                 if role_id is not None:
                     # popup if new
                     popup = ""
+                    form = ""
+                    link = ""
                     if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
-                        popup = html.IMG(src="./images/messages_received.jpg", title="Nouveau(x) message(s) dans cette partie !")
-                    value = popup
+
+                        arrival = "messages"
+                        if storage['GAME_ACCESS_MODE'] == 'button':
+                            form = html.FORM()
+                            input_jump_game = html.INPUT(type="image", src="./images/messages_received.jpg")
+                            input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=arrival: select_game_callback(e, gn, gds, a))
+                            form <= input_jump_game
+                            value = form
+                        else:
+                            img = html.IMG(src="./images/messages_received.jpg")
+                            link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
+                            link <= img
+                            value = link
 
             if field == 'action':
                 value = ""
@@ -699,13 +721,13 @@ def my_games(state_name):
                     if role_id == 0:
                         if state == 0:
                             form = html.FORM()
-                            input_start_game = html.INPUT(type="submit", value="démarrer")
+                            input_start_game = html.INPUT(type="image", src="./images/start_game.jpg")
                             input_start_game.bind("click", lambda e, g=game_name: start_game_callback(e, g))
                             form <= input_start_game
                             value = form
                         if state == 1:
                             form = html.FORM()
-                            input_stop_game = html.INPUT(type="submit", value="arrêter")
+                            input_stop_game = html.INPUT(type="image", src="./images/stop_game.png")
                             input_stop_game.bind("click", lambda e, g=game_name: stop_game_callback(e, g))
                             form <= input_stop_game
                             value = form
