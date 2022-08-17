@@ -33,7 +33,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['consulter', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'noter', 'arbitrer', 'paramètres', 'participants', 'superviser', 'observer']
+OPTIONS = ['consulter', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'noter', 'arbitrer', 'paramètres', 'événements', 'superviser', 'observer']
 
 
 @enum.unique
@@ -373,6 +373,25 @@ def make_rating_colours_window(variant_data, ratings, colours, game_scoring):
         role_score = f"{score_dis:.2f}"
         col = html.TD(role_score)
         rating_scoring_row <= col
+
+    rolename2role_id = {VARIANT_DATA.name_table[v]: k for k, v in VARIANT_DATA.roles.items()}
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+    role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
+
+    # player
+    players_row = html.TR()
+    rating_table <= players_row
+    col = html.TD(html.B("Joueurs :"))
+    players_row <= col
+    for role_name in ratings:
+        role_id = rolename2role_id[role_name]
+        pseudo_there = ""
+        if role_id in role2pseudo:
+            player_id_str = role2pseudo[role_id]
+            player_id = int(player_id_str)
+            pseudo_there = id2pseudo[player_id]
+        col = html.TD(pseudo_there)
+        players_row <= col
 
     return rating_table
 
@@ -4700,8 +4719,8 @@ def show_game_parameters():
     return True
 
 
-def show_participants_in_game():
-    """ show_participants_in_game """
+def show_events_in_game():
+    """ show_events_in_game """
 
     def cancel_remove_incident_callback(_, dialog, ):
         """ cancel_remove_incident_callback """
@@ -4725,7 +4744,7 @@ def show_participants_in_game():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            show_participants_in_game()
+            show_events_in_game()
 
         dialog.close()
 
@@ -4747,7 +4766,7 @@ def show_participants_in_game():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        show_participants_in_game()
+        show_events_in_game()
 
     # game status
     MY_SUB_PANEL <= GAME_STATUS
@@ -4805,7 +4824,7 @@ def show_participants_in_game():
         MY_SUB_PANEL <= game_master_table
 
     # players
-    MY_SUB_PANEL <= html.H3("Joueurs")
+    MY_SUB_PANEL <= html.H3("Joueurs non alloués")
 
     # need to be connected
     if PSEUDO is None:
@@ -4818,59 +4837,6 @@ def show_participants_in_game():
     else:
         id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-        game_players_table = html.TABLE()
-
-        fields = ['flag', 'role', 'player']
-
-        # header
-        thead = html.THEAD()
-        for field in fields:
-            field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'rôle'}[field]
-            col = html.TD(field_fr)
-            thead <= col
-        game_players_table <= thead
-
-        role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
-
-        for role_id in VARIANT_DATA.roles:
-
-            row = html.TR()
-
-            if role_id <= 0:
-                continue
-
-            # role flag
-            role = VARIANT_DATA.roles[role_id]
-            role_name = VARIANT_DATA.name_table[role]
-            role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
-
-            if role_icon_img:
-                col = html.TD(role_icon_img)
-            else:
-                col = html.TD()
-            row <= col
-
-            # role name
-            role = VARIANT_DATA.roles[role_id]
-            role_name = VARIANT_DATA.name_table[role]
-
-            col = html.TD(role_name)
-            row <= col
-
-            # player
-            pseudo_there = ""
-            if role_id in role2pseudo:
-                player_id_str = role2pseudo[role_id]
-                player_id = int(player_id_str)
-                pseudo_there = id2pseudo[player_id]
-            col = html.TD(pseudo_there)
-            row <= col
-
-            game_players_table <= row
-
-        MY_SUB_PANEL <= game_players_table
-
-        # add the non allocated players
         dangling_players = [p for p, d in GAME_PLAYERS_DICT.items() if d == - 1]
         if dangling_players:
             MY_SUB_PANEL <= html.BR()
@@ -5646,8 +5612,8 @@ def load_option(_, item_name):
         status = supervise()
     if item_name == 'paramètres':
         status = show_game_parameters()
-    if item_name == 'participants':
-        status = show_participants_in_game()
+    if item_name == 'événements':
+        status = show_events_in_game()
     if item_name == 'observer':
         status = observe()
 
@@ -5764,7 +5730,7 @@ def render(panel_middle):
             # moderator wants to see whose orders are missing
             if moderate.check_modo(PSEUDO):
                 # Admin
-                ITEM_NAME_SELECTED = 'participants'
+                ITEM_NAME_SELECTED = 'événements'
 
     set_arrival(None)
     load_option(None, ITEM_NAME_SELECTED)
