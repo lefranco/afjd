@@ -674,16 +674,12 @@ def my_games(state_name):
             if field == 'new_declarations':
                 value = ""
                 if role_id is not None:
-                    # popup if new
-                    popup = ""
-                    form = ""
-                    link = ""
                     if dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
 
                         arrival = "declarations"
                         if storage['GAME_ACCESS_MODE'] == 'button':
                             form = html.FORM()
-                            input_jump_game = html.INPUT(type="image", src="./images/press_published.jpg", value="xxx")
+                            input_jump_game = html.INPUT(type="image", src="./images/press_published.jpg")
                             input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=arrival: select_game_callback(e, gn, gds, a))
                             form <= input_jump_game
                             value = form
@@ -696,10 +692,6 @@ def my_games(state_name):
             if field == 'new_messages':
                 value = ""
                 if role_id is not None:
-                    # popup if new
-                    popup = ""
-                    form = ""
-                    link = ""
                     if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
 
                         arrival = "messages"
@@ -743,6 +735,19 @@ def my_games(state_name):
         games_table <= row
 
     MY_PANEL <= games_table
+    MY_PANEL <= html.BR()
+
+    MY_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
+    MY_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
+    MY_PANEL <= " "
+    MY_PANEL <= html.IMG(src="./images/messages_received.jpg", title="Pour aller voir les nouveaux messages privés")
+    MY_PANEL <= " "
+    MY_PANEL <= html.IMG(src="./images/press_published.jpg", title="Pour aller voir les nouvelles presses")
+    MY_PANEL <= " "
+    MY_PANEL <= html.IMG(src="./images/start_game.jpg", title="Pour démarrer la partie")
+    MY_PANEL <= " "
+    MY_PANEL <= html.IMG(src="./images/stop_game.png", title="Pour arrêter la partie")
+    MY_PANEL <= html.BR()
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')

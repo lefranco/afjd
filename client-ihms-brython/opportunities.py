@@ -362,7 +362,7 @@ def my_opportunities():
                 else:
                     game_name = data['name']
                     form = html.FORM()
-                    input_join_game = html.INPUT(type="submit", value="J'en profite !")
+                    input_join_game = html.INPUT(type="image", src="./images/join.png")
                     input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
                     form <= input_join_game
                     value = form
@@ -433,6 +433,13 @@ def my_opportunities():
         games_table <= row
 
     MY_PANEL <= games_table
+    MY_PANEL <= html.BR()
+
+    MY_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
+    MY_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
+    MY_PANEL <= " "
+    MY_PANEL <= html.IMG(src="./images/join.png", title="Pour se mettre dans la partie")
+    MY_PANEL <= html.BR()
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')

@@ -521,7 +521,7 @@ def show_games():
             if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image",  src="./images/play.png")
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                     form <= input_jump_game
                     value = form
@@ -612,6 +612,11 @@ def show_games():
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= games_table
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
+    MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
+    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
