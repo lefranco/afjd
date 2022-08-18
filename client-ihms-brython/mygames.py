@@ -538,7 +538,7 @@ def my_games(state_name):
             colour = None
             game_name = data['name']
 
-            if field == 'game_name':
+            if field == 'name':
                 value = game_name
 
             if field == 'go_game':
@@ -546,7 +546,7 @@ def my_games(state_name):
                 if storage['GAME_ACCESS_MODE'] == 'button':
 
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png", legend="aller dans la partie")
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
                     form <= input_jump_game
                     value = form
