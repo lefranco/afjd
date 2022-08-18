@@ -383,12 +383,12 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['go_game', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']
+    fields = ['name', 'go_game', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'go_game': 'aller dans la partie', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'current_state': 'état'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'current_state': 'état'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -396,8 +396,9 @@ def show_games():
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['go_game', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']:
-            if field == 'go_game':
+        if field in ['name', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']:
+
+            if field == 'name':
 
                 # button for sorting by creation date
                 button = html.BUTTON("&lt;date de création&gt;")
@@ -514,16 +515,20 @@ def show_games():
             fg_colour = None
             game_name = data['name']
 
+            if field == 'name':
+                value = game_name
+
             if field == 'go_game':
                 if storage['GAME_ACCESS_MODE'] == 'button':
                     form = html.FORM()
-                    input_jump_game = html.INPUT(type="submit", value=game_name)
+                    input_jump_game = html.INPUT(type="image",  src="./images/play.png")
                     input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
                     form <= input_jump_game
                     value = form
                 else:
+                    img = html.IMG(src="./images/play.png")
                     link = html.A(href=f"?game={game_name}", target="_blank")
-                    link <= game_name
+                    link <= img
                     value = link
 
             if field == 'master':
