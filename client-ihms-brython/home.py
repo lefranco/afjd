@@ -158,6 +158,15 @@ def show_news():
 
     # ----
 
+    title1A = html.H4("Lien aussi utile : Une proposition de forum")
+    MY_SUB_PANEL <= title1A
+
+    link1A = html.A(href="https://diplomania-gen.fr/forum/phpBB3", target="_blank")
+    link1A <= "Diplomania : un forum à base du fameux phpBB3"
+    MY_SUB_PANEL <= link1A
+
+    # ----
+
     title2 = html.H4("Charte du bon diplomate")
     MY_SUB_PANEL <= title2
 
