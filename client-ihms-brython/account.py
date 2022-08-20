@@ -12,7 +12,7 @@ import config
 import common
 import login
 
-OPTIONS = ['créer un compte', 'mot de passe', 'valider mon courriel', 'éditer', 'supprimer']
+OPTIONS = ['créer un compte', 'mot de passe', 'valider mon courriel', 'mon code forum', 'éditer', 'supprimer']
 
 
 MAX_LEN_PSEUDO = 20
@@ -444,6 +444,29 @@ def validate_email():
     MY_SUB_PANEL <= form
 
 
+def forum_code():
+    """ forum_code """
+
+    MY_SUB_PANEL <= html.H3("Code pour le forum")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    legende_code_forum = html.DIV(Class='note')
+    legende_code_forum <= f"Votre code à utiliser sur le forum est : "
+    MY_SUB_PANEL <= legende_code_forum
+
+    MY_SUB_PANEL <= html.BR()
+
+    code_forum = html.DIV(Class='important')
+    code_value = 1000 + sum(map(lambda c: ord(c)**2, pseudo)) % (10000 - 1000)
+    code_forum <= code_value
+    MY_SUB_PANEL <= code_forum
+
+
 def edit_account():
     """ edit_account """
 
@@ -810,6 +833,8 @@ def load_option(_, item_name):
         change_password()
     if item_name == 'valider mon courriel':
         validate_email()
+    if item_name == 'mon code forum':
+        forum_code()
     if item_name == 'éditer':
         edit_account()
     if item_name == 'supprimer':
