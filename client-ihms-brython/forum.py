@@ -17,5 +17,8 @@ def render(panel_middle):
     # load forum directly
     MY_PANEL <= html.A(id='forum_link')
     forum_link = document['forum_link']
-    forum_link.href = html.A(href="https://diplomania-gen.fr/forum/phpBB3", target="_blank")
+
+    # for some reason target=_blank does not seem to work here...
+    forum_link.href = html.A(href="https://diplomania-gen.fr/forum/phpBB3")
+
     document['forum_link'].click()
