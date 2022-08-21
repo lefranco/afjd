@@ -456,7 +456,7 @@ def forum_code():
     pseudo = storage['PSEUDO']
 
     legende_code_forum = html.DIV(Class='note')
-    legende_code_forum <= f"Votre code à utiliser sur le forum est : "
+    legende_code_forum <= "Votre code à utiliser sur le forum est : "
     MY_SUB_PANEL <= legende_code_forum
 
     MY_SUB_PANEL <= html.BR()
