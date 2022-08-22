@@ -23,11 +23,9 @@ import index  # circular import
 
 OPTIONS = ['dernières nouvelles', 'autres liens', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
 
-NOTE_CONTENT_STATED = """
-Bienvenue dans la première version du site Diplomania.
+NOTE_CONTENT_STATED = """Bienvenue dans la première version du site Diplomania.
 Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu.
-Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/liens) ou sur le serveur Discord.
-"""
+Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/liens) ou sur le serveur Discord."""
 
 
 def get_stats_content():
