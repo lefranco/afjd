@@ -793,3 +793,9 @@ def get_player_games_playing_in(player_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return dict(player_games_dict)
+
+
+def verification_code(pseudo):
+    """ verification_code """
+    code =  int(sum(map(lambda c: ord(c)**3.5, pseudo))) % 1000000
+    return code

@@ -462,7 +462,7 @@ def forum_code():
     MY_SUB_PANEL <= html.BR()
 
     code_forum = html.DIV(Class='important')
-    code_value = 1000 + sum(map(lambda c: ord(c)**2, pseudo)) % (10000 - 1000)
+    code_value = common.verification_code(pseudo)
     code_forum <= code_value
     MY_SUB_PANEL <= code_forum
 
