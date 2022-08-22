@@ -213,7 +213,7 @@ def show_news():
     MY_SUB_PANEL <= title7
 
     MY_SUB_PANEL <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
-    MY_SUB_PANEL <= html.DIV("Pour les daltoniens, trois cartes avec des couleurs spécifiques ont été créées, allez dans 'accueil/choix d'interface'")
+    MY_SUB_PANEL <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
 
     # ----
     title7 = html.H4("Statistiques")
