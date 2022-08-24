@@ -797,5 +797,5 @@ def get_player_games_playing_in(player_id):
 
 def verification_code(pseudo):
     """ verification_code """
-    code =  int(sum(map(lambda c: ord(c)**3.5, pseudo))) % 1000000
+    code = int(sum(map(lambda c: ord(c) ** 3.5, pseudo))) % 1000000
     return code
