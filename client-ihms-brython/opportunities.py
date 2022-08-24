@@ -82,7 +82,7 @@ def my_opportunities():
         index.load_option(None, 'jouer la partie sélectionnée')
 
     def join_and_select_game_callback(evt, game_name, game_data_sel):
-        """ join_and_select_game_callback """
+        """ join_and_select_game_callback : the second way of joining a game : by a button """
 
         def join_game(game_name, game_data_sel):
 

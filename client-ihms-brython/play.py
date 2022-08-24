@@ -95,6 +95,51 @@ def readable_season(advancement):
     return value
 
 
+def join_game():
+    """ join_game_action : the third way of joining a game (by a link) """
+
+    def reply_callback(req):
+
+        req_result = json.loads(req.text)
+        if req.status != 201:
+            if 'message' in req_result:
+                alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à l'inscription à la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        messages = "<br>".join(req_result['msg'].split('\n'))
+        InfoDialog("OK", f"Vous avez rejoint la partie : {messages}", remove_after=config.REMOVE_AFTER)
+
+    if PSEUDO is None:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = PSEUDO
+
+    if GAME_ID is None:
+        alert("Problème avec la partie")
+        return
+
+    game_id = GAME_ID
+
+    json_dict = {
+        'game_id': game_id,
+        'player_pseudo': pseudo,
+        'pseudo': pseudo,
+        'delete': 0
+    }
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/allocations"
+
+    # adding allocation : need a token
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
 def game_incidents_reload(game_id):
     """ game_incidents_reload """
 
@@ -1137,6 +1182,11 @@ def show_position():
         input_download_game_json = html.INPUT(type="submit", value="télécharger la partie au format JSON")
         input_download_game_json.bind("click", callback_export_game_json)
         buttons_right <= input_download_game_json
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+        url = f"https://diplomania-gen.fr/game={GAME}&arrival=rejoindre"
+        buttons_right <= f"Pour inviter un joueur à rejoindre la partie, lui envoyer le lien : '{url}'"
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
@@ -5705,32 +5755,34 @@ def render(panel_middle):
     if COUNTDOWN_TIMER is None:
         COUNTDOWN_TIMER = timer.set_interval(countdown, 1000)
 
-    # game not started, visiting probably to see parameters
-    if GAME_PARAMETERS_LOADED['current_state'] == 0:
-        ITEM_NAME_SELECTED = 'paramètres'
+    # this means user wants to join game
+    if ARRIVAL == 'rejoindre':
+        join_game()
+
+    if ROLE_ID is not None:
+
+        # we have a player here
+
+        if ARRIVAL == 'declarations':
+            # set page for press
+            ITEM_NAME_SELECTED = 'déclarer'
+        elif ARRIVAL == 'messages':
+            # set page for messages
+            ITEM_NAME_SELECTED = 'négocier'
+        else:
+            if ROLE_ID == 0:
+                # game master
+                ITEM_NAME_SELECTED = 'arbitrer'
+            else:
+                # player
+                ITEM_NAME_SELECTED = 'ordonner'
 
     else:
 
-        if ROLE_ID is not None:
-
-            if ARRIVAL == 'declarations':
-                ITEM_NAME_SELECTED = 'déclarer'
-            elif ARRIVAL == 'messages':
-                ITEM_NAME_SELECTED = 'négocier'
-            else:
-                if ROLE_ID == 0:
-                    # Arbitre
-                    ITEM_NAME_SELECTED = 'arbitrer'
-                else:
-                    # Joueur
-                    ITEM_NAME_SELECTED = 'ordonner'
-
-        else:
-
-            # moderator wants to see whose orders are missing
-            if moderate.check_modo(PSEUDO):
-                # Admin
-                ITEM_NAME_SELECTED = 'événements'
+        # moderator wants to see whose orders are missing
+        if moderate.check_modo(PSEUDO):
+            # Admin
+            ITEM_NAME_SELECTED = 'événements'
 
     set_arrival(None)
     load_option(None, ITEM_NAME_SELECTED)

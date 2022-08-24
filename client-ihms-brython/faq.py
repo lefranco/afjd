@@ -40,7 +40,10 @@ FAQ_CONTENT_TABLE = {
     "Ces deux paramètres ont une version 'partie' et une version 'en cours' La première est celle entrée par le créateur de la partie. La deuxième est celle qui va s'appliquer, elle est initialisée à la valeur de la première. A la fin de la partie, la deuxième est effacée. L'arbitre peut également jouer avec l'autorisation des messages publics et privés pendant la partie. Les exportations de partie (pour savoir comment elle a été jouée) se baseront sur la première.",
 
     "Comment remplacer un joueur ?":
-    "C'est le rôle de l'arbitre. Il faut lui retirer le rôle dans la console d'arbitrage et attribuer le rôle à un autre joueur dans la partie, qu'il aura fallu faire venir au préalable. Faire venir ou partir les joueurs de la partie se réalise par contre dans le menu appariement.",
+    "C'est le rôle de l'arbitre. Il faut lui retirer le rôle dans la console d'arbitrage et attribuer le rôle à un autre joueur dans la partie, qu'il aura fallu faire venir au préalable cf. question suivante. ",
+
+    "Comment mettre un joueur dans une partie ?":
+    "Faire venir ou partir les joueurs de la partie se réalise par contre dans le menu appariement. Un joueur peut se metre ou se retire d'une partie, un arbitre peut mettre un joueur ou le retirer d'une partie. Il y a trois manière de rejoindre une partie : par le menu apariement(qui gère tous les cas), par le menu opportunités (qui liste les parties qui recrutent), par un hyper lien que quelqu'un vous aura envoyé s(pour vous inviter).",
 
     "Sur ma partie il y a un joueur bizarre. Depuis qu'un autre l'a stabbé, il passe son temps à lui donner du \"l'autre abruti\" et j'en passe et des meilleures. L'arbitre ne fait rien. Que dois-je faire  ?":
     "C'est à l'arbitre de le rappeler à l'ordre en principe. Si sa manière de traiter la chose ne vous plait pas, il faut déclarer un incident. Nous voulons une atmosphère cordiale sur le site.",
