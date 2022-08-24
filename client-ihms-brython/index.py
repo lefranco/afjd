@@ -194,7 +194,7 @@ if 'game' in document.query:
     if load_game(QUERY_GAME_NAME):
         if 'arrival' in document.query:
             arrival = document.query['arrival']
-            # so that will go to proper page
+            # so that will go to proper page and/or do proper action
             play.set_arrival(arrival)
         load_option(None, 'jouer la partie sélectionnée')
     else:

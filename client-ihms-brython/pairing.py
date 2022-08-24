@@ -54,7 +54,7 @@ def get_game_allocated_players(game_id):
 
 
 def join_game():
-    """ join_game """
+    """ join_game : the first way of joining a game """
 
     def join_game_callback(_):
 
