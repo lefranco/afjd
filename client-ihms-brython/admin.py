@@ -175,6 +175,7 @@ def change_news_admin():
 
     MY_SUB_PANEL <= form
 
+
 def show_verif_codes():
     """ show_verif_codes """
 
