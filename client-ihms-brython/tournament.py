@@ -130,7 +130,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # obviously different name
         json_dict['name'] = game_to_create_name
 
-        # obviously different deadline - set it to now
+        # obviously different deadline (set it to now)
         timestamp = time.time()
         deadline = int(timestamp)
         json_dict['deadline'] = deadline
@@ -138,6 +138,9 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         # obviously different state (starting)
         json_dict['current_state'] = 0
         json_dict['current_advancement'] = 0
+
+        # logically : manual allocation (otherwise at start random allocation will spoil csv file allocation)
+        json_dict['manual'] = int(True)
 
         # remove these two so that they get copied from their xxx_game clone
         del json_dict['nopress_current']
@@ -1460,8 +1463,14 @@ def show_tournaments_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} tournois")
 
 
+# so that we do not too much repeat the selected game
+PREV_GAME = ""
+
+
 def create_many_games():
     """ create_many_games """
+
+    global PREV_GAME
 
     def create_games_callback(_):
         """ create_games_callback """
@@ -1567,6 +1576,10 @@ def create_many_games():
 
     game = storage['GAME']
 
+    if game != PREV_GAME:
+        alert(f"La partie modèle est le partie '{game}'. Vérifiez que cela convient !")
+        PREV_GAME = game
+
     information = html.DIV(Class='note')
     information <= "Vous devez composer un fichier CSV"
     information <= html.BR()
@@ -1585,6 +1598,7 @@ def create_many_games():
     information <= "Il est impossible d'attribuer l'arbitrage d'une partie à un autre joueur, donc vous pouvez mettre un arbitre différent à des fins de vérification mais la création des parties n'aura pas lieu."
     information <= html.BR()
     information <= "Les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée, dont la description - donc pensez bien à la modifier dans la partie modèle avant de créer les parties..."
+    information <= "Cela créée les parties, pas le tournoi. Il faut se mettre sur une partie, puis créée le tournoi et enfin insérer dedans les autres parties."
     information <= html.BR()
     information <= "Note : Soit vous utilisez comme modèle une partie existante, soit vous la créez pour l'occasion et la supprimez à la fin"
 
@@ -1733,8 +1747,12 @@ MY_PANEL <= MY_SUB_PANEL
 def load_option(_, item_name):
     """ load_option """
 
+    global PREV_GAME
+
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
+
+    PREV_GAME = ""
 
     if item_name == 'parties du tournoi':
         show_games()
