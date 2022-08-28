@@ -15,7 +15,7 @@ import common
 import index  # circular import
 
 MY_PANEL = html.DIV(id="login")
-MY_PANEL.attrs['style'] = 'display: table'
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 
 def login():

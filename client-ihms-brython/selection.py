@@ -11,7 +11,7 @@ import common
 
 
 MY_PANEL = html.DIV(id="selection")
-MY_PANEL.attrs['style'] = 'display: table'
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 
 def select_game():
