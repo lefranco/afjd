@@ -288,7 +288,7 @@ def create_game():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_used_for_elo = html.LEGEND("used_for_elo", title="Partie sérieuse - les résultats de la partie comptent pour le calcul du élo sur le site")
+    legend_used_for_elo = html.LEGEND("utilisée pour le élo", title="Partie sérieuse - les résultats de la partie comptent pour le calcul du élo sur le site")
     fieldset <= legend_used_for_elo
     input_used_for_elo = html.INPUT(type="checkbox", checked=True)
     fieldset <= input_used_for_elo
