@@ -197,7 +197,7 @@ def create_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_replace = html.LEGEND("Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
+    legend_replace = html.LEGEND("Je veux remplacer !", title="Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
     fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=False)
     fieldset <= input_replace
@@ -663,7 +663,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_replace = html.LEGEND("Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
+    legend_replace = html.LEGEND("Je veux remplacer !", title="Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
     fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
     fieldset <= input_replace
