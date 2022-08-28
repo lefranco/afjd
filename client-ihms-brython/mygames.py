@@ -20,7 +20,7 @@ import play
 import index  # circular import
 
 MY_PANEL = html.DIV(id="mygames")
-MY_PANEL.attrs['style'] = 'display: table'
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 
 def get_all_roles_allocated_to_player():

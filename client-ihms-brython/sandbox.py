@@ -20,7 +20,7 @@ LONG_DURATION_LIMIT_SEC = 1.0
 VARIANT_NAME = "standard"
 
 MY_PANEL = html.DIV(id="sandbox")
-MY_PANEL.attrs['style'] = 'display: table'
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 
 @enum.unique
