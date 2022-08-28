@@ -5,7 +5,7 @@
 from browser import document, html, window   # pylint: disable=import-error
 
 MY_PANEL = html.DIV(id="forum")
-MY_PANEL.attrs['style'] = 'display: table'
+MY_PANEL.attrs['style'] = 'display: table-row'
 
 
 def render(panel_middle):
