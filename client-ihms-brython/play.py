@@ -4629,7 +4629,7 @@ def game_master():
             else:
 
                 input_for_role = html.SELECT(type="select-one", value="", display='inline')
-                for play_role_pseudo in sorted(possible_given_role):
+                for play_role_pseudo in sorted(possible_given_role, key=lambda p: p.upper()):
                     option = html.OPTION(play_role_pseudo)
                     input_for_role <= option
                 form <= input_for_role
