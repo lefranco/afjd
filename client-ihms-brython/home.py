@@ -165,8 +165,44 @@ def show_news():
 
     # ----
 
-    title3 = html.H4("Note importante")
+    title3 = html.H4("Les parties en souffrance")
     MY_SUB_PANEL <= title3
+
+    suffering_games_loaded = get_needing_replacement_games()
+    suffering_games = formatted_games(suffering_games_loaded)
+    MY_SUB_PANEL <= suffering_games
+
+    # ----
+
+    title4 = html.H4("Dernières nouvelles administrateur", Class='news')
+    MY_SUB_PANEL <= title4
+
+    news_content_loaded = common.get_news_content()
+    news_content = formatted_news(news_content_loaded)
+    MY_SUB_PANEL <= news_content
+
+    # ----
+
+    title5 = html.H4("Dernières nouvelles moderateur", Class='news')
+    MY_SUB_PANEL <= title5
+
+    news_content_loaded2 = common.get_news_content2()
+    news_content2 = formatted_news(news_content_loaded2)
+    MY_SUB_PANEL <= news_content2
+
+    # ----
+
+    title6 = html.H4("Dernières contributions sur les formus", Class='news')
+    MY_SUB_PANEL <= title6
+
+    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="250")
+
+    MY_SUB_PANEL <= news_forum
+
+    # ----
+
+    title7 = html.H4("Note importante")
+    MY_SUB_PANEL <= title7
 
     note_bene_content = html.DIV()
     for line in NOTE_CONTENT_STATED.split("\n"):
@@ -181,41 +217,15 @@ def show_news():
 
     # ----
 
-    title4 = html.H4("Les parties en souffrance")
-    MY_SUB_PANEL <= title4
-
-    suffering_games_loaded = get_needing_replacement_games()
-    suffering_games = formatted_games(suffering_games_loaded)
-    MY_SUB_PANEL <= suffering_games
-
-    # ----
-
-    title5 = html.H4("Dernières nouvelles administrateur", Class='news')
-    MY_SUB_PANEL <= title5
-
-    news_content_loaded = common.get_news_content()
-    news_content = formatted_news(news_content_loaded)
-    MY_SUB_PANEL <= news_content
-
-    # ----
-
-    title6 = html.H4("Dernières nouvelles moderateur", Class='news')
-    MY_SUB_PANEL <= title6
-
-    news_content_loaded2 = common.get_news_content2()
-    news_content2 = formatted_news(news_content_loaded2)
-    MY_SUB_PANEL <= news_content2
-
-    # ----
-    title7 = html.H4("Divers")
-    MY_SUB_PANEL <= title7
+    title8 = html.H4("Divers")
+    MY_SUB_PANEL <= title8
 
     MY_SUB_PANEL <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
     MY_SUB_PANEL <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
 
     # ----
-    title7 = html.H4("Statistiques")
-    MY_SUB_PANEL <= title7
+    title9 = html.H4("Statistiques")
+    MY_SUB_PANEL <= title9
 
     stats_content = get_stats_content()
     MY_SUB_PANEL <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité."
