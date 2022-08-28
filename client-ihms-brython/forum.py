@@ -17,7 +17,12 @@ def render(panel_middle):
     # load forum directly
 
     # use button
-    button = html.BUTTON("Lancement du forum", id='forum_link')
-    MY_PANEL <= button
-    button.bind("click", lambda e: window.open("https://diplomania-gen.fr/forum/phpBB3"))
-    document['forum_link'].click()
+    #button = html.BUTTON("Lancement du forum", id='forum_link')
+    #MY_PANEL <= button
+    #button.bind("click", lambda e: window.open("https://diplomania-gen.fr/forum/phpBB3"))
+    #document['forum_link'].click()
+
+    # use object
+    #  width and height values seem to work....
+    window_forum = html.OBJECT(data="https://diplomania-gen.fr/forum/phpBB3", width=800, height=400)
+    MY_PANEL <= window_forum

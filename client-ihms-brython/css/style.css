@@ -145,6 +145,7 @@ fieldset{
     border: 0;
 }
 
+
 /* color of sea in diplomania map BBD9DC */
 
 #home {
@@ -191,6 +192,9 @@ fieldset{
     background-color: #BBD9DC;
 }
 
+#forum {
+    background-color: #BBD9DC;
+}
 
 #lists {
     background-color: #BBD9DC;
