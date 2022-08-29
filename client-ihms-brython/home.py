@@ -156,7 +156,7 @@ def show_news():
 
     # ----
 
-    title2 = html.H4("Dernières contributions sur les formus", Class='news')
+    title2 = html.H4("Dernières contributions sur les formus")
     MY_SUB_PANEL <= title2
 
     news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="300")
