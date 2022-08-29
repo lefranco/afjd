@@ -781,9 +781,9 @@ def delete_account():
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_account_callback(e, d))
 
-        # back to where we started
+        # back to where we started (well not exactly)
         MY_SUB_PANEL.clear()
-        delete_account()
+        create_account()
 
     MY_SUB_PANEL <= html.H3("Suppression du compte")
 
