@@ -147,26 +147,8 @@ def show_news():
 
     # ----
 
-    title1 = html.H4("Lien utile : Diplomania")
+    title1 = html.H4("Les parties en souffrance")
     MY_SUB_PANEL <= title1
-
-    link1 = html.A(href="http://www.diplomania.fr", target="_blank")
-    link1 <= "Diplomania : Le site officiel de l'Association Francophone des Joueurs de Diplomacy (brique sociale)"
-    MY_SUB_PANEL <= link1
-
-    # ----
-
-    title2 = html.H4("Charte du bon diplomate")
-    MY_SUB_PANEL <= title2
-
-    link2 = html.A(href="./docs/charte.pdf", target="_blank")
-    link2 <= "Lien vers la charte du bon diplomate"
-    MY_SUB_PANEL <= link2
-
-    # ----
-
-    title3 = html.H4("Les parties en souffrance")
-    MY_SUB_PANEL <= title3
 
     suffering_games_loaded = get_needing_replacement_games()
     suffering_games = formatted_games(suffering_games_loaded)
@@ -174,8 +156,8 @@ def show_news():
 
     # ----
 
-    title4 = html.H4("Dernières nouvelles administrateur", Class='news')
-    MY_SUB_PANEL <= title4
+    title2 = html.H4("Dernières nouvelles administrateur", Class='news')
+    MY_SUB_PANEL <= title2
 
     news_content_loaded = common.get_news_content()
     news_content = formatted_news(news_content_loaded)
@@ -183,8 +165,8 @@ def show_news():
 
     # ----
 
-    title5 = html.H4("Dernières nouvelles moderateur", Class='news')
-    MY_SUB_PANEL <= title5
+    title3 = html.H4("Dernières nouvelles moderateur", Class='news')
+    MY_SUB_PANEL <= title3
 
     news_content_loaded2 = common.get_news_content2()
     news_content2 = formatted_news(news_content_loaded2)
@@ -192,12 +174,30 @@ def show_news():
 
     # ----
 
-    title6 = html.H4("Dernières contributions sur les formus", Class='news')
-    MY_SUB_PANEL <= title6
+    title4 = html.H4("Dernières contributions sur les formus", Class='news')
+    MY_SUB_PANEL <= title4
 
     news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="250")
 
     MY_SUB_PANEL <= news_forum
+
+    # ----
+
+    title5 = html.H4("Lien utile : Diplomania")
+    MY_SUB_PANEL <= title5
+
+    link1 = html.A(href="http://www.diplomania.fr", target="_blank")
+    link1 <= "Diplomania : Le site officiel de l'Association Francophone des Joueurs de Diplomacy (brique sociale)"
+    MY_SUB_PANEL <= link1
+
+    # ----
+
+    title6 = html.H4("Charte du bon diplomate")
+    MY_SUB_PANEL <= title6
+
+    link2 = html.A(href="./docs/charte.pdf", target="_blank")
+    link2 <= "Lien vers la charte du bon diplomate"
+    MY_SUB_PANEL <= link2
 
     # ----
 
