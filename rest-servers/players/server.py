@@ -79,6 +79,8 @@ MODERATOR_PARSER.add_argument('delete', type=int, required=True)
 # to avoid sending emails in debug phase
 PREVENT_MAIL_CHECKING = False
 
+# pseudo must be at least that size
+LEN_PSEUDO_MIN = 3
 
 @API.resource('/player-identifiers/<pseudo>')
 class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
@@ -362,6 +364,10 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         if not pseudo.isidentifier():
             del sql_executor
             flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is not a valid pseudo")
+
+        if len(pseudo) < LEN_PSEUDO_MIN:
+            del sql_executor
+            flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is too short")
 
         # cannot have a void residence
         if args['residence']:
