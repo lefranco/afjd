@@ -89,11 +89,11 @@ def get_needing_replacement_games():
     return needing_replacement_games_list
 
 
-def formatted_news(news_content_loaded):
+def formatted_news(news_content_loaded, admin):
     """ formatted_news """
 
     # init
-    news_content = html.DIV(Class='news')
+    news_content = html.DIV(Class='news2' if admin else 'news')
 
     # format
     if news_content_loaded is not None:
@@ -169,16 +169,16 @@ def show_news():
     MY_SUB_PANEL <= title3
 
     news_content_loaded2 = common.get_news_content2()
-    news_content2 = formatted_news(news_content_loaded2)
+    news_content2 = formatted_news(news_content_loaded2, False)
     MY_SUB_PANEL <= news_content2
 
     # ----
 
-    title4 = html.H4("Dernières nouvelles administrateur", Class='news')
+    title4 = html.H4("Dernières nouvelles administrateur", Class='news2')
     MY_SUB_PANEL <= title4
 
     news_content_loaded = common.get_news_content()
-    news_content = formatted_news(news_content_loaded)
+    news_content = formatted_news(news_content_loaded, True)
     MY_SUB_PANEL <= news_content
 
     # ----
