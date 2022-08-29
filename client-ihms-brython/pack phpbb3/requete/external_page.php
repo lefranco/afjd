@@ -21,7 +21,7 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup('viewforum');
 
-$search_limit = 5;
+$search_limit = 10;
 
 // ----- Change between HERE -----
 $posts_ary = array(

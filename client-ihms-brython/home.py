@@ -156,12 +156,12 @@ def show_news():
 
     # ----
 
-    title2 = html.H4("Dernières nouvelles administrateur", Class='news')
+    title2 = html.H4("Dernières contributions sur les formus", Class='news')
     MY_SUB_PANEL <= title2
 
-    news_content_loaded = common.get_news_content()
-    news_content = formatted_news(news_content_loaded)
-    MY_SUB_PANEL <= news_content
+    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="300")
+
+    MY_SUB_PANEL <= news_forum
 
     # ----
 
@@ -174,12 +174,12 @@ def show_news():
 
     # ----
 
-    title4 = html.H4("Dernières contributions sur les formus", Class='news')
+    title4 = html.H4("Dernières nouvelles administrateur", Class='news')
     MY_SUB_PANEL <= title4
 
-    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="250")
-
-    MY_SUB_PANEL <= news_forum
+    news_content_loaded = common.get_news_content()
+    news_content = formatted_news(news_content_loaded)
+    MY_SUB_PANEL <= news_content
 
     # ----
 
@@ -222,6 +222,9 @@ def show_news():
 
     MY_SUB_PANEL <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
     MY_SUB_PANEL <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
+    MY_SUB_PANEL <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
+    MY_SUB_PANEL <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant : modifiez le paramètre de votre compte")
+    MY_SUB_PANEL <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : jouer la partie sélectionnée / taguer")
 
     # ----
     title9 = html.H4("Statistiques")
