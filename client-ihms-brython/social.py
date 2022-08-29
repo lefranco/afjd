@@ -4,7 +4,7 @@
 
 from browser import document, html, window   # pylint: disable=import-error
 
-MY_PANEL = html.DIV(id="forum")
+MY_PANEL = html.DIV(id="social")
 MY_PANEL.attrs['style'] = 'display: table-row'
 
 
@@ -14,11 +14,11 @@ def render(panel_middle):
     MY_PANEL.clear()
     panel_middle <= MY_PANEL
 
-    # load forum directly
+    # load social directly
 
     # use button
-    button = html.BUTTON("Lancement du forum", id='forum_link')
+    button = html.BUTTON("Lancement du la brique sociale", id='social_link')
     MY_PANEL <= button
-    button.bind("click", lambda e: window.open("https://diplomania-gen.fr/forum/phpBB3"))
-    document['forum_link'].click()
+    button.bind("click", lambda e: window.open("https://www.diplomania.fr/"))
+    document['social_link'].click()
 

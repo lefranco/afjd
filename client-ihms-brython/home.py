@@ -183,17 +183,8 @@ def show_news():
 
     # ----
 
-    title5 = html.H4("Lien utile : Diplomania")
+    title5 = html.H4("Charte du bon diplomate")
     MY_SUB_PANEL <= title5
-
-    link1 = html.A(href="http://www.diplomania.fr", target="_blank")
-    link1 <= "Diplomania : Le site officiel de l'Association Francophone des Joueurs de Diplomacy (brique sociale)"
-    MY_SUB_PANEL <= link1
-
-    # ----
-
-    title6 = html.H4("Charte du bon diplomate")
-    MY_SUB_PANEL <= title6
 
     link2 = html.A(href="./docs/charte.pdf", target="_blank")
     link2 <= "Lien vers la charte du bon diplomate"
@@ -201,8 +192,8 @@ def show_news():
 
     # ----
 
-    title7 = html.H4("Note importante")
-    MY_SUB_PANEL <= title7
+    title6 = html.H4("Note importante")
+    MY_SUB_PANEL <= title6
 
     note_bene_content = html.DIV()
     for line in NOTE_CONTENT_STATED.split("\n"):
