@@ -15,6 +15,7 @@ import login
 OPTIONS = ['créer un compte', 'mot de passe', 'valider mon courriel', 'mon code forum', 'éditer', 'supprimer']
 
 
+MIN_LEN_PSEUDO = 3
 MAX_LEN_PSEUDO = 20
 MAX_LEN_EMAIL = 100
 
@@ -74,6 +75,12 @@ def create_account():
 
         if not pseudo:
             alert("Pseudo manquant")
+            MY_SUB_PANEL.clear()
+            create_account()
+            return
+
+        if len(pseudo) < MIN_LEN_PSEUDO:
+            alert("Pseudo trop court")
             MY_SUB_PANEL.clear()
             create_account()
             return
