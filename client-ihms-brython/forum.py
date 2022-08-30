@@ -21,4 +21,3 @@ def render(panel_middle):
     MY_PANEL <= button
     button.bind("click", lambda e: window.open("https://diplomania-gen.fr/forum/phpBB3"))
     document['forum_link'].click()
-
