@@ -119,7 +119,7 @@ legend{
 
 /* color of turkey in diplomania map EDE585 */
 .news2{
-    background-color: #FFFFA5;
+     background-color: #FFFFA5; 
 }
 
 /* color of england in diplomania map 83B9CC */
@@ -154,61 +154,61 @@ fieldset{
 /* color of sea in diplomania map BBD9DC */
 
 #home {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #login {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #selection {
-   background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #account {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #opportunities {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #mygames {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #games {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #pairing {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #play {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #tournament {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #sandbox {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #forum {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #social {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
-#lists {
 
-    background-color: #BBD9DC;
+#lists {
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
 #admin {
-    background-color: #BBD9DC;
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
