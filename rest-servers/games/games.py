@@ -733,6 +733,11 @@ class Game:
         """ property """
         return self._nb_max_cycles_to_play
 
+    @property
+    def used_for_elo(self) -> int:
+        """ property """
+        return self._used_for_elo
+
     def __str__(self) -> str:
         return f"name={self._name} variant={self._variant} description={self._description} archive={self._archive} anonymous={self._anonymous} nomessage_game={self._nomessage_game} nopress_game={self._nopress_game} nomessage_current={self._nomessage_current} nopress_current={self._nopress_current} fast={self._fast} scoring={self._scoring} deadline={self._deadline} deadline_hour={self._deadline_hour} deadline_sync={self._deadline_sync} grace_duration={self._grace_duration} speed_moves={self._speed_moves} cd_possible_moves={self._cd_possible_moves} speed_retreats={self._speed_retreats} cd_possible_retreats={self._cd_possible_retreats} speed_adjustments={self._speed_adjustments} cd_possible_builds={self._cd_possible_builds} used_for_elo={self._used_for_elo} play_weekend={self._play_weekend} manual={self._manual} access_code={self._access_code} access_restriction_reliability={self._access_restriction_reliability} access_restriction_regularity={self._access_restriction_regularity} access_restriction_performance={self._access_restriction_performance} current_advancement={self._current_advancement} nb_max_cycles_to_play={self._nb_max_cycles_to_play} victory_centers={self._victory_centers} current_state={self._current_state}"
 
