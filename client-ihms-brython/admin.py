@@ -18,7 +18,7 @@ import mapping
 import geometry
 
 
-OPTIONS = ['changer nouvelles', 'codes de vérification', 'usurper', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'maintenance']
+OPTIONS = ['changer nouvelles', 'codes de vérification', 'usurper', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'calcul du elo', 'maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1169,11 +1169,78 @@ def edit_moderators():
     MY_SUB_PANEL <= form
 
 
+def calculate_elo():
+    """ calculate_elo """
+
+    def calculate_elo_callback(_):
+        """ calculate_elo_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au calcul du ELO : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au calcul du ELO : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                calculate_elo()
+
+                return
+
+            information = str(req_result['games_dict'])
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            MY_SUB_PANEL <= information
+
+        json_dict = {
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/calculate_elo"
+
+        # calculate_elo : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    MY_SUB_PANEL <= html.H3("Calculer le ELO")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # players_dict has Pseudo -> player_id
+
+    form = html.FORM()
+
+    # ---
+
+    input_maintain = html.INPUT(type="submit", value="calculer")
+    input_maintain.bind("click", calculate_elo_callback)
+    form <= input_maintain
+
+    MY_SUB_PANEL <= form
+
+
 def maintain():
     """ maintain """
 
     def maintain_callback(_):
-        """ maintain """
+        """ maintain_callback """
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1273,6 +1340,8 @@ def load_option(_, item_name):
         last_failures()
     if item_name == 'éditer les modérateurs':
         edit_moderators()
+    if item_name == 'calcul du elo':
+        calculate_elo()
     if item_name == 'maintenance':
         maintain()
 

@@ -4846,6 +4846,58 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/calculate_elo')
+class CalculateEloRessource(flask_restful.Resource):  # type: ignore
+    """ CalculateEloRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Get information for ELO of players etc...
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/calculate_elo - GET - getting ELO data ")
+
+        sql_executor = database.SqlExecutor()
+
+        # concerned_games
+        games_list = games.Game.inventory(sql_executor)
+        concerned_games_list = [g.identifier for g in games_list if g.current_state == 2 and g.used_for_elo == 1]
+
+        games_dict = {}
+        for game_id in concerned_games_list:
+
+            game_data: typing.Dict[str, typing.Any] = {}
+
+            # get end date
+            report = reports.Report.find_by_identifier(sql_executor, game_id)
+            assert report is not None
+            game_data['time_stamp'] = report.time_stamp
+
+            # get players
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            game_data['players'] = {str(a[1]): a[2] for a in allocations_list}
+
+            # get scoring and name
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+            game_name = game.name
+            game_data['scoring'] = game.scoring
+
+            # get ownerships
+            game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
+            owners = {o[2] for o in game_ownerships}
+            centers_number = {o: len([oo for oo in game_ownerships if oo[2] == o]) for o in owners}
+            game_data['centers_number'] = centers_number
+
+            games_dict[game_name] = game_data
+
+        del sql_executor
+
+        data = {'games_dict': games_dict}
+        return data, 200
+
+
 @API.resource('/maintain')
 class MaintainRessource(flask_restful.Resource):  # type: ignore
     """ MaintainRessource """
