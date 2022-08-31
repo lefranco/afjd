@@ -16,6 +16,7 @@ import interface
 import login
 import mapping
 import geometry
+import elo
 
 
 OPTIONS = ['changer nouvelles', 'codes de vérification', 'usurper', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'calcul du elo', 'maintenance']
@@ -1191,11 +1192,12 @@ def calculate_elo():
 
                 return
 
-            information = str(req_result['games_dict'])
+            games_dict = req_result['games_dict']
+            elo_information = elo.process_elo(players_dict, games_dict)
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            MY_SUB_PANEL <= information
+            MY_SUB_PANEL <= elo_information
 
         json_dict = {
         }
