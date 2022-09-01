@@ -62,7 +62,7 @@ def select_game():
             legend_game = html.LEGEND(legend, title="Sélection de la partie")
             fieldset <= legend_game
             input_game = html.SELECT(type="select-one", value="")
-            game_list = sorted([g['name'].upper() for g in games_data.values() if g['variant'] == variant and g['current_state'] == current_state])
+            game_list = sorted([g['name'] for g in games_data.values() if g['variant'] == variant and g['current_state'] == current_state], key=lambda n: n.upper())
             for game in game_list:
                 option = html.OPTION(game)
                 if 'GAME' in storage:
