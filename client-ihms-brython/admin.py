@@ -1193,7 +1193,8 @@ def calculate_elo():
                 return
 
             games_dict = req_result['games_dict']
-            elo_information = elo.process_elo(players_dict, games_dict)
+            elo_information = html.DIV()
+            elo.process_elo(variant_data, players_dict, games_dict, elo_information)
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1226,6 +1227,17 @@ def calculate_elo():
         return
 
     # players_dict has Pseudo -> player_id
+
+    if 'GAME_VARIANT' not in storage:
+        alert("Pas de partie de référence")
+        return
+    variant_name = storage['GAME_VARIANT']
+
+    variant_content = common.game_variant_content_reload(variant_name)
+    interface_chosen = interface.get_interface_from_variant(variant_name)
+    interface_parameters = common.read_parameters(variant_name, interface_chosen)
+
+    variant_data = mapping.Variant(variant_name, variant_content, interface_parameters)
 
     form = html.FORM()
 
