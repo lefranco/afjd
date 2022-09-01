@@ -4876,7 +4876,7 @@ class CalculateEloRessource(flask_restful.Resource):  # type: ignore
 
             # get players
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
-            game_data['players'] = {str(a[1]): a[2] for a in allocations_list}
+            game_data['players'] = {str(a[1]): a[2] for a in allocations_list if a[2] >= 1}
 
             # get scoring and name
             game = games.Game.find_by_identifier(sql_executor, game_id)
