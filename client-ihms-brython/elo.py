@@ -94,14 +94,41 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                     elo_recap_table[pseudo]['number'] += 1
 
     # global recap
-    final_raw_elo_table = {p: elo_recap_table[p]['sum'] / elo_recap_table[p]['number'] for p in elo_recap_table}
+    # fills DEFAULT_ELO for roles not played
+    final_raw_elo_table = {p: (elo_recap_table[p]['sum'] + (num_players - elo_recap_table[p]['number']) * DEFAULT_ELO) / num_players for p in elo_recap_table}
     final_elo_table = {p: final_raw_elo_table[p] for p in sorted(final_raw_elo_table, key=lambda p: final_raw_elo_table[p], reverse=True)}
 
     # display
     elo_information <= html.HR()
     elo_information <= html.HR()
+
+    # display global
     elo_information <= html.HR()
     for rank, (player, elo) in enumerate(final_elo_table.items()):
+
+        # make detail for player
         player_detail = {num2rolename[num]: elo_table[(player, num2rolename[num])] for num in variant_data.roles if num >= 1 and (player, num2rolename[num]) in elo_table}
+
+        # display rankings
         elo_information <= f"{rank + 1} {player} -> {elo} ({player_detail})"
         elo_information <= html.BR()
+
+    # display per role
+    for num in variant_data.roles:
+        if num >= 1:
+
+            # display role name
+            elo_information <= html.HR()
+            role_name = num2rolename[num]
+            elo_information <= role_name
+            elo_information <= html.BR()
+
+            # make table
+            final_raw_role_elo_table = {p : elo_table[(p, rn)] for (p, rn) in elo_table if rn == role_name}
+            final_role_elo_table = {p: final_raw_role_elo_table[p] for p in sorted(final_raw_role_elo_table, key=lambda p: final_raw_role_elo_table[p], reverse=True)}
+
+            # display rankings
+            for rank, (player, elo) in enumerate(final_role_elo_table.items()):
+                elo_information <= f"{rank + 1} {player} -> {elo}"
+                elo_information <= html.BR()
+            elo_information <= html.BR()
