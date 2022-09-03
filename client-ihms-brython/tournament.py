@@ -386,12 +386,12 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']
+    fields = ['name', 'go_game', 'master', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'master': 'arbitre', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'current_state': 'état'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'master': 'arbitre', 'variant': 'variante', 'used_for_elo': 'elo', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'current_state': 'état'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -399,7 +399,7 @@ def show_games():
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']:
+        if field in ['name', 'master', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']:
 
             if field == 'name':
 
@@ -455,6 +455,8 @@ def show_games():
         def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'variant':
         def key_function(g): return g[1]['variant']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'used_for_elo':
+        def key_function(g): return g[1]['used_for_elo']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nopress_game':
         def key_function(g): return (g[1]['nopress_game'], g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nomessage_game':
@@ -533,6 +535,9 @@ def show_games():
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
+
+            if field == 'used_for_elo':
+                value = "Oui" if value else "Non"
 
             if field == 'master':
                 game_name = data['name']
