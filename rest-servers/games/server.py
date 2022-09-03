@@ -4964,11 +4964,12 @@ class CalculateEloRessource(flask_restful.Resource):  # type: ignore
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
             game_data['players'] = {str(a[1]): a[2] for a in allocations_list if a[2] >= 1}
 
-            # get scoring and name
+            # get scoring, classic and name
             game = games.Game.find_by_identifier(sql_executor, game_id)
             assert game is not None
             game_name = game.name
             game_data['scoring'] = game.scoring
+            game_data['classic'] = not game.nomessage_game
 
             # get ownerships
             game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
