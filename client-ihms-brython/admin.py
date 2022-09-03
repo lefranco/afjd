@@ -305,14 +305,6 @@ def usurp():
     MY_SUB_PANEL <= form
 
 
-
-
-
-
-
-
-
-
 def rectify_used_for_elo():
     """ rectify_used_for_elo """
 
@@ -429,14 +421,6 @@ def rectify_used_for_elo():
     form <= input_change_used_for_elo_game
 
     MY_SUB_PANEL <= form
-
-
-
-
-
-
-
-
 
 
 def rectify_position():
