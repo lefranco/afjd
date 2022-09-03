@@ -34,6 +34,7 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
         game_scoring_dict = game_data['scoring']
         centers_number_dict = game_data['centers_number']
         game_players_dict = game_data['players']
+        classic = game_data['classic']
 
         # convert time
         time_creation = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
@@ -73,17 +74,27 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                         expected_table[role_name] += 1 / (1 + (10 ** ((rating_table[role_name2] - rating_table[role_name]) / D_CONSTANT)))
                 expected_table[role_name] /= ((num_players * (num_players - 1)) / 2)
 
-        elo_information <= f"{time_creation_str} {game_name} -> {score_table} {pseudo_table} {performed_table} {expected_table} "
+        elo_information <= f"{time_creation_str=} {game_name=} {classic=}"
+        elo_information <= html.BR()
+        elo_information <= f"{pseudo_table=}"
+        elo_information <= html.BR()
+        elo_information <= f"{score_table=}"
+        elo_information <= html.BR()
+        elo_information <= f"{expected_table=}"
+        elo_information <= html.BR()
+        elo_information <=  f"{performed_table=} "
         elo_information <= html.BR()
 
         # elo variation
+        elo_information <= "Effect :"
+        elo_information <= html.BR()
         for num in variant_data.roles:
             if num >= 1:
                 role_name = num2rolename[num]
                 player = pseudo_table[role_name]
                 elo_table[(player, role_name)] += K_CONSTANT * (num_players - 1) * (performed_table[role_name] - expected_table[role_name])
 
-                elo_information <= f"{player}({role_name}) -> delta = {K_CONSTANT * (performed_table[role_name] - expected_table[role_name])} "
+                elo_information <= f"{player}({role_name}) -> delta = {K_CONSTANT * (performed_table[role_name] - expected_table[role_name])} new elo = {elo_table[(player, role_name)]} "
                 elo_information <= html.BR()
 
         elo_information <= html.HR()
