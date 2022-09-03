@@ -58,8 +58,8 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                 role_name = num2rolename[num]
                 player = pseudo_table[role_name]
                 if (player, classic) not in number_games_table:
-                    number_games_table[(player, classic)] = 0
-                number_games_table[(player, classic)] += 1
+                    number_games_table[(player, role_name, classic)] = 0
+                number_games_table[(player, role_name, classic)] += 1
 
         # extract ELO of players
         rating_table = {}
@@ -103,7 +103,7 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                 player = pseudo_table[role_name]
 
                 # K parameter must decrease other number of games
-                k_player = max(20, 40 - number_games_table[(player, classic)] / 2.)
+                k_player = max(20, 40 - number_games_table[(player, role_name, classic)] / 2.)
 
                 elo_table[(player, role_name, classic)] += k_player * (num_players - 1) * (performed_table[role_name] - expected_table[role_name])
 
