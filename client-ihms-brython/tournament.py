@@ -1264,7 +1264,7 @@ def edit_tournament():
     possible_incomers -= set(games_grouped_list)
 
     input_incomer = html.SELECT(type="select-one", value="")
-    for game_name in sorted(map(lambda i: id2name[i], possible_incomers), key=lambda n: n.upper()):
+    for game_name in sorted(map(lambda i: id2name[i], possible_incomers), key=lambda g: g.upper()):
         option = html.OPTION(game_name)
         input_incomer <= option
 
@@ -1298,7 +1298,7 @@ def edit_tournament():
     possible_outcomers = games_in
 
     input_outcomer = html.SELECT(type="select-one", value="")
-    for game_name in sorted(map(lambda i: id2name[i], possible_outcomers)):
+    for game_name in sorted(map(lambda i: id2name[i], possible_outcomers), key=lambda g: g.upper()):
         option = html.OPTION(game_name)
         input_outcomer <= option
 
