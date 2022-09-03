@@ -395,7 +395,7 @@ def my_games(state_name):
     games_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'go_game', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
+    fields = ['name', 'go_game', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
 
     if storage['ACTION_COLUMN_MODE'] == 'displayed':
         fields.extend(['action'])
@@ -403,7 +403,7 @@ def my_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'variant': 'variante', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis d\'accord', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous d\'accord', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'action': 'action'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'variant': 'variante', 'used_for_elo': 'elo', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis d\'accord', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous d\'accord', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'action': 'action'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -411,7 +411,7 @@ def my_games(state_name):
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played']:
+        if field in ['name', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played']:
 
             if field == 'name':
 
@@ -459,6 +459,8 @@ def my_games(state_name):
         def key_function(g): return g[1]['name'].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'variant':
         def key_function(g): return g[1]['variant']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'used_for_elo':
+        def key_function(g): return g[1]['used_for_elo']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nopress_game':
         def key_function(g): return (g[1]['nopress_game'], g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nomessage_game':
@@ -555,6 +557,9 @@ def my_games(state_name):
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
+
+            if field == 'used_for_elo':
+                value = "Oui" if value else "Non"
 
             if field == 'nopress_game':
                 value1 = value

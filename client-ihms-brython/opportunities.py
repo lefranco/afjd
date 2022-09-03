@@ -215,12 +215,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'join', 'master', 'variant', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
+    fields = ['name', 'go_game', 'join', 'master', 'variant', 'used_for_elo', 'description', 'nopress_game', 'nomessage_game', 'deadline', 'current_state', 'current_advancement', 'allocated']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(**)'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'master': 'arbitre', 'join': 'rejoindre', 'variant': 'variante', 'used_for_elo': 'elo', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(**)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -228,7 +228,7 @@ def my_opportunities():
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']:
+        if field in ['name', 'master', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']:
 
             if field == 'name':
 
@@ -276,6 +276,8 @@ def my_opportunities():
         def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'variant':
         def key_function(g): return g[1]['variant']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'used_for_elo':
+        def key_function(g): return g[1]['used_for_elo']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nopress_game':
         def key_function(g): return (g[1]['nopress_game'], g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nomessage_game':
@@ -366,6 +368,9 @@ def my_opportunities():
                     input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
                     form <= input_join_game
                     value = form
+
+            if field == 'used_for_elo':
+                value = "Oui" if value else "Non"
 
             if field == 'master':
                 game_name = data['name']

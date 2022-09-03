@@ -354,12 +354,12 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'id', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']
+    fields = ['name', 'go_game', 'id', 'master', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'master': 'arbitre', 'variant': 'variante', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'master': 'arbitre', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -367,7 +367,7 @@ def all_games(state_name):
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'master', 'variant', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']:
+        if field in ['name', 'master', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement']:
 
             if field == 'name':
 
@@ -416,6 +416,8 @@ def all_games(state_name):
         def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'variant':
         def key_function(g): return g[1]['variant']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'used_for_elo':
+        def key_function(g): return g[1]['used_for_elo']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nopress_game':
         def key_function(g): return (g[1]['nopress_game'], g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nomessage_game':
@@ -494,6 +496,9 @@ def all_games(state_name):
 
             if field == 'id':
                 value = game_id
+
+            if field == 'used_for_elo':
+                value = "Oui" if value else "Non"
 
             if field == 'master':
                 game_name = data['name']
