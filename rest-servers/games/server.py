@@ -4947,15 +4947,18 @@ class CalculateEloRessource(flask_restful.Resource):  # type: ignore
         games_list = games.Game.inventory(sql_executor)
         concerned_games_list = [g.identifier for g in games_list if g.current_state == 2 and g.used_for_elo == 1]
 
+        # time of spring 01
+        advancement = 1
+
         games_dict = {}
         for game_id in concerned_games_list:
 
             game_data: typing.Dict[str, typing.Any] = {}
 
-            # get end date
-            report = reports.Report.find_by_identifier(sql_executor, game_id)
-            assert report is not None
-            game_data['time_stamp'] = report.time_stamp
+            # get start date
+            transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, advancement)
+            assert transition is not None
+            game_data['time_stamp'] = transition.time_stamp
 
             # get players
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)

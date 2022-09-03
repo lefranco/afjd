@@ -2,6 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
+import datetime
+
 from browser import html  # pylint: disable=import-error
 
 import scoring
@@ -28,9 +30,14 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
     for game_name, game_data in sorted(games_dict.items(), key=lambda i: i[1]['time_stamp']):
 
         # extract information
+        time_stamp = game_data['time_stamp']
         game_scoring_dict = game_data['scoring']
         centers_number_dict = game_data['centers_number']
         game_players_dict = game_data['players']
+
+        # convert time
+        time_creation = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+        time_creation_str = datetime.datetime.strftime(time_creation, "%d-%m-%Y %H:%M:%S")
 
         # calculate scoring
         ratings = {num2rolename[n]: centers_number_dict[str(n)] if str(n) in centers_number_dict else 0 for n in variant_data.roles if n >= 1}
@@ -66,7 +73,7 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                         expected_table[role_name] += 1 / (1 + (10 ** ((rating_table[role_name2] - rating_table[role_name]) / D_CONSTANT)))
                 expected_table[role_name] /= ((num_players * (num_players - 1)) / 2)
 
-        elo_information <= f"{game_name} -> {score_table} {pseudo_table} {performed_table} {expected_table} "
+        elo_information <= f"{time_creation_str} {game_name} -> {score_table} {pseudo_table} {performed_table} {expected_table} "
         elo_information <= html.BR()
 
         # elo variation
@@ -74,7 +81,7 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             if num >= 1:
                 role_name = num2rolename[num]
                 player = pseudo_table[role_name]
-                elo_table[(player, role_name)] += K_CONSTANT * (performed_table[role_name] - expected_table[role_name])
+                elo_table[(player, role_name)] += K_CONSTANT * (num_players - 1) * (performed_table[role_name] - expected_table[role_name])
 
                 elo_information <= f"{player}({role_name}) -> delta = {K_CONSTANT * (performed_table[role_name] - expected_table[role_name])} "
                 elo_information <= html.BR()
@@ -95,8 +102,10 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
 
     # global recap
     # fills DEFAULT_ELO for roles not played
-    final_raw_elo_table = {p: (elo_recap_table[p]['sum'] + (num_players - elo_recap_table[p]['number']) * DEFAULT_ELO) / num_players for p in elo_recap_table}
-    final_elo_table = {p: final_raw_elo_table[p] for p in sorted(final_raw_elo_table, key=lambda p: final_raw_elo_table[p], reverse=True)}
+    final_raw_elo_table = {k: (v['sum'] + (num_players - v['number']) * DEFAULT_ELO) / num_players for k, v in elo_recap_table.items()}
+
+    # sort table
+    final_elo_table = dict(sorted(final_raw_elo_table.items(), key=lambda t: t[1], reverse=True))
 
     # display
     elo_information <= html.HR()
@@ -124,8 +133,10 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             elo_information <= html.BR()
 
             # make table
-            final_raw_role_elo_table = {p : elo_table[(p, rn)] for (p, rn) in elo_table if rn == role_name}
-            final_role_elo_table = {p: final_raw_role_elo_table[p] for p in sorted(final_raw_role_elo_table, key=lambda p: final_raw_role_elo_table[p], reverse=True)}
+            final_raw_role_elo_table = {p: elo_table[(p, rn)] for (p, rn) in elo_table if rn == role_name}
+
+            # sort table
+            final_role_elo_table = dict(sorted(final_raw_role_elo_table.items(), key=lambda t: t[1], reverse=True))
 
             # display rankings
             for rank, (player, elo) in enumerate(final_role_elo_table.items()):
