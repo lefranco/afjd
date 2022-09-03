@@ -98,6 +98,11 @@ GAME_PARSER.add_argument('victory_centers', type=int, required=False)
 GAME_PARSER.add_argument('current_state', type=int, required=False)
 GAME_PARSER.add_argument('pseudo', type=str, required=False)
 
+# for game parameter alteration
+GAME_PARSER2 = flask_restful.reqparse.RequestParser()
+GAME_PARSER2.add_argument('used_for_elo', type=int, required=False)
+GAME_PARSER2.add_argument('pseudo', type=str, required=False)
+
 GAMES_SELECT_PARSER = flask_restful.reqparse.RequestParser()
 GAMES_SELECT_PARSER.add_argument('selection', type=str, required=True)
 
@@ -627,6 +632,105 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         data = {'name': name, 'msg': 'Ok removed'}
         return data, 200
+
+
+
+
+
+
+
+
+
+
+
+
+
+@API.resource('/alter_games/<name>')
+class AlterGameRessource(flask_restful.Resource):  # type: ignore
+    """ AlterGameRessource """
+
+    def put(self, name: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Updates information about a game (as site administrattor)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/alter_games/<name> - PUT - alterating game name=%s", name)
+
+        args = GAME_PARSER2.parse_args(strict=True)
+
+        pseudo = args['pseudo']
+
+        mylogger.LOGGER.info("pseudo=%s", pseudo)
+
+        if pseudo is None:
+            flask_restful.abort(401, msg="Need a pseudo to modify game")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_name(sql_executor, name)
+
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Game {name} does not exist")
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to alter a game!")
+
+        assert game is not None
+        changed = game.load_json(args)
+        if not changed:
+
+            del sql_executor
+
+            data = {'name': name, 'msg': 'Ok but no change !'}
+            return data, 200
+
+        game.update_database(sql_executor)
+        sql_executor.commit()
+
+        del sql_executor
+
+        data = {'name': name, 'msg': 'Ok altered'}
+        return data, 200
+
+
+
+
+
+
+
+
+
+
 
 
 @API.resource('/games')

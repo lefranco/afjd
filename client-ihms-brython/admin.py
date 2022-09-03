@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['changer nouvelles', 'codes de vérification', 'usurper', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'calcul du elo', 'maintenance']
+OPTIONS = ['changer nouvelles', 'codes de vérification', 'usurper', 'rectifier pour le elo', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'calcul du elo', 'maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -305,8 +305,142 @@ def usurp():
     MY_SUB_PANEL <= form
 
 
-def rectify():
-    """rectify """
+
+
+
+
+
+
+
+
+def rectify_used_for_elo():
+    """ rectify_used_for_elo """
+
+    # declare the values
+    used_for_elo_loaded = None
+
+    def change_used_for_elo_reload():
+        """ change_used_for_elo_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ local_noreply_callback """
+            nonlocal status
+            alert("Problème (pas de réponse de la part du serveur)")
+            status = False
+
+        def reply_callback(req):
+            nonlocal status
+            nonlocal used_for_elo_loaded
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération de l'utilisation pour le ELO de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération de l'utilisation pour le ELO de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                status = False
+                return
+
+            used_for_elo_loaded = req_result['used_for_elo']
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # getting game data : no need for token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_used_for_elo_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification de l'utilisation pour le ELO de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification de l'utilisation pour le ELO de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"L'utilisation pour le ELO a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
+
+        used_for_elo = int(input_used_for_elo.checked)
+
+        json_dict = {
+            'pseudo': pseudo,
+            'used_for_elo': used_for_elo,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/alter_games/{game}"
+
+        # altering game used for elo : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        rectify_used_for_elo()
+
+    MY_SUB_PANEL <= html.H3("Rectifier l'utilisation pour le calcul du ELO")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    status = change_used_for_elo_reload()
+    if not status:
+        return
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_used_for_elo = html.LEGEND("utilisée pour le élo", title="Partie sérieuse - les résultats de la partie comptent pour le calcul du élo sur le site")
+    fieldset <= legend_used_for_elo
+    input_used_for_elo = html.INPUT(type="checkbox", checked=used_for_elo_loaded)
+    fieldset <= input_used_for_elo
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_used_for_elo_game = html.INPUT(type="submit", value="changer l'utilisation pour le calcul du ELO de la partie")
+    input_change_used_for_elo_game.bind("click", change_used_for_elo_game_callback)
+    form <= input_change_used_for_elo_game
+
+    MY_SUB_PANEL <= form
+
+
+
+
+
+
+
+
+
+
+def rectify_position():
+    """rectify_position """
 
     stored_event = None
     down_click_time = None
@@ -1344,8 +1478,10 @@ def load_option(_, item_name):
         show_verif_codes()
     if item_name == 'usurper':
         usurp()
+    if item_name == 'rectifier pour le elo':
+        rectify_used_for_elo()
     if item_name == 'rectifier la position':
-        rectify()
+        rectify_position()
     if item_name == 'envoyer un courriel':
         sendmail()
     if item_name == 'dernières connexions':
