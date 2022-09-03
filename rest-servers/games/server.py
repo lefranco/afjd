@@ -634,17 +634,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-
-
-
-
-
-
-
-
-
-
-
 @API.resource('/alter_games/<name>')
 class AlterGameRessource(flask_restful.Resource):  # type: ignore
     """ AlterGameRessource """
@@ -721,16 +710,6 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
 
         data = {'name': name, 'msg': 'Ok altered'}
         return data, 200
-
-
-
-
-
-
-
-
-
-
 
 
 @API.resource('/games')
