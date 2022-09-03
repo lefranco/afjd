@@ -55,7 +55,7 @@ FAQ_CONTENT_TABLE = {
     "Un modérateur peut voir le courriel et le numéro de téléphone d'un inscrit. Il peut retrouver un pseudo à partir d'une adresse courriel. Il peut lister toutes les adresses courriel du site. Il peut voir le résultat complet d'un tournoi (anonyme ou pas). Enfin, dans les parties : il voit les identités des joueurs même si la partie est anonyme, ainsi que les soumissions et les incidents même s'il n'est pas dans la partie.",
 
     "Que peut faire un administrateur ?":
-    "Il peut rectifier la position d'une partie. Il peut modifier les nouvelles. Il peut savoir les dates des dernières connexions et les connexions manquées (erreur de pseudo/mot de passe). Il peut se substituer à un inscrit. Il peut envoyer un courriel de la part du site. Enfin, il gère les modérateurs.",
+    "Il peut rectifier la position d'une partie. Il peut modifier les nouvelles. Il peut savoir les dates des dernières connexions et les connexions manquées (erreur de pseudo/mot de passe). Il peut se substituer à un inscrit (donc cela implique qu'il puisse, s'il le souhaite, lire tous les messages privés et publics de toutes les parties). Il peut envoyer un courriel de la part du site. Enfin, il gère les modérateurs.",
 
     "Comment créer une partie dans laquelle je joue ?":
     "Il faut créer la partie, puis se retirer de l'arbitrage et demander à un arbitre de parties du site d'en prendre l'arbitrage.",
