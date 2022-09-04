@@ -6,11 +6,23 @@ from browser import html, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
-OPTIONS = ['m\'inscrire à un événement', 'créer un événement', 'éditer un événement', 'supprimer un événement']
+OPTIONS = ['sélectionner un événement', 'm\'inscrire', 'créer un événement', 'éditer l\'événement', 'supprimer l\'événement']
+
+
+def select_event():
+    """ select_event """
+
+    MY_SUB_PANEL <= html.H3("Sélection d'un événement")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    MY_SUB_PANEL <= "TODO"
 
 
 def register_event():
-    """ create_event """
+    """ register_event """
 
     MY_SUB_PANEL <= html.H3("Inscription à un événement")
 
@@ -81,13 +93,15 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'm\'inscrire à un événement':
+    if item_name == 'sélectionner un événement':
+        select_event()
+    if item_name == 'm\'inscrire':
         register_event()
     if item_name == 'créer un événement':
         create_event()
-    if item_name == 'éditer un événement':
+    if item_name == 'éditer l\'événement':
         edit_event()
-    if item_name == 'supprimer un événement':
+    if item_name == 'supprimer l\'événement':
         delete_event()
 
     global ITEM_NAME_SELECTED
