@@ -1185,7 +1185,7 @@ def show_position():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        url = f"https://diplomania-gen.fr/game={GAME}&arrival=rejoindre"
+        url = f"https://diplomania-gen.fr?game={GAME}&arrival=rejoindre"
         buttons_right <= f"Pour inviter un joueur à rejoindre la partie, lui envoyer le lien : '{url}'"
         buttons_right <= html.BR()
         buttons_right <= html.BR()
