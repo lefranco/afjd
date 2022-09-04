@@ -6,7 +6,7 @@ from browser import html, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
-OPTIONS = ['sélectionner un événement', 'm\'inscrire', 'créer un événement', 'éditer l\'événement', 'supprimer l\'événement']
+OPTIONS = ['sélectionner un événement', 'm\'inscrire', 'me désinscrire', 'participants à l\'événement', 'créer un événement', 'éditer l\'événement', 'supprimer l\'événement']
 
 
 def select_event():
@@ -25,6 +25,30 @@ def register_event():
     """ register_event """
 
     MY_SUB_PANEL <= html.H3("Inscription à un événement")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    MY_SUB_PANEL <= "TODO"
+
+
+def unregister_event():
+    """ unregister_event """
+
+    MY_SUB_PANEL <= html.H3("Désinscription à un événement")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    MY_SUB_PANEL <= "TODO"
+
+
+def event_joiners():
+    """ event_joiners """
+
+    MY_SUB_PANEL <= html.H3("Participants à un événement")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -97,6 +121,10 @@ def load_option(_, item_name):
         select_event()
     if item_name == 'm\'inscrire':
         register_event()
+    if item_name == 'me désinscrire':
+        unregister_event()
+    if item_name == 'participants à l\'événement':
+        event_joiners()
     if item_name == 'créer un événement':
         create_event()
     if item_name == 'éditer l\'événement':
