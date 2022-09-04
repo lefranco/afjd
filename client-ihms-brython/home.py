@@ -6,7 +6,7 @@ import json
 import time
 import datetime
 
-from browser import html, ajax, alert, window  # pylint: disable=import-error
+from browser import html, ajax, alert, document, window  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
@@ -21,7 +21,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['dernières nouvelles', 'autres liens', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
+OPTIONS = ['dernières nouvelles', 'autres liens', 'brique sociale', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
 
 NOTE_CONTENT_STATED = """Bienvenue dans la première version du site Diplomania.
 Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu.
@@ -1031,6 +1031,18 @@ def show_no_game_masters_data():
     MY_SUB_PANEL <= no_game_masters_table
 
 
+def social():
+    """ social """
+
+    # load social directly
+
+    # use button
+    button = html.BUTTON("Lancement du la brique sociale", id='social_link')
+    MY_SUB_PANEL <= button
+    button.bind("click", lambda e: window.open("https://www.diplomania.fr/"))
+    document['social_link'].click()
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -1061,6 +1073,8 @@ def load_option(_, item_name):
         all_games('en cours')
     if item_name == 'autres liens':
         show_links()
+    if item_name == 'brique sociale':
+        social()
     if item_name == 'déclarer un incident':
         declare_incident()
     if item_name == 'foire aux questions':
