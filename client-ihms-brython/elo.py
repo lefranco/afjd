@@ -62,7 +62,11 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
     num2rolename = {n: variant_data.name_table[variant_data.roles[n]] for n in variant_data.roles if n >= 1}
 
     # to measure times spent
+    dating_calculation_time = 0.
     scoring_calculation_time = 0.
+    performance_calculation_time = 0.
+    count_calculation_time = 0.
+    extract_calculation_time = 0.
     expected_calculation_time = 0.
     variation_calculation_time = 0.
 
@@ -78,34 +82,41 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
         classic = game_data['classic']
 
         # convert time
+        before = time.time()
         time_creation = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
         time_creation_str = datetime.datetime.strftime(time_creation, "%d-%m-%Y %H:%M:%S")
+        after = time.time()
+        dating_calculation_time += (after - before)
 
         # calculate scoring
+        before = time.time()
         ratings = {num2rolename[n]: centers_number_dict[str(n)] if str(n) in centers_number_dict else 0 for n in variant_data.roles if n >= 1}
         solo_threshold = variant_data.number_centers() // 2
-
-        before = time.time()
         score_table = scoring.scoring(game_scoring_dict, solo_threshold, ratings)
         after = time.time()
         scoring_calculation_time += (after - before)
 
-        # calculate performance
+        # calculate performance and get pseudos of players
+        before = time.time()
         sum_score = sum(score_table.values())
         performed_table = {r: s / sum_score for r, s in score_table.items()}
-
-        # get pseudos of players
         pseudo_table = {num2rolename[rn]: num2pseudo[int(pn)] for pn, rn in game_players_dict.items()}
+        after = time.time()
+        performance_calculation_time += (after - before)
 
         # count games
+        before = time.time()
         for num in effective_roles:
             role_name = num2rolename[num]
             player = pseudo_table[role_name]
             if (player, role_name, classic) not in number_games_table:
                 number_games_table[(player, role_name, classic)] = 0
             number_games_table[(player, role_name, classic)] += 1
+        after = time.time()
+        count_calculation_time += (after - before)
 
         # extract ELO of players
+        before = time.time()
         rating_table = {}
         for num in effective_roles:
             role_name = num2rolename[num]
@@ -113,6 +124,8 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             if (player, role_name, classic) not in elo_table:
                 elo_table[(player, role_name, classic)] = DEFAULT_ELO
             rating_table[role_name] = elo_table[(player, role_name, classic)]
+        after = time.time()
+        extract_calculation_time += (after - before)
 
         # calculate expected performance
         before = time.time()
@@ -140,9 +153,6 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             elo_information <= f"{performed_table=}"
             elo_information <= html.BR()
 
-        loosers = [r for r in score_table if r == min(score_table.values())]
-        winners = [r for r in score_table if r == max(score_table.values())]
-
         # elo variation
 
         if VERIFY:
@@ -151,7 +161,8 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
 
         # calculate expected performance
         before = time.time()
-
+        loosers = [r for r in score_table if r == min(score_table.values())]
+        winners = [r for r in score_table if r == max(score_table.values())]
         for num in effective_roles:
             role_name = num2rolename[num]
             player = pseudo_table[role_name]
@@ -189,7 +200,22 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             elo_information <= "-------------------"
             elo_information <= html.BR()
 
+    elo_information <=f"Number of games processed : {len(games_dict)}"
+    elo_information <= html.BR()
+
+    elo_information <= f"Dating calculation time : {dating_calculation_time}"
+    elo_information <= html.BR()
+
     elo_information <= f"Scoring calculation time : {scoring_calculation_time}"
+    elo_information <= html.BR()
+
+    elo_information <= f"Performance calculation time : {performance_calculation_time}"
+    elo_information <= html.BR()
+
+    elo_information <= f"Count calculation time : {count_calculation_time}"
+    elo_information <= html.BR()
+
+    elo_information <= f"Extract calculation time : {extract_calculation_time}"
     elo_information <= html.BR()
 
     elo_information <= f"Expected calculation time : {expected_calculation_time}"
