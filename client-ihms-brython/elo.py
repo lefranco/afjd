@@ -152,7 +152,6 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
         # calculate expected performance
         before = time.time()
 
-        expected_table = {}
         for num in effective_roles:
             role_name = num2rolename[num]
             player = pseudo_table[role_name]
