@@ -96,35 +96,32 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
         pseudo_table = {num2rolename[rn]: num2pseudo[int(pn)] for pn, rn in game_players_dict.items()}
 
         # count games
-        for num in variant_data.roles:
-            if num >= 1:
-                role_name = num2rolename[num]
-                player = pseudo_table[role_name]
-                if (player, role_name, classic) not in number_games_table:
-                    number_games_table[(player, role_name, classic)] = 0
-                number_games_table[(player, role_name, classic)] += 1
+        for num in effective_roles:
+            role_name = num2rolename[num]
+            player = pseudo_table[role_name]
+            if (player, role_name, classic) not in number_games_table:
+                number_games_table[(player, role_name, classic)] = 0
+            number_games_table[(player, role_name, classic)] += 1
 
         # extract ELO of players
         rating_table = {}
-        for num in variant_data.roles:
-            if num >= 1:
-                role_name = num2rolename[num]
-                player = pseudo_table[role_name]
-                if (player, role_name, classic) not in elo_table:
-                    elo_table[(player, role_name, classic)] = DEFAULT_ELO
-                rating_table[role_name] = elo_table[(player, role_name, classic)]
+        for num in effective_roles:
+            role_name = num2rolename[num]
+            player = pseudo_table[role_name]
+            if (player, role_name, classic) not in elo_table:
+                elo_table[(player, role_name, classic)] = DEFAULT_ELO
+            rating_table[role_name] = elo_table[(player, role_name, classic)]
 
         # calculate expected performance
         expected_table = {}
-        for num in variant_data.roles:
-            if num >= 1:
-                role_name = num2rolename[num]
-                expected_table[role_name] = 0
-                for num2 in variant_data.roles:
-                    if num2 >= 1 and num2 != num:
-                        role_name2 = num2rolename[num2]
-                        expected_table[role_name] += 1 / (1 + (10 ** ((rating_table[role_name2] - rating_table[role_name]) / D_CONSTANT)))
-                expected_table[role_name] /= ((num_players * (num_players - 1)) / 2)
+        for num in effective_roles:
+            role_name = num2rolename[num]
+            expected_table[role_name] = 0
+            for num2 in variant_data.roles:
+                if num2 >= 1 and num2 != num:
+                    role_name2 = num2rolename[num2]
+                    expected_table[role_name] += 1 / (1 + (10 ** ((rating_table[role_name2] - rating_table[role_name]) / D_CONSTANT)))
+            expected_table[role_name] /= ((num_players * (num_players - 1)) / 2)
 
         if VERIFY:
             elo_information <= f"{time_creation_str=} {game_name=} {classic=}"
@@ -147,36 +144,35 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             elo_information <= "Effect :"
             elo_information <= html.BR()
 
-        for num in variant_data.roles:
-            if num >= 1:
-                role_name = num2rolename[num]
-                player = pseudo_table[role_name]
+        for num in effective_roles:
+            role_name = num2rolename[num]
+            player = pseudo_table[role_name]
 
-                # K parameter must decrease other number of games
-                k_player = max(20, 40 - number_games_table[(player, role_name, classic)] / 2.)
+            # K parameter must decrease other number of games
+            k_player = max(20, 40 - number_games_table[(player, role_name, classic)] / 2.)
 
-                delta = k_player * num_players * (num_players / 2) * (performed_table[role_name] - expected_table[role_name])
+            delta = k_player * num_players * (num_players / 2) * (performed_table[role_name] - expected_table[role_name])
 
-                # just a little check
-                if role_name in loosers and delta > 0:
-                    elo_information <= f"WARNING {game_name}: {player} as {role_name} looses but gains points !!!!"
-                    elo_information <= html.BR()
-                if role_name in winners and delta < 0:
-                    elo_information <= f"WARNING {game_name}: {player} as {role_name} wins but looses points !!!!"
-                    elo_information <= html.BR()
+            # just a little check
+            if role_name in loosers and delta > 0:
+                elo_information <= f"WARNING {game_name}: {player} as {role_name} looses but gains points !!!!"
+                elo_information <= html.BR()
+            if role_name in winners and delta < 0:
+                elo_information <= f"WARNING {game_name}: {player} as {role_name} wins but looses points !!!!"
+                elo_information <= html.BR()
 
-                prev_elo = elo_table[(player, role_name, classic)]
-                elo_table[(player, role_name, classic)] += delta
-                new_elo = elo_table[(player, role_name, classic)]
+            prev_elo = elo_table[(player, role_name, classic)]
+            elo_table[(player, role_name, classic)] += delta
+            new_elo = elo_table[(player, role_name, classic)]
 
-                if VERIFY:
-                    elo_information <= f"{player}({role_name}) -> delta = {delta} so elo changes from {prev_elo} to {new_elo}"
-                    elo_information <= html.BR()
+            if VERIFY:
+                elo_information <= f"{player}({role_name}) -> delta = {delta} so elo changes from {prev_elo} to {new_elo}"
+                elo_information <= html.BR()
 
-                if new_elo < MINIMUM_ELO:
-                    elo_table[(player, role_name, classic)] = MINIMUM_ELO
-                    elo_information <= f"INFORMATION {game_name}: {player}({role_name}) would have less than {MINIMUM_ELO} so forced to this value"
-                    elo_information <= html.BR()
+            if new_elo < MINIMUM_ELO:
+                elo_table[(player, role_name, classic)] = MINIMUM_ELO
+                elo_information <= f"INFORMATION {game_name}: {player}({role_name}) would have less than {MINIMUM_ELO} so forced to this value"
+                elo_information <= html.BR()
 
         if VERIFY:
             elo_information <= "-------------------"
@@ -205,14 +201,13 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
         # sum up elos per role
         elo_recap_table = {}
         for player in players_dict:
-            for num in variant_data.roles:
-                if num >= 1:
-                    role_name = num2rolename[num]
-                    if (player, role_name, classic) in elo_table:
-                        if player not in elo_recap_table:
-                            elo_recap_table[player] = {'sum': 0, 'number': 0}
-                        elo_recap_table[player]['sum'] += elo_table[(player, role_name, classic)]
-                        elo_recap_table[player]['number'] += 1
+            for num in effective_roles:
+                role_name = num2rolename[num]
+                if (player, role_name, classic) in elo_table:
+                    if player not in elo_recap_table:
+                        elo_recap_table[player] = {'sum': 0, 'number': 0}
+                    elo_recap_table[player]['sum'] += elo_table[(player, role_name, classic)]
+                    elo_recap_table[player]['number'] += 1
 
         # fills DEFAULT_ELO for roles not played
         final_raw_elo_table = {k: (v['sum'] + (num_players - v['number']) * DEFAULT_ELO) / num_players for k, v in elo_recap_table.items()}
@@ -236,28 +231,27 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
         # per role recap
         # --------------
 
-        for num in variant_data.roles:
-            if num >= 1:
+        for num in effective_roles:
 
-                # display role name
-                elo_information <= "-------------------"
+            # display role name
+            elo_information <= "-------------------"
+            elo_information <= html.BR()
+            role_name = num2rolename[num]
+            elo_information <= role_name
+            elo_information <= html.BR()
+
+            # make table
+            final_raw_role_elo_table = {p: elo_table[(p, rn, c)] for (p, rn, c) in elo_table if rn == role_name and c == classic}
+
+            # sort table
+            final_role_elo_table = dict(sorted(final_raw_role_elo_table.items(), key=lambda t: t[1], reverse=True))
+
+            # display rankings
+            for rank, (player, elo) in enumerate(final_role_elo_table.items()):
+                sample_size = number_games_table[(player, role_name, classic)]
+                elo_information <= f"{rank + 1} {player} -> {elo} (played {sample_size} times)"
                 elo_information <= html.BR()
-                role_name = num2rolename[num]
-                elo_information <= role_name
-                elo_information <= html.BR()
-
-                # make table
-                final_raw_role_elo_table = {p: elo_table[(p, rn, c)] for (p, rn, c) in elo_table if rn == role_name and c == classic}
-
-                # sort table
-                final_role_elo_table = dict(sorted(final_raw_role_elo_table.items(), key=lambda t: t[1], reverse=True))
-
-                # display rankings
-                for rank, (player, elo) in enumerate(final_role_elo_table.items()):
-                    sample_size = number_games_table[(player, role_name, classic)]
-                    elo_information <= f"{rank + 1} {player} -> {elo} (played {sample_size} times)"
-                    elo_information <= html.BR()
-                elo_information <= html.BR()
+            elo_information <= html.BR()
 
         elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'}")
 
