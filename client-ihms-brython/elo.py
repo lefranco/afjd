@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import datetime
+import time
 
 from browser import html  # pylint: disable=import-error
 
@@ -12,9 +13,14 @@ D_CONSTANT = 400.
 DEFAULT_ELO = 1500.
 MINIMUM_ELO = 1000.
 
+VERIFY = False
+
 
 def process_elo(variant_data, players_dict, games_dict, elo_information):
     """ process_elo """
+
+    # this to know how long it takes
+    start_time = time.time()
 
     # index is (player, role_name, classic)
     elo_table = {}
@@ -87,23 +93,27 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                         expected_table[role_name] += 1 / (1 + (10 ** ((rating_table[role_name2] - rating_table[role_name]) / D_CONSTANT)))
                 expected_table[role_name] /= ((num_players * (num_players - 1)) / 2)
 
-        elo_information <= f"{time_creation_str=} {game_name=} {classic=}"
-        elo_information <= html.BR()
-        elo_information <= f"{pseudo_table=}"
-        elo_information <= html.BR()
-        elo_information <= f"{score_table=}"
-        elo_information <= html.BR()
-        elo_information <= f"{expected_table=}"
-        elo_information <= html.BR()
-        elo_information <= f"{performed_table=}"
-        elo_information <= html.BR()
+        if VERIFY:
+            elo_information <= f"{time_creation_str=} {game_name=} {classic=}"
+            elo_information <= html.BR()
+            elo_information <= f"{pseudo_table=}"
+            elo_information <= html.BR()
+            elo_information <= f"{score_table=}"
+            elo_information <= html.BR()
+            elo_information <= f"{expected_table=}"
+            elo_information <= html.BR()
+            elo_information <= f"{performed_table=}"
+            elo_information <= html.BR()
 
         loosers = [r for r in score_table if r == min(score_table.values())]
         winners = [r for r in score_table if r == max(score_table.values())]
 
         # elo variation
-        elo_information <= "Effect :"
-        elo_information <= html.BR()
+
+        if VERIFY:
+            elo_information <= "Effect :"
+            elo_information <= html.BR()
+
         for num in variant_data.roles:
             if num >= 1:
                 role_name = num2rolename[num]
@@ -116,26 +126,28 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
 
                 # just a little check
                 if role_name in loosers and delta > 0:
-                    elo_information <= f"WARNING {player} as {role_name} looses but gains points !!!!"
+                    elo_information <= f"WARNING {game_name}: {player} as {role_name} looses but gains points !!!!"
                     elo_information <= html.BR()
                 if role_name in winners and delta < 0:
-                    elo_information <= f"WARNING {player} as {role_name} wins but looses points !!!!"
+                    elo_information <= f"WARNING {game_name}: {player} as {role_name} wins but looses points !!!!"
                     elo_information <= html.BR()
 
                 prev_elo = elo_table[(player, role_name, classic)]
                 elo_table[(player, role_name, classic)] += delta
                 new_elo = elo_table[(player, role_name, classic)]
 
-                elo_information <= f"{player}({role_name}) -> delta = {delta} so elo changes from {prev_elo} to {new_elo}"
-                elo_information <= html.BR()
+                if VERIFY:
+                    elo_information <= f"{player}({role_name}) -> delta = {delta} so elo changes from {prev_elo} to {new_elo}"
+                    elo_information <= html.BR()
 
                 if new_elo < MINIMUM_ELO:
                     elo_table[(player, role_name, classic)] = MINIMUM_ELO
-                    elo_information <= f"{player}({role_name}) would have less than {MINIMUM_ELO} so forced to this value"
+                    elo_information <= f"INFORMATION {game_name}: {player}({role_name}) would have less than {MINIMUM_ELO} so forced to this value"
                     elo_information <= html.BR()
 
-        elo_information <= "-------------------"
-        elo_information <= html.BR()
+        if VERIFY:
+            elo_information <= "-------------------"
+            elo_information <= html.BR()
 
     for classic in (True, False):
 
@@ -208,3 +220,10 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                     elo_information <= f"{rank + 1} {player} -> {elo} (played {sample_size} times)"
                     elo_information <= html.BR()
                 elo_information <= html.BR()
+
+    # how long it took
+    done_time = time.time()
+    elapsed = done_time - start_time
+    elo_information <= html.BR()
+    elo_information <= f"Time elapsed : {elapsed}"
+    elo_information <= html.BR()

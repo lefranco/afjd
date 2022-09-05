@@ -566,6 +566,7 @@ if __name__ == '__main__':
 
     # how long it took
     DONE = time.time()
-    print(f"Time elapsed : {DONE - START:f}".format())
+    elapsed = DONE - START
+    print(f"Time elapsed : {elapsed}")
 
     sys.exit(0)
