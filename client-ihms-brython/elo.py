@@ -13,14 +13,38 @@ D_CONSTANT = 400.
 DEFAULT_ELO = 1500.
 MINIMUM_ELO = 1000.
 
-VERIFY = False
+VERIFY = True
+
+
+LAST_TIME = 0
+
+
+def elapsed_then(elo_information, desc):
+    """ elapsed_then """
+
+    global LAST_TIME
+
+    # elapsed
+    now_time = time.time()
+    elapsed = now_time - LAST_TIME
+
+    # update last time
+    LAST_TIME = now_time
+
+    # display
+    elo_information <= html.BR()
+    elo_information <= f"{desc} : {elapsed}"
+    elo_information <= html.BR()
 
 
 def process_elo(variant_data, players_dict, games_dict, elo_information):
     """ process_elo """
 
+    global LAST_TIME
+
     # this to know how long it takes
     start_time = time.time()
+    LAST_TIME = start_time
 
     # index is (player, role_name, classic)
     elo_table = {}
@@ -36,6 +60,11 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
 
     # rolename from number
     num2rolename = {n: variant_data.name_table[variant_data.roles[n]] for n in variant_data.roles if n >= 1}
+
+    # to measure time spent on scoring
+    scoring_calculation_time = 0.
+
+    effective_roles = [r for r in variant_data.roles if r >= 1]
 
     for game_name, game_data in sorted(games_dict.items(), key=lambda i: i[1]['time_stamp']):
 
@@ -53,7 +82,11 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
         # calculate scoring
         ratings = {num2rolename[n]: centers_number_dict[str(n)] if str(n) in centers_number_dict else 0 for n in variant_data.roles if n >= 1}
         solo_threshold = variant_data.number_centers() // 2
+
+        before = time.time()
         score_table = scoring.scoring(game_scoring_dict, solo_threshold, ratings)
+        after = time.time()
+        scoring_calculation_time += (after - before)
 
         # calculate performance
         sum_score = sum(score_table.values())
@@ -149,6 +182,11 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             elo_information <= "-------------------"
             elo_information <= html.BR()
 
+    elo_information <= f"Scoring calculation time : {scoring_calculation_time}"
+    elo_information <= html.BR()
+
+    elapsed_then(elo_information, "Parsing games")
+
     for classic in (True, False):
 
         elo_information <= "-------------------"
@@ -220,6 +258,8 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                     elo_information <= f"{rank + 1} {player} -> {elo} (played {sample_size} times)"
                     elo_information <= html.BR()
                 elo_information <= html.BR()
+
+        elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'}")
 
     # how long it took
     done_time = time.time()
