@@ -13,7 +13,7 @@ D_CONSTANT = 400.
 DEFAULT_ELO = 1500.
 MINIMUM_ELO = 1000.
 
-VERIFY = True
+VERIFY = False
 
 
 LAST_TIME = 0
@@ -61,8 +61,10 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
     # rolename from number
     num2rolename = {n: variant_data.name_table[variant_data.roles[n]] for n in variant_data.roles if n >= 1}
 
-    # to measure time spent on scoring
+    # to measure times spent
     scoring_calculation_time = 0.
+    expected_calculation_time = 0.
+    variation_calculation_time = 0.
 
     effective_roles = [r for r in variant_data.roles if r >= 1]
 
@@ -113,6 +115,7 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             rating_table[role_name] = elo_table[(player, role_name, classic)]
 
         # calculate expected performance
+        before = time.time()
         expected_table = {}
         for num in effective_roles:
             role_name = num2rolename[num]
@@ -122,6 +125,8 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                     role_name2 = num2rolename[num2]
                     expected_table[role_name] += 1 / (1 + (10 ** ((rating_table[role_name2] - rating_table[role_name]) / D_CONSTANT)))
             expected_table[role_name] /= ((num_players * (num_players - 1)) / 2)
+        after = time.time()
+        expected_calculation_time += (after - before)
 
         if VERIFY:
             elo_information <= f"{time_creation_str=} {game_name=} {classic=}"
@@ -144,6 +149,10 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             elo_information <= "Effect :"
             elo_information <= html.BR()
 
+        # calculate expected performance
+        before = time.time()
+
+        expected_table = {}
         for num in effective_roles:
             role_name = num2rolename[num]
             player = pseudo_table[role_name]
@@ -174,11 +183,20 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                 elo_information <= f"INFORMATION {game_name}: {player}({role_name}) would have less than {MINIMUM_ELO} so forced to this value"
                 elo_information <= html.BR()
 
+        after = time.time()
+        variation_calculation_time += (after - before)
+
         if VERIFY:
             elo_information <= "-------------------"
             elo_information <= html.BR()
 
     elo_information <= f"Scoring calculation time : {scoring_calculation_time}"
+    elo_information <= html.BR()
+
+    elo_information <= f"Expected calculation time : {expected_calculation_time}"
+    elo_information <= html.BR()
+
+    elo_information <= f"Variation calculation time : {variation_calculation_time}"
     elo_information <= html.BR()
 
     elapsed_then(elo_information, "Parsing games")
