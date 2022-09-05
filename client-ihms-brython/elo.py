@@ -132,15 +132,17 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
         extract_calculation_time += (after - before)
 
         # calculate expected performance
+        # here is where most time is spent : 27% approx
         before = time.time()
         divider = (num_players * (num_players - 1.)) / 2.
         expected_table = {}
         for (role_name, _) in memo.values():
-            expected_table[role_name] = 0.
+            sigma = 0.
             for (role_name2, _) in memo.values():
                 if role_name2 != role_name:
-                    expected_table[role_name] += 1 / (1 + (10 ** ((rating_table[role_name2] - rating_table[role_name]) / D_CONSTANT)))
-            expected_table[role_name] /= divider
+                    sigma += 1 / (1 + (10 ** ((rating_table[role_name2] - rating_table[role_name]) / D_CONSTANT)))
+            sigma /= divider
+            expected_table[role_name] = sigma
         after = time.time()
         expected_calculation_time += (after - before)
 
