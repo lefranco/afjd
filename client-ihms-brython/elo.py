@@ -52,6 +52,9 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
     # index is (player, role_name, classic)
     elo_table = {}
 
+    # index is (player, role_name, classic) value is (game_name, change)
+    elo_change_table = {}
+
     # index is (player, role_name, classic)
     number_games_table = {}
 
@@ -195,6 +198,7 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
                 prev_elo = elo_table[(player, role_name, classic)]
 
             elo_table[(player, role_name, classic)] += delta
+            elo_change_table[(player, role_name, classic)] = (game_name, delta)
 
             if VERIFY:
                 new_elo = elo_table[(player, role_name, classic)]
@@ -237,7 +241,7 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
     elo_information <= f"Variation calculation time : {variation_calculation_time}"
     elo_information <= html.BR()
 
-    elapsed_then(elo_information, "Parsing games")
+    elapsed_then(elo_information, "Parsing games time")
 
     for classic in (True, False):
 
@@ -305,11 +309,12 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             # display rankings
             for rank, (player, elo) in enumerate(final_role_elo_table.items()):
                 sample_size = number_games_table[(player, role_name, classic)]
-                elo_information <= f"{rank + 1} {player} -> {elo} (played {sample_size} times)"
+                game_name, last_change = elo_change_table[(player, role_name, classic)]
+                elo_information <= f"{rank + 1} {player} -> {elo} (last change {last_change:+f} in game {game_name} & played {sample_size} times)"
                 elo_information <= html.BR()
             elo_information <= html.BR()
 
-        elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'}")
+        elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'} time")
 
     # how long it took
     done_time = time.time()
