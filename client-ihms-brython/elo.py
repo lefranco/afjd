@@ -13,6 +13,8 @@ D_CONSTANT = 400.
 DEFAULT_ELO = 1500.
 MINIMUM_ELO = 1000.
 
+K_MAX_CONSTANT = 40
+
 VERIFY = False
 
 
@@ -164,14 +166,14 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             elo_information <= "Effect :"
             elo_information <= html.BR()
 
-        # calculate expected performance
+        # calculate efect on ELO
         before = time.time()
         loosers = [r for r in score_table if r == min(score_table.values())]
         winners = [r for r in score_table if r == max(score_table.values())]
         for (role_name, player) in memo.values():
 
             # K parameter must decrease other number of games
-            k_player = max(20, 40 - number_games_table[(player, role_name, classic)] / 2.)
+            k_player = max(K_MAX_CONSTANT // 2, K_MAX_CONSTANT - number_games_table[(player, role_name, classic)] / 2.)
 
             delta = k_player * num_players * (num_players / 2.) * (performed_table[role_name] - expected_table[role_name])
 

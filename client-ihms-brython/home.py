@@ -868,42 +868,51 @@ def show_technical():
 
     # --
 
-    title5 = html.H4("Règles simplifiées")
+    title5 = html.H4("Le calcul du ELO")
     MY_SUB_PANEL <= title5
 
-    link5 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
-    link5 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
+    link5 = html.A(href="./docs/calcul_elo.pdf", target="_blank")
+    link5 <= "Lien vers les spécifications du calcul du ELO sur le site"
     MY_SUB_PANEL <= link5
 
     # --
 
-    title6 = html.H4("Création de fichier de tournoi")
+    title6 = html.H4("Règles simplifiées")
     MY_SUB_PANEL <= title6
 
-    link6 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
-    link6 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
+    link6 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
+    link6 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
     MY_SUB_PANEL <= link6
+
+    # --
+
+    title7 = html.H4("Création de fichier de tournoi")
+    MY_SUB_PANEL <= title7
+
+    link7 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
+    link7 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
+    MY_SUB_PANEL <= link7
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
-    link7 = html.A(href="./scripts/allocate.py", target="_blank")
-    link7 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
-    MY_SUB_PANEL <= link7
+    link8 = html.A(href="./scripts/allocate.py", target="_blank")
+    link8 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
+    MY_SUB_PANEL <= link8
 
     # --
 
     title7 = html.H4("Remerciements")
     MY_SUB_PANEL <= title7
 
-    link8 = html.A(href="https://brython.info/", target="_blank")
-    link8 <= "Outil utilisé pour ce site web"
-    MY_SUB_PANEL <= link8
+    link9 = html.A(href="https://brython.info/", target="_blank")
+    link9 <= "Outil utilisé pour ce site web"
+    MY_SUB_PANEL <= link9
 
     MY_SUB_PANEL <= html.P()
 
-    link9 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link9 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link9
+    link10 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link10 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link10
 
 
 def select_interface():
