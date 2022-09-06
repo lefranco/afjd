@@ -14,6 +14,7 @@ DEFAULT_ELO = 1500.
 MINIMUM_ELO = 1000.
 
 K_MAX_CONSTANT = 40
+K_SLOPE = 2.
 
 VERIFY = False
 
@@ -82,6 +83,11 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
         centers_number_dict = game_data['centers_number']
         game_players_dict = game_data['players']
         classic = game_data['classic']
+
+        if len(game_players_dict) != len(effective_roles):
+            elo_information <= f"WARNING {game_name}: ignored because missing player(s) !!!!"
+            elo_information <= html.BR()
+            continue
 
         # convert time
         before = time.time()
@@ -173,7 +179,7 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
         for (role_name, player) in memo.values():
 
             # K parameter must decrease other number of games
-            k_player = max(K_MAX_CONSTANT // 2, K_MAX_CONSTANT - number_games_table[(player, role_name, classic)] / 2.)
+            k_player = max(K_MAX_CONSTANT // 2, K_MAX_CONSTANT - number_games_table[(player, role_name, classic)] / K_SLOPE)
 
             delta = k_player * num_players * (num_players / 2.) * (performed_table[role_name] - expected_table[role_name])
 
