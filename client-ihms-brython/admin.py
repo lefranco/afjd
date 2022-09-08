@@ -7,7 +7,7 @@ import time
 import datetime
 
 from browser import document, html, ajax, alert, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -1291,8 +1291,59 @@ def edit_moderators():
 def calculate_elo():
     """ calculate_elo """
 
+    elo_table = None
+
+    def cancel_update_database_callback(_, dialog):
+        """ cancel_update_database_callback """
+        dialog.close()
+
+    def update_database_callback(_, dialog):
+
+        def reply_callback(req):
+            #### req_result = json.loads(req.text)
+            if 0:#req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la mise à jour du ELO : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la mise à jour du ELO : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            #### messages = "<br>".join(req_result['msg'].split('\n'))
+            messages = "xxx"
+            InfoDialog("OK", f"La mise à jour du ELO a été réalisée : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            calculate_elo()
+
+        dialog.close()
+
+        json_dict = {
+            'pseudo': pseudo
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        f"{host}:{port}/update_elo"
+
+        # update database : need token
+        reply_callback(None)
+        #### TODO ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def update_database_callback_confirm(_):
+        """ update_database_callback_confirm """
+
+        dialog = Dialog("On met à jour la base de données ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog: update_database_callback(e, d))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
+
+
     def calculate_elo_callback(_):
         """ calculate_elo_callback """
+
+        nonlocal elo_table
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1312,11 +1363,14 @@ def calculate_elo():
 
             games_dict = req_result['games_dict']
             elo_information = html.DIV()
-            elo.process_elo(variant_data, players_dict, games_dict, elo_information)
+            elo_table = elo.process_elo(variant_data, players_dict, games_dict, elo_information)
 
-            # back to where we started
+            # display result
             MY_SUB_PANEL.clear()
             MY_SUB_PANEL <= elo_information
+
+            # offer update
+            update_database_callback_confirm(None)
 
         json_dict = {
         }

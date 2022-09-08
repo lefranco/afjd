@@ -287,32 +287,34 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             elo_information <= f"{rank + 1} {player} -> {elo} ({player_detail})"
             elo_information <= html.BR()
 
-        # --------------
-        # per role recap
-        # --------------
+        if VERIFY:
 
-        for num in effective_roles:
+            # --------------
+            # per role recap
+            # --------------
 
-            # display role name
-            elo_information <= "-------------------"
-            elo_information <= html.BR()
-            role_name = num2rolename[num]
-            elo_information <= role_name
-            elo_information <= html.BR()
+            for num in effective_roles:
 
-            # make table
-            final_raw_role_elo_table = {p: elo_table[(p, rn, c)] for (p, rn, c) in elo_table if rn == role_name and c == classic}
-
-            # sort table
-            final_role_elo_table = dict(sorted(final_raw_role_elo_table.items(), key=lambda t: t[1], reverse=True))
-
-            # display rankings
-            for rank, (player, elo) in enumerate(final_role_elo_table.items()):
-                sample_size = number_games_table[(player, role_name, classic)]
-                game_name, last_change = elo_change_table[(player, role_name, classic)]
-                elo_information <= f"{rank + 1} {player} -> {elo} (last change {last_change:+f} in game {game_name} & played {sample_size} times)"
+                # display role name
+                elo_information <= "-------------------"
                 elo_information <= html.BR()
-            elo_information <= html.BR()
+                role_name = num2rolename[num]
+                elo_information <= role_name
+                elo_information <= html.BR()
+
+                # make table
+                final_raw_role_elo_table = {p: elo_table[(p, rn, c)] for (p, rn, c) in elo_table if rn == role_name and c == classic}
+
+                # sort table
+                final_role_elo_table = dict(sorted(final_raw_role_elo_table.items(), key=lambda t: t[1], reverse=True))
+
+                # display rankings
+                for rank, (player, elo) in enumerate(final_role_elo_table.items()):
+                    sample_size = number_games_table[(player, role_name, classic)]
+                    game_name, last_change = elo_change_table[(player, role_name, classic)]
+                    elo_information <= f"{rank + 1} {player} -> {elo} (last change {last_change:+f} in game {game_name} & played {sample_size} times)"
+                    elo_information <= html.BR()
+                elo_information <= html.BR()
 
         elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'} time")
 
@@ -322,3 +324,5 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
     elo_information <= html.BR()
     elo_information <= f"Time elapsed : {elapsed}"
     elo_information <= html.BR()
+
+    return elo_table
