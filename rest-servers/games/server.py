@@ -4929,9 +4929,9 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/calculate_elo')
-class CalculateEloRessource(flask_restful.Resource):  # type: ignore
-    """ CalculateEloRessource """
+@API.resource('/extract_elo_data')
+class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
+    """ ExtractEloDataRessource """
 
     def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
@@ -4939,7 +4939,7 @@ class CalculateEloRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/calculate_elo - GET - getting ELO data ")
+        mylogger.LOGGER.info("/extract_elo_data - GET - getting ELO data ")
 
         sql_executor = database.SqlExecutor()
 
