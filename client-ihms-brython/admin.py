@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['changer nouvelles', 'codes de vérification', 'usurper', 'rectifier pour le elo', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'calcul du elo', 'maintenance']
+OPTIONS = ['changer nouvelles', 'codes de vérification', 'usurper', 'rectifier pour le elo', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'mise à jour du elo', 'maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1288,8 +1288,8 @@ def edit_moderators():
     MY_SUB_PANEL <= form
 
 
-def calculate_elo():
-    """ calculate_elo """
+def update_elo():
+    """ update_elo """
 
     elo_table = None
 
@@ -1300,8 +1300,8 @@ def calculate_elo():
     def update_database_callback(_, dialog):
 
         def reply_callback(req):
-            #### req_result = json.loads(req.text)
-            if 0:#req.status != 200:
+            req_result = json.loads(req.text)
+            if req.status != 200:
                 if 'message' in req_result:
                     alert(f"Erreur à la mise à jour du ELO : {req_result['message']}")
                 elif 'msg' in req_result:
@@ -1310,27 +1310,27 @@ def calculate_elo():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            #### messages = "<br>".join(req_result['msg'].split('\n'))
-            messages = "xxx"
+            messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"La mise à jour du ELO a été réalisée : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            calculate_elo()
+            update_elo()
 
         dialog.close()
 
+        elo_table_json = json.dumps(elo_table)
+
         json_dict = {
-            'pseudo': pseudo
+            'elo_table': elo_table_json
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
-        f"{host}:{port}/update_elo"
+        url = f"{host}:{port}/update_elo"
 
         # update database : need token
-        reply_callback(None)
-        #### TODO ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def update_database_callback_confirm(_):
         """ update_database_callback_confirm """
@@ -1339,13 +1339,13 @@ def calculate_elo():
         dialog.ok_button.bind("click", lambda e, d=dialog: update_database_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
-
-    def calculate_elo_callback(_):
-        """ calculate_elo_callback """
-
-        nonlocal elo_table
+    def extract_elo_data_callback(_):
+        """ extract_elo_data_callback """
 
         def reply_callback(req):
+
+            nonlocal elo_table
+
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
@@ -1357,7 +1357,7 @@ def calculate_elo():
 
                 # failed but refresh
                 MY_SUB_PANEL.clear()
-                calculate_elo()
+                update_elo()
 
                 return
 
@@ -1377,12 +1377,12 @@ def calculate_elo():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/calculate_elo"
+        url = f"{host}:{port}/extract_elo_data"
 
-        # calculate_elo : need token
+        # extract_elo_data : need token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    MY_SUB_PANEL <= html.H3("Calculer le ELO")
+    MY_SUB_PANEL <= html.H3("Mettre à jour le ELO")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1415,8 +1415,8 @@ def calculate_elo():
 
     # ---
 
-    input_maintain = html.INPUT(type="submit", value="calculer")
-    input_maintain.bind("click", calculate_elo_callback)
+    input_maintain = html.INPUT(type="submit", value="extraire et calculer")
+    input_maintain.bind("click", extract_elo_data_callback)
     form <= input_maintain
 
     MY_SUB_PANEL <= form
@@ -1528,8 +1528,8 @@ def load_option(_, item_name):
         last_failures()
     if item_name == 'éditer les modérateurs':
         edit_moderators()
-    if item_name == 'calcul du elo':
-        calculate_elo()
+    if item_name == 'mise à jour du elo':
+        update_elo()
     if item_name == 'maintenance':
         maintain()
 

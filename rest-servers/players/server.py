@@ -10,8 +10,10 @@ The server
 import typing
 import random
 import argparse
+import json
+import sys
 
-import waitress  # type: ignore
+import waitress
 import flask
 import flask_cors  # type: ignore
 import flask_restful  # type: ignore
@@ -76,11 +78,15 @@ MODERATOR_PARSER = flask_restful.reqparse.RequestParser()
 MODERATOR_PARSER.add_argument('player_pseudo', type=str, required=True)
 MODERATOR_PARSER.add_argument('delete', type=int, required=True)
 
+ELO_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
+ELO_UPDATE_PARSER.add_argument('elo_table', type=str, required=True)
+
 # to avoid sending emails in debug phase
 PREVENT_MAIL_CHECKING = False
 
 # pseudo must be at least that size
 LEN_PSEUDO_MIN = 3
+
 
 @API.resource('/player-identifiers/<pseudo>')
 class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
@@ -569,7 +575,6 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         nb_mails = len(addressees)
         data = {'msg': f"Ok {nb_mails} email(s) successfully sent"}
         return data, 200
-
 
 
 @API.resource('/mail-support')
@@ -1089,7 +1094,58 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/update_elo')
+class UpdateEloRessource(flask_restful.Resource):  # type: ignore
+    """ UpdateEloRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        maintain
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/update_elo - POST - update_elo")
+
+        args = ELO_UPDATE_PARSER.parse_args(strict=True)
+
+        elo_table_submitted = args['elo_table']
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
+
+        try:
+            elo_table = json.loads(elo_table_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert elo table from json to text ?")
+
+        sql_executor = database.SqlExecutor()
+
+        # TODO
+        print(str(elo_table), file=sys.stderr)
+
+        del sql_executor
+
+        data = {'msg': "ELO update done"}
+        return data, 200
+
+
 EMAIL_SUPPORT = ''
+
 
 def load_support_config() -> None:
     """ load_support_config """
