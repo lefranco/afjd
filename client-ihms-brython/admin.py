@@ -1319,8 +1319,6 @@ def update_elo():
 
         dialog.close()
 
-        alert(f"{len(elo_raw_list)=}")
-
         elo_raw_list_json = json.dumps(elo_raw_list)
 
         json_dict = {
