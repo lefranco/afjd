@@ -318,7 +318,6 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
 
         elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'} time")
 
-
     rolename2num = {v: k for k, v in num2rolename.items()}
     gamename2gameid = {v['name']: int(k) for k, v in games_dict.items()}
 
