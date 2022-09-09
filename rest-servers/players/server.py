@@ -79,7 +79,7 @@ MODERATOR_PARSER.add_argument('player_pseudo', type=str, required=True)
 MODERATOR_PARSER.add_argument('delete', type=int, required=True)
 
 ELO_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
-ELO_UPDATE_PARSER.add_argument('elo_table', type=str, required=True)
+ELO_UPDATE_PARSER.add_argument('elo_list', type=str, required=True)
 
 # to avoid sending emails in debug phase
 PREVENT_MAIL_CHECKING = False
@@ -1108,7 +1108,7 @@ class UpdateEloRessource(flask_restful.Resource):  # type: ignore
 
         args = ELO_UPDATE_PARSER.parse_args(strict=True)
 
-        elo_table_submitted = args['elo_table']
+        elo_list_submitted = args['elo_list']
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1129,14 +1129,14 @@ class UpdateEloRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         try:
-            elo_table = json.loads(elo_table_submitted)
+            elo_list = json.loads(elo_list_submitted)
         except json.JSONDecodeError:
             flask_restful.abort(400, msg="Did you convert elo table from json to text ?")
 
         sql_executor = database.SqlExecutor()
 
         # TODO
-        print(str(elo_table), file=sys.stderr)
+        print(f"len = {len(elo_list)}", file=sys.stderr)
 
         del sql_executor
 
