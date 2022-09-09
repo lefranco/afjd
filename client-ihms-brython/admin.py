@@ -1327,7 +1327,7 @@ def update_elo():
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/update_elo"
+        url = f"{host}:{port}/elo_rating"
 
         # update database : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)

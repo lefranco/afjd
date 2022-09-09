@@ -1094,7 +1094,7 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/update_elo')
+@API.resource('/elo_rating')
 class UpdateEloRessource(flask_restful.Resource):  # type: ignore
     """ UpdateEloRessource """
 
