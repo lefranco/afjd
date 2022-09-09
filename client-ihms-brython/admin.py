@@ -1291,7 +1291,7 @@ def edit_moderators():
 def update_elo():
     """ update_elo """
 
-    elo_table = None
+    elo_raw_list = None
 
     def cancel_update_database_callback(_, dialog):
         """ cancel_update_database_callback """
@@ -1319,10 +1319,12 @@ def update_elo():
 
         dialog.close()
 
-        elo_table_json = json.dumps(elo_table)
+        alert(f"{len(elo_raw_list)=}")
+
+        elo_raw_list_json = json.dumps(elo_raw_list)
 
         json_dict = {
-            'elo_table': elo_table_json
+            'elo_list': elo_raw_list_json
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -1344,7 +1346,7 @@ def update_elo():
 
         def reply_callback(req):
 
-            nonlocal elo_table
+            nonlocal elo_raw_list
 
             req_result = json.loads(req.text)
             if req.status != 200:
@@ -1361,9 +1363,9 @@ def update_elo():
 
                 return
 
-            games_dict = req_result['games_dict']
+            games_results_dict = req_result['games_dict']
             elo_information = html.DIV()
-            elo_table = elo.process_elo(variant_data, players_dict, games_dict, elo_information)
+            elo_raw_list = elo.process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information)
 
             # display result
             MY_SUB_PANEL.clear()
@@ -1396,6 +1398,10 @@ def update_elo():
 
     players_dict = common.get_players()
     if not players_dict:
+        return
+
+    games_dict = common.get_games_data()
+    if not games_dict:
         return
 
     # players_dict has Pseudo -> player_id

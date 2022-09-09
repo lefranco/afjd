@@ -40,7 +40,7 @@ def elapsed_then(elo_information, desc):
     elo_information <= html.BR()
 
 
-def process_elo(variant_data, players_dict, games_dict, elo_information):
+def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information):
     """ process_elo """
 
     global LAST_TIME
@@ -78,7 +78,7 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
 
     effective_roles = [r for r in variant_data.roles if r >= 1]
 
-    for game_name, game_data in sorted(games_dict.items(), key=lambda i: i[1]['time_stamp']):
+    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['time_stamp']):
 
         # extract information
         time_stamp = game_data['time_stamp']
@@ -217,7 +217,7 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
             elo_information <= "-------------------"
             elo_information <= html.BR()
 
-    elo_information <= f"Number of games processed : {len(games_dict)}"
+    elo_information <= f"Number of games processed : {len(games_results_dict)}"
     elo_information <= html.BR()
 
     elo_information <= f"Dating calculation time : {dating_calculation_time}"
@@ -318,6 +318,39 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
 
         elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'} time")
 
+
+    rolename2num = {v: k for k, v in num2rolename.items()}
+    gamename2gameid = {v['name']: int(k) for k, v in games_dict.items()}
+
+    elo_raw_list = []
+
+    for (player, role_name, classic) in elo_table:
+
+        # extract
+        elo_value = elo_table[(player, role_name, classic)]
+        (game_name, change) = elo_change_table[(player, role_name, classic)]
+        number_games = number_games_table[(player, role_name, classic)]
+
+        # convert
+
+        # elo is integer
+        elo_value_int = round(elo_value)
+
+        # player is the id
+        player_id = players_dict[player]
+
+        # role is the id
+        role_id = rolename2num[role_name]
+
+        # game is the id
+        game_id = gamename2gameid[game_name]
+
+        # change is integer
+        change_int = round(change)
+
+        elo_raw_element = [classic, role_id, player_id, elo_value_int, change_int, game_id, number_games]
+        elo_raw_list.append(elo_raw_element)
+
     # how long it took
     done_time = time.time()
     elapsed = done_time - start_time
@@ -325,4 +358,4 @@ def process_elo(variant_data, players_dict, games_dict, elo_information):
     elo_information <= f"Time elapsed : {elapsed}"
     elo_information <= html.BR()
 
-    return elo_table
+    return elo_raw_list
