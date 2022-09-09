@@ -11,7 +11,6 @@ import typing
 import random
 import argparse
 import json
-import sys
 
 import waitress
 import flask
@@ -28,6 +27,7 @@ import players
 import newss
 import news2s
 import moderators
+import ratings
 import database
 
 
@@ -1135,9 +1135,12 @@ class UpdateEloRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # TODO
-        print(f"len = {len(elo_list)}", file=sys.stderr)
+        ratings.Rating.create_table(sql_executor)
+        for elo in elo_list:
+            rating = ratings.Rating(*elo)
+            rating.update_database(sql_executor)
 
+        sql_executor.commit()
         del sql_executor
 
         data = {'msg': "ELO update done"}
