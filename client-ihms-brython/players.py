@@ -2,13 +2,90 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import html, alert, window  # pylint: disable=import-error
+import json
+
+from browser import ajax, html, alert, window  # pylint: disable=import-error
 
 import config
 import common
 
 
-OPTIONS = ['inscrits', 'joueurs', 'arbitres', 'oisifs', 'remplaçants', 'modérateurs', 'courriels non confirmés']
+OPTIONS = ['classement', 'inscrits', 'joueurs', 'arbitres', 'oisifs', 'remplaçants', 'modérateurs', 'courriels non confirmés']
+
+
+def get_detailed_rating(classic, role_id):
+    """ get_detailed_rating """
+
+    rating_list = None
+
+    def reply_callback(req):
+        nonlocal rating_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération du classement détaillé : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération du classement détaillé : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        rating_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/elo_rating/{int(classic)}/{role_id}"
+
+    # getting rating list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return list(rating_list)
+
+
+def get_global_rating(classic):
+    """ get_global_rating """
+
+    rating_list = None
+
+    def reply_callback(req):
+        nonlocal rating_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération du classement global : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération du classement global : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        rating_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/elo_rating/{int(classic)}"
+
+    # getting rating list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return list(rating_list)
+
+
+def show_rating():
+    """ show_rating """
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    rating_list = get_global_rating(True)
+
+    MY_SUB_PANEL <= html.H3("Le classement par ELO")
+    MY_SUB_PANEL <= str(rating_list)
 
 
 def show_registered_data():
@@ -418,6 +495,8 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
+    if item_name == 'classement':
+        show_rating()
     if item_name == 'inscrits':
         show_registered_data()
     if item_name == 'joueurs':

@@ -1094,6 +1094,44 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/elo_rating/<classic>')
+class EloClassicRessource(flask_restful.Resource):  # type: ignore
+    """ EloClassicRessource """
+
+    def get(self, classic: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int, int]], int]:  # pylint: disable=no-self-use
+        """
+        Provides ratings by classic and role
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/elo_rating - GET - get by classic")
+
+        sql_executor = database.SqlExecutor()
+        ratings_list = ratings.Rating.list_by_classic(sql_executor, bool(classic))
+        del sql_executor
+
+        return ratings_list, 200
+
+
+@API.resource('/elo_rating/<classic>/<role_id>')
+class EloClassicRoleRessource(flask_restful.Resource):  # type: ignore
+    """ EloClassicRoleRessource """
+
+    def get(self, classic: int, role_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int, int]], int]:  # pylint: disable=no-self-use
+        """
+        Provides ratings by classic and role
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/elo_rating - GET - get by classic and role")
+
+        sql_executor = database.SqlExecutor()
+        ratings_list = ratings.Rating.list_by_classic_role_id(sql_executor, bool(classic), role_id)
+        del sql_executor
+
+        return ratings_list, 200
+
+
 @API.resource('/elo_rating')
 class UpdateEloRessource(flask_restful.Resource):  # type: ignore
     """ UpdateEloRessource """
@@ -1104,7 +1142,7 @@ class UpdateEloRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/update_elo - POST - update_elo")
+        mylogger.LOGGER.info("/elo_rating - POST - update_elo")
 
         args = ELO_UPDATE_PARSER.parse_args(strict=True)
 
