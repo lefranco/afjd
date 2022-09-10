@@ -529,7 +529,7 @@ def show_rating(classic, role_id):
             ratings_table <= row
             rank += 1
 
-        average = sum(r[3] for r in rating_list) / len(rating_list)
+        average = round(sum(r[3] for r in rating_list) / len(rating_list))
         return ratings_table, average
 
     def refresh():
@@ -572,7 +572,7 @@ def show_rating(classic, role_id):
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
-        MY_PANEL <= html.DIV(f"La moyenne des ELO est de {average}", Class='note')
+        MY_SUB_PANEL <= html.DIV(f"La moyenne des ELO est de {average}", Class='note')
 
     def sort_by_callback(_, new_sort_by):
 
