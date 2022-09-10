@@ -393,7 +393,6 @@ def show_rating(classic, role_id):
     """ show_rating """
 
     def make_ratings_table(classic, role_id):
-        """ make_ratings_table """
 
         if role_id:
 
@@ -521,6 +520,45 @@ def show_rating(classic, role_id):
 
         return ratings_table
 
+    def refresh():
+
+        ratings_table = make_ratings_table(classic, role_id)
+
+        # button for changing mode
+        switch_mode_button = html.BUTTON(f"passer en {'blitz' if classic else 'classique'}")
+        switch_mode_button.bind("click", switch_mode_callback)
+
+        # button for going global
+        switch_global_button = html.BUTTON("classement global")
+        switch_global_button.bind("click", lambda e: switch_role_callback(e, None))
+
+        # buttons for selecting role
+        switch_role_buttons_table = html.TABLE()
+        row = html.TR()
+        col = html.TD("Détailler pour le pays")
+        row <= col
+        for poss_role_id, role in variant_data.roles.items():
+            if poss_role_id >= 1:
+                form = html.FORM()
+                input_change_role = html.INPUT(type="image", src=f"./variants/{variant_name}/{interface_chosen}/roles/{poss_role_id}.jpg")
+                input_change_role.bind("click", lambda e, r=poss_role_id: switch_role_callback(e, r))
+                form <= input_change_role
+                col = html.TD(form)
+                row <= col
+        switch_role_buttons_table <= row
+
+        MY_SUB_PANEL.clear()
+        MY_SUB_PANEL <= html.H3(f"Le classement par ELO en mode {'classique' if classic else 'blitz'}")
+        MY_SUB_PANEL <= switch_mode_button
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= switch_role_buttons_table
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= switch_global_button
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= ratings_table
+
     def sort_by_callback(_, new_sort_by):
 
         # if same sort criterion : inverse order otherwise back to normal order
@@ -531,11 +569,19 @@ def show_rating(classic, role_id):
             else:
                 storage['REVERSE_NEEDED_RATINGS'] = str(not bool(storage['REVERSE_NEEDED_RATINGS'] == 'True'))
 
-        ratings_table = make_ratings_table(classic, role_id)
+        refresh()
 
-        MY_SUB_PANEL.clear()
-        MY_SUB_PANEL <= html.H3("Le classement par ELO")
-        MY_SUB_PANEL <= ratings_table
+    def switch_mode_callback(_):
+
+        nonlocal classic
+        classic = not classic
+        refresh()
+
+    def switch_role_callback(_, new_role_id):
+
+        nonlocal role_id
+        role_id = new_role_id
+        refresh()
 
     if 'GAME_VARIANT' not in storage:
         alert("Pas de partie de référence")
