@@ -452,7 +452,7 @@ def show_rating(classic, role_id):
         row = html.TR()
         for field in fields:
             buttons = html.DIV()
-            if field in ['player', 'elo', 'change', 'game', 'number']:
+            if field in ['player', 'elo', 'change', 'role', 'game', 'number']:
 
                 # button for sorting
                 button = html.BUTTON("<>")
@@ -474,6 +474,8 @@ def show_rating(classic, role_id):
             def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'change':
             def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'role':
+            def key_function(r): return r[1]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'game':
             def key_function(r): return games_dict[str(r[5])]['name'].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'number':
