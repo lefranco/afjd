@@ -4,13 +4,16 @@
 
 import json
 
-from browser import ajax, html, alert, window  # pylint: disable=import-error
+from browser import html, ajax, alert, window  # pylint: disable=import-error
+from browser.local_storage import storage  # pylint: disable=import-error
 
-import config
 import common
+import interface
+import config
+import mapping
 
 
-OPTIONS = ['classement', 'inscrits', 'joueurs', 'arbitres', 'oisifs', 'remplaçants', 'modérateurs', 'courriels non confirmés']
+OPTIONS = ['inscrits', 'joueurs', 'arbitres', 'oisifs', 'remplaçants', 'classement', 'modérateurs', 'courriels non confirmés']
 
 
 def get_detailed_rating(classic, role_id):
@@ -71,21 +74,6 @@ def get_global_rating(classic):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return list(rating_list)
-
-
-def show_rating():
-    """ show_rating """
-
-    players_dict = common.get_players_data()
-
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-        return
-
-    rating_list = get_global_rating(True)
-
-    MY_SUB_PANEL <= html.H3("Le classement par ELO")
-    MY_SUB_PANEL <= str(rating_list)
 
 
 def show_registered_data():
@@ -399,6 +387,139 @@ def show_replacement_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} remplaçants")
 
 
+def show_rating(classic, role_id):
+    """ show_rating """
+
+    def sort_by_callback(_, new_sort_by):
+
+        # if same sort criterion : inverse order otherwise back to normal order
+        if new_sort_by != storage['SORT_BY_RATINGS']:
+            storage['SORT_BY_RATINGS'] = new_sort_by
+            storage['REVERSE_NEEDED_RATINGS'] = str(False)
+        else:
+            storage['REVERSE_NEEDED_RATINGS'] = str(not bool(storage['REVERSE_NEEDED_RATINGS'] == 'True'))
+
+        MY_PANEL.clear()
+        # TODO
+        show_rating(False, None)
+
+    if 'GAME_VARIANT' not in storage:
+        alert("Pas de partie de référence")
+        return
+    variant_name = storage['GAME_VARIANT']
+
+    variant_content = common.game_variant_content_reload(variant_name)
+    interface_chosen = interface.get_interface_from_variant(variant_name)
+    interface_parameters = common.read_parameters(variant_name, interface_chosen)
+
+    variant_data = mapping.Variant(variant_name, variant_content, interface_parameters)
+
+    players_dict = common.get_players()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    if role_id:
+        rating_list = get_detailed_rating(classic, role_id)
+    else:
+        rating_list = get_global_rating(classic)
+
+    ratings_table = html.TABLE()
+
+    # the display order
+    fields = ['classic', 'role', 'player', 'elo', 'change', 'game', 'number']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'classic': 'classique', 'role': 'role', 'player': 'joueur', 'elo': 'elo', 'change': 'changement', 'game': 'dernière partie', 'number': 'nombre de parties'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    ratings_table <= thead
+
+    row = html.TR()
+    for field in fields:
+        buttons = html.DIV()
+        if field in ['player', 'elo', 'change', 'game', 'number']:
+
+            # button for sorting
+            button = html.BUTTON("<>")
+            button.bind("click", lambda e, f='elo': sort_by_callback(e, f))
+            buttons <= button
+
+        col = html.TD(buttons)
+        row <= col
+    ratings_table <= row
+
+    # default
+    if 'SORT_BY_RATINGS' not in storage:
+        storage['SORT_BY_RATINGS'] = 'elo_value'
+    if 'REVERSE_NEEDED_RATINGS' not in storage:
+        storage['REVERSE_NEEDED_RATINGS'] = str(False)
+
+    sort_by = storage['SORT_BY_RATINGS']
+    reverse_needed = bool(storage['REVERSE_NEEDED_RATINGS'] == 'True')
+
+    # 0 classic / 1 role_id / 2 player_id / 3 elo_value / 4 change / 5 game_id / 6 number games
+
+    if sort_by == 'elo_value':
+        def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'change':
+        def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'game':
+        def key_function(r): return r[5]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'number_game':
+        def key_function(r): return r[6]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+
+    for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
+
+        row = html.TR()
+        for num, field in enumerate(fields):
+
+            raw_value = rating[num]
+
+            if field == 'classic':
+                value = "oui" if raw_value else "non"
+
+            if field == 'role':
+                role_id = raw_value
+                role = variant_data.roles[role_id]
+                role_name = variant_data.name_table[role]
+                role_icon_img = html.IMG(src=f"./variants/{variant_name}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
+                value = role_icon_img
+
+            if field == 'player':
+                value = num2pseudo[raw_value]
+
+            if field == 'elo':
+                value = raw_value
+
+            if field == 'change':
+                value = raw_value
+
+            if field == 'game':
+                value = games_dict[str(raw_value)]['name']
+
+            if field == 'number':
+                value = raw_value
+
+            col = html.TD(value)
+            row <= col
+
+        ratings_table <= row
+
+    MY_SUB_PANEL <= html.H3("Le classement par ELO")
+    MY_SUB_PANEL <= ratings_table
+
+
 def show_moderators():
     """ show_moderators """
 
@@ -495,8 +616,6 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'classement':
-        show_rating()
     if item_name == 'inscrits':
         show_registered_data()
     if item_name == 'joueurs':
@@ -507,6 +626,8 @@ def load_option(_, item_name):
         show_idle_data()
     if item_name == 'remplaçants':
         show_replacement_data()
+    if item_name == 'classement':
+        show_rating(True, None)
     if item_name == 'modérateurs':
         show_moderators()
     if item_name == 'courriels non confirmés':
