@@ -484,6 +484,12 @@ def show_rating(classic, role_id):
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
+            player = num2pseudo[rating[2]]
+            if player == pseudo:
+                colour = config.MY_RATING
+            else:
+                colour = None
+
             row = html.TR()
             for field in fields:
 
@@ -491,7 +497,7 @@ def show_rating(classic, role_id):
                     value = rank
 
                 if field == 'player':
-                    value = num2pseudo[rating[2]]
+                    value = player
 
                 if field == 'elo':
                     value = rating[3]
@@ -513,6 +519,11 @@ def show_rating(classic, role_id):
                     value = rating[6]
 
                 col = html.TD(value)
+                if colour is not None:
+                    col.style = {
+                        'background-color': colour
+                    }
+
                 row <= col
 
             ratings_table <= row
@@ -583,6 +594,15 @@ def show_rating(classic, role_id):
         nonlocal role_id
         role_id = new_role_id
         refresh()
+
+    if 'PSEUDO' in storage:
+        pseudo = storage['PSEUDO']
+    else:
+        pseudo = None
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable (pour la variante)")
+        return
 
     if 'GAME_VARIANT' not in storage:
         alert("Pas de partie de référence")
