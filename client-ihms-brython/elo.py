@@ -9,6 +9,7 @@ from browser import html  # pylint: disable=import-error
 
 import scoring
 
+ALPHA = 1.5
 D_CONSTANT = 400.
 DEFAULT_ELO = 1500.
 MINIMUM_ELO = 1000.
@@ -61,9 +62,6 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     # pseudo from number
     num2pseudo = {v: k for k, v in players_dict.items()}
 
-    # should be 7
-    num_players = len([n for n in variant_data.roles if n >= 1])
-
     # rolename from number
     num2rolename = {n: variant_data.name_table[variant_data.roles[n]] for n in variant_data.roles if n >= 1}
 
@@ -77,6 +75,9 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     variation_calculation_time = 0.
 
     effective_roles = [r for r in variant_data.roles if r >= 1]
+
+    # should be 7
+    num_players = len(effective_roles)
 
     for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['time_stamp']):
 
@@ -110,8 +111,8 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
 
         # calculate performance and get pseudos of players
         before = time.time()
-        sum_score = sum(score_table.values())
-        performed_table = {r: s / sum_score for r, s in score_table.items()}
+        ranking_table = {r: len([_ for ss in score_table.values() if ss > s]) + 1 for r, s in score_table.items()}
+        performed_table = {r: (ALPHA ** (num_players - ranking_table[r]) - 1) / sum([ALPHA ** (num_players - i) - 1 for i in range(1, num_players + 1)]) for r, s in score_table.items()}
         pseudo_table = {num2rolename[rn]: num2pseudo[int(pn)] for pn, rn in game_players_dict.items()}
         after = time.time()
         performance_calculation_time += (after - before)
@@ -164,6 +165,8 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
             elo_information <= html.BR()
             elo_information <= f"{score_table=}"
             elo_information <= html.BR()
+            elo_information <= f"{ranking_table=}"
+            elo_information <= html.BR()
             elo_information <= f"{expected_table=}"
             elo_information <= html.BR()
             elo_information <= f"{performed_table=}"
@@ -175,7 +178,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
             elo_information <= "Effect :"
             elo_information <= html.BR()
 
-        # calculate efect on ELO
+        # calculate effect on ELO
         before = time.time()
         loosers = [r for r in score_table if r == min(score_table.values())]
         winners = [r for r in score_table if r == max(score_table.values())]
