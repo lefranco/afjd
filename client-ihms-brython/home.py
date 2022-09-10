@@ -874,24 +874,30 @@ def show_technical():
     link5 = html.A(href="./docs/calcul_elo.pdf", target="_blank")
     link5 <= "Lien vers les spécifications du calcul du ELO sur le site"
     MY_SUB_PANEL <= link5
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    link6 = html.A(href="https://towardsdatascience.com/developing-a-generalized-elo-rating-system-for-multiplayer-games-b9b495e87802", target="_blank")
+    link6 <= "Lien vers la source d'inspiration pour le calcul du ELO sur le site"
+    MY_SUB_PANEL <= link6
 
     # --
 
     title6 = html.H4("Règles simplifiées")
     MY_SUB_PANEL <= title6
 
-    link6 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
-    link6 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
-    MY_SUB_PANEL <= link6
+    link7 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
+    link7 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
+    MY_SUB_PANEL <= link7
 
     # --
 
     title7 = html.H4("Création de fichier de tournoi")
     MY_SUB_PANEL <= title7
 
-    link7 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
-    link7 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
-    MY_SUB_PANEL <= link7
+    link8 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
+    link8 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
+    MY_SUB_PANEL <= link8
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
