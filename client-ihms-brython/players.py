@@ -529,11 +529,12 @@ def show_rating(classic, role_id):
             ratings_table <= row
             rank += 1
 
-        return ratings_table
+        average = sum(r[3] for r in rating_list) / len(rating_list)
+        return ratings_table, average
 
     def refresh():
 
-        ratings_table = make_ratings_table(classic, role_id)
+        ratings_table, average = make_ratings_table(classic, role_id)
 
         # button for changing mode
         switch_mode_button = html.BUTTON(f"passer en {'blitz' if classic else 'classique'}")
@@ -570,6 +571,8 @@ def show_rating(classic, role_id):
         MY_SUB_PANEL <= switch_role_buttons_table
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
+        MY_SUB_PANEL <= html.BR()
+        MY_PANEL <= html.DIV(f"La moyenne des ELO est de {average}", Class='note')
 
     def sort_by_callback(_, new_sort_by):
 
