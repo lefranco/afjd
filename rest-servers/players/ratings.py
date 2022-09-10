@@ -15,7 +15,7 @@ class Rating:
     """ Class for handling a rating """
 
     @staticmethod
-    def list_by_classic(sql_executor: database.SqlExecutor, classic: int) -> typing.List[typing.Tuple[int, int, int, int, int, int, int]]:
+    def list_by_classic(sql_executor: database.SqlExecutor, classic: bool) -> typing.List[typing.Tuple[int, int, int, int, int, int, int]]:
         """ class lookup : finds the object in database from fame id """
         ratings_found = sql_executor.execute("SELECT * FROM ratings where classic = ?", (int(classic), ), need_result=True)
         if not ratings_found:
@@ -23,7 +23,7 @@ class Rating:
         return ratings_found
 
     @staticmethod
-    def list_by_classic_role_id(sql_executor: database.SqlExecutor, classic: int, role_id: int) -> typing.List[typing.Tuple[int, int, int, int, int, int, int]]:
+    def list_by_classic_role_id(sql_executor: database.SqlExecutor, classic: bool, role_id: int) -> typing.List[typing.Tuple[int, int, int, int, int, int, int]]:
         """ class lookup : finds the object in database from fame id """
         ratings_found = sql_executor.execute("SELECT * FROM ratings where classic = ? and role_id = ?", (int(classic), role_id), need_result=True)
         if not ratings_found:
