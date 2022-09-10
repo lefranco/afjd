@@ -538,7 +538,7 @@ def show_rating(classic, role_id):
         col = html.TD("Cliquer sur le pays pour le détail ->")
         row <= col
         for poss_role_id, role in variant_data.roles.items():
-            if poss_role_id >= 1:
+            if poss_role_id >= 1 and poss_role_id != role_id:
                 form = html.FORM()
                 input_change_role = html.INPUT(type="image", src=f"./variants/{variant_name}/{interface_chosen}/roles/{poss_role_id}.jpg")
                 input_change_role.bind("click", lambda e, r=poss_role_id: switch_role_callback(e, r))
@@ -552,10 +552,11 @@ def show_rating(classic, role_id):
         MY_SUB_PANEL <= switch_mode_button
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
+        if role_id:
+            MY_SUB_PANEL <= switch_global_button
+            MY_SUB_PANEL <= html.BR()
+            MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= switch_role_buttons_table
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= switch_global_button
-        MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
 
