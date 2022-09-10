@@ -535,7 +535,7 @@ def show_rating(classic, role_id):
         # buttons for selecting role
         switch_role_buttons_table = html.TABLE()
         row = html.TR()
-        col = html.TD("Détailler pour le pays")
+        col = html.TD("Cliquer sur le pays pour le détail ->")
         row <= col
         for poss_role_id, role in variant_data.roles.items():
             if poss_role_id >= 1:
