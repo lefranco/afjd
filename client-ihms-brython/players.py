@@ -12,6 +12,8 @@ import interface
 import config
 import mapping
 
+DEFAULT_ELO = 1500
+
 
 OPTIONS = ['inscrits', 'joueurs', 'arbitres', 'oisifs', 'remplaçants', 'classement', 'modérateurs', 'courriels non confirmés']
 
@@ -390,18 +392,148 @@ def show_replacement_data():
 def show_rating(classic, role_id):
     """ show_rating """
 
+    def make_ratings_table(classic, role_id):
+        """ make_ratings_table """
+
+        if role_id:
+
+            # for a given role
+            rating_list = get_detailed_rating(classic, role_id)
+
+        else:
+
+            # for all roles
+            detailed_rating_list = get_global_rating(classic)
+
+            # should be 7
+            number_roles = len({r[1] for r in detailed_rating_list})
+
+            # need to sum up per player
+            rating_list_dict = {}
+            for (classic, role_id, player_id, elo, change, game_id, number_games) in detailed_rating_list:
+
+                # avoid using loop variable
+                classic_found = classic
+
+                # create entry if necessary
+                if player_id not in rating_list_dict:
+                    rating_list_dict[player_id] = {}
+                    rating_list_dict[player_id]['elo_sum'] = 0
+                    rating_list_dict[player_id]['number_games'] = 0
+                    rating_list_dict[player_id]['number_rated'] = 0
+
+                # update entry
+
+                # suming up
+                rating_list_dict[player_id]['elo_sum'] += elo
+                rating_list_dict[player_id]['number_games'] += number_games
+                rating_list_dict[player_id]['number_rated'] += 1
+
+                # last
+                rating_list_dict[player_id]['last_change'] = change
+                rating_list_dict[player_id]['last_game'] = game_id
+                rating_list_dict[player_id]['last_role'] = role_id
+
+            rating_list = [[classic_found, v['last_role'], k, round((v['elo_sum'] + (number_roles - v['number_rated']) * DEFAULT_ELO) / number_roles), v['last_change'], v['last_game'], v['number_games']] for k, v in rating_list_dict.items()]
+
+        ratings_table = html.TABLE()
+
+        # the display order
+        fields = ['rank', 'player', 'elo', 'change', 'role', 'game', 'number']
+
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'rank': 'rang', 'player': 'joueur', 'elo': 'elo', 'change': 'dernier changement', 'role': 'avec le rôle', 'game': 'dans la partie', 'number': 'nombre de parties'}[field]
+            col = html.TD(field_fr)
+            thead <= col
+        ratings_table <= thead
+
+        row = html.TR()
+        for field in fields:
+            buttons = html.DIV()
+            if field in ['player', 'elo', 'change', 'game', 'number']:
+
+                # button for sorting
+                button = html.BUTTON("<>")
+                button.bind("click", lambda e, f=field: sort_by_callback(e, f))
+                buttons <= button
+
+            col = html.TD(buttons)
+            row <= col
+        ratings_table <= row
+
+        sort_by = storage['SORT_BY_RATINGS']
+        reverse_needed = bool(storage['REVERSE_NEEDED_RATINGS'] == 'True')
+
+        # 0 classic / 1 role_id / 2 player_id / 3 elo / 4 change / 5 game_id / 6 number games
+
+        if sort_by == 'player':
+            def key_function(r): return num2pseudo[r[2]].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'elo':
+            def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'change':
+            def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'game':
+            def key_function(r): return games_dict[str(r[5])]['name'].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'number':
+            def key_function(r): return r[6]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+
+        rank = 1
+
+        for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
+
+            row = html.TR()
+            for field in fields:
+
+                if field == 'rank':
+                    value = rank
+
+                if field == 'player':
+                    value = num2pseudo[rating[2]]
+
+                if field == 'elo':
+                    value = rating[3]
+
+                if field == 'change':
+                    value = rating[4]
+
+                if field == 'role':
+                    role_id = rating[1]
+                    role = variant_data.roles[role_id]
+                    role_name = variant_data.name_table[role]
+                    role_icon_img = html.IMG(src=f"./variants/{variant_name}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
+                    value = role_icon_img
+
+                if field == 'game':
+                    value = games_dict[str(rating[5])]['name']
+
+                if field == 'number':
+                    value = rating[6]
+
+                col = html.TD(value)
+                row <= col
+
+            ratings_table <= row
+            rank += 1
+
+        return ratings_table
+
     def sort_by_callback(_, new_sort_by):
 
         # if same sort criterion : inverse order otherwise back to normal order
-        if new_sort_by != storage['SORT_BY_RATINGS']:
-            storage['SORT_BY_RATINGS'] = new_sort_by
-            storage['REVERSE_NEEDED_RATINGS'] = str(False)
-        else:
-            storage['REVERSE_NEEDED_RATINGS'] = str(not bool(storage['REVERSE_NEEDED_RATINGS'] == 'True'))
+        if new_sort_by is not None:
+            if new_sort_by != storage['SORT_BY_RATINGS']:
+                storage['SORT_BY_RATINGS'] = new_sort_by
+                storage['REVERSE_NEEDED_RATINGS'] = str(False)
+            else:
+                storage['REVERSE_NEEDED_RATINGS'] = str(not bool(storage['REVERSE_NEEDED_RATINGS'] == 'True'))
 
-        MY_PANEL.clear()
-        # TODO
-        show_rating(False, None)
+        ratings_table = make_ratings_table(classic, role_id)
+
+        MY_SUB_PANEL.clear()
+        MY_SUB_PANEL <= html.H3("Le classement par ELO")
+        MY_SUB_PANEL <= ratings_table
 
     if 'GAME_VARIANT' not in storage:
         alert("Pas de partie de référence")
@@ -427,97 +559,13 @@ def show_rating(classic, role_id):
         alert("Erreur chargement dictionnaire parties")
         return
 
-    if role_id:
-        rating_list = get_detailed_rating(classic, role_id)
-    else:
-        rating_list = get_global_rating(classic)
-
-    ratings_table = html.TABLE()
-
-    # the display order
-    fields = ['classic', 'role', 'player', 'elo', 'change', 'game', 'number']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'classic': 'classique', 'role': 'role', 'player': 'joueur', 'elo': 'elo', 'change': 'changement', 'game': 'dernière partie', 'number': 'nombre de parties'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    ratings_table <= thead
-
-    row = html.TR()
-    for field in fields:
-        buttons = html.DIV()
-        if field in ['player', 'elo', 'change', 'game', 'number']:
-
-            # button for sorting
-            button = html.BUTTON("<>")
-            button.bind("click", lambda e, f='elo': sort_by_callback(e, f))
-            buttons <= button
-
-        col = html.TD(buttons)
-        row <= col
-    ratings_table <= row
-
     # default
     if 'SORT_BY_RATINGS' not in storage:
-        storage['SORT_BY_RATINGS'] = 'elo_value'
+        storage['SORT_BY_RATINGS'] = 'elo'
     if 'REVERSE_NEEDED_RATINGS' not in storage:
-        storage['REVERSE_NEEDED_RATINGS'] = str(False)
+        storage['REVERSE_NEEDED_RATINGS'] = str(True)
 
-    sort_by = storage['SORT_BY_RATINGS']
-    reverse_needed = bool(storage['REVERSE_NEEDED_RATINGS'] == 'True')
-
-    # 0 classic / 1 role_id / 2 player_id / 3 elo_value / 4 change / 5 game_id / 6 number games
-
-    if sort_by == 'elo_value':
-        def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'change':
-        def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'game':
-        def key_function(r): return r[5]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'number_game':
-        def key_function(r): return r[6]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-
-    for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
-
-        row = html.TR()
-        for num, field in enumerate(fields):
-
-            raw_value = rating[num]
-
-            if field == 'classic':
-                value = "oui" if raw_value else "non"
-
-            if field == 'role':
-                role_id = raw_value
-                role = variant_data.roles[role_id]
-                role_name = variant_data.name_table[role]
-                role_icon_img = html.IMG(src=f"./variants/{variant_name}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
-                value = role_icon_img
-
-            if field == 'player':
-                value = num2pseudo[raw_value]
-
-            if field == 'elo':
-                value = raw_value
-
-            if field == 'change':
-                value = raw_value
-
-            if field == 'game':
-                value = games_dict[str(raw_value)]['name']
-
-            if field == 'number':
-                value = raw_value
-
-            col = html.TD(value)
-            row <= col
-
-        ratings_table <= row
-
-    MY_SUB_PANEL <= html.H3("Le classement par ELO")
-    MY_SUB_PANEL <= ratings_table
+    sort_by_callback(None, None)
 
 
 def show_moderators():
