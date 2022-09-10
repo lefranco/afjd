@@ -1107,7 +1107,7 @@ class EloClassicRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/elo_rating - GET - get by classic")
 
         sql_executor = database.SqlExecutor()
-        ratings_list = ratings.Rating.list_by_classic(sql_executor, bool(classic))
+        ratings_list = ratings.Rating.list_by_classic(sql_executor, bool(int(classic)))
         del sql_executor
 
         return ratings_list, 200
@@ -1126,7 +1126,7 @@ class EloClassicRoleRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/elo_rating - GET - get by classic and role")
 
         sql_executor = database.SqlExecutor()
-        ratings_list = ratings.Rating.list_by_classic_role_id(sql_executor, bool(classic), role_id)
+        ratings_list = ratings.Rating.list_by_classic_role_id(sql_executor, bool(int(classic)), role_id)
         del sql_executor
 
         return ratings_list, 200
