@@ -68,6 +68,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     # to measure times spent
     dating_calculation_time = 0.
     scoring_calculation_time = 0.
+    pseudo_calculation_time = 0.
     performance_calculation_time = 0.
     count_calculation_time = 0.
     extract_calculation_time = 0.
@@ -78,6 +79,9 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
 
     # should be 7
     num_players = len(effective_roles)
+
+    # table rank -> score
+    static_score_table = {r: (ALPHA ** (num_players - r) - 1) / sum([ALPHA ** (num_players - i) - 1 for i in range(1, num_players + 1)]) for r in range(1, num_players + 1)}
 
     for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['time_stamp']):
 
@@ -109,13 +113,22 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
         after = time.time()
         scoring_calculation_time += (after - before)
 
-        # calculate performance and get pseudos of players
+        # calculate performance
         before = time.time()
-        ranking_table = {r: len([_ for ss in score_table.values() if ss > s]) + 1 for r, s in score_table.items()}
-        performed_table = {r: (ALPHA ** (num_players - ranking_table[r]) - 1) / sum([ALPHA ** (num_players - i) - 1 for i in range(1, num_players + 1)]) for r, s in score_table.items()}
-        pseudo_table = {num2rolename[rn]: num2pseudo[int(pn)] for pn, rn in game_players_dict.items()}
+        # get everyones's rank
+        ranking_table = {r: len([ss for ss in score_table.values() if ss > s]) + 1 for r, s in score_table.items()}
+        # get everyones's sharing
+        shared_table = {r: len([ss for ss in score_table.values() if ss == s]) for r, s in score_table.items()}
+        # get performance from rank and sharing
+        performed_table = {r: sum([static_score_table[ranking_table[r] + i] for i in range(shared_table[r])]) for r in score_table}
         after = time.time()
         performance_calculation_time += (after - before)
+
+        # get pseudos of players
+        before = time.time()
+        pseudo_table = {num2rolename[rn]: num2pseudo[int(pn)] for pn, rn in game_players_dict.items()}
+        after = time.time()
+        pseudo_calculation_time += (after - before)
 
         # optimization
         memo = {}
@@ -227,6 +240,9 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     elo_information <= html.BR()
 
     elo_information <= f"Scoring calculation time : {scoring_calculation_time}"
+    elo_information <= html.BR()
+
+    elo_information <= f"Pseudo calculation time : {pseudo_calculation_time}"
     elo_information <= html.BR()
 
     elo_information <= f"Performance calculation time : {performance_calculation_time}"
