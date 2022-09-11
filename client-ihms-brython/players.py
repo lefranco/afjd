@@ -409,10 +409,10 @@ def show_rating(classic, role_id):
 
             # need to sum up per player
             rating_list_dict = {}
-            for (classic, role_id, player_id, elo, change, game_id, number_games) in detailed_rating_list:
+            for (classic2, role_id2, player_id, elo, change, game_id, number_games) in detailed_rating_list:
 
                 # avoid using loop variable
-                classic_found = classic
+                classic_found = classic2
 
                 # create entry if necessary
                 if player_id not in rating_list_dict:
@@ -431,7 +431,7 @@ def show_rating(classic, role_id):
                 # last
                 rating_list_dict[player_id]['last_change'] = change
                 rating_list_dict[player_id]['last_game'] = game_id
-                rating_list_dict[player_id]['last_role'] = role_id
+                rating_list_dict[player_id]['last_role'] = role_id2
 
             rating_list = [[classic_found, v['last_role'], k, round((v['elo_sum'] + (number_roles - v['number_rated']) * DEFAULT_ELO) / number_roles), v['last_change'], v['last_game'], v['number_games']] for k, v in rating_list_dict.items()]
 
@@ -549,7 +549,7 @@ def show_rating(classic, role_id):
         row = html.TR()
         col = html.TD("Cliquer sur le pays pour le détail ->")
         row <= col
-        for poss_role_id, role in variant_data.roles.items():
+        for poss_role_id in variant_data.roles:
             if poss_role_id >= 1 and poss_role_id != role_id:
                 form = html.FORM()
                 input_change_role = html.INPUT(type="image", src=f"./variants/{variant_name}/{interface_chosen}/roles/{poss_role_id}.jpg")
