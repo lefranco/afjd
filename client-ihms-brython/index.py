@@ -30,7 +30,7 @@ H2 = html.DIV("Front end du site Diplomania (brique jeu)")
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'événements', 'forum', 'joueurs', 'modération', 'administration']
+OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'événements', 'forum', 'classement', 'modération', 'administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -122,7 +122,7 @@ def load_option(_, item_name):
         events.render(PANEL_MIDDLE)
     if item_name == 'forum':
         forum.render(PANEL_MIDDLE)
-    if item_name == 'joueurs':
+    if item_name == 'classement':
         players.render(PANEL_MIDDLE)
     if item_name == 'modération':
         moderate.render(PANEL_MIDDLE)
