@@ -120,7 +120,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
         # get everyones's sharing
         shared_table = {r: len([ss for ss in score_table.values() if ss == s]) for r, s in score_table.items()}
         # get performance from rank and sharing
-        performed_table = {r: sum([static_score_table[ranking_table[r] + i] for i in range(shared_table[r])]) for r in score_table}
+        performed_table = {r: sum([static_score_table[ranking_table[r] + i] for i in range(shared_table[r])]) / shared_table[r] for r in score_table}
         after = time.time()
         performance_calculation_time += (after - before)
 
