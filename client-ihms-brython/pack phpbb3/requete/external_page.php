@@ -23,7 +23,6 @@ $user->setup('viewforum');
 
 $search_limit = 10;
 
-// ----- Change between HERE -----
 $posts_ary = array(
         'SELECT'    => 'p.*, t.*, u.username, u.user_colour',
 
@@ -55,7 +54,7 @@ $posts_ary = array(
       while( $posts_row = $db->sql_fetchrow($posts_result) )
       {
          $topic_title       =  $posts_row['topic_title'];
-         $post_author       = get_username_string('full', $posts_row['poster_id'], $posts_row['username'], $posts_row['user_colour']);
+         $post_author       =  $posts_row['username']; // get_username_string('full', $posts_row['poster_id'], $posts_row['username'], $posts_row['user_colour']);
          $post_date          = $user->format_date($posts_row['post_time']);
          $post_link       = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "p=" . $posts_row['post_id'] . "#p" . $posts_row['post_id']);
 
@@ -74,7 +73,6 @@ $posts_ary = array(
          'POST_TEXT'         => censor_text($post_text),
          ));
       }
-// --- and HERE ---
 
 	page_header('External page');
 
@@ -82,7 +80,7 @@ $posts_ary = array(
         'body' => 'external_body.html'
     ));
 
-   page_footer();
+    page_footer();
 
 
 ?>
