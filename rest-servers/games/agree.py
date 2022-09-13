@@ -349,7 +349,8 @@ def fake_post(game_id: int, role_id: int, definitive_value: bool, names: str, sq
         if game is None:
             return False, False, "ERROR : Could not find the game"
 
-        if game.past_deadline():
+        # there cannot be delays for archive games
+        if not game.archive and game.past_deadline():
 
             # we are : insert this incident
 
