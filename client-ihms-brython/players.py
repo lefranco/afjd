@@ -91,14 +91,14 @@ def show_rating(classic, role_id):
         else:
 
             # for all roles
-            detailed_rating_list = get_global_rating(classic)
+            complete_rating_list = get_global_rating(classic)
 
             # should be 7
-            number_roles = len({r[1] for r in detailed_rating_list})
+            number_roles = len({r[1] for r in complete_rating_list})
 
             # need to sum up per player
             rating_list_dict = {}
-            for (classic2, role_id2, player_id, elo, change, game_id, number_games) in detailed_rating_list:
+            for (classic2, role_id2, player_id, elo, change, game_id, number_games) in complete_rating_list:
 
                 # avoid using loop variable
                 classic_found = classic2
