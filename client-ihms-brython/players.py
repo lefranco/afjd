@@ -81,7 +81,7 @@ def get_global_rating(classic):
 def show_rating(classic, role_id):
     """ show_rating """
 
-    def make_ratings_table(classic, role_id):
+    def make_ratings_table(classic, role_id, nb_roles):
 
         if role_id:
 
@@ -92,9 +92,6 @@ def show_rating(classic, role_id):
 
             # for all roles
             complete_rating_list = get_global_rating(classic)
-
-            # should be 7
-            number_roles = len({r[1] for r in complete_rating_list})
 
             # need to sum up per player
             rating_list_dict = {}
@@ -122,7 +119,7 @@ def show_rating(classic, role_id):
                 rating_list_dict[player_id]['last_game'] = game_id
                 rating_list_dict[player_id]['last_role'] = role_id2
 
-            rating_list = [[classic_found, v['last_role'], k, round((v['elo_sum'] + (number_roles - v['number_rated']) * DEFAULT_ELO) / number_roles), v['last_change'], v['last_game'], v['number_games']] for k, v in rating_list_dict.items()]
+            rating_list = [[classic_found, v['last_role'], k, round((v['elo_sum'] + (nb_roles - v['number_rated']) * DEFAULT_ELO) / nb_roles), v['last_change'], v['last_game'], v['number_games']] for k, v in rating_list_dict.items()]
 
         ratings_table = html.TABLE()
 
@@ -192,7 +189,7 @@ def show_rating(classic, role_id):
                     value = rating[3]
 
                 if field == 'change':
-                    value = rating[4]
+                    value = f"{round(rating[4] / nb_roles)} ({rating[4]})"
 
                 if field == 'role':
                     role_id = rating[1]
@@ -223,7 +220,10 @@ def show_rating(classic, role_id):
 
     def refresh():
 
-        ratings_table, average = make_ratings_table(classic, role_id)
+        # should be 7
+        nb_roles = len(variant_data.roles) - 1
+
+        ratings_table, average = make_ratings_table(classic, role_id, nb_roles)
 
         # button for changing mode
         switch_mode_button = html.BUTTON(f"passer en {'blitz' if classic else 'classique'}")
@@ -262,6 +262,9 @@ def show_rating(classic, role_id):
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV(f"La moyenne des ELO est de {average}", Class='note')
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV(f"Le changement est indiqué est celui global pour le joueur, celui entre parenthèse pour le rôle donné.", Class='note')
 
     def sort_by_callback(_, new_sort_by):
 
