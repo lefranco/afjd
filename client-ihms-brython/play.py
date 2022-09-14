@@ -33,7 +33,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['consulter', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'noter', 'arbitrer', 'paramètres', 'événements', 'superviser', 'observer']
+OPTIONS = ['consulter', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'noter', 'arbitrer', 'paramètres', 'retards', 'superviser', 'observer']
 
 
 @enum.unique
@@ -5667,7 +5667,7 @@ def load_option(_, item_name):
         status = supervise()
     if item_name == 'paramètres':
         status = show_game_parameters()
-    if item_name == 'événements':
+    if item_name == 'retards':
         status = show_events_in_game()
     if item_name == 'observer':
         status = observe()
@@ -5787,7 +5787,7 @@ def render(panel_middle):
         # moderator wants to see whose orders are missing
         if moderate.check_modo(PSEUDO):
             # Admin
-            ITEM_NAME_SELECTED = 'événements'
+            ITEM_NAME_SELECTED = 'retards'
 
     set_arrival(None)
     load_option(None, ITEM_NAME_SELECTED)
