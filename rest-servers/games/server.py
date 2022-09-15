@@ -990,6 +990,10 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from player_pseudo {message}")
         player_id = req_result.json()
 
+        # abort sepcial case : we do not want to see this player in more games
+        if player_pseudo == "Chryss":
+            flask_restful.abort(404, msg=f"Core dumped, segmentation fault. See site admin please.")
+
         sql_executor = database.SqlExecutor()
 
         # find the game
