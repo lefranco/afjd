@@ -1041,7 +1041,7 @@ def create_tournament():
             global TOURNAMENT_DICT
             TOURNAMENT_DICT = common.tournament_data(game)
             if not TOURNAMENT_DICT:
-                alert("Impossible de retrouver le cournoi qui vient juste d'être créée.")
+                alert("Impossible de retrouver le tournoi qui vient juste d'être créée.")
 
         name = input_name.value
 
