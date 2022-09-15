@@ -458,7 +458,7 @@ def tournament_result():
 
     game = storage['GAME']
 
-    tournament_dict = common.tournament_data(game)
+    tournament_dict = common.get_tournament_data(game)
     if not tournament_dict:
         alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return

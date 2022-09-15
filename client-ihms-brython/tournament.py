@@ -1039,7 +1039,7 @@ def create_tournament():
 
             # we may have just created so need to reload
             global TOURNAMENT_DICT
-            TOURNAMENT_DICT = common.tournament_data(game)
+            TOURNAMENT_DICT = common.get_tournament_data(game)
             if not TOURNAMENT_DICT:
                 alert("Impossible de retrouver le tournoi qui vient juste d'être créée.")
 
@@ -1223,7 +1223,7 @@ def edit_tournament():
 
     # we probably just changed so need to reload
     global TOURNAMENT_DICT
-    TOURNAMENT_DICT = common.tournament_data(game)
+    TOURNAMENT_DICT = common.get_tournament_data(game)
     if not TOURNAMENT_DICT:
         alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
@@ -1340,7 +1340,7 @@ def delete_tournament():
             InfoDialog("OK", f"Le tournoi a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
 
             global TOURNAMENT_DICT
-            TOURNAMENT_DICT = common.tournament_data(game)
+            TOURNAMENT_DICT = common.get_tournament_data(game)
             if not TOURNAMENT_DICT:
                 alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
                 return
@@ -1380,7 +1380,7 @@ def delete_tournament():
         return
 
     global TOURNAMENT_DICT
-    TOURNAMENT_DICT = common.tournament_data(game)
+    TOURNAMENT_DICT = common.get_tournament_data(game)
     if not TOURNAMENT_DICT:
         alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
@@ -1809,7 +1809,7 @@ def render(panel_middle):
     if 'GAME' in storage:
         game = storage['GAME']
         global TOURNAMENT_DICT
-        TOURNAMENT_DICT = common.tournament_data(game)
+        TOURNAMENT_DICT = common.get_tournament_data(game)
         if TOURNAMENT_DICT:
             ITEM_NAME_SELECTED = 'parties du tournoi'
 

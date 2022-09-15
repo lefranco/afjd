@@ -611,8 +611,8 @@ def game_parameters_reload(game):
     return game_parameters_loaded
 
 
-def tournament_data(game):
-    """ tournament_data : returns empty dict if problem """
+def get_tournament_data(game):
+    """ get_tournament_data : returns empty dict if problem """
 
     tournament_dict = {}
 
