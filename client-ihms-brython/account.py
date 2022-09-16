@@ -51,6 +51,13 @@ def information_about_emails():
     return information
 
 
+def information_about_pseudo():
+    """ information_about_emails """
+
+    information = html.DIV(Class='important')
+    information <= "Un pseudo inapproprié pourra être refusé sur le site (et le compte supprimé)"
+    return information
+
 def create_account():
     """ create_account """
 
@@ -157,6 +164,9 @@ def create_account():
     MY_SUB_PANEL <= html.BR()
 
     form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
 
     form <= html.DIV("Pas d'accents, d'espaces ni de tirets dans le pseudo", Class='note')
     form <= html.BR()
@@ -276,7 +286,11 @@ def create_account():
 
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= information_about_pseudo()
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= information_about_emails()
+
 
 
 def change_password():
