@@ -990,10 +990,6 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get id from player_pseudo {message}")
         player_id = req_result.json()
 
-        # abort sepcial case : we do not want to see this player in more games
-        if player_pseudo == "Chryss":
-            flask_restful.abort(404, msg="Core dumped, segmentation fault!")
-
         sql_executor = database.SqlExecutor()
 
         # find the game
@@ -3238,11 +3234,11 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             messages_dict_dest[identifier].append(addressee_num)
 
         # extract the ones not concerned
-        messages_list: typing.List[typing.Tuple[int, int, int, typing.List[int], str]] = []
+        messages_list: typing.List[typing.Tuple[int, int, typing.List[int], str]] = []
         for identifier, (author_num, time_stamp, content) in messages_dict_mess.items():
             addressees_num = messages_dict_dest[identifier]
             if role_id == author_num or role_id in addressees_num:
-                messages_list.append((identifier, author_num, time_stamp, addressees_num, content.payload))
+                messages_list.append((author_num, time_stamp, addressees_num, content.payload))
 
         del sql_executor
 
@@ -3406,11 +3402,11 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         declarations_list = declarations.Declaration.list_with_content_by_game_id(sql_executor, game_id)
 
         declarations_list_ret = []
-        for _, identifier, author_num, anonymous, time_stamp, content in declarations_list:
+        for _, _, author_num, anonymous, time_stamp, content in declarations_list:
             if anonymous and role_id != 0:
-                declarations_list_ret.append((identifier, anonymous, -1, time_stamp, content.payload))
+                declarations_list_ret.append((anonymous, -1, time_stamp, content.payload))
             else:
-                declarations_list_ret.append((identifier, anonymous, author_num, time_stamp, content.payload))
+                declarations_list_ret.append((anonymous, author_num, time_stamp, content.payload))
 
         del sql_executor
 
@@ -3468,7 +3464,7 @@ class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
 
             # gather declarations
             declarations_list = declarations.Declaration.list_with_content_by_game_id(sql_executor, game_id)
-            for _, _, _, time_stamp_found, _ in declarations_list:
+            for _, _, _, _, time_stamp_found, _ in declarations_list:
                 time_stamp = time_stamp_found
                 break
 
