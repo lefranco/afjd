@@ -13,6 +13,8 @@ import news2s
 import moderators
 import players
 import ratings
+import events
+import registrations
 import database
 
 
@@ -46,6 +48,18 @@ def populate_ratings(sql_executor: database.SqlExecutor) -> None:
     ratings.Rating.create_table(sql_executor)
 
 
+def populate_events(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+
+    events.Event.create_table(sql_executor)
+
+
+def populate_registrations(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+
+    registrations.Registration.create_table(sql_executor)
+
+
 def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
@@ -56,6 +70,8 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_players(sql_executor)
     populate_moderators(sql_executor)
     populate_ratings(sql_executor)
+    populate_events(sql_executor)
+    populate_registrations(sql_executor)
 
 
 if __name__ == '__main__':
