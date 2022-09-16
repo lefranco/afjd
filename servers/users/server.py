@@ -46,9 +46,6 @@ JWT = flask_jwt_extended.JWTManager(APP)
 # Account allowed to usupr, to see logins and failed logins
 ADMIN_ACCOUNT_NAME = 'Palpatine'
 
-# Banned accounts
-BANNED_LIST = [] # ['Chryss']
-
 
 # ---------------------------------
 # users
@@ -247,10 +244,6 @@ def verify_user() -> typing.Tuple[typing.Any, int]:
 
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
-
-    # patch to reject banned people
-    if logged_in_as in BANNED_LIST:
-        return flask.jsonify({'msg' : 'PROBLEM DETECTED!'}), 400
 
     return flask.jsonify(logged_in_as=logged_in_as), 200
 
