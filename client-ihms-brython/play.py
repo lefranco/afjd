@@ -3191,20 +3191,20 @@ def negotiate():
     # there can be no message (if no message of failed to load)
 
     # insert new field 'synchro'
-    messages = [(False, 0, f, t, d, c) for (f, t, d, c) in messages]
+    messages = [(False, 0, i, f, t, d, c) for (i, f, t, d, c) in messages]
 
     # get the transition table
     game_transitions = game_transitions_reload(GAME_ID)
 
     # add fake messages (game transitions) and sort
-    fake_messages = [(True, int(k), -1, v, [], readable_season(int(k))) for k, v in game_transitions.items()]
+    fake_messages = [(True, int(k), -1, -1, v, [], readable_season(int(k))) for k, v in game_transitions.items()]
     messages.extend(fake_messages)
     messages.sort(key=lambda d: (d[3], d[1]), reverse=True)
 
     messages_table = html.TABLE()
 
     thead = html.THEAD()
-    for title in ['Date', 'Auteur', 'Destinataire(s)', 'Contenu']:
+    for title in ['id', 'Date', 'Auteur', 'Destinataire(s)', 'Contenu']:
         col = html.TD(html.B(title))
         thead <= col
     messages_table <= thead
@@ -3213,7 +3213,7 @@ def negotiate():
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    for synchro, _, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
+    for synchro, _, id_, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
 
         if synchro:
             class_ = 'synchro'
@@ -3221,6 +3221,9 @@ def negotiate():
             class_ = 'text'
 
         row = html.TR()
+
+        col = html.TD(f"{id_}", Class=class_)
+        row <= col
 
         date_desc_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
         date_desc_gmt_str = datetime.datetime.strftime(date_desc_gmt, "%d-%m-%Y %H:%M:%S")
@@ -3337,7 +3340,7 @@ def negotiate():
 
     # advice to report
     label_unsuitable_content = html.DIV(Class="important")
-    label_unsuitable_content <= "Attention, les messages sont privés entre émetteur et destinataire(s) mais doivent respecter la charte. L'administrateur peut les lire pour vérifier. Contenu inaproprié ? Déclarez un incident ! (reperez le message par sa date, son auteur et son destinataire)"
+    label_unsuitable_content <= "Attention, les messages sont privés entre émetteur et destinataire(s) mais doivent respecter la charte. L'administrateur peut sur demande les lire pour vérifier. Contenu inaproprié ? Déclarez un incident ! (reperez le message par son id)"
     MY_SUB_PANEL <= label_unsuitable_content
     MY_SUB_PANEL <= html.BR()
 
@@ -3488,20 +3491,20 @@ def declare():
     # there can be no message (if no declaration of failed to load)
 
     # insert new field 'synchro'
-    declarations = [(False, 0, a, r, t, c) for (a, r, t, c) in declarations]
+    declarations = [(False, 0, i, a, r, t, c) for (i, a, r, t, c) in declarations]
 
     # get the transition table
     game_transitions = game_transitions_reload(GAME_ID)
 
     # add fake declarations (game transitions) and sort
-    fake_declarations = [(True, int(k), False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
+    fake_declarations = [(True, int(k), -1, False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
     declarations.extend(fake_declarations)
     declarations.sort(key=lambda d: (d[4], d[1]), reverse=True)
 
     declarations_table = html.TABLE()
 
     thead = html.THEAD()
-    for title in ['Date', 'Auteur', 'Contenu']:
+    for title in ['id', 'Date', 'Auteur', 'Contenu']:
         col = html.TD(html.B(title))
         thead <= col
     declarations_table <= thead
@@ -3510,7 +3513,7 @@ def declare():
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    for synchro, _, anonymous, role_id_msg, time_stamp, content in declarations:
+    for synchro, _, id_, anonymous, role_id_msg, time_stamp, content in declarations:
 
         if synchro:
             class_ = 'synchro'
@@ -3520,6 +3523,9 @@ def declare():
             class_ = 'text'
 
         row = html.TR()
+
+        col = html.TD(f"{id_}", Class=class_)
+        row <= col
 
         date_desc_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
         date_desc_gmt_str = datetime.datetime.strftime(date_desc_gmt, "%d-%m-%Y %H:%M:%S")
@@ -3613,7 +3619,7 @@ def declare():
 
     # advice to report
     label_unsuitable_content = html.DIV(Class="important")
-    label_unsuitable_content <= "Attention, les messages sont privés entre joueurs de la partie mais doivent respecter la charte. L'administrateur peut les lire pour vérifier. Contenu inaproprié ? Déclarez un incident ! (reperez le message par sa date)"
+    label_unsuitable_content <= "Attention, les déclarations sont privées entre joueurs de la partie mais doivent respecter la charte. L'administrateur peut les lire pour vérifier. Contenu inaproprié ? Déclarez un incident ! (reperez la déclaration par son id)"
     MY_SUB_PANEL <= label_unsuitable_content
     MY_SUB_PANEL <= html.BR()
 
