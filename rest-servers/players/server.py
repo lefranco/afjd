@@ -28,6 +28,8 @@ import newss
 import news2s
 import moderators
 import ratings
+import events
+import registrations
 import database
 
 
@@ -81,11 +83,21 @@ MODERATOR_PARSER.add_argument('delete', type=int, required=True)
 ELO_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
 ELO_UPDATE_PARSER.add_argument('elo_list', type=str, required=True)
 
+EVENT_PARSER = flask_restful.reqparse.RequestParser()
+EVENT_PARSER.add_argument('name', type=str, required=True)
+
+REGISTRATION_PARSER = flask_restful.reqparse.RequestParser()
+REGISTRATION_PARSER.add_argument('player_id', type=int, required=True)
+REGISTRATION_PARSER.add_argument('delete', type=int, required=True)
+
 # to avoid sending emails in debug phase
 PREVENT_MAIL_CHECKING = False
 
 # pseudo must be at least that size
 LEN_PSEUDO_MIN = 3
+
+# event name must be at most that size
+LEN_EVENT_MAX = 50
 
 
 @API.resource('/player-identifiers/<pseudo>')
@@ -1182,6 +1194,271 @@ class UpdateEloRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'msg': "ELO update done"}
+        return data, 200
+
+
+@API.resource('/events/<event_id>')
+class EventRessource(flask_restful.Resource):  # type: ignore
+    """ EventRessource """
+
+    def get(self, event_id: int) -> typing.Tuple[typing.Optional[typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
+        """
+        Get all information about event
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/events/<event_id> - GET- retrieving data of event with id name=%s", event_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        event = events.Event.find_by_identifier(sql_executor, event_id)
+        if event is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Event {event_id} doesn't exist")
+
+        assert event is not None
+
+        # find the registrations from event id
+        event_registrations = registrations.Registration.list_by_event_id(sql_executor, event_id)
+
+        del sql_executor
+
+        data = {'name': event.name, 'manager_id': event.manager_id, 'registrations': event_registrations}
+
+        return data, 200
+
+    def delete(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Deletes an event
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/events/<event_id> - DELETE - deleting event with id=%s", event_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        # we do not check pseudo, we read it from token
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        event = events.Event.find_by_identifier(sql_executor, event_id)
+        if event is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Event {event_id} doesn't exist")
+
+        assert event is not None
+
+        # check that user is the manager of the event
+        if user_id != event.manager_id:
+            del sql_executor
+            flask_restful.abort(404, msg="You do not seem to be manager of that event")
+
+        # delete registrations
+        event.delete_registrations(sql_executor)
+
+        # finally delete event
+        event.delete_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'identifier': event_id, 'msg': 'Ok removed'}
+        return data, 200
+
+
+@API.resource('/events')
+class EventListRessource(flask_restful.Resource):  # type: ignore
+    """ EventListRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
+        """
+        Get list of events
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/events - GET- retrieving list of events")
+
+        sql_executor = database.SqlExecutor()
+        events_list = events.Event.inventory(sql_executor)
+        del sql_executor
+
+        data = {str(t.identifier): {'name': t.name, 'manager_id': t.manager_id} for t in events_list}
+
+        return data, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Creates a new event
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/events - POST - creating new event")
+
+        args = EVENT_PARSER.parse_args(strict=True)
+
+        name = args['name']
+
+        mylogger.LOGGER.info("name=%s", name)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        # we do not check pseudo, we read it from token
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        if not name.isidentifier():
+            flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
+
+        sql_executor = database.SqlExecutor()
+
+        # find the event
+        event = events.Event.find_by_name(sql_executor, name)
+
+        if event is not None:
+            del sql_executor
+            flask_restful.abort(400, msg=f"Event {name} already exists")
+
+        # check len of name
+        if len(name) > LEN_EVENT_MAX:
+            del sql_executor
+            flask_restful.abort(400, msg=f"Event name {name} is too long")
+
+        # create event here
+        identifier = events.Event.free_identifier(sql_executor)
+        event = events.Event(identifier, name, user_id)
+        event.update_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'name': name, 'msg': 'Ok event created'}
+        return data, 201
+
+
+@API.resource('/registrations/<event_id>')
+class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
+    """ RegistrationEventRessource """
+
+    def post(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Creates or deletes a registration (a relation player-event)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/registrations - POST - creating/deleting new registration")
+
+        args = REGISTRATION_PARSER.parse_args(strict=True)
+
+        player_id = args['player_id']
+        delete = args['delete']
+
+        mylogger.LOGGER.info("event_id=%s player_id=%s delete=%s", event_id, player_id, delete)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the event
+        event = events.Event.find_by_identifier(sql_executor, event_id)
+        if event is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be an event with identifier {event_id}")
+
+        # check the player exists
+        player = players.Player.find_by_identifier(sql_executor, user_id)
+        if player is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a player with identifier {user_id}")
+
+        # action
+
+        if not delete:
+
+            registration = registrations.Registration(int(event_id), int(player_id))
+            registration.update_database(sql_executor)
+
+            sql_executor.commit()
+            del sql_executor
+
+            data = {'msg': 'Ok registration updated or created'}
+            return data, 201
+
+        registration = registrations.Registration(int(event_id), int(player_id))
+        registration.delete_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': 'Ok registration deleted if present'}
         return data, 200
 
 
