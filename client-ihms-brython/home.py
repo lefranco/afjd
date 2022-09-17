@@ -159,9 +159,17 @@ def show_news():
     title2 = html.H4("Les événements qui recrutent")
     MY_SUB_PANEL <= title2
 
-    list_events = html.DIV("BIENTOT")
-
-    MY_SUB_PANEL <= list_events
+    events_data = common.get_events_data()
+    for event_dict in events_data.values():
+        div_event_box = html.DIV(Class='event_element')
+        div_event_box <= html.B(event_dict['name'])
+        div_event_box <= html.BR()
+        div_event_box <= html.BR()
+        for line in event_dict['description'].split('\n'):
+            div_event_box <= line
+            div_event_box <= html.BR()
+        MY_SUB_PANEL <= div_event_box
+        MY_SUB_PANEL <= html.HR()
 
     # ----
 

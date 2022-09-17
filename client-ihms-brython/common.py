@@ -795,6 +795,36 @@ def get_player_games_playing_in(player_id):
     return dict(player_games_dict)
 
 
+def get_events_data():
+    """ get_events_data : returnes empty dict if problem """
+
+    events_dict = {}
+
+    def reply_callback(req):
+        nonlocal events_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des événements : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des événements : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        events_dict = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/events"
+
+    # getting tournaments list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return events_dict
+
+
 def verification_code(pseudo):
     """ verification_code """
     code = int(sum(map(lambda c: ord(c) ** 3.5, pseudo))) % 1000000

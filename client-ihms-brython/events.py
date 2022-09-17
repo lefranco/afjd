@@ -82,36 +82,6 @@ def get_event_data(event_id):
     return event_dict
 
 
-def get_events_data():
-    """ get_events_data : returnes empty dict if problem """
-
-    events_dict = {}
-
-    def reply_callback(req):
-        nonlocal events_dict
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des événements : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des événements : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        events_dict = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/events"
-
-    # getting tournaments list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return events_dict
-
-
 def select_event():
     """ select_event """
 
@@ -129,7 +99,7 @@ def select_event():
 
     MY_SUB_PANEL <= html.H3("Sélection d'un événement")
 
-    events_data = get_events_data()
+    events_data = common.get_events_data()
     if not events_data:
         if 'EVENT_ID' in storage:
             del storage['EVENT_ID']
