@@ -87,7 +87,6 @@ EVENT_PARSER = flask_restful.reqparse.RequestParser()
 EVENT_PARSER.add_argument('name', type=str, required=True)
 
 REGISTRATION_PARSER = flask_restful.reqparse.RequestParser()
-REGISTRATION_PARSER.add_argument('player_id', type=int, required=True)
 REGISTRATION_PARSER.add_argument('delete', type=int, required=True)
 
 # to avoid sending emails in debug phase
@@ -1395,10 +1394,9 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
 
         args = REGISTRATION_PARSER.parse_args(strict=True)
 
-        player_id = args['player_id']
         delete = args['delete']
 
-        mylogger.LOGGER.info("event_id=%s player_id=%s delete=%s", event_id, player_id, delete)
+        mylogger.LOGGER.info("event_id=%s delete=%s", event_id, delete)
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1443,7 +1441,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
 
         if not delete:
 
-            registration = registrations.Registration(int(event_id), int(player_id))
+            registration = registrations.Registration(int(event_id), user_id)
             registration.update_database(sql_executor)
 
             sql_executor.commit()
@@ -1452,7 +1450,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             data = {'msg': 'Ok registration updated or created'}
             return data, 201
 
-        registration = registrations.Registration(int(event_id), int(player_id))
+        registration = registrations.Registration(int(event_id), user_id)
         registration.delete_database(sql_executor)
 
         sql_executor.commit()
