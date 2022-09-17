@@ -85,6 +85,11 @@ ELO_UPDATE_PARSER.add_argument('elo_list', type=str, required=True)
 
 EVENT_PARSER = flask_restful.reqparse.RequestParser()
 EVENT_PARSER.add_argument('name', type=str, required=True)
+EVENT_PARSER.add_argument('start_date', type=str, required=False)
+EVENT_PARSER.add_argument('start_hour', type=str, required=False)
+EVENT_PARSER.add_argument('end_date', type=str, required=False)
+EVENT_PARSER.add_argument('location', type=str, required=False)
+EVENT_PARSER.add_argument('description', type=str, required=False)
 
 REGISTRATION_PARSER = flask_restful.reqparse.RequestParser()
 REGISTRATION_PARSER.add_argument('delete', type=int, required=True)
@@ -1220,7 +1225,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {'name': event.name, 'manager_id': event.manager_id}
+        data = {'name': event.name, 'start_date': event.start_date, 'start_hour': event.start_hour, 'end_date': event.end_date, 'location': event.location, 'description': event.description, 'manager_id': event.manager_id}
 
         return data, 200
 
@@ -1303,7 +1308,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         events_list = events.Event.inventory(sql_executor)
         del sql_executor
 
-        data = {str(t.identifier): {'name': t.name, 'manager_id': t.manager_id} for t in events_list}
+        data = {str(e.identifier): {'name': e.name, 'description': e.description} for e in events_list}
 
         return data, 200
 
@@ -1318,6 +1323,11 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         args = EVENT_PARSER.parse_args(strict=True)
 
         name = args['name']
+        start_date = args['start_date']
+        start_hour = args['start_hour']
+        end_date = args['end_date']
+        location = args['location']
+        description = args['description']
 
         mylogger.LOGGER.info("name=%s", name)
 
@@ -1367,7 +1377,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
 
         # create event here
         identifier = events.Event.free_identifier(sql_executor)
-        event = events.Event(identifier, name, user_id)
+        event = events.Event(identifier, name, start_date, start_hour, end_date, location, description, user_id)
         event.update_database(sql_executor)
 
         sql_executor.commit()

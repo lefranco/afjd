@@ -10,13 +10,20 @@ import sqlite3
 import typing
 import pathlib
 import unicodedata
+import lzma
+import base64
 
 # File holding the SQLITE database
 FILE = "./db/players.db"
 
-BYTES_SEPARATOR = b';'
 STR_SEPARATOR = ';'
+BYTES_SEPARATOR = b';'
+
 STR_SEPARATOR_SUBSTITUTE = ':'
+BYTES_SEPARATOR_SUBSTITUTE_FOR_TEXT = b':'
+
+STR_SEPARATOR_SUBSTITUTE_FOR_UNREADABLE = '|'
+BYTES_SEPARATOR_SUBSTITUTE_FOR_UNREADABLE = b'|'
 
 
 def rmdiacritics(field_content: str) -> str:
@@ -45,6 +52,26 @@ def sanitize_field(field_content: str) -> str:
     without_diacritics = rmdiacritics(field_content)
     without_separator = without_diacritics.replace(STR_SEPARATOR, STR_SEPARATOR_SUBSTITUTE)
     return without_separator
+
+
+def compress_text(text: str) -> str:
+    """ compresses text that can be long """
+    byte_form = text.encode(errors='ignore')
+    compressed = lzma.compress(byte_form)
+    a85 = base64.a85encode(compressed)
+    assert BYTES_SEPARATOR_SUBSTITUTE_FOR_UNREADABLE not in a85
+    removed_semicolon = a85.replace(BYTES_SEPARATOR, BYTES_SEPARATOR_SUBSTITUTE_FOR_UNREADABLE)
+    return removed_semicolon.decode('ascii')
+
+
+def uncompress_text(unreadable_str: str) -> str:
+    """ uncompresses text that can be long """
+    unreadable = unreadable_str.encode('ascii')
+    restored_semicolon = unreadable.replace(BYTES_SEPARATOR_SUBSTITUTE_FOR_UNREADABLE, BYTES_SEPARATOR)
+    compressed_back = base64.a85decode(restored_semicolon)
+    byte_form_back = lzma.decompress(compressed_back)
+    text_back = byte_form_back.decode()
+    return text_back
 
 
 def db_remove() -> None:
