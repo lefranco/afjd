@@ -127,7 +127,7 @@ def select_event():
         InfoDialog("OK", f"Evenement sélectionné : {event_name}", remove_after=config.REMOVE_AFTER)
 
         # back to where we started actually joined)
-        load_option(None, 'participants à l\'événement')
+        load_option(None, 'm\'inscrire')
 
     MY_SUB_PANEL <= html.H3("Sélection d'un événement")
 
@@ -182,12 +182,12 @@ def select_event():
 def register_event():
     """ register_event """
 
-    def register_event_callback(_):
+    def register_event_callback(_, register):
         """ register_event_callback """
 
         def reply_callback(req):
             req_result = json.loads(req.text)
-            if req.status != 201:
+            if req.status not in [200, 201]:
                 if 'message' in req_result:
                     alert(f"Erreur à l'inscription à l'événement : {req_result['message']}")
                 elif 'msg' in req_result:
@@ -204,7 +204,7 @@ def register_event():
         url = f"{host}:{port}/registrations/{event_id}"
 
         json_dict = {
-            'delete': False,
+            'delete': not register,
         }
 
         # registrating to an event : need token
@@ -218,6 +218,7 @@ def register_event():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
+    pseudo = storage['PSEUDO']
 
     if 'EVENT_ID' not in storage:
         alert("Il faut sélectionner un événement au préalable")
@@ -226,11 +227,24 @@ def register_event():
     event_id = storage['EVENT_ID']
     event_dict = get_event_data(event_id)
 
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        alert("Erreur chargement identifiant joueur")
+        return
+
+    joiners = get_registrations(event_id)
+    player_joined = player_id in joiners
+
     form = html.FORM()
 
-    input_register_event = html.INPUT(type="submit", value="s'inscrire à l'événement")
-    input_register_event.bind("click", register_event_callback)
-    form <= input_register_event
+    if player_joined:
+        input_unregister_event = html.INPUT(type="submit", value="se désinscrire de l'événement")
+        input_unregister_event.bind("click", lambda e: register_event_callback(e, False))
+        form <= input_unregister_event
+    else:
+        input_register_event = html.INPUT(type="submit", value="s'inscrire à l'événement")
+        input_register_event.bind("click", lambda e: register_event_callback(e, True))
+        form <= input_register_event
 
     name = event_dict['name']
     MY_SUB_PANEL <= html.DIV(f"Evenement {name}", Class='note')
@@ -248,7 +262,6 @@ def event_joiners():
         return
 
     players_dict = common.get_players_data()
-
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
         return
