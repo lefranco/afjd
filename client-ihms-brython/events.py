@@ -17,7 +17,7 @@ OPTIONS = ['sélectionner un événement', 'm\'inscrire', 'participants à l\'é
 MAX_LEN_EVENT_NAME = 50
 MAX_LEN_EVENT_LOCATION = 20
 
-# global data below
+DEFAULT_EVENT_LOCATION = "Diplomania"
 
 
 def get_registrations(event_id):
@@ -263,8 +263,15 @@ def register_event():
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV(f"Lieu : {location}", Class='information')
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"{description}", Class='information')
+
+    # description
+    div_description = html.DIV(Class='information')
+    for line in description.split('\n'):
+        div_description <= line
+        div_description <= html.BR()
+    MY_SUB_PANEL <= div_description
     MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= form
 
 
@@ -322,8 +329,15 @@ def event_joiners():
 
     MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='note')
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"{description}", Class='information')
+
+    # description
+    div_description = html.DIV(Class='information')
+    for line in description.split('\n'):
+        div_description <= line
+        div_description <= html.BR()
+    MY_SUB_PANEL <= div_description
     MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= joiners_table
     MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
 
@@ -437,7 +451,7 @@ def create_event():
     fieldset = html.FIELDSET()
     legend_location = html.LEGEND("lieu", title="Lieu de l'événement")
     fieldset <= legend_location
-    input_location = html.INPUT(type="text", value="", size=MAX_LEN_EVENT_LOCATION)
+    input_location = html.INPUT(type="text", value=DEFAULT_EVENT_LOCATION, size=MAX_LEN_EVENT_LOCATION)
     fieldset <= input_location
     form <= fieldset
 
@@ -448,7 +462,6 @@ def create_event():
     legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'tournoi par équipes avec négociations'")
     fieldset <= legend_description
     input_description = html.TEXTAREA(type="text", rows=8, cols=80)
-    input_description <= "..."
     fieldset <= input_description
     form <= fieldset
 
@@ -552,8 +565,15 @@ def delete_event():
 
     MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='note')
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"{description}", Class='information')
+
+    # description
+    div_description = html.DIV(Class='information')
+    for line in description.split('\n'):
+        div_description <= line
+        div_description <= html.BR()
+    MY_SUB_PANEL <= div_description
     MY_SUB_PANEL <= html.BR()
+
     MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= form
