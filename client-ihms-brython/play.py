@@ -3199,7 +3199,7 @@ def negotiate():
     # add fake messages (game transitions) and sort
     fake_messages = [(True, int(k), -1, -1, v, [], readable_season(int(k))) for k, v in game_transitions.items()]
     messages.extend(fake_messages)
-    messages.sort(key=lambda d: (d[3], d[1]), reverse=True)
+    messages.sort(key=lambda d: (d[4], d[1]), reverse=True)
 
     messages_table = html.TABLE()
 
@@ -3499,7 +3499,7 @@ def declare():
     # add fake declarations (game transitions) and sort
     fake_declarations = [(True, int(k), -1, False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
     declarations.extend(fake_declarations)
-    declarations.sort(key=lambda d: (d[4], d[1]), reverse=True)
+    declarations.sort(key=lambda d: (d[5], d[1]), reverse=True)
 
     declarations_table = html.TABLE()
 
