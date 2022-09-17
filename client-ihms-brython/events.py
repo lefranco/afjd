@@ -15,11 +15,9 @@ OPTIONS = ['sélectionner un événement', 'm\'inscrire', 'participants à l\'é
 
 
 MAX_LEN_EVENT_NAME = 50
+MAX_LEN_EVENT_LOCATION = 20
 
 # global data below
-
-# loaded in render()
-EVENT_ID = None
 
 
 def get_registrations(event_id):
@@ -124,7 +122,7 @@ def select_event():
         event_id = event_data_sel[event_name]
         storage['EVENT_ID'] = event_id
 
-        InfoDialog("OK", f"Evenement sélectionné : {event_name}", remove_after=config.REMOVE_AFTER)
+        InfoDialog("OK", f"Evénement sélectionné : {event_name}", remove_after=config.REMOVE_AFTER)
 
         # back to where we started actually joined)
         load_option(None, 'm\'inscrire')
@@ -133,6 +131,8 @@ def select_event():
 
     events_data = get_events_data()
     if not events_data:
+        if 'EVENT_ID' in storage:
+            del storage['EVENT_ID']
         alert("Pas d'événement de prévu pour le moment")
         return
 
@@ -247,7 +247,23 @@ def register_event():
         form <= input_register_event
 
     name = event_dict['name']
-    MY_SUB_PANEL <= html.DIV(f"Evenement {name}", Class='note')
+    start_date = event_dict['start_date']
+    start_hour = event_dict['start_hour']
+    end_date = event_dict['end_date']
+    location = event_dict['location']
+    description = event_dict['description']
+
+    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"Date de début : {start_date}", Class='information')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"Heure de début : {start_hour}", Class='information')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"Date de fin : {end_date}", Class='information')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"Lieu : {location}", Class='information')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"{description}", Class='information')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= form
 
@@ -259,11 +275,6 @@ def event_joiners():
 
     if 'EVENT_ID' not in storage:
         alert("Il faut sélectionner un événement au préalable")
-        return
-
-    players_dict = common.get_players_data()
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
         return
 
     joiners_table = html.TABLE()
@@ -279,6 +290,10 @@ def event_joiners():
     joiners_table <= thead
 
     code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
+
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
 
     event_id = storage['EVENT_ID']
     event_dict = get_event_data(event_id)
@@ -303,7 +318,11 @@ def event_joiners():
         count += 1
 
     name = event_dict['name']
-    MY_SUB_PANEL <= html.DIV(f"Evenement {name}", Class='note')
+    description = event_dict['description']
+
+    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"{description}", Class='information')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= joiners_table
     MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
@@ -330,6 +349,11 @@ def create_event():
             InfoDialog("OK", f"L'événement a été créé : {messages}", remove_after=config.REMOVE_AFTER)
 
         name = input_name.value
+        start_date = input_start_date.value
+        start_hour = input_start_hour.value
+        end_date = input_end_date.value
+        location = input_location.value
+        description = input_description.value
 
         if not name:
             alert("Nom d'événement manquant")
@@ -343,8 +367,19 @@ def create_event():
             create_event()
             return
 
+        if len(location) > MAX_LEN_EVENT_LOCATION:
+            alert("Lieu de l'événement trop long")
+            MY_SUB_PANEL.clear()
+            create_event()
+            return
+
         json_dict = {
             'name': name,
+            'start_date': start_date,
+            'start_hour': start_hour,
+            'end_date': end_date,
+            'location': location,
+            'description': description,
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -374,6 +409,47 @@ def create_event():
     fieldset <= legend_name
     input_name = html.INPUT(type="text", value="", size=MAX_LEN_EVENT_NAME)
     fieldset <= input_name
+    form <= fieldset
+
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_start_date = html.LEGEND("date", title="Date de début de l'événement")
+    fieldset <= legend_start_date
+    input_start_date = html.INPUT(type="date", value="")
+    fieldset <= input_start_date
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_start_hour = html.LEGEND("heure", title="Heure de l'événement")
+    fieldset <= legend_start_hour
+    input_start_hour = html.INPUT(type="time", value="")
+    fieldset <= input_start_hour
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_end_date = html.LEGEND("date", title="Date de fin de l'événement")
+    fieldset <= legend_end_date
+    input_end_date = html.INPUT(type="date", value="")
+    fieldset <= input_end_date
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_location = html.LEGEND("lieu", title="Lieu de l'événement")
+    fieldset <= legend_location
+    input_location = html.INPUT(type="text", value="", size=MAX_LEN_EVENT_LOCATION)
+    fieldset <= input_location
+    form <= fieldset
+
+    form <= html.BR()
+
+    form <= html.BR()
+    fieldset = html.FIELDSET()
+    legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'tournoi par équipes avec négociations'")
+    fieldset <= legend_description
+    input_description = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_description <= "..."
+    fieldset <= input_description
     form <= fieldset
 
     form <= html.BR()
@@ -465,8 +541,20 @@ def delete_event():
     input_delete_event.bind("click", delete_event_callback_confirm)
     form <= input_delete_event
 
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+
     name = event_dict['name']
-    MY_SUB_PANEL <= html.DIV(f"Evenement {name}", Class='note')
+    description = event_dict['description']
+    manager_id = event_dict['manager_id']
+    manager = players_dict[str(manager_id)]['pseudo']
+
+    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"{description}", Class='information')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= form
 
@@ -533,11 +621,6 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
-
-    global EVENT_ID
-    EVENT_ID = None
-    if 'EVENT_ID' in storage:
-        EVENT_ID = storage['EVENT_ID']
 
     ITEM_NAME_SELECTED = OPTIONS[0]
 
