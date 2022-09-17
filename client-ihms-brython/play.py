@@ -3340,7 +3340,7 @@ def negotiate():
 
     # advice to report
     label_unsuitable_content = html.DIV(Class="important")
-    label_unsuitable_content <= "Attention, les messages sont privés entre émetteur et destinataire(s) mais doivent respecter la charte. L'administrateur peut sur demande les lire pour vérifier. Contenu inaproprié ? Déclarez un incident ! (reperez le message par son id)"
+    label_unsuitable_content <= "Attention, les messages sont privés entre émetteur et destinataire(s) mais doivent respecter la charte. L'administrateur peut sur demande les lire pour vérifier. Si cela ne vous convient pas, quittez le site. Contenu inaproprié ? Déclarez un incident ! (reperez le message par son id)"
     MY_SUB_PANEL <= label_unsuitable_content
     MY_SUB_PANEL <= html.BR()
 
@@ -3619,7 +3619,7 @@ def declare():
 
     # advice to report
     label_unsuitable_content = html.DIV(Class="important")
-    label_unsuitable_content <= "Attention, les déclarations sont privées entre joueurs de la partie mais doivent respecter la charte. L'administrateur peut les lire pour vérifier. Contenu inaproprié ? Déclarez un incident ! (reperez la déclaration par son id)"
+    label_unsuitable_content <= "Attention, les déclarations sont privées entre joueurs de la partie mais doivent respecter la charte. L'administrateur peut les lire pour vérifier. Si cela ne vous convient pas, quittez le site. Contenu inaproprié ? Déclarez un incident ! (reperez la déclaration par son id)"
     MY_SUB_PANEL <= label_unsuitable_content
     MY_SUB_PANEL <= html.BR()
 
