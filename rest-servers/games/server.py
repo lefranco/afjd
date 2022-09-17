@@ -3234,7 +3234,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             messages_dict_dest[identifier].append(addressee_num)
 
         # extract the ones not concerned
-        messages_list: typing.List[typing.Tuple[int, int, typing.List[int], str]] = []
+        messages_list: typing.List[typing.Tuple[int, int, int, typing.List[int], str]] = []
         for identifier, (author_num, time_stamp, content) in messages_dict_mess.items():
             addressees_num = messages_dict_dest[identifier]
             if role_id == author_num or role_id in addressees_num:

@@ -58,6 +58,7 @@ def information_about_pseudo():
     information <= "Un pseudo inapproprié pourra être refusé sur le site (et le compte supprimé)"
     return information
 
+
 def create_account():
     """ create_account """
 
@@ -290,7 +291,6 @@ def create_account():
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= information_about_emails()
-
 
 
 def change_password():
