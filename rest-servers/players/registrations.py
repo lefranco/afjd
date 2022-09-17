@@ -15,9 +15,9 @@ class Registration:
     """ Class for handling a registration """
 
     @staticmethod
-    def list_by_event_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, int]]:
+    def list_by_event_id(sql_executor: database.SqlExecutor, event_id: int) -> typing.List[typing.Tuple[int, int]]:
         """ class lookup : finds the object in database from event id """
-        registrations_found = sql_executor.execute("SELECT * FROM registrations where event_id = ?", (player_id,), need_result=True)
+        registrations_found = sql_executor.execute("SELECT * FROM registrations where event_id = ?", (event_id,), need_result=True)
         if not registrations_found:
             return []
         return registrations_found

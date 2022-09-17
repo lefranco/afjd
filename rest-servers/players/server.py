@@ -1218,12 +1218,9 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         assert event is not None
 
-        # find the registrations from event id
-        event_registrations = registrations.Registration.list_by_event_id(sql_executor, event_id)
-
         del sql_executor
 
-        data = {'name': event.name, 'manager_id': event.manager_id, 'registrations': event_registrations}
+        data = {'name': event.name, 'manager_id': event.manager_id}
 
         return data, 200
 
@@ -1383,6 +1380,21 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
 @API.resource('/registrations/<event_id>')
 class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
     """ RegistrationEventRessource """
+
+    def get(self, event_id: int) -> typing.Tuple[typing.List[int], int]:  # pylint: disable=no-self-use
+        """
+        Get list of registrations to the event
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/registrations/<event_id> - GET - getting registrations to the event")
+
+        sql_executor = database.SqlExecutor()
+        registrations_list = registrations.Registration.list_by_event_id(sql_executor, int(event_id))
+        del sql_executor
+
+        data = [r[1] for r in registrations_list]
+        return data, 200
 
     def post(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
