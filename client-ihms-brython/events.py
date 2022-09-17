@@ -126,9 +126,8 @@ def select_event():
 
         InfoDialog("OK", f"Evenement sélectionné : {event_name}", remove_after=config.REMOVE_AFTER)
 
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        select_event()
+        # back to where we started actually joined)
+        load_option(None, 'participants à l\'événement')
 
     MY_SUB_PANEL <= html.H3("Sélection d'un événement")
 
@@ -212,8 +211,7 @@ def register_event():
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started (actually to joiners)
-        MY_SUB_PANEL.clear()
-        event_joiners()
+        load_option(None, 'participants à l\'événement')
 
     MY_SUB_PANEL <= html.H3("Inscription à un événement")
 
@@ -411,9 +409,8 @@ def delete_event():
 
             del storage['EVENT_ID']
 
-            # back to where we started (actually to creation)
-            MY_SUB_PANEL.clear()
-            select_event()
+        # back to where we started (actually to creation)
+        load_option(None, 'créer un événement')
 
         dialog.close()
 
@@ -433,9 +430,8 @@ def delete_event():
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_event_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_event_callback(e, d))
 
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        delete_event()
+        # back to where we started (actually to select)
+        load_option(None, 'sélectionner un événement')
 
     MY_SUB_PANEL <= html.H3("Suppression de l'événement")
 
