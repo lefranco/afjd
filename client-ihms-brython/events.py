@@ -11,7 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import common
 import config
 
-OPTIONS = ['sélectionner un événement', 'm\'inscrire', 'me désinscrire', 'participants à l\'événement', 'créer un événement', 'éditer l\'événement', 'supprimer l\'événement']
+OPTIONS = ['sélectionner un événement', 'm\'inscrire', 'participants à l\'événement', 'créer un événement', 'éditer l\'événement', 'supprimer l\'événement']
 
 
 MAX_LEN_EVENT_NAME = 50
@@ -152,25 +152,61 @@ def select_event():
 def register_event():
     """ register_event """
 
+    def register_event_callback(_):
+        """ register_event_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'inscription à l'événement : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'inscription à l'événement : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"L'inscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/registrations/{event_id}"
+
+        json_dict = {
+            'delete': False,
+        }
+
+        # registrating to an event : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started (actually to joiners)
+        MY_SUB_PANEL.clear()
+        event_joiners()
+
     MY_SUB_PANEL <= html.H3("Inscription à un événement")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
 
-    MY_SUB_PANEL <= "TODO"
-
-
-def unregister_event():
-    """ unregister_event """
-
-    MY_SUB_PANEL <= html.H3("Désinscription à un événement")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
+    if 'EVENT_ID' not in storage:
+        alert("Il faut sélectionner un événement au préalable")
         return
 
-    MY_SUB_PANEL <= "TODO"
+    event_id = storage['EVENT_ID']
+    event_dict = get_event_data(event_id)
+
+    form = html.FORM()
+
+    input_register_event = html.INPUT(type="submit", value="s'inscrire à l'événement")
+    input_register_event.bind("click", register_event_callback)
+    form <= input_register_event
+
+    name = event_dict['name']
+    MY_SUB_PANEL <= html.DIV(f"Evenement {name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= form
 
 
 def event_joiners():
@@ -377,8 +413,6 @@ def load_option(_, item_name):
         select_event()
     if item_name == 'm\'inscrire':
         register_event()
-    if item_name == 'me désinscrire':
-        unregister_event()
     if item_name == 'participants à l\'événement':
         event_joiners()
     if item_name == 'créer un événement':
