@@ -3222,7 +3222,8 @@ def negotiate():
 
         row = html.TR()
 
-        col = html.TD(f"{id_}", Class=class_)
+        id_txt = str(id_) if id_ != -1 else ""
+        col = html.TD(id_txt, Class=class_)
         row <= col
 
         date_desc_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
@@ -3524,7 +3525,8 @@ def declare():
 
         row = html.TR()
 
-        col = html.TD(f"{id_}", Class=class_)
+        id_txt = str(id_) if id_ != -1 else ""
+        col = html.TD(id_txt, Class=class_)
         row <= col
 
         date_desc_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
