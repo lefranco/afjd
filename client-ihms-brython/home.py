@@ -156,8 +156,17 @@ def show_news():
 
     # ----
 
-    title2 = html.H4("Dernières contributions sur les formus")
+    title2 = html.H4("Les événements qui recrutent")
     MY_SUB_PANEL <= title2
+
+    list_events = html.DIV("BIENTOT")
+
+    MY_SUB_PANEL <= list_events
+
+    # ----
+
+    title3 = html.H4("Dernières contributions sur les forums")
+    MY_SUB_PANEL <= title3
 
     news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="300")
 
@@ -165,8 +174,8 @@ def show_news():
 
     # ----
 
-    title3 = html.H4("Dernières nouvelles moderateur", Class='news')
-    MY_SUB_PANEL <= title3
+    title4 = html.H4("Dernières nouvelles moderateur", Class='news')
+    MY_SUB_PANEL <= title4
 
     news_content_loaded2 = common.get_news_content2()
     news_content2 = formatted_news(news_content_loaded2, False)
@@ -174,8 +183,8 @@ def show_news():
 
     # ----
 
-    title4 = html.H4("Dernières nouvelles administrateur", Class='news2')
-    MY_SUB_PANEL <= title4
+    title5 = html.H4("Dernières nouvelles administrateur", Class='news2')
+    MY_SUB_PANEL <= title5
 
     news_content_loaded = common.get_news_content()
     news_content = formatted_news(news_content_loaded, True)
@@ -183,8 +192,8 @@ def show_news():
 
     # ----
 
-    title5 = html.H4("Charte du bon diplomate")
-    MY_SUB_PANEL <= title5
+    title6 = html.H4("Charte du bon diplomate")
+    MY_SUB_PANEL <= title6
 
     link2 = html.A(href="./docs/charte.pdf", target="_blank")
     link2 <= "Lien vers la charte du bon diplomate"
@@ -192,8 +201,8 @@ def show_news():
 
     # ----
 
-    title6 = html.H4("Note importante")
-    MY_SUB_PANEL <= title6
+    title7 = html.H4("Note importante")
+    MY_SUB_PANEL <= title7
 
     note_bene_content = html.DIV()
     for line in NOTE_CONTENT_STATED.split("\n"):
