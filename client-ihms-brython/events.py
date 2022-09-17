@@ -22,6 +22,37 @@ MAX_LEN_EVENT_NAME = 50
 EVENT_ID = None
 
 
+def get_registrations(event_id):
+    """ get_registrations  """
+
+    registrations_list = []
+
+    def reply_callback(req):
+        nonlocal registrations_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des inscriptions à l'événement: {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des inscriptions à l'événement : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        registrations_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/registrations/{event_id}"
+
+    # getting registrations: no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return registrations_list
+
+
 def get_event_data(event_id):
     """ get_event_data : returns empty dict if problem """
 
@@ -47,7 +78,7 @@ def get_event_data(event_id):
     port = config.SERVER_CONFIG['PLAYER']['PORT']
     url = f"{host}:{port}/events/{event_id}"
 
-    # getting tournament data : no need for token
+    # getting event data : no need for token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return event_dict
@@ -214,11 +245,57 @@ def event_joiners():
 
     MY_SUB_PANEL <= html.H3("Participants à un événement")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
+    if 'EVENT_ID' not in storage:
+        alert("Il faut sélectionner un événement au préalable")
         return
 
-    MY_SUB_PANEL <= "TODO"
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    joiners_table = html.TABLE()
+
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    joiners_table <= thead
+
+    code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
+
+    event_id = storage['EVENT_ID']
+    event_dict = get_event_data(event_id)
+    joiners = get_registrations(event_id)
+    joiners_dict = {j: players_dict[str(j)] for j in joiners}
+
+    count = 0
+    for data in sorted(joiners_dict.values(), key=lambda g: g['pseudo'].upper()):
+        row = html.TR()
+        for field in fields:
+            value = data[field]
+
+            if field in ['residence', 'nationality']:
+                code = value
+                country_name = code_country_table[code]
+                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
+
+            col = html.TD(value)
+            row <= col
+
+        joiners_table <= row
+        count += 1
+
+    name = event_dict['name']
+    MY_SUB_PANEL <= html.DIV(f"Evenement {name}", Class='note')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= joiners_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
 
 
 def create_event():
