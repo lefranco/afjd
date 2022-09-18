@@ -202,6 +202,11 @@ if 'game' in document.query:
         load_option(None, 'jouer la partie sélectionnée')
     else:
         load_option(None, ITEM_NAME_SELECTED)
+elif 'event' in document.query:
+    QUERY_EVENT_ID = document.query['event']
+    storage['EVENT_ID'] = QUERY_EVENT_ID
+    events.set_arrival()
+    load_option(None, 'événements')
 else:
     load_option(None, ITEM_NAME_SELECTED)
 
