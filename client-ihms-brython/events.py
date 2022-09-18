@@ -21,10 +21,12 @@ DEFAULT_EVENT_LOCATION = "Diplomania"
 
 ARRIVAL = False
 
+
 def set_arrival():
     """ set_arrival """
     global ARRIVAL
     ARRIVAL = True
+
 
 def get_registrations(event_id):
     """ get_registrations  """
