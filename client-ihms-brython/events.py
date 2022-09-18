@@ -457,7 +457,7 @@ def create_event():
     fieldset = html.FIELDSET()
     legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'tournoi par équipes avec négociations'")
     fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_description = html.TEXTAREA(type="text", value="", rows=8, cols=80)
     fieldset <= input_description
     form <= fieldset
 
@@ -473,13 +473,156 @@ def create_event():
 def edit_event():
     """ edit_event """
 
+    def edit_event_callback(_):
+        """ edit_event_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification de l'événement : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification de l'événement : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"L'événement a été mis à jour : {messages}", remove_after=config.REMOVE_AFTER)
+
+        name = input_name.value
+        start_date = input_start_date.value
+        start_hour = input_start_hour.value
+        end_date = input_end_date.value
+        location = input_location.value
+        description = input_description.value
+
+        if not name:
+            alert("Nom d'événement manquant")
+            MY_SUB_PANEL.clear()
+            create_event()
+            return
+
+        if len(name) > MAX_LEN_EVENT_NAME:
+            alert("Nom d'événement trop long")
+            MY_SUB_PANEL.clear()
+            create_event()
+            return
+
+        if len(location) > MAX_LEN_EVENT_LOCATION:
+            alert("Lieu de l'événement trop long")
+            MY_SUB_PANEL.clear()
+            create_event()
+            return
+
+        json_dict = {
+            'name': name,
+            'start_date': start_date,
+            'start_hour': start_hour,
+            'end_date': end_date,
+            'location': location,
+            'description': description,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/events/{event_id}"
+
+        # updating an event : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        edit_event()
+
     MY_SUB_PANEL <= html.H3("Edition d'événement")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
 
-    MY_SUB_PANEL <= "TODO"
+    if 'EVENT_ID' not in storage:
+        alert("Il faut sélectionner un événement au préalable")
+        return
+
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+
+    event_id = storage['EVENT_ID']
+    event_dict = get_event_data(event_id)
+
+    name = event_dict['name']
+    start_date = event_dict['start_date']
+    start_hour = event_dict['start_hour']
+    end_date = event_dict['end_date']
+    location = event_dict['location']
+    description = event_dict['description']
+    manager_id = event_dict['manager_id']
+    manager = players_dict[str(manager_id)]['pseudo']
+
+    form = html.FORM()
+
+    form <= html.DIV("Pas d'espaces ni de tirets dans le nom de l'événement", Class='note')
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_name = html.LEGEND("nom", title="Nom de l'événement (faites court et simple)")
+    fieldset <= legend_name
+    input_name = html.INPUT(type="text", value=name, size=MAX_LEN_EVENT_NAME)
+    fieldset <= input_name
+    form <= fieldset
+
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_start_date = html.LEGEND("date", title="Date de début de l'événement")
+    fieldset <= legend_start_date
+    input_start_date = html.INPUT(type="date", value=start_date)
+    fieldset <= input_start_date
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_start_hour = html.LEGEND("heure", title="Heure de l'événement")
+    fieldset <= legend_start_hour
+    input_start_hour = html.INPUT(type="time", value=start_hour)
+    fieldset <= input_start_hour
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_end_date = html.LEGEND("date", title="Date de fin de l'événement")
+    fieldset <= legend_end_date
+    input_end_date = html.INPUT(type="date", value=end_date)
+    fieldset <= input_end_date
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_location = html.LEGEND("lieu", title="Lieu de l'événement")
+    fieldset <= legend_location
+    input_location = html.INPUT(type="text", value=location, size=MAX_LEN_EVENT_LOCATION)
+    fieldset <= input_location
+    form <= fieldset
+
+    form <= html.BR()
+    fieldset = html.FIELDSET()
+    legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'tournoi par équipes avec négociations'")
+    fieldset <= legend_description
+    input_description = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_description <= description
+    fieldset <= input_description
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_edit_event = html.INPUT(type="submit", value="modifier l'événement")
+    input_edit_event.bind("click", edit_event_callback)
+    form <= input_edit_event
+
+    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= form
 
 
 def delete_event():
@@ -561,6 +704,8 @@ def delete_event():
 
     MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
     MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
+    MY_SUB_PANEL <= html.BR()
 
     # description
     div_description = html.DIV(Class='information')
@@ -570,8 +715,6 @@ def delete_event():
     MY_SUB_PANEL <= div_description
     MY_SUB_PANEL <= html.BR()
 
-    MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= form
 
 
