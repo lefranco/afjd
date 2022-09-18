@@ -441,6 +441,32 @@ def make_rating_colours_window(variant_data, ratings, colours, game_scoring):
     return rating_table
 
 
+def non_playing_information():
+    """ non_playing_information """
+
+    # need to be connected
+    if PSEUDO is None:
+        return None
+
+    # is game anonymous
+    if not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+        return None
+
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+
+    dangling_players = [p for p, d in GAME_PLAYERS_DICT.items() if d == - 1]
+    if not dangling_players:
+        return None
+
+    info = "Les pseudos suivants sont alloués à la partie sans rôle : "
+    for dangling_player_id_str in dangling_players:
+        dangling_player_id = int(dangling_player_id_str)
+        dangling_player = id2pseudo[dangling_player_id]
+        info += f"{dangling_player} "
+
+    return html.EM(info)
+
+
 def date_last_visit_update(game_id, pseudo, role_id, visit_type):
     """ date_last_visit_update """
 
@@ -1104,6 +1130,12 @@ def show_position():
 
         display_left <= rating_colours_window
         display_left <= html.BR()
+
+        report_non_playing = non_playing_information()
+        if report_non_playing is not None:
+            display_left <= report_non_playing
+            display_left <= html.BR()
+            display_left <= html.BR()
 
         report_window = common.make_report_window(fake_report_loaded)
         display_left <= report_window
@@ -4885,31 +4917,6 @@ def show_events_in_game():
         game_master_table <= row
 
         MY_SUB_PANEL <= game_master_table
-
-    # players
-    MY_SUB_PANEL <= html.H3("Joueurs non alloués")
-
-    # need to be connected
-    if PSEUDO is None:
-        MY_SUB_PANEL <= html.DIV("Il faut se connecter au préalable", Class='important')
-
-    # is game anonymous
-    elif not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
-        MY_SUB_PANEL <= html.DIV("Seul l'arbitre (ou un modérateur du site) peut voir les joueurs d'une partie anonyme", Class='important')
-
-    else:
-        id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
-
-        dangling_players = [p for p, d in GAME_PLAYERS_DICT.items() if d == - 1]
-        if dangling_players:
-            MY_SUB_PANEL <= html.BR()
-            info = html.EM("Les pseudos suivants sont alloués à la partie sans rôle : ")
-            roles_less = html.DIV(info, Class='note')
-            for dangling_player_id_str in dangling_players:
-                dangling_player_id = int(dangling_player_id_str)
-                dangling_player = id2pseudo[dangling_player_id]
-                roles_less <= html.EM(f"{dangling_player} ")
-            MY_SUB_PANEL <= roles_less
 
     # orders
     MY_SUB_PANEL <= html.H3("Ordres")
