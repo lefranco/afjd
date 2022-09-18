@@ -189,6 +189,12 @@ def event_joiners():
 
     count = 0
     for data in sorted(joiners_dict.values(), key=lambda g: g['pseudo'].upper()):
+
+        if 'PSEUDO' in storage and data['pseudo'] == storage['PSEUDO']:
+            colour = config.MY_RATING
+        else:
+            colour = None
+
         row = html.TR()
         for field in fields:
             value = data[field]
@@ -199,6 +205,10 @@ def event_joiners():
                 value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
 
             col = html.TD(value)
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
             row <= col
 
         joiners_table <= row
