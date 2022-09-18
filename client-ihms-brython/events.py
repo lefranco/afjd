@@ -11,7 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import common
 import config
 
-OPTIONS = ['sélectionner un événement', 'm\'inscrire', 'participants à l\'événement', 'créer un événement', 'éditer l\'événement', 'supprimer l\'événement']
+OPTIONS = ['sélectionner un événement', 'participants à l\'événement', 'm\'inscrire', 'créer un événement', 'éditer l\'événement', 'supprimer l\'événement']
 
 
 MAX_LEN_EVENT_NAME = 50
@@ -19,6 +19,12 @@ MAX_LEN_EVENT_LOCATION = 20
 
 DEFAULT_EVENT_LOCATION = "Diplomania"
 
+ARRIVAL = False
+
+def set_arrival():
+    """ set_arrival """
+    global ARRIVAL
+    ARRIVAL = True
 
 def get_registrations(event_id):
     """ get_registrations  """
@@ -149,6 +155,73 @@ def select_event():
     MY_SUB_PANEL <= sub_panel
 
 
+def event_joiners():
+    """ event_joiners """
+
+    MY_SUB_PANEL <= html.H3("Participants à un événement")
+
+    if 'EVENT_ID' not in storage:
+        alert("Il faut sélectionner un événement au préalable")
+        return
+
+    joiners_table = html.TABLE()
+
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    joiners_table <= thead
+
+    code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
+
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+
+    event_id = storage['EVENT_ID']
+    event_dict = get_event_data(event_id)
+    joiners = get_registrations(event_id)
+    joiners_dict = {j: players_dict[str(j)] for j in joiners}
+
+    count = 0
+    for data in sorted(joiners_dict.values(), key=lambda g: g['pseudo'].upper()):
+        row = html.TR()
+        for field in fields:
+            value = data[field]
+
+            if field in ['residence', 'nationality']:
+                code = value
+                country_name = code_country_table[code]
+                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
+
+            col = html.TD(value)
+            row <= col
+
+        joiners_table <= row
+        count += 1
+
+    name = event_dict['name']
+    description = event_dict['description']
+
+    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
+    MY_SUB_PANEL <= html.BR()
+
+    # description
+    div_description = html.DIV(Class='information')
+    for line in description.split('\n'):
+        div_description <= line
+        div_description <= html.BR()
+    MY_SUB_PANEL <= div_description
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= joiners_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
+
+
 def register_event():
     """ register_event """
 
@@ -223,7 +296,12 @@ def register_event():
     location = event_dict['location']
     description = event_dict['description']
 
-    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='note')
+    url = f"https://diplomania-gen.fr?event={event_id}"
+    MY_SUB_PANEL <= f"Pour inviter un joueur à rejoindre cet événement, lui envoyer le lien : '{url}'"
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV(f"Date de début : {start_date}", Class='information')
     MY_SUB_PANEL <= html.BR()
@@ -243,73 +321,6 @@ def register_event():
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= form
-
-
-def event_joiners():
-    """ event_joiners """
-
-    MY_SUB_PANEL <= html.H3("Participants à un événement")
-
-    if 'EVENT_ID' not in storage:
-        alert("Il faut sélectionner un événement au préalable")
-        return
-
-    joiners_table = html.TABLE()
-
-    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    joiners_table <= thead
-
-    code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
-
-    players_dict = common.get_players_data()
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-
-    event_id = storage['EVENT_ID']
-    event_dict = get_event_data(event_id)
-    joiners = get_registrations(event_id)
-    joiners_dict = {j: players_dict[str(j)] for j in joiners}
-
-    count = 0
-    for data in sorted(joiners_dict.values(), key=lambda g: g['pseudo'].upper()):
-        row = html.TR()
-        for field in fields:
-            value = data[field]
-
-            if field in ['residence', 'nationality']:
-                code = value
-                country_name = code_country_table[code]
-                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
-
-            col = html.TD(value)
-            row <= col
-
-        joiners_table <= row
-        count += 1
-
-    name = event_dict['name']
-    description = event_dict['description']
-
-    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='note')
-    MY_SUB_PANEL <= html.BR()
-
-    # description
-    div_description = html.DIV(Class='information')
-    for line in description.split('\n'):
-        div_description <= line
-        div_description <= html.BR()
-    MY_SUB_PANEL <= div_description
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= joiners_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
 
 
 def create_event():
@@ -533,7 +544,7 @@ def delete_event():
     manager_id = event_dict['manager_id']
     manager = players_dict[str(manager_id)]['pseudo']
 
-    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='note')
+    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
     MY_SUB_PANEL <= html.BR()
 
     # description
@@ -575,10 +586,10 @@ def load_option(_, item_name):
 
     if item_name == 'sélectionner un événement':
         select_event()
-    if item_name == 'm\'inscrire':
-        register_event()
     if item_name == 'participants à l\'événement':
         event_joiners()
+    if item_name == 'm\'inscrire':
+        register_event()
     if item_name == 'créer un événement':
         create_event()
     if item_name == 'éditer l\'événement':
@@ -611,8 +622,14 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
+    global ARRIVAL
 
     ITEM_NAME_SELECTED = OPTIONS[0]
 
+    # this means user wants to join game
+    if ARRIVAL:
+        ITEM_NAME_SELECTED = 'm\'inscrire'
+
+    ARRIVAL = False
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

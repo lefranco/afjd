@@ -160,9 +160,15 @@ def show_news():
     MY_SUB_PANEL <= title2
 
     events_data = common.get_events_data()
-    for event_dict in events_data.values():
+    for id_event, event_dict in events_data.items():
         div_event_box = html.DIV(Class='event_element')
-        div_event_box <= html.B(event_dict['name'])
+
+        name_event = event_dict['name']
+        event_link = f"https://diplomania-gen.fr?event={id_event}"
+        link = html.A(href=event_link, target="_blank")
+        link <= name_event
+        div_event_box <= link
+
         div_event_box <= html.BR()
         div_event_box <= html.BR()
         for line in event_dict['description'].split('\n'):
@@ -177,7 +183,6 @@ def show_news():
     MY_SUB_PANEL <= title3
 
     news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="300")
-
     MY_SUB_PANEL <= news_forum
 
     # ----
