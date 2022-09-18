@@ -252,7 +252,10 @@ def register_event():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'inscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
+            if register:
+                InfoDialog("OK", f"L'inscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
+            else:
+                InfoDialog("OK", f"La désinscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
