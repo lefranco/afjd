@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['changer nouvelles', 'codes de vérification', 'usurper', 'rectifier pour le elo', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'mise à jour du elo', 'maintenance']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier pour le elo', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'mise à jour du elo', 'maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -175,53 +175,6 @@ def change_news_admin():
     form <= html.BR()
 
     MY_SUB_PANEL <= form
-
-
-def show_verif_codes():
-    """ show_verif_codes """
-
-    MY_SUB_PANEL <= html.H3("Usurper un inscrit")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
-        alert("Pas le bon compte (pas admin)")
-        return
-
-    players_dict = common.get_players()
-    if not players_dict:
-        return
-
-    players_table = html.TABLE()
-
-    fields = ['pseudo', 'code']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'code': 'code'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    players_table <= thead
-
-    for pseudo in sorted(players_dict, key=lambda p: p.upper()):
-        row = html.TR()
-
-        col = html.TD(pseudo)
-        row <= col
-
-        code = common.verification_code(pseudo)
-        col = html.TD(code)
-        row <= col
-
-        players_table <= row
-
-    MY_SUB_PANEL <= players_table
-
 
 def usurp():
     """ usurp """
@@ -1516,8 +1469,6 @@ def load_option(_, item_name):
 
     if item_name == 'changer nouvelles':
         change_news_admin()
-    if item_name == 'codes de vérification':
-        show_verif_codes()
     if item_name == 'usurper':
         usurp()
     if item_name == 'rectifier pour le elo':
