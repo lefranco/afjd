@@ -173,14 +173,14 @@ def show_news():
     MY_SUB_PANEL <= title2
 
     events_data = common.get_events_data()
-    for id_event, event_dict in events_data.items():
+    for event_dict in events_data.values():
         div_event_box = html.DIV(Class='event_element')
 
-        event_name = event_dict['name']
+        name = event_dict['name']
 
         # fast access
-        button = html.BUTTON(event_name, Class='btn-menu')
-        button.bind("click", lambda e, en=event_name: select_event_callback(e, en))
+        button = html.BUTTON(name, Class='btn-menu')
+        button.bind("click", lambda e, en=name: select_event_callback(e, en))
         div_event_box <= button
 
         div_event_box <= html.BR()

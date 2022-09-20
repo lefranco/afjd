@@ -315,7 +315,7 @@ def register_event():
     location = event_dict['location']
     description = event_dict['description']
 
-    url = f"https://diplomania-gen.fr?event={event_id}"
+    url = f"https://diplomania-gen.fr?event={name}"
     MY_SUB_PANEL <= f"Pour inviter un joueur à rejoindre cet événement, lui envoyer le lien : '{url}'"
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
