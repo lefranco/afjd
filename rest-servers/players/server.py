@@ -1548,7 +1548,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             data = {'msg': 'Ok registration updated or created'}
             return data, 201
 
-        registration = registrations.Registration(int(event_id), user_id, 0, 0)
+        registration = registrations.Registration(int(event_id), user_id, 0., 0)
         registration.delete_database(sql_executor)
 
         sql_executor.commit()
