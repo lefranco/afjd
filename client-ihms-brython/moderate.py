@@ -31,7 +31,6 @@ def check_modo(pseudo):
     return True
 
 
-
 def get_tournament_players_data(tournament_id):
     """ get_tournament_players_data : returns empty dict if problem """
 
