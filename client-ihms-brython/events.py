@@ -268,8 +268,9 @@ def register_event():
         # registrating to an event : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-        # back to where we started (actually to joiners)
-        load_option(None, 'participants à l\'événement')
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        register_event()
 
     MY_SUB_PANEL <= html.H3("Inscription à un événement")
 
