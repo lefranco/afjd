@@ -54,17 +54,19 @@ MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
+
 def check_event(event_name):
     """ check_event """
 
     events_data = common.get_events_data()
     event_list = [g['name'] for g in events_data.values()]
 
-    if not event_name in event_list:
+    if event_name not in event_list:
         alert(f"Erreur chargement événement {event_name}. Cet événement existe ?")
         return False
 
     return True
+
 
 def load_game(game_name):
     """ load_game """
