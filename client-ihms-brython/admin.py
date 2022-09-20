@@ -176,6 +176,7 @@ def change_news_admin():
 
     MY_SUB_PANEL <= form
 
+
 def usurp():
     """ usurp """
 
