@@ -292,7 +292,7 @@ def register_event():
         return
 
     joiners = get_registrations(event_id)
-    player_joined = player_id in joiners
+    player_joined = player_id in [j[0] for j in joiners]
 
     form = html.FORM()
 
