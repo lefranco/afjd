@@ -1626,9 +1626,6 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         date_ = registrations.Registration.find_date_by_event_id_player_id(sql_executor, event_id, player_id)
         assert date_ is not None
 
-        import sys
-        print(f"{value=}", file=sys.stderr)
-
         registration = registrations.Registration(int(event_id), int(player_id), date_, value)
         registration.update_database(sql_executor)
 
