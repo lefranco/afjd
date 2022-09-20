@@ -15,7 +15,7 @@ class Registration:
     """ Class for handling a registration """
 
     @staticmethod
-    def list_by_event_id(sql_executor: database.SqlExecutor, event_id: int) -> typing.List[typing.Tuple[int, int]]:
+    def list_by_event_id(sql_executor: database.SqlExecutor, event_id: int) -> typing.List[typing.Tuple[int, int, int, int]]:
         """ class lookup : finds the object in database from event id """
         registrations_found = sql_executor.execute("SELECT * FROM registrations where event_id = ?", (event_id,), need_result=True)
         if not registrations_found:
@@ -35,9 +35,9 @@ class Registration:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS registrations")
-        sql_executor.execute("CREATE TABLE registrations (event_id INTEGER, player_id INTEGER)")
+        sql_executor.execute("CREATE TABLE registrations (event_id INTEGER, player_id INTEGER, date real, approved INTEGER)")
 
-    def __init__(self, event_id: int, player_id: int) -> None:
+    def __init__(self, event_id: int, player_id: int, date_: float, approved: int) -> None:
 
         assert isinstance(event_id, int), "event_id must be an int"
         self._event_id = event_id
@@ -45,16 +45,22 @@ class Registration:
         assert isinstance(player_id, int), "player_id must be an int"
         self._player_id = player_id
 
+        assert isinstance(date_, float), "date must be an float"
+        self._date = date_
+
+        assert isinstance(approved, int), "approved must be an int"
+        self._approved = approved
+
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        sql_executor.execute("INSERT OR REPLACE INTO registrations (event_id, player_id) VALUES (?, ?)", (self._event_id, self._player_id))
+        sql_executor.execute("INSERT OR REPLACE INTO registrations (event_id, player_id, date, approved) VALUES (?, ?, ?, ?)", (self._event_id, self._player_id, self._date, self._approved))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
         sql_executor.execute("DELETE FROM registrations WHERE event_id = ? AND player_id = ?", (self._event_id, self._player_id))
 
     def __str__(self) -> str:
-        return f"event_id={self._event_id} player_id={self._player_id}"
+        return f"event_id={self._event_id} player_id={self._player_id} date={self._date} approved={self._approved}"
 
 
 if __name__ == '__main__':

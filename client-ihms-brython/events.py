@@ -187,10 +187,11 @@ def event_joiners():
     event_id = storage['EVENT_ID']
     event_dict = get_event_data(event_id)
     joiners = get_registrations(event_id)
-    joiners_dict = {j: players_dict[str(j)] for j in joiners}
+    joiners_dict = {j[0]: players_dict[str(j[0])] for j in joiners}
 
     count = 0
-    for data in sorted(joiners_dict.values(), key=lambda g: g['pseudo'].upper()):
+    # sorting is done by server
+    for data in joiners_dict.values():
 
         if 'PSEUDO' in storage and data['pseudo'] == storage['PSEUDO']:
             colour = config.MY_RATING

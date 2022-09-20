@@ -105,8 +105,8 @@ class Event:
 
         event_id = self.identifier
         registrations_list = registrations.Registration.list_by_event_id(sql_executor, event_id)
-        for event_id, player_id in registrations_list:
-            registration = registrations.Registration(event_id, player_id)
+        for event_id, player_id, date_, approved in registrations_list:
+            registration = registrations.Registration(event_id, player_id, date_, approved)
             registration.delete_database(sql_executor)
 
     @property
