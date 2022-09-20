@@ -11,7 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import common
 import config
 
-OPTIONS = ['sélectionner un événement', 'participants à l\'événement', 'm\'inscrire', 'créer un événement', 'éditer l\'événement', 'supprimer l\'événement']
+OPTIONS = ['sélectionner un événement', 'participants à l\'événement', 'm\'inscrire', 'créer un événement', 'éditer l\'événement', 'gérer les participations', 'supprimer l\'événement']
 
 
 MAX_LEN_EVENT_NAME = 50
@@ -163,12 +163,12 @@ def event_joiners():
 
     joiners_table = html.TABLE()
 
-    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone']
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire'}[field]
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut'}[field]
         col = html.TD(field_fr)
         thead <= col
     joiners_table <= thead
@@ -186,7 +186,11 @@ def event_joiners():
     event_dict = get_event_data(event_id)
 
     joiners = get_registrations(event_id)
-    joiners_dict = {j[0]: players_dict[str(j[0])] for j in joiners}
+    joiners_dict = {}
+    for joiner in joiners:
+        joiner_data = players_dict[str(joiner[0])].copy()
+        joiner_data.update({'status': joiner[1]})
+        joiners_dict[joiner[0]] = joiner_data
 
     count = 0
     # sorting is done by server
@@ -205,6 +209,9 @@ def event_joiners():
                 code = value
                 country_name = code_country_table[code]
                 value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
+
+            if field == 'status':
+                value = {-1: "Refusé", 0: "En attente", 1: "Accepté"}[value]
 
             col = html.TD(value)
             if colour is not None:
@@ -631,6 +638,154 @@ def edit_event():
     MY_SUB_PANEL <= form
 
 
+def handle_joiners():
+    """ handle_joiners """
+
+    def registration_action_callback(_, player_id, value):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification de l'inscription {player_id} {value}: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification de l'inscription {player_id} {value}: {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"L'inscription a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
+
+        json_dict = {
+            'player_id': player_id,
+            'value': value
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/registrations/{event_id}"
+
+        # changing event registration : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        handle_joiners()
+
+
+    MY_SUB_PANEL <= html.H3("Gérer les participations")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    if 'EVENT' not in storage:
+        alert("Il faut sélectionner un événement au préalable")
+        return
+
+    joiners_table = html.TABLE()
+
+    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status', 'action']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut', 'action': 'action'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    joiners_table <= thead
+
+    code_country_table = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}
+
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+
+    event_name = storage['EVENT']
+    events_dict = common.get_events_data()
+    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
+    event_id = eventname2id[event_name]
+    event_dict = get_event_data(event_id)
+
+    joiners = get_registrations(event_id)
+    joiners_dict = {}
+    for joiner in joiners:
+        joiner_data = players_dict[str(joiner[0])].copy()
+        joiner_data.update({'status': joiner[1]})
+        joiners_dict[joiner[0]] = joiner_data
+
+    count = 0
+    # sorting is done by server
+    for player_id, data in joiners_dict.items():
+
+        data['action'] = None
+
+        if 'PSEUDO' in storage and data['pseudo'] == storage['PSEUDO']:
+            colour = config.MY_RATING
+        else:
+            colour = None
+
+        row = html.TR()
+        for field in fields:
+            value = data[field]
+
+            if field in ['residence', 'nationality']:
+                code = value
+                country_name = code_country_table[code]
+                value = html.IMG(src=f"./national_flags/{code}.png", title=country_name, width="25", height="17")
+
+            if field == 'status':
+                value = {-1: "Refusé", 0: "En attente", 1: "Accepté"}[value]
+
+            if field == 'action':
+                value = html.TABLE()
+                row2 = html.TR()
+                if data['status'] != -1:
+                    form = html.FORM()
+                    input_event_reject = html.INPUT(type="image", src="./images/event_reject.jpg")
+                    input_event_reject.bind("click", lambda e, pi=player_id: registration_action_callback(e, pi, -1))
+                    form <= input_event_reject
+                    col2 = html.TD()
+                    col2 <= form
+                    row2 <= col2
+                if data['status'] != 0:
+                    form = html.FORM()
+                    input_event_wait = html.INPUT(type="image", src="./images/event_wait.jpg")
+                    input_event_wait.bind("click", lambda e, pi=player_id: registration_action_callback(e, pi, 0))
+                    form <= input_event_wait
+                    col2 = html.TD()
+                    col2 <= form
+                    row2 <= col2
+                if data['status'] != 1:
+                    form = html.FORM()
+                    input_event_accept = html.INPUT(type="image", src="./images/event_accept.jpg")
+                    input_event_accept.bind("click", lambda e, pi=player_id: registration_action_callback(e, pi, 1))
+                    form <= input_event_accept
+                    col2 = html.TD()
+                    col2 <= form
+                    row2 <= col2
+                value <= row2
+
+            col = html.TD(value)
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+            row <= col
+
+        joiners_table <= row
+        count += 1
+
+    name = event_dict['name']
+
+    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= joiners_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
+
+
 def delete_event():
     """ delete_event """
 
@@ -761,6 +916,8 @@ def load_option(_, item_name):
         create_event()
     if item_name == 'éditer l\'événement':
         edit_event()
+    if item_name == 'gérer les participations':
+        handle_joiners()
     if item_name == 'supprimer l\'événement':
         delete_event()
 

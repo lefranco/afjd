@@ -95,6 +95,10 @@ EVENT_PARSER.add_argument('description', type=str, required=False)
 REGISTRATION_PARSER = flask_restful.reqparse.RequestParser()
 REGISTRATION_PARSER.add_argument('delete', type=int, required=True)
 
+REGISTRATION_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
+REGISTRATION_UPDATE_PARSER.add_argument('player_id', type=int, required=True)
+REGISTRATION_UPDATE_PARSER.add_argument('value', type=int, required=True)
+
 # to avoid sending emails in debug phase
 PREVENT_MAIL_CHECKING = False
 
@@ -1555,6 +1559,83 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'msg': 'Ok registration deleted if present'}
+        return data, 200
+
+    def put(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Updates a registration (a relation player-event)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/registrations - PUT - updating registration")
+
+        args = REGISTRATION_UPDATE_PARSER.parse_args(strict=True)
+
+        player_id = args['player_id']
+        value = args['value']
+
+        mylogger.LOGGER.info("event_id=%s player_id=%s value=%s", event_id, player_id, value)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # find the event
+        event = events.Event.find_by_identifier(sql_executor, event_id)
+        if event is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be an event with identifier {event_id}")
+        assert event is not None
+
+        # check the player exists
+        player = players.Player.find_by_identifier(sql_executor, user_id)
+        if player is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a player with identifier {user_id}")
+
+        # check that user is the manager of the event
+        if user_id != event.manager_id:
+            del sql_executor
+            flask_restful.abort(404, msg="You do not seem to be manager of that event")
+
+        # action
+
+        date_ = registrations.Registration.find_date_by_event_id_player_id(sql_executor, event_id, player_id)
+        assert date_ is not None
+
+        import sys
+        print(f"{value=}", file=sys.stderr)
+
+        registration = registrations.Registration(int(event_id), int(player_id), date_, value)
+        registration.update_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': 'Ok registration updated if present'}
         return data, 200
 
 
