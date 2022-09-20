@@ -17,7 +17,7 @@ def render(panel_middle):
     # load forum directly
 
     # use button
-    button = html.BUTTON("Lancement du forum", id='forum_link')
+    button = html.BUTTON("Lancement du forum", Class='btn-menu')
     MY_PANEL <= button
     button.bind("click", lambda e: window.open("https://diplomania-gen.fr/forum/phpBB3"))
     document['forum_link'].click()

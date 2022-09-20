@@ -370,9 +370,9 @@ def my_games(state_name):
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
-        button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)")
+        button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
     else:
-        button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)")
+        button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
     button.bind("click", change_button_mode_callback)
     MY_PANEL <= button
 
@@ -383,9 +383,9 @@ def my_games(state_name):
     if 'ACTION_COLUMN_MODE' not in storage:
         storage['ACTION_COLUMN_MODE'] = 'not_displayed'
     if storage['ACTION_COLUMN_MODE'] == 'not_displayed':
-        button = html.BUTTON("Basculer en mode avec colonne action")
+        button = html.BUTTON("Basculer en mode avec colonne action", Class='btn-menu')
     else:
-        button = html.BUTTON("Basculer en mode sans colonne action")
+        button = html.BUTTON("Basculer en mode sans colonne action", Class='btn-menu')
     button.bind("click", change_action_mode_callback)
     MY_PANEL <= button
 
@@ -416,7 +416,7 @@ def my_games(state_name):
             if field == 'name':
 
                 # button for sorting by creation date
-                button = html.BUTTON("&lt;date de création&gt;")
+                button = html.BUTTON("&lt;date de création&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
@@ -424,13 +424,13 @@ def my_games(state_name):
                 buttons <= " "
 
                 # button for sorting by name
-                button = html.BUTTON("&lt;nom&gt;")
+                button = html.BUTTON("&lt;nom&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
                 buttons <= button
 
             else:
 
-                button = html.BUTTON("<>")
+                button = html.BUTTON("<>", Class='btn-menu')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
         col = html.TD(buttons)

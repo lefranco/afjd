@@ -178,10 +178,10 @@ def load_option(_, item_name):
             MENU_LEFT <= html.BR()
             MENU_LEFT <= emotion_img
             MENU_LEFT <= html.BR()
-            button = html.BUTTON("-")
+            button = html.BUTTON("-", Class='btn-menu')
             button.bind("click", lambda e: set_flag(e, 'False'))
         else:
-            button = html.BUTTON("+")
+            button = html.BUTTON("+", Class='btn-menu')
             button.bind("click", lambda e: set_flag(e, 'True'))
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
