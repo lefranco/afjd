@@ -53,6 +53,7 @@ class Registration:
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
+        sql_executor.execute("DELETE FROM registrations WHERE event_id = ? AND player_id = ?", (self._event_id, self._player_id))
         sql_executor.execute("INSERT OR REPLACE INTO registrations (event_id, player_id, date, approved) VALUES (?, ?, ?, ?)", (self._event_id, self._player_id, self._date, self._approved))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
