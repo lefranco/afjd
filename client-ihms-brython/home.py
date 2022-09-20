@@ -1088,7 +1088,7 @@ def social():
     # load social directly
 
     # use button
-    button = html.BUTTON("Lancement du la brique sociale", Class='btn-menu')
+    button = html.BUTTON("Lancement du la brique sociale", id='social_link')
     MY_SUB_PANEL <= button
     button.bind("click", lambda e: window.open("https://www.diplomania.fr/"))
     document['social_link'].click()
