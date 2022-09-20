@@ -14,6 +14,7 @@ import registrations
 
 # need to have a limit in sizes of fields
 LEN_NAME_MAX = 50
+LEN_LOCATION_MAX = 20
 
 
 class Event:
@@ -72,7 +73,7 @@ class Event:
         self._identifier = identifier
 
         assert isinstance(name, str), "name must be a str"
-        self._name = name
+        self._name = database.sanitize_field(name)[:LEN_NAME_MAX]
 
         assert isinstance(start_date, str), "start_date must be a str"
         self._start_date = start_date
@@ -84,7 +85,7 @@ class Event:
         self._end_date = end_date
 
         assert isinstance(location, str), "location must be a str"
-        self._location = location
+        self._location = database.sanitize_field(location)[:LEN_LOCATION_MAX]
 
         assert isinstance(description, str), "name must be a str"
         self._description = description
