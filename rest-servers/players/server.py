@@ -11,6 +11,7 @@ import typing
 import random
 import argparse
 import json
+import time
 
 import waitress
 import flask
@@ -1465,7 +1466,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
 class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
     """ RegistrationEventRessource """
 
-    def get(self, event_id: int) -> typing.Tuple[typing.List[int], int]:  # pylint: disable=no-self-use
+    def get(self, event_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int]], int]:  # pylint: disable=no-self-use
         """
         Get list of registrations to the event
         EXPOSED
@@ -1477,7 +1478,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         registrations_list = registrations.Registration.list_by_event_id(sql_executor, int(event_id))
         del sql_executor
 
-        data = [r[1] for r in registrations_list]
+        data = [(r[1], r[3]) for r in sorted(registrations_list, key=lambda r: r[2])]
         return data, 200
 
     def post(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
@@ -1537,7 +1538,8 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
 
         if not delete:
 
-            registration = registrations.Registration(int(event_id), user_id)
+            now = time.time()
+            registration = registrations.Registration(int(event_id), user_id, now, 0)
             registration.update_database(sql_executor)
 
             sql_executor.commit()
@@ -1546,7 +1548,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             data = {'msg': 'Ok registration updated or created'}
             return data, 201
 
-        registration = registrations.Registration(int(event_id), user_id)
+        registration = registrations.Registration(int(event_id), user_id, 0, 0)
         registration.delete_database(sql_executor)
 
         sql_executor.commit()
