@@ -23,6 +23,14 @@ class Registration:
         return registrations_found
 
     @staticmethod
+    def find_date_by_event_id_player_id(sql_executor: database.SqlExecutor, event_id: int, player_id: int) -> typing.Optional[float]:
+        """ class lookup : finds the object in database from identifier """
+        registrations_found = sql_executor.execute("SELECT date FROM registrations where event_id = ? and player_id = ?", (event_id, player_id), need_result=True)
+        if not registrations_found:
+            return None
+        return registrations_found[0][0]  # type: ignore
+
+    @staticmethod
     def inventory(sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[int, int, int]]:
         """ class inventory : gives a list of all objects in database """
         registrations_found = sql_executor.execute("SELECT * FROM registrations", need_result=True)
