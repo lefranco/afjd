@@ -93,12 +93,11 @@ def get_event_data(event_id):
 def select_event():
     """ select_event """
 
-    def select_event_callback(_, input_event, event_data_sel):
+    def select_event_callback(_, input_event):
         """ select_event_callback """
 
         event_name = input_event.value
-        event_id = event_data_sel[event_name]
-        storage['EVENT_ID'] = event_id
+        storage['EVENT'] = event_name
 
         InfoDialog("OK", f"Evénement sélectionné : {event_name}", remove_after=config.REMOVE_AFTER)
 
@@ -109,15 +108,12 @@ def select_event():
 
     events_data = common.get_events_data()
     if not events_data:
-        if 'EVENT_ID' in storage:
-            del storage['EVENT_ID']
+        if 'EVENT' in storage:
+            del storage['EVENT']
         alert("Pas d'événement de prévu pour le moment")
         return
 
     select_table = html.TABLE()
-
-    # create a table to pass information about selected game
-    event_data_sel = {v['name']: k for k, v in events_data.items()}
 
     form = html.FORM()
 
@@ -126,11 +122,10 @@ def select_event():
     fieldset <= legend_event
     input_event = html.SELECT(type="select-one", value="")
     event_list = sorted([g['name'] for g in events_data.values()], key=lambda n: n.upper())
-    for event in event_list:
-        option = html.OPTION(event)
-        event_id = event_data_sel[event]
-        if 'EVENT_ID' in storage:
-            if storage['EVENT_ID'] == event_id:
+    for event_name in event_list:
+        option = html.OPTION(event_name)
+        if 'EVENT' in storage:
+            if storage['EVENT'] == event_name:
                 option.selected = True
         input_event <= option
     fieldset <= input_event
@@ -139,7 +134,7 @@ def select_event():
     form <= html.BR()
 
     input_select_event = html.INPUT(type="submit", value="sélectionner cet événement")
-    input_select_event.bind("click", lambda e, ie=input_event, eds=event_data_sel: select_event_callback(e, ie, eds))
+    input_select_event.bind("click", lambda e, ie=input_event: select_event_callback(e, ie))
     form <= input_select_event
 
     col = html.TD()
@@ -162,7 +157,7 @@ def event_joiners():
 
     MY_SUB_PANEL <= html.H3("Participants à un événement")
 
-    if 'EVENT_ID' not in storage:
+    if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
         return
 
@@ -184,8 +179,12 @@ def event_joiners():
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
 
-    event_id = storage['EVENT_ID']
+    event_name = storage['EVENT']
+    events_dict = common.get_events_data()
+    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
+    event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
+
     joiners = get_registrations(event_id)
     joiners_dict = {j[0]: players_dict[str(j[0])] for j in joiners}
 
@@ -279,11 +278,14 @@ def register_event():
         return
     pseudo = storage['PSEUDO']
 
-    if 'EVENT_ID' not in storage:
+    if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
         return
 
-    event_id = storage['EVENT_ID']
+    event_name = storage['EVENT']
+    events_dict = common.get_events_data()
+    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
+    event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
 
     player_id = common.get_player_id(pseudo)
@@ -542,18 +544,20 @@ def edit_event():
         alert("Il faut se connecter au préalable")
         return
 
-    if 'EVENT_ID' not in storage:
+    if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
         return
+
+    event_name = storage['EVENT']
+    events_dict = common.get_events_data()
+    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
+    event_id = eventname2id[event_name]
+    event_dict = get_event_data(event_id)
 
     players_dict = common.get_players_data()
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
 
-    event_id = storage['EVENT_ID']
-    event_dict = get_event_data(event_id)
-
-    name = event_dict['name']
     start_date = event_dict['start_date']
     start_hour = event_dict['start_hour']
     end_date = event_dict['end_date']
@@ -570,7 +574,7 @@ def edit_event():
     fieldset = html.FIELDSET()
     legend_name = html.LEGEND("nom", title="Nom de l'événement (faites court et simple)")
     fieldset <= legend_name
-    input_name = html.INPUT(type="text", value=name, size=MAX_LEN_EVENT_NAME)
+    input_name = html.INPUT(type="text", value=event_name, size=MAX_LEN_EVENT_NAME)
     fieldset <= input_name
     form <= fieldset
 
@@ -619,7 +623,7 @@ def edit_event():
     input_edit_event.bind("click", edit_event_callback)
     form <= input_edit_event
 
-    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
+    MY_SUB_PANEL <= html.DIV(f"Evénement {event_name}", Class='important')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
     MY_SUB_PANEL <= html.BR()
@@ -649,7 +653,7 @@ def delete_event():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"L'événement a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
 
-            del storage['EVENT_ID']
+            del storage['EVENT']
 
         # back to where we started (actually to creation)
         load_option(None, 'créer un événement')
@@ -681,11 +685,14 @@ def delete_event():
         alert("Il faut se connecter au préalable")
         return
 
-    if 'EVENT_ID' not in storage:
+    if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
         return
 
-    event_id = storage['EVENT_ID']
+    event_name = storage['EVENT']
+    events_dict = common.get_events_data()
+    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
+    event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
 
     form = html.FORM()

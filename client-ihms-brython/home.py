@@ -164,7 +164,7 @@ def show_news():
         div_event_box = html.DIV(Class='event_element')
 
         name_event = event_dict['name']
-        event_link = f"https://diplomania-gen.fr?event={id_event}"
+        event_link = f"https://diplomania-gen.fr?event={name_event}"
         link = html.A(href=event_link, target="_blank")
         link <= name_event
         div_event_box <= link

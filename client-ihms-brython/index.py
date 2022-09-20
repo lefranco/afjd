@@ -203,8 +203,8 @@ if 'game' in document.query:
     else:
         load_option(None, ITEM_NAME_SELECTED)
 elif 'event' in document.query:
-    QUERY_EVENT_ID = document.query['event']
-    storage['EVENT_ID'] = QUERY_EVENT_ID
+    QUERY_EVENT_NAME = document.query['event']
+    storage['EVENT'] = QUERY_EVENT_NAME
     events.set_arrival()
     load_option(None, 'événements')
 else:
