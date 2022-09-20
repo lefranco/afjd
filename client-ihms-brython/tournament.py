@@ -376,9 +376,9 @@ def show_games():
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
-        button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)")
+        button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
     else:
-        button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)")
+        button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
     button.bind("click", change_button_mode_callback)
     MY_SUB_PANEL <= button
     MY_SUB_PANEL <= html.BR()
@@ -404,7 +404,7 @@ def show_games():
             if field == 'name':
 
                 # button for sorting by creation date
-                button = html.BUTTON("&lt;date de création&gt;")
+                button = html.BUTTON("&lt;date de création&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
@@ -412,13 +412,13 @@ def show_games():
                 buttons <= " "
 
                 # button for sorting by name
-                button = html.BUTTON("&lt;nom&gt;")
+                button = html.BUTTON("&lt;nom&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
                 buttons <= button
 
             else:
 
-                button = html.BUTTON("<>")
+                button = html.BUTTON("<>", Class='btn-menu')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
 

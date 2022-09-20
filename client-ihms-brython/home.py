@@ -18,6 +18,7 @@ import mapping
 import memoize
 import common
 import selection
+import events
 import index  # circular import
 
 
@@ -142,6 +143,18 @@ def formatted_games(suffering_games):
 def show_news():
     """ show_home """
 
+    def select_event_callback(_, event_name):
+        """ select_game_callback """
+
+        # action of selecting event
+        storage['EVENT'] = event_name
+
+        # so that will go to proper page
+        events.set_arrival()
+
+        # action of going to game page
+        index.load_option(None, 'événements')
+
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
 
@@ -163,11 +176,12 @@ def show_news():
     for id_event, event_dict in events_data.items():
         div_event_box = html.DIV(Class='event_element')
 
-        name_event = event_dict['name']
-        event_link = f"https://diplomania-gen.fr?event={name_event}"
-        link = html.A(href=event_link, target="_blank")
-        link <= name_event
-        div_event_box <= link
+        event_name = event_dict['name']
+
+        # fast access
+        button = html.BUTTON(event_name, Class='btn-menu')
+        button.bind("click", lambda e, en=event_name: select_event_callback(e, en))
+        div_event_box <= button
 
         div_event_box <= html.BR()
         div_event_box <= html.BR()
@@ -366,9 +380,9 @@ def all_games(state_name):
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
-        button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)")
+        button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
     else:
-        button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)")
+        button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
     button.bind("click", change_button_mode_callback)
     MY_SUB_PANEL <= button
     MY_SUB_PANEL <= html.BR()
@@ -394,7 +408,7 @@ def all_games(state_name):
             if field == 'name':
 
                 # button for sorting by creation date
-                button = html.BUTTON("&lt;date de création&gt;")
+                button = html.BUTTON("&lt;date de création&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
@@ -402,13 +416,13 @@ def all_games(state_name):
                 buttons <= " "
 
                 # button for sorting by name
-                button = html.BUTTON("&lt;nom&gt;")
+                button = html.BUTTON("&lt;nom&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
                 buttons <= button
 
             else:
 
-                button = html.BUTTON("<>")
+                button = html.BUTTON("<>", Class='btn-menu')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
 
@@ -1074,7 +1088,7 @@ def social():
     # load social directly
 
     # use button
-    button = html.BUTTON("Lancement du la brique sociale", id='social_link')
+    button = html.BUTTON("Lancement du la brique sociale", Class='btn-menu')
     MY_SUB_PANEL <= button
     button.bind("click", lambda e: window.open("https://www.diplomania.fr/"))
     document['social_link'].click()

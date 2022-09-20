@@ -140,7 +140,7 @@ def show_rating(classic, role_id):
             if field in ['player', 'elo', 'change', 'role', 'game', 'number']:
 
                 # button for sorting
-                button = html.BUTTON("<>")
+                button = html.BUTTON("<>", Class='btn-menu')
                 button.bind("click", lambda e, f=field: sort_by_callback(e, f))
                 buttons <= button
 
@@ -226,11 +226,11 @@ def show_rating(classic, role_id):
         ratings_table, average = make_ratings_table(classic, role_id, nb_roles)
 
         # button for changing mode
-        switch_mode_button = html.BUTTON(f"passer en {'blitz' if classic else 'classique'}")
+        switch_mode_button = html.BUTTON(f"passer en {'blitz' if classic else 'classique'}", Class='btn-menu')
         switch_mode_button.bind("click", switch_mode_callback)
 
         # button for going global
-        switch_global_button = html.BUTTON("classement global")
+        switch_global_button = html.BUTTON("classement global", Class='btn-menu')
         switch_global_button.bind("click", lambda e: switch_role_callback(e, None))
 
         # buttons for selecting role
