@@ -18,7 +18,7 @@ import scoring
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['changer nouvelles', 'retrouver à partir du courriel', 'tous les courriels', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi', 'destituer arbitre']
+OPTIONS = ['changer nouvelles', 'codes de vérification', 'retrouver à partir du courriel', 'tous les courriels', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi', 'destituer arbitre']
 
 
 def check_modo(pseudo):
@@ -29,6 +29,7 @@ def check_modo(pseudo):
         return False
 
     return True
+
 
 
 def get_tournament_players_data(tournament_id):
@@ -236,6 +237,52 @@ def change_news_modo():
     form <= html.BR()
 
     MY_SUB_PANEL <= form
+
+
+def show_verif_codes():
+    """ show_verif_codes """
+
+    MY_SUB_PANEL <= html.H3("Lister les codes de vérification")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    players_table = html.TABLE()
+
+    fields = ['pseudo', 'code']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'code': 'code'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for pseudo in sorted(players_dict, key=lambda p: p.upper()):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        code = common.verification_code(pseudo)
+        col = html.TD(code)
+        row <= col
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
 
 
 def all_emails():
@@ -777,6 +824,8 @@ def load_option(_, item_name):
 
     if item_name == 'changer nouvelles':
         change_news_modo()
+    if item_name == 'codes de vérification':
+        show_verif_codes()
     if item_name == 'retrouver à partir du courriel':
         find_from_email_address()
     if item_name == 'tous les courriels':
