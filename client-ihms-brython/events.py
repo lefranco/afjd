@@ -322,6 +322,13 @@ def register_event():
     location = event_dict['location']
     description = event_dict['description']
 
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+
+    manager_id = event_dict['manager_id']
+    manager = players_dict[str(manager_id)]['pseudo']
+
     url = f"https://diplomania-gen.fr?event={name}"
     MY_SUB_PANEL <= f"Pour inviter un joueur à rejoindre cet événement, lui envoyer le lien : '{url}'"
     MY_SUB_PANEL <= html.BR()
@@ -347,6 +354,9 @@ def register_event():
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= form
+
+    MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
+    MY_SUB_PANEL <= html.BR()
 
 
 def create_event():
@@ -375,6 +385,7 @@ def create_event():
         end_date = input_end_date.value
         location = input_location.value
         description = input_description.value
+        summary = input_summary.value
 
         if not name:
             alert("Nom d'événement manquant")
@@ -401,6 +412,7 @@ def create_event():
             'end_date': end_date,
             'location': location,
             'description': description,
+            'summary': summary,
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -466,10 +478,18 @@ def create_event():
 
     form <= html.BR()
     fieldset = html.FIELDSET()
-    legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'tournoi par équipes avec négociations'")
+    legend_description = html.LEGEND("description", title="Description complète de l'événement pour les inscrits")
     fieldset <= legend_description
     input_description = html.TEXTAREA(type="text", value="", rows=8, cols=80)
     fieldset <= input_description
+    form <= fieldset
+
+    form <= html.BR()
+    fieldset = html.FIELDSET()
+    legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil")
+    fieldset <= legend_summary
+    input_summary = html.TEXTAREA(type="text", value="", rows=8, cols=80)
+    fieldset <= input_summary
     form <= fieldset
 
     form <= html.BR()
@@ -507,6 +527,7 @@ def edit_event():
         end_date = input_end_date.value
         location = input_location.value
         description = input_description.value
+        summary = input_summary.value
 
         if not name:
             alert("Nom d'événement manquant")
@@ -533,6 +554,7 @@ def edit_event():
             'end_date': end_date,
             'location': location,
             'description': description,
+            'summary': summary,
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -562,17 +584,15 @@ def edit_event():
     event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
 
-    players_dict = common.get_players_data()
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-
     start_date = event_dict['start_date']
     start_hour = event_dict['start_hour']
     end_date = event_dict['end_date']
     location = event_dict['location']
     description = event_dict['description']
+    summary = event_dict['summary']
+
+    # TODO
     manager_id = event_dict['manager_id']
-    manager = players_dict[str(manager_id)]['pseudo']
 
     form = html.FORM()
 
@@ -618,11 +638,20 @@ def edit_event():
 
     form <= html.BR()
     fieldset = html.FIELDSET()
-    legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'tournoi par équipes avec négociations'")
+    legend_description = html.LEGEND("description", title="Description complète de l'événement pour les inscrits")
     fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_description = html.TEXTAREA(type="text", rows=16, cols=80)
     input_description <= description
     fieldset <= input_description
+    form <= fieldset
+
+    form <= html.BR()
+    fieldset = html.FIELDSET()
+    legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil")
+    fieldset <= legend_summary
+    input_summary = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_summary <= summary
+    fieldset <= input_summary
     form <= fieldset
 
     form <= html.BR()
@@ -632,8 +661,6 @@ def edit_event():
     form <= input_edit_event
 
     MY_SUB_PANEL <= html.DIV(f"Evénement {event_name}", Class='important')
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= form
 
@@ -673,7 +700,6 @@ def handle_joiners():
         MY_SUB_PANEL.clear()
         handle_joiners()
 
-
     MY_SUB_PANEL <= html.H3("Gérer les participations")
 
     if 'PSEUDO' not in storage:
@@ -707,6 +733,9 @@ def handle_joiners():
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
+
+    # TODO
+    manager_id = event_dict['manager_id']
 
     joiners = get_registrations(event_id)
     joiners_dict = {}
@@ -851,6 +880,9 @@ def delete_event():
     event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
 
+    # TODO
+    manager_id = event_dict['manager_id']
+
     form = html.FORM()
 
     input_delete_event = html.INPUT(type="submit", value="supprimer l'événement")
@@ -863,11 +895,8 @@ def delete_event():
 
     name = event_dict['name']
     manager_id = event_dict['manager_id']
-    manager = players_dict[str(manager_id)]['pseudo']
 
     MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= form
