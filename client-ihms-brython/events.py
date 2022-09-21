@@ -307,11 +307,11 @@ def register_event():
     form = html.FORM()
 
     if player_joined:
-        input_unregister_event = html.INPUT(type="submit", value="se désinscrire de l'événement")
+        input_unregister_event = html.INPUT(type="submit", value="Sans moi !")
         input_unregister_event.bind("click", lambda e: register_event_callback(e, False))
         form <= input_unregister_event
     else:
-        input_register_event = html.INPUT(type="submit", value="s'inscrire à l'événement")
+        input_register_event = html.INPUT(type="submit", value="J'en profite !")
         input_register_event.bind("click", lambda e: register_event_callback(e, True))
         form <= input_register_event
 
@@ -862,21 +862,12 @@ def delete_event():
         alert("Erreur chargement dictionnaire joueurs")
 
     name = event_dict['name']
-    description = event_dict['description']
     manager_id = event_dict['manager_id']
     manager = players_dict[str(manager_id)]['pseudo']
 
     MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
-    MY_SUB_PANEL <= html.BR()
-
-    # description
-    div_description = html.DIV(Class='information')
-    for line in description.split('\n'):
-        div_description <= line
-        div_description <= html.BR()
-    MY_SUB_PANEL <= div_description
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= form
