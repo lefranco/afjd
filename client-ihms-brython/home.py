@@ -185,7 +185,7 @@ def show_news():
 
         div_event_box <= html.BR()
         div_event_box <= html.BR()
-        for line in event_dict['description'].split('\n'):
+        for line in event_dict['summary'].split('\n'):
             div_event_box <= line
             div_event_box <= html.BR()
         MY_SUB_PANEL <= div_event_box

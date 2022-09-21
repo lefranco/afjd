@@ -91,6 +91,7 @@ EVENT_PARSER.add_argument('start_hour', type=str, required=False)
 EVENT_PARSER.add_argument('end_date', type=str, required=False)
 EVENT_PARSER.add_argument('location', type=str, required=False)
 EVENT_PARSER.add_argument('description', type=str, required=False)
+EVENT_PARSER.add_argument('summary', type=str, required=False)
 
 REGISTRATION_PARSER = flask_restful.reqparse.RequestParser()
 REGISTRATION_PARSER.add_argument('delete', type=int, required=True)
@@ -1230,7 +1231,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {'name': event.name, 'start_date': event.start_date, 'start_hour': event.start_hour, 'end_date': event.end_date, 'location': event.location, 'description': event.description, 'manager_id': event.manager_id}
+        data = {'name': event.name, 'start_date': event.start_date, 'start_hour': event.start_hour, 'end_date': event.end_date, 'location': event.location, 'description': event.description, 'summary': event.summary, 'manager_id': event.manager_id}
 
         return data, 200
 
@@ -1250,6 +1251,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
         end_date = args['end_date']
         location = args['location']
         description = args['description']
+        summary = args['summary']
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1299,7 +1301,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg=f"Event name {name} is too long")
 
         # update event here
-        event = events.Event(int(event_id), name, start_date, start_hour, end_date, location, description, user_id)
+        event = events.Event(int(event_id), name, start_date, start_hour, end_date, location, description, summary, user_id)
         event.update_database(sql_executor)
 
         sql_executor.commit()
@@ -1387,7 +1389,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         events_list = events.Event.inventory(sql_executor)
         del sql_executor
 
-        data = {str(e.identifier): {'name': e.name, 'description': e.description} for e in events_list}
+        data = {str(e.identifier): {'name': e.name, 'summary': e.summary} for e in events_list}
 
         return data, 200
 
@@ -1407,6 +1409,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         end_date = args['end_date']
         location = args['location']
         description = args['description']
+        summary = args['summary']
 
         mylogger.LOGGER.info("name=%s", name)
 
@@ -1456,7 +1459,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
 
         # create event here
         identifier = events.Event.free_identifier(sql_executor)
-        event = events.Event(identifier, name, start_date, start_hour, end_date, location, description, user_id)
+        event = events.Event(identifier, name, start_date, start_hour, end_date, location, description, summary, user_id)
         event.update_database(sql_executor)
 
         sql_executor.commit()
