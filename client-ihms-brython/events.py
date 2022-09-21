@@ -53,8 +53,8 @@ def get_registrations(event_id):
     port = config.SERVER_CONFIG['PLAYER']['PORT']
     url = f"{host}:{port}/registrations/{event_id}"
 
-    # getting registrations: no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    # getting registrations: need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return registrations_list
 
@@ -101,8 +101,9 @@ def select_event():
 
         InfoDialog("OK", f"Evénement sélectionné : {event_name}", remove_after=config.REMOVE_AFTER)
 
-        # back to where we started actually joined)
-        load_option(None, 'm\'inscrire')
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        select_event()
 
     MY_SUB_PANEL <= html.H3("Sélection d'un événement")
 
@@ -157,6 +158,10 @@ def event_joiners():
 
     MY_SUB_PANEL <= html.H3("Participants à un événement")
 
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
     if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
         return
@@ -196,7 +201,7 @@ def event_joiners():
     # sorting is done by server
     for data in joiners_dict.values():
 
-        if 'PSEUDO' in storage and data['pseudo'] == storage['PSEUDO']:
+        if data['pseudo'] == storage['PSEUDO']:
             colour = config.MY_RATING
         else:
             colour = None
@@ -285,6 +290,10 @@ def register_event():
         alert("Il faut se connecter au préalable")
         return
     pseudo = storage['PSEUDO']
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        alert("Erreur chargement identifiant joueur")
+        return
 
     if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
@@ -296,10 +305,6 @@ def register_event():
     event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
 
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        alert("Erreur chargement identifiant joueur")
-        return
 
     joiners = get_registrations(event_id)
     player_joined = player_id in [j[0] for j in joiners]
@@ -336,6 +341,8 @@ def register_event():
 
     MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
     MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
+    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV(f"Date de début : {start_date}", Class='information')
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV(f"Heure de début : {start_hour}", Class='information')
@@ -354,9 +361,6 @@ def register_event():
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= form
-
-    MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
-    MY_SUB_PANEL <= html.BR()
 
 
 def create_event():
@@ -480,7 +484,7 @@ def create_event():
     fieldset = html.FIELDSET()
     legend_description = html.LEGEND("description", title="Description complète de l'événement pour les inscrits")
     fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", value="", rows=8, cols=80)
+    input_description = html.TEXTAREA(type="text", value="", rows=16, cols=80)
     fieldset <= input_description
     form <= fieldset
 
@@ -488,7 +492,7 @@ def create_event():
     fieldset = html.FIELDSET()
     legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil")
     fieldset <= legend_summary
-    input_summary = html.TEXTAREA(type="text", value="", rows=8, cols=80)
+    input_summary = html.TEXTAREA(type="text", value="", rows=5, cols=80)
     fieldset <= input_summary
     form <= fieldset
 
@@ -573,6 +577,11 @@ def edit_event():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
+    pseudo = storage['PSEUDO']
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        alert("Erreur chargement identifiant joueur")
+        return
 
     if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
@@ -591,8 +600,11 @@ def edit_event():
     description = event_dict['description']
     summary = event_dict['summary']
 
-    # TODO
+    # need to be the manager
     manager_id = event_dict['manager_id']
+    if player_id != manager_id:
+        alert("Vous ne semblez pas être le créateur de cet événement")
+        return
 
     form = html.FORM()
 
@@ -649,7 +661,7 @@ def edit_event():
     fieldset = html.FIELDSET()
     legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil")
     fieldset <= legend_summary
-    input_summary = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_summary = html.TEXTAREA(type="text", rows=5, cols=80)
     input_summary <= summary
     fieldset <= input_summary
     form <= fieldset
@@ -705,6 +717,11 @@ def handle_joiners():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
+    pseudo = storage['PSEUDO']
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        alert("Erreur chargement identifiant joueur")
+        return
 
     if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
@@ -734,8 +751,11 @@ def handle_joiners():
     event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
 
-    # TODO
+    # need to be the manager
     manager_id = event_dict['manager_id']
+    if player_id != manager_id:
+        alert("Vous ne semblez pas être le créateur de cet événement")
+        return
 
     joiners = get_registrations(event_id)
     joiners_dict = {}
@@ -869,6 +889,11 @@ def delete_event():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
+    pseudo = storage['PSEUDO']
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        alert("Erreur chargement identifiant joueur")
+        return
 
     if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
@@ -880,8 +905,11 @@ def delete_event():
     event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
 
-    # TODO
+    # need to be the manager
     manager_id = event_dict['manager_id']
+    if player_id != manager_id:
+        alert("Vous ne semblez pas être le créateur de cet événement")
+        return
 
     form = html.FORM()
 
