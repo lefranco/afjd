@@ -21,7 +21,10 @@ $user->session_begin();
 $auth->acl($user->data);
 $user->setup('viewforum');
 
-$search_limit = 10;
+$search_limit = 100;
+$search_result_limit = 10;
+
+$topics = array();
 
 $posts_ary = array(
         'SELECT'    => 'p.*, t.*, u.username, u.user_colour',
@@ -51,10 +54,18 @@ $posts_ary = array(
 
     $posts_result = $db->sql_query_limit($posts, $search_limit);
 
+	  $count = 1;
+
       while( $posts_row = $db->sql_fetchrow($posts_result) )
       {
          $topic_title       =  $posts_row['topic_title'];
-         $post_author       =  $posts_row['username']; // get_username_string('full', $posts_row['poster_id'], $posts_row['username'], $posts_row['user_colour']);
+		 
+		 // topic already encountered : ignored
+		 if (in_array($topic_title, $topics))  continue;
+		 array_push($topics, $topic_title);
+		 
+		 
+         $post_author       =  $posts_row['username'];
          $post_date          = $user->format_date($posts_row['post_time']);
          $post_link       = append_sid("{$phpbb_root_path}viewtopic.$phpEx", "p=" . $posts_row['post_id'] . "#p" . $posts_row['post_id']);
 
@@ -72,6 +83,9 @@ $posts_ary = array(
          'POST_LINK'       => $post_link,
          'POST_TEXT'         => censor_text($post_text),
          ));
+		 
+		 $count ++;
+		 if ($count > $search_result_limit) break;
       }
 
 	page_header('External page');
