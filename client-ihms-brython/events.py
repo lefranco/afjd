@@ -451,21 +451,21 @@ def create_event():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_start_date = html.LEGEND("date", title="Date de début de l'événement")
+    legend_start_date = html.LEGEND("date de début", title="Date de début de l'événement")
     fieldset <= legend_start_date
     input_start_date = html.INPUT(type="date", value="")
     fieldset <= input_start_date
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_start_hour = html.LEGEND("heure", title="Heure de l'événement")
+    legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
     fieldset <= legend_start_hour
     input_start_hour = html.INPUT(type="time", value="")
     fieldset <= input_start_hour
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_end_date = html.LEGEND("date", title="Date de fin de l'événement")
+    legend_end_date = html.LEGEND("date de fin", title="Date de fin de l'événement")
     fieldset <= legend_end_date
     input_end_date = html.INPUT(type="date", value="")
     fieldset <= input_end_date
@@ -482,7 +482,7 @@ def create_event():
 
     form <= html.BR()
     fieldset = html.FIELDSET()
-    legend_description = html.LEGEND("description", title="Description complète de l'événement pour les inscrits")
+    legend_description = html.LEGEND("description complète", title="Description complète de l'événement pour les inscrits")
     fieldset <= legend_description
     input_description = html.TEXTAREA(type="text", value="", rows=16, cols=80)
     fieldset <= input_description
@@ -621,21 +621,21 @@ def edit_event():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_start_date = html.LEGEND("date", title="Date de début de l'événement")
+    legend_start_date = html.LEGEND("date de début", title="Date de début de l'événement")
     fieldset <= legend_start_date
     input_start_date = html.INPUT(type="date", value=start_date)
     fieldset <= input_start_date
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_start_hour = html.LEGEND("heure", title="Heure de l'événement")
+    legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
     fieldset <= legend_start_hour
     input_start_hour = html.INPUT(type="time", value=start_hour)
     fieldset <= input_start_hour
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_end_date = html.LEGEND("date", title="Date de fin de l'événement")
+    legend_end_date = html.LEGEND("date de fin", title="Date de fin de l'événement")
     fieldset <= legend_end_date
     input_end_date = html.INPUT(type="date", value=end_date)
     fieldset <= input_end_date
@@ -650,7 +650,7 @@ def edit_event():
 
     form <= html.BR()
     fieldset = html.FIELDSET()
-    legend_description = html.LEGEND("description", title="Description complète de l'événement pour les inscrits")
+    legend_description = html.LEGEND("description complète", title="Description complète de l'événement pour les inscrits")
     fieldset <= legend_description
     input_description = html.TEXTAREA(type="text", rows=16, cols=80)
     input_description <= description
