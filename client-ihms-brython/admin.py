@@ -1319,6 +1319,22 @@ def update_elo():
             elo_information = html.DIV()
             elo_raw_list = elo.process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information)
 
+            alert("Télechargement automatique des logs du calcul")
+
+            # exportation of logs
+            log_html = elo_information.innerHTML
+
+            # needed too for some reason
+            MY_SUB_PANEL <= html.A(id='download_link')
+
+            # perform actual exportation
+            text_file_as_blob = window.Blob.new([log_html], {'type': 'text/plain'})
+            download_link = document['download_link']
+            now = int(time.time())
+            download_link.download = f"diplomania_elo_{now}.html"
+            download_link.href = window.URL.createObjectURL(text_file_as_blob)
+            document['download_link'].click()
+
             # display result
             MY_SUB_PANEL.clear()
             MY_SUB_PANEL <= elo_information
