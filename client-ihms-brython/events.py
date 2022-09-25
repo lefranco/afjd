@@ -305,7 +305,6 @@ def register_event():
     event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
 
-
     joiners = get_registrations(event_id)
     player_joined = player_id in [j[0] for j in joiners]
 
