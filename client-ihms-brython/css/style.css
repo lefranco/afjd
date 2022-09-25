@@ -67,6 +67,10 @@ a:visited{
     background-color: white;
 }
 
+#grid {
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
 
 /* color of germany in diplomania map CEB087 */
 

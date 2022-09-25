@@ -157,20 +157,35 @@ def show_news():
 
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
+    div_homepage = html.DIV(id='grid')
 
     # ----
+    div_a5 = html.DIV()
 
     title1 = html.H4("Les parties en souffrance")
-    MY_SUB_PANEL <= title1
+    div_a5 <= title1
 
     suffering_games_loaded = get_needing_replacement_games()
     suffering_games = formatted_games(suffering_games_loaded)
-    MY_SUB_PANEL <= suffering_games
+    div_a5 <= suffering_games
+
+    div_homepage <= div_a5
 
     # ----
+    div_b5 =  html.DIV()
+
+    title11 = html.H4("Les champions sur le site")
+    div_b5 <= title11
+
+    div_b5 <= "Plus tard..."
+
+    div_homepage <= div_b5
+
+    # ----
+    div_a4 =  html.DIV()
 
     title2 = html.H4("Les événements qui recrutent")
-    MY_SUB_PANEL <= title2
+    div_a4 <= title2
 
     events_data = common.get_events_data()
     for event_dict in events_data.values():
@@ -188,48 +203,51 @@ def show_news():
         for line in event_dict['summary'].split('\n'):
             div_event_box <= line
             div_event_box <= html.BR()
-        MY_SUB_PANEL <= div_event_box
-        MY_SUB_PANEL <= html.HR()
+        div_a4 <= div_event_box
+        div_a4 <= html.HR()
+
+    div_homepage <= div_a4
 
     # ----
+    div_b4 =  html.DIV()
 
     title3 = html.H4("Dernières contributions sur les forums")
-    MY_SUB_PANEL <= title3
+    div_b4 <= title3
 
-    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="300")
-    MY_SUB_PANEL <= news_forum
+    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="400")
+    div_b4 <= news_forum
+
+    div_homepage <= div_b4
 
     # ----
+    div_a3 =  html.DIV()
 
     title4 = html.H4("Dernières nouvelles moderateur", Class='news')
-    MY_SUB_PANEL <= title4
+    div_a3 <= title4
 
     news_content_loaded2 = common.get_news_content2()
     news_content2 = formatted_news(news_content_loaded2, False)
-    MY_SUB_PANEL <= news_content2
+    div_a3 <= news_content2
+
+    div_homepage <= div_a3
 
     # ----
+    div_b3 =  html.DIV()
 
     title5 = html.H4("Dernières nouvelles administrateur", Class='news2')
-    MY_SUB_PANEL <= title5
+    div_b3 <= title5
 
     news_content_loaded = common.get_news_content()
     news_content = formatted_news(news_content_loaded, True)
-    MY_SUB_PANEL <= news_content
+    div_b3 <= news_content
+
+    div_homepage <= div_b3
 
     # ----
-
-    title6 = html.H4("Charte du bon diplomate")
-    MY_SUB_PANEL <= title6
-
-    link2 = html.A(href="./docs/charte.pdf", target="_blank")
-    link2 <= "Lien vers la charte du bon diplomate"
-    MY_SUB_PANEL <= link2
-
-    # ----
+    div_a2 =  html.DIV()
 
     title7 = html.H4("Note importante")
-    MY_SUB_PANEL <= title7
+    div_a2 <= title7
 
     note_bene_content = html.DIV()
     for line in NOTE_CONTENT_STATED.split("\n"):
@@ -240,25 +258,50 @@ def show_news():
     note_content_table <= row
     col = html.TD(note_bene_content)
     row <= col
-    MY_SUB_PANEL <= note_content_table
+    div_a2 <= note_content_table
+
+    div_homepage <= div_a2
 
     # ----
+    div_b2 =  html.DIV()
+
+    title6 = html.H4("Charte du bon diplomate")
+    div_b2 <= title6
+
+    link2 = html.A(href="./docs/charte.pdf", target="_blank")
+    link2 <= "Lien vers la charte du bon diplomate"
+    div_b2 <= link2
+
+    div_homepage <= div_b2
+
+    # ----
+    div_a1 =  html.DIV()
 
     title8 = html.H4("Divers")
-    MY_SUB_PANEL <= title8
+    div_a1 <= title8
 
-    MY_SUB_PANEL <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
-    MY_SUB_PANEL <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
-    MY_SUB_PANEL <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
-    MY_SUB_PANEL <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant : modifiez le paramètre de votre compte")
-    MY_SUB_PANEL <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : jouer la partie sélectionnée / taguer")
+    div_a1 <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
+    div_a1 <= html.DIV("Il faut toujours cocher 'd\'accord pour résoudre pour que la partie avance")
+    div_a1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
+    div_a1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
+    div_a1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant : modifiez le paramètre de votre compte")
+    div_a1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : jouer la partie sélectionnée / taguer")
+
+    div_homepage <= div_a1
 
     # ----
+    div_b1 =  html.DIV()
+
     title9 = html.H4("Statistiques")
-    MY_SUB_PANEL <= title9
+    div_b1 <= title9
 
     stats_content = get_stats_content()
-    MY_SUB_PANEL <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité."
+    div_b1 <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité."
+
+    div_homepage <= div_b1
+
+    # ----
+    MY_SUB_PANEL <= div_homepage
 
 
 def show_links():
