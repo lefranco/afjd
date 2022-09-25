@@ -25,6 +25,7 @@ LONG_DURATION_LIMIT_SEC = 1.0
 
 ADMIN_PSEUDO = 'Palpatine'
 
+DOWNLOAD_LOG_ELO = False
 
 def check_admin(pseudo):
     """ check_admin """
@@ -1246,6 +1247,7 @@ def update_elo():
     """ update_elo """
 
     elo_raw_list = None
+    teaser_text = None
 
     def cancel_update_database_callback(_, dialog):
         """ cancel_update_database_callback """
@@ -1276,7 +1278,8 @@ def update_elo():
         elo_raw_list_json = json.dumps(elo_raw_list)
 
         json_dict = {
-            'elo_list': elo_raw_list_json
+            'elo_list': elo_raw_list_json,
+            'teaser': teaser_text
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -1299,6 +1302,7 @@ def update_elo():
         def reply_callback(req):
 
             nonlocal elo_raw_list
+            nonlocal teaser_text
 
             req_result = json.loads(req.text)
             if req.status != 200:
@@ -1317,23 +1321,24 @@ def update_elo():
 
             games_results_dict = req_result['games_dict']
             elo_information = html.DIV()
-            elo_raw_list = elo.process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information)
+            elo_raw_list, teaser_text = elo.process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information)
 
-            alert("Télechargement automatique des logs du calcul")
+            if DOWNLOAD_LOG_ELO:
+                alert("Télechargement automatique des logs du calcul")
 
-            # exportation of logs
-            log_html = elo_information.innerHTML
+                # exportation of logs
+                log_html = elo_information.innerHTML
 
-            # needed too for some reason
-            MY_SUB_PANEL <= html.A(id='download_link')
+                # needed too for some reason
+                MY_SUB_PANEL <= html.A(id='download_link')
 
-            # perform actual exportation
-            text_file_as_blob = window.Blob.new([log_html], {'type': 'text/plain'})
-            download_link = document['download_link']
-            now = int(time.time())
-            download_link.download = f"diplomania_elo_{now}.html"
-            download_link.href = window.URL.createObjectURL(text_file_as_blob)
-            document['download_link'].click()
+                # perform actual exportation
+                text_file_as_blob = window.Blob.new([log_html], {'type': 'text/plain'})
+                download_link = document['download_link']
+                now = int(time.time())
+                download_link.download = f"diplomania_elo_{now}.html"
+                download_link.href = window.URL.createObjectURL(text_file_as_blob)
+                document['download_link'].click()
 
             # display result
             MY_SUB_PANEL.clear()
