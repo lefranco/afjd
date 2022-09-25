@@ -27,6 +27,7 @@ ADMIN_PSEUDO = 'Palpatine'
 
 DOWNLOAD_LOG_ELO = False
 
+
 def check_admin(pseudo):
     """ check_admin """
 
