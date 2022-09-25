@@ -17,7 +17,9 @@ MINIMUM_ELO = 1000.
 K_MAX_CONSTANT = 40
 K_SLOPE = 2.
 
-VERIFY = True
+VERIFY = False
+
+TEASER_KEEP = 5
 
 
 LAST_TIME = 0
@@ -82,6 +84,10 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
 
     # table rank -> score
     static_score_table = {r: (ALPHA ** (num_players - r) - 1) / sum([ALPHA ** (num_players - i) - 1 for i in range(1, num_players + 1)]) for r in range(1, num_players + 1)}
+
+    # ------------------
+    # 1 Parse all games
+    # ------------------
 
     for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['time_stamp']):
 
@@ -262,6 +268,10 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
 
     elapsed_then(elo_information, "Parsing games time")
 
+    # ------------------
+    # 2 Make recap
+    # ------------------
+
     for classic in (True, False):
 
         elo_information <= "-------------------"
@@ -337,6 +347,10 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
 
         elapsed_then(elo_information, f"Mode {'CLASSIC' if classic else 'BLITZ'} time")
 
+    # ------------------
+    # 3 Make elo_raw_list (returned)
+    # ------------------
+
     rolename2num = {v: k for k, v in num2rolename.items()}
     gamename2gameid = {v['name']: int(k) for k, v in games_dict.items()}
 
@@ -369,6 +383,9 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
         elo_raw_element = [classic, role_id, player_id, elo_value_int, change_int, game_id, number_games]
         elo_raw_list.append(elo_raw_element)
 
+    # make teaser (just an abstract)
+    teaser_text = "\n".join([f"{num2pseudo[e[2]]} : {e[3]} avec {num2rolename[e[1]]} en {'classique' if e[0] else 'blitz'}" for e in sorted(elo_raw_list, key=lambda ee: ee[3], reverse=True)][0: TEASER_KEEP])
+
     # how long it took
     done_time = time.time()
     elapsed = done_time - start_time
@@ -376,4 +393,4 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     elo_information <= f"Time elapsed : {elapsed}"
     elo_information <= html.BR()
 
-    return elo_raw_list
+    return elo_raw_list, teaser_text

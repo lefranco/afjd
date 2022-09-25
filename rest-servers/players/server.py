@@ -29,6 +29,7 @@ import newss
 import news2s
 import moderators
 import ratings
+import teasers
 import events
 import registrations
 import database
@@ -83,6 +84,7 @@ MODERATOR_PARSER.add_argument('delete', type=int, required=True)
 
 ELO_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
 ELO_UPDATE_PARSER.add_argument('elo_list', type=str, required=True)
+ELO_UPDATE_PARSER.add_argument('teaser', type=str, required=True)
 
 EVENT_PARSER = flask_restful.reqparse.RequestParser()
 EVENT_PARSER.add_argument('name', type=str, required=True)
@@ -1155,8 +1157,24 @@ class EloClassicRoleRessource(flask_restful.Resource):  # type: ignore
 
 
 @API.resource('/elo_rating')
-class UpdateEloRessource(flask_restful.Resource):  # type: ignore
-    """ UpdateEloRessource """
+class RawEloRessource(flask_restful.Resource):  # type: ignore
+    """ RawEloRessource """
+
+    def get(self) -> typing.Tuple[str, int]:  # pylint: disable=no-self-use
+        """
+        Provides the elo teaser
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/news - GET - get the elo teaser")
+
+        sql_executor = database.SqlExecutor()
+        teaser_content = teasers.Teaser.content(sql_executor)
+        del sql_executor
+
+        data = teaser_content
+
+        return data, 200
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
@@ -1164,11 +1182,12 @@ class UpdateEloRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/elo_rating - POST - update_elo")
+        mylogger.LOGGER.info("/elo_rating - POST - update elo and elo teaser")
 
         args = ELO_UPDATE_PARSER.parse_args(strict=True)
 
         elo_list_submitted = args['elo_list']
+        teaser_submitted = args['teaser']
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1195,10 +1214,15 @@ class UpdateEloRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
+        # put the raw ratings
         ratings.Rating.create_table(sql_executor)
         for elo in elo_list:
             rating = ratings.Rating(*elo)
             rating.update_database(sql_executor)
+
+        # put the teaser
+        teaser = teasers.Teaser(teaser_submitted)
+        teaser.update_database(sql_executor)
 
         sql_executor.commit()
         del sql_executor

@@ -90,6 +90,36 @@ def get_needing_replacement_games():
     return needing_replacement_games_list
 
 
+def get_teaser_content():
+    """ get_teaser_content """
+
+    teaser_content = None
+
+    def reply_callback(req):
+        nonlocal teaser_content
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération du contenu du teaser elo : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération du contenu du teaser elo : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        teaser_content = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/elo_rating"
+
+    # get teaser elo : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return teaser_content
+
+
 def formatted_news(news_content_loaded, admin):
     """ formatted_news """
 
@@ -139,6 +169,22 @@ def formatted_games(suffering_games):
     games_content <= game_content_table
     return games_content
 
+def formatted_teaser(teasers):
+    """ formatted_teaser """
+
+    # init
+    teaser_content = html.DIV()
+
+    teaser_content_table = html.TABLE()
+    row = html.TR()
+    for champion in teasers.split('\n'):
+        teaser_content_table <= row
+        col = html.TD(champion)
+        row <= col
+
+    teaser_content <= teaser_content_table
+    return teaser_content
+
 
 def show_news():
     """ show_home """
@@ -176,10 +222,12 @@ def show_news():
     # ----
     div_b5 = html.DIV(Class='tooltip')
 
-    title11 = html.H4("Les champions sur le site")
+    title11 = html.H4("Les meilleurs ELOs sur le site")
     div_b5 <= title11
 
-    div_b5 <= "Plus tard..."
+    teaser_loaded = get_teaser_content()
+    teaser = formatted_teaser(teaser_loaded)
+    div_b5 <= teaser
 
     div_b5_tip = html.SPAN("Plus de détail dans le menu 'classement'", Class='tooltiptext')
     div_b5 <= div_b5_tip
