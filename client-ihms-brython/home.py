@@ -169,6 +169,7 @@ def formatted_games(suffering_games):
     games_content <= game_content_table
     return games_content
 
+
 def formatted_teaser(teasers):
     """ formatted_teaser """
 
@@ -239,24 +240,8 @@ def show_news():
     title2 = html.H4("Les événements qui recrutent")
     div_a4 <= title2
 
-    events_data = common.get_events_data()
-    for event_dict in events_data.values():
-        div_event_box = html.DIV(Class='event_element')
-
-        name = event_dict['name']
-
-        # fast access
-        button = html.BUTTON(name, Class='btn-menu')
-        button.bind("click", lambda e, en=name: select_event_callback(e, en))
-        div_event_box <= button
-
-        div_event_box <= html.BR()
-        div_event_box <= html.BR()
-        for line in event_dict['summary'].split('\n'):
-            div_event_box <= line
-            div_event_box <= html.BR()
-        div_a4 <= div_event_box
-        div_a4 <= html.HR()
+    news_events = html.OBJECT(data="https://diplomania-gen.fr/events/", width="100%", height="400")
+    div_a4 <= news_events
 
     # no tip
     div_homepage <= div_a4
