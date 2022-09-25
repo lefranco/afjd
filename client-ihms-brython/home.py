@@ -213,7 +213,7 @@ def show_news():
     div_a5 <= title1
 
     suffering_games_loaded = get_needing_replacement_games()
-    suffering_games = formatted_games(suffering_games_loaded)
+    suffering_games = formatted_games(suffering_games_loaded) if suffering_games_loaded else "Aucune pour le moment"
     div_a5 <= suffering_games
 
     div_a5_tip = html.SPAN("Plus de détail dans le menu 'rejoindre une partie'", Class='tooltiptext')
