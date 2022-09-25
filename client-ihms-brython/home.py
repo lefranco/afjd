@@ -26,7 +26,7 @@ OPTIONS = ['dernières nouvelles', 'autres liens', 'brique sociale', 'toutes les
 
 NOTE_CONTENT_STATED = """Bienvenue dans la première version du site Diplomania.
 Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu.
-Merci de nous remonter vos remarques sur le forum de Diplomania (cf accueil/liens) ou sur le serveur Discord."""
+Merci de nous remonter vos remarques sur le forum ou sur le serveur Discord."""
 
 
 def get_stats_content():
