@@ -172,7 +172,7 @@ def show_news():
     div_homepage <= div_a5
 
     # ----
-    div_b5 =  html.DIV()
+    div_b5 = html.DIV()
 
     title11 = html.H4("Les champions sur le site")
     div_b5 <= title11
@@ -182,7 +182,7 @@ def show_news():
     div_homepage <= div_b5
 
     # ----
-    div_a4 =  html.DIV()
+    div_a4 = html.DIV()
 
     title2 = html.H4("Les événements qui recrutent")
     div_a4 <= title2
@@ -209,7 +209,7 @@ def show_news():
     div_homepage <= div_a4
 
     # ----
-    div_b4 =  html.DIV()
+    div_b4 = html.DIV()
 
     title3 = html.H4("Dernières contributions sur les forums")
     div_b4 <= title3
@@ -220,7 +220,7 @@ def show_news():
     div_homepage <= div_b4
 
     # ----
-    div_a3 =  html.DIV()
+    div_a3 = html.DIV()
 
     title4 = html.H4("Dernières nouvelles moderateur", Class='news')
     div_a3 <= title4
@@ -232,7 +232,7 @@ def show_news():
     div_homepage <= div_a3
 
     # ----
-    div_b3 =  html.DIV()
+    div_b3 = html.DIV()
 
     title5 = html.H4("Dernières nouvelles administrateur", Class='news2')
     div_b3 <= title5
@@ -244,26 +244,18 @@ def show_news():
     div_homepage <= div_b3
 
     # ----
-    div_a2 =  html.DIV()
+    div_a2 = html.DIV()
 
-    title7 = html.H4("Note importante")
-    div_a2 <= title7
+    title9 = html.H4("Statistiques")
+    div_a2 <= title9
 
-    note_bene_content = html.DIV()
-    for line in NOTE_CONTENT_STATED.split("\n"):
-        note_bene_content <= line
-        note_bene_content <= html.BR()
-    note_content_table = html.TABLE()
-    row = html.TR()
-    note_content_table <= row
-    col = html.TD(note_bene_content)
-    row <= col
-    div_a2 <= note_content_table
+    stats_content = get_stats_content()
+    div_a2 <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité."
 
     div_homepage <= div_a2
 
     # ----
-    div_b2 =  html.DIV()
+    div_b2 = html.DIV()
 
     title6 = html.H4("Charte du bon diplomate")
     div_b2 <= title6
@@ -275,28 +267,36 @@ def show_news():
     div_homepage <= div_b2
 
     # ----
-    div_a1 =  html.DIV()
+    div_a1 = html.DIV()
 
-    title8 = html.H4("Divers")
-    div_a1 <= title8
+    title7 = html.H4("Note importante")
+    div_a1 <= title7
 
-    div_a1 <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
-    div_a1 <= html.DIV("Il faut toujours cocher 'd\'accord pour résoudre pour que la partie avance")
-    div_a1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
-    div_a1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
-    div_a1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant : modifiez le paramètre de votre compte")
-    div_a1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : jouer la partie sélectionnée / taguer")
+    note_bene_content = html.DIV()
+    for line in NOTE_CONTENT_STATED.split("\n"):
+        note_bene_content <= line
+        note_bene_content <= html.BR()
+    note_content_table = html.TABLE()
+    row = html.TR()
+    note_content_table <= row
+    col = html.TD(note_bene_content)
+    row <= col
+    div_a1 <= note_content_table
 
     div_homepage <= div_a1
 
     # ----
-    div_b1 =  html.DIV()
+    div_b1 = html.DIV()
 
-    title9 = html.H4("Statistiques")
-    div_b1 <= title9
+    title8 = html.H4("Divers")
+    div_b1 <= title8
 
-    stats_content = get_stats_content()
-    div_b1 <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité."
+    div_b1 <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
+    div_b1 <= html.DIV("Il faut toujours cocher 'd\'accord pour résoudre pour que la partie avance")
+    div_b1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
+    div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
+    div_b1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant : modifiez le paramètre de votre compte")
+    div_b1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : jouer la partie sélectionnée / taguer")
 
     div_homepage <= div_b1
 
