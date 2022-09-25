@@ -22,7 +22,7 @@ import events
 import index  # circular import
 
 
-OPTIONS = ['dernières nouvelles', 'autres liens', 'brique sociale', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
+OPTIONS = ['vue d\'ensemble', 'autres liens', 'brique sociale', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
 
 NOTE_CONTENT_STATED = """Bienvenue dans la première version du site Diplomania.
 Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu.
@@ -1212,7 +1212,7 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'dernières nouvelles':
+    if item_name == 'vue d\'ensemble':
         show_news()
     if item_name == 'toutes les parties':
         all_games('en cours')
