@@ -213,7 +213,7 @@ def show_news():
     div_a5 <= title1
 
     suffering_games_loaded = get_needing_replacement_games()
-    suffering_games = formatted_games(suffering_games_loaded) if suffering_games_loaded else "Aucune pour le moment"
+    suffering_games = formatted_games(suffering_games_loaded) if suffering_games_loaded else "Aucune pour le moment."
     div_a5 <= suffering_games
 
     div_a5_tip = html.SPAN("Plus de détail dans le menu 'rejoindre une partie'", Class='tooltiptext')
@@ -227,7 +227,7 @@ def show_news():
     div_b5 <= title11
 
     teaser_loaded = get_teaser_content()
-    teaser = formatted_teaser(teaser_loaded)
+    teaser = formatted_teaser(teaser_loaded) if teaser_loaded else "Aucun pour le moment."
     div_b5 <= teaser
 
     div_b5_tip = html.SPAN("Plus de détail dans le menu 'classement'", Class='tooltiptext')
