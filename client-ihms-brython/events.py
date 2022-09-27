@@ -168,12 +168,12 @@ def event_joiners():
 
     joiners_table = html.TABLE()
 
-    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status']
+    fields = ['rank', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut'}[field]
+        field_fr = {'rank': 'rang', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut'}[field]
         col = html.TD(field_fr)
         thead <= col
     joiners_table <= thead
@@ -197,9 +197,10 @@ def event_joiners():
         joiner_data.update({'status': joiner[1]})
         joiners_dict[joiner[0]] = joiner_data
 
-    count = 0
     # sorting is done by server
-    for data in joiners_dict.values():
+    for num, data in enumerate(joiners_dict.values()):
+
+        data['rank'] = None
 
         if data['pseudo'] == storage['PSEUDO']:
             colour = config.MY_RATING
@@ -209,6 +210,9 @@ def event_joiners():
         row = html.TR()
         for field in fields:
             value = data[field]
+
+            if field == 'rank':
+                value = num + 1
 
             if field in ['residence', 'nationality']:
                 code = value
@@ -226,7 +230,6 @@ def event_joiners():
             row <= col
 
         joiners_table <= row
-        count += 1
 
     name = event_dict['name']
     description = event_dict['description']
@@ -243,6 +246,7 @@ def event_joiners():
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= joiners_table
+    count = len(joiners_dict)
     MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
 
 
@@ -306,7 +310,19 @@ def register_event():
     event_dict = get_event_data(event_id)
 
     joiners = get_registrations(event_id)
-    player_joined = player_id in [j[0] for j in joiners]
+    dict_status = {j[0] : j[1] for j in joiners}
+    player_joined = player_id in dict_status
+
+    if player_joined:
+        status = dict_status[player_id]
+        if status < 0:
+            player_status = "Votre inscription est refusée"
+        elif status > 0:
+            player_status = "Votre inscription est acceptée"
+        else:
+            player_status = "Votre inscription est en attente"
+    else:
+        player_status = "Vous n'êtes pas inscrit"
 
     form = html.FORM()
 
@@ -357,6 +373,9 @@ def register_event():
         div_description <= line
         div_description <= html.BR()
     MY_SUB_PANEL <= div_description
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= html.DIV(player_status, Class='important')
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= form
@@ -728,12 +747,12 @@ def handle_joiners():
 
     joiners_table = html.TABLE()
 
-    fields = ['pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status', 'action']
+    fields = ['rank', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status', 'action']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut', 'action': 'action'}[field]
+        field_fr = {'rank': 'rang', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut', 'action': 'action'}[field]
         col = html.TD(field_fr)
         thead <= col
     joiners_table <= thead
@@ -763,10 +782,10 @@ def handle_joiners():
         joiner_data.update({'status': joiner[1]})
         joiners_dict[joiner[0]] = joiner_data
 
-    count = 0
     # sorting is done by server
-    for player_id, data in joiners_dict.items():
+    for num, (player_id, data) in enumerate(joiners_dict.items()):
 
+        data['rank'] = None
         data['action'] = None
 
         if 'PSEUDO' in storage and data['pseudo'] == storage['PSEUDO']:
@@ -777,6 +796,9 @@ def handle_joiners():
         row = html.TR()
         for field in fields:
             value = data[field]
+
+            if field == 'rank':
+                value = num + 1
 
             if field in ['residence', 'nationality']:
                 code = value
@@ -823,7 +845,6 @@ def handle_joiners():
             row <= col
 
         joiners_table <= row
-        count += 1
 
     name = event_dict['name']
 
@@ -831,6 +852,7 @@ def handle_joiners():
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= joiners_table
+    count = len(joiners_dict)
     MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
 
 
