@@ -361,10 +361,6 @@ def registrations():
     location = event_dict['location']
     description = event_dict['description']
 
-    players_dict = common.get_players_data()
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-
     manager_id = event_dict['manager_id']
     manager = players_dict[str(manager_id)]['pseudo']
 
