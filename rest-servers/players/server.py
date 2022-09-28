@@ -95,6 +95,9 @@ EVENT_PARSER.add_argument('location', type=str, required=False)
 EVENT_PARSER.add_argument('description', type=str, required=False)
 EVENT_PARSER.add_argument('summary', type=str, required=False)
 
+EVENT_PARSER2 = flask_restful.reqparse.RequestParser()
+EVENT_PARSER2.add_argument('manager_id', type=int, required=True)
+
 REGISTRATION_PARSER = flask_restful.reqparse.RequestParser()
 REGISTRATION_PARSER.add_argument('delete', type=int, required=True)
 
@@ -1231,6 +1234,65 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/events_manager/<event_id>')
+class EventManagerRessource(flask_restful.Resource):  # type: ignore
+    """ EventManagerRessource """
+
+    def post(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Updates an event (manager)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/events/<event_id> - PUT - updating manager event with id=%s", event_id)
+
+        args = EVENT_PARSER2.parse_args(strict=True)
+
+        manager_id = args['manager_id']
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        # we do not check pseudo, we read it from token
+        pseudo = req_result.json()['logged_in_as']
+
+        sql_executor = database.SqlExecutor()
+
+        # find the event
+        event = events.Event.find_by_identifier(sql_executor, event_id)
+        if event is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Event {event_id} doesn't exist")
+
+        assert event is not None
+
+        # check that user is administrator
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            del sql_executor
+            flask_restful.abort(403, msg="You are not allowed to change event manager")
+
+        # update event here
+        event = events.Event(int(event_id), event.name, event.start_date, event.start_hour, event.end_date, event.location, event.description, event.summary, manager_id)
+        event.update_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'identifier': event_id, 'msg': 'Ok manager updated'}
+        return data, 200
+
+
 @API.resource('/events/<event_id>')
 class EventRessource(flask_restful.Resource):  # type: ignore
     """ EventRessource """
@@ -1261,7 +1323,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
     def put(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
-        Deletes an event
+        Updates an event
         EXPOSED
         """
 
