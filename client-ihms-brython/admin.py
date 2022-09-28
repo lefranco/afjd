@@ -1271,14 +1271,11 @@ def edit_moderators():
 def update_elo():
     """ update_elo """
 
-    elo_raw_list = None
-    teaser_text = None
-
     def cancel_update_database_callback(_, dialog):
         """ cancel_update_database_callback """
         dialog.close()
 
-    def update_database_callback(_, dialog):
+    def update_database_callback(_, dialog, elo_raw_list, teaser_text):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1314,11 +1311,11 @@ def update_elo():
         # update database : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def update_database_callback_confirm(_):
+    def update_database_callback_confirm(_, elo_raw_list, teaser_text):
         """ update_database_callback_confirm """
 
         dialog = Dialog("On met à jour la base de données ?", ok_cancel=True)
-        dialog.ok_button.bind("click", lambda e, d=dialog: update_database_callback(e, d))
+        dialog.ok_button.bind("click", lambda e, d=dialog, erl=elo_raw_list, tt=teaser_text: update_database_callback(e, d, erl, tt))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
     def extract_elo_data_callback(_):
@@ -1370,7 +1367,7 @@ def update_elo():
             MY_SUB_PANEL <= elo_information
 
             # offer update
-            update_database_callback_confirm(None)
+            update_database_callback_confirm(None, elo_raw_list, teaser_text)
 
         json_dict = {
         }
