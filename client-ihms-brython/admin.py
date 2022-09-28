@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier les paramètres', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'mise à jour du elo', 'maintenance']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier les paramètres', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'mise à jour du elo', 'changer responsable événement', 'maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1426,6 +1426,92 @@ def update_elo():
     MY_SUB_PANEL <= form
 
 
+def change_manager():
+    """ change_manager """
+
+    def promote_managers_callback(_):
+        """ promote_managers_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la promotion responsable événement : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la promotion responsable événement : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            InfoDialog("OK", f"Il a été promu responsable: {manager}", remove_after=config.REMOVE_AFTER)
+
+        manager = input_manager.value
+        manager_id = players_dict[manager]
+
+        json_dict = {
+            'manager_id': manager_id,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/events_manager/{event_id}"
+
+        # updating an event : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        change_manager()
+
+    MY_SUB_PANEL <= html.H3("Changer le responsable d'un événement")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    if 'EVENT' not in storage:
+        alert("Il faut sélectionner un événement au préalable")
+        return
+
+    event_name = storage['EVENT']
+    events_dict = common.get_events_data()
+    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
+    event_id = eventname2id[event_name]
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # all players can be usurped
+    possible_managers = set(players_dict.keys())
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_manager = html.LEGEND("Destinataire", title="Sélectionner le nouveau responsable")
+    fieldset <= legend_manager
+    input_manager = html.SELECT(type="select-one", value="")
+    for manager_pseudo in sorted(possible_managers, key=lambda pu: pu.upper()):
+        option = html.OPTION(manager_pseudo)
+        input_manager <= option
+    fieldset <= input_manager
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_select_player = html.INPUT(type="submit", value="promouvoir responsable")
+    input_select_player.bind("click", promote_managers_callback)
+    form <= input_select_player
+
+    MY_SUB_PANEL <= form
+
+
 def maintain():
     """ maintain """
 
@@ -1532,6 +1618,8 @@ def load_option(_, item_name):
         edit_moderators()
     if item_name == 'mise à jour du elo':
         update_elo()
+    if item_name == 'changer responsable événement':
+        change_manager()
     if item_name == 'maintenance':
         maintain()
 
