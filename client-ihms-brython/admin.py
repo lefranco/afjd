@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier pour le elo', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'mise à jour du elo', 'maintenance']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier les paramètres', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'mise à jour du elo', 'maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -261,14 +261,16 @@ def usurp():
     MY_SUB_PANEL <= form
 
 
-def rectify_used_for_elo():
-    """ rectify_used_for_elo """
+def rectify_parameters():
+    """ rectify_parameters """
 
     # declare the values
     used_for_elo_loaded = None
+    nomessage_loaded = None
+    nopress_loaded = None
 
-    def change_used_for_elo_reload():
-        """ change_used_for_elo_reload """
+    def change_parameters_reload():
+        """ change_parameters_reload """
 
         status = True
 
@@ -281,18 +283,22 @@ def rectify_used_for_elo():
         def reply_callback(req):
             nonlocal status
             nonlocal used_for_elo_loaded
+            nonlocal nomessage_loaded
+            nonlocal nopress_loaded
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la récupération de l'utilisation pour le ELO de la partie : {req_result['message']}")
+                    alert(f"Erreur à la récupération des paramètres de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la récupération de l'utilisation pour le ELO de la partie : {req_result['msg']}")
+                    alert(f"Problème à la récupération des paramètres de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 status = False
                 return
 
             used_for_elo_loaded = req_result['used_for_elo']
+            nomessage_loaded = req_result['nomessage_game']
+            nopress_loaded = req_result['nopress_game']
 
         json_dict = {}
 
@@ -305,27 +311,31 @@ def rectify_used_for_elo():
 
         return status
 
-    def change_used_for_elo_game_callback(_):
+    def change_parameters_game_callback(_):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la modification de l'utilisation pour le ELO de la partie : {req_result['message']}")
+                    alert(f"Erreur à la modification des paramètres de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la modification de l'utilisation pour le ELO de la partie : {req_result['msg']}")
+                    alert(f"Problème à la modification des paramètres de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'utilisation pour le ELO a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"Les paramètres de la partie ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
 
         used_for_elo = int(input_used_for_elo.checked)
+        nomessage_game = int(input_nomessage.checked)
+        nopress_game = int(input_nopress.checked)
 
         json_dict = {
             'pseudo': pseudo,
             'used_for_elo': used_for_elo,
+            'nomessage_game': nomessage_game,
+            'nopress_game': nopress_game,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -337,9 +347,9 @@ def rectify_used_for_elo():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        rectify_used_for_elo()
+        rectify_parameters()
 
-    MY_SUB_PANEL <= html.H3("Rectifier l'utilisation pour le calcul du ELO")
+    MY_SUB_PANEL <= html.H3("Rectifier des paramètres de la partie")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -357,7 +367,7 @@ def rectify_used_for_elo():
 
     game = storage['GAME']
 
-    status = change_used_for_elo_reload()
+    status = change_parameters_reload()
     if not status:
         return
 
@@ -370,10 +380,24 @@ def rectify_used_for_elo():
     fieldset <= input_used_for_elo
     form <= fieldset
 
+    fieldset = html.FIELDSET()
+    legend_nomessage = html.LEGEND("pas de message privé", title="Les joueurs ne peuvent pas communiquer (négocier) par message privé avant la fin de la partie")
+    fieldset <= legend_nomessage
+    input_nomessage = html.INPUT(type="checkbox", checked=nomessage_loaded)
+    fieldset <= input_nomessage
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_nopress = html.LEGEND("pas de message public", title="Les joueurs ne peuvent pas communiquer (déclarer) par message public avant la fin de la partie")
+    fieldset <= legend_nopress
+    input_nopress = html.INPUT(type="checkbox", checked=nopress_loaded)
+    fieldset <= input_nopress
+    form <= fieldset
+
     form <= html.BR()
 
-    input_change_used_for_elo_game = html.INPUT(type="submit", value="changer l'utilisation pour le calcul du ELO de la partie")
-    input_change_used_for_elo_game.bind("click", change_used_for_elo_game_callback)
+    input_change_used_for_elo_game = html.INPUT(type="submit", value="changer les paramètres de la partie")
+    input_change_used_for_elo_game.bind("click", change_parameters_game_callback)
     form <= input_change_used_for_elo_game
 
     MY_SUB_PANEL <= form
@@ -1494,8 +1518,8 @@ def load_option(_, item_name):
         change_news_admin()
     if item_name == 'usurper':
         usurp()
-    if item_name == 'rectifier pour le elo':
-        rectify_used_for_elo()
+    if item_name == 'rectifier les paramètres':
+        rectify_parameters()
     if item_name == 'rectifier la position':
         rectify_position()
     if item_name == 'envoyer un courriel':

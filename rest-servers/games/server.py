@@ -101,6 +101,8 @@ GAME_PARSER.add_argument('pseudo', type=str, required=False)
 # for game parameter alteration
 GAME_PARSER2 = flask_restful.reqparse.RequestParser()
 GAME_PARSER2.add_argument('used_for_elo', type=int, required=False)
+GAME_PARSER2.add_argument('nomessage_game', type=int, required=False)
+GAME_PARSER2.add_argument('nopress_game', type=int, required=False)
 GAME_PARSER2.add_argument('pseudo', type=str, required=False)
 
 GAMES_SELECT_PARSER = flask_restful.reqparse.RequestParser()
