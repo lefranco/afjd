@@ -18,7 +18,6 @@ import mapping
 import memoize
 import common
 import selection
-import events
 import index  # circular import
 
 
@@ -189,18 +188,6 @@ def formatted_teaser(teasers):
 
 def show_news():
     """ show_home """
-
-    def select_event_callback(_, event_name):
-        """ select_game_callback """
-
-        # action of selecting event
-        storage['EVENT'] = event_name
-
-        # so that will go to proper page
-        events.set_arrival()
-
-        # action of going to game page
-        index.load_option(None, 'événements')
 
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
