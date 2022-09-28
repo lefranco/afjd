@@ -156,6 +156,66 @@ def select_event():
 def registrations():
     """ registrations """
 
+
+
+
+
+
+
+    def sendmail_callback(_):
+        """ sendmail_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'envoi de courrier électronique : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'envoi de courrier électronique : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            InfoDialog("OK", f"Message émis vers : {manager}", remove_after=config.REMOVE_AFTER)
+
+        subject = f"Message de la part du joueur {pseudo} au sujet du tournoi {name} du site https://diplomania-gen.fr (AFJD)"
+
+        if not input_message.value:
+            alert("Contenu du message vide")
+            return
+
+        body = input_message.value
+
+        addressees = [manager_id]
+
+        json_dict = {
+            'pseudo': pseudo,
+            'addressees': " ".join([str(a) for a in addressees]),
+            'subject': subject,
+            'body': body,
+            'force': True,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+
+        # sending email : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        registrations()
+
+
+
+
+
+
+
+
+
+
     def register_event_callback(_, register):
         """ register_event_callback """
 
@@ -283,16 +343,42 @@ def registrations():
     else:
         player_status = "Vous n'êtes pas inscrit"
 
-    form = html.FORM()
+    register_form = html.FORM()
 
     if player_joined:
         input_unregister_event = html.INPUT(type="submit", value="Sans moi !")
         input_unregister_event.bind("click", lambda e: register_event_callback(e, False))
-        form <= input_unregister_event
+        register_form <= input_unregister_event
     else:
         input_register_event = html.INPUT(type="submit", value="J'en profite !")
         input_register_event.bind("click", lambda e: register_event_callback(e, True))
-        form <= input_register_event
+        register_form <= input_register_event
+
+
+
+    contact_form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_message = html.LEGEND("Votre message", title="Qu'avez vous à lui dire ?")
+    fieldset <= legend_message
+    input_message = html.TEXTAREA(type="text", rows=8, cols=80)
+    fieldset <= input_message
+    contact_form <= fieldset
+
+    contact_form <= html.BR()
+
+    input_select_player = html.INPUT(type="submit", value="envoyer le courriel")
+    input_select_player.bind("click", sendmail_callback)
+    contact_form <= input_select_player
+
+
+
+
+
+
+
+
+
 
     name = event_dict['name']
     start_date = event_dict['start_date']
@@ -356,7 +442,12 @@ def registrations():
     MY_SUB_PANEL <= html.BR()
 
     # put button to register/un register
-    MY_SUB_PANEL <= form
+    MY_SUB_PANEL <= register_form
+
+    # provide people already in
+    MY_SUB_PANEL <= html.H4("Contacter l'organisateur")
+    # put button to register/un register
+    MY_SUB_PANEL <= contact_form
 
     # provide people already in
     MY_SUB_PANEL <= html.H4("Ils/elles vous attendent :")
