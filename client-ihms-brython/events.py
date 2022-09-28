@@ -156,12 +156,6 @@ def select_event():
 def registrations():
     """ registrations """
 
-
-
-
-
-
-
     def sendmail_callback(_):
         """ sendmail_callback """
 
@@ -206,15 +200,6 @@ def registrations():
         # back to where we started
         MY_SUB_PANEL.clear()
         registrations()
-
-
-
-
-
-
-
-
-
 
     def register_event_callback(_, register):
         """ register_event_callback """
@@ -354,8 +339,6 @@ def registrations():
         input_register_event.bind("click", lambda e: register_event_callback(e, True))
         register_form <= input_register_event
 
-
-
     contact_form = html.FORM()
 
     fieldset = html.FIELDSET()
@@ -371,15 +354,6 @@ def registrations():
     input_select_player.bind("click", sendmail_callback)
     contact_form <= input_select_player
 
-
-
-
-
-
-
-
-
-
     name = event_dict['name']
     start_date = event_dict['start_date']
     start_hour = event_dict['start_hour']
@@ -394,7 +368,7 @@ def registrations():
     manager_id = event_dict['manager_id']
     manager = players_dict[str(manager_id)]['pseudo']
 
-    event_information = html.DIV( Class='event_element')
+    event_information = html.DIV(Class='event_element')
     event_information <= html.B("Créateur")
     event_information <= f" : {manager}"
     event_information <= html.BR()
@@ -416,7 +390,7 @@ def registrations():
     event_information <= html.BR()
 
     event_information <= html.B("Description complète")
-    event_information <= f" :"
+    event_information <= " :"
     event_information <= html.BR()
     for line in description.split('\n'):
         event_information <= line
