@@ -27,6 +27,7 @@ import json
 
 from browser import html, ajax, document
 
+
 def get_events_data():
     """ get_events_data : returnes empty dict if problem """
 
@@ -35,7 +36,7 @@ def get_events_data():
     def noreply_callback(_):
         """ noreply_callback """
         alert("Problème (pas de réponse de la part du serveur)")
-	
+
     def reply_callback(req):
         nonlocal events_dict
         req_result = json.loads(req.text)
@@ -80,9 +81,6 @@ for event_dict in events_data.values():
         div_event_box <= html.BR()
     document <= div_event_box
     document <= html.HR()
-
-
-
 
 </script>
 </body>
