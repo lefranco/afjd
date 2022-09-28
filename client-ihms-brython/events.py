@@ -490,7 +490,7 @@ def create_event():
 
     form <= html.BR()
     fieldset = html.FIELDSET()
-    legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil")
+    legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil (pas plus de trois lignes)")
     fieldset <= legend_summary
     input_summary = html.TEXTAREA(type="text", value="", rows=5, cols=80)
     fieldset <= input_summary
@@ -659,7 +659,7 @@ def edit_event():
 
     form <= html.BR()
     fieldset = html.FIELDSET()
-    legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil")
+    legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil (pas plus de trois lignes)")
     fieldset <= legend_summary
     input_summary = html.TEXTAREA(type="text", rows=5, cols=80)
     input_summary <= summary
