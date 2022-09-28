@@ -11,7 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import common
 import config
 
-OPTIONS = ['sélectionner un événement', 'participants à l\'événement', 'm\'inscrire', 'créer un événement', 'éditer l\'événement', 'gérer les participations', 'supprimer l\'événement']
+OPTIONS = ['sélectionner un événement', 'inscriptions', 'créer un événement', 'éditer l\'événement', 'gérer les participations', 'supprimer l\'événement']
 
 
 MAX_LEN_EVENT_NAME = 50
@@ -153,18 +153,66 @@ def select_event():
     MY_SUB_PANEL <= sub_panel
 
 
-def event_joiners():
-    """ event_joiners """
+def registrations():
+    """ registrations """
 
-    MY_SUB_PANEL <= html.H3("Participants à un événement")
+    def register_event_callback(_, register):
+        """ register_event_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status not in [200, 201]:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'inscription à l'événement : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'inscription à l'événement : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            if register:
+                InfoDialog("OK", f"L'inscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
+            else:
+                InfoDialog("OK", f"La désinscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/registrations/{event_id}"
+
+        json_dict = {
+            'delete': not register,
+        }
+
+        # registrating to an event : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        registrations()
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
+        return
+    pseudo = storage['PSEUDO']
+    player_id = common.get_player_id(pseudo)
+    if player_id is None:
+        alert("Erreur chargement identifiant joueur")
         return
 
     if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
         return
+
+    event_name = storage['EVENT']
+    events_dict = common.get_events_data()
+    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
+    event_id = eventname2id[event_name]
+    event_dict = get_event_data(event_id)
+
+    joiners = get_registrations(event_id)
+    dict_status = {j[0]: j[1] for j in joiners}
+    player_joined = player_id in dict_status
 
     joiners_table = html.TABLE()
 
@@ -184,13 +232,6 @@ def event_joiners():
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
 
-    event_name = storage['EVENT']
-    events_dict = common.get_events_data()
-    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
-    event_id = eventname2id[event_name]
-    event_dict = get_event_data(event_id)
-
-    joiners = get_registrations(event_id)
     joiners_dict = {}
     for joiner in joiners:
         joiner_data = players_dict[str(joiner[0])].copy()
@@ -231,88 +272,6 @@ def event_joiners():
 
         joiners_table <= row
 
-    name = event_dict['name']
-    description = event_dict['description']
-
-    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
-    MY_SUB_PANEL <= html.BR()
-
-    # description
-    div_description = html.DIV(Class='information')
-    for line in description.split('\n'):
-        div_description <= line
-        div_description <= html.BR()
-    MY_SUB_PANEL <= div_description
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= joiners_table
-    count = len(joiners_dict)
-    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
-
-
-def register_event():
-    """ register_event """
-
-    def register_event_callback(_, register):
-        """ register_event_callback """
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status not in [200, 201]:
-                if 'message' in req_result:
-                    alert(f"Erreur à l'inscription à l'événement : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à l'inscription à l'événement : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            if register:
-                InfoDialog("OK", f"L'inscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
-            else:
-                InfoDialog("OK", f"La désinscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/registrations/{event_id}"
-
-        json_dict = {
-            'delete': not register,
-        }
-
-        # registrating to an event : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        register_event()
-
-    MY_SUB_PANEL <= html.H3("Inscription à un événement")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-    pseudo = storage['PSEUDO']
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        alert("Erreur chargement identifiant joueur")
-        return
-
-    if 'EVENT' not in storage:
-        alert("Il faut sélectionner un événement au préalable")
-        return
-
-    event_name = storage['EVENT']
-    events_dict = common.get_events_data()
-    eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
-    event_id = eventname2id[event_name]
-    event_dict = get_event_data(event_id)
-
-    joiners = get_registrations(event_id)
-    dict_status = {j[0] : j[1] for j in joiners}
-    player_joined = player_id in dict_status
-
     if player_joined:
         status = dict_status[player_id]
         if status < 0:
@@ -349,36 +308,59 @@ def register_event():
     manager_id = event_dict['manager_id']
     manager = players_dict[str(manager_id)]['pseudo']
 
-    url = f"https://diplomania-gen.fr?event={name}"
-    MY_SUB_PANEL <= f"Pour inviter un joueur à rejoindre cet événement, lui envoyer le lien : '{url}'"
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
+    event_information = html.DIV( Class='event_element')
+    event_information <= html.B("Créateur")
+    event_information <= f" : {manager}"
+    event_information <= html.BR()
+
+    event_information <= html.B("Date de début")
+    event_information <= f" : {start_date}"
+    event_information <= html.BR()
+
+    event_information <= html.B("Heure de début")
+    event_information <= f" : {start_hour}"
+    event_information <= html.BR()
+
+    event_information <= html.B("Date de fin")
+    event_information <= f" : {end_date}"
+    event_information <= html.BR()
+
+    event_information <= html.B("Lieu")
+    event_information <= f" : {location}"
+    event_information <= html.BR()
+
+    event_information <= html.B("Description complète")
+    event_information <= f" :"
+    event_information <= html.BR()
+    for line in description.split('\n'):
+        event_information <= line
+        event_information <= html.BR()
+
+    MY_SUB_PANEL <= html.H3("Inscriptions")
 
     MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"Créateur : {manager}", Class='information')
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"Date de début : {start_date}", Class='information')
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"Heure de début : {start_hour}", Class='information')
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"Date de fin : {end_date}", Class='information')
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"Lieu : {location}", Class='information')
+
+    MY_SUB_PANEL <= html.H4("Toutes les informations")
+
+    MY_SUB_PANEL <= event_information
     MY_SUB_PANEL <= html.BR()
 
-    # description
-    div_description = html.DIV(Class='information')
-    for line in description.split('\n'):
-        div_description <= line
-        div_description <= html.BR()
-    MY_SUB_PANEL <= div_description
-    MY_SUB_PANEL <= html.BR()
+    # provide the link
+    url = f"https://diplomania-gen.fr?event={name}"
+    MY_SUB_PANEL <= f"Pour inviter un joueur à rejoindre cet événement, lui envoyer le lien : '{url}'"
 
+    MY_SUB_PANEL <= html.H4("Votre inscription")
+
+    # tell the guy his situation
     MY_SUB_PANEL <= html.DIV(player_status, Class='important')
     MY_SUB_PANEL <= html.BR()
 
+    # put button to register/un register
     MY_SUB_PANEL <= form
+
+    # provide people already in
+    MY_SUB_PANEL <= html.H4("Ils/elles vous attendent :")
+    MY_SUB_PANEL <= joiners_table
 
 
 def create_event():
@@ -852,8 +834,6 @@ def handle_joiners():
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= joiners_table
-    count = len(joiners_dict)
-    MY_SUB_PANEL <= html.P(f"Il y a {count} inscrits")
 
 
 def delete_event():
@@ -977,10 +957,8 @@ def load_option(_, item_name):
 
     if item_name == 'sélectionner un événement':
         select_event()
-    if item_name == 'participants à l\'événement':
-        event_joiners()
-    if item_name == 'm\'inscrire':
-        register_event()
+    if item_name == 'inscriptions':
+        registrations()
     if item_name == 'créer un événement':
         create_event()
     if item_name == 'éditer l\'événement':
@@ -1021,7 +999,7 @@ def render(panel_middle):
 
     # this means user wants to join game
     if ARRIVAL:
-        ITEM_NAME_SELECTED = 'm\'inscrire'
+        ITEM_NAME_SELECTED = 'inscriptions'
 
     ARRIVAL = False
     load_option(None, ITEM_NAME_SELECTED)
