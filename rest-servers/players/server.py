@@ -1749,6 +1749,12 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg="You do not seem to be manager of that event")
 
+        # check the player exists
+        player_concerned = players.Player.find_by_identifier(sql_executor, player_id)
+        if player_concerned is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a player with identifier {player_id}")
+
         # action
 
         date_ = registrations.Registration.find_date_by_event_id_player_id(sql_executor, event_id, player_id)
@@ -1760,7 +1766,26 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         sql_executor.commit()
         del sql_executor
 
-        data = {'msg': 'Ok registration updated if present'}
+        subject = f"Le statut de votre inscription dans l'événement {event.name} a été modifié"
+        body = ""
+        if value < 0:
+            body += "Votre inscription a été refusée :-( !\n"
+        elif value > 0:
+            body += "Votre inscription a été acceptée :-) !\n"
+        else:
+            body += "Votre inscription a été remise en attente ?!?!\n"
+        body += "\n"
+        body += "Vous pouvez contacter l'organisateur depuis le site\n"
+        body += "\n"
+        body += "Pour se rendre directement sur l'événement :\n"
+        body += f"https://diplomania-gen.fr?event={event.name}"
+
+        assert player is not None
+        status = mailer.send_mail(subject, body, [player_concerned.email], None)
+        if not status:
+            flask_restful.abort(400, msg="Failed to send message to player")
+
+        data = {'msg': 'Ok registration updated if present and email sent to player'}
         return data, 200
 
 
