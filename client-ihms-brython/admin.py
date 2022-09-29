@@ -1323,9 +1323,6 @@ def update_elo():
 
         def reply_callback(req):
 
-            nonlocal elo_raw_list
-            nonlocal teaser_text
-
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:

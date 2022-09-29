@@ -79,7 +79,8 @@ SCORING_CONVERSION_TABLE = {
     'WNAM': 'WinNamur',
     'DLIG': 'DiploLigue',
     'NOMG': 'OpenMindTheGap',
-    'CNAM': 'CDiploNamur'
+    'CNAM': 'CDiploNamur',
+    'BOUC': 'Boucher'
 }
 
 
