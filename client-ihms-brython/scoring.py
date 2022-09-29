@@ -257,6 +257,34 @@ def c_diplo_namur(solo_threshold, ratings):
     return score
 
 
+def butcher(solo_threshold, ratings):
+    """ the butcher scoring system """
+
+    solo_reward = 60
+
+    # default score
+    score = {role_name: 0 for role_name in ratings}
+
+    # detect solo
+    best_role_name = list(ratings.keys())[0]
+    if ratings[best_role_name] > solo_threshold:
+        score[best_role_name] = solo_reward
+        return score
+
+    # how many eliminated
+    nb_eliminated = len([s for s in ratings.values() if s == 0])
+
+    # calculate reward
+    reward = nb_eliminated * 10 if nb_eliminated else 5
+
+    # give points
+    for role_name in ratings:
+        if ratings[role_name]:
+            score[role_name] = reward
+
+    return score
+
+
 def scoring(game_scoring, solo_threshold, ratings):
     """ scoring """
 
@@ -273,5 +301,7 @@ def scoring(game_scoring, solo_threshold, ratings):
         score_table = nexus_omg(solo_threshold, ratings)
     if game_scoring == 'CNAM':
         score_table = c_diplo_namur(solo_threshold, ratings)
+    if game_scoring == 'BOUC':
+        score_table = butcher(solo_threshold, ratings)
 
     return score_table
