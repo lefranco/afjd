@@ -348,6 +348,7 @@ def registrations():
     fieldset <= input_message
     contact_form <= fieldset
 
+    contact_form <= html.DIV("Pensez à lui fournir le moyen de vous répondre !")
     contact_form <= html.BR()
 
     input_select_player = html.INPUT(type="submit", value="envoyer le courriel")
