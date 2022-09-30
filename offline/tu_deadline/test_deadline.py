@@ -9,17 +9,12 @@ import argparse
 import sys
 import typing
 
-SPEED_MOVES = 48
-SPEED_RETREATS = 24
-SPEED_ADJUSTMENTS = 24
-
-CURRENT_ADVANCEMENT = 5
-
+SEASON=["Printemps", "Automne", "Ete", "Hiver", "Ajustements"]
 
 class Game:
     """ Class for handling a game """
 
-    def __init__(self, archive: bool, fast: bool, play_weekend: bool, deadline_sync: bool, deadline_hour: int):
+    def __init__(self, archive: bool, fast: bool, play_weekend: bool, deadline_sync: bool, deadline_hour: int, moves_time: int, retreats_time: int, adjustments_time: int, current_advancement: int):
 
         self._archive = archive
         self._fast = fast
@@ -27,11 +22,11 @@ class Game:
         self._deadline_sync = deadline_sync
         self._deadline_hour = deadline_hour
 
-        self._speed_moves = SPEED_MOVES
-        self._speed_retreats = SPEED_RETREATS
-        self._speed_adjustments = SPEED_ADJUSTMENTS
+        self._speed_moves = moves_time
+        self._speed_retreats = retreats_time
+        self._speed_adjustments = adjustments_time
 
-        self._current_advancement = CURRENT_ADVANCEMENT
+        self._current_advancement = current_advancement
 
         self._deadline = 0
 
@@ -61,7 +56,7 @@ class Game:
             # increment is one hour
             deadline_increment = 3600
 
-        print(f"Step 1 : after rounding deadline is {datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)} GMT")
+        print(f"Step 1 : after rounding next hour/minute deadline is {datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)} GMT")
 
         # increment deadline
 
@@ -79,7 +74,7 @@ class Game:
         # increment deadline
         self._deadline += hours_or_minute_add * deadline_increment
 
-        print(f"Step 2 after increment : deadline is {datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)} GMT")
+        print(f"Step 2 after increment necessary play time : deadline is {datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)} GMT")
 
         # if fast we are done
         if self._fast:
@@ -145,21 +140,27 @@ def main() -> None:
     """ main """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", "--now", required=True, type=lambda d: datetime.datetime.strptime(d, '%Y%m%d%H%M%z'), help="Date in the format yyyymmddHHMM+0100 (+0200 in summer)")
+    parser.add_argument("-n", "--now", required=True, type=lambda d: datetime.datetime.strptime(d, '%Y%m%d%H%M%z'), help="Local date in the format yyyymmddHHMM+0100 (+0200 in summer)")
     parser.add_argument('-a', '--archive', required=False, action="store_true", help='Game is archive')
     parser.add_argument('-f', '--fast', required=False, action="store_true", help='Game is fast')
     parser.add_argument('-w', '--play_weekend', required=False, action="store_true", help='Game plays weekends')
     parser.add_argument('-S', '--deadline_sync', required=False, action="store_true", help='Game wants deadline sync.')
     parser.add_argument('-H', '--deadline_hour', required=False, type=int, default=0, help='Game wants deadline sync at this time')
+    parser.add_argument('-M', '--moves_time', required=False, type=int, default=48, help='Time for moves in hours')
+    parser.add_argument('-R', '--retreats_time', required=False, type=int, default=24, help='Time for retreats in hours')
+    parser.add_argument('-A', '--adjustments_time', required=False, type=int, default=24, help='Time for adjustments in hours')
+    parser.add_argument('-c', '--current_advancement', required=False, type=int, default=5, help='Current advancement (5 if moves to play, 6 retreats, 9 adjustments)')
+
     args = parser.parse_args()
 
-    print(f"Using time now as {args.now}")
+    print(f"Using local time now as {args.now}")
+    print(f"Next to play is {SEASON[args.current_advancement%5]}")
 
     if not 0 <= args.deadline_hour <= 23:
         print("Please revise deadline hour")
         sys.exit(1)
 
-    game = Game(args.archive, args.fast, args.play_weekend, args.deadline_sync, args.deadline_hour)
+    game = Game(args.archive, args.fast, args.play_weekend, args.deadline_sync, args.deadline_hour, args.moves_time, args.retreats_time, args.adjustments_time, args.current_advancement)
     print(game)
 
     forced_timestamp = args.now.timestamp()
