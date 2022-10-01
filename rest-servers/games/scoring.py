@@ -275,7 +275,7 @@ def butcher(solo_threshold, ratings):
     nb_eliminated = len([s for s in ratings.values() if s == 0])
 
     # calculate reward
-    reward = nb_eliminated * 10 if nb_eliminated else 5
+    reward = nb_eliminated * 10 if nb_eliminated else 1
 
     # give points
     for role_name in ratings:
