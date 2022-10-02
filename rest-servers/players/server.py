@@ -1320,13 +1320,9 @@ class EventRessource(flask_restful.Resource):  # type: ignore
         # find the event image
         image_bytes = event_images.EventImage.find_by_identifier(sql_executor, event_id)
 
-        import sys
-        print(f"==== getting from db {image_bytes=}", file=sys.stderr)
+        del sql_executor
 
         image = image_bytes.decode() if image_bytes else None
-        print(f"==== sending back {image=}", file=sys.stderr)
-
-        del sql_executor
 
         data = {'name': event.name, 'start_date': event.start_date, 'start_hour': event.start_hour, 'end_date': event.end_date, 'location': event.location, 'description': event.description, 'summary': event.summary, 'manager_id': event.manager_id, 'image': image}
 
@@ -1411,13 +1407,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
         # update event_image here
         if image is not None:
 
-            import sys
-
-            print(f"==== received {image=}", file=sys.stderr)
-
             image_bytes = image.encode()
-            print(f"==== putting in db {image_bytes=}", file=sys.stderr)
-
             event_image = event_images.EventImage(int(event_id), image_bytes)
             event_image.update_database(sql_executor)
 

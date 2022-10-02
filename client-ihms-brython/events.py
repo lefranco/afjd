@@ -407,7 +407,7 @@ def registrations():
         image_b64 = base64.b64encode(image_bytes).decode()
 
         # put it on screen
-        MY_SUB_PANEL <= html.IMG(src=f"data:image/jpeg;base64,{image_b64}")
+        MY_SUB_PANEL <= html.IMG(src=f"data:image/jpeg;base64,{image_b64}", alt=name)
 
     MY_SUB_PANEL <= html.H3("Inscriptions")
 
@@ -846,7 +846,7 @@ def illustrate_event():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_name = html.LEGEND("Ficher JPG")
+    legend_name = html.LEGEND("Ficher JPG uniquement !")
     fieldset <= legend_name
     form <= fieldset
 
