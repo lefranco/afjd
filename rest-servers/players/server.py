@@ -31,6 +31,7 @@ import moderators
 import ratings
 import teasers
 import events
+import event_images
 import registrations
 import database
 
@@ -87,13 +88,14 @@ ELO_UPDATE_PARSER.add_argument('elo_list', type=str, required=True)
 ELO_UPDATE_PARSER.add_argument('teaser', type=str, required=True)
 
 EVENT_PARSER = flask_restful.reqparse.RequestParser()
-EVENT_PARSER.add_argument('name', type=str, required=True)
+EVENT_PARSER.add_argument('name', type=str, required=False)
 EVENT_PARSER.add_argument('start_date', type=str, required=False)
 EVENT_PARSER.add_argument('start_hour', type=str, required=False)
 EVENT_PARSER.add_argument('end_date', type=str, required=False)
 EVENT_PARSER.add_argument('location', type=str, required=False)
 EVENT_PARSER.add_argument('description', type=str, required=False)
 EVENT_PARSER.add_argument('summary', type=str, required=False)
+EVENT_PARSER.add_argument('image', type=str, required=False)
 
 EVENT_PARSER2 = flask_restful.reqparse.RequestParser()
 EVENT_PARSER2.add_argument('manager_id', type=int, required=True)
@@ -1307,7 +1309,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # find the game
+        # find the event
         event = events.Event.find_by_identifier(sql_executor, event_id)
         if event is None:
             del sql_executor
@@ -1315,9 +1317,18 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         assert event is not None
 
+        # find the event image
+        image_bytes = event_images.EventImage.find_by_identifier(sql_executor, event_id)
+
+        import sys
+        print(f"==== getting from db {image_bytes=}", file=sys.stderr)
+
+        image = image_bytes.decode() if image_bytes else None
+        print(f"==== sending back {image=}", file=sys.stderr)
+
         del sql_executor
 
-        data = {'name': event.name, 'start_date': event.start_date, 'start_hour': event.start_hour, 'end_date': event.end_date, 'location': event.location, 'description': event.description, 'summary': event.summary, 'manager_id': event.manager_id}
+        data = {'name': event.name, 'start_date': event.start_date, 'start_hour': event.start_hour, 'end_date': event.end_date, 'location': event.location, 'description': event.description, 'summary': event.summary, 'manager_id': event.manager_id, 'image': image}
 
         return data, 200
 
@@ -1331,13 +1342,18 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         args = EVENT_PARSER.parse_args(strict=True)
 
+        # either name is set (update data)...
         name = args['name']
+
         start_date = args['start_date']
         start_hour = args['start_hour']
         end_date = args['end_date']
         location = args['location']
         description = args['description']
         summary = args['summary']
+
+        # either encode_image is set (update image)
+        image = args['image']
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1381,14 +1397,29 @@ class EventRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg="You do not seem to be manager of that event")
 
-        # check len of name
-        if len(name) > LEN_EVENT_MAX:
-            del sql_executor
-            flask_restful.abort(400, msg=f"Event name {name} is too long")
+        if name is not None:
 
-        # update event here
-        event = events.Event(int(event_id), name, start_date, start_hour, end_date, location, description, summary, user_id)
-        event.update_database(sql_executor)
+            # check len of name
+            if len(name) > LEN_EVENT_MAX:
+                del sql_executor
+                flask_restful.abort(400, msg=f"Event name {name} is too long")
+
+            # update event here
+            event = events.Event(int(event_id), name, start_date, start_hour, end_date, location, description, summary, user_id)
+            event.update_database(sql_executor)
+
+        # update event_image here
+        if image is not None:
+
+            import sys
+
+            print(f"==== received {image=}", file=sys.stderr)
+
+            image_bytes = image.encode()
+            print(f"==== putting in db {image_bytes=}", file=sys.stderr)
+
+            event_image = event_images.EventImage(int(event_id), image_bytes)
+            event_image.update_database(sql_executor)
 
         sql_executor.commit()
         del sql_executor
@@ -1448,6 +1479,10 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         # delete registrations
         event.delete_registrations(sql_executor)
+
+        # delete image if present
+        event_image = event_images.EventImage(event_id, b'')
+        event_image.delete_database(sql_executor)
 
         # finally delete event
         event.delete_database(sql_executor)
@@ -1781,6 +1816,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         body += f"https://diplomania-gen.fr?event={event.name}"
 
         assert player is not None
+        assert player_concerned is not None
         status = mailer.send_mail(subject, body, [player_concerned.email], None)
         if not status:
             flask_restful.abort(400, msg="Failed to send message to player")
