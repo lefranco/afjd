@@ -1494,7 +1494,7 @@ def create_many_games():
 
             games_to_create = {}
 
-            content = str(reader.result)
+            content = reader.result
             lines = content.splitlines()
 
             for line in lines:
@@ -1560,8 +1560,8 @@ def create_many_games():
         # Extract the file
         file_name = INPUT_FILE.files[0]
         # Read the file content as text
-        reader.readAsBinaryString(file_name)
         reader.bind("load", onload_callback)
+        reader.readAsText(file_name)
 
         # back to where we started
         MY_SUB_PANEL.clear()
