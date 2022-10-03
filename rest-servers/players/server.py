@@ -116,6 +116,10 @@ LEN_PSEUDO_MIN = 3
 # event name must be at most that size
 LEN_EVENT_MAX = 50
 
+# max size in bytes of image (after b64)
+# let 's say one Mo
+MAX_SIZE_IMAGE = (4 / 3) * 1000000
+
 
 @API.resource('/player-identifiers/<pseudo>')
 class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
@@ -1407,9 +1411,16 @@ class EventRessource(flask_restful.Resource):  # type: ignore
         # update event_image here
         if image is not None:
 
+            if len(image) > MAX_SIZE_IMAGE:
+                del sql_executor
+                flask_restful.abort(404, msg="Too big an image this is, please try a smaller one !")
+
             image_bytes = image.encode()
             event_image = event_images.EventImage(int(event_id), image_bytes)
-            event_image.update_database(sql_executor)
+            if image_bytes == b'':
+                event_image.delete_database(sql_executor)
+            else:
+                event_image.update_database(sql_executor)
 
         sql_executor.commit()
         del sql_executor
