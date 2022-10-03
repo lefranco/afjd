@@ -15,7 +15,7 @@ import mapping
 DEFAULT_ELO = 1500
 
 
-OPTIONS = ['classement', 'inscrits', 'joueurs', 'arbitres', 'oisifs', 'remplaçants', 'modérateurs', 'courriels non confirmés']
+OPTIONS = ['classement performance', 'classement fiabilité', 'classement régularité', 'liste inscrits', 'liste joueurs', 'liste arbitres', 'liste oisifs', 'liste remplaçants', 'liste modérateurs', 'courriels non confirmés']
 
 
 def get_detailed_rating(classic, role_id):
@@ -78,8 +78,8 @@ def get_global_rating(classic):
     return list(rating_list)
 
 
-def show_rating(classic, role_id):
-    """ show_rating """
+def show_rating_performance(classic, role_id):
+    """ show_rating_performance """
 
     def make_ratings_table(classic, role_id, nb_roles):
 
@@ -249,7 +249,10 @@ def show_rating(classic, role_id):
         switch_role_buttons_table <= row
 
         MY_SUB_PANEL.clear()
-        MY_SUB_PANEL <= html.H3(f"Le classement par ELO en mode {'classique' if classic else 'blitz'}")
+        MY_SUB_PANEL <= html.H3(f"Le classement par performance")
+        MY_SUB_PANEL <= html.DIV("Ce classement est un ELO - il prend en compte le résultat des joueurs sur les parties par rapport aux autres", Class='important')
+        MY_SUB_PANEL <= html.DIV(f"Mode de jeu sélectionné {'classique' if classic else 'blitz'}")
+        MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= switch_mode_button
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.BR()
@@ -331,6 +334,22 @@ def show_rating(classic, role_id):
 
     sort_by_callback(None, None)
 
+
+def show_rating_reliability():
+    """ show_rating_reliability """
+
+    MY_SUB_PANEL <= html.H3(f"Le classement sur la fiabilité")
+    MY_SUB_PANEL <= html.DIV("Ce classement prend en compte le nombre de retards et d'abandons sur toutes les parties terminées", Class='important')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Pas implémenté pour le moment")
+
+def show_rating_regularity():
+    """ show_rating_regularity """
+
+    MY_SUB_PANEL <= html.H3(f"Le classement sur la régularité")
+    MY_SUB_PANEL <= html.DIV("Ce classement est purement quantitatif et ne prend en compte que le nombre de parties jouées", Class='important')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Pas implémenté pour le moment")
 
 def show_registered_data():
     """ show_registered_data """
@@ -739,19 +758,23 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'inscrits':
+    if item_name == 'classement performance':
+        show_rating_performance(True, None)
+    if item_name == 'classement fiabilité':
+        show_rating_reliability()
+    if item_name == 'classement régularité':
+        show_rating_regularity()
+    if item_name == 'liste inscrits':
         show_registered_data()
-    if item_name == 'joueurs':
+    if item_name == 'liste joueurs':
         show_players_data()
-    if item_name == 'arbitres':
+    if item_name == 'liste arbitres':
         show_game_masters_data()
-    if item_name == 'oisifs':
+    if item_name == 'liste oisifs':
         show_idle_data()
-    if item_name == 'remplaçants':
+    if item_name == 'liste remplaçants':
         show_replacement_data()
-    if item_name == 'classement':
-        show_rating(True, None)
-    if item_name == 'modérateurs':
+    if item_name == 'liste modérateurs':
         show_moderators()
     if item_name == 'courriels non confirmés':
         show_non_confirmed_data()
