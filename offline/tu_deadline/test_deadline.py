@@ -149,10 +149,16 @@ def perform_one_test(archive: bool, fast: bool, play_weekend: bool, deadline_syn
     return datetime_deadline_extracted
 
 
+def perform_many_tests() -> None:
+    """ perform_many_tests """
+
+    print("TODO")
+
 def main() -> None:
     """ main """
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-b', '--batch', required=False, action="store_true", default=False, help='Use a batch')
     parser.add_argument("-n", "--now", required=False, type=lambda d: datetime.datetime.strptime(d, '%Y%m%d%H%M%z'), help="Local date in the format yyyymmddHHMM+0100 (+0200 in summer)")
     parser.add_argument('-a', '--archive', required=False, action="store_true", default=False, help='Game is archive')
     parser.add_argument('-f', '--fast', required=False, action="store_true", default=False, help='Game is fast')
@@ -165,6 +171,10 @@ def main() -> None:
     parser.add_argument('-c', '--current_advancement', required=False, type=int, default=5, help='Current advancement (5 if moves to play, 6 retreats, 9 adjustments)')
 
     args = parser.parse_args()
+
+    if args.batch:
+        perform_many_tests()
+        sys.exit(1)
 
     now = args.now if args.now else datetime.datetime.fromtimestamp(time.time())
 
@@ -180,7 +190,6 @@ def main() -> None:
     if args.current_advancement <= 0:
         print("Please revise current advancement")
         sys.exit(1)
-
 
     datetime_deadline_extracted = perform_one_test(args.archive, args.fast, args.play_weekend, args.deadline_sync, args.deadline_hour, args.moves_time, args.retreats_time, args.adjustments_time, args.current_advancement, forced_timestamp)
 
