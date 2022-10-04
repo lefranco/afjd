@@ -9,7 +9,8 @@ import argparse
 import sys
 import typing
 
-SEASON=["Printemps", "Automne", "Ete", "Hiver", "Ajustements"]
+SEASON_NAME = ["Printemps", "Automne", "Ete", "Hiver", "Ajustements"]
+
 
 class Game:
     """ Class for handling a game """
@@ -127,25 +128,37 @@ class Game:
 
         print(f"Step 4 : after setting to sync : deadline is {datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)}")
 
-    def show_deadline(self) -> None:
-        """ show_deadline """
-        datetime_deadline_extracted = datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)
-        print(f"deadline is {datetime_deadline_extracted}")
+    @property
+    def deadline(self) -> int:
+        """ property """
+        return self._deadline
 
     def __str__(self) -> str:
         return f"archive={self._archive} fast={self._fast} play_weekend={self._play_weekend} deadline_sync={self._deadline_sync} deadline_hour={self._deadline_hour}"
+
+
+def perform_one_test(archive: bool, fast: bool, play_weekend: bool, deadline_sync: bool, deadline_hour: int, moves_time: int, retreats_time: int, adjustments_time: int, current_advancement: int, forced_timestamp: int) -> int:
+    """ perform_test """
+
+    game = Game(archive, fast, play_weekend, deadline_sync, deadline_hour, moves_time, retreats_time, adjustments_time, current_advancement)
+    print(game)
+
+    game.push_deadline(forced_timestamp)
+
+    datetime_deadline_extracted = datetime.datetime.fromtimestamp(game.deadline, datetime.timezone.utc)
+    return datetime_deadline_extracted
 
 
 def main() -> None:
     """ main """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-n", "--now", required=True, type=lambda d: datetime.datetime.strptime(d, '%Y%m%d%H%M%z'), help="Local date in the format yyyymmddHHMM+0100 (+0200 in summer)")
-    parser.add_argument('-a', '--archive', required=False, action="store_true", help='Game is archive')
-    parser.add_argument('-f', '--fast', required=False, action="store_true", help='Game is fast')
-    parser.add_argument('-w', '--play_weekend', required=False, action="store_true", help='Game plays weekends')
-    parser.add_argument('-S', '--deadline_sync', required=False, action="store_true", help='Game wants deadline sync.')
-    parser.add_argument('-H', '--deadline_hour', required=False, type=int, default=0, help='Game wants deadline sync at this time')
+    parser.add_argument("-n", "--now", required=False, type=lambda d: datetime.datetime.strptime(d, '%Y%m%d%H%M%z'), help="Local date in the format yyyymmddHHMM+0100 (+0200 in summer)")
+    parser.add_argument('-a', '--archive', required=False, action="store_true", default=False, help='Game is archive')
+    parser.add_argument('-f', '--fast', required=False, action="store_true", default=False, help='Game is fast')
+    parser.add_argument('-w', '--play_weekend', required=False, action="store_true", default=False, help='Game plays weekends')
+    parser.add_argument('-S', '--deadline_sync', required=False, action="store_true", default=True, help='Game wants deadline sync.')
+    parser.add_argument('-H', '--deadline_hour', required=False, type=int, default=0, help='Game wants deadline sync at this GMT time')
     parser.add_argument('-M', '--moves_time', required=False, type=int, default=48, help='Time for moves in hours')
     parser.add_argument('-R', '--retreats_time', required=False, type=int, default=24, help='Time for retreats in hours')
     parser.add_argument('-A', '--adjustments_time', required=False, type=int, default=24, help='Time for adjustments in hours')
@@ -153,21 +166,25 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    print(f"Using local time now as {args.now}")
-    print(f"Next to play is {SEASON[args.current_advancement%5]}")
+    now = args.now if args.now else datetime.datetime.fromtimestamp(time.time())
+
+    forced_timestamp = now.timestamp()
+
+    print(f"Using local time now as {now}")
+    print(f"Next to play is {SEASON_NAME[args.current_advancement%5]}")
 
     if not 0 <= args.deadline_hour <= 23:
         print("Please revise deadline hour")
         sys.exit(1)
 
-    game = Game(args.archive, args.fast, args.play_weekend, args.deadline_sync, args.deadline_hour, args.moves_time, args.retreats_time, args.adjustments_time, args.current_advancement)
-    print(game)
+    if args.current_advancement <= 0:
+        print("Please revise current advancement")
+        sys.exit(1)
 
-    forced_timestamp = args.now.timestamp()
-    game.push_deadline(forced_timestamp)
 
-    print("After : ", end='')
-    game.show_deadline()
+    datetime_deadline_extracted = perform_one_test(args.archive, args.fast, args.play_weekend, args.deadline_sync, args.deadline_hour, args.moves_time, args.retreats_time, args.adjustments_time, args.current_advancement, forced_timestamp)
+
+    print(f"Resulting deadline is {datetime_deadline_extracted}")
 
 
 if __name__ == '__main__':
