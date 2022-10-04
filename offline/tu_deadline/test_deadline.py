@@ -126,7 +126,7 @@ class Game:
                 self._deadline += 24 * 3600 + wished_deadline_time_in_day - current_deadline_time_in_day
                 print("option B")
 
-        print(f"Step 4 : after setting to sync : deadline is {datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)}")
+        print(f"Step 4 : after setting to sync : new deadline is {datetime.datetime.fromtimestamp(self._deadline, datetime.timezone.utc)}")
 
     @property
     def deadline(self) -> int:
@@ -134,10 +134,10 @@ class Game:
         return self._deadline
 
     def __str__(self) -> str:
-        return f"archive={self._archive} fast={self._fast} play_weekend={self._play_weekend} deadline_sync={self._deadline_sync} deadline_hour={self._deadline_hour}"
+        return f"archive={self._archive} fast={self._fast} play_weekend={self._play_weekend} deadline_sync={self._deadline_sync} deadline_hour={self._deadline_hour} Next to play is {SEASON_NAME[self._current_advancement%5]}"
 
 
-def perform_one_test(archive: bool, fast: bool, play_weekend: bool, deadline_sync: bool, deadline_hour: int, moves_time: int, retreats_time: int, adjustments_time: int, current_advancement: int, forced_timestamp: int) -> int:
+def perform_one_test(archive: bool, fast: bool, play_weekend: bool, deadline_sync: bool, deadline_hour: int, moves_time: int, retreats_time: int, adjustments_time: int, current_advancement: int, forced_timestamp: int) -> datetime.datetime:
     """ perform_test """
 
     game = Game(archive, fast, play_weekend, deadline_sync, deadline_hour, moves_time, retreats_time, adjustments_time, current_advancement)
@@ -152,7 +152,14 @@ def perform_one_test(archive: bool, fast: bool, play_weekend: bool, deadline_syn
 def perform_many_tests() -> None:
     """ perform_many_tests """
 
-    print("TODO")
+    time_stamp = int(time.time())
+    for _ in range(7):
+        for _ in range(24):
+            for _ in range(12):
+                perform_one_test(False, False, False, True, 23, 48, 24, 24, 1, time_stamp)
+                time_stamp += 5 * 60
+                print()
+
 
 def main() -> None:
     """ main """
@@ -181,7 +188,6 @@ def main() -> None:
     forced_timestamp = now.timestamp()
 
     print(f"Using local time now as {now}")
-    print(f"Next to play is {SEASON_NAME[args.current_advancement%5]}")
 
     if not 0 <= args.deadline_hour <= 23:
         print("Please revise deadline hour")
