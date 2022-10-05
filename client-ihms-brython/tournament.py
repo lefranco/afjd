@@ -22,6 +22,9 @@ import index  # circular import
 
 OPTIONS = ['parties du tournoi', 'classement du tournoi', 'incidents du tournoi', 'créer un tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'les tournois du site', 'créer plusieurs parties', 'tester un scorage']
 
+
+MAX_NUMBER_GAMES = 100
+
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_TOURNAMENT_NAME = 50
 
@@ -1497,6 +1500,10 @@ def create_many_games():
             content = reader.result
             lines = content.splitlines()
 
+            if len(lines) > MAX_NUMBER_GAMES:
+                alert(f"Il y a trop de parties dans le fichier. La limite est {MAX_NUMBER_GAMES}")
+                return
+
             for line in lines:
 
                 # ignore empty lines
@@ -1530,8 +1537,16 @@ def create_many_games():
                     alert(f"La partie {game_name} est définie plusieurs fois dans le fichier")
                     return
 
+                # create players dict
+                players_dict = {n: tab[n + 1] for n in range(len(tab) - 1)}
+
+                # check for duplicated games
+                if players_dict in games_to_create.values():
+                    alert(f"La partie {game_name} est identique à une précédente")
+                    return
+
                 # create dictionnary
-                games_to_create[game_name] = {n: tab[n + 1] for n in range(len(tab) - 1)}
+                games_to_create[game_name] = players_dict
 
             if not games_to_create:
                 alert("Aucune partie dans le fichier")
