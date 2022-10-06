@@ -784,7 +784,7 @@ def illustrate_event():
             # b64 encode to pass it on server
             try:
                 image_str = base64.standard_b64encode(image_bytes).decode()
-            except:
+            except:  # noqa: E722 pylint: disable=bare-except
                 alert("Problème à l'encodage pour le web... fichier trop gros ?")
                 return
 

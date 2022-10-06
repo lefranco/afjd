@@ -21,6 +21,7 @@ import events    # noqa: E402
 import forum    # noqa: E402
 import players    # noqa: E402
 import moderate    # noqa: E402
+import create    # noqa: E402
 import admin    # noqa: E402
 
 # TITLE is in index.html
@@ -30,7 +31,7 @@ H2 = html.DIV("Front end du site Diplomania (brique jeu)")
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'événements', 'forum', 'classement', 'modération', 'administration']
+OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'événements', 'forum', 'classement', 'création', 'modération', 'administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -137,6 +138,8 @@ def load_option(_, item_name):
         forum.render(PANEL_MIDDLE)
     if item_name == 'classement':
         players.render(PANEL_MIDDLE)
+    if item_name == 'création':
+        create.render(PANEL_MIDDLE)
     if item_name == 'modération':
         moderate.render(PANEL_MIDDLE)
     if item_name == 'administration':
@@ -150,6 +153,11 @@ def load_option(_, item_name):
 
     # items in menu
     for possible_item_name in OPTIONS:
+
+        # do not display menu create if not creator
+        if possible_item_name == 'création':
+            if pseudo is None or not create.check_creator(pseudo):
+                continue
 
         # do not display menu moderate if not moderator
         if possible_item_name == 'modération':
