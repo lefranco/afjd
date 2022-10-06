@@ -376,7 +376,6 @@ def create_many_games():
                 dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
                 dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
 
-
         if not INPUT_FILE.files:
             alert("Pas de fichier")
 
