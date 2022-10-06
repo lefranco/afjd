@@ -993,8 +993,8 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         player_id = req_result.json()
 
         # abort special case : we do not want to see this player in more games
-        # if not delete and player_pseudo == "Chryss":
-            # flask_restful.abort(404, msg="Core dumped, segmentation fault!")
+        if not delete and player_pseudo == "Chryss":
+            flask_restful.abort(404, msg="Core dumped, segmentation fault!")
 
         sql_executor = database.SqlExecutor()
 
