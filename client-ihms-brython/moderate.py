@@ -811,7 +811,7 @@ MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
-MY_SUB_PANEL = html.DIV(id="admin")
+MY_SUB_PANEL = html.DIV(id="moderate")
 MY_PANEL <= MY_SUB_PANEL
 
 
