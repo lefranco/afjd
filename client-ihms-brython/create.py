@@ -376,9 +376,6 @@ def create_many_games():
                 dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
                 dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
 
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            create_many_games()
 
         if not INPUT_FILE.files:
             alert("Pas de fichier")
@@ -489,7 +486,7 @@ MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
-MY_SUB_PANEL = html.DIV(id="admin")
+MY_SUB_PANEL = html.DIV(id="create")
 MY_PANEL <= MY_SUB_PANEL
 
 
