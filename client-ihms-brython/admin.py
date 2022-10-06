@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier les paramètres', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les modérateurs', 'mise à jour du elo', 'changer responsable événement', 'maintenance']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier les paramètres', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les créateurs', 'éditer les modérateurs', 'mise à jour du elo', 'changer responsable événement', 'maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1102,6 +1102,172 @@ def last_failures():
     MY_SUB_PANEL <= failures_table
 
 
+def edit_creators():
+    """ edit_creators """
+
+    def add_creator_callback(_):
+        """ add_creator_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la mise d'un créateur : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la mise d'un créateur : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                edit_creators()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur a été promu créateur : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            edit_creators()
+
+        player_pseudo = input_incomer.value
+
+        json_dict = {
+            'player_pseudo': player_pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/creators"
+
+        # putting a moderator : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def remove_creator_callback(_):
+        """remove_creator_callback"""
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au retrait d'un créateur : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au retrait d'un créateur : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                edit_creators()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le joueur a été déchu du rôle de créateur : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            edit_creators()
+
+        player_pseudo = input_outcomer.value
+
+        json_dict = {
+            'player_pseudo': player_pseudo,
+            'delete': 1
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/creators"
+
+        # removing a moderator : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    MY_SUB_PANEL <= html.H3("Editer les modérateurs")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    creators_list = common.get_creators()
+
+    form = html.FORM()
+
+    # ---
+
+    fieldset = html.FIELDSET()
+    legend_incomer = html.LEGEND("Entrant", title="Sélectionner le joueur à promouvoir")
+    fieldset <= legend_incomer
+
+    # all players can come in
+    possible_incomers = set(players_dict.keys())
+
+    # not those already in
+    possible_incomers -= set(creators_list)
+
+    input_incomer = html.SELECT(type="select-one", value="")
+    for play_pseudo in sorted(possible_incomers, key=lambda pi: pi.upper()):
+        option = html.OPTION(play_pseudo)
+        input_incomer <= option
+
+    fieldset <= input_incomer
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_put_in_game = html.INPUT(type="submit", value="mettre dans les créateurs")
+    input_put_in_game.bind("click", add_creator_callback)
+    form <= input_put_in_game
+
+    form <= html.BR()
+    form <= html.BR()
+
+    # ---
+
+    fieldset = html.FIELDSET()
+    fieldset <= html.LEGEND("Sont créateurs : ")
+    fieldset <= html.DIV(" ".join(sorted(list(set(creators_list)), key=lambda p: p.upper())), Class='note')
+    form <= fieldset
+
+    # ---
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_outcomer = html.LEGEND("Sortant", title="Sélectionner le joueur à destituer")
+    fieldset <= legend_outcomer
+
+    # players can come out are the ones not assigned
+    possible_outcomers = creators_list
+
+    input_outcomer = html.SELECT(type="select-one", value="")
+    for play_pseudo in sorted(possible_outcomers):
+        option = html.OPTION(play_pseudo)
+        input_outcomer <= option
+
+    fieldset <= input_outcomer
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_remove_from_game = html.INPUT(type="submit", value="retirer des créateurs")
+    input_remove_from_game.bind("click", remove_creator_callback)
+    form <= input_remove_from_game
+
+    MY_SUB_PANEL <= form
+
+
 def edit_moderators():
     """ edit_moderators """
 
@@ -1227,7 +1393,7 @@ def edit_moderators():
 
     form <= html.BR()
 
-    input_put_in_game = html.INPUT(type="submit", value="mettre dans les modérateur")
+    input_put_in_game = html.INPUT(type="submit", value="mettre dans les modérateurs")
     input_put_in_game.bind("click", add_moderator_callback)
     form <= input_put_in_game
 
@@ -1610,6 +1776,8 @@ def load_option(_, item_name):
         last_failures()
     if item_name == 'éditer les modérateurs':
         edit_moderators()
+    if item_name == 'éditer les créateurs':
+        edit_creators()
     if item_name == 'mise à jour du elo':
         update_elo()
     if item_name == 'changer responsable événement':

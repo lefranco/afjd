@@ -11,6 +11,7 @@ import mylogger
 import newss
 import news2s
 import moderators
+import creators
 import players
 import ratings
 import teasers
@@ -42,6 +43,12 @@ def populate_moderators(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
 
     moderators.Moderator.create_table(sql_executor)
+
+
+def populate_creators(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+
+    creators.Creator.create_table(sql_executor)
 
 
 def populate_ratings(sql_executor: database.SqlExecutor) -> None:
@@ -83,6 +90,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_news2s(sql_executor)
     populate_players(sql_executor)
     populate_moderators(sql_executor)
+    populate_creators(sql_executor)
     populate_ratings(sql_executor)
     populate_teasers(sql_executor)
     populate_events(sql_executor)
