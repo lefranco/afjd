@@ -51,6 +51,9 @@ FAQ_CONTENT_TABLE = {
     "Que peut faire l'arbitre ?":
     "L'arbitre connaît l'identité des joueurs de sa partie. Il démarre et arrête la partie. Il peut distinguer la partie. Il peut forcer des ordres de désordre civil pour un pays (si les paramètres de la partie le permettent). Il peut forcer un accord pour résoudre pour un pays (après la date limite). Il peut retirser ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
 
+    "Que peut faire un créateur ?":
+    "Un créateur peut créer plusieurs parties en une seul fois grace à un petit fichier csv contenant les joueurs dans les parties. Pour obtenir le statut de créateur et pouvoir réaliser cette opération consulter l'administrateur (en déclarant un incident par exemple)",
+
     "Que peut faire un modérateur ?":
     "Un modérateur peut voir le courriel et le numéro de téléphone d'un inscrit. Il peut retrouver un pseudo à partir d'une adresse courriel. Il peut lister toutes les adresses courriel du site. Il peut voir le résultat complet d'un tournoi (anonyme ou pas). Enfin, dans les parties : il voit les identités des joueurs même si la partie est anonyme, ainsi que les soumissions et les incidents même s'il n'est pas dans la partie.",
 
