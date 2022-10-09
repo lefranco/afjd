@@ -504,7 +504,7 @@ def show_rating_regularity():
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("L'ancienneté est le nombre de jours écoulés depuis le début de la première partie jouée (pour favoriser les joueurs qui ont commencé il y a longtemps)", Class='note')
+        MY_SUB_PANEL <= html.DIV("L'ancienneté est le nombre de semaines écoulées depuis le début de la première partie jouée (pour favoriser les joueurs qui ont commencé il y a longtemps)", Class='note')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("La modernité est le rapport entre le nombre de jour depuis le début de la première partie et le nombre de jours depuis la fin de la dernière partie (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
         MY_SUB_PANEL <= html.BR()
