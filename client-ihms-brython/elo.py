@@ -468,9 +468,7 @@ def process_regularity(players_dict, games_results_dict, regularity_information)
     # 2 Merge players intervals
     # ------------------
 
-    for player_id in sequences_list_table:
-        # alias
-        intervals = sequences_list_table[player_id]
+    for player_id, intervals in sequences_list_table.items():
         # sort
         intervals.sort()
         # use a stack
