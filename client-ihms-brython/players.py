@@ -305,7 +305,7 @@ def show_rating_performance(classic, role_id):
         if new_sort_by is not None:
             if new_sort_by != storage['SORT_BY_ELO_RATINGS']:
                 storage['SORT_BY_ELO_RATINGS'] = new_sort_by
-                storage['REVERSE_NEEDED_ELO_RATINGS'] = str(False)
+                storage['REVERSE_NEEDED_ELO_RATINGS'] = str(True)
             else:
                 storage['REVERSE_NEEDED_ELO_RATINGS'] = str(not bool(storage['REVERSE_NEEDED_ELO_RATINGS'] == 'True'))
 
@@ -518,7 +518,7 @@ def show_rating_regularity():
         if new_sort_by is not None:
             if new_sort_by != storage['SORT_BY_REG_RATINGS']:
                 storage['SORT_BY_REG_RATINGS'] = new_sort_by
-                storage['REVERSE_NEEDED_REG_RATINGS'] = str(False)
+                storage['REVERSE_NEEDED_REG_RATINGS'] = str(True)
             else:
                 storage['REVERSE_NEEDED_REG_RATINGS'] = str(not bool(storage['REVERSE_NEEDED_REG_RATINGS'] == 'True'))
 
