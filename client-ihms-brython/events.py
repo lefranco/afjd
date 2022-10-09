@@ -1093,8 +1093,8 @@ def delete_event():
 
             del storage['EVENT']
 
-        # back to where we started (actually to creation)
-        load_option(None, 'créer un événement')
+        # back to where we started (actually to select)
+        load_option(None, 'sélectionner un événement')
 
         dialog.close()
 

@@ -30,6 +30,7 @@ import news2s
 import moderators
 import creators
 import ratings
+import ratings2
 import teasers
 import events
 import event_images
@@ -91,6 +92,9 @@ CREATOR_PARSER.add_argument('delete', type=int, required=True)
 ELO_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
 ELO_UPDATE_PARSER.add_argument('elo_list', type=str, required=True)
 ELO_UPDATE_PARSER.add_argument('teaser', type=str, required=True)
+
+REGULARITY_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
+REGULARITY_UPDATE_PARSER.add_argument('regularity_list', type=str, required=True)
 
 EVENT_PARSER = flask_restful.reqparse.RequestParser()
 EVENT_PARSER.add_argument('name', type=str, required=False)
@@ -1239,7 +1243,7 @@ class EloClassicRoleRessource(flask_restful.Resource):  # type: ignore
 
     def get(self, classic: int, role_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int, int]], int]:  # pylint: disable=no-self-use
         """
-        Provides ratings by classic and role
+        Provides ELO ratings by classic and role
         EXPOSED
         """
 
@@ -1301,7 +1305,7 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
 
         # TODO improve this with real admin account
         if pseudo != 'Palpatine':
-            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update ELO data")
 
         try:
             elo_list = json.loads(elo_list_submitted)
@@ -1324,6 +1328,74 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'msg': "ELO update done"}
+        return data, 200
+
+
+@API.resource('/regularity_rating')
+class RegularityRessource(flask_restful.Resource):  # type: ignore
+    """ RegularityRessource """
+
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int]], int]:  # pylint: disable=no-self-use
+        """
+        Provides regularity ratings
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/regularity_rating - GET")
+
+        sql_executor = database.SqlExecutor()
+        ratings_list = ratings2.Rating2.list(sql_executor)
+        del sql_executor
+
+        return ratings_list, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        maintain
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/regularity_rating - POST - update regularity")
+
+        args = REGULARITY_UPDATE_PARSER.parse_args(strict=True)
+
+        regularity_list_submitted = args['regularity_list']
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update regularity data")
+
+        try:
+            regularity_list = json.loads(regularity_list_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert regularity table from json to text ?")
+
+        sql_executor = database.SqlExecutor()
+
+        # put the raw ratings
+        ratings2.Rating2.create_table(sql_executor)
+        for regularity in regularity_list:
+            rating = ratings2.Rating2(*regularity)
+            rating.update_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': "regularity update done"}
         return data, 200
 
 
@@ -1569,7 +1641,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
         event.delete_registrations(sql_executor)
 
         # delete image if present
-        event_image = event_images.EventImage(event_id, b'')
+        event_image = event_images.EventImage(int(event_id), b'')
         event_image.delete_database(sql_executor)
 
         # finally delete event
