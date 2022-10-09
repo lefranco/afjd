@@ -1656,7 +1656,6 @@ def update_regularity():
             games_results_dict = req_result['games_dict']
             regularity_information = html.DIV()
             regularity_list = elo.process_regularity(players_dict, games_results_dict, regularity_information)
-            alert(f"{regularity_list=}")
 
             if DOWNLOAD_LOG:
                 alert("Télechargement automatique des logs du calcul")

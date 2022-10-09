@@ -48,7 +48,7 @@ class Rating2:
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        sql_executor.execute("INSERT OR REPLACE INTO ratings2 (player_id, started_playing_days, finished_playing_days, activity_days, number_games) VALUES (?, ?, ?, ?, ?)", (self._player_id, self._finished_playing_days, self._activity_days, self._activity_days, self._number_games))
+        sql_executor.execute("INSERT OR REPLACE INTO ratings2 (player_id, started_playing_days, finished_playing_days, activity_days, number_games) VALUES (?, ?, ?, ?, ?)", (self._player_id, self._started_playing_days, self._finished_playing_days, self._activity_days, self._number_games))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """

@@ -379,24 +379,21 @@ def show_rating_regularity():
 
     def make_ratings_table():
 
-        def regularity():
-            pass
-
         # get data
         complete_rating_list = get_regularity_rating()
 
         # from raw data to displayable data (simpler than ELO here)
-        rating_list = [[r[0], 100, r[1], r[2], r[3], r[4]] for r in complete_rating_list]
+        rating_list = [[r[0], 0, r[1], r[1] / r[2] if r[2] else -1000, 100 * r[3] / (r[1] - r[2]) if r[2] != r[1] else -1000, r[4]] for r in complete_rating_list]
 
         ratings_table = html.TABLE()
 
         # the display order
-        fields = ['rank', 'player', 'regularity', 'first_day', 'last_day', 'activity_days', 'number']
+        fields = ['rank', 'player', 'regularity', 'seniority', 'modernity', 'continuity', 'number']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'rank': 'rang', 'player': 'joueur', 'regularity': 'régularité', 'first_day': 'jour début', 'last_day': 'jour fin', 'activity_days': 'jours actifs', 'number': 'nombre de parties'}[field]
+            field_fr = {'rank': 'rang', 'player': 'joueur', 'regularity': 'régularité', 'seniority': 'ancienneté', 'modernity': 'modernité', 'continuity': 'continuité', 'number': 'nombre de parties'}[field]
             col = html.TD(field_fr)
             thead <= col
         ratings_table <= thead
@@ -404,7 +401,7 @@ def show_rating_regularity():
         row = html.TR()
         for field in fields:
             buttons = html.DIV()
-            if field in ['player', 'regularity', 'first_day', 'last_day', 'activity_days', 'number']:
+            if field in ['player', 'regularity', 'seniority', 'modernity', 'continuity', 'number']:
 
                 # button for sorting
                 button = html.BUTTON("<>", Class='btn-menu')
@@ -418,17 +415,17 @@ def show_rating_regularity():
         sort_by = storage['SORT_BY_REG_RATINGS']
         reverse_needed = bool(storage['REVERSE_NEEDED_REG_RATINGS'] == 'True')
 
-        # 0 player_id / 1 regularity / 2 first_day/ 3 last_day / 4 activity_days / 5 number games
+        # 0 player_id / 1 regularity / 2 seniority/ 3 modernity / 4 continuity / 5 number games
 
         if sort_by == 'player':
             def key_function(r): return num2pseudo[r[0]].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'regularity':
             def key_function(r): return r[1]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        elif sort_by == 'first_day':
+        elif sort_by == 'seniority':
             def key_function(r): return r[2]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        elif sort_by == 'last_day':
+        elif sort_by == 'modernity':
             def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        elif sort_by == 'activity_days':
+        elif sort_by == 'continuity':
             def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'number':
             def key_function(r): return r[5]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
@@ -455,14 +452,14 @@ def show_rating_regularity():
                 if field == 'regularity':
                     value = rating[1]
 
-                if field == 'first_day':
+                if field == 'seniority':
                     value = rating[2]
 
-                if field == 'last_day':
-                    value = rating[3]
+                if field == 'modernity':
+                    value = round(rating[3], 2)
 
-                if field == 'activity_days':
-                    value = rating[4]
+                if field == 'continuity':
+                    value = f"{round(rating[4], 2)} %"
 
                 if field == 'number':
                     value = rating[5]
@@ -490,7 +487,9 @@ def show_rating_regularity():
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("La régularité est le produit du nombre de parties par le nombre de jours d'activités (A MIEUX EXPLIQUER).", Class='note')
+        MY_SUB_PANEL <= html.DIV("L'ancienneté est le nombre de jours écoulés depuis le début de la première partie jouée", Class='note')
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("La continuité est la proportion de jours actifs entre la première et la dernière partie", Class='note')
 
     def sort_by_callback(_, new_sort_by):
 
