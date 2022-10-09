@@ -217,7 +217,7 @@ def show_news():
     teaser = formatted_teaser(teaser_loaded) if teaser_loaded else "Aucun pour le moment."
     div_b5 <= teaser
 
-    div_b5_tip = html.SPAN("Plus de détail dans le menu 'classement'", Class='tooltiptext')
+    div_b5_tip = html.SPAN("Plus de détail dans le menu 'classements'", Class='tooltiptext')
     div_b5 <= div_b5_tip
     div_homepage <= div_b5
 

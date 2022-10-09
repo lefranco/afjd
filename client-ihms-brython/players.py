@@ -383,7 +383,24 @@ def show_rating_regularity():
         complete_rating_list = get_regularity_rating()
 
         # from raw data to displayable data (simpler than ELO here)
-        rating_list = [[r[0], 0, r[1], r[1] / r[2] if r[2] else -1000, 100 * r[3] / (r[1] - r[2]) if r[2] != r[1] else -1000, r[4]] for r in complete_rating_list]
+        rating_list = []
+        for player_id, started_playing_days, finished_playing_days, activity_days, number_games in complete_rating_list:
+
+            # for how long been playing (in weeks)
+            seniority = round(started_playing_days / 7)
+
+            # how recent is the activity - that is a ratio
+            modernity = round(started_playing_days / finished_playing_days, 2)
+
+            # how continuous (there must a few gaps as possible)
+            play_duration = max(started_playing_days - finished_playing_days, 0.5)
+            continuity = round(100 * max(activity_days, 0.5) / play_duration, 2)
+
+            # verdict - just a product
+            regularity = round(seniority * modernity * continuity * number_games / 1000, 2)
+
+            rating =  (player_id, regularity, seniority, modernity, continuity, number_games)
+            rating_list.append(rating)
 
         ratings_table = html.TABLE()
 
@@ -456,10 +473,10 @@ def show_rating_regularity():
                     value = rating[2]
 
                 if field == 'modernity':
-                    value = round(rating[3], 2)
+                    value = rating[3]
 
                 if field == 'continuity':
-                    value = f"{round(rating[4], 2)} %"
+                    value = f"{rating[4]} %"
 
                 if field == 'number':
                     value = rating[5]
@@ -483,13 +500,15 @@ def show_rating_regularity():
 
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par régularité")
-        MY_SUB_PANEL <= html.DIV("Ce classement est un aggrégation", Class='important')
+        MY_SUB_PANEL <= html.DIV("Ce classement une aggrégation par produit de ancienneté, modernité, contnuité et nombre de parties", Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("L'ancienneté est le nombre de jours écoulés depuis le début de la première partie jouée", Class='note')
+        MY_SUB_PANEL <= html.DIV("L'ancienneté est le nombre de jours écoulés depuis le début de la première partie jouée (pour favoriser les joueurs qui ont commencé il y a longtemps", Class='note')
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("La continuité est la proportion de jours actifs entre la première et la dernière partie", Class='note')
+        MY_SUB_PANEL <= html.DIV("La modernité est le rapport entre le nonombre de jour depuis le début de la première partie et le nombre de jours depuis la fin de la dernière partie (pour favoriser les joueurs qui jouen encore)", Class='note')
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("La continuité est la proportion de jours actifs (dans une partie en cours) entre le début de la première et la fin de la dernière partie (pour favoriser les joueurs qui jouent sans s'arrêter)", Class='note')
 
     def sort_by_callback(_, new_sort_by):
 
