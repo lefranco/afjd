@@ -89,10 +89,10 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     # 1 Parse all games
     # ------------------
 
-    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['time_stamp']):
+    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):
 
         # extract information
-        time_stamp = game_data['time_stamp']
+        game_start_time = game_data['start_time_stamp']
         game_scoring_dict = game_data['scoring']
         centers_number_dict = game_data['centers_number']
         game_players_dict = game_data['players']
@@ -106,7 +106,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
         # convert time
         before = time.time()
         if VERIFY:
-            time_creation = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+            time_creation = datetime.datetime.fromtimestamp(game_start_time, datetime.timezone.utc)
             time_creation_str = datetime.datetime.strftime(time_creation, "%d-%m-%Y %H:%M:%S")
         after = time.time()
         dating_calculation_time += (after - before)
@@ -394,3 +394,132 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     elo_information <= html.BR()
 
     return elo_raw_list, teaser_text
+
+
+def process_regularity(players_dict, games_results_dict, regularity_information):
+    """ process_regularity """
+
+    # this to know how long it takes
+    start_time = time.time()
+
+    # index is player_id
+    number_games_table = {}
+
+    # index is player_id
+    started_playing_table = {}
+
+    # index is player_id
+    finished_playing_table = {}
+
+    # index is player_id
+    sequences_list_table = {}
+
+    # index is player_id
+    activity_table = {}
+
+    # just set of players
+    players_set = set()
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    # ------------------
+    # 1 Parse all games
+    # ------------------
+
+    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):
+
+        # extract information
+        game_start_time = game_data['start_time_stamp']
+        game_end_time = game_data['end_time_stamp']
+        game_players_dict = game_data['players']
+        game_players = list(map(int, game_players_dict.keys()))
+
+        regularity_information <= f"{game_name=} {game_players=}"
+        regularity_information <= html.BR()
+
+        for player_id in game_players:
+
+            players_set.add(player_id)
+
+            # overall start
+            if player_id not in started_playing_table:
+                started_playing_table[player_id] = game_start_time
+            if game_start_time < started_playing_table[player_id]:
+                started_playing_table[player_id] = game_start_time
+
+            # overall end
+            if player_id not in finished_playing_table:
+                finished_playing_table[player_id] = game_end_time
+            if game_end_time > finished_playing_table[player_id]:
+                finished_playing_table[player_id] = game_end_time
+
+            # sequences
+            if player_id not in sequences_list_table:
+                sequences_list_table[player_id] = []
+            sequences_list_table[player_id].append([game_start_time, game_end_time])
+
+            #  how many games played
+            if player_id not in number_games_table:
+                number_games_table[player_id] = 0
+            number_games_table[player_id] += 1
+
+    # ------------------
+    # 2 Merge players intervals
+    # ------------------
+
+    for player_id in sequences_list_table:
+        # alias
+        intervals = sequences_list_table[player_id]
+        # sort
+        intervals.sort()
+        # use a stack
+        intervals_stacked = []
+        # insert first interval into stack
+        intervals_stacked.append(intervals[0])
+        for interval in intervals[1:]:
+            # Check for overlapping interval,
+            # if interval overlap
+            if intervals_stacked[-1][0] <= interval[0] <= intervals_stacked[-1][1]:
+                intervals_stacked[-1][1] = max(intervals_stacked[-1][1], interval[1])
+            else:
+                intervals_stacked.append(interval)
+        # output
+        sequences_list_table[player_id] = intervals_stacked
+
+    # ------------------
+    # 3 Measure active time
+    # ------------------
+    for player_id, intervals in sequences_list_table.items():
+        activity_table[player_id] = sum([(i[1] - i[0]) for i in intervals])
+
+    # ------------------
+    # 4 Make regularity_list (returned)
+    # ------------------
+
+    ref_time = time.time()
+
+    regularity_list = []
+
+    for player_id in players_set:
+
+        started_playing_days = (ref_time - started_playing_table[player_id]) // (24 * 3600)
+        finished_playing_days = (ref_time - finished_playing_table[player_id]) // (24 * 3600)
+        activity_days = activity_table[player_id] // (24 * 3600)
+        number_games = number_games_table[player_id]
+
+        regularity_element = [player_id, started_playing_days, finished_playing_days, activity_days, number_games]
+        regularity_list.append(regularity_element)
+
+        # to check
+        regularity_information <= f"{num2pseudo[player_id]} -> {number_games=} {started_playing_days=} {finished_playing_days=} {activity_days=}"
+        regularity_information <= html.BR()
+
+    # how long it took
+    done_time = time.time()
+    elapsed = done_time - start_time
+    regularity_information <= html.BR()
+    regularity_information <= f"Time elapsed : {elapsed}"
+    regularity_information <= html.BR()
+
+    return regularity_list
