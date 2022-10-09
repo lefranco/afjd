@@ -504,11 +504,13 @@ def show_rating_regularity():
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("L'ancienneté est le nombre de jours écoulés depuis le début de la première partie jouée (pour favoriser les joueurs qui ont commencé il y a longtemps", Class='note')
+        MY_SUB_PANEL <= html.DIV("L'ancienneté est le nombre de jours écoulés depuis le début de la première partie jouée (pour favoriser les joueurs qui ont commencé il y a longtemps)", Class='note')
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("La modernité est le rapport entre le nonombre de jour depuis le début de la première partie et le nombre de jours depuis la fin de la dernière partie (pour favoriser les joueurs qui jouen encore)", Class='note')
+        MY_SUB_PANEL <= html.DIV("La modernité est le rapport entre le nombre de jour depuis le début de la première partie et le nombre de jours depuis la fin de la dernière partie (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("La continuité est la proportion de jours actifs (dans une partie en cours) entre le début de la première et la fin de la dernière partie (pour favoriser les joueurs qui jouent sans s'arrêter)", Class='note')
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("Le nombre de parties se passe d'explications (pour favoriser les joueurs qui jouent le plus de parties)", Class='note')
 
     def sort_by_callback(_, new_sort_by):
 
