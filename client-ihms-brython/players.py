@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
+import math
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -390,27 +391,27 @@ def show_rating_regularity():
             seniority = round(started_playing_days / 7)
 
             # how recent is the activity - that is a ratio
-            modernity = round(started_playing_days / finished_playing_days, 2)
+            non_obsolesence = round(math.exp(- finished_playing_days / 365.2), 3)
 
             # how continuous (there must a few gaps as possible)
             play_duration = max(started_playing_days - finished_playing_days, 0.5)
             continuity = round(100 * max(activity_days, 0.5) / play_duration, 2)
 
             # verdict - just a product
-            regularity = round(seniority * modernity * continuity * number_games / 1000, 2)
+            regularity = round(seniority * non_obsolesence * continuity * number_games / 100, 2)
 
-            rating =  (player_id, regularity, seniority, modernity, continuity, number_games)
+            rating =  (player_id, regularity, seniority, non_obsolesence, continuity, number_games)
             rating_list.append(rating)
 
         ratings_table = html.TABLE()
 
         # the display order
-        fields = ['rank', 'player', 'regularity', 'seniority', 'modernity', 'continuity', 'number']
+        fields = ['rank', 'player', 'regularity', 'seniority', 'non_obsolesence', 'continuity', 'number']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'rank': 'rang', 'player': 'joueur', 'regularity': 'régularité', 'seniority': 'ancienneté', 'modernity': 'modernité', 'continuity': 'continuité', 'number': 'nombre de parties'}[field]
+            field_fr = {'rank': 'rang', 'player': 'joueur', 'regularity': 'régularité', 'seniority': 'ancienneté', 'non_obsolesence': 'non obsolesence', 'continuity': 'continuité', 'number': 'nombre de parties'}[field]
             col = html.TD(field_fr)
             thead <= col
         ratings_table <= thead
@@ -418,7 +419,7 @@ def show_rating_regularity():
         row = html.TR()
         for field in fields:
             buttons = html.DIV()
-            if field in ['player', 'regularity', 'seniority', 'modernity', 'continuity', 'number']:
+            if field in ['player', 'regularity', 'seniority', 'non_obsolesence', 'continuity', 'number']:
 
                 # button for sorting
                 button = html.BUTTON("<>", Class='btn-menu')
@@ -432,7 +433,7 @@ def show_rating_regularity():
         sort_by = storage['SORT_BY_REG_RATINGS']
         reverse_needed = bool(storage['REVERSE_NEEDED_REG_RATINGS'] == 'True')
 
-        # 0 player_id / 1 regularity / 2 seniority/ 3 modernity / 4 continuity / 5 number games
+        # 0 player_id / 1 regularity / 2 seniority/ 3 non_obsolesence / 4 continuity / 5 number games
 
         if sort_by == 'player':
             def key_function(r): return num2pseudo[r[0]].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
@@ -440,7 +441,7 @@ def show_rating_regularity():
             def key_function(r): return r[1]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'seniority':
             def key_function(r): return r[2]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        elif sort_by == 'modernity':
+        elif sort_by == 'non_obsolesence':
             def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'continuity':
             def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
@@ -472,7 +473,7 @@ def show_rating_regularity():
                 if field == 'seniority':
                     value = rating[2]
 
-                if field == 'modernity':
+                if field == 'non_obsolesence':
                     value = rating[3]
 
                 if field == 'continuity':
@@ -500,13 +501,13 @@ def show_rating_regularity():
 
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par régularité")
-        MY_SUB_PANEL <= html.DIV("Ce classement une aggrégation par produit de ancienneté, modernité, continuité et nombre de parties", Class='important')
+        MY_SUB_PANEL <= html.DIV("Ce classement une aggrégation par produit de ancienneté, non obsolesence, continuité et nombre de parties", Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("L'ancienneté est le nombre de semaines écoulées depuis le début de la première partie jouée (pour favoriser les joueurs qui ont commencé il y a longtemps)", Class='note')
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("La modernité est le rapport entre le nombre de jour depuis le début de la première partie et le nombre de jours depuis la fin de la dernière partie (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
+        MY_SUB_PANEL <= html.DIV("La non obsolecence est égale à l'exponentielle de moins le nombre d'années écoulées depuis la fin de la dernière partie jouée) (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("La continuité est la proportion de jours actifs (dans une partie en cours) entre le début de la première partie et la fin de la dernière partie (pour favoriser les joueurs qui jouent sans s'arrêter)", Class='note')
         MY_SUB_PANEL <= html.BR()
