@@ -130,14 +130,14 @@ legend{
 
 /* diplomacy messages and declarations */
 .text{
-    font-family: cursive;
+    font-family: serif;
 }
 .text_anonymous{
-    font-family: cursive;
+    font-family: serif;
     background-color: #EDA89E;
 }
 .synchro{
-    font-family: cursive;
+    font-family: serif;
     background-color: #98E4ED;
 }
 
