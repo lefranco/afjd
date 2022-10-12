@@ -424,7 +424,7 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
     for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):
 
         # extract information
-        last_advancememnt = game_data['last_advancement']
+        number_advancement_played = game_data['number_advancement_played']
         delays_number_dict = game_data['delays_number']
         # TODO dropouts_number_dict = game_data['dropouts_number']
         game_players_dict = game_data['players']
@@ -466,7 +466,7 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
             #  how many advancements played
             if player_id not in number_advancements_table:
                 number_advancements_table[player_id] = 0
-            number_advancements_table[player_id] += last_advancememnt
+            number_advancements_table[player_id] += number_advancement_played
 
         reliability_information <= html.BR()
 

@@ -4977,11 +4977,11 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             # get current_advancement
             game = games.Game.find_by_identifier(sql_executor, game_id)
             assert game is not None
-            last_advancement = game.current_advancement - 1
-            game_data['last_advancement'] = last_advancement
+            last_advancement_played = game.current_advancement - 1
+            game_data['number_advancement_played'] = game.current_advancement
 
             # get end date
-            transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement)
+            transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
             assert transition is not None
             end_time = transition.time_stamp
             game_data['end_time_stamp'] = transition.time_stamp
