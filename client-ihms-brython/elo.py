@@ -430,12 +430,19 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
         game_players_dict = game_data['players']
         game_players = list(map(int, game_players_dict.keys()))
 
-        reliability_information <= f"{game_name=} {game_players=}"
+        reliability_information <= f"{game_name=} {list(map(lambda n: num2pseudo[n], game_players))}"
         reliability_information <= html.BR()
 
         reliability_information <= "delays from this game: "
         for k, v in delays_number_dict.items():
-            reliability_information <= f"{k} -> {v} "
+            if int(k) in num2pseudo:
+                player_pseudo = num2pseudo[int(k)]
+                reliability_information <= f"{player_pseudo} "
+            else:
+                reliability_information <= f"({k}???) "
+            reliability_information <= f"-> {v} "
+            if int(k) not in game_players:
+                reliability_information <= "(outside) "
         reliability_information <= html.BR()
 
         for player_id in game_players:
@@ -460,6 +467,8 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
             if player_id not in number_advancements_table:
                 number_advancements_table[player_id] = 0
             number_advancements_table[player_id] += last_advancememnt
+
+        reliability_information <= html.BR()
 
     # ------------------
     # 4 Make reliability_list (returned)
@@ -529,7 +538,7 @@ def process_regularity(players_dict, games_results_dict, regularity_information)
         game_players_dict = game_data['players']
         game_players = list(map(int, game_players_dict.keys()))
 
-        regularity_information <= f"{game_name=} {game_players=}"
+        regularity_information <= f"{game_name=} {list(map(lambda n: num2pseudo[n], game_players))}"
         regularity_information <= html.BR()
 
         for player_id in game_players:
@@ -557,6 +566,8 @@ def process_regularity(players_dict, games_results_dict, regularity_information)
             if player_id not in number_games_table:
                 number_games_table[player_id] = 0
             number_games_table[player_id] += 1
+
+        regularity_information <= html.BR()
 
     # ------------------
     # 2 Merge players intervals
