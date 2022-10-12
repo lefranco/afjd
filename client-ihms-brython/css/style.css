@@ -20,6 +20,7 @@ a{
 a:visited{
     color: green;
 }
+
 .btn-menu {
     width: 100%;
     display: inline-block;
@@ -199,7 +200,6 @@ thead{
 fieldset{
     border: 0;
 }
-
 
 /* color of sea in diplomania map BBD9DC */
 
