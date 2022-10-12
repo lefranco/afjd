@@ -406,26 +406,23 @@ def show_rating_reliability():
 
         # from raw data to displayable data (simpler than ELO here)
         rating_list = []
-        for player_id, number_delays, number_dropouts, finished_playing_days, number_advancements in complete_rating_list:
-
-            # how recent is the activity - that is a ratio
-            non_obsolesence = round(math.exp(- finished_playing_days / 365.2), 3)
+        for player_id, number_delays, number_dropouts, number_advancements in complete_rating_list:
 
             # verdict - just a product
-            reliability = round((100 * (number_advancements - number_delays) / number_advancements) * non_obsolesence, 2)
+            reliability = round(100 * (number_advancements - number_delays) / number_advancements, 2)
 
-            rating = (player_id, reliability, number_delays, number_dropouts, non_obsolesence, number_advancements)
+            rating = (player_id, reliability, number_delays, number_dropouts, number_advancements)
             rating_list.append(rating)
 
         ratings_table = html.TABLE()
 
         # the display order
-        fields = ['rank', 'player', 'reliability', 'number_delays', 'number_dropouts', 'non_obsolesence', 'number']
+        fields = ['rank', 'player', 'reliability', 'number_delays', 'number_dropouts', 'number']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'rank': 'rang', 'player': 'joueur', 'reliability': 'fiabilité', 'number_delays': 'nombre de retards', 'number_dropouts': 'nombre d\'abandons', 'non_obsolesence': 'non obsolesence', 'number': 'nombre de tours joués'}[field]
+            field_fr = {'rank': 'rang', 'player': 'joueur', 'reliability': 'fiabilité', 'number_delays': 'nombre de retards', 'number_dropouts': 'nombre d\'abandons', 'number': 'nombre de tours joués'}[field]
             col = html.TD(field_fr)
             thead <= col
         ratings_table <= thead
@@ -433,7 +430,7 @@ def show_rating_reliability():
         row = html.TR()
         for field in fields:
             buttons = html.DIV()
-            if field in ['player', 'reliability', 'number_delays', 'number_dropouts', 'non_obsolesence', 'number']:
+            if field in ['player', 'reliability', 'number_delays', 'number_dropouts', 'number']:
 
                 # button for sorting
                 button = html.BUTTON("<>", Class='btn-menu')
@@ -457,10 +454,8 @@ def show_rating_reliability():
             def key_function(r): return r[2]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'number_dropouts':
             def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-        elif sort_by == 'non_obsolesence':
-            def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'number':
-            def key_function(r): return r[5]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+            def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
         rank = 1
 
@@ -490,11 +485,8 @@ def show_rating_reliability():
                 if field == 'number_dropouts':
                     value = rating[3]
 
-                if field == 'non_obsolesence':
-                    value = rating[4]
-
                 if field == 'number':
-                    value = rating[5]
+                    value = rating[4]
 
                 col = html.TD(value)
                 if colour is not None:
@@ -515,17 +507,10 @@ def show_rating_reliability():
 
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par fiabilité")
-        MY_SUB_PANEL <= html.DIV("Ce classement est un ratio du nombre de tours joués moins le nombre de retards (le nombre d'abandon n\'est pas encore calculable) par rapport au nombre de tours joués atténué par la non obsolence", Class='important')
+        MY_SUB_PANEL <= html.DIV("Ce classement est un ratio du nombre de tours joués moins le nombre de retards (le nombre d'abandon n\'est pas encore calculable) par rapport au nombre de tours joués", Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Le nombre de retards se passe d'explications", Class='note')
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Le nombre d'abandons se passe d'explications", Class='note')
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("La non obsolecence est égale à l'exponentielle de moins le nombre d'années écoulées depuis la fin de la dernière partie jouée (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Le nombre de tours joués se passe d'explications", Class='note')
 
     def sort_by_callback(_, new_sort_by):
 

@@ -1335,6 +1335,74 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/reliability_rating')
+class ReliabilityRessource(flask_restful.Resource):  # type: ignore
+    """ ReliabilityRessource """
+
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int]], int]:  # pylint: disable=no-self-use
+        """
+        Provides reliability ratings
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/reliability_rating - GET")
+
+        sql_executor = database.SqlExecutor()
+        ratings_list = ratings3.Rating3.list(sql_executor)
+        del sql_executor
+
+        return ratings_list, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        maintain
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/reliability_rating - POST - update regularity")
+
+        args = RELIABILITY_UPDATE_PARSER.parse_args(strict=True)
+
+        reliability_list_submitted = args['reliability_list']
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update reliability data")
+
+        try:
+            reliability_list = json.loads(reliability_list_submitted)
+        except json.JSONDecodeError:
+            flask_restful.abort(400, msg="Did you convert reliability table from json to text ?")
+
+        sql_executor = database.SqlExecutor()
+
+        # put the raw ratings
+        ratings3.Rating3.create_table(sql_executor)
+        for reliability in reliability_list:
+            rating = ratings3.Rating3(*reliability)
+            rating.update_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': "reliability update done"}
+        return data, 200
+
+
 @API.resource('/regularity_rating')
 class RegularityRessource(flask_restful.Resource):  # type: ignore
     """ RegularityRessource """
@@ -1400,74 +1468,6 @@ class RegularityRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'msg': "regularity update done"}
-        return data, 200
-
-
-@API.resource('/reliability_rating')
-class ReliabilityRessource(flask_restful.Resource):  # type: ignore
-    """ ReliabilityRessource """
-
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int]], int]:  # pylint: disable=no-self-use
-        """
-        Provides reliability ratings
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/reliability_rating - GET")
-
-        sql_executor = database.SqlExecutor()
-        ratings_list = ratings3.Rating3.list(sql_executor)
-        del sql_executor
-
-        return ratings_list, 200
-
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """
-        maintain
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/reliability_rating - POST - update regularity")
-
-        args = RELIABILITY_UPDATE_PARSER.parse_args(strict=True)
-
-        reliability_list_submitted = args['reliability_list']
-
-        # check authentication from user server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        pseudo = req_result.json()['logged_in_as']
-
-        # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
-            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update reliability data")
-
-        try:
-            reliability_list = json.loads(reliability_list_submitted)
-        except json.JSONDecodeError:
-            flask_restful.abort(400, msg="Did you convert reliability table from json to text ?")
-
-        sql_executor = database.SqlExecutor()
-
-        # put the raw ratings
-        ratings3.Rating3.create_table(sql_executor)
-        for reliability in reliability_list:
-            rating = ratings3.Rating3(*reliability)
-            rating.update_database(sql_executor)
-
-        sql_executor.commit()
-        del sql_executor
-
-        data = {'msg': "reliability update done"}
         return data, 200
 
 
