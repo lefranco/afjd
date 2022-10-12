@@ -515,9 +515,13 @@ def show_rating_reliability():
 
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par fiabilité")
-        MY_SUB_PANEL <= html.DIV("Ce classement est un ration du nombre d'incidents par rapport au nombre de tours joués atténué par la non obsolence", Class='important')
+        MY_SUB_PANEL <= html.DIV("Ce classement est un ratio du nombre de tours joués moins le nombre de retards (le nombre d'abandon n\'est pas encore calculable) par rapport au nombre de tours joués atténué par la non obsolence", Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("Le nombre de retards se passe d'explications", Class='note')
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("Le nombre d'abandons se passe d'explications", Class='note')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("La non obsolecence est égale à l'exponentielle de moins le nombre d'années écoulées depuis la fin de la dernière partie jouée (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
         MY_SUB_PANEL <= html.BR()
