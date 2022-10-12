@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier les paramètres', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les créateurs', 'éditer les modérateurs', 'mise à jour du elo', 'mise à jour de la régularité', 'changer responsable événement', 'maintenance']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier les paramètres', 'rectifier la position', 'envoyer un courriel', 'dernières connexions', 'connexions manquées', 'éditer les créateurs', 'éditer les modérateurs', 'mise à jour du elo', 'mise à jour de la fiabilité', 'mise à jour de la régularité', 'changer responsable événement', 'maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1584,6 +1584,140 @@ def update_elo():
     MY_SUB_PANEL <= form
 
 
+def update_reliability():
+    """ update_reliability """
+
+    def cancel_update_database_callback(_, dialog):
+        """ cancel_update_database_callback """
+        dialog.close()
+
+    def update_database_callback(_, dialog, reliability_list):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la mise à jour de la fiabilité : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la mise à jour de la fiabilité : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La mise à jour de la fiabilité a été réalisée : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            update_reliability()
+
+        dialog.close()
+
+        reliability_list_json = json.dumps(reliability_list)
+
+        json_dict = {
+            'reliability_list': reliability_list_json,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/reliability_rating"
+
+        # update database : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def update_database_callback_confirm(_, reliability_list):
+        """ update_database_callback_confirm """
+
+        dialog = Dialog("On met à jour la base de données ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog, rl=reliability_list: update_database_callback(e, d, rl))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
+
+    def extract_reliability_data_callback(_):
+        """ extract_reliability_data_callback """
+
+        def reply_callback(req):
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au calcul de la fiabilité : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au calcul de la fiabilité : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                update_reliability()
+
+                return
+
+            games_results_dict = req_result['games_dict']
+            reliability_information = html.DIV()
+            reliability_list = elo.process_reliability(players_dict, games_results_dict, reliability_information)
+
+            if DOWNLOAD_LOG:
+                alert("Télechargement automatique des logs du calcul")
+
+                # exportation of logs
+                log_html = reliability_information.innerHTML
+
+                # needed too for some reason
+                MY_SUB_PANEL <= html.A(id='download_link')
+
+                # perform actual exportation
+                text_file_as_blob = window.Blob.new([log_html], {'type': 'text/plain'})
+                download_link = document['download_link']
+                now = int(time.time())
+                download_link.download = f"diplomania_reliability_{now}.html"
+                download_link.href = window.URL.createObjectURL(text_file_as_blob)
+                document['download_link'].click()
+
+            # display result
+            MY_SUB_PANEL.clear()
+            MY_SUB_PANEL <= reliability_information
+
+            # offer update
+            update_database_callback_confirm(None, reliability_list)
+
+        json_dict = {
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/extract_elo_data"
+
+        # extract_elo_data : need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    MY_SUB_PANEL <= html.H3("Mettre à jour la fiabilité")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    form = html.FORM()
+
+    # ---
+
+    input_maintain = html.INPUT(type="submit", value="extraire et calculer")
+    input_maintain.bind("click", extract_reliability_data_callback)
+    form <= input_maintain
+
+    MY_SUB_PANEL <= form
+
+
 def update_regularity():
     """ update_regularity """
 
@@ -1912,6 +2046,8 @@ def load_option(_, item_name):
         edit_creators()
     if item_name == 'mise à jour du elo':
         update_elo()
+    if item_name == 'mise à jour de la fiabilité':
+        update_reliability()
     if item_name == 'mise à jour de la régularité':
         update_regularity()
     if item_name == 'changer responsable événement':

@@ -396,6 +396,88 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     return elo_raw_list, teaser_text
 
 
+def process_reliability(players_dict, games_results_dict, reliability_information):
+    """ process_reliability """
+
+    # this to know how long it takes
+    start_time = time.time()
+
+    # index is player_id
+    number_advancements_table = {}
+
+    # index is player_id
+    finished_playing_table = {}
+
+    # just set of players
+    players_set = set()
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    # ------------------
+    # 1 Parse all games
+    # ------------------
+
+    for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):
+
+        # extract information
+        game_end_time = game_data['end_time_stamp']
+        last_advancememnt = game_data['last_advancement']
+        game_players_dict = game_data['players']
+        game_players = list(map(int, game_players_dict.keys()))
+
+        reliability_information <= f"{game_name=} {game_players=}"
+        reliability_information <= html.BR()
+
+        for player_id in game_players:
+
+            players_set.add(player_id)
+
+            # overall end
+            if player_id not in finished_playing_table:
+                finished_playing_table[player_id] = game_end_time
+            if game_end_time > finished_playing_table[player_id]:
+                finished_playing_table[player_id] = game_end_time
+
+            #  how many advancements played
+            if player_id not in number_advancements_table:
+                number_advancements_table[player_id] = 0
+            number_advancements_table[player_id] += last_advancememnt
+
+    # ------------------
+    # 4 Make reliability_list (returned)
+    # ------------------
+
+    ref_time = time.time()
+
+    reliability_list = []
+
+    for player_id in players_set:
+
+        finished_playing_days = (ref_time - finished_playing_table[player_id]) // (24 * 3600)
+        number_advancements = number_advancements_table[player_id]
+
+        # TODO
+        number_delays = 0
+        number_dropouts = 0
+
+        reliability_element = [player_id, number_delays, number_dropouts, finished_playing_days, number_advancements]
+        reliability_list.append(reliability_element)
+
+        # to check
+        reliability_information <= f"{num2pseudo[player_id]} -> {number_advancements=} {finished_playing_days=}"
+        reliability_information <= html.BR()
+
+    # how long it took
+    done_time = time.time()
+    elapsed = done_time - start_time
+    reliability_information <= html.BR()
+    reliability_information <= f"Time elapsed : {elapsed}"
+    reliability_information <= html.BR()
+
+    return reliability_list
+
+
 def process_regularity(players_dict, games_results_dict, regularity_information):
     """ process_regularity """
 
