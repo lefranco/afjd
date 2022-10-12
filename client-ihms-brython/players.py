@@ -16,7 +16,7 @@ import mapping
 DEFAULT_ELO = 1500
 
 
-OPTIONS = ['classement performance', 'classement fiabilité', 'classement régularité', 'liste inscrits', 'liste joueurs', 'liste arbitres', 'liste oisifs', 'liste remplaçants', 'liste modérateurs', 'liste créateurs', 'courriels non confirmés']
+OPTIONS = ['classement performance', 'classement fiabilité', 'classement régularité', 'liste inscrits', 'liste joueurs', 'liste arbitres', 'groupe remplaçants', 'groupe modérateurs', 'groupe créateurs', 'comptes oisifs', 'courriels non confirmés']
 
 
 def get_detailed_elo_rating(classic, role_id):
@@ -893,74 +893,6 @@ def show_game_masters_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} arbitres")
 
 
-def show_idle_data():
-    """ show_idle_data """
-
-    # get the games
-    games_dict = common.get_games_data()
-    if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
-        return
-
-    players_dict = common.get_players_data()
-
-    if not players_dict:
-        alert("Erreur chargement dictionnaire joueurs")
-        return
-
-    idle_set = set()
-    for player_data in players_dict.values():
-        player = player_data['pseudo']
-        idle_set.add(player)
-
-    # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
-    if not allocations_data:
-        alert("Erreur chargement allocations")
-        return
-
-    players_alloc = allocations_data['players_dict']
-    for player_id, _ in players_alloc.items():
-        player = players_dict[str(player_id)]['pseudo']
-        if player in idle_set:
-            idle_set.remove(player)
-
-    masters_alloc = allocations_data['game_masters_dict']
-    for player_id, _ in masters_alloc.items():
-        player = players_dict[str(player_id)]['pseudo']
-        if player in idle_set:
-            idle_set.remove(player)
-
-    idle_table = html.TABLE()
-
-    fields = ['player']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'player': 'joueur'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    idle_table <= thead
-
-    count = 0
-    for player in sorted(idle_set, key=lambda p: p.upper()):
-        row = html.TR()
-        for field in fields:
-            if field == 'player':
-                value = player
-            col = html.TD(value)
-            row <= col
-
-        idle_table <= row
-        count += 1
-
-    MY_SUB_PANEL <= html.H3("Les oisifs")
-    MY_SUB_PANEL <= idle_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
-    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
-
-
 def show_replacement_data():
     """ show_replacement_data """
 
@@ -1096,6 +1028,76 @@ def show_creators():
     MY_SUB_PANEL <= creators_table
 
 
+def show_idle_data():
+    """ show_idle_data """
+
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    idle_set = set()
+    for player_data in players_dict.values():
+        player = player_data['pseudo']
+        idle_set.add(player)
+
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
+    players_alloc = allocations_data['players_dict']
+    for player_id, _ in players_alloc.items():
+        player = players_dict[str(player_id)]['pseudo']
+        if player in idle_set:
+            idle_set.remove(player)
+
+    masters_alloc = allocations_data['game_masters_dict']
+    for player_id, _ in masters_alloc.items():
+        player = players_dict[str(player_id)]['pseudo']
+        if player in idle_set:
+            idle_set.remove(player)
+
+    idle_table = html.TABLE()
+
+    fields = ['player']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'player': 'joueur'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    idle_table <= thead
+
+    pseudo2id = {v['pseudo']: int(k) for k, v in players_dict.items()}
+
+    count = 0
+    for player in sorted(idle_set, key=lambda p: pseudo2id[p]):
+        row = html.TR()
+        for field in fields:
+            if field == 'player':
+                value = player
+            col = html.TD(value)
+            row <= col
+
+        idle_table <= row
+        count += 1
+
+    MY_SUB_PANEL <= html.H3("Les oisifs")
+    MY_SUB_PANEL <= idle_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
+    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
+
+
 def show_non_confirmed_data():
     """ show_non_confirmed_data """
 
@@ -1171,14 +1173,14 @@ def load_option(_, item_name):
         show_players_data()
     if item_name == 'liste arbitres':
         show_game_masters_data()
-    if item_name == 'liste oisifs':
-        show_idle_data()
-    if item_name == 'liste remplaçants':
+    if item_name == 'groupe remplaçants':
         show_replacement_data()
-    if item_name == 'liste modérateurs':
+    if item_name == 'groupe modérateurs':
         show_moderators()
-    if item_name == 'liste créateurs':
+    if item_name == 'groupe créateurs':
         show_creators()
+    if item_name == 'comptes oisifs':
+        show_idle_data()
     if item_name == 'courriels non confirmés':
         show_non_confirmed_data()
 
