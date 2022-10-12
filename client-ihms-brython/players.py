@@ -519,7 +519,7 @@ def show_rating_reliability():
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("La non obsolecence est égale à l'exponentielle de moins le nombre d'années écoulées depuis la fin de la dernière partie jouée) (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
+        MY_SUB_PANEL <= html.DIV("La non obsolecence est égale à l'exponentielle de moins le nombre d'années écoulées depuis la fin de la dernière partie jouée (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("Le nombre de tours joués se passe d'explications", Class='note')
 
@@ -689,7 +689,7 @@ def show_rating_regularity():
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("L'ancienneté est le nombre de semaines écoulées depuis le début de la première partie jouée (pour favoriser les joueurs qui ont commencé il y a longtemps)", Class='note')
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("La non obsolecence est égale à l'exponentielle de moins le nombre d'années écoulées depuis la fin de la dernière partie jouée) (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
+        MY_SUB_PANEL <= html.DIV("La non obsolecence est égale à l'exponentielle de moins le nombre d'années écoulées depuis la fin de la dernière partie jouée (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("La continuité est la proportion de jours actifs (dans une partie en cours) entre le début de la première partie et la fin de la dernière partie (pour favoriser les joueurs qui jouent sans s'arrêter)", Class='note')
         MY_SUB_PANEL <= html.BR()
