@@ -409,7 +409,7 @@ def show_rating_reliability():
         for player_id, number_delays, number_dropouts, number_advancements in complete_rating_list:
 
             # verdict - just a product
-            reliability = round(100 * (number_advancements - number_delays) / number_advancements, 2)
+            reliability = round(100 * (number_advancements - number_delays) / number_advancements, 3)
 
             rating = (player_id, reliability, number_delays, number_dropouts, number_advancements)
             rating_list.append(rating)
