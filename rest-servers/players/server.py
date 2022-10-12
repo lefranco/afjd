@@ -1339,7 +1339,7 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
 class RegularityRessource(flask_restful.Resource):  # type: ignore
     """ RegularityRessource """
 
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int]], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int]], int]:  # pylint: disable=no-self-use
         """
         Provides regularity ratings
         EXPOSED
@@ -1407,7 +1407,7 @@ class RegularityRessource(flask_restful.Resource):  # type: ignore
 class ReliabilityRessource(flask_restful.Resource):  # type: ignore
     """ ReliabilityRessource """
 
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int]], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int]], int]:  # pylint: disable=no-self-use
         """
         Provides reliability ratings
         EXPOSED

@@ -27,7 +27,7 @@ class Rating3:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS ratings3")
-        sql_executor.execute("CREATE TABLE ratings3 (player_id INTEGER, started_playing_days INTEGER, finished_playing_days INTEGER, activity_days INTEGER, number_games INTEGER)")
+        sql_executor.execute("CREATE TABLE ratings3 (player_id INTEGER, number_delays INTEGER, number_dropouts INTEGER, finished_playing_days INTEGER, number_advancements INTEGER)")
 
     def __init__(self, player_id: int, number_delays: int, number_dropouts: int, finished_playing_days: int, number_advancements: int) -> None:
 
