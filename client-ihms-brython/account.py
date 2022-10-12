@@ -449,7 +449,7 @@ def validate_email():
     form <= html.BR()
 
     fieldset = html.FIELDSET()
-    legend_confirmation_code = html.LEGEND("code de confirmation")
+    legend_confirmation_code = html.LEGEND("code de confirmation", title="Le code reçu par courriel")
     fieldset <= legend_confirmation_code
     input_confirmation_code = html.INPUT(type="number", value="", required=True)
     fieldset <= input_confirmation_code
