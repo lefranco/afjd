@@ -5095,7 +5095,7 @@ def show_events_in_game():
 
     game_incidents_table = html.TABLE()
 
-    fields = ['flag', 'role', 'season', 'duration', 'date']
+    fields = ['flag', 'role', 'pseudo', 'season', 'duration', 'date']
 
     if ROLE_ID == 0:
         fields.extend(['remove'])
@@ -5103,10 +5103,12 @@ def show_events_in_game():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'season': 'saison', 'duration': 'durée', 'date': 'date', 'remove': 'supprimer'}[field]
+        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'pseudo': 'pseudo', 'season': 'saison', 'duration': 'durée', 'date': 'date', 'remove': 'supprimer'}[field]
         col = html.TD(field_fr)
         thead <= col
     game_incidents_table <= thead
+
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
     for role_id, advancement, player_id, duration, date_incident in sorted(game_incidents, key=lambda i: i[4]):
 
@@ -5127,6 +5129,12 @@ def show_events_in_game():
         role_name = VARIANT_DATA.name_table[role]
 
         col = html.TD(role_name)
+        row <= col
+
+        # pseudo
+        col = html.TD()
+        if player_id is not None:
+            col <= id2pseudo[player_id]
         row <= col
 
         # season
@@ -5166,6 +5174,8 @@ def show_events_in_game():
     count = {}
 
     for role_id, advancement, player_id, duration, date_incident in game_incidents:
+        if player_id is not None:
+            continue
         if role_id not in count:
             count[role_id] = []
         count[role_id].append(duration)
@@ -5215,7 +5225,7 @@ def show_events_in_game():
         MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) ont réalisé la transition 'pas d'accord -> 'd'accord pour résoudre' après la date limite", Class='note')
         MY_SUB_PANEL <= html.BR()
 
-        MY_SUB_PANEL <= html.DIV("Les retards des joueurs qui depuis ont été remplacés apparaissent", Class='note')
+        MY_SUB_PANEL <= html.DIV("Seuls les pseudos de joueurs en retard qui depuis ont été remplacés apparaissent (ces retards ne sont pas comptés dans le récapitulatif)", Class='note')
         MY_SUB_PANEL <= html.BR()
 
         MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes).  Un retard de 1 par exemple signifie un retard entre 1 seconde et 59 minutes, 59 secondes.", Class='note')
