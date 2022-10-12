@@ -409,9 +409,6 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
     number_dropouts_table = {}
 
     # index is player_id
-    finished_playing_table = {}
-
-    # index is player_id
     number_advancements_table = {}
     # just set of players
 
@@ -427,10 +424,9 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
     for game_name, game_data in sorted(games_results_dict.items(), key=lambda i: i[1]['start_time_stamp']):
 
         # extract information
-        game_end_time = game_data['end_time_stamp']
         last_advancememnt = game_data['last_advancement']
         delays_number_dict = game_data['delays_number']
-        dropouts_number_dict = game_data['dropouts_number']
+        # TODO dropouts_number_dict = game_data['dropouts_number']
         game_players_dict = game_data['players']
         game_players = list(map(int, game_players_dict.keys()))
 
@@ -445,12 +441,6 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
         for player_id in game_players:
 
             players_set.add(player_id)
-
-            # overall end
-            if player_id not in finished_playing_table:
-                finished_playing_table[player_id] = game_end_time
-            if game_end_time > finished_playing_table[player_id]:
-                finished_playing_table[player_id] = game_end_time
 
             #  how many delays
             if player_id not in number_delays_table:
@@ -475,8 +465,6 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
     # 4 Make reliability_list (returned)
     # ------------------
 
-    ref_time = time.time()
-
     reliability_list = []
 
     for player_id in players_set:
@@ -484,13 +472,12 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
         number_delays = number_delays_table[player_id]
         number_dropouts = number_dropouts_table[player_id]
         number_advancements = number_advancements_table[player_id]
-        finished_playing_days = (ref_time - finished_playing_table[player_id]) // (24 * 3600)
 
-        reliability_element = [player_id, number_delays, number_dropouts, finished_playing_days, number_advancements]
+        reliability_element = [player_id, number_delays, number_dropouts, number_advancements]
         reliability_list.append(reliability_element)
 
         # to check
-        reliability_information <= f"{num2pseudo[player_id]} -> {number_delays=} {number_dropouts=} {finished_playing_days=} {number_advancements=} "
+        reliability_information <= f"{num2pseudo[player_id]} -> {number_delays=} {number_dropouts=} {number_advancements=} "
         reliability_information <= html.BR()
 
     # how long it took
