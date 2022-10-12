@@ -4995,6 +4995,17 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             centers_number = {o: len([oo for oo in game_ownerships if oo[2] == o]) for o in owners}
             game_data['centers_number'] = centers_number
 
+            # get delays
+            game_incidents = incidents.Incident.list_by_game_id(sql_executor, game_id)
+            delayers = {d[3] for d in game_incidents}
+            delays_number = {d: len([dd for dd in game_incidents if dd[3] == d]) for d in delayers}
+            game_data['delays_number'] = delays_number
+
+            # get dropouts
+            # TODO
+            dropouts_number = {}
+            game_data['dropouts_number'] = dropouts_number
+
             games_dict[game_name] = game_data
 
         del sql_executor

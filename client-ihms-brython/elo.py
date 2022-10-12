@@ -403,12 +403,18 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
     start_time = time.time()
 
     # index is player_id
-    number_advancements_table = {}
+    number_delays_table = {}
+
+    # index is player_id
+    number_dropouts_table = {}
 
     # index is player_id
     finished_playing_table = {}
 
+    # index is player_id
+    number_advancements_table = {}
     # just set of players
+
     players_set = set()
 
     # pseudo from number
@@ -423,10 +429,17 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
         # extract information
         game_end_time = game_data['end_time_stamp']
         last_advancememnt = game_data['last_advancement']
+        delays_number_dict = game_data['delays_number']
+        dropouts_number_dict = game_data['dropouts_number']
         game_players_dict = game_data['players']
         game_players = list(map(int, game_players_dict.keys()))
 
         reliability_information <= f"{game_name=} {game_players=}"
+        reliability_information <= html.BR()
+
+        reliability_information <= "delays from this game: "
+        for k, v in delays_number_dict.items():
+            reliability_information <= f"{k} -> {v} "
         reliability_information <= html.BR()
 
         for player_id in game_players:
@@ -438,6 +451,20 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
                 finished_playing_table[player_id] = game_end_time
             if game_end_time > finished_playing_table[player_id]:
                 finished_playing_table[player_id] = game_end_time
+
+            #  how many delays
+            if player_id not in number_delays_table:
+                number_delays_table[player_id] = 0
+            if str(player_id) in delays_number_dict:
+                number_delays = delays_number_dict[str(player_id)]
+                number_delays_table[player_id] += number_delays
+
+            #  how many dropouts
+            if player_id not in number_dropouts_table:
+                number_dropouts_table[player_id] = 0
+            # TODO
+            number_dropouts = 0
+            number_dropouts_table[int(player_id)] += number_dropouts
 
             #  how many advancements played
             if player_id not in number_advancements_table:
@@ -454,18 +481,16 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
 
     for player_id in players_set:
 
-        finished_playing_days = (ref_time - finished_playing_table[player_id]) // (24 * 3600)
+        number_delays = number_delays_table[player_id]
+        number_dropouts = number_dropouts_table[player_id]
         number_advancements = number_advancements_table[player_id]
-
-        # TODO
-        number_delays = 0
-        number_dropouts = 0
+        finished_playing_days = (ref_time - finished_playing_table[player_id]) // (24 * 3600)
 
         reliability_element = [player_id, number_delays, number_dropouts, finished_playing_days, number_advancements]
         reliability_list.append(reliability_element)
 
         # to check
-        reliability_information <= f"{num2pseudo[player_id]} -> {number_advancements=} {finished_playing_days=}"
+        reliability_information <= f"{num2pseudo[player_id]} -> {number_delays=} {number_dropouts=} {finished_playing_days=} {number_advancements=} "
         reliability_information <= html.BR()
 
     # how long it took
