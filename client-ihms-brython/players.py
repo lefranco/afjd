@@ -79,6 +79,36 @@ def get_global_elo_rating(classic):
     return list(rating_list)
 
 
+def get_reliability_rating():
+    """ get_reliability_rating """
+
+    rating_list = None
+
+    def reply_callback(req):
+        nonlocal rating_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération du classement fiabilité : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération du classement fiabilité : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        rating_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/reliability_rating"
+
+    # getting rating list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return list(rating_list)
+
+
 def get_regularity_rating():
     """ get_regularity_rating """
 
@@ -369,10 +399,162 @@ def show_rating_performance(classic, role_id):
 def show_rating_reliability():
     """ show_rating_reliability """
 
-    MY_SUB_PANEL <= html.H3("Le classement sur la fiabilité")
-    MY_SUB_PANEL <= html.DIV("Ce classement prend en compte le nombre de retards et d'abandons sur toutes les parties terminées", Class='important')
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV("Pas implémenté pour le moment")
+    def make_ratings_table():
+
+        # get data
+        complete_rating_list = get_reliability_rating()
+
+        # from raw data to displayable data (simpler than ELO here)
+        rating_list = []
+        for player_id, number_delays, number_dropouts, finished_playing_days, number_advancements in complete_rating_list:
+
+            # how recent is the activity - that is a ratio
+            non_obsolesence = round(math.exp(- finished_playing_days / 365.2), 3)
+
+            # verdict - just a product
+            reliability = round((100 * (number_advancements - number_delays) / number_advancements) * non_obsolesence, 2)
+
+            rating = (player_id, reliability, number_delays, number_dropouts, non_obsolesence, number_advancements)
+            rating_list.append(rating)
+
+        ratings_table = html.TABLE()
+
+        # the display order
+        fields = ['rank', 'player', 'reliability', 'number_delays', 'number_dropouts', 'non_obsolesence', 'number']
+
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'rank': 'rang', 'player': 'joueur', 'reliability': 'fiabilité', 'number_delays': 'nombre de retards', 'number_dropouts': 'nombre d\'abandons', 'non_obsolesence': 'non obsolesence', 'number': 'nombre de tours joués'}[field]
+            col = html.TD(field_fr)
+            thead <= col
+        ratings_table <= thead
+
+        row = html.TR()
+        for field in fields:
+            buttons = html.DIV()
+            if field in ['player', 'reliability', 'number_delays', 'number_dropouts', 'non_obsolesence', 'number']:
+
+                # button for sorting
+                button = html.BUTTON("<>", Class='btn-menu')
+                button.bind("click", lambda e, f=field: sort_by_callback(e, f))
+                buttons <= button
+
+            col = html.TD(buttons)
+            row <= col
+        ratings_table <= row
+
+        sort_by = storage['SORT_BY_REL_RATINGS']
+        reverse_needed = bool(storage['REVERSE_NEEDED_REL_RATINGS'] == 'True')
+
+        # 0 player_id / 1 reliability / 2 number_delays/ 3 number_dropouts / 4 non_obsolesence / 5 number advancements
+
+        if sort_by == 'player':
+            def key_function(r): return num2pseudo[r[0]].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'reliability':
+            def key_function(r): return r[1]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'number_delays':
+            def key_function(r): return r[2]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'number_dropouts':
+            def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'non_obsolesence':
+            def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        elif sort_by == 'number':
+            def key_function(r): return r[5]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+
+        rank = 1
+
+        for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
+
+            player = num2pseudo[rating[0]]
+            if player == pseudo:
+                colour = config.MY_RATING
+            else:
+                colour = None
+
+            row = html.TR()
+            for field in fields:
+
+                if field == 'rank':
+                    value = rank
+
+                if field == 'player':
+                    value = player
+
+                if field == 'reliability':
+                    value = f"{rating[1]} %"
+
+                if field == 'number_delays':
+                    value = rating[2]
+
+                if field == 'number_dropouts':
+                    value = rating[3]
+
+                if field == 'non_obsolesence':
+                    value = rating[4]
+
+                if field == 'number':
+                    value = rating[5]
+
+                col = html.TD(value)
+                if colour is not None:
+                    col.style = {
+                        'background-color': colour
+                    }
+
+                row <= col
+
+            ratings_table <= row
+            rank += 1
+
+        return ratings_table
+
+    def refresh():
+
+        ratings_table = make_ratings_table()
+
+        MY_SUB_PANEL.clear()
+        MY_SUB_PANEL <= html.H3("Le classement par fiabilité")
+        MY_SUB_PANEL <= html.DIV("Ce classement est un ration du nombre d'incidents par rapport au nombre de tours joués atténué par la non obsolence", Class='important')
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= ratings_table
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("La non obsolecence est égale à l'exponentielle de moins le nombre d'années écoulées depuis la fin de la dernière partie jouée) (pour favoriser les joueurs qui jouent encore maintenant)", Class='note')
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.DIV("Le nombre de tours joués se passe d'explications", Class='note')
+
+    def sort_by_callback(_, new_sort_by):
+
+        # if same sort criterion : inverse order otherwise back to normal order
+        if new_sort_by is not None:
+            if new_sort_by != storage['SORT_BY_REL_RATINGS']:
+                storage['SORT_BY_REL_RATINGS'] = new_sort_by
+                storage['REVERSE_NEEDED_REL_RATINGS'] = str(True)
+            else:
+                storage['REVERSE_NEEDED_REL_RATINGS'] = str(not bool(storage['REVERSE_NEEDED_REL_RATINGS'] == 'True'))
+
+        refresh()
+
+    if 'PSEUDO' in storage:
+        pseudo = storage['PSEUDO']
+    else:
+        pseudo = None
+
+    players_dict = common.get_players()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    # default
+    if 'SORT_BY_REL_RATINGS' not in storage:
+        storage['SORT_BY_REL_RATINGS'] = 'reliability'
+    if 'REVERSE_NEEDED_REL_RATINGS' not in storage:
+        storage['REVERSE_NEEDED_REL_RATINGS'] = str(True)
+
+    sort_by_callback(None, None)
 
 
 def show_rating_regularity():
@@ -400,7 +582,7 @@ def show_rating_regularity():
             # verdict - just a product
             regularity = round(seniority * non_obsolesence * continuity * number_games / 100, 2)
 
-            rating =  (player_id, regularity, seniority, non_obsolesence, continuity, number_games)
+            rating = (player_id, regularity, seniority, non_obsolesence, continuity, number_games)
             rating_list.append(rating)
 
         ratings_table = html.TABLE()
