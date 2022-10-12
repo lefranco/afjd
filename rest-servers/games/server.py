@@ -1007,6 +1007,9 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         # find the game master
         assert game is not None
         game_master_id = game.get_role(sql_executor, 0)
+        if game_master_id is None:
+            del sql_executor
+            flask_restful.abort(404, msg="There does not seem to be a game master for this game. This should be addressed beforehand...")
 
         if user_id not in [game_master_id, player_id]:
             del sql_executor
