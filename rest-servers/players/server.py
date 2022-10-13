@@ -158,7 +158,6 @@ class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
         return player.identifier, 200
 
 
-
 @API.resource('/resend-code/<pseudo>')
 class ResendCodeRessource(flask_restful.Resource):  # type: ignore
     """ ResendCodeRessource """
