@@ -3913,7 +3913,7 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
 class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
     """ GameIncidentsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, None, int, float]]], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, typing.Optional[int], int, float]]], int]:  # pylint: disable=no-self-use
         """
         Gets list of roles which have produced an incident for given game
         EXPOSED
@@ -3935,6 +3935,7 @@ class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
 
         # incidents_list : those who submitted orders after deadline
         incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
+
         # player_id only provided if not in game at this role (because left or was moved)
         late_list = [(o[1], o[2], o[3] if o[3] != current_players_dict[o[1]] else None, o[4], o[5]) for o in incidents_list]
 
@@ -4643,8 +4644,18 @@ class TournamentIncidentsRessource(flask_restful.Resource):  # type: ignore
 
         late_list: typing.List[typing.Tuple[int, int, int, int, float]] = []
         for game_id in tournament_game_ids:
+
+            # find the current players
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            current_players_dict = {a[2]: a[1] for a in allocations_list}
+
+            # incidents_list : those who submitted orders after deadline
             incidents_list = incidents.Incident.list_by_game_id(sql_executor, game_id)
-            for _, role_id, advancement, _, duration_incident, date_incident in incidents_list:
+
+            # select only incidents with current player
+            for _, role_id, advancement, player_id, duration_incident, date_incident in incidents_list:
+                if player_id != current_players_dict[role_id]:
+                    continue
                 late_list.append((game_id, role_id, advancement, duration_incident, date_incident))
 
         del sql_executor
@@ -4986,7 +4997,6 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             # get end date
             transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
             assert transition is not None
-            end_time = transition.time_stamp
             game_data['end_time_stamp'] = transition.time_stamp
 
             # get scoring, classic and name
@@ -5010,7 +5020,7 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
 
             # get dropouts
             # TODO
-            dropouts_number = {}
+            dropouts_number: typing.Dict[int, int] = {}
             game_data['dropouts_number'] = dropouts_number
 
             games_dict[game_name] = game_data
