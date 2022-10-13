@@ -18,11 +18,11 @@ MY_PANEL = html.DIV(id="login")
 MY_PANEL.attrs['style'] = 'display: table-row'
 
 
-
 def email_confirmed(pseudo):
     """ email_confirmed """
 
     email_confirmed_loaded = False
+
     def reply_callback(req):
         nonlocal email_confirmed_loaded
         req_result = json.loads(req.text)
