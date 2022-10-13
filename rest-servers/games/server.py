@@ -3909,6 +3909,32 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/player-incidents/<player_id>')
+class PlayerIncidentsRessource(flask_restful.Resource):  # type: ignore
+    """ PlayerIncidentsRessource """
+
+    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int]]], int]:  # pylint: disable=no-self-use
+        """
+        Gets list of roles which have produced an incident for given player
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/player-incidents/<game_id> - GET - getting which incidents occured for player id=%s", player_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # incidents_list : those who submitted orders after deadline
+        incidents_list = incidents.Incident.list_by_player_id(sql_executor, player_id)
+
+        # only outputs game_id and game_advancement
+        late_list = [(o[0], o[2]) for o in incidents_list]
+
+        del sql_executor
+
+        data = {'incidents': late_list}
+        return data, 200
+
+
 @API.resource('/game-incidents/<game_id>')
 class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
     """ GameIncidentsRessource """

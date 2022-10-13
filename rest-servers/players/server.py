@@ -193,6 +193,7 @@ class ResendCodeRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
+        assert player is not None
         code = random.randint(1000, 9999)
         email_after = player.email
 
@@ -388,6 +389,36 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         assert player is not None
         player_id = player.identifier
 
+        # check player has no committements
+
+        # ----------------------
+        # first checks locally (players)
+        # ----------------------
+
+        # cannot quit if registered to an event
+        registered_list = registrations.Registration.inventory(sql_executor)
+        if player_id in [m[1] for m in registered_list]:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Player {pseudo} is registered to an event")
+
+        # cannot quit if creator
+        creators_list = creators.Creator.inventory(sql_executor)
+        if pseudo in [m[0] for m in creators_list]:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Player {pseudo} is a creator")
+
+        # cannot quit if  moderator
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        if pseudo in [m[0] for m in moderators_list]:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Player {pseudo} is a moderator")
+
+        # ----------------------
+        # second checks externally (games)
+        # ----------------------
+
+        # player cannot quit if allocation (play in game)
+
         # get all allocations of the player
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
         port = lowdata.SERVER_CONFIG['GAME']['PORT']
@@ -401,10 +432,53 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg=f"Allocation check failed!:{message}")
         json_dict = req_result.json()
         allocations_dict = json_dict
-
         if allocations_dict:
             del sql_executor
             flask_restful.abort(400, msg="Player is still in a game")
+
+        # player cannot quit if incidents (registered for event)
+
+        # Tget all incidents of the player
+        host = lowdata.SERVER_CONFIG['GAME']['HOST']
+        port = lowdata.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/player-incidents/{player_id}"
+        jwt_token = flask.request.headers.get('AccessToken')
+        req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"})
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Incident check failed!:{message}")
+        json_dict = req_result.json()
+        incidents_list = json_dict['incidents']
+        if incidents_list:
+            game_numbers = {i[0] for i in incidents_list}
+            del sql_executor
+            flask_restful.abort(400, msg=f"Player has an incident in a game(s) number {game_numbers}")
+
+        # player cannot quit if assignement (director of tournament)
+
+        # get all assignments
+        host = lowdata.SERVER_CONFIG['GAME']['HOST']
+        port = lowdata.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/assignments"
+        jwt_token = flask.request.headers.get('AccessToken')
+        req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"})
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Assignement check failed!:{message}")
+        json_dict = req_result.json()
+        groupings_dict = json_dict
+
+        if player_id in groupings_dict.values():
+            del sql_executor
+            flask_restful.abort(400, msg="Player is assigned to a tournament")
+
+        # ----------------------
+        # all is ok
+        # ----------------------
 
         # delete player from users server (that will implicitly check we have rights)
         host = lowdata.SERVER_CONFIG['USER']['HOST']
