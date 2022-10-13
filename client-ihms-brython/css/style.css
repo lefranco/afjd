@@ -136,13 +136,16 @@ legend{
 
 /* diplomacy messages and declarations */
 .text{
+    font-size: 14px;
     font-family: serif;
 }
 .text_anonymous{
+    font-size: 14px;
     font-family: serif;
     background-color: #EDA89E;
 }
 .synchro{
+    font-size: 14px;
     font-family: serif;
     background-color: #98E4ED;
 }
