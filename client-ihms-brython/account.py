@@ -397,7 +397,7 @@ def validate_email():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}", remove_after=config.REMOVE_AFTER) # TODO
+            InfoDialog("OK", f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}", remove_after=config.REMOVE_AFTER)
 
         json_dict = {}
 
