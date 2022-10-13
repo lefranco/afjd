@@ -19,7 +19,7 @@ K_SLOPE = 2.
 
 VERIFY = False
 
-TEASER_KEEP = 5
+TEASER_KEEP = 7
 
 
 LAST_TIME = 0
