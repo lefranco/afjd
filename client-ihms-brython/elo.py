@@ -434,14 +434,14 @@ def process_reliability(players_dict, games_results_dict, reliability_informatio
         reliability_information <= html.BR()
 
         reliability_information <= "delays from this game: "
-        for k, v in delays_number_dict.items():
-            if int(k) in num2pseudo:
-                player_pseudo = num2pseudo[int(k)]
+        for key, value in delays_number_dict.items():
+            if int(key) in num2pseudo:
+                player_pseudo = num2pseudo[int(key)]
                 reliability_information <= f"{player_pseudo} "
             else:
-                reliability_information <= f"({k}???) "
-            reliability_information <= f"-> {v} "
-            if int(k) not in game_players:
+                reliability_information <= f"({key}???) "
+            reliability_information <= f"-> {value} "
+            if int(key) not in game_players:
                 reliability_information <= "(outside) "
         reliability_information <= html.BR()
 
