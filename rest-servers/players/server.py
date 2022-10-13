@@ -158,6 +158,70 @@ class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
         return player.identifier, 200
 
 
+
+@API.resource('/resend-code/<pseudo>')
+class ResendCodeRessource(flask_restful.Resource):  # type: ignore
+    """ ResendCodeRessource """
+
+    def post(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Request new verification code
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/resend-code/<pseudo> - POST - ask resend verification code pseudo=%s", pseudo)
+
+        # check from user server user is pseudo
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
+        sql_executor = database.SqlExecutor()
+
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+
+        if player is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
+
+        player.email_confirmed = False
+        code = random.randint(1000, 9999)
+        email_after = player.email
+
+        json_dict = {
+            'email_value': email_after,
+            'code': code
+        }
+
+        # store the email/code in secure server
+        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/emails"
+        req_result = SESSION.post(url, data=json_dict)
+        if req_result.status_code != 201:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
+        if not PREVENT_MAIL_CHECKING:
+            if not mailer.send_mail_checker(code, email_after):
+                del sql_executor
+                flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
+
+        data = {'pseudo': pseudo, 'msg': 'Ok verification code generated and sent'}
+        return data, 200
+
+
 @API.resource('/players/<pseudo>')
 class PlayerRessource(flask_restful.Resource):  # type: ignore
     """ PlayerRessource """
