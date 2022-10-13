@@ -382,6 +382,36 @@ def change_password():
 def validate_email():
     """ validate_email """
 
+    def send_new_code_callback(_):
+        """ send_new_code_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la demande de renvoi de code de validation : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la demande de renvoi de code de validation : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}", remove_after=config.REMOVE_AFTER) # TODO
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/resend-code/{pseudo}"
+
+        # asking resend of verification code for account : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        validate_email()
+
     def validate_email_callback(_):
         """ validate_email_callback """
 
@@ -463,6 +493,17 @@ def validate_email():
     form <= html.BR()
 
     MY_SUB_PANEL <= form
+
+    MY_SUB_PANEL <= html.BR()
+
+    form2 = html.FORM()
+
+    input_send_new_code = html.INPUT(type="submit", value="me renvoyer un nouveau code")
+    input_send_new_code.bind("click", send_new_code_callback)
+    form2 <= input_send_new_code
+    form2 <= html.BR()
+
+    MY_SUB_PANEL <= form2
 
 
 def forum_code():
