@@ -697,6 +697,16 @@ def stack_clock(frame, period):
     frame <= clock_icon_img
 
 
+def stack_last_moves_button(frame):
+    """ stack_last_moves_button """
+
+    input_last_moves = html.INPUT(type="submit", value="derniers mouvements")
+    input_last_moves.bind("click", lambda e: load_option(e, 'consulter', True))
+    frame <= input_last_moves
+    frame <= html.BR()
+    frame <= html.BR()
+
+
 def stack_role_flag(frame):
     """ stack_role_flag """
 
@@ -705,6 +715,8 @@ def stack_role_flag(frame):
     role_name = VARIANT_DATA.name_table[role]
     role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{ROLE_ID}.jpg", title=role_name)
     frame <= role_icon_img
+    frame <= html.BR()
+    frame <= html.BR()
 
 
 def stack_role_retreats(frame):
@@ -957,7 +969,7 @@ def get_roles_submitted_orders(game_id):
     return submitted_data
 
 
-def show_position():
+def show_position(direct_last_moves):
     """ show_position """
 
     position_data = None
@@ -1158,14 +1170,13 @@ def show_position():
         input_refresh = html.INPUT(type="submit", value="recharger la partie")
         input_refresh.bind("click", callback_refresh)
         buttons_right <= input_refresh
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+        # button last moves
+        stack_last_moves_button(buttons_right)
 
         buttons_right <= html.H3("Historique")
-
-        input_first = html.INPUT(type="submit", value="derniers mouvements")
-        input_first.bind("click", lambda e, a=adv_last_moves: transition_display_callback(e, a))
-        buttons_right <= input_first
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
 
         input_first = html.INPUT(type="submit", value="||<<")
         input_first.bind("click", lambda e, a=0: transition_display_callback(e, a))
@@ -1242,7 +1253,10 @@ def show_position():
             break
 
     # initiates callback
-    transition_display_callback(None, last_advancement)
+    if direct_last_moves:
+        transition_display_callback(None, adv_last_moves)
+    else:
+        transition_display_callback(None, last_advancement)
 
     return True
 
@@ -1350,9 +1364,11 @@ def submit_orders():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+        # role flag
         stack_role_flag(buttons_right)
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+
+        # button last moves
+        stack_last_moves_button(buttons_right)
 
         # we are in spring or autumn
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
@@ -1387,9 +1403,11 @@ def submit_orders():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+        # role flag
         stack_role_flag(buttons_right)
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+
+        # button last moves
+        stack_last_moves_button(buttons_right)
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
@@ -1435,9 +1453,11 @@ def submit_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
 
+            # role flag
             stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+
+            # button last moves
+            stack_last_moves_button(buttons_right)
 
             legend_select_active = html.DIV("Sélectionner la zone où construire (cliquer sous la légende)", Class='instruction')
             buttons_right <= legend_select_active
@@ -1473,9 +1493,11 @@ def submit_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+            # role flag
             stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+
+            # button last moves
+            stack_last_moves_button(buttons_right)
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
@@ -1643,9 +1665,11 @@ def submit_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+            # role flag
             stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+
+            # button last moves
+            stack_last_moves_button(buttons_right)
 
             # gm can pass orders on archive games
             if ROLE_ID != 0 and selected_active_unit.role != VARIANT_DATA.roles[ROLE_ID]:
@@ -1736,9 +1760,11 @@ def submit_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+            # role flag
             stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+
+            # button last moves
+            stack_last_moves_button(buttons_right)
 
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
@@ -1825,9 +1851,11 @@ def submit_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+            # role flag
             stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+
+            # button last moves
+            stack_last_moves_button(buttons_right)
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -1935,9 +1963,11 @@ def submit_orders():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+        # role flag
         stack_role_flag(buttons_right)
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+
+        # button last moves
+        stack_last_moves_button(buttons_right)
 
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
             legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
@@ -2292,9 +2322,11 @@ def submit_orders():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+    # role flag
     stack_role_flag(buttons_right)
-    buttons_right <= html.BR()
-    buttons_right <= html.BR()
+
+    # button last moves
+    stack_last_moves_button(buttons_right)
 
     # first time : we alert about retreat possibilities
     if advancement_season in [mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
@@ -2408,9 +2440,11 @@ def submit_communication_orders():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+        # role flag
         stack_role_flag(buttons_right)
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+
+        # button last moves
+        stack_last_moves_button(buttons_right)
 
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
@@ -2438,9 +2472,11 @@ def submit_communication_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+            # role flag
             stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+
+            # button last moves
+            stack_last_moves_button(buttons_right)
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
@@ -2544,9 +2580,11 @@ def submit_communication_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+            # role flag
             stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+
+            # button last moves
+            stack_last_moves_button(buttons_right)
 
             # gm can pass orders on archive games
             if ROLE_ID != 0 and selected_active_unit.role != VARIANT_DATA.roles[ROLE_ID]:
@@ -2608,9 +2646,11 @@ def submit_communication_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+            # role flag
             stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+
+            # button last moves
+            stack_last_moves_button(buttons_right)
 
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
@@ -2651,9 +2691,11 @@ def submit_communication_orders():
             buttons_right = html.DIV(id='buttons_right')
             buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+            # role flag
             stack_role_flag(buttons_right)
-            buttons_right <= html.BR()
-            buttons_right <= html.BR()
+
+            # button last moves
+            stack_last_moves_button(buttons_right)
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -2746,9 +2788,11 @@ def submit_communication_orders():
         buttons_right = html.DIV(id='buttons_right')
         buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+        # role flag
         stack_role_flag(buttons_right)
-        buttons_right <= html.BR()
-        buttons_right <= html.BR()
+
+        # button last moves
+        stack_last_moves_button(buttons_right)
 
         legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_unit
@@ -3022,9 +3066,11 @@ def submit_communication_orders():
     buttons_right = html.DIV(id='buttons_right')
     buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
 
+    # role flag
     stack_role_flag(buttons_right)
-    buttons_right <= html.BR()
-    buttons_right <= html.BR()
+
+    # button last moves
+    stack_last_moves_button(buttons_right)
 
     legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
     buttons_right <= legend_select_unit
@@ -3361,10 +3407,11 @@ def negotiate():
     MY_SUB_PANEL <= rating_colours_window
     MY_SUB_PANEL <= html.BR()
 
-    # role
+    # role flag
     stack_role_flag(MY_SUB_PANEL)
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
+
+    # button last moves
+    stack_last_moves_button(MY_SUB_PANEL)
 
     # form
     MY_SUB_PANEL <= form
@@ -3637,10 +3684,11 @@ def declare():
     MY_SUB_PANEL <= rating_colours_window
     MY_SUB_PANEL <= html.BR()
 
-    # role
+    # role flag
     stack_role_flag(MY_SUB_PANEL)
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
+
+    # button last moves
+    stack_last_moves_button(MY_SUB_PANEL)
 
     # form only if allowed
     if GAME_PARAMETERS_LOADED['nopress_current'] and ROLE_ID != 0:
@@ -3809,10 +3857,11 @@ def vote():
     MY_SUB_PANEL <= rating_colours_window
     MY_SUB_PANEL <= html.BR()
 
-    # role
+    # role flag
     stack_role_flag(MY_SUB_PANEL)
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
+
+    # button last moves
+    stack_last_moves_button(MY_SUB_PANEL)
 
     # form
     MY_SUB_PANEL <= form
@@ -3937,10 +3986,11 @@ def note():
     MY_SUB_PANEL <= rating_colours_window
     MY_SUB_PANEL <= html.BR()
 
-    # role
+    # role flag
     stack_role_flag(MY_SUB_PANEL)
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
+
+    # button last moves
+    stack_last_moves_button(MY_SUB_PANEL)
 
     # form
     MY_SUB_PANEL <= form
@@ -4484,9 +4534,8 @@ def game_master():
     MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
+    # role flag
     stack_role_flag(MY_SUB_PANEL)
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
 
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
@@ -5423,8 +5472,8 @@ def supervise():
             MY_SUB_PANEL <= GAME_STATUS
             MY_SUB_PANEL <= html.BR()
 
+            # role flag
             stack_role_flag(MY_SUB_PANEL)
-            MY_SUB_PANEL <= html.BR()
 
         # changed from outside
         refresh_subroutine()
@@ -5666,14 +5715,14 @@ MY_SUB_PANEL = html.DIV(id="play")
 MY_PANEL <= MY_SUB_PANEL
 
 
-def load_option(_, item_name):
+def load_option(_, item_name, direct_last_moves=False):
     """ load_option """
 
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
     if item_name == 'consulter':
-        status = show_position()
+        status = show_position(direct_last_moves)
     if item_name == 'ordonner':
         status = submit_orders()
     if item_name == 'taguer':
