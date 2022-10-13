@@ -191,6 +191,7 @@ tr{
 }
 
 td{
+    font-size: 12px;
     border: 1px solid black;
     background-color: #83B9CC;
 }
