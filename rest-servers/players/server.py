@@ -194,7 +194,6 @@ class ResendCodeRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
-        player.email_confirmed = False
         code = random.randint(1000, 9999)
         email_after = player.email
 
