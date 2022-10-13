@@ -18,6 +18,38 @@ MY_PANEL = html.DIV(id="login")
 MY_PANEL.attrs['style'] = 'display: table-row'
 
 
+
+def email_confirmed(pseudo):
+    """ email_confirmed """
+
+    email_confirmed_loaded = False
+    def reply_callback(req):
+        nonlocal email_confirmed_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement des informations du compte : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement des informations du compte : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        email_confirmed_loaded = req_result['email_confirmed']
+        return
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/players/{pseudo}"
+
+    # reading data about account : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return email_confirmed_loaded
+
+
 def login():
     """ login """
 
@@ -49,6 +81,10 @@ def login():
             storage['LOGIN_TIME'] = str(time_stamp)
             InfoDialog("OK", f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
             show_login()
+
+            # request to validate email
+            if not email_confirmed(pseudo):
+                alert("Merci de penser à vérifier votre adresse couriel. Cela évite que les message du site reviennent en erreur. Pour ce faire : mon_compte/valider mon courriel")
 
             # goto directly to page my games
             index.load_option(None, 'mes parties')
