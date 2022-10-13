@@ -4776,7 +4776,7 @@ def show_game_parameters():
             'cd_possible_builds': ("désordre civil possible pour les constructions", "oui ou non", "L'arbitre est en mesure d'imposer un désordre civil pour une phase d'ajustements", "OUI"),
             'play_weekend': ("on joue le week-end", "oui ou non", "Le système pourra placer une date limite pendant le week-end", "OUI"),
             'access_code': ("code d'accès pour la partie", "(code de quatre chiffres)", "Le système demande un code pour rejoindre la partie", "NON - c'est pourquoi le code apparaît ici en clair !"),
-            'access_restriction_reliability': ("restriction d'accès sur la fiabilité", "(valeur)", "Un seuil de fiabilité est exigé pour rejoindre la partie", "NON"),
+            'access_restriction_reliability': ("restriction d'accès sur la fiabilité", "(valeur)", "Un seuil de fiabilité est exigé pour rejoindre la partie", "OUI"),
             'access_restriction_regularity': ("restriction d'accès sur la régularité", "(valeur)", "Un seuil de régularité est exigé pour rejoindre la partie", "OUI"),
             'access_restriction_performance': ("restriction d'accès sur la performance", "(valeur)", "Un seuil de performance est exigé pour rejoindre la partie", "OUI"),
             'nb_max_cycles_to_play': ("nombre maximum de cycles (années) à jouer", "(valeur)", "L'arbitre déclare la partie terminée si autant de cycles ont été joués", "-"),
