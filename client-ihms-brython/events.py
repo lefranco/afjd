@@ -441,11 +441,28 @@ def registrations():
     MY_SUB_PANEL <= joiners_table
 
 
-def create_event():
+def create_event(json_dict):
     """ create_event """
+
+    # load previous values if applicable
+    name = json_dict['name'] if json_dict and 'name' in json_dict else None
+    start_date = json_dict['start_date'] if json_dict and 'start_date' in json_dict else None
+    start_hour = json_dict['start_hour'] if json_dict and 'start_hour' in json_dict else None
+    end_date = json_dict['end_date'] if json_dict and 'end_date' in json_dict else None
+    location = json_dict['location'] if json_dict and 'location' in json_dict else None
+    description = json_dict['description'] if json_dict and 'description' in json_dict else None
+    summary = json_dict['summary'] if json_dict and 'summary' in json_dict else None
 
     def create_event_callback(_):
         """ create_event_callback """
+
+        nonlocal name
+        nonlocal start_date
+        nonlocal start_hour
+        nonlocal end_date
+        nonlocal location
+        nonlocal description
+        nonlocal summary
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -461,6 +478,8 @@ def create_event():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"L'événement a été créé : {messages}", remove_after=config.REMOVE_AFTER)
 
+        # get values from user input
+
         name = input_name.value
         start_date = input_start_date.value
         start_hour = input_start_hour.value
@@ -469,24 +488,7 @@ def create_event():
         description = input_description.value
         summary = input_summary.value
 
-        if not name:
-            alert("Nom d'événement manquant")
-            MY_SUB_PANEL.clear()
-            create_event()
-            return
-
-        if len(name) > MAX_LEN_EVENT_NAME:
-            alert("Nom d'événement trop long")
-            MY_SUB_PANEL.clear()
-            create_event()
-            return
-
-        if len(location) > MAX_LEN_EVENT_LOCATION:
-            alert("Lieu de l'événement trop long")
-            MY_SUB_PANEL.clear()
-            create_event()
-            return
-
+        # make data structure
         json_dict = {
             'name': name,
             'start_date': start_date,
@@ -497,6 +499,28 @@ def create_event():
             'summary': summary,
         }
 
+        # start checking data
+
+        if not name:
+            alert("Nom d'événement manquant")
+            MY_SUB_PANEL.clear()
+            create_event(json_dict)
+            return
+
+        if len(name) > MAX_LEN_EVENT_NAME:
+            alert("Nom d'événement trop long")
+            MY_SUB_PANEL.clear()
+            create_event(json_dict)
+            return
+
+        if len(location) > MAX_LEN_EVENT_LOCATION:
+            alert("Lieu de l'événement trop long")
+            MY_SUB_PANEL.clear()
+            create_event(json_dict)
+            return
+
+        # send to server
+
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/events"
@@ -506,7 +530,7 @@ def create_event():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        create_event()
+        create_event(json_dict)
 
     MY_SUB_PANEL <= html.H3("Création d'événement")
 
@@ -522,7 +546,7 @@ def create_event():
     fieldset = html.FIELDSET()
     legend_name = html.LEGEND("nom", title="Nom de l'événement (faites court et simple)")
     fieldset <= legend_name
-    input_name = html.INPUT(type="text", value="", size=MAX_LEN_EVENT_NAME)
+    input_name = html.INPUT(type="text", value=name if name is not None else "", size=MAX_LEN_EVENT_NAME)
     fieldset <= input_name
     form <= fieldset
 
@@ -531,28 +555,28 @@ def create_event():
     fieldset = html.FIELDSET()
     legend_start_date = html.LEGEND("date de début", title="Date de début de l'événement")
     fieldset <= legend_start_date
-    input_start_date = html.INPUT(type="date", value="")
+    input_start_date = html.INPUT(type="date", value=start_date if start_date is not None else "")
     fieldset <= input_start_date
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
     fieldset <= legend_start_hour
-    input_start_hour = html.INPUT(type="time", value="")
+    input_start_hour = html.INPUT(type="time", value=start_hour if start_hour is not None else "")
     fieldset <= input_start_hour
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_end_date = html.LEGEND("date de fin", title="Date de fin de l'événement")
     fieldset <= legend_end_date
-    input_end_date = html.INPUT(type="date", value="")
+    input_end_date = html.INPUT(type="date", value=end_date if end_date is not None else "")
     fieldset <= input_end_date
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_location = html.LEGEND("lieu", title="Lieu de l'événement")
     fieldset <= legend_location
-    input_location = html.INPUT(type="text", value=DEFAULT_EVENT_LOCATION, size=MAX_LEN_EVENT_LOCATION)
+    input_location = html.INPUT(type="text", value=location if location is not None else DEFAULT_EVENT_LOCATION, size=MAX_LEN_EVENT_LOCATION)
     fieldset <= input_location
     form <= fieldset
 
@@ -562,7 +586,8 @@ def create_event():
     fieldset = html.FIELDSET()
     legend_description = html.LEGEND("description complète", title="Description complète de l'événement pour les inscrits")
     fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", value="", rows=16, cols=80)
+    input_description = html.TEXTAREA(type="text", rows=16, cols=80)
+    input_description <= description if description is not None else ""
     fieldset <= input_description
     form <= fieldset
 
@@ -570,7 +595,8 @@ def create_event():
     fieldset = html.FIELDSET()
     legend_summary = html.LEGEND("résumé", title="Description courte de l'événement pour la page d'accueil (pas plus de trois lignes)")
     fieldset <= legend_summary
-    input_summary = html.TEXTAREA(type="text", value="", rows=5, cols=80)
+    input_summary = html.TEXTAREA(type="text", rows=5, cols=80)
+    input_summary <= summary if summary is not None else ""
     fieldset <= input_summary
     form <= fieldset
 
@@ -611,24 +637,7 @@ def edit_event():
         description = input_description.value
         summary = input_summary.value
 
-        if not name:
-            alert("Nom d'événement manquant")
-            MY_SUB_PANEL.clear()
-            create_event()
-            return
-
-        if len(name) > MAX_LEN_EVENT_NAME:
-            alert("Nom d'événement trop long")
-            MY_SUB_PANEL.clear()
-            create_event()
-            return
-
-        if len(location) > MAX_LEN_EVENT_LOCATION:
-            alert("Lieu de l'événement trop long")
-            MY_SUB_PANEL.clear()
-            create_event()
-            return
-
+        # make data structure
         json_dict = {
             'name': name,
             'start_date': start_date,
@@ -639,6 +648,26 @@ def edit_event():
             'summary': summary,
         }
 
+        # start checking data
+
+        if not name:
+            alert("Nom d'événement manquant")
+            MY_SUB_PANEL.clear()
+            create_event(json_dict)
+            return
+
+        if len(name) > MAX_LEN_EVENT_NAME:
+            alert("Nom d'événement trop long")
+            MY_SUB_PANEL.clear()
+            create_event(json_dict)
+            return
+
+        if len(location) > MAX_LEN_EVENT_LOCATION:
+            alert("Lieu de l'événement trop long")
+            MY_SUB_PANEL.clear()
+            create_event(json_dict)
+            return
+
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/events/{event_id}"
@@ -648,7 +677,7 @@ def edit_event():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        edit_event()
+        create_event(json_dict)
 
     MY_SUB_PANEL <= html.H3("Edition d'événement")
 
@@ -1192,7 +1221,7 @@ def load_option(_, item_name):
     if item_name == 'inscriptions':
         registrations()
     if item_name == 'créer un événement':
-        create_event()
+        create_event(None)
     if item_name == 'éditer l\'événement':
         edit_event()
     if item_name == 'illustrer l\'événement':

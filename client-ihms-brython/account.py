@@ -59,11 +59,38 @@ def information_about_pseudo():
     return information
 
 
-def create_account():
+def create_account(json_dict):
     """ create_account """
+
+    # load previous values if applicable
+    pseudo = json_dict['pseudo'] if json_dict and 'pseudo' in json_dict else None
+    password = json_dict['password'] if json_dict and 'password' in json_dict else None
+    password_again = json_dict['password_again'] if json_dict and 'password_again' in json_dict else None
+    email = json_dict['email'] if json_dict and 'email' in json_dict else None
+    telephone = json_dict['telephone'] if json_dict and 'telephone' in json_dict else None
+    notify = json_dict['notify'] if json_dict and 'notify' in json_dict else None
+    replace = json_dict['replace'] if json_dict and 'replace' in json_dict else None
+    family_name = json_dict['family_name'] if json_dict and 'pseudo' in json_dict else None
+    first_name = json_dict['first_name'] if json_dict and 'family_name' in json_dict else None
+    residence_code = json_dict['residence_code'] if json_dict and 'residence_code' in json_dict else None
+    nationality_code = json_dict['nationality_code'] if json_dict and 'nationality_code' in json_dict else None
+    timezone_code = json_dict['timezone_code'] if json_dict and 'timezone_code' in json_dict else None
 
     def create_account_callback(_):
         """ create_account_callback """
+
+        nonlocal pseudo
+        nonlocal password
+        nonlocal password_again
+        nonlocal email
+        nonlocal telephone
+        nonlocal notify
+        nonlocal replace
+        nonlocal family_name
+        nonlocal first_name
+        nonlocal residence_code
+        nonlocal nationality_code
+        nonlocal timezone_code
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -79,64 +106,26 @@ def create_account():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Votre compte a été créé : {messages}", remove_after=config.REMOVE_AFTER)
 
+        # get values from user input
+
         pseudo = input_pseudo.value
-
-        if not pseudo:
-            alert("Pseudo manquant")
-            MY_SUB_PANEL.clear()
-            create_account()
-            return
-
-        if len(pseudo) < MIN_LEN_PSEUDO:
-            alert("Pseudo trop court")
-            MY_SUB_PANEL.clear()
-            create_account()
-            return
-
-        if len(pseudo) > MAX_LEN_PSEUDO:
-            alert("Pseudo trop long")
-            MY_SUB_PANEL.clear()
-            create_account()
-            return
-
         password = input_password.value
-        if not password:
-            alert("Mot de passe manquant")
-            return
-
         password_again = input_password_again.value
-        if password_again != password:
-            alert("Les mots de passe ne correspondent pas")
-            MY_SUB_PANEL.clear()
-            create_account()
-            return
-
         email = input_email.value
-        if not email:
-            alert("courriel manquant")
-            MY_SUB_PANEL.clear()
-            create_account()
-            return
-
-        if email.find('@') == -1:
-            alert("@ dans courriel manquant")
-            MY_SUB_PANEL.clear()
-            create_account()
-            return
-
         telephone = input_telephone.value
         notify = int(input_notify.checked)
         replace = int(input_replace.checked)
         family_name = input_family_name.value
         first_name = input_first_name.value
-
         residence_code = config.COUNTRY_CODE_TABLE[input_residence.value]
         nationality_code = config.COUNTRY_CODE_TABLE[input_nationality.value]
         timezone_code = config.TIMEZONE_CODE_TABLE[input_timezone.value]
 
+        # make data structure
         json_dict = {
             'pseudo': pseudo,
             'password': password,
+            'password_again': password_again,
             'email': email,
             'telephone': telephone,
             'notify': notify,
@@ -148,6 +137,54 @@ def create_account():
             'time_zone': timezone_code,
         }
 
+        # start checking data
+
+        if not pseudo:
+            alert("Pseudo manquant")
+            MY_SUB_PANEL.clear()
+            create_account(json_dict)
+            return
+
+        if len(pseudo) < MIN_LEN_PSEUDO:
+            alert("Pseudo trop court")
+            MY_SUB_PANEL.clear()
+            create_account(json_dict)
+            return
+
+        if len(pseudo) > MAX_LEN_PSEUDO:
+            alert("Pseudo trop long")
+            MY_SUB_PANEL.clear()
+            create_account(json_dict)
+            return
+
+        if not password:
+            alert("Mot de passe manquant")
+            MY_SUB_PANEL.clear()
+            create_account(json_dict)
+            return
+
+        if password_again != password:
+            alert("Les mots de passe ne correspondent pas")
+            MY_SUB_PANEL.clear()
+            create_account(json_dict)
+            return
+
+        if not email:
+            alert("courriel manquant")
+            MY_SUB_PANEL.clear()
+            create_account(json_dict)
+            return
+
+        if email.find('@') == -1:
+            alert("@ dans courriel manquant")
+            MY_SUB_PANEL.clear()
+            create_account(json_dict)
+            return
+
+        del json_dict['password_again']
+
+        # send to server
+
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
         url = f"{host}:{port}/players"
@@ -155,9 +192,12 @@ def create_account():
         # adding a player : no need for token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+        # restore password again in case of failure
+        json_dict['password_again'] = password_again
+
         # back to where we started
         MY_SUB_PANEL.clear()
-        create_account()
+        create_account(json_dict)
 
     MY_SUB_PANEL <= html.H3("Création du compte")
 
@@ -175,63 +215,63 @@ def create_account():
     fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("pseudo", title="Votre identifiant sur le site")
     fieldset <= legend_pseudo
-    input_pseudo = html.INPUT(type="text", value="")
+    input_pseudo = html.INPUT(type="text", value=pseudo if pseudo is not None else "")
     fieldset <= input_pseudo
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_password = html.LEGEND("mot de passe", title="Pour empêcher les autres de jouer à votre place;-)")
     fieldset <= legend_password
-    input_password = html.INPUT(type="password", value="")
+    input_password = html.INPUT(type="password", value=password if password is not None else "")
     fieldset <= input_password
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_password_again = html.LEGEND("confirmation mot de passe", title="Pour éviter une faute de frappe sur le mot de passe")
     fieldset <= legend_password_again
-    input_password_again = html.INPUT(type="password", value="")
+    input_password_again = html.INPUT(type="password", value=password_again if password_again is not None else "")
     fieldset <= input_password_again
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_email = html.LEGEND("courriel (privé)", title="Le site vous notifiera de quelques très rares événements (sauf si vous demandez les notifications)")
     fieldset <= legend_email
-    input_email = html.INPUT(type="email", value="", size=MAX_LEN_EMAIL)
+    input_email = html.INPUT(type="email", value=email if email is not None else "", size=MAX_LEN_EMAIL)
     fieldset <= input_email
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_telephone = html.LEGEND("téléphone (privé et facultatif)", title="En cas d'urgence")
     fieldset <= legend_telephone
-    input_telephone = html.INPUT(type="tel", value="")
+    input_telephone = html.INPUT(type="tel", value=telephone if telephone is not None else "")
     fieldset <= input_telephone
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_notify = html.LEGEND("Notifiez-moi !", title="Devons nous vous envoyer un courriel sur chaque résolution de vos parties ?")
     fieldset <= legend_notify
-    input_notify = html.INPUT(type="checkbox", checked=True)
+    input_notify = html.INPUT(type="checkbox", checked=bool(notify) if notify is not None else True)
     fieldset <= input_notify
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_replace = html.LEGEND("Je veux remplacer !", title="Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
     fieldset <= legend_replace
-    input_replace = html.INPUT(type="checkbox", checked=False)
+    input_replace = html.INPUT(type="checkbox", checked=bool(replace) if replace is not None else False)
     fieldset <= input_replace
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_family_name = html.LEGEND("nom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     fieldset <= legend_family_name
-    input_family_name = html.INPUT(type="text", value="")
+    input_family_name = html.INPUT(type="text", value=family_name if family_name is not None else False)
     fieldset <= input_family_name
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_first_name = html.LEGEND("prénom (facultatif et public)", title="Pour vous connaître dans la vraie vie - attention les accents seront supprimés")
     fieldset <= legend_first_name
-    input_first_name = html.INPUT(type="text", value="")
+    input_first_name = html.INPUT(type="text", value=first_name if first_name is not None else False)
     fieldset <= input_first_name
     form <= fieldset
 
@@ -242,7 +282,7 @@ def create_account():
 
     for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if config.COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
+        if config.COUNTRY_CODE_TABLE[country_name] == (residence_code if residence_code is not None else DEFAULT_COUNTRY_CODE):
             option.selected = True
         input_residence <= option
 
@@ -256,7 +296,7 @@ def create_account():
 
     for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if config.COUNTRY_CODE_TABLE[country_name] == DEFAULT_COUNTRY_CODE:
+        if config.COUNTRY_CODE_TABLE[country_name] == (nationality_code if nationality_code is not None else DEFAULT_COUNTRY_CODE):
             option.selected = True
         input_nationality <= option
 
@@ -270,7 +310,7 @@ def create_account():
 
     for timezone_cities in config.TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
-        if config.TIMEZONE_CODE_TABLE[timezone_cities] == DEFAULT_TIMEZONE_CODE:
+        if config.TIMEZONE_CODE_TABLE[timezone_cities] == (timezone_code if timezone_code is not None else DEFAULT_TIMEZONE_CODE):
             option.selected = True
         input_timezone <= option
 
@@ -845,7 +885,7 @@ def delete_account():
 
         # back to where we started (well not exactly)
         MY_SUB_PANEL.clear()
-        create_account()
+        create_account(None)
 
     MY_SUB_PANEL <= html.H3("Suppression du compte")
 
@@ -890,7 +930,7 @@ def load_option(_, item_name):
     window.scroll(0, 0)
 
     if item_name == 'créer un compte':
-        create_account()
+        create_account(None)
     if item_name == 'mot de passe':
         change_password()
     if item_name == 'valider mon courriel':
