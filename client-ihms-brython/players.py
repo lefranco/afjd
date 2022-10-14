@@ -16,7 +16,7 @@ import mapping
 DEFAULT_ELO = 1500
 
 
-OPTIONS = ['classement performance', 'classement fiabilité', 'classement régularité', 'liste inscrits', 'liste joueurs', 'liste arbitres', 'groupe remplaçants', 'groupe modérateurs', 'groupe créateurs', 'comptes oisifs', 'courriels non confirmés']
+OPTIONS = ['classement performance', 'classement fiabilité', 'classement régularité', 'liste inscrits', 'liste joueurs', 'liste arbitres', 'abonnés remplaçants', 'groupe modérateurs', 'groupe créateurs', 'comptes oisifs', 'courriels non confirmés']
 
 
 def get_detailed_elo_rating(classic, role_id):
@@ -250,7 +250,7 @@ def show_rating_performance(classic, role_id):
                     value = rating[3]
 
                 if field == 'change':
-                    value = f"{round(rating[4] / nb_roles)} ({rating[4]})"
+                    value = f"{round(rating[4] / nb_roles):+} ({rating[4]:+})"
 
                 if field == 'role':
                     role_id = rating[1]
@@ -959,7 +959,7 @@ def show_replacement_data():
 
     MY_SUB_PANEL <= html.H3("Les remplaçants")
     MY_SUB_PANEL <= players_table
-    MY_SUB_PANEL <= html.P(f"Il y a {count} remplaçants")
+    MY_SUB_PANEL <= html.P(f"Il y a {count} abonnés remplaçants")
 
 
 def show_moderators():
@@ -1120,6 +1120,7 @@ def show_non_confirmed_data():
         thead <= col
     players_table <= thead
 
+    count = 0
     for data in sorted(players_dict.values(), key=lambda p: p['pseudo'].upper()):
 
         if data['email_confirmed']:
@@ -1131,10 +1132,12 @@ def show_non_confirmed_data():
 
             col = html.TD(value)
             row <= col
+            count += 1
 
         players_table <= row
 
     MY_SUB_PANEL <= players_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} comptes non confirmés")
 
 
 MY_PANEL = html.DIV()
@@ -1173,7 +1176,7 @@ def load_option(_, item_name):
         show_players_data()
     if item_name == 'liste arbitres':
         show_game_masters_data()
-    if item_name == 'groupe remplaçants':
+    if item_name == 'abonnés remplaçants':
         show_replacement_data()
     if item_name == 'groupe modérateurs':
         show_moderators()
