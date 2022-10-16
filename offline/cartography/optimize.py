@@ -26,7 +26,7 @@ class Point:
         self.x = x  # pylint: disable=invalid-name
         self.y = y  # pylint: disable=invalid-name
 
-    def distance(self, other) -> float:
+    def distance(self, other: 'Point') -> float:
         """ distance """
         return math.sqrt((other.x - self.x)**2 + (other.y - self.y)**2)
 
