@@ -7,6 +7,7 @@ File : optimize.py
 optimize parameter file
 """
 
+import typing
 import argparse
 import json
 import itertools
@@ -17,10 +18,11 @@ SCALING_X = 5.
 SCALING_Y = 5.
 MAX_DIST = 25
 
+
 class Point:
     """ Point """
 
-    def __init__(self, x, y) -> None:
+    def __init__(self, x: int, y: int) -> None:  # pylint: disable=invalid-name
         self.x = x  # pylint: disable=invalid-name
         self.y = y  # pylint: disable=invalid-name
 
@@ -62,7 +64,6 @@ def main() -> None:
         point = Point(x_pos, y_pos)
         items[point] = zone
 
-    iterations = 1
     while True:
 
         smallest_dist = sys.float_info.max
@@ -85,7 +86,6 @@ def main() -> None:
         point1.y += round((point1.y - point2.y) / SCALING_Y)
         point2.x += round((point2.x - point1.x) / SCALING_X)
         point2.y += round((point2.y - point1.y) / SCALING_Y)
-
 
     # ============= output ===============
 

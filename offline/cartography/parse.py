@@ -128,7 +128,6 @@ def main() -> None:
     parser.add_argument('-p', '--parameters_input', required=True, help='Input parameters (names) json file')
     parser.add_argument('-s', '--svg_input', required=True, help='Input map svg file')
     parser.add_argument('-F', '--first_format_json_output', required=True, help='Output json file for first format (jeremie)')
-    parser.add_argument('-S', '--second_format_json_output', required=False, help='Output json file for second format (wenz)')
     args = parser.parse_args()
 
     map_png_input = args.map_png_input
@@ -136,7 +135,6 @@ def main() -> None:
     json_parameters_input = args.parameters_input
     svg_input_file = args.svg_input
     first_format_json_output = args.first_format_json_output
-    second_format_json_output = args.second_format_json_output
 
     # load variant from json data file
     with open(json_variant_input, "r", encoding='utf-8') as read_file:
@@ -158,9 +156,6 @@ def main() -> None:
     # make coastal zone table from input json file
     coastal_zones_name2num_table = {f"{json_parameters_data['zones'][str(r)]['name']}{json_parameters_data['coasts'][str(c)]['name']}".upper(): len(json_variant_data['regions']) + 1 + n for n, (r, c) in enumerate(json_variant_data['coastal_zones'])}
 
-    # make table coastal zone2region
-    coastal_zone2region_table = {len(json_variant_data['regions']) + 1 + n: r for n, (r, _) in enumerate(json_variant_data['coastal_zones'])}
-
     # parse svg map to find paths
     doc = xml.dom.minidom.parse(svg_input_file)
 
@@ -174,12 +169,6 @@ def main() -> None:
     viewbox_height = float(viewbox_height_str)
 
     # ====== get image dimension =====
-
-    # svg for wenz
-    svg_dim = {
-        'width': viewbox_width,
-        'height': viewbox_height
-    }
 
     # png for jeremie
     png_width, png_height = get_image_info(map_png_input)
@@ -330,24 +319,6 @@ def main() -> None:
         x_unit_pos = round(x_chosen * png_width / viewbox_width)
         y_unit_pos = round(y_chosen * png_height / viewbox_height)
 
-        # BEGIN alternate strategy - to be further tested
-
-        # make a path for unit to put label in center of region without unit
-        #  d = f"M {x_chosen-10},{y_chosen-10} L {x_chosen+10},{y_chosen-10} L {x_chosen+10},{y_chosen+10} L {x_chosen-10},{y_chosen+10} {x_chosen-10},{y_chosen-10}"
-        #  unit_path =  Path(d)
-
-        #  path2 = copy.deepcopy(path)
-        #  path2.add_inner(unit_path)
-
-        # for regions label :  the polylabel
-        #  x_chosen, y_chosen = path2.polylabel()
-
-        # legend in png coords
-        #  x_legend_pos = round(x_chosen * png_width / viewbox_width)
-        #  y_legend_pos = round(y_chosen * png_height / viewbox_height)
-
-        # END alternate strategy - to be further tested
-
         x_legend_pos = x_unit_pos
         y_legend_pos = y_unit_pos
 
@@ -395,100 +366,6 @@ def main() -> None:
             "y_legend_pos": y_legend_pos
         }
 
-    # ====== make map_elements =====
-    #  for wenz
-
-    map_elements: typing.List[typing.List[typing.Any]] = []
-
-    for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
-
-        map_element: typing.List[typing.Any] = []
-
-        # put 'path' (always)
-        map_element.append(["path"])
-
-        # build infos
-        infos = []
-
-        infos.append("a")
-        region_type_code = json_variant_data['regions'][num - 1]
-        assert region_type_code in [1, 2, 3]
-        infos.append("l" if region_type_code in [1, 2] else "w")
-        region_name = regions_ref_num_table[num]
-        infos.append(region_name)
-        infos.append(str(num))
-
-        # put infos
-        map_element.append(infos)
-
-        # put path
-        map_element.append([str(path)])
-
-        # put in map elements
-        map_elements.append(map_element)
-
-    # ====== zones =====
-    #  for wenz
-
-    # uses regions_pos_table and center_pos_table
-    # uses regions_raw_pos_table and center_raw_pos_table
-
-    zone_table: typing.Dict[int, typing.Dict[str, typing.Any]] = {}
-
-    for num, data in sorted(regions_pos_table.items(), key=lambda kv: int(kv[0])):
-
-        # ignore specific coasts
-        if num in coastal_zones_path_table:
-
-            coord_coasts = list(map(round, coastal_zones_raw_pos_table[num]))
-            num_region = coastal_zone2region_table[num]
-            zone_table[num_region]['unit_pos'].append(coord_coasts)
-
-            _, num_coast_type = json_variant_data['coastal_zones'][num - len(json_variant_data['regions']) - 1]
-            label = f"{json_parameters_data['coasts'][str(num_coast_type)]['name']}"
-            zone_table[num_region]['pos_labels'].append(label)
-
-            zone_table[num] = {
-                'label': label,
-                'coord_label': [],
-                'name': "",
-                'type': 1,
-                'city': -1,
-                'coord_city': [],
-                'unit_pos': [coord_coasts],
-                'pos_labels': ["d"],
-                'center': int(num_region in region2center_table)
-            }
-
-            continue
-
-        region_type_code = json_variant_data['regions'][num - 1]
-        assert region_type_code in [1, 2, 3]
-        type_ = 1 if region_type_code in [1, 2] else 0
-
-        city = 0
-        coord_city = []
-        if num in region2center_table:
-            city = 1
-            num_center = region2center_table[num]
-            coord_city = list(map(round, centers_raw_pos_table[num_center]))
-            if num_center not in sum(json_variant_data['start_centers'], []):
-                city = 2
-
-        coords = list(map(round, regions_raw_pos_table[num]))
-
-        zone_table[num] = {
-            'label': data['name'],
-            'coord_label': coords,
-            'name': data['full_name'],
-            'type': type_,
-            'city': city,
-            'coord_city': coord_city,
-            'unit_pos': [coords],
-            'pos_labels': ["d"],
-            'center': int(num in region2center_table)
-        }
-
     # ============= output ===============
 
     result1 = copy.deepcopy(json_parameters_data)
@@ -498,15 +375,6 @@ def main() -> None:
     output = json.dumps(result1, indent=4, ensure_ascii=False)
     with open(first_format_json_output, 'w', encoding='utf-8') as file_ptr:
         file_ptr.write(output)
-
-    if second_format_json_output is not None:
-        result2: typing.Dict[str, typing.Any] = {}
-        result2['svg_dim'] = svg_dim
-        result2['map_elements'] = map_elements
-        result2['zones'] = zone_table
-        output = json.dumps(result2, indent=4, ensure_ascii=False)
-        with open(second_format_json_output, 'w', encoding='utf-8') as file_ptr:
-            file_ptr.write(output)
 
 
 if __name__ == '__main__':
