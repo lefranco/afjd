@@ -127,7 +127,7 @@ def main() -> None:
     parser.add_argument('-v', '--variant_input', required=True, help='Input variant json file')
     parser.add_argument('-p', '--parameters_input', required=True, help='Input parameters (names) json file')
     parser.add_argument('-s', '--svg_input', required=True, help='Input map svg file')
-    parser.add_argument('-F', '--first_format_json_output', required=True, help='Output json file for first format (jeremie)')
+    parser.add_argument('-F', '--first_format_json_output', required=True, help='Output json file for first format')
     args = parser.parse_args()
 
     map_png_input = args.map_png_input
@@ -170,7 +170,6 @@ def main() -> None:
 
     # ====== get image dimension =====
 
-    # png for jeremie
     png_width, png_height = get_image_info(map_png_input)
     map_table = {
         'width': int(png_width),
@@ -285,7 +284,6 @@ def main() -> None:
             path.add_inner(path_center)
 
     # ====== make centers_pos_table =====
-    #  for jeremie
 
     centers_raw_pos_table = {}
     centers_pos_table = {}
@@ -303,7 +301,6 @@ def main() -> None:
         }
 
     # ====== make regions_pos_table =====
-    #  for jeremie
 
     regions_raw_pos_table = {}
     regions_pos_table = {}
