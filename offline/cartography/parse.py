@@ -285,15 +285,11 @@ def main() -> None:
 
     # ====== make centers_pos_table =====
 
-    centers_raw_pos_table = {}
     centers_pos_table = {}
     for num, path in sorted(centers_path_table.items(), key=lambda kv: int(kv[0])):
 
         # for centers : middle is OK
         x_chosen, y_chosen = path.middle()
-
-        # for wenz
-        centers_raw_pos_table[num] = (x_chosen, y_chosen)
 
         centers_pos_table[num] = {
             "x_pos": round(x_chosen * png_width / viewbox_width),
@@ -302,15 +298,11 @@ def main() -> None:
 
     # ====== make regions_pos_table =====
 
-    regions_raw_pos_table = {}
     regions_pos_table = {}
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
 
         # for regions :  the polylabel
         x_chosen, y_chosen = path.polylabel()
-
-        # for wenz
-        regions_raw_pos_table[num] = (x_chosen, y_chosen)
 
         # unit in png coords
         x_unit_pos = round(x_chosen * png_width / viewbox_width)
@@ -333,14 +325,10 @@ def main() -> None:
             "y_legend_pos": y_legend_pos
         }
 
-    coastal_zones_raw_pos_table = {}
     for num, path in sorted(coastal_zones_path_table.items(), key=lambda kv: int(kv[0])):
 
         # for special coasts : middle
         x_chosen, y_chosen = path.middle()
-
-        # for wenz
-        coastal_zones_raw_pos_table[num] = (x_chosen, y_chosen)
 
         # unit in png coords
         x_unit_pos = round(x_chosen * png_width / viewbox_width)
