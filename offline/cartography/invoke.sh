@@ -8,6 +8,11 @@ echo "Parsing...."
    -s ./input/Carte_annotee.svg \
    -F new_parameters.json
 
+if [ $? -ne 0 ] ; then
+	echo "Parsing failed"
+    exit 1
+fi
+
 echo "Optimizing...."
 ./optimize.py \
    -p new_parameters.json \
