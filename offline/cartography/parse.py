@@ -342,7 +342,7 @@ def main() -> None:
         }
 
         regions_area_table[num] = {
-            "area": [(round((x * png_width / viewbox_width), 2), round((y * png_height / viewbox_height), 2)) for (x,y) in path.polygon()]
+            "area": [(round((x * png_width / viewbox_width)), round((y * png_height / viewbox_height))) for (x,y) in path.polygon()]
         }
 
     for num, path in sorted(coastal_zones_path_table.items(), key=lambda kv: int(kv[0])):
@@ -372,7 +372,7 @@ def main() -> None:
         }
 
         regions_area_table[num] = {
-            "area": [(round((x * png_width / viewbox_width), 2), round((y * png_height / viewbox_height), 2)) for (x,y) in path.polygon()]
+            "area": [(round((x * png_width / viewbox_width)), round((y * png_height / viewbox_height))) for (x,y) in path.polygon()]
         }
 
     # ============= output ===============
