@@ -793,7 +793,7 @@ def sandbox():
         buttons_right <= html.BR()
 
         # to check positions
-        for zone in VARIANT_DATA.zones.values():
+        for zone in sorted(VARIANT_DATA.zones.values(), key=lambda z:VARIANT_DATA.name_table[z]):
             zone_area = VARIANT_DATA.path_table[zone]
             zone_name = VARIANT_DATA.name_table[zone]
 

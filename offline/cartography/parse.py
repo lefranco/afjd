@@ -37,7 +37,7 @@ def get_image_info(file_name: str) -> typing.Tuple[int, int]:
 class Path:
     """ Path """
 
-    def __init__(self, text: str):
+    def __init__(self, title_content: str, text: str):
         self._text = text
         self.points: typing.List[float] = []
         self._list_x = []
@@ -46,6 +46,13 @@ class Path:
 
         #  print(f"{text=}")
 
+        # M : move (do not draw)
+        # L : Line
+        # V : vertical
+        # H : horizontal
+        # C : curve : approximative
+        # Z : zero (back to first point)
+
         # first we standardize path
         elements = []
         for elt in self._text.split():
@@ -53,7 +60,7 @@ class Path:
                 letter = elt
                 elements.append(letter)
             else:
-                for letter in ['M', 'L', 'C', 'V', 'H', 'Z']:
+                for letter in ['M', 'L', 'V', 'H', 'C', 'Z']:
                     if elt.startswith(letter):
                         elements.append(letter)
                         elements.append(elt[1:])
@@ -67,7 +74,7 @@ class Path:
             #  print(f"{elt=}")
 
             # letters set the automaton state
-            if elt in ['M', 'L', 'C', 'V', 'H', 'Z']:
+            if elt in ['M', 'L', 'V', 'H', 'C', 'Z']:
                 state = elt
                 continue
 
@@ -79,6 +86,12 @@ class Path:
                 x_pos = float(elt)
             if state == 'V':
                 y_pos = float(elt)
+            if state == 'Z':
+                assert False, f"{title_content} : Z is not at the end"
+            if state == 'M':
+                if len(self._list_x):
+                    print(f"{title_content} : M is not at the begining")
+                    # TODO assert not len(self._list_x), f"{title_content} : M is not at the begining"
             self._list_x.append(x_pos)
             self._list_y.append(y_pos)
 
@@ -218,7 +231,7 @@ def main() -> None:
                 sys.exit(1)
 
             # get a point from d
-            the_path = Path(d)
+            the_path = Path(title_content, d)
             centers_path_table[number] = the_path
 
         # we have a region (area)
@@ -234,7 +247,7 @@ def main() -> None:
             if number in regions_path_table:
                 print(f"This region already has a path '{title_content}'")
                 sys.exit(1)
-            the_path = Path(d)
+            the_path = Path(title_content, d)
             regions_path_table[number] = the_path
 
         # we have a coastal zone (star)
@@ -250,7 +263,7 @@ def main() -> None:
             if number in coastal_zones_path_table:
                 print(f"This coastal zones already has a path '{title_content}'")
                 sys.exit(1)
-            the_path = Path(d)
+            the_path = Path(title_content, d)
             coastal_zones_path_table[number] = the_path
 
     doc.unlink()
