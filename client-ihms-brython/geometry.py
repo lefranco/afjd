@@ -158,6 +158,7 @@ class Polygon:
                 # If side is intersects exline
                 if relative_direction(side.point1, point, side.point2) == 0:
                     return side.on_me(point)
+
                 count += 1
 
             i = (i + 1) % size
