@@ -76,6 +76,9 @@ class Path:
             # letters set the automaton state
             if elt in ['M', 'L', 'V', 'H', 'C', 'Z']:
                 state = elt
+                if state == 'Z':
+                    self._list_x.append(self._list_x[0])
+                    self._list_y.append(self._list_y[0])
                 continue
 
             # coordinates get stacked
@@ -90,8 +93,7 @@ class Path:
                 assert False, f"{title_content} : Z is not at the end"
             if state == 'M':
                 if len(self._list_x):
-                    print(f"{title_content} : M is not at the begining")
-                    # TODO assert not len(self._list_x), f"{title_content} : M is not at the begining"
+                    assert not len(self._list_x), f"{title_content} {text}: M is not at the begining"
             self._list_x.append(x_pos)
             self._list_y.append(y_pos)
 
