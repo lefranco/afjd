@@ -299,6 +299,7 @@ def main() -> None:
     # ====== make regions_pos_table =====
 
     regions_pos_table = {}
+    regions_area_table = {}
     for num, path in sorted(regions_path_table.items(), key=lambda kv: int(kv[0])):
 
         # for regions :  the polylabel
@@ -323,6 +324,10 @@ def main() -> None:
             "y_pos": y_unit_pos,
             "x_legend_pos": x_legend_pos,
             "y_legend_pos": y_legend_pos
+        }
+
+        regions_area_table[num] = {
+            "area": [(round((x * png_width / viewbox_width), 2), round((y * png_height / viewbox_height), 2)) for (x,y) in path.polygon()]
         }
 
     for num, path in sorted(coastal_zones_path_table.items(), key=lambda kv: int(kv[0])):
@@ -351,12 +356,17 @@ def main() -> None:
             "y_legend_pos": y_legend_pos
         }
 
+        regions_area_table[num] = {
+            "area": [(round((x * png_width / viewbox_width), 2), round((y * png_height / viewbox_height), 2)) for (x,y) in path.polygon()]
+        }
+
     # ============= output ===============
 
     result1 = copy.deepcopy(json_parameters_data)
     result1['map'] = map_table
     result1['zones'] = regions_pos_table
     result1['centers'] = centers_pos_table
+    result1['zone_areas'] = regions_area_table
     output = json.dumps(result1, indent=4, ensure_ascii=False)
     with open(first_format_json_output, 'w', encoding='utf-8') as file_ptr:
         file_ptr.write(output)

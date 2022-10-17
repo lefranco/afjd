@@ -134,6 +134,9 @@ def sandbox():
     down_click_time = None
     selected_hovered_object = None
 
+    def show_zone_callback(_, zone_area):
+        mapping.show_zone(ctx, zone_area)
+
     def rest_hold_callback(_):
         """ rest_hold_callback """
 
@@ -163,6 +166,8 @@ def sandbox():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
             put_download(buttons_right)
+        buttons_right <= html.BR()
+        put_checkers(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -197,6 +202,8 @@ def sandbox():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
             put_download(buttons_right)
+        buttons_right <= html.BR()
+        put_checkers(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -365,6 +372,8 @@ def sandbox():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
+            buttons_right <= html.BR()
+            put_checkers(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -431,6 +440,8 @@ def sandbox():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
+            buttons_right <= html.BR()
+            put_checkers(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -475,6 +486,8 @@ def sandbox():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
+            buttons_right <= html.BR()
+            put_checkers(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -514,6 +527,8 @@ def sandbox():
                     put_submit(buttons_right)
                 if not POSITION_DATA.empty():
                     put_download(buttons_right)
+                buttons_right <= html.BR()
+                put_checkers(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
                 return
@@ -538,6 +553,8 @@ def sandbox():
                 put_submit(buttons_right)
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
+            buttons_right <= html.BR()
+            put_checkers(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -553,6 +570,7 @@ def sandbox():
 
         nonlocal automaton_state
         nonlocal buttons_right
+        nonlocal selected_hovered_object
 
         # the aim is to give this variable a value
         selected_erase_unit = None
@@ -581,7 +599,6 @@ def sandbox():
             POSITION_DATA.remove_unit(selected_erase_unit)
 
             # tricky
-            nonlocal selected_hovered_object
             if selected_hovered_object == selected_erase_unit:
                 selected_hovered_object = None
 
@@ -609,6 +626,8 @@ def sandbox():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
             put_download(buttons_right)
+        buttons_right <= html.BR()
+        put_checkers(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -767,6 +786,23 @@ def sandbox():
         buttons_right <= input_export
         buttons_right <= html.BR()
 
+    def put_checkers(buttons_right):
+        """ put_checkers """
+
+        buttons_right <= "Vérifier zone :"
+        buttons_right <= html.BR()
+
+        # to check positions
+        for zone in VARIANT_DATA.zones.values():
+            zone_area = VARIANT_DATA.path_table[zone]
+            zone_name = VARIANT_DATA.name_table[zone]
+
+            input_submit = html.INPUT(type="submit", value=zone_name)
+            input_submit.bind("click", lambda e, za=zone_area: show_zone_callback(e, za))
+            buttons_right <= input_submit
+
+        buttons_right <= html.BR()
+
     # callbacks pour le glisser / deposer
 
     def mouseover(event):
@@ -870,6 +906,8 @@ def sandbox():
             put_submit(buttons_right)
         if not POSITION_DATA.empty():
             put_download(buttons_right)
+        buttons_right <= html.BR()
+        put_checkers(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -917,8 +955,8 @@ def sandbox():
             unit_canvas.bind("mouseover", mouseover)
             unit_canvas.bind("dragstart", dragstart)
 
-            ctx = unit_canvas.getContext("2d")
-            draggable_unit.render(ctx)
+            ctx2 = unit_canvas.getContext("2d")
+            draggable_unit.render(ctx2)
 
             col <= unit_canvas
             row <= col
@@ -1004,6 +1042,8 @@ def sandbox():
         put_submit(buttons_right)
     if not POSITION_DATA.empty():
         put_download(buttons_right)
+    buttons_right <= html.BR()
+    put_checkers(buttons_right)
 
     # overall
     my_sub_panel2 = html.DIV()

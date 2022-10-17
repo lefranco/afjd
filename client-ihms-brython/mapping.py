@@ -307,12 +307,11 @@ class Zone(Highliteable):
     def render(self, ctx, active=False):
         """ put me on screen """
 
-        legend_colour = LEGEND_COLOUR
+        # -----------------
+        # the legend
+        # -----------------
 
-        # alteration (highlite)
-        if active:
-            legend_colour = LEGEND_COLOUR_HIGHLITED
-
+        legend_colour = LEGEND_COLOUR_HIGHLITED if active else LEGEND_COLOUR
         ctx.fillStyle = legend_colour.str_value()
 
         # legend position and unit position are calculated from area ith polylabel
@@ -320,13 +319,37 @@ class Zone(Highliteable):
         x_pos = position.x_pos
         y_pos = position.y_pos
 
+        # legend content
         if self._coast_type:
             legend = self._variant.name_table[self._coast_type]
         else:
             legend = self._variant.name_table[self]
+
+        # put on screen
         text_width = ctx.measureText(legend).width
         ctx.font = LEGEND_FONT
         ctx.fillText(legend, x_pos - text_width / 2, y_pos)
+
+        # -----------------
+        # the outline
+        # -----------------
+
+        outline_colour = OUTLINE_COLOUR
+
+        # alteration (highlite)
+        if active:
+            outline_colour = OUTLINE_COLOUR_HIGHLITED
+
+        path = self._variant.path_table[self]
+        ctx.beginPath()
+        for n, p in enumerate(path.points):  # pylint: disable=invalid-name
+            if not n:
+                ctx.moveTo(p.x_pos, p.y_pos)
+            else:
+                ctx.lineTo(p.x_pos, p.y_pos)
+        stroke_color = outline_colour
+        ctx.strokeStyle = stroke_color.str_value()
+        ctx.stroke(); ctx.closePath()
 
     def description(self):
         """ description for helping """
@@ -458,6 +481,13 @@ ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 # legend
 LEGEND_COLOUR = ColourRecord(red=42, green=42, blue=42)  # black-ish
 LEGEND_COLOUR_HIGHLITED = ColourRecord(red=212, green=212, blue=212)  # white-ish
+
+# outline
+OUTLINE_COLOUR = ColourRecord(red=25, green=25, blue=25)  # black
+OUTLINE_COLOUR_HIGHLITED = ColourRecord(red=255, green=25, blue=25)  # red
+
+# show
+SHOW_COLOUR = ColourRecord(red=255, green=25, blue=25)  # red
 
 
 def legend_font() -> str:
@@ -597,6 +627,7 @@ class Variant(Renderable):
         self._position_table = {}
         self._legend_position_table = {}
         self._role_add_table = {}
+        self._path_table = {}
 
         # load the map size
         data_dict = self._raw_parameters_content['map']
@@ -680,6 +711,15 @@ class Variant(Renderable):
             legend_position = geometry.PositionRecord(x_pos=x_legend_pos, y_pos=y_legend_pos)
             self._legend_position_table[zone] = legend_position
 
+        # zone areas (polygons)
+        assert len(self._raw_parameters_content['zone_areas']) == len(self._zones)
+        for zone_num_str, data_dict in self._raw_parameters_content['zone_areas'].items():
+            zone_num = int(zone_num_str)
+            zone = self._zones[zone_num]
+            # get area
+            area = data_dict['area']
+            self._path_table[zone] = geometry.Polygon([geometry.PositionRecord(*t) for t in area])
+
         # load the centers localisations
         assert len(self._raw_parameters_content['centers']) == len(self._centers)
         for center_num_str, data_dict in self._raw_parameters_content['centers'].items():
@@ -724,16 +764,17 @@ class Variant(Renderable):
     def closest_zone(self, designated_pos: geometry.PositionRecord):
         """ closest_zone """
 
-        closest_zone = None
-        distance_closest = None
-        for zone in self._zones.values():
-            zone_pos = self.position_table[zone]
-            distance = designated_pos.distance(zone_pos)
-            if distance_closest is None or distance < distance_closest:
-                closest_zone = zone
-                distance_closest = distance
+        # sort them by distance
+        zones_sorted = sorted(self.zones.values(), key=lambda z: designated_pos.distance(self.position_table[z]))
 
-        return closest_zone
+        # yields the first one which point is in
+        for zone in zones_sorted:
+            zone_path = self.path_table[zone]
+            if zone_path.is_inside_me(designated_pos):
+                return zone
+
+        # by default
+        return zones_sorted[0]
 
     def render(self, ctx, active=False) -> None:
         """ put me on screen """
@@ -807,6 +848,11 @@ class Variant(Renderable):
     def position_table(self):
         """ property """
         return self._position_table
+
+    @property
+    def path_table(self):
+        """ property """
+        return self._path_table
 
     @property
     def legend_position_table(self):
@@ -1301,13 +1347,18 @@ class Position(Renderable):
                 closest_object = unit
                 distance_closest = distance
 
-        # search in the zones
-        for zone in self._variant.zones.values():
-            zone_pos = self._variant.position_table[zone]
-            distance = designated_pos.distance(zone_pos)
-            if distance_closest is None or distance < distance_closest:
-                closest_object = zone
-                distance_closest = distance
+        # sort them by distance
+        zones_sorted = sorted(self._variant.zones.values(), key=lambda z: designated_pos.distance(self._variant.position_table[z]))
+
+        # yields the first one which point is in
+        for zone in zones_sorted:
+            zone_path = self._variant.path_table[zone]
+            if zone_path.is_inside_me(designated_pos):
+                zone_pos = self._variant.position_table[zone]
+                distance = designated_pos.distance(zone_pos)
+                if distance_closest is None or distance < distance_closest:
+                    closest_object = zone
+                    distance_closest = distance
 
         # search in the ownerships
         for ownership in self._ownerships:
@@ -1878,3 +1929,21 @@ class Orders(Renderable):
 
     def __str__(self) -> str:
         return '\n'.join([str(o) for o in self._orders])
+
+
+def show_zone(ctx, zone_area):
+    """ show_zone """
+
+    # choose the coulours (need to be deterministic)
+    stroke_color = SHOW_COLOUR
+    ctx.strokeStyle = stroke_color.str_value()
+    outline_stroke_color = stroke_color.outline_colour()
+    ctx.fillStyle = outline_stroke_color.str_value()
+
+    ctx.beginPath()
+    for n, p in enumerate(zone_area.points):  # pylint: disable=invalid-name
+        if not n:
+            ctx.moveTo(p.x_pos, p.y_pos)
+        else:
+            ctx.lineTo(p.x_pos, p.y_pos)
+    ctx.fill(); ctx.stroke(); ctx.closePath()
