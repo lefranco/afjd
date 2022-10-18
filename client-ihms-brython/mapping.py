@@ -315,27 +315,29 @@ class Zone(Highliteable):
         """ put me on screen """
 
         # -----------------
-        # the legend
+        # the legend (only if not active)
         # -----------------
 
-        legend_colour = LEGEND_COLOUR_HIGHLITED if active else LEGEND_COLOUR
-        ctx.fillStyle = legend_colour.str_value()
+        if not active:
 
-        # legend position and unit position are calculated from area ith polylabel
-        position = self._variant.legend_position_table[self]
-        x_pos = position.x_pos
-        y_pos = position.y_pos
+            legend_colour = LEGEND_COLOUR
+            ctx.fillStyle = legend_colour.str_value()
 
-        # legend content
-        if self._coast_type:
-            legend = self._variant.name_table[self._coast_type]
-        else:
-            legend = self._variant.name_table[self]
+            # legend position and unit position are calculated from area ith polylabel
+            position = self._variant.legend_position_table[self]
+            x_pos = position.x_pos
+            y_pos = position.y_pos
 
-        # put on screen
-        text_width = ctx.measureText(legend).width
-        ctx.font = LEGEND_FONT
-        ctx.fillText(legend, x_pos - text_width / 2, y_pos)
+            # legend content
+            if self._coast_type:
+                legend = self._variant.name_table[self._coast_type]
+            else:
+                legend = self._variant.name_table[self]
+
+            # put on screen
+            text_width = ctx.measureText(legend).width
+            ctx.font = LEGEND_FONT
+            ctx.fillText(legend, x_pos - text_width / 2, y_pos)
 
         # -----------------
         # the outline
@@ -483,8 +485,7 @@ RETREAT_COLOUR = ColourRecord(red=255, green=127, blue=0)  # orange
 ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 # legend
-LEGEND_COLOUR = ColourRecord(red=50, green=50, blue=50)  # black-ish
-LEGEND_COLOUR_HIGHLITED = ColourRecord(red=212, green=212, blue=212)  # white-ish
+LEGEND_COLOUR = ColourRecord(red=25, green=25, blue=25)  # black-ish
 
 # outline
 SPECIAL_COAST_OUTLINE_COLOUR = ColourRecord(red=50, green=50, blue=50)  # black-ish
@@ -1328,7 +1329,7 @@ class Position(Renderable):
             if unit.is_disloged():
                 unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
             distance = designated_pos.distance(unit_pos)
-            if distance < MAX_PROXIMITY_CENTER_UNIT and (distance_closest is None or distance < distance_closest):
+            if distance_closest is None or distance < distance_closest:
                 closest_unit = unit
                 distance_closest = distance
 
