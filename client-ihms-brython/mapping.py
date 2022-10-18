@@ -15,6 +15,9 @@ import unit_design
 # we stop after this number of areas when testing if inside area of zone
 MAX_NUMBER_AREAS_TESTED = 5
 
+# proximity necessary for a center or a unit (to come before the zone)
+MAX_PROXIMITY_CENTER_UNIT = 10
+
 
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
     """ shorten the segment a little bit (returns new x_dest, y_dest) """
@@ -483,12 +486,12 @@ RETREAT_COLOUR = ColourRecord(red=255, green=127, blue=0)  # orange
 ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 # legend
-LEGEND_COLOUR = ColourRecord(red=42, green=42, blue=42)  # black-ish
+LEGEND_COLOUR = ColourRecord(red=50, green=50, blue=50)  # black-ish
 LEGEND_COLOUR_HIGHLITED = ColourRecord(red=212, green=212, blue=212)  # white-ish
 
 # outline
-OUTLINE_COLOUR = ColourRecord(red=25, green=25, blue=25)  # black
-OUTLINE_COLOUR_HIGHLITED = ColourRecord(red=255, green=25, blue=25)  # red
+OUTLINE_COLOUR = ColourRecord(red=25, green=25, blue=25)  # black-ish
+OUTLINE_COLOUR_HIGHLITED = ColourRecord(red=255, green=0, blue=0)  # red
 
 # show
 SHOW_COLOUR = ColourRecord(red=255, green=25, blue=25)  # red
@@ -1327,7 +1330,7 @@ class Position(Renderable):
             if unit.is_disloged():
                 unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
             distance = designated_pos.distance(unit_pos)
-            if distance_closest is None or distance < distance_closest:
+            if distance < MAX_PROXIMITY_CENTER_UNIT and (distance_closest is None or distance < distance_closest):
                 closest_unit = unit
                 distance_closest = distance
 
@@ -1342,14 +1345,14 @@ class Position(Renderable):
         # what list do we use ?
         search_list = self._units + self._dislodged_units
 
-        # search in the units
+        # search in the units (must be close enough)
         for unit in search_list:
             zone = unit.zone
             unit_pos = self._variant.position_table[zone]
             if unit.is_disloged():
                 unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
             distance = designated_pos.distance(unit_pos)
-            if distance_closest is None or distance < distance_closest:
+            if distance < MAX_PROXIMITY_CENTER_UNIT and (distance_closest is None or distance < distance_closest):
                 closest_object = unit
                 distance_closest = distance
 
@@ -1368,12 +1371,12 @@ class Position(Renderable):
             if num > MAX_NUMBER_AREAS_TESTED:
                 break
 
-        # search in the ownerships
+        # search in the ownerships (must be close enough)
         for ownership in self._ownerships:
             center = ownership.center
             center_pos = self._variant.position_table[center]
             distance = designated_pos.distance(center_pos)
-            if distance_closest is None or distance < distance_closest:
+            if distance < MAX_PROXIMITY_CENTER_UNIT and (distance_closest is None or distance < distance_closest):
                 closest_object = ownership
                 distance_closest = distance
 
