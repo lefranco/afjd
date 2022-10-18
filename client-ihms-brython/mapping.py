@@ -341,11 +341,8 @@ class Zone(Highliteable):
         # the outline
         # -----------------
 
-        outline_colour = OUTLINE_COLOUR
-
         # alteration (highlite)
-        if active:
-            outline_colour = OUTLINE_COLOUR_HIGHLITED
+        outline_colour = OUTLINE_COLOUR_HIGHLITED if active else (SPECIAL_COAST_OUTLINE_COLOUR if self._coast_type else OUTLINE_COLOUR)
 
         path = self._variant.path_table[self]
         ctx.beginPath()
@@ -490,6 +487,7 @@ LEGEND_COLOUR = ColourRecord(red=50, green=50, blue=50)  # black-ish
 LEGEND_COLOUR_HIGHLITED = ColourRecord(red=212, green=212, blue=212)  # white-ish
 
 # outline
+SPECIAL_COAST_OUTLINE_COLOUR = ColourRecord(red=50, green=50, blue=50)  # black-ish
 OUTLINE_COLOUR = ColourRecord(red=25, green=25, blue=25)  # black-ish
 OUTLINE_COLOUR_HIGHLITED = ColourRecord(red=255, green=0, blue=0)  # red
 
