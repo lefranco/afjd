@@ -1,15 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
    width="214.969mm"
    version="1.2"
    height="189.992mm"
    viewBox="0 0 2539 2244"
-   id="svg2940">
+   id="svg2940"
+   sodipodi:docname="Carte_annotee.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview1473"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="3.6709001"
+     inkscape:cx="680.07844"
+     inkscape:cy="602.4408"
+     inkscape:window-width="1920"
+     inkscape:window-height="1052"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2940" />
   <defs
      id="defs2" />
   <g
@@ -12639,7 +12662,7 @@
       <cc:Work
          rdf:about="">
         <dc:format>image/svg+xml</dc:format>
-        <dc:title></dc:title>
+        <dc:title />
         <dc:date>2021-03-08T14:11:30</dc:date>
         <dc:identifier />
         <dc:description />
@@ -12659,44 +12682,44 @@
     </rdf:RDF>
   </metadata>
   <path
-     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:6.25"
      id="path17165"
-     d="M1933.0297,269.12352 L1919.8283,269.64997 1915.2482,257.2574 1925.6189,249.07192 1936.6085,256.40558 Z">
+     d="M1940.1311,278.8861 L1913.7282,279.939 1904.5681,255.1539 1925.3095,238.7829 1947.2887,253.4502 Z">
     <title
        id="title17167">ZC_STPCN</title>
   </path>
   <path
-     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:6.25"
      id="path20127"
-     d="M579.16312,1975.7418 L565.96175,1976.2682 561.38161,1963.8756 571.75231,1955.6902 582.74188,1963.0238 Z">
+     d="M586.2645,1985.5044 L559.8618,1986.5572 550.7015,1961.772 571.4429,1945.4012 593.422,1960.0684 Z">
     <title
        id="title20125">ZC_ESPCS</title>
   </path>
   <path
-     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:6.25"
      id="path20131"
-     d="M575.60007,1655.7108 L562.3987,1656.2372 557.81856,1643.8446 568.18926,1635.6592 579.17883,1642.9928 Z">
+     d="M582.7015,1665.4734 L556.2987,1666.5262 547.1384,1641.741 567.8798,1625.3702 589.859,1640.0374 Z">
     <title
        id="title20129">ZC_ESPCN</title>
   </path>
   <path
-     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:6.25"
      id="path20145"
-     d="M1853.874,1634.147 L1840.6726,1634.6735 1836.0925,1622.2809 1846.4632,1614.0954 1857.4528,1621.4291 Z">
+     d="M1860.9754,1643.9096 L1834.5726,1644.9626 1825.4124,1620.1774 1846.1538,1603.8064 1868.133,1618.4738 Z">
     <title
        id="title20143">ZC_BULCE</title>
   </path>
   <path
-     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:6.25"
      id="path20151"
-     d="M1796.9074,1733.8734 L1783.7061,1734.3998 1779.1259,1722.0072 1789.4966,1713.8218 1800.4862,1721.1554 Z">
+     d="M1804.0088,1743.636 L1777.6062,1744.6888 1768.4458,1719.9036 1789.1872,1703.5328 1811.1664,1718.2 Z">
     <title
        id="title20149">ZC_BULCS</title>
   </path>
   <path
-     style="fill:#ffff00;fill-rule:evenodd;stroke-width:3.125"
+     style="fill:#ffff00;fill-rule:evenodd;stroke-width:6.25"
      id="path1477"
-     d="M 1700.7247,760.05285 L1687.5233,760.5793 1682.9432,748.18673 1693.3139,740.00125 1704.3035,747.33491 Z">
+     d="M1707.8261,769.8154 L1681.4233,770.8683 1672.2631,746.0832 1693.0045,729.7122 1714.9837,744.3795 Z">
     <title
        id="title1475">ZC_STPCS</title>
   </path>
