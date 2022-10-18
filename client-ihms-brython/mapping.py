@@ -12,6 +12,10 @@ import center_design
 import unit_design
 
 
+# we stop after this number of areas when testing if inside area of zone
+MAX_NUMBER_AREAS_TESTED = 5
+
+
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
     """ shorten the segment a little bit (returns new x_dest, y_dest) """
     epsilon = 5
@@ -768,10 +772,12 @@ class Variant(Renderable):
         zones_sorted = sorted(self.zones.values(), key=lambda z: designated_pos.distance(self.position_table[z]))
 
         # yields the first one which point is in
-        for zone in zones_sorted:
+        for num, zone in enumerate(zones_sorted):
             zone_path = self.path_table[zone]
             if zone_path.is_inside_me(designated_pos):
                 return zone
+            if num > MAX_NUMBER_AREAS_TESTED:
+                break
 
         # by default
         return zones_sorted[0]
@@ -1351,7 +1357,7 @@ class Position(Renderable):
         zones_sorted = sorted(self._variant.zones.values(), key=lambda z: designated_pos.distance(self._variant.position_table[z]))
 
         # yields the first one which point is in
-        for zone in zones_sorted:
+        for num, zone in enumerate(zones_sorted):
             zone_path = self._variant.path_table[zone]
             if zone_path.is_inside_me(designated_pos):
                 zone_pos = self._variant.position_table[zone]
@@ -1359,6 +1365,8 @@ class Position(Renderable):
                 if distance_closest is None or distance < distance_closest:
                     closest_object = zone
                     distance_closest = distance
+            if num > MAX_NUMBER_AREAS_TESTED:
+                break
 
         # search in the ownerships
         for ownership in self._ownerships:
