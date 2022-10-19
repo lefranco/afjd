@@ -13,10 +13,13 @@ import sys
 import json
 import copy
 import struct
+import itertools
 
 import xml.dom.minidom
 
 import polylabel
+
+TRACE = False
 
 
 def get_image_info(file_name: str) -> typing.Tuple[int, int]:
@@ -39,9 +42,7 @@ class Path:
 
     def __init__(self, title_content: str, text: str):
         self._text = text
-        self.points: typing.List[float] = []
-        self._list_x = []
-        self._list_y = []
+        self.points: typing.List[typing.Tuple[float, float]] = []
         self._inner_path: typing.Optional['Path'] = None
 
         #  print(f"{text=}")
@@ -77,8 +78,7 @@ class Path:
             if elt in ['M', 'L', 'V', 'H', 'C', 'Z']:
                 state = elt
                 if state == 'Z':
-                    self._list_x.append(self._list_x[0])
-                    self._list_y.append(self._list_y[0])
+                    self.points.append(self.points[0])
                 continue
 
             # coordinates get stacked
@@ -92,10 +92,8 @@ class Path:
             if state == 'Z':
                 assert False, f"{title_content} : Z is not at the end"
             if state == 'M':
-                if len(self._list_x):
-                    assert not len(self._list_x), f"{title_content} {text}: M is not at the begining"
-            self._list_x.append(x_pos)
-            self._list_y.append(y_pos)
+                assert not self.points, f"{title_content} {text}: M is not at the begining"
+            self.points.append((x_pos, y_pos))
 
     def add_inner(self, path: 'Path') -> None:
         """ add_inner """
@@ -103,13 +101,13 @@ class Path:
 
     def middle(self) -> typing.Tuple[float, float]:
         """ middle of area for centers """
-        middle_x = (min(self._list_x) + max(self._list_x)) / 2.
-        middle_y = (min(self._list_y) + max(self._list_y)) / 2.
+        middle_x = (min([p[0] for p in self.points]) + max([p[0] for p in self.points])) / 2.
+        middle_y = (min([p[1] for p in self.points]) + max([p[1] for p in self.points])) / 2.
         return middle_x, middle_y
 
     def polygon(self) -> typing.List[typing.List[float]]:
         """ polygon """
-        return [[x, y] for x, y in zip(self._list_x, self._list_y)]
+        return [list(p) for p in self.points]
 
     def polylabel(self) -> typing.Tuple[float, float]:
         """ middle of area for regions """
@@ -341,8 +339,15 @@ def main() -> None:
             "y_legend_pos": y_legend_pos
         }
 
+        # little simplification : remove successive duplicates
+        raw_list = [(round((x * png_width / viewbox_width)), round((y * png_height / viewbox_height))) for (x, y) in path.polygon()]
+        clean_list = [p for p, _ in itertools.groupby(raw_list)]
+        if TRACE:
+            if clean_list != raw_list:
+                print(f"Simplified path of {region_name} from {len(raw_list)} to {len(clean_list)} elements")
+
         regions_area_table[num] = {
-            "area": [(round((x * png_width / viewbox_width)), round((y * png_height / viewbox_height))) for (x,y) in path.polygon()]
+            "area": clean_list
         }
 
     for num, path in sorted(coastal_zones_path_table.items(), key=lambda kv: int(kv[0])):
@@ -371,8 +376,15 @@ def main() -> None:
             "y_legend_pos": y_legend_pos
         }
 
+        # little simplification : remove successive duplicates
+        raw_list = [(round((x * png_width / viewbox_width)), round((y * png_height / viewbox_height))) for (x, y) in path.polygon()]
+        clean_list = [p for p, _ in itertools.groupby(raw_list)]
+        if TRACE:
+            if clean_list != raw_list:
+                print(f"Simplified path of special coast {num} from {len(raw_list)} to {len(clean_list)} elements")
+
         regions_area_table[num] = {
-            "area": [(round((x * png_width / viewbox_width)), round((y * png_height / viewbox_height))) for (x,y) in path.polygon()]
+            "area": clean_list
         }
 
     # ============= output ===============
