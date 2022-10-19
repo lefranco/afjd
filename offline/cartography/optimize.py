@@ -18,6 +18,8 @@ SCALING_X = 5.
 SCALING_Y = 5.
 MAX_DIST = 25
 
+TRACE = False
+
 
 class Point:
     """ Point """
@@ -79,7 +81,8 @@ def main() -> None:
         (point1, point2) = couple
         zone1 = items[point1]
         zone2 = items[point2]
-        print(f"Pushing aside {zone1['name']} and {zone2['name']} distant of {smallest_dist}")
+        if TRACE:
+            print(f"Pushing aside {zone1['name']} and {zone2['name']} distant of {smallest_dist}")
 
         # push them aside
         point1.x += round((point1.x - point2.x) / SCALING_X)
