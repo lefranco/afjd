@@ -12,9 +12,6 @@ import center_design
 import unit_design
 
 
-# we stop after this number of areas when testing if inside area of zone
-MAX_NUMBER_AREAS_TESTED = 5
-
 # proximity necessary for a center or a unit (to come before the zone)
 MAX_PROXIMITY_CENTER_UNIT = 10
 
@@ -756,12 +753,12 @@ class Variant(Renderable):
         """ closest_center  """
 
         closest_center = None
-        distance_closest = None
+        distance_closest = math.inf
 
         for center in self._centers.values():
             center_pos = self.position_table[center]
             distance = designated_pos.distance(center_pos)
-            if distance_closest is None or distance < distance_closest:
+            if distance < distance_closest:
                 closest_center = center
                 distance_closest = distance
 
@@ -770,19 +767,34 @@ class Variant(Renderable):
     def closest_zone(self, designated_pos: geometry.PositionRecord):
         """ closest_zone """
 
+        closest_zone = None
+        distance_closest = math.inf
+
         # sort them by distance
         zones_sorted = sorted(self.zones.values(), key=lambda z: designated_pos.distance(self.position_table[z]))
 
-        # yields the first one which point is in
+        # yields the closest one which point is in (because can be in two zones : specific coasts)
+        # limits the zones tested for optimization
+        inside_ones = 0
         for num, zone in enumerate(zones_sorted):
             zone_path = self.path_table[zone]
             if zone_path.is_inside_me(designated_pos):
-                return zone
-            if num > MAX_NUMBER_AREAS_TESTED:
+                inside_ones += 1
+                zone_pos = self.position_table[zone]
+                distance = designated_pos.distance(zone_pos)
+                if distance < distance_closest:
+                    closest_zone = zone
+                    distance_closest = distance
+                if inside_ones >= 2:
+                    break
+            if num > len(zones_sorted) // 2:
                 break
 
         # by default
-        return zones_sorted[0]
+        if not closest_zone:
+            closest_zone = zones_sorted[0]
+
+        return closest_zone
 
     def render(self, ctx, active=False) -> None:
         """ put me on screen """
@@ -1296,13 +1308,13 @@ class Position(Renderable):
         """ closest_ownership  """
 
         closest_ownership = None
-        distance_closest = None
+        distance_closest = math.inf
 
         for ownership in self._ownerships:
             center = ownership.center
             center_pos = self._variant.position_table[center]
             distance = designated_pos.distance(center_pos)
-            if distance_closest is None or distance < distance_closest:
+            if distance < distance_closest:
                 closest_ownership = ownership
                 distance_closest = distance
 
@@ -1312,7 +1324,7 @@ class Position(Renderable):
         """ closest_unit (pass dislodged = None for all dislodged and not dislodged)  """
 
         closest_unit = None
-        distance_closest = None
+        distance_closest = math.inf
 
         # what list do we use ?
         if dislodged is None:
@@ -1329,7 +1341,7 @@ class Position(Renderable):
             if unit.is_disloged():
                 unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
             distance = designated_pos.distance(unit_pos)
-            if distance_closest is None or distance < distance_closest:
+            if distance < distance_closest:
                 closest_unit = unit
                 distance_closest = distance
 
@@ -1339,43 +1351,56 @@ class Position(Renderable):
         """ closest_object : unit, center, region  """
 
         closest_object = None
-        distance_closest = None
+        distance_closest = math.inf
+
+        # search the zones
+
+        # sort zones by distance
+        zones_sorted = sorted(self._variant.zones.values(), key=lambda z: designated_pos.distance(self._variant.position_table[z]))
+
+        # yields the closest one which point is in (because can be in two zones : specific coasts)
+        # limits the zones tested for optimization
+        inside_ones = 0
+        for num, zone in enumerate(zones_sorted):
+            zone_path = self._variant.path_table[zone]
+            if zone_path.is_inside_me(designated_pos):
+                inside_ones += 1
+                zone_pos = self._variant.position_table[zone]
+                distance = designated_pos.distance(zone_pos)
+                if distance < distance_closest:
+                    closest_object = zone
+                    distance_closest = distance
+                if inside_ones >= 2:
+                    break
+            if num > len(zones_sorted) // 2:
+                break
 
         # what list do we use ?
         search_list = self._units + self._dislodged_units
 
         # search in the units (must be close enough)
+
         for unit in search_list:
             zone = unit.zone
             unit_pos = self._variant.position_table[zone]
             if unit.is_disloged():
                 unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
             distance = designated_pos.distance(unit_pos)
-            if distance < MAX_PROXIMITY_CENTER_UNIT and (distance_closest is None or distance < distance_closest):
+            if distance >= MAX_PROXIMITY_CENTER_UNIT:
+                continue
+            if distance < distance_closest:
                 closest_object = unit
                 distance_closest = distance
 
-        # sort them by distance
-        zones_sorted = sorted(self._variant.zones.values(), key=lambda z: designated_pos.distance(self._variant.position_table[z]))
-
-        # yields the first one which point is in
-        for num, zone in enumerate(zones_sorted):
-            zone_path = self._variant.path_table[zone]
-            if zone_path.is_inside_me(designated_pos):
-                zone_pos = self._variant.position_table[zone]
-                distance = designated_pos.distance(zone_pos)
-                if distance_closest is None or distance < distance_closest:
-                    closest_object = zone
-                    distance_closest = distance
-            if num > MAX_NUMBER_AREAS_TESTED:
-                break
-
         # search in the ownerships (must be close enough)
+
         for ownership in self._ownerships:
             center = ownership.center
             center_pos = self._variant.position_table[center]
             distance = designated_pos.distance(center_pos)
-            if distance < MAX_PROXIMITY_CENTER_UNIT and (distance_closest is None or distance < distance_closest):
+            if distance >= MAX_PROXIMITY_CENTER_UNIT:
+                continue
+            if distance < distance_closest:
                 closest_object = ownership
                 distance_closest = distance
 
@@ -1876,21 +1901,22 @@ class Orders(Renderable):
     def closest_unit_or_built_unit(self, designated_pos: geometry.PositionRecord):
         """ closest_unit_or_built_unit """
 
+        closest_unit = None
+        distance_closest = math.inf
+
         # search units from position (make a copy)
         search_list = list(self._position.units_list())
 
         # add units from build orders
         search_list += list(self._fake_units.values())
 
-        closest_unit = None
-        distance_closest = None
         for unit in search_list:
             zone = unit.zone
             unit_pos = self._position.variant.position_table[zone]
             distance = designated_pos.distance(unit_pos)
             # if two units at same position we prefer the built one
             # this only occurs when user built on an existing unit
-            if distance_closest is None or distance < distance_closest or (distance == distance_closest and unit in self._fake_units.values()):
+            if distance < distance_closest or (distance == distance_closest and unit in self._fake_units.values()):
                 closest_unit = unit
                 distance_closest = distance
 
