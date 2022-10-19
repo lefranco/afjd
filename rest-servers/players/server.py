@@ -1649,11 +1649,12 @@ class EventManagerRessource(flask_restful.Resource):  # type: ignore
 
         assert event is not None
 
-        # check that user is administrator
-        # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
-            del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to change event manager")
+        # check user has right to change event manager (moderator)
+
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        the_moderators = [m[0] for m in moderators_list]
+        if pseudo not in the_moderators:
+            flask_restful.abort(403, msg="You are not allowed to change event manager (need to be moderator)")
 
         # update event here
         event = events.Event(int(event_id), event.name, event.start_date, event.start_hour, event.end_date, event.location, event.description, event.summary, manager_id)
