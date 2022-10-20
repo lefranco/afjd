@@ -87,6 +87,8 @@ class Polygon:
 
     def is_inside_me(self, point: PositionRecord) -> bool:
         """
+            Adapted from this C code :
+
             int pnpoly(int nvert, float *vertx, float *verty, float testx, float testy)
             {
                 int i, j, c = 0;
