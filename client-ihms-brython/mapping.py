@@ -1152,6 +1152,20 @@ class Ownership(Highliteable):
         fill_color = self._position.variant.colour_table[self._role]
         ctx.fillStyle = fill_color.str_value()
 
+        # NEW WAY (must come first)
+        if self._center:
+
+            zone = self._center.region.zone
+            path = self._position.variant.path_table[zone]
+            ctx.beginPath()
+            for n, p in enumerate(path.points):  # pylint: disable=invalid-name
+                if not n:
+                    ctx.moveTo(p.x_pos, p.y_pos)
+                else:
+                    ctx.lineTo(p.x_pos, p.y_pos)
+            ctx.fill(); ctx.closePath()
+
+        # OLD WAY (must come second)
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
@@ -1161,7 +1175,6 @@ class Ownership(Highliteable):
             position = DUMMY_POSITION
 
         x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
-
         center_design.stabbeur_center(x, y, ctx)
 
 
