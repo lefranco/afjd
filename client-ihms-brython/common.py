@@ -393,8 +393,13 @@ def read_parameters(variant_name_loaded, interface_chosen):
 def read_image(variant_name_loaded, interface_chosen):
     """ read_image """
 
-    return html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png")
+    # create image
+    image = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png")
 
+    # it must not move on screen !
+    image.attrs['style'] = 'position: absolute;'
+
+    return image
 
 def get_allocations_data():
     """ get_allocations_data : returns empty dict on error """
