@@ -401,6 +401,7 @@ def read_image(variant_name_loaded, interface_chosen):
 
     return image
 
+
 def get_allocations_data():
     """ get_allocations_data : returns empty dict on error """
 
