@@ -11,7 +11,6 @@ import geometry
 import center_design
 import unit_design
 
-
 # proximity necessary for a center or a unit (to come before the zone)
 MAX_PROXIMITY_CENTER_UNIT = 10
 
@@ -626,7 +625,8 @@ class Variant(Renderable):
 
         self._name_table = {}
         self._full_name_table = {}
-        self._colour_table = {}
+        self._item_colour_table = {}
+        self._background_colour_table = {}
         self._position_table = {}
         self._legend_position_table = {}
         self._role_add_table = {}
@@ -663,16 +663,24 @@ class Variant(Renderable):
 
         # load the roles names and colours
         assert len(self._raw_parameters_content['roles']) == len(self._roles)
+
         for role_num_str, data_dict in self._raw_parameters_content['roles'].items():
+
             role_num = int(role_num_str)
             role = self._roles[role_num]
             name = data_dict['name']
             self._name_table[role] = name
-            red = data_dict['red']
-            green = data_dict['green']
-            blue = data_dict['blue']
-            colour = ColourRecord(red=red, green=green, blue=blue)
-            self._colour_table[role] = colour
+
+            red_item, red_background = data_dict['red']
+            green_item, green_background = data_dict['green']
+            blue_item, blue_background = data_dict['blue']
+
+            item_colour = ColourRecord(red=red_item, green=green_item, blue=blue_item)
+            self._item_colour_table[role] = item_colour
+
+            background_colour = ColourRecord(red=red_background, green=green_background, blue=blue_background)
+            self._background_colour_table[role] = background_colour
+
             self._role_add_table[role] = (data_dict['adjective_name'], data_dict['letter_name'])
 
         # load coasts types names
@@ -860,9 +868,14 @@ class Variant(Renderable):
         return self._full_name_table
 
     @property
-    def colour_table(self):
+    def item_colour_table(self):
         """ property """
-        return self._colour_table
+        return self._item_colour_table
+
+    @property
+    def background_colour_table(self):
+        """ property """
+        return self._background_colour_table
 
     @property
     def position_table(self):
@@ -1026,7 +1039,7 @@ class Army(Unit):
 
     def render(self, ctx, active=False) -> None:
 
-        fill_color = self._position.variant.colour_table[self._role]
+        fill_color = self._position.variant.item_colour_table[self._role]
 
         # alteration (highlite)
         if active:
@@ -1068,7 +1081,7 @@ class Fleet(Unit):
 
     def render(self, ctx, active=False) -> None:
 
-        fill_color = self._position.variant.colour_table[self._role]
+        fill_color = self._position.variant.item_colour_table[self._role]
 
         # alteration (highlite)
         if active:
@@ -1149,12 +1162,12 @@ class Ownership(Highliteable):
 
     def render(self, ctx, active=False) -> None:
 
-        fill_color = self._position.variant.colour_table[self._role]
-        ctx.fillStyle = fill_color.str_value()
 
         # NEW WAY (must come first)
         if self._center:
 
+            background_fill_color = self._position.variant.background_colour_table[self._role]
+            ctx.fillStyle = background_fill_color.str_value()
             zone = self._center.region.zone
             path = self._position.variant.path_table[zone]
             ctx.beginPath()
@@ -1166,7 +1179,9 @@ class Ownership(Highliteable):
             ctx.fill(); ctx.closePath()
 
         # OLD WAY (must come second)
-        outline_colour = fill_color.outline_colour()
+        item_fill_color = self._position.variant.item_colour_table[self._role]
+        ctx.fillStyle = item_fill_color.str_value()
+        outline_colour = item_fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
         if self._center:
@@ -1462,7 +1477,7 @@ class Position(Renderable):
 
     def role_colours(self):
         """ a rating of roles """
-        return {self._variant.name_table[r]: self._variant.colour_table[r] for r in self._variant.roles.values()}
+        return {self._variant.name_table[r]: self._variant.item_colour_table[r] for r in self._variant.roles.values()}
 
     def add_unit(self, unit: Unit):
         """ add_unit (sandbox and rectification)"""

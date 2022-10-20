@@ -27,65 +27,137 @@
             "name": "Arbitre",
             "adjective_name": "Arbitre",
             "letter_name": "M",
-            "red": 0,
-            "green": 0,
-            "blue": 0
+            "red": [
+                0,
+                0
+            ],
+            "green": [
+                0,
+                0
+            ],
+            "blue": [
+                0,
+                0
+            ]
         },
         "1": {
             "name": "Angleterre",
             "adjective_name": "anglais",
             "letter_name": "E",
-            "red": 47,
-            "green": 138,
-            "blue": 170
+            "red": [
+                47,
+                131
+            ],
+            "green": [
+                138,
+                185
+            ],
+            "blue": [
+                170,
+                204
+            ]
         },
         "2": {
             "name": "France",
             "adjective_name": "francais",
             "letter_name": "F",
-            "red": 83,
-            "green": 210,
-            "blue": 224
+            "red": [
+                83,
+                152
+            ],
+            "green": [
+                210,
+                228
+            ],
+            "blue": [
+                224,
+                237
+            ]
         },
         "3": {
             "name": "Allemagne",
             "adjective_name": "allemand",
             "letter_name": "G",
-            "red": 173,
-            "green": 122,
-            "blue": 55
+            "red": [
+                173,
+                206
+            ],
+            "green": [
+                122,
+                176
+            ],
+            "blue": [
+                55,
+                135
+            ]
         },
         "4": {
             "name": "Italie",
             "adjective_name": "italien",
             "letter_name": "I",
-            "red": 109,
-            "green": 224,
-            "blue": 105
+            "red": [
+                109,
+                168
+            ],
+            "green": [
+                224,
+                237
+            ],
+            "blue": [
+                105,
+                165
+            ]
         },
         "5": {
             "name": "Autriche",
             "adjective_name": "autrichien",
             "letter_name": "A",
-            "red": 224,
-            "green": 110,
-            "blue": 93
+            "red": [
+                224,
+                237
+            ],
+            "green": [
+                110,
+                168
+            ],
+            "blue": [
+                93,
+                158
+            ]
         },
         "6": {
             "name": "Russie",
             "adjective_name": "russe",
             "letter_name": "R",
-            "red": 239,
-            "green": 249,
-            "blue": 248
+            "red": [
+                239,
+                246
+            ],
+            "green": [
+                249,
+                252
+            ],
+            "blue": [
+                248,
+                251
+            ]
         },
         "7": {
             "name": "Turquie",
             "adjective_name": "turc",
             "letter_name": "T",
-            "red": 224,
-            "green": 211,
-            "blue": 51
+            "red": [
+                224,
+                237
+            ],
+            "green": [
+                211,
+                229
+            ],
+            "blue": [
+                51,
+                133
+            ]
         }
     },
     "coasts": {
