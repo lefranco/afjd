@@ -14,6 +14,8 @@ import unit_design
 # proximity necessary for a center or a unit (to come before the zone)
 MAX_PROXIMITY_CENTER_UNIT = 10
 
+# for filling zones
+TRANSPARENCY = 0.7
 
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
     """ shorten the segment a little bit (returns new x_dest, y_dest) """
@@ -195,7 +197,7 @@ class Center:
         """ put me on screen """
 
         fill_color = CENTER_COLOUR
-        ctx.fillStyle = fill_color.str_value()
+        ctx.fillStyle = fill_color.str_value()  # for a center
 
         outline_colour = fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
@@ -317,7 +319,7 @@ class Zone(Highliteable):
         if not active:
 
             legend_colour = LEGEND_COLOUR
-            ctx.fillStyle = legend_colour.str_value()
+            ctx.fillStyle = legend_colour.str_value()  # for a text
 
             # legend position and unit position are calculated from area ith polylabel
             position = self._variant.legend_position_table[self]
@@ -933,12 +935,12 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
         # dislodger
 
         dislodger_back_colour = DISLODGED_TEXT_BACKGROUND_COLOUR
-        ctx.fillStyle = dislodger_back_colour.str_value()
+        ctx.fillStyle = dislodger_back_colour.str_value()  # for background
         ctx.rect(x_pos + 12, y_pos - 17, 18, 10)
         ctx.fill()
 
         dislodger_colour = DISLODGED_COLOUR
-        ctx.fillStyle = dislodger_colour.str_value()
+        ctx.fillStyle = dislodger_colour.str_value()  # for text
         ctx.font = DISLODGED_FONT
         ctx.fillText(dislodger_legend, x_pos + 14, y_pos - 9)
 
@@ -1045,7 +1047,7 @@ class Army(Unit):
         if active:
             fill_color = fill_color.highlite_colour()
 
-        ctx.fillStyle = fill_color.str_value()
+        ctx.fillStyle = fill_color.str_value()  # for unit
 
         outline_colour = fill_color.outline_colour()
 
@@ -1087,7 +1089,7 @@ class Fleet(Unit):
         if active:
             fill_color = fill_color.highlite_colour()
 
-        ctx.fillStyle = fill_color.str_value()
+        ctx.fillStyle = fill_color.str_value()  # for unit
 
         outline_colour = fill_color.outline_colour()
 
@@ -1166,8 +1168,9 @@ class Ownership(Highliteable):
         # NEW WAY (must come first)
         if self._center:
 
+            ctx.globalAlpha = TRANSPARENCY;
             background_fill_color = self._position.variant.background_colour_table[self._role]
-            ctx.fillStyle = background_fill_color.str_value()
+            ctx.fillStyle = background_fill_color.str_value()  # filling the zone
             zone = self._center.region.zone
             path = self._position.variant.path_table[zone]
             ctx.beginPath()
@@ -1177,10 +1180,11 @@ class Ownership(Highliteable):
                 else:
                     ctx.lineTo(p.x_pos, p.y_pos)
             ctx.fill(); ctx.closePath()
+            ctx.globalAlpha = 1;
 
         # OLD WAY (must come second)
         item_fill_color = self._position.variant.item_colour_table[self._role]
-        ctx.fillStyle = item_fill_color.str_value()
+        ctx.fillStyle = item_fill_color.str_value()  # for an ownership
         outline_colour = item_fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
@@ -2002,7 +2006,8 @@ def show_zone(ctx, zone_area):
     stroke_color = SHOW_COLOUR
     ctx.strokeStyle = stroke_color.str_value()
     outline_stroke_color = stroke_color.outline_colour()
-    ctx.fillStyle = outline_stroke_color.str_value()
+    ctx.fillStyle = outline_stroke_color.str_value()  # filling zone
+    ctx.globalAlpha = TRANSPARENCY;
 
     ctx.beginPath()
     for n, p in enumerate(zone_area.points):  # pylint: disable=invalid-name
@@ -2011,3 +2016,4 @@ def show_zone(ctx, zone_area):
         else:
             ctx.lineTo(p.x_pos, p.y_pos)
     ctx.fill(); ctx.stroke(); ctx.closePath()
+    ctx.globalAlpha = 1;
