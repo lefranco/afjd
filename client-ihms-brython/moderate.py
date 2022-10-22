@@ -18,7 +18,7 @@ import scoring
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['changer nouvelles', 'codes de vérification', 'envoyer un courriel', 'retrouver à partir du courriel', 'tous les courriels', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi', 'destituer arbitre', 'changer responsable événement']
+OPTIONS = ['changer nouvelles', 'préparer un publipostage', 'codes de vérification', 'envoyer un courriel', 'retrouver à partir du courriel', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi', 'destituer arbitre', 'changer responsable événement']
 
 
 def check_modo(pseudo):
@@ -238,6 +238,51 @@ def change_news_modo():
     MY_SUB_PANEL <= form
 
 
+def all_emails():
+    """ all_emails """
+
+    MY_SUB_PANEL <= html.H3("Liste joueurs avec leurs courriels")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    emails_dict = get_all_emails()
+
+    emails_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['email', 'pseudo']:
+        col = html.TD(field)
+        thead <= col
+    emails_table <= thead
+
+    for pseudo, (email, confirmed) in sorted(emails_dict.items(), key=lambda t:t[1][0]):
+        row = html.TR()
+
+        if confirmed:
+            email_formatted = html.STRONG(email)
+        else:
+            email_formatted = html.EM(email)
+
+        col = html.TD(email_formatted)
+        row <= col
+
+        col = html.TD(pseudo)
+        row <= col
+
+        emails_table <= row
+
+    MY_SUB_PANEL <= emails_table
+
+
 def show_verif_codes():
     """ show_verif_codes """
 
@@ -383,46 +428,6 @@ def sendmail():
     form <= input_select_player
 
     MY_SUB_PANEL <= form
-
-
-def all_emails():
-    """ all_emails """
-
-    MY_SUB_PANEL <= html.H3("Liste joueurs avec leurs courriels")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    emails_dict = get_all_emails()
-
-    emails_table = html.TABLE()
-
-    # header
-    thead = html.THEAD()
-    for field in ['pseudo', 'email']:
-        col = html.TD(field)
-        thead <= col
-    emails_table <= thead
-
-    for pseudo, email in emails_dict.items():
-        row = html.TR()
-
-        col = html.TD(pseudo)
-        row <= col
-
-        col = html.TD(email)
-        row <= col
-
-        emails_table <= row
-
-    MY_SUB_PANEL <= emails_table
 
 
 def display_email_address():
@@ -935,7 +940,7 @@ def change_manager():
         MY_SUB_PANEL.clear()
         change_manager()
 
-    MY_SUB_PANEL <= html.H3("Changer le responsable d'un événement")
+    MY_SUB_PANEL <= html.H3("Changer le responsable de l'événement")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1010,14 +1015,14 @@ def load_option(_, item_name):
 
     if item_name == 'changer nouvelles':
         change_news_modo()
+    if item_name == 'préparer un publipostage':
+        all_emails()
     if item_name == 'codes de vérification':
         show_verif_codes()
     if item_name == 'envoyer un courriel':
         sendmail()
     if item_name == 'retrouver à partir du courriel':
         find_from_email_address()
-    if item_name == 'tous les courriels':
-        all_emails()
     if item_name == 'récupérer un courriel':
         display_email_address()
     if item_name == 'récupérer un téléphone':
