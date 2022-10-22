@@ -135,7 +135,7 @@ def sandbox():
     selected_hovered_object = None
 
     def show_zone_callback(_, zone_area):
-        mapping.show_zone(ctx, zone_area)
+        mapping.fill_zone(ctx, zone_area, mapping.SHOW_COLOUR)
 
     def rest_hold_callback(_):
         """ rest_hold_callback """

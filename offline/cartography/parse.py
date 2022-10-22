@@ -286,8 +286,11 @@ def main() -> None:
             print(f"Seems coastal zone '{coastal_zone_name}' did not get a path")
             sys.exit(1)
 
-    # make region table from input json file
+    # make region table from input json file (name of region)
     regions_ref_num_table = {int(k): v['name'] for k, v in json_parameters_data['zones'].items() if v['name']}
+
+    # make display table from input json file (color display of region )
+    display_ref_num_table = {int(k): v['display'] for k, v in json_parameters_data['zones'].items() if 'display' in v}
 
     # put centers path in region paths
     for num, path in regions_path_table.items():
@@ -338,6 +341,10 @@ def main() -> None:
             "x_legend_pos": x_legend_pos,
             "y_legend_pos": y_legend_pos
         }
+
+        if num in display_ref_num_table:
+            display = display_ref_num_table[num]
+            regions_pos_table[num]["display"] = display
 
         # little simplification : remove successive duplicates
         raw_list = [(round((x * png_width / viewbox_width)), round((y * png_height / viewbox_height))) for (x, y) in path.polygon()]

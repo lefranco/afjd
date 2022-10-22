@@ -12,6 +12,9 @@ FAQ_CONTENT_TABLE = {
     "Peut-on faire des erreurs d'ordres ?":
     "Eh non. Les ordres sont 100% vérifiés avant d'être enregistrés. Par contre le menu 'taguer' dans une partie permet une communcation par ordres 'ésotériques'. Cela ne presente un intérêt que dans les parties sans communication.",
 
+    "Que signifient toutes les couleurs de remplissage des regions sur la carte ?":
+    "Une région prend la couleur du pays qui possède le centre qui s'y trouve. Sinon, elle prend la couleur du pays qui possède l'unité qui l'occupe. Sinon, elle prend la couleur géographique (ce critère restant subjectif) du pays.",
+
     "Quand a lieu la résolution ?":
     "Quand le dernier joueur qui a des ordres à rendre coche sur la case 'd'accord pour la résolution' tout simplement (ou quand l'arbitre le fait à sa place pour éviter que la partie ne s'éternise).",
 

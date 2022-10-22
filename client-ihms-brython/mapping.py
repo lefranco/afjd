@@ -15,7 +15,8 @@ import unit_design
 MAX_PROXIMITY_CENTER_UNIT = 10
 
 # for filling zones
-TRANSPARENCY = 0.7
+TRANSPARENCY = 0.66
+
 
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
     """ shorten the segment a little bit (returns new x_dest, y_dest) """
@@ -58,6 +59,27 @@ def draw_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int, ctx) -> Non
     ctx.fill(); ctx.closePath()
 
     ctx.restore()
+
+
+def fill_zone(ctx, zone_area, fill_colour):
+    """ fill_zone """
+
+    # fill coulour
+    ctx.fillStyle = fill_colour.str_value()  # filling zone
+
+    # change transparency
+    ctx.globalAlpha = TRANSPARENCY
+
+    ctx.beginPath()
+    for n, p in enumerate(zone_area.points):  # pylint: disable=invalid-name
+        if not n:
+            ctx.moveTo(p.x_pos, p.y_pos)
+        else:
+            ctx.lineTo(p.x_pos, p.y_pos)
+    ctx.fill(); ctx.stroke(); ctx.closePath()
+
+    # restore transparency
+    ctx.globalAlpha = 1
 
 
 class Renderable:
@@ -355,6 +377,15 @@ class Zone(Highliteable):
         ctx.strokeStyle = stroke_color.str_value()
         ctx.stroke(); ctx.closePath()
 
+    def render2(self, ctx, role):
+        """ put me on screen - fill me because geographically belong to role"""
+
+        # Filling the zone because it geographically belongs to a role (priority rank = 3)
+
+        path = self._variant.path_table[self]
+        background_fill_color = self._variant.background_colour_table[role]
+        fill_zone(ctx, path, background_fill_color)
+
     def description(self):
         """ description for helping """
 
@@ -633,6 +664,7 @@ class Variant(Renderable):
         self._legend_position_table = {}
         self._role_add_table = {}
         self._path_table = {}
+        self._geographic_owner_table = {}
 
         # load the map size
         data_dict = self._raw_parameters_content['map']
@@ -723,6 +755,12 @@ class Variant(Renderable):
             y_legend_pos = data_dict['y_legend_pos']
             legend_position = geometry.PositionRecord(x_pos=x_legend_pos, y_pos=y_legend_pos)
             self._legend_position_table[zone] = legend_position
+
+            #  geographic_owner_table
+            if 'display' in data_dict:
+                num_owner = data_dict['display']
+                owner = self._roles[num_owner]
+                self._geographic_owner_table[zone] = owner
 
         # zone areas (polygons)
         assert len(self._raw_parameters_content['zone_areas']) == len(self._zones)
@@ -880,6 +918,11 @@ class Variant(Renderable):
         return self._background_colour_table
 
     @property
+    def geographic_owner_table(self):
+        """ property """
+        return self._geographic_owner_table
+
+    @property
     def position_table(self):
         """ property """
         return self._position_table
@@ -922,6 +965,58 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
     def is_disloged(self):
         """ dislodged """
         return self._dislodged_origin is not None
+
+    def render(self, ctx, active=False) -> None:
+
+        # Filling the zone because occupied by a unit (priority rank = 2)
+
+        # must be somewhere (not a fake unit in sandbox)
+        if self._zone:
+            # must not already have a coulour there (owned by someone)
+            if self._zone.region.center not in self._position.owner_table:
+                zone = self._zone
+                # must not be at sea
+                if zone.region.region_type is not RegionTypeEnum.SEA_REGION:
+                    path = self._position.variant.path_table[zone]
+                    background_fill_color = self._position.variant.background_colour_table[self._role]
+                    fill_zone(ctx, path, background_fill_color)
+
+        fill_color = self._position.variant.item_colour_table[self._role]
+
+        # alteration (highlite)
+        if active:
+            fill_color = fill_color.highlite_colour()
+
+        ctx.fillStyle = fill_color.str_value()  # for unit
+
+        outline_colour = fill_color.outline_colour()
+
+        # alteration (highlite)
+        if active:
+            outline_colour = outline_colour.highlite_colour()
+
+        # TODO : this should be done in simpler way
+        if self._zone:
+            position = self._position.variant.position_table[self._zone]
+        else:
+            position = DUMMY_POSITION
+
+        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
+
+        # shift for dislodged units
+        if self._dislodged_origin is not None:
+            x += DISLODGED_SHIFT_X  # pylint: disable=invalid-name
+            y += DISLODGED_SHIFT_Y  # pylint: disable=invalid-name
+
+        # actual display of unit
+        if isinstance(self, Army):
+            unit_design.stabbeur_army(x, y, ctx)
+        if isinstance(self, Fleet):
+            unit_design.stabbeur_fleet(x, y, ctx)
+
+        # more stuff if dislodged
+        if self._dislodged_origin is not None:
+            self.render_as_dislodged(x, y, ctx)
 
     def render_as_dislodged(self, x_pos: int, y_pos: int, ctx) -> None:
         """ render additional stuff when dislodged """
@@ -1038,84 +1133,14 @@ class Army(Unit):
     """ An army """
 
     # use init from parent class
-
-    def render(self, ctx, active=False) -> None:
-
-        fill_color = self._position.variant.item_colour_table[self._role]
-
-        # alteration (highlite)
-        if active:
-            fill_color = fill_color.highlite_colour()
-
-        ctx.fillStyle = fill_color.str_value()  # for unit
-
-        outline_colour = fill_color.outline_colour()
-
-        # alteration (highlite)
-        if active:
-            outline_colour = outline_colour.highlite_colour()
-
-        ctx.strokeStyle = outline_colour.str_value()
-
-        if self._zone:
-            position = self._position.variant.position_table[self._zone]
-        else:
-            position = DUMMY_POSITION
-
-        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
-
-        # shift for dislodged units
-        if self._dislodged_origin is not None:
-            x += DISLODGED_SHIFT_X  # pylint: disable=invalid-name
-            y += DISLODGED_SHIFT_Y  # pylint: disable=invalid-name
-
-        unit_design.stabbeur_army(x, y, ctx)
-
-        # more stuff if dislodged
-        if self._dislodged_origin is not None:
-            self.render_as_dislodged(x, y, ctx)
+    # use render from parent class
 
 
 class Fleet(Unit):
     """ An fleet """
 
     # use init from parent class
-
-    def render(self, ctx, active=False) -> None:
-
-        fill_color = self._position.variant.item_colour_table[self._role]
-
-        # alteration (highlite)
-        if active:
-            fill_color = fill_color.highlite_colour()
-
-        ctx.fillStyle = fill_color.str_value()  # for unit
-
-        outline_colour = fill_color.outline_colour()
-
-        # alteration (highlite)
-        if active:
-            outline_colour = outline_colour.highlite_colour()
-
-        ctx.strokeStyle = outline_colour.str_value()
-
-        if self._zone:
-            position = self._position.variant.position_table[self._zone]
-        else:
-            position = DUMMY_POSITION
-
-        x, y = position.x_pos, position.y_pos  # pylint: disable=invalid-name
-
-        # shift for dislodged units
-        if self._dislodged_origin is not None:
-            x += DISLODGED_SHIFT_X  # pylint: disable=invalid-name
-            y += DISLODGED_SHIFT_Y  # pylint: disable=invalid-name
-
-        unit_design.stabbeur_fleet(x, y, ctx)
-
-        # more stuff if dislodged
-        if self._dislodged_origin is not None:
-            self.render_as_dislodged(x, y, ctx)
+    # use render from parent class
 
 
 class Ownership(Highliteable):
@@ -1164,30 +1189,22 @@ class Ownership(Highliteable):
 
     def render(self, ctx, active=False) -> None:
 
+        # Filling the zone  because center is owned (priority rank = 1)
 
-        # NEW WAY (must come first)
         if self._center:
-
-            ctx.globalAlpha = TRANSPARENCY;
-            background_fill_color = self._position.variant.background_colour_table[self._role]
-            ctx.fillStyle = background_fill_color.str_value()  # filling the zone
             zone = self._center.region.zone
             path = self._position.variant.path_table[zone]
-            ctx.beginPath()
-            for n, p in enumerate(path.points):  # pylint: disable=invalid-name
-                if not n:
-                    ctx.moveTo(p.x_pos, p.y_pos)
-                else:
-                    ctx.lineTo(p.x_pos, p.y_pos)
-            ctx.fill(); ctx.closePath()
-            ctx.globalAlpha = 1;
+            background_fill_color = self._position.variant.background_colour_table[self._role]
+            fill_zone(ctx, path, background_fill_color)
 
-        # OLD WAY (must come second)
+        # the little disk ("old way")
+
         item_fill_color = self._position.variant.item_colour_table[self._role]
         ctx.fillStyle = item_fill_color.str_value()  # for an ownership
         outline_colour = item_fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
+        # TODO : this should be done in simpler way
         if self._center:
             position = self._position.variant.position_table[self._center]
         else:
@@ -1305,6 +1322,23 @@ class Position(Renderable):
         self._occupant_table = {}
 
     def render(self, ctx, active=False) -> None:
+
+        for zone in self._variant.zones.values():
+
+            # must geographically belong to a role
+            if zone not in self._variant.geographic_owner_table:
+                continue
+
+            # must not be owned
+            if zone.region.center in self._owner_table:
+                continue
+
+            # must not be occupied
+            if zone.region in self._occupant_table:
+                continue
+
+            role = self._variant.geographic_owner_table[zone]
+            zone.render2(ctx, role)
 
         # ownerships
         for ownership in self._ownerships:
@@ -1997,23 +2031,3 @@ class Orders(Renderable):
 
     def __str__(self) -> str:
         return '\n'.join([str(o) for o in self._orders])
-
-
-def show_zone(ctx, zone_area):
-    """ show_zone """
-
-    # choose the coulours (need to be deterministic)
-    stroke_color = SHOW_COLOUR
-    ctx.strokeStyle = stroke_color.str_value()
-    outline_stroke_color = stroke_color.outline_colour()
-    ctx.fillStyle = outline_stroke_color.str_value()  # filling zone
-    ctx.globalAlpha = TRANSPARENCY;
-
-    ctx.beginPath()
-    for n, p in enumerate(zone_area.points):  # pylint: disable=invalid-name
-        if not n:
-            ctx.moveTo(p.x_pos, p.y_pos)
-        else:
-            ctx.lineTo(p.x_pos, p.y_pos)
-    ctx.fill(); ctx.stroke(); ctx.closePath()
-    ctx.globalAlpha = 1;
