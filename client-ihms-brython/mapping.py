@@ -1008,6 +1008,8 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
         if active:
             outline_colour = outline_colour.highlite_colour()
 
+        ctx.strokeStyle = outline_colour.str_value()
+
         # TODO : this should be done in simpler way
         if self._zone:
             position = self._position.variant.position_table[self._zone]

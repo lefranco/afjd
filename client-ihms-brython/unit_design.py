@@ -15,6 +15,8 @@ class Point:
 def stabbeur_army(x: int, y: int, ctx):  # pylint: disable=invalid-name
     """ display an army the stabbeur way """
 
+    # the ctx.strokeStyle and ctx.fillStyle should be defined
+
     # socle
     p1 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
     p1[0].x = x - 15; p1[0].y = y + 6
@@ -83,6 +85,8 @@ def stabbeur_army(x: int, y: int, ctx):  # pylint: disable=invalid-name
 
 def stabbeur_fleet(x: int, y: int, ctx):  # pylint: disable=invalid-name
     """ display a fleet the stabbeur way """
+
+    # the ctx.strokeStyle and ctx.fillStyle should be defined
 
     # gros oeuvre
     p1 = [Point() for _ in range(33)]  # pylint: disable=invalid-name
