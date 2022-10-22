@@ -463,7 +463,7 @@ def sandbox():
             # insert attack, off support or convoy order
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
                 # little shortcut if dest = origin
-                if selected_dest_zone == selected_active_unit.zone:
+                if selected_dest_zone.region == selected_active_unit.zone.region:
                     selected_order_type = mapping.OrderTypeEnum.HOLD_ORDER
                     selected_dest_zone = None
                 order = mapping.Order(POSITION_DATA, selected_order_type, selected_active_unit, None, selected_dest_zone)
