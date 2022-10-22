@@ -12,7 +12,8 @@ import center_design
 import unit_design
 
 # proximity necessary for a center or a unit (to come before the zone)
-MAX_PROXIMITY_CENTER_UNIT = 10
+# otherwise the zones have no chance since units are first
+MAX_PROXIMITY_ITEM_UNIT = 10
 
 # for filling zones
 TRANSPARENCY = 0.66
@@ -434,7 +435,6 @@ class Zone(Highliteable):
     def parent_zone(self) -> 'Zone':
         """ property """
         return self._parent_zone
-
 
     def __str__(self) -> str:
         variant = self._variant
@@ -1432,7 +1432,38 @@ class Position(Renderable):
         closest_object = None
         distance_closest = math.inf
 
+        # what list do we use ?
+        search_list = self._units + self._dislodged_units
+
+        # search in the units (must be close enough)
+
+        for unit in search_list:
+            zone = unit.zone
+            unit_pos = self._variant.position_table[zone]
+            if unit.is_disloged():
+                unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
+            distance = designated_pos.distance(unit_pos)
+            if distance >= MAX_PROXIMITY_ITEM_UNIT:
+                continue
+            if distance < distance_closest:
+                closest_object = unit
+                distance_closest = distance
+
+        # search in the ownerships (must be close enough)
+
+        for ownership in self._ownerships:
+            center = ownership.center
+            center_pos = self._variant.position_table[center]
+            distance = designated_pos.distance(center_pos)
+            if distance >= MAX_PROXIMITY_ITEM_UNIT:
+                continue
+            if distance < distance_closest:
+                closest_object = ownership
+                distance_closest = distance
+
         # search the zones
+        # important : it must come last
+        # because hot spot is same between units and zones so otherwise units have no chance of being selected
 
         # sort zones by distance
         zones_sorted = sorted(self._variant.zones.values(), key=lambda z: designated_pos.distance(self._variant.position_table[z]))
@@ -1453,35 +1484,6 @@ class Position(Renderable):
                     break
             if num > len(zones_sorted) // 2:
                 break
-
-        # what list do we use ?
-        search_list = self._units + self._dislodged_units
-
-        # search in the units (must be close enough)
-
-        for unit in search_list:
-            zone = unit.zone
-            unit_pos = self._variant.position_table[zone]
-            if unit.is_disloged():
-                unit_pos = geometry.PositionRecord(x_pos=unit_pos.x_pos + DISLODGED_SHIFT_X, y_pos=unit_pos.y_pos + DISLODGED_SHIFT_Y)
-            distance = designated_pos.distance(unit_pos)
-            if distance >= MAX_PROXIMITY_CENTER_UNIT:
-                continue
-            if distance < distance_closest:
-                closest_object = unit
-                distance_closest = distance
-
-        # search in the ownerships (must be close enough)
-
-        for ownership in self._ownerships:
-            center = ownership.center
-            center_pos = self._variant.position_table[center]
-            distance = designated_pos.distance(center_pos)
-            if distance >= MAX_PROXIMITY_CENTER_UNIT:
-                continue
-            if distance < distance_closest:
-                closest_object = ownership
-                distance_closest = distance
 
         return closest_object
 
