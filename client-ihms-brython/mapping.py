@@ -312,7 +312,7 @@ class Region:
 class Zone(Highliteable):
     """ A zone """
 
-    def __init__(self, identifier: int, region: Region, coast_type, variant) -> None:
+    def __init__(self, identifier: int, region: Region, coast_type, parent_zone, variant) -> None:
 
         self._identifier = identifier
 
@@ -321,6 +321,7 @@ class Zone(Highliteable):
 
         # for the special zones that have a specific coast
         self._coast_type = coast_type
+        self._parent_zone = parent_zone
 
         # other zones one may access by fleet and army
         self._neighbours = {u: [] for u in UnitTypeEnum}
@@ -428,6 +429,12 @@ class Zone(Highliteable):
     def variant(self) -> 'Variant':
         """ property """
         return self._variant
+
+    @property
+    def parent_zone(self) -> 'Zone':
+        """ property """
+        return self._parent_zone
+
 
     def __str__(self) -> str:
         variant = self._variant
@@ -605,7 +612,7 @@ class Variant(Renderable):
         self._zones = {}
         for num, region in enumerate(self._regions.values()):
             number = num + 1
-            zone = Zone(number, region, None, self)
+            zone = Zone(number, region, None, None, self)
             region.zone = zone
             self._zones[number] = zone
 
@@ -617,7 +624,9 @@ class Variant(Renderable):
             number = num + 1
             region = self._regions[region_num]
             coast_type = self._coast_types[coast_type_num]
-            zone = Zone(offset + number, region, coast_type, self)
+            coast_num = region_num
+            parent_zone = self._zones[coast_num]
+            zone = Zone(offset + number, region, coast_type, parent_zone, self)
             self._zones[offset + number] = zone
 
         # load the start units
@@ -972,9 +981,13 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
 
         # must be somewhere (not a fake unit in sandbox)
         if self._zone:
+
             # must not already have a coulour there (owned by someone)
             if self._zone.region.center not in self._position.owner_table:
-                zone = self._zone
+
+                # special coasts : we get the big one
+                zone = self._zone.parent_zone if self._zone.parent_zone else self._zone
+
                 # must not be at sea
                 if zone.region.region_type is not RegionTypeEnum.SEA_REGION:
                     path = self._position.variant.path_table[zone]
