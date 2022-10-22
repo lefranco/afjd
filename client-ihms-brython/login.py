@@ -49,12 +49,15 @@ def email_confirmed(pseudo):
 
     return email_confirmed_loaded
 
+PREVIOUS_PSEUDO = None
 
 def login():
     """ login """
 
     def login_callback(_):
         """ login_callback """
+
+        global PREVIOUS_PSEUDO
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -65,7 +68,7 @@ def login():
                     alert(f"Problème à la connexion : {req_result['msg']}")
 
                     # Too expensive to load list of players and see which is same with different case so just provide a little tip
-                    InfoDialog("Astuce", "Vous vous trompez peut-être sur la casse de votre pseudo (et non sur le mot de passe), allez donc consulter la liste des joueurs pour vous rafraichir la mémoire...", remove_after=config.REMOVE_AFTER)
+                    InfoDialog("Astuce", "Vous vous trompez peut-être sur la casse de votre pseudo (et non sur le mot de passe), allez donc consulter la liste des joueurs (menu classement) pour vous rafraichir la mémoire...", remove_after=config.REMOVE_AFTER)
 
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
@@ -90,6 +93,9 @@ def login():
             index.load_option(None, 'mes parties')
 
         pseudo = input_pseudo.value
+
+        # remember what was entered to propose it if fails
+        PREVIOUS_PSEUDO = pseudo
 
         if not pseudo:
             alert("Il manque le pseudo !")
@@ -153,9 +159,13 @@ def login():
     form1 <= html.DIV("Pas de compte ? Créez-le à partir du menu 'mon compte/créér mon compte'...", Class='note')
     form1 <= html.BR()
 
-    proposed_pseudo = ""
-    if 'PSEUDO' in storage:
+    # try to make user gain a bit of time
+    if PREVIOUS_PSEUDO is not None:
+        proposed_pseudo = PREVIOUS_PSEUDO
+    elif 'PSEUDO' in storage:
         proposed_pseudo = storage['PSEUDO']
+    else:
+        proposed_pseudo = ""
 
     fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("Pseudo", title="Attention la casse est importante")
@@ -206,6 +216,8 @@ def login():
 def logout():
     """ logout """
 
+    global PREVIOUS_PSEUDO
+
     effective = False
 
     if 'PSEUDO' in storage:
@@ -215,6 +227,8 @@ def logout():
     if 'LOGIN_TIME' in storage:
         del storage['LOGIN_TIME']
         effective = True
+
+    PREVIOUS_PSEUDO = None
 
     show_login()
 
