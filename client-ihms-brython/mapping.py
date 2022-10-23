@@ -16,8 +16,14 @@ import unit_design
 MAX_PROXIMITY_ITEM_UNIT = 10
 
 # for filling zones
-TRANSPARENCY = 0.66
+TRANSPARENCY = 0.70
 
+# how many zones considered before giving up
+# 35 makes sure all goes right with standard diplomania map
+# with 30 west of moscow is no man land
+# with 20 south of sweden is no man land
+# with 10 east of atlantic is no man land
+CONSIDERED_ZONES = 35
 
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
     """ shorten the segment a little bit (returns new x_dest, y_dest) """
@@ -844,7 +850,8 @@ class Variant(Renderable):
                     distance_closest = distance
                 if inside_ones >= 2:
                     break
-            if num > len(zones_sorted) // 2:
+            # do not want to spend too much time on this
+            if num > CONSIDERED_ZONES:
                 break
 
         # by default
@@ -1484,7 +1491,8 @@ class Position(Renderable):
                     distance_closest = distance
                 if inside_ones >= 2:
                     break
-            if num > len(zones_sorted) // 2:
+            # do not want to spend too much time on this
+            if num > CONSIDERED_ZONES:
                 break
 
         return closest_object
