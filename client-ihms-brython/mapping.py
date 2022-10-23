@@ -25,6 +25,7 @@ TRANSPARENCY = 0.70
 # with 10 east of atlantic is no man land
 CONSIDERED_ZONES = 35
 
+
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
     """ shorten the segment a little bit (returns new x_dest, y_dest) """
     epsilon = 5
