@@ -750,6 +750,9 @@ def sandbox():
         # put the legends at the end
         VARIANT_DATA.render_legends(ctx)
 
+        # because they get cleared on screen
+        displayed_zones.clear()
+
     def stack_orders(buttons_right):
         """ stack_orders """
 
