@@ -49,7 +49,9 @@ def email_confirmed(pseudo):
 
     return email_confirmed_loaded
 
+
 PREVIOUS_PSEUDO = None
+
 
 def login():
     """ login """
