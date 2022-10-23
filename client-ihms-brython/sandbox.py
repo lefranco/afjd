@@ -134,7 +134,18 @@ def sandbox():
     down_click_time = None
     selected_hovered_object = None
 
-    def show_zone_callback(_, zone_area):
+    displayed_zones = set()
+
+    def show_zone_callback(_, zone):
+
+        # ignore if already
+        if zone in displayed_zones:
+            return
+
+        # handle the set of displayed zones
+        displayed_zones.add(zone)
+
+        zone_area = VARIANT_DATA.path_table[zone]
         mapping.fill_zone(ctx, zone_area, mapping.SHOW_COLOUR)
 
     def rest_hold_callback(_):
@@ -794,11 +805,10 @@ def sandbox():
 
         # to check positions
         for zone in sorted(VARIANT_DATA.zones.values(), key=lambda z: VARIANT_DATA.name_table[z].upper()):
-            zone_area = VARIANT_DATA.path_table[zone]
             zone_name = VARIANT_DATA.name_table[zone]
 
             input_submit = html.INPUT(type="submit", value=zone_name)
-            input_submit.bind("click", lambda e, za=zone_area: show_zone_callback(e, za))
+            input_submit.bind("click", lambda e, z=zone: show_zone_callback(e, z))
             buttons_right <= input_submit
 
         buttons_right <= html.BR()
