@@ -901,7 +901,7 @@ def sandbox():
         POSITION_DATA.add_unit(new_unit)
 
         # refresh
-        callback_render(ctx)
+        callback_render(None)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
