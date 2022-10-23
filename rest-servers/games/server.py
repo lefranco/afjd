@@ -798,6 +798,10 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg=f"Game {name} already exists")
 
+        # abort special case : we do not want to see this player in more games
+        if pseudo == "Chryss":
+            flask_restful.abort(404, msg="Core dumped, segmentation fault! (1)")
+
         # pay more attention to deadline
         entered_deadline = args['deadline']
 
@@ -994,7 +998,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
         # abort special case : we do not want to see this player in more games
         if not delete and player_pseudo == "Chryss":
-            flask_restful.abort(404, msg="Core dumped, segmentation fault!")
+            flask_restful.abort(404, msg="Core dumped, segmentation fault! (2)")
 
         sql_executor = database.SqlExecutor()
 
