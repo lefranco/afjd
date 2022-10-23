@@ -694,7 +694,7 @@ def rectify_position():
             position_data.add_ownership(new_ownership)
 
         # refresh
-        callback_render(ctx)
+        callback_render(None)
 
     # starts here
 
