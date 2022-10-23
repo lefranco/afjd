@@ -264,7 +264,7 @@ def all_emails():
         thead <= col
     emails_table <= thead
 
-    for pseudo, (email, confirmed) in sorted(emails_dict.items(), key=lambda t:t[1][0]):
+    for pseudo, (email, confirmed) in sorted(emails_dict.items(), key=lambda t:t[1][0].upper()):
         row = html.TR()
 
         if confirmed:
@@ -281,7 +281,8 @@ def all_emails():
         emails_table <= row
 
     MY_SUB_PANEL <= emails_table
-
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV("Les courriels en gras sont confimés, les courriels en italique ne le sont pas.", Class='note')
 
 def show_verif_codes():
     """ show_verif_codes """
