@@ -987,6 +987,8 @@ def show_board(panel):
         # put the legends at the end
         VARIANT_DATA.render_legends(ctx)
 
+        # do not put the orders here
+
     # create canvas
     map_size = VARIANT_DATA.map_size
     canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
@@ -1102,12 +1104,12 @@ def show_position(direct_last_moves):
             # put the position
             position_data.render(ctx)
 
+            # put the legends at the end
+            VARIANT_DATA.render_legends(ctx)
+
             # put the orders (if history)
             if orders_data:
                 orders_data.render(ctx)
-
-            # put the legends at the end
-            VARIANT_DATA.render_legends(ctx)
 
         # current position is default
         orders_loaded = None
@@ -2141,11 +2143,11 @@ def submit_orders():
         # put the position
         POSITION_DATA.render(ctx)
 
-        # put the orders
-        orders_data.render(ctx)
-
         # put the legends at the end
         VARIANT_DATA.render_legends(ctx)
+
+        # put the orders
+        orders_data.render(ctx)
 
     def stack_orders(buttons_right):
         """ stack_orders """
@@ -2950,11 +2952,11 @@ def submit_communication_orders():
         # put the position
         POSITION_DATA.render(ctx)
 
-        # put the orders
-        orders_data.render(ctx)
-
         # put the legends at the end
         VARIANT_DATA.render_legends(ctx)
+
+        # put the orders
+        orders_data.render(ctx)
 
     def stack_orders(buttons_right):
         """ stack_orders """
