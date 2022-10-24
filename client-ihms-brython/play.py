@@ -969,6 +969,48 @@ def get_roles_submitted_orders(game_id):
     return submitted_data
 
 
+def show_board(panel):
+    """ map and ratings """
+
+    def callback_render(_):
+        """ callback_render """
+
+        # put the background map first
+        ctx.drawImage(img, 0, 0)
+
+        # put the centers
+        VARIANT_DATA.render(ctx)
+
+        # put the position
+        POSITION_DATA.render(ctx)
+
+        # put the legends at the end
+        VARIANT_DATA.render_legends(ctx)
+
+    # create canvas
+    map_size = VARIANT_DATA.map_size
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return False
+
+    # put background (this will call the callback that display the whole map)
+    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    img.bind('load', callback_render)
+
+    panel <= canvas
+    panel <= html.BR()
+
+    # ratings
+    ratings = POSITION_DATA.role_ratings()
+    colours = POSITION_DATA.role_colours()
+    game_scoring = GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+    panel <= rating_colours_window
+    panel <= html.BR()
+
+
 def show_position(direct_last_moves):
     """ show_position """
 
@@ -3095,21 +3137,6 @@ def submit_communication_orders():
 def negotiate():
     """ negotiate """
 
-    def callback_render(_):
-        """ callback_render """
-
-        # put the background map first
-        ctx.drawImage(img, 0, 0)
-
-        # put the centers
-        VARIANT_DATA.render(ctx)
-
-        # put the position
-        POSITION_DATA.render(ctx)
-
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
-
     def add_message_callback(_):
         """ add_message_callback """
 
@@ -3384,28 +3411,8 @@ def negotiate():
     MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
-    # create canvas
-    map_size = VARIANT_DATA.map_size
-    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
-    ctx = canvas.getContext("2d")
-    if ctx is None:
-        alert("Il faudrait utiliser un navigateur plus récent !")
-        return False
-
-    # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-    img.bind('load', callback_render)
-
-    MY_SUB_PANEL <= canvas
-    MY_SUB_PANEL <= html.BR()
-
-    # ratings
-    ratings = POSITION_DATA.role_ratings()
-    colours = POSITION_DATA.role_colours()
-    game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
-    MY_SUB_PANEL <= rating_colours_window
-    MY_SUB_PANEL <= html.BR()
+    # map and ratings
+    show_board(MY_SUB_PANEL)
 
     # role flag
     stack_role_flag(MY_SUB_PANEL)
@@ -3438,21 +3445,6 @@ def negotiate():
 
 def declare():
     """ declare """
-
-    def callback_render(_):
-        """ callback_render """
-
-        # put the background map first
-        ctx.drawImage(img, 0, 0)
-
-        # put the centers
-        VARIANT_DATA.render(ctx)
-
-        # put the position
-        POSITION_DATA.render(ctx)
-
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
 
     def add_declaration_callback(_):
         """ add_declaration_callback """
@@ -3661,28 +3653,8 @@ def declare():
     MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
-    # create canvas
-    map_size = VARIANT_DATA.map_size
-    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
-    ctx = canvas.getContext("2d")
-    if ctx is None:
-        alert("Il faudrait utiliser un navigateur plus récent !")
-        return False
-
-    # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-    img.bind('load', callback_render)
-
-    MY_SUB_PANEL <= canvas
-    MY_SUB_PANEL <= html.BR()
-
-    # ratings
-    ratings = POSITION_DATA.role_ratings()
-    colours = POSITION_DATA.role_colours()
-    game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
-    MY_SUB_PANEL <= rating_colours_window
-    MY_SUB_PANEL <= html.BR()
+    # map and ratings
+    show_board(MY_SUB_PANEL)
 
     # role flag
     stack_role_flag(MY_SUB_PANEL)
@@ -3719,21 +3691,6 @@ def declare():
 
 def vote():
     """ vote """
-
-    def callback_render(_):
-        """ callback_render """
-
-        # put the background map first
-        ctx.drawImage(img, 0, 0)
-
-        # put the centers
-        VARIANT_DATA.render(ctx)
-
-        # put the position
-        POSITION_DATA.render(ctx)
-
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
 
     def add_vote_callback(_):
         """ add_vote_callback """
@@ -3834,28 +3791,8 @@ def vote():
     MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
-    # create canvas
-    map_size = VARIANT_DATA.map_size
-    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
-    ctx = canvas.getContext("2d")
-    if ctx is None:
-        alert("Il faudrait utiliser un navigateur plus récent !")
-        return False
-
-    # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-    img.bind('load', callback_render)
-
-    MY_SUB_PANEL <= canvas
-    MY_SUB_PANEL <= html.BR()
-
-    # ratings
-    ratings = POSITION_DATA.role_ratings()
-    colours = POSITION_DATA.role_colours()
-    game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
-    MY_SUB_PANEL <= rating_colours_window
-    MY_SUB_PANEL <= html.BR()
+    # map and ratings
+    show_board(MY_SUB_PANEL)
 
     # role flag
     stack_role_flag(MY_SUB_PANEL)
@@ -3871,21 +3808,6 @@ def vote():
 
 def note():
     """ note """
-
-    def callback_render(_):
-        """ callback_render """
-
-        # put the background map first
-        ctx.drawImage(img, 0, 0)
-
-        # put the centers
-        VARIANT_DATA.render(ctx)
-
-        # put the position
-        POSITION_DATA.render(ctx)
-
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
 
     def add_note_callback(_):
         """ add_note_callback """
@@ -3963,28 +3885,8 @@ def note():
     MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
 
-    # create canvas
-    map_size = VARIANT_DATA.map_size
-    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
-    ctx = canvas.getContext("2d")
-    if ctx is None:
-        alert("Il faudrait utiliser un navigateur plus récent !")
-        return False
-
-    # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-    img.bind('load', callback_render)
-
-    MY_SUB_PANEL <= canvas
-    MY_SUB_PANEL <= html.BR()
-
-    # ratings
-    ratings = POSITION_DATA.role_ratings()
-    colours = POSITION_DATA.role_colours()
-    game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
-    MY_SUB_PANEL <= rating_colours_window
-    MY_SUB_PANEL <= html.BR()
+    # map and ratings
+    show_board(MY_SUB_PANEL)
 
     # role flag
     stack_role_flag(MY_SUB_PANEL)
@@ -5616,20 +5518,6 @@ def observe():
     ctx = None
     img = None
 
-    def callback_render(_):
-        """ callback_render """
-
-        # put the background map first
-        ctx.drawImage(img, 0, 0)
-
-        # put the centers
-        VARIANT_DATA.render(ctx)
-
-        # put the position
-        POSITION_DATA.render(ctx)
-
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
 
     def refresh():
         """ refresh """
