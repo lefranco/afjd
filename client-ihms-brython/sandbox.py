@@ -744,11 +744,11 @@ def sandbox():
         # put the position
         POSITION_DATA.render(ctx)
 
-        # put the orders
-        ORDERS_DATA.render(ctx)
-
         # put the legends at the end
         VARIANT_DATA.render_legends(ctx)
+
+        # put the orders
+        ORDERS_DATA.render(ctx)
 
         # because they get cleared on screen
         displayed_zones.clear()

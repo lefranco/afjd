@@ -584,6 +584,8 @@ def rectify_position():
         # put the legends at the end
         variant_data.render_legends(ctx)
 
+        # do not put the orders here
+
     def put_submit(buttons_right):
         """ put_submit """
 
