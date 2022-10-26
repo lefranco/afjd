@@ -43,6 +43,29 @@ POSITION_DATA = None
 ORDERS_DATA = None
 
 
+# canvas backup to optimize drawing map when only orders change
+BACKUP_CANVAS = None
+
+
+def save_context(ctx):
+    """ save_context """
+
+    global BACKUP_CANVAS
+
+    # create backup canvas
+    BACKUP_CANVAS = html.CANVAS(width=ctx.canvas.width, height=ctx.canvas.height)
+    bctx = BACKUP_CANVAS.getContext("2d")
+
+    # copy canvas into it
+    bctx.drawImage(ctx.canvas, 0, 0)
+
+
+def restore_context(ctx):
+    """ restore_context """
+
+    ctx.drawImage(BACKUP_CANVAS, 0, 0)
+
+
 def create_initial_position():
     """ create_initial_position """
 
@@ -158,7 +181,7 @@ def sandbox():
         ORDERS_DATA.rest_hold(None)
 
         # update displayed map
-        callback_render(None)
+        callback_render(False)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
@@ -196,7 +219,7 @@ def sandbox():
         POSITION_DATA.erase_units()
 
         # update displayed map
-        callback_render(None)
+        callback_render(True)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
@@ -353,7 +376,7 @@ def sandbox():
                 ORDERS_DATA.insert_order(order)
 
                 # update map
-                callback_render(None)
+                callback_render(False)
 
                 legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
@@ -484,7 +507,7 @@ def sandbox():
                 ORDERS_DATA.insert_order(order)
 
             # update map
-            callback_render(None)
+            callback_render(False)
 
             legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
             buttons_right <= legend_select_unit
@@ -522,7 +545,7 @@ def sandbox():
                 ORDERS_DATA.insert_order(order)
 
                 # update map
-                callback_render(None)
+                callback_render(False)
 
                 legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long sur un ordre/unité sans ordre pour l'effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
@@ -619,7 +642,7 @@ def sandbox():
             ORDERS_DATA.remove_order(selected_erase_unit)
 
         # update map
-        callback_render(None)
+        callback_render(False)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
@@ -732,20 +755,30 @@ def sandbox():
             # redraw all arrows
             ORDERS_DATA.render(ctx)
 
-    def callback_render(_):
+    def callback_render(refresh):
         """ callback_render """
 
-        # put the background map first
-        ctx.drawImage(img, 0, 0)
+        if refresh:
 
-        # put the centers
-        VARIANT_DATA.render(ctx)
+            # put the background map first
+            ctx.drawImage(img, 0, 0)
 
-        # put the position
-        POSITION_DATA.render(ctx)
+            # put the centers
+            VARIANT_DATA.render(ctx)
 
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
+            # put the position
+            POSITION_DATA.render(ctx)
+
+            # put the legends at the end
+            VARIANT_DATA.render_legends(ctx)
+
+            # save
+            save_context(ctx)
+
+        else:
+
+            # restore
+            restore_context(ctx)
 
         # put the orders
         ORDERS_DATA.render(ctx)
@@ -901,7 +934,7 @@ def sandbox():
         POSITION_DATA.add_unit(new_unit)
 
         # refresh
-        callback_render(None)
+        callback_render(True)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
@@ -1023,7 +1056,7 @@ def sandbox():
 
     # put background (this will call the callback that display the whole map)
     img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-    img.bind('load', callback_render)
+    img.bind('load', lambda _: callback_render(True))
 
     # left side
 
