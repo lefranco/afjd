@@ -239,14 +239,11 @@ def registrations():
         MY_SUB_PANEL.clear()
         registrations()
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-    pseudo = storage['PSEUDO']
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        alert("Erreur chargement identifiant joueur")
-        return
+    player_id = None
+    if 'PSEUDO' in storage:
+        pseudo = storage['PSEUDO']
+        player_id = common.get_player_id(pseudo)
+        # player_id None does not matter
 
     if 'EVENT' not in storage:
         alert("Il faut sélectionner un événement au préalable")
@@ -260,7 +257,9 @@ def registrations():
 
     joiners = get_registrations(event_id)
     dict_status = {j[0]: j[1] for j in joiners}
-    player_joined = player_id in dict_status
+    player_joined = False
+    if player_id is not None:
+        player_joined = player_id in dict_status
 
     joiners_table = html.TABLE()
 
@@ -291,10 +290,10 @@ def registrations():
 
         data['rank'] = None
 
-        if data['pseudo'] == storage['PSEUDO']:
-            colour = config.MY_RATING
-        else:
-            colour = None
+        colour = None
+        if 'PSEUDO' in storage:
+            if data['pseudo'] == pseudo:
+                colour = config.MY_RATING
 
         row = html.TR()
         for field in fields:
@@ -320,27 +319,30 @@ def registrations():
 
         joiners_table <= row
 
-    if player_joined:
-        status = dict_status[player_id]
-        if status < 0:
-            player_status = "Votre inscription est refusée"
-        elif status > 0:
-            player_status = "Votre inscription est acceptée"
+    if 'PSEUDO' in storage:
+        if player_joined:
+            assert player_id is not None
+            status = dict_status[player_id]
+            if status < 0:
+                player_status = "Votre inscription est refusée"
+            elif status > 0:
+                player_status = "Votre inscription est acceptée"
+            else:
+                player_status = "Votre inscription est en attente"
         else:
-            player_status = "Votre inscription est en attente"
-    else:
-        player_status = "Vous n'êtes pas inscrit"
+            player_status = "Vous n'êtes pas inscrit"
 
-    register_form = html.FORM()
-
-    if player_joined:
-        input_unregister_event = html.INPUT(type="submit", value="Sans moi !")
-        input_unregister_event.bind("click", lambda e: register_event_callback(e, False))
-        register_form <= input_unregister_event
+        register_form = html.FORM()
+        if player_joined:
+            input_unregister_event = html.INPUT(type="submit", value="Sans moi !")
+            input_unregister_event.bind("click", lambda e: register_event_callback(e, False))
+            register_form <= input_unregister_event
+        else:
+            input_register_event = html.INPUT(type="submit", value="J'en profite !")
+            input_register_event.bind("click", lambda e: register_event_callback(e, True))
+            register_form <= input_register_event
     else:
-        input_register_event = html.INPUT(type="submit", value="J'en profite !")
-        input_register_event.bind("click", lambda e: register_event_callback(e, True))
-        register_form <= input_register_event
+        player_status = "Vous n'êtes pas identifié"
 
     contact_form = html.FORM()
 
@@ -429,7 +431,8 @@ def registrations():
     MY_SUB_PANEL <= html.BR()
 
     # put button to register/un register
-    MY_SUB_PANEL <= register_form
+    if 'PSEUDO' in storage:
+        MY_SUB_PANEL <= register_form
 
     # provide people already in
     MY_SUB_PANEL <= html.H4("Contacter l'organisateur")
