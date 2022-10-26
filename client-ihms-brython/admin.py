@@ -468,7 +468,7 @@ def rectify_position():
         position_data.remove_ownership(selected_erase_ownership)
 
         # update map
-        callback_render(None)
+        callback_render(True)
 
     def callback_canvas_long_click(event):
         """
@@ -503,7 +503,7 @@ def rectify_position():
             selected_hovered_object = None
 
         # update map
-        callback_render(None)
+        callback_render(True)
 
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
@@ -571,6 +571,8 @@ def rectify_position():
 
     def callback_render(_):
         """ callback_render """
+
+        # since orders are not involved not save/restore context
 
         # put the background map first
         ctx.drawImage(img, 0, 0)
@@ -696,7 +698,7 @@ def rectify_position():
             position_data.add_ownership(new_ownership)
 
         # refresh
-        callback_render(None)
+        callback_render(True)
 
     # starts here
 
@@ -791,8 +793,8 @@ def rectify_position():
             unit_canvas.bind("mouseover", mouseover)
             unit_canvas.bind("dragstart", dragstart)
 
-            ctx = unit_canvas.getContext("2d")
-            draggable_unit.render(ctx)
+            ctx2 = unit_canvas.getContext("2d")
+            draggable_unit.render(ctx2)
 
             col <= unit_canvas
             row <= col
@@ -810,8 +812,8 @@ def rectify_position():
         ownership_canvas.bind("mouseover", mouseover)
         ownership_canvas.bind("dragstart", dragstart)
 
-        ctx = ownership_canvas.getContext("2d")
-        draggable_ownership.render(ctx)
+        ctx3 = ownership_canvas.getContext("2d")
+        draggable_ownership.render(ctx3)
 
         col <= ownership_canvas
         row <= col
@@ -850,7 +852,7 @@ def rectify_position():
 
     # put background (this will call the callback that display the whole map)
     img = common.read_image(variant_name_loaded, interface_chosen)
-    img.bind('load', callback_render)
+    img.bind('load', lambda _: callback_render(True))
 
     # left side
 
