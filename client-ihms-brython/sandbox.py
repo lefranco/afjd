@@ -352,7 +352,7 @@ def sandbox():
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_passive = html.DIV("Sélectionner l'unité supportée offensivement (cliquer sous la légende)", Class='instruction')
+                legend_selected_passive = html.DIV("Sélectionner l'unité supportée offensivement", Class='instruction')
                 buttons_right <= legend_selected_passive
 
                 automaton_state = AutomatonStateEnum.SELECT_PASSIVE_UNIT_STATE
@@ -574,9 +574,9 @@ def sandbox():
             buttons_right <= legend_selected_passive
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue (cliquer sous la légende)", Class='instruction')
+                legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue", Class='instruction')
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_select_destination = html.DIV("Sélectionner la destination du convoi (cliquer sous la légende)", Class='instruction')
+                legend_select_destination = html.DIV("Sélectionner la destination du convoi", Class='instruction')
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)

@@ -1021,7 +1021,7 @@ def show_board(panel):
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
-        return False
+        return
 
     # put background (this will call the callback that display the whole map)
     img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
@@ -1531,7 +1531,7 @@ def submit_orders():
             # button last moves
             stack_last_moves_button(buttons_right)
 
-            legend_select_active = html.DIV("Sélectionner la zone où construire (cliquer sous la légende)", Class='instruction')
+            legend_select_active = html.DIV("Sélectionner la zone où construire", Class='instruction')
             buttons_right <= legend_select_active
 
             stack_orders(buttons_right)
@@ -1578,7 +1578,7 @@ def submit_orders():
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.DIV("Sélectionner la destination de l'attaque (cliquer sous la légende)", Class='instruction')
+                legend_selected_destination = html.DIV("Sélectionner la destination de l'attaque", Class='instruction')
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -1643,7 +1643,7 @@ def submit_orders():
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.DIV("Sélectionner la destination de la retraite (cliquer sous la légende)", Class='instruction')
+                legend_selected_destination = html.DIV("Sélectionner la destination de la retraite", Class='instruction')
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -1963,9 +1963,9 @@ def submit_orders():
             buttons_right <= legend_selected_passive
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue (cliquer sous la légende)", Class='instruction')
+                legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue", Class='instruction')
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_select_destination = html.DIV("Sélectionner la destination du convoi (cliquer sous la légende)", Class='instruction')
+                legend_select_destination = html.DIV("Sélectionner la destination du convoi", Class='instruction')
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
@@ -2567,7 +2567,7 @@ def submit_communication_orders():
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
 
-                legend_selected_destination = html.DIV("Sélectionner la destination de l'attaque (cliquer sous la légende)", Class='instruction')
+                legend_selected_destination = html.DIV("Sélectionner la destination de l'attaque", Class='instruction')
                 buttons_right <= legend_selected_destination
 
                 automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -2810,9 +2810,9 @@ def submit_communication_orders():
             buttons_right <= legend_selected_passive
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
-                legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue (cliquer sous la légende)", Class='instruction')
+                legend_select_destination = html.DIV("Sélectionner la destination de l'attaque soutenue", Class='instruction')
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
-                legend_select_destination = html.DIV("Sélectionner la destination du convoi (cliquer sous la légende)", Class='instruction')
+                legend_select_destination = html.DIV("Sélectionner la destination du convoi", Class='instruction')
             buttons_right <= legend_select_destination
 
             stack_orders(buttons_right)
