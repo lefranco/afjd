@@ -934,6 +934,7 @@ def sandbox():
         POSITION_DATA.add_unit(new_unit)
 
         # refresh
+        # unit added so refresh all
         callback_render(True)
 
         my_sub_panel2.removeChild(buttons_right)

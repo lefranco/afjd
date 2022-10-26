@@ -394,23 +394,23 @@ def make_rating_colours_window(variant_data, ratings, colours, game_scoring):
     for role_name in ratings:
         col = html.TD()
 
-        canvas = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
-        ctx = canvas.getContext("2d")
+        canvas2 = html.CANVAS(id="rect", width=15, height=15, alt=role_name)
+        ctx2 = canvas2.getContext("2d")
 
         colour = colours[role_name]
 
         outline_colour = colour.outline_colour()
-        ctx.strokeStyle = outline_colour.str_value()
-        ctx.lineWidth = 2
-        ctx.beginPath()
-        ctx.rect(0, 0, 14, 14)
-        ctx.stroke()
-        ctx.closePath()  # no fill
+        ctx2.strokeStyle = outline_colour.str_value()
+        ctx2.lineWidth = 2
+        ctx2.beginPath()
+        ctx2.rect(0, 0, 14, 14)
+        ctx2.stroke()
+        ctx2.closePath()  # no fill
 
-        ctx.fillStyle = colour.str_value()
-        ctx.fillRect(1, 1, 13, 13)
+        ctx2.fillStyle = colour.str_value()
+        ctx2.fillRect(1, 1, 13, 13)
 
-        col <= canvas
+        col <= canvas2
         col <= f" {role_name}"
         rating_names_row <= col
 
@@ -5581,10 +5581,6 @@ def observe():
 
         # map and ratings
         show_board(MY_SUB_PANEL)
-        MY_SUB_PANEL <= html.BR()
-
-        report_window = common.make_report_window(REPORT_LOADED)
-        MY_SUB_PANEL <= report_window
 
     # game needs to be ongoing - not waiting
     if GAME_PARAMETERS_LOADED['current_state'] == 0:
