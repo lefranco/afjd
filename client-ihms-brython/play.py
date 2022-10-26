@@ -78,6 +78,30 @@ REPORT_LOADED = {}
 # loaded in load_special_stuff
 GAME_PLAYERS_DICT = {}
 
+
+# canvas backup to optimize drawing map when only orders change
+BACKUP_CANVAS = None
+
+
+def save_context(ctx):
+    """ save_context """
+
+    global BACKUP_CANVAS
+
+    # create backup canvas
+    BACKUP_CANVAS = html.CANVAS(width=ctx.canvas.width, height=ctx.canvas.height)
+    bctx = BACKUP_CANVAS.getContext("2d")
+
+    # copy canvas into it
+    bctx.drawImage(ctx.canvas, 0, 0)
+
+
+def restore_context(ctx):
+    """ restore_context """
+
+    ctx.drawImage(BACKUP_CANVAS, 0, 0)
+
+
 ARRIVAL = None
 
 
@@ -975,6 +999,8 @@ def show_board(panel):
     def callback_render(_):
         """ callback_render """
 
+        # since orders are not involved not save/restore context
+
         # put the background map first
         ctx.drawImage(img, 0, 0)
 
@@ -999,7 +1025,7 @@ def show_board(panel):
 
     # put background (this will call the callback that display the whole map)
     img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-    img.bind('load', callback_render)
+    img.bind('load', lambda _: callback_render(True))
 
     panel <= canvas
     panel <= html.BR()
@@ -1095,6 +1121,8 @@ def show_position(direct_last_moves):
         def callback_render(_):
             """ callback_render """
 
+            # since orders are part of the data not save/restore context
+
             # put the background map first
             ctx.drawImage(img, 0, 0)
 
@@ -1174,7 +1202,7 @@ def show_position(direct_last_moves):
 
         # put background (this will call the callback that display the whole map)
         img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-        img.bind('load', callback_render)
+        img.bind('load', lambda _: callback_render(True))
 
         display_left <= canvas
         display_left <= html.BR()
@@ -1402,7 +1430,7 @@ def submit_orders():
         orders_data.rest_hold(ROLE_ID if ROLE_ID != 0 else None)
 
         # update displayed map
-        callback_render(None)
+        callback_render(False)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
@@ -1441,7 +1469,7 @@ def submit_orders():
         orders_data.erase_orders()
 
         # update displayed map
-        callback_render(None)
+        callback_render(False)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
@@ -1586,7 +1614,7 @@ def submit_orders():
                 orders_data.insert_order(order)
 
                 # update map
-                callback_render(None)
+                callback_render(False)
 
                 legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
@@ -1627,7 +1655,7 @@ def submit_orders():
                 orders_data.insert_order(order)
 
                 # update map
-                callback_render(None)
+                callback_render(False)
 
                 legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
@@ -1775,7 +1803,7 @@ def submit_orders():
                     orders_data.insert_order(order)
 
                     # update map
-                    callback_render(None)
+                    callback_render(False)
 
                 automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
@@ -1851,7 +1879,7 @@ def submit_orders():
                     alert("Pas de centre à cet endroit !")
 
             # update map
-            callback_render(None)
+            callback_render(False)
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.SUMMER_SEASON, mapping.SeasonEnum.AUTUMN_SEASON, mapping.SeasonEnum.WINTER_SEASON]:
                 legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
@@ -1908,7 +1936,7 @@ def submit_orders():
                 orders_data.insert_order(order)
 
                 # update map
-                callback_render(None)
+                callback_render(False)
 
                 legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
@@ -2001,7 +2029,7 @@ def submit_orders():
         orders_data.remove_order(selected_erase_unit)
 
         # update map
-        callback_render(None)
+        callback_render(False)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
@@ -2131,20 +2159,30 @@ def submit_orders():
             # redraw all arrows
             orders_data.render(ctx)
 
-    def callback_render(_):
+    def callback_render(refresh):
         """ callback_render """
 
-        # put the background map first
-        ctx.drawImage(img, 0, 0)
+        if refresh:
 
-        # put the centers
-        VARIANT_DATA.render(ctx)
+            # put the background map first
+            ctx.drawImage(img, 0, 0)
 
-        # put the position
-        POSITION_DATA.render(ctx)
+            # put the centers
+            VARIANT_DATA.render(ctx)
 
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
+            # put the position
+            POSITION_DATA.render(ctx)
+
+            # put the legends at the end
+            VARIANT_DATA.render_legends(ctx)
+
+            # save
+            save_context(ctx)
+
+        else:
+
+            # restore
+            restore_context(ctx)
 
         # put the orders
         orders_data.render(ctx)
@@ -2309,7 +2347,7 @@ def submit_orders():
 
     # put background (this will call the callback that display the whole map)
     img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-    img.bind('load', callback_render)
+    img.bind('load', lambda _: callback_render(True))
 
     ratings = POSITION_DATA.role_ratings()
     colours = POSITION_DATA.role_colours()
@@ -2478,7 +2516,7 @@ def submit_communication_orders():
         orders_data.erase_orders()
 
         # update displayed map
-        callback_render(None)
+        callback_render(False)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
@@ -2565,7 +2603,7 @@ def submit_communication_orders():
                 orders_data.insert_order(order)
 
                 # update map
-                callback_render(None)
+                callback_render(False)
 
                 legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
@@ -2709,7 +2747,7 @@ def submit_communication_orders():
                 orders_data.insert_order(order)
 
             # update map
-            callback_render(None)
+            callback_render(False)
 
             legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
             buttons_right <= legend_select_unit
@@ -2748,7 +2786,7 @@ def submit_communication_orders():
                 orders_data.insert_order(order)
 
                 # update map
-                callback_render(None)
+                callback_render(False)
 
                 legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
@@ -2826,7 +2864,7 @@ def submit_communication_orders():
         orders_data.remove_order(selected_erase_unit)
 
         # update map
-        callback_render(None)
+        callback_render(False)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
@@ -2940,20 +2978,30 @@ def submit_communication_orders():
             # redraw all arrows
             orders_data.render(ctx)
 
-    def callback_render(_):
+    def callback_render(refresh):
         """ callback_render """
 
-        # put the background map first
-        ctx.drawImage(img, 0, 0)
+        if refresh:
 
-        # put the centers
-        VARIANT_DATA.render(ctx)
+            # put the background map first
+            ctx.drawImage(img, 0, 0)
 
-        # put the position
-        POSITION_DATA.render(ctx)
+            # put the centers
+            VARIANT_DATA.render(ctx)
 
-        # put the legends at the end
-        VARIANT_DATA.render_legends(ctx)
+            # put the position
+            POSITION_DATA.render(ctx)
+
+            # put the legends at the end
+            VARIANT_DATA.render_legends(ctx)
+
+            # save
+            save_context(ctx)
+
+        else:
+
+            # restore
+            restore_context(ctx)
 
         # put the orders
         orders_data.render(ctx)
@@ -3087,7 +3135,7 @@ def submit_communication_orders():
 
     # put background (this will call the callback that display the whole map)
     img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-    img.bind('load', callback_render)
+    img.bind('load', lambda _: callback_render(True))
 
     ratings = POSITION_DATA.role_ratings()
     colours = POSITION_DATA.role_colours()
@@ -5517,10 +5565,6 @@ OBSERVE_REFRESH_TIMER = None
 def observe():
     """ observe """
 
-    ctx = None
-    img = None
-
-
     def refresh():
         """ refresh """
 
@@ -5535,33 +5579,11 @@ def observe():
         # game status
         MY_SUB_PANEL <= GAME_STATUS
 
-        # create canvas
-        map_size = VARIANT_DATA.map_size
-        canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
-        nonlocal ctx
-        ctx = canvas.getContext("2d")
-        if ctx is None:
-            alert("Il faudrait utiliser un navigateur plus récent !")
-            return
-
-        # put background (this will call the callback that display the whole map)
-        nonlocal img
-        img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
-        img.bind('load', callback_render)
-
-        ratings = POSITION_DATA.role_ratings()
-        colours = POSITION_DATA.role_colours()
-        game_scoring = GAME_PARAMETERS_LOADED['scoring']
-        rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+        # map and ratings
+        show_board(MY_SUB_PANEL)
+        MY_SUB_PANEL <= html.BR()
 
         report_window = common.make_report_window(REPORT_LOADED)
-
-        # left side
-
-        MY_SUB_PANEL <= canvas
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= rating_colours_window
-        MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= report_window
 
     # game needs to be ongoing - not waiting
