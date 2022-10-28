@@ -14,6 +14,8 @@ import config
 
 OPTIONS = ['sélectionner un événement', 'inscriptions', 'créer un événement', 'éditer l\'événement', 'illustrer l\'événement', 'gérer les participations', 'supprimer l\'événement']
 
+# Too big files cause weird problemns especially in Internet Explorer
+MAX_IMAGE_SIZE = 50000
 
 MAX_LEN_EVENT_NAME = 50
 MAX_LEN_EVENT_LOCATION = 20
@@ -813,11 +815,15 @@ def illustrate_event():
             # get the image content
             image_bytes = bytes(window.Array["from"](window.Uint8Array.new(reader.result)))
 
+            if len(image_bytes) > MAX_IMAGE_SIZE:
+                alert(f"Ce fichier est trop gros La limite est {MAX_IMAGE_SIZE} octets")
+                return
+
             # b64 encode to pass it on server
             try:
                 image_str = base64.standard_b64encode(image_bytes).decode()
             except:  # noqa: E722 pylint: disable=bare-except
-                alert("Problème à l'encodage pour le web... fichier trop gros ?")
+                alert("Problème à l'encodage pour le web... ")
                 return
 
             json_dict = {
