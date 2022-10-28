@@ -1971,49 +1971,11 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/registrations/<event_id> - GET - getting registrations to the event")
 
-        # check authentication from user server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-
-        # we do not check pseudo, we read it from token
-        pseudo = req_result.json()['logged_in_as']
-
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        user_id = req_result.json()
-
         sql_executor = database.SqlExecutor()
-        event = events.Event.find_by_identifier(sql_executor, int(event_id))
         registrations_list = registrations.Registration.list_by_event_id(sql_executor, int(event_id))
         del sql_executor
 
-        assert event is not None
-        manager_id = event.manager_id
-
-        data = []
-        for _, player_id, __, approved in sorted(registrations_list, key=lambda r: r[2]):
-
-            # confidential is a special case : refused and not concerned
-            if approved < 0 and user_id not in [player_id, manager_id]:
-                continue
-
-            data.append((player_id, approved))
+        data = [(r[1], r[3]) for r in sorted(registrations_list, key=lambda rr: rr[2])]
 
         return data, 200
 
