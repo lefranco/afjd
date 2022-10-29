@@ -528,7 +528,7 @@ RETREAT_COLOUR = ColourRecord(red=255, green=127, blue=0)  # orange
 ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 # legend
-LEGEND_COLOUR = ColourRecord(red=25, green=25, blue=25)  # black-ish
+LEGEND_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
 
 # outline
 SPECIAL_COAST_OUTLINE_COLOUR = ColourRecord(red=50, green=50, blue=50)  # black-ish
