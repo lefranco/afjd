@@ -1349,6 +1349,7 @@ def submit_orders():
     selected_hovered_object = None
 
     input_definitive = None
+    unordered_units = None
 
     def cancel_submit_orders_callback(_, dialog):
         dialog.close()
@@ -2162,6 +2163,8 @@ def submit_orders():
     def callback_render(refresh):
         """ callback_render """
 
+        nonlocal unordered_units
+
         if refresh:
 
             # put the background map first
@@ -2197,6 +2200,21 @@ def submit_orders():
             orders <= html.B(line)
             orders <= html.BR()
         buttons_right <= orders
+
+        # capture the units without an order
+        if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
+            unordered_units = [u for u in POSITION_DATA.units if u.role.identifier == ROLE_ID and not orders_data.is_ordered(u)]
+
+        if unordered_units:
+
+            buttons_right <= html.BR()
+
+            lines = map(str, unordered_units)
+            no_orders = html.DIV()
+            for line in lines:
+                no_orders <= html.EM(line)
+                no_orders <= html.BR()
+            buttons_right <= no_orders
 
     def put_erase_all(buttons_right):
         """ put_erase_all """
