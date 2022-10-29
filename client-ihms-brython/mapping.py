@@ -1632,6 +1632,11 @@ class Position(Renderable):
         """ property """
         return self._owner_table
 
+    @property
+    def units(self):
+        """ property """
+        return self._units
+
 
 DASH_PATTERN = [4, 4]
 
