@@ -2203,18 +2203,19 @@ def submit_orders():
 
         # capture the units without an order
         if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.ADJUST_SEASON]:
+
+            # list units without orders
             unordered_units = [u for u in POSITION_DATA.units if u.role.identifier == ROLE_ID and not orders_data.is_ordered(u)]
 
-        if unordered_units:
-
-            buttons_right <= html.BR()
-
-            lines = map(str, unordered_units)
-            no_orders = html.DIV()
-            for line in lines:
-                no_orders <= html.EM(line)
-                no_orders <= html.BR()
-            buttons_right <= no_orders
+            # if there are display them
+            if unordered_units:
+                buttons_right <= html.BR()
+                lines = map(str, unordered_units)
+                no_orders = html.DIV()
+                for line in lines:
+                    no_orders <= html.EM(line)
+                    no_orders <= html.BR()
+                buttons_right <= no_orders
 
     def put_erase_all(buttons_right):
         """ put_erase_all """
