@@ -2071,14 +2071,7 @@ class Orders(Renderable):
 
         # should be in season for move orders - not checked here
 
-        units_in_position = set(self._position.units_list())
-
-        # if within a role restrict to that role
-        if role_id is not None:
-            units_in_position = {u for u in units_in_position if u.role.identifier == role_id}
-
-        ordered_units = {o.active_unit for o in self._orders}
-        unordered_units = units_in_position - ordered_units
+        unordered_units = [u for u in self._position.units_list() if (role_id is None or u.role.identifier == role_id) and not self.is_ordered(u)]
         for unordered_unit in unordered_units:
             order = Order(self._position, OrderTypeEnum.HOLD_ORDER, unordered_unit, None, None)
             self.insert_order(order)
