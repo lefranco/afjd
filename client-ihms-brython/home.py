@@ -775,6 +775,26 @@ def declare_incident():
         body += f"version : {version}"
         body += "\n\n"
 
+        body += f"Cookies enabled: {window.navigator.cookieEnabled}\n"
+        try:
+            body += f"Connection Speed: {window.navigator.connection.downlink}\n"
+        except:
+            body += "Failed to get connection speed\n"
+        try:
+            body += f"Connection Effective Type: {window.navigator.connection.effectiveType}\n"
+        except:
+            body += "Failed to get connection effective type\n"
+        try:
+            body += f"Connection Type: {window.navigator.connection.type}\n"
+        except:
+            body += "Failed to get connection type\n"
+        try:
+            body += f"Memory: {window.navigator.deviceMemory}\n"
+        except:
+            body += "Failed to get Memory data\n"
+        body += f"Language: {window.navigator.language}\n"
+        body += f"User Agent: {window.navigator.userAgent}\n"
+
         json_dict = {
             'subject': subject,
             'body': body,
