@@ -12,6 +12,7 @@ import random
 import argparse
 import json
 import time
+import sys
 
 import waitress
 import flask
@@ -53,6 +54,7 @@ PLAYER_PARSER.add_argument('email_confirmed', type=int, required=False)
 PLAYER_PARSER.add_argument('telephone', type=str, required=False)
 PLAYER_PARSER.add_argument('notify', type=int, required=False)
 PLAYER_PARSER.add_argument('replace', type=int, required=False)
+PLAYER_PARSER.add_argument('newsletter', type=int, required=False)
 PLAYER_PARSER.add_argument('first_name', type=str, required=False)
 PLAYER_PARSER.add_argument('family_name', type=str, required=False)
 PLAYER_PARSER.add_argument('residence', type=str, required=False)
@@ -587,7 +589,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         # create player here
         identifier = players.Player.free_identifier(sql_executor)
 
-        player = players.Player(identifier, '', '', False, '', False, False, '', '', '', '', '')
+        player = players.Player(identifier, '', '', False, '', False, False, False, '', '', '', '', '')
         _ = player.load_json(args)
 
         player.update_database(sql_executor)
@@ -1418,7 +1420,7 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
-        maintain
+        Update elo data
         EXPOSED
         """
 
@@ -1559,7 +1561,7 @@ class RegularityRessource(flask_restful.Resource):  # type: ignore
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
-        maintain
+        update regularity data
         EXPOSED
         """
 
@@ -2153,6 +2155,50 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg="Failed to send message to player")
 
         data = {'msg': 'Ok registration updated if present and email sent to player'}
+        return data, 200
+
+
+@API.resource('/maintain')
+class MaintainRessource(flask_restful.Resource):  # type: ignore
+    """ MaintainRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        maintain
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/maintain - POST - maintain")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
+
+        print("MAINTENANCE - start !!!", file=sys.stderr)
+        #  sql_executor = database.SqlExecutor()
+
+        # TODO : insert specific code here
+
+        #  sql_executor.commit()
+
+        #  del sql_executor
+        print("MAINTENANCE - done !!!", file=sys.stderr)
+
+        data = {'msg': "maintenance done"}
         return data, 200
 
 
