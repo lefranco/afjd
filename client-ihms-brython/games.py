@@ -73,7 +73,6 @@ def create_game(json_dict):
     speed_adjustments = json_dict['speed_adjustments'] if json_dict and 'speed_adjustments' in json_dict else None
     cd_possible_builds = json_dict['cd_possible_builds'] if json_dict and 'cd_possible_builds' in json_dict else None
     play_weekend = json_dict['play_weekend'] if json_dict and 'play_weekend' in json_dict else None
-    access_code = json_dict['access_code'] if json_dict and 'access_code' in json_dict else None
     access_restriction_reliability = json_dict['access_restriction_reliability'] if json_dict and 'access_restriction_reliability' in json_dict else None
     access_restriction_regularity = json_dict['access_restriction_regularity'] if json_dict and 'access_restriction_regularity' in json_dict else None
     access_restriction_performance = json_dict['access_restriction_performance'] if json_dict and 'access_restriction_performance' in json_dict else None
@@ -103,7 +102,6 @@ def create_game(json_dict):
         nonlocal speed_adjustments
         nonlocal cd_possible_builds
         nonlocal play_weekend
-        nonlocal access_code
         nonlocal access_restriction_reliability
         nonlocal access_restriction_regularity
         nonlocal access_restriction_performance
@@ -170,11 +168,6 @@ def create_game(json_dict):
 
         cd_possible_builds = int(input_cd_possible_builds.checked)
         play_weekend = int(input_play_weekend.checked)
-
-        try:
-            access_code = int(input_access_code.value)
-        except:  # noqa: E722 pylint: disable=bare-except
-            access_code = None
 
         try:
             access_restriction_reliability = int(input_access_restriction_reliability.value)
@@ -247,7 +240,6 @@ def create_game(json_dict):
             'speed_adjustments': speed_adjustments,
             'cd_possible_builds': cd_possible_builds,
             'play_weekend': play_weekend,
-            'access_code': access_code,
             'access_restriction_reliability': access_restriction_reliability,
             'access_restriction_regularity': access_restriction_regularity,
             'access_restriction_performance': access_restriction_performance,
@@ -492,13 +484,6 @@ def create_game(json_dict):
 
     title_access = html.H3("Accès à la partie - ne peuvent plus être changés la partie démarrée")
     form <= title_access
-
-    fieldset = html.FIELDSET()
-    legend_access_code = html.LEGEND("code accès", title="Code d'accès à la partie A SUPPRIMER")
-    fieldset <= legend_access_code
-    input_access_code = html.INPUT(type="number", value="")
-    fieldset <= input_access_code
-    form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
@@ -1042,7 +1027,6 @@ def change_access_parameters_game():
     """ change_access_parameters_game """
 
     # declare the values
-    access_code_loaded = None
     access_restriction_reliability_loaded = None
     access_restriction_regularity_loaded = None
     access_restriction_performance_loaded = None
@@ -1060,22 +1044,20 @@ def change_access_parameters_game():
 
         def reply_callback(req):
             nonlocal status
-            nonlocal access_code_loaded
             nonlocal access_restriction_reliability_loaded
             nonlocal access_restriction_regularity_loaded
             nonlocal access_restriction_performance_loaded
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la récupération du paramètre d'accès à la partie : {req_result['message']}")
+                    alert(f"Erreur à la récupération des paramètres d'accès à la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la récupération du paramètre d'accès à la partie : {req_result['msg']}")
+                    alert(f"Problème à la récupération des paramètres d'accès à la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 status = False
                 return
 
-            access_code_loaded = req_result['access_code']
             access_restriction_reliability_loaded = req_result['access_restriction_reliability']
             access_restriction_regularity_loaded = req_result['access_restriction_regularity']
             access_restriction_performance_loaded = req_result['access_restriction_performance']
@@ -1107,7 +1089,6 @@ def change_access_parameters_game():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Les paramètres d'accès ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
 
-        access_code = input_access_code.value
         access_restriction_reliability = input_access_restriction_reliability.value
         access_restriction_regularity = input_access_restriction_regularity.value
         access_restriction_performance = input_access_restriction_performance.value
@@ -1115,7 +1096,6 @@ def change_access_parameters_game():
         json_dict = {
             'pseudo': pseudo,
             'name': game,
-            'access_code': access_code,
             'access_restriction_reliability': access_restriction_reliability,
             'access_restriction_regularity': access_restriction_regularity,
             'access_restriction_performance': access_restriction_performance,
@@ -1154,13 +1134,6 @@ def change_access_parameters_game():
 
     form <= information_about_input()
     form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_access_code = html.LEGEND("code accès", title="Code d'accès à la partie")
-    fieldset <= legend_access_code
-    input_access_code = html.INPUT(type="number", value=access_code_loaded)
-    fieldset <= input_access_code
-    form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_access_restriction_reliability = html.LEGEND("restriction fiabilité", title="Sélectionne les joueurs sur leur fiabilité")
