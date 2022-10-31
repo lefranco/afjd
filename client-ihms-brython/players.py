@@ -508,7 +508,7 @@ def show_rating_reliability():
 
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par fiabilité")
-        MY_SUB_PANEL <= html.DIV("Ce classement est un ratio du nombre d'années jouées moins le nombre de retards (le nombre d'abandon n\'est pas encore calculable) par rapport au nombre d'années jouées (cinq tours par année) - on considère qu'il ne peut y avoir plus d'un retard par année jouée...", Class='important')
+        MY_SUB_PANEL <= html.DIV("Ce classement est un ratio du nombre d'années jouées moins le nombre de retards (le nombre d'abandon n\'est pas encore calculable) par rapport au nombre d'années jouées - on considère qu'il ne peut y avoir plus d'un retard par année jouée...", Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
