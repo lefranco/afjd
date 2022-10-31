@@ -259,13 +259,16 @@ def all_emails():
 
     # header
     thead = html.THEAD()
-    for field in ['email', 'pseudo', 'confirmé', 'newsletter']:
+    for field in ['pseudo', 'courriel', 'confirmé', 'newsletter']:
         col = html.TD(field)
         thead <= col
     emails_table <= thead
 
     for pseudo, (email, confirmed, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
         row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
 
         if newsletter:
             if confirmed:
@@ -276,9 +279,6 @@ def all_emails():
             email_formatted = "-"
 
         col = html.TD(email_formatted)
-        row <= col
-
-        col = html.TD(pseudo)
         row <= col
 
         col = html.TD("Oui" if confirmed else "Non")
