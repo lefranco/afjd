@@ -824,7 +824,7 @@ class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
         players_list = players.Player.inventory(sql_executor)
         del sql_executor
 
-        data = {p.pseudo: (p.email, p.email_confirmed) for p in players_list}
+        data = {p.pseudo: (p.email, p.email_confirmed, p.newsletter) for p in players_list}
 
         return data, 200
 
