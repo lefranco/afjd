@@ -205,7 +205,7 @@ def my_games(state_name):
         play.set_arrival(arrival)
 
         # action of going to game page
-        index.load_option(None, 'jouer la partie sélectionnée')
+        index.load_option(None, 'Jouer la partie sélectionnée')
 
     def start_game_callback(_, game):
 

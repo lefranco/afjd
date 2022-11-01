@@ -33,7 +33,7 @@ OBSERVE_REFRESH_PERIOD_SEC = 60
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['consulter', 'ordonner', 'taguer', 'négocier', 'déclarer', 'voter', 'noter', 'arbitrer', 'paramètres', 'retards', 'superviser', 'observer']
+OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Paramètres', 'Retards', 'Superviser', 'Observer']
 
 
 @enum.unique
@@ -1062,7 +1062,7 @@ def show_position(direct_last_moves):
         alert("La position de la partie a changé !")
         load_dynamic_stuff()
         MY_SUB_PANEL.clear()
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
 
     def callback_export_sandbox(_):
         """ callback_export_sandbox """
@@ -1071,7 +1071,7 @@ def show_position(direct_last_moves):
         sandbox.import_position(POSITION_DATA)
 
         # action of going to sandbox page
-        index.load_option(None, 'bac à sable')
+        index.load_option(None, 'Bac à sable')
 
     def callback_export_game_json(_):
         """ callback_export_game_json """
@@ -1376,7 +1376,7 @@ def submit_orders():
                 alert("La position de la partie a changé !")
                 load_dynamic_stuff()
                 MY_SUB_PANEL.clear()
-                load_option(None, 'consulter')
+                load_option(None, 'Consulter')
 
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             role = VARIANT_DATA.roles[ROLE_ID]
@@ -2263,31 +2263,31 @@ def submit_orders():
     # need to be connected
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # need to have a role
     if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # cannot be game master unless archive game
     if ROLE_ID == 0 and not GAME_PARAMETERS_LOADED['archive']:
         alert("Ordonner pour un arbitre n'est possible que pour les parties archive")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not waiting
     if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not finished
     if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # need to have orders to submit
@@ -2295,18 +2295,18 @@ def submit_orders():
     submitted_data = get_roles_submitted_orders(GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     if ROLE_ID == 0:
         if not submitted_data['needed']:
             alert("Il n'y a pas d'ordre à passer")
-            load_option(None, 'consulter')
+            load_option(None, 'Consulter')
             return False
     else:
         if ROLE_ID not in submitted_data['needed']:
             alert("Vous n'avez pas d'ordre à passer")
-            load_option(None, 'consulter')
+            load_option(None, 'Consulter')
             return False
 
     # check gameover
@@ -2316,7 +2316,7 @@ def submit_orders():
     nb_max_cycles_to_play = GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
     if current_advancement % 5 == 4 and (current_advancement + 1) // 5 >= nb_max_cycles_to_play:
         alert("La partie est arrivée à échéance")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # because we do not want the token stale in the middle of the process
@@ -2351,7 +2351,7 @@ def submit_orders():
     orders_loaded = game_orders_reload(GAME_ID)
     if not orders_loaded:
         alert("Erreur chargement ordres")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # digest the orders
@@ -3060,31 +3060,31 @@ def submit_communication_orders():
     # need to be connected
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # need to have a role
     if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # cannot be game master
     if ROLE_ID == 0:
         alert("Ce n'est pas possible pour l'arbitre de cette partie")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not waiting
     if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not finished
     if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # need to have orders to submit
@@ -3092,12 +3092,12 @@ def submit_communication_orders():
     submitted_data = get_roles_submitted_orders(GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     if ROLE_ID not in submitted_data['needed']:
         alert("Vous n'avez pas d'ordre à passer")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # check gameover
@@ -3107,7 +3107,7 @@ def submit_communication_orders():
     nb_max_cycles_to_play = GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
     if current_advancement % 5 == 4 and (current_advancement + 1) // 5 >= nb_max_cycles_to_play:
         alert("La partie est arrivée à échéance")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # because we do not want the token stale in the middle of the process
@@ -3139,7 +3139,7 @@ def submit_communication_orders():
     communication_orders_loaded = game_communication_orders_reload(GAME_ID)
     if not communication_orders_loaded:
         alert("Erreur chargement ordres communication")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # digest the orders
@@ -3292,7 +3292,7 @@ def negotiate():
 
     if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # because we do not want the token stale in the middle of the process
@@ -3589,7 +3589,7 @@ def declare():
 
     if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # because we do not want the token stale in the middle of the process
@@ -3802,30 +3802,30 @@ def vote():
 
     if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     if ROLE_ID == 0:
         alert("Ce n'est pas possible pour l'arbitre de cette partie")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not waiting
     if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not finished
     if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     votes = game_votes_reload(GAME_ID)
     if votes is None:
         alert("Erreur chargement votes")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
     votes = list(votes)
 
@@ -3919,13 +3919,13 @@ def note():
 
     if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     content_loaded = game_note_reload(GAME_ID)
     if content_loaded is None:
         alert("Erreur chargement note")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     form = html.FORM()
@@ -4473,25 +4473,25 @@ def game_master():
     # need to be connected
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # need to be game master
     if ROLE_ID != 0:
         alert("Vous ne semblez pas être l'arbitre de cette partie")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not waiting
     if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not finished
     if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # now we can display
@@ -4511,7 +4511,7 @@ def game_master():
     submitted_data = get_roles_submitted_orders(GAME_ID)
     if not submitted_data:
         alert("Erreur chargement données de soumission")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # who can I put in this role
@@ -4522,7 +4522,7 @@ def game_master():
     votes = game_votes_reload(GAME_ID)
     if votes is None:
         alert("Erreur chargement votes")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
     votes = list(votes)
 
@@ -4955,7 +4955,7 @@ def show_events_in_game():
         submitted_data = get_roles_submitted_orders(GAME_ID)
         if not submitted_data:
             alert("Erreur chargement données de soumission")
-            load_option(None, 'consulter')
+            load_option(None, 'Consulter')
             return False
 
         role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
@@ -5508,7 +5508,7 @@ def supervise():
 
         dialog.close()
 
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
 
     def supervise_callback(_, dialog):
         """ supervise_callback """
@@ -5539,31 +5539,31 @@ def supervise():
     # need to be connected
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # need to be game master
     if ROLE_ID != 0:
         alert("Vous ne semblez pas être l'arbitre de cette partie")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not waiting
     if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not finished
     if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be fast
     if not GAME_PARAMETERS_LOADED['fast']:
         alert("Cette partie n'est pas une partie rapide")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # since touchy, this requires a confirmation
@@ -5600,13 +5600,13 @@ def observe():
     # game needs to be ongoing - not waiting
     if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # game needs to be ongoing - not finished
     if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
-        load_option(None, 'consulter')
+        load_option(None, 'Consulter')
         return False
 
     # initiates refresh
@@ -5644,29 +5644,29 @@ def load_option(_, item_name, direct_last_moves=False):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'consulter':
+    if item_name == 'Consulter':
         status = show_position(direct_last_moves)
-    if item_name == 'ordonner':
+    if item_name == 'Ordonner':
         status = submit_orders()
-    if item_name == 'taguer':
+    if item_name == 'Taguer':
         status = submit_communication_orders()
-    if item_name == 'négocier':
+    if item_name == 'Négocier':
         status = negotiate()
-    if item_name == 'déclarer':
+    if item_name == 'Déclarer':
         status = declare()
-    if item_name == 'voter':
+    if item_name == 'Voter':
         status = vote()
-    if item_name == 'arbitrer':
+    if item_name == 'Arbitrer':
         status = game_master()
-    if item_name == 'noter':
+    if item_name == 'Noter':
         status = note()
-    if item_name == 'superviser':
+    if item_name == 'Superviser':
         status = supervise()
-    if item_name == 'paramètres':
+    if item_name == 'Paramètres':
         status = show_game_parameters()
-    if item_name == 'retards':
+    if item_name == 'Retards':
         status = show_events_in_game()
-    if item_name == 'observer':
+    if item_name == 'Observer':
         status = observe()
 
     if not status:
@@ -5731,7 +5731,7 @@ def render(panel_middle):
 
     # Connected but not player
     # Not connected
-    ITEM_NAME_SELECTED = 'consulter'
+    ITEM_NAME_SELECTED = 'Consulter'
 
     global PSEUDO
     PSEUDO = None
@@ -5767,24 +5767,24 @@ def render(panel_middle):
 
         if ARRIVAL == 'declarations':
             # set page for press
-            ITEM_NAME_SELECTED = 'déclarer'
+            ITEM_NAME_SELECTED = 'Déclarer'
         elif ARRIVAL == 'messages':
             # set page for messages
-            ITEM_NAME_SELECTED = 'négocier'
+            ITEM_NAME_SELECTED = 'Négocier'
         else:
             if ROLE_ID == 0:
                 # game master
-                ITEM_NAME_SELECTED = 'arbitrer'
+                ITEM_NAME_SELECTED = 'Arbitrer'
             else:
                 # player
-                ITEM_NAME_SELECTED = 'ordonner'
+                ITEM_NAME_SELECTED = 'Ordonner'
 
     else:
 
         # moderator wants to see whose orders are missing
         if moderate.check_modo(PSEUDO):
             # Admin
-            ITEM_NAME_SELECTED = 'retards'
+            ITEM_NAME_SELECTED = 'Retards'
 
     set_arrival(None)
     load_option(None, ITEM_NAME_SELECTED)

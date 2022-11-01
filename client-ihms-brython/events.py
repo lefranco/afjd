@@ -12,7 +12,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import common
 import config
 
-OPTIONS = ['sélectionner un événement', 'inscriptions', 'créer un événement', 'éditer l\'événement', 'illustrer l\'événement', 'gérer les participations', 'supprimer l\'événement']
+OPTIONS = ['Sélectionner un événement', 'Inscriptions', 'Créer un événement', 'Editer l\'événement', 'Illustrer l\'événement', 'Gérer les participations', 'Supprimer l\'événement']
 
 # Too big files cause weird problemns especially in Internet Explorer
 MAX_IMAGE_SIZE = 50000
@@ -1132,7 +1132,7 @@ def delete_event():
             del storage['EVENT']
 
         # back to where we started (actually to select)
-        load_option(None, 'sélectionner un événement')
+        load_option(None, 'Sélectionner un événement')
 
         dialog.close()
 
@@ -1153,7 +1153,7 @@ def delete_event():
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_event_callback(e, d))
 
         # back to where we started (actually to select)
-        load_option(None, 'sélectionner un événement')
+        load_option(None, 'Sélectionner un événement')
 
     MY_SUB_PANEL <= html.H3("Suppression de l'événement")
 
@@ -1225,19 +1225,19 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'sélectionner un événement':
+    if item_name == 'Sélectionner un événement':
         select_event()
-    if item_name == 'inscriptions':
+    if item_name == 'Inscriptions':
         registrations()
-    if item_name == 'créer un événement':
+    if item_name == 'Créer un événement':
         create_event(None)
-    if item_name == 'éditer l\'événement':
+    if item_name == 'Editer l\'événement':
         edit_event()
-    if item_name == 'illustrer l\'événement':
+    if item_name == 'Illustrer l\'événement':
         illustrate_event()
-    if item_name == 'gérer les participations':
+    if item_name == 'Gérer les participations':
         handle_joiners()
-    if item_name == 'supprimer l\'événement':
+    if item_name == 'Supprimer l\'événement':
         delete_event()
 
     global ITEM_NAME_SELECTED

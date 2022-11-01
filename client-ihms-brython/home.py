@@ -21,7 +21,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['vue d\'ensemble', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres', 'autres liens', 'brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Toutes les parties', 'Déclarer un incident', 'Foire aux questions', 'Pourquoi yapa', 'Coin technique', 'Choix d\'interface', 'Parties sans arbitres', 'Autres liens', 'Brique sociale']
 
 NOTE_CONTENT_STATED = """Bienvenue dans la première version du site Diplomania.
 Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu.
@@ -360,7 +360,7 @@ def all_games(state_name):
         selection.show_game_selected()
 
         # action of going to game page
-        index.load_option(None, 'jouer la partie sélectionnée')
+        index.load_option(None, 'Jouer la partie sélectionnée')
 
     def again(state_name):
         """ again """
@@ -1220,25 +1220,25 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'vue d\'ensemble':
+    if item_name == 'Vue d\'ensemble':
         show_news()
-    if item_name == 'toutes les parties':
+    if item_name == 'Toutes les parties':
         all_games('en cours')
-    if item_name == 'déclarer un incident':
+    if item_name == 'Déclarer un incident':
         declare_incident()
-    if item_name == 'foire aux questions':
+    if item_name == 'Foire aux questions':
         show_faq()
-    if item_name == 'pourquoi yapa':
+    if item_name == 'Pourquoi yapa':
         show_whynot()
-    if item_name == 'coin technique':
+    if item_name == 'Coin technique':
         show_technical()
-    if item_name == 'choix d\'interface':
+    if item_name == 'Choix d\'interface':
         select_interface()
-    if item_name == 'parties sans arbitres':
+    if item_name == 'Parties sans arbitres':
         show_no_game_masters_data()
-    if item_name == 'autres liens':
+    if item_name == 'Autres liens':
         show_links()
-    if item_name == 'brique sociale':
+    if item_name == 'Brique sociale':
         social()
 
     global ITEM_NAME_SELECTED

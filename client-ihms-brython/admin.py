@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier les paramètres', 'rectifier la position', 'dernières connexions', 'connexions manquées', 'éditer les créateurs', 'éditer les modérateurs', 'mise à jour du elo', 'mise à jour de la fiabilité', 'mise à jour de la régularité', 'comptes oisifs', 'courriels non confirmés', 'maintenance']
+OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Comptes oisifs', 'Courriels non confirmés', 'Maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1959,33 +1959,33 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'changer nouvelles':
+    if item_name == 'Changer nouvelles':
         change_news_admin()
-    if item_name == 'usurper':
+    if item_name == 'Usurper':
         usurp()
-    if item_name == 'rectifier les paramètres':
+    if item_name == 'Rectifier les paramètres':
         rectify_parameters()
-    if item_name == 'rectifier la position':
+    if item_name == 'Rectifier la position':
         rectify_position()
-    if item_name == 'dernières connexions':
+    if item_name == 'Dernières connexions':
         last_logins()
-    if item_name == 'connexions manquées':
+    if item_name == 'Connexions manquées':
         last_failures()
-    if item_name == 'éditer les modérateurs':
+    if item_name == 'Editer les modérateurs':
         edit_moderators()
-    if item_name == 'éditer les créateurs':
+    if item_name == 'Editer les créateurs':
         edit_creators()
-    if item_name == 'mise à jour du elo':
+    if item_name == 'Mise à jour du elo':
         update_elo()
-    if item_name == 'mise à jour de la fiabilité':
+    if item_name == 'Mise à jour de la fiabilité':
         update_reliability()
-    if item_name == 'mise à jour de la régularité':
+    if item_name == 'Mise à jour de la régularité':
         update_regularity()
-    if item_name == 'comptes oisifs':
+    if item_name == 'Comptes oisifs':
         show_idle_data()
-    if item_name == 'courriels non confirmés':
+    if item_name == 'Courriels non confirmés':
         show_non_confirmed_data()
-    if item_name == 'maintenance':
+    if item_name == 'Maintenance':
         maintain()
 
     global ITEM_NAME_SELECTED

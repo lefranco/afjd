@@ -92,7 +92,7 @@ def login():
                 alert("Merci de penser à vérifier votre adresse couriel. Cela évite que les message du site reviennent en erreur. Pour ce faire : mon_compte/valider mon courriel")
 
             # goto directly to page my games
-            index.load_option(None, 'mes parties')
+            index.load_option(None, 'Mes parties')
 
         pseudo = input_pseudo.value
 
@@ -155,7 +155,7 @@ def login():
         """ create_account_callback """
 
         # go to create account page
-        index.load_option(None, 'mon compte')
+        index.load_option(None, 'Mon compte')
 
     # begins here
 

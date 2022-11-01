@@ -16,7 +16,7 @@ import common
 import selection
 import index  # circular import
 
-OPTIONS = ['créer', 'changer description', 'changer anonymat', 'changer accès messagerie', 'changer scorage', 'changer paramètres accès', 'changer date limite', 'changer paramètres cadence', 'changer état', 'supprimer']
+OPTIONS = ['Créer', 'Changer description', 'Changer anonymat', 'Changer accès messagerie', 'Changer scorage', 'Changer paramètres accès', 'Changer date limite', 'Changer paramètres cadence', 'Changer état', 'Supprimer']
 
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_VARIANT_NAME = 20
@@ -1746,7 +1746,7 @@ def delete_game():
             selection.unselect_game()
 
             # go to select another game
-            index.load_option(None, 'sélectionner partie')
+            index.load_option(None, 'Sélectionner partie')
 
         dialog.close()
 
@@ -1819,25 +1819,25 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'créer':
+    if item_name == 'Créer':
         create_game(None)
-    if item_name == 'changer description':
+    if item_name == 'Changer description':
         change_description_game()
-    if item_name == 'changer anonymat':
+    if item_name == 'Changer anonymat':
         change_anonymity_game()
-    if item_name == 'changer accès messagerie':
+    if item_name == 'Changer accès messagerie':
         change_access_messages_game()
-    if item_name == 'changer scorage':
+    if item_name == 'Changer scorage':
         change_scoring_game()
-    if item_name == 'changer paramètres accès':
+    if item_name == 'Changer paramètres accès':
         change_access_parameters_game()
-    if item_name == 'changer date limite':
+    if item_name == 'Changer date limite':
         change_deadline_game()
-    if item_name == 'changer paramètres cadence':
+    if item_name == 'Changer paramètres cadence':
         change_pace_parameters_game()
-    if item_name == 'changer état':
+    if item_name == 'Changer état':
         change_state_game()
-    if item_name == 'supprimer':
+    if item_name == 'Supprimer':
         delete_game()
 
     global ITEM_NAME_SELECTED

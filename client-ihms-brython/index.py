@@ -31,7 +31,7 @@ H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de 
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['accueil', 'connexion', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'sélectionner partie', 'jouer la partie sélectionnée', 'bac à sable', 'interface tournois', 'événements', 'classements', 'création', 'modération', 'administration', 'forum']
+OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Mes parties', 'Editer partie', 'Appariement', 'Sélectionner partie', 'Jouer la partie sélectionnée', 'Bac à sable', 'Interface tournois', 'Evénements', 'Classements', 'Création', 'Modération', 'Administration', 'Forum']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -110,39 +110,39 @@ def load_option(_, item_name):
         pseudo = storage['PSEUDO']
 
     PANEL_MIDDLE.clear()
-    if item_name == 'accueil':
+    if item_name == 'Accueil':
         home.render(PANEL_MIDDLE)
-    if item_name == 'connexion':
+    if item_name == 'Connexion':
         login.render(PANEL_MIDDLE)
-    if item_name == 'mon compte':
+    if item_name == 'Mon compte':
         account.render(PANEL_MIDDLE)
-    if item_name == 'rejoindre une partie':
+    if item_name == 'Rejoindre une partie':
         opportunities.render(PANEL_MIDDLE)
-    if item_name == 'mes parties':
+    if item_name == 'Mes parties':
         mygames.render(PANEL_MIDDLE)
-    if item_name == 'éditer partie':
+    if item_name == 'Editer partie':
         games.render(PANEL_MIDDLE)
-    if item_name == 'appariement':
+    if item_name == 'Appariement':
         pairing.render(PANEL_MIDDLE)
-    if item_name == 'sélectionner partie':
+    if item_name == 'Sélectionner partie':
         selection.render(PANEL_MIDDLE)
-    if item_name == 'jouer la partie sélectionnée':
+    if item_name == 'Jouer la partie sélectionnée':
         play.render(PANEL_MIDDLE)
-    if item_name == 'bac à sable':
+    if item_name == 'Bac à sable':
         sandbox.render(PANEL_MIDDLE)
-    if item_name == 'interface tournois':
+    if item_name == 'Interface tournois':
         tournament.render(PANEL_MIDDLE)
-    if item_name == 'événements':
+    if item_name == 'Evénements':
         events.render(PANEL_MIDDLE)
-    if item_name == 'classements':
+    if item_name == 'Classements':
         players.render(PANEL_MIDDLE)
-    if item_name == 'création':
+    if item_name == 'Création':
         create.render(PANEL_MIDDLE)
-    if item_name == 'modération':
+    if item_name == 'Modération':
         moderate.render(PANEL_MIDDLE)
-    if item_name == 'administration':
+    if item_name == 'Administration':
         admin.render(PANEL_MIDDLE)
-    if item_name == 'forum':
+    if item_name == 'Forum':
         forum.render(PANEL_MIDDLE)
 
     global ITEM_NAME_SELECTED
@@ -155,17 +155,17 @@ def load_option(_, item_name):
     for possible_item_name in OPTIONS:
 
         # do not display menu create if not creator
-        if possible_item_name == 'création':
+        if possible_item_name == 'Création':
             if pseudo is None or not create.check_creator(pseudo):
                 continue
 
         # do not display menu moderate if not moderator
-        if possible_item_name == 'modération':
+        if possible_item_name == 'Modération':
             if pseudo is None or not moderate.check_modo(pseudo):
                 continue
 
         # do not display menu administrate if not administrator
-        if possible_item_name == 'administration':
+        if possible_item_name == 'Administration':
             if pseudo is None or not admin.check_admin(pseudo):
                 continue
 
@@ -193,7 +193,7 @@ def load_option(_, item_name):
     if prev_item_selected in ['jouer la partie sélectionnée', 'bac à sable']:
         document.unbind("keypress")
 
-    if ITEM_NAME_SELECTED == 'accueil':
+    if ITEM_NAME_SELECTED == 'Accueil':
         if 'flag' not in storage or storage['flag'] == 'True':
             emotion_img = html.IMG(src="./images/ukraine-flag-animation.gif")
             MENU_LEFT <= html.BR()
@@ -220,7 +220,7 @@ if 'game' in document.query:
             arrival = document.query['arrival']
             # so that will go to proper page and/or do proper action
             play.set_arrival(arrival)
-        load_option(None, 'jouer la partie sélectionnée')
+        load_option(None, 'Jouer la partie sélectionnée')
     else:
         load_option(None, ITEM_NAME_SELECTED)
 elif 'event' in document.query:
@@ -228,7 +228,7 @@ elif 'event' in document.query:
     if check_event(QUERY_EVENT_NAME):
         storage['EVENT'] = QUERY_EVENT_NAME
         events.set_arrival()
-        load_option(None, 'événements')
+        load_option(None, 'Evénements')
     else:
         load_option(None, ITEM_NAME_SELECTED)
 else:
