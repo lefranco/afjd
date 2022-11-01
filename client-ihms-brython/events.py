@@ -712,12 +712,6 @@ def edit_event():
     description = event_dict['description']
     summary = event_dict['summary']
 
-    # need to be the manager
-    manager_id = event_dict['manager_id']
-    if player_id != manager_id:
-        alert("Vous ne semblez pas être le créateur de cet événement")
-        return
-
     form = html.FORM()
 
     form <= html.DIV("Pas d'espaces ni de tirets dans le nom de l'événement", Class='note')
@@ -910,13 +904,6 @@ def illustrate_event():
     events_dict = common.get_events_data()
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
-    event_dict = get_event_data(event_id)
-
-    # need to be the manager
-    manager_id = event_dict['manager_id']
-    if player_id != manager_id:
-        alert("Vous ne semblez pas être le créateur de cet événement")
-        return
 
     form = html.FORM()
 
@@ -1020,12 +1007,6 @@ def handle_joiners():
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
-
-    # need to be the manager
-    manager_id = event_dict['manager_id']
-    if player_id != manager_id:
-        alert("Vous ne semblez pas être le créateur de cet événement")
-        return
 
     joiners = get_registrations(event_id)
     joiners_dict = {}
@@ -1176,12 +1157,6 @@ def delete_event():
     event_id = eventname2id[event_name]
     event_dict = get_event_data(event_id)
 
-    # need to be the manager
-    manager_id = event_dict['manager_id']
-    if player_id != manager_id:
-        alert("Vous ne semblez pas être le créateur de cet événement")
-        return
-
     form = html.FORM()
 
     input_delete_event = html.INPUT(type="submit", value="supprimer l'événement")
@@ -1193,7 +1168,6 @@ def delete_event():
         alert("Erreur chargement dictionnaire joueurs")
 
     name = event_dict['name']
-    manager_id = event_dict['manager_id']
 
     MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
     MY_SUB_PANEL <= html.BR()
