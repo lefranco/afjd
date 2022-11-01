@@ -1755,15 +1755,6 @@ def update_regularity():
     MY_SUB_PANEL <= form
 
 
-
-
-
-
-
-
-
-
-
 def show_idle_data():
     """ show_idle_data """
 
@@ -1874,20 +1865,6 @@ def show_non_confirmed_data():
 
     MY_SUB_PANEL <= players_table
     MY_SUB_PANEL <= html.P(f"Il y a {count} comptes non confirmés")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 def maintain():

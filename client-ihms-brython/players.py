@@ -1027,6 +1027,7 @@ def show_creators():
 
     MY_SUB_PANEL <= creators_table
 
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
