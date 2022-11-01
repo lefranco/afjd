@@ -16,7 +16,7 @@ import mapping
 DEFAULT_ELO = 1500
 
 
-OPTIONS = ['classement performance', 'classement fiabilité', 'classement régularité', 'liste inscrits', 'liste joueurs', 'liste arbitres', 'abonnés remplaçants', 'groupe modérateurs', 'groupe créateurs']
+OPTIONS = ['Classement performance', 'Classement fiabilité', 'Classement régularité', 'Liste inscrits', 'Liste joueurs', 'Liste arbitres', 'Abonnés remplaçants', 'Groupe modérateurs', 'Groupe créateurs']
 
 
 def get_detailed_elo_rating(classic, role_id):
@@ -1052,23 +1052,23 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'classement performance':
+    if item_name == 'Classement performance':
         show_rating_performance(True, None)
-    if item_name == 'classement fiabilité':
+    if item_name == 'Classement fiabilité':
         show_rating_reliability()
-    if item_name == 'classement régularité':
+    if item_name == 'Classement régularité':
         show_rating_regularity()
-    if item_name == 'liste inscrits':
+    if item_name == 'Liste inscrits':
         show_registered_data()
-    if item_name == 'liste joueurs':
+    if item_name == 'Liste joueurs':
         show_players_data()
-    if item_name == 'liste arbitres':
+    if item_name == 'Liste arbitres':
         show_game_masters_data()
-    if item_name == 'abonnés remplaçants':
+    if item_name == 'Abonnés remplaçants':
         show_replacement_data()
-    if item_name == 'groupe modérateurs':
+    if item_name == 'Groupe modérateurs':
         show_moderators()
-    if item_name == 'groupe créateurs':
+    if item_name == 'Groupe créateurs':
         show_creators()
 
     global ITEM_NAME_SELECTED

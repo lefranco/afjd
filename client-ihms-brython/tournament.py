@@ -20,7 +20,7 @@ import memoize
 import index  # circular import
 
 
-OPTIONS = ['parties du tournoi', 'classement du tournoi', 'incidents du tournoi', 'créer un tournoi', 'éditer le tournoi', 'supprimer le tournoi', 'les tournois du site', 'tester un scorage']
+OPTIONS = ['Parties du tournoi', 'Classement du tournoi', 'Incidents du tournoi', 'Créer un tournoi', 'Editer le tournoi', 'Supprimer le tournoi', 'Les tournois du site', 'Tester un scorage']
 
 MAX_LEN_TOURNAMENT_NAME = 50
 
@@ -44,7 +44,7 @@ def show_games():
         selection.show_game_selected()
 
         # action of going to game page
-        index.load_option(None, 'jouer la partie sélectionnée')
+        index.load_option(None, 'Jouer la partie sélectionnée')
 
     def change_button_mode_callback(_):
         if storage['GAME_ACCESS_MODE'] == 'button':
@@ -1327,21 +1327,21 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'parties du tournoi':
+    if item_name == 'Parties du tournoi':
         show_games()
-    if item_name == 'classement du tournoi':
+    if item_name == 'Classement du tournoi':
         show_ratings()
-    if item_name == 'incidents du tournoi':
+    if item_name == 'Incidents du tournoi':
         show_incidents()
-    if item_name == 'créer un tournoi':
+    if item_name == 'Créer un tournoi':
         create_tournament()
-    if item_name == 'éditer le tournoi':
+    if item_name == 'Editer le tournoi':
         edit_tournament()
-    if item_name == 'supprimer le tournoi':
+    if item_name == 'Supprimer le tournoi':
         delete_tournament()
-    if item_name == 'les tournois du site':
+    if item_name == 'Les tournois du site':
         show_tournaments_data()
-    if item_name == 'tester un scorage':
+    if item_name == 'Tester un scorage':
         test_scoring()
 
     global ITEM_NAME_SELECTED
@@ -1370,14 +1370,14 @@ def render(panel_middle):
     # always back to top
     global ITEM_NAME_SELECTED
 
-    ITEM_NAME_SELECTED = 'créer un tournoi'
+    ITEM_NAME_SELECTED = 'Créer un tournoi'
 
     if 'GAME' in storage:
         game = storage['GAME']
         global TOURNAMENT_DICT
         TOURNAMENT_DICT = common.get_tournament_data(game)
         if TOURNAMENT_DICT:
-            ITEM_NAME_SELECTED = 'parties du tournoi'
+            ITEM_NAME_SELECTED = 'Parties du tournoi'
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

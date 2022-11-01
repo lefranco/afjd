@@ -15,7 +15,7 @@ import interface
 import mapping
 
 
-OPTIONS = ['créer plusieurs parties']
+OPTIONS = ['Créer plusieurs parties']
 
 MAX_NUMBER_GAMES = 200
 
@@ -499,7 +499,7 @@ def load_option(_, item_name):
 
     PREV_GAME = ""
 
-    if item_name == 'créer plusieurs parties':
+    if item_name == 'Créer plusieurs parties':
         create_many_games()
 
     global ITEM_NAME_SELECTED

@@ -12,7 +12,7 @@ import config
 import common
 import login
 
-OPTIONS = ['créer un compte', 'mot de passe', 'valider mon courriel', 'mon code forum', 'éditer', 'supprimer']
+OPTIONS = ['Créer un compte', 'Mot de passe', 'Valider mon courriel', 'Mon code forum', 'Editer', 'Supprimer']
 
 
 MIN_LEN_PSEUDO = 3
@@ -953,17 +953,17 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'créer un compte':
+    if item_name == 'Créer un compte':
         create_account(None)
-    if item_name == 'mot de passe':
+    if item_name == 'Mot de passe':
         change_password()
-    if item_name == 'valider mon courriel':
+    if item_name == 'Valider mon courriel':
         validate_email()
-    if item_name == 'mon code forum':
+    if item_name == 'Mon code forum':
         forum_code()
-    if item_name == 'éditer':
+    if item_name == 'Editer':
         edit_account()
-    if item_name == 'supprimer':
+    if item_name == 'Supprimer':
         delete_account()
 
     global ITEM_NAME_SELECTED
@@ -992,7 +992,7 @@ def render(panel_middle):
     global ITEM_NAME_SELECTED
 
     if 'PSEUDO' in storage:
-        ITEM_NAME_SELECTED = 'éditer'
+        ITEM_NAME_SELECTED = 'Editer'
     else:
         ITEM_NAME_SELECTED = OPTIONS[0]
 

@@ -69,7 +69,7 @@ def my_opportunities():
         """ create_account_callback """
 
         # go to create account page
-        index.load_option(None, 'mon compte')
+        index.load_option(None, 'Mon compte')
 
     def select_game_callback(_, game_name, game_data_sel):
         """ select_game_callback """
@@ -85,7 +85,7 @@ def my_opportunities():
         selection.show_game_selected()
 
         # action of going to game page
-        index.load_option(None, 'jouer la partie sélectionnée')
+        index.load_option(None, 'Jouer la partie sélectionnée')
 
     def join_and_select_game_callback(evt, game_name, game_data_sel):
         """ join_and_select_game_callback : the second way of joining a game : by a button """

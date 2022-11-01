@@ -18,7 +18,7 @@ import scoring
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['changer nouvelles', 'préparer un publipostage', 'codes de vérification', 'envoyer un courriel', 'retrouver à partir du courriel', 'récupérer un courriel', 'récupérer un téléphone', 'résultats tournoi', 'destituer arbitre', 'changer responsable événement']
+OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Retrouver à partir du courriel', 'Récupérer un courriel', 'Récupérer un téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement']
 
 
 def check_modo(pseudo):
@@ -1024,25 +1024,25 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'changer nouvelles':
+    if item_name == 'Changer nouvelles':
         change_news_modo()
-    if item_name == 'préparer un publipostage':
+    if item_name == 'Préparer un publipostage':
         all_emails()
-    if item_name == 'codes de vérification':
+    if item_name == 'Codes de vérification':
         show_verif_codes()
-    if item_name == 'envoyer un courriel':
+    if item_name == 'Envoyer un courriel':
         sendmail()
-    if item_name == 'retrouver à partir du courriel':
+    if item_name == 'Retrouver à partir du courriel':
         find_from_email_address()
-    if item_name == 'récupérer un courriel':
+    if item_name == 'Récupérer un courriel':
         display_email_address()
-    if item_name == 'récupérer un téléphone':
+    if item_name == 'Récupérer un téléphone':
         display_phone_number()
-    if item_name == 'résultats tournoi':
+    if item_name == 'Résultats tournoi':
         tournament_result()
-    if item_name == 'destituer arbitre':
+    if item_name == 'Destituer arbitre':
         revoke_master()
-    if item_name == 'changer responsable événement':
+    if item_name == 'Changer responsable événement':
         change_manager()
 
     global ITEM_NAME_SELECTED
