@@ -179,7 +179,6 @@ def login():
     fieldset <= input_pseudo
     form <= fieldset
     form <= html.BR()
-    form <= html.BR()
 
     fieldset = html.FIELDSET()
     legend_password = html.LEGEND("Mot de passe", title="Notez le dans un coin !")
