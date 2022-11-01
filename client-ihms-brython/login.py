@@ -188,7 +188,6 @@ def login():
     fieldset <= input_password
     form <= fieldset
     form <= html.BR()
-    form <= html.BR()
 
     input_login = html.INPUT(type="submit", value="connexion")
     input_login.bind("click", login_callback)
