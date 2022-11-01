@@ -65,6 +65,12 @@ def get_recruiting_games():
 def my_opportunities():
     """ my_opportunities """
 
+    def create_account_callback(_):
+        """ create_account_callback """
+
+        # go to create account page
+        index.load_option(None, 'mon compte')
+
     def select_game_callback(_, game_name, game_data_sel):
         """ select_game_callback """
 
@@ -201,6 +207,15 @@ def my_opportunities():
 
     MY_PANEL <= information_about_games()
     MY_PANEL <= html.BR()
+
+    # button for creating account
+    if 'PSEUDO' not in storage:
+        # shortcut to create account
+        button = html.BUTTON("Je n'ai pas de compte, je veux le créer !", Class='btn-menu')
+        button.bind("click", create_account_callback)
+        MY_PANEL <= button
+        MY_PANEL <= html.BR()
+        MY_PANEL <= html.BR()
 
     # button for switching mode
     if 'GAME_ACCESS_MODE' not in storage:
