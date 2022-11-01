@@ -146,7 +146,8 @@ class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/player-identifiers/<pseudo> - GET - retrieving identifier from  player pseudo=%s", pseudo)
+        # not logged because too much log
+        #  mylogger.LOGGER.info("/player-identifiers/<pseudo> - GET - retrieving identifier from  player pseudo=%s", pseudo)
 
         # find data
         sql_executor = database.SqlExecutor()

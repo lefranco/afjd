@@ -1991,7 +1991,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         adjudication_names = args['adjudication_names']
         pseudo = args['pseudo']
 
-        mylogger.LOGGER.info("role_id=%s orders_submitted=%s definitive_value=%s names=%s", role_id, orders_submitted, definitive_value, names)
+        mylogger.LOGGER.info("role_id=%s definitive_value=%s", role_id, definitive_value)
         mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
@@ -2585,7 +2585,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         communication_orders_submitted = args['orders']
         pseudo = args['pseudo']
 
-        mylogger.LOGGER.info("role_id=%s communication_orders_submitted=%s", role_id, communication_orders_submitted)  # names not logged
+        mylogger.LOGGER.info("role_id=%s", role_id)
         mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         if pseudo is None:
