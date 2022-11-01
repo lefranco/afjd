@@ -778,19 +778,19 @@ def declare_incident():
         body += f"Cookies enabled: {window.navigator.cookieEnabled}\n"
         try:
             body += f"Connection Speed: {window.navigator.connection.downlink}\n"
-        except:
+        except:  # noqa: E722 pylint: disable=bare-except
             body += "Failed to get connection speed\n"
         try:
             body += f"Connection Effective Type: {window.navigator.connection.effectiveType}\n"
-        except:
+        except:  # noqa: E722 pylint: disable=bare-except
             body += "Failed to get connection effective type\n"
         try:
             body += f"Connection Type: {window.navigator.connection.type}\n"
-        except:
+        except:  # noqa: E722 pylint: disable=bare-except
             body += "Failed to get connection type\n"
         try:
             body += f"Memory: {window.navigator.deviceMemory}\n"
-        except:
+        except:  # noqa: E722 pylint: disable=bare-except
             body += "Failed to get Memory data\n"
         body += f"Language: {window.navigator.language}\n"
         body += f"User Agent: {window.navigator.userAgent}\n"
