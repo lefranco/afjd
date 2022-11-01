@@ -8,12 +8,12 @@ from browser.local_storage import storage  # pylint: disable=import-error # noqa
 import common    # noqa: E402
 import home    # noqa: E402
 import login    # noqa: E402
-import selection    # noqa: E402
 import account    # noqa: E402
 import opportunities    # noqa: E402
 import mygames    # noqa: E402
 import games    # noqa: E402
 import pairing    # noqa: E402
+import selection    # noqa: E402
 import play    # noqa: E402
 import sandbox    # noqa: E402
 import tournament    # noqa: E402
@@ -31,7 +31,7 @@ H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de 
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'bac à sable', 'interface tournois', 'événements', 'classements', 'création', 'modération', 'administration', 'forum']
+OPTIONS = ['accueil', 'connexion', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'sélectionner partie', 'jouer la partie sélectionnée', 'bac à sable', 'interface tournois', 'événements', 'classements', 'création', 'modération', 'administration', 'forum']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -114,8 +114,6 @@ def load_option(_, item_name):
         home.render(PANEL_MIDDLE)
     if item_name == 'connexion':
         login.render(PANEL_MIDDLE)
-    if item_name == 'sélectionner partie':
-        selection.render(PANEL_MIDDLE)
     if item_name == 'mon compte':
         account.render(PANEL_MIDDLE)
     if item_name == 'rejoindre une partie':
@@ -126,6 +124,8 @@ def load_option(_, item_name):
         games.render(PANEL_MIDDLE)
     if item_name == 'appariement':
         pairing.render(PANEL_MIDDLE)
+    if item_name == 'sélectionner partie':
+        selection.render(PANEL_MIDDLE)
     if item_name == 'jouer la partie sélectionnée':
         play.render(PANEL_MIDDLE)
     if item_name == 'bac à sable':
