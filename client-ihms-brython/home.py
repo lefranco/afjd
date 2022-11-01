@@ -21,7 +21,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['vue d\'ensemble', 'autres liens', 'brique sociale', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres']
+OPTIONS = ['vue d\'ensemble', 'toutes les parties', 'déclarer un incident', 'foire aux questions', 'pourquoi yapa', 'coin technique', 'choix d\'interface', 'parties sans arbitres', 'autres liens', 'brique sociale']
 
 NOTE_CONTENT_STATED = """Bienvenue dans la première version du site Diplomania.
 Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu.
@@ -341,40 +341,6 @@ def show_news():
 
     # ----
     MY_SUB_PANEL <= div_homepage
-
-
-def show_links():
-    """ show_links """
-
-    title = html.H3("Autres liens")
-    MY_SUB_PANEL <= title
-
-    # ----
-
-    title2 = html.H4("Parrainage")
-    MY_SUB_PANEL <= title2
-
-    link2 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
-    link2 <= "Participer au financement du développement du site"
-    MY_SUB_PANEL <= link2
-
-    # ----
-
-    title3 = html.H4("Tutoriel youtube")
-    MY_SUB_PANEL <= title3
-
-    link3 = html.A(href="https://youtu.be/luOiAz9i7Ls", target="_blank")
-    link3 <= "Si vous comprenez rien à ce site, ce tutoriel va vous éclairer sur les points essentiels..."
-    MY_SUB_PANEL <= link3
-
-    # ----
-
-    title4 = html.H4("Document d'interface de l'API")
-    MY_SUB_PANEL <= title4
-
-    link4 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
-    link4 <= "Si vous voulez vous aussi développer votre front end..."
-    MY_SUB_PANEL <= link4
 
 
 def all_games(state_name):
@@ -1184,6 +1150,40 @@ def show_no_game_masters_data():
     MY_SUB_PANEL <= no_game_masters_table
 
 
+def show_links():
+    """ show_links """
+
+    title = html.H3("Autres liens")
+    MY_SUB_PANEL <= title
+
+    # ----
+
+    title2 = html.H4("Parrainage")
+    MY_SUB_PANEL <= title2
+
+    link2 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
+    link2 <= "Participer au financement du développement du site"
+    MY_SUB_PANEL <= link2
+
+    # ----
+
+    title3 = html.H4("Tutoriel youtube")
+    MY_SUB_PANEL <= title3
+
+    link3 = html.A(href="https://youtu.be/luOiAz9i7Ls", target="_blank")
+    link3 <= "Si vous comprenez rien à ce site, ce tutoriel va vous éclairer sur les points essentiels..."
+    MY_SUB_PANEL <= link3
+
+    # ----
+
+    title4 = html.H4("Document d'interface de l'API")
+    MY_SUB_PANEL <= title4
+
+    link4 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
+    link4 <= "Si vous voulez vous aussi développer votre front end..."
+    MY_SUB_PANEL <= link4
+
+
 def social():
     """ social """
 
@@ -1224,10 +1224,6 @@ def load_option(_, item_name):
         show_news()
     if item_name == 'toutes les parties':
         all_games('en cours')
-    if item_name == 'autres liens':
-        show_links()
-    if item_name == 'brique sociale':
-        social()
     if item_name == 'déclarer un incident':
         declare_incident()
     if item_name == 'foire aux questions':
@@ -1240,6 +1236,10 @@ def load_option(_, item_name):
         select_interface()
     if item_name == 'parties sans arbitres':
         show_no_game_masters_data()
+    if item_name == 'autres liens':
+        show_links()
+    if item_name == 'brique sociale':
+        social()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
