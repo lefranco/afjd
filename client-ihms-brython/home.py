@@ -210,7 +210,7 @@ def show_news():
     # ----
     div_b5 = html.DIV(Class='tooltip')
 
-    title11 = html.H4("Les meilleurs ELOs sur le site")
+    title11 = html.H4("Les meilleurs joueurs du site (d'après le classement ELO)")
     div_b5 <= title11
 
     teaser_loaded = get_teaser_content()
