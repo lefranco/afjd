@@ -1121,7 +1121,7 @@ def show_non_confirmed_data():
     players_table <= thead
 
     count = 0
-    for data in sorted(players_dict.values(), key=lambda p: p['pseudo'].upper()):
+    for player_id, data in sorted(players_dict.items(), key=lambda p: p[0]):
 
         if data['email_confirmed']:
             continue
