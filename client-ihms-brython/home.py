@@ -196,7 +196,7 @@ def show_news():
     # ----
     div_a5 = html.DIV(Class='tooltip')
 
-    title1 = html.H4("Les parties en cours où il manque un joueur")
+    title1 = html.H4("Les parties en cours dans lesquelles il manque un joueur")
     div_a5 <= title1
 
     suffering_games_loaded = get_needing_replacement_games()
