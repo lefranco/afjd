@@ -145,21 +145,22 @@ def my_opportunities():
 
     overall_time_before = time.time()
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
+    pseudo = None
+    player_id = None
+    player_games = []
 
-    pseudo = storage['PSEUDO']
+    if 'PSEUDO' in storage:
+        pseudo = storage['PSEUDO']
 
-    player_id = common.get_player_id(pseudo)
-    if player_id is None:
-        alert("Erreur chargement identifiant joueur")
-        return
+        player_id = common.get_player_id(pseudo)
+        if player_id is None:
+            alert("Erreur chargement identifiant joueur")
+            return
 
-    player_games = common.get_player_games_playing_in(player_id)
-    if player_games is None:
-        alert("Erreur chargement liste parties joueés")
-        return
+        player_games = common.get_player_games_playing_in(player_id)
+        if player_games is None:
+            alert("Erreur chargement liste parties jouées")
+            return
 
     recruiting_games_list = get_recruiting_games()
     # there can be no message (if no game of failed to load)
@@ -359,8 +360,10 @@ def my_opportunities():
                     value = link
 
             if field == 'join':
-                if game_id_str in player_games:
-                    value = "(déjà dedans !)"
+                if player_id is None:
+                    value = "Pas identifié"
+                elif game_id_str in player_games:
+                    value = "Déjà dedans"
                 else:
                     game_name = data['name']
                     form = html.FORM()
