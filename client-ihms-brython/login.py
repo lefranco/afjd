@@ -222,7 +222,6 @@ def login():
         form <= html.BR()
         form <= html.BR()
 
-
     sub_panel <= form
 
     return sub_panel
