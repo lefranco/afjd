@@ -14,6 +14,7 @@ import datetime
 import time
 import argparse
 import sys
+import threading
 
 import waitress
 import flask
@@ -195,6 +196,12 @@ GROUPING_PARSER.add_argument('game_id', type=int, required=True)
 GROUPING_PARSER.add_argument('delete', type=int, required=True)
 
 
+# creates some locks for some critical sections (where there can only be one at same time)
+# there is one lock per ongoing game
+# waitress uses threads, not processes
+LOCK_TABLE: typing.Dict[str, threading.Lock] = {}
+
+
 @API.resource('/variants/<name>')
 class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
     """ VariantIdentifierRessource """
@@ -357,6 +364,10 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
             if current_state_before == 0 and game.current_state == 1:
 
+                # create and insert lock for that game
+                lock = threading.Lock()
+                LOCK_TABLE[game.name] = lock
+
                 # ----
                 # we are starting the game
                 # ----
@@ -421,6 +432,9 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                         flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
             elif current_state_before == 1 and game.current_state == 2:
+
+                # delete lock for that game
+                del LOCK_TABLE[game.name]
 
                 # ----
                 # we are finishing the game
@@ -1897,27 +1911,32 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg="Invalid role_id parameter")
 
-        # check orders are required
-        actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
-        needed_list = [o[1] for o in actives_list]
-        if role_id not in needed_list:
-            del sql_executor
-            flask_restful.abort(400, msg="This role does not seem to require any orders")
+        # begin of protected section
+        with LOCK_TABLE[game.name]:
 
-        # check orders are submitted
-        submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
-        submitted_list = [o[1] for o in submissions_list]
-        if role_id not in submitted_list:
-            del sql_executor
-            flask_restful.abort(400, msg="This role does not seem to have submitted orders yet")
+            # check orders are required
+            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+            needed_list = [o[1] for o in actives_list]
+            if role_id not in needed_list:
+                del sql_executor
+                flask_restful.abort(400, msg="This role does not seem to require any orders")
 
-        if not game.past_deadline():
-            del sql_executor
-            flask_restful.abort(400, msg="We are not after deadline, please change deadline first.")
+            # check orders are submitted
+            submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+            submitted_list = [o[1] for o in submissions_list]
+            if role_id not in submitted_list:
+                del sql_executor
+                flask_restful.abort(400, msg="This role does not seem to have submitted orders yet")
 
-        # handle definitive boolean
-        # game master forced player to agree to adjudicate
-        status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), adjudication_names, sql_executor)
+            if not game.past_deadline():
+                del sql_executor
+                flask_restful.abort(400, msg="We are not after deadline, please change deadline first.")
+
+            # handle definitive boolean
+            # game master forced player to agree to adjudicate
+            status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), adjudication_names, sql_executor)
+
+        # end of protected section
 
         if not status:
             del sql_executor  # noqa: F821
@@ -2045,201 +2064,206 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="Submitting orders is not possible for game master for non archive games")
 
-        # check orders are required
-        # needed list : those who need to submit orders
-        if role_id != 0:
-            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
-            needed_list = [o[1] for o in actives_list]
-            if role_id not in needed_list:
-                del sql_executor
-                flask_restful.abort(403, msg="This role does not seem to require any orders")
+        # begin of protected section
+        with LOCK_TABLE[game.name]:
 
-        # extract orders from input
-        try:
-            the_orders = json.loads(orders_submitted)
-        except json.JSONDecodeError:
-            del sql_executor
-            flask_restful.abort(400, msg="Did you convert orders from json to text ?")
-
-        # check the phase (sometimes two submission arrive simultanously)
-        for the_order in the_orders:
-            if game.current_advancement % 5 in [0, 2]:
-                if the_order['order_type'] not in [1, 2, 3, 4, 5]:
-                    flask_restful.abort(400, msg="Seems we have a move phase, you must provide move orders! (or more probably, you submitted twice or game changed just before you submitted)")
-            if game.current_advancement % 5 in [1, 3]:
-                if the_order['order_type'] not in [6, 7]:
-                    flask_restful.abort(400, msg="Seems we have a retreat phase, you must provide retreat orders! (or more probably, you submitted twice or game changed just before you submitted")
-            if game.current_advancement % 5 in [4]:
-                if the_order['order_type'] not in [8, 9]:
-                    flask_restful.abort(400, msg="Seems we have a adjustements phase, you must provide adjustments orders! (or more probably, you submitted twice or game changed just before you submitted")
-
-        # put in database fake units - units for build orders
-
-        # first we remove the fake units of the role already present
-        game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
-        for _, type_num, zone_num, role_num, _, fake in game_units:
-            if not fake:
-                continue
-            if not (role_id == 0 or role_num == int(role_id)):
-                continue
-            fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
-            fake_unit.delete_database(sql_executor)  # noqa: F821
-
-        # we check not building where there is already a unit
-        # get the occupied zones
-        game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
-        occupied_zones: typing.Set[int] = set()
-        for _, _, zone_num, _, _, fake in game_units:
-            if not fake:
-                occupied_zones.add(zone_num)
-        # check not build on occupied zone
-        for the_order in the_orders:
-            if the_order['order_type'] == 8:
-                zone_num = the_order['active_unit']['zone']
-                if zone_num in occupied_zones:
+            # check orders are required
+            # needed list : those who need to submit orders
+            if role_id != 0:
+                actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+                needed_list = [o[1] for o in actives_list]
+                if role_id not in needed_list:
                     del sql_executor
-                    flask_restful.abort(400, msg="Trying to build in a zone where there is already a unit")
+                    flask_restful.abort(403, msg="This role does not seem to require any orders")
 
-        # then we put the incoming ones in the database
-        inserted_fake_unit_list: typing.List[typing.List[int]] = []
-        for the_order in the_orders:
-            if the_order['order_type'] == 8:
-                type_num = the_order['active_unit']['type_unit']
-                role_num = the_order['active_unit']['role']
-                zone_num = the_order['active_unit']['zone']
-                inserted_fake_unit_list.append([type_num, zone_num, role_num])
-                fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
-                # insert
-                fake_unit.update_database(sql_executor)  # noqa: F821
+            # extract orders from input
+            try:
+                the_orders = json.loads(orders_submitted)
+            except json.JSONDecodeError:
+                del sql_executor
+                flask_restful.abort(400, msg="Did you convert orders from json to text ?")
 
-        # now checking validity of orders
+            # check the phase (sometimes two submission arrive simultanously)
+            for the_order in the_orders:
+                if game.current_advancement % 5 in [0, 2]:
+                    if the_order['order_type'] not in [1, 2, 3, 4, 5]:
+                        flask_restful.abort(400, msg="Seems we have a move phase, you must provide move orders! (or more probably, you submitted twice or game changed just before you submitted)")
+                if game.current_advancement % 5 in [1, 3]:
+                    if the_order['order_type'] not in [6, 7]:
+                        flask_restful.abort(400, msg="Seems we have a retreat phase, you must provide retreat orders! (or more probably, you submitted twice or game changed just before you submitted")
+                if game.current_advancement % 5 in [4]:
+                    if the_order['order_type'] not in [8, 9]:
+                        flask_restful.abort(400, msg="Seems we have a adjustements phase, you must provide adjustments orders! (or more probably, you submitted twice or game changed just before you submitted")
 
-        # evaluate variant
-        variant_name = game.variant
-        variant_dict = variants.Variant.get_by_name(variant_name)
-        if variant_dict is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"Variant {variant_name} doesn't exist")
-        variant_dict_json = json.dumps(variant_dict)
+            # put in database fake units - units for build orders
 
-        # evaluate situation
-
-        # situation: get ownerships
-        ownership_dict: typing.Dict[str, int] = {}
-        game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)  # noqa: F821
-        for _, center_num, role_num in game_ownerships:
-            ownership_dict[str(center_num)] = role_num
-
-        # situation: get units
-        game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
-        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
-            if fake:
-                # ignore units built by other roles (otherwise may guess other builds)
-                if role_id not in (0, role_num):
+            # first we remove the fake units of the role already present
+            game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
+            for _, type_num, zone_num, role_num, _, fake in game_units:
+                if not fake:
                     continue
-                fake_unit_dict[str(role_num)].append([type_num, zone_num])
-            elif region_dislodged_from_num:
-                dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
-            else:
-                unit_dict[str(role_num)].append([type_num, zone_num])
-
-        # situation: get forbiddens
-        forbidden_list = []
-        game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)  # noqa: F821
-        for _, region_num in game_forbiddens:
-            forbidden_list.append(region_num)
-
-        situation_dict = {
-            'ownerships': ownership_dict,
-            'dislodged_ones': dislodged_unit_dict,
-            'units': unit_dict,
-            'fake_units': fake_unit_dict,
-            'forbiddens': forbidden_list,
-        }
-        situation_dict_json = json.dumps(situation_dict)
-
-        orders_list = []
-        for the_order in the_orders:
-            order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
-            order.load_json(the_order)
-            order_export = order.export()
-            orders_list.append(order_export)
-
-        orders_list_json = json.dumps(orders_list)
-
-        json_dict = {
-            'variant': variant_dict_json,
-            'advancement': game.current_advancement,
-            'situation': situation_dict_json,
-            'orders': orders_list_json,
-            'names': names,
-            'role': role_id,
-        }
-
-        # post to solver
-        host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
-        port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
-        url = f"{host}:{port}/solve"
-        req_result = SESSION.post(url, data=json_dict)
-
-        if 'msg' in req_result.json():
-            submission_report = req_result.json()['msg']
-        else:
-            submission_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
-
-        # adjudication failed
-        if req_result.status_code != 201:
-
-            # we remove the inserted fake units
-            for type_num, zone_num, role_num in inserted_fake_unit_list:
+                if not (role_id == 0 or role_num == int(role_id)):
+                    continue
                 fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
-                # remove
                 fake_unit.delete_database(sql_executor)  # noqa: F821
 
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            # we check not building where there is already a unit
+            # get the occupied zones
+            game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
+            occupied_zones: typing.Set[int] = set()
+            for _, _, zone_num, _, _, fake in game_units:
+                if not fake:
+                    occupied_zones.add(zone_num)
+            # check not build on occupied zone
+            for the_order in the_orders:
+                if the_order['order_type'] == 8:
+                    zone_num = the_order['active_unit']['zone']
+                    if zone_num in occupied_zones:
+                        del sql_executor
+                        flask_restful.abort(400, msg="Trying to build in a zone where there is already a unit")
 
-            del sql_executor
-            flask_restful.abort(400, msg=f"Failed to submit orders {message} : {submission_report}")
+            # then we put the incoming ones in the database
+            inserted_fake_unit_list: typing.List[typing.List[int]] = []
+            for the_order in the_orders:
+                if the_order['order_type'] == 8:
+                    type_num = the_order['active_unit']['type_unit']
+                    role_num = the_order['active_unit']['role']
+                    zone_num = the_order['active_unit']['zone']
+                    inserted_fake_unit_list.append([type_num, zone_num, role_num])
+                    fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
+                    # insert
+                    fake_unit.update_database(sql_executor)  # noqa: F821
 
-        # ok so orders are accepted
+            # now checking validity of orders
 
-        # store orders
+            # evaluate variant
+            variant_name = game.variant
+            variant_dict = variants.Variant.get_by_name(variant_name)
+            if variant_dict is None:
+                del sql_executor
+                flask_restful.abort(404, msg=f"Variant {variant_name} doesn't exist")
+            variant_dict_json = json.dumps(variant_dict)
 
-        # purge previous
+            # evaluate situation
 
-        # get list
-        if int(role_id) != 0:
-            previous_orders = orders.Order.list_by_game_id_role_num(sql_executor, int(game_id), role_id)  # noqa: F821
-        else:
-            previous_orders = orders.Order.list_by_game_id(sql_executor, int(game_id))  # noqa: F821
+            # situation: get ownerships
+            ownership_dict: typing.Dict[str, int] = {}
+            game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)  # noqa: F821
+            for _, center_num, role_num in game_ownerships:
+                ownership_dict[str(center_num)] = role_num
 
-        # purge
-        for (_, role_num, _, zone_num, _, _) in previous_orders:
-            order = orders.Order(int(game_id), role_num, 0, zone_num, 0, 0)
-            order.delete_database(sql_executor)  # noqa: F821
+            # situation: get units
+            game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
+            unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+            fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+            dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+            for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+                if fake:
+                    # ignore units built by other roles (otherwise may guess other builds)
+                    if role_id not in (0, role_num):
+                        continue
+                    fake_unit_dict[str(role_num)].append([type_num, zone_num])
+                elif region_dislodged_from_num:
+                    dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
+                else:
+                    unit_dict[str(role_num)].append([type_num, zone_num])
 
-        # insert new ones
-        for the_order in the_orders:
-            order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
-            order.load_json(the_order)
-            order.update_database(sql_executor)  # noqa: F821
+            # situation: get forbiddens
+            forbidden_list = []
+            game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)  # noqa: F821
+            for _, region_num in game_forbiddens:
+                forbidden_list.append(region_num)
 
-            # special case : build : create a fake unit
-            # this was done before submitting
-            # we tolerate that some extra fake unit may persist from previous submission
+            situation_dict = {
+                'ownerships': ownership_dict,
+                'dislodged_ones': dislodged_unit_dict,
+                'units': unit_dict,
+                'fake_units': fake_unit_dict,
+                'forbiddens': forbidden_list,
+            }
+            situation_dict_json = json.dumps(situation_dict)
 
-        # insert this submisssion (if not game master)
-        if role_id != 0:
-            submission = submissions.Submission(int(game_id), int(role_id))
-            submission.update_database(sql_executor)  # noqa: F821
+            orders_list = []
+            for the_order in the_orders:
+                order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
+                order.load_json(the_order)
+                order_export = order.export()
+                orders_list.append(order_export)
 
-        # handle definitive boolean
-        # player submitted orders and agreed (or not) to adjudicate
-        status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), adjudication_names, sql_executor)  # noqa: F821
+            orders_list_json = json.dumps(orders_list)
+
+            json_dict = {
+                'variant': variant_dict_json,
+                'advancement': game.current_advancement,
+                'situation': situation_dict_json,
+                'orders': orders_list_json,
+                'names': names,
+                'role': role_id,
+            }
+
+            # post to solver
+            host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
+            port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
+            url = f"{host}:{port}/solve"
+            req_result = SESSION.post(url, data=json_dict)
+
+            if 'msg' in req_result.json():
+                submission_report = req_result.json()['msg']
+            else:
+                submission_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
+
+            # adjudication failed
+            if req_result.status_code != 201:
+
+                # we remove the inserted fake units
+                for type_num, zone_num, role_num in inserted_fake_unit_list:
+                    fake_unit = units.Unit(int(game_id), type_num, zone_num, role_num, 0, True)
+                    # remove
+                    fake_unit.delete_database(sql_executor)  # noqa: F821
+
+                print(f"ERROR from server  : {req_result.text}")
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+
+                del sql_executor
+                flask_restful.abort(400, msg=f"Failed to submit orders {message} : {submission_report}")
+
+            # ok so orders are accepted
+
+            # store orders
+
+            # purge previous
+
+            # get list
+            if int(role_id) != 0:
+                previous_orders = orders.Order.list_by_game_id_role_num(sql_executor, int(game_id), role_id)  # noqa: F821
+            else:
+                previous_orders = orders.Order.list_by_game_id(sql_executor, int(game_id))  # noqa: F821
+
+            # purge
+            for (_, role_num, _, zone_num, _, _) in previous_orders:
+                order = orders.Order(int(game_id), role_num, 0, zone_num, 0, 0)
+                order.delete_database(sql_executor)  # noqa: F821
+
+            # insert new ones
+            for the_order in the_orders:
+                order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
+                order.load_json(the_order)
+                order.update_database(sql_executor)  # noqa: F821
+
+                # special case : build : create a fake unit
+                # this was done before submitting
+                # we tolerate that some extra fake unit may persist from previous submission
+
+            # insert this submisssion (if not game master)
+            if role_id != 0:
+                submission = submissions.Submission(int(game_id), int(role_id))
+                submission.update_database(sql_executor)  # noqa: F821
+
+            # handle definitive boolean
+            # player submitted orders and agreed (or not) to adjudicate
+            status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), adjudication_names, sql_executor)  # noqa: F821
+
+        # end of protected section
 
         if not status:
             del sql_executor  # noqa: F821
@@ -5105,6 +5129,22 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+def create_game_locks() -> None:
+    """ create_game_locks """
+
+    # get list of games
+    sql_executor = database.SqlExecutor()
+    games_list = games.Game.inventory(sql_executor)
+    del sql_executor
+
+    # create lock for active games
+    for game in games_list:
+        if game.current_state != 1:
+            continue
+        lock = threading.Lock()
+        LOCK_TABLE[game.name] = lock
+
+
 def main() -> None:
     """ main """
 
@@ -5124,6 +5164,9 @@ def main() -> None:
         populate.populate(sql_executor)
         sql_executor.commit()
         del sql_executor
+
+    # one lock per game is created
+    create_game_locks()
 
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['GAME']['PORT']
