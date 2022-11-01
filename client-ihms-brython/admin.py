@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['changer nouvelles', 'usurper', 'rectifier les paramètres', 'rectifier la position', 'dernières connexions', 'connexions manquées', 'éditer les créateurs', 'éditer les modérateurs', 'mise à jour du elo', 'mise à jour de la fiabilité', 'mise à jour de la régularité', 'maintenance']
+OPTIONS = ['changer nouvelles', 'usurper', 'rectifier les paramètres', 'rectifier la position', 'dernières connexions', 'connexions manquées', 'éditer les créateurs', 'éditer les modérateurs', 'mise à jour du elo', 'mise à jour de la fiabilité', 'mise à jour de la régularité', 'comptes oisifs', 'courriels non confirmés', 'maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1755,6 +1755,141 @@ def update_regularity():
     MY_SUB_PANEL <= form
 
 
+
+
+
+
+
+
+
+
+
+def show_idle_data():
+    """ show_idle_data """
+
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    idle_set = set()
+    for player_data in players_dict.values():
+        player = player_data['pseudo']
+        idle_set.add(player)
+
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
+    players_alloc = allocations_data['players_dict']
+    for player_id, _ in players_alloc.items():
+        player = players_dict[str(player_id)]['pseudo']
+        if player in idle_set:
+            idle_set.remove(player)
+
+    masters_alloc = allocations_data['game_masters_dict']
+    for player_id, _ in masters_alloc.items():
+        player = players_dict[str(player_id)]['pseudo']
+        if player in idle_set:
+            idle_set.remove(player)
+
+    idle_table = html.TABLE()
+
+    fields = ['player']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'player': 'joueur'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    idle_table <= thead
+
+    pseudo2id = {v['pseudo']: int(k) for k, v in players_dict.items()}
+
+    count = 0
+    for player in sorted(idle_set, key=lambda p: pseudo2id[p]):
+        row = html.TR()
+        for field in fields:
+            if field == 'player':
+                value = player
+            col = html.TD(value)
+            row <= col
+
+        idle_table <= row
+        count += 1
+
+    MY_SUB_PANEL <= html.H3("Les oisifs")
+    MY_SUB_PANEL <= idle_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
+    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
+
+
+def show_non_confirmed_data():
+    """ show_non_confirmed_data """
+
+    MY_SUB_PANEL <= html.H3("Les inscrits non confirmés")
+
+    players_dict = common.get_players_data()
+
+    if not players_dict:
+        return
+
+    players_table = html.TABLE()
+
+    fields = ['pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    count = 0
+    for player_id, data in sorted(players_dict.items(), key=lambda p: p[0]):
+
+        if data['email_confirmed']:
+            continue
+
+        row = html.TR()
+        for field in fields:
+            value = data[field]
+
+            col = html.TD(value)
+            row <= col
+            count += 1
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} comptes non confirmés")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def maintain():
     """ maintain """
 
@@ -1869,6 +2004,10 @@ def load_option(_, item_name):
         update_reliability()
     if item_name == 'mise à jour de la régularité':
         update_regularity()
+    if item_name == 'comptes oisifs':
+        show_idle_data()
+    if item_name == 'courriels non confirmés':
+        show_non_confirmed_data()
     if item_name == 'maintenance':
         maintain()
 
