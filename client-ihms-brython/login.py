@@ -151,15 +151,18 @@ def login():
 
         render(PANEL_MIDDLE)
 
+    def create_account_callback(_):
+        """ create_account_callback """
+
+        # go to create account page
+        index.load_option(None, 'mon compte')
+
     # begins here
 
     sub_panel = html.DIV(id='sub_panel')
 
     # --
-    form1 = html.FORM()
-
-    form1 <= html.DIV("Pas de compte ? Créez-le à partir du menu 'mon compte/créér mon compte'...", Class='note')
-    form1 <= html.BR()
+    form = html.FORM()
 
     # try to make user gain a bit of time
     if PREVIOUS_PSEUDO is not None:
@@ -174,43 +177,53 @@ def login():
     fieldset <= legend_pseudo
     input_pseudo = html.INPUT(type="text", value=proposed_pseudo)
     fieldset <= input_pseudo
-    form1 <= fieldset
+    form <= fieldset
+    form <= html.BR()
+    form <= html.BR()
 
     fieldset = html.FIELDSET()
     legend_password = html.LEGEND("Mot de passe", title="Notez le dans un coin !")
     fieldset <= legend_password
     input_password = html.INPUT(type="password", value="")
     fieldset <= input_password
-    form1 <= fieldset
-    form1 <= html.BR()
+    form <= fieldset
+    form <= html.BR()
+    form <= html.BR()
 
     input_login = html.INPUT(type="submit", value="connexion")
     input_login.bind("click", login_callback)
-    form1 <= input_login
-
-    sub_panel <= form1
-    sub_panel <= html.BR()
-    sub_panel <= html.BR()
+    form <= input_login
+    form <= html.BR()
+    form <= html.BR()
 
     # --
-    form2 = html.FORM()
 
     input_forgot = html.INPUT(type="submit", value="mot de passe oublié")
     input_forgot.bind("click", forgot_callback)
-    form2 <= input_forgot
-
-    sub_panel <= form2
-    sub_panel <= html.BR()
-    sub_panel <= html.BR()
+    form <= input_forgot
+    form <= html.BR()
+    form <= html.BR()
 
     # --
-    form3 = html.FORM()
 
     input_logout = html.INPUT(type="submit", value="déconnexion")
     input_logout.bind("click", logout_callback)
-    form3 <= input_logout
+    form <= input_logout
+    form <= html.BR()
+    form <= html.BR()
 
-    sub_panel <= form3
+    # --
+
+    if 'PSEUDO' not in storage:
+        # shortcut to create account
+        input_create_account = html.INPUT(type="submit", value="Je n'ai pas de compte, je veux le créer !")
+        input_create_account.bind("click", create_account_callback)
+        form <= input_create_account
+        form <= html.BR()
+        form <= html.BR()
+
+
+    sub_panel <= form
 
     return sub_panel
 
