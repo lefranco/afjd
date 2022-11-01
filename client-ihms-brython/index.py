@@ -31,7 +31,7 @@ H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de 
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'interface tournois', 'bac à sable', 'événements', 'forum', 'classements', 'création', 'modération', 'administration']
+OPTIONS = ['accueil', 'connexion', 'sélectionner partie', 'mon compte', 'rejoindre une partie', 'mes parties', 'éditer partie', 'appariement', 'jouer la partie sélectionnée', 'bac à sable', 'interface tournois', 'événements', 'forum', 'classements', 'création', 'modération', 'administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -128,10 +128,10 @@ def load_option(_, item_name):
         pairing.render(PANEL_MIDDLE)
     if item_name == 'jouer la partie sélectionnée':
         play.render(PANEL_MIDDLE)
-    if item_name == 'interface tournois':
-        tournament.render(PANEL_MIDDLE)
     if item_name == 'bac à sable':
         sandbox.render(PANEL_MIDDLE)
+    if item_name == 'interface tournois':
+        tournament.render(PANEL_MIDDLE)
     if item_name == 'événements':
         events.render(PANEL_MIDDLE)
     if item_name == 'forum':
