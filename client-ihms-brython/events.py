@@ -11,6 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
 import config
+import index
 
 OPTIONS = ['Sélectionner un événement', 'Inscriptions', 'Créer un événement', 'Editer l\'événement', 'Illustrer l\'événement', 'Gérer les participations', 'Supprimer l\'événement']
 
@@ -160,6 +161,12 @@ def select_event():
 
 def registrations():
     """ registrations """
+
+    def create_account_callback(_):
+        """ create_account_callback """
+
+        # go to create account page
+        index.load_option(None, 'Mon compte')
 
     def sendmail_callback(_):
         """ sendmail_callback """
@@ -413,6 +420,13 @@ def registrations():
         # put it on screen
         MY_SUB_PANEL <= html.IMG(src=f"data:image/jpeg;base64,{image_b64}", alt=name)
 
+    # button for creating account
+    account_button = None
+    if 'PSEUDO' not in storage:
+        # shortcut to create account
+        account_button = html.BUTTON("Je n'ai pas de compte, je veux le créer !", Class='btn-menu')
+        account_button.bind("click", create_account_callback)
+
     MY_SUB_PANEL <= html.H3("Inscriptions")
 
     MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
@@ -435,6 +449,8 @@ def registrations():
     # put button to register/un register
     if 'PSEUDO' in storage:
         MY_SUB_PANEL <= register_form
+    else:
+        MY_SUB_PANEL <= account_button
 
     # provide people already in
     MY_SUB_PANEL <= html.H4("Contacter l'organisateur")
