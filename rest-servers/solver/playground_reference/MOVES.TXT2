@@ -1,0 +1,48 @@
+ANGLETERRE
+F IRL - ATN
+F NRD S F SKA - DAN
+F SKA - DAN
+A STP - NGE
+F SUE S F SKA - DAN
+ 
+FRANCE
+F ATL S F MAN
+A BEL H
+A BOU S A BEL
+A BRE - PGA
+A ESP - GAS
+F MAN C A BRE - PGA
+ 
+ALLEMAGNE
+	
+A DAN h;(délogée);(détruite)
+A HOL H
+A KIE S A DAN
+A LVP - EDI;(échec)
+F GRO - EDI;(échec); was MNG
+A MUN H
+ 
+ITALIE
+F ADR S A VEN - TRI
+F ION - GRE;(échec);(délogée)
+A TYR - VIE;(échec)
+A VEN - TRI
+ 
+AUTRICHE
+A TRI - TYR;(échec);(délogée)
+A VIE s A TRI - TYR;(coupé);(délogée)
+ 
+	
+RUSSIE
+A LVN - STP
+A MOS S A LVN - STP
+ 
+TURQUIE
+A BUD - VIE
+A BUL - GRE;(échec)
+F EGE H
+A GAL S A BUD - VIE
+F MOR - ION
+A ROU - BUD
+F SEB H
+A SER S A ROU - BUD
