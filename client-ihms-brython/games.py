@@ -121,6 +121,7 @@ def create_game(json_dict):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"La partie a été créé : {messages}", remove_after=config.REMOVE_AFTER)
+            alert("Maintenant vous devez la sélectionner par le menu 'Sélectionner partie'")
 
         # get values from user input
 

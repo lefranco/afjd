@@ -107,6 +107,7 @@ def create_account(json_dict):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Votre compte a été créé : {messages}", remove_after=config.REMOVE_AFTER)
+            alert("Maintenant vous devez vous identifier par le menu 'Connexion'")
 
         # get values from user input
 
