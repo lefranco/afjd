@@ -151,9 +151,12 @@ def my_opportunities():
 
     overall_time_before = time.time()
 
+    # declared by safety but could be not used
     pseudo = None
     player_id = None
-    player_games = []
+
+    # fallback value
+    player_games = {}
 
     if 'PSEUDO' in storage:
         pseudo = storage['PSEUDO']
