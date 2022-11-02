@@ -725,7 +725,7 @@ def stack_last_moves_button(frame):
     """ stack_last_moves_button """
 
     input_last_moves = html.INPUT(type="submit", value="derniers mouvements")
-    input_last_moves.bind("click", lambda e: load_option(e, 'consulter', True))
+    input_last_moves.bind("click", lambda e: load_option(e, 'Consulter', True))
     frame <= input_last_moves
     frame <= html.BR()
     frame <= html.BR()
@@ -908,7 +908,7 @@ def get_game_status():
 
     if GAME_PARAMETERS_LOADED['fast']:
         row = html.TR()
-        specific_information = html.DIV("Partie en direct : utiliser le bouton 'recharger la partie' du menu 'consulter'", Class='note')
+        specific_information = html.DIV("Partie en direct : utiliser le bouton 'recharger la partie' du menu 'Consulter'", Class='note')
         col = html.TD(specific_information, colspan="6")
         row <= col
         game_status_table <= row
