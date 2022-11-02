@@ -1396,10 +1396,10 @@ void suppressionelimines2(void) {
 	_DELOGEE *r, *x;
 	_ARMEEVOISIN *v, *vv;
 	_FLOTTEVOISIN *w, *ww;
-	BOOL retraitecentreposssible, collisionpossible;
+	BOOL retraitecentrepossible, collisionpossible;
 
 	for (p = PAYS.t; p < PAYS.t + PAYS.n; p++) {
-
+		
 		for (r = DELOGEE.t; r < DELOGEE.t + DELOGEE.n; r++)
 			if (r->unite->pays == p)
 				break;
@@ -1446,7 +1446,7 @@ void suppressionelimines2(void) {
 		if (q < UNITE.t + UNITE.n)
 			continue; /* une unite du pays occupe un centre */
 
-		retraitecentreposssible = collisionpossible = FALSE;
+		retraitecentrepossible = collisionpossible = FALSE;
 		for (r = DELOGEE.t; r < DELOGEE.t + DELOGEE.n; r++) {
 
 			if (r->unite->pays != p)
@@ -1466,7 +1466,7 @@ void suppressionelimines2(void) {
 							if (t->region == v->zone2->region)
 								break;
 						if (t < CENTRE.t + CENTRE.n) { /* retraite possible sur un centre */
-							retraitecentreposssible = TRUE;
+							retraitecentrepossible = TRUE;
 							r = DELOGEE.t + DELOGEE.n; /* sortie de boucle */
 							break;/* sortie de boucle */
 						}
@@ -1519,7 +1519,7 @@ void suppressionelimines2(void) {
 							if (t->region == w->zone2->region)
 								break;
 						if (t < CENTRE.t + CENTRE.n) { /* retraite possible sur un centre */
-							retraitecentreposssible = TRUE;
+							retraitecentrepossible = TRUE;
 							r = DELOGEE.t + DELOGEE.n; /* sortie de boucle */
 							break;/* sortie de boucle */
 						}
@@ -1560,8 +1560,8 @@ void suppressionelimines2(void) {
 			}
 		}
 
-		if (retraitecentreposssible || collisionpossible)
-			break; /* une delogee du pays peut retraiter sur un centre ou realiser une collision */
+		if (retraitecentrepossible || collisionpossible)
+			continue; /* une delogee du pays peut retraiter sur un centre ou realiser une collision */
 
 		/* test presume inutile a confirmer */
 		/*if (q < UNITE.t + UNITE.n)
