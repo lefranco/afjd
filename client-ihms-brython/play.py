@@ -3334,7 +3334,7 @@ def negotiate():
         role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id_dest}.jpg", title=role_name)
 
         # the alternative
-        input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), name="destinees")
+        input_dest = html.INPUT(type="checkbox", id=str(role_id_dest))
         col = html.TD()
         col <= input_dest
 
