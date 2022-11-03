@@ -173,7 +173,7 @@
     },
     "zones": {
         "1": {
-            "name": "Adr",
+            "name": "ADR",
             "full_name": "Adriatic Sea",
             "x_pos": 466,
             "y_pos": 568,
@@ -181,7 +181,7 @@
             "y_legend_pos": 554
         },
         "2": {
-            "name": "Aeg",
+            "name": "AEG",
             "full_name": "Aegean Sea",
             "x_pos": 586,
             "y_pos": 640,
@@ -224,7 +224,7 @@
             "display": 7
         },
         "7": {
-            "name": "Bal",
+            "name": "BAL",
             "full_name": "Baltic Sea",
             "x_pos": 453,
             "y_pos": 317,
@@ -232,7 +232,7 @@
             "y_legend_pos": 303
         },
         "8": {
-            "name": "Bar",
+            "name": "BAR",
             "full_name": "Barents Sea",
             "x_pos": 551,
             "y_pos": 38,
@@ -257,7 +257,7 @@
             "display": 3
         },
         "11": {
-            "name": "Bla",
+            "name": "BLA",
             "full_name": "Black Sea",
             "x_pos": 637,
             "y_pos": 506,
@@ -343,7 +343,7 @@
             "y_legend_pos": 312
         },
         "21": {
-            "name": "Eas",
+            "name": "EAS",
             "full_name": "Eastern Mediterranean",
             "x_pos": 681,
             "y_pos": 673,
@@ -360,7 +360,7 @@
             "display": 1
         },
         "23": {
-            "name": "Eng",
+            "name": "ENG",
             "full_name": "English Channel",
             "x_pos": 199,
             "y_pos": 421,
@@ -394,7 +394,7 @@
             "display": 2
         },
         "27": {
-            "name": "GoL",
+            "name": "GOL",
             "full_name": "Golf of Lyon",
             "x_pos": 299,
             "y_pos": 577,
@@ -410,7 +410,7 @@
             "y_legend_pos": 587
         },
         "29": {
-            "name": "Hel",
+            "name": "HEL",
             "full_name": "Helgoland Bight",
             "x_pos": 330,
             "y_pos": 328,
@@ -426,7 +426,7 @@
             "y_legend_pos": 365
         },
         "31": {
-            "name": "Ion",
+            "name": "IOM",
             "full_name": "Ionian Sea",
             "x_pos": 487,
             "y_pos": 670,
@@ -434,7 +434,7 @@
             "y_legend_pos": 656
         },
         "32": {
-            "name": "Iri",
+            "name": "IRI",
             "full_name": "Irish Sea",
             "x_pos": 167,
             "y_pos": 392,
@@ -469,7 +469,7 @@
             "display": 6
         },
         "36": {
-            "name": "Liv",
+            "name": "Lvp",
             "full_name": "Liverpool",
             "x_pos": 230,
             "y_pos": 335,
@@ -487,7 +487,7 @@
             "display": 2
         },
         "38": {
-            "name": "MAt",
+            "name": "MID",
             "full_name": "Mid-Atlantic Ocean",
             "x_pos": 91,
             "y_pos": 457,
@@ -530,7 +530,7 @@
             "display": 4
         },
         "43": {
-            "name": "NAt",
+            "name": "NAT",
             "full_name": "North Atlantic Ocean",
             "x_pos": 106,
             "y_pos": 261,
@@ -538,7 +538,7 @@
             "y_legend_pos": 247
         },
         "44": {
-            "name": "Nrg",
+            "name": "NRG",
             "full_name": "Norwegian Sea",
             "x_pos": 285,
             "y_pos": 112,
@@ -546,7 +546,7 @@
             "y_legend_pos": 98
         },
         "45": {
-            "name": "Nth",
+            "name": "NTH",
             "full_name": "North Sea",
             "x_pos": 289,
             "y_pos": 295,
@@ -658,7 +658,7 @@
             "display": 3
         },
         "58": {
-            "name": "Ska",
+            "name": "SKA",
             "full_name": "Skagerrak",
             "x_pos": 363,
             "y_pos": 280,
@@ -735,7 +735,7 @@
             "display": 4
         },
         "67": {
-            "name": "Tyn",
+            "name": "TYN",
             "full_name": "Tyrrhenian Sea",
             "x_pos": 388,
             "y_pos": 613,
@@ -797,7 +797,7 @@
             "display": 6
         },
         "74": {
-            "name": "Wes",
+            "name": "WES",
             "full_name": "Western Mediterranean",
             "x_pos": 297,
             "y_pos": 633,
