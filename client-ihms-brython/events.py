@@ -1261,7 +1261,7 @@ def render(panel_middle):
 
     # this means user wants to join game
     if ARRIVAL:
-        ITEM_NAME_SELECTED = 'inscriptions'
+        ITEM_NAME_SELECTED = 'Inscriptions'
 
     ARRIVAL = False
     load_option(None, ITEM_NAME_SELECTED)
