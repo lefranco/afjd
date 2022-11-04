@@ -28,6 +28,14 @@
 import index
 </script>
 
+<!-- IP Address  -->
+<script type="application/javascript">
+  function getIP(json) {
+    localStorage.setItem('IPADDRESS', json.ip);
+  }
+</script>
+<script type="application/javascript" src="https://api.ipify.org?format=jsonp&callback=getIP"></script>
+
 <!-- version  -->
 <script language="JavaScript">
 var xhReq = new XMLHttpRequest();
@@ -36,9 +44,6 @@ xhReq.send(null);
 var lastModified = xhReq.getResponseHeader("Last-Modified");
 localStorage.setItem('VERSION', lastModified);
 </script>
-
-
-
 
 </body>
 </html>

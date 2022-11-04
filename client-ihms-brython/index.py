@@ -245,3 +245,6 @@ document <= html.B("Contactez le support par courriel en cas de problème (cf. p
 document <= html.BR()
 version = storage['VERSION']
 document <= html.I(f"Vous utilisez la version du {version}")
+document <= html.BR()
+ip_address = storage['IPADDRESS']
+document <= html.I(f"Votre adresse IP est {ip_address}")
