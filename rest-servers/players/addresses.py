@@ -15,6 +15,11 @@ class Address:
     """ Class for handling an address """
 
     @staticmethod
+    def delete_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> None:
+        """ deleting a player """
+        sql_executor.execute("DELETE FROM addresses where player_id = ?", (player_id,))
+
+    @staticmethod
     def inventory(sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[str, int]]:
         """ class inventory : gives a list of all objects in database """
         addresses_found = sql_executor.execute("SELECT * FROM addresses", need_result=True)
