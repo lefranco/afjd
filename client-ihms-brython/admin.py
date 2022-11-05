@@ -1929,9 +1929,8 @@ def show_ip_addresses():
     sorted_ips = sorted([i[0] for i in ip_table])
     duplicated_ips = [sorted_ips[i] for i in range(len(sorted_ips)) if (i < len(sorted_ips) - 1 and sorted_ips[i] == sorted_ips[i + 1]) or (i > 0 and sorted_ips[i] == sorted_ips[i - 1])]
 
-    for data in sorted(ip_table, key=lambda i: i[0]):
+    for data in sorted(ip_table, key=lambda c: (c[0], num2pseudo[c[1]].upper())):
 
-        colour = None
         row = html.TR()
         for field in fields:
 
@@ -1941,8 +1940,7 @@ def show_ip_addresses():
             if field == 'ip_value':
                 value = data[0]
 
-                if value in duplicated_ips:
-                    colour = 'red'
+                colour = 'red' if value in duplicated_ips else None
 
             col = html.TD(value)
 
