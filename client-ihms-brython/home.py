@@ -342,10 +342,6 @@ def show_news():
     # ----
     MY_SUB_PANEL <= div_homepage
 
-    # special : store ip address
-    # TODO : duplicate this call to several places in the code
-    common.store_ip_address()
-
 
 def all_games(state_name):
     """all_games """
