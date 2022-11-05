@@ -1370,6 +1370,9 @@ def submit_orders():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Vous avez soumis les ordres : {messages}", remove_after=config.REMOVE_AFTER)
 
+            # special : store ip address
+            common.store_ip_address()
+
             adjudicated = req_result['adjudicated']
             if adjudicated:
                 # seems to be things not updated if back to orders
