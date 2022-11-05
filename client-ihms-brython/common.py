@@ -861,6 +861,41 @@ def get_events_data():
     return events_dict
 
 
+def store_ip_address():
+    """ store_ip_address """
+
+    def reply_callback(req):
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la mémorisation de l'adresse IP : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la mémorisation de l'adresse IP : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+    # must be identified
+    if 'PSEUDO' not in storage:
+        return
+
+    # must have an IP (should be the case)
+    if 'IPADDRESS' not in storage:
+        return
+
+    ip_value = storage['IPADDRESS']
+    json_dict = {
+        'ip_value': ip_value
+    }
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/ip_address"
+
+    # store ip : do need token
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+
 def verification_code(pseudo):
     """ verification_code """
     code = int(sum(map(lambda c: ord(c) ** 3.5, pseudo))) % 1000000
