@@ -37,6 +37,7 @@ import teasers
 import events
 import event_images
 import registrations
+import addresses
 import database
 
 
@@ -121,6 +122,10 @@ REGISTRATION_PARSER.add_argument('delete', type=int, required=True)
 REGISTRATION_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
 REGISTRATION_UPDATE_PARSER.add_argument('player_id', type=int, required=True)
 REGISTRATION_UPDATE_PARSER.add_argument('value', type=int, required=True)
+
+IP_ADDRESS_PARSER = flask_restful.reqparse.RequestParser()
+IP_ADDRESS_PARSER.add_argument('ip_value', type=str, required=True)
+
 
 # to avoid sending emails in debug phase
 PREVENT_MAIL_CHECKING = False
@@ -2156,6 +2161,90 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg="Failed to send message to player")
 
         data = {'msg': 'Ok registration updated if present and email sent to player'}
+        return data, 200
+
+
+@API.resource('/ip_address')
+class IpAddressRessource(flask_restful.Resource):  # type: ignore
+    """ IpAddressRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[str, int]]], int]:  # pylint: disable=no-self-use
+        """
+        Get list of IP addresses
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/ip_address - GET - getting ip addresses")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to get IP addresses")
+
+        sql_executor = database.SqlExecutor()
+        addresses_list = addresses.Address.inventory(sql_executor)
+        del sql_executor
+
+        data = {'addresses_list': addresses_list}
+
+        return data, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Stores an IP address
+        EXPOSED
+        """
+
+        args = IP_ADDRESS_PARSER.parse_args(strict=True)
+        ip_value = args['ip_value']
+
+        mylogger.LOGGER.info("/ip_address/<pseudo> - POST - stores an IP address ip_value=%s", ip_value)
+
+        # check from user server user is pseudo
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+        # we do not check pseudo, we read it from token
+        pseudo = req_result.json()['logged_in_as']
+
+        sql_executor = database.SqlExecutor()
+
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+
+        if player is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
+
+        assert player is not None
+        player_id = player.identifier
+        address = addresses.Address(ip_value, player_id)
+        address.update_database(sql_executor)
+
+        sql_executor.commit()
+
+        data = {'pseudo': pseudo, 'msg': 'Ok IP address stored'}
         return data, 200
 
 
