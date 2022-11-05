@@ -408,9 +408,13 @@ def show_rating_reliability():
         rating_list = []
         for player_id, number_delays, number_dropouts, number_advancements in complete_rating_list:
 
-            # verdict - just a ratio
-            number_years_played = number_advancements / 5
-            reliability = round(100 * (number_years_played - number_delays) / number_years_played, 3)
+            # verdict - mostly a ratio
+            reliability = round(100 * (number_advancements - number_delays) / number_advancements, 3)
+            # bonus for no delays
+            if number_delays == 0:
+                reliability += number_advancements / 1000
+            # dropouts
+            reliability *= 2 ** number_dropouts
 
             rating = (player_id, reliability, number_delays, number_dropouts, number_advancements)
             rating_list.append(rating)
@@ -508,7 +512,7 @@ def show_rating_reliability():
 
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par fiabilité")
-        MY_SUB_PANEL <= html.DIV("Ce classement est un ratio du nombre d'années jouées moins le nombre de retards (le nombre d'abandon n\'est pas encore calculable) par rapport au nombre d'années jouées - on considère qu'il ne peut y avoir plus d'un retard par année jouée...", Class='important')
+        MY_SUB_PANEL <= html.DIV("Ce classement est un ratio du nombre de tours joués moins le nombre de retards par rapport au nombre de tours joués. Les joueurs sans retard sont bonifiés du millimième du nombre de tours joués. Chaque abandon divise par deux la fiabilité.", Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
