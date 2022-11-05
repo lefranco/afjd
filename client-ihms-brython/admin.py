@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Comptes oisifs', 'Courriels non confirmés', 'Maintenance']
+OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Comptes oisifs', 'Courriels non confirmés', 'Adresses IP', 'Maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -100,6 +100,37 @@ def get_last_failures():
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return failures_list
+
+
+def get_ip_table():
+    """ get_ip_table """
+
+    addresses_list = None
+
+    def reply_callback(req):
+        nonlocal addresses_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des addresses IP : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des addresses IP: {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        addresses_list = req_result['addresses_list']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/ip_address"
+
+    # getting ip addresses : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return addresses_list
 
 
 def change_news_admin():
@@ -1867,6 +1898,53 @@ def show_non_confirmed_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} comptes non confirmés")
 
 
+def show_ip_addresses():
+    """ show_ip_addresses """
+
+    MY_SUB_PANEL <= html.H3("Les adresses IP")
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    ip_table = get_ip_table()
+    if not ip_table:
+        return
+
+    players_table = html.TABLE()
+
+    fields = ['ip_value', 'pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'ip_value': 'ip_value', 'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for data in sorted(ip_table, key=lambda i: i[0]):
+
+        row = html.TR()
+        for field in fields:
+
+            if field == 'pseudo':
+                value = num2pseudo[data[1]]
+
+            if field == 'ip_value':
+                value = data[0]
+
+            col = html.TD(value)
+            row <= col
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
+
+
 def maintain():
     """ maintain """
 
@@ -1985,6 +2063,8 @@ def load_option(_, item_name):
         show_idle_data()
     if item_name == 'Courriels non confirmés':
         show_non_confirmed_data()
+    if item_name == 'Adresses IP':
+        show_ip_addresses()
     if item_name == 'Maintenance':
         maintain()
 

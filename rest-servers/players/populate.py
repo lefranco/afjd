@@ -20,6 +20,7 @@ import teasers
 import events
 import event_images
 import registrations
+import addresses
 import database
 
 
@@ -95,6 +96,12 @@ def populate_registrations(sql_executor: database.SqlExecutor) -> None:
     registrations.Registration.create_table(sql_executor)
 
 
+def populate_addresses(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+
+    addresses.Address.create_table(sql_executor)
+
+
 def populate(sql_executor: database.SqlExecutor) -> None:
     """ inserts all items in database """
 
@@ -112,6 +119,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_events(sql_executor)
     populate_image_events(sql_executor)
     populate_registrations(sql_executor)
+    populate_addresses(sql_executor)
 
 
 if __name__ == '__main__':
