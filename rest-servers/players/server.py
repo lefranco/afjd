@@ -446,7 +446,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
         # player cannot quit if incidents (registered for event)
 
-        # Tget all incidents of the player
+        # Get all incidents of the player
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
         port = lowdata.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/player-incidents/{player_id}"
@@ -487,6 +487,9 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # ----------------------
         # all is ok
         # ----------------------
+
+        # delete player from ip addresses table
+        addresses.Address.delete_by_player_id(sql_executor, player_id)
 
         # delete player from users server (that will implicitly check we have rights)
         host = lowdata.SERVER_CONFIG['USER']['HOST']
