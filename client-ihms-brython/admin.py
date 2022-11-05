@@ -105,7 +105,7 @@ def get_last_failures():
 def get_ip_table():
     """ get_ip_table """
 
-    addresses_list = None
+    addresses_list = []
 
     def reply_callback(req):
         nonlocal addresses_list
@@ -130,7 +130,7 @@ def get_ip_table():
     # getting ip addresses : need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    return addresses_list
+    return list(addresses_list)
 
 
 def change_news_admin():
@@ -1926,8 +1926,12 @@ def show_ip_addresses():
         thead <= col
     players_table <= thead
 
+    sorted_ips = sorted([i[0] for i in ip_table])
+    duplicated_ips = [sorted_ips[i] for i in range(len(sorted_ips)) if (i < len(sorted_ips) - 1 and sorted_ips[i] == sorted_ips[i + 1]) or (i > 0 and sorted_ips[i] == sorted_ips[i - 1])]
+
     for data in sorted(ip_table, key=lambda i: i[0]):
 
+        colour = None
         row = html.TR()
         for field in fields:
 
@@ -1937,7 +1941,16 @@ def show_ip_addresses():
             if field == 'ip_value':
                 value = data[0]
 
+                if value in duplicated_ips:
+                    colour = 'red'
+
             col = html.TD(value)
+
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+
             row <= col
 
         players_table <= row
