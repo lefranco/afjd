@@ -6,7 +6,7 @@ START_TIME = time.time()
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import document, html, alert, timer  # pylint: disable=import-error # noqa: E402
+from browser import document, html, alert, timer, ajax  # pylint: disable=import-error # noqa: E402
 from browser.local_storage import storage  # pylint: disable=import-error # noqa: E402
 
 import common    # noqa: E402
@@ -58,6 +58,25 @@ MENU_LEFT <= MENU_SELECTION
 
 
 ITEM_NAME_SELECTED = OPTIONS[0]
+
+
+# reading the IP in a non disruptive way
+def read_ip():
+    """ read_ip """
+
+    def store_ip(req):
+        if req.status != 200:
+            alert(f"Problem getting IP {req.status=}")
+            return
+        ip_value = req.read()
+        storage['IPADDRESS'] = ip_value
+
+    def no_ip():
+        alert(f"Failed to get IP")
+
+    url = "https://api.ipify.org"
+    timeout = 5
+    ajax.get(url, blocking=False, timeout=timeout, oncomplete=store_ip, ontimeout=no_ip)
 
 
 def check_event(event_name):
@@ -211,6 +230,8 @@ def load_option(_, item_name):
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
 
+# we read ip now
+read_ip()
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
@@ -253,3 +274,4 @@ document <= html.BR()
 END_TIME = time.time()
 ELAPSED = END_TIME - START_TIME
 document <= html.I(f"Temps d'execution de la page d'accueil : {ELAPSED} sec.")
+
