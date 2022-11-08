@@ -19,8 +19,8 @@ import sandbox    # noqa: E402
 import tournament    # noqa: E402
 import events    # noqa: E402
 import players    # noqa: E402
-import moderate    # noqa: E402
 import create    # noqa: E402
+import moderate    # noqa: E402
 import admin    # noqa: E402
 import forum    # noqa: E402
 
