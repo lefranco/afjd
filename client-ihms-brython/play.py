@@ -3203,8 +3203,12 @@ def submit_communication_orders():
     return True
 
 
-def negotiate():
+def negotiate(default_dest_set):
     """ negotiate """
+
+    def answer_callback(_, dest_set):
+        MY_SUB_PANEL.clear()
+        negotiate(dest_set)
 
     def add_message_callback(_):
         """ add_message_callback """
@@ -3227,7 +3231,7 @@ def negotiate():
             global CONTENT_BACKUP
             CONTENT_BACKUP = None
             MY_SUB_PANEL.clear()
-            negotiate()
+            negotiate({})
 
         dest_role_ids = ' '.join([str(role_num) for (role_num, button) in selected.items() if button.checked])
 
@@ -3240,13 +3244,13 @@ def negotiate():
         if not content:
             alert("Pas de contenu pour ce message !")
             MY_SUB_PANEL.clear()
-            negotiate()
+            negotiate({})
             return
 
         if not dest_role_ids:
             alert("Pas de destinataire pour ce message !")
             MY_SUB_PANEL.clear()
-            negotiate()
+            negotiate({})
             return
 
         json_dict = {
@@ -3337,7 +3341,7 @@ def negotiate():
         role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id_dest}.jpg", title=role_name)
 
         # the alternative
-        input_dest = html.INPUT(type="checkbox", id=str(role_id_dest))
+        input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set)
         col = html.TD()
         col <= input_dest
 
@@ -3378,7 +3382,7 @@ def negotiate():
     messages_table = html.TABLE()
 
     thead = html.THEAD()
-    for title in ['id', 'Date', 'Auteur', 'Destinataire(s)', 'Contenu']:
+    for title in ['id', 'Date', 'Auteur', 'Destinataire(s)', 'Contenu', 'Répondre']:
         col = html.TD(html.B(title))
         thead <= col
     messages_table <= thead
@@ -3468,6 +3472,16 @@ def negotiate():
             col <= line
             col <= html.BR()
 
+        row <= col
+
+        col = html.TD()
+        if ROLE_ID in dest_role_id_msgs:
+            button = html.BUTTON("Répondre", Class='btn-menu')
+            new_dest_role_id_msgs = set(dest_role_id_msgs)
+            new_dest_role_id_msgs.add(from_role_id_msg)
+            new_dest_role_id_msgs.remove(ROLE_ID)
+            button.bind("click", lambda e, d=new_dest_role_id_msgs: answer_callback(e, d))
+            col <= button
         row <= col
 
         messages_table <= row
@@ -5654,7 +5668,7 @@ def load_option(_, item_name, direct_last_moves=False):
     if item_name == 'Taguer':
         status = submit_communication_orders()
     if item_name == 'Négocier':
-        status = negotiate()
+        status = negotiate({})
     if item_name == 'Déclarer':
         status = declare()
     if item_name == 'Voter':
