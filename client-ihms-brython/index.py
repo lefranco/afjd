@@ -1,5 +1,9 @@
 """ index """
 
+import time
+
+START_TIME = time.time()
+
 # pylint: disable=pointless-statement, expression-not-assigned
 
 from browser import document, html, alert, timer  # pylint: disable=import-error # noqa: E402
@@ -245,3 +249,7 @@ document <= html.B("Contactez le support par courriel en cas de problème (cf. p
 document <= html.BR()
 version = storage['VERSION']
 document <= html.I(f"Vous utilisez la version du {version}")
+document <= html.BR()
+END_TIME = time.time()
+ELAPSED = END_TIME - START_TIME
+document <= html.I(f"Temps d'execution de la page d'accueil : {ELAPSED} sec.")
