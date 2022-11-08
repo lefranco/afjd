@@ -72,7 +72,7 @@ def read_ip():
         storage['IPADDRESS'] = ip_value
 
     def no_ip():
-        alert(f"Failed to get IP")
+        alert("Failed to get IP")
 
     url = "https://api.ipify.org"
     timeout = 5
@@ -230,6 +230,7 @@ def load_option(_, item_name):
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
 
+
 # we read ip now
 read_ip()
 
@@ -274,4 +275,3 @@ document <= html.BR()
 END_TIME = time.time()
 ELAPSED = END_TIME - START_TIME
 document <= html.I(f"Temps d'execution de la page d'accueil : {ELAPSED} sec.")
-
