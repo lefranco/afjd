@@ -1059,7 +1059,6 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
 
         ctx.strokeStyle = outline_colour.str_value()
 
-        # TODO : this should be done in simpler way
         if self._zone:
             position = self._position.variant.position_table[self._zone]
         else:
@@ -1268,7 +1267,6 @@ class Ownership(Highliteable):
         outline_colour = item_fill_color.outline_colour()
         ctx.strokeStyle = outline_colour.str_value()
 
-        # TODO : this should be done in simpler way
         if self._center:
             position = self._position.variant.position_table[self._center]
         else:
