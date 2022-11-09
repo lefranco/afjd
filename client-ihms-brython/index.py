@@ -6,27 +6,27 @@ START_TIME = time.time()
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import document, html, alert, timer, ajax  # pylint: disable=import-error # noqa: E402
-from browser.local_storage import storage  # pylint: disable=import-error # noqa: E402
+from browser import document, html, alert, timer, ajax  # pylint: disable=import-error,wrong-import-position # noqa: E402
+from browser.local_storage import storage  # pylint: disable=import-error,wrong-import-position # noqa: E402
 
-import common    # noqa: E402
-import home    # noqa: E402
-import login    # noqa: E402
-import account    # noqa: E402
-import opportunities    # noqa: E402
-import mygames    # noqa: E402
-import games    # noqa: E402
-import pairing    # noqa: E402
-import selection    # noqa: E402
-import play    # noqa: E402
-import sandbox    # noqa: E402
-import tournament    # noqa: E402
-import events    # noqa: E402
-import players    # noqa: E402
-import create    # noqa: E402
-import moderate    # noqa: E402
-import admin    # noqa: E402
-import forum    # noqa: E402
+import common    # pylint: disable=wrong-import-position # noqa: E402
+import home    # pylint: disable=wrong-import-position # noqa: E402
+import login    # pylint: disable=wrong-import-position # noqa: E402
+import account    # pylint: disable=wrong-import-position # noqa: E402
+import opportunities    # pylint: disable=wrong-import-position # noqa: E402
+import mygames    # pylint: disable=wrong-import-position # noqa: E402
+import games    # pylint: disable=wrong-import-position # noqa: E402
+import pairing    # pylint: disable=wrong-import-position # noqa: E402
+import selection    # pylint: disable=wrong-import-position # noqa: E402
+import play    # pylint: disable=wrong-import-position # noqa: E402
+import sandbox    # pylint: disable=wrong-import-position # noqa: E402
+import tournament    # pylint: disable=wrong-import-position # noqa: E402
+import events    # pylint: disable=wrong-import-position # noqa: E402
+import players    # pylint: disable=wrong-import-position # noqa: E402
+import create    # pylint: disable=wrong-import-position # noqa: E402
+import moderate    # pylint: disable=wrong-import-position # noqa: E402
+import admin    # pylint: disable=wrong-import-position # noqa: E402
+import forum    # pylint: disable=wrong-import-position # noqa: E402
 
 # TITLE is in index.html
 
