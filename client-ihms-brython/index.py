@@ -74,7 +74,8 @@ def read_ip():
     def no_ip():
         alert("Failed to get IP")
 
-    url = "https://api.ipify.org"
+    url = "https://ident.me"
+#    url = "https://api.ipify.org"
     timeout = 5
     ajax.get(url, blocking=False, timeout=timeout, oncomplete=store_ip, ontimeout=no_ip)
 
