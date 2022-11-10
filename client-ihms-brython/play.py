@@ -4017,6 +4017,49 @@ def note():
 def game_master():
     """ game_master """
 
+
+    def push_deadline_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au report de date limite à la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au report de la date limite à la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La date limite a été reportée : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            load_dynamic_stuff()
+            game_master()
+
+        # get deadline
+        deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
+
+        # add one day - if fast game change to one minute
+        time_unit = 60 if GAME_PARAMETERS_LOADED['fast'] else 24 * 60 * 60
+        deadline_forced = deadline_loaded + time_unit
+
+        # push on server
+        json_dict = {
+            'pseudo': PSEUDO,
+            'name': GAME,
+            'deadline': deadline_forced,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{GAME}"
+
+        # changing game deadline : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     def send_recall_orders_email_callback(_, role_id):
         """ send_recall_orders_email_callback """
 
@@ -4757,11 +4800,16 @@ def game_master():
     fieldset <= input_deadline_hour
     deadline_form <= fieldset
 
-    deadline_form <= html.BR()
-
-    input_change_deadline_game = html.INPUT(type="submit", value="changer la date limite de la partie")
+    input_change_deadline_game = html.INPUT(type="submit", value="changer la date limite de la partie à cette valeur")
     input_change_deadline_game.bind("click", change_deadline_game_callback)
     deadline_form <= input_change_deadline_game
+
+    deadline_form <= html.BR()
+    deadline_form <= html.BR()
+
+    input_push_deadline_game = html.INPUT(type="submit", value="reporter la date limite de 24 heures (une minute pour une partie en direct)")
+    input_push_deadline_game.bind("click", push_deadline_game_callback)
+    deadline_form <= input_push_deadline_game
 
     MY_SUB_PANEL <= html.H3("Gestion")
 
