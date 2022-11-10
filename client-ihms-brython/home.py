@@ -173,16 +173,12 @@ def formatted_teaser(teasers):
     """ formatted_teaser """
 
     # init
-    teaser_content = html.DIV()
+    teaser_content = html.DIV(Class='teaser')
 
-    teaser_content_table = html.TABLE()
-    row = html.TR()
     for champion in teasers.split('\n'):
-        teaser_content_table <= row
-        col = html.TD(champion)
-        row <= col
+        teaser_content <= champion
+        teaser_content <= html.BR()
 
-    teaser_content <= teaser_content_table
     return teaser_content
 
 
