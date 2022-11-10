@@ -226,6 +226,37 @@ def game_incidents2_reload(game_id):
     return incidents
 
 
+def game_dropouts_reload(game_id):
+    """ game_dropouts_reload """
+
+    dropouts = []
+
+    def reply_callback(req):
+        nonlocal dropouts
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des quittages de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des quittages de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        dropouts = req_result['dropouts']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-dropouts/{game_id}"
+
+    # extracting dropouts from a game : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return dropouts
+
+
 def game_report_reload(game_id):
     """ game_report_reload """
 
@@ -4860,9 +4891,44 @@ def show_game_parameters():
 def show_events_in_game():
     """ show_events_in_game """
 
-    def cancel_remove_incident_callback(_, dialog, ):
+    def cancel_remove_dropout_callback(_, dialog):
+        """ cancel_remove_dropout_callback """
+        dialog.close()
+
+    def cancel_remove_incident_callback(_, dialog):
         """ cancel_remove_incident_callback """
         dialog.close()
+
+    def remove_dropout_callback(_, dialog, role_id, player_id):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la suppression du quittage : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la suppression du quittage: {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le quittage a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            show_events_in_game()
+
+        dialog.close()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-dropouts-manage/{GAME_ID}/{role_id}/{player_id}"
+
+        # deleting dropout : need token
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def remove_incident_callback(_, dialog, role_id, advancement):
 
@@ -4894,6 +4960,17 @@ def show_events_in_game():
 
         # deleting incident : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def remove_dropout_callback_confirm(_, role_id, player_id, text):
+        """ remove_dropout_callback_confirm """
+
+        dialog = Dialog(f"On supprime vraiment cet quittage pour {text} ?", ok_cancel=True)
+        dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, p=player_id: remove_dropout_callback(e, d, r, p))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_incident_callback(e, d))
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        show_events_in_game()
 
     def remove_incident_callback_confirm(_, role_id, advancement, text):
         """ remove_incident_callback_confirm """
@@ -5125,6 +5202,80 @@ def show_events_in_game():
     if game_incidents2:
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV("Un désordre civil signifie que l'arbitre a forcé des ordres pour le joueur", Class='note')
+
+    # quitters
+    MY_SUB_PANEL <= html.H3("Quitteurs")
+
+    # get the actual dropouts of the game
+    game_dropouts = game_dropouts_reload(GAME_ID)
+    # there can be no incidents (if no incident of failed to load)
+
+    game_dropouts_table = html.TABLE()
+
+    fields = ['flag', 'role', 'pseudo', 'date']
+
+    if ROLE_ID == 0:
+        fields.extend(['remove'])
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'flag': 'drapeau', 'role': 'rôle', 'pseudo': 'pseudo', 'date': 'date', 'remove': 'supprimer'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    game_dropouts_table <= thead
+
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+
+    for role_id, player_id, date_dropout in sorted(game_dropouts, key=lambda d: d[2]):
+
+        row = html.TR()
+
+        # role flag
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
+        role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+
+        if role_icon_img:
+            col = html.TD(role_icon_img)
+        else:
+            col = html.TD()
+        row <= col
+
+        role = VARIANT_DATA.roles[role_id]
+        role_name = VARIANT_DATA.name_table[role]
+
+        col = html.TD(role_name)
+        row <= col
+
+        # pseudo
+        col = html.TD()
+        pseudo_quitter = id2pseudo[player_id]
+        col <= pseudo_quitter
+        row <= col
+
+        # date
+        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
+        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
+        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
+        incident_str = f"{incident_day} {incident_hour} GMT"
+        col = html.TD(incident_str)
+        row <= col
+
+        # remove
+        if ROLE_ID == 0:
+            form = html.FORM()
+            input_remove_dropout = html.INPUT(type="submit", value="supprimer")
+            text = f"Rôle {role_name} et joueur {pseudo_quitter}"
+            input_remove_dropout.bind("click", lambda e, r=role_id, p=player_id, t=text: remove_dropout_callback_confirm(e, r, p, t))
+            form <= input_remove_dropout
+            col = html.TD(form)
+            row <= col
+
+        game_dropouts_table <= row
+
+    MY_SUB_PANEL <= game_dropouts_table
+    MY_SUB_PANEL <= html.BR()
 
     # incidents
     MY_SUB_PANEL <= html.H3("Retards")
