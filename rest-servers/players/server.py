@@ -444,7 +444,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg="Player is still in a game")
 
-        # player cannot quit if incidents (registered for event)
+        # player cannot quit if incidents
 
         # Get all incidents of the player
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
@@ -463,6 +463,26 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             game_numbers = {i[0] for i in incidents_list}
             del sql_executor
             flask_restful.abort(400, msg=f"Player has an incident in a game(s) number {game_numbers}")
+
+        # player cannot quit if dropouts
+
+        # Get all dropouts of the player
+        host = lowdata.SERVER_CONFIG['GAME']['HOST']
+        port = lowdata.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/player-droppouts/{player_id}"
+        jwt_token = flask.request.headers.get('AccessToken')
+        req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"})
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Dropout check failed!:{message}")
+        json_dict = req_result.json()
+        dropouts_list = json_dict['dropouts']
+        if dropouts_list:
+            game_numbers = {i[0] for i in dropouts_list}
+            del sql_executor
+            flask_restful.abort(400, msg=f"Player has a dropout in a game(s) number {game_numbers}")
 
         # player cannot quit if assignement (director of tournament)
 

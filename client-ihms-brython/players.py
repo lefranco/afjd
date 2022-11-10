@@ -409,12 +409,16 @@ def show_rating_reliability():
         for player_id, number_delays, number_dropouts, number_advancements in complete_rating_list:
 
             # verdict - mostly a ratio
+            # avoid division by zero
+            if number_advancements == 0:
+                number_advancements = 1
+            # ratio
             reliability = round(100 * (number_advancements - number_delays) / number_advancements, 3)
             # bonus for no delays
             if number_delays == 0:
                 reliability += number_advancements / 1000
             # dropouts
-            reliability *= 2 ** number_dropouts
+            reliability /= 2 ** number_dropouts
 
             rating = (player_id, reliability, number_delays, number_dropouts, number_advancements)
             rating_list.append(rating)
