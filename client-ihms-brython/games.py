@@ -16,7 +16,7 @@ import common
 import selection
 import index  # circular import
 
-OPTIONS = ['Créer', 'Changer description', 'Changer anonymat', 'Changer accès messagerie', 'Changer scorage', 'Changer paramètres accès', 'Changer date limite', 'Changer paramètres cadence', 'Changer état', 'Supprimer']
+OPTIONS = ['Créer', 'Changer description', 'Changer anonymat', 'Changer accès messagerie', 'Changer scorage', 'Changer paramètres accès', 'Changer paramètres cadence', 'Changer état', 'Supprimer']
 
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_VARIANT_NAME = 20
@@ -1166,158 +1166,6 @@ def change_access_parameters_game():
     MY_SUB_PANEL <= form
 
 
-def change_deadline_game():
-    """ change_deadline_game """
-
-    # declare the values
-    deadline_loaded = None
-
-    def change_deadline_reload():
-        """ change_deadline_reload """
-
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problème (pas de réponse de la part du serveur)")
-            status = False
-
-        def reply_callback(req):
-            nonlocal status
-            nonlocal deadline_loaded
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération de la date limite de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération de la date limite de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                status = False
-                return
-
-            # convert deadline from server to humand editable deadline
-            deadline_loaded = req_result['deadline']
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        return status
-
-    def change_deadline_game_callback(_):
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la modification de la date limite à la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la modification de la date limite à la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La date limite a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
-
-        # convert this human entered deadline to the deadline the server understands
-        deadline_day_part = input_deadline_day.value
-        deadline_hour_part = input_deadline_hour.value
-        deadline_datetime_str = f"{deadline_day_part} {deadline_hour_part}"
-        deadline_datetime = datetime.datetime.strptime(deadline_datetime_str, "%Y-%m-%d %H:%M")
-        timestamp = deadline_datetime.replace(tzinfo=datetime.timezone.utc).timestamp()
-        deadline = int(timestamp)
-
-        json_dict = {
-            'pseudo': pseudo,
-            'name': game,
-            'deadline': deadline,
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # changing game deadline : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        change_deadline_game()
-
-    MY_SUB_PANEL <= html.H3("Changement de la date limite")
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    status = change_deadline_reload()
-    if not status:
-        return
-
-    form = html.FORM()
-
-    form <= information_about_input()
-    form <= html.BR()
-
-    dl_gmt = html.DIV("ATTENTION : vous devez entrer une date limite en temps GMT", Class='important')
-    special_legend = html.LEGEND(dl_gmt)
-    form <= special_legend
-    form <= html.BR()
-
-    # get GMT date and time
-    time_stamp = time.time()
-    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
-
-    special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
-    form <= special_info
-    form <= html.BR()
-
-    # convert 'deadline_loaded' to human editable format
-
-    datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
-    deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-    deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
-
-    fieldset = html.FIELDSET()
-    legend_deadline_day = html.LEGEND("Jour de la date limite (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
-    fieldset <= legend_deadline_day
-    input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day)
-    fieldset <= input_deadline_day
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_deadline_hour = html.LEGEND("Heure de la date limite (hh:mm ou selon les réglages du navigateur)")
-    fieldset <= legend_deadline_hour
-    input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour)
-    fieldset <= input_deadline_hour
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_change_deadline_game = html.INPUT(type="submit", value="changer la date limite de la partie")
-    input_change_deadline_game.bind("click", change_deadline_game_callback)
-    form <= input_change_deadline_game
-
-    MY_SUB_PANEL <= form
-
-
 def change_pace_parameters_game():
     """ change_pace_parameters_game """
 
@@ -1832,8 +1680,6 @@ def load_option(_, item_name):
         change_scoring_game()
     if item_name == 'Changer paramètres accès':
         change_access_parameters_game()
-    if item_name == 'Changer date limite':
-        change_deadline_game()
     if item_name == 'Changer paramètres cadence':
         change_pace_parameters_game()
     if item_name == 'Changer état':
