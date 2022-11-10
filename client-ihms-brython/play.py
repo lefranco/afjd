@@ -3986,78 +3986,6 @@ def note():
 def game_master():
     """ game_master """
 
-    def change_deadline_reload():
-        """ change_deadline_reload """
-
-        deadline_loaded = None
-
-        def reply_callback(req):
-            nonlocal deadline_loaded
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération de la date limite de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération de la date limite de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            deadline_loaded = req_result['deadline']
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{GAME}"
-
-        # getting game data : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        return deadline_loaded
-
-    def push_deadline_game_callback(_):
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur au report de date limite à la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème au report de la date limite à la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La date limite a été reportée : {messages}", remove_after=config.REMOVE_AFTER)
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            load_dynamic_stuff()
-            game_master()
-
-        # get deadline from server
-        deadline_loaded = change_deadline_reload()
-
-        # add one day - if fast game change to one minute
-        time_unit = 60 if GAME_PARAMETERS_LOADED['fast'] else 24 * 60 * 60
-        deadline_forced = deadline_loaded + time_unit
-
-        # push on server
-        json_dict = {
-            'pseudo': PSEUDO,
-            'name': GAME,
-            'deadline': deadline_forced,
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{GAME}"
-
-        # changing game deadline : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
     def send_recall_orders_email_callback(_, role_id):
         """ send_recall_orders_email_callback """
 
@@ -4487,6 +4415,48 @@ def game_master():
 
         return pseudo_list
 
+    def change_deadline_game_callback(_):
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification de la date limite à la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification de la date limite à la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"La date limite a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            load_dynamic_stuff()
+            game_master()
+
+        # convert this human entered deadline to the deadline the server understands
+        deadline_day_part = input_deadline_day.value
+        deadline_hour_part = input_deadline_hour.value
+        deadline_datetime_str = f"{deadline_day_part} {deadline_hour_part}"
+        deadline_datetime = datetime.datetime.strptime(deadline_datetime_str, "%Y-%m-%d %H:%M")
+        timestamp = deadline_datetime.replace(tzinfo=datetime.timezone.utc).timestamp()
+        deadline = int(timestamp)
+
+        json_dict = {
+            'pseudo': PSEUDO,
+            'name': GAME,
+            'deadline': deadline,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{GAME}"
+
+        # changing game deadline : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     # need to be connected
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -4722,20 +4692,60 @@ def game_master():
 
         game_admin_table <= row
 
-    MY_SUB_PANEL <= html.DIV("Pour bénéficier du bouton premettant de contacter tous les remplaçants, il faut retirer le rôle au joueur (ci-dessous) puis éjecter le joueur de la partie (dans le menu appariement.)", Class='note')
-    MY_SUB_PANEL <= html.BR()
+    deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
+
+    deadline_form = html.FORM()
+
+    dl_gmt = html.DIV("ATTENTION : vous devez entrer une date limite en temps GMT", Class='important')
+    special_legend = html.LEGEND(dl_gmt)
+    deadline_form <= special_legend
+    deadline_form <= html.BR()
+
+    # get GMT date and time
+    time_stamp = time.time()
+    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+
+    # convert 'deadline_loaded' to human editable format
+
+    datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
+    deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
+    deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
+
+    fieldset = html.FIELDSET()
+    legend_deadline_day = html.LEGEND("Jour de la date limite (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
+    fieldset <= legend_deadline_day
+    input_deadline_day = html.INPUT(type="date", value=deadline_loaded_day)
+    fieldset <= input_deadline_day
+    deadline_form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_deadline_hour = html.LEGEND("Heure de la date limite (hh:mm ou selon les réglages du navigateur)", title="La date limite. Dernière heure du jour pour soumettre les ordres. Après le joueur est en retard.")
+    fieldset <= legend_deadline_hour
+    input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour)
+    fieldset <= input_deadline_hour
+    deadline_form <= fieldset
+
+    deadline_form <= html.BR()
+
+    input_change_deadline_game = html.INPUT(type="submit", value="changer la date limite de la partie")
+    input_change_deadline_game.bind("click", change_deadline_game_callback)
+    deadline_form <= input_change_deadline_game
+
+    MY_SUB_PANEL <= html.H3("Gestion")
 
     MY_SUB_PANEL <= game_admin_table
     MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= html.DIV("Pour bénéficier du bouton premettant de contacter tous les remplaçants, il faut retirer le rôle au joueur (ci-dessous) puis éjecter le joueur de la partie (dans le menu appariement.)", Class='note')
+
+    MY_SUB_PANEL <= html.H3("Date limite")
+
+    MY_SUB_PANEL <= deadline_form
     MY_SUB_PANEL <= html.BR()
 
-    MY_SUB_PANEL <= html.DIV("Le bouton ci-dessous repousse la date limite d'une journée (une minute pour une partie en direct). Pour une gestion plus fine de cette date limite vous devez éditer la partie.", Class='note')
+    MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    input_push_deadline = html.INPUT(type="submit", value="Reporter la date limite")
-    input_push_deadline.bind("click", push_deadline_game_callback)
-    MY_SUB_PANEL <= input_push_deadline
 
     return True
 
@@ -4899,9 +4909,6 @@ def show_events_in_game():
     # game status
     MY_SUB_PANEL <= GAME_STATUS
     MY_SUB_PANEL <= html.BR()
-
-    # game master
-    MY_SUB_PANEL <= html.H3("Arbitre")
 
     game_master_pseudo = get_game_master(int(GAME_ID))
     if game_master_pseudo is None:
