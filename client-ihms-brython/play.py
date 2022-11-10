@@ -236,9 +236,9 @@ def game_dropouts_reload(game_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération des quittages de la partie : {req_result['message']}")
+                alert(f"Erreur à la récupération des abandons de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération des quittages de la partie : {req_result['msg']}")
+                alert(f"Problème à la récupération des abandons de la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
@@ -4905,15 +4905,15 @@ def show_events_in_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la suppression du quittage : {req_result['message']}")
+                    alert(f"Erreur à la suppression de l'abandon : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la suppression du quittage: {req_result['msg']}")
+                    alert(f"Problème à la suppression de l'abandon : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le quittage a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"L'abandon a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -4964,7 +4964,7 @@ def show_events_in_game():
     def remove_dropout_callback_confirm(_, role_id, player_id, text):
         """ remove_dropout_callback_confirm """
 
-        dialog = Dialog(f"On supprime vraiment cet quittage pour {text} ?", ok_cancel=True)
+        dialog = Dialog(f"On supprime vraiment cet abandon pour {text} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, p=player_id: remove_dropout_callback(e, d, r, p))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_incident_callback(e, d))
 
@@ -5204,7 +5204,7 @@ def show_events_in_game():
         MY_SUB_PANEL <= html.DIV("Un désordre civil signifie que l'arbitre a forcé des ordres pour le joueur", Class='note')
 
     # quitters
-    MY_SUB_PANEL <= html.H3("Quitteurs")
+    MY_SUB_PANEL <= html.H3("Abandons")
 
     # get the actual dropouts of the game
     game_dropouts = game_dropouts_reload(GAME_ID)
