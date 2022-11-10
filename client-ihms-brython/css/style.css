@@ -178,8 +178,14 @@ legend{
 
 /* color of turkey in diplomania map EDE585 */
 .news2{
-     background-color: #FFFFA5;
+     background-color: #EDE585;
 }
+
+/* color of sea in diplomania map BBD9DC */
+.teaser{
+     background-color: #83B9CC;
+}
+
 
 /* color of england in diplomania map 83B9CC */
 table{

@@ -386,6 +386,12 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     # make teaser (just an abstract)
     teaser_text = "\n".join([f"{num2pseudo[e[2]]} : {e[3]} avec {num2rolename[e[1]]} en {'classique' if e[0] else 'blitz'}" for e in sorted(elo_raw_list, key=lambda ee: ee[3], reverse=True)][0: TEASER_KEEP])
 
+    # date to teaser
+    date = time.time()
+    date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
+    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+    teaser_text += f"\n(en date du {date_now_gmt_str})"
+
     # how long it took
     done_time = time.time()
     elapsed = done_time - start_time
