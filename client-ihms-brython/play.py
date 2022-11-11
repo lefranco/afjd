@@ -37,6 +37,15 @@ OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Négocier', 'Déclarer', 'Voter',
 
 
 @enum.unique
+class MessageTypeEnum(enum.Enum):
+    """ MessageTypeEnum """
+
+    TEXT = enum.auto()
+    SEASON = enum.auto()
+    DROPOUT = enum.auto()
+
+
+@enum.unique
 class AutomatonStateEnum(enum.Enum):
     """ AutomatonStateEnum """
 
@@ -406,7 +415,7 @@ def game_transitions_reload(game_id):
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/game-transitions/{game_id}"
 
-    # getting variant : do not need a token
+    # getting transitions : do not need a token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return transitions_loaded
@@ -3399,15 +3408,26 @@ def negotiate(default_dest_set):
     messages = messages_reload(GAME_ID)
     # there can be no message (if no message of failed to load)
 
-    # insert new field 'synchro'
-    messages = [(False, 0, i, f, t, d, c) for (i, f, t, d, c) in messages]
+    # insert new field 'type'
+    messages = [(MessageTypeEnum.TEXT, 0, i, f, t, d, c) for (i, f, t, d, c) in messages]
 
     # get the transition table
     game_transitions = game_transitions_reload(GAME_ID)
 
-    # add fake messages (game transitions) and sort
-    fake_messages = [(True, int(k), -1, -1, v, [], readable_season(int(k))) for k, v in game_transitions.items()]
+    # add fake messages (game transitions)
+    fake_messages = [(MessageTypeEnum.SEASON, int(k), -1, -1, v, [], readable_season(int(k))) for k, v in game_transitions.items()]
     messages.extend(fake_messages)
+
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+
+    # get the dropouts table
+    game_dropouts = game_dropouts_reload(GAME_ID)
+
+    # add fake messages (game dropouts)
+    fake_messages = [(MessageTypeEnum.DROPOUT, 0, -1, r, d, [], f"Le joueur {id2pseudo[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    messages.extend(fake_messages)
+
+    # sort with all that was added
     messages.sort(key=lambda d: (d[4], d[1]), reverse=True)
 
     messages_table = html.TABLE()
@@ -3420,14 +3440,15 @@ def negotiate(default_dest_set):
 
     game_master_pseudo = get_game_master(int(GAME_ID))
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
-    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    for synchro, _, id_, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
+    for type_, _, id_, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
 
-        if synchro:
-            class_ = 'synchro'
-        else:
+        if type_ is MessageTypeEnum.TEXT:
             class_ = 'text'
+        elif type_ is MessageTypeEnum.SEASON:
+            class_ = 'season'
+        elif type_ is MessageTypeEnum.DROPOUT:
+            class_ = 'dropout'
 
         row = html.TR()
 
@@ -3676,15 +3697,26 @@ def declare():
     declarations = declarations_reload(GAME_ID)
     # there can be no message (if no declaration of failed to load)
 
-    # insert new field 'synchro'
-    declarations = [(False, 0, i, a, r, t, c) for (i, a, r, t, c) in declarations]
+    # insert new field 'type'
+    declarations = [(MessageTypeEnum.TEXT, 0, i, a, r, t, c) for (i, a, r, t, c) in declarations]
 
     # get the transition table
     game_transitions = game_transitions_reload(GAME_ID)
 
     # add fake declarations (game transitions) and sort
-    fake_declarations = [(True, int(k), -1, False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
+    fake_declarations = [(MessageTypeEnum.SEASON, int(k), -1, False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
     declarations.extend(fake_declarations)
+
+    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
+
+    # get the dropouts table
+    game_dropouts = game_dropouts_reload(GAME_ID)
+
+    # add fake messages (game dropouts)
+    fake_declarations = [(MessageTypeEnum.DROPOUT, 0, -1, False, r, d, f"Le joueur {id2pseudo[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    declarations.extend(fake_declarations)
+
+    # sort with all that was added
     declarations.sort(key=lambda d: (d[5], d[1]), reverse=True)
 
     declarations_table = html.TABLE()
@@ -3699,14 +3731,17 @@ def declare():
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    for synchro, _, id_, anonymous, role_id_msg, time_stamp, content in declarations:
+    for type_, _, id_, anonymous, role_id_msg, time_stamp, content in declarations:
 
-        if synchro:
-            class_ = 'synchro'
-        elif anonymous:
-            class_ = 'text_anonymous'
-        else:
-            class_ = 'text'
+        if type_ is MessageTypeEnum.TEXT:
+            if anonymous:
+                class_ = 'text_anonymous'
+            else:
+                class_ = 'text'
+        elif type_ is MessageTypeEnum.SEASON:
+            class_ = 'season'
+        elif type_ is MessageTypeEnum.DROPOUT:
+            class_ = 'dropout'
 
         row = html.TR()
 
@@ -5013,7 +5048,7 @@ def show_events_in_game():
 
         dialog = Dialog(f"On supprime vraiment cet abandon pour {text} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, p=player_id: remove_dropout_callback(e, d, r, p))
-        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_incident_callback(e, d))
+        dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_dropout_callback(e, d))
 
         # back to where we started
         MY_SUB_PANEL.clear()
