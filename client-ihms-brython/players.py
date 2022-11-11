@@ -681,7 +681,7 @@ def show_rating_regularity():
 
         MY_SUB_PANEL.clear()
         MY_SUB_PANEL <= html.H3("Le classement par régularité")
-        MY_SUB_PANEL <= html.DIV("Ce classement une aggrégation par produit de ancienneté, non obsolesence, continuité et nombre de parties", Class='important')
+        MY_SUB_PANEL <= html.DIV("Ce classement une aggrégation par produit de l'ancienneté, la non obsolesence, continuité et le nombre de parties", Class='important')
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= ratings_table
         MY_SUB_PANEL <= html.BR()
