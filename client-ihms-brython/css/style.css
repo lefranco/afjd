@@ -142,12 +142,17 @@ legend{
 .text_anonymous{
     font-size: 14px;
     font-family: serif;
-    background-color: #EDA89E;
+    background-color: #808080;
 }
-.synchro{
+.season{
     font-size: 14px;
     font-family: serif;
     background-color: #98E4ED;
+}
+.dropout{
+    font-size: 14px;
+    font-family: serif;
+    background-color: #FA8128;
 }
 
 /* color of italy in diplomania map A8EDA5 */
