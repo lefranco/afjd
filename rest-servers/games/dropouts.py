@@ -32,6 +32,14 @@ class Dropout:
         return dropouts_found
 
     @staticmethod
+    def inventory(sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[int, int, int, float]]:
+        """ class inventory : gives a list of all objects in database """
+        dropouts_found = sql_executor.execute("SELECT * FROM dropouts", need_result=True)
+        if not dropouts_found:
+            return []
+        return dropouts_found
+
+    @staticmethod
     def create_table(sql_executor: database.SqlExecutor) -> None:
         """ creation of table from scratch """
 
