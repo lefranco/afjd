@@ -5469,9 +5469,6 @@ def show_events_in_game():
         MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes).  Un retard de 1 par exemple signifie un retard entre 1 seconde et 59 minutes, 59 secondes.", Class='note')
         MY_SUB_PANEL <= html.BR()
 
-        humour_img = html.IMG(src="./images/goudrons_plumes.gif", title="Du goudron et des plumes pour les retardataires !")
-        MY_SUB_PANEL <= humour_img
-
     return True
 
 
