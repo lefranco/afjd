@@ -5302,7 +5302,7 @@ def show_events_in_game():
         row <= col
 
         # date
-        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
+        datetime_incident = datetime.datetime.fromtimestamp(date_dropout, datetime.timezone.utc)
         incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
         incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
         incident_str = f"{incident_day} {incident_hour} GMT"
