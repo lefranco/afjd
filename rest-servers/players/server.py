@@ -469,7 +469,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # Get all dropouts of the player
         host = lowdata.SERVER_CONFIG['GAME']['HOST']
         port = lowdata.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/player-droppouts/{player_id}"
+        url = f"{host}:{port}/player-dropouts/{player_id}"
         jwt_token = flask.request.headers.get('AccessToken')
         req_result = SESSION.get(url, headers={'AccessToken': f"{jwt_token}"})
         if req_result.status_code != 200:
