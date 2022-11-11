@@ -4095,6 +4095,27 @@ class GameDropoutsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/all-game-dropouts')
+class AllGamesDropoutsRessource(flask_restful.Resource):  # type: ignore
+    """ AllGamesDropoutsRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:  # pylint: disable=no-self-use
+        """
+        Gets list of roles which have produced an dropout
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-dropouts/<game_id> - GET - getting which dropouts occured")
+
+        sql_executor = database.SqlExecutor()
+        late_list = dropouts.Dropout.inventory(sql_executor)
+        sql_executor = database.SqlExecutor()
+        del sql_executor
+
+        data = {'dropouts': late_list}
+        return data, 200
+
+
 @API.resource('/game-notes/<game_id>')
 class GameNoteRessource(flask_restful.Resource):  # type: ignore
     """  GameNoteRessource """
