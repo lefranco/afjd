@@ -4017,7 +4017,6 @@ def note():
 def game_master():
     """ game_master """
 
-
     def push_deadline_game_callback(_):
 
         def reply_callback(req):
