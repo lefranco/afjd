@@ -3977,7 +3977,7 @@ class PlayerIncidentsRessource(flask_restful.Resource):  # type: ignore
 class PlayerDropoutsRessource(flask_restful.Resource):  # type: ignore
     """ PlayerDropoutsRessource """
 
-    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int]]], int]:  # pylint: disable=no-self-use
+    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int]]], int]:  # pylint: disable=no-self-use
         """
         Gets list of games which have produced an dropout for given player
         EXPOSED
@@ -4069,7 +4069,7 @@ class GameIncidents2Ressource(flask_restful.Resource):  # type: ignore
 class GameDropoutsRessource(flask_restful.Resource):  # type: ignore
     """ GameDropoutsRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, typing.Optional[int], int, float]]], int]:  # pylint: disable=no-self-use
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:  # pylint: disable=no-self-use
         """
         Gets list of roles which have produced an dropout for given game
         EXPOSED
@@ -5167,9 +5167,14 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             game_data: typing.Dict[str, typing.Any] = {}
 
             # get start date
-            transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement)
-            assert transition is not None
-            game_data['start_time_stamp'] = transition.time_stamp
+            start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement)
+
+            if not start_transition:
+                # this game was not played
+                continue
+
+            assert start_transition is not None
+            game_data['start_time_stamp'] = start_transition.time_stamp
 
             # get players
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
@@ -5182,9 +5187,15 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             game_data['number_advancement_played'] = game.current_advancement
 
             # get end date
-            transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
-            assert transition is not None
-            game_data['end_time_stamp'] = transition.time_stamp
+            end_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
+
+            # would lead to division by zero
+            if end_transition == start_transition:
+                # this game was not played
+                continue
+
+            assert end_transition is not None
+            game_data['end_time_stamp'] = end_transition.time_stamp
 
             # get scoring, classic and name
             game = games.Game.find_by_identifier(sql_executor, game_id)
