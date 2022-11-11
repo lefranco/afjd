@@ -215,7 +215,7 @@ def show_rating_performance(classic, role_id):
         # 0 classic / 1 role_id / 2 player_id / 3 elo / 4 change / 5 game_id / 6 number games
 
         if sort_by == 'player':
-            def key_function(r): return num2pseudo[r[2]].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+            def key_function(r): return num2pseudo[r[2]].upper() if r[2] in num2pseudo else ""  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'elo':
             def key_function(r): return r[3]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'change':
@@ -231,7 +231,7 @@ def show_rating_performance(classic, role_id):
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
-            player = num2pseudo[rating[2]]
+            player = num2pseudo[rating[2]] if rating[2] in num2pseudo else ""
             if player == pseudo:
                 colour = config.MY_RATING
             else:
@@ -260,7 +260,7 @@ def show_rating_performance(classic, role_id):
                     value = role_icon_img
 
                 if field == 'game':
-                    value = games_dict[str(rating[5])]['name']
+                    value = games_dict[str(rating[5])]['name'] if str(rating[5]) in games_dict else ""
 
                 if field == 'number':
                     value = rating[6]
@@ -456,7 +456,7 @@ def show_rating_reliability():
         # 0 player_id / 1 reliability / 2 number_delays/ 3 number_dropouts / 4 non_obsolesence / 5 number advancements
 
         if sort_by == 'player':
-            def key_function(r): return num2pseudo[r[0]].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+            def key_function(r): return num2pseudo[r[0]].upper() if r[0] in num2pseudo else ""  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'reliability':
             def key_function(r): return r[1]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'number_delays':
@@ -470,7 +470,7 @@ def show_rating_reliability():
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
-            player = num2pseudo[rating[0]]
+            player = num2pseudo[rating[0]] if rating[0] in num2pseudo else ""
             if player == pseudo:
                 colour = config.MY_RATING
             else:
@@ -616,7 +616,7 @@ def show_rating_regularity():
         # 0 player_id / 1 regularity / 2 seniority/ 3 non_obsolesence / 4 continuity / 5 number games
 
         if sort_by == 'player':
-            def key_function(r): return num2pseudo[r[0]].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+            def key_function(r): return num2pseudo[r[0]].upper() if r[0] in num2pseudo else ""  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'regularity':
             def key_function(r): return r[1]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
         elif sort_by == 'seniority':
@@ -632,7 +632,7 @@ def show_rating_regularity():
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
-            player = num2pseudo[rating[0]]
+            player = num2pseudo[rating[0]] if rating[0] in num2pseudo else ""
             if player == pseudo:
                 colour = config.MY_RATING
             else:
