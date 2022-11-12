@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Comptes oisifs', 'Courriels non confirmés', 'Adresses IP', 'Maintenance']
+OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Comptes oisifs', 'Courriels non confirmés', 'Vérification des adresses IP', 'Vérification des courriels', 'Maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1965,6 +1965,68 @@ def show_ip_addresses():
     MY_SUB_PANEL <= players_table
 
 
+def show_all_emails():
+    """ all_emails """
+
+    MY_SUB_PANEL <= html.H3("Liste joueurs avec leurs courriels")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_admin(pseudo):
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    emails_dict = common.get_all_emails()
+
+    emails_table = html.TABLE()
+
+    fields = ['courriel', 'pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        col = html.TD(field)
+        thead <= col
+    emails_table <= thead
+
+    # duplicated ones
+    sorted_emails = sorted([e[0] for e in emails_dict.values()])
+    duplicated_emails = {sorted_emails[i] for i in range(len(sorted_emails)) if (i < len(sorted_emails) - 1 and sorted_emails[i] == sorted_emails[i + 1]) or (i > 0 and sorted_emails[i] == sorted_emails[i - 1])}
+
+    for pseudo, (email, _, _) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
+
+        row = html.TR()
+        for field in fields:
+
+            if field == 'pseudo':
+                value = pseudo
+
+            if field == 'courriel':
+                value = email
+
+                if value in duplicated_emails:
+                    colour = 'red'
+                else:
+                    colour = None
+
+            col = html.TD(value)
+
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+
+            row <= col
+
+        emails_table <= row
+
+    MY_SUB_PANEL <= emails_table
+
+
 def maintain():
     """ maintain """
 
@@ -2083,8 +2145,10 @@ def load_option(_, item_name):
         show_idle_data()
     if item_name == 'Courriels non confirmés':
         show_non_confirmed_data()
-    if item_name == 'Adresses IP':
+    if item_name == 'Vérification des adresses IP':
         show_ip_addresses()
+    if item_name == 'Vérification des courriels':
+        show_all_emails()
     if item_name == 'Maintenance':
         maintain()
 

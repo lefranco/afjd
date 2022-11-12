@@ -861,6 +861,37 @@ def get_events_data():
     return events_dict
 
 
+def get_all_emails():
+    """ get_all_emails returns empty dict if error """
+
+    emails_dict = {}
+
+    def reply_callback(req):
+        nonlocal emails_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des courriels : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des courriels : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        emails_dict = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/players-emails"
+
+    # changing news : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return emails_dict
+
+
 def store_ip_address():
     """ store_ip_address """
 
