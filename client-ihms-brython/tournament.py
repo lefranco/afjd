@@ -20,7 +20,7 @@ import memoize
 import index  # circular import
 
 
-OPTIONS = ['Parties du tournoi', 'Classement du tournoi', 'Incidents du tournoi', 'Créer un tournoi', 'Editer le tournoi', 'Supprimer le tournoi', 'Les tournois du site', 'Tester un scorage']
+OPTIONS = ['Parties du tournoi', 'Classement du tournoi', 'Incidents du tournoi', 'Créer un tournoi', 'Editer le tournoi', 'Supprimer le tournoi', 'Les tournois du site']
 
 MAX_LEN_TOURNAMENT_NAME = 50
 
