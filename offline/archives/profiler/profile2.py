@@ -7,6 +7,7 @@ def log_time(desc):
     global BEFORE
     now = time.time()
     LOG.append(f"{desc} {now-BEFORE}s")
+    BEFORE = now
 
 # au fil de l'eau
 log_time("<action>")
