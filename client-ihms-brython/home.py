@@ -18,10 +18,11 @@ import mapping
 import memoize
 import common
 import selection
+import scoring
 import index  # circular import
 
 
-OPTIONS = ['Vue d\'ensemble', 'Toutes les parties', 'Déclarer un incident', 'Foire aux questions', 'Pourquoi yapa', 'Coin technique', 'Choix d\'interface', 'Parties sans arbitres', 'Les lâcheurs', 'Autres liens', 'Brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Toutes les parties', 'Déclarer un incident', 'Foire aux questions', 'Pourquoi yapa', 'Coin technique', 'Choix d\'interface', 'Tester un scorage', 'Parties sans arbitres', 'Les lâcheurs', 'Autres liens', 'Brique sociale']
 
 NOTE_CONTENT_STATED = """Bienvenue dans la première version du site Diplomania.
 Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu.
@@ -1124,6 +1125,99 @@ def select_interface():
     MY_SUB_PANEL <= select_table
 
 
+RATING_TABLE = {}
+
+
+def test_scoring():
+    """ test_scoring """
+
+    def test_scoring_callback(_, game_scoring, ratings_input):
+        """ test_scoring_callback """
+
+        for name, element in ratings_input.items():
+            val = 0
+            try:
+                val = int(element.value)
+            except:  # noqa: E722 pylint: disable=bare-except
+                pass
+            RATING_TABLE[name] = val
+
+        # scoring
+        solo_threshold = variant_data.number_centers() // 2
+        score_table = scoring.scoring(game_scoring, solo_threshold, RATING_TABLE)
+
+        score_desc = "\n".join([f"{k} : {v} points" for k, v in score_table.items()])
+        alert(f"Dans cette configuration la marque est :\n{score_desc}")
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        test_scoring()
+
+    # title
+    title = html.H3("Test de scorage")
+    MY_SUB_PANEL <= title
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    game_parameters_loaded = common.game_parameters_reload(game)
+
+    variant_name_loaded = storage['GAME_VARIANT']
+
+    # from variant name get variant content
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+
+    # selected interface (user choice)
+    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+    # from display chose get display parameters
+    interface_parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, interface_parameters_read)
+
+    # this comes from game
+    game_scoring = game_parameters_loaded['scoring']
+
+    form = html.FORM()
+
+    title_enter_centers = html.H4("Entrer les nombre de centres")
+    form <= title_enter_centers
+
+    ratings_input = {}
+    for num, role in variant_data.roles.items():
+
+        if num == 0:
+            continue
+
+        role_name = variant_data.name_table[role]
+
+        fieldset = html.FIELDSET()
+        legend_centers = html.LEGEND(role_name, title="nombre de centres")
+        fieldset <= legend_centers
+        input_centers = html.INPUT(type="number", value=str(RATING_TABLE[role_name]) if role_name in RATING_TABLE else "")
+        fieldset <= input_centers
+        form <= fieldset
+
+        ratings_input[role_name] = input_centers
+
+    # get scoring name
+    name2code = {v: k for k, v in config.SCORING_CODE_TABLE.items()}
+    scoring_name = name2code[game_scoring]
+
+    form <= html.DIV(f"Pour cette partie le scorage est {scoring_name}", Class='note')
+    form <= html.BR()
+
+    input_test_scoring = html.INPUT(type="submit", value="calculer le scorage")
+    input_test_scoring.bind("click", lambda e, gs=game_scoring, ri=ratings_input: test_scoring_callback(e, gs, ri))
+    form <= input_test_scoring
+
+    MY_SUB_PANEL <= form
+
+
 def show_no_game_masters_data():
     """ show_no_game_masters_data """
 
@@ -1315,6 +1409,8 @@ def load_option(_, item_name):
         show_technical()
     if item_name == 'Choix d\'interface':
         select_interface()
+    if item_name == 'Tester un scorage':
+        test_scoring()
     if item_name == 'Parties sans arbitres':
         show_no_game_masters_data()
     if item_name == 'Les lâcheurs':
