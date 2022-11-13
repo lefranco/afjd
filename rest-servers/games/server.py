@@ -5126,6 +5126,47 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+
+@API.resource('/tournament-players/<tournament_id>')
+class TournamentPlayersRessource(flask_restful.Resource):  # type: ignore
+    """ TournamentPlayersRessource """
+
+    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
+        """
+        Gets all players for the game of the tournamnet
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournament-players/<game_id> - GET - get getting allocations for game of tournament id=%s", tournament_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # find the tournament
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a tournament with identifier {tournament_id}")
+
+        # games of that tournament
+        tournament_games = groupings.Grouping.list_by_tournament_id(sql_executor, int(tournament_id))
+        tournament_game_ids = [g[1] for g in tournament_games]
+
+        players_list: typing.Set[int] = set()
+        for game_id in tournament_game_ids:
+
+            # get answer
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            players_list.update([a[1] for a in allocations_list])
+
+        del sql_executor
+
+        # need to sort so not to give any indoications on who plays what
+        data = sorted(players_list)
+
+        return data, 200
+
+
+
 @API.resource('/statistics')
 class StatisticsRessource(flask_restful.Resource):  # type: ignore
     """ StatisticsRessource """
