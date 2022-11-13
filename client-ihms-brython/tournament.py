@@ -20,11 +20,45 @@ import memoize
 import index  # circular import
 
 
-OPTIONS = ['Parties du tournoi', 'Classement du tournoi', 'Incidents du tournoi', 'Créer un tournoi', 'Editer le tournoi', 'Supprimer le tournoi', 'Les tournois du site']
+OPTIONS = ['Parties du tournoi', 'Joueurs du tournoi', 'Classement du tournoi', 'Incidents du tournoi', 'Créer un tournoi', 'Editer le tournoi', 'Supprimer le tournoi', 'Les tournois du site']
 
 MAX_LEN_TOURNAMENT_NAME = 50
 
 TOURNAMENT_DICT = None
+
+
+
+
+def get_tournament_players(tournament_id):
+    """ get_tournament_players : returns empty list if problem """
+
+    tournament_players = {}
+
+    def reply_callback(req):
+        nonlocal tournament_players
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des joueurs du tournoi : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des joueurs du tournoi : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        tournament_players = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/tournament-players/{tournament_id}"
+
+    # getting tournament allocation : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return tournament_players
+
 
 
 def show_games():
@@ -388,6 +422,47 @@ def show_games():
         stats += f" soit {elapsed/number_games} par partie"
 
     MY_SUB_PANEL <= html.DIV(stats, Class='load')
+
+
+def show_players():
+    """ show_players """
+
+    MY_SUB_PANEL <= html.H3("Les participants au tournoi")
+
+    tournament_id = TOURNAMENT_DICT['identifier']
+
+    players_list = get_tournament_players(tournament_id)
+    if not players_list:
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    players_table = html.TABLE()
+
+    fields = ['pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for player_id in sorted(players_list, key=lambda p: num2pseudo[p].upper()):
+
+        row = html.TR()
+        col = html.TD(num2pseudo[player_id])
+        row <= col
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
 
 
 def show_ratings():
@@ -1236,6 +1311,8 @@ def load_option(_, item_name):
 
     if item_name == 'Parties du tournoi':
         show_games()
+    if item_name == 'Joueurs du tournoi':
+        show_players()
     if item_name == 'Classement du tournoi':
         show_ratings()
     if item_name == 'Incidents du tournoi':
