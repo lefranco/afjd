@@ -539,8 +539,8 @@ def rectify_position():
     def callback_canvas_mousedown(event):
         """ callback_mousedow : store event"""
 
-        nonlocal down_click_time
         nonlocal stored_event
+        nonlocal down_click_time
 
         down_click_time = time.time()
         stored_event = event

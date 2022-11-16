@@ -344,12 +344,14 @@ def show_rating_performance(classic, role_id):
 
     def switch_mode_callback(_):
 
+        # note : actualy 'classic' is a parameter, not a variable
         nonlocal classic
         classic = not classic
         refresh()
 
     def switch_role_callback(_, new_role_id):
 
+        # note : actualy 'role_id' is a parameter, not a variable
         nonlocal role_id
         role_id = new_role_id
         refresh()

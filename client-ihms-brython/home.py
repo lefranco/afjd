@@ -723,9 +723,7 @@ MAX_LEN_EMAIL = 100
 def declare_incident():
     """ declare_incident """
 
-    game = ""
     email_loaded = ""
-    pseudo = ""
 
     def reply_callback(req):
         nonlocal email_loaded
@@ -808,10 +806,12 @@ def declare_incident():
         declare_incident()
 
     # get game if possible
+    game = ""
     if 'GAME' in storage:
         game = storage['GAME']
 
     # get email if possible
+    pseudo = ""
     if 'PSEUDO' in storage:
 
         pseudo = storage['PSEUDO']

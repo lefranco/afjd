@@ -1382,13 +1382,12 @@ def submit_orders():
     selected_order_type = None
     selected_build_unit_type = None
     selected_build_zone = None
+    selected_hovered_object = None
     automaton_state = None
-
     stored_event = None
     down_click_time = None
-    selected_hovered_object = None
-
     input_definitive = None
+    buttons_right = None
 
     def cancel_submit_orders_callback(_, dialog):
         dialog.close()
@@ -2525,12 +2524,11 @@ def submit_communication_orders():
     selected_passive_unit = None
     selected_dest_zone = None
     selected_order_type = None
-    selected_build_zone = None
+    selected_hovered_object = None
     automaton_state = None
-
     stored_event = None
     down_click_time = None
-    selected_hovered_object = None
+    buttons_right = None
 
     def submit_orders_callback(_):
         """ submit_orders_callback """
@@ -2701,7 +2699,6 @@ def submit_communication_orders():
         nonlocal selected_active_unit
         nonlocal selected_passive_unit
         nonlocal selected_dest_zone
-        nonlocal selected_build_zone
         nonlocal buttons_right
 
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
@@ -5510,6 +5507,10 @@ def show_events_in_game():
 def supervise():
     """ supervise """
 
+    id2pseudo = {}
+    role2pseudo = {}
+    log_stack = None
+
     def civil_disorder_callback(_, role_id):
         """ civil_disorder_callback """
 
@@ -5785,10 +5786,6 @@ def supervise():
         global SUPERVISE_REFRESH_TIMER
         if SUPERVISE_REFRESH_TIMER is None:
             SUPERVISE_REFRESH_TIMER = timer.set_interval(refresh, SUPERVISE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
-
-    id2pseudo = {}
-    role2pseudo = {}
-    log_stack = None
 
     # need to be connected
     if PSEUDO is None:

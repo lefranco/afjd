@@ -151,12 +151,12 @@ def sandbox():
     selected_passive_unit = None
     selected_dest_zone = None
     selected_order_type = None
+    selected_hovered_object = None
     automaton_state = None
-
     stored_event = None
     down_click_time = None
-    selected_hovered_object = None
-
+    buttons_right = None
+    report_window = None
     displayed_zones = set()
 
     def show_zone_callback(_, zone):
