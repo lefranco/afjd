@@ -424,7 +424,12 @@ def show_games():
 def show_players():
     """ show_players """
 
-    MY_SUB_PANEL <= html.H3("Les participants au tournoi")
+    title = html.H3("Les participants au tournoi")
+    MY_SUB_PANEL <= title
+
+    if not TOURNAMENT_DICT:
+        alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
 
     tournament_id = TOURNAMENT_DICT['identifier']
 
