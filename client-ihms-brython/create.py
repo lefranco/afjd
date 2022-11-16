@@ -4,6 +4,7 @@
 
 import json
 import time
+import datetime
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
 from browser.widgets.dialog import Dialog  # pylint: disable=import-error
@@ -15,7 +16,7 @@ import interface
 import mapping
 
 
-OPTIONS = ['Créer plusieurs parties']
+OPTIONS = ['Créer plusieurs parties', 'Les lâcheurs']
 
 MAX_NUMBER_GAMES = 200
 
@@ -32,6 +33,37 @@ def check_creator(pseudo):
         return False
 
     return True
+
+
+def get_quitters_data():
+    """ get_quitters_data : returns empty dict on error """
+
+    quitters_data = {}
+
+    def reply_callback(req):
+        nonlocal quitters_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des abandons : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des abandons : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        quitters_data = req_result['dropouts']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-game-dropouts"
+
+    # getting allocations : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return quitters_data
 
 
 def check_batch(current_pseudo, games_to_create):
@@ -471,6 +503,60 @@ def create_many_games():
     MY_SUB_PANEL <= form
 
 
+def show_game_quitters():
+    """ show_game_quitters """
+
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    # get the players (masters)
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    # get the quitters
+    quitters_data = get_quitters_data()
+    # there can be no quitters
+
+    game_quitters_table = html.TABLE()
+
+    fields = ['player', 'game', 'date']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'player': 'joueur', 'game': 'partie', 'date': 'date'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    game_quitters_table <= thead
+
+    for game_id, _, player_id, date in quitters_data:
+
+        row = html.TR()
+
+        player_name = players_dict[str(player_id)]['pseudo']
+        col = html.TD(player_name)
+        row <= col
+
+        game_name = games_dict[str(game_id)]['name']
+        col = html.TD(game_name)
+        row <= col
+
+        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
+        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        col = html.TD(date_now_gmt_str)
+        row <= col
+
+        game_quitters_table <= row
+
+    MY_SUB_PANEL <= html.H3("Les joueurs qui ont abandonné une partie")
+    MY_SUB_PANEL <= game_quitters_table
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -501,6 +587,8 @@ def load_option(_, item_name):
 
     if item_name == 'Créer plusieurs parties':
         create_many_games()
+    if item_name == 'Les lâcheurs':
+        show_game_quitters()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
