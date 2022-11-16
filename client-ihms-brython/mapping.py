@@ -129,10 +129,9 @@ class RegionTypeEnum(enum.Enum):
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        for region_type in RegionTypeEnum:
-            if region_type.value == code:
-                return region_type
-        return None
+        if code > len(RegionTypeEnum):
+            return None
+        return list(RegionTypeEnum)[code - 1]
 
 
 @enum.unique
@@ -145,10 +144,9 @@ class UnitTypeEnum(enum.Enum):
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        for unit_type in UnitTypeEnum:
-            if unit_type.value == code:
-                return unit_type
-        return None
+        if code > len(UnitTypeEnum):
+            return None
+        return list(UnitTypeEnum)[code - 1]
 
 
 @enum.unique
@@ -164,10 +162,9 @@ class SeasonEnum(enum.Enum):
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        for season in SeasonEnum:
-            if season.value == code:
-                return season
-        return None
+        if code > len(SeasonEnum):
+            return None
+        return list(SeasonEnum)[code - 1]
 
 
 @enum.unique
@@ -187,10 +184,9 @@ class OrderTypeEnum(enum.Enum):
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        for order_type in OrderTypeEnum:
-            if order_type.value == code:
-                return order_type
-        return None
+        if code > len(OrderTypeEnum):
+            return None
+        return list(OrderTypeEnum)[code - 1]
 
     @staticmethod
     def shortcut(char: str):
