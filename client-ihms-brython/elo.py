@@ -83,7 +83,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     num_players = len(effective_roles)
 
     # table rank -> score
-    static_score_table = {r: (ALPHA ** (num_players - r) - 1) / sum([ALPHA ** (num_players - i) - 1 for i in range(1, num_players + 1)]) for r in range(1, num_players + 1)}
+    static_score_table = {r: (ALPHA ** (num_players - r) - 1) / sum(ALPHA ** (num_players - i) - 1 for i in range(1, num_players + 1)) for r in range(1, num_players + 1)}
 
     # ------------------
     # 1 Parse all games
@@ -126,7 +126,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
         # get everyones's sharing
         shared_table = {r: len([ss for ss in score_table.values() if ss == s]) for r, s in score_table.items()}
         # get performance from rank and sharing
-        performed_table = {r: sum([static_score_table[ranking_table[r] + i] for i in range(shared_table[r])]) / shared_table[r] for r in score_table}
+        performed_table = {r: sum(static_score_table[ranking_table[r] + i] for i in range(shared_table[r])) / shared_table[r] for r in score_table}
         after = time.time()
         performance_calculation_time += (after - before)
 
@@ -619,7 +619,7 @@ def process_regularity(players_dict, games_results_dict, regularity_information)
     # 3 Measure active time
     # ------------------
     for player_id, intervals in sequences_list_table.items():
-        activity_table[player_id] = sum([(i[1] - i[0]) for i in intervals])
+        activity_table[player_id] = sum((i[1] - i[0]) for i in intervals)
 
     # ------------------
     # 4 Make regularity_list (returned)

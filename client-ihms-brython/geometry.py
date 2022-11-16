@@ -80,10 +80,10 @@ class Polygon:
         self.shifted_points = [points[-1]] + points[:-1]
 
         # bounding box
-        self.x_min = min([p.x_pos for p in points])
-        self.x_max = max([p.x_pos for p in points])
-        self.y_min = min([p.y_pos for p in points])
-        self.y_max = max([p.y_pos for p in points])
+        self.x_min = min(p.x_pos for p in points)
+        self.x_max = max(p.x_pos for p in points)
+        self.y_min = min(p.y_pos for p in points)
+        self.y_max = max(p.y_pos for p in points)
 
     def is_inside_me(self, point: PositionRecord) -> bool:
         """

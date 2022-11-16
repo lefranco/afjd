@@ -513,7 +513,7 @@ def non_playing_information():
         return None
 
     # is game anonymous
-    if not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+    if not (moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         return None
 
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
@@ -5125,11 +5125,11 @@ def show_events_in_game():
         MY_SUB_PANEL <= html.DIV("Il faut se connecter au préalable", Class='important')
 
     # is player in game ?
-    elif not(moderate.check_modo(PSEUDO) or ROLE_ID is not None):
+    elif not (moderate.check_modo(PSEUDO) or ROLE_ID is not None):
         MY_SUB_PANEL <= html.DIV("Seuls les participants à une partie (ou un modérateur du site) peuvent voir le statut des ordres", Class='important')
 
     # game anonymous
-    elif not(moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
+    elif not (moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         MY_SUB_PANEL <= html.DIV("Seul l'arbitre (ou un modérateur du site) peut voir le statut des ordres  pour une partie anonyme", Class='important')
 
     else:
