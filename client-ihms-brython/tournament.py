@@ -27,8 +27,6 @@ MAX_LEN_TOURNAMENT_NAME = 50
 TOURNAMENT_DICT = None
 
 
-
-
 def get_tournament_players(tournament_id):
     """ get_tournament_players : returns empty list if problem """
 
@@ -58,7 +56,6 @@ def get_tournament_players(tournament_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return tournament_players
-
 
 
 def show_games():
