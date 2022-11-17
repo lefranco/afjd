@@ -141,6 +141,10 @@ class UnitTypeEnum(enum.Enum):
     ARMY_UNIT = enum.auto()
     FLEET_UNIT = enum.auto()
 
+    def to_code(self):
+        """ to_code """
+        return list(UnitTypeEnum).index(self) + 1
+
     @staticmethod
     def from_code(code: int):
         """ from_code """
@@ -180,6 +184,10 @@ class OrderTypeEnum(enum.Enum):
     DISBAND_ORDER = enum.auto()
     BUILD_ORDER = enum.auto()
     REMOVE_ORDER = enum.auto()
+
+    def to_code(self):
+        """ to_code """
+        return list(OrderTypeEnum).index(self) + 1
 
     @staticmethod
     def from_code(code: int):
@@ -1119,7 +1127,7 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
             type_unit = UnitTypeEnum.ARMY_UNIT
 
         json_dict = {
-            "type_unit": type_unit.value,
+            "type_unit": type_unit.to_code(),
             "role": self._role.identifier,
             "zone": self._zone.identifier
         }
@@ -1887,7 +1895,7 @@ class Order(Renderable):
 
         json_dict = {}
         if self._order_type is not None:
-            json_dict.update({"order_type": self._order_type.value})
+            json_dict.update({"order_type": self._order_type.to_code()})
         if self._active_unit is not None:
             json_dict.update({"active_unit": self._active_unit.save_json()})
         if self._passive_unit is not None:
