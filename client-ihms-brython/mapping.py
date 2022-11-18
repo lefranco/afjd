@@ -129,7 +129,7 @@ class RegionTypeEnum(enum.Enum):
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        if code > len(RegionTypeEnum):
+        if code < 1 or code > len(RegionTypeEnum):
             return None
         return list(RegionTypeEnum)[code - 1]
 
@@ -148,7 +148,7 @@ class UnitTypeEnum(enum.Enum):
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        if code > len(UnitTypeEnum):
+        if code < 1 or code > len(UnitTypeEnum):
             return None
         return list(UnitTypeEnum)[code - 1]
 
@@ -166,7 +166,7 @@ class SeasonEnum(enum.Enum):
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        if code > len(SeasonEnum):
+        if code < 1 or code > len(SeasonEnum):
             return None
         return list(SeasonEnum)[code - 1]
 
@@ -192,7 +192,7 @@ class OrderTypeEnum(enum.Enum):
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        if code > len(OrderTypeEnum):
+        if code < 1 or code > len(OrderTypeEnum):
             return None
         return list(OrderTypeEnum)[code - 1]
 
