@@ -28,12 +28,9 @@ import index  # circular import
 # how long between two consecutives refresh
 SUPERVISE_REFRESH_PERIOD_SEC = 15
 
-# how long between two consecutives refresh
-OBSERVE_REFRESH_PERIOD_SEC = 60
-
 LONG_DURATION_LIMIT_SEC = 1.0
 
-OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Paramètres', 'Retards', 'Superviser', 'Observer']
+OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Paramètres', 'Retards', 'Superviser']
 
 
 @enum.unique
@@ -5834,52 +5831,6 @@ def supervise():
     return True
 
 
-OBSERVE_REFRESH_TIMER = None
-
-
-def observe():
-    """ observe """
-
-    def refresh():
-        """ refresh """
-
-        # reload from server to see what changed from outside
-        load_dynamic_stuff()
-        MY_SUB_PANEL.clear()
-
-        # clock
-        stack_clock(MY_SUB_PANEL, OBSERVE_REFRESH_PERIOD_SEC)
-        MY_SUB_PANEL <= html.BR()
-
-        # game status
-        MY_SUB_PANEL <= GAME_STATUS
-
-        # map and ratings
-        show_board(MY_SUB_PANEL)
-
-    # game needs to be ongoing - not waiting
-    if GAME_PARAMETERS_LOADED['current_state'] == 0:
-        alert("La partie n'est pas encore démarrée")
-        load_option(None, 'Consulter')
-        return False
-
-    # game needs to be ongoing - not finished
-    if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
-        alert("La partie est déjà terminée")
-        load_option(None, 'Consulter')
-        return False
-
-    # initiates refresh
-    refresh()
-
-    # repeat
-    global OBSERVE_REFRESH_TIMER
-    if OBSERVE_REFRESH_TIMER is None:
-        OBSERVE_REFRESH_TIMER = timer.set_interval(refresh, OBSERVE_REFRESH_PERIOD_SEC * 1000)  # refresh every x seconds
-
-    return True
-
-
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -5926,8 +5877,6 @@ def load_option(_, item_name, direct_last_moves=False):
         status = show_game_parameters()
     if item_name == 'Retards':
         status = show_events_in_game()
-    if item_name == 'Observer':
-        status = observe()
 
     if not status:
         return
@@ -5962,13 +5911,6 @@ def load_option(_, item_name, direct_last_moves=False):
         if SUPERVISE_REFRESH_TIMER is not None:
             timer.clear_interval(SUPERVISE_REFRESH_TIMER)
             SUPERVISE_REFRESH_TIMER = None
-
-    # quitting observer : clear timer
-    global OBSERVE_REFRESH_TIMER
-    if ITEM_NAME_SELECTED != 'observer':
-        if OBSERVE_REFRESH_TIMER is not None:
-            timer.clear_interval(OBSERVE_REFRESH_TIMER)
-            OBSERVE_REFRESH_TIMER = None
 
 
 COUNTDOWN_TIMER = None
