@@ -3425,7 +3425,7 @@ def negotiate(default_dest_set):
     messages.extend(fake_messages)
 
     # sort with all that was added
-    messages.sort(key=lambda d: (d[4], d[1]), reverse=True)
+    messages.sort(key=lambda m: (float(m[4]), float(m[1])), reverse=True)
 
     messages_table = html.TABLE()
 
@@ -3714,7 +3714,7 @@ def declare():
     declarations.extend(fake_declarations)
 
     # sort with all that was added
-    declarations.sort(key=lambda d: (d[5], d[1]), reverse=True)
+    declarations.sort(key=lambda d: (float(d[5]), float(d[1])), reverse=True)
 
     declarations_table = html.TABLE()
 
