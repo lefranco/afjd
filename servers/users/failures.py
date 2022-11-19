@@ -28,25 +28,28 @@ class Failure:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS failures")
-        sql_executor.execute("CREATE TABLE failures (user_name STR, date real)")
+        sql_executor.execute("CREATE TABLE failures (user_name STR, ip_address STR, date real)")
 
-    def __init__(self, user_name: str) -> None:
+    def __init__(self, user_name: str, ip_address: str) -> None:
 
         assert isinstance(user_name, str), "identifier must be an str"
         self._user_name = user_name
+
+        assert isinstance(ip_address, str), "ip_address must be an str"
+        self._ip_address = ip_address
 
         self._date = time.time()
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        sql_executor.execute("INSERT OR REPLACE INTO failures (user_name, date) VALUES (?, ?)", (self._user_name, self._date))
+        sql_executor.execute("INSERT OR REPLACE INTO failures (user_name, ip_address, date) VALUES (?, ?, ?)", (self._user_name, self._ip_address, self._date))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
         sql_executor.execute("DELETE FROM failures WHERE user_name = ? and date = ?", (self._user_name, self._date))
 
     def __str__(self) -> str:
-        return f"user_name={self._user_name} date={self._date}"
+        return f"user_name={self._user_name} ip_address={self._ip_address} date={self._date}"
 
 
 if __name__ == '__main__':

@@ -11,7 +11,7 @@ import typing
 import argparse
 import datetime
 
-import waitress  # type: ignore
+import waitress
 import flask
 import flask_cors  # type: ignore
 import flask_jwt_extended  # type: ignore
@@ -203,14 +203,17 @@ def login_user() -> typing.Tuple[typing.Any, int]:
     if not password:
         return flask.jsonify({"msg": "Missing password parameter"}), 400
 
+    # not mandatory
+    ip_address = flask.request.json.get('ip_address', None)
+
     sql_executor = database.SqlExecutor()
 
     user = users.User.find_by_name(sql_executor, user_name)
 
-    if user is None or not werkzeug.security.check_password_hash(user.pwd_hash, password):  # type: ignore
+    if user is None or not werkzeug.security.check_password_hash(user.pwd_hash, password):
 
         # we keep a trace of the failure
-        failure = failures.Failure(user_name)
+        failure = failures.Failure(user_name, ip_address)
         failure.update_database(sql_executor)
 
         sql_executor.commit()
@@ -219,7 +222,7 @@ def login_user() -> typing.Tuple[typing.Any, int]:
         return flask.jsonify({"msg": "Bad user_name or password"}), 401
 
     # we keep a trace of the login
-    login = logins.Login(user_name)
+    login = logins.Login(user_name, ip_address)
     login.update_database(sql_executor)
 
     sql_executor.commit()
