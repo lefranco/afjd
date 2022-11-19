@@ -1024,7 +1024,11 @@ def sandbox():
     display_very_left <= html.BR()
 
     display_very_left <= html.BR()
-    display_very_left <= html.DIV("Pour une situation initiale (ou approchant), aller dans une partie puis cliquer 'exporter vers le bac à sable'", Class='note')
+    display_very_left <= html.DIV("Pour avoir la situation d'une partie, aller dans la partie puis cliquer 'exporter vers le bac à sable'", Class='note')
+    display_very_left <= html.BR()
+
+    display_very_left <= html.BR()
+    display_very_left <= html.DIV("Le but du bac à sable est uniquement de lever les ambigüités sur la résolution des mouvements, il n'y a donc pas de continuité sur les phases suivantes...", Class='note')
     display_very_left <= html.BR()
 
     display_very_left <= html.BR()
