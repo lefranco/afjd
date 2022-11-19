@@ -209,9 +209,6 @@ def load_option(_, item_name):
         if play.SUPERVISE_REFRESH_TIMER is not None:
             timer.clear_interval(play.SUPERVISE_REFRESH_TIMER)
             play.SUPERVISE_REFRESH_TIMER = None
-        if play.OBSERVE_REFRESH_TIMER is not None:
-            timer.clear_interval(play.OBSERVE_REFRESH_TIMER)
-            play.OBSERVE_REFRESH_TIMER = None
 
     # these cause some problems
     if prev_item_selected in ['Jouer la partie sélectionnée', 'Bac à sable']:
