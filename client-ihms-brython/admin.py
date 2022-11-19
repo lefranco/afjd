@@ -935,15 +935,20 @@ def last_logins():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'date']:
+    for field in ['pseudo', 'adresse IP', 'date']:
         col = html.TD(field)
         thead <= col
     logins_table <= thead
 
-    for pseudo, date in sorted(logins_list, key=lambda l: l[1], reverse=True):
+    for pseudo, ip_address, date in sorted(logins_list, key=lambda l: l[2], reverse=True):
         row = html.TR()
 
         col = html.TD(pseudo)
+        row <= col
+
+        if ip_address is None:
+            ip_address = '-'
+        col = html.TD(ip_address)
         row <= col
 
         date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
@@ -982,15 +987,20 @@ def last_failures():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'date']:
+    for field in ['pseudo', 'adresse IP', 'date']:
         col = html.TD(field)
         thead <= col
     failures_table <= thead
 
-    for pseudo, date in sorted(failures_list, key=lambda l: l[1], reverse=True):
+    for pseudo, ip_address, date in sorted(failures_list, key=lambda f: f[2], reverse=True):
         row = html.TR()
 
         col = html.TD(pseudo)
+        row <= col
+
+        if ip_address is None:
+            ip_address = '-'
+        col = html.TD(ip_address)
         row <= col
 
         date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
@@ -1029,11 +1039,11 @@ def last_failures():
 
     # Now display
 
-    MY_SUB_PANEL <= html.H4("Par inscrit")
-    MY_SUB_PANEL <= failures_summary
-
     MY_SUB_PANEL <= html.H4("Chronologiquement")
     MY_SUB_PANEL <= failures_table
+
+    MY_SUB_PANEL <= html.H4("Par inscrit")
+    MY_SUB_PANEL <= failures_summary
 
 
 def edit_creators():

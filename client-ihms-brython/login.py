@@ -123,13 +123,19 @@ def login():
             render(PANEL_MIDDLE)
             return
 
+        # should have an IP
+        ip_value = None
+        if 'IPADDRESS' in storage:
+            ip_value = storage['IPADDRESS']
+
         host = config.SERVER_CONFIG['USER']['HOST']
         port = config.SERVER_CONFIG['USER']['PORT']
         url = f"{host}:{port}/login"
 
         json_dict = {
             'user_name': pseudo,
-            'password': password
+            'password': password,
+            'ip_address': ip_value
         }
 
         # login (getting token) : no need for token
