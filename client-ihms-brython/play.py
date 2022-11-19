@@ -1468,6 +1468,9 @@ def submit_orders():
         nonlocal automaton_state
         nonlocal buttons_right
 
+        # to stop catching keyboard
+        document.unbind("keypress")
+
         # complete orders
         orders_data.rest_hold(ROLE_ID if ROLE_ID != 0 else None)
 
@@ -1598,6 +1601,9 @@ def submit_orders():
         nonlocal automaton_state
         nonlocal buttons_right
         nonlocal selected_order_type
+
+        # to stop catching keyboard
+        document.unbind("keypress")
 
         if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
 
@@ -1831,6 +1837,9 @@ def submit_orders():
                     legend_select_order22 = html.I(info)
                     buttons_right <= legend_select_order22
                     buttons_right <= html.BR()
+
+                # to catch keyboard
+                document.bind("keypress", callback_keypress)
 
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(advancement_season):
@@ -2142,24 +2151,6 @@ def submit_orders():
         # normal : call s
         callback_canvas_click(stored_event)
 
-    def callback_keypress(event):
-        """ callback_keypress """
-
-        char = chr(event.charCode).lower()
-
-        # order removal : special
-        if char == 'x':
-            # pass to double click
-            callback_canvas_long_click(None)
-            return
-
-        # order shortcut
-        selected_order = mapping.OrderTypeEnum.shortcut(char)
-        if selected_order is None:
-            return
-
-        select_order_type_callback(event, selected_order)
-
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
 
@@ -2200,6 +2191,24 @@ def submit_orders():
             selected_hovered_object.highlite(ctx, False)
             # redraw all arrows
             orders_data.render(ctx)
+
+    def callback_keypress(event):
+        """ callback_keypress """
+
+        char = chr(event.charCode).lower()
+
+        # order removal : special
+        if char == 'x':
+            # pass to double click
+            callback_canvas_long_click(None)
+            return
+
+        # order shortcut
+        selected_order = mapping.OrderTypeEnum.shortcut(char)
+        if selected_order is None:
+            return
+
+        select_order_type_callback(event, selected_order)
 
     def callback_render(refresh):
         """ callback_render """
@@ -2385,9 +2394,6 @@ def submit_orders():
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
     canvas.bind("mousedown", callback_canvas_mousedown)
-
-    # to catch keyboard
-    document.bind("keypress", callback_keypress)
 
     # get the orders from server
     orders_loaded = game_orders_reload(GAME_ID)
@@ -2603,6 +2609,9 @@ def submit_communication_orders():
         nonlocal buttons_right
         nonlocal selected_order_type
 
+        # to stop catching keyboard
+        document.unbind("keypress")
+
         if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
 
             selected_order_type = order_type
@@ -2754,6 +2763,9 @@ def submit_communication_orders():
                     legend_select_order22 = html.I(info)
                     buttons_right <= legend_select_order22
                     buttons_right <= html.BR()
+
+                # to catch keyboard
+                document.bind("keypress", callback_keypress)
 
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(mapping.SeasonEnum.SPRING_SEASON):
@@ -2975,24 +2987,6 @@ def submit_communication_orders():
         # normal : call s
         callback_canvas_click(stored_event)
 
-    def callback_keypress(event):
-        """ callback_keypress """
-
-        char = chr(event.charCode).lower()
-
-        # order removal : special
-        if char == 'x':
-            # pass to double click
-            callback_canvas_long_click(None)
-            return
-
-        # order shortcut
-        selected_order = mapping.OrderTypeEnum.shortcut(char)
-        if selected_order is None:
-            return
-
-        select_order_type_callback(event, selected_order)
-
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
 
@@ -3033,6 +3027,24 @@ def submit_communication_orders():
             selected_hovered_object.highlite(ctx, False)
             # redraw all arrows
             orders_data.render(ctx)
+
+    def callback_keypress(event):
+        """ callback_keypress """
+
+        char = chr(event.charCode).lower()
+
+        # order removal : special
+        if char == 'x':
+            # pass to double click
+            callback_canvas_long_click(None)
+            return
+
+        # order shortcut
+        selected_order = mapping.OrderTypeEnum.shortcut(char)
+        if selected_order is None:
+            return
+
+        select_order_type_callback(event, selected_order)
 
     def callback_render(refresh):
         """ callback_render """
@@ -3171,9 +3183,6 @@ def submit_communication_orders():
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
     canvas.bind("mousedown", callback_canvas_mousedown)
-
-    # to catch keyboard
-    document.bind("keypress", callback_keypress)
 
     # get the orders from server
     communication_orders_loaded = game_communication_orders_reload(GAME_ID)
@@ -5924,6 +5933,7 @@ def load_option(_, item_name, direct_last_moves=False):
         return
 
     global ITEM_NAME_SELECTED
+    prev_item_selected = ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
     MENU_LEFT.clear()
@@ -5941,6 +5951,10 @@ def load_option(_, item_name, direct_last_moves=False):
         menu_item = html.LI(button)
         menu_item.attrs['style'] = 'list-style-type: none'
         MENU_LEFT <= menu_item
+
+    # these cause some problems
+    if prev_item_selected in ['Ordonner', 'Taguer']:
+        document.unbind("keypress")
 
     # quitting superviser : clear timer
     global SUPERVISE_REFRESH_TIMER

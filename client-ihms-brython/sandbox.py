@@ -177,6 +177,9 @@ def sandbox():
         nonlocal automaton_state
         nonlocal buttons_right
 
+        # to stop catching keyboard
+        document.unbind("keypress")
+
         # complete orders
         ORDERS_DATA.rest_hold(None)
 
@@ -325,6 +328,9 @@ def sandbox():
         nonlocal buttons_right
         nonlocal selected_order_type
 
+        # to stop catching keyboard
+        document.unbind("keypress")
+
         if automaton_state is AutomatonStateEnum.SELECT_ORDER_STATE:
 
             selected_order_type = order_type
@@ -457,6 +463,9 @@ def sandbox():
                     legend_select_order22 = html.I(info)
                     buttons_right <= legend_select_order22
                     buttons_right <= html.BR()
+
+                # to catch keyboard
+                document.bind("keypress", callback_keypress)
 
                 for order_type in mapping.OrderTypeEnum:
                     if order_type.compatible(mapping.SeasonEnum.AUTUMN_SEASON):
@@ -696,24 +705,6 @@ def sandbox():
         # normal : call
         callback_canvas_click(stored_event)
 
-    def callback_keypress(event):
-        """ callback_keypress """
-
-        char = chr(event.charCode).lower()
-
-        # order removal : special
-        if char == 'x':
-            # pass to double click
-            callback_canvas_long_click(None)
-            return
-
-        # order shortcut
-        selected_order = mapping.OrderTypeEnum.shortcut(char)
-        if selected_order is None:
-            return
-
-        select_order_type_callback(event, selected_order)
-
     def callback_canvas_mouse_move(event):
         """ callback_canvas_mouse_move """
 
@@ -754,6 +745,24 @@ def sandbox():
             selected_hovered_object.highlite(ctx, False)
             # redraw all arrows
             ORDERS_DATA.render(ctx)
+
+    def callback_keypress(event):
+        """ callback_keypress """
+
+        char = chr(event.charCode).lower()
+
+        # order removal : special
+        if char == 'x':
+            # pass to double click
+            callback_canvas_long_click(None)
+            return
+
+        # order shortcut
+        selected_order = mapping.OrderTypeEnum.shortcut(char)
+        if selected_order is None:
+            return
+
+        select_order_type_callback(event, selected_order)
 
     def callback_render(refresh):
         """ callback_render """
@@ -1051,9 +1060,6 @@ def sandbox():
     # dragging related events
     canvas.bind('dragover', dragover)
     canvas.bind("drop", drop)
-
-    # to catch keyboard
-    document.bind("keypress", callback_keypress)
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
