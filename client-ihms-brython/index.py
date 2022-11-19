@@ -214,7 +214,7 @@ def load_option(_, item_name):
             play.OBSERVE_REFRESH_TIMER = None
 
     # these cause some problems
-    if prev_item_selected in ['jouer la partie sélectionnée', 'bac à sable']:
+    if prev_item_selected in ['Jouer la partie sélectionnée', 'Bac à sable']:
         document.unbind("keypress")
 
     if ITEM_NAME_SELECTED == 'Accueil':
