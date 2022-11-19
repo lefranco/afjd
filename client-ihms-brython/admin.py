@@ -1861,35 +1861,40 @@ def show_non_confirmed_data():
 
     MY_SUB_PANEL <= html.H3("Les inscrits non confirmés")
 
-    players_dict = common.get_players_data()
-
-    if not players_dict:
+    emails_dict = common.get_all_emails()
+    if not emails_dict:
         return
 
     players_table = html.TABLE()
 
-    fields = ['pseudo']
+    fields = ['pseudo', 'email']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo'}[field]
+        field_fr = {'pseudo': 'pseudo', 'email': 'courriel'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_table <= thead
 
     count = 0
-    for _, data in sorted(players_dict.items(), key=lambda p: p[0]):
+    for pseudo, (email, confirmed, _) in sorted(emails_dict.items(), key=lambda t: t[0].upper()):
 
-        if data['email_confirmed']:
+        if confirmed:
             continue
 
         row = html.TR()
         for field in fields:
-            value = data[field]
+
+            if field == 'pseudo':
+                value = pseudo
+
+            if field == 'email':
+                value = email
 
             col = html.TD(value)
             row <= col
+
             count += 1
 
         players_table <= row
@@ -1981,15 +1986,18 @@ def show_all_emails():
         return
 
     emails_dict = common.get_all_emails()
+    if not emails_dict:
+        return
 
     emails_table = html.TABLE()
 
-    fields = ['courriel', 'pseudo']
+    fields = ['pseudo', 'email']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        col = html.TD(field)
+        field_fr = {'pseudo': 'pseudo', 'email': 'courriel'}[field]
+        col = html.TD(field_fr)
         thead <= col
     emails_table <= thead
 
