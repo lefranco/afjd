@@ -5871,12 +5871,12 @@ def load_option(_, item_name, direct_last_moves=False):
         status = game_master()
     if item_name == 'Noter':
         status = note()
-    if item_name == 'Superviser':
-        status = supervise()
     if item_name == 'Paramètres':
         status = show_game_parameters()
     if item_name == 'Retards':
         status = show_events_in_game()
+    if item_name == 'Superviser':
+        status = supervise()
 
     if not status:
         return
@@ -5889,6 +5889,11 @@ def load_option(_, item_name, direct_last_moves=False):
 
     # items in menu
     for possible_item_name in OPTIONS:
+
+        # do not display menu supervise if not fast game
+        if possible_item_name == 'Superviser':
+            if not GAME_PARAMETERS_LOADED['fast']:
+                continue
 
         if possible_item_name == ITEM_NAME_SELECTED:
             item_name_bold_or_not = html.B(possible_item_name)
