@@ -109,6 +109,7 @@ FAQ_CONTENT_TABLE = {
 
     "(Pour les modérateurs) Quels sont les codes pour écrire sur le mur ?":
     """
+    .ANNONCE pour une annonce spéciale (sur la même ligne) - admin seulement <br>
     .HR pour un trait horizontal <br>
     .STRONG pour écrire en gras <br>
     .KBD pour écrire ce que l'on doit taper au clavier <br>

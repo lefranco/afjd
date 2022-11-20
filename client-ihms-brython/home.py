@@ -120,8 +120,14 @@ def get_teaser_content():
     return teaser_content
 
 
+ANNOUNCE = ""
+
 def formatted_news(news_content_loaded, admin):
     """ formatted_news """
+
+    global ANNOUNCE
+
+    ANNOUNCE = ""
 
     # init
     news_content = html.DIV(Class='news2' if admin else 'news')
@@ -129,7 +135,10 @@ def formatted_news(news_content_loaded, admin):
     # format
     if news_content_loaded is not None:
         for line in news_content_loaded.split("\n"):
-            if line.startswith(".HR"):
+            if line.startswith(".ANNONCE"):
+                if admin:
+                    _, _, ANNOUNCE = line.partition(".ANNONCE ")
+            elif line.startswith(".HR"):
                 separator = html.HR()
                 news_content <= separator
             elif line.startswith(".STRONG"):
@@ -343,8 +352,8 @@ def show_news():
     # ----
     MY_SUB_PANEL <= div_homepage
 
-    if not SPAMMED:
-        alert("Pensez à vous inscrire au championnat de France à Paris du 25 au 27 Novembre !")
+    if not SPAMMED and ANNOUNCE:
+        alert(ANNOUNCE)
         SPAMMED = True
 
 
