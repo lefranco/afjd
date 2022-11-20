@@ -183,8 +183,12 @@ def formatted_teaser(teasers):
     return teaser_content
 
 
+SPAMMED = False
+
 def show_news():
     """ show_home """
+
+    global SPAMMED
 
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
@@ -338,6 +342,10 @@ def show_news():
 
     # ----
     MY_SUB_PANEL <= div_homepage
+
+    if not SPAMMED:
+        alert("Pensez à vous inscrire au championnat de France à Paris du 25 au 27 Novembre !")
+        SPAMMED = True
 
 
 def all_games(state_name):
