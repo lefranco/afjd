@@ -1383,8 +1383,11 @@ def submit_orders():
     automaton_state = None
     stored_event = None
     down_click_time = None
-    input_definitive = None
     buttons_right = None
+
+    input_now = None
+    input_after = None
+    input_never = None
 
     def cancel_submit_orders_callback(_, dialog):
         dialog.close()
@@ -1441,13 +1444,16 @@ def submit_orders():
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
 
-        definitive_value = input_definitive.checked
+        if input_after.checked:   # TODO change later
+            alert("Cette option d'attendre la date limite n'est pas encore implémentée !")
+
+        definitive_value = input_now.checked   # TODO change later
 
         json_dict = {
             'role_id': ROLE_ID,
             'pseudo': PSEUDO,
             'orders': orders_list_dict_json,
-            'definitive': definitive_value,
+            'definitive': definitive_value,   # TODO change later
             'names': names_dict_json,
             'adjudication_names': inforced_names_dict_json
         }
@@ -2283,15 +2289,35 @@ def submit_orders():
     def put_submit(buttons_right):
         """ put_submit """
 
-        nonlocal input_definitive
+        nonlocal input_now
+        nonlocal input_after
+        nonlocal input_never
 
-        label_definitive = html.LABEL("D'accord pour la résolution ?")
+        label_definitive = html.LABEL(html.B("D'accord pour la résolution ?"))
         buttons_right <= label_definitive
+        buttons_right <= html.BR()
 
-        definitive_value = ROLE_ID in submitted_data['agreed']
+        now_value = ROLE_ID in submitted_data['agreed']
 
-        input_definitive = html.INPUT(type="checkbox", checked=definitive_value)
-        buttons_right <= input_definitive
+        option_now = "maintenant."
+        label_now = html.LABEL(html.EM(option_now))
+        buttons_right <= label_now
+        input_now = html.INPUT(type="radio", id="now", name="agreed", checked=now_value)
+        buttons_right <= input_now
+        buttons_right <= html.BR()
+
+        option_after = "après la DL..."
+        label_after = html.LABEL(html.EM(option_after))
+        buttons_right <= label_after
+        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=False, disabled=True)  # TODO : change
+        buttons_right <= input_after
+        buttons_right <= html.BR()
+
+        option_never = "non, non !"
+        label_never = html.LABEL(html.EM(option_never))
+        buttons_right <= label_never
+        input_never = html.INPUT(type="radio", id="never", name="agreed", checked=not now_value)
+        buttons_right <= input_never
         buttons_right <= html.BR()
 
         input_submit = html.INPUT(type="submit", value="soumettre ces ordres")
