@@ -120,14 +120,15 @@ def get_teaser_content():
     return teaser_content
 
 
-ANNOUNCE = ""
+ANNOUNCEMENT = ""
+
 
 def formatted_news(news_content_loaded, admin):
     """ formatted_news """
 
-    global ANNOUNCE
+    global ANNOUNCEMENT
 
-    ANNOUNCE = ""
+    ANNOUNCEMENT = ""
 
     # init
     news_content = html.DIV(Class='news2' if admin else 'news')
@@ -137,7 +138,7 @@ def formatted_news(news_content_loaded, admin):
         for line in news_content_loaded.split("\n"):
             if line.startswith(".ANNONCE"):
                 if admin:
-                    _, _, ANNOUNCE = line.partition(".ANNONCE ")
+                    _, _, ANNOUNCEMENT = line.partition(".ANNONCE ")
             elif line.startswith(".HR"):
                 separator = html.HR()
                 news_content <= separator
@@ -193,6 +194,7 @@ def formatted_teaser(teasers):
 
 
 SPAMMED = False
+
 
 def show_news():
     """ show_home """
@@ -352,8 +354,8 @@ def show_news():
     # ----
     MY_SUB_PANEL <= div_homepage
 
-    if not SPAMMED and ANNOUNCE:
-        alert(ANNOUNCE)
+    if not SPAMMED and ANNOUNCEMENT:
+        alert(ANNOUNCEMENT)
         SPAMMED = True
 
 
