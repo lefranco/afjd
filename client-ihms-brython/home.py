@@ -29,6 +29,13 @@ Information importante : vous visualisez ici une interface au design rustique po
 Merci de nous remonter vos remarques sur le forum ou sur le serveur Discord."""
 
 
+# for safety
+if 'ANNOUNCEMENT' not in storage:
+    storage['ANNOUNCEMENT'] = ""
+if 'ALREADY_SPAMMED' not in storage:
+    storage['ALREADY_SPAMMED'] = 'yes'
+
+
 def get_stats_content():
     """ get_stats_content """
 
@@ -120,15 +127,8 @@ def get_teaser_content():
     return teaser_content
 
 
-ANNOUNCEMENT = ""
-
-
 def formatted_news(news_content_loaded, admin):
     """ formatted_news """
-
-    global ANNOUNCEMENT
-
-    ANNOUNCEMENT = ""
 
     # init
     news_content = html.DIV(Class='news2' if admin else 'news')
@@ -138,7 +138,11 @@ def formatted_news(news_content_loaded, admin):
         for line in news_content_loaded.split("\n"):
             if line.startswith(".ANNONCE"):
                 if admin:
-                    _, _, ANNOUNCEMENT = line.partition(".ANNONCE ")
+                    _, _, announcement = line.partition(".ANNONCE ")
+                    previous_announcement = storage['ANNOUNCEMENT']
+                    storage['ANNOUNCEMENT'] = announcement
+                    if announcement != previous_announcement:
+                        storage['ALREADY_SPAMMED'] = 'no'
             elif line.startswith(".HR"):
                 separator = html.HR()
                 news_content <= separator
@@ -193,13 +197,8 @@ def formatted_teaser(teasers):
     return teaser_content
 
 
-SPAMMED = False
-
-
 def show_news():
     """ show_home """
-
-    global SPAMMED
 
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
@@ -354,10 +353,12 @@ def show_news():
     # ----
     MY_SUB_PANEL <= div_homepage
 
-    if not SPAMMED and ANNOUNCEMENT:
-        alert(ANNOUNCEMENT)
-        SPAMMED = True
-
+    # announce
+    if storage['ALREADY_SPAMMED'] == 'no':
+        announcement = storage['ANNOUNCEMENT']
+        if announcement:
+            alert(announcement)
+        storage['ALREADY_SPAMMED'] = 'yes'
 
 def all_games(state_name):
     """all_games """
