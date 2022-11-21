@@ -56,6 +56,13 @@ PREVIOUS_PSEUDO = None
 def login():
     """ login """
 
+    def detect_caps_lock_callback(ev):
+        """ detect_caps_lock_callback """
+
+        pressed = ev.getModifierState("CapsLock")
+        if pressed:
+            alert(f"Attention : vous êtes en mode majuscules !")
+
     def login_callback(_):
         """ login_callback """
 
@@ -196,6 +203,9 @@ def login():
     fieldset <= input_password
     form <= fieldset
     form <= html.BR()
+
+    # detect caps lock
+    input_password.bind("keypress", detect_caps_lock_callback)
 
     input_login = html.INPUT(type="submit", value="connexion")
     input_login.bind("click", login_callback)
