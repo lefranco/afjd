@@ -59,6 +59,7 @@ MENU_LEFT <= MENU_SELECTION
 
 ITEM_NAME_SELECTED = OPTIONS[0]
 
+IP_TIMEOUT_SEC = 7
 
 # reading the IP in a non disruptive way
 def read_ip():
@@ -66,18 +67,16 @@ def read_ip():
 
     def store_ip(req):
         if req.status != 200:
-            alert(f"Problem getting IP {req.status=}")
+            alert(f"Problem getting IP code={req.status=}")
             return
         ip_value = req.read()
         storage['IPADDRESS'] = ip_value
 
     def no_ip():
-        alert("Failed to get IP")
+        alert("Failed to get IP (timeout)")
 
     url = "https://ident.me"
-#    url = "https://api.ipify.org"
-    timeout = 5
-    ajax.get(url, blocking=False, timeout=timeout, oncomplete=store_ip, ontimeout=no_ip)
+    ajax.get(url, blocking=False, timeout=IP_TIMEOUT_SEC, oncomplete=store_ip, ontimeout=no_ip)
 
 
 def check_event(event_name):
@@ -229,8 +228,9 @@ def load_option(_, item_name):
         MENU_LEFT <= button
 
 
-# we read ip now
-read_ip()
+# we read ip now if necessary
+if 'IPADDRESS' not in storage:
+    read_ip()
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
