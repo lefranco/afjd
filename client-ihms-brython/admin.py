@@ -2020,16 +2020,16 @@ def show_all_emails():
         row = html.TR()
         for field in fields:
 
+            colour = None
+            
             if field == 'pseudo':
                 value = pseudo
 
-            if field == 'courriel':
+            if field == 'email':
                 value = email
 
                 if value in duplicated_emails:
                     colour = 'red'
-                else:
-                    colour = None
 
             col = html.TD(value)
 
