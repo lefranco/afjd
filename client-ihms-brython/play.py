@@ -2299,21 +2299,21 @@ def submit_orders():
 
         now_value = ROLE_ID in submitted_data['agreed']
 
-        option_now = "maintenant."
+        option_now = "oui, même dès maintenant !"
         label_now = html.LABEL(html.EM(option_now))
         buttons_right <= label_now
         input_now = html.INPUT(type="radio", id="now", name="agreed", checked=now_value)
         buttons_right <= input_now
         buttons_right <= html.BR()
 
-        option_after = "après la DL..."
+        option_after = "oui, mais seulement après la DL !"
         label_after = html.LABEL(html.EM(option_after))
         buttons_right <= label_after
         input_after = html.INPUT(type="radio", id="after", name="agreed", checked=False, disabled=True)  # TODO : change
         buttons_right <= input_after
         buttons_right <= html.BR()
 
-        option_never = "non, non !"
+        option_never = "non, non, ce n'est pas définitif !"
         label_never = html.LABEL(html.EM(option_never))
         buttons_right <= label_never
         input_never = html.INPUT(type="radio", id="never", name="agreed", checked=not now_value)
