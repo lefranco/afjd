@@ -113,9 +113,16 @@ def select_event():
     MY_SUB_PANEL <= html.H3("Sélection d'un événement")
 
     events_data = common.get_events_data()
-    if not events_data:
-        if 'EVENT' in storage:
+
+    # delete obsolete event
+    if 'EVENT' in storage:
+        event_name_selected = storage['EVENT']
+        if event_name_selected not in [g['name'] for g in events_data.values()]:
             del storage['EVENT']
+            alert("Votre événement sélectionné n'existe plus")
+
+    # exit if no event
+    if not events_data:
         alert("Pas d'événement de prévu pour le moment")
         return
 
