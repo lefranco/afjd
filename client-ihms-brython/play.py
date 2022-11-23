@@ -1389,11 +1389,19 @@ def submit_orders():
     input_after = None
     input_never = None
 
+    now_value = None
+    after_value = None
+    never_value = None
+
     def cancel_submit_orders_callback(_, dialog):
         dialog.close()
 
     def submit_orders_callback(_, warned=False, dialog2=None):
         """ submit_orders_callback """
+
+        nonlocal now_value
+        nonlocal after_value
+        nonlocal never_value
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -2293,30 +2301,42 @@ def submit_orders():
         nonlocal input_after
         nonlocal input_never
 
-        label_definitive = html.LABEL(html.B("D'accord pour la résolution ?"))
+        def update_select(event):
+            """ update_select """
+
+            nonlocal now_value
+            nonlocal after_value
+            nonlocal never_value
+
+            now_value = event.target is input_now
+            after_value = event.target is input_after
+            never_value = event.target is input_never
+
+        label_definitive = html.LABEL(html.B("D'accord pour la résolution :"))
         buttons_right <= label_definitive
         buttons_right <= html.BR()
-
-        now_value = ROLE_ID in submitted_data['agreed']
 
         option_now = "oui, même dès maintenant !"
         label_now = html.LABEL(html.EM(option_now))
         buttons_right <= label_now
         input_now = html.INPUT(type="radio", id="now", name="agreed", checked=now_value)
+        input_now.bind("click", update_select)
         buttons_right <= input_now
         buttons_right <= html.BR()
 
-        option_after = "oui, mais seulement après la DL !"
+        option_after = "oui, mais seulement juste après la DL !"
         label_after = html.LABEL(html.EM(option_after))
         buttons_right <= label_after
-        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=False, disabled=True)  # TODO : change
+        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=after_value, disabled=True)  # TODO : change
+        input_after.bind("click", update_select)
         buttons_right <= input_after
         buttons_right <= html.BR()
 
         option_never = "non, non, ce n'est pas définitif !"
         label_never = html.LABEL(html.EM(option_never))
         buttons_right <= label_never
-        input_never = html.INPUT(type="radio", id="never", name="agreed", checked=not now_value)
+        input_never = html.INPUT(type="radio", id="never", name="agreed", checked=never_value)
+        input_never.bind("click", update_select)
         buttons_right <= input_never
         buttons_right <= html.BR()
 
@@ -2525,6 +2545,10 @@ def submit_orders():
                 buttons_right <= html.BR()
                 buttons_right <= input_select
         automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
+
+    now_value = ROLE_ID in submitted_data['agreed']
+    after_value = False  # TODO change
+    never_value = ROLE_ID not in submitted_data['agreed']
 
     stack_orders(buttons_right)
     if not orders_data.empty():
