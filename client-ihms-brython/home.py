@@ -360,6 +360,7 @@ def show_news():
             alert(announcement)
         storage['ALREADY_SPAMMED'] = 'yes'
 
+
 def all_games(state_name):
     """all_games """
 

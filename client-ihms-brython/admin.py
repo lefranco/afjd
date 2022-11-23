@@ -2021,7 +2021,7 @@ def show_all_emails():
         for field in fields:
 
             colour = None
-            
+
             if field == 'pseudo':
                 value = pseudo
 
