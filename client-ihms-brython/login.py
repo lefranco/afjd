@@ -61,7 +61,7 @@ def login():
 
         pressed = ev.getModifierState("CapsLock")
         if pressed:
-            alert(f"Attention : vous êtes en mode majuscules !")
+            alert("Attention : vous êtes en mode majuscules !")
 
     def login_callback(_):
         """ login_callback """

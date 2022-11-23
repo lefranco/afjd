@@ -61,6 +61,7 @@ ITEM_NAME_SELECTED = OPTIONS[0]
 
 IP_TIMEOUT_SEC = 7
 
+
 # reading the IP in a non disruptive way
 def read_ip():
     """ read_ip """
