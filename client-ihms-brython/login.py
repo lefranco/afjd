@@ -56,10 +56,10 @@ PREVIOUS_PSEUDO = None
 def login():
     """ login """
 
-    def detect_caps_lock_callback(ev):
+    def detect_caps_lock_callback(event):
         """ detect_caps_lock_callback """
 
-        pressed = ev.getModifierState("CapsLock")
+        pressed = event.getModifierState("CapsLock")
         if pressed:
             alert("Attention : vous êtes en mode majuscules !")
 
