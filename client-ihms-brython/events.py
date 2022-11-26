@@ -194,6 +194,9 @@ def registrations():
 
         if not input_message.value:
             alert("Contenu du message vide")
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            registrations()
             return
 
         body = input_message.value

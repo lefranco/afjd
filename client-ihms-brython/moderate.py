@@ -337,6 +337,9 @@ def sendmail():
 
         if not input_message.value:
             alert("Contenu du message vide")
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            sendmail()
             return
 
         body = input_message.value
