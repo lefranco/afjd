@@ -234,18 +234,19 @@ def all_emails():
     emails_table <= thead
 
     for pseudo, (email, confirmed, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
+
+        if not newsletter:
+            continue
+
         row = html.TR()
 
         col = html.TD(pseudo)
         row <= col
 
-        if newsletter:
-            if confirmed:
-                email_formatted = html.B(email)
-            else:
-                email_formatted = html.EM(email)
+        if confirmed:
+            email_formatted = html.B(email)
         else:
-            email_formatted = "-"
+            email_formatted = html.EM(email)
 
         col = html.TD(email_formatted)
         row <= col
@@ -258,7 +259,57 @@ def all_emails():
 
         emails_table <= row
 
+    emails_table2 = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'courriel', 'confirmé', 'newsletter']:
+        col = html.TD(field)
+        thead <= col
+    emails_table2 <= thead
+
+    for pseudo, (email, confirmed, newsletter) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
+
+        if newsletter:
+            continue
+
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        col.style = {
+            'background-color': 'Red'
+        }
+        row <= col
+
+        if confirmed:
+            email_formatted = html.B(email)
+        else:
+            email_formatted = html.EM(email)
+
+        col = html.TD(email_formatted)
+        col.style = {
+            'background-color': 'Red'
+        }
+        row <= col
+
+        col = html.TD("Oui" if confirmed else "Non")
+        col.style = {
+            'background-color': 'Red'
+        }
+        row <= col
+
+        col = html.TD("Oui" if newsletter else "Non")
+        col.style = {
+            'background-color': 'Red'
+        }
+        row <= col
+
+        emails_table2 <= row
+
+    MY_SUB_PANEL <= html.H4("Publipostage")
     MY_SUB_PANEL <= emails_table
+    MY_SUB_PANEL <= html.H4("Information (ATTENTION : ne pas envoyer la lettre d'information)")
+    MY_SUB_PANEL <= emails_table2
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les courriels en gras sont confimés, les courriels en italique ne le sont pas.", Class='note')
 
