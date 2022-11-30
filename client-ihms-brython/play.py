@@ -418,7 +418,7 @@ def game_transitions_reload(game_id):
     return transitions_loaded
 
 
-def make_rating_colours_window(variant_data, ratings, colours, game_scoring):
+def make_rating_colours_window(variant_data, ratings, units, colours, game_scoring):
     """ make_rating_window """
 
     rating_table = html.TABLE()
@@ -454,11 +454,15 @@ def make_rating_colours_window(variant_data, ratings, colours, game_scoring):
     # centers
     rating_centers_row = html.TR()
     rating_table <= rating_centers_row
-    col = html.TD(html.B("Centres :"))
+    col = html.TD(html.B("Centres (unités) :"))
     rating_centers_row <= col
-    for ncenters in ratings.values():
+    for role, ncenters in ratings.items():
+        nunits = units[role]
         col = html.TD()
-        col <= f"{ncenters}"
+        if nunits != ncenters:
+            col <= f"{ncenters} ({nunits})"
+        else:
+            col <= f"{ncenters}"
         rating_centers_row <= col
 
     # scoring
@@ -1069,9 +1073,10 @@ def show_board(panel):
 
     # ratings
     ratings = POSITION_DATA.role_ratings()
+    units = POSITION_DATA.role_units()
     colours = POSITION_DATA.role_colours()
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, units, colours, game_scoring)
     panel <= rating_colours_window
     panel <= html.BR()
 
@@ -1245,9 +1250,10 @@ def show_position(direct_last_moves):
         display_left <= html.BR()
 
         ratings = position_data.role_ratings()
+        units = POSITION_DATA.role_units()
         colours = position_data.role_colours()
         game_scoring = GAME_PARAMETERS_LOADED['scoring']
-        rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+        rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, units, colours, game_scoring)
 
         display_left <= rating_colours_window
         display_left <= html.BR()
@@ -2457,9 +2463,10 @@ def submit_orders():
     img.bind('load', lambda _: callback_render(True))
 
     ratings = POSITION_DATA.role_ratings()
+    units = POSITION_DATA.role_units()
     colours = POSITION_DATA.role_colours()
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, units, colours, game_scoring)
 
     report_window = common.make_report_window(REPORT_LOADED)
 
@@ -3250,9 +3257,10 @@ def submit_communication_orders():
     img.bind('load', lambda _: callback_render(True))
 
     ratings = POSITION_DATA.role_ratings()
+    units = POSITION_DATA.role_units()
     colours = POSITION_DATA.role_colours()
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, colours, game_scoring)
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, units, colours, game_scoring)
 
     # left side
 

@@ -1582,6 +1582,11 @@ class Position(Renderable):
         raw_dict = {self._variant.name_table[self._variant.roles[i]]: len([o for o in self._ownerships if o.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0}
         return {r: raw_dict[r] for r in sorted(raw_dict.keys(), key=lambda r: raw_dict[r], reverse=True)}
 
+    def role_units(self):
+        """ a units number of roles """
+        raw_dict = {self._variant.name_table[self._variant.roles[i]]: len([u for u in self._units + self._dislodged_units if u.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0}
+        return raw_dict
+
     def role_colours(self):
         """ a rating of roles """
         return {self._variant.name_table[r]: self._variant.item_colour_table[r] for r in self._variant.roles.values()}
