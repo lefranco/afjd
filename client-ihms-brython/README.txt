@@ -14,4 +14,4 @@ For more information please visit http://brython.info.
 
 ADDITIONAL / IMPORTANT 
 to install do not forget to run :
-brython-cli --modules
+brython-cli --make_modules
