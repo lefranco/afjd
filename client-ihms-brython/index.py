@@ -274,3 +274,11 @@ document <= html.BR()
 END_TIME = time.time()
 ELAPSED = END_TIME - START_TIME
 document <= html.I(f"Temps d'execution de la page d'accueil : {ELAPSED} sec.")
+
+# spinner dies
+spinner = document['spinner']
+spinner.className = 'pycorpse'
+
+# spinner dissipates
+spinner.parentElement.removeChild(spinner)
+
