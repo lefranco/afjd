@@ -940,7 +940,7 @@ def last_logins():
         thead <= col
     logins_table <= thead
 
-    for pseudo, ip_address, date in sorted(logins_list, key=lambda l: l[2], reverse=True):
+    for pseudo, ip_address, date in sorted(logins_list, key=lambda ll: ll[2], reverse=True):
         row = html.TR()
 
         col = html.TD(pseudo)
@@ -1026,7 +1026,7 @@ def last_failures():
         thead <= col
     failures_summary <= thead
 
-    for pseudo, number in sorted(failures_recap.items(), key=lambda l: l[1], reverse=True):
+    for pseudo, number in sorted(failures_recap.items(), key=lambda ll: ll[1], reverse=True):
         row = html.TR()
 
         col = html.TD(pseudo)
