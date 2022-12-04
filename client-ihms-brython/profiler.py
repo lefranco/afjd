@@ -2,16 +2,16 @@
 
 
 import time
-import json
 
-from browser import ajax   # pylint: disable=import-error
-from browser.local_storage import storage  # pylint: disable=import-error
+START_TIME = time.time()
 
-import common
-import admin
-import config
+import json  # pylint: disable=wrong-import-order,wrong-import-position # noqa: E402
 
-VERSION = "tbd"
+from browser import ajax   # pylint: disable=import-error,wrong-import-position # noqa: E402
+from browser.local_storage import storage  # pylint: disable=import-error,wrong-import-position # noqa: E402
+
+
+ADDRESS_ADMIN = "1"
 
 
 class Measure:
@@ -64,41 +64,41 @@ class Profiler:
         self._stop = time.time()
         self._elapsed = self._stop - self._start
 
-    def send_report(self, pseudo):
+    def send_report(self, pseudo, version, destination, timeout):
         """ send_report """
 
         def reply_callback(_):
+            pass
+
+        def noreply_callback():
             pass
 
         subject = f"stats pour {pseudo}"
         body = ""
         body += f"{self}"
         body += "\n\n"
-        body += f"version : {VERSION}"
+        body += f"overhead profiler {ELAPSED=}"
+        body += "\n\n"
+        body += f"version : {version}"
         body += "\n\n"
 
-        addressed_user_name = admin.ADMIN_PSEUDO
-
-        players_dict = common.get_players()
-        if not players_dict:
-            return
-
-        addressed_id = players_dict[addressed_user_name]
-        addressees = [addressed_id]
         json_dict = {
             'pseudo': pseudo,
-            'addressees': " ".join([str(a) for a in addressees]),
+            'addressees': ADDRESS_ADMIN,
             'subject': subject,
             'body': body,
             'force': 1,
         }
 
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        host, port = destination
         url = f"{host}:{port}/mail-players"
 
         # sending email : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=timeout, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     def __str__(self):
         return f"{self._elapsed}s\n\n" + "\n".join([f"{n} : {m}" for n, m in self._table.items()])
+
+
+END_TIME = time.time()
+ELAPSED = END_TIME - START_TIME

@@ -4,12 +4,26 @@ import time
 
 START_TIME = time.time()
 
+import profiler    # pylint: disable=wrong-import-order,wrong-import-position # noqa: E402
+
+my_profiler = profiler.Profiler()
+
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import document, html, alert, timer, ajax  # pylint: disable=import-error,wrong-import-position # noqa: E402
-from browser.local_storage import storage  # pylint: disable=import-error,wrong-import-position # noqa: E402
+my_profiler.start("Import browser...")
+from browser import document, html, alert, timer, ajax  # pylint: disable=import-error,wrong-import-order,wrong-import-position # noqa: E402
+from browser.local_storage import storage  # pylint: disable=import-error,wrong-import-order,wrong-import-position # noqa: E402
+my_profiler.stop()
 
+my_profiler.start("Import config...")
+import config    # pylint: disable=wrong-import-position # noqa: E402
+my_profiler.stop()
+
+my_profiler.start("Import common...")
 import common    # pylint: disable=wrong-import-position # noqa: E402
+my_profiler.stop()
+
+my_profiler.start("Import menus...")
 import home    # pylint: disable=wrong-import-position # noqa: E402
 import login    # pylint: disable=wrong-import-position # noqa: E402
 import account    # pylint: disable=wrong-import-position # noqa: E402
@@ -27,6 +41,9 @@ import create    # pylint: disable=wrong-import-position # noqa: E402
 import moderate    # pylint: disable=wrong-import-position # noqa: E402
 import admin    # pylint: disable=wrong-import-position # noqa: E402
 import forum    # pylint: disable=wrong-import-position # noqa: E402
+my_profiler.stop()
+
+my_profiler.start("The rest...")
 
 # TITLE is in index.html
 
@@ -268,8 +285,8 @@ selection.show_game_selected()
 
 document <= html.B("Contactez le support par courriel en cas de problème (cf. page d'accueil / onglet 'déclarer un incident'). Merci !")
 document <= html.BR()
-version = storage['VERSION']
-document <= html.I(f"Vous utilisez la version du {version}")
+VERSION_VALUE = storage['VERSION']
+document <= html.I(f"Vous utilisez la version du {VERSION_VALUE}")
 document <= html.BR()
 END_TIME = time.time()
 ELAPSED = END_TIME - START_TIME
@@ -282,3 +299,15 @@ spinner.className = 'pycorpse'
 # spinner dissipates
 spinner.parentElement.removeChild(spinner)
 
+my_profiler.stop()
+
+if 'PSEUDO' in storage:
+    PSEUDO_VALUE = storage['PSEUDO']
+
+    players_dict = common.get_players()
+    if players_dict:
+
+        HOST = config.SERVER_CONFIG['PLAYER']['HOST']
+        PORT = config.SERVER_CONFIG['PLAYER']['PORT']
+
+        my_profiler.send_report(PSEUDO_VALUE, VERSION_VALUE, (HOST, PORT), config.TIMEOUT_SERVER)
