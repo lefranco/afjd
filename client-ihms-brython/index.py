@@ -6,44 +6,70 @@ START_TIME = time.time()
 
 import profiler    # pylint: disable=wrong-import-order,wrong-import-position # noqa: E402
 
-my_profiler = profiler.Profiler()
-
 # pylint: disable=pointless-statement, expression-not-assigned
 
-my_profiler.start("Import browser...")
+profiler.PROFILER.start("Import browser...")
 from browser import document, html, alert, timer, ajax  # pylint: disable=import-error,wrong-import-order,wrong-import-position # noqa: E402
 from browser.local_storage import storage  # pylint: disable=import-error,wrong-import-order,wrong-import-position # noqa: E402
-my_profiler.stop()
+profiler.PROFILER.stop()
 
-my_profiler.start("Import config...")
 import config    # pylint: disable=wrong-import-position # noqa: E402
-my_profiler.stop()
 
-my_profiler.start("Import common...")
 import common    # pylint: disable=wrong-import-position # noqa: E402
-my_profiler.stop()
 
-my_profiler.start("Import menus...")
+profiler.PROFILER.start("Import index / home...")
 import home    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / login...")
 import login    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / account...")
 import account    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / opportunities...")
 import opportunities    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / mygames...")
 import mygames    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / games...")
 import games    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / pairing...")
 import pairing    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / selection...")
 import selection    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / play...")
 import play    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / sandbox...")
 import sandbox    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / tournament...")
 import tournament    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / events...")
 import events    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / players...")
 import players    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / create...")
 import create    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / moderate...")
 import moderate    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / admin...")
 import admin    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop()
+profiler.PROFILER.start("Import index / forum...")
 import forum    # pylint: disable=wrong-import-position # noqa: E402
-my_profiler.stop()
+profiler.PROFILER.stop()
 
-my_profiler.start("The rest...")
+profiler.PROFILER.start("index/functions...")
 
 # TITLE is in index.html
 
@@ -245,10 +271,15 @@ def load_option(_, item_name):
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
 
+profiler.PROFILER.stop()
 
+profiler.PROFILER.start("index/read ip...")
 # we read ip now if necessary
 if 'IPADDRESS' not in storage:
     read_ip()
+profiler.PROFILER.stop()
+
+profiler.PROFILER.start("index/more (load options)...")
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
@@ -279,7 +310,13 @@ else:
 document <= html.BR()
 document <= html.BR()
 
+profiler.PROFILER.stop()
+
+profiler.PROFILER.start("index / check token")
 login.check_token()
+profiler.PROFILER.stop()
+
+profiler.PROFILER.start("index / rest")
 login.show_login()
 selection.show_game_selected()
 
@@ -299,15 +336,12 @@ spinner.className = 'pycorpse'
 # spinner dissipates
 spinner.parentElement.removeChild(spinner)
 
-my_profiler.stop()
+profiler.PROFILER.stop()
 
 if 'PSEUDO' in storage:
     PSEUDO_VALUE = storage['PSEUDO']
 
-    players_dict = common.get_players()
-    if players_dict:
+    HOST = config.SERVER_CONFIG['PLAYER']['HOST']
+    PORT = config.SERVER_CONFIG['PLAYER']['PORT']
 
-        HOST = config.SERVER_CONFIG['PLAYER']['HOST']
-        PORT = config.SERVER_CONFIG['PLAYER']['PORT']
-
-        my_profiler.send_report(PSEUDO_VALUE, VERSION_VALUE, (HOST, PORT), config.TIMEOUT_SERVER)
+    profiler.PROFILER.send_report(PSEUDO_VALUE, VERSION_VALUE, (HOST, PORT), config.TIMEOUT_SERVER)

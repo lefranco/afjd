@@ -17,50 +17,62 @@ ADDRESS_ADMIN = "1"
 class Measure:
     """ Measure """
 
-    def __init__(self):
+    def __init__(self, name):
+        self._name = name
         now = time.time()
         self._start = now
         self._stop = None
 
     def terminate(self):
         """ terminate """
-
         now = time.time()
         self._stop = now
 
+    def duration(self):
+        """ duration """
+        return self._stop - self._start
+
     def __str__(self):
-        elapsed = self._stop - self._start
+        elapsed = self.duration()
         elapsed_ms = round(elapsed * 1000.)
-        return f"{elapsed_ms}ms"
+        return f"{self._name} : {elapsed_ms}ms"
 
 
 class Profiler:
     """ Profiler """
 
     def __init__(self):
-        self._table = {}
+        self._measures = []
         self._current = None
         self._start = time.time()
         self._stop = None
+        self._sum = 0.
         self._elapsed = None
 
     def start(self, name):
         """ start """
 
-        prev_name = self._current
-        if prev_name:
-            old_measure = self._table[prev_name]
-            old_measure.terminate()
-        new_measure = Measure()
-        self._table[name] = new_measure
-        self._current = name
+        if self._current:
+            return
+
+        new_measure = Measure(name)
+        self._current = new_measure
 
     def stop(self):
         """ stop """
 
-        prev_name = self._current
-        old_measure = self._table[prev_name]
-        old_measure.terminate()
+        if not self._current:
+            return
+
+        cur_measure = self._current
+        cur_measure.terminate()
+        self._measures.append(cur_measure)
+        self._current = None
+
+        # sum up
+        self._sum += cur_measure.duration()
+
+        # in case this is last
         self._stop = time.time()
         self._elapsed = self._stop - self._start
 
@@ -73,11 +85,13 @@ class Profiler:
         def noreply_callback():
             pass
 
-        subject = f"stats pour {pseudo}"
+        subject = f"stats for {pseudo}"
         body = ""
         body += f"{self}"
         body += "\n\n"
         body += f"overhead profiler {ELAPSED=}"
+        body += "\n\n"
+        body += f"sum {self._sum}"
         body += "\n\n"
         body += f"version : {version}"
         body += "\n\n"
@@ -97,8 +111,10 @@ class Profiler:
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=timeout, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     def __str__(self):
-        return f"{self._elapsed}s\n\n" + "\n".join([f"{n} : {m}" for n, m in self._table.items()])
+        return f"{self._elapsed}s\n\n" + "\n".join([str(m) for m in self._measures])
 
+
+PROFILER = Profiler()
 
 END_TIME = time.time()
 ELAPSED = END_TIME - START_TIME
