@@ -2,8 +2,16 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
+
+import profiler
+
+profiler.PROFILER.start("Import common / json...")
 import json
+profiler.PROFILER.stop()
+
+profiler.PROFILER.start("Import common / datetime...")
 import datetime
+profiler.PROFILER.stop()
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -11,6 +19,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import mapping
 
+profiler.PROFILER.start("Import common / functions...")
 
 def noreply_callback(_):
     """ noreply_callback """
@@ -931,3 +940,6 @@ def verification_code(pseudo):
     """ verification_code """
     code = int(sum(map(lambda c: ord(c) ** 3.5, pseudo))) % 1000000
     return code
+
+
+profiler.PROFILER.stop()

@@ -1,5 +1,8 @@
 """ config """
 
+import profiler
+profiler.PROFILER.start("Import config / preambule...")
+
 import json
 
 
@@ -15,21 +18,33 @@ STATE_CODE_TABLE = {'en attente': 0, 'en cours': 1, 'terminée': 2, 'distinguée
 DECLARATIONS_TYPE = 0
 MESSAGES_TYPE = 1
 
+profiler.PROFILER.stop()
+
 # load servers list from json data file
+profiler.PROFILER.start("Import config / server config...")
 with open("./config/servers.json", "r", encoding="utf-8") as read_file:
     SERVER_CONFIG = json.load(read_file)
+profiler.PROFILER.stop()
 
 # load country list from json data file
+profiler.PROFILER.start("Import config / country codes...")
 with open("./data/country_list.json", "r", encoding="utf-8") as read_file:
     COUNTRY_CODE_TABLE = json.load(read_file)
+profiler.PROFILER.stop()
 
 # load timezone list from json data file
+profiler.PROFILER.start("Import config / timezones...")
 with open("./data/timezone_list.json", "r", encoding="utf-8") as read_file:
     TIMEZONE_CODE_TABLE = json.load(read_file)
+profiler.PROFILER.stop()
 
 # load scoring list from json data file
+profiler.PROFILER.start("Import config / scoring codes...")
 with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
     SCORING_CODE_TABLE = json.load(read_file)
+profiler.PROFILER.stop()
+
+profiler.PROFILER.start("Import config / postambule...")
 
 # colours
 ALL_AGREEMENTS_IN_COLOUR = 'Chartreuse'
@@ -42,6 +57,4 @@ APPROACHING_DEADLINE_COLOUR = 'Yellow'
 NEED_REPLACEMENT = 'Pink'
 MY_RATING = 'Blue'
 
-#  kept to show how to write json file
-#  x = json.dumps(SERVER_CONFIG, indent=4)
-#  print(x)
+profiler.PROFILER.stop()

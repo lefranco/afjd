@@ -1,5 +1,8 @@
 """ mapping """
 
+import profiler
+profiler.PROFILER.start("Import mapping...")
+
 # pylint: disable=pointless-statement, expression-not-assigned, multiple-statements
 # noqa: E702
 
@@ -2103,3 +2106,6 @@ class Orders(Renderable):
 
     def __str__(self) -> str:
         return '\n'.join([str(o) for o in self._orders])
+
+
+profiler.PROFILER.stop()
