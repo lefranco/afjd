@@ -85,7 +85,7 @@ class Profiler:
         def noreply_callback():
             pass
 
-        subject = f"stats for {pseudo}"
+        subject = f"stats for {pseudo} ({self._elapsed})"
         body = ""
         body += f"{self}"
         body += "\n\n"
@@ -111,7 +111,7 @@ class Profiler:
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=timeout, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     def __str__(self):
-        return f"{self._elapsed}s\n\n" + "\n".join([str(m) for m in self._measures])
+        return "\n".join([str(m) for m in self._measures])
 
 
 PROFILER = Profiler()
