@@ -193,7 +193,7 @@ def load_option(_, item_name):
 
     profiler.PROFILER.start_mes("load_option()...")
 
-    profiler.PROFILER.start_mes("first ...")
+    profiler.PROFILER.start_mes(f"loading page - calling render() - {item_name} ...")
 
     pseudo = None
     if 'PSEUDO' in storage:
@@ -236,7 +236,7 @@ def load_option(_, item_name):
         forum.render(PANEL_MIDDLE)
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("second...")
+    profiler.PROFILER.start_mes("additional stuff...")
 
     global ITEM_NAME_SELECTED
     prev_item_selected = ITEM_NAME_SELECTED
@@ -284,7 +284,7 @@ def load_option(_, item_name):
         document.unbind("keypress")
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("third...")
+    profiler.PROFILER.start_mes("ukr flag...")
 
     if ITEM_NAME_SELECTED == 'Accueil':
         if 'flag' not in storage or storage['flag'] == 'True':
