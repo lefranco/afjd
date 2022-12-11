@@ -1,75 +1,94 @@
 """ index """
 
+# pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
+
 import time
 
 START_TIME = time.time()
 
-import profiler    # pylint: disable=wrong-import-order,wrong-import-position # noqa: E402
+import profiler
 
-# pylint: disable=pointless-statement, expression-not-assigned
+profiler.PROFILER.start_mes("=== inside index.py...")
 
-profiler.PROFILER.start("Import browser...")
-from browser import document, html, alert, timer, ajax  # pylint: disable=import-error,wrong-import-order,wrong-import-position # noqa: E402
-from browser.local_storage import storage  # pylint: disable=import-error,wrong-import-order,wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
 
-import config    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.start_mes("Import browser stuff ...")
+from browser import document, html, alert, timer, ajax  # pylint: disable=import-error
+from browser.local_storage import storage  # pylint: disable=import-error
+profiler.PROFILER.stop_mes()
 
-import common    # pylint: disable=wrong-import-position # noqa: E402
+import config
 
-profiler.PROFILER.start("Import index / home...")
-import home    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / login...")
+import common
+
+profiler.PROFILER.start_mes("Import home...")
+import home
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import login...")
 import login    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / account...")
-import account    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / opportunities...")
-import opportunities    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / mygames...")
-import mygames    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / games...")
-import games    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / pairing...")
-import pairing    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / selection...")
-import selection    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / play...")
-import play    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / sandbox...")
-import sandbox    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / tournament...")
-import tournament    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / events...")
-import events    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / players...")
-import players    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / create...")
-import create    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / moderate...")
-import moderate    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / admin...")
-import admin    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
-profiler.PROFILER.start("Import index / forum...")
-import forum    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop()
+profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.start("index/functions...")
+profiler.PROFILER.start_mes("Import account...")
+import account    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import opportunities...")
+import opportunities    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import mygames...")
+import mygames    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import games...")
+import games    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import pairing...")
+import pairing    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import selection...")
+import selection    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import play...")
+import play    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import sandbox...")
+import sandbox    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import tournament...")
+import tournament    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import events...")
+import events    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import players...")
+import players    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import create...")
+import create    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import moderate...")
+import moderate    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import admin...")
+import admin    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import forum...")
+import forum    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("define functions...")
 
 # TITLE is in index.html
 
@@ -172,6 +191,10 @@ def set_flag(_, value):
 def load_option(_, item_name):
     """ load_option """
 
+    profiler.PROFILER.start_mes("load_option()...")
+
+    profiler.PROFILER.start_mes("first ...")
+
     pseudo = None
     if 'PSEUDO' in storage:
         pseudo = storage['PSEUDO']
@@ -211,6 +234,9 @@ def load_option(_, item_name):
         admin.render(PANEL_MIDDLE)
     if item_name == 'Forum':
         forum.render(PANEL_MIDDLE)
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("second...")
 
     global ITEM_NAME_SELECTED
     prev_item_selected = ITEM_NAME_SELECTED
@@ -257,6 +283,9 @@ def load_option(_, item_name):
     if prev_item_selected in ['Jouer la partie sélectionnée', 'Bac à sable']:
         document.unbind("keypress")
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("third...")
+
     if ITEM_NAME_SELECTED == 'Accueil':
         if 'flag' not in storage or storage['flag'] == 'True':
             emotion_img = html.IMG(src="./images/ukraine-flag-animation.gif")
@@ -271,16 +300,19 @@ def load_option(_, item_name):
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.stop()
 
-profiler.PROFILER.start("index/read ip...")
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("read ip...")
 # we read ip now if necessary
 if 'IPADDRESS' not in storage:
     read_ip()
-profiler.PROFILER.stop()
+profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.start("index/more (load options)...")
+profiler.PROFILER.start_mes("more (load options)...")
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
@@ -311,13 +343,14 @@ else:
 document <= html.BR()
 document <= html.BR()
 
-profiler.PROFILER.stop()
+profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.start("index / check token")
+profiler.PROFILER.start_mes("check token")
 login.check_token()
-profiler.PROFILER.stop()
+profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.start("index / rest")
+profiler.PROFILER.start_mes("display info")
+
 login.show_login()
 selection.show_game_selected()
 
@@ -330,6 +363,9 @@ END_TIME = time.time()
 ELAPSED = END_TIME - START_TIME
 document <= html.I(f"Temps d'execution de la page d'accueil : {ELAPSED} sec.")
 
+profiler.PROFILER.stop_mes()
+profiler.PROFILER.start_mes("kill spinner")
+
 # spinner dies
 spinner = document['spinner']
 spinner.className = 'pycorpse'
@@ -337,7 +373,8 @@ spinner.className = 'pycorpse'
 # spinner dissipates
 spinner.parentElement.removeChild(spinner)
 
-profiler.PROFILER.stop()
+profiler.PROFILER.stop_mes()
+profiler.PROFILER.stop_mes()
 
 if 'PSEUDO' in storage:
     PSEUDO_VALUE = storage['PSEUDO']

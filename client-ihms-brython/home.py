@@ -1,6 +1,8 @@
 """ home """
 
-# pylint: disable=pointless-statement, expression-not-assigned
+# pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
+
+import profiler
 
 import json
 import time
@@ -200,9 +202,13 @@ def formatted_teaser(teasers):
 def show_news():
     """ show_home """
 
+    profiler.PROFILER.start_mes("home.show_news()...")
+
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
     div_homepage = html.DIV(id='grid')
+
+    profiler.PROFILER.start_mes("parties...")
 
     # ----
     div_a5 = html.DIV(Class='tooltip')
@@ -218,6 +224,9 @@ def show_news():
     div_a5 <= div_a5_tip
     div_homepage <= div_a5
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("meilleurs...")
+
     # ----
     div_b5 = html.DIV(Class='tooltip')
 
@@ -232,6 +241,12 @@ def show_news():
     div_b5 <= div_b5_tip
     div_homepage <= div_b5
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("second...")
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("events...")
+
     # ----
     div_a4 = html.DIV(Class='tooltip')
 
@@ -244,6 +259,9 @@ def show_news():
     # no tip
     div_homepage <= div_a4
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("contribs...")
+
     # ----
     div_b4 = html.DIV(Class='tooltip')
 
@@ -255,6 +273,9 @@ def show_news():
 
     # no tip
     div_homepage <= div_b4
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("news modo...")
 
     # ----
     div_a3 = html.DIV(Class='tooltip')
@@ -270,6 +291,9 @@ def show_news():
     div_a3 <= div_a3_tip
     div_homepage <= div_a3
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("news admin...")
+
     # ----
     div_b3 = html.DIV(Class='tooltip')
 
@@ -284,6 +308,9 @@ def show_news():
     div_b3 <= div_b3_tip
     div_homepage <= div_b3
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("stats...")
+
     # ----
     div_a2 = html.DIV(Class='tooltip')
 
@@ -296,6 +323,9 @@ def show_news():
     div_a2_tip = html.SPAN("Plus de détail dans le menu 'classement/joueurs'", Class='tooltiptext')
     div_a2 <= div_a2_tip
     div_homepage <= div_a2
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("charte...")
 
     # ----
     div_b2 = html.DIV(Class='tooltip')
@@ -310,6 +340,9 @@ def show_news():
     div_b2_tip = html.SPAN("Plus de documents intéressants dans le menu 'accueil/coin technique'", Class='tooltiptext')
     div_b2 <= div_b2_tip
     div_homepage <= div_b2
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("note importante...")
 
     # ----
     div_a1 = html.DIV(Class='tooltip')
@@ -331,6 +364,9 @@ def show_news():
     div_a1_tip = html.SPAN("Plus de détail dans le menu 'accueil/brique sociale'", Class='tooltiptext')
     div_a1 <= div_a1_tip
     div_homepage <= div_a1
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("divers...")
 
     # ----
     div_b1 = html.DIV(Class='tooltip')
@@ -359,6 +395,9 @@ def show_news():
         if announcement:
             alert(announcement)
         storage['ALREADY_SPAMMED'] = 'yes'
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.stop_mes()
 
 
 def all_games(state_name):
@@ -1328,6 +1367,8 @@ MY_PANEL <= MY_SUB_PANEL
 def load_option(_, item_name):
     """ load_option """
 
+    profiler.PROFILER.start_mes("home.load_option()...")
+
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
@@ -1373,9 +1414,13 @@ def load_option(_, item_name):
         menu_item.attrs['style'] = 'list-style-type: none'
         MENU_LEFT <= menu_item
 
+    profiler.PROFILER.stop_mes()
+
 
 def render(panel_middle):
     """ render """
+
+    profiler.PROFILER.start_mes("home.render()...")
 
     # always back to top
     global ITEM_NAME_SELECTED
@@ -1383,3 +1428,5 @@ def render(panel_middle):
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
+
+    profiler.PROFILER.stop_mes()

@@ -1,16 +1,25 @@
 """ mapping """
 
+# pylint: disable=pointless-statement, expression-not-assigned, multiple-statements, wrong-import-order, wrong-import-position
+
 import profiler
-profiler.PROFILER.start("Import mapping...")
+profiler.PROFILER.start_mes("inside mapping...")
 
-# pylint: disable=pointless-statement, expression-not-assigned, multiple-statements
-# noqa: E702
+profiler.PROFILER.start_mes("import enum...")
+import enum    # pylint: disable=wrong-import-order,wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
 
-import enum
+profiler.PROFILER.start_mes("import abc...")
 import abc
-import math
+profiler.PROFILER.stop_mes()
 
-from browser import html   # pylint: disable=import-error
+profiler.PROFILER.start_mes("import math...")
+import math
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("the rest...")
+
+from browser import html  # pylint: disable=import-error
 
 import geometry
 import center_design
@@ -2108,4 +2117,5 @@ class Orders(Renderable):
         return '\n'.join([str(o) for o in self._orders])
 
 
-profiler.PROFILER.stop()
+profiler.PROFILER.stop_mes()
+profiler.PROFILER.stop_mes()
