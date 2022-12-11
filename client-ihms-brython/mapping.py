@@ -5,10 +5,6 @@
 import profiler
 profiler.PROFILER.start_mes("inside mapping...")
 
-profiler.PROFILER.start_mes("import enum...")
-import enum    # pylint: disable=wrong-import-order,wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
 profiler.PROFILER.start_mes("import abc...")
 import abc
 profiler.PROFILER.stop_mes()
@@ -130,83 +126,93 @@ class Highliteable(Renderable):
         """ text to display when mouses passes over """
 
 
-@enum.unique
-class RegionTypeEnum(enum.Enum):
+class RegionTypeEnum:
     """ RegionTypeEnum """
 
-    COAST_REGION = enum.auto()
-    LAND_REGION = enum.auto()
-    SEA_REGION = enum.auto()
+    COAST_REGION = 1
+    LAND_REGION = 2
+    SEA_REGION = 3
+
+    @staticmethod
+    def inventory():
+        """ inventory """
+        return (RegionTypeEnum.COAST_REGION, RegionTypeEnum.LAND_REGION, RegionTypeEnum.SEA_REGION)
 
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        if code < 1 or code > len(RegionTypeEnum):
-            return None
-        return list(RegionTypeEnum)[code - 1]
+        return code
 
 
-@enum.unique
-class UnitTypeEnum(enum.Enum):
+class UnitTypeEnum:
     """ UnitTypeEnum """
 
-    ARMY_UNIT = enum.auto()
-    FLEET_UNIT = enum.auto()
+    ARMY_UNIT = 1
+    FLEET_UNIT = 2
 
-    def to_code(self):
+    @staticmethod
+    def inventory():
+        """ inventory """
+        return (UnitTypeEnum.ARMY_UNIT, UnitTypeEnum.FLEET_UNIT)
+
+    @staticmethod
+    def to_code(unit):
         """ to_code """
-        return list(UnitTypeEnum).index(self) + 1
+        return unit
 
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        if code < 1 or code > len(UnitTypeEnum):
-            return None
-        return list(UnitTypeEnum)[code - 1]
+        return code
 
 
-@enum.unique
-class SeasonEnum(enum.Enum):
+class SeasonEnum:
     """ SeasonEnum """
 
-    SPRING_SEASON = enum.auto()
-    SUMMER_SEASON = enum.auto()
-    AUTUMN_SEASON = enum.auto()
-    WINTER_SEASON = enum.auto()
-    ADJUST_SEASON = enum.auto()
+    SPRING_SEASON = 1
+    SUMMER_SEASON = 2
+    AUTUMN_SEASON = 3
+    WINTER_SEASON = 4
+    ADJUST_SEASON = 5
+
+    @staticmethod
+    def inventory():
+        """ inventory """
+        return (SeasonEnum.SPRING_SEASON, SeasonEnum.SUMMER_SEASON, SeasonEnum.AUTUMN_SEASON, SeasonEnum.WINTER_SEASON, SeasonEnum.ADJUST_SEASON)
 
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        if code < 1 or code > len(SeasonEnum):
-            return None
-        return list(SeasonEnum)[code - 1]
+        return code
 
 
-@enum.unique
-class OrderTypeEnum(enum.Enum):
+class OrderTypeEnum:
     """ OrderTypeEnum """
 
-    ATTACK_ORDER = enum.auto()
-    OFF_SUPPORT_ORDER = enum.auto()
-    DEF_SUPPORT_ORDER = enum.auto()
-    HOLD_ORDER = enum.auto()
-    CONVOY_ORDER = enum.auto()
-    RETREAT_ORDER = enum.auto()
-    DISBAND_ORDER = enum.auto()
-    BUILD_ORDER = enum.auto()
-    REMOVE_ORDER = enum.auto()
+    ATTACK_ORDER = 1
+    OFF_SUPPORT_ORDER = 2
+    DEF_SUPPORT_ORDER = 3
+    HOLD_ORDER = 4
+    CONVOY_ORDER = 5
+    RETREAT_ORDER = 6
+    DISBAND_ORDER = 7
+    BUILD_ORDER = 8
+    REMOVE_ORDER = 9
 
-    def to_code(self):
+    @staticmethod
+    def inventory():
+        """ inventory """
+        return (OrderTypeEnum.ATTACK_ORDER, OrderTypeEnum.OFF_SUPPORT_ORDER, OrderTypeEnum.DEF_SUPPORT_ORDER, OrderTypeEnum.HOLD_ORDER, OrderTypeEnum.CONVOY_ORDER, OrderTypeEnum.RETREAT_ORDER, OrderTypeEnum.DISBAND_ORDER, OrderTypeEnum.BUILD_ORDER, OrderTypeEnum.REMOVE_ORDER)
+
+    @staticmethod
+    def to_code(order):
         """ to_code """
-        return list(OrderTypeEnum).index(self) + 1
+        return order
 
     @staticmethod
     def from_code(code: int):
         """ from_code """
-        if code < 1 or code > len(OrderTypeEnum):
-            return None
-        return list(OrderTypeEnum)[code - 1]
+        return code
 
     @staticmethod
     def shortcut(char: str):
@@ -223,14 +229,15 @@ class OrderTypeEnum(enum.Enum):
             return OrderTypeEnum.CONVOY_ORDER
         return None
 
-    def compatible(self, advancement_season: SeasonEnum) -> bool:
+    @staticmethod
+    def compatible(unit, advancement_season: SeasonEnum) -> bool:
         """ type order compatible with season """
         if advancement_season in [SeasonEnum.SPRING_SEASON, SeasonEnum.AUTUMN_SEASON]:
-            return self in [OrderTypeEnum.ATTACK_ORDER, OrderTypeEnum.OFF_SUPPORT_ORDER, OrderTypeEnum.DEF_SUPPORT_ORDER, OrderTypeEnum.HOLD_ORDER, OrderTypeEnum.CONVOY_ORDER]
+            return unit in [OrderTypeEnum.ATTACK_ORDER, OrderTypeEnum.OFF_SUPPORT_ORDER, OrderTypeEnum.DEF_SUPPORT_ORDER, OrderTypeEnum.HOLD_ORDER, OrderTypeEnum.CONVOY_ORDER]
         if advancement_season in [SeasonEnum.SUMMER_SEASON, SeasonEnum.WINTER_SEASON]:
-            return self in [OrderTypeEnum.RETREAT_ORDER, OrderTypeEnum.DISBAND_ORDER]
+            return unit in [OrderTypeEnum.RETREAT_ORDER, OrderTypeEnum.DISBAND_ORDER]
         if advancement_season is SeasonEnum.ADJUST_SEASON:
-            return self in [OrderTypeEnum.BUILD_ORDER, OrderTypeEnum.REMOVE_ORDER]
+            return unit in [OrderTypeEnum.BUILD_ORDER, OrderTypeEnum.REMOVE_ORDER]
         return False
 
 
@@ -356,7 +363,7 @@ class Zone(Highliteable):
         self._parent_zone = parent_zone
 
         # other zones one may access by fleet and army
-        self._neighbours = {u: [] for u in UnitTypeEnum}
+        self._neighbours = {u: [] for u in UnitTypeEnum.inventory()}
 
         # variant
         self._variant = variant
@@ -383,9 +390,9 @@ class Zone(Highliteable):
 
             # legend content (just for the length)
             if self._coast_type:
-                legend = self._variant.name_table[self._coast_type]
+                legend = self._variant.coast_name_table[self._coast_type]
             else:
-                legend = self._variant.name_table[self]
+                legend = self._variant.zone_name_table[self]
 
             # put on screen
             text_width = ctx.measureText(legend).width
@@ -425,10 +432,10 @@ class Zone(Highliteable):
         variant = self._variant
 
         # zone
-        zone_full_name = variant.full_name_table[self]
+        zone_full_name = variant.full_zone_name_table[self]
 
         # region type name
-        region_type_name = variant.name_table[self._region.region_type]
+        region_type_name = variant.region_name_table[self._region.region_type]
 
         return f"La zone {zone_full_name} - {region_type_name}."
 
@@ -469,7 +476,7 @@ class Zone(Highliteable):
 
     def __str__(self) -> str:
         variant = self._variant
-        zone_full_name = variant.full_name_table[self]
+        zone_full_name = variant.full_zone_name_table[self]
         return f"La zone {zone_full_name}"
 
 
@@ -696,8 +703,15 @@ class Variant(Renderable):
         # load the parameters content
         self._raw_parameters_content = raw_parameters_content
 
-        self._name_table = {}
-        self._full_name_table = {}
+        self._region_name_table = {}
+        self._unit_name_table = {}
+        self._role_name_table = {}
+        self._coast_name_table = {}
+        self._zone_name_table = {}
+        self._full_zone_name_table = {}
+        self._season_name_table = {}
+        self._order_name_table = {}
+
         self._item_colour_table = {}
         self._background_colour_table = {}
         self._position_table = {}
@@ -715,22 +729,22 @@ class Variant(Renderable):
         self._map_size = map_size
 
         # load the regions type names
-        assert len(self._raw_parameters_content['regions']) == len(RegionTypeEnum)
+        assert len(self._raw_parameters_content['regions']) == len(RegionTypeEnum.inventory())
         for region_type_code_str, data_dict in self._raw_parameters_content['regions'].items():
             region_type_code = int(region_type_code_str)
             region_type = RegionTypeEnum.from_code(region_type_code)
             assert region_type is not None
             name = data_dict['name']
-            self._name_table[region_type] = name
+            self._region_name_table[region_type] = name
 
         # load the units type names
-        assert len(self._raw_parameters_content['units']) == len(UnitTypeEnum)
+        assert len(self._raw_parameters_content['units']) == len(UnitTypeEnum.inventory())
         for unit_type_code_str, data_dict in self._raw_parameters_content['units'].items():
             unit_type_code = int(unit_type_code_str)
             unit_type = UnitTypeEnum.from_code(unit_type_code)
             assert unit_type is not None
             name = data_dict['name']
-            self._name_table[unit_type] = name
+            self._unit_name_table[unit_type] = name
 
         # add GM role
         role = Role(0)
@@ -744,7 +758,7 @@ class Variant(Renderable):
             role_num = int(role_num_str)
             role = self._roles[role_num]
             name = data_dict['name']
-            self._name_table[role] = name
+            self._role_name_table[role] = name
 
             red_item, red_background = data_dict['red']
             green_item, green_background = data_dict['green']
@@ -763,7 +777,7 @@ class Variant(Renderable):
         for coast_type_num_str, data_dict in self._raw_parameters_content['coasts'].items():
             coast_type_num = int(coast_type_num_str)
             coast_type = self._coast_types[coast_type_num]
-            self._name_table[coast_type] = data_dict['name']
+            self._coast_name_table[coast_type] = data_dict['name']
 
         # load the zones names and localisations (units and legends)
         assert len(self._raw_parameters_content['zones']) == len(self._zones)
@@ -773,17 +787,17 @@ class Variant(Renderable):
 
             # special zones have a special name
             if zone.coast_type:
-                region_name = self._name_table[zone.region.zone]
-                region_full_name = self._full_name_table[zone.region.zone]
-                coast_name = self._name_table[zone.coast_type]
+                region_name = self._zone_name_table[zone.region.zone]
+                region_full_name = self._full_zone_name_table[zone.region.zone]
+                coast_name = self._coast_name_table[zone.coast_type]
                 name = f"{region_name}{coast_name}"
                 full_name = f"{region_full_name} ({coast_name})"
             else:
                 name = data_dict['name']
                 full_name = data_dict['full_name']
 
-            self._name_table[zone] = name
-            self._full_name_table[zone] = full_name
+            self._zone_name_table[zone] = name
+            self._full_zone_name_table[zone] = full_name
 
             # unit position
             x_pos = data_dict['x_pos']
@@ -823,29 +837,29 @@ class Variant(Renderable):
             self._position_table[center] = center_position
 
         # load seasons names
-        assert len(self._raw_parameters_content['seasons']) == len(SeasonEnum)
+        assert len(self._raw_parameters_content['seasons']) == len(SeasonEnum.inventory())
         for season_num_str, data_dict in self._raw_parameters_content['seasons'].items():
             season_num = int(season_num_str)
             season = SeasonEnum.from_code(season_num)
             assert season is not None
-            self._name_table[season] = data_dict['name']
+            self._season_name_table[season] = data_dict['name']
 
         # load orders types names
-        assert len(self._raw_parameters_content['orders']) == len(OrderTypeEnum)
+        assert len(self._raw_parameters_content['orders']) == len(OrderTypeEnum.inventory())
         for order_type_num_str, data_dict in self._raw_parameters_content['orders'].items():
             order_type_num = int(order_type_num_str)
             order_type = OrderTypeEnum.from_code(order_type_num)
             assert order_type is not None
-            self._name_table[order_type] = data_dict['name']
+            self._order_name_table[order_type] = data_dict['name']
 
         # zone legends
         for zone in self._zones.values():
 
             # get the legend
             if zone.coast_type:
-                legend = self._name_table[zone.coast_type]
+                legend = self._coast_name_table[zone.coast_type]
             else:
-                legend = self._name_table[zone]
+                legend = self._zone_name_table[zone]
 
             # create a canvas for legend
             width = len(legend) * FONT_LEGEND_WIDTH
@@ -933,17 +947,17 @@ class Variant(Renderable):
         def extract_role_data(role):
             """ extract_role_data """
             additional = self._role_add_table[role]
-            return [self._name_table[role], additional[0], additional[1]]
+            return [self._role_name_table[role], additional[0], additional[1]]
 
         def extract_zone_data(zone):
             """ extract_zone_data """
             if zone.coast_type:
                 return ''
-            return self._name_table[zone]
+            return self._zone_name_table[zone]
 
         role_names = {k: extract_role_data(v) for k, v in self._roles.items()}
         zone_names = {k: extract_zone_data(v) for k, v in self._zones.items()}
-        coast_names = {k: self._name_table[v] for k, v in self._coast_types.items()}
+        coast_names = {k: self._coast_name_table[v] for k, v in self._coast_types.items()}
 
         return {'roles': role_names, 'zones': zone_names, 'coasts': coast_names}
 
@@ -967,14 +981,44 @@ class Variant(Renderable):
         return self._map_size
 
     @property
-    def name_table(self):
+    def region_name_table(self):
         """ property """
-        return self._name_table
+        return self._region_name_table
 
     @property
-    def full_name_table(self):
+    def unit_name_table(self):
         """ property """
-        return self._full_name_table
+        return self._unit_name_table
+
+    @property
+    def role_name_table(self):
+        """ property """
+        return self._role_name_table
+
+    @property
+    def coast_name_table(self):
+        """ property """
+        return self._coast_name_table
+
+    @property
+    def zone_name_table(self):
+        """ property """
+        return self._zone_name_table
+
+    @property
+    def full_zone_name_table(self):
+        """ property """
+        return self._full_zone_name_table
+
+    @property
+    def season_name_table(self):
+        """ property """
+        return self._season_name_table
+
+    @property
+    def order_name_table(self):
+        """ property """
+        return self._order_name_table
 
     @property
     def item_colour_table(self):
@@ -1104,7 +1148,7 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
 
         # because we know names of zones but not of regions
         zone_dislodger = self._dislodged_origin.zone
-        dislodger_legend = self._position.variant.name_table[zone_dislodger]
+        dislodger_legend = self._position.variant.zone_name_table[zone_dislodger]
 
         # dislodger
 
@@ -1139,7 +1183,7 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
             type_unit = UnitTypeEnum.ARMY_UNIT
 
         json_dict = {
-            "type_unit": type_unit.to_code(),
+            "type_unit": UnitTypeEnum.to_code(type_unit),
             "role": self._role.identifier,
             "zone": self._zone.identifier
         }
@@ -1157,22 +1201,22 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
 
         # unit type
         if isinstance(self, Army):
-            type_name = variant.name_table[UnitTypeEnum.ARMY_UNIT].lower()
+            type_name = variant.unit_name_table[UnitTypeEnum.ARMY_UNIT].lower()
         if isinstance(self, Fleet):
-            type_name = variant.name_table[UnitTypeEnum.FLEET_UNIT].lower()
+            type_name = variant.unit_name_table[UnitTypeEnum.FLEET_UNIT].lower()
 
         # role
         adjective = variant.role_adjective(self._role)
 
         # zone
         zone = self._zone
-        zone_full_name = variant.full_name_table[zone]
+        zone_full_name = variant.full_zone_name_table[zone]
 
         # dislodger - actually not used since called on standard units
         dislodged_info = ""
         if self._dislodged_origin is not None:
             zone_dislodger = self._dislodged_origin.zone
-            dislodger_legend = self._position.variant.name_table[zone_dislodger]
+            dislodger_legend = self._position.variant.zone_name_table[zone_dislodger]
             dislodged_info = f"- delogée par une unité venue de la région {dislodger_legend}"
 
         return f"Une {type_name} appartenant au joueur {adjective} positionnée en {zone_full_name} {dislodged_info}."
@@ -1195,11 +1239,11 @@ class Unit(Highliteable):  # pylint: disable=abstract-method
     def __str__(self) -> str:
         variant = self._position.variant
         zone = self._zone
-        name = variant.name_table[zone]
+        name = variant.zone_name_table[zone]
         if isinstance(self, Army):
-            type_name = variant.name_table[UnitTypeEnum.ARMY_UNIT]
+            type_name = variant.unit_name_table[UnitTypeEnum.ARMY_UNIT]
         if isinstance(self, Fleet):
-            type_name = variant.name_table[UnitTypeEnum.FLEET_UNIT]
+            type_name = variant.unit_name_table[UnitTypeEnum.FLEET_UNIT]
         type_name_initial = type_name[0]
         return f"{type_name_initial} {name}"
 
@@ -1262,7 +1306,7 @@ class Ownership(Highliteable):
 
         # zone
         zone = self._center.region.zone
-        zone_full_name = variant.full_name_table[zone]
+        zone_full_name = variant.full_zone_name_table[zone]
 
         return f"Un centre appartenant au joueur {adjective} positionné en {zone_full_name}."
 
@@ -1564,13 +1608,13 @@ class Position(Renderable):
                 continue
 
             if isinstance(dislodged_unit, Fleet):
-                type_name = self._variant.name_table[UnitTypeEnum.FLEET_UNIT].lower()
-                where_to = " / ".join([self._variant.full_name_table[z] for z in dislodged_unit.zone.neighbours[UnitTypeEnum.FLEET_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
+                type_name = self._variant.unit_name_table[UnitTypeEnum.FLEET_UNIT].lower()
+                where_to = " / ".join([self._variant.full_zone_name_table[z] for z in dislodged_unit.zone.neighbours[UnitTypeEnum.FLEET_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
             if isinstance(dislodged_unit, Army):
-                type_name = self._variant.name_table[UnitTypeEnum.ARMY_UNIT].lower()
-                where_to = " / ".join([self._variant.full_name_table[z] for z in dislodged_unit.zone.neighbours[UnitTypeEnum.ARMY_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
+                type_name = self._variant.unit_name_table[UnitTypeEnum.ARMY_UNIT].lower()
+                where_to = " / ".join([self._variant.full_zone_name_table[z] for z in dislodged_unit.zone.neighbours[UnitTypeEnum.ARMY_UNIT] if z.region not in self._occupant_table and z.region not in [f.region for f in self._forbiddens] and z.region != dislodged_unit.dislodged_origin])
 
-            information = f"Votre {type_name} en {self._variant.full_name_table[dislodged_unit.zone]} peut retraiter en : {where_to}"
+            information = f"Votre {type_name} en {self._variant.full_zone_name_table[dislodged_unit.zone]} peut retraiter en : {where_to}"
             informations.append(information)
 
         return informations
@@ -1591,17 +1635,17 @@ class Position(Renderable):
 
     def role_ratings(self):
         """ a rating of roles """
-        raw_dict = {self._variant.name_table[self._variant.roles[i]]: len([o for o in self._ownerships if o.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0}
+        raw_dict = {self._variant.role_name_table[self._variant.roles[i]]: len([o for o in self._ownerships if o.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0}
         return {r: raw_dict[r] for r in sorted(raw_dict.keys(), key=lambda r: raw_dict[r], reverse=True)}
 
     def role_units(self):
         """ a units number of roles """
-        raw_dict = {self._variant.name_table[self._variant.roles[i]]: len([u for u in self._units + self._dislodged_units if u.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0}
+        raw_dict = {self._variant.role_name_table[self._variant.roles[i]]: len([u for u in self._units + self._dislodged_units if u.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0}
         return raw_dict
 
     def role_colours(self):
         """ a rating of roles """
-        return {self._variant.name_table[r]: self._variant.item_colour_table[r] for r in self._variant.roles.values()}
+        return {self._variant.role_name_table[r]: self._variant.item_colour_table[r] for r in self._variant.roles.values()}
 
     def add_unit(self, unit: Unit):
         """ add_unit (sandbox and rectification)"""
@@ -1711,7 +1755,7 @@ class Order(Renderable):
             from_point = self._position.variant.position_table[self._passive_unit.zone]
             dest_point = self._position.variant.position_table[self._destination_zone]
             direction = geometry.get_direction(from_point, dest_point)
-            next_direction = direction.perpendicular()
+            next_direction = geometry.perpendicular(direction)
             from_point_shifted = from_point.shift(next_direction, 3)
             dest_point_shifted = dest_point.shift(next_direction, 3)
             dest_point_shifted_closer_x, dest_point_shifted_closer_y = shorten_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos)
@@ -1744,7 +1788,7 @@ class Order(Renderable):
             from_point = self._position.variant.position_table[self._active_unit.zone]
             dest_point = self._position.variant.position_table[self._passive_unit.zone]
             direction = geometry.get_direction(from_point, dest_point)
-            next_direction = direction.perpendicular()
+            next_direction = geometry.perpendicular(direction)
             dest_point_shifted = dest_point.shift(next_direction, 3)
 
             # put a dashed circle (stand) over unit
@@ -1802,7 +1846,7 @@ class Order(Renderable):
             from_point = self._position.variant.position_table[self._passive_unit.zone]
             dest_point = self._position.variant.position_table[self._destination_zone]
             direction = geometry.get_direction(from_point, dest_point)
-            next_direction = direction.perpendicular()
+            next_direction = geometry.perpendicular(direction)
             from_point_shifted = from_point.shift(next_direction, 6)
             dest_point_shifted = dest_point.shift(next_direction, 6)
             dest_point_shifted_closer_x, dest_point_shifted_closer_y = shorten_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos)
@@ -1912,7 +1956,7 @@ class Order(Renderable):
 
         json_dict = {}
         if self._order_type is not None:
-            json_dict.update({"order_type": self._order_type.to_code()})
+            json_dict.update({"order_type": UnitTypeEnum.to_code(self._order_type)})
         if self._active_unit is not None:
             json_dict.update({"active_unit": self._active_unit.save_json()})
         if self._passive_unit is not None:
@@ -1936,10 +1980,10 @@ class Order(Renderable):
         variant = self._position.variant
 
         if self._order_type is OrderTypeEnum.ATTACK_ORDER:
-            dest_zone_name = variant.name_table[self._destination_zone]
+            dest_zone_name = variant.zone_name_table[self._destination_zone]
             return f"{self._active_unit} - {dest_zone_name}"
         if self._order_type is OrderTypeEnum.OFF_SUPPORT_ORDER:
-            dest_zone_name = variant.name_table[self._destination_zone]
+            dest_zone_name = variant.zone_name_table[self._destination_zone]
             foreign = variant.role_adjective(self._passive_unit.role) if self._passive_unit.role != self._active_unit.role else ""
             return f"{self._active_unit} S {foreign} {self._passive_unit} - {dest_zone_name}"
         if self._order_type is OrderTypeEnum.DEF_SUPPORT_ORDER:
@@ -1948,11 +1992,11 @@ class Order(Renderable):
         if self._order_type is OrderTypeEnum.HOLD_ORDER:
             return f"{self._active_unit} H"
         if self._order_type is OrderTypeEnum.CONVOY_ORDER:
-            dest_zone_name = variant.name_table[self._destination_zone]
+            dest_zone_name = variant.zone_name_table[self._destination_zone]
             foreign = variant.role_adjective(self._passive_unit.role) if self._passive_unit.role != self._active_unit.role else ""
             return f"{self._active_unit} C {foreign} {self._passive_unit} - {dest_zone_name}"
         if self._order_type is OrderTypeEnum.RETREAT_ORDER:
-            dest_zone_name = variant.name_table[self._destination_zone]
+            dest_zone_name = variant.zone_name_table[self._destination_zone]
             return f"{self._active_unit} R {dest_zone_name}"
         if self._order_type is OrderTypeEnum.DISBAND_ORDER:
             return f"{self._active_unit} A"

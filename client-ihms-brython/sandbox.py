@@ -3,7 +3,6 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
-import enum
 import time
 
 from browser import document, html, ajax, alert   # pylint: disable=import-error
@@ -23,14 +22,13 @@ MY_PANEL = html.DIV(id="sandbox")
 MY_PANEL.attrs['style'] = 'display: table-row'
 
 
-@enum.unique
-class AutomatonStateEnum(enum.Enum):
+class AutomatonStateEnum:
     """ AutomatonStateEnum """
 
-    SELECT_ACTIVE_STATE = enum.auto()
-    SELECT_ORDER_STATE = enum.auto()
-    SELECT_PASSIVE_UNIT_STATE = enum.auto()
-    SELECT_DESTINATION_STATE = enum.auto()
+    SELECT_ACTIVE_STATE = 1
+    SELECT_ORDER_STATE = 2
+    SELECT_PASSIVE_UNIT_STATE = 3
+    SELECT_DESTINATION_STATE = 4
 
 
 # this will not change
@@ -341,7 +339,7 @@ def sandbox():
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -353,7 +351,7 @@ def sandbox():
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -365,7 +363,7 @@ def sandbox():
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -394,7 +392,7 @@ def sandbox():
 
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -467,9 +465,9 @@ def sandbox():
                 # to catch keyboard
                 document.bind("keypress", callback_keypress)
 
-                for order_type in mapping.OrderTypeEnum:
-                    if order_type.compatible(mapping.SeasonEnum.AUTUMN_SEASON):
-                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
+                for order_type in mapping.OrderTypeEnum.inventory():
+                    if mapping.OrderTypeEnum.compatible(order_type, mapping.SeasonEnum.AUTUMN_SEASON):
+                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.order_name_table[order_type])
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
@@ -849,8 +847,8 @@ def sandbox():
         buttons_right <= html.BR()
 
         # to check positions
-        for zone in sorted(VARIANT_DATA.zones.values(), key=lambda z: VARIANT_DATA.name_table[z].upper()):
-            zone_name = VARIANT_DATA.name_table[zone]
+        for zone in sorted(VARIANT_DATA.zones.values(), key=lambda z: VARIANT_DATA.zone_name_table[z].upper()):
+            zone_name = VARIANT_DATA.zone_name_table[zone]
 
             input_submit = html.INPUT(type="submit", value=zone_name)
             input_submit.bind("click", lambda e, z=zone: show_zone_callback(e, z))
@@ -990,10 +988,10 @@ def sandbox():
 
         # country name
         col = html.TD()
-        col <= html.B(VARIANT_DATA.name_table[role])
+        col <= html.B(VARIANT_DATA.role_name_table[role])
         row <= col
 
-        for type_unit in mapping.UnitTypeEnum:
+        for type_unit in mapping.UnitTypeEnum.inventory():
 
             col = html.TD()
 

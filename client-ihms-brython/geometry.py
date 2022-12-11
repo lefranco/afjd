@@ -1,39 +1,37 @@
 """ geometry """
 
-import enum
 import math
 
 
-@enum.unique
-class DirectionEnum(enum.Enum):
+class DirectionEnum:
     """ DirectionEnum """
 
-    NORTH_EAST = enum.auto()
-    NORTH_WEST = enum.auto()
-    SOUTH_WEST = enum.auto()
-    SOUTH_EAST = enum.auto()
+    NORTH_EAST = 1
+    NORTH_WEST = 2
+    SOUTH_WEST = 3
+    SOUTH_EAST = 4
 
-    def perpendicular(self) -> 'DirectionEnum':
-        """ perpendicular """
-        if self is DirectionEnum.NORTH_EAST:
-            return DirectionEnum.NORTH_WEST
-        if self is DirectionEnum.NORTH_WEST:
-            return DirectionEnum.SOUTH_WEST
-        if self is DirectionEnum.SOUTH_WEST:
-            return DirectionEnum.SOUTH_EAST
-        # if self is DirectionEnum.SOUTH_EAST:
-        return DirectionEnum.NORTH_EAST
+def perpendicular(direction) -> 'DirectionEnum':
+    """ perpendicular """
+    if direction is DirectionEnum.NORTH_EAST:
+        return DirectionEnum.NORTH_WEST
+    if direction is DirectionEnum.NORTH_WEST:
+        return DirectionEnum.SOUTH_WEST
+    if direction is DirectionEnum.SOUTH_WEST:
+        return DirectionEnum.SOUTH_EAST
+    # if direction is DirectionEnum.SOUTH_EAST:
+    return DirectionEnum.NORTH_EAST
 
-    def xy_shift(self, amplitude: int):
-        """ x_shift """
-        if self is DirectionEnum.NORTH_EAST:
-            return amplitude, -amplitude
-        if self is DirectionEnum.NORTH_WEST:
-            return - amplitude, - amplitude
-        if self is DirectionEnum.SOUTH_WEST:
-            return - amplitude, amplitude
-        #  if self is DirectionEnum.SOUTH_EAST:
-        return amplitude, amplitude
+def xy_shift(direction, amplitude: int):
+    """ x_shift """
+    if direction is DirectionEnum.NORTH_EAST:
+        return amplitude, -amplitude
+    if direction is DirectionEnum.NORTH_WEST:
+        return - amplitude, - amplitude
+    if direction is DirectionEnum.SOUTH_WEST:
+        return - amplitude, amplitude
+    #  if direction is DirectionEnum.SOUTH_EAST:
+    return amplitude, amplitude
 
 
 class PositionRecord:
@@ -49,7 +47,7 @@ class PositionRecord:
 
     def shift(self, direction: DirectionEnum, amplitude: int) -> 'PositionRecord':
         """ shift """
-        x_shift, y_shift = direction.xy_shift(amplitude)
+        x_shift, y_shift = xy_shift(direction, amplitude)
         return PositionRecord(x_pos=self.x_pos + x_shift, y_pos=self.y_pos + y_shift)
 
     def __str__(self) -> str:

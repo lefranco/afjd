@@ -803,10 +803,10 @@ def rectify_position():
 
         # country name
         col = html.TD()
-        col <= html.B(variant_data.name_table[role])
+        col <= html.B(variant_data.role_name_table[role])
         row <= col
 
-        for type_unit in mapping.UnitTypeEnum:
+        for type_unit in mapping.UnitTypeEnum.inventory():
 
             col = html.TD()
 

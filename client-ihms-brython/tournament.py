@@ -362,7 +362,7 @@ def show_games():
             if field == 'current_advancement':
                 advancement_loaded = value
                 advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
-                advancement_season_readable = variant_data.name_table[advancement_season]
+                advancement_season_readable = variant_data.season_name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
 
                 # special : a colour to see how far games have got (cannot go up to 255 - not readable)
@@ -702,14 +702,14 @@ def show_incidents():
         # player
         game_name = data['name']
         role = variant_data.roles[role_num]
-        role_name = variant_data.name_table[role]
+        role_name = variant_data.role_name_table[role]
         alias = f"{game_name}##{role_name}"
         col = html.TD(alias)
         row <= col
 
         # season
         advancement_season, advancement_year = common.get_season(advancement, variant_data)
-        advancement_season_readable = variant_data.name_table[advancement_season]
+        advancement_season_readable = variant_data.season_name_table[advancement_season]
         game_season = f"{advancement_season_readable} {advancement_year}"
         col = html.TD(game_season)
         row <= col
@@ -781,14 +781,14 @@ def show_incidents():
         # player
         game_name = data['name']
         role = variant_data.roles[role_num]
-        role_name = variant_data.name_table[role]
+        role_name = variant_data.role_name_table[role]
         alias = f"{game_name}##{role_name}"
         col = html.TD(alias)
         row <= col
 
         # season
         advancement_season, advancement_year = common.get_season(advancement, variant_data)
-        advancement_season_readable = variant_data.name_table[advancement_season]
+        advancement_season_readable = variant_data.season_name_table[advancement_season]
         game_season = f"{advancement_season_readable} {advancement_year}"
         col = html.TD(game_season)
         row <= col

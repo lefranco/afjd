@@ -438,7 +438,7 @@ def my_opportunities():
             if field == 'current_advancement':
                 advancement_loaded = value
                 advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
-                advancement_season_readable = variant_data.name_table[advancement_season]
+                advancement_season_readable = variant_data.season_name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
 
             if field == 'allocated':
