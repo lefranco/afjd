@@ -11,6 +11,7 @@ class DirectionEnum:
     SOUTH_WEST = 3
     SOUTH_EAST = 4
 
+
 def perpendicular(direction) -> 'DirectionEnum':
     """ perpendicular """
     if direction is DirectionEnum.NORTH_EAST:
@@ -21,6 +22,7 @@ def perpendicular(direction) -> 'DirectionEnum':
         return DirectionEnum.SOUTH_EAST
     # if direction is DirectionEnum.SOUTH_EAST:
     return DirectionEnum.NORTH_EAST
+
 
 def xy_shift(direction, amplitude: int):
     """ x_shift """
