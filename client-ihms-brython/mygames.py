@@ -1,6 +1,11 @@
 """ home """
 
-# pylint: disable=pointless-statement, expression-not-assigned
+# pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
+
+import profiler
+
+profiler.PROFILER.start_mes("inside mygames.py...")
+
 
 import json
 import datetime
@@ -10,17 +15,39 @@ from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+profiler.PROFILER.start_mes("home made imports...")
+
 import common
-import interface
 import config
+
+profiler.PROFILER.start_mes("import mapping...")
 import mapping
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("import interface...")
+import interface
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("import selection...")
 import selection
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("import memoize...")
 import memoize
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("import play...")
 import play
+profiler.PROFILER.stop_mes()
+
 import index  # circular import
+
+profiler.PROFILER.stop_mes()
 
 MY_PANEL = html.DIV(id="mygames")
 MY_PANEL.attrs['style'] = 'display: table-row'
+
+profiler.PROFILER.start_mes("functions")
 
 
 def get_all_roles_allocated_to_player():
@@ -799,3 +826,7 @@ def render(panel_middle):
     MY_PANEL.clear()
     my_games('en cours')
     panel_middle <= MY_PANEL
+
+
+profiler.PROFILER.stop_mes()
+profiler.PROFILER.stop_mes()

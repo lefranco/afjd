@@ -1,12 +1,20 @@
 """ play """
 
-# pylint: disable=pointless-statement, expression-not-assigned
+# pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
+
+import profiler
+
+profiler.PROFILER.start_mes("inside play.py...")
+
 
 import json
 import datetime
 import enum
 import time
+
+profiler.PROFILER.start_mes("import random...")
 import random
+profiler.PROFILER.stop_mes()
 
 from browser import document, html, ajax, alert, timer, window   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
@@ -87,6 +95,8 @@ GAME_PLAYERS_DICT = {}
 
 # canvas backup to optimize drawing map when only orders change
 BACKUP_CANVAS = None
+
+profiler.PROFILER.start_mes("functions...")
 
 
 def save_context(ctx):
@@ -6059,3 +6069,7 @@ def render(panel_middle):
     set_arrival(None)
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
+
+
+profiler.PROFILER.stop_mes()
+profiler.PROFILER.stop_mes()

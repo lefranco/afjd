@@ -1,17 +1,20 @@
 """ common """
 
-# pylint: disable=pointless-statement, expression-not-assigned
+# pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
 
 import profiler
 
-profiler.PROFILER.start("Import common / json...")
-import json
-profiler.PROFILER.stop()
+profiler.PROFILER.start_mes("inside common.py...")
 
-profiler.PROFILER.start("Import common / datetime...")
+
+profiler.PROFILER.start_mes("Import json...")
+import json
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import datetime...")
 import datetime
-profiler.PROFILER.stop()
+profiler.PROFILER.stop_mes()
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -19,7 +22,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import mapping
 
-profiler.PROFILER.start("Import common / functions...")
+profiler.PROFILER.start_mes("functions...")
 
 
 def noreply_callback(_):
@@ -943,4 +946,6 @@ def verification_code(pseudo):
     return code
 
 
-profiler.PROFILER.stop()
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.stop_mes()

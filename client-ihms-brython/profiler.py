@@ -1,14 +1,15 @@
 """ profiler """
 
+# pylint: disable=wrong-import-order, wrong-import-position
 
 import time
 
 START_TIME = time.time()
 
-import json  # pylint: disable=wrong-import-order,wrong-import-position # noqa: E402
+import json
 
-from browser import ajax   # pylint: disable=import-error,wrong-import-position # noqa: E402
-from browser.local_storage import storage  # pylint: disable=import-error,wrong-import-position # noqa: E402
+from browser import ajax  # pylint: disable=import-error
+from browser.local_storage import storage  # pylint: disable=import-error
 
 
 ADDRESS_ADMIN = "1"
@@ -17,64 +18,61 @@ ADDRESS_ADMIN = "1"
 class Measure:
     """ Measure """
 
-    def __init__(self, name):
-        self._name = name
-        now = time.time()
-        self._start = now
-        self._stop = None
+    def __init__(self, legend, parent):
+        self._legend = legend
+        self._start_time = time.time()
+        self._stop_time = None
+        self._parent_measure = parent
+        self._sub_measures = []
 
     def terminate(self):
         """ terminate """
-        now = time.time()
-        self._stop = now
+        self._stop_time = time.time()
+
+    def insert_sub_measure(self, sub_measure):
+        """ insert_sub_measure """
+        self._sub_measures.append(sub_measure)
+
+    def list_sub_measures(self):
+        """ list_sub_measures """
+        return self._sub_measures
+
+    def parent_measure(self):
+        """ parent_measure """
+        return self._parent_measure
 
     def duration(self):
         """ duration """
-        return self._stop - self._start
+        return self._stop_time - self._start_time
 
     def __str__(self):
         elapsed = self.duration()
         elapsed_ms = round(elapsed * 1000.)
-        return f"{self._name} : {elapsed_ms}ms"
+        return f"{self._legend} : {elapsed_ms}ms"
 
 
 class Profiler:
     """ Profiler """
 
     def __init__(self):
-        self._measures = []
-        self._current = None
-        self._start = time.time()
-        self._stop = None
-        self._sum = 0.
-        self._elapsed = None
+        self._main_measure = Measure("root", None)
+        self._current_measure = self._main_measure
 
-    def start(self, name):
+    def start_mes(self, legend):
         """ start """
 
-        if self._current:
-            return
+        cur_measure = self._current_measure
+        new_measure = Measure(legend, cur_measure)
+        cur_measure.insert_sub_measure(new_measure)
+        self._current_measure = new_measure
 
-        new_measure = Measure(name)
-        self._current = new_measure
+    def stop_mes(self):
+        """ terminate """
 
-    def stop(self):
-        """ stop """
-
-        if not self._current:
-            return
-
-        cur_measure = self._current
+        cur_measure = self._current_measure
         cur_measure.terminate()
-        self._measures.append(cur_measure)
-        self._current = None
-
-        # sum up
-        self._sum += cur_measure.duration()
-
-        # in case this is last
-        self._stop = time.time()
-        self._elapsed = self._stop - self._start
+        self._current_measure = cur_measure.parent_measure()
+        assert self._current_measure is not None, "Terminating too many measures"
 
     def send_report(self, pseudo, version, destination, timeout):
         """ send_report """
@@ -85,13 +83,18 @@ class Profiler:
         def noreply_callback():
             pass
 
-        subject = f"stats for {pseudo} ({self._elapsed})"
+        assert self._current_measure is self._main_measure, "Not terminating enough measures"
+
+        cur_measure = self._current_measure
+        cur_measure.terminate()
+
+        elapsed = cur_measure.duration()
+
+        subject = f"stats for {pseudo} ({elapsed})"
         body = ""
         body += f"{self}"
         body += "\n\n"
         body += f"overhead profiler {ELAPSED=}"
-        body += "\n\n"
-        body += f"sum {self._sum}"
         body += "\n\n"
         body += f"version : {version}"
         body += "\n\n"
@@ -111,7 +114,21 @@ class Profiler:
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=timeout, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     def __str__(self):
-        return "\n".join([str(m) for m in self._measures])
+
+        result = ""
+
+        def rec_display(level, measure):
+            nonlocal result
+            ratio = (measure.duration() / elapsed) * 100
+            result += f"{'    '*level}{measure} ({ratio:.2f}%) {'+'*round(ratio)}\n"
+            for sub_mes in measure.list_sub_measures():
+                rec_display(level + 1, sub_mes)
+
+        cur_measure = self._current_measure
+        elapsed = cur_measure.duration()
+
+        rec_display(1, self._main_measure)
+        return result
 
 
 PROFILER = Profiler()
