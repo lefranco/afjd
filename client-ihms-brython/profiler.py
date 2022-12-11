@@ -11,6 +11,7 @@ import json
 from browser import ajax  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import user_config
 
 ADDRESS_ADMIN = "1"
 
@@ -95,6 +96,8 @@ class Profiler:
         body += f"{self}"
         body += "\n\n"
         body += f"overhead profiler {ELAPSED=}"
+        body += "\n\n"
+        body += f"config : {user_config.CONFIG}"
         body += "\n\n"
         body += f"version : {version}"
         body += "\n\n"

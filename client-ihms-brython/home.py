@@ -12,6 +12,7 @@ from browser import html, ajax, alert, document, window  # pylint: disable=impor
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import user_config
 import faq
 import whynot
 import interface
@@ -795,26 +796,8 @@ def declare_incident():
         version = storage['VERSION']
         body += f"version : {version}"
         body += "\n\n"
-
-        body += f"Cookies enabled: {window.navigator.cookieEnabled}\n"
-        try:
-            body += f"Connection Speed: {window.navigator.connection.downlink}\n"
-        except:  # noqa: E722 pylint: disable=bare-except
-            body += "Failed to get connection speed\n"
-        try:
-            body += f"Connection Effective Type: {window.navigator.connection.effectiveType}\n"
-        except:  # noqa: E722 pylint: disable=bare-except
-            body += "Failed to get connection effective type\n"
-        try:
-            body += f"Connection Type: {window.navigator.connection.type}\n"
-        except:  # noqa: E722 pylint: disable=bare-except
-            body += "Failed to get connection type\n"
-        try:
-            body += f"Memory: {window.navigator.deviceMemory}\n"
-        except:  # noqa: E722 pylint: disable=bare-except
-            body += "Failed to get Memory data\n"
-        body += f"Language: {window.navigator.language}\n"
-        body += f"User Agent: {window.navigator.userAgent}\n"
+        body += f"config : {user_config.CONFIG}"
+        body += "\n\n"
 
         json_dict = {
             'subject': subject,
