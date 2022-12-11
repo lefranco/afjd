@@ -21,6 +21,7 @@ import mapping
 
 profiler.PROFILER.start("Import common / functions...")
 
+
 def noreply_callback(_):
     """ noreply_callback """
     alert("Problème (pas de réponse de la part du serveur)")

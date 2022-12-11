@@ -271,6 +271,7 @@ def load_option(_, item_name):
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
 
+
 profiler.PROFILER.stop()
 
 profiler.PROFILER.start("index/read ip...")
