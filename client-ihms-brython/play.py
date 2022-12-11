@@ -11,9 +11,6 @@ import json
 import datetime
 import time
 
-profiler.PROFILER.start_mes("import random...")
-import random
-profiler.PROFILER.stop_mes()
 
 from browser import document, html, ajax, alert, timer, window   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
@@ -57,6 +54,22 @@ class AutomatonStateEnum:
     SELECT_DESTINATION_STATE = 4
     SELECT_BUILD_UNIT_TYPE_STATE = 5
 
+
+class Random:
+
+    def __init__(self):
+        self._seed = int(time.time())
+
+    def choice(self, values):
+        """ chooses an element """
+
+        self._seed += 1
+        a_val = self._seed * 15485863
+        position = int(a_val ** 3 % 2038074743 / 2038074743)
+        return values[position]
+
+
+RANDOM = Random()
 
 # the idea is not to loose the content of a message if not destinee were specified
 CONTENT_BACKUP = None
@@ -5792,7 +5805,7 @@ def supervise():
 
             alterated = False
             if missing_orders:
-                role_id = random.choice(missing_orders)
+                role_id = RANDOM.choice(missing_orders)
                 civil_disorder_callback(None, role_id)
                 role = VARIANT_DATA.roles[role_id]
                 role_name = VARIANT_DATA.role_name_table[role]
@@ -5804,7 +5817,7 @@ def supervise():
                     if role_id in submitted_roles_list and role_id not in agreed_roles_list:
                         missing_agreements.append(role_id)
                 if missing_agreements:
-                    role_id = random.choice(missing_agreements)
+                    role_id = RANDOM.choice(missing_agreements)
                     force_agreement_callback(None, role_id)
                     role = VARIANT_DATA.roles[role_id]
                     role_name = VARIANT_DATA.role_name_table[role]
