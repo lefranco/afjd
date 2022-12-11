@@ -9,7 +9,6 @@ profiler.PROFILER.start_mes("inside play.py...")
 
 import json
 import datetime
-import enum
 import time
 
 profiler.PROFILER.start_mes("import random...")
@@ -41,24 +40,22 @@ LONG_DURATION_LIMIT_SEC = 1.0
 OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Paramètres', 'Retards', 'Superviser']
 
 
-@enum.unique
-class MessageTypeEnum(enum.Enum):
+class MessageTypeEnum:
     """ MessageTypeEnum """
 
-    TEXT = enum.auto()
-    SEASON = enum.auto()
-    DROPOUT = enum.auto()
+    TEXT = 1
+    SEASON = 2
+    DROPOUT = 3
 
 
-@enum.unique
-class AutomatonStateEnum(enum.Enum):
+class AutomatonStateEnum:
     """ AutomatonStateEnum """
 
-    SELECT_ACTIVE_STATE = enum.auto()
-    SELECT_ORDER_STATE = enum.auto()
-    SELECT_PASSIVE_UNIT_STATE = enum.auto()
-    SELECT_DESTINATION_STATE = enum.auto()
-    SELECT_BUILD_UNIT_TYPE_STATE = enum.auto()
+    SELECT_ACTIVE_STATE = 1
+    SELECT_ORDER_STATE = 2
+    SELECT_PASSIVE_UNIT_STATE = 3
+    SELECT_DESTINATION_STATE = 4
+    SELECT_BUILD_UNIT_TYPE_STATE = 5
 
 
 # the idea is not to loose the content of a message if not destinee were specified
@@ -130,7 +127,7 @@ def set_arrival(arrival):
 def readable_season(advancement):
     """ readable_season """
     advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
-    advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
+    advancement_season_readable = VARIANT_DATA.season_name_table[advancement_season]
     value = f"{advancement_season_readable} {advancement_year}"
     return value
 
@@ -494,7 +491,7 @@ def make_rating_colours_window(variant_data, ratings, units, colours, game_scori
         col = html.TD(role_score)
         rating_scoring_row <= col
 
-    rolename2role_id = {VARIANT_DATA.name_table[v]: k for k, v in VARIANT_DATA.roles.items()}
+    rolename2role_id = {VARIANT_DATA.role_name_table[v]: k for k, v in VARIANT_DATA.roles.items()}
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
@@ -787,7 +784,7 @@ def stack_role_flag(frame):
 
     # role flag
     role = VARIANT_DATA.roles[ROLE_ID]
-    role_name = VARIANT_DATA.name_table[role]
+    role_name = VARIANT_DATA.role_name_table[role]
     role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{ROLE_ID}.jpg", title=role_name)
     frame <= role_icon_img
     frame <= html.BR()
@@ -914,7 +911,7 @@ def get_game_status():
 
     advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
     advancement_season, advancement_year = common.get_season(advancement_loaded, VARIANT_DATA)
-    advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
+    advancement_season_readable = VARIANT_DATA.season_name_table[advancement_season]
     game_season = f"{advancement_season_readable} {advancement_year}"
 
     nb_max_cycles_to_play = GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
@@ -971,7 +968,7 @@ def get_game_status_histo(variant_data, advancement_selected):
     """ get_game_status_histo """
 
     advancement_selected_season, advancement_selected_year = common.get_season(advancement_selected, variant_data)
-    advancement_selected_season_readable = variant_data.name_table[advancement_selected_season]
+    advancement_selected_season_readable = variant_data.season_name_table[advancement_selected_season]
     game_season = f"{advancement_selected_season_readable} {advancement_selected_year}"
 
     game_status_table = html.TABLE()
@@ -1330,7 +1327,7 @@ def show_position(direct_last_moves):
         for adv_sample in range(4, last_advancement, 5):
 
             adv_sample_season, adv_sample_year = common.get_season(adv_sample, VARIANT_DATA)
-            adv_sample_season_readable = VARIANT_DATA.name_table[adv_sample_season]
+            adv_sample_season_readable = VARIANT_DATA.season_name_table[adv_sample_season]
 
             input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}")
             input_last.bind("click", lambda e, a=adv_sample: transition_display_callback(e, a))
@@ -1561,9 +1558,9 @@ def submit_orders():
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
             buttons_right <= legend_select_order
-            for order_type in mapping.OrderTypeEnum:
-                if order_type.compatible(advancement_season):
-                    input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
+            for order_type in mapping.OrderTypeEnum.inventory():
+                if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
+                    input_select = html.INPUT(type="submit", value=VARIANT_DATA.order_name_table[order_type])
                     buttons_right <= html.BR()
                     input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
@@ -1648,7 +1645,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1660,7 +1657,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1672,7 +1669,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1701,7 +1698,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1713,7 +1710,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.RETREAT_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1745,8 +1742,8 @@ def submit_orders():
                 legend_select_active = html.DIV("Sélectionner le type d'unité à construire", Class='instruction')
                 buttons_right <= legend_select_active
 
-                for unit_type in mapping.UnitTypeEnum:
-                    input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[unit_type])
+                for unit_type in mapping.UnitTypeEnum.inventory():
+                    input_select = html.INPUT(type="submit", value=VARIANT_DATA.unit_name_table[unit_type])
                     buttons_right <= html.BR()
                     input_select.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
                     buttons_right <= html.BR()
@@ -1756,7 +1753,7 @@ def submit_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.REMOVE_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -1835,9 +1832,9 @@ def submit_orders():
                 if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                     legend_select_unit = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
                     buttons_right <= legend_select_unit
-                    for order_type in mapping.OrderTypeEnum:
-                        if order_type.compatible(advancement_season):
-                            input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
+                    for order_type in mapping.OrderTypeEnum.inventory():
+                        if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
+                            input_select = html.INPUT(type="submit", value=VARIANT_DATA.order_name_table[order_type])
                             buttons_right <= html.BR()
                             input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                             buttons_right <= html.BR()
@@ -1868,9 +1865,9 @@ def submit_orders():
                 # to catch keyboard
                 document.bind("keypress", callback_keypress)
 
-                for order_type in mapping.OrderTypeEnum:
-                    if order_type.compatible(advancement_season):
-                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
+                for order_type in mapping.OrderTypeEnum.inventory():
+                    if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
+                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.order_name_table[order_type])
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
@@ -1966,9 +1963,9 @@ def submit_orders():
             if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 legend_select_unit = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
                 buttons_right <= legend_select_unit
-                for order_type in mapping.OrderTypeEnum:
-                    if order_type.compatible(advancement_season):
-                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
+                for order_type in mapping.OrderTypeEnum.inventory():
+                    if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
+                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.order_name_table[order_type])
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
@@ -2127,9 +2124,9 @@ def submit_orders():
         if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
             buttons_right <= legend_select_order
-            for order_type in mapping.OrderTypeEnum:
-                if order_type.compatible(advancement_season):
-                    input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
+            for order_type in mapping.OrderTypeEnum.inventory():
+                if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
+                    input_select = html.INPUT(type="submit", value=VARIANT_DATA.order_name_table[order_type])
                     buttons_right <= html.BR()
                     input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                     buttons_right <= html.BR()
@@ -2554,9 +2551,9 @@ def submit_orders():
     if advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
         legend_select_order = html.DIV("Sélectionner l'ordre d'ajustement (clic-long pour effacer)", Class='instruction')
         buttons_right <= legend_select_order
-        for order_type in mapping.OrderTypeEnum:
-            if order_type.compatible(advancement_season):
-                input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
+        for order_type in mapping.OrderTypeEnum.inventory():
+            if mapping.OrderTypeEnum.compatible(order_type, advancement_season):
+                input_select = html.INPUT(type="submit", value=VARIANT_DATA.order_name_table[order_type])
                 buttons_right <= html.BR()
                 input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                 buttons_right <= html.BR()
@@ -2692,7 +2689,7 @@ def submit_communication_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.ATTACK_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -2704,7 +2701,7 @@ def submit_communication_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -2716,7 +2713,7 @@ def submit_communication_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.DEF_SUPPORT_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -2745,7 +2742,7 @@ def submit_communication_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.CONVOY_ORDER:
 
-                order_name = VARIANT_DATA.name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
@@ -2831,9 +2828,9 @@ def submit_communication_orders():
                 # to catch keyboard
                 document.bind("keypress", callback_keypress)
 
-                for order_type in mapping.OrderTypeEnum:
-                    if order_type.compatible(mapping.SeasonEnum.SPRING_SEASON):
-                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.name_table[order_type])
+                for order_type in mapping.OrderTypeEnum.inventory():
+                    if mapping.OrderTypeEnum.compatible(order_type, mapping.SeasonEnum.SPRING_SEASON):
+                        input_select = html.INPUT(type="submit", value=VARIANT_DATA.order_name_table[order_type])
                         buttons_right <= html.BR()
                         input_select.bind("click", lambda e, o=order_type: select_order_type_callback(e, o))
                         buttons_right <= html.BR()
@@ -3448,7 +3445,7 @@ def negotiate(default_dest_set):
                 continue
 
         role_dest = VARIANT_DATA.roles[role_id_dest]
-        role_name = VARIANT_DATA.name_table[role_dest]
+        role_name = VARIANT_DATA.role_name_table[role_dest]
         role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id_dest}.jpg", title=role_name)
 
         # the alternative
@@ -3538,7 +3535,7 @@ def negotiate(default_dest_set):
         if from_role_id_msg != -1:
 
             role = VARIANT_DATA.roles[from_role_id_msg]
-            role_name = VARIANT_DATA.name_table[role]
+            role_name = VARIANT_DATA.role_name_table[role]
             role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{from_role_id_msg}.jpg", title=role_name)
             col <= role_icon_img
 
@@ -3563,7 +3560,7 @@ def negotiate(default_dest_set):
         for dest_role_id_msg in dest_role_id_msgs:
 
             role = VARIANT_DATA.roles[dest_role_id_msg]
-            role_name = VARIANT_DATA.name_table[role]
+            role_name = VARIANT_DATA.role_name_table[role]
             role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{dest_role_id_msg}.jpg", title=role_name)
 
             # player
@@ -3831,7 +3828,7 @@ def declare():
         if role_id_msg != -1:
 
             role = VARIANT_DATA.roles[role_id_msg]
-            role_name = VARIANT_DATA.name_table[role]
+            role_name = VARIANT_DATA.role_name_table[role]
             role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id_msg}.jpg", title=role_name)
 
             # player
@@ -4193,7 +4190,7 @@ def game_master():
         subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
 
         body = "Bonjour !"
         body += "\n"
@@ -4254,7 +4251,7 @@ def game_master():
         subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
 
         body = "Bonjour !"
         body += "\n"
@@ -4309,7 +4306,7 @@ def game_master():
         subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
 
         body = "Bonjour !"
         body += "\n"
@@ -4368,7 +4365,7 @@ def game_master():
         subject = f"Message de la part de l'arbitre de la partie {GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
 
         body = "Bonjour !"
         body += "\n"
@@ -4717,7 +4714,7 @@ def game_master():
         row = html.TR()
 
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
 
         # flag
         col = html.TD()
@@ -5163,7 +5160,7 @@ def show_events_in_game():
 
         # role flag
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
         role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
@@ -5174,7 +5171,7 @@ def show_events_in_game():
 
         # role name
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
 
         col = html.TD(role_name)
         row <= col
@@ -5237,7 +5234,7 @@ def show_events_in_game():
 
             # role flag
             role = VARIANT_DATA.roles[role_id]
-            role_name = VARIANT_DATA.name_table[role]
+            role_name = VARIANT_DATA.role_name_table[role]
             role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
 
             if role_icon_img:
@@ -5247,7 +5244,7 @@ def show_events_in_game():
             row <= col
 
             role = VARIANT_DATA.roles[role_id]
-            role_name = VARIANT_DATA.name_table[role]
+            role_name = VARIANT_DATA.role_name_table[role]
 
             col = html.TD(role_name)
             row <= col
@@ -5318,7 +5315,7 @@ def show_events_in_game():
 
         # role flag
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
         role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
@@ -5328,14 +5325,14 @@ def show_events_in_game():
         row <= col
 
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
 
         col = html.TD(role_name)
         row <= col
 
         # season
         advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
-        advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
+        advancement_season_readable = VARIANT_DATA.season_name_table[advancement_season]
         game_season = f"{advancement_season_readable} {advancement_year}"
         col = html.TD(game_season)
         row <= col
@@ -5386,7 +5383,7 @@ def show_events_in_game():
 
         # role flag
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
         role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
@@ -5396,7 +5393,7 @@ def show_events_in_game():
         row <= col
 
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
 
         col = html.TD(role_name)
         row <= col
@@ -5460,7 +5457,7 @@ def show_events_in_game():
 
         # role flag
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
         role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
@@ -5470,7 +5467,7 @@ def show_events_in_game():
         row <= col
 
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
 
         col = html.TD(role_name)
         row <= col
@@ -5483,7 +5480,7 @@ def show_events_in_game():
 
         # season
         advancement_season, advancement_year = common.get_season(advancement, VARIANT_DATA)
-        advancement_season_readable = VARIANT_DATA.name_table[advancement_season]
+        advancement_season_readable = VARIANT_DATA.season_name_table[advancement_season]
         game_season = f"{advancement_season_readable} {advancement_year}"
         col = html.TD(game_season)
         row <= col
@@ -5543,7 +5540,7 @@ def show_events_in_game():
 
         # role flag
         role = VARIANT_DATA.roles[role_id]
-        role_name = VARIANT_DATA.name_table[role]
+        role_name = VARIANT_DATA.role_name_table[role]
         role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
 
         if role_icon_img:
@@ -5676,7 +5673,7 @@ def supervise():
             row = html.TR()
 
             role = VARIANT_DATA.roles[role_id]
-            role_name = VARIANT_DATA.name_table[role]
+            role_name = VARIANT_DATA.role_name_table[role]
 
             # flag
             col = html.TD()
@@ -5798,7 +5795,7 @@ def supervise():
                 role_id = random.choice(missing_orders)
                 civil_disorder_callback(None, role_id)
                 role = VARIANT_DATA.roles[role_id]
-                role_name = VARIANT_DATA.name_table[role]
+                role_name = VARIANT_DATA.role_name_table[role]
                 message = f"Désordre civil pour {role_name}"
                 alterated = True
             else:
@@ -5810,7 +5807,7 @@ def supervise():
                     role_id = random.choice(missing_agreements)
                     force_agreement_callback(None, role_id)
                     role = VARIANT_DATA.roles[role_id]
-                    role_name = VARIANT_DATA.name_table[role]
+                    role_name = VARIANT_DATA.role_name_table[role]
                     message = f"Forçage accord pour {role_name}"
                     alterated = True
 

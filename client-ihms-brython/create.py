@@ -313,7 +313,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
             status = allocate_role(current_pseudo, game_to_create_name, player_name, role_id)
             if not status:
                 role = variant_data.roles[role_id]
-                role_name = variant_data.name_table[role]
+                role_name = variant_data.role_name_table[role]
                 alert(f"Echec à l'attribution du role {role_name} à {player_name} dans la partie {game_to_create_name}")
                 return
 

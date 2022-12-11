@@ -255,7 +255,7 @@ def show_rating_performance(classic, role_id):
                 if field == 'role':
                     role_id = rating[1]
                     role = variant_data.roles[role_id]
-                    role_name = variant_data.name_table[role]
+                    role_name = variant_data.role_name_table[role]
                     role_icon_img = html.IMG(src=f"./variants/{variant_name}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
                     value = role_icon_img
 

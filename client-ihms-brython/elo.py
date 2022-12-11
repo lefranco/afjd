@@ -65,7 +65,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     num2pseudo = {v: k for k, v in players_dict.items()}
 
     # rolename from number
-    num2rolename = {n: variant_data.name_table[variant_data.roles[n]] for n in variant_data.roles if n >= 1}
+    num2rolename = {n: variant_data.role_name_table[variant_data.roles[n]] for n in variant_data.roles if n >= 1}
 
     # to measure times spent
     dating_calculation_time = 0.
