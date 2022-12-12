@@ -6,7 +6,10 @@ from browser import window  # pylint: disable=import-error
 
 CONFIG = "User Config detected : \n"
 
-CONFIG += f"Cookies enabled: {window.navigator.cookieEnabled}\n"
+try:
+    CONFIG += f"Cookies enabled: {window.navigator.cookieEnabled}\n"
+except:  # noqa: E722 pylint: disable=bare-except
+    CONFIG += "Failed to get cookies anabled\n"
 
 try:
     CONFIG += f"Connection Speed: {window.navigator.connection.downlink}\n"
@@ -28,6 +31,17 @@ try:
 except:  # noqa: E722 pylint: disable=bare-except
     CONFIG += "Failed to get Memory data\n"
 
-CONFIG += f"Language: {window.navigator.language}\n"
+try:
+    CONFIG += f"Language: {window.navigator.language}\n"
+except:  # noqa: E722 pylint: disable=bare-except
+    CONFIG += "Failed to get Language\n"
 
-CONFIG += f"User Agent: {window.navigator.userAgent}\n"
+try:
+    CONFIG += f"User Agent: {window.navigator.userAgent}\n"
+except:  # noqa: E722 pylint: disable=bare-except
+    CONFIG += "Failed to get User Agent\n"
+
+try:
+    CONFIG += f"Concurrency: {window.navigator.hardwareConcurrency}\n"
+except:  # noqa: E722 pylint: disable=bare-except
+    CONFIG += "Failed to get Concurrency\n"
