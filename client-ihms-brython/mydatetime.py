@@ -12,7 +12,7 @@ FOUR_YEARS_DURATION = 4 * 365 + 1
           # Mar Ap  May Jun Jul Au  Se  Oc  No  De  Ja  Fe
 CALENDAR = [31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31, 28]
 
-def myfromtimestamp(time_stamp):
+def fromtimestamp(time_stamp):
 
     # check input
     assert MY_EPOCH <= time_stamp <= LATEST
@@ -63,14 +63,16 @@ def myfromtimestamp(time_stamp):
 
     return dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec
 
+def strftime(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec):
+    return f"{dt_day:02}-{dt_month:02}-{dt_year:04} {dt_hour:02}:{dt_min:02}:{dt_sec:02} GMT"
 
 def check_time_stamp(timestamp):
 
     date_now_gmt = datetime.datetime.fromtimestamp(timestamp, datetime.timezone.utc)
     date_now_gmt_str_ref = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
-    dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec = myfromtimestamp(timestamp)
-    date_now_gmt_str_retr = f"{dt_day:02}-{dt_month:02}-{dt_year:04} {dt_hour:02}:{dt_min:02}:{dt_sec:02} GMT"
+    dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec = fromtimestamp(timestamp)
+    date_now_gmt_str_retr = strftime(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
 
     assert date_now_gmt_str_retr == date_now_gmt_str_ref, f"Error for {timestamp}  yield {date_now_gmt_str_retr=} but {date_now_gmt_str_ref=}"
 
