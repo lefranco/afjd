@@ -8,7 +8,6 @@ profiler.PROFILER.start_mes("inside play.py...")
 
 
 import json
-import datetime
 import time
 
 
@@ -16,6 +15,7 @@ from browser import document, html, ajax, alert, timer, window   # pylint: disab
 from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import mydatetime
 import config
 import common
 import scoring
@@ -56,6 +56,7 @@ class AutomatonStateEnum:
 
 
 class Random:
+    """ Random provider """
 
     def __init__(self):
         self._seed = int(time.time())
@@ -931,10 +932,8 @@ def get_game_status():
     last_year_played = common.get_last_year(nb_max_cycles_to_play, VARIANT_DATA)
 
     deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
-    datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
-    deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-    deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
-    game_deadline_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
+    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+    datetime_deadline_loaded_str = mydatetime.strftime(*datetime_deadline_loaded)
 
     game_status_table = html.TABLE()
 
@@ -952,7 +951,7 @@ def get_game_status():
     row <= col
 
     global DEADLINE_COL
-    DEADLINE_COL = html.TD(f"DL {game_deadline_str}")
+    DEADLINE_COL = html.TD(f"DL {datetime_deadline_loaded_str}")
     row <= DEADLINE_COL
 
     global COUNTDOWN_COL
@@ -3537,8 +3536,8 @@ def negotiate(default_dest_set):
         col = html.TD(id_txt, Class=class_)
         row <= col
 
-        date_desc_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-        date_desc_gmt_str = datetime.datetime.strftime(date_desc_gmt, "%d-%m-%Y %H:%M:%S")
+        date_desc_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_desc_gmt_str = mydatetime.strftime(*date_desc_gmt)
 
         col = html.TD(f"{date_desc_gmt_str} GMT", Class=class_)
         row <= col
@@ -3830,8 +3829,8 @@ def declare():
         col = html.TD(id_txt, Class=class_)
         row <= col
 
-        date_desc_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-        date_desc_gmt_str = datetime.datetime.strftime(date_desc_gmt, "%d-%m-%Y %H:%M:%S")
+        date_desc_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_desc_gmt_str = mydatetime.strftime(*date_desc_gmt)
 
         col = html.TD(f"{date_desc_gmt_str} GMT", Class=class_)
         row <= col
@@ -4628,10 +4627,11 @@ def game_master():
         # convert this human entered deadline to the deadline the server understands
         deadline_day_part = input_deadline_day.value
         deadline_hour_part = input_deadline_hour.value
-        deadline_datetime_str = f"{deadline_day_part} {deadline_hour_part}"
-        deadline_datetime = datetime.datetime.strptime(deadline_datetime_str, "%Y-%m-%d %H:%M")
-        timestamp = deadline_datetime.replace(tzinfo=datetime.timezone.utc).timestamp()
-        deadline = int(timestamp)
+
+        dt_year, dt_month, dt_day = map(int, deadline_day_part.split('-'))
+        dt_hour, dt_min, dt_sec = map(int, deadline_hour_part.split(':'))
+
+        deadline = mydatetime.totimestamp(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
 
         json_dict = {
             'pseudo': PSEUDO,
@@ -4892,14 +4892,14 @@ def game_master():
 
     # get GMT date and time
     time_stamp = time.time()
-    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+    date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
 
     # convert 'deadline_loaded' to human editable format
 
-    datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
-    deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-    deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
+    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+    datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+    deadline_loaded_day, deadline_loaded_hour, _ = datetime_deadline_loaded_str.split(' ')
 
     fieldset = html.FIELDSET()
     legend_deadline_day = html.LEGEND("Jour de la date limite (DD/MM/YYYY - ou selon les réglages du navigateur)", title="La date limite. Dernier jour pour soumettre les ordres. Après le joueur est en retard.")
@@ -4955,8 +4955,8 @@ class Logger(list):
 
         # insert datation
         time_stamp = time.time()
-        date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
 
         # put in stack (limited height)
         log_line = html.DIV(f"{date_now_gmt_str} : {message}", Class='important')
@@ -5322,7 +5322,7 @@ def show_events_in_game():
         thead <= col
     game_incidents2_table <= thead
 
-    for role_id, advancement, date_incident in sorted(game_incidents2, key=lambda i: i[2]):
+    for role_id, advancement, time_stamp in sorted(game_incidents2, key=lambda i: i[2]):
 
         row = html.TR()
 
@@ -5351,11 +5351,9 @@ def show_events_in_game():
         row <= col
 
         # date
-        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
-        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
-        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
-        incident_str = f"{incident_day} {incident_hour} GMT"
-        col = html.TD(incident_str)
+        datetime_incident = mydatetime.fromtimestamp(time_stamp)
+        datetime_incident_str = mydatetime.strftime2(*datetime_incident)
+        col = html.TD(datetime_incident_str)
         row <= col
 
         game_incidents2_table <= row
@@ -5390,7 +5388,7 @@ def show_events_in_game():
 
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    for role_id, player_id, date_dropout in sorted(game_dropouts, key=lambda d: d[2]):
+    for role_id, player_id, time_stamp in sorted(game_dropouts, key=lambda d: d[2]):
 
         row = html.TR()
 
@@ -5418,11 +5416,9 @@ def show_events_in_game():
         row <= col
 
         # date
-        datetime_incident = datetime.datetime.fromtimestamp(date_dropout, datetime.timezone.utc)
-        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
-        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
-        incident_str = f"{incident_day} {incident_hour} GMT"
-        col = html.TD(incident_str)
+        datetime_incident = mydatetime.fromtimestamp(time_stamp)
+        datetime_incident_str = mydatetime.strftime2(*datetime_incident)
+        col = html.TD(datetime_incident_str)
         row <= col
 
         # remove
@@ -5464,7 +5460,7 @@ def show_events_in_game():
 
     id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
 
-    for role_id, advancement, player_id, duration, date_incident in sorted(game_incidents, key=lambda i: i[4]):
+    for role_id, advancement, player_id, duration, time_stamp in sorted(game_incidents, key=lambda i: i[4]):
 
         row = html.TR()
 
@@ -5503,11 +5499,9 @@ def show_events_in_game():
         row <= col
 
         # date
-        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
-        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
-        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
-        incident_str = f"{incident_day} {incident_hour} GMT"
-        col = html.TD(incident_str)
+        datetime_incident = mydatetime.fromtimestamp(time_stamp)
+        datetime_incident_str = mydatetime.strftime2(*datetime_incident)
+        col = html.TD(datetime_incident_str)
         row <= col
 
         # remove
@@ -5527,7 +5521,7 @@ def show_events_in_game():
 
     count = {}
 
-    for role_id, advancement, player_id, duration, date_incident in game_incidents:
+    for role_id, advancement, player_id, duration, _ in game_incidents:
         if player_id is not None:
             continue
         if role_id not in count:

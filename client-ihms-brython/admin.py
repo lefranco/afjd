@@ -4,12 +4,12 @@
 
 import json
 import time
-import datetime
 
 from browser import document, html, ajax, alert, window  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import mydatetime
 import config
 import common
 import interface
@@ -940,7 +940,7 @@ def last_logins():
         thead <= col
     logins_table <= thead
 
-    for pseudo, ip_address, date in sorted(logins_list, key=lambda ll: ll[2], reverse=True):
+    for pseudo, ip_address, time_stamp in sorted(logins_list, key=lambda ll: ll[2], reverse=True):
         row = html.TR()
 
         col = html.TD(pseudo)
@@ -951,8 +951,8 @@ def last_logins():
         col = html.TD(ip_address)
         row <= col
 
-        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
-        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
         col = html.TD(date_now_gmt_str)
         row <= col
 
@@ -992,7 +992,7 @@ def last_failures():
         thead <= col
     failures_table <= thead
 
-    for pseudo, ip_address, date in sorted(failures_list, key=lambda f: f[2], reverse=True):
+    for pseudo, ip_address, time_stamp in sorted(failures_list, key=lambda f: f[2], reverse=True):
         row = html.TR()
 
         col = html.TD(pseudo)
@@ -1003,8 +1003,8 @@ def last_failures():
         col = html.TD(ip_address)
         row <= col
 
-        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
-        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
         col = html.TD(date_now_gmt_str)
         row <= col
 

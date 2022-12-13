@@ -4,12 +4,12 @@
 
 import json
 import time
-import datetime
 
 from browser import document, html, ajax, alert  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import mydatetime
 import config
 import common
 import index  # circular import
@@ -321,8 +321,9 @@ def show_login():
     if 'LOGIN_TIME' in storage:
         # this is local time
         time_stamp = round(float(storage['LOGIN_TIME']))
-        date_desc = datetime.datetime.fromtimestamp(time_stamp)
-        log_message <= f", depuis {date_desc} (temps local)"
+        date_desc = mydatetime.fromtimestamp(time_stamp)
+        date_desc_str = mydatetime.strftime(*date_desc)
+        log_message <= f", depuis {date_desc_str}"
 
     show_login_panel = html.DIV(id="show_login")
     show_login_panel.attrs['style'] = 'text-align: left'

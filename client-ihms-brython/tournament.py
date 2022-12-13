@@ -4,12 +4,12 @@
 
 import json
 import time
-import datetime
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import mydatetime
 import common
 import config
 import interface
@@ -340,11 +340,9 @@ def show_games():
 
             if field == 'deadline':
                 deadline_loaded = value
-                datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
-                deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-                deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
-                deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
-                value = deadline_loaded_str
+                datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                value = datetime_deadline_loaded_str
 
                 time_unit = 60 if data['fast'] else 60 * 60
                 approach_duration = 24 * 60 * 60
@@ -405,8 +403,8 @@ def show_games():
 
     # get GMT date and time
     time_stamp = time.time()
-    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+    date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
     special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     MY_SUB_PANEL <= special_info
     MY_SUB_PANEL <= html.BR()
@@ -661,7 +659,7 @@ def show_incidents():
         thead <= col
     tournament_incidents2_table <= thead
 
-    for game_id, role_num, advancement, date_incident in sorted(tournament_incidents2, key=lambda i: i[3]):
+    for game_id, role_num, advancement, time_stamp in sorted(tournament_incidents2, key=lambda i: i[3]):
 
         data = games_dict[str(game_id)]
 
@@ -715,11 +713,9 @@ def show_incidents():
         row <= col
 
         # date
-        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
-        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
-        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
-        incident_str = f"{incident_day} {incident_hour} GMT"
-        col = html.TD(incident_str)
+        datetime_incident = mydatetime.fromtimestamp(time_stamp)
+        datetime_incident_str = mydatetime.strftime2(*datetime_incident)
+        col = html.TD(datetime_incident_str)
         row <= col
 
         tournament_incidents2_table <= row
@@ -740,7 +736,7 @@ def show_incidents():
         thead <= col
     tournament_incidents_table <= thead
 
-    for game_id, role_num, advancement, duration, date_incident in sorted(tournament_incidents, key=lambda i: i[4]):
+    for game_id, role_num, advancement, duration, time_stamp in sorted(tournament_incidents, key=lambda i: i[4]):
 
         data = games_dict[str(game_id)]
 
@@ -798,11 +794,9 @@ def show_incidents():
         row <= col
 
         # date
-        datetime_incident = datetime.datetime.fromtimestamp(date_incident, datetime.timezone.utc)
-        incident_day = f"{datetime_incident.year:04}-{datetime_incident.month:02}-{datetime_incident.day:02}"
-        incident_hour = f"{datetime_incident.hour:02}:{datetime_incident.minute:02}"
-        incident_str = f"{incident_day} {incident_hour} GMT"
-        col = html.TD(incident_str)
+        datetime_incident = mydatetime.fromtimestamp(time_stamp)
+        datetime_incident_str = mydatetime.strftime(*datetime_incident)
+        col = html.TD(datetime_incident_str)
         row <= col
 
         tournament_incidents_table <= row

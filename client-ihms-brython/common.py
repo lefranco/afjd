@@ -12,13 +12,10 @@ profiler.PROFILER.start_mes("Import json...")
 import json
 profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.start_mes("Import datetime...")
-import datetime
-profiler.PROFILER.stop_mes()
-
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import mydatetime
 import config
 import mapping
 
@@ -384,8 +381,8 @@ def make_report_window(report_loaded):
         report_row <= report_col
 
     time_stamp = report_loaded['time_stamp']
-    date_report_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-    date_report_gmt_str = datetime.datetime.strftime(date_report_gmt, "%Y-%m-%d %H:%M:%S GMT")
+    date_report_gmt = mydatetime.fromtimestamp(time_stamp)
+    date_report_gmt_str = mydatetime.strftime(*date_report_gmt)
     report_elem = html.B(date_report_gmt_str)
     caption = html.CAPTION(report_elem)
     report_table <= caption
