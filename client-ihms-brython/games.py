@@ -3,7 +3,6 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
-import datetime
 import time
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
@@ -11,6 +10,7 @@ from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
+import mydatetime
 import config
 import common
 import selection
@@ -197,8 +197,8 @@ def create_game(json_dict):
 
         # these are automatic
         time_stamp = time.time()
-        time_creation = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-        time_creation_str = datetime.datetime.strftime(time_creation, "%d-%m-%Y %H:%M:%S")
+        time_creation = mydatetime.fromtimestamp(time_stamp)
+        time_creation_str = mydatetime.strftime(*time_creation)
 
         specific_data = ""
         if archive:

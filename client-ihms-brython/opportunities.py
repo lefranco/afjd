@@ -3,13 +3,13 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
-import datetime
 import time
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 
+import mydatetime
 import config
 import interface
 import common
@@ -421,11 +421,9 @@ def my_opportunities():
 
             if field == 'deadline':
                 deadline_loaded = value
-                datetime_deadline_loaded = datetime.datetime.fromtimestamp(deadline_loaded, datetime.timezone.utc)
-                deadline_loaded_day = f"{datetime_deadline_loaded.year:04}-{datetime_deadline_loaded.month:02}-{datetime_deadline_loaded.day:02}"
-                deadline_loaded_hour = f"{datetime_deadline_loaded.hour:02}:{datetime_deadline_loaded.minute:02}"
-                deadline_loaded_str = f"{deadline_loaded_day} {deadline_loaded_hour} GMT"
-                value = deadline_loaded_str
+                datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                value = datetime_deadline_loaded_str
 
             if field == 'current_state':
                 state_loaded = value
@@ -476,8 +474,8 @@ def my_opportunities():
 
     # get GMT date and time
     time_stamp = time.time()
-    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-    date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+    date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
 
     special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     MY_PANEL <= special_legend

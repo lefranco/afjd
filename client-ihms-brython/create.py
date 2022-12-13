@@ -4,12 +4,12 @@
 
 import json
 import time
-import datetime
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
 from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import mydatetime
 import config
 import common
 import interface
@@ -534,7 +534,7 @@ def show_game_quitters():
         thead <= col
     game_quitters_table <= thead
 
-    for game_id, _, player_id, date in quitters_data:
+    for game_id, _, player_id, time_stamp in quitters_data:
 
         row = html.TR()
 
@@ -546,8 +546,8 @@ def show_game_quitters():
         col = html.TD(game_name)
         row <= col
 
-        date_now_gmt = datetime.datetime.fromtimestamp(date, datetime.timezone.utc)
-        date_now_gmt_str = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+        date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
         col = html.TD(date_now_gmt_str)
         row <= col
 
