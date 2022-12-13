@@ -37,6 +37,8 @@ import memoize
 profiler.PROFILER.stop_mes()
 
 profiler.PROFILER.start_mes("import play...")
+profiler.PROFILER.start_mes(f"before import play : time={time.time()}")
+profiler.PROFILER.stop_mes()
 import play
 profiler.PROFILER.stop_mes()
 

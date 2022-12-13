@@ -4,6 +4,10 @@
 
 import profiler
 
+
+profiler.PROFILER.start_mes(f"inside imported play.py : time={time.time()}")
+profiler.PROFILER.stop_mes()
+
 profiler.PROFILER.start_mes("inside play.py...")
 
 
@@ -1379,6 +1383,8 @@ def show_position(direct_last_moves):
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
+    profiler.PROFILER.start_mes("show_position()")
+
     last_advancement = GAME_PARAMETERS_LOADED['current_advancement']
     adv_last_moves = last_advancement
     while True:
@@ -1392,6 +1398,7 @@ def show_position(direct_last_moves):
     else:
         transition_display_callback(None, last_advancement)
 
+    profiler.PROFILER.stop_mes()
     return True
 
 
@@ -2379,28 +2386,34 @@ def submit_orders():
             buttons_right <= html.BR()
             buttons_right <= html.DIV("Pour communiquer avec des ordres (ordres invalides) utilisez le sous menu 'taguer'", Class='Note')
 
+    profiler.PROFILER.start_mes("submit_orders()")
+
     # need to be connected
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     # need to have a role
     if ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     # cannot be game master unless archive game
     if ROLE_ID == 0 and not GAME_PARAMETERS_LOADED['archive']:
         alert("Ordonner pour un arbitre n'est possible que pour les parties archive")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     # game needs to be ongoing - not waiting
     if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     # game needs to be ongoing - not finished
@@ -2415,6 +2428,7 @@ def submit_orders():
     if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     if ROLE_ID == 0:
@@ -2426,6 +2440,7 @@ def submit_orders():
         if ROLE_ID not in submitted_data['needed']:
             alert("Vous n'avez pas d'ordre à passer")
             load_option(None, 'Consulter')
+            profiler.PROFILER.stop_mes()
             return False
 
     # check gameover
@@ -2436,10 +2451,8 @@ def submit_orders():
     if current_advancement % 5 == 4 and (current_advancement + 1) // 5 >= nb_max_cycles_to_play:
         alert("La partie est arrivée à échéance")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
-
-    # because we do not want the token stale in the middle of the process
-    login.check_token()
 
     # now we can display
 
@@ -2457,7 +2470,8 @@ def submit_orders():
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
-        return True
+        profiler.PROFILER.stop_mes()
+        return False
 
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
@@ -2504,6 +2518,8 @@ def submit_orders():
     # all reports until last moves
     advancement_selected = GAME_PARAMETERS_LOADED['current_advancement']
 
+    profiler.PROFILER.start_mes("loop loading transitions")
+
     while True:
 
         # one backwards
@@ -2531,6 +2547,8 @@ def submit_orders():
         # just displayed last moves : done
         if advancement_selected % 5 in [0, 2]:
             break
+
+    profiler.PROFILER.stop_mes()
 
     # right side
 
@@ -2592,6 +2610,8 @@ def submit_orders():
     my_sub_panel2 <= buttons_right
 
     MY_SUB_PANEL <= my_sub_panel2
+
+    profiler.PROFILER.stop_mes()
 
     return True
 
@@ -3235,9 +3255,6 @@ def submit_communication_orders():
         load_option(None, 'Consulter')
         return False
 
-    # because we do not want the token stale in the middle of the process
-    login.check_token()
-
     # now we can display
 
     # header
@@ -3251,7 +3268,7 @@ def submit_communication_orders():
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
-        return True
+        return False
 
     # now we need to be more clever and handle the state of the mouse (up or down)
     canvas.bind("mouseup", callback_canvas_mouseup)
@@ -3421,9 +3438,6 @@ def negotiate(default_dest_set):
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         load_option(None, 'Consulter')
         return False
-
-    # because we do not want the token stale in the middle of the process
-    login.check_token()
 
     # get time stamp of last visit of declarations
     time_stamp_last_visit = common.date_last_visit_load(GAME_ID, config.MESSAGES_TYPE)
@@ -3740,9 +3754,6 @@ def declare():
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         load_option(None, 'Consulter')
         return False
-
-    # because we do not want the token stale in the middle of the process
-    login.check_token()
 
     # get time stamp of last visit of declarations
     time_stamp_last_visit = common.date_last_visit_load(GAME_ID, config.DECLARATIONS_TYPE)
@@ -4646,28 +4657,34 @@ def game_master():
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    profiler.PROFILER.start_mes("game_master()")
+
     # need to be connected
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     # need to be game master
     if ROLE_ID != 0:
         alert("Vous ne semblez pas être l'arbitre de cette partie")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     # game needs to be ongoing - not waiting
     if GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     # game needs to be ongoing - not finished
     if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     # now we can display
@@ -4688,6 +4705,7 @@ def game_master():
     if not submitted_data:
         alert("Erreur chargement données de soumission")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     # who can I put in this role
@@ -4699,7 +4717,9 @@ def game_master():
     if votes is None:
         alert("Erreur chargement votes")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
+
     votes = list(votes)
 
     vote_values_table = {}
@@ -4941,6 +4961,7 @@ def game_master():
     MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
     MY_SUB_PANEL <= html.BR()
 
+    profiler.PROFILER.stop_mes()
     return True
 
 
@@ -5924,6 +5945,8 @@ MY_PANEL <= MY_SUB_PANEL
 def load_option(_, item_name, direct_last_moves=False):
     """ load_option """
 
+    profiler.PROFILER.start_mes("load_option()")
+
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
@@ -5989,12 +6012,16 @@ def load_option(_, item_name, direct_last_moves=False):
             timer.clear_interval(SUPERVISE_REFRESH_TIMER)
             SUPERVISE_REFRESH_TIMER = None
 
+    profiler.PROFILER.stop_mes()
+
 
 COUNTDOWN_TIMER = None
 
 
 def render(panel_middle):
     """ render """
+
+    profiler.PROFILER.start_mes("render()")
 
     # always back to top
     global ITEM_NAME_SELECTED
@@ -6029,9 +6056,11 @@ def render(panel_middle):
     if PSEUDO is not None:
         ROLE_ID = common.get_role_allocated_to_player_in_game(GAME_ID)
 
+    profiler.PROFILER.start_mes("loading things")
     load_static_stuff()
     load_dynamic_stuff()
     load_special_stuff()
+    profiler.PROFILER.stop_mes()
 
     # initiates new countdown
     countdown()
@@ -6074,6 +6103,7 @@ def render(panel_middle):
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
 
+    profiler.PROFILER.stop_mes()
 
 profiler.PROFILER.stop_mes()
 profiler.PROFILER.stop_mes()
