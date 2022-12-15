@@ -1247,6 +1247,88 @@ class FindPlayerFromEmailRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/creators')
+class CreatorListRessource(flask_restful.Resource):  # type: ignore
+    """ CreatorListRessource """
+
+    def get(self) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=no-self-use
+        """
+        Provides list of all creators
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/creators - GET - get getting all creators")
+
+        sql_executor = database.SqlExecutor()
+        creators_list = creators.Creator.inventory(sql_executor)
+        del sql_executor
+
+        data = [c[0] for c in creators_list]
+
+        return data, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+        """
+        Creates/Deletes a creator
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/creators - POST - creating/deleting new creator")
+
+        args = CREATOR_PARSER.parse_args(strict=True)
+        player_pseudo = args['player_pseudo']
+        delete = args['delete']
+
+        mylogger.LOGGER.info("player_pseudo=%s delete=%s", player_pseudo, delete)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+        pseudo = req_result.json()['logged_in_as']
+
+        # check user has right to add/remove creator (admin)
+
+        # TODO improve this with real admin account
+        if pseudo != 'Palpatine':
+            flask_restful.abort(403, msg="You are not allowed to edit the list of creators!")
+
+        sql_executor = database.SqlExecutor()
+
+        player = players.Player.find_by_pseudo(sql_executor, player_pseudo)
+
+        if player is None:
+            del sql_executor
+            flask_restful.abort(400, msg=f"Player {player_pseudo} does not exist")
+
+        if not delete:
+            creator = creators.Creator(player_pseudo)
+            creator.update_database(sql_executor)
+
+            sql_executor.commit()
+            del sql_executor
+
+            data = {'msg': 'Ok creator updated or created'}
+            return data, 201
+
+        creator = creators.Creator(player_pseudo)
+        creator.delete_database(sql_executor)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': 'Ok creator deleted if present'}
+        return data, 200
+
+
 @API.resource('/moderators')
 class ModeratorListRessource(flask_restful.Resource):  # type: ignore
     """ ModeratorListRessource """
@@ -1329,86 +1411,27 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/creators')
-class CreatorListRessource(flask_restful.Resource):  # type: ignore
-    """ CreatorListRessource """
+@API.resource('/priviledged')
+class PriviledgedListRessource(flask_restful.Resource):  # type: ignore
+    """ PriviledgedListRessource """
 
-    def get(self) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[str]], int]:  # pylint: disable=no-self-use
         """
-        Provides list of all creators
+        Provides list of all priviledged (creators or moderators)
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/creators - GET - get getting all creators")
+        mylogger.LOGGER.info("/priviledged - GET - get getting all priviledged")
 
         sql_executor = database.SqlExecutor()
         creators_list = creators.Creator.inventory(sql_executor)
+        moderators_list = moderators.Moderator.inventory(sql_executor)
         del sql_executor
 
-        data = [m[0] for m in creators_list]
+        c_list = [c[0] for c in creators_list]
+        m_list = [m[0] for m in moderators_list]
 
-        return data, 200
-
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
-        """
-        Creates/Deletes a creator
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/creators - POST - creating/deleting new creator")
-
-        args = CREATOR_PARSER.parse_args(strict=True)
-        player_pseudo = args['player_pseudo']
-        delete = args['delete']
-
-        mylogger.LOGGER.info("player_pseudo=%s delete=%s", player_pseudo, delete)
-
-        # check authentication from user server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        pseudo = req_result.json()['logged_in_as']
-
-        # check user has right to add/remove creator (admin)
-
-        # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
-            flask_restful.abort(403, msg="You are not allowed to edit the list of creators!")
-
-        sql_executor = database.SqlExecutor()
-
-        player = players.Player.find_by_pseudo(sql_executor, player_pseudo)
-
-        if player is None:
-            del sql_executor
-            flask_restful.abort(400, msg=f"Player {player_pseudo} does not exist")
-
-        if not delete:
-            creator = creators.Creator(player_pseudo)
-            creator.update_database(sql_executor)
-
-            sql_executor.commit()
-            del sql_executor
-
-            data = {'msg': 'Ok creator updated or created'}
-            return data, 201
-
-        creator = creators.Creator(player_pseudo)
-        creator.delete_database(sql_executor)
-
-        sql_executor.commit()
-        del sql_executor
-
-        data = {'msg': 'Ok creator deleted if present'}
-        return data, 200
+        return {'creators': c_list, 'moderators': m_list}, 200
 
 
 @API.resource('/elo_rating/<classic>')

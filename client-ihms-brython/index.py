@@ -235,7 +235,14 @@ def load_option(_, item_name):
         forum.render(PANEL_MIDDLE)
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("checking if creator/modo/admin...")
+
+    profiler.PROFILER.start_mes("getting priviledged...")
+    priviledged = common.get_priviledged()
+    creator_list = priviledged['creators']
+    moderators_list = priviledged['moderators']
+    profiler.PROFILER.stop_mes()
+
+    profiler.PROFILER.start_mes("showing more options in menus...")
 
     global ITEM_NAME_SELECTED
     prev_item_selected = ITEM_NAME_SELECTED
@@ -248,12 +255,12 @@ def load_option(_, item_name):
 
         # do not display menu create if not creator
         if possible_item_name == 'Création':
-            if pseudo is None or not create.check_creator(pseudo):
+            if pseudo is None or pseudo not in creator_list:
                 continue
 
         # do not display menu moderate if not moderator
         if possible_item_name == 'Modération':
-            if pseudo is None or not moderate.check_modo(pseudo):
+            if pseudo is None or pseudo not in moderators_list:
                 continue
 
         # do not display menu administrate if not administrator

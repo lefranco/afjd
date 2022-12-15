@@ -7,7 +7,6 @@ import profiler
 
 profiler.PROFILER.start_mes("inside common.py...")
 
-
 profiler.PROFILER.start_mes("Import json...")
 import json
 profiler.PROFILER.stop_mes()
@@ -25,6 +24,36 @@ profiler.PROFILER.start_mes("functions...")
 def noreply_callback(_):
     """ noreply_callback """
     alert("Problème (pas de réponse de la part du serveur)")
+
+
+def get_priviledged():
+    """ get_priviledged : returns empty list if problem """
+
+    priviledged = {}
+
+    def reply_callback(req):
+        nonlocal priviledged
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des privilégiés : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des privilégiés : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        priviledged = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/priviledged"
+
+    # getting moderators list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return priviledged
 
 
 def get_players():
@@ -658,66 +687,6 @@ def tournament_incidents2_reload(tournament_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return incidents
-
-
-def get_moderators():
-    """ get_moderators : returns empty list if problem """
-
-    moderators_list = []
-
-    def reply_callback(req):
-        nonlocal moderators_list
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des modérateurs : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des modérateurs : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        moderators_list = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/moderators"
-
-    # getting moderators list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
-
-    return moderators_list
-
-
-def get_creators():
-    """ get_creators : returns empty list if problem """
-
-    creators_list = []
-
-    def reply_callback(req):
-        nonlocal creators_list
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des créateurs : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des créateurs : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        creators_list = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/creators"
-
-    # getting moderators list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
-
-    return creators_list
 
 
 def get_player_id(pseudo):

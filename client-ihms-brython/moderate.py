@@ -24,8 +24,11 @@ OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérifica
 def check_modo(pseudo):
     """ check_modo """
 
-    moderator_list = common.get_moderators()
-    if pseudo not in moderator_list:
+    priviledged = common.get_priviledged()
+    if not priviledged:
+        return False
+    moderators_list = priviledged['moderators']
+    if pseudo not in moderators_list:
         return False
 
     return True
