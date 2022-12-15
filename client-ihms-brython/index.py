@@ -17,7 +17,6 @@ from browser.local_storage import storage  # pylint: disable=import-error
 profiler.PROFILER.stop_mes()
 
 import config
-
 import common
 
 profiler.PROFILER.start_mes("Import home...")
@@ -236,7 +235,7 @@ def load_option(_, item_name):
         forum.render(PANEL_MIDDLE)
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("additional stuff...")
+    profiler.PROFILER.start_mes("checking if creator/modo/admin...")
 
     global ITEM_NAME_SELECTED
     prev_item_selected = ITEM_NAME_SELECTED
