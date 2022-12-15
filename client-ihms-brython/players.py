@@ -16,7 +16,7 @@ import mapping
 DEFAULT_ELO = 1500
 
 
-OPTIONS = ['Classement performance', 'Classement fiabilité', 'Classement régularité', 'Liste inscrits', 'Liste joueurs', 'Liste arbitres', 'Abonnés remplaçants', 'Groupe modérateurs', 'Groupe créateurs']
+OPTIONS = ['Classement performance', 'Classement fiabilité', 'Classement régularité', 'Liste inscrits', 'Liste joueurs', 'Liste arbitres', 'Abonnés remplaçants', 'Groupe créateurs', 'Groupe modérateurs']
 
 
 def get_detailed_elo_rating(classic, role_id):
@@ -972,48 +972,15 @@ def show_replacement_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} abonnés remplaçants")
 
 
-def show_moderators():
-    """ show_moderators """
-
-    MY_SUB_PANEL <= html.H3("Les modérateurs")
-
-    moderator_list = common.get_moderators()
-
-    if not moderator_list:
-        return
-
-    moderators_table = html.TABLE()
-
-    fields = ['pseudo']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    moderators_table <= thead
-
-    for moderator in sorted(moderator_list, key=lambda m: m.upper()):
-
-        row = html.TR()
-        col = html.TD(moderator)
-        row <= col
-
-        moderators_table <= row
-
-    MY_SUB_PANEL <= moderators_table
-
-
 def show_creators():
     """ show_creators """
 
     MY_SUB_PANEL <= html.H3("Les créateurs (de partie)")
 
-    creator_list = common.get_creators()
-
-    if not creator_list:
+    priviledged = common.get_priviledged()
+    if not priviledged:
         return
+    creators_list = priviledged['creators']
 
     creators_table = html.TABLE()
 
@@ -1027,7 +994,7 @@ def show_creators():
         thead <= col
     creators_table <= thead
 
-    for creator in sorted(creator_list, key=lambda m: m.upper()):
+    for creator in sorted(creators_list, key=lambda m: m.upper()):
 
         row = html.TR()
         col = html.TD(creator)
@@ -1036,6 +1003,39 @@ def show_creators():
         creators_table <= row
 
     MY_SUB_PANEL <= creators_table
+
+
+def show_moderators():
+    """ show_moderators """
+
+    MY_SUB_PANEL <= html.H3("Les modérateurs")
+
+    priviledged = common.get_priviledged()
+    if not priviledged:
+        return
+    moderators_list = priviledged['moderators']
+
+    moderators_table = html.TABLE()
+
+    fields = ['pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    moderators_table <= thead
+
+    for moderator in sorted(moderators_list, key=lambda m: m.upper()):
+
+        row = html.TR()
+        col = html.TD(moderator)
+        row <= col
+
+        moderators_table <= row
+
+    MY_SUB_PANEL <= moderators_table
 
 
 MY_PANEL = html.DIV()
@@ -1076,10 +1076,10 @@ def load_option(_, item_name):
         show_game_masters_data()
     if item_name == 'Abonnés remplaçants':
         show_replacement_data()
-    if item_name == 'Groupe modérateurs':
-        show_moderators()
     if item_name == 'Groupe créateurs':
         show_creators()
+    if item_name == 'Groupe modérateurs':
+        show_moderators()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name

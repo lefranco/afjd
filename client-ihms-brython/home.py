@@ -208,7 +208,6 @@ def show_news():
     MY_SUB_PANEL <= title
     div_homepage = html.DIV(id='grid')
 
-
     # ----
     profiler.PROFILER.start_mes("get stats...")
     stats_content = get_stats_content()

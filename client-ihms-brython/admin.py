@@ -38,6 +38,65 @@ def check_admin(pseudo):
     return True
 
 
+def get_creators():
+    """ get_creators : returns empty list if problem """
+
+    creators_list = []
+
+    def reply_callback(req):
+        nonlocal creators_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des créateurs : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des créateurs : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        creators_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/creators"
+
+    # getting moderators list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return creators_list
+
+
+def get_moderators():
+    """ get_moderators : returns empty list if problem """
+
+    moderators_list = []
+
+    def reply_callback(req):
+        nonlocal moderators_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des modérateurs : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des modérateurs : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        moderators_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/moderators"
+
+    # getting moderators list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return moderators_list
+
 def get_news_content():
     """ get_news_content """
 
@@ -1175,7 +1234,7 @@ def edit_creators():
     if not players_dict:
         return
 
-    creators_list = common.get_creators()
+    creators_list = get_creators()
 
     form = html.FORM()
 
@@ -1341,7 +1400,7 @@ def edit_moderators():
     if not players_dict:
         return
 
-    moderators_list = common.get_moderators()
+    moderators_list = get_moderators()
 
     form = html.FORM()
 
