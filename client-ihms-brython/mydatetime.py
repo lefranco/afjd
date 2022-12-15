@@ -1,5 +1,7 @@
 """ replaces datetime """
 
+#  import datetime
+
 
 # ref is 1/3/2000 0h0m:0s
 MY_EPOCH_YEAR = 2000
@@ -121,18 +123,16 @@ def strftime2(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec):
     return f"{dt_year:04}-{dt_month:02}-{dt_day:02} {dt_hour:02}:{dt_min:02}:{dt_sec:02} GMT"
 
 
-def check_time_stamp(time_stamp):
-    """ check_time_stamp (unitary testing)  """
+#def check_time_stamp(time_stamp):
+    #""" check_time_stamp (unitary testing)  """
 
-    date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
-    date_now_gmt_str_ref = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
+    #date_now_gmt = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+    #date_now_gmt_str_ref = datetime.datetime.strftime(date_now_gmt, "%d-%m-%Y %H:%M:%S GMT")
 
-    dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec = fromtimestamp(time_stamp)
-    date_now_gmt_str_retr = strftime(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
+    #dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec = fromtimestamp(time_stamp)
+    #date_now_gmt_str_retr = strftime(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
 
-    assert date_now_gmt_str_retr == date_now_gmt_str_ref, f"Error for {time_stamp}  yield {date_now_gmt_str_retr=} but {date_now_gmt_str_ref=}"
+    #assert date_now_gmt_str_retr == date_now_gmt_str_ref, f"Error for {time_stamp}  yield {date_now_gmt_str_retr=} but {date_now_gmt_str_ref=}"
 
-    back_time_stamp = totimestamp(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
-    assert back_time_stamp == time_stamp, f"Error {back_time_stamp=} should be {time_stamp} for {date_now_gmt_str_ref=}"
-
-
+    #back_time_stamp = totimestamp(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
+    #assert back_time_stamp == time_stamp, f"Error {back_time_stamp=} should be {time_stamp} for {date_now_gmt_str_ref=}"
