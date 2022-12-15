@@ -6055,9 +6055,15 @@ def render(panel_middle):
     if PSEUDO is not None:
         ROLE_ID = common.get_role_allocated_to_player_in_game(GAME_ID)
 
-    profiler.PROFILER.start_mes("loading things")
+    profiler.PROFILER.start_mes("loading static stuff")
     load_static_stuff()
+    profiler.PROFILER.stop_mes()
+
+    profiler.PROFILER.start_mes("loading dynamic stuff")
     load_dynamic_stuff()
+    profiler.PROFILER.stop_mes()
+
+    profiler.PROFILER.start_mes("loading special stuff")
     load_special_stuff()
     profiler.PROFILER.stop_mes()
 
