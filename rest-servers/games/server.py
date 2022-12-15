@@ -1559,40 +1559,6 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/games-needing-replacement')
-class GamesNeedingReplacementRessource(flask_restful.Resource):  # type: ignore
-    """ GamesNeedingReplacementRessource """
-
-    def get(self) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=no-self-use
-        """
-        Gets ongoing games that do not have all players (needing replacement)
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/games-needing-replacement - GET - get getting games needing replacement")
-
-        sql_executor = database.SqlExecutor()
-
-        full_games_data = sql_executor.execute("select games.identifier, count(*) as filled_count, capacities.value from games join allocations on allocations.game_id=games.identifier join capacities on capacities.game_id=games.identifier group by identifier", need_result=True)
-
-        # keep only the ones where a role is missing
-        assert full_games_data is not None
-        recruiting_games = [tr[0] for tr in full_games_data if tr[1] < tr[2]]
-
-        # keep only the ongoing ones
-        data = []
-        for game_id in recruiting_games:
-            game = games.Game.find_by_identifier(sql_executor, game_id)
-            assert game is not None
-            if game.current_state != 1:
-                continue
-            data.append(game.name)
-
-        del sql_executor
-
-        return data, 200
-
-
 @API.resource('/game-positions/<game_id>')
 class GamePositionRessource(flask_restful.Resource):  # type: ignore
     """ GamePositionRessource """
@@ -4099,7 +4065,7 @@ class GameDropoutsRessource(flask_restful.Resource):  # type: ignore
 class AllGamesDropoutsRessource(flask_restful.Resource):  # type: ignore
     """ AllGamesDropoutsRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, float]]], int]:  # pylint: disable=no-self-use
         """
         Gets list of roles which have produced an dropout
         EXPOSED
@@ -5126,12 +5092,11 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-
 @API.resource('/tournament-players/<tournament_id>')
 class TournamentPlayersRessource(flask_restful.Resource):  # type: ignore
     """ TournamentPlayersRessource """
 
-    def get(self, tournament_id: int) -> typing.Tuple[typing.Dict[int, typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
+    def get(self, tournament_id: int) -> typing.Tuple[typing.List[int], int]:  # pylint: disable=no-self-use
         """
         Gets all players for the game of the tournamnet
         EXPOSED
@@ -5166,7 +5131,6 @@ class TournamentPlayersRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-
 @API.resource('/statistics')
 class StatisticsRessource(flask_restful.Resource):  # type: ignore
     """ StatisticsRessource """
@@ -5180,6 +5144,26 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/statistics - GET - getting statistics ")
 
         sql_executor = database.SqlExecutor()
+
+        # games needing replacement
+
+        full_games_data = sql_executor.execute("select games.identifier, count(*) as filled_count, capacities.value from games join allocations on allocations.game_id=games.identifier join capacities on capacities.game_id=games.identifier group by identifier", need_result=True)
+
+        # keep only the ones where a role is missing
+        assert full_games_data is not None
+        recruiting_games = [tr[0] for tr in full_games_data if tr[1] < tr[2]]
+
+        # keep only the ongoing ones
+        suffering_games = []
+        for game_id in recruiting_games:
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+            if game.current_state != 1:
+                continue
+            suffering_games.append(game.name)
+
+        # stats about games
+
         allocations_list = allocations.Allocation.inventory(sql_executor)
         games_list = games.Game.inventory(sql_executor)
         del sql_executor
@@ -5198,7 +5182,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
             else:
                 players_set.add(player_id)
 
-        data = {'ongoing_games': len(allowed_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set)}
+        data = {'suffering_games': suffering_games, 'ongoing_games': len(allowed_games), 'active_game_masters': len(game_masters_set), 'active_players': len(players_set)}
         return data, 200
 
 

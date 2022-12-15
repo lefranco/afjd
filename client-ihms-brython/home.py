@@ -99,37 +99,6 @@ def get_stats_content():
     return stats_content
 
 
-def get_needing_replacement_games():
-    """ get_needing_replacement_games : returns empty list if error or no game"""
-
-    needing_replacement_games_list = []
-
-    def reply_callback(req):
-        nonlocal needing_replacement_games_list
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des parties qui ont besoin de remplaçant : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des parties qui ont besoin de remplaçant : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        needing_replacement_games_list = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games-needing-replacement"
-
-    # getting needing replacement games list : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return needing_replacement_games_list
-
-
 def get_teaser_content():
     """ get_teaser_content """
 
@@ -239,15 +208,21 @@ def show_news():
     MY_SUB_PANEL <= title
     div_homepage = html.DIV(id='grid')
 
-    profiler.PROFILER.start_mes("parties...")
 
     # ----
+    profiler.PROFILER.start_mes("get stats...")
+    stats_content = get_stats_content()
+    profiler.PROFILER.stop_mes()
+    # ----
+
+    # ----
+    profiler.PROFILER.start_mes("parties qui recrutent...")
     div_a5 = html.DIV(Class='tooltip')
 
     title1 = html.H4("Les parties en cours dans lesquelles il manque un joueur")
     div_a5 <= title1
 
-    suffering_games_loaded = get_needing_replacement_games()
+    suffering_games_loaded = stats_content['suffering_games']
     suffering_games = formatted_games(suffering_games_loaded) if suffering_games_loaded else "Aucune pour le moment. On n'aime pas que les parties restent bloquées longtemps ici ;-)"
     div_a5 <= suffering_games
 
@@ -256,9 +231,9 @@ def show_news():
     div_homepage <= div_a5
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("meilleurs...")
 
     # ----
+    profiler.PROFILER.start_mes("meilleurs...")
     div_b5 = html.DIV(Class='tooltip')
 
     title11 = html.H4("Les meilleurs joueurs du site (d'après le classement ELO)")
@@ -273,12 +248,9 @@ def show_news():
     div_homepage <= div_b5
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("second...")
-
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("events...")
 
     # ----
+    profiler.PROFILER.start_mes("evenements ...")
     div_a4 = html.DIV(Class='tooltip')
 
     title2 = html.H4("Les événements qui recrutent")
@@ -291,9 +263,9 @@ def show_news():
     div_homepage <= div_a4
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("contribs...")
 
     # ----
+    profiler.PROFILER.start_mes("contributions forum...")
     div_b4 = html.DIV(Class='tooltip')
 
     title3 = html.H4("Dernières contributions sur les forums")
@@ -306,13 +278,15 @@ def show_news():
     div_homepage <= div_b4
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("news modo...")
 
     # ----
+    profiler.PROFILER.start_mes("get all news...")
     all_news_content_loaded = get_all_news_content()
+    profiler.PROFILER.stop_mes()
     # ----
 
     # ----
+    profiler.PROFILER.start_mes("news modo...")
     div_a3 = html.DIV(Class='tooltip')
 
     title4 = html.H4("Dernières nouvelles moderateur", Class='news')
@@ -327,9 +301,9 @@ def show_news():
     div_homepage <= div_a3
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("news admin...")
 
     # ----
+    profiler.PROFILER.start_mes("news admin...")
     div_b3 = html.DIV(Class='tooltip')
 
     title5 = html.H4("Dernières nouvelles administrateur", Class='news2')
@@ -344,25 +318,27 @@ def show_news():
     div_homepage <= div_b3
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("stats...")
 
     # ----
+    profiler.PROFILER.start_mes("stats...")
     div_a2 = html.DIV(Class='tooltip')
 
     title9 = html.H4("Statistiques")
     div_a2 <= title9
 
-    stats_content = get_stats_content()
-    div_a2 <= f"Il y a {stats_content['ongoing_games']} parties en cours. Il y a {stats_content['active_game_masters']} arbitres en activité. Il y a {stats_content['active_players']} joueurs en activité."
+    ongoing_games = stats_content['ongoing_games']
+    active_game_masters = stats_content['active_game_masters']
+    active_players = stats_content['active_players']
+    div_a2 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité."
 
     div_a2_tip = html.SPAN("Plus de détail dans le menu 'classement/joueurs'", Class='tooltiptext')
     div_a2 <= div_a2_tip
     div_homepage <= div_a2
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("charte...")
 
     # ----
+    profiler.PROFILER.start_mes("charte...")
     div_b2 = html.DIV(Class='tooltip')
 
     title6 = html.H4("Charte du bon diplomate")
@@ -377,9 +353,9 @@ def show_news():
     div_homepage <= div_b2
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("note importante...")
 
     # ----
+    profiler.PROFILER.start_mes("note importante...")
     div_a1 = html.DIV(Class='tooltip')
 
     title7 = html.H4("Note importante")
@@ -401,9 +377,9 @@ def show_news():
     div_homepage <= div_a1
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("divers...")
 
     # ----
+    profiler.PROFILER.start_mes("divers...")
     div_b1 = html.DIV(Class='tooltip')
 
     title8 = html.H4("Divers")
@@ -421,7 +397,10 @@ def show_news():
     div_b1 <= div_b1_tip
     div_homepage <= div_b1
 
+    profiler.PROFILER.stop_mes()
+
     # ----
+    profiler.PROFILER.start_mes("spam")
     MY_SUB_PANEL <= div_homepage
 
     # announce
