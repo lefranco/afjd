@@ -2,6 +2,7 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
+import time
 import profiler
 
 
@@ -12,7 +13,6 @@ profiler.PROFILER.start_mes("inside play.py...")
 
 
 import json
-import time
 
 
 from browser import document, html, ajax, alert, timer, window   # pylint: disable=import-error
@@ -26,7 +26,6 @@ import scoring
 import interface
 import geometry
 import mapping
-import login
 import sandbox
 import memoize
 import moderate
@@ -6104,6 +6103,7 @@ def render(panel_middle):
     panel_middle <= MY_PANEL
 
     profiler.PROFILER.stop_mes()
+
 
 profiler.PROFILER.stop_mes()
 profiler.PROFILER.stop_mes()
