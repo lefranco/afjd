@@ -915,6 +915,28 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/all_news')
+class AllNewsRessource(flask_restful.Resource):  # type: ignore
+    """ AllNewsRessource """
+
+    def get(self) -> typing.Tuple[typing.Any, int]:  # pylint: disable=no-self-use
+        """
+        Provides the latest news
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/news - GET - get the latest news (admin and modo)")
+
+        sql_executor = database.SqlExecutor()
+        news_content1 = newss.News.content(sql_executor)
+        news_content2 = news2s.News.content(sql_executor)
+        del sql_executor
+
+        data = {'admin': news_content1, 'modo': news_content2}
+
+        return data, 200
+
+
 @API.resource('/news')
 class NewsRessource(flask_restful.Resource):  # type: ignore
     """ NewsRessource """

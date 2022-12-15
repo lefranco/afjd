@@ -39,6 +39,36 @@ if 'ALREADY_SPAMMED' not in storage:
     storage['ALREADY_SPAMMED'] = 'yes'
 
 
+def get_all_news_content():
+    """ get_all_news_content """
+
+    all_news_content = {}
+
+    def reply_callback(req):
+        nonlocal all_news_content
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération du contenu des nouvelles (admin+modo) : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération du contenu des nouvelles (admin+modo) : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        all_news_content = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/all_news"
+
+    # get news : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return all_news_content
+
+
 def get_stats_content():
     """ get_stats_content """
 
@@ -279,12 +309,16 @@ def show_news():
     profiler.PROFILER.start_mes("news modo...")
 
     # ----
+    all_news_content_loaded = get_all_news_content()
+    # ----
+
+    # ----
     div_a3 = html.DIV(Class='tooltip')
 
     title4 = html.H4("Dernières nouvelles moderateur", Class='news')
     div_a3 <= title4
 
-    news_content_loaded2 = common.get_news_content2()
+    news_content_loaded2 = all_news_content_loaded['modo']
     news_content2 = formatted_news(news_content_loaded2, False)
     div_a3 <= news_content2
 
@@ -301,7 +335,7 @@ def show_news():
     title5 = html.H4("Dernières nouvelles administrateur", Class='news2')
     div_b3 <= title5
 
-    news_content_loaded = common.get_news_content()
+    news_content_loaded = all_news_content_loaded['admin']
     news_content = formatted_news(news_content_loaded, True)
     div_b3 <= news_content
 
