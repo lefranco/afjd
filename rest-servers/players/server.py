@@ -145,7 +145,7 @@ MAX_SIZE_IMAGE = (4 / 3) * 1000000
 class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
     """ PlayerIdentifierRessource """
 
-    def get(self, pseudo: str) -> typing.Tuple[int, int]:  # pylint: disable=no-self-use
+    def get(self, pseudo: str) -> typing.Tuple[int, int]:
         """
         From name get identifier
         EXPOSED
@@ -170,7 +170,7 @@ class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
 class ResendCodeRessource(flask_restful.Resource):  # type: ignore
     """ ResendCodeRessource """
 
-    def post(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Request new verification code
         EXPOSED
@@ -233,7 +233,7 @@ class ResendCodeRessource(flask_restful.Resource):  # type: ignore
 class PlayerRessource(flask_restful.Resource):  # type: ignore
     """ PlayerRessource """
 
-    def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Gets all info about a player
         EXPOSED
@@ -268,7 +268,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         data = player.save_json()
         return data, 200
 
-    def put(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def put(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Updates all info about a player
         EXPOSED
@@ -378,7 +378,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         data = {'pseudo': pseudo, 'msg': 'Ok updated'}
         return data, 200
 
-    def delete(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def delete(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Deletes a player
         EXPOSED
@@ -537,7 +537,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 class PlayerListRessource(flask_restful.Resource):  # type: ignore
     """ PlayerListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Provides list of all pseudo data (all players)
         EXPOSED
@@ -553,7 +553,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Creates a new player
         EXPOSED
@@ -669,7 +669,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 class PlayerShortListRessource(flask_restful.Resource):  # type: ignore
     """ PlayerShortListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Provides list of all pseudo (all players) - only identifier
         EXPOSED
@@ -690,7 +690,7 @@ class PlayerShortListRessource(flask_restful.Resource):  # type: ignore
 class PlayerSelectListRessource(flask_restful.Resource):  # type: ignore
     """ PlayerSelectListRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Provides list of some pseudo ( selected by identifier)
         Should be a get but has parameters
@@ -720,7 +720,7 @@ class PlayerSelectListRessource(flask_restful.Resource):  # type: ignore
 class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
     """ MailPlayersListRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Sends an email to a list of players
         EXPOSED
@@ -794,7 +794,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 class MailSupportRessource(flask_restful.Resource):  # type: ignore
     """ MailSupportRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Sends an email to support
         EXPOSED
@@ -819,7 +819,7 @@ class MailSupportRessource(flask_restful.Resource):  # type: ignore
 class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
     """ PlayerEmailsListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Provides list of all pseudo (all players) and the emails
         EXPOSED
@@ -862,7 +862,7 @@ class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
 class EmailRessource(flask_restful.Resource):  # type: ignore
     """ EmailRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Checks a couple pseudo/code for email in database
         EXPOSED
@@ -919,7 +919,7 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
 class AllNewsRessource(flask_restful.Resource):  # type: ignore
     """ AllNewsRessource """
 
-    def get(self) -> typing.Tuple[typing.Any, int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Any, int]:
         """
         Provides the latest news
         EXPOSED
@@ -941,7 +941,7 @@ class AllNewsRessource(flask_restful.Resource):  # type: ignore
 class NewsRessource(flask_restful.Resource):  # type: ignore
     """ NewsRessource """
 
-    def get(self) -> typing.Tuple[typing.Any, int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Any, int]:
         """
         Provides the latest news
         EXPOSED
@@ -957,7 +957,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Creates a new news
         EXPOSED
@@ -1013,7 +1013,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 class News2Ressource(flask_restful.Resource):  # type: ignore
     """ News2Ressource """
 
-    def get(self) -> typing.Tuple[typing.Any, int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Any, int]:
         """
         Provides the latest news
         EXPOSED
@@ -1029,7 +1029,7 @@ class News2Ressource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Creates a new news
         EXPOSED
@@ -1087,7 +1087,7 @@ class News2Ressource(flask_restful.Resource):  # type: ignore
 class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
     """ PlayerTelephoneRessource """
 
-    def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, str], int]:  # pylint: disable=no-self-use
+    def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, str], int]:
         """
         Provides the phone number of a player
         EXPOSED
@@ -1142,7 +1142,7 @@ class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
 class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
     """ PlayerEmailRessource """
 
-    def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, str], int]:  # pylint: disable=no-self-use
+    def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, str], int]:
         """
         Provides the email address of a player
         EXPOSED
@@ -1197,7 +1197,7 @@ class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
 class FindPlayerFromEmailRessource(flask_restful.Resource):  # type: ignore
     """ FindPlayerFromEmailRessource """
 
-    def get(self, email: str) -> typing.Tuple[typing.Dict[str, str], int]:  # pylint: disable=no-self-use
+    def get(self, email: str) -> typing.Tuple[typing.Dict[str, str], int]:
         """
         Provides the pseudo from the email address
         EXPOSED
@@ -1251,7 +1251,7 @@ class FindPlayerFromEmailRessource(flask_restful.Resource):  # type: ignore
 class CreatorListRessource(flask_restful.Resource):  # type: ignore
     """ CreatorListRessource """
 
-    def get(self) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.List[str], int]:
         """
         Provides list of all creators
         EXPOSED
@@ -1267,7 +1267,7 @@ class CreatorListRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Creates/Deletes a creator
         EXPOSED
@@ -1333,7 +1333,7 @@ class CreatorListRessource(flask_restful.Resource):  # type: ignore
 class ModeratorListRessource(flask_restful.Resource):  # type: ignore
     """ ModeratorListRessource """
 
-    def get(self) -> typing.Tuple[typing.List[str], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.List[str], int]:
         """
         Provides list of all moderators
         EXPOSED
@@ -1349,7 +1349,7 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Creates/Deletes a moderator
         EXPOSED
@@ -1415,7 +1415,7 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
 class PriviledgedListRessource(flask_restful.Resource):  # type: ignore
     """ PriviledgedListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[str]], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[str]], int]:
         """
         Provides list of all priviledged (creators or moderators)
         EXPOSED
@@ -1438,7 +1438,7 @@ class PriviledgedListRessource(flask_restful.Resource):  # type: ignore
 class EloClassicRessource(flask_restful.Resource):  # type: ignore
     """ EloClassicRessource """
 
-    def get(self, classic: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int, int]], int]:  # pylint: disable=no-self-use
+    def get(self, classic: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int, int]], int]:
         """
         Provides ratings by classic and role
         EXPOSED
@@ -1457,7 +1457,7 @@ class EloClassicRessource(flask_restful.Resource):  # type: ignore
 class EloClassicRoleRessource(flask_restful.Resource):  # type: ignore
     """ EloClassicRoleRessource """
 
-    def get(self, classic: int, role_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int, int]], int]:  # pylint: disable=no-self-use
+    def get(self, classic: int, role_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int, int, int]], int]:
         """
         Provides ELO ratings by classic and role
         EXPOSED
@@ -1476,7 +1476,7 @@ class EloClassicRoleRessource(flask_restful.Resource):  # type: ignore
 class RawEloRessource(flask_restful.Resource):  # type: ignore
     """ RawEloRessource """
 
-    def get(self) -> typing.Tuple[str, int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[str, int]:
         """
         Provides the elo teaser
         EXPOSED
@@ -1492,7 +1492,7 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Update elo data
         EXPOSED
@@ -1551,7 +1551,7 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
 class ReliabilityRessource(flask_restful.Resource):  # type: ignore
     """ ReliabilityRessource """
 
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int]], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int]], int]:
         """
         Provides reliability ratings
         EXPOSED
@@ -1565,7 +1565,7 @@ class ReliabilityRessource(flask_restful.Resource):  # type: ignore
 
         return ratings_list, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         maintain
         EXPOSED
@@ -1619,7 +1619,7 @@ class ReliabilityRessource(flask_restful.Resource):  # type: ignore
 class RegularityRessource(flask_restful.Resource):  # type: ignore
     """ RegularityRessource """
 
-    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int]], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, int, int]], int]:
         """
         Provides regularity ratings
         EXPOSED
@@ -1633,7 +1633,7 @@ class RegularityRessource(flask_restful.Resource):  # type: ignore
 
         return ratings_list, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         update regularity data
         EXPOSED
@@ -1687,7 +1687,7 @@ class RegularityRessource(flask_restful.Resource):  # type: ignore
 class EventManagerRessource(flask_restful.Resource):  # type: ignore
     """ EventManagerRessource """
 
-    def post(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Updates an event (manager)
         EXPOSED
@@ -1747,7 +1747,7 @@ class EventManagerRessource(flask_restful.Resource):  # type: ignore
 class EventRessource(flask_restful.Resource):  # type: ignore
     """ EventRessource """
 
-    def get(self, event_id: int) -> typing.Tuple[typing.Optional[typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
+    def get(self, event_id: int) -> typing.Tuple[typing.Optional[typing.Dict[str, typing.Any]], int]:
         """
         Get all information about event
         EXPOSED
@@ -1776,7 +1776,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def put(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def put(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Updates an event
         EXPOSED
@@ -1872,7 +1872,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
         data = {'identifier': event_id, 'msg': 'Ok updated'}
         return data, 200
 
-    def delete(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def delete(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Deletes an event
         EXPOSED
@@ -1943,7 +1943,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 class EventListRessource(flask_restful.Resource):  # type: ignore
     """ EventListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[str, typing.Any]], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[str, typing.Any]], int]:
         """
         Get list of events
         EXPOSED
@@ -1959,7 +1959,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Creates a new event
         EXPOSED
@@ -2039,7 +2039,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
 class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
     """ RegistrationEventRessource """
 
-    def get(self, event_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int]], int]:  # pylint: disable=no-self-use
+    def get(self, event_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int]], int]:
         """
         Get list of registrations to the event
         EXPOSED
@@ -2055,7 +2055,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Creates or deletes a registration (a relation player-event)
         EXPOSED
@@ -2131,7 +2131,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': 'Ok registration deleted if present'}
         return data, 200
 
-    def put(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def put(self, event_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Updates a registration (a relation player-event)
         EXPOSED
@@ -2236,7 +2236,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
 class IpAddressRessource(flask_restful.Resource):  # type: ignore
     """ IpAddressRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[str, int]]], int]:  # pylint: disable=no-self-use
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[str, int]]], int]:
         """
         Get list of IP addresses
         EXPOSED
@@ -2270,7 +2270,7 @@ class IpAddressRessource(flask_restful.Resource):  # type: ignore
 
         return data, 200
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Stores an IP address
         EXPOSED
@@ -2320,7 +2320,7 @@ class IpAddressRessource(flask_restful.Resource):  # type: ignore
 class MaintainRessource(flask_restful.Resource):  # type: ignore
     """ MaintainRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         maintain
         EXPOSED
