@@ -5944,7 +5944,7 @@ MY_PANEL <= MY_SUB_PANEL
 def load_option(_, item_name, direct_last_moves=False):
     """ load_option """
 
-    profiler.PROFILER.start_mes("load_option()")
+    profiler.PROFILER.start_mes("play.py load_option()")
 
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
@@ -5973,6 +5973,7 @@ def load_option(_, item_name, direct_last_moves=False):
         status = supervise()
 
     if not status:
+        profiler.PROFILER.stop_mes()
         return
 
     global ITEM_NAME_SELECTED
@@ -6020,7 +6021,7 @@ COUNTDOWN_TIMER = None
 def render(panel_middle):
     """ render """
 
-    profiler.PROFILER.start_mes("render()")
+    profiler.PROFILER.start_mes("play.py render()")
 
     # always back to top
     global ITEM_NAME_SELECTED
