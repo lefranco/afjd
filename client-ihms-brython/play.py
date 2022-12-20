@@ -2732,7 +2732,7 @@ def submit_communication_orders():
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
 
-                order_name = VARIANT_DATA.order_order_name_table[order_type]
+                order_name = VARIANT_DATA.order_name_table[order_type]
                 legend_selected_order = html.DIV(f"L'ordre sélectionné est {order_name}")
                 buttons_right <= legend_selected_order
                 buttons_right <= html.BR()
