@@ -97,6 +97,7 @@ def get_moderators():
 
     return moderators_list
 
+
 def get_news_content():
     """ get_news_content """
 
