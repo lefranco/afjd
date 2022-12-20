@@ -574,7 +574,7 @@ def show_ratings():
     ratings_table <= thead
 
     rank = 1
-    for (game, role), (points, centers, scoring_name) in sorted(rating_dict.items(), key=lambda i: (i[1][0], -i[1][1]), reverse=True):
+    for (game, role), (points, centers, scoring_name) in sorted(rating_dict.items(), key=lambda i: (float(i[1][0]), -float(i[1][1])), reverse=True):
 
         row = html.TR()
 
@@ -583,7 +583,7 @@ def show_ratings():
         row <= col
 
         # points
-        points_str = f"{points:.2f}"
+        points_str = f"{float(points):.2f}"
         col = html.TD(points_str)
         row <= col
 
