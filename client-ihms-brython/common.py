@@ -20,10 +20,29 @@ import mapping
 
 profiler.PROFILER.start_mes("functions...")
 
+# TODO improve this with real admin account
+ADMIN_PSEUDO = 'Palpatine'
+ALTERNATE_ADMIN_PSEUDO = 'OrangeCar'
+
 
 def noreply_callback(_):
     """ noreply_callback """
     alert("Problème (pas de réponse de la part du serveur)")
+
+
+def check_admin():
+    """ check_admin """
+
+    if 'PSEUDO' not in storage:
+        return False
+
+    pseudo = storage['PSEUDO']
+
+    # TODO improve this with real admin account
+    if pseudo != ADMIN_PSEUDO:
+        return False
+
+    return True
 
 
 def get_priviledged():
