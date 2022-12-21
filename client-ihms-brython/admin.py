@@ -319,8 +319,8 @@ def usurp():
 
             storage['PSEUDO'] = usurped_user_name
             storage['JWT_TOKEN'] = req_result['AccessToken']
-            time_stamp = time.time()
-            storage['LOGIN_TIME'] = str(time_stamp)
+            time_stamp_now = time.time()
+            storage['LOGIN_TIME'] = str(time_stamp_now)
 
             InfoDialog("OK", f"Vous usurpez maintenant : {usurped_user_name}", remove_after=config.REMOVE_AFTER)
             login.show_login()
@@ -1554,8 +1554,8 @@ def update_elo():
                 # perform actual exportation
                 text_file_as_blob = window.Blob.new([log_html], {'type': 'text/plain'})
                 download_link = document['download_link']
-                now = int(time.time())
-                download_link.download = f"diplomania_elo_{now}.html"
+                time_stamp_now = int(time.time())
+                download_link.download = f"diplomania_elo_{time_stamp_now}.html"
                 download_link.href = window.URL.createObjectURL(text_file_as_blob)
                 document['download_link'].click()
 
@@ -1703,8 +1703,8 @@ def update_reliability():
                 # perform actual exportation
                 text_file_as_blob = window.Blob.new([log_html], {'type': 'text/plain'})
                 download_link = document['download_link']
-                now = int(time.time())
-                download_link.download = f"diplomania_reliability_{now}.html"
+                time_stamp_now = int(time.time())
+                download_link.download = f"diplomania_reliability_{time_stamp_now}.html"
                 download_link.href = window.URL.createObjectURL(text_file_as_blob)
                 document['download_link'].click()
 
@@ -1837,8 +1837,8 @@ def update_regularity():
                 # perform actual exportation
                 text_file_as_blob = window.Blob.new([log_html], {'type': 'text/plain'})
                 download_link = document['download_link']
-                now = int(time.time())
-                download_link.download = f"diplomania_regularity_{now}.html"
+                time_stamp_now = int(time.time())
+                download_link.download = f"diplomania_regularity_{time_stamp_now}.html"
                 download_link.href = window.URL.createObjectURL(text_file_as_blob)
                 document['download_link'].click()
 

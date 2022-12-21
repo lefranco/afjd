@@ -267,9 +267,9 @@ def sandbox():
                 display_left.removeChild(report_window)
 
                 # put new
-                time_stamp = time.time()
+                time_stamp_now = time.time()
                 report_txt = req_result['result']
-                fake_report_loaded = {'time_stamp': time_stamp, 'content': report_txt}
+                fake_report_loaded = {'time_stamp': time_stamp_now, 'content': report_txt}
                 report_window = common.make_report_window(fake_report_loaded)
                 display_left <= report_window
 
@@ -307,8 +307,8 @@ def sandbox():
         """ download_callback """
 
         # make a rendom like label
-        time_stamp = time.time()
-        label = int(time_stamp) % 1000
+        time_stamp_now = time.time()
+        label = int(time_stamp_now) % 1000
 
         # needed too for some reason
         MY_PANEL <= html.A(id='download_link')
@@ -1017,8 +1017,8 @@ def sandbox():
 
         reserve_table <= row
 
-    time_stamp = time.time()
-    fake_report_loaded = {'time_stamp': time_stamp, 'content': ""}
+    time_stamp_now = time.time()
+    fake_report_loaded = {'time_stamp': time_stamp_now, 'content': ""}
     report_window = common.make_report_window(fake_report_loaded)
 
     display_very_left = html.DIV(id='display_very_left')

@@ -196,8 +196,8 @@ def create_game(json_dict):
             victory_centers = None
 
         # these are automatic
-        time_stamp = time.time()
-        time_creation = mydatetime.fromtimestamp(time_stamp)
+        time_stamp_now = time.time()
+        time_creation = mydatetime.fromtimestamp(time_stamp_now)
         time_creation_str = mydatetime.strftime(*time_creation)
 
         specific_data = ""

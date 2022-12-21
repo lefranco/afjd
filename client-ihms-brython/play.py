@@ -4643,6 +4643,14 @@ def game_master():
 
         deadline = mydatetime.totimestamp(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
 
+        time_stamp_now = time.time()
+        if deadline < time_stamp_now:
+            alert("Désolé, il est interdit de positionner une date limite dans le passé")
+            # back to where we were
+            MY_SUB_PANEL.clear()
+            game_master()
+            return
+
         json_dict = {
             'pseudo': PSEUDO,
             'name': GAME,
@@ -4910,8 +4918,8 @@ def game_master():
     deadline_form <= html.BR()
 
     # get GMT date and time
-    time_stamp = time.time()
-    date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+    time_stamp_now = time.time()
+    date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
 
     # convert 'deadline_loaded' to human editable format
@@ -4974,8 +4982,8 @@ class Logger(list):
         """ insert """
 
         # insert datation
-        time_stamp = time.time()
-        date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+        time_stamp_now = time.time()
+        date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
         date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
 
         # put in stack (limited height)
