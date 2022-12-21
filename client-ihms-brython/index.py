@@ -229,7 +229,7 @@ def load_option(_, item_name):
         forum.render(PANEL_MIDDLE)
     if item_name == 'Administration':
         if common.check_admin():
-            import admin
+            import admin  # pylint: disable=import-outside-toplevel
             admin.render(PANEL_MIDDLE)
 
     profiler.PROFILER.stop_mes()
