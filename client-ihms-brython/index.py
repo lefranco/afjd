@@ -83,11 +83,6 @@ profiler.PROFILER.start_mes("Import forum...")
 import forum    # pylint: disable=wrong-import-position # noqa: E402
 profiler.PROFILER.stop_mes()
 
-if common.check_admin():
-    profiler.PROFILER.start_mes("Import admin...")
-    import admin
-    profiler.PROFILER.stop_mes()
-
 profiler.PROFILER.start_mes("define functions...")
 
 # TITLE is in index.html
@@ -234,6 +229,7 @@ def load_option(_, item_name):
         forum.render(PANEL_MIDDLE)
     if item_name == 'Administration':
         if common.check_admin():
+            import admin
             admin.render(PANEL_MIDDLE)
 
     profiler.PROFILER.stop_mes()
