@@ -793,6 +793,22 @@ def declare_incident():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
+        if not input_email.value:
+            alert("Il faut obligatoirement un courriel (pour répondre)")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            declare_incident()
+            return
+
+        if input_email.value.find('@') == -1:
+            alert("@ dans courriel manquant")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            declare_incident()
+            return
+
         subject = "Déclaration d'incident de la part du site https://diplomania-gen.fr (AFJD)"
         body = ""
         body += f"pseudo : {input_pseudo.value}"
@@ -879,7 +895,7 @@ def declare_incident():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("courriel (facultatif mais bienvenu pour répondre facilement)", title="Votre courriel (si pas de pseudo)")
+    legend_email = html.LEGEND("courriel (obligatoire)", title="Votre courriel")
     fieldset <= legend_email
     input_email = html.INPUT(type="text", value=email_loaded, size=MAX_LEN_EMAIL)
     fieldset <= input_email
