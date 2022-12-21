@@ -727,8 +727,8 @@ def all_games(state_name):
     MY_SUB_PANEL <= html.BR()
 
     # get GMT date and time
-    time_stamp = time.time()
-    date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+    time_stamp_now = time.time()
+    date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
     special_info = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
     MY_SUB_PANEL <= special_info

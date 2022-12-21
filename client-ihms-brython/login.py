@@ -90,8 +90,8 @@ def login():
             # store data
             storage['PSEUDO'] = pseudo
             storage['JWT_TOKEN'] = req_result['AccessToken']
-            time_stamp = time.time()
-            storage['LOGIN_TIME'] = str(time_stamp)
+            time_stamp_now = time.time()
+            storage['LOGIN_TIME'] = str(time_stamp_now)
 
             # inform user
             InfoDialog("OK", f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)

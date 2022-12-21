@@ -170,8 +170,8 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         json_dict['name'] = game_to_create_name
 
         # obviously different deadline (set it to now)
-        timestamp = time.time()
-        deadline = int(timestamp)
+        time_stamp_now = time.time()
+        deadline = int(time_stamp_now)
         json_dict['deadline'] = deadline
 
         # obviously different state (starting)
