@@ -4615,6 +4615,9 @@ def game_master():
 
     def change_deadline_game_callback(_):
 
+        # bug brython
+        nonlocal dummy
+
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
@@ -4634,6 +4637,9 @@ def game_master():
             load_dynamic_stuff()
             game_master()
 
+        # bug brython
+        dummy = None
+
         # convert this human entered deadline to the deadline the server understands
         deadline_day_part = input_deadline_day.value
         deadline_hour_part = input_deadline_hour.value
@@ -4641,10 +4647,10 @@ def game_master():
         dt_year, dt_month, dt_day = map(int, deadline_day_part.split('-'))
         dt_hour, dt_min, dt_sec = map(int, deadline_hour_part.split(':'))
 
-        deadline = mydatetime.totimestamp(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
+        deadline_timestamp = mydatetime.totimestamp(dt_year, dt_month, dt_day, dt_hour, dt_min, dt_sec)
 
         time_stamp_now = time.time()
-        if deadline < time_stamp_now:
+        if deadline_timestamp < time_stamp_now:
             alert("Désolé, il est interdit de positionner une date limite dans le passé")
             # back to where we were
             MY_SUB_PANEL.clear()
@@ -4654,7 +4660,7 @@ def game_master():
         json_dict = {
             'pseudo': PSEUDO,
             'name': GAME,
-            'deadline': deadline,
+            'deadline': deadline_timestamp,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -4695,6 +4701,9 @@ def game_master():
         return False
 
     # now we can display
+
+    # because probably bug in brython (leave)
+    dummy = None
 
     # header
 
