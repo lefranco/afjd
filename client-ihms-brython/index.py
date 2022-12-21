@@ -79,13 +79,14 @@ profiler.PROFILER.start_mes("Import moderate...")
 import moderate    # pylint: disable=wrong-import-position # noqa: E402
 profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.start_mes("Import admin...")
-import admin    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
 profiler.PROFILER.start_mes("Import forum...")
 import forum    # pylint: disable=wrong-import-position # noqa: E402
 profiler.PROFILER.stop_mes()
+
+if common.check_admin():
+    profiler.PROFILER.start_mes("Import admin...")
+    import admin
+    profiler.PROFILER.stop_mes()
 
 profiler.PROFILER.start_mes("define functions...")
 
@@ -96,7 +97,7 @@ H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de 
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Mes parties', 'Editer partie', 'Appariement', 'Sélectionner partie', 'Jouer la partie sélectionnée', 'Bac à sable', 'Interface tournois', 'Evénements', 'Classements', 'Création', 'Modération', 'Administration', 'Forum']
+OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Mes parties', 'Editer partie', 'Appariement', 'Sélectionner partie', 'Jouer la partie sélectionnée', 'Bac à sable', 'Interface tournois', 'Evénements', 'Classements', 'Création', 'Modération', 'Forum', 'Administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -229,10 +230,11 @@ def load_option(_, item_name):
         create.render(PANEL_MIDDLE)
     if item_name == 'Modération':
         moderate.render(PANEL_MIDDLE)
-    if item_name == 'Administration':
-        admin.render(PANEL_MIDDLE)
     if item_name == 'Forum':
         forum.render(PANEL_MIDDLE)
+    if item_name == 'Administration':
+        if common.check_admin():
+            admin.render(PANEL_MIDDLE)
 
     profiler.PROFILER.stop_mes()
 
@@ -265,7 +267,7 @@ def load_option(_, item_name):
 
         # do not display menu administrate if not administrator
         if possible_item_name == 'Administration':
-            if pseudo is None or not admin.check_admin(pseudo):
+            if not common.check_admin():
                 continue
 
         if possible_item_name == ITEM_NAME_SELECTED:

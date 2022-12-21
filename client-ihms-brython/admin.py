@@ -23,20 +23,8 @@ OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifi
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-ADMIN_PSEUDO = 'Palpatine'
-ALTERNATE_PSEUDO = 'OrangeCar'
 
 DOWNLOAD_LOG = False
-
-
-def check_admin(pseudo):
-    """ check_admin """
-
-    # TODO improve this with real admin account
-    if pseudo != ADMIN_PSEUDO:
-        return False
-
-    return True
 
 
 def get_creators():
@@ -250,7 +238,7 @@ def change_news_admin():
             return
 
         json_dict = {
-            'pseudo': pseudo,
+            'pseudo': common.ADMIN_PSEUDO,
             'content': news_content
         }
 
@@ -267,13 +255,7 @@ def change_news_admin():
 
     MY_SUB_PANEL <= html.H3("Editer les nouvelles")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -345,13 +327,7 @@ def usurp():
 
     MY_SUB_PANEL <= html.H3("Usurper un inscrit")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -454,7 +430,7 @@ def rectify_parameters():
         nopress_game = int(input_nopress.checked)
 
         json_dict = {
-            'pseudo': pseudo,
+            'pseudo': common.ADMIN_PSEUDO,
             'used_for_elo': used_for_elo,
             'nomessage_game': nomessage_game,
             'nopress_game': nopress_game,
@@ -473,13 +449,7 @@ def rectify_parameters():
 
     MY_SUB_PANEL <= html.H3("Rectifier des paramètres de la partie")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -558,7 +528,7 @@ def rectify_position():
         ownerships_list_dict_json = json.dumps(ownerships_list_dict)
 
         json_dict = {
-            'pseudo': pseudo,
+            'pseudo': common.ADMIN_PSEUDO,
             'units': units_list_dict_json,
             'ownerships': ownerships_list_dict_json,
         }
@@ -826,13 +796,7 @@ def rectify_position():
 
     MY_SUB_PANEL <= html.H3("Rectifier la position")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -1010,13 +974,7 @@ def last_logins():
 
     MY_SUB_PANEL <= html.H3("Liste des dernières connexions")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -1057,13 +1015,7 @@ def last_failures():
 
     MY_SUB_PANEL <= html.H3("Connexions manquées")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -1222,13 +1174,7 @@ def edit_creators():
 
     MY_SUB_PANEL <= html.H3("Editer les modérateurs")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -1388,13 +1334,7 @@ def edit_moderators():
 
     MY_SUB_PANEL <= html.H3("Editer les modérateurs")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -1579,13 +1519,7 @@ def update_elo():
 
     MY_SUB_PANEL <= html.H3("Mettre à jour le ELO")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -1728,13 +1662,7 @@ def update_reliability():
 
     MY_SUB_PANEL <= html.H3("Mettre à jour la fiabilité")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -1862,13 +1790,7 @@ def update_regularity():
 
     MY_SUB_PANEL <= html.H3("Mettre à jour la régularité")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -2037,7 +1959,7 @@ def show_ip_addresses():
     duplicated_ips = {sorted_ips[i] for i in range(len(sorted_ips)) if (i < len(sorted_ips) - 1 and sorted_ips[i] == sorted_ips[i + 1]) or (i > 0 and sorted_ips[i] == sorted_ips[i - 1])}
 
     # same as admin ones (or orangecar)
-    admin_ips = {i[0] for i in ip_table if num2pseudo[i[1]] in [ADMIN_PSEUDO, ALTERNATE_PSEUDO]}
+    admin_ips = {i[0] for i in ip_table if num2pseudo[i[1]] in [common.ADMIN_PSEUDO, common.ALTERNATE_ADMIN_PSEUDO]}
 
     for data in sorted(ip_table, key=lambda c: (c[0], num2pseudo[c[1]].upper())):
 
@@ -2076,13 +1998,7 @@ def show_all_emails():
 
     MY_SUB_PANEL <= html.H3("Liste joueurs avec leurs courriels")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
@@ -2183,13 +2099,7 @@ def maintain():
 
     MY_SUB_PANEL <= html.H3("Maintenance")
 
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_admin(pseudo):
+    if not common.check_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
