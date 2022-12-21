@@ -648,18 +648,26 @@ def game_note_reload(game_id):
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
+    profiler.PROFILER.start_mes("get players")
+
     # need to be first since used in get_game_status()
     # get the players (all players)
     global PLAYERS_DICT
     PLAYERS_DICT = common.get_players()
     if not PLAYERS_DICT:
         alert("Erreur chargement info joueurs")
+        profiler.PROFILER.stop_mes()
         return
+
+    profiler.PROFILER.stop_mes()
+
+    profiler.PROFILER.start_mes("complicated part with optims")
 
     # from game name get variant name
 
     if 'GAME_VARIANT' not in storage:
         alert("ERREUR : variante introuvable")
+        profiler.PROFILER.stop_mes()
         return
 
     global VARIANT_NAME_LOADED
@@ -676,6 +684,7 @@ def load_static_stuff():
         VARIANT_CONTENT_LOADED = common.game_variant_content_reload(VARIANT_NAME_LOADED)
         if not VARIANT_CONTENT_LOADED:
             alert("Erreur chargement contenu variante")
+            profiler.PROFILER.stop_mes()
             return
         memoize.VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED] = VARIANT_CONTENT_LOADED
 
@@ -726,6 +735,7 @@ def load_static_stuff():
         INFORCED_VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, inforced_interface_parameters_read)
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = INFORCED_VARIANT_DATA
 
+    profiler.PROFILER.stop_mes()
 
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
@@ -2386,11 +2396,13 @@ def submit_orders():
             buttons_right <= html.DIV("Pour communiquer avec des ordres (ordres invalides) utilisez le sous menu 'taguer'", Class='Note')
 
     profiler.PROFILER.start_mes("submit_orders()")
+    profiler.PROFILER.start_mes("many checks")
 
     # need to be connected
     if PSEUDO is None:
         alert("Il faut se connecter au préalable")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         profiler.PROFILER.stop_mes()
         return False
 
@@ -2399,12 +2411,14 @@ def submit_orders():
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         load_option(None, 'Consulter')
         profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
     # cannot be game master unless archive game
     if ROLE_ID == 0 and not GAME_PARAMETERS_LOADED['archive']:
         alert("Ordonner pour un arbitre n'est possible que pour les parties archive")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         profiler.PROFILER.stop_mes()
         return False
 
@@ -2413,12 +2427,15 @@ def submit_orders():
         alert("La partie n'est pas encore démarrée")
         load_option(None, 'Consulter')
         profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
     # game needs to be ongoing - not finished
     if GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
     # need to have orders to submit
@@ -2428,17 +2445,21 @@ def submit_orders():
         alert("Erreur chargement données de soumission")
         load_option(None, 'Consulter')
         profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
     if ROLE_ID == 0:
         if not submitted_data['needed']:
             alert("Il n'y a pas d'ordre à passer")
             load_option(None, 'Consulter')
+            profiler.PROFILER.stop_mes()
+            profiler.PROFILER.stop_mes()
             return False
     else:
         if ROLE_ID not in submitted_data['needed']:
             alert("Vous n'avez pas d'ordre à passer")
             load_option(None, 'Consulter')
+            profiler.PROFILER.stop_mes()
             profiler.PROFILER.stop_mes()
             return False
 
@@ -2451,9 +2472,14 @@ def submit_orders():
         alert("La partie est arrivée à échéance")
         load_option(None, 'Consulter')
         profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
+    profiler.PROFILER.stop_mes()
+
     # now we can display
+
+    profiler.PROFILER.start_mes("put things on screen")
 
     # header
 
@@ -2481,6 +2507,7 @@ def submit_orders():
     if not orders_loaded:
         alert("Erreur chargement ordres")
         load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
         return False
 
     # digest the orders
@@ -2517,6 +2544,8 @@ def submit_orders():
     # all reports until last moves
     advancement_selected = GAME_PARAMETERS_LOADED['current_advancement']
 
+    profiler.PROFILER.stop_mes()
+
     profiler.PROFILER.start_mes("loop loading transitions")
 
     while True:
@@ -2548,6 +2577,8 @@ def submit_orders():
             break
 
     profiler.PROFILER.stop_mes()
+
+    profiler.PROFILER.start_mes("put more things (right hand side")
 
     # right side
 
@@ -2609,6 +2640,8 @@ def submit_orders():
     my_sub_panel2 <= buttons_right
 
     MY_SUB_PANEL <= my_sub_panel2
+
+    profiler.PROFILER.stop_mes()
 
     profiler.PROFILER.stop_mes()
 
