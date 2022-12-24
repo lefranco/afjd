@@ -7,14 +7,28 @@ import time
 from browser import document, html, alert, timer, window   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import profiler
+
 import config
 import common
 import moderate
 
-import play_play
-import play_master
-import play_other
+profiler.PROFILER.start_mes("import play_low...")
 import play_low
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("import play_play...")
+import play_play
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("import play_master...")
+import play_master
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("import play_other...")
+import play_other
+profiler.PROFILER.stop_mes()
+
 
 OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Paramètres', 'Retards', 'Superviser']
 
