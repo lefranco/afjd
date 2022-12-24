@@ -16,6 +16,9 @@ import user_config
 ADDRESS_ADMIN = "1"
 
 
+# only send mail if more thant this
+THRESHOLD = 10
+
 class Measure:
     """ Measure """
 
@@ -90,6 +93,10 @@ class Profiler:
         cur_measure.terminate()
 
         elapsed = cur_measure.duration()
+
+        # otherwise too much spam
+        if elapsed < THRESHOLD:
+            return
 
         subject = f"stats for {pseudo} ({elapsed})"
         body = ""
