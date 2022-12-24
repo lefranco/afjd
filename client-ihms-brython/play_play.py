@@ -1092,7 +1092,7 @@ def submit_orders():
         buttons_right <= input_after
         buttons_right <= html.BR()
 
-        option_never = "non pour le moment !"
+        option_never = "non (pour le moment) !"
         label_never = html.LABEL(html.EM(option_never))
         buttons_right <= label_never
         input_never = html.INPUT(type="radio", id="never", name="agreed", checked=never_value)
@@ -1107,9 +1107,7 @@ def submit_orders():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        buttons_right <= html.DIV("La soumission des ordres prend également en compte le fait d'être d\'accord pour la résolution", Class='instruction')
-        buttons_right <= html.BR()
-        buttons_right <= html.DIV("Le coche 'd\'accord pour la résolution' est obligatoire à un moment donné (de préférence avant la date limite)", Class='important')
+        buttons_right <= html.DIV("La soumission des ordres prend également en compte l\'accord pour la résolution", Class='instruction')
         if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
             buttons_right <= html.BR()
             buttons_right <= html.DIV("Pour communiquer avec des ordres (ordres invalides) utilisez le sous menu 'taguer'", Class='Note')
