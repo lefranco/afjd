@@ -163,10 +163,6 @@ def submit_orders():
     def submit_orders_callback(_, warned=False, dialog2=None):
         """ submit_orders_callback """
 
-        nonlocal now_value
-        nonlocal after_value
-        nonlocal never_value
-
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 201:
@@ -1076,11 +1072,11 @@ def submit_orders():
             after_value = event.target is input_after
             never_value = event.target is input_never
 
-        label_definitive = html.LABEL(html.B("D'accord pour la résolution :"))
+        label_definitive = html.LABEL(html.B("D'accord pour la résolution ?"))
         buttons_right <= label_definitive
         buttons_right <= html.BR()
 
-        option_now = "oui, même dès maintenant !"
+        option_now = "oui, maintenant !"
         label_now = html.LABEL(html.EM(option_now))
         buttons_right <= label_now
         input_now = html.INPUT(type="radio", id="now", name="agreed", checked=now_value)
@@ -1088,7 +1084,7 @@ def submit_orders():
         buttons_right <= input_now
         buttons_right <= html.BR()
 
-        option_after = "oui, mais seulement juste après la DL !"
+        option_after = "juste après la DL !"
         label_after = html.LABEL(html.EM(option_after))
         buttons_right <= label_after
         input_after = html.INPUT(type="radio", id="after", name="agreed", checked=after_value, disabled=True)  # TODO : change
@@ -1096,7 +1092,7 @@ def submit_orders():
         buttons_right <= input_after
         buttons_right <= html.BR()
 
-        option_never = "non, non, ce n'est pas définitif !"
+        option_never = "non pour le moment !"
         label_never = html.LABEL(html.EM(option_never))
         buttons_right <= label_never
         input_never = html.INPUT(type="radio", id="never", name="agreed", checked=never_value)
