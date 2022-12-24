@@ -339,14 +339,21 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         if entered_deadline is not None:
 
-            # check it
-            deadline_date = datetime.datetime.fromtimestamp(entered_deadline, datetime.timezone.utc)
+            if entered_deadline == 0: # this means "now, please !"
 
-            # cannot be in past
-            if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc):
-                date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
-                del sql_executor
-                flask_restful.abort(400, msg=f"You cannot set a deadline in the past from now !:'{date_desc}' (GMT)")
+                # now at server time
+                args['deadline'] = int(time.time() + 1)
+
+            else:
+
+                # check it
+                deadline_date = datetime.datetime.fromtimestamp(entered_deadline, datetime.timezone.utc)
+
+                # cannot be in past
+                if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc):
+                    date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
+                    del sql_executor
+                    flask_restful.abort(400, msg=f"You cannot set a deadline in the past from now !:'{date_desc}' (GMT)")
 
         # keep a note of game state before
         current_state_before = game.current_state
