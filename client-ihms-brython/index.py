@@ -51,7 +51,8 @@ profiler.PROFILER.start_mes("Import selection...")
 import selection    # pylint: disable=wrong-import-position # noqa: E402
 profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.start_mes("Import play...")
+profiler.PROFILER.start_mes("Import play and play_master...")
+import play_master    # pylint: disable=wrong-import-position # noqa: E402
 import play    # pylint: disable=wrong-import-position # noqa: E402
 profiler.PROFILER.stop_mes()
 
@@ -279,9 +280,9 @@ def load_option(_, item_name):
 
     # quitting superviser : clear timer
     if ITEM_NAME_SELECTED != 'jouer la partie sélectionnée':
-        if play.SUPERVISE_REFRESH_TIMER is not None:
-            timer.clear_interval(play.SUPERVISE_REFRESH_TIMER)
-            play.SUPERVISE_REFRESH_TIMER = None
+        if play_master.SUPERVISE_REFRESH_TIMER is not None:
+            timer.clear_interval(play_master.SUPERVISE_REFRESH_TIMER)
+            play_master.SUPERVISE_REFRESH_TIMER = None
 
     # these cause some problems
     if prev_item_selected in ['Jouer la partie sélectionnée', 'Bac à sable']:
