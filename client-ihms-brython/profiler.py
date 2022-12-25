@@ -19,6 +19,7 @@ ADDRESS_ADMIN = "1"
 # only send mail if more thant this
 THRESHOLD = 10
 
+
 class Measure:
     """ Measure """
 
