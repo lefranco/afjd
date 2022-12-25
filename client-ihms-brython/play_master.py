@@ -83,6 +83,12 @@ def game_master():
                     alert(f"Erreur à la modification de la date limite à la partie : {req_result['message']}")
                 elif 'msg' in req_result:
                     alert(f"Problème à la modification de la date limite à la partie : {req_result['msg']}")
+
+                    # back to where we were
+                    play_low.MY_SUB_PANEL.clear()
+                    game_master()
+                    return
+
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
