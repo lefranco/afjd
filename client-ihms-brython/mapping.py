@@ -15,8 +15,6 @@ profiler.PROFILER.stop_mes()
 
 profiler.PROFILER.start_mes("the rest...")
 
-from browser import html  # pylint: disable=import-error
-
 import geometry
 import center_design
 import unit_design
@@ -34,12 +32,6 @@ TRANSPARENCY = 0.70
 # with 20 south of sweden is no man land
 # with 10 east of atlantic is no man land
 CONSIDERED_ZONES = 35
-
-# in pixels (heuristically established)
-DEBUG_LEGEND_POS = False
-FONT_LEGEND_HEIGHT = 11
-FONT_LEGEND_WIDTH = 7.5
-SHIFT_LEGEND_UP = 8
 
 
 def shorten_arrow(x_start: int, y_start: int, x_dest: int, y_dest: int):
@@ -386,7 +378,7 @@ class Zone(Highliteable):
             # legend position and unit position are calculated from area ith polylabel
             position = self._variant.legend_position_table[self]
             x_pos = position.x_pos
-            y_pos = position.y_pos - SHIFT_LEGEND_UP
+            y_pos = position.y_pos
 
             # legend content (just for the length)
             if self._coast_type:
@@ -397,7 +389,7 @@ class Zone(Highliteable):
             # put on screen
             text_width = ctx.measureText(legend).width
             ctx.font = LEGEND_FONT
-            ctx.drawImage(self._variant.legend_canvas_table[self], x_pos - text_width / 2, y_pos)
+            ctx.fillText(legend, x_pos - text_width / 2, y_pos)
 
         # -----------------
         # the outline
@@ -719,7 +711,6 @@ class Variant(Renderable):
         self._role_add_table = {}
         self._path_table = {}
         self._geographic_owner_table = {}
-        self._legend_canvas_table = {}
 
         # load the map size
         data_dict = self._raw_parameters_content['map']
@@ -851,33 +842,6 @@ class Variant(Renderable):
             order_type = OrderTypeEnum.from_code(order_type_num)
             assert order_type is not None
             self._order_name_table[order_type] = data_dict['name']
-
-        # zone legends
-        for zone in self._zones.values():
-
-            # get the legend
-            if zone.coast_type:
-                legend = self._coast_name_table[zone.coast_type]
-            else:
-                legend = self._zone_name_table[zone]
-
-            # create a canvas for legend
-            width = len(legend) * FONT_LEGEND_WIDTH
-            height = FONT_LEGEND_HEIGHT
-            local_canvas = html.CANVAS(width=width, height=height)
-            local_ctx = local_canvas.getContext("2d")
-
-            # debug
-            if DEBUG_LEGEND_POS:
-                local_ctx.beginPath()
-                local_ctx.rect(1, 1, width - 2, height - 2)
-                local_ctx.stroke()
-
-            # put legend in context of canvas
-            local_ctx.fillText(legend, 0, height * 3 / 4)
-
-            # store the canvas
-            self._legend_canvas_table[zone] = local_canvas
 
     def closest_center(self, designated_pos: geometry.PositionRecord):
         """ closest_center  """
@@ -1049,11 +1013,6 @@ class Variant(Renderable):
     def legend_position_table(self):
         """ property """
         return self._legend_position_table
-
-    @property
-    def legend_canvas_table(self):
-        """ property """
-        return self._legend_canvas_table
 
     @property
     def zones(self):
