@@ -183,17 +183,24 @@ def countdown():
 def render(panel_middle):
     """ render """
 
+    profiler.PROFILER.start_mes("play render")
+    profiler.PROFILER.start_mes("start")
+
     # always back to top
     global ITEM_NAME_SELECTED
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
+        profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return
 
     play_low.GAME = storage['GAME']
 
     if 'GAME_ID' not in storage:
         alert("ERREUR : identifiant de partie introuvable")
+        profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return
 
     play_low.GAME_ID = storage['GAME_ID']
@@ -212,9 +219,21 @@ def render(panel_middle):
     if play_low.PSEUDO is not None:
         play_low.ROLE_ID = common.get_role_allocated_to_player_in_game(play_low.GAME_ID)
 
+    profiler.PROFILER.stop_mes()
+
+    profiler.PROFILER.start_mes("load_static_stuff")
     play_low.load_static_stuff()
+    profiler.PROFILER.stop_mes()
+
+    profiler.PROFILER.start_mes("load_dynamic_stuff")
     play_low.load_dynamic_stuff()
+    profiler.PROFILER.stop_mes()
+
+    profiler.PROFILER.start_mes("load_special_stuff")
     play_low.load_special_stuff()
+    profiler.PROFILER.stop_mes()
+
+    profiler.PROFILER.start_mes("misc")
 
     # initiates new countdown
     countdown()
@@ -254,5 +273,13 @@ def render(panel_middle):
             ITEM_NAME_SELECTED = 'Retards'
 
     set_arrival(None)
+
+    profiler.PROFILER.stop_mes()
+
+    profiler.PROFILER.start_mes("load_option")
     load_option(None, ITEM_NAME_SELECTED)
+    profiler.PROFILER.stop_mes()
+
     panel_middle <= play_low.MY_PANEL
+
+    profiler.PROFILER.stop_mes()

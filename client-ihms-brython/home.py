@@ -406,7 +406,9 @@ def show_news():
     if storage['ALREADY_SPAMMED'] == 'no':
         announcement = storage['ANNOUNCEMENT']
         if announcement:
+            profiler.PROFILER.start_mes("alert()")
             alert(announcement)
+            profiler.PROFILER.stop_mes()
         storage['ALREADY_SPAMMED'] = 'yes'
 
     profiler.PROFILER.stop_mes()
