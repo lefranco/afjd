@@ -159,12 +159,12 @@ def show_games():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'master', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']
+    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_game', 'nomessage_game']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'master': 'arbitre', 'variant': 'variante', 'used_for_elo': 'elo', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'current_state': 'état'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', }[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -172,7 +172,7 @@ def show_games():
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'master', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'current_state']:
+        if field in ['name', 'deadline', 'current_advancement', 'current_state', 'variant', 'used_for_elo', 'master', 'nopress_game', 'nomessage_game']:
 
             if field == 'name':
 
@@ -224,16 +224,16 @@ def show_games():
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'name':
         def key_function(g): return g[1]['name'].upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
-    elif sort_by == 'master':
-        def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'variant':
         def key_function(g): return g[1]['variant']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'used_for_elo':
-        def key_function(g): return g[1]['used_for_elo']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        def key_function(g): return int(g[1]['used_for_elo'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'master':
+        def key_function(g): return game_master_dict.get(g[1]['name'], '').upper()  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nopress_game':
-        def key_function(g): return (g[1]['nopress_game'], g[1]['nopress_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        def key_function(g): return (int(g[1]['nopress_game']), int(g[1]['nopress_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nomessage_game':
-        def key_function(g): return (g[1]['nomessage_game'], g[1]['nomessage_current'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        def key_function(g): return (int(g[1]['nomessage_game']), int(g[1]['nomessage_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
@@ -309,35 +309,6 @@ def show_games():
                     link <= img
                     value = link
 
-            if field == 'used_for_elo':
-                value = "Oui" if value else "Non"
-
-            if field == 'master':
-                game_name = data['name']
-                # some games do not have a game master
-                master_name = game_master_dict.get(game_name, '')
-                value = master_name
-
-            if field == 'nopress_game':
-                value1 = value
-                value2 = data['nopress_current']
-                if value2 == value1:
-                    value = "Non" if value1 else "Oui"
-                else:
-                    value1 = "Non" if value1 else "Oui"
-                    value2 = "Non" if value2 else "Oui"
-                    value = f"{value1} ({value2})"
-
-            if field == 'nomessage_game':
-                value1 = value
-                value2 = data['nomessage_current']
-                if value2 == value1:
-                    value = "Non" if value1 else "Oui"
-                else:
-                    value1 = "Non" if value1 else "Oui"
-                    value2 = "Non" if value2 else "Oui"
-                    value = f"{value1} ({value2})"
-
             if field == 'deadline':
                 deadline_loaded = value
                 datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
@@ -372,6 +343,35 @@ def show_games():
             if field == 'current_state':
                 state_name = data[field]
                 value = rev_state_code_table[state_name]
+
+            if field == 'used_for_elo':
+                value = "Oui" if value else "Non"
+
+            if field == 'master':
+                game_name = data['name']
+                # some games do not have a game master
+                master_name = game_master_dict.get(game_name, '')
+                value = master_name
+
+            if field == 'nopress_game':
+                value1 = value
+                value2 = data['nopress_current']
+                if value2 == value1:
+                    value = "Non" if value1 else "Oui"
+                else:
+                    value1 = "Non" if value1 else "Oui"
+                    value2 = "Non" if value2 else "Oui"
+                    value = f"{value1} ({value2})"
+
+            if field == 'nomessage_game':
+                value1 = value
+                value2 = data['nomessage_current']
+                if value2 == value1:
+                    value = "Non" if value1 else "Oui"
+                else:
+                    value1 = "Non" if value1 else "Oui"
+                    value2 = "Non" if value2 else "Oui"
+                    value = f"{value1} ({value2})"
 
             col = html.TD(value)
             if colour is not None:

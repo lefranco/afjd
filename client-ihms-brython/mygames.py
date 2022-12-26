@@ -82,7 +82,7 @@ def get_all_roles_allocated_to_player():
 
 
 def date_last_visit_load_all_games(visit_type):
-    """ date_last_visit_load_all_games : returns empty dct if problem """
+    """ date_last_visit_load_all_games : returns empty dict if problem """
 
     dict_time_stamp = {}
 
@@ -422,7 +422,7 @@ def my_games(state_name):
     games_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'go_game', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages']
+    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
 
     if storage['ACTION_COLUMN_MODE'] == 'displayed':
         fields.extend(['action'])
@@ -430,7 +430,7 @@ def my_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'variant': 'variante', 'used_for_elo': 'elo', 'deadline': 'date limite', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis d\'accord', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous d\'accord', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'action': 'action'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis d\'accord', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous d\'accord', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'action': 'action'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -438,7 +438,7 @@ def my_games(state_name):
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game', 'deadline', 'current_advancement', 'role_played']:
+        if field in ['name', 'deadline', 'current_advancement', 'role_played', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']:
 
             if field == 'name':
 
@@ -585,29 +585,6 @@ def my_games(state_name):
                     link <= img
                     value = link
 
-            if field == 'used_for_elo':
-                value = "Oui" if value else "Non"
-
-            if field == 'nopress_game':
-                value1 = value
-                value2 = data['nopress_current']
-                if value2 == value1:
-                    value = "Non" if value1 else "Oui"
-                else:
-                    value1 = "Non" if value1 else "Oui"
-                    value2 = "Non" if value2 else "Oui"
-                    value = f"{value1} ({value2})"
-
-            if field == 'nomessage_game':
-                value1 = value
-                value2 = data['nomessage_current']
-                if value2 == value1:
-                    value = "Non" if value1 else "Oui"
-                else:
-                    value1 = "Non" if value1 else "Oui"
-                    value2 = "Non" if value2 else "Oui"
-                    value = f"{value1} ({value2})"
-
             if field == 'deadline':
                 deadline_loaded = value
                 datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
@@ -736,6 +713,29 @@ def my_games(state_name):
                             link = html.A(href=f"?game={game_name}&arrival={arrival}", target="_blank")
                             link <= img
                             value = link
+
+            if field == 'used_for_elo':
+                value = "Oui" if value else "Non"
+
+            if field == 'nopress_game':
+                value1 = value
+                value2 = data['nopress_current']
+                if value2 == value1:
+                    value = "Non" if value1 else "Oui"
+                else:
+                    value1 = "Non" if value1 else "Oui"
+                    value2 = "Non" if value2 else "Oui"
+                    value = f"{value1} ({value2})"
+
+            if field == 'nomessage_game':
+                value1 = value
+                value2 = data['nomessage_current']
+                if value2 == value1:
+                    value = "Non" if value1 else "Oui"
+                else:
+                    value1 = "Non" if value1 else "Oui"
+                    value2 = "Non" if value2 else "Oui"
+                    value = f"{value1} ({value2})"
 
             if field == 'action':
                 value = ""
