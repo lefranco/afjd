@@ -323,6 +323,7 @@ def load_static_stuff():
 
     profiler.PROFILER.stop_mes()
 
+
 def load_dynamic_stuff():
     """ load_dynamic_stuff : loads global data """
 
