@@ -218,12 +218,22 @@ def show_news():
     profiler.PROFILER.start_mes("parties qui recrutent...")
     div_a5 = html.DIV(Class='tooltip')
 
-    title1 = html.H4("Les parties en cours dans lesquelles il manque un joueur")
+    # ----
+    profiler.PROFILER.start_mes("get all news...")
+    all_news_content_loaded = get_all_news_content()
+    profiler.PROFILER.stop_mes()
+    # ----
+
+    title1 = html.H4("Remplacements urgents")
     div_a5 <= title1
 
     suffering_games_loaded = stats_content['suffering_games']
-    suffering_games = formatted_games(suffering_games_loaded) if suffering_games_loaded else "Aucune pour le moment. On n'aime pas que les parties restent bloquées longtemps ici ;-)"
-    div_a5 <= suffering_games
+    if suffering_games_loaded:
+        div_a5 <= "Les parties suivantes sont en cours et ont besoin de remplaçant"
+        div_a5 <= html.BR()
+        div_a5 <= formatted_games(suffering_games_loaded)
+    else:
+        div_a5 <= "Aucune partie en cours n'a besoin de remplaçant."
 
     div_a5_tip = html.SPAN("Plus de détail dans le menu 'rejoindre une partie'", Class='tooltiptext')
     div_a5 <= div_a5_tip
@@ -277,12 +287,6 @@ def show_news():
     div_homepage <= div_b4
 
     profiler.PROFILER.stop_mes()
-
-    # ----
-    profiler.PROFILER.start_mes("get all news...")
-    all_news_content_loaded = get_all_news_content()
-    profiler.PROFILER.stop_mes()
-    # ----
 
     # ----
     profiler.PROFILER.start_mes("news modo...")
@@ -383,6 +387,25 @@ def show_news():
 
     title8 = html.H4("Divers")
     div_b1 <= title8
+
+    # time shift
+    server_time = all_news_content_loaded['server_time']
+    local_time = time.time()
+    delta_time = round(local_time - server_time)
+    if delta_time > 0:
+        status = "en avance"
+    else:
+        status = "en retard"
+    abs_delta_time = abs(delta_time)
+    if abs_delta_time > 60:
+        abs_delta_time /= 60
+        unit = "minutes"
+    else:
+        unit = "secondes"
+    div_b1 <= html.DIV(f"Votre horloge locale est {status} de {abs_delta_time} {unit} sur celle du serveur", Class='note')
+    div_b1 <= html.BR()
+
+    # rest
 
     div_b1 <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
     div_b1 <= html.DIV("Il faut toujours cocher 'd\'accord pour résoudre pour que la partie avance")
