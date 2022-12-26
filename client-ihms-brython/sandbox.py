@@ -157,18 +157,6 @@ def sandbox():
     report_window = None
     displayed_zones = set()
 
-    def show_zone_callback(_, zone):
-
-        # ignore if already
-        if zone in displayed_zones:
-            return
-
-        # handle the set of displayed zones
-        displayed_zones.add(zone)
-
-        zone_area = VARIANT_DATA.path_table[zone]
-        mapping.fill_zone(ctx, zone_area, mapping.SHOW_COLOUR)
-
     def rest_hold_callback(_):
         """ rest_hold_callback """
 
@@ -202,7 +190,6 @@ def sandbox():
         if not POSITION_DATA.empty():
             put_download(buttons_right)
         buttons_right <= html.BR()
-        put_checkers(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -238,7 +225,6 @@ def sandbox():
         if not POSITION_DATA.empty():
             put_download(buttons_right)
         buttons_right <= html.BR()
-        put_checkers(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -411,7 +397,6 @@ def sandbox():
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
             buttons_right <= html.BR()
-            put_checkers(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -482,7 +467,6 @@ def sandbox():
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
             buttons_right <= html.BR()
-            put_checkers(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -528,7 +512,6 @@ def sandbox():
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
             buttons_right <= html.BR()
-            put_checkers(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -569,7 +552,6 @@ def sandbox():
                 if not POSITION_DATA.empty():
                     put_download(buttons_right)
                 buttons_right <= html.BR()
-                put_checkers(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
                 return
@@ -595,7 +577,6 @@ def sandbox():
             if not POSITION_DATA.empty():
                 put_download(buttons_right)
             buttons_right <= html.BR()
-            put_checkers(buttons_right)
 
             my_sub_panel2 <= buttons_right
             MY_PANEL <= my_sub_panel2
@@ -668,7 +649,6 @@ def sandbox():
         if not POSITION_DATA.empty():
             put_download(buttons_right)
         buttons_right <= html.BR()
-        put_checkers(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -840,22 +820,6 @@ def sandbox():
         buttons_right <= input_export
         buttons_right <= html.BR()
 
-    def put_checkers(buttons_right):
-        """ put_checkers """
-
-        buttons_right <= "Vérifier zone :"
-        buttons_right <= html.BR()
-
-        # to check positions
-        for zone in sorted(VARIANT_DATA.zones.values(), key=lambda z: VARIANT_DATA.zone_name_table[z].upper()):
-            zone_name = VARIANT_DATA.zone_name_table[zone]
-
-            input_submit = html.INPUT(type="submit", value=zone_name)
-            input_submit.bind("click", lambda e, z=zone: show_zone_callback(e, z))
-            buttons_right <= input_submit
-
-        buttons_right <= html.BR()
-
     # callbacks pour le glisser / deposer
 
     def mouseover(event):
@@ -961,7 +925,6 @@ def sandbox():
         if not POSITION_DATA.empty():
             put_download(buttons_right)
         buttons_right <= html.BR()
-        put_checkers(buttons_right)
 
         my_sub_panel2 <= buttons_right
         MY_PANEL <= my_sub_panel2
@@ -1098,7 +1061,6 @@ def sandbox():
     if not POSITION_DATA.empty():
         put_download(buttons_right)
     buttons_right <= html.BR()
-    put_checkers(buttons_right)
 
     # overall
     my_sub_panel2 = html.DIV()
