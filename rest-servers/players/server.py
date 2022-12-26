@@ -918,14 +918,16 @@ class AllNewsRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/news - GET - get the latest news (admin and modo)")
+        mylogger.LOGGER.info("/news - GET - get the latest news (admin and modo) + server time")
 
         sql_executor = database.SqlExecutor()
         news_content1 = newss.News.content(sql_executor)
         news_content2 = news2s.News.content(sql_executor)
         del sql_executor
 
-        data = {'admin': news_content1, 'modo': news_content2}
+        server_time = time.time()
+
+        data = {'admin': news_content1, 'modo': news_content2, 'server_time': server_time}
 
         return data, 200
 
