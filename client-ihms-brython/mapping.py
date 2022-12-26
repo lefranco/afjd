@@ -545,7 +545,7 @@ DISLODGED_FONT = dislodged_font()
 # orders
 ATTACK_COLOUR = ColourRecord(red=255, green=25, blue=25)  # red
 ATTACK_FAILED_COLOUR = ColourRecord(red=25, green=25, blue=25)  # black (not used)
-SUPPORT_COLOUR = ColourRecord(red=25, green=255, blue=25)  # green
+SUPPORT_COLOUR = ColourRecord(red=25, green=190, blue=25)  # green a bit dark
 CONVOY_COLOUR = ColourRecord(red=25, green=25, blue=255)  # blue
 RETREAT_COLOUR = ColourRecord(red=255, green=127, blue=0)  # orange
 ADJUSTMENT_COLOUR = ColourRecord(red=0, green=0, blue=0)  # black
@@ -1660,7 +1660,7 @@ class Position(Renderable):
         return self._units
 
 
-DASH_PATTERN = [4, 4]
+DASH_PATTERN = [5, 5]
 
 
 class Order(Renderable):
