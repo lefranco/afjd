@@ -280,7 +280,6 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
         # update player on users server if there is a password
         if args['password']:
-            mylogger.LOGGER.info("Special :  updating a password")
             host = lowdata.SERVER_CONFIG['USER']['HOST']
             port = lowdata.SERVER_CONFIG['USER']['PORT']
             url = f"{host}:{port}/change"
@@ -564,8 +563,6 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         args = PLAYER_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
 
-        mylogger.LOGGER.info("pseudo=%s", pseudo)
-
         sql_executor = database.SqlExecutor()
 
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
@@ -733,8 +730,6 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         force = args['force']
         pretend_sender = args['pretend_sender']
 
-        mylogger.LOGGER.info("pseudo=%s", pseudo)
-
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -872,8 +867,6 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
 
         args = EMAIL_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
-
-        mylogger.LOGGER.info("pseudo=%s", pseudo)
 
         sql_executor = database.SqlExecutor()
 
@@ -1279,8 +1272,6 @@ class CreatorListRessource(flask_restful.Resource):  # type: ignore
         player_pseudo = args['player_pseudo']
         delete = args['delete']
 
-        mylogger.LOGGER.info("player_pseudo=%s delete=%s", player_pseudo, delete)
-
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -1360,8 +1351,6 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
         args = MODERATOR_PARSER.parse_args(strict=True)
         player_pseudo = args['player_pseudo']
         delete = args['delete']
-
-        mylogger.LOGGER.info("player_pseudo=%s delete=%s", player_pseudo, delete)
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1977,8 +1966,6 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         description = args['description']
         summary = args['summary']
 
-        mylogger.LOGGER.info("name=%s", name)
-
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -2067,8 +2054,6 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
 
         delete = args['delete']
 
-        mylogger.LOGGER.info("event_id=%s delete=%s", event_id, delete)
-
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -2143,8 +2128,6 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
 
         player_id = args['player_id']
         value = args['value']
-
-        mylogger.LOGGER.info("event_id=%s player_id=%s value=%s", event_id, player_id, value)
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
