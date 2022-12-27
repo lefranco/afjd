@@ -122,7 +122,7 @@ def get_news_content():
 def get_last_logins():
     """ get_last_logins """
 
-    logins_list = None
+    logins_list = []
 
     def reply_callback(req):
         nonlocal logins_list
@@ -1826,6 +1826,9 @@ def show_idle_data():
         return
 
     logins_list = get_last_logins()
+    if not logins_list:
+        alert("Erreur chargement logins joueurs")
+        return
     last_login_time = {ll[0]: ll[2] for ll in logins_list}
 
     idle_set = set()
