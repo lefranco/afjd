@@ -431,7 +431,12 @@ def get_game_status():
 
     row = html.TR()
 
-    col = html.TD(f"Partie {game_name} ({game_variant})")
+    desc = html.DIV()
+    desc <= "Partie "
+    desc <= html.B(f"{game_name}")
+    desc <= f" ({game_variant})"
+
+    col = html.TD(desc)
     row <= col
     col = html.TD(f"id={GAME_ID}")
     row <= col
