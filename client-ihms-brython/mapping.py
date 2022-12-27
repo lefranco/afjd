@@ -1397,6 +1397,11 @@ class Position(Renderable):
                 region = zone.region
                 self._occupant_table[region] = dislodged_unit
 
+    def erase_centers(self) -> None:
+        """ erase all centers """
+        self._ownerships = []
+        self._owner_table = []
+
     def erase_units(self) -> None:
         """ erase all units """
         self._units = []
