@@ -1497,7 +1497,7 @@ def negotiate(default_dest_set):
 
         for line in content.split('\n'):
             # new so put in bold
-            if time_stamp > time_stamp_last_visit:
+            if from_role_id_msg != play_low.ROLE_ID and time_stamp > time_stamp_last_visit:
                 line = html.B(line)
             col <= line
             col <= html.BR()
@@ -1760,7 +1760,7 @@ def declare():
 
         for line in content.split('\n'):
             # new so put in bold
-            if time_stamp > time_stamp_last_visit:
+            if role_id_msg != play_low.ROLE_ID and time_stamp > time_stamp_last_visit:
                 line = html.B(line)
             col <= line
             col <= html.BR()
