@@ -99,7 +99,7 @@ def login():
 
             # request to validate email
             if not email_confirmed(pseudo):
-                alert("Merci de penser à vérifier votre adresse couriel. Cela évite que les message du site reviennent en erreur. Pour ce faire : mon_compte/valider mon courriel")
+                alert("Merci de penser à vérifier votre adresse courriel. Cela évite que les message du site reviennent en erreur. Pour ce faire : mon_compte/valider mon courriel - 'me renvoyer un nouveau code', recopier le code du courriel et 'valider le courriel'")
 
             # goto directly to page my games
             index.load_option(None, 'Mes parties')
