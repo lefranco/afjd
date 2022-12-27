@@ -28,6 +28,7 @@ DOWNLOAD_LOG = False
 
 IDLE_TIMEOUT = 365.2 * 24 * 60 * 60
 
+
 def get_creators():
     """ get_creators : returns empty list if problem """
 
@@ -1825,7 +1826,7 @@ def show_idle_data():
         return
 
     logins_list = get_last_logins()
-    last_login_time = {l[0] : l[2] for l in logins_list}
+    last_login_time = {ll[0]: ll[2] for ll in logins_list}
 
     idle_set = set()
     for player_data in players_dict.values():
@@ -1857,7 +1858,7 @@ def show_idle_data():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'id'  :'id', 'player': 'joueur', 'last_login': 'dernier login'}[field]
+        field_fr = {'id': 'id', 'player': 'joueur', 'last_login': 'dernier login'}[field]
         col = html.TD(field_fr)
         thead <= col
     idle_table <= thead
