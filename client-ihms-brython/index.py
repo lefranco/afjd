@@ -187,7 +187,7 @@ def set_flag(_, value):
 def load_option(_, item_name):
     """ load_option """
 
-    profiler.PROFILER.start_mes("load_option()...")
+    profiler.PROFILER.start_mes("index.py inside load_option()...")
 
     profiler.PROFILER.start_mes(f"loading page - calling render() - {item_name} ...")
 

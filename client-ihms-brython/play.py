@@ -276,7 +276,7 @@ def render(panel_middle):
 
     profiler.PROFILER.stop_mes()
 
-    profiler.PROFILER.start_mes("load_option")
+    profiler.PROFILER.start_mes("play.py call load_option")
     load_option(None, ITEM_NAME_SELECTED)
     profiler.PROFILER.stop_mes()
 
