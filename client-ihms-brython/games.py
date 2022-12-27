@@ -79,7 +79,7 @@ def create_game(json_dict):
     nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play'] if json_dict and 'nb_max_cycles_to_play' in json_dict else None
     victory_centers = json_dict['victory_centers'] if json_dict and 'victory_centers' in json_dict else None
 
-    def create_game_callback(_):
+    def create_game_callback(ev):
         """ create_game_callback """
 
         nonlocal name
@@ -122,6 +122,8 @@ def create_game(json_dict):
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"La partie a été créé : {messages}", remove_after=config.REMOVE_AFTER)
             alert("Maintenant vous devez la sélectionner par le menu 'Sélectionner partie'")
+
+        ev.preventDefault()
 
         # get values from user input
 
@@ -577,7 +579,7 @@ def change_description_game():
 
         return status
 
-    def change_description_game_callback(_):
+    def change_description_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -592,6 +594,8 @@ def change_description_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"La description a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         description = input_description.value
 
@@ -697,7 +701,7 @@ def change_anonymity_game():
 
         return status
 
-    def change_anonymity_games_callback(_):
+    def change_anonymity_games_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -712,6 +716,8 @@ def change_anonymity_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"L'accès à l'anonymat a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         json_dict = {
             'pseudo': pseudo,
@@ -817,7 +823,7 @@ def change_access_messages_game():
 
         return status
 
-    def change_access_messages_games_callback(_):
+    def change_access_messages_games_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -832,6 +838,8 @@ def change_access_messages_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"L'accès à la messagerie a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         json_dict = {
             'pseudo': pseudo,
@@ -943,7 +951,7 @@ def change_scoring_game():
 
         return status
 
-    def change_scoring_game_callback(_):
+    def change_scoring_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -958,6 +966,8 @@ def change_scoring_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Le scorage a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         scoring_code = config.SCORING_CODE_TABLE[input_scoring.value]
 
@@ -1074,7 +1084,7 @@ def change_access_parameters_game():
 
         return status
 
-    def change_access_parameters_game_callback(_):
+    def change_access_parameters_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1089,6 +1099,8 @@ def change_access_parameters_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Les paramètres d'accès ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         access_restriction_reliability = input_access_restriction_reliability.value
         access_restriction_regularity = input_access_restriction_regularity.value
@@ -1237,7 +1249,7 @@ def change_pace_parameters_game():
 
         return status
 
-    def change_pace_parameters_game_callback(_):
+    def change_pace_parameters_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1252,6 +1264,8 @@ def change_pace_parameters_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Les paramètres de cadence ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         try:
             deadline_hour = int(input_deadline_hour.value)

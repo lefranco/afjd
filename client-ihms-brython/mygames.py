@@ -215,8 +215,10 @@ def information_about_quitting():
 def my_games(state_name):
     """ my_games """
 
-    def select_game_callback(_, game_name, game_data_sel, arrival):
+    def select_game_callback(ev, game_name, game_data_sel, arrival):
         """ select_game_callback """
+
+        ev.preventDefault()
 
         # action of selecting game
         storage['GAME'] = game_name
@@ -234,7 +236,7 @@ def my_games(state_name):
         # action of going to game page
         index.load_option(None, 'Jouer la partie sélectionnée')
 
-    def start_game_callback(_, game):
+    def start_game_callback(ev, game):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -249,6 +251,8 @@ def my_games(state_name):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"La partie a été démarrée : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         json_dict = {
             'pseudo': pseudo,
@@ -267,7 +271,7 @@ def my_games(state_name):
         MY_PANEL.clear()
         my_games(state_name)
 
-    def stop_game_callback(_, game):
+    def stop_game_callback(ev, game):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -282,6 +286,8 @@ def my_games(state_name):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"La partie a été arrêtée : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         json_dict = {
             'pseudo': pseudo,

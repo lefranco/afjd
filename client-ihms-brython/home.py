@@ -265,7 +265,7 @@ def show_news():
     title2 = html.H4("Les événements qui recrutent")
     div_a4 <= title2
 
-    news_events = html.OBJECT(data="https://diplomania-gen.fr/events/", width="100%", height="400")
+    news_events = html.OBJECT(data="https://diplomania-gen.fr/events/", width="100%", height="400", title="Evénements",  alt="Evénements")
     div_a4 <= news_events
 
     # no tip
@@ -280,7 +280,7 @@ def show_news():
     title3 = html.H4("Dernières contributions sur les forums")
     div_b4 <= title3
 
-    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="400")
+    news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="400", title="Forums", alt="Forums")
     div_b4 <= news_forum
 
     # no tip
@@ -804,7 +804,7 @@ def declare_incident():
 
         email_loaded = req_result['email']
 
-    def submit_incident_callback(_):
+    def submit_incident_callback(ev):
         """ submit_incident_callback """
 
         def submit_incident_reply_callback(req):
@@ -817,6 +817,8 @@ def declare_incident():
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
+
+        ev.preventDefault()
 
         if not input_email.value:
             alert("Il faut obligatoirement un courriel (pour répondre)")
@@ -1194,8 +1196,10 @@ RATING_TABLE = {}
 def test_scoring():
     """ test_scoring """
 
-    def test_scoring_callback(_, game_scoring, ratings_input):
+    def test_scoring_callback(ev, game_scoring, ratings_input):
         """ test_scoring_callback """
+
+        ev.preventDefault()
 
         for name, element in ratings_input.items():
             val = 0

@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang=fr>
 
 <head>
@@ -21,18 +21,18 @@
 
 <body onload="brython()">
 
-<div id='spinner' style="padding:50px">
+<div id='spinner'>
 <span class=pyspinner>
 Chargement en cours... un peu de patience !
 </div>
 
 <!-- just calling python  -->
-<script type="text/python">
+<script type="text/python" content-type="utf-8">
 import index
 </script>
 
 <!-- version  -->
-<script language="JavaScript">
+<script language="JavaScript" content-type="utf-8">
 var xhReq = new XMLHttpRequest();
 xhReq.open("HEAD", "brython_modules.js", false);
 xhReq.send(null);

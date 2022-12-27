@@ -762,8 +762,10 @@ def show_events_in_game():
         # deleting incident : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def remove_dropout_callback_confirm(_, role_id, player_id, text):
+    def remove_dropout_callback_confirm(ev, role_id, player_id, text):
         """ remove_dropout_callback_confirm """
+
+        ev.preventDefault()
 
         dialog = Dialog(f"On supprime vraiment cet abandon pour {text} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, p=player_id: remove_dropout_callback(e, d, r, p))
@@ -773,8 +775,10 @@ def show_events_in_game():
         play_low.MY_SUB_PANEL.clear()
         show_events_in_game()
 
-    def remove_incident_callback_confirm(_, role_id, advancement, text):
+    def remove_incident_callback_confirm(ev, role_id, advancement, text):
         """ remove_incident_callback_confirm """
+
+        ev.preventDefault()
 
         dialog = Dialog(f"On supprime vraiment cet incident pour {text} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, a=advancement: remove_incident_callback(e, d, r, a))
@@ -1231,7 +1235,7 @@ def negotiate(default_dest_set):
         play_low.MY_SUB_PANEL.clear()
         negotiate(dest_set)
 
-    def add_message_callback(_):
+    def add_message_callback(ev):
         """ add_message_callback """
 
         def reply_callback(req):
@@ -1253,6 +1257,8 @@ def negotiate(default_dest_set):
             CONTENT_BACKUP = None
             play_low.MY_SUB_PANEL.clear()
             negotiate({})
+
+        ev.preventDefault()
 
         dest_role_ids = ' '.join([str(role_num) for (role_num, button) in selected.items() if button.checked])
 
@@ -1559,7 +1565,7 @@ def negotiate(default_dest_set):
 def declare():
     """ declare """
 
-    def add_declaration_callback(_):
+    def add_declaration_callback(ev):
         """ add_declaration_callback """
 
         def reply_callback(req):
@@ -1579,6 +1585,8 @@ def declare():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             declare()
+
+        ev.preventDefault()
 
         anonymous = input_anonymous.checked
 
@@ -1816,7 +1824,7 @@ def declare():
 def note():
     """ note """
 
-    def add_note_callback(_):
+    def add_note_callback(ev):
         """ add_note_callback """
 
         def reply_callback(req):
@@ -1836,6 +1844,8 @@ def note():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             note()
+
+        ev.preventDefault()
 
         content = input_note.value
 

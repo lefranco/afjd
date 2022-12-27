@@ -2053,7 +2053,7 @@ def submit_communication_orders():
 def vote():
     """ vote """
 
-    def add_vote_callback(_):
+    def add_vote_callback(ev):
         """ add_vote_callback """
 
         def reply_callback(req):
@@ -2073,6 +2073,8 @@ def vote():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             vote()
+
+        ev.preventDefault()
 
         vote_value = input_vote.checked
 

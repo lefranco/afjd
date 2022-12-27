@@ -63,7 +63,7 @@ def login():
         if pressed:
             alert("Attention : vous êtes en mode majuscules !")
 
-    def login_callback(_):
+    def login_callback(ev):
         """ login_callback """
 
         global PREVIOUS_PSEUDO
@@ -103,6 +103,8 @@ def login():
 
             # goto directly to page my games
             index.load_option(None, 'Mes parties')
+
+        ev.preventDefault()
 
         pseudo = input_pseudo.value
 
@@ -148,15 +150,19 @@ def login():
         # login (getting token) : no need for token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def forgot_callback(_):
+    def forgot_callback(ev):
         """ forgot_callback """
+
+        ev.preventDefault()
 
         alert("Désolé: la récupération du mot de passe n'est pas encore implémentée - vous pouvez contacter le support (cf. page d'accueil / onglet 'déclarer un incident') qui vous forcera un nouveau mot de passe")
 
         render(PANEL_MIDDLE)
 
-    def logout_callback(_):
+    def logout_callback(ev):
         """ logout_callback """
+
+        ev.preventDefault()
 
         effective = logout()
 

@@ -293,7 +293,7 @@ def load_option(_, item_name):
 
     if ITEM_NAME_SELECTED == 'Accueil':
         if 'flag' not in storage or storage['flag'] == 'True':
-            emotion_img = html.IMG(src="./images/ukraine-flag-animation.gif")
+            emotion_img = html.IMG(src="./images/ukraine-flag-animation.gif", alt="Solidarité")
             MENU_LEFT <= html.BR()
             MENU_LEFT <= emotion_img
             MENU_LEFT <= html.BR()
