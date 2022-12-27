@@ -71,8 +71,10 @@ def my_opportunities():
         # go to create account page
         index.load_option(None, 'Mon compte')
 
-    def select_game_callback(_, game_name, game_data_sel):
+    def select_game_callback(ev, game_name, game_data_sel):
         """ select_game_callback """
+
+        ev.preventDefault()
 
         # action of selecting game
         storage['GAME'] = game_name
@@ -87,7 +89,7 @@ def my_opportunities():
         # action of going to game page
         index.load_option(None, 'Jouer la partie sélectionnée')
 
-    def join_and_select_game_callback(evt, game_name, game_data_sel):
+    def join_and_select_game_callback(ev, game_name, game_data_sel):
         """ join_and_select_game_callback : the second way of joining a game : by a button """
 
         def join_game(game_name, game_data_sel):
@@ -123,11 +125,13 @@ def my_opportunities():
             # adding allocation : need a token
             ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+        ev.preventDefault()
+
         # action of putting myself in game
         join_game(game_name, game_data_sel)
 
         # action of going to the game
-        select_game_callback(evt, game_name, game_data_sel)
+        select_game_callback(ev, game_name, game_data_sel)
 
     def change_button_mode_callback(_):
         if storage['GAME_ACCESS_MODE'] == 'button':

@@ -567,7 +567,7 @@ def game_master():
         # put role : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def allocate_role_callback(_, input_for_role, role_id):
+    def allocate_role_callback(ev, input_for_role, role_id):
         """ allocate_role_callback """
 
         def reply_callback(req):
@@ -588,6 +588,8 @@ def game_master():
             play_low.MY_SUB_PANEL.clear()
             play_low.load_special_stuff()
             game_master()
+
+        ev.preventDefault()
 
         player_pseudo = input_for_role.value
 
