@@ -833,7 +833,7 @@ def show_incidents():
 def create_tournament():
     """ create_tournament """
 
-    def create_tournament_callback(_):
+    def create_tournament_callback(ev):
         """ create_tournament_callback """
 
         def reply_callback(req):
@@ -855,6 +855,8 @@ def create_tournament():
             TOURNAMENT_DICT = common.get_tournament_data(game)
             if not TOURNAMENT_DICT:
                 alert("Impossible de retrouver le tournoi qui vient juste d'être créée.")
+
+        ev.preventDefault()
 
         name = input_name.value
 
@@ -931,7 +933,7 @@ def create_tournament():
 def edit_tournament():
     """ edit_tournament """
 
-    def put_in_tournament_callback(_):
+    def put_in_tournament_callback(ev):
         """ put_in_tournament_callback """
 
         def reply_callback(req):
@@ -957,6 +959,8 @@ def edit_tournament():
             MY_SUB_PANEL.clear()
             edit_tournament()
 
+        ev.preventDefault()
+
         game_name = input_incomer.value
         game_id = common.get_game_id(game_name)
         if not game_id:
@@ -975,7 +979,7 @@ def edit_tournament():
         # putting a game in a tournament : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def remove_from_tournament_callback(_):
+    def remove_from_tournament_callback(ev):
         """remove_from_tournament_callback"""
 
         def reply_callback(req):
@@ -1000,6 +1004,8 @@ def edit_tournament():
             # back to where we started
             MY_SUB_PANEL.clear()
             edit_tournament()
+
+        ev.preventDefault()
 
         game_name = input_outcomer.value
 
@@ -1136,7 +1142,7 @@ def delete_tournament():
         """ cancel_delete_tournament_callback """
         dialog.close()
 
-    def delete_tournament_callback(_, dialog):
+    def delete_tournament_callback(ev, dialog):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1158,6 +1164,8 @@ def delete_tournament():
                 alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
                 return
 
+        ev.preventDefault()
+
         dialog.close()
 
         json_dict = {}
@@ -1169,8 +1177,10 @@ def delete_tournament():
         # deleting tournament : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def delete_tournament_callback_confirm(_):
+    def delete_tournament_callback_confirm(ev):
         """ delete_tournament_callback_confirm """
+
+        ev.preventDefault()
 
         dialog = Dialog("On supprime vraiment le tournoi ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_tournament_callback(e, d))

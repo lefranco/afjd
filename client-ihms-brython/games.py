@@ -1489,7 +1489,7 @@ def change_state_game():
         """ cancel_delete_account_callback """
         dialog.close()
 
-    def change_state_game_callback(_, dialog, expected_state):
+    def change_state_game_callback(ev, dialog, expected_state):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1504,6 +1504,8 @@ def change_state_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"L'état de la partie a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         if dialog is not None:
             dialog.close()
@@ -1525,7 +1527,10 @@ def change_state_game():
         MY_SUB_PANEL.clear()
         change_state_game()
 
-    def change_state_game_callback_confirm(_, expected_state):
+    def change_state_game_callback_confirm(ev, expected_state):
+
+        ev.preventDefault()
+
         dialog = Dialog(f"On arrête vraiment la partie {game} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, es=expected_state: change_state_game_callback(e, d, es))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_change_state_game_callback(e, d))
@@ -1591,7 +1596,7 @@ def delete_game():
         """ cancel_delete_game_callback """
         dialog.close()
 
-    def delete_game_callback(_, dialog):
+    def delete_game_callback(ev, dialog):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1611,6 +1616,8 @@ def delete_game():
             # go to select another game
             index.load_option(None, 'Sélectionner partie')
 
+        ev.preventDefault()
+
         dialog.close()
 
         json_dict = {
@@ -1624,8 +1631,10 @@ def delete_game():
         # deleting game : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def delete_game_callback_confirm(_):
+    def delete_game_callback_confirm(ev):
         """ delete_game_callback_confirm """
+
+        ev.preventDefault()
 
         dialog = Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))

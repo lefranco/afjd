@@ -17,8 +17,10 @@ MY_PANEL.attrs['style'] = 'display: table-row'
 def select_game():
     """ select_game """
 
-    def select_game_callback(_, input_game, game_data_sel):
+    def select_game_callback(ev, input_game, game_data_sel):
         """ select_game_callback """
+
+        ev.preventDefault()
 
         game_name = input_game.value
         storage['GAME'] = game_name

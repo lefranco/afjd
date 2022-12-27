@@ -56,7 +56,7 @@ def get_game_allocated_players(game_id):
 def join_game():
     """ join_game : the first way of joining a game """
 
-    def join_game_callback(_):
+    def join_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -80,6 +80,8 @@ def join_game():
             # back to where we started
             MY_SUB_PANEL.clear()
             join_game()
+
+        ev.preventDefault()
 
         json_dict = {
             'game_id': game_id,
@@ -125,7 +127,7 @@ def join_game():
 def quit_game():
     """ quit_game """
 
-    def quit_game_callback(_):
+    def quit_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -149,6 +151,8 @@ def quit_game():
             # back to where we started
             MY_SUB_PANEL.clear()
             quit_game()
+
+        ev.preventDefault()
 
         json_dict = {
             'game_id': game_id,
@@ -195,7 +199,7 @@ def quit_game():
 def move_players_in_game():
     """ move_players_in_game """
 
-    def put_in_game_callback(_):
+    def put_in_game_callback(ev):
         """ put_in_game_callback """
 
         def reply_callback(req):
@@ -221,6 +225,8 @@ def move_players_in_game():
             MY_SUB_PANEL.clear()
             move_players_in_game()
 
+        ev.preventDefault()
+
         player_pseudo = input_incomer.value
 
         json_dict = {
@@ -237,7 +243,7 @@ def move_players_in_game():
         # putting a player in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def remove_from_game_callback(_):
+    def remove_from_game_callback(ev):
         """remove_from_game_callback"""
 
         def reply_callback(req):
@@ -262,6 +268,8 @@ def move_players_in_game():
             # back to where we started
             MY_SUB_PANEL.clear()
             move_players_in_game()
+
+        ev.preventDefault()
 
         player_pseudo = input_outcomer.value
 
@@ -400,7 +408,7 @@ def move_players_in_game():
 def take_mastering_game():
     """ take_mastering_game """
 
-    def take_mastering_game_callback(_):
+    def take_mastering_game_callback(ev):
 
         def reply_callback(req):
 
@@ -425,6 +433,8 @@ def take_mastering_game():
             # back to where we started
             MY_SUB_PANEL.clear()
             take_mastering_game()
+
+        ev.preventDefault()
 
         json_dict = {
             'game_id': game_id,
@@ -471,7 +481,7 @@ def take_mastering_game():
 def quit_mastering_game():
     """ quit_mastering_game """
 
-    def quit_mastering_game_callback(_):
+    def quit_mastering_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -495,6 +505,8 @@ def quit_mastering_game():
             # back to where we started
             MY_SUB_PANEL.clear()
             quit_mastering_game()
+
+        ev.preventDefault()
 
         json_dict = {
             'game_id': game_id,

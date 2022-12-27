@@ -74,7 +74,7 @@ SUPERVISE_REFRESH_PERIOD_SEC = 15
 def game_master():
     """ game_master """
 
-    def change_deadline_game_callback(_):
+    def change_deadline_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -83,12 +83,6 @@ def game_master():
                     alert(f"Erreur à la modification de la date limite à la partie : {req_result['message']}")
                 elif 'msg' in req_result:
                     alert(f"Problème à la modification de la date limite à la partie : {req_result['msg']}")
-
-                    # back to where we were
-                    play_low.MY_SUB_PANEL.clear()
-                    game_master()
-                    return
-
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
@@ -100,6 +94,8 @@ def game_master():
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
             game_master()
+
+        ev.preventDefault()
 
         # convert this human entered deadline to the deadline the server understands
         deadline_day_part = input_deadline_day.value
@@ -131,7 +127,7 @@ def game_master():
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def push_deadline_game_callback(_):
+    def push_deadline_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -151,6 +147,8 @@ def game_master():
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
             game_master()
+
+        ev.preventDefault()
 
         # get deadline
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
@@ -173,7 +171,7 @@ def game_master():
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def sync_deadline_game_callback(_):
+    def sync_deadline_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -193,6 +191,8 @@ def game_master():
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
             game_master()
+
+        ev.preventDefault()
 
         # push on server
         json_dict = {
