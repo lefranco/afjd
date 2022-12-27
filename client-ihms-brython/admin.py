@@ -366,6 +366,7 @@ def rectify_parameters():
 
     # declare the values
     used_for_elo_loaded = None
+    fast_loaded = None
     nomessage_loaded = None
     nopress_loaded = None
 
@@ -383,6 +384,7 @@ def rectify_parameters():
         def reply_callback(req):
             nonlocal status
             nonlocal used_for_elo_loaded
+            nonlocal fast_loaded
             nonlocal nomessage_loaded
             nonlocal nopress_loaded
             req_result = json.loads(req.text)
@@ -397,6 +399,7 @@ def rectify_parameters():
                 return
 
             used_for_elo_loaded = req_result['used_for_elo']
+            fast_loaded = req_result['fast']
             nomessage_loaded = req_result['nomessage_game']
             nopress_loaded = req_result['nopress_game']
 
@@ -428,12 +431,14 @@ def rectify_parameters():
             InfoDialog("OK", f"Les paramètres de la partie ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
 
         used_for_elo = int(input_used_for_elo.checked)
+        fast = int(input_fast.checked)
         nomessage_game = int(input_nomessage.checked)
         nopress_game = int(input_nopress.checked)
 
         json_dict = {
             'pseudo': common.ADMIN_PSEUDO,
             'used_for_elo': used_for_elo,
+            'fast': fast,
             'nomessage_game': nomessage_game,
             'nopress_game': nopress_game,
         }
@@ -472,6 +477,13 @@ def rectify_parameters():
     fieldset <= legend_used_for_elo
     input_used_for_elo = html.INPUT(type="checkbox", checked=used_for_elo_loaded)
     fieldset <= input_used_for_elo
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_fast = html.LEGEND("en direct", title="Partie en direct - jouée en une soirée")
+    fieldset <= legend_fast
+    input_fast = html.INPUT(type="checkbox", checked=fast_loaded)
+    fieldset <= input_fast
     form <= fieldset
 
     fieldset = html.FIELDSET()
