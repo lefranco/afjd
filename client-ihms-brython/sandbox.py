@@ -203,6 +203,9 @@ def sandbox():
         # erase orders
         ORDERS_DATA.erase_orders()
 
+        # erase centers
+        POSITION_DATA.erase_centers()
+
         # erase units
         POSITION_DATA.erase_units()
 
