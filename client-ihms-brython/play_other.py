@@ -500,7 +500,7 @@ def show_position(direct_last_moves):
 
         buttons_right <= html.H3("Divers")
 
-        input_export_sandbox = html.INPUT(type="submit", value="exporter vers le bac à sable")
+        input_export_sandbox = html.INPUT(type="submit", value="exporter la partie vers le bac à sable")
         input_export_sandbox.bind("click", callback_export_sandbox)
         buttons_right <= input_export_sandbox
         buttons_right <= html.BR()
