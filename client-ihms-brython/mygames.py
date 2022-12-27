@@ -793,7 +793,7 @@ def my_games(state_name):
     time_stamp_now = time.time()
     date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
-    special_legend = html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}")
+    special_legend = html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
     MY_PANEL <= special_legend
     MY_PANEL <= html.BR()
 
