@@ -939,7 +939,7 @@ def game_master():
     play_low.MY_SUB_PANEL <= deadline_form
     play_low.MY_SUB_PANEL <= html.BR()
 
-    play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement : {date_now_gmt_str}", Class='note')
+    play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}", Class='note')
     play_low.MY_SUB_PANEL <= html.BR()
 
     return True
