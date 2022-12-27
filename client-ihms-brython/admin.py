@@ -26,6 +26,7 @@ LONG_DURATION_LIMIT_SEC = 1.0
 
 DOWNLOAD_LOG = False
 
+IDLE_TIMEOUT = 365.2 * 24 * 60 * 60
 
 def get_creators():
     """ get_creators : returns empty list if problem """
@@ -1819,10 +1820,12 @@ def show_idle_data():
         return
 
     players_dict = common.get_players_data()
-
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
         return
+
+    logins_list = get_last_logins()
+    last_login_time = {l[0] : l[2] for l in logins_list}
 
     idle_set = set()
     for player_data in players_dict.values():
@@ -1849,25 +1852,51 @@ def show_idle_data():
 
     idle_table = html.TABLE()
 
-    fields = ['player']
+    fields = ['id', 'player', 'last_login']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'player': 'joueur'}[field]
+        field_fr = {'id'  :'id', 'player': 'joueur', 'last_login': 'dernier login'}[field]
         col = html.TD(field_fr)
         thead <= col
     idle_table <= thead
 
     pseudo2id = {v['pseudo']: int(k) for k, v in players_dict.items()}
 
+    time_stamp_now = time.time()
+
     count = 0
     for player in sorted(idle_set, key=lambda p: pseudo2id[p]):
         row = html.TR()
+
         for field in fields:
+
+            colour = None
+
+            if field == 'id':
+                value = pseudo2id[player]
+
             if field == 'player':
                 value = player
+
+            if field == 'last_login':
+                value = ''
+                if player in last_login_time:
+                    time_stamp = last_login_time[player]
+                    if time_stamp < time_stamp_now - IDLE_TIMEOUT:
+                        colour = 'red'
+                    date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+                    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+                    value = f"{date_now_gmt_str}"
+
             col = html.TD(value)
+
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+
             row <= col
 
         idle_table <= row
