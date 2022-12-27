@@ -1949,7 +1949,7 @@ def show_ip_addresses():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'ip_value': 'ip_value', 'pseudo': 'pseudo'}[field]
+        field_fr = {'ip_value': 'adresse IP', 'pseudo': 'pseudo'}[field]
         col = html.TD(field_fr)
         thead <= col
     players_table <= thead
