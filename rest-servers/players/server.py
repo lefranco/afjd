@@ -507,6 +507,20 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # all is ok
         # ----------------------
 
+        # notify player
+
+        # create message
+        subject = f"Message de suppression de compte {pseudo} sur le site https://diplomania-gen.fr (AFJD)"
+        body = "Bonjour !"
+        body += "\n"
+        body += "Votre compte a été supprimé !"
+
+        # send message
+        status = mailer.send_mail(subject, body, [player.email], None)
+        if not status:
+            del sql_executor
+            flask_restful.abort(400, msg="Failed to send notification message")
+
         # delete player from ip addresses table
         addresses.Address.delete_by_player_id(sql_executor, player_id)
 
