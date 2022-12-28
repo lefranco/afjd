@@ -2053,7 +2053,7 @@ def submit_communication_orders():
 def vote():
     """ vote """
 
-    def add_vote_callback(ev):
+    def add_vote_callback(ev):  # pylint: disable=invalid-name
         """ add_vote_callback """
 
         def reply_callback(req):

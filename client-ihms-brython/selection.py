@@ -17,7 +17,7 @@ MY_PANEL.attrs['style'] = 'display: table-row'
 def select_game():
     """ select_game """
 
-    def select_game_callback(ev, input_game, game_data_sel):
+    def select_game_callback(ev, input_game, game_data_sel):  # pylint: disable=invalid-name
         """ select_game_callback """
 
         ev.preventDefault()

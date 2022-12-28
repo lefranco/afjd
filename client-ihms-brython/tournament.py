@@ -832,7 +832,7 @@ def show_incidents():
 def create_tournament():
     """ create_tournament """
 
-    def create_tournament_callback(ev):
+    def create_tournament_callback(ev):  # pylint: disable=invalid-name
         """ create_tournament_callback """
 
         def reply_callback(req):
@@ -932,7 +932,7 @@ def create_tournament():
 def edit_tournament():
     """ edit_tournament """
 
-    def put_in_tournament_callback(ev):
+    def put_in_tournament_callback(ev):  # pylint: disable=invalid-name
         """ put_in_tournament_callback """
 
         def reply_callback(req):
@@ -978,7 +978,7 @@ def edit_tournament():
         # putting a game in a tournament : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def remove_from_tournament_callback(ev):
+    def remove_from_tournament_callback(ev):  # pylint: disable=invalid-name
         """remove_from_tournament_callback"""
 
         def reply_callback(req):
@@ -1141,7 +1141,7 @@ def delete_tournament():
         """ cancel_delete_tournament_callback """
         dialog.close()
 
-    def delete_tournament_callback(ev, dialog):
+    def delete_tournament_callback(ev, dialog):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1176,7 +1176,7 @@ def delete_tournament():
         # deleting tournament : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def delete_tournament_callback_confirm(ev):
+    def delete_tournament_callback_confirm(ev):  # pylint: disable=invalid-name
         """ delete_tournament_callback_confirm """
 
         ev.preventDefault()

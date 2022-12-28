@@ -166,7 +166,7 @@ def find_from_email_address():
 def change_news_modo():
     """ change_news_modo """
 
-    def change_news_modo_callback(ev):
+    def change_news_modo_callback(ev):  # pylint: disable=invalid-name
         """ change_news_modo_callback """
 
         def reply_callback(req):
@@ -398,7 +398,7 @@ def show_verif_codes():
 def sendmail():
     """ sendmail """
 
-    def sendmail_callback(ev):
+    def sendmail_callback(ev):  # pylint: disable=invalid-name
         """ sendmail_callback """
 
         def reply_callback(req):
@@ -504,7 +504,7 @@ def sendmail():
 def display_email_address():
     """ display_email_address """
 
-    def display_email_address_callback(ev):
+    def display_email_address_callback(ev):  # pylint: disable=invalid-name
         """ display_email_address_callback """
 
         def reply_callback(req):
@@ -584,7 +584,7 @@ def display_email_address():
 def display_phone_number():
     """ get_phone_number """
 
-    def display_phone_number_callback(ev):
+    def display_phone_number_callback(ev):  # pylint: disable=invalid-name
         """ get_phone_number_callback """
 
         def reply_callback(req):
@@ -907,7 +907,7 @@ def tournament_result():
 def revoke_master():
     """ revoke_master """
 
-    def revoke_master_callback(ev):
+    def revoke_master_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -983,7 +983,7 @@ def revoke_master():
 def change_manager():
     """ change_manager """
 
-    def promote_managers_callback(ev):
+    def promote_managers_callback(ev):  # pylint: disable=invalid-name
         """ promote_managers_callback """
 
         def reply_callback(req):

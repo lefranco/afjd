@@ -71,7 +71,7 @@ def my_opportunities():
         # go to create account page
         index.load_option(None, 'Mon compte')
 
-    def select_game_callback(ev, game_name, game_data_sel):
+    def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
         """ select_game_callback """
 
         ev.preventDefault()
@@ -89,7 +89,7 @@ def my_opportunities():
         # action of going to game page
         index.load_option(None, 'Jouer la partie sélectionnée')
 
-    def join_and_select_game_callback(ev, game_name, game_data_sel):
+    def join_and_select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
         """ join_and_select_game_callback : the second way of joining a game : by a button """
 
         def join_game(game_name, game_data_sel):

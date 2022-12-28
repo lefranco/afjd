@@ -804,7 +804,7 @@ def declare_incident():
 
         email_loaded = req_result['email']
 
-    def submit_incident_callback(ev):
+    def submit_incident_callback(ev):  # pylint: disable=invalid-name
         """ submit_incident_callback """
 
         def submit_incident_reply_callback(req):
@@ -1196,7 +1196,7 @@ RATING_TABLE = {}
 def test_scoring():
     """ test_scoring """
 
-    def test_scoring_callback(ev, game_scoring, ratings_input):
+    def test_scoring_callback(ev, game_scoring, ratings_input):  # pylint: disable=invalid-name
         """ test_scoring_callback """
 
         ev.preventDefault()

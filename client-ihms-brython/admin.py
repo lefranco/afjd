@@ -217,7 +217,7 @@ def get_ip_table():
 def change_news_admin():
     """ change_news_admin """
 
-    def change_news_admin_callback(ev):
+    def change_news_admin_callback(ev):  # pylint: disable=invalid-name
         """ change_news_admin_callback """
 
         def reply_callback(req):
@@ -416,7 +416,7 @@ def rectify_parameters():
 
         return status
 
-    def change_parameters_game_callback(ev):
+    def change_parameters_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1110,7 +1110,7 @@ def last_failures():
 def edit_creators():
     """ edit_creators """
 
-    def add_creator_callback(ev):
+    def add_creator_callback(ev):  # pylint: disable=invalid-name
         """ add_creator_callback """
 
         def reply_callback(req):
@@ -1152,7 +1152,7 @@ def edit_creators():
         # putting a moderator : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def remove_creator_callback(ev):
+    def remove_creator_callback(ev):  # pylint: disable=invalid-name
         """remove_creator_callback"""
 
         def reply_callback(req):
@@ -1274,7 +1274,7 @@ def edit_creators():
 def edit_moderators():
     """ edit_moderators """
 
-    def add_moderator_callback(ev):
+    def add_moderator_callback(ev):  # pylint: disable=invalid-name
         """ add_moderator_callback """
 
         def reply_callback(req):
@@ -1316,7 +1316,7 @@ def edit_moderators():
         # putting a moderator : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def remove_moderator_callback(ev):
+    def remove_moderator_callback(ev):  # pylint: disable=invalid-name
         """remove_moderator_callback"""
 
         def reply_callback(req):
@@ -1485,7 +1485,7 @@ def update_elo():
         dialog.ok_button.bind("click", lambda e, d=dialog, erl=elo_raw_list, tt=teaser_text: update_database_callback(e, d, erl, tt))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
-    def extract_elo_data_callback(ev):
+    def extract_elo_data_callback(ev):  # pylint: disable=invalid-name
         """ extract_elo_data_callback """
 
         def reply_callback(req):
@@ -1630,7 +1630,7 @@ def update_reliability():
         dialog.ok_button.bind("click", lambda e, d=dialog, rl=reliability_list: update_database_callback(e, d, rl))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
-    def extract_reliability_data_callback(ev):
+    def extract_reliability_data_callback(ev):  # pylint: disable=invalid-name
         """ extract_reliability_data_callback """
 
         def reply_callback(req):
@@ -1760,7 +1760,7 @@ def update_regularity():
         dialog.ok_button.bind("click", lambda e, d=dialog, rl=regularity_list: update_database_callback(e, d, rl))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
-    def extract_regularity_data_callback(ev):
+    def extract_regularity_data_callback(ev):  # pylint: disable=invalid-name
         """ extract_regularity_data_callback """
 
         def reply_callback(req):
@@ -2118,7 +2118,7 @@ def show_all_emails():
 def maintain():
     """ maintain """
 
-    def maintain_callback(ev):
+    def maintain_callback(ev):  # pylint: disable=invalid-name
         """ maintain_callback """
 
         def reply_callback(req):
