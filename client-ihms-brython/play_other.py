@@ -762,7 +762,7 @@ def show_events_in_game():
         # deleting incident : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def remove_dropout_callback_confirm(ev, role_id, player_id, text):
+    def remove_dropout_callback_confirm(ev, role_id, player_id, text):  # pylint: disable=invalid-name
         """ remove_dropout_callback_confirm """
 
         ev.preventDefault()
@@ -775,7 +775,7 @@ def show_events_in_game():
         play_low.MY_SUB_PANEL.clear()
         show_events_in_game()
 
-    def remove_incident_callback_confirm(ev, role_id, advancement, text):
+    def remove_incident_callback_confirm(ev, role_id, advancement, text):  # pylint: disable=invalid-name
         """ remove_incident_callback_confirm """
 
         ev.preventDefault()
@@ -1235,7 +1235,7 @@ def negotiate(default_dest_set):
         play_low.MY_SUB_PANEL.clear()
         negotiate(dest_set)
 
-    def add_message_callback(ev):
+    def add_message_callback(ev):  # pylint: disable=invalid-name
         """ add_message_callback """
 
         def reply_callback(req):
@@ -1565,7 +1565,7 @@ def negotiate(default_dest_set):
 def declare():
     """ declare """
 
-    def add_declaration_callback(ev):
+    def add_declaration_callback(ev):  # pylint: disable=invalid-name
         """ add_declaration_callback """
 
         def reply_callback(req):
@@ -1824,7 +1824,7 @@ def declare():
 def note():
     """ note """
 
-    def add_note_callback(ev):
+    def add_note_callback(ev):  # pylint: disable=invalid-name
         """ add_note_callback """
 
         def reply_callback(req):

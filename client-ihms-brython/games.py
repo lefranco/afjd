@@ -79,7 +79,7 @@ def create_game(json_dict):
     nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play'] if json_dict and 'nb_max_cycles_to_play' in json_dict else None
     victory_centers = json_dict['victory_centers'] if json_dict and 'victory_centers' in json_dict else None
 
-    def create_game_callback(ev):
+    def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
 
         nonlocal name
@@ -579,7 +579,7 @@ def change_description_game():
 
         return status
 
-    def change_description_game_callback(ev):
+    def change_description_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -701,7 +701,7 @@ def change_anonymity_game():
 
         return status
 
-    def change_anonymity_games_callback(ev):
+    def change_anonymity_games_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -823,7 +823,7 @@ def change_access_messages_game():
 
         return status
 
-    def change_access_messages_games_callback(ev):
+    def change_access_messages_games_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -951,7 +951,7 @@ def change_scoring_game():
 
         return status
 
-    def change_scoring_game_callback(ev):
+    def change_scoring_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1084,7 +1084,7 @@ def change_access_parameters_game():
 
         return status
 
-    def change_access_parameters_game_callback(ev):
+    def change_access_parameters_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1249,7 +1249,7 @@ def change_pace_parameters_game():
 
         return status
 
-    def change_pace_parameters_game_callback(ev):
+    def change_pace_parameters_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1489,7 +1489,7 @@ def change_state_game():
         """ cancel_delete_account_callback """
         dialog.close()
 
-    def change_state_game_callback(ev, dialog, expected_state):
+    def change_state_game_callback(ev, dialog, expected_state):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1527,7 +1527,7 @@ def change_state_game():
         MY_SUB_PANEL.clear()
         change_state_game()
 
-    def change_state_game_callback_confirm(ev, expected_state):
+    def change_state_game_callback_confirm(ev, expected_state):  # pylint: disable=invalid-name
 
         ev.preventDefault()
 
@@ -1596,7 +1596,7 @@ def delete_game():
         """ cancel_delete_game_callback """
         dialog.close()
 
-    def delete_game_callback(ev, dialog):
+    def delete_game_callback(ev, dialog):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -1631,7 +1631,7 @@ def delete_game():
         # deleting game : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def delete_game_callback_confirm(ev):
+    def delete_game_callback_confirm(ev):  # pylint: disable=invalid-name
         """ delete_game_callback_confirm """
 
         ev.preventDefault()

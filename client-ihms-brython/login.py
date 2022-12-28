@@ -63,7 +63,7 @@ def login():
         if pressed:
             alert("Attention : vous êtes en mode majuscules !")
 
-    def login_callback(ev):
+    def login_callback(ev):  # pylint: disable=invalid-name
         """ login_callback """
 
         global PREVIOUS_PSEUDO
@@ -150,7 +150,7 @@ def login():
         # login (getting token) : no need for token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def forgot_callback(ev):
+    def forgot_callback(ev):  # pylint: disable=invalid-name
         """ forgot_callback """
 
         ev.preventDefault()
@@ -159,7 +159,7 @@ def login():
 
         render(PANEL_MIDDLE)
 
-    def logout_callback(ev):
+    def logout_callback(ev):  # pylint: disable=invalid-name
         """ logout_callback """
 
         ev.preventDefault()

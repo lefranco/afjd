@@ -74,7 +74,7 @@ SUPERVISE_REFRESH_PERIOD_SEC = 15
 def game_master():
     """ game_master """
 
-    def change_deadline_game_callback(ev):
+    def change_deadline_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -127,7 +127,7 @@ def game_master():
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def push_deadline_game_callback(ev):
+    def push_deadline_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -171,7 +171,7 @@ def game_master():
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def sync_deadline_game_callback(ev):
+    def sync_deadline_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -567,7 +567,7 @@ def game_master():
         # put role : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def allocate_role_callback(ev, input_for_role, role_id):
+    def allocate_role_callback(ev, input_for_role, role_id):  # pylint: disable=invalid-name
         """ allocate_role_callback """
 
         def reply_callback(req):
