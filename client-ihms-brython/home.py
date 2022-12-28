@@ -265,7 +265,7 @@ def show_news():
     title2 = html.H4("Les événements qui recrutent")
     div_a4 <= title2
 
-    news_events = html.OBJECT(data="https://diplomania-gen.fr/events/", width="100%", height="400", title="Evénements",  alt="Evénements")
+    news_events = html.OBJECT(data="https://diplomania-gen.fr/events/", width="100%", height="400", title="Evénements", alt="Evénements")
     div_a4 <= news_events
 
     # no tip
