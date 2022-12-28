@@ -822,7 +822,7 @@ def tournament_result():
         col = html.TD(pseudo)
         row <= col
 
-        col = html.TD(f"{score:.2f}")
+        col = html.TD(f"{float(score):.2f}")
         row <= col
 
         incidents_list = count.get(pseudo, [])

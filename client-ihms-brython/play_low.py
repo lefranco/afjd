@@ -111,7 +111,7 @@ def make_rating_colours_window(variant_data, ratings, units, colours, game_scori
     rating_scoring_row <= col
     for role_name in ratings:
         score_dis = float(score_table[role_name])
-        role_score = f"{score_dis:.2f}"
+        role_score = f"{float(score_dis):.2f}"
         col = html.TD(role_score)
         rating_scoring_row <= col
 
