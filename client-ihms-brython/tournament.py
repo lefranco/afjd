@@ -583,8 +583,7 @@ def show_ratings():
         row <= col
 
         # points
-        points_str = f"{float(points):.2f}"
-        col = html.TD(points_str)
+        col = html.TD(f"{float(points):.2f}")
         row <= col
 
         # centers
