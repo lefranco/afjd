@@ -592,7 +592,7 @@ def process_regularity(players_dict, games_results_dict, regularity_information)
                 number_games_table[player_id] = 0
             number_games_table[player_id] += 1
 
-        regularity_information <= html.BR()
+    regularity_information <= html.BR()
 
     # ------------------
     # 2 Merge players intervals
