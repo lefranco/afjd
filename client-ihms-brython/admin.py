@@ -217,7 +217,7 @@ def get_ip_table():
 def change_news_admin():
     """ change_news_admin """
 
-    def change_news_admin_callback(_):
+    def change_news_admin_callback(ev):
         """ change_news_admin_callback """
 
         def reply_callback(req):
@@ -233,6 +233,8 @@ def change_news_admin():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Les nouvelles ont été changées : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         news_content = input_news_content.value
         if not news_content:
@@ -414,7 +416,7 @@ def rectify_parameters():
 
         return status
 
-    def change_parameters_game_callback(_):
+    def change_parameters_game_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -429,6 +431,8 @@ def rectify_parameters():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Les paramètres de la partie ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         used_for_elo = int(input_used_for_elo.checked)
         fast = int(input_fast.checked)
@@ -1106,7 +1110,7 @@ def last_failures():
 def edit_creators():
     """ edit_creators """
 
-    def add_creator_callback(_):
+    def add_creator_callback(ev):
         """ add_creator_callback """
 
         def reply_callback(req):
@@ -1132,6 +1136,8 @@ def edit_creators():
             MY_SUB_PANEL.clear()
             edit_creators()
 
+        ev.preventDefault()
+
         player_pseudo = input_incomer.value
 
         json_dict = {
@@ -1146,7 +1152,7 @@ def edit_creators():
         # putting a moderator : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def remove_creator_callback(_):
+    def remove_creator_callback(ev):
         """remove_creator_callback"""
 
         def reply_callback(req):
@@ -1171,6 +1177,8 @@ def edit_creators():
             # back to where we started
             MY_SUB_PANEL.clear()
             edit_creators()
+
+        ev.preventDefault()
 
         player_pseudo = input_outcomer.value
 
@@ -1266,7 +1274,7 @@ def edit_creators():
 def edit_moderators():
     """ edit_moderators """
 
-    def add_moderator_callback(_):
+    def add_moderator_callback(ev):
         """ add_moderator_callback """
 
         def reply_callback(req):
@@ -1292,6 +1300,8 @@ def edit_moderators():
             MY_SUB_PANEL.clear()
             edit_moderators()
 
+        ev.preventDefault()
+
         player_pseudo = input_incomer.value
 
         json_dict = {
@@ -1306,7 +1316,7 @@ def edit_moderators():
         # putting a moderator : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def remove_moderator_callback(_):
+    def remove_moderator_callback(ev):
         """remove_moderator_callback"""
 
         def reply_callback(req):
@@ -1331,6 +1341,8 @@ def edit_moderators():
             # back to where we started
             MY_SUB_PANEL.clear()
             edit_moderators()
+
+        ev.preventDefault()
 
         player_pseudo = input_outcomer.value
 
@@ -1466,14 +1478,14 @@ def update_elo():
         # update database : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def update_database_callback_confirm(_, elo_raw_list, teaser_text):
-        """ update_database_callback_confirm """
+    def update_database_confirm(elo_raw_list, teaser_text):
+        """ update_database_confirm """
 
         dialog = Dialog("On met à jour la base de données ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, erl=elo_raw_list, tt=teaser_text: update_database_callback(e, d, erl, tt))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
-    def extract_elo_data_callback(_):
+    def extract_elo_data_callback(ev):
         """ extract_elo_data_callback """
 
         def reply_callback(req):
@@ -1519,7 +1531,9 @@ def update_elo():
             MY_SUB_PANEL <= elo_information
 
             # offer update
-            update_database_callback_confirm(None, elo_raw_list, teaser_text)
+            update_database_confirm(elo_raw_list, teaser_text)
+
+        ev.preventDefault()
 
         json_dict = {
         }
@@ -1609,14 +1623,14 @@ def update_reliability():
         # update database : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def update_database_callback_confirm(_, reliability_list):
-        """ update_database_callback_confirm """
+    def update_database_confirm(reliability_list):
+        """ update_database_confirm """
 
         dialog = Dialog("On met à jour la base de données ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, rl=reliability_list: update_database_callback(e, d, rl))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
-    def extract_reliability_data_callback(_):
+    def extract_reliability_data_callback(ev):
         """ extract_reliability_data_callback """
 
         def reply_callback(req):
@@ -1662,7 +1676,9 @@ def update_reliability():
             MY_SUB_PANEL <= reliability_information
 
             # offer update
-            update_database_callback_confirm(None, reliability_list)
+            update_database_confirm(reliability_list)
+
+        ev.preventDefault()
 
         json_dict = {
         }
@@ -1737,14 +1753,14 @@ def update_regularity():
         # update database : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def update_database_callback_confirm(_, regularity_list):
-        """ update_database_callback_confirm """
+    def update_database_confirm(regularity_list):
+        """ update_database_confirm """
 
         dialog = Dialog("On met à jour la base de données ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, rl=regularity_list: update_database_callback(e, d, rl))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
-    def extract_regularity_data_callback(_):
+    def extract_regularity_data_callback(ev):
         """ extract_regularity_data_callback """
 
         def reply_callback(req):
@@ -1790,7 +1806,9 @@ def update_regularity():
             MY_SUB_PANEL <= regularity_information
 
             # offer update
-            update_database_callback_confirm(None, regularity_list)
+            update_database_confirm(regularity_list)
+
+        ev.preventDefault()
 
         json_dict = {
         }
@@ -2100,7 +2118,7 @@ def show_all_emails():
 def maintain():
     """ maintain """
 
-    def maintain_callback(_):
+    def maintain_callback(ev):
         """ maintain_callback """
 
         def reply_callback(req):
@@ -2127,6 +2145,8 @@ def maintain():
             # back to where we started
             MY_SUB_PANEL.clear()
             maintain()
+
+        ev.preventDefault()
 
         json_dict = {
         }

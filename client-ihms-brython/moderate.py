@@ -166,7 +166,7 @@ def find_from_email_address():
 def change_news_modo():
     """ change_news_modo """
 
-    def change_news_modo_callback(_):
+    def change_news_modo_callback(ev):
         """ change_news_modo_callback """
 
         def reply_callback(req):
@@ -182,6 +182,8 @@ def change_news_modo():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Les nouvelles (modo) ont été changées : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         news_content = input_news_content.value
         if not news_content:
@@ -396,7 +398,7 @@ def show_verif_codes():
 def sendmail():
     """ sendmail """
 
-    def sendmail_callback(_):
+    def sendmail_callback(ev):
         """ sendmail_callback """
 
         def reply_callback(req):
@@ -411,6 +413,8 @@ def sendmail():
                 return
 
             InfoDialog("OK", f"Message émis vers : {addressed_user_name}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         addressed_user_name = input_addressed.value
         if not addressed_user_name:
@@ -500,7 +504,7 @@ def sendmail():
 def display_email_address():
     """ display_email_address """
 
-    def display_email_address_callback(_):
+    def display_email_address_callback(ev):
         """ display_email_address_callback """
 
         def reply_callback(req):
@@ -516,6 +520,8 @@ def display_email_address():
 
             email = req_result['email']
             alert(f"Son courriel est '{email}'")
+
+        ev.preventDefault()
 
         contact_user_name = input_contact.value
         if not contact_user_name:
@@ -578,7 +584,7 @@ def display_email_address():
 def display_phone_number():
     """ get_phone_number """
 
-    def display_phone_number_callback(_):
+    def display_phone_number_callback(ev):
         """ get_phone_number_callback """
 
         def reply_callback(req):
@@ -597,6 +603,8 @@ def display_phone_number():
                 alert(f"Son numéro est '{telephone}'")
             else:
                 alert("Pas de numéro entré !")
+
+        ev.preventDefault()
 
         contact_user_name = input_contact.value
         if not contact_user_name:
@@ -899,7 +907,7 @@ def tournament_result():
 def revoke_master():
     """ revoke_master """
 
-    def revoke_master_callback(_):
+    def revoke_master_callback(ev):
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -923,6 +931,8 @@ def revoke_master():
             # back to where we started
             MY_SUB_PANEL.clear()
             revoke_master()
+
+        ev.preventDefault()
 
         json_dict = {
             'pseudo': pseudo,
@@ -973,7 +983,7 @@ def revoke_master():
 def change_manager():
     """ change_manager """
 
-    def promote_managers_callback(_):
+    def promote_managers_callback(ev):
         """ promote_managers_callback """
 
         def reply_callback(req):
@@ -988,6 +998,8 @@ def change_manager():
                 return
 
             InfoDialog("OK", f"Il a été promu responsable: {manager}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         manager = input_manager.value
         manager_id = players_dict[manager]
