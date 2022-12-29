@@ -15,15 +15,15 @@ import math
 profiler.PROFILER.stop_mes()
 
 
-profiler.PROFILER.start_mes("inport geometry...")
+profiler.PROFILER.start_mes("import geometry...")
 import geometry
 profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.start_mes("inport center_design...")
+profiler.PROFILER.start_mes("import center_design...")
 import center_design
 profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.start_mes("inport unit_design...")
+profiler.PROFILER.start_mes("import unit_design...")
 import unit_design
 profiler.PROFILER.stop_mes()
 
