@@ -123,7 +123,6 @@ ROLE_ALLOCATION_PARSER.add_argument('delete', type=int, required=True)
 RECTIFICATION_PARSER = flask_restful.reqparse.RequestParser()
 RECTIFICATION_PARSER.add_argument('ownerships', type=str, required=True)
 RECTIFICATION_PARSER.add_argument('units', type=str, required=True)
-RECTIFICATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER.add_argument('role_id', type=int, required=True)
@@ -131,27 +130,22 @@ SUBMISSION_PARSER.add_argument('orders', type=str, required=True)
 SUBMISSION_PARSER.add_argument('definitive', type=int, required=False)
 SUBMISSION_PARSER.add_argument('names', type=str, required=True)
 SUBMISSION_PARSER.add_argument('adjudication_names', type=str, required=True)
-SUBMISSION_PARSER.add_argument('pseudo', type=str, required=False)
 
 AGREE_PARSER = flask_restful.reqparse.RequestParser()
 AGREE_PARSER.add_argument('role_id', type=int, required=True)
 AGREE_PARSER.add_argument('definitive', type=int, required=False)
 AGREE_PARSER.add_argument('adjudication_names', type=str, required=True)
-AGREE_PARSER.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER2 = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER2.add_argument('role_id', type=int, required=True)
 SUBMISSION_PARSER2.add_argument('names', type=str, required=True)
-SUBMISSION_PARSER2.add_argument('pseudo', type=str, required=False)
 
 SUBMISSION_PARSER3 = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER3.add_argument('role_id', type=int, required=True)
 SUBMISSION_PARSER3.add_argument('orders', type=str, required=True)
-SUBMISSION_PARSER3.add_argument('pseudo', type=str, required=False)
 
 ADJUDICATION_PARSER = flask_restful.reqparse.RequestParser()
 ADJUDICATION_PARSER.add_argument('names', type=str, required=True)
-ADJUDICATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 SIMULATION_PARSER = flask_restful.reqparse.RequestParser()
 SIMULATION_PARSER.add_argument('variant_name', type=str, required=True)
@@ -163,27 +157,22 @@ DECLARATION_PARSER = flask_restful.reqparse.RequestParser()
 DECLARATION_PARSER.add_argument('role_id', type=int, required=True)
 DECLARATION_PARSER.add_argument('anonymous', type=int, required=True)
 DECLARATION_PARSER.add_argument('content', type=str, required=True)
-DECLARATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
 MESSAGE_PARSER.add_argument('role_id', type=int, required=True)
 MESSAGE_PARSER.add_argument('dest_role_ids', type=str, required=True)
 MESSAGE_PARSER.add_argument('content', type=str, required=True)
-MESSAGE_PARSER.add_argument('pseudo', type=str, required=False)
 
 VISIT_PARSER = flask_restful.reqparse.RequestParser()
 VISIT_PARSER.add_argument('role_id', type=int, required=True)
-VISIT_PARSER.add_argument('pseudo', type=str, required=False)
 
 VOTE_PARSER = flask_restful.reqparse.RequestParser()
 VOTE_PARSER.add_argument('role_id', type=int, required=True)
 VOTE_PARSER.add_argument('value', type=int, required=True)
-VOTE_PARSER.add_argument('pseudo', type=str, required=False)
 
 NOTE_PARSER = flask_restful.reqparse.RequestParser()
 NOTE_PARSER.add_argument('role_id', type=int, required=True)
 NOTE_PARSER.add_argument('content', type=str, required=True)
-NOTE_PARSER.add_argument('pseudo', type=str, required=False)
 
 TOURNAMENT_PARSER = flask_restful.reqparse.RequestParser()
 TOURNAMENT_PARSER.add_argument('name', type=str, required=True)
@@ -295,6 +284,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -523,6 +513,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -674,6 +665,7 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -761,6 +753,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -956,6 +949,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -1106,6 +1100,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -1279,6 +1274,7 @@ class GameRoleRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -1339,6 +1335,7 @@ class AllGamesRolesRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -1409,6 +1406,7 @@ class AllocationGameRessource(flask_restful.Resource):  # type: ignore
                 mylogger.LOGGER.error("ERROR = %s", req_result.text)
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                 flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
             pseudo = req_result.json()['logged_in_as']
 
             # get player identifier
@@ -1532,7 +1530,6 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
 
         ownerships_submitted = args['ownerships']
         units_submitted = args['units']
-        pseudo = args['pseudo']
 
         try:
             the_ownerships = json.loads(ownerships_submitted)
@@ -1543,9 +1540,6 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             the_units = json.loads(units_submitted)
         except json.JSONDecodeError:
             flask_restful.abort(400, msg="Did you convert units from json to text ?")
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to rectify position in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1559,8 +1553,8 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1789,10 +1783,6 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         role_id = args['role_id']
         definitive_value = args['definitive']
         adjudication_names = args['adjudication_names']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to force agree to solve")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1806,8 +1796,8 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1937,10 +1927,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         definitive_value = args['definitive']
         names = args['names']
         adjudication_names = args['adjudication_names']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1954,8 +1940,8 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -2334,10 +2320,6 @@ class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
 
         role_id = args['role_id']
         names = args['names']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to submit orders in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -2351,8 +2333,8 @@ class GameForceNoOrderRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -2529,10 +2511,6 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
 
         role_id = args['role_id']
         communication_orders_submitted = args['orders']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to submit communication orders in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -2546,8 +2524,8 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -3034,10 +3012,6 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         role_id = args['role_id']
         dest_role_ids_submitted = args['dest_role_ids']
         payload = args['content']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to insert message in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -3051,8 +3025,8 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -3144,6 +3118,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -3218,10 +3193,6 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         role_id = args['role_id']
         anonymous = args['anonymous']
         payload = args['content']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to insert declaration in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -3235,8 +3206,8 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -3318,6 +3289,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -3388,6 +3360,7 @@ class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -3450,6 +3423,7 @@ class DateLastGameMessagesRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -3508,10 +3482,6 @@ class GameVisitsRessource(flask_restful.Resource):  # type: ignore
         args = VISIT_PARSER.parse_args(strict=True)
 
         role_id = args['role_id']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to insert visit in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -3525,8 +3495,8 @@ class GameVisitsRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -3589,6 +3559,7 @@ class GameVisitsRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -3659,6 +3630,7 @@ class AllGameVisitsRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -3714,10 +3686,6 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
 
         role_id = args['role_id']
         value = args['value']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to insert vote in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -3731,8 +3699,8 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -3801,6 +3769,7 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -4029,10 +3998,6 @@ class GameNoteRessource(flask_restful.Resource):  # type: ignore
 
         role_id = args['role_id']
         content = args['content']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to insert note in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -4046,8 +4011,8 @@ class GameNoteRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -4107,6 +4072,7 @@ class GameNoteRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -4203,7 +4169,6 @@ class GameIncidentsManageRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
-        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -4270,7 +4235,6 @@ class GameDropoutsManageRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
-        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -4405,7 +4369,6 @@ class TournamentRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
-        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -4521,7 +4484,6 @@ class TournamentListRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
-        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -4603,6 +4565,7 @@ class GroupingTournamentRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -4897,6 +4860,7 @@ class RevokeRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             del sql_executor
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # check moderator rights
@@ -4965,6 +4929,7 @@ class TournamentGameRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # check moderator rights
@@ -5224,6 +5189,7 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # TODO improve this with real admin account

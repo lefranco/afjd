@@ -219,7 +219,6 @@ def submit_orders():
 
         json_dict = {
             'role_id': play_low.ROLE_ID,
-            'pseudo': play_low.PSEUDO,
             'orders': orders_list_dict_json,
             'definitive': definitive_value,   # TODO change later
             'names': names_dict_json,
@@ -1361,7 +1360,6 @@ def submit_communication_orders():
 
         json_dict = {
             'role_id': play_low.ROLE_ID,
-            'pseudo': play_low.PSEUDO,
             'orders': orders_list_dict_json,
         }
 
@@ -2080,7 +2078,6 @@ def vote():
 
         json_dict = {
             'role_id': play_low.ROLE_ID,
-            'pseudo': play_low.PSEUDO,
             'value': vote_value
         }
 

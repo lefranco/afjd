@@ -249,8 +249,7 @@ def create_game(json_dict):
             'nb_max_cycles_to_play': nb_max_cycles_to_play,
             'victory_centers': victory_centers,
             'description': description,
-            'current_state': state,
-            'pseudo': pseudo
+            'current_state': state
         }
 
         # start checking data
@@ -627,8 +626,6 @@ def change_description_game():
         alert("Il faut se connecter au préalable")
         return
 
-    pseudo = storage['PSEUDO']
-
     status = change_description_reload()
     if not status:
         return
@@ -745,8 +742,6 @@ def change_anonymity_game():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
-
-    pseudo = storage['PSEUDO']
 
     status = change_anonymity_reload()
     if not status:
@@ -867,8 +862,6 @@ def change_access_messages_game():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
-
-    pseudo = storage['PSEUDO']
 
     status = change_access_messages_reload()
     if not status:
@@ -995,8 +988,6 @@ def change_scoring_game():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
-
-    pseudo = storage['PSEUDO']
 
     status = change_scoring_reload()
     if not status:
@@ -1131,8 +1122,6 @@ def change_access_parameters_game():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
-
-    pseudo = storage['PSEUDO']
 
     status = change_access_parameters_reload()
     if not status:
@@ -1332,8 +1321,6 @@ def change_pace_parameters_game():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
-
-    pseudo = storage['PSEUDO']
 
     status = change_pace_parameters_reload()
     if not status:
@@ -1544,8 +1531,6 @@ def change_state_game():
         alert("Il faut se connecter au préalable")
         return
 
-    pseudo = storage['PSEUDO']
-
     status = change_state_reload()
     if not status:
         return
@@ -1646,8 +1631,6 @@ def delete_game():
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
-
-    pseudo = storage['PSEUDO']
 
     form = html.FORM()
 

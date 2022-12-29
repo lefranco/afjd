@@ -59,7 +59,7 @@ def get_game_master(game_id):
     return None
 
 
-def date_last_visit_update(game_id, pseudo, role_id, visit_type):
+def date_last_visit_update(game_id, role_id, visit_type):
     """ date_last_visit_update """
 
     def reply_callback(req):
@@ -75,7 +75,6 @@ def date_last_visit_update(game_id, pseudo, role_id, visit_type):
 
     json_dict = {
         'role_id': role_id,
-        'pseudo': pseudo,
     }
 
     host = config.SERVER_CONFIG['GAME']['HOST']
@@ -1282,7 +1281,6 @@ def negotiate(default_dest_set):
         json_dict = {
             'dest_role_ids': dest_role_ids,
             'role_id': play_low.ROLE_ID,
-            'pseudo': play_low.PSEUDO,
             'content': content
         }
 
@@ -1332,7 +1330,7 @@ def negotiate(default_dest_set):
     time_stamp_last_visit = common.date_last_visit_load(play_low.GAME_ID, config.MESSAGES_TYPE)
 
     # put time stamp of last visit of declarations as now
-    date_last_visit_update(play_low.GAME_ID, play_low.PSEUDO, play_low.ROLE_ID, config.MESSAGES_TYPE)
+    date_last_visit_update(play_low.GAME_ID, play_low.ROLE_ID, config.MESSAGES_TYPE)
 
     form = html.FORM()
 
@@ -1599,7 +1597,6 @@ def declare():
 
         json_dict = {
             'role_id': play_low.ROLE_ID,
-            'pseudo': play_low.PSEUDO,
             'anonymous': anonymous,
             'content': content
         }
@@ -1650,7 +1647,7 @@ def declare():
     time_stamp_last_visit = common.date_last_visit_load(play_low.GAME_ID, config.DECLARATIONS_TYPE)
 
     # put time stamp of last visit of declarations as now
-    date_last_visit_update(play_low.GAME_ID, play_low.PSEUDO, play_low.ROLE_ID, config.DECLARATIONS_TYPE)
+    date_last_visit_update(play_low.GAME_ID, play_low.ROLE_ID, config.DECLARATIONS_TYPE)
 
     form = html.FORM()
 
@@ -1850,7 +1847,6 @@ def note():
 
         json_dict = {
             'role_id': play_low.ROLE_ID,
-            'pseudo': play_low.PSEUDO,
             'content': content
         }
 
