@@ -461,8 +461,10 @@ def show_news():
 def all_games(state_name):
     """all_games """
 
-    def select_game_callback(_, game_name, game_data_sel):
+    def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
         """ select_game_callback """
+
+        ev.preventDefault()
 
         # action of selecting game
         storage['GAME'] = game_name
