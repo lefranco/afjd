@@ -10,7 +10,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
 import config
-import index
+import index  # circular import
 
 OPTIONS = ['Sélectionner un événement', 'Inscriptions', 'Créer un événement', 'Editer l\'événement', 'Gérer les participations', 'Supprimer l\'événement']
 

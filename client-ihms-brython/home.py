@@ -11,17 +11,37 @@ from browser import html, ajax, alert, document, window  # pylint: disable=impor
 from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-import user_config
-import faq
-import whynot
-import interface
 import mydatetime
+import user_config
 import config
-import mapping
-import memoize
 import common
+
+import mapping
+
+profiler.PROFILER.start_mes("Import faq...")
+import faq
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import whynot...")
+import whynot
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import interface...")
+import interface
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import memoize...")
+import memoize
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import selection...")
 import selection
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("Import scoring...")
 import scoring
+profiler.PROFILER.stop_mes()
+
 import index  # circular import
 
 

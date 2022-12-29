@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned, multiple-statements, wrong-import-order, wrong-import-position
 
 import profiler
+
 profiler.PROFILER.start_mes("inside mapping...")
 
 profiler.PROFILER.start_mes("import abc...")
@@ -13,11 +14,20 @@ profiler.PROFILER.start_mes("import math...")
 import math
 profiler.PROFILER.stop_mes()
 
-profiler.PROFILER.start_mes("the rest...")
 
+profiler.PROFILER.start_mes("inport geometry...")
 import geometry
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("inport center_design...")
 import center_design
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("inport unit_design...")
 import unit_design
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("do the rest...")
 
 # proximity necessary for a center or a unit (to come before the zone)
 # otherwise the zones have no chance since units are first

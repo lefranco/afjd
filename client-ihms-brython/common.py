@@ -7,16 +7,21 @@ import profiler
 
 profiler.PROFILER.start_mes("inside common.py...")
 
-profiler.PROFILER.start_mes("Import json...")
 import json
-profiler.PROFILER.stop_mes()
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+profiler.PROFILER.start_mes("import mydatetime...")
 import mydatetime
-import config
+profiler.PROFILER.stop_mes()
+
+profiler.PROFILER.start_mes("import mapping...")
 import mapping
+profiler.PROFILER.stop_mes()
+
+import config
+
 
 profiler.PROFILER.start_mes("functions...")
 
