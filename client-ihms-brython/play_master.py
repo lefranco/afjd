@@ -185,7 +185,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La date limite a été reportée : {messages}", remove_after=config.REMOVE_AFTER)
+            InfoDialog("OK", f"La date limite a été synchronisée : {messages}", remove_after=config.REMOVE_AFTER)
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
