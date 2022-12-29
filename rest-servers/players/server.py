@@ -82,7 +82,6 @@ SENDMAIL_PARSER2.add_argument('subject', type=str, required=True)
 SENDMAIL_PARSER2.add_argument('body', type=str, required=True)
 
 NEWS_PARSER = flask_restful.reqparse.RequestParser()
-NEWS_PARSER.add_argument('pseudo', type=str, required=True)
 NEWS_PARSER.add_argument('content', type=str, required=True)
 
 MODERATOR_PARSER = flask_restful.reqparse.RequestParser()
@@ -975,7 +974,6 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/news - POST - changing the news")
 
         args = NEWS_PARSER.parse_args(strict=True)
-        pseudo = args['pseudo']
 
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -989,8 +987,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+        pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
 
@@ -1047,7 +1044,6 @@ class News2Ressource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/news2 - POST - changing the news (moderator)")
 
         args = NEWS_PARSER.parse_args(strict=True)
-        pseudo = args['pseudo']
 
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1061,21 +1057,19 @@ class News2Ressource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
-        pseudo_requester = req_result.json()['logged_in_as']
+        pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
 
-        requester = players.Player.find_by_pseudo(sql_executor, pseudo_requester)
+        requester = players.Player.find_by_pseudo(sql_executor, pseudo)
 
         if requester is None:
             del sql_executor
-            flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
+            flask_restful.abort(404, msg=f"Requesting player {pseudo} does not exist")
 
         moderators_list = moderators.Moderator.inventory(sql_executor)
         the_moderators = [m[0] for m in moderators_list]
-        if pseudo_requester not in the_moderators:
+        if pseudo not in the_moderators:
             del sql_executor
             flask_restful.abort(403, msg="You are not allowed to change moderator news! (need to be moderator)")
 
