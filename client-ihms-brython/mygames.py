@@ -255,7 +255,6 @@ def my_games(state_name):
         ev.preventDefault()
 
         json_dict = {
-            'pseudo': pseudo,
             'name': game,
             'current_state': 1,
         }
@@ -290,7 +289,6 @@ def my_games(state_name):
         ev.preventDefault()
 
         json_dict = {
-            'pseudo': pseudo,
             'name': game,
             'current_state': 2,
         }

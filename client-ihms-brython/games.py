@@ -600,7 +600,6 @@ def change_description_game():
         description = input_description.value
 
         json_dict = {
-            'pseudo': pseudo,
             'name': game,
             'description': description,
         }
@@ -720,7 +719,6 @@ def change_anonymity_game():
         ev.preventDefault()
 
         json_dict = {
-            'pseudo': pseudo,
             'name': game,
             'anonymous': input_anonymous.checked,
         }
@@ -842,7 +840,6 @@ def change_access_messages_game():
         ev.preventDefault()
 
         json_dict = {
-            'pseudo': pseudo,
             'name': game,
             'nopress_current': input_nopress.checked,
             'nomessage_current': input_nomessage.checked,
@@ -972,7 +969,6 @@ def change_scoring_game():
         scoring_code = config.SCORING_CODE_TABLE[input_scoring.value]
 
         json_dict = {
-            'pseudo': pseudo,
             'name': game,
             'scoring': scoring_code,
         }
@@ -1107,7 +1103,6 @@ def change_access_parameters_game():
         access_restriction_performance = input_access_restriction_performance.value
 
         json_dict = {
-            'pseudo': pseudo,
             'name': game,
             'access_restriction_reliability': access_restriction_reliability,
             'access_restriction_regularity': access_restriction_regularity,
@@ -1302,7 +1297,6 @@ def change_pace_parameters_game():
         play_weekend = int(input_play_weekend.checked)
 
         json_dict = {
-            'pseudo': pseudo,
             'name': game,
             'deadline_hour': deadline_hour,
             'deadline_sync': deadline_sync,
@@ -1511,7 +1505,6 @@ def change_state_game():
             dialog.close()
 
         json_dict = {
-            'pseudo': pseudo,
             'name': game,
             'current_state': expected_state,
         }
@@ -1620,9 +1613,7 @@ def delete_game():
 
         dialog.close()
 
-        json_dict = {
-            'pseudo': pseudo
-        }
+        json_dict = {}
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']

@@ -115,7 +115,6 @@ def game_master():
             return
 
         json_dict = {
-            'pseudo': play_low.PSEUDO,
             'name': play_low.GAME,
             'deadline': deadline_timestamp,
         }
@@ -159,7 +158,6 @@ def game_master():
 
         # push on server
         json_dict = {
-            'pseudo': play_low.PSEUDO,
             'name': play_low.GAME,
             'deadline': deadline_forced,
         }
@@ -196,7 +194,6 @@ def game_master():
 
         # push on server
         json_dict = {
-            'pseudo': play_low.PSEUDO,
             'name': play_low.GAME,
             'deadline': 0,
         }
