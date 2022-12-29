@@ -242,7 +242,6 @@ def change_news_admin():
             return
 
         json_dict = {
-            'pseudo': common.ADMIN_PSEUDO,
             'content': news_content
         }
 

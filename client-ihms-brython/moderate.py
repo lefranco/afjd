@@ -191,7 +191,6 @@ def change_news_modo():
             return
 
         json_dict = {
-            'pseudo': pseudo,
             'content': news_content
         }
 
