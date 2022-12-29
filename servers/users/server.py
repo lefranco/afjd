@@ -13,8 +13,8 @@ import datetime
 
 import waitress
 import flask
-import flask_cors  # type: ignore
-import flask_jwt_extended  # type: ignore
+import flask_cors
+import flask_jwt_extended
 import werkzeug.security
 
 import lowdata

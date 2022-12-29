@@ -10,9 +10,9 @@ The server
 import typing
 import argparse
 
-import waitress  # type: ignore
+import waitress
 import flask
-import flask_cors  # type: ignore
+import flask_cors
 import flask_restful  # type: ignore
 import flask_restful.reqparse  # type: ignore
 
@@ -36,7 +36,7 @@ EMAIL_PARSER.add_argument('code', type=int, required=True)
 class EmailsRessource(flask_restful.Resource):  # type: ignore
     """ EmailsRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         add an email for a player
         PROTECTED : called only by player block (account creation/email change)
@@ -63,7 +63,7 @@ class EmailsRessource(flask_restful.Resource):  # type: ignore
 class CheckEmailRessource(flask_restful.Resource):  # type: ignore
     """ CheckEmailRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         Check if code is correct for email.
         PROTECTED : called by block players
