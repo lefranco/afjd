@@ -204,7 +204,6 @@ def registrations():
         addressees = [manager_id]
 
         json_dict = {
-            'pseudo': pseudo,
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
