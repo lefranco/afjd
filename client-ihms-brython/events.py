@@ -98,8 +98,10 @@ def get_event_data(event_id):
 def select_event():
     """ select_event """
 
-    def select_event_callback(_, input_event):
+    def select_event_callback(ev, input_event):  # pylint: disable=invalid-name
         """ select_event_callback """
+
+        ev.preventDefault()
 
         event_name = input_event.value
         storage['EVENT'] = event_name
@@ -174,7 +176,7 @@ def registrations():
         # go to create account page
         index.load_option(None, 'Mon compte')
 
-    def sendmail_callback(_):
+    def sendmail_callback(ev):  # pylint: disable=invalid-name
         """ sendmail_callback """
 
         def reply_callback(req):
@@ -190,7 +192,7 @@ def registrations():
 
             InfoDialog("OK", f"Message émis vers : {manager}", remove_after=config.REMOVE_AFTER)
 
-        subject = f"Message de la part du joueur {pseudo} au sujet du tournoi {name} du site https://diplomania-gen.fr (AFJD)"
+        ev.preventDefault()
 
         if not input_message.value:
             alert("Contenu du message vide")
@@ -198,6 +200,8 @@ def registrations():
             MY_SUB_PANEL.clear()
             registrations()
             return
+
+        subject = f"Message de la part du joueur {pseudo} au sujet du tournoi {name} du site https://diplomania-gen.fr (AFJD)"
 
         body = input_message.value
 
@@ -221,7 +225,7 @@ def registrations():
         MY_SUB_PANEL.clear()
         registrations()
 
-    def register_event_callback(_, register):
+    def register_event_callback(ev, register):  # pylint: disable=invalid-name
         """ register_event_callback """
 
         def reply_callback(req):
@@ -240,6 +244,8 @@ def registrations():
                 InfoDialog("OK", f"L'inscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
             else:
                 InfoDialog("OK", f"La désinscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
@@ -469,7 +475,7 @@ def create_event(json_dict):
     description = json_dict['description'] if json_dict and 'description' in json_dict else None
     summary = json_dict['summary'] if json_dict and 'summary' in json_dict else None
 
-    def create_event_callback(_):
+    def create_event_callback(ev):  # pylint: disable=invalid-name
         """ create_event_callback """
 
         nonlocal name
@@ -493,6 +499,8 @@ def create_event(json_dict):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"L'événement a été créé : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         # get values from user input
 
@@ -628,7 +636,7 @@ def create_event(json_dict):
 def edit_event():
     """ edit_event """
 
-    def edit_event_callback(_):
+    def edit_event_callback(ev):  # pylint: disable=invalid-name
         """ edit_event_callback """
 
         def reply_callback(req):
@@ -644,6 +652,8 @@ def edit_event():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"L'événement a été mis à jour : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         name = input_name.value
         start_date = input_start_date.value
@@ -797,7 +807,7 @@ def edit_event():
 def handle_joiners():
     """ handle_joiners """
 
-    def registration_action_callback(_, player_id, value):
+    def registration_action_callback(ev, player_id, value):  # pylint: disable=invalid-name
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -812,6 +822,8 @@ def handle_joiners():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"L'inscription a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         json_dict = {
             'player_id': player_id,
@@ -986,8 +998,10 @@ def delete_event():
         # deleting event : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def delete_event_callback_confirm(_):
+    def delete_event_callback_confirm(ev):  # pylint: disable=invalid-name
         """ delete_event_callback_confirm """
+
+        ev.preventDefault()
 
         dialog = Dialog("On supprime vraiment l'événement ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_event_callback(e, d))
