@@ -185,9 +185,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         del json_dict['nopress_current']
         del json_dict['nomessage_current']
 
-        # and addition
-        json_dict['pseudo'] = current_pseudo
-
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
         url = f"{host}:{port}/games"
@@ -225,7 +222,6 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
         json_dict = {
             'game_id': game_id_int,
             'player_pseudo': player_name,
-            'pseudo': current_pseudo,
             'delete': 0
         }
 
@@ -267,8 +263,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
             'game_id': game_id_int,
             'role_id': role_id,
             'player_pseudo': player_pseudo,
-            'delete': 0,
-            'pseudo': current_pseudo,
+            'delete': 0
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']

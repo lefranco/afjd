@@ -119,7 +119,6 @@ def join_game():
     json_dict = {
         'game_id': game_id,
         'player_pseudo': pseudo,
-        'pseudo': pseudo,
         'delete': 0
     }
 
