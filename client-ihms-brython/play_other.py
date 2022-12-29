@@ -1440,7 +1440,7 @@ def negotiate(default_dest_set):
         date_desc_gmt = mydatetime.fromtimestamp(time_stamp)
         date_desc_gmt_str = mydatetime.strftime(*date_desc_gmt)
 
-        col = html.TD(f"{date_desc_gmt_str} GMT", Class=class_)
+        col = html.TD(f"{date_desc_gmt_str}", Class=class_)
         row <= col
 
         col = html.TD(Class=class_)
@@ -1731,7 +1731,7 @@ def declare():
         date_desc_gmt = mydatetime.fromtimestamp(time_stamp)
         date_desc_gmt_str = mydatetime.strftime(*date_desc_gmt)
 
-        col = html.TD(f"{date_desc_gmt_str} GMT", Class=class_)
+        col = html.TD(f"{date_desc_gmt_str}", Class=class_)
         row <= col
 
         role_icon_img = ""
