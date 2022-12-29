@@ -131,10 +131,10 @@ def check_batch(current_pseudo, games_to_create):
     return not error
 
 
-def perform_batch(current_pseudo, current_game_name, games_to_create_data):
+def perform_batch(current_game_name, games_to_create_data):
     """ perform_batch """
 
-    def create_game(current_pseudo, current_game_name, game_to_create_name):
+    def create_game(current_game_name, game_to_create_name):
         """ create_game """
 
         create_status = None
@@ -194,7 +194,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
 
         return create_status
 
-    def put_player_in_game(current_pseudo, game_name, player_name):
+    def put_player_in_game(game_name, player_name):
         """ put_player_in_game """
 
         status = None
@@ -234,7 +234,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
 
         return status
 
-    def allocate_role(current_pseudo, game_name, player_pseudo, role_id):
+    def allocate_role(game_name, player_pseudo, role_id):
         """ allocate_role """
 
         status = None
@@ -287,7 +287,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
     for game_to_create_name, game_to_create_data in games_to_create_data.items():
 
         # create game
-        status = create_game(current_pseudo, current_game_name, game_to_create_name)
+        status = create_game(current_game_name, game_to_create_name)
         if not status:
             alert(f"Echec à la création de la partie {game_to_create_name}")
             return
@@ -298,7 +298,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
             if role_id == 0:
                 continue
             # put player
-            status = put_player_in_game(current_pseudo, game_to_create_name, player_name)
+            status = put_player_in_game(game_to_create_name, player_name)
             if not status:
                 alert(f"Echec à l'appariement de {player_name} dans la partie {game_to_create_name}")
                 return
@@ -308,7 +308,7 @@ def perform_batch(current_pseudo, current_game_name, games_to_create_data):
             # game master already has its role
             if role_id == 0:
                 continue
-            status = allocate_role(current_pseudo, game_to_create_name, player_name, role_id)
+            status = allocate_role(game_to_create_name, player_name, role_id)
             if not status:
                 role = variant_data.roles[role_id]
                 role_name = variant_data.role_name_table[role]
@@ -341,7 +341,7 @@ def create_many_games():
             def create_games_callback2(_, dialog):
                 """ create_games_callback2 """
                 dialog.close()
-                perform_batch(pseudo, game, games_to_create)
+                perform_batch(game, games_to_create)
 
             games_to_create = {}
 

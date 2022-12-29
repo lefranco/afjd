@@ -188,6 +188,7 @@ class ResendCodeRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
@@ -250,6 +251,8 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+        # exception : we have both token and pseudo
         if req_result.json()['logged_in_as'] != pseudo:
             flask_restful.abort(403, msg="Wrong authentication!")
 
@@ -301,6 +304,8 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+        # exception : we have both token and pseudo
         if req_result.json()['logged_in_as'] != pseudo:
             flask_restful.abort(403, msg="Wrong authentication!")
 
@@ -752,6 +757,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         subject = args['subject']
@@ -843,6 +849,7 @@ class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
@@ -983,6 +990,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
@@ -1053,6 +1061,7 @@ class News2Ressource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
@@ -1082,17 +1091,17 @@ class News2Ressource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
-@API.resource('/player-telephone/<pseudo>')
+@API.resource('/player-telephone/<pseudo_player>')
 class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
     """ PlayerTelephoneRessource """
 
-    def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, str], int]:
+    def get(self, pseudo_player: str) -> typing.Tuple[typing.Dict[str, str], int]:
         """
         Provides the phone number of a player
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/player-telephone - GET - get the phone number of player pseudo=%s", pseudo)
+        mylogger.LOGGER.info("/player-telephone - GET - get the phone number of player pseudo=%s", pseudo_player)
 
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1106,27 +1115,28 @@ class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
-        pseudo_requester = req_result.json()['logged_in_as']
+
+        pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
 
-        requester = players.Player.find_by_pseudo(sql_executor, pseudo_requester)
+        requester = players.Player.find_by_pseudo(sql_executor, pseudo)
 
         if requester is None:
             del sql_executor
-            flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
+            flask_restful.abort(404, msg=f"Requesting player {pseudo} does not exist")
 
         moderators_list = moderators.Moderator.inventory(sql_executor)
         the_moderators = [m[0] for m in moderators_list]
-        if pseudo_requester not in the_moderators:
+        if pseudo not in the_moderators:
             del sql_executor
             flask_restful.abort(403, msg="You are not allowed to get phone number! (need to be moderator)")
 
-        contact = players.Player.find_by_pseudo(sql_executor, pseudo)
+        contact = players.Player.find_by_pseudo(sql_executor, pseudo_player)
 
         if contact is None:
             del sql_executor
-            flask_restful.abort(404, msg=f"Contact player {pseudo} does not exist")
+            flask_restful.abort(404, msg=f"Contact player {pseudo_player} does not exist")
 
         del sql_executor
 
@@ -1137,17 +1147,17 @@ class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/player-email/<pseudo>')
+@API.resource('/player-email/<pseudo_player>')
 class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
     """ PlayerEmailRessource """
 
-    def get(self, pseudo: str) -> typing.Tuple[typing.Dict[str, str], int]:
+    def get(self, pseudo_player: str) -> typing.Tuple[typing.Dict[str, str], int]:
         """
         Provides the email address of a player
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/player-email - GET - get the email address of player pseudo=%s", pseudo)
+        mylogger.LOGGER.info("/player-email - GET - get the email address of player pseudo=%s", pseudo_player)
 
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1161,27 +1171,28 @@ class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
-        pseudo_requester = req_result.json()['logged_in_as']
+
+        pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
 
-        requester = players.Player.find_by_pseudo(sql_executor, pseudo_requester)
+        requester = players.Player.find_by_pseudo(sql_executor, pseudo)
 
         if requester is None:
             del sql_executor
-            flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
+            flask_restful.abort(404, msg=f"Requesting player {pseudo} does not exist")
 
         moderators_list = moderators.Moderator.inventory(sql_executor)
         the_moderators = [m[0] for m in moderators_list]
-        if pseudo_requester not in the_moderators:
+        if pseudo not in the_moderators:
             del sql_executor
             flask_restful.abort(403, msg="You are not allowed to get email address! (need to be moderator)")
 
-        contact = players.Player.find_by_pseudo(sql_executor, pseudo)
+        contact = players.Player.find_by_pseudo(sql_executor, pseudo_player)
 
         if contact is None:
             del sql_executor
-            flask_restful.abort(404, msg=f"Contact player {pseudo} does not exist")
+            flask_restful.abort(404, msg=f"Contact player {pseudo_player} does not exist")
 
         del sql_executor
 
@@ -1216,6 +1227,7 @@ class FindPlayerFromEmailRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
         pseudo_requester = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
@@ -1290,6 +1302,7 @@ class CreatorListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # check user has right to add/remove creator (admin)
@@ -1370,6 +1383,7 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # check user has right to add/remove moderator (admin)
@@ -1584,6 +1598,7 @@ class ReliabilityRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # TODO improve this with real admin account
@@ -1652,6 +1667,7 @@ class RegularityRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # TODO improve this with real admin account
@@ -1707,7 +1723,6 @@ class EventManagerRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
-        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
@@ -1888,7 +1903,6 @@ class EventRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
-        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -1985,7 +1999,6 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
-        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -2147,6 +2160,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -2283,7 +2297,6 @@ class IpAddressRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
 
-        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()

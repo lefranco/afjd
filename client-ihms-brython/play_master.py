@@ -466,7 +466,6 @@ def game_master():
 
         json_dict = {
             'role_id': role_id,
-            'pseudo': play_low.PSEUDO,
             'names': names_dict_json
         }
 
@@ -511,7 +510,6 @@ def game_master():
 
         json_dict = {
             'role_id': role_id,
-            'pseudo': play_low.PSEUDO,
             'definitive': definitive_value,
             'adjudication_names': inforced_names_dict_json
         }
@@ -964,7 +962,6 @@ def supervise():
 
         json_dict = {
             'role_id': role_id,
-            'pseudo': play_low.PSEUDO,
             'names': names_dict_json
         }
 
@@ -1002,7 +999,6 @@ def supervise():
 
         json_dict = {
             'role_id': role_id,
-            'pseudo': play_low.PSEUDO,
             'definitive': definitive_value,
             'adjudication_names': inforced_names_dict_json
         }

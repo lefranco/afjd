@@ -545,7 +545,6 @@ def rectify_position():
         ownerships_list_dict_json = json.dumps(ownerships_list_dict)
 
         json_dict = {
-            'pseudo': common.ADMIN_PSEUDO,
             'units': units_list_dict_json,
             'ownerships': ownerships_list_dict_json,
         }
