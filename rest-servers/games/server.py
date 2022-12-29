@@ -420,7 +420,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     body += f"https://diplomania-gen.fr?game={game.name}"
 
                     json_dict = {
-                        'pseudo': pseudo,
                         'addressees': " ".join([str(a) for a in addressees]),
                         'subject': subject,
                         'body': body,
@@ -466,7 +465,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                     body += f"https://diplomania-gen.fr?game={game.name}"
 
                     json_dict = {
-                        'pseudo': pseudo,
                         'addressees': " ".join([str(a) for a in addressees]),
                         'subject': subject,
                         'body': body,
@@ -1068,7 +1066,6 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
                 body += f"https://diplomania-gen.fr?game={game.name}"
 
                 json_dict = {
-                    'pseudo': pseudo,
                     'addressees': " ".join([str(a) for a in addressees]),
                     'subject': subject,
                     'body': body,
@@ -1927,7 +1924,6 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 body += f"https://diplomania-gen.fr?game={game.name}"
 
                 json_dict = {
-                    'pseudo': pseudo,
                     'addressees': " ".join([str(a) for a in addressees]),
                     'subject': subject,
                     'body': body,
@@ -2251,7 +2247,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 body += f"https://diplomania-gen.fr?game={game.name}"
 
                 json_dict = {
-                    'pseudo': pseudo,
                     'addressees': " ".join([str(a) for a in addressees]),
                     'subject': subject,
                     'body': body,

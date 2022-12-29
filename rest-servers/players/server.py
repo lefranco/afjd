@@ -70,7 +70,6 @@ EMAIL_PARSER.add_argument('pseudo', type=str, required=True)
 EMAIL_PARSER.add_argument('code', type=str, required=True)
 
 SENDMAIL_PARSER = flask_restful.reqparse.RequestParser()
-SENDMAIL_PARSER.add_argument('pseudo', type=str, required=True)
 SENDMAIL_PARSER.add_argument('addressees', type=str, required=True)
 SENDMAIL_PARSER.add_argument('subject', type=str, required=True)
 SENDMAIL_PARSER.add_argument('body', type=str, required=True)
@@ -739,7 +738,6 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/mail-players - POST - sending emails to a list of players")
 
         args = SENDMAIL_PARSER.parse_args(strict=True)
-        pseudo = args['pseudo']
         force = args['force']
         pretend_sender = args['pretend_sender']
 
@@ -755,8 +753,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+        pseudo = req_result.json()['logged_in_as']
 
         subject = args['subject']
         body = args['body']
@@ -794,7 +791,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         nb_mails = len(addressees)
-        data = {'msg': f"Ok {nb_mails} email(s) successfully sent"}
+        data = {'msg': f"Ok {nb_mails} email(s) successfully sent using {pseudo} account"}
         return data, 200
 
 

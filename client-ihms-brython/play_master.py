@@ -255,7 +255,6 @@ def game_master():
         addressees = [addressed_id]
 
         json_dict = {
-            'pseudo': play_low.PSEUDO,
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
@@ -316,7 +315,6 @@ def game_master():
         addressees = [addressed_id]
 
         json_dict = {
-            'pseudo': play_low.PSEUDO,
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
@@ -371,7 +369,6 @@ def game_master():
         addressees = [addressed_id]
 
         json_dict = {
-            'pseudo': play_low.PSEUDO,
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
@@ -433,7 +430,6 @@ def game_master():
         addressees = [p for p in players_dict if players_dict[str(p)]['replace']]
 
         json_dict = {
-            'pseudo': play_low.PSEUDO,
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
