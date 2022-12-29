@@ -10,17 +10,19 @@ import profiler
 
 profiler.PROFILER.start_mes("=== inside index.py...")
 
-
-profiler.PROFILER.start_mes("Import browser stuff ...")
 from browser import document, html, alert, timer, ajax  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
+
+profiler.PROFILER.start_mes("Import config...")
+import config    # pylint: disable=wrong-import-position # noqa: E402
 profiler.PROFILER.stop_mes()
 
-import config
-import common
+profiler.PROFILER.start_mes("Import common...")
+import common    # pylint: disable=wrong-import-position # noqa: E402
+profiler.PROFILER.stop_mes()
 
 profiler.PROFILER.start_mes("Import home...")
-import home
+import home    # pylint: disable=wrong-import-position # noqa: E402
 profiler.PROFILER.stop_mes()
 
 profiler.PROFILER.start_mes("Import login...")

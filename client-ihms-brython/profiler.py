@@ -6,18 +6,24 @@ import time
 
 START_TIME = time.time()
 
+before_json = time.time()
 import json
+after_json = time.time()
+import_json_time = after_json - before_json
 
 from browser import ajax  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+before_user_config = time.time()
 import user_config
+after_user_config = time.time()
+import_user_config_time = after_user_config - before_user_config
 
 ADDRESS_ADMIN = "1"
 
 
 # only send mail if more thant this
-THRESHOLD = 10
+THRESHOLD = 10.
 
 
 class Measure:
@@ -104,6 +110,10 @@ class Profiler:
         body += f"{self}"
         body += "\n\n"
         body += f"overhead profiler {ELAPSED=}"
+        body += "\n"
+        body += f"{import_json_time=}"
+        body += "\n"
+        body += f"{import_user_config_time=}"
         body += "\n\n"
         body += f"config : {user_config.CONFIG}"
         body += "\n\n"
@@ -111,7 +121,6 @@ class Profiler:
         body += "\n\n"
 
         json_dict = {
-            'pseudo': pseudo,
             'addressees': ADDRESS_ADMIN,
             'subject': subject,
             'body': body,
