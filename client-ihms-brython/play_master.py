@@ -549,8 +549,7 @@ def game_master():
             'game_id': play_low.GAME_ID,
             'role_id': role_id,
             'player_pseudo': pseudo_removed,
-            'delete': 1,
-            'pseudo': play_low.PSEUDO,
+            'delete': 1
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -590,8 +589,7 @@ def game_master():
             'game_id': play_low.GAME_ID,
             'role_id': role_id,
             'player_pseudo': player_pseudo,
-            'delete': 0,
-            'pseudo': play_low.PSEUDO,
+            'delete': 0
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']

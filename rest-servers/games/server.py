@@ -113,14 +113,12 @@ ALLOCATION_PARSER = flask_restful.reqparse.RequestParser()
 ALLOCATION_PARSER.add_argument('game_id', type=int, required=True)
 ALLOCATION_PARSER.add_argument('player_pseudo', type=str, required=True)
 ALLOCATION_PARSER.add_argument('delete', type=int, required=True)
-ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 ROLE_ALLOCATION_PARSER = flask_restful.reqparse.RequestParser()
 ROLE_ALLOCATION_PARSER.add_argument('game_id', type=int, required=True)
 ROLE_ALLOCATION_PARSER.add_argument('player_pseudo', type=str, required=True)
 ROLE_ALLOCATION_PARSER.add_argument('role_id', type=int, required=True)
 ROLE_ALLOCATION_PARSER.add_argument('delete', type=int, required=True)
-ROLE_ALLOCATION_PARSER.add_argument('pseudo', type=str, required=False)
 
 RECTIFICATION_PARSER = flask_restful.reqparse.RequestParser()
 RECTIFICATION_PARSER.add_argument('ownerships', type=str, required=True)
@@ -945,10 +943,6 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         game_id = args['game_id']
         player_pseudo = args['player_pseudo']
         delete = args['delete']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to join/put or quit/remolve in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -962,8 +956,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1100,10 +1093,6 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         player_pseudo = args['player_pseudo']
         role_id = args['role_id']
         delete = args['delete']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to move role in game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1117,8 +1106,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']

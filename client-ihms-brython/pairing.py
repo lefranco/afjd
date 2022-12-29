@@ -86,7 +86,6 @@ def join_game():
         json_dict = {
             'game_id': game_id,
             'player_pseudo': pseudo,
-            'pseudo': pseudo,
             'delete': 0
         }
 
@@ -157,7 +156,6 @@ def quit_game():
         json_dict = {
             'game_id': game_id,
             'player_pseudo': pseudo,
-            'pseudo': pseudo,
             'delete': 1
         }
 
@@ -232,7 +230,6 @@ def move_players_in_game():
         json_dict = {
             'game_id': game_id,
             'player_pseudo': player_pseudo,
-            'pseudo': pseudo,
             'delete': 0
         }
 
@@ -276,7 +273,6 @@ def move_players_in_game():
         json_dict = {
             'game_id': game_id,
             'player_pseudo': player_pseudo,
-            'pseudo': pseudo,
             'delete': 1
         }
 
@@ -440,7 +436,6 @@ def take_mastering_game():
             'game_id': game_id,
             'role_id': 0,
             'player_pseudo': pseudo,
-            'pseudo': pseudo,
             'delete': 0
         }
 
@@ -512,7 +507,6 @@ def quit_mastering_game():
             'game_id': game_id,
             'role_id': 0,
             'player_pseudo': pseudo,
-            'pseudo': pseudo,
             'delete': 1
         }
 
