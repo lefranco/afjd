@@ -98,7 +98,6 @@ GAME_PARSER.add_argument('current_advancement', type=int, required=False)
 GAME_PARSER.add_argument('nb_max_cycles_to_play', type=int, required=False)
 GAME_PARSER.add_argument('victory_centers', type=int, required=False)
 GAME_PARSER.add_argument('current_state', type=int, required=False)
-GAME_PARSER.add_argument('pseudo', type=str, required=False)
 
 # for game parameter alteration
 GAME_PARSER2 = flask_restful.reqparse.RequestParser()
@@ -106,7 +105,6 @@ GAME_PARSER2.add_argument('used_for_elo', type=int, required=False)
 GAME_PARSER2.add_argument('fast', type=int, required=False)
 GAME_PARSER2.add_argument('nomessage_game', type=int, required=False)
 GAME_PARSER2.add_argument('nopress_game', type=int, required=False)
-GAME_PARSER2.add_argument('pseudo', type=str, required=False)
 
 GAMES_SELECT_PARSER = flask_restful.reqparse.RequestParser()
 GAMES_SELECT_PARSER.add_argument('selection', type=str, required=True)
@@ -287,11 +285,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         args = GAME_PARSER.parse_args(strict=True)
 
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to modify game")
-
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -304,8 +297,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -338,7 +330,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         if entered_deadline is not None:
 
-            if entered_deadline == 0: # this means "now, please !"
+            if entered_deadline == 0:  # this means "now, please !"
 
                 # now at server time
                 args['deadline'] = int(time.time() + 1)
@@ -533,8 +525,6 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-
-        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
@@ -674,11 +664,6 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
 
         args = GAME_PARSER2.parse_args(strict=True)
 
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to modify game")
-
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -691,8 +676,7 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -766,10 +750,6 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         args = GAME_PARSER.parse_args(strict=True)
 
         name = args['name']
-        pseudo = args['pseudo']
-
-        if pseudo is None:
-            flask_restful.abort(401, msg="Need a pseudo to create game")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -783,8 +763,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+        pseudo = req_result.json()['logged_in_as']
 
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
