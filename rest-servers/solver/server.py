@@ -11,9 +11,9 @@ import typing
 import json
 import argparse
 
-import waitress  # type: ignore
+import waitress
 import flask
-import flask_cors  # type: ignore
+import flask_cors
 import flask_restful  # type: ignore
 import flask_restful.reqparse  # type: ignore
 
@@ -46,7 +46,7 @@ DISORDER_PARSER.add_argument('names', type=str, required=True)
 class SolveRessource(flask_restful.Resource):  # type: ignore
     """ SolveRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         Performs an adjudication
         EXPOSED (since there can be simulation)
@@ -116,7 +116,7 @@ class SolveRessource(flask_restful.Resource):  # type: ignore
 class PrintRessource(flask_restful.Resource):  # type: ignore
     """ PrintRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         Print orders
         NOT EXPOSED
@@ -168,7 +168,7 @@ class PrintRessource(flask_restful.Resource):  # type: ignore
 class DisorderRessource(flask_restful.Resource):  # type: ignore
     """ DisorderRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
         """
         Performs an civil disorder orders extraction
         EXPOSED
