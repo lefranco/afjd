@@ -164,17 +164,17 @@ class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
         return player.identifier, 200
 
 
-@API.resource('/resend-code/<pseudo>')
+@API.resource('/resend-code')
 class ResendCodeRessource(flask_restful.Resource):  # type: ignore
     """ ResendCodeRessource """
 
-    def post(self, pseudo: str) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Request new verification code
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/resend-code/<pseudo> - POST - ask resend verification code pseudo=%s", pseudo)
+        mylogger.LOGGER.info("/resend-code - POST - ask resend verification code")
 
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -188,8 +188,7 @@ class ResendCodeRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
-        if req_result.json()['logged_in_as'] != pseudo:
-            flask_restful.abort(403, msg="Wrong authentication!")
+        pseudo = req_result.json()['logged_in_as']
 
         sql_executor = database.SqlExecutor()
 
