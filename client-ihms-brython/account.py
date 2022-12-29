@@ -77,7 +77,7 @@ def create_account(json_dict):
     nationality_code = json_dict['nationality_code'] if json_dict and 'nationality_code' in json_dict else None
     timezone_code = json_dict['timezone_code'] if json_dict and 'timezone_code' in json_dict else None
 
-    def create_account_callback(_):
+    def create_account_callback(ev):  # pylint: disable=invalid-name
         """ create_account_callback """
 
         nonlocal pseudo
@@ -108,6 +108,8 @@ def create_account(json_dict):
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Votre compte a été créé : {messages}", remove_after=config.REMOVE_AFTER)
             alert("Maintenant vous devez vous identifier par le menu 'Connexion'")
+
+        ev.preventDefault()
 
         # get values from user input
 
@@ -348,7 +350,7 @@ def create_account(json_dict):
 def change_password():
     """ change_password """
 
-    def change_password_callback(_):
+    def change_password_callback(ev):  # pylint: disable=invalid-name
         """ change_password_callback """
 
         def reply_callback(req):
@@ -364,6 +366,8 @@ def change_password():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Votre mot de passe a été changé : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         new_password = input_new_password.value
         if not new_password:
@@ -434,7 +438,7 @@ def change_password():
 def validate_email():
     """ validate_email """
 
-    def send_new_code_callback(_):
+    def send_new_code_callback(ev):  # pylint: disable=invalid-name
         """ send_new_code_callback """
 
         def reply_callback(req):
@@ -451,6 +455,8 @@ def validate_email():
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}", remove_after=config.REMOVE_AFTER)
 
+        ev.preventDefault()
+
         json_dict = {}
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -464,7 +470,7 @@ def validate_email():
         MY_SUB_PANEL.clear()
         validate_email()
 
-    def validate_email_callback(_):
+    def validate_email_callback(ev):  # pylint: disable=invalid-name
         """ validate_email_callback """
 
         def reply_callback(req):
@@ -480,6 +486,8 @@ def validate_email():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Félicitations, votre courriel a été validé : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         if not input_confirmation_code.value:
             alert("Code de confirmation mal saisi")
@@ -661,7 +669,7 @@ def edit_account():
 
         return status
 
-    def change_account_callback(_):
+    def change_account_callback(ev):  # pylint: disable=invalid-name
         """ change_account_callback """
 
         def reply_callback(req):
@@ -677,6 +685,8 @@ def edit_account():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             InfoDialog("OK", f"Votre compte a été changé : {messages}", remove_after=config.REMOVE_AFTER)
+
+        ev.preventDefault()
 
         email = input_email.value
         if not email:
@@ -901,8 +911,10 @@ def delete_account():
         # deleting account : need token
         ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def delete_account_callback_confirm(_):
+    def delete_account_callback_confirm(ev):  # pylint: disable=invalid-name
         """ delete_account_callback_confirm """
+
+        ev.preventDefault()
 
         dialog = Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
