@@ -179,7 +179,7 @@ def show_games():
             if field == 'name':
 
                 # button for sorting by creation date
-                button = html.BUTTON("&lt;date de création&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
@@ -187,7 +187,7 @@ def show_games():
                 buttons <= " "
 
                 # button for sorting by name
-                button = html.BUTTON("&lt;nom&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Nom&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
                 buttons <= button
 
@@ -924,7 +924,7 @@ def create_tournament():
 
     form <= html.BR()
 
-    input_create_tournament = html.INPUT(type="submit", value="créer le tournoi")
+    input_create_tournament = html.INPUT(type="submit", value="Créer le tournoi")
     input_create_tournament.bind("click", create_tournament_callback)
     form <= input_create_tournament
 
@@ -1093,7 +1093,7 @@ def edit_tournament():
 
     form <= html.BR()
 
-    input_put_in_tournament = html.INPUT(type="submit", value="mettre dans le tournoi")
+    input_put_in_tournament = html.INPUT(type="submit", value="Mettre dans le tournoi")
     input_put_in_tournament.bind("click", put_in_tournament_callback)
     form <= input_put_in_tournament
 
@@ -1127,7 +1127,7 @@ def edit_tournament():
 
     form <= html.BR()
 
-    input_remove_from_tournament = html.INPUT(type="submit", value="retirer du tournoi")
+    input_remove_from_tournament = html.INPUT(type="submit", value="Retirer du tournoi")
     input_remove_from_tournament.bind("click", remove_from_tournament_callback)
     form <= input_remove_from_tournament
 
@@ -1213,7 +1213,7 @@ def delete_tournament():
 
     form = html.FORM()
 
-    input_delete_tournament = html.INPUT(type="submit", value="supprimer le tournoi")
+    input_delete_tournament = html.INPUT(type="submit", value="Supprimer le tournoi")
     input_delete_tournament.bind("click", delete_tournament_callback_confirm)
     form <= input_delete_tournament
 

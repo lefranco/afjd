@@ -79,7 +79,7 @@ def select_game():
             # create a table to pass information about selected game
             game_data_sel = {v['name']: (k, v['variant']) for k, v in games_data.items()}
 
-            input_select_game = html.INPUT(type="submit", value="sélectionner cette partie")
+            input_select_game = html.INPUT(type="submit", value="Sélectionner cette partie")
             input_select_game.bind("click", lambda e, ig=input_game, gds=game_data_sel: select_game_callback(e, ig, gds))
             form <= input_select_game
 

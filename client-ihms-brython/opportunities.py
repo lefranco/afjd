@@ -256,7 +256,7 @@ def my_opportunities():
             if field == 'name':
 
                 # button for sorting by creation date
-                button = html.BUTTON("&lt;date de création&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
@@ -264,7 +264,7 @@ def my_opportunities():
                 buttons <= " "
 
                 # button for sorting by name
-                button = html.BUTTON("&lt;nom&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Nom&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
                 buttons <= button
 

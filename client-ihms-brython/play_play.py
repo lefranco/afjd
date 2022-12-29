@@ -1039,7 +1039,7 @@ def submit_orders():
     def put_erase_all(buttons_right):
         """ put_erase_all """
 
-        input_erase_all = html.INPUT(type="submit", value="effacer tout")
+        input_erase_all = html.INPUT(type="submit", value="Effacer tout")
         input_erase_all.bind("click", erase_all_callback)
         buttons_right <= html.BR()
         buttons_right <= input_erase_all
@@ -1048,7 +1048,7 @@ def submit_orders():
     def put_rest_hold(buttons_right):
         """ put_rest_hold """
 
-        input_rest_hold = html.INPUT(type="submit", value="tout le reste tient")
+        input_rest_hold = html.INPUT(type="submit", value="Tout le reste tient")
         input_rest_hold.bind("click", rest_hold_callback)
         buttons_right <= html.BR()
         buttons_right <= input_rest_hold
@@ -1100,7 +1100,7 @@ def submit_orders():
         buttons_right <= input_never
         buttons_right <= html.BR()
 
-        input_submit = html.INPUT(type="submit", value="soumettre ces ordres")
+        input_submit = html.INPUT(type="submit", value="Soumettre ces ordres")
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -1894,7 +1894,7 @@ def submit_communication_orders():
     def put_erase_all(buttons_right):
         """ put_erase_all """
 
-        input_erase_all = html.INPUT(type="submit", value="effacer tout")
+        input_erase_all = html.INPUT(type="submit", value="Effacer tout")
         input_erase_all.bind("click", erase_all_callback)
         buttons_right <= html.BR()
         buttons_right <= input_erase_all
@@ -1903,7 +1903,7 @@ def submit_communication_orders():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="enregistrer ces ordres")
+        input_submit = html.INPUT(type="submit", value="Enregistrer ces ordres")
         input_submit.bind("click", submit_orders_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -2144,7 +2144,7 @@ def vote():
 
     form <= html.BR()
 
-    input_vote_in_game = html.INPUT(type="submit", value="voter dans la partie")
+    input_vote_in_game = html.INPUT(type="submit", value="Voter dans la partie")
     input_vote_in_game.bind("click", add_vote_callback)
     form <= input_vote_in_game
 

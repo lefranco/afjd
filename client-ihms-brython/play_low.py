@@ -379,7 +379,7 @@ def load_special_stuff():
 def stack_last_moves_button(frame):
     """ stack_last_moves_button """
 
-    input_last_moves = html.INPUT(type="submit", value="derniers mouvements")
+    input_last_moves = html.INPUT(type="submit", value="Derniers mouvements")
     input_last_moves.bind("click", lambda e: play.load_option(e, 'Consulter', True))
     frame <= input_last_moves
     frame <= html.BR()

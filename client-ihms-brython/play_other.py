@@ -451,7 +451,7 @@ def show_position(direct_last_moves):
 
         buttons_right <= html.H3("Position")
 
-        input_refresh = html.INPUT(type="submit", value="recharger la partie")
+        input_refresh = html.INPUT(type="submit", value="Recharger la partie")
         input_refresh.bind("click", callback_refresh)
         buttons_right <= input_refresh
         buttons_right <= html.BR()
@@ -500,13 +500,13 @@ def show_position(direct_last_moves):
 
         buttons_right <= html.H3("Divers")
 
-        input_export_sandbox = html.INPUT(type="submit", value="exporter la partie vers le bac à sable")
+        input_export_sandbox = html.INPUT(type="submit", value="Exporter la partie vers le bac à sable")
         input_export_sandbox.bind("click", callback_export_sandbox)
         buttons_right <= input_export_sandbox
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        input_download_game_json = html.INPUT(type="submit", value="télécharger la partie au format JSON")
+        input_download_game_json = html.INPUT(type="submit", value="Télécharger la partie au format JSON")
         input_download_game_json.bind("click", callback_export_game_json)
         buttons_right <= input_download_game_json
         buttons_right <= html.BR()
@@ -1066,7 +1066,7 @@ def show_events_in_game():
         # remove
         if play_low.ROLE_ID == 0:
             form = html.FORM()
-            input_remove_dropout = html.INPUT(type="submit", value="supprimer")
+            input_remove_dropout = html.INPUT(type="submit", value="Supprimer")
             text = f"Rôle {role_name} et joueur {pseudo_quitter}"
             input_remove_dropout.bind("click", lambda e, r=role_id, p=player_id, t=text: remove_dropout_callback_confirm(e, r, p, t))
             form <= input_remove_dropout
@@ -1149,7 +1149,7 @@ def show_events_in_game():
         # remove
         if play_low.ROLE_ID == 0:
             form = html.FORM()
-            input_remove_incident = html.INPUT(type="submit", value="supprimer")
+            input_remove_incident = html.INPUT(type="submit", value="Supprimer")
             text = f"Rôle {role_name} en saison {game_season}"
             input_remove_incident.bind("click", lambda e, r=role_id, a=advancement, t=text: remove_incident_callback_confirm(e, r, a, t))
             form <= input_remove_incident
@@ -1383,7 +1383,7 @@ def negotiate(default_dest_set):
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="envoyer le message")
+    input_declare_in_game = html.INPUT(type="submit", value="Envoyer le message")
     input_declare_in_game.bind("click", add_message_callback)
     form <= input_declare_in_game
 
@@ -1671,7 +1671,7 @@ def declare():
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="déclarer dans la partie")
+    input_declare_in_game = html.INPUT(type="submit", value="Déclarer dans la partie")
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
 
@@ -1892,7 +1892,7 @@ def note():
 
     form <= html.BR()
 
-    input_vote_in_game = html.INPUT(type="submit", value="enregistrer dans la partie")
+    input_vote_in_game = html.INPUT(type="submit", value="Enregistrer dans la partie")
     input_vote_in_game.bind("click", add_note_callback)
     form <= input_vote_in_game
 

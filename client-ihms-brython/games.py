@@ -528,7 +528,7 @@ def create_game(json_dict):
 
     form <= html.BR()
 
-    input_create_game = html.INPUT(type="submit", value="créer la partie")
+    input_create_game = html.INPUT(type="submit", value="Créer la partie")
     input_create_game.bind("click", create_game_callback)
     form <= input_create_game
 
@@ -649,7 +649,7 @@ def change_description_game():
 
     form <= html.BR()
 
-    input_change_description_game = html.INPUT(type="submit", value="changer la description de la partie")
+    input_change_description_game = html.INPUT(type="submit", value="Changer la description de la partie")
     input_change_description_game.bind("click", change_description_game_callback)
     form <= input_change_description_game
 
@@ -768,7 +768,7 @@ def change_anonymity_game():
 
     form <= html.BR()
 
-    input_change_anonymity_game = html.INPUT(type="submit", value="changer l'anonymat de la partie")
+    input_change_anonymity_game = html.INPUT(type="submit", value="Changer l'anonymat de la partie")
     input_change_anonymity_game.bind("click", change_anonymity_games_callback)
     form <= input_change_anonymity_game
 
@@ -900,7 +900,7 @@ def change_access_messages_game():
 
     form <= html.BR()
 
-    input_change_message_game = html.INPUT(type="submit", value="changer l'accès aux messages publics et privés de la partie")
+    input_change_message_game = html.INPUT(type="submit", value="Changer l'accès aux messages publics et privés de la partie")
     input_change_message_game.bind("click", change_access_messages_games_callback)
     form <= input_change_message_game
 
@@ -1027,7 +1027,7 @@ def change_scoring_game():
 
     form <= html.BR()
 
-    input_change_scoring_game = html.INPUT(type="submit", value="changer le scorage de la partie")
+    input_change_scoring_game = html.INPUT(type="submit", value="Changer le scorage de la partie")
     input_change_scoring_game.bind("click", change_scoring_game_callback)
     form <= input_change_scoring_game
 
@@ -1171,7 +1171,7 @@ def change_access_parameters_game():
 
     form <= html.BR()
 
-    input_change_access_game = html.INPUT(type="submit", value="changer les paramètres d'accès à la partie")
+    input_change_access_game = html.INPUT(type="submit", value="Changer les paramètres d'accès à la partie")
     input_change_access_game.bind("click", change_access_parameters_game_callback)
     form <= input_change_access_game
 
@@ -1434,7 +1434,7 @@ def change_pace_parameters_game():
 
     form <= html.BR()
 
-    input_change_pace_game = html.INPUT(type="submit", value="changer le rythme de la partie")
+    input_change_pace_game = html.INPUT(type="submit", value="Changer le rythme de la partie")
     input_change_pace_game.bind("click", change_pace_parameters_game_callback)
     form <= input_change_pace_game
 
@@ -1567,22 +1567,22 @@ def change_state_game():
     fieldset <= legend_state
 
     if state_loaded == 0:
-        input_start_game = html.INPUT(type="submit", value="démarrer la partie")
+        input_start_game = html.INPUT(type="submit", value="Démarrer la partie")
         input_start_game.bind("click", lambda e, s=1: change_state_game_callback(e, None, s))
         form <= input_start_game
 
     if state_loaded == 1:
-        input_stop_game = html.INPUT(type="submit", value="arrêter la partie")
+        input_stop_game = html.INPUT(type="submit", value="Arrêter la partie")
         input_stop_game.bind("click", lambda e, s=2: change_state_game_callback_confirm(e, s))
         form <= input_stop_game
 
     if state_loaded == 2:
-        input_stop_game = html.INPUT(type="submit", value="distinguer la partie")
+        input_stop_game = html.INPUT(type="submit", value="Distinguer la partie")
         input_stop_game.bind("click", lambda e, s=3: change_state_game_callback(e, None, s))
         form <= input_stop_game
 
     if state_loaded == 3:
-        input_stop_game = html.INPUT(type="submit", value="ne plus distinguer la partie")
+        input_stop_game = html.INPUT(type="submit", value="Ne plus distinguer la partie")
         input_stop_game.bind("click", lambda e, s=2: change_state_game_callback(e, None, s))
         form <= input_stop_game
 
@@ -1660,7 +1660,7 @@ def delete_game():
 
     form = html.FORM()
 
-    input_delete_game = html.INPUT(type="submit", value="supprimer la partie")
+    input_delete_game = html.INPUT(type="submit", value="Supprimer la partie")
     input_delete_game.bind("click", delete_game_callback_confirm)
     form <= input_delete_game
 

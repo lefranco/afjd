@@ -551,7 +551,7 @@ def all_games(state_name):
             if field == 'name':
 
                 # button for sorting by creation date
-                button = html.BUTTON("&lt;date de création&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Date de création&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='creation': sort_by_callback(e, f))
                 buttons <= button
 
@@ -559,7 +559,7 @@ def all_games(state_name):
                 buttons <= " "
 
                 # button for sorting by name
-                button = html.BUTTON("&lt;nom&gt;", Class='btn-menu')
+                button = html.BUTTON("&lt;Nom&gt;", Class='btn-menu')
                 button.bind("click", lambda e, f='name': sort_by_callback(e, f))
                 buttons <= button
 
@@ -946,7 +946,7 @@ def declare_incident():
     fieldset <= "Il est toujours bienvenu de fournir une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu..."
     form <= fieldset
 
-    input_submit_incident = html.INPUT(type="submit", value="soumettre l'incident")
+    input_submit_incident = html.INPUT(type="submit", value="Soumettre l'incident")
     input_submit_incident.bind("click", submit_incident_callback)
     form <= input_submit_incident
 
@@ -1174,7 +1174,7 @@ def select_interface():
 
         form <= html.BR()
 
-        input_select_interface = html.INPUT(type="submit", value="sélectionner cette interface")
+        input_select_interface = html.INPUT(type="submit", value="Sélectionner cette interface")
         input_select_interface.bind("click", lambda e, i=user_interface: select_interface_callback(e, i))
         form <= input_select_interface
 
@@ -1278,7 +1278,7 @@ def test_scoring():
     form <= html.DIV(f"Pour cette partie le scorage est {scoring_name}", Class='note')
     form <= html.BR()
 
-    input_test_scoring = html.INPUT(type="submit", value="calculer le scorage")
+    input_test_scoring = html.INPUT(type="submit", value="Calculer le scorage")
     input_test_scoring.bind("click", lambda e, gs=game_scoring, ri=ratings_input: test_scoring_callback(e, gs, ri))
     form <= input_test_scoring
 

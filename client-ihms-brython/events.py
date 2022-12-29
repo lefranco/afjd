@@ -146,7 +146,7 @@ def select_event():
 
     form <= html.BR()
 
-    input_select_event = html.INPUT(type="submit", value="sélectionner cet événement")
+    input_select_event = html.INPUT(type="submit", value="Sélectionner cet événement")
     input_select_event.bind("click", lambda e, ie=input_event: select_event_callback(e, ie))
     form <= input_select_event
 
@@ -374,7 +374,7 @@ def registrations():
     contact_form <= html.DIV("Pensez à lui fournir le moyen de vous répondre !")
     contact_form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="envoyer le courriel")
+    input_select_player = html.INPUT(type="submit", value="Envoyer le courriel")
     input_select_player.bind("click", sendmail_callback)
     contact_form <= input_select_player
 
@@ -619,7 +619,7 @@ def create_event(json_dict):
 
     form <= html.BR()
 
-    input_create_event = html.INPUT(type="submit", value="créer l'événement")
+    input_create_event = html.INPUT(type="submit", value="Créer l'événement")
     input_create_event.bind("click", create_event_callback)
     form <= input_create_event
 
@@ -786,7 +786,7 @@ def edit_event():
 
     form <= html.BR()
 
-    input_edit_event = html.INPUT(type="submit", value="modifier l'événement")
+    input_edit_event = html.INPUT(type="submit", value="Modifier l'événement")
     input_edit_event.bind("click", edit_event_callback)
     form <= input_edit_event
 
@@ -1020,7 +1020,7 @@ def delete_event():
 
     form = html.FORM()
 
-    input_delete_event = html.INPUT(type="submit", value="supprimer l'événement")
+    input_delete_event = html.INPUT(type="submit", value="Supprimer l'événement")
     input_delete_event.bind("click", delete_event_callback_confirm)
     form <= input_delete_event
 

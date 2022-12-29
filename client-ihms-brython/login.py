@@ -213,7 +213,7 @@ def login():
     # detect caps lock
     input_password.bind("keypress", detect_caps_lock_callback)
 
-    input_login = html.INPUT(type="submit", value="connexion")
+    input_login = html.INPUT(type="submit", value="Connexion")
     input_login.bind("click", login_callback)
     form <= input_login
     form <= html.BR()
@@ -221,7 +221,7 @@ def login():
 
     # --
 
-    input_forgot = html.INPUT(type="submit", value="mot de passe oublié")
+    input_forgot = html.INPUT(type="submit", value="Mot de passe oublié")
     input_forgot.bind("click", forgot_callback)
     form <= input_forgot
     form <= html.BR()
@@ -229,7 +229,7 @@ def login():
 
     # --
 
-    input_logout = html.INPUT(type="submit", value="déconnexion")
+    input_logout = html.INPUT(type="submit", value="Déconnexion")
     input_logout.bind("click", logout_callback)
     form <= input_logout
     form <= html.BR()
