@@ -328,7 +328,7 @@ def create_many_games():
 
     global PREV_GAME
 
-    def create_games_callback(_):
+    def create_games_callback(ev):  # pylint: disable=invalid-name
         """ create_games_callback """
 
         def onload_callback(_):
@@ -405,6 +405,8 @@ def create_many_games():
                 dialog = Dialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
                 dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
                 dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
+
+        ev.preventDefault()
 
         if not INPUT_FILE.files:
             alert("Pas de fichier")
