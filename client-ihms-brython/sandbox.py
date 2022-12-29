@@ -790,7 +790,7 @@ def sandbox():
     def put_erase_all(buttons_right):
         """ put_erase_all """
 
-        input_erase_all = html.INPUT(type="submit", value="effacer tout")
+        input_erase_all = html.INPUT(type="submit", value="Effacer tout")
         input_erase_all.bind("click", erase_all_callback)
         buttons_right <= html.BR()
         buttons_right <= input_erase_all
@@ -799,7 +799,7 @@ def sandbox():
     def put_rest_hold(buttons_right):
         """ put_rest_hold """
 
-        input_rest_hold = html.INPUT(type="submit", value="tout le reste tient")
+        input_rest_hold = html.INPUT(type="submit", value="Tout le reste tient")
         input_rest_hold.bind("click", rest_hold_callback)
         buttons_right <= html.BR()
         buttons_right <= input_rest_hold
@@ -808,7 +808,7 @@ def sandbox():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="soumettre au simulateur")
+        input_submit = html.INPUT(type="submit", value="Soumettre au simulateur")
         input_submit.bind("click", submit_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -817,7 +817,7 @@ def sandbox():
     def put_download(buttons_right):
         """ put_export """
 
-        input_export = html.INPUT(type="submit", value="télécharger cette position")
+        input_export = html.INPUT(type="submit", value="Télécharger cette position")
         input_export.bind("click", download_callback)
         buttons_right <= html.BR()
         buttons_right <= input_export

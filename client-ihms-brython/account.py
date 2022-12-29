@@ -333,7 +333,7 @@ def create_account(json_dict):
 
     form <= html.BR()
 
-    input_create_account = html.INPUT(type="submit", value="créer le compte")
+    input_create_account = html.INPUT(type="submit", value="Créer le compte")
     input_create_account.bind("click", create_account_callback)
     form <= input_create_account
 
@@ -428,7 +428,7 @@ def change_password():
 
     form <= html.BR()
 
-    input_change_password = html.INPUT(type="submit", value="changer le mot de passe")
+    input_change_password = html.INPUT(type="submit", value="Changer le mot de passe")
     input_change_password.bind("click", change_password_callback)
     form <= input_change_password
 
@@ -547,7 +547,7 @@ def validate_email():
 
     form <= html.BR()
 
-    input_validate_email = html.INPUT(type="submit", value="valider le courriel")
+    input_validate_email = html.INPUT(type="submit", value="Valider le courriel")
     input_validate_email.bind("click", validate_email_callback)
     form <= input_validate_email
     form <= html.BR()
@@ -558,7 +558,7 @@ def validate_email():
 
     form2 = html.FORM()
 
-    input_send_new_code = html.INPUT(type="submit", value="me renvoyer un nouveau code")
+    input_send_new_code = html.INPUT(type="submit", value="Me renvoyer un nouveau code")
     input_send_new_code.bind("click", send_new_code_callback)
     form2 <= input_send_new_code
     form2 <= html.BR()
@@ -863,7 +863,7 @@ def edit_account():
 
     form <= html.BR()
 
-    input_change_account = html.INPUT(type="submit", value="changer le compte")
+    input_change_account = html.INPUT(type="submit", value="Changer le compte")
     input_change_account.bind("click", change_account_callback)
     form <= input_change_account
 
@@ -936,7 +936,7 @@ def delete_account():
 
     MY_SUB_PANEL <= form
 
-    input_delete_account = html.INPUT(type="submit", value="supprimer le compte")
+    input_delete_account = html.INPUT(type="submit", value="Supprimer le compte")
     input_delete_account.bind("click", delete_account_callback_confirm)
     form <= input_delete_account
     form <= html.BR()

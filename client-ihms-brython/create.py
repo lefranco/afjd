@@ -499,7 +499,7 @@ def create_many_games():
 
     form <= html.BR()
 
-    input_create_games = html.INPUT(type="submit", value="créer les parties")
+    input_create_games = html.INPUT(type="submit", value="Créer les parties")
     input_create_games.bind("click", create_games_callback)
     form <= input_create_games
 

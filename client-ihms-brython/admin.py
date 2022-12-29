@@ -279,7 +279,7 @@ def change_news_admin():
 
     form <= html.BR()
 
-    input_change_news_content = html.INPUT(type="submit", value="mettre à jour")
+    input_change_news_content = html.INPUT(type="submit", value="Mettre à jour")
     input_change_news_content.bind("click", change_news_admin_callback)
     form <= input_change_news_content
     form <= html.BR()
@@ -356,7 +356,7 @@ def usurp():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="usurper")
+    input_select_player = html.INPUT(type="submit", value="Usurper")
     input_select_player.bind("click", usurp_callback)
     form <= input_select_player
 
@@ -506,7 +506,7 @@ def rectify_parameters():
 
     form <= html.BR()
 
-    input_change_used_for_elo_game = html.INPUT(type="submit", value="changer les paramètres de la partie")
+    input_change_used_for_elo_game = html.INPUT(type="submit", value="Changer les paramètres de la partie")
     input_change_used_for_elo_game.bind("click", change_parameters_game_callback)
     form <= input_change_used_for_elo_game
 
@@ -701,7 +701,7 @@ def rectify_position():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="rectifier la position")
+        input_submit = html.INPUT(type="submit", value="Rectifier la position")
         input_submit.bind("click", submit_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
@@ -1230,7 +1230,7 @@ def edit_creators():
 
     form <= html.BR()
 
-    input_put_in_game = html.INPUT(type="submit", value="mettre dans les créateurs")
+    input_put_in_game = html.INPUT(type="submit", value="Mettre dans les créateurs")
     input_put_in_game.bind("click", add_creator_callback)
     form <= input_put_in_game
 
@@ -1264,7 +1264,7 @@ def edit_creators():
 
     form <= html.BR()
 
-    input_remove_from_game = html.INPUT(type="submit", value="retirer des créateurs")
+    input_remove_from_game = html.INPUT(type="submit", value="Retirer des créateurs")
     input_remove_from_game.bind("click", remove_creator_callback)
     form <= input_remove_from_game
 
@@ -1394,7 +1394,7 @@ def edit_moderators():
 
     form <= html.BR()
 
-    input_put_in_game = html.INPUT(type="submit", value="mettre dans les modérateurs")
+    input_put_in_game = html.INPUT(type="submit", value="Mettre dans les modérateurs")
     input_put_in_game.bind("click", add_moderator_callback)
     form <= input_put_in_game
 
@@ -1428,7 +1428,7 @@ def edit_moderators():
 
     form <= html.BR()
 
-    input_remove_from_game = html.INPUT(type="submit", value="retirer des modérateurs")
+    input_remove_from_game = html.INPUT(type="submit", value="Retirer des modérateurs")
     input_remove_from_game.bind("click", remove_moderator_callback)
     form <= input_remove_from_game
 
@@ -1574,7 +1574,7 @@ def update_elo():
 
     # ---
 
-    input_maintain = html.INPUT(type="submit", value="extraire et calculer")
+    input_maintain = html.INPUT(type="submit", value="Extraire et calculer")
     input_maintain.bind("click", extract_elo_data_callback)
     form <= input_maintain
 
@@ -1704,7 +1704,7 @@ def update_reliability():
 
     # ---
 
-    input_maintain = html.INPUT(type="submit", value="extraire et calculer")
+    input_maintain = html.INPUT(type="submit", value="Extraire et calculer")
     input_maintain.bind("click", extract_reliability_data_callback)
     form <= input_maintain
 
@@ -1834,7 +1834,7 @@ def update_regularity():
 
     # ---
 
-    input_maintain = html.INPUT(type="submit", value="extraire et calculer")
+    input_maintain = html.INPUT(type="submit", value="Extraire et calculer")
     input_maintain.bind("click", extract_regularity_data_callback)
     form <= input_maintain
 
@@ -2172,7 +2172,7 @@ def maintain():
 
     # ---
 
-    input_maintain = html.INPUT(type="submit", value="déclencher")
+    input_maintain = html.INPUT(type="submit", value="Déclencher")
     input_maintain.bind("click", maintain_callback)
     form <= input_maintain
 

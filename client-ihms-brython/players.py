@@ -287,11 +287,11 @@ def show_rating_performance(classic, role_id):
         ratings_table, average = make_ratings_table(classic, role_id, nb_roles)
 
         # button for changing mode
-        switch_mode_button = html.BUTTON(f"passer en {'blitz' if classic else 'classique'}", Class='btn-menu')
+        switch_mode_button = html.BUTTON(f"Passer en {'blitz' if classic else 'classique'}", Class='btn-menu')
         switch_mode_button.bind("click", switch_mode_callback)
 
         # button for going global
-        switch_global_button = html.BUTTON("classement global", Class='btn-menu')
+        switch_global_button = html.BUTTON("Classement global", Class='btn-menu')
         switch_global_button.bind("click", lambda e: switch_role_callback(e, None))
 
         # buttons for selecting role

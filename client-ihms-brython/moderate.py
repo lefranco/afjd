@@ -156,7 +156,7 @@ def find_from_email_address():
 
     form <= html.BR()
 
-    input_find_email = html.INPUT(type="submit", value="retrouver le compte")
+    input_find_email = html.INPUT(type="submit", value="Retrouver le compte")
     input_find_email.bind("click", find_from_email_addresss_callback)
     form <= input_find_email
 
@@ -234,7 +234,7 @@ def change_news_modo():
 
     form <= html.BR()
 
-    input_change_news_content = html.INPUT(type="submit", value="mettre à jour")
+    input_change_news_content = html.INPUT(type="submit", value="Mettre à jour")
     input_change_news_content.bind("click", change_news_modo_callback)
     form <= input_change_news_content
     form <= html.BR()
@@ -494,7 +494,7 @@ def sendmail():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="envoyer le courriel")
+    input_select_player = html.INPUT(type="submit", value="Envoyer le courriel")
     input_select_player.bind("click", sendmail_callback)
     form <= input_select_player
 
@@ -574,7 +574,7 @@ def display_email_address():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="récupérer son courriel")
+    input_select_player = html.INPUT(type="submit", value="Récupérer son courriel")
     input_select_player.bind("click", display_email_address_callback)
     form <= input_select_player
 
@@ -657,7 +657,7 @@ def display_phone_number():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="récupérer son numéro de téléphone")
+    input_select_player = html.INPUT(type="submit", value="Récupérer son numéro de téléphone")
     input_select_player.bind("click", display_phone_number_callback)
     form <= input_select_player
 
@@ -973,7 +973,7 @@ def revoke_master():
 
     form = html.FORM()
 
-    input_revoke_master = html.INPUT(type="submit", value="destituer l'arbitre de la partie sélectionnée")
+    input_revoke_master = html.INPUT(type="submit", value="Destituer l'arbitre de la partie sélectionnée")
     input_revoke_master.bind("click", revoke_master_callback)
     form <= input_revoke_master
 
@@ -1061,7 +1061,7 @@ def change_manager():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="promouvoir responsable")
+    input_select_player = html.INPUT(type="submit", value="Promouvoir responsable")
     input_select_player.bind("click", promote_managers_callback)
     form <= input_select_player
 
