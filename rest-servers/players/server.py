@@ -387,6 +387,23 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/players/<pseudo> - DELETE - removing one player pseudo=%s", pseudo)
 
+        # check from user server user is pseudo
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
+
+        # exception : we have both token and pseudo
+        if req_result.json()['logged_in_as'] != pseudo:
+            flask_restful.abort(403, msg="Wrong authentication!")
+
         sql_executor = database.SqlExecutor()
 
         player = players.Player.find_by_pseudo(sql_executor, pseudo)

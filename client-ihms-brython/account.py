@@ -49,6 +49,7 @@ def information_about_account2():
     information <= f"A NOTER : Un compte oisif plus de {config.IDLE_DAY_TIMEOUT} jours sera supprimé pour ne pas encombrer le système."
     return information
 
+
 def information_about_emails():
     """ information_about_emails """
 
@@ -910,9 +911,7 @@ def delete_account():
 
         dialog.close()
 
-        json_dict = {
-            'pseudo': pseudo,
-        }
+        json_dict = {}
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']

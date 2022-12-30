@@ -211,6 +211,68 @@ def get_ip_table():
     return list(addresses_list)
 
 
+def delete_account_callback(ev, player_pseudo):  # pylint: disable=invalid-name
+    """ delete_account_callback """
+
+    # first step : usurp to get a token
+    # second step : delete account using token
+
+    def reply_callback1(req):
+
+        def reply_callback2(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la suppression du compte {player_pseudo}: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la suppression du compte {player_pseudo} : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            InfoDialog("OK", f"Le compte {player_pseudo} a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            show_idle_data()
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à l'usurpation {player_pseudo} : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à l'usurpation {player_pseudo} : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        token = req_result['AccessToken']
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/players/{player_pseudo}"
+
+        # deleting account : need token (of player or of admin)
+        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': token}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback2, ontimeout=common.noreply_callback)
+
+    ev.preventDefault()
+
+    json_dict = {
+        'usurped_user_name': player_pseudo,
+    }
+
+    host = config.SERVER_CONFIG['USER']['HOST']
+    port = config.SERVER_CONFIG['USER']['PORT']
+    url = f"{host}:{port}/usurp"
+
+    # usurping : need token
+    # note : since we access directly to the user server, we present the token in a slightly different way
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback1, ontimeout=common.noreply_callback)
+
+
 def change_news_admin():
     """ change_news_admin """
 
@@ -1881,12 +1943,12 @@ def show_idle_data():
 
     idle_table = html.TABLE()
 
-    fields = ['id', 'player', 'last_login']
+    fields = ['id', 'player', 'last_login', 'delete']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'id': 'id', 'player': 'joueur', 'last_login': 'dernier login'}[field]
+        field_fr = {'id': 'id', 'player': 'joueur', 'last_login': 'dernier login', 'delete': 'supprimer'}[field]
         col = html.TD(field_fr)
         thead <= col
     idle_table <= thead
@@ -1919,6 +1981,13 @@ def show_idle_data():
                     date_now_gmt = mydatetime.fromtimestamp(time_stamp)
                     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
                     value = f"{date_now_gmt_str}"
+
+            if field == 'delete':
+                form = html.FORM()
+                input_delete_account = html.INPUT(type="image", src="./images/delete.jpg")
+                input_delete_account.bind("click", lambda e, p=player: delete_account_callback(e, p))
+                form <= input_delete_account
+                value = form
 
             col = html.TD(value)
 
