@@ -23,10 +23,7 @@ OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifi
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-
 DOWNLOAD_LOG = False
-
-IDLE_TIMEOUT = 365.2 * 24 * 60 * 60
 
 
 def get_creators():
@@ -1916,7 +1913,8 @@ def show_idle_data():
                 value = ''
                 if player in last_login_time:
                     time_stamp = last_login_time[player]
-                    if time_stamp < time_stamp_now - IDLE_TIMEOUT:
+                    day_idle = int(time_stamp_now - time_stamp) // (24 * 3600)
+                    if day_idle > config.IDLE_DAY_TIMEOUT:
                         colour = 'red'
                     date_now_gmt = mydatetime.fromtimestamp(time_stamp)
                     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
