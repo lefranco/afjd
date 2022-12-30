@@ -38,16 +38,26 @@ def information_about_account():
     information <= html.B("Vous voulez rester discret ?")
     information <= html.BR()
     information <= "La plupart des champs sont privés et ne seront pas montrés sur le site et/ou facultatifs."
+    information <= html.BR()
     return information
 
+
+def information_about_account2():
+    """ information_about_account2 """
+
+    information = html.DIV(Class='note')
+    information <= f"A NOTER : Un compte oisif plus de {config.IDLE_DAY_TIMEOUT} jours sera supprimé pour ne pas encombrer le système."
+    return information
 
 def information_about_emails():
     """ information_about_emails """
 
     information = html.DIV(Class='important')
-    information <= "Vous recevrez un courriel pour confimer votre adresse de courriel, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un courriel de rappel de l'arbitre si vous êtes en retard sur les ordres. Un courriel de notification de résolution mais dans ce dernier cas seulement si vous l'avez demandé. A noter : il vous est déconseillé d'utiliser une adresse courriel professionelle."
+    information <= "Vous recevrez un courriel pour confimer votre adresse de courriel, ainsi qu'au démarrage et à l'arrêt de vos parties. Parfois un courriel de rappel de l'arbitre si vous êtes en retard sur les ordres. Un courriel de notification de résolution mais dans ce dernier cas seulement si vous l'avez demandé. Un courriel à la suppression du compte."
     information <= html.BR()
     information <= "Rien de plus !"
+    information <= html.BR()
+    information <= "Il vous est déconseillé d'utiliser une adresse courriel professionelle."
     return information
 
 
@@ -340,9 +350,9 @@ def create_account(json_dict):
     MY_SUB_PANEL <= form
 
     MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= information_about_account2()
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= information_about_pseudo()
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= information_about_emails()
 

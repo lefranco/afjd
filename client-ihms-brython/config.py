@@ -21,6 +21,9 @@ STATE_CODE_TABLE = {'en attente': 0, 'en cours': 1, 'terminée': 2, 'distinguée
 DECLARATIONS_TYPE = 0
 MESSAGES_TYPE = 1
 
+# how many days after which account may be suppressed if nothing happens on it
+IDLE_DAY_TIMEOUT = 365
+
 # load servers list from json data file
 profiler.PROFILER.start_mes("server config...")
 with open("./config/servers.json", "r", encoding="utf-8") as read_file:
