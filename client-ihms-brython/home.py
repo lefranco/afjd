@@ -555,12 +555,12 @@ def all_games(state_name):
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'id', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master', 'nopress_game', 'nomessage_game']
+    fields = ['name', 'go_game', 'id', 'deadline', 'current_advancement', 'game_over', 'variant', 'used_for_elo', 'master', 'nopress_game', 'nomessage_game']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'deadline': 'date limite', 'current_advancement': 'saison à jouer'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'game_over':'game over', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -671,6 +671,7 @@ def all_games(state_name):
         data['go_game'] = None
         data['id'] = None
         data['master'] = None
+        data['game_over'] = None
 
         row = html.TR()
         for field in fields:
@@ -722,6 +723,12 @@ def all_games(state_name):
                 advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
                 advancement_season_readable = variant_data.season_name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
+
+            if field == 'game_over':
+                value = ''
+                if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                    flag = html.IMG(src="./images/game_over.png", title="Partie finie")
+                    value = flag
 
             if field == 'used_for_elo':
                 value = "Oui" if value else "Non"
