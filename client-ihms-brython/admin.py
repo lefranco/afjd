@@ -498,7 +498,6 @@ def rectify_parameters():
         nopress_game = int(input_nopress.checked)
 
         json_dict = {
-            'pseudo': common.ADMIN_PSEUDO,
             'used_for_elo': used_for_elo,
             'fast': fast,
             'nomessage_game': nomessage_game,
