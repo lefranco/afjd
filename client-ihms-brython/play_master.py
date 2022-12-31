@@ -9,6 +9,8 @@ from browser import html, ajax, alert, timer   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import profiler
+
 import mydatetime
 import config
 import common
@@ -628,31 +630,44 @@ def game_master():
 
         return pseudo_list
 
+    profiler.PROFILER.start_mes("game_master()")
+    profiler.PROFILER.start_mes("preambule")
+
     # need to be connected
     if play_low.PSEUDO is None:
         alert("Il faut se connecter au préalable")
         play.load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
     # need to be game master
     if play_low.ROLE_ID != 0:
         alert("Vous ne semblez pas être l'arbitre de cette partie")
         play.load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
     # game needs to be ongoing - not waiting
     if play_low.GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
         play.load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
     # game needs to be ongoing - not finished
     if play_low.GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
         play.load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
     # now we can display
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("display before")
 
     # header
 
@@ -670,6 +685,8 @@ def game_master():
     if not submitted_data:
         alert("Erreur chargement données de soumission")
         play.load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
     # who can I put in this role
@@ -681,6 +698,8 @@ def game_master():
     if votes is None:
         alert("Erreur chargement votes")
         play.load_option(None, 'Consulter')
+        profiler.PROFILER.stop_mes()
+        profiler.PROFILER.stop_mes()
         return False
 
     votes = list(votes)
@@ -700,6 +719,9 @@ def game_master():
         col = html.TD(field)
         thead <= col
     game_admin_table <= thead
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("display table")
 
     for role_id in play_low.VARIANT_DATA.roles:
 
@@ -864,6 +886,9 @@ def game_master():
 
         game_admin_table <= row
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("display after")
+
     deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
 
     deadline_form = html.FORM()
@@ -933,6 +958,8 @@ def game_master():
     play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}", Class='note')
     play_low.MY_SUB_PANEL <= html.BR()
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.stop_mes()
     return True
 
 
