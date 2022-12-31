@@ -217,7 +217,7 @@ class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
 class GameIdentifierRessource(flask_restful.Resource):  # type: ignore
     """ GameIdentifierRessource """
 
-    def get(self, name: str) -> typing.Tuple[int, int]: # pylint: disable=no-self-use
+    def get(self, name: str) -> typing.Tuple[int, int]:  # pylint: disable=no-self-use
         """
         From name get identifier
         EXPOSED
@@ -710,6 +710,9 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+CREATE_GAME_LOCK = threading.Lock()
+
+
 @API.resource('/games')
 class GameListRessource(flask_restful.Resource):  # type: ignore
     """ GameListRessource """
@@ -778,19 +781,6 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         else:
             args['scoring'] = games.default_scoring()
 
-        sql_executor = database.SqlExecutor()
-
-        # find the game
-        game = games.Game.find_by_name(sql_executor, name)
-
-        if game is not None:
-            del sql_executor
-            flask_restful.abort(400, msg=f"Game {name} already exists")
-
-        # abort special case : we do not want to see this player in more games
-        if pseudo == "Chryss":
-            flask_restful.abort(404, msg="Core dumped, segmentation fault! (1)")
-
         # pay more attention to deadline
         entered_deadline = args['deadline']
 
@@ -802,7 +792,6 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             # cannot be in past
             if deadline_date < datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1):
                 date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S')
-                del sql_executor
                 flask_restful.abort(400, msg=f"You cannot set a deadline in the past :'{date_desc}' (GMT)")
 
         else:
@@ -812,37 +801,48 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             forced_deadline = int(time_stamp)
             args['deadline'] = forced_deadline
 
-        # create game here
-        identifier = games.Game.free_identifier(sql_executor)
-        game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0)
-        _ = game.load_json(args)
-        game.update_database(sql_executor)
+        sql_executor = database.SqlExecutor()
 
-        # make position for game
-        game.create_position(sql_executor)
+        with CREATE_GAME_LOCK:
 
-        game_id = game.identifier
+            # find the game
+            game = games.Game.find_by_name(sql_executor, name)
 
-        # add a little report
-        time_stamp = int(time.time())
-        report = reports.Report(game_id, time_stamp, WELCOME_TO_GAME)
-        report.update_database(sql_executor)
+            if game is not None:
+                del sql_executor
+                flask_restful.abort(400, msg=f"Game {name} already exists")
 
-        # add a capacity
-        # TODO : get correct value from variant
-        value = 8
-        capacity = capacities.Capacity(game_id, value)
-        capacity.update_database(sql_executor)
+            # create game here
+            identifier = games.Game.free_identifier(sql_executor)
+            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0)
+            _ = game.load_json(args)
+            game.update_database(sql_executor)
 
-        # add that all players are active (those who own a center - that will do)
-        game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
-        active_roles = {o[2] for o in game_ownerships}
-        for role_num in active_roles:
-            active = actives.Active(int(game_id), role_num)
-            active.update_database(sql_executor)
+            # make position for game
+            game.create_position(sql_executor)
 
-        # allocate game master to game
-        game.put_role(sql_executor, user_id, 0)
+            game_id = game.identifier
+
+            # add a little report
+            time_stamp = int(time.time())
+            report = reports.Report(game_id, time_stamp, WELCOME_TO_GAME)
+            report.update_database(sql_executor)
+
+            # add a capacity
+            # TODO : get correct value from variant
+            value = 8
+            capacity = capacities.Capacity(game_id, value)
+            capacity.update_database(sql_executor)
+
+            # add that all players are active (those who own a center - that will do)
+            game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
+            active_roles = {o[2] for o in game_ownerships}
+            for role_num in active_roles:
+                active = actives.Active(int(game_id), role_num)
+                active.update_database(sql_executor)
+
+            # allocate game master to game
+            game.put_role(sql_executor, user_id, 0)
 
         sql_executor.commit()
         del sql_executor
