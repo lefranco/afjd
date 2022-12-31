@@ -13,6 +13,7 @@ import argparse
 import json
 import time
 import sys
+import threading
 
 import waitress
 import flask
@@ -565,6 +566,9 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+CREATE_PLAYER_LOCK = threading.Lock()
+
+
 @API.resource('/players')
 class PlayerListRessource(flask_restful.Resource):  # type: ignore
     """ PlayerListRessource """
@@ -596,33 +600,16 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         args = PLAYER_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
 
-        sql_executor = database.SqlExecutor()
-
-        player = players.Player.find_by_pseudo(sql_executor, pseudo)
-
-        if player is not None:
-            del sql_executor
-            flask_restful.abort(400, msg=f"Player {pseudo} already exists")
-
-        player2 = players.Player.find_by_similar_pseudo(sql_executor, pseudo)
-        if player2 is not None:
-            pseudo2 = player2.pseudo
-            del sql_executor
-            flask_restful.abort(400, msg=f"Player with similar pseudo '{pseudo2}' already exists")
-
         if not pseudo.isidentifier():
-            del sql_executor
             flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is not a valid pseudo")
 
         if len(pseudo) < LEN_PSEUDO_MIN:
-            del sql_executor
             flask_restful.abort(400, msg=f"Pseudo '{pseudo}' is too short")
 
         # cannot have a void residence
         if args['residence']:
             residence_provided = args['residence']
             if not players.check_country(residence_provided):
-                del sql_executor
                 flask_restful.abort(404, msg=f"Residence '{residence_provided}' is not a valid country code")
         else:
             args['residence'] = players.default_country()
@@ -631,7 +618,6 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         if args['nationality']:
             nationality_provided = args['nationality']
             if not players.check_country(nationality_provided):
-                del sql_executor
                 flask_restful.abort(404, msg=f"Nationality '{nationality_provided}' is not a valid country code")
         else:
             args['nationality'] = players.default_country()
@@ -640,53 +626,68 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         if args['time_zone']:
             timezone_provided = args['time_zone']
             if not players.check_timezone(timezone_provided):
-                del sql_executor
                 flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
         else:
             args['time_zone'] = players.default_timezone()
 
-        # create player here
-        identifier = players.Player.free_identifier(sql_executor)
+        sql_executor = database.SqlExecutor()
 
-        player = players.Player(identifier, '', '', False, '', False, False, False, '', '', '', '', '')
-        _ = player.load_json(args)
+        with CREATE_PLAYER_LOCK:
 
-        player.update_database(sql_executor)
+            player = players.Player.find_by_pseudo(sql_executor, pseudo)
 
-        # send email confirmation
-        email_after = player.email
-        code = random.randint(1000, 9999)
-
-        json_dict = {
-            'email_value': email_after,
-            'code': code
-        }
-
-        # store the email/code in secure server
-        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
-        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
-        url = f"{host}:{port}/emails"
-        req_result = SESSION.post(url, data=json_dict)
-        if req_result.status_code != 201:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            del sql_executor
-            flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
-        if not PREVENT_MAIL_CHECKING:
-            if not mailer.send_mail_checker(code, email_after):
+            if player is not None:
                 del sql_executor
-                flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
+                flask_restful.abort(400, msg=f"Player {pseudo} already exists")
 
-        # create player on users server
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/add"
-        req_result = SESSION.post(url, json={'user_name': pseudo, 'password': args['password']})
-        if req_result.status_code != 201:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            del sql_executor
-            flask_restful.abort(400, msg=f"User creation failed!:{message}")
+            player2 = players.Player.find_by_similar_pseudo(sql_executor, pseudo)
+            if player2 is not None:
+                pseudo2 = player2.pseudo
+                del sql_executor
+                flask_restful.abort(400, msg=f"Player with similar pseudo '{pseudo2}' already exists")
+
+            # create player here
+            identifier = players.Player.free_identifier(sql_executor)
+
+            player = players.Player(identifier, '', '', False, '', False, False, False, '', '', '', '', '')
+            _ = player.load_json(args)
+
+            player.update_database(sql_executor)
+
+            # send email confirmation
+            email_after = player.email
+            code = random.randint(1000, 9999)
+
+            json_dict = {
+                'email_value': email_after,
+                'code': code
+            }
+
+            # store the email/code in secure server
+            host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+            port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+            url = f"{host}:{port}/emails"
+            req_result = SESSION.post(url, data=json_dict)
+            if req_result.status_code != 201:
+                mylogger.LOGGER.error("ERROR = %s", req_result.text)
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                del sql_executor
+                flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
+            if not PREVENT_MAIL_CHECKING:
+                if not mailer.send_mail_checker(code, email_after):
+                    del sql_executor
+                    flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
+
+            # create player on users server
+            host = lowdata.SERVER_CONFIG['USER']['HOST']
+            port = lowdata.SERVER_CONFIG['USER']['PORT']
+            url = f"{host}:{port}/add"
+            req_result = SESSION.post(url, json={'user_name': pseudo, 'password': args['password']})
+            if req_result.status_code != 201:
+                mylogger.LOGGER.error("ERROR = %s", req_result.text)
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                del sql_executor
+                flask_restful.abort(400, msg=f"User creation failed!:{message}")
 
         sql_executor.commit()
         del sql_executor
