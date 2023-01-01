@@ -506,11 +506,8 @@ def game_master():
         inforced_names_dict = play_low.INFORCED_VARIANT_DATA.extract_names()
         inforced_names_dict_json = json.dumps(inforced_names_dict)
 
-        definitive_value = True
-
         json_dict = {
             'role_id': role_id,
-            'definitive': definitive_value,
             'adjudication_names': inforced_names_dict_json
         }
 
@@ -994,11 +991,8 @@ def supervise():
         inforced_names_dict = play_low.INFORCED_VARIANT_DATA.extract_names()
         inforced_names_dict_json = json.dumps(inforced_names_dict)
 
-        definitive_value = True
-
         json_dict = {
             'role_id': role_id,
-            'definitive': definitive_value,
             'adjudication_names': inforced_names_dict_json
         }
 
