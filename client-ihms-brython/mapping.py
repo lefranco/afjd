@@ -1034,7 +1034,7 @@ class Variant(Renderable):
         return self._year_zero
 
 
-class Unit(Highliteable):  # pylint: disable=abstract-method
+class Unit(Highliteable):
     """ A unit """
 
     def __init__(self, position: 'Position', role: Role, zone: Zone, dislodged_origin) -> None:
