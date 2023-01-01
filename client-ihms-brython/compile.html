@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<script type="text/javascript" src="brython.js"></script>
+<script type="text/javascript" src="brython_stdlib.js"></script>
+</head>
+
+<body>
+
+<input type="file" onchange="previewFile()" /><br />
+<p class="content"></p>
+
+<script type="text/javascript">
+
+
+function previewFile() {
+  const content = document.querySelector('.content');
+  const [file] = document.querySelector('input[type=file]').files;
+  const reader = new FileReader();
+
+  reader.addEventListener("load", () => {
+    // this will then display a text file
+
+    src = reader.result;
+    var t1 = new Date()
+    var js = __BRYTHON__.python_to_js(src, 'test')
+    var t2 = new Date()
+
+  msg = 'translate to js time: ' +  (t2 - t1) + 'ms\n' +
+         'Python size: ' + src.length + 'b, ' +  src.split('\n').length + ' lines\n ' +
+         'Javascript size ' + js.length + 'b'
+
+    alert(msg)
+    // content.innerText = reader.result;
+
+
+  }, false);
+
+  if (file) {
+    reader.readAsText(file);
+  }
+}
+
+</script>
+</body>
+
+</html>
