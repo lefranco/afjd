@@ -136,6 +136,10 @@ AGREE_PARSER.add_argument('role_id', type=int, required=True)
 AGREE_PARSER.add_argument('definitive', type=int, required=False)
 AGREE_PARSER.add_argument('adjudication_names', type=str, required=True)
 
+FORCE_AGREE_PARSER = flask_restful.reqparse.RequestParser()
+FORCE_AGREE_PARSER.add_argument('role_id', type=int, required=True)
+FORCE_AGREE_PARSER.add_argument('adjudication_names', type=str, required=True)
+
 SUBMISSION_PARSER2 = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER2.add_argument('role_id', type=int, required=True)
 SUBMISSION_PARSER2.add_argument('names', type=str, required=True)
@@ -1778,10 +1782,9 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         """
         mylogger.LOGGER.info("/game-force-agree-solve/<game_id> - POST - force agreeing from game master to solve with orders game id=%s", game_id)
 
-        args = AGREE_PARSER.parse_args(strict=True)
+        args = FORCE_AGREE_PARSER.parse_args(strict=True)
 
         role_id = args['role_id']
-        definitive_value = args['definitive']
         adjudication_names = args['adjudication_names']
 
         # check authentication from user server
@@ -1854,7 +1857,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
             # handle definitive boolean
             # game master forced player to agree to adjudicate
-            status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), adjudication_names, sql_executor)
+            status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, True, adjudication_names, sql_executor)
 
         # end of protected section
 
@@ -1904,7 +1907,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         if adjudicated:
             data = {'adjudicated': adjudicated, 'msg': f"Ok adjudication was performed (initiated by game master): {agreement_report}"}
         else:
-            data = {'adjudicated': adjudicated, 'msg': f"Ok agreement {bool(definitive_value)} stored for role {role_id} (forced by game master) (game adjudication:{agreement_report})"}
+            data = {'adjudicated': adjudicated, 'msg': f"Ok agreement to solve stored for role {role_id} (forced by game master) (game adjudication:{agreement_report})"}
         return data, 201
 
 
