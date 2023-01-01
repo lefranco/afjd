@@ -600,12 +600,9 @@ class Variant(Renderable):
         # from variant file
         # =================
 
-        # load the variant from dict
-        self._raw_variant_content = raw_variant_content
-
         # load the regions
         self._regions = {}
-        for num, code in enumerate(self._raw_variant_content['regions']):
+        for num, code in enumerate(raw_variant_content['regions']):
             number = num + 1
             region_type = RegionTypeEnum.from_code(code)
             assert region_type is not None
@@ -614,7 +611,7 @@ class Variant(Renderable):
 
         # load the centers
         self._centers = {}
-        for num, num_region in enumerate(self._raw_variant_content['centers']):
+        for num, num_region in enumerate(raw_variant_content['centers']):
             number = num + 1
             region = self._regions[num_region]
             center = Center(number, region)
@@ -623,15 +620,15 @@ class Variant(Renderable):
 
         # load the roles (starts at zero)
         self._roles = {}
-        for num in range(self._raw_variant_content['roles']['number']):
+        for num in range(raw_variant_content['roles']['number']):
             number = num + 1
             role = Role(number)
             self._roles[number] = role
 
-        assert len(self._raw_variant_content['start_centers']) == len(self._roles)
+        assert len(raw_variant_content['start_centers']) == len(self._roles)
 
         # load start centers
-        for num, role_start_centers in enumerate(self._raw_variant_content['start_centers']):
+        for num, role_start_centers in enumerate(raw_variant_content['start_centers']):
             number = num + 1
             role = self._roles[number]
             for number_center in role_start_centers:
@@ -641,7 +638,7 @@ class Variant(Renderable):
 
         # load the coast types
         self._coast_types = {}
-        for num in range(self._raw_variant_content['type_coasts']['number']):
+        for num in range(raw_variant_content['type_coasts']['number']):
             number = num + 1
             coast_type = CoastType(number)
             self._coast_types[number] = coast_type
@@ -660,7 +657,7 @@ class Variant(Renderable):
         offset = max(self._zones.keys())
 
         # then the special coast zones
-        for num, (region_num, coast_type_num) in enumerate(self._raw_variant_content['coastal_zones']):
+        for num, (region_num, coast_type_num) in enumerate(raw_variant_content['coastal_zones']):
             number = num + 1
             region = self._regions[region_num]
             coast_type = self._coast_types[coast_type_num]
@@ -670,7 +667,7 @@ class Variant(Renderable):
             self._zones[offset + number] = zone
 
         # load the start units
-        for num, role_start_units in enumerate(self._raw_variant_content['start_units']):
+        for num, role_start_units in enumerate(raw_variant_content['start_units']):
             number = num + 1
             role = self._roles[number]
             for unit_type_code_str, role_start_units2 in role_start_units.items():
@@ -681,10 +678,10 @@ class Variant(Renderable):
                     zone = self._zones[zone_num]
 
         # load the year zero
-        self._year_zero = int(self._raw_variant_content['year_zero'])
+        self._year_zero = int(raw_variant_content['year_zero'])
 
         # load the neighbouring
-        for num, neighbourings in enumerate(self._raw_variant_content['neighbouring']):
+        for num, neighbourings in enumerate(raw_variant_content['neighbouring']):
             number = num + 1
             unit_type = UnitTypeEnum.from_code(number)
             assert unit_type is not None
@@ -701,9 +698,6 @@ class Variant(Renderable):
         # =================
         # from parameters file
         # =================
-
-        # load the parameters content
-        self._raw_parameters_content = raw_parameters_content
 
         self._region_name_table = {}
         self._unit_name_table = {}
@@ -723,15 +717,15 @@ class Variant(Renderable):
         self._geographic_owner_table = {}
 
         # load the map size
-        data_dict = self._raw_parameters_content['map']
+        data_dict = raw_parameters_content['map']
         width = data_dict['width']
         height = data_dict['height']
         map_size = geometry.PositionRecord(x_pos=width, y_pos=height)
         self._map_size = map_size
 
         # load the regions type names
-        assert len(self._raw_parameters_content['regions']) == len(RegionTypeEnum.inventory())
-        for region_type_code_str, data_dict in self._raw_parameters_content['regions'].items():
+        assert len(raw_parameters_content['regions']) == len(RegionTypeEnum.inventory())
+        for region_type_code_str, data_dict in raw_parameters_content['regions'].items():
             region_type_code = int(region_type_code_str)
             region_type = RegionTypeEnum.from_code(region_type_code)
             assert region_type is not None
@@ -739,8 +733,8 @@ class Variant(Renderable):
             self._region_name_table[region_type] = name
 
         # load the units type names
-        assert len(self._raw_parameters_content['units']) == len(UnitTypeEnum.inventory())
-        for unit_type_code_str, data_dict in self._raw_parameters_content['units'].items():
+        assert len(raw_parameters_content['units']) == len(UnitTypeEnum.inventory())
+        for unit_type_code_str, data_dict in raw_parameters_content['units'].items():
             unit_type_code = int(unit_type_code_str)
             unit_type = UnitTypeEnum.from_code(unit_type_code)
             assert unit_type is not None
@@ -752,9 +746,9 @@ class Variant(Renderable):
         self._roles[0] = role
 
         # load the roles names and colours
-        assert len(self._raw_parameters_content['roles']) == len(self._roles)
+        assert len(raw_parameters_content['roles']) == len(self._roles)
 
-        for role_num_str, data_dict in self._raw_parameters_content['roles'].items():
+        for role_num_str, data_dict in raw_parameters_content['roles'].items():
 
             role_num = int(role_num_str)
             role = self._roles[role_num]
@@ -774,15 +768,15 @@ class Variant(Renderable):
             self._role_add_table[role] = (data_dict['adjective_name'], data_dict['letter_name'])
 
         # load coasts types names
-        assert len(self._raw_parameters_content['coasts']) == len(self._coast_types)
-        for coast_type_num_str, data_dict in self._raw_parameters_content['coasts'].items():
+        assert len(raw_parameters_content['coasts']) == len(self._coast_types)
+        for coast_type_num_str, data_dict in raw_parameters_content['coasts'].items():
             coast_type_num = int(coast_type_num_str)
             coast_type = self._coast_types[coast_type_num]
             self._coast_name_table[coast_type] = data_dict['name']
 
         # load the zones names and localisations (units and legends)
-        assert len(self._raw_parameters_content['zones']) == len(self._zones)
-        for zone_num_str, data_dict in self._raw_parameters_content['zones'].items():
+        assert len(raw_parameters_content['zones']) == len(self._zones)
+        for zone_num_str, data_dict in raw_parameters_content['zones'].items():
             zone_num = int(zone_num_str)
             zone = self._zones[zone_num]
 
@@ -819,8 +813,8 @@ class Variant(Renderable):
                 self._geographic_owner_table[zone] = owner
 
         # zone areas (polygons)
-        assert len(self._raw_parameters_content['zone_areas']) == len(self._zones)
-        for zone_num_str, data_dict in self._raw_parameters_content['zone_areas'].items():
+        assert len(raw_parameters_content['zone_areas']) == len(self._zones)
+        for zone_num_str, data_dict in raw_parameters_content['zone_areas'].items():
             zone_num = int(zone_num_str)
             zone = self._zones[zone_num]
             # get area
@@ -828,8 +822,8 @@ class Variant(Renderable):
             self._path_table[zone] = geometry.Polygon([geometry.PositionRecord(*t) for t in area])
 
         # load the centers localisations
-        assert len(self._raw_parameters_content['centers']) == len(self._centers)
-        for center_num_str, data_dict in self._raw_parameters_content['centers'].items():
+        assert len(raw_parameters_content['centers']) == len(self._centers)
+        for center_num_str, data_dict in raw_parameters_content['centers'].items():
             center_num = int(center_num_str)
             center = self._centers[center_num]
             x_pos = data_dict['x_pos']
@@ -838,16 +832,16 @@ class Variant(Renderable):
             self._position_table[center] = center_position
 
         # load seasons names
-        assert len(self._raw_parameters_content['seasons']) == len(SeasonEnum.inventory())
-        for season_num_str, data_dict in self._raw_parameters_content['seasons'].items():
+        assert len(raw_parameters_content['seasons']) == len(SeasonEnum.inventory())
+        for season_num_str, data_dict in raw_parameters_content['seasons'].items():
             season_num = int(season_num_str)
             season = SeasonEnum.from_code(season_num)
             assert season is not None
             self._season_name_table[season] = data_dict['name']
 
         # load orders types names
-        assert len(self._raw_parameters_content['orders']) == len(OrderTypeEnum.inventory())
-        for order_type_num_str, data_dict in self._raw_parameters_content['orders'].items():
+        assert len(raw_parameters_content['orders']) == len(OrderTypeEnum.inventory())
+        for order_type_num_str, data_dict in raw_parameters_content['orders'].items():
             order_type_num = int(order_type_num_str)
             order_type = OrderTypeEnum.from_code(order_type_num)
             assert order_type is not None
