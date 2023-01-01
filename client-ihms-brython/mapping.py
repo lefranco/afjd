@@ -117,7 +117,7 @@ class Renderable:
 
 
 class Highliteable(Renderable):
-    """ Renderable """
+    """ Highliteable """
 
     @abc.abstractmethod
     def highlite(self, ctx, active) -> None:
@@ -243,7 +243,7 @@ class OrderTypeEnum:
         return False
 
 
-class Center:
+class Center(Renderable):
     """ A Center """
 
     def __init__(self, identifier: int, region: 'Region') -> None:
@@ -256,7 +256,7 @@ class Center:
         # the owner at start of the game
         self._owner_start = None
 
-    def render(self, ctx):
+    def render(self, ctx, active=False):
         """ put me on screen """
 
         fill_color = CENTER_COLOUR
@@ -350,7 +350,7 @@ class Region:
         self._zone = zone
 
 
-class Zone(Highliteable):
+class Zone(Highliteable, Renderable):
     """ A zone """
 
     def __init__(self, identifier: int, region: Region, coast_type, parent_zone, variant) -> None:
@@ -1034,7 +1034,7 @@ class Variant(Renderable):
         return self._year_zero
 
 
-class Unit(Highliteable):
+class Unit(Highliteable, Renderable):
     """ A unit """
 
     def __init__(self, position: 'Position', role: Role, zone: Zone, dislodged_origin) -> None:
@@ -1229,7 +1229,7 @@ class Fleet(Unit):
     # use render from parent class
 
 
-class Ownership(Highliteable):
+class Ownership(Highliteable, Renderable):
     """ OwnerShip """
 
     def __init__(self, position: 'Position', role: Role, center: Center) -> None:
