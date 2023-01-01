@@ -9,8 +9,6 @@ from browser import html, ajax, alert, document   # pylint: disable=import-error
 from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-import profiler
-
 import config
 import common
 import geometry
@@ -1113,46 +1111,34 @@ def submit_orders():
             buttons_right <= html.BR()
             buttons_right <= html.DIV("Pour communiquer avec des ordres (ordres invalides) utilisez le sous menu 'taguer'", Class='Note')
 
-    profiler.PROFILER.start_mes("submit_orders()...")
-    profiler.PROFILER.start_mes("preambule...")
-
     # need to be connected
     if play_low.PSEUDO is None:
         alert("Il faut se connecter au préalable")
         play.load_option(None, 'Consulter')
-        profiler.PROFILER.stop_mes()
-        profiler.PROFILER.stop_mes()
         return False
 
     # need to have a role
     if play_low.ROLE_ID is None:
         alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
         play.load_option(None, 'Consulter')
-        profiler.PROFILER.stop_mes()
-        profiler.PROFILER.stop_mes()
         return False
 
     # cannot be game master unless archive game
     if play_low.ROLE_ID == 0 and not play_low.GAME_PARAMETERS_LOADED['archive']:
         alert("Ordonner pour un arbitre n'est possible que pour les parties archive")
         play.load_option(None, 'Consulter')
-        profiler.PROFILER.stop_mes()
         return False
 
     # game needs to be ongoing - not waiting
     if play_low.GAME_PARAMETERS_LOADED['current_state'] == 0:
         alert("La partie n'est pas encore démarrée")
         play.load_option(None, 'Consulter')
-        profiler.PROFILER.stop_mes()
-        profiler.PROFILER.stop_mes()
         return False
 
     # game needs to be ongoing - not finished
     if play_low.GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
         play.load_option(None, 'Consulter')
-        profiler.PROFILER.stop_mes()
-        profiler.PROFILER.stop_mes()
         return False
 
     # need to have orders to submit
@@ -1161,23 +1147,17 @@ def submit_orders():
     if not submitted_data:
         alert("Erreur chargement données de soumission")
         play.load_option(None, 'Consulter')
-        profiler.PROFILER.stop_mes()
-        profiler.PROFILER.stop_mes()
         return False
 
     if play_low.ROLE_ID == 0:
         if not submitted_data['needed']:
             alert("Il n'y a pas d'ordre à passer")
             play.load_option(None, 'Consulter')
-            profiler.PROFILER.stop_mes()
-            profiler.PROFILER.stop_mes()
             return False
     else:
         if play_low.ROLE_ID not in submitted_data['needed']:
             alert("Vous n'avez pas d'ordre à passer")
             play.load_option(None, 'Consulter')
-            profiler.PROFILER.stop_mes()
-            profiler.PROFILER.stop_mes()
             return False
 
     # check gameover
@@ -1188,13 +1168,9 @@ def submit_orders():
     if current_advancement % 5 == 4 and (current_advancement + 1) // 5 >= nb_max_cycles_to_play:
         alert("La partie est arrivée à échéance")
         play.load_option(None, 'Consulter')
-        profiler.PROFILER.stop_mes()
-        profiler.PROFILER.stop_mes()
         return False
 
     # now we can display
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("display before")
 
     # header
 
@@ -1210,8 +1186,6 @@ def submit_orders():
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
-        profiler.PROFILER.stop_mes()
-        profiler.PROFILER.stop_mes()
         return False
 
     # now we need to be more clever and handle the state of the mouse (up or down)
@@ -1223,8 +1197,6 @@ def submit_orders():
     if not orders_loaded:
         alert("Erreur chargement ordres")
         play.load_option(None, 'Consulter')
-        profiler.PROFILER.stop_mes()
-        profiler.PROFILER.stop_mes()
         return False
 
     # digest the orders
@@ -1261,9 +1233,6 @@ def submit_orders():
     # all reports until last moves
     advancement_selected = play_low.GAME_PARAMETERS_LOADED['current_advancement']
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("loop advancements")
-
     while True:
 
         # one backwards
@@ -1291,9 +1260,6 @@ def submit_orders():
         # just displayed last moves : done
         if advancement_selected % 5 in [0, 2]:
             break
-
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("display after")
 
     # right side
 
@@ -1356,8 +1322,6 @@ def submit_orders():
 
     play_low.MY_SUB_PANEL <= my_sub_panel2
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.stop_mes()
     return True
 
 

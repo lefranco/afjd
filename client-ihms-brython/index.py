@@ -6,87 +6,29 @@ import time
 
 START_TIME = time.time()
 
-import profiler
-
-profiler.PROFILER.start_mes("=== inside index.py...")
 
 from browser import document, html, alert, timer, ajax  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-profiler.PROFILER.start_mes("Import config...")
 import config    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import common...")
 import common    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import home...")
 import home    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import login...")
 import login    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import account...")
 import account    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import opportunities...")
 import opportunities    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import mygames...")
 import mygames    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import games...")
 import games    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import pairing...")
 import pairing    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import selection...")
 import selection    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import play and play_master...")
 import play_master    # pylint: disable=wrong-import-position # noqa: E402
 import play    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import sandbox...")
 import sandbox    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import tournament...")
 import tournament    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import events...")
 import events    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import players...")
 import players    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import create...")
 import create    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import moderate...")
 import moderate    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("Import forum...")
 import forum    # pylint: disable=wrong-import-position # noqa: E402
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("define functions...")
 
 # TITLE is in index.html
 
@@ -189,10 +131,6 @@ def set_flag(_, value):
 def load_option(_, item_name):
     """ load_option """
 
-    profiler.PROFILER.start_mes("index.py inside load_option()...")
-
-    profiler.PROFILER.start_mes(f"loading page - calling render() - {item_name} ...")
-
     pseudo = None
     if 'PSEUDO' in storage:
         pseudo = storage['PSEUDO']
@@ -235,15 +173,9 @@ def load_option(_, item_name):
             import admin  # pylint: disable=import-outside-toplevel
             admin.render(PANEL_MIDDLE)
 
-    profiler.PROFILER.stop_mes()
-
-    profiler.PROFILER.start_mes("getting priviledged...")
     priviledged = common.get_priviledged()
     creator_list = priviledged['creators']
     moderators_list = priviledged['moderators']
-    profiler.PROFILER.stop_mes()
-
-    profiler.PROFILER.start_mes("showing more options in menus...")
 
     global ITEM_NAME_SELECTED
     prev_item_selected = ITEM_NAME_SELECTED
@@ -290,9 +222,6 @@ def load_option(_, item_name):
     if prev_item_selected in ['Jouer la partie sélectionnée', 'Bac à sable']:
         document.unbind("keypress")
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("ukr flag...")
-
     if ITEM_NAME_SELECTED == 'Accueil':
         if 'flag' not in storage or storage['flag'] == 'True':
             emotion_img = html.IMG(src="./images/ukraine-flag-animation.gif", alt="Solidarité")
@@ -307,19 +236,10 @@ def load_option(_, item_name):
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.stop_mes()
 
-
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("read ip...")
 # we read ip now if necessary
 if 'IPADDRESS' not in storage:
     read_ip()
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("more (load options)...")
 
 # panel-middle
 PANEL_MIDDLE = html.DIV()
@@ -350,14 +270,7 @@ else:
 document <= html.BR()
 document <= html.BR()
 
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("check token")
 login.check_token()
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("display info")
-
 login.show_login()
 selection.show_game_selected()
 
@@ -370,9 +283,6 @@ END_TIME = time.time()
 ELAPSED = END_TIME - START_TIME
 document <= html.I(f"Temps d'execution de la page d'accueil : {ELAPSED} sec.")
 
-profiler.PROFILER.stop_mes()
-profiler.PROFILER.start_mes("kill spinner")
-
 # spinner dies
 spinner = document['spinner']
 spinner.className = 'pycorpse'
@@ -380,13 +290,8 @@ spinner.className = 'pycorpse'
 # spinner dissipates
 spinner.parentElement.removeChild(spinner)
 
-profiler.PROFILER.stop_mes()
-profiler.PROFILER.stop_mes()
-
 if 'PSEUDO' in storage:
     PSEUDO_VALUE = storage['PSEUDO']
 
     HOST = config.SERVER_CONFIG['PLAYER']['HOST']
     PORT = config.SERVER_CONFIG['PLAYER']['PORT']
-
-    profiler.PROFILER.send_report(PSEUDO_VALUE, VERSION_VALUE, (HOST, PORT), config.TIMEOUT_SERVER)

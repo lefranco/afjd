@@ -7,8 +7,6 @@ import json
 from browser import html, ajax, alert   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-import profiler
-
 import mydatetime
 import config
 import common
@@ -232,26 +230,18 @@ def game_transition_reload(game_id, advancement):
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
-    profiler.PROFILER.start_mes("get players...")
-
     # need to be first since used in get_game_status()
     # get the players (all players)
     global PLAYERS_DICT
     PLAYERS_DICT = common.get_players()
     if not PLAYERS_DICT:
         alert("Erreur chargement info joueurs")
-        profiler.PROFILER.stop_mes()
         return
-
-    profiler.PROFILER.stop_mes()
-
-    profiler.PROFILER.start_mes("get the rest (memo)...")
 
     # from game name get variant name
 
     if 'GAME_VARIANT' not in storage:
         alert("ERREUR : variante introuvable")
-        profiler.PROFILER.stop_mes()
         return
 
     global VARIANT_NAME_LOADED
@@ -265,12 +255,9 @@ def load_static_stuff():
     if VARIANT_NAME_LOADED in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
         VARIANT_CONTENT_LOADED = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED]
     else:
-        profiler.PROFILER.start_mes("get variant...")
         VARIANT_CONTENT_LOADED = common.game_variant_content_reload(VARIANT_NAME_LOADED)
-        profiler.PROFILER.stop_mes()
         if not VARIANT_CONTENT_LOADED:
             alert("Erreur chargement contenu variante")
-            profiler.PROFILER.stop_mes()
             return
         memoize.VARIANT_CONTENT_MEMOIZE_TABLE[VARIANT_NAME_LOADED] = VARIANT_CONTENT_LOADED
 
@@ -320,8 +307,6 @@ def load_static_stuff():
     else:
         INFORCED_VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, inforced_interface_parameters_read)
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = INFORCED_VARIANT_DATA
-
-    profiler.PROFILER.stop_mes()
 
 
 def load_dynamic_stuff():

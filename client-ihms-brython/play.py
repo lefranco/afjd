@@ -7,31 +7,16 @@ import time
 from browser import document, html, alert, timer, window   # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-import profiler
-
 import config
 import common
 import moderate
 
-profiler.PROFILER.start_mes("import play_low...")
 import play_low
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("import play_play...")
 import play_play
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("import play_master...")
 import play_master
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("import play_other...")
 import play_other
-profiler.PROFILER.stop_mes()
-
 
 OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Paramètres', 'Retards', 'Superviser']
-
 
 ARRIVAL = None
 
@@ -183,24 +168,17 @@ def countdown():
 def render(panel_middle):
     """ render """
 
-    profiler.PROFILER.start_mes("play render")
-    profiler.PROFILER.start_mes("start")
-
     # always back to top
     global ITEM_NAME_SELECTED
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
-        profiler.PROFILER.stop_mes()
-        profiler.PROFILER.stop_mes()
         return
 
     play_low.GAME = storage['GAME']
 
     if 'GAME_ID' not in storage:
         alert("ERREUR : identifiant de partie introuvable")
-        profiler.PROFILER.stop_mes()
-        profiler.PROFILER.stop_mes()
         return
 
     play_low.GAME_ID = storage['GAME_ID']
@@ -219,21 +197,9 @@ def render(panel_middle):
     if play_low.PSEUDO is not None:
         play_low.ROLE_ID = common.get_role_allocated_to_player_in_game(play_low.GAME_ID)
 
-    profiler.PROFILER.stop_mes()
-
-    profiler.PROFILER.start_mes("load_static_stuff")
     play_low.load_static_stuff()
-    profiler.PROFILER.stop_mes()
-
-    profiler.PROFILER.start_mes("load_dynamic_stuff")
     play_low.load_dynamic_stuff()
-    profiler.PROFILER.stop_mes()
-
-    profiler.PROFILER.start_mes("load_special_stuff")
     play_low.load_special_stuff()
-    profiler.PROFILER.stop_mes()
-
-    profiler.PROFILER.start_mes("misc")
 
     # initiates new countdown
     countdown()
@@ -274,12 +240,6 @@ def render(panel_middle):
 
     set_arrival(None)
 
-    profiler.PROFILER.stop_mes()
-
-    profiler.PROFILER.start_mes("play.py call load_option")
     load_option(None, ITEM_NAME_SELECTED)
-    profiler.PROFILER.stop_mes()
 
     panel_middle <= play_low.MY_PANEL
-
-    profiler.PROFILER.stop_mes()
