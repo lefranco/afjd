@@ -3,27 +3,15 @@
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
 
-import profiler
-
-profiler.PROFILER.start_mes("inside common.py...")
-
 import json
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-profiler.PROFILER.start_mes("import mydatetime...")
 import mydatetime
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("import mapping...")
 import mapping
-profiler.PROFILER.stop_mes()
-
 import config
 
-
-profiler.PROFILER.start_mes("functions...")
 
 # TODO improve this with real admin account
 ADMIN_PSEUDO = 'Palpatine'
@@ -874,8 +862,3 @@ def verification_code(pseudo):
     """ verification_code """
     code = int(sum(map(lambda c: ord(c) ** 3.5, pseudo))) % 1000000
     return code
-
-
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.stop_mes()

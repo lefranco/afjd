@@ -2,32 +2,12 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned, multiple-statements, wrong-import-order, wrong-import-position
 
-import profiler
 
-profiler.PROFILER.start_mes("inside mapping...")
-
-profiler.PROFILER.start_mes("import abc...")
 import abc
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("import math...")
 import math
-profiler.PROFILER.stop_mes()
-
-
-profiler.PROFILER.start_mes("import geometry...")
 import geometry
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("import center_design...")
 import center_design
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("import unit_design...")
 import unit_design
-profiler.PROFILER.stop_mes()
-
-profiler.PROFILER.start_mes("do the rest...")
 
 # proximity necessary for a center or a unit (to come before the zone)
 # otherwise the zones have no chance since units are first
@@ -2127,7 +2107,3 @@ class Orders(Renderable):
 
     def __str__(self) -> str:
         return '\n'.join([str(o) for o in self._orders])
-
-
-profiler.PROFILER.stop_mes()
-profiler.PROFILER.stop_mes()
