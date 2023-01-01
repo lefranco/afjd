@@ -9,13 +9,13 @@
 
 <body>
 
-<input type="file" onchange="previewFile()" /><br />
+<input type="file" onchange="compileFile()" /><br />
 <p class="content"></p>
 
 <script type="text/javascript">
 
 
-function previewFile() {
+function compileFile() {
   const content = document.querySelector('.content');
   const [file] = document.querySelector('input[type=file]').files;
   const reader = new FileReader();
@@ -33,7 +33,6 @@ function previewFile() {
          'Javascript size ' + js.length + 'b'
 
     alert(msg)
-    // content.innerText = reader.result;
 
 
   }, false);
