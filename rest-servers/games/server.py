@@ -190,7 +190,35 @@ GROUPING_PARSER.add_argument('delete', type=int, required=True)
 # creates some locks for some critical sections (where there can only be one at same time)
 # there is one lock per ongoing game
 # waitress uses threads, not processes
-LOCK_TABLE: typing.Dict[str, threading.Lock] = {}
+MOVE_GAME_LOCK_TABLE: typing.Dict[str, threading.Lock] = {}
+
+# to avoid repeat messages/declarations
+NO_REPEAT_DELAY_SEC = 15
+
+
+class RepeatPreventer(typing.Dict[typing.Tuple[int, int], float]):
+    """ Table """
+
+    def can(self, game_id: int, role_id: int) -> bool:
+        """ can """
+
+        if (game_id, role_id) not in self:
+            return True
+
+        now = time.time()
+        return now > self[(game_id, role_id)] + NO_REPEAT_DELAY_SEC
+
+    def did(self, game_id: int, role_id: int) -> None:
+        """ did """
+
+        # do it
+        now = time.time()
+        self[(game_id, role_id)] = now
+
+        # house clean
+        obsoletes = [k for (k, v) in self.items() if v < now - NO_REPEAT_DELAY_SEC]
+        for key in obsoletes:
+            del self[key]
 
 
 @API.resource('/variants/<name>')
@@ -357,7 +385,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
                 # create and insert lock for that game
                 lock = threading.Lock()
-                LOCK_TABLE[game.name] = lock
+                MOVE_GAME_LOCK_TABLE[game.name] = lock
 
                 # ----
                 # we are starting the game
@@ -424,7 +452,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             elif current_state_before == 1 and game.current_state == 2:
 
                 # delete lock for that game
-                del LOCK_TABLE[game.name]
+                del MOVE_GAME_LOCK_TABLE[game.name]
 
                 # ----
                 # we are finishing the game
@@ -1835,7 +1863,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg="Invalid role_id parameter")
 
         # begin of protected section
-        with LOCK_TABLE[game.name]:
+        with MOVE_GAME_LOCK_TABLE[game.name]:
 
             # check orders are required
             actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
@@ -1980,7 +2008,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="Submitting orders is not possible for game master for non archive games")
 
         # begin of protected section
-        with LOCK_TABLE[game.name]:
+        with MOVE_GAME_LOCK_TABLE[game.name]:
 
             # check orders are required
             # needed list : those who need to submit orders
@@ -2998,6 +3026,10 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
+POST_MESSAGE_LOCK = threading.Lock()
+POST_MESSAGE_REPEAT_PREVENTER = RepeatPreventer()
+
+
 @API.resource('/game-messages/<game_id>')
 class GameMessageRessource(flask_restful.Resource):  # type: ignore
     """  GameMessageRessource """
@@ -3068,7 +3100,14 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(400, msg="Bad list of addresses identifiers. Use a space separated list of numbers")
 
-        # checks relative to no message
+        if not dest_role_ids:
+            del sql_executor
+            flask_restful.abort(400, msg="There should be at least one destinee")
+
+        nb_addressees = len(dest_role_ids)
+
+        # checks relative to message
+
         if game.nomessage_current:
 
             # find game master
@@ -3081,19 +3120,24 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(403, msg="Only game master may send or receive message in 'no message' game")
 
         # create message here
+        with POST_MESSAGE_LOCK:
 
-        # create a content
-        identifier = contents.Content.free_identifier(sql_executor)  # noqa: F821
-        time_stamp = int(time.time())  # now
-        content = contents.Content(identifier, int(game_id), time_stamp, payload)
-        content.update_database(sql_executor)  # noqa: F821
+            if not POST_MESSAGE_REPEAT_PREVENTER.can(int(game_id), role_id):
+                del sql_executor
+                flask_restful.abort(400, msg="You have already messaged a very short time ago")
 
-        # create a message linked to the content
-        for dest_role_id in dest_role_ids:
-            message = messages.Message(int(game_id), role_id, dest_role_id, identifier)
-            message.update_database(sql_executor)  # noqa: F821
+            # create a content
+            identifier = contents.Content.free_identifier(sql_executor)  # noqa: F821
+            time_stamp = int(time.time())  # now
+            content = contents.Content(identifier, int(game_id), time_stamp, payload)
+            content.update_database(sql_executor)  # noqa: F821
 
-        nb_addressees = len(dest_role_ids)
+            # create a message linked to the content
+            for dest_role_id in dest_role_ids:
+                message = messages.Message(int(game_id), role_id, dest_role_id, identifier)
+                message.update_database(sql_executor)  # noqa: F821
+
+            POST_MESSAGE_REPEAT_PREVENTER.did(int(game_id), role_id)
 
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
@@ -3179,6 +3223,10 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+POST_DECLARATION_REPEAT_PREVENTER = RepeatPreventer()
+POST_DECLARATION_LOCK = threading.Lock()
+
+
 @API.resource('/game-declarations/<game_id>')
 class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
     """  GameDeclarationRessource """
@@ -3255,16 +3303,23 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(403, msg="Only game master may declare in a 'no press' game")
 
         # create declaration here
+        with POST_DECLARATION_LOCK:
 
-        # create a content
-        identifier = contents.Content.free_identifier(sql_executor)
-        time_stamp = int(time.time())  # now
-        content = contents.Content(identifier, int(game_id), time_stamp, payload)
-        content.update_database(sql_executor)
+            if not POST_DECLARATION_REPEAT_PREVENTER.can(int(game_id), role_id):
+                del sql_executor
+                flask_restful.abort(400, msg="You have already declared a very short time ago")
 
-        # create a declaration linked to the content
-        declaration = declarations.Declaration(int(game_id), role_id, anonymous, identifier)
-        declaration.update_database(sql_executor)
+            # create a content
+            identifier = contents.Content.free_identifier(sql_executor)
+            time_stamp = int(time.time())  # now
+            content = contents.Content(identifier, int(game_id), time_stamp, payload)
+            content.update_database(sql_executor)
+
+            # create a declaration linked to the content
+            declaration = declarations.Declaration(int(game_id), role_id, anonymous, identifier)
+            declaration.update_database(sql_executor)
+
+            POST_DECLARATION_REPEAT_PREVENTER.did(int(game_id), role_id)
 
         sql_executor.commit()
         del sql_executor
@@ -5226,7 +5281,7 @@ def create_game_locks() -> None:
         if game.current_state != 1:
             continue
         lock = threading.Lock()
-        LOCK_TABLE[game.name] = lock
+        MOVE_GAME_LOCK_TABLE[game.name] = lock
 
 
 def main() -> None:
