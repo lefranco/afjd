@@ -6,7 +6,6 @@ import json
 import time
 
 from browser import document, html, ajax, alert   # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 
 import config
 import common
@@ -248,7 +247,7 @@ def sandbox():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez soumis les ordres et la situation pour une simulation : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Vous avez soumis les ordres et la situation pour une simulation : {messages}")
 
             if 'result' in req_result:
 

@@ -5,7 +5,6 @@
 import json
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -75,7 +74,7 @@ def join_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez rejoint la partie : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Vous avez rejoint la partie : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -145,7 +144,7 @@ def quit_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez quitté la partie : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Vous avez quitté la partie : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -217,7 +216,7 @@ def move_players_in_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur a été mis dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le joueur a été mis dans la partie: {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -260,7 +259,7 @@ def move_players_in_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur a été retiré de la partie: {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le joueur a été retiré de la partie: {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -424,7 +423,7 @@ def take_mastering_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez pris l'arbitrage de la partie : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Vous avez pris l'arbitrage de la partie : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -495,7 +494,7 @@ def quit_mastering_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez quitté l'arbitrage de la partie : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Vous avez quitté l'arbitrage de la partie : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()

@@ -6,7 +6,6 @@ import json
 import time
 
 from browser import document, html, ajax, alert  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -77,7 +76,7 @@ def login():
                     alert(f"Problème à la connexion : {req_result['msg']}")
 
                     # Too expensive to load list of players and see which is same with different case so just provide a little tip
-                    InfoDialog("Astuce", "Vous vous trompez peut-être sur la casse de votre pseudo (et non sur le mot de passe), allez donc consulter la liste des inscrits (menu classement) pour vous rafraichir la mémoire...", remove_after=config.REMOVE_AFTER)
+                    common.info_dialog("Vous vous trompez peut-être sur la casse de votre pseudo (et non sur le mot de passe), allez donc consulter la liste des inscrits (menu classement) pour vous rafraichir la mémoire...")
 
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
@@ -94,7 +93,7 @@ def login():
             storage['LOGIN_TIME'] = str(time_stamp_now)
 
             # inform user
-            InfoDialog("OK", f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page")
             show_login()
 
             # request to validate email
@@ -169,7 +168,7 @@ def login():
         if not effective:
             alert("Déjà déconnecté !")
         else:
-            InfoDialog("OK", "Déconnecté avec succès", remove_after=config.REMOVE_AFTER)
+            common.info_dialog("Déconnecté avec succès")
 
         render(PANEL_MIDDLE)
 
@@ -286,7 +285,7 @@ def check_token():
             elif 'msg' in req_result:
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                InfoDialog("OK", f"Votre jeton d'authentification a expiré.<br>Vous devez juste vous loguer à nouveau {messages}", remove_after=config.REMOVE_AFTER)
+                common.info_dialog(f"Votre jeton d'authentification a expiré.<br>Vous devez juste vous loguer à nouveau {messages}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             logout()

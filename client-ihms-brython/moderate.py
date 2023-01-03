@@ -5,7 +5,6 @@
 import json
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -181,7 +180,7 @@ def change_news_modo():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Les nouvelles (modo) ont été changées : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Les nouvelles (modo) ont été changées : {messages}")
 
         ev.preventDefault()
 
@@ -411,7 +410,7 @@ def sendmail():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", f"Message émis vers : {addressed_user_name}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Message émis vers : {addressed_user_name}")
 
         ev.preventDefault()
 
@@ -924,7 +923,7 @@ def revoke_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez destitué l'arbitre : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Vous avez destitué l'arbitre : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -995,7 +994,7 @@ def change_manager():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", f"Il a été promu responsable: {manager}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Il a été promu responsable: {manager}")
 
         ev.preventDefault()
 

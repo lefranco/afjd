@@ -7,7 +7,6 @@ import json
 import time
 
 from browser import html, ajax, alert   # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -202,7 +201,7 @@ def my_games(state_name):
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        InfoDialog("OK", f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         selection.show_game_selected()
 
         # so that will go to proper page
@@ -225,7 +224,7 @@ def my_games(state_name):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La partie a été démarrée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La partie a été démarrée : {messages}")
 
         ev.preventDefault()
 
@@ -259,7 +258,7 @@ def my_games(state_name):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La partie a été arrêtée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La partie a été arrêtée : {messages}")
 
         ev.preventDefault()
 

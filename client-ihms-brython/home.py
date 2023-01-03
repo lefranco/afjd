@@ -6,7 +6,6 @@ import json
 import time
 
 from browser import html, ajax, alert, document, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -396,7 +395,7 @@ def all_games(state_name):
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        InfoDialog("OK", f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         selection.show_game_selected()
 
         # action of going to game page
@@ -1079,7 +1078,7 @@ def select_interface():
         """ select_interface_callback """
 
         interface.set_interface(variant_name_loaded, user_interface)
-        InfoDialog("OK", f"Interface sélectionnée pour la variante {variant_name_loaded} : {user_interface}", remove_after=config.REMOVE_AFTER)
+        common.info_dialog(f"Interface sélectionnée pour la variante {variant_name_loaded} : {user_interface}")
 
         # we do not go back to where we started
         # this is intended otherwise the new maps are not active

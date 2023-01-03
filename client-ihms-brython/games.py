@@ -6,7 +6,7 @@ import json
 import time
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
+from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
@@ -120,7 +120,7 @@ def create_game(json_dict):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La partie a été créé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La partie a été créé : {messages}")
             alert("Maintenant vous devez la sélectionner par le menu 'Sélectionner partie'")
 
         ev.preventDefault()
@@ -592,7 +592,7 @@ def change_description_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La description a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La description a été modifiée : {messages}")
 
         ev.preventDefault()
 
@@ -711,7 +711,7 @@ def change_anonymity_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'accès à l'anonymat a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"L'accès à l'anonymat a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -830,7 +830,7 @@ def change_access_messages_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'accès à la messagerie a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"L'accès à la messagerie a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -955,7 +955,7 @@ def change_scoring_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le scorage a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le scorage a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -1085,7 +1085,7 @@ def change_access_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Les paramètres d'accès ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Les paramètres d'accès ont été modifiés : {messages}")
 
         ev.preventDefault()
 
@@ -1247,7 +1247,7 @@ def change_pace_parameters_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Les paramètres de cadence ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Les paramètres de cadence ont été modifiés : {messages}")
 
         ev.preventDefault()
 
@@ -1484,7 +1484,7 @@ def change_state_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'état de la partie a été modifié : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"L'état de la partie a été modifié : {messages}")
 
         ev.preventDefault()
 
@@ -1588,7 +1588,7 @@ def delete_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La partie a été supprimée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La partie a été supprimée : {messages}")
             selection.unselect_game()
 
             # go to select another game
