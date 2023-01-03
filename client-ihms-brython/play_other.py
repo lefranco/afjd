@@ -5,7 +5,7 @@
 import json
 
 from browser import html, ajax, alert, window, document   # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
+from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -100,7 +100,7 @@ def join_game():
             return
 
         messages = "<br>".join(req_result['msg'].split('\n'))
-        InfoDialog("OK", f"Vous avez rejoint la partie : {messages}", remove_after=config.REMOVE_AFTER)
+        common.info_dialog(f"Vous avez rejoint la partie : {messages}")
 
     if play_low.PSEUDO is None:
         alert("Il faut se connecter au préalable")
@@ -264,7 +264,7 @@ def show_position(direct_last_moves):
 
         if game_parameters_loaded['current_advancement'] == play_low.GAME_PARAMETERS_LOADED['current_advancement']:
             # no change it seeems
-            InfoDialog("OK", "Rien de nouveau sous le soleil !", remove_after=config.REMOVE_AFTER)
+            common.info_dialog("Rien de nouveau sous le soleil !")
             return
 
         alert("La position de la partie a changé !")
@@ -711,7 +711,7 @@ def show_events_in_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'abandon a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"L'abandon a été supprimé : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -742,7 +742,7 @@ def show_events_in_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'incident a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"L'incident a été supprimé : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1247,7 +1247,7 @@ def negotiate(default_dest_set):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le message a été envoyé ! {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le message a été envoyé ! {messages}")
 
             # back to where we started
             global CONTENT_BACKUP
@@ -1576,7 +1576,7 @@ def declare():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La déclaration a été faite ! {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La déclaration a été faite ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -1834,7 +1834,7 @@ def note():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La note a été enregistrée ! {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La note a été enregistrée ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()

@@ -6,7 +6,7 @@ import json
 import time
 
 from browser import document, html, ajax, alert, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
+from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -231,7 +231,7 @@ def delete_account_callback(ev, player_pseudo):  # pylint: disable=invalid-name
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le compte {player_pseudo} a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le compte {player_pseudo} a été supprimé : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -291,7 +291,7 @@ def change_news_admin():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Les nouvelles ont été changées : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Les nouvelles ont été changées : {messages}")
 
         ev.preventDefault()
 
@@ -367,7 +367,7 @@ def usurp():
             time_stamp_now = time.time()
             storage['LOGIN_TIME'] = str(time_stamp_now)
 
-            InfoDialog("OK", f"Vous usurpez maintenant : {usurped_user_name}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Vous usurpez maintenant : {usurped_user_name}")
             login.show_login()
 
         usurped_user_name = input_usurped.value
@@ -488,7 +488,7 @@ def rectify_parameters():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Les paramètres de la partie ont été modifiés : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Les paramètres de la partie ont été modifiés : {messages}")
 
         ev.preventDefault()
 
@@ -592,7 +592,7 @@ def rectify_position():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez rectifié la position : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Vous avez rectifié la position : {messages}")
 
         # units
         units_list_dict = position_data.save_json()
@@ -1186,7 +1186,7 @@ def edit_creators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur a été promu créateur : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le joueur a été promu créateur : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1228,7 +1228,7 @@ def edit_creators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur a été déchu du rôle de créateur : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le joueur a été déchu du rôle de créateur : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1350,7 +1350,7 @@ def edit_moderators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur a été promu modérateur : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le joueur a été promu modérateur : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1392,7 +1392,7 @@ def edit_moderators():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur a été déchu du rôle de modérateur : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le joueur a été déchu du rôle de modérateur : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1512,7 +1512,7 @@ def update_elo():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La mise à jour du ELO a été réalisée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La mise à jour du ELO a été réalisée : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1658,7 +1658,7 @@ def update_reliability():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La mise à jour de la fiabilité a été réalisée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La mise à jour de la fiabilité a été réalisée : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1788,7 +1788,7 @@ def update_regularity():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La mise à jour de la régularité a été réalisée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La mise à jour de la régularité a été réalisée : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -2204,7 +2204,7 @@ def maintain():
             messages = "<br>".join(req_result['msg'].split('\n'))
             print(messages)
 
-            InfoDialog("OK", f"Maintenance réalisée :{messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Maintenance réalisée :{messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()

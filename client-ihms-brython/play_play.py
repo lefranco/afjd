@@ -6,7 +6,7 @@ import time
 import json
 
 from browser import html, ajax, alert, document   # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
+from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -175,7 +175,7 @@ def submit_orders():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez soumis les ordres : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Vous avez soumis les ordres : {messages}")
 
             # special : store ip address
             common.store_ip_address()
@@ -1353,7 +1353,7 @@ def submit_communication_orders():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Vous avez déposé les ordres de communcation : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Vous avez déposé les ordres de communcation : {messages}")
 
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
@@ -2066,7 +2066,7 @@ def vote():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le vote a été enregistré ! {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le vote a été enregistré ! {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()

@@ -5,7 +5,7 @@
 import json
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
+from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -117,7 +117,7 @@ def create_account(json_dict):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Votre compte a été créé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Votre compte a été créé : {messages}")
             alert("Maintenant vous devez vous identifier par le menu 'Connexion'")
 
         ev.preventDefault()
@@ -376,7 +376,7 @@ def change_password():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Votre mot de passe a été changé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Votre mot de passe a été changé : {messages}")
 
         ev.preventDefault()
 
@@ -464,7 +464,7 @@ def validate_email():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}")
 
         ev.preventDefault()
 
@@ -496,7 +496,7 @@ def validate_email():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Félicitations, votre courriel a été validé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Félicitations, votre courriel a été validé : {messages}")
 
         ev.preventDefault()
 
@@ -695,7 +695,7 @@ def edit_account():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Votre compte a été changé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Votre compte a été changé : {messages}")
 
         ev.preventDefault()
 
@@ -903,7 +903,7 @@ def delete_account():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Votre compte a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Votre compte a été supprimé : {messages}")
 
             # logout
             login.PANEL_MIDDLE = None

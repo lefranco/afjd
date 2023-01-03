@@ -6,7 +6,7 @@ import json
 import time
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
+from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -73,7 +73,7 @@ def show_games():
         game_variant = game_data_sel[game_name][1]
         storage['GAME_VARIANT'] = game_variant
 
-        InfoDialog("OK", f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page", remove_after=config.REMOVE_AFTER)
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
         selection.show_game_selected()
 
         # action of going to game page
@@ -849,7 +849,7 @@ def create_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le tournoi a été créé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le tournoi a été créé : {messages}")
 
             # we may have just created so need to reload
             global TOURNAMENT_DICT
@@ -954,7 +954,7 @@ def edit_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La partie a été mise dans le tournoi : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La partie a été mise dans le tournoi : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1000,7 +1000,7 @@ def edit_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La partie a été retirée du tournoi : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La partie a été retirée du tournoi : {messages}")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1157,7 +1157,7 @@ def delete_tournament():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le tournoi a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le tournoi a été supprimé : {messages}")
 
             global TOURNAMENT_DICT
             TOURNAMENT_DICT = common.get_tournament_data(game)

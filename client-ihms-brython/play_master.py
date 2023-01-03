@@ -6,7 +6,7 @@ import time
 import json
 
 from browser import html, ajax, alert, timer   # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
+from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -88,7 +88,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La date limite a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La date limite a été modifiée : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -140,7 +140,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La date limite a été reportée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La date limite a été reportée : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -183,7 +183,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"La date limite a été synchronisée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"La date limite a été synchronisée : {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -222,7 +222,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", f"Message de rappel (manque ordres) émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Message de rappel (manque ordres) émis vers : {pseudo_there}")
 
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
         time_stamp_now = time.time()
@@ -282,7 +282,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", f"Message de rappel (manque d'accord pour résoudre) émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Message de rappel (manque d'accord pour résoudre) émis vers : {pseudo_there}")
 
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
         time_stamp_now = time.time()
@@ -342,7 +342,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", f"Message de bienvenue émis vers : {pseudo_there}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Message de bienvenue émis vers : {pseudo_there}")
 
         subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
@@ -396,7 +396,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", "Message de demande de remplacement émis vers les remplaçants potentiels", remove_after=config.REMOVE_AFTER)
+            common.info_dialog("Message de demande de remplacement émis vers les remplaçants potentiels")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -455,7 +455,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le joueur s'est vu infligé des ordres de désordre civil: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -491,7 +491,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur s'est vu imposé un accord pour résoudre: {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le joueur s'est vu imposé un accord pour résoudre: {messages}")
 
             adjudicated = req_result['adjudicated']
             if adjudicated:
@@ -533,7 +533,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur s'est vu retirer le rôle dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le joueur s'est vu retirer le rôle dans la partie: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -569,7 +569,7 @@ def game_master():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"Le joueur s'est vu attribuer le rôle dans la partie: {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Le joueur s'est vu attribuer le rôle dans la partie: {messages}")
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
@@ -984,7 +984,7 @@ def supervise():
 
             adjudicated = req_result['adjudicated']
             if adjudicated:
-                InfoDialog("OK", "La résolution a été forcée..", remove_after=config.REMOVE_AFTER)
+                common.info_dialog("La résolution a été forcée..")
                 message = "Résolution forcée par la console suite forçage accord"
                 log_stack.insert(message)
 

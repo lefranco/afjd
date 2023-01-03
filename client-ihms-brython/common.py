@@ -5,7 +5,8 @@
 
 import json
 
-from browser import html, ajax, alert  # pylint: disable=import-error
+from browser import html, ajax, alert, window  # pylint: disable=import-error
+from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
@@ -21,6 +22,15 @@ ALTERNATE_ADMIN_PSEUDO = 'OrangeCar'
 def noreply_callback(_):
     """ noreply_callback """
     alert("Problème (pas de réponse de la part du serveur)")
+
+
+def info_dialog(mess):
+    """ info_dialog """
+
+    height_dialog = round(len(mess.split('<br>')) * 15)
+    width_dialog = round(max(map(len, mess.split('<br>'))) * 5)
+
+    InfoDialog("Information", mess, top=window.innerHeight // 2 - height_dialog // 2, left=window.innerWidth // 2 - width_dialog // 2, remove_after=config.REMOVE_AFTER)
 
 
 def check_admin():

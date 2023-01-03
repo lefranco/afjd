@@ -5,7 +5,7 @@
 import json
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog, Dialog  # pylint: disable=import-error
+from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
@@ -106,7 +106,7 @@ def select_event():
         event_name = input_event.value
         storage['EVENT'] = event_name
 
-        InfoDialog("OK", f"Evénement sélectionné : {event_name}", remove_after=config.REMOVE_AFTER)
+        common.info_dialog(f"Evénement sélectionné : {event_name}")
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -190,7 +190,7 @@ def registrations():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            InfoDialog("OK", f"Message émis vers : {manager}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"Message émis vers : {manager}")
 
         ev.preventDefault()
 
@@ -241,9 +241,9 @@ def registrations():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             if register:
-                InfoDialog("OK", f"L'inscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
+                common.info_dialog(f"L'inscription a été prise en compte : {messages}")
             else:
-                InfoDialog("OK", f"La désinscription a été prise en compte : {messages}", remove_after=config.REMOVE_AFTER)
+                common.info_dialog(f"La désinscription a été prise en compte : {messages}")
 
         ev.preventDefault()
 
@@ -498,7 +498,7 @@ def create_event(json_dict):
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'événement a été créé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"L'événement a été créé : {messages}")
 
         ev.preventDefault()
 
@@ -651,7 +651,7 @@ def edit_event():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'événement a été mis à jour : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"L'événement a été mis à jour : {messages}")
 
         ev.preventDefault()
 
@@ -821,7 +821,7 @@ def handle_joiners():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'inscription a été modifiée : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"L'inscription a été modifiée : {messages}")
 
         ev.preventDefault()
 
@@ -980,7 +980,7 @@ def delete_event():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            InfoDialog("OK", f"L'événement a été supprimé : {messages}", remove_after=config.REMOVE_AFTER)
+            common.info_dialog(f"L'événement a été supprimé : {messages}")
 
             del storage['EVENT']
 
