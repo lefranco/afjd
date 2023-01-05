@@ -6,10 +6,10 @@ import json
 import time
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
-from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
+import mydialog
 import config
 import common
 import interface
@@ -336,11 +336,11 @@ def create_many_games():
 
             def cancel_create_games_callback(_, dialog):
                 """ cancel_create_games_callback """
-                dialog.close()
+                dialog.close(None)
 
             def create_games_callback2(_, dialog):
                 """ create_games_callback2 """
-                dialog.close()
+                dialog.close(None)
                 perform_batch(game, games_to_create)
 
             games_to_create = {}
@@ -402,7 +402,7 @@ def create_many_games():
 
             #  actual creation of all the games
             if check_batch(pseudo, games_to_create):
-                dialog = Dialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
+                dialog = mydialog.Dialog("On créé vraiment toutes ces parties ?", ok_cancel=True)
                 dialog.ok_button.bind("click", lambda e, d=dialog: create_games_callback2(e, d))
                 dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_create_games_callback(e, d))
 

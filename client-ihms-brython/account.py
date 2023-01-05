@@ -5,9 +5,9 @@
 import json
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
-from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import mydialog
 import config
 import common
 import login
@@ -886,7 +886,7 @@ def delete_account():
 
     def cancel_delete_account_callback(_, dialog):
         """ cancel_delete_account_callback """
-        dialog.close()
+        dialog.close(None)
 
     def delete_account_callback(_, dialog):
         """ delete_account_callback """
@@ -909,7 +909,7 @@ def delete_account():
             login.PANEL_MIDDLE = None
             login.logout()
 
-        dialog.close()
+        dialog.close(None)
 
         json_dict = {}
 
@@ -925,7 +925,7 @@ def delete_account():
 
         ev.preventDefault()
 
-        dialog = Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
+        dialog = mydialog.Dialog(f"On supprime vraiment le compte {pseudo} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_account_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_account_callback(e, d))
 

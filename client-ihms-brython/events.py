@@ -5,10 +5,10 @@
 import json
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
-from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
+import mydialog
 import config
 import index  # circular import
 
@@ -964,7 +964,7 @@ def delete_event():
 
     def cancel_delete_event_callback(_, dialog):
         """ cancel_delete_event_callback """
-        dialog.close()
+        dialog.close(None)
 
     def delete_event_callback(_, dialog):
 
@@ -987,7 +987,7 @@ def delete_event():
         # back to where we started (actually to select)
         load_option(None, 'Sélectionner un événement')
 
-        dialog.close()
+        dialog.close(None)
 
         json_dict = {}
 
@@ -1003,7 +1003,7 @@ def delete_event():
 
         ev.preventDefault()
 
-        dialog = Dialog("On supprime vraiment l'événement ?", ok_cancel=True)
+        dialog = mydialog.Dialog("On supprime vraiment l'événement ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_event_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_event_callback(e, d))
 

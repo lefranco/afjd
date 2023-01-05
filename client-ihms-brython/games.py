@@ -6,11 +6,11 @@ import json
 import time
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
-from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
 import mydatetime
+import mydialog
 import config
 import common
 import selection
@@ -1468,7 +1468,7 @@ def change_state_game():
 
     def cancel_change_state_game_callback(_, dialog):
         """ cancel_delete_account_callback """
-        dialog.close()
+        dialog.close(None)
 
     def change_state_game_callback(ev, dialog, expected_state):  # pylint: disable=invalid-name
 
@@ -1489,7 +1489,7 @@ def change_state_game():
         ev.preventDefault()
 
         if dialog is not None:
-            dialog.close()
+            dialog.close(None)
 
         json_dict = {
             'name': game,
@@ -1511,7 +1511,7 @@ def change_state_game():
 
         ev.preventDefault()
 
-        dialog = Dialog(f"On arrête vraiment la partie {game} ?", ok_cancel=True)
+        dialog = mydialog.Dialog(f"On arrête vraiment la partie {game} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, es=expected_state: change_state_game_callback(e, d, es))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_change_state_game_callback(e, d))
 
@@ -1572,7 +1572,7 @@ def delete_game():
 
     def cancel_delete_game_callback(_, dialog):
         """ cancel_delete_game_callback """
-        dialog.close()
+        dialog.close(None)
 
     def delete_game_callback(ev, dialog):  # pylint: disable=invalid-name
 
@@ -1596,7 +1596,7 @@ def delete_game():
 
         ev.preventDefault()
 
-        dialog.close()
+        dialog.close(None)
 
         json_dict = {}
 
@@ -1612,7 +1612,7 @@ def delete_game():
 
         ev.preventDefault()
 
-        dialog = Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
+        dialog = mydialog.Dialog(f"On supprime vraiment la partie {game} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_game_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_game_callback(e, d))
 

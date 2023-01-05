@@ -5,11 +5,11 @@
 
 import json
 
-from browser import html, ajax, alert, window  # pylint: disable=import-error
-from browser.widgets.dialog import InfoDialog  # pylint: disable=import-error
+from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
+import mydialog
 import mapping
 import config
 
@@ -27,10 +27,7 @@ def noreply_callback(_):
 def info_dialog(mess):
     """ info_dialog """
 
-    height_dialog = round(len(mess.split('<br>')) * 15)
-    width_dialog = round(max(map(len, mess.split('<br>'))) * 5)
-
-    InfoDialog("Information", mess, top=window.innerHeight // 2 - height_dialog // 2, left=window.innerWidth // 2 - width_dialog // 2, remove_after=config.REMOVE_AFTER)
+    mydialog.InfoDialog("Information", mess)
 
 
 def check_admin():

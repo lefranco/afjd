@@ -6,10 +6,10 @@ import time
 import json
 
 from browser import html, ajax, alert, document   # pylint: disable=import-error
-from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
+import mydialog
 import common
 import geometry
 import mapping
@@ -158,7 +158,7 @@ def submit_orders():
     never_value = None
 
     def cancel_submit_orders_callback(_, dialog):
-        dialog.close()
+        dialog.close(None)
 
     def submit_orders_callback(_, warned=False, dialog2=None):
         """ submit_orders_callback """
@@ -195,7 +195,7 @@ def submit_orders():
                 nb_builds_done = orders_data.number()
                 if nb_builds_done < nb_builds:
                     if not warned:
-                        dialog = Dialog(f"Vous construisez {nb_builds_done} unités alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
+                        dialog = mydialog.Dialog(f"Vous construisez {nb_builds_done} unités alors que vous avez droit à {nb_builds} unités. Vous êtes sûr ?", ok_cancel=True)
                         dialog.ok_button.bind("click", lambda e, w=True, d=dialog: submit_orders_callback(e, w, d))
                         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_submit_orders_callback(e, d))
                         return

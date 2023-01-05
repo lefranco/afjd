@@ -9,9 +9,6 @@ import json
 # timeout for server requests
 TIMEOUT_SERVER = 10
 
-# timeout for message when OK
-REMOVE_AFTER = 5
-
 # to display state of a game
 STATE_CODE_TABLE = {'en attente': 0, 'en cours': 1, 'terminée': 2, 'distinguée': 3}
 

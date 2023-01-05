@@ -6,10 +6,10 @@ import json
 import time
 
 from browser import document, html, ajax, alert, window  # pylint: disable=import-error
-from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
+import mydialog
 import config
 import common
 import interface
@@ -1496,7 +1496,7 @@ def update_elo():
 
     def cancel_update_database_callback(_, dialog):
         """ cancel_update_database_callback """
-        dialog.close()
+        dialog.close(None)
 
     def update_database_callback(_, dialog, elo_raw_list, teaser_text):
 
@@ -1518,7 +1518,7 @@ def update_elo():
             MY_SUB_PANEL.clear()
             update_elo()
 
-        dialog.close()
+        dialog.close(None)
 
         elo_raw_list_json = json.dumps(elo_raw_list)
 
@@ -1537,7 +1537,7 @@ def update_elo():
     def update_database_confirm(elo_raw_list, teaser_text):
         """ update_database_confirm """
 
-        dialog = Dialog("On met à jour la base de données ?", ok_cancel=True)
+        dialog = mydialog.Dialog("On met à jour la base de données ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, erl=elo_raw_list, tt=teaser_text: update_database_callback(e, d, erl, tt))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
@@ -1642,7 +1642,7 @@ def update_reliability():
 
     def cancel_update_database_callback(_, dialog):
         """ cancel_update_database_callback """
-        dialog.close()
+        dialog.close(None)
 
     def update_database_callback(_, dialog, reliability_list):
 
@@ -1664,7 +1664,7 @@ def update_reliability():
             MY_SUB_PANEL.clear()
             update_reliability()
 
-        dialog.close()
+        dialog.close(None)
 
         reliability_list_json = json.dumps(reliability_list)
 
@@ -1682,7 +1682,7 @@ def update_reliability():
     def update_database_confirm(reliability_list):
         """ update_database_confirm """
 
-        dialog = Dialog("On met à jour la base de données ?", ok_cancel=True)
+        dialog = mydialog.Dialog("On met à jour la base de données ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, rl=reliability_list: update_database_callback(e, d, rl))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
@@ -1772,7 +1772,7 @@ def update_regularity():
 
     def cancel_update_database_callback(_, dialog):
         """ cancel_update_database_callback """
-        dialog.close()
+        dialog.close(None)
 
     def update_database_callback(_, dialog, regularity_list):
 
@@ -1794,7 +1794,7 @@ def update_regularity():
             MY_SUB_PANEL.clear()
             update_regularity()
 
-        dialog.close()
+        dialog.close(None)
 
         regularity_list_json = json.dumps(regularity_list)
 
@@ -1812,7 +1812,7 @@ def update_regularity():
     def update_database_confirm(regularity_list):
         """ update_database_confirm """
 
-        dialog = Dialog("On met à jour la base de données ?", ok_cancel=True)
+        dialog = mydialog.Dialog("On met à jour la base de données ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, rl=regularity_list: update_database_callback(e, d, rl))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_update_database_callback(e, d))
 
