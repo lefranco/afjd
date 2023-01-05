@@ -6,10 +6,10 @@ import time
 import json
 
 from browser import html, ajax, alert, timer   # pylint: disable=import-error
-from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
+import mydialog
 import config
 import common
 
@@ -1184,14 +1184,14 @@ def supervise():
     def cancel_supervise_callback(_, dialog):
         """ cancel_supervise_callback """
 
-        dialog.close()
+        dialog.close(None)
 
         play.load_option(None, 'Consulter')
 
     def supervise_callback(_, dialog):
         """ supervise_callback """
 
-        dialog.close()
+        dialog.close(None)
 
         nonlocal id2pseudo
         id2pseudo = {v: k for k, v in play_low.PLAYERS_DICT.items()}
@@ -1241,7 +1241,7 @@ def supervise():
         return False
 
     # since touchy, this requires a confirmation
-    dialog = Dialog("On supervise vraiment la partie (cela peut entrainer des désordres civils) ?", ok_cancel=True)
+    dialog = mydialog.Dialog("On supervise vraiment la partie (cela peut entrainer des désordres civils) ?", ok_cancel=True)
     dialog.ok_button.bind("click", lambda e, d=dialog: supervise_callback(e, d))
     dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_supervise_callback(e, d))
 

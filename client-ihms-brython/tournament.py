@@ -6,10 +6,10 @@ import json
 import time
 
 from browser import html, alert, ajax, window  # pylint: disable=import-error
-from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
+import mydialog
 import common
 import config
 import interface
@@ -1141,7 +1141,7 @@ def delete_tournament():
 
     def cancel_delete_tournament_callback(_, dialog):
         """ cancel_delete_tournament_callback """
-        dialog.close()
+        dialog.close(None)
 
     def delete_tournament_callback(ev, dialog):  # pylint: disable=invalid-name
 
@@ -1167,7 +1167,7 @@ def delete_tournament():
 
         ev.preventDefault()
 
-        dialog.close()
+        dialog.close(None)
 
         json_dict = {}
 
@@ -1183,7 +1183,7 @@ def delete_tournament():
 
         ev.preventDefault()
 
-        dialog = Dialog("On supprime vraiment le tournoi ?", ok_cancel=True)
+        dialog = mydialog.Dialog("On supprime vraiment le tournoi ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog: delete_tournament_callback(e, d))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_delete_tournament_callback(e, d))
 

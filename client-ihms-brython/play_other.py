@@ -5,10 +5,10 @@
 import json
 
 from browser import html, ajax, alert, window, document   # pylint: disable=import-error
-from browser.widgets.dialog import Dialog  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import mydatetime
+import mydialog
 import config
 import common
 import sandbox
@@ -691,11 +691,11 @@ def show_events_in_game():
 
     def cancel_remove_dropout_callback(_, dialog):
         """ cancel_remove_dropout_callback """
-        dialog.close()
+        dialog.close(None)
 
     def cancel_remove_incident_callback(_, dialog):
         """ cancel_remove_incident_callback """
-        dialog.close()
+        dialog.close(None)
 
     def remove_dropout_callback(_, dialog, role_id, player_id):
 
@@ -717,7 +717,7 @@ def show_events_in_game():
             play_low.MY_SUB_PANEL.clear()
             show_events_in_game()
 
-        dialog.close()
+        dialog.close(None)
 
         json_dict = {}
 
@@ -748,7 +748,7 @@ def show_events_in_game():
             play_low.MY_SUB_PANEL.clear()
             show_events_in_game()
 
-        dialog.close()
+        dialog.close(None)
 
         json_dict = {}
 
@@ -764,7 +764,7 @@ def show_events_in_game():
 
         ev.preventDefault()
 
-        dialog = Dialog(f"On supprime vraiment cet abandon pour {text} ?", ok_cancel=True)
+        dialog = mydialog.Dialog(f"On supprime vraiment cet abandon pour {text} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, p=player_id: remove_dropout_callback(e, d, r, p))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_dropout_callback(e, d))
 
@@ -777,7 +777,7 @@ def show_events_in_game():
 
         ev.preventDefault()
 
-        dialog = Dialog(f"On supprime vraiment cet incident pour {text} ?", ok_cancel=True)
+        dialog = mydialog.Dialog(f"On supprime vraiment cet incident pour {text} ?", ok_cancel=True)
         dialog.ok_button.bind("click", lambda e, d=dialog, r=role_id, a=advancement: remove_incident_callback(e, d, r, a))
         dialog.cancel_button.bind("click", lambda e, d=dialog: cancel_remove_incident_callback(e, d))
 
