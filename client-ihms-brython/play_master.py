@@ -958,7 +958,7 @@ def supervise():
     role2pseudo = {}
     log_stack = None
 
-    def civil_disorder_callback(_, role_id):
+    def civil_disorder_callback(ev, role_id):  # pylint: disable=invalid-name
         """ civil_disorder_callback """
 
         def reply_callback(req):
@@ -971,6 +971,8 @@ def supervise():
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
+
+        ev.preventDefault()
 
         names_dict = play_low.VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
@@ -987,7 +989,7 @@ def supervise():
         # submitting civil disorder : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def force_agreement_callback(_, role_id):
+    def force_agreement_callback(ev, role_id):  # pylint: disable=invalid-name
         """ force_agreement_callback """
 
         def reply_callback(req):
@@ -1006,6 +1008,8 @@ def supervise():
                 common.info_dialog("La résolution a été forcée..")
                 message = "Résolution forcée par la console suite forçage accord"
                 log_stack.insert(message)
+
+        ev.preventDefault()
 
         inforced_names_dict = play_low.INFORCED_VARIANT_DATA.extract_names()
         inforced_names_dict_json = json.dumps(inforced_names_dict)
