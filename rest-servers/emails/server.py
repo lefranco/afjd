@@ -36,7 +36,7 @@ EMAIL_PARSER.add_argument('code', type=int, required=True)
 class EmailsRessource(flask_restful.Resource):  # type: ignore
     """ EmailsRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         add an email for a player
         PROTECTED : called only by player block (account creation/email change)
@@ -63,7 +63,7 @@ class EmailsRessource(flask_restful.Resource):  # type: ignore
 class CheckEmailRessource(flask_restful.Resource):  # type: ignore
     """ CheckEmailRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:  # pylint: disable=no-self-use
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Check if code is correct for email.
         PROTECTED : called by block players
