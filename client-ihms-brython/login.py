@@ -19,6 +19,7 @@ MY_PANEL.attrs['style'] = 'display: table-row'
 # how long token is valid - must be same value as server.py from users access point
 TOKEN_DURATION_DAYS = 20
 
+
 def email_confirmed(pseudo):
     """ email_confirmed """
 
@@ -284,16 +285,22 @@ def check_token():
         return
 
     if 'JWT_TOKEN' not in storage:
-        # should not happen
+        # should not happen (or tweak)
+        common.info_dialog("Pour des raisons techniques il faut vous loguer à nouveau !")
+        return
+
+    if 'LOGIN_EXPIRATION_TIME' not in storage:
+        # should not happen (or tweak or transition period)
+        common.info_dialog("Pour des raisons techniques il faut vous loguer à nouveau !")
+        logout()
         return
 
     # fast imprecise method
-    if 'LOGIN_EXPIRATION_TIME' in storage:
-        time_stamp_now = time.time()
-        time_stamp_expiration = float(storage['LOGIN_EXPIRATION_TIME'])
-        if time_stamp_now > time_stamp_expiration:
-            common.info_dialog(f"Votre jeton d'authentification a expiré.<br>Vous devez juste vous loguer à nouveau !")
-            logout()
+    time_stamp_now = time.time()
+    time_stamp_expiration = float(storage['LOGIN_EXPIRATION_TIME'])
+    if time_stamp_now > time_stamp_expiration:
+        common.info_dialog("Votre jeton d'authentification a expiré.<br>Vous devez juste vous loguer à nouveau !")
+        logout()
 
 
 def show_login():
