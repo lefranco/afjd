@@ -10,6 +10,8 @@ The server
 import typing
 import argparse
 import datetime
+import time
+import threading
 
 import waitress
 import flask
@@ -46,10 +48,37 @@ JWT = flask_jwt_extended.JWTManager(APP)
 # Account allowed to usupr, to see logins and failed logins
 ADMIN_ACCOUNT_NAME = 'Palpatine'
 
+# to avoid repeat logins
+NO_REPEAT_DELAY_SEC = 15
 
 # ---------------------------------
 # users
 # ---------------------------------
+
+
+class RepeatPreventer(typing.Dict[str, float]):
+    """ Table """
+
+    def can(self, user_name: str) -> bool:
+        """ can """
+
+        if user_name not in self:
+            return True
+
+        now = time.time()
+        return now > self[user_name] + NO_REPEAT_DELAY_SEC
+
+    def did(self, user_name: str) -> None:
+        """ did """
+
+        # do it
+        now = time.time()
+        self[user_name] = now
+
+        # house clean
+        obsoletes = [k for (k, v) in self.items() if v < now - NO_REPEAT_DELAY_SEC]
+        for key in obsoletes:
+            del self[key]
 
 
 @APP.route('/add', methods=['POST'])
@@ -180,6 +209,10 @@ def change_user() -> typing.Tuple[typing.Any, int]:
     return flask.jsonify({"msg": "User was changed"}), 201
 
 
+LOGIN_REPEAT_PREVENTER = RepeatPreventer()
+LOGIN_LOCK = threading.Lock()
+
+
 @APP.route('/login', methods=['POST'])
 def login_user() -> typing.Tuple[typing.Any, int]:
     """
@@ -208,22 +241,34 @@ def login_user() -> typing.Tuple[typing.Any, int]:
 
     sql_executor = database.SqlExecutor()
 
-    user = users.User.find_by_name(sql_executor, user_name)
+    with LOGIN_LOCK:
 
-    if user is None or not werkzeug.security.check_password_hash(user.pwd_hash, password):
+        if not LOGIN_REPEAT_PREVENTER.can(user_name):
+            del sql_executor
+            return flask.jsonify({"msg": "You have already tried to login a very short time ago"}), 400
 
-        # we keep a trace of the failure
-        failure = failures.Failure(user_name, ip_address)
-        failure.update_database(sql_executor)
+        LOGIN_REPEAT_PREVENTER.did(user_name)
 
-        sql_executor.commit()
-        del sql_executor
+        user = users.User.find_by_name(sql_executor, user_name)
 
-        return flask.jsonify({"msg": "Bad user_name or password"}), 401
+        if user is None:
 
-    # we keep a trace of the login
-    login = logins.Login(user_name, ip_address)
-    login.update_database(sql_executor)
+            del sql_executor
+            return flask.jsonify({"msg": "Bad user_name"}), 401
+
+        if not werkzeug.security.check_password_hash(user.pwd_hash, password):
+
+            # we keep a trace of the failure if user exists
+            failure = failures.Failure(user_name, ip_address)
+            failure.update_database(sql_executor)
+
+            sql_executor.commit()
+            del sql_executor
+            return flask.jsonify({"msg": "Bad password for this user_name"}), 401
+
+        # we keep a trace of the login
+        login = logins.Login(user_name, ip_address)
+        login.update_database(sql_executor)
 
     sql_executor.commit()
     del sql_executor
