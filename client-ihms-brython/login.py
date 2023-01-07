@@ -16,6 +16,8 @@ import index  # circular import
 MY_PANEL = html.DIV(id="login")
 MY_PANEL.attrs['style'] = 'display: table-row'
 
+# how long token is valid - must be same value as server.py from users access point
+TOKEN_DURATION_DAYS = 20
 
 def email_confirmed(pseudo):
     """ email_confirmed """
@@ -91,6 +93,7 @@ def login():
             storage['JWT_TOKEN'] = req_result['AccessToken']
             time_stamp_now = time.time()
             storage['LOGIN_TIME'] = str(time_stamp_now)
+            storage['LOGIN_EXPIRATION_TIME'] = str(time_stamp_now + TOKEN_DURATION_DAYS * 24 * 3600)
 
             # inform user
             common.info_dialog(f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page")
@@ -277,19 +280,6 @@ def logout():
 def check_token():
     """ check_token """
 
-    def reply_callback(req):
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la vérification du jeton d'authentification : {req_result['message']}")
-            elif 'msg' in req_result:
-
-                messages = "<br>".join(req_result['msg'].split('\n'))
-                common.info_dialog(f"Votre jeton d'authentification a expiré.<br>Vous devez juste vous loguer à nouveau {messages}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            logout()
-
     if 'PSEUDO' not in storage:
         return
 
@@ -297,16 +287,13 @@ def check_token():
         # should not happen
         return
 
-    # check authentication from user server
-    host = config.SERVER_CONFIG['USER']['HOST']
-    port = config.SERVER_CONFIG['USER']['PORT']
-    url = f"{host}:{port}/verify"
-
-    json_dict = {}
-
-    # check token : need token
-    # note : since we access directly to the user server, we present the token in a slightly different way
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+    # fast imprecise method
+    if 'LOGIN_EXPIRATION_TIME' in storage:
+        time_stamp_now = time.time()
+        time_stamp_expiration = float(storage['LOGIN_EXPIRATION_TIME'])
+        if time_stamp_now > time_stamp_expiration:
+            common.info_dialog(f"Votre jeton d'authentification a expiré.<br>Vous devez juste vous loguer à nouveau !")
+            logout()
 
 
 def show_login():
