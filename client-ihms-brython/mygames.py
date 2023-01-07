@@ -657,7 +657,7 @@ def my_games(state_name):
                     nb_agreed_after = len(agreed_after_roles_list)
                     submitted_roles_list = submitted_data['submitted']
                     nb_submitted = len(submitted_roles_list)
-                    stats = f"{nb_agreed_now}m+{nb_agreed_after}a/{nb_submitted}o"
+                    stats = f"{nb_agreed_now}m+{nb_agreed_after}a"
                     value = stats
                     if nb_agreed_now >= nb_submitted:
                         # we have all agreements : green
