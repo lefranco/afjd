@@ -701,7 +701,8 @@ def game_master():
         vote_values_table[role] = bool(vote_val)
 
     submitted_roles_list = submitted_data['submitted']
-    agreed_roles_list = submitted_data['agreed']
+    agreed_now_roles_list = submitted_data['agreed_now']
+    agreed_after_roles_list = submitted_data['agreed_after']
     needed_roles_list = submitted_data['needed']
 
     game_admin_table = html.TABLE()
@@ -794,8 +795,10 @@ def game_master():
         flag = ""
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
-                if role_id in agreed_roles_list:
-                    flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre")
+                if role_id in agreed_now_roles_list:
+                    flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
+                elif role_id in agreed_after_roles_list:
+                    flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre après la date limite")
                 else:
                     flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
         col <= flag
@@ -805,7 +808,7 @@ def game_master():
         input_send_recall_email = ""
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
-                if role_id not in agreed_roles_list:
+                if role_id not in agreed_now_roles_list and role_id not in agreed_after_roles_list:
                     if pseudo_there:
                         input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel accord", title="Ceci enverra un courriel demandant au joueur de manifester son accord pour résoudre la partie")
                         input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_agreed_email_callback(e, r))
@@ -816,7 +819,7 @@ def game_master():
         input_force_agreement = ""
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
-                if role_id not in agreed_roles_list:
+                if role_id not in agreed_now_roles_list and role_id not in agreed_after_roles_list:
                     if pseudo_there:
                         input_force_agreement = html.INPUT(type="submit", value="Forcer accord", title="Ceci forcera l'accord pour résoudre du joueur, déclenchant éventuellement la résolution")
                         input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
@@ -1027,7 +1030,8 @@ def supervise():
             vote_values_table[role] = bool(vote_val)
 
         submitted_roles_list = submitted_data['submitted']
-        agreed_roles_list = submitted_data['agreed']
+        agreed_now_roles_list = submitted_data['agreed_now']
+        agreed_after_roles_list = submitted_data['agreed_after']
         needed_roles_list = submitted_data['needed']
 
         game_admin_table = html.TABLE()
@@ -1078,8 +1082,10 @@ def supervise():
             flag = ""
             if role_id in needed_roles_list:
                 if role_id in submitted_roles_list:
-                    if role_id in agreed_roles_list:
-                        flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre")
+                    if role_id in agreed_now_roles_list:
+                        flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
+                    elif role_id in agreed_after_roles_list:
+                        flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais après la date limite")
                     else:
                         flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
             col <= flag
@@ -1150,7 +1156,7 @@ def supervise():
         if time_stamp_now > force_point:
 
             submitted_roles_list = submitted_data['submitted']
-            agreed_roles_list = submitted_data['agreed']
+            agreed_now_roles_list = submitted_data['agreed_now']
             needed_roles_list = submitted_data['needed']
 
             missing_orders = []
@@ -1169,7 +1175,7 @@ def supervise():
             else:
                 missing_agreements = []
                 for role_id in play_low.VARIANT_DATA.roles:
-                    if role_id in submitted_roles_list and role_id not in agreed_roles_list:
+                    if role_id in submitted_roles_list and role_id not in agreed_now_roles_list:
                         missing_agreements.append(role_id)
                 if missing_agreements:
                     role_id = RANDOM.choice(missing_agreements)

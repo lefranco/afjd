@@ -37,7 +37,7 @@ class Definitive:
         sql_executor.execute("DROP TABLE IF EXISTS definitives")
         sql_executor.execute("CREATE TABLE definitives (game_id INTEGER, role_num INTEGER, value INTEGER)")
 
-    def __init__(self, game_id: int, role_num: int, definitive: bool) -> None:
+    def __init__(self, game_id: int, role_num: int, definitive: int) -> None:
 
         assert isinstance(game_id, int), "game_id must be an int"
         self._game_id = game_id
@@ -45,7 +45,7 @@ class Definitive:
         assert isinstance(role_num, int), "role_num must be an int"
         self._role_num = role_num
 
-        assert isinstance(definitive, bool), "definitive must be an bool"
+        assert isinstance(definitive, int), "definitive must be an int"
         self._definitive = definitive
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:

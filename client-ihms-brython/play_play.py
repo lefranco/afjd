@@ -153,9 +153,7 @@ def submit_orders():
     input_after = None
     input_never = None
 
-    now_value = None
-    after_value = None
-    never_value = None
+    definitive_value = None
 
     def cancel_submit_orders_callback(_, dialog):
         dialog.close(None)
@@ -212,15 +210,17 @@ def submit_orders():
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
 
-        if input_after.checked:   # TODO change later
-            alert("Cette option d'attendre la date limite n'est pas encore implémentée !")
-
-        definitive_value = input_now.checked   # TODO change later
+        if input_never.checked:
+            definitive_value = 0
+        if input_now.checked:
+            definitive_value = 1
+        if input_after.checked:
+            definitive_value = 2
 
         json_dict = {
             'role_id': play_low.ROLE_ID,
             'orders': orders_list_dict_json,
-            'definitive': definitive_value,   # TODO change later
+            'definitive': definitive_value,
             'names': names_dict_json,
             'adjudication_names': inforced_names_dict_json
         }
@@ -1063,13 +1063,14 @@ def submit_orders():
         def update_select(event):
             """ update_select """
 
-            nonlocal now_value
-            nonlocal after_value
-            nonlocal never_value
+            nonlocal definitive_value
 
-            now_value = event.target is input_now
-            after_value = event.target is input_after
-            never_value = event.target is input_never
+            if event.target is input_now:
+                definitive_value = 1
+            if event.target is input_after:
+                definitive_value = 2
+            if event.target is input_never:
+                definitive_value = 0
 
         label_definitive = html.LABEL(html.B("D'accord pour la résolution ?"))
         buttons_right <= label_definitive
@@ -1078,7 +1079,7 @@ def submit_orders():
         option_now = "oui, maintenant !"
         label_now = html.LABEL(html.EM(option_now))
         buttons_right <= label_now
-        input_now = html.INPUT(type="radio", id="now", name="agreed", checked=now_value)
+        input_now = html.INPUT(type="radio", id="now", name="agreed", checked=(definitive_value == 1))
         input_now.bind("click", update_select)
         buttons_right <= input_now
         buttons_right <= html.BR()
@@ -1086,7 +1087,10 @@ def submit_orders():
         option_after = "juste après la DL !"
         label_after = html.LABEL(html.EM(option_after))
         buttons_right <= label_after
-        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=after_value, disabled=True)  # TODO : change
+
+        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), disabled=True)
+#        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2))
+
         input_after.bind("click", update_select)
         buttons_right <= input_after
         buttons_right <= html.BR()
@@ -1094,7 +1098,7 @@ def submit_orders():
         option_never = "non (pour le moment) !"
         label_never = html.LABEL(html.EM(option_never))
         buttons_right <= label_never
-        input_never = html.INPUT(type="radio", id="never", name="agreed", checked=never_value)
+        input_never = html.INPUT(type="radio", id="never", name="agreed", checked=(definitive_value == 0))
         input_never.bind("click", update_select)
         buttons_right <= input_never
         buttons_right <= html.BR()
@@ -1307,9 +1311,12 @@ def submit_orders():
                 buttons_right <= input_select
         automaton_state = AutomatonStateEnum.SELECT_ORDER_STATE
 
-    now_value = play_low.ROLE_ID in submitted_data['agreed']
-    after_value = False  # TODO change
-    never_value = play_low.ROLE_ID not in submitted_data['agreed']
+    if play_low.ROLE_ID in submitted_data['agreed_now']:
+        definitive_value = 1
+    elif play_low.ROLE_ID in submitted_data['agreed_after']:
+        definitive_value = 2
+    else:
+        definitive_value = 0
 
     stack_orders(buttons_right)
     if not orders_data.empty():

@@ -408,7 +408,7 @@ def my_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'suis d\'accord', 'all_orders_submitted': 'ordres(**)', 'all_agreed': 'tous d\'accord', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'action': 'action'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous(**)', 'all_agreed': 'accords de tous(***)', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'action': 'action'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -527,7 +527,8 @@ def my_games(state_name):
         submitted_data = {}
         submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
         submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
-        submitted_data['agreed'] = dict_submitted_data['dict_agreed'][str(game_id)]
+        submitted_data['agreed_now'] = dict_submitted_data['dict_agreed_now'][str(game_id)]
+        submitted_data['agreed_after'] = dict_submitted_data['dict_agreed_after'][str(game_id)]
 
         data['go_game'] = None
         data['orders_submitted'] = None
@@ -621,10 +622,14 @@ def my_games(state_name):
                     value = flag
                 else:
                     submitted_roles_list = submitted_data['submitted']
-                    agreed_roles_list = submitted_data['agreed']
+                    agreed_now_roles_list = submitted_data['agreed_now']
+                    agreed_after_roles_list = submitted_data['agreed_after']
                     if role_id is not None:
-                        if role_id in agreed_roles_list:
-                            flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre")
+                        if role_id in agreed_now_roles_list:
+                            flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
+                            value = flag
+                        elif role_id in agreed_after_roles_list:
+                            flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais après la date limite")
                             value = flag
                         elif role_id in needed_roles_list:
                             flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
@@ -646,13 +651,15 @@ def my_games(state_name):
             if field == 'all_agreed':
                 value = ""
                 if role_id is not None:
-                    agreed_roles_list = submitted_data['agreed']
-                    nb_agreed = len(agreed_roles_list)
+                    agreed_now_roles_list = submitted_data['agreed_now']
+                    nb_agreed_now = len(agreed_now_roles_list)
+                    agreed_after_roles_list = submitted_data['agreed_after']
+                    nb_agreed_after = len(agreed_after_roles_list)
                     submitted_roles_list = submitted_data['submitted']
                     nb_submitted = len(submitted_roles_list)
-                    stats = f"{nb_agreed}/{nb_submitted}"
+                    stats = f"{nb_agreed_now}m+{nb_agreed_after}a/{nb_submitted}o"
                     value = stats
-                    if nb_agreed >= nb_submitted:
+                    if nb_agreed_now >= nb_submitted:
                         # we have all agreements : green
                         colour = config.ALL_AGREEMENTS_IN_COLOUR
 
@@ -762,6 +769,9 @@ def my_games(state_name):
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("(**) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
+    MY_PANEL <= html.BR()
+
+    MY_PANEL <= html.DIV("(***) Accords (m)aintenant et (a)près la D.L. sur les (o)rdres soumis", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= information_about_quitting()

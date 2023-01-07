@@ -927,12 +927,15 @@ def show_events_in_game():
             col = html.TD()
             flag = ""
             submitted_roles_list = submitted_data['submitted']
-            agreed_roles_list = submitted_data['agreed']
+            agreed_now_roles_list = submitted_data['agreed_now']
+            agreed_after_roles_list = submitted_data['agreed_after']
             needed_roles_list = submitted_data['needed']
             if role_id in needed_roles_list:
                 if role_id in submitted_roles_list:
-                    if role_id in agreed_roles_list:
-                        flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre")
+                    if role_id in agreed_now_roles_list:
+                        flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
+                    elif role_id in agreed_after_roles_list:
+                        flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais après la date limite")
                     else:
                         flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
             col <= flag

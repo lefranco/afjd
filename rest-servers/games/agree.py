@@ -203,7 +203,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
 
     # clear agreements
     for (_, role_num, _) in definitives.Definitive.list_by_game_id(sql_executor, int(game_id)):
-        definitive = definitives.Definitive(int(game_id), role_num, False)
+        definitive = definitives.Definitive(int(game_id), role_num, 0)
         definitive.delete_database(sql_executor)
 
     # insert
@@ -317,7 +317,7 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
     return True, f"Adjudication performed for game {game.name} season {game.current_advancement}!"
 
 
-def fake_post(game_id: int, role_id: int, definitive_value: bool, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
+def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
     """
     posts an agreement in a game (or a disagreement)
     returns
@@ -327,41 +327,51 @@ def fake_post(game_id: int, role_id: int, definitive_value: bool, names: str, sq
     """
 
     # what was before ?
-    definitive_before = False
+    definitive_before = 0
     definitive_before_list = definitives.Definitive.list_by_game_id_role_num(sql_executor, game_id, role_id)
     if definitive_before_list:
         definitive_before_element = definitive_before_list[0]
-        definitive_before_int = definitive_before_element[2]
-        definitive_before = bool(definitive_before_int)
+        definitive_before = definitive_before_element[2]
+
+    # find the game
+    game = games.Game.find_by_identifier(sql_executor, game_id)
+    if game is None:
+        return False, False, "ERROR : Could not find the game"
+
+    # are we after deadline ?
+    after_deadline = game.past_deadline()
+
+    # commute value if after deadline
+    if after_deadline:
+        if definitive_value == 2:
+            definitive_value = 1
 
     # update db here for agreement
     definitive = definitives.Definitive(int(game_id), role_id, definitive_value)
     definitive.update_database(sql_executor)  # noqa: F821
 
-    if not definitive_value:
+    # no agreement : this is the end
+    if definitive_value == 0:
         return True, False, "Player does not agree to adjudicate"
 
-    # do we have a transition disagree -> agree (means actual submission of orders)
-    if not definitive_before:
+    if after_deadline:
 
-        # are we after deadline ?
-        game = games.Game.find_by_identifier(sql_executor, game_id)
-        if game is None:
-            return False, False, "ERROR : Could not find the game"
+        # do we have a transition disagree -> agree (means actual submission of orders)
+        if definitive_before == 0:
 
-        # there cannot be delays for archive games
-        if not game.archive and game.past_deadline():
+            # there cannot be delays for archive games
+            if not game.archive:
 
-            # we are : insert this incident
+                # we are : insert this incident
 
-            advancement = game.current_advancement
-            player_id = game.get_role(sql_executor, int(role_id))
-            if player_id is None:
-                return False, False, "ERROR : Could not find the player identifier"
+                advancement = game.current_advancement
+                player_id = game.get_role(sql_executor, int(role_id))
+                if player_id is None:
+                    return False, False, "ERROR : Could not find the player identifier"
 
-            duration = game.hours_after_deadline()
-            incident = incidents.Incident(int(game_id), int(role_id), advancement, player_id, duration)
-            incident.update_database(sql_executor)  # noqa: F821
+                duration = game.hours_after_deadline()
+                incident = incidents.Incident(int(game_id), int(role_id), advancement, player_id, duration)
+                incident.update_database(sql_executor)  # noqa: F821
 
     # needed list : those who need to submit orders
     actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
@@ -371,14 +381,9 @@ def fake_post(game_id: int, role_id: int, definitive_value: bool, names: str, sq
     submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
     submitted_list = [o[1] for o in submissions_list]
 
-    # definitives_list : those who agreed to adjudicate
+    # definitives_list : those who agreed to adjudicate now
     definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
-    agreed_list = [o[1] for o in definitives_list if o[2]]
-
-    # find the game
-    game = games.Game.find_by_identifier(sql_executor, game_id)
-    if game is None:
-        return False, False, "ERROR : Could not find the game"
+    agreed_list = [o[1] for o in definitives_list if o[2] == 1]
 
     if not game.archive:
 

@@ -618,7 +618,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
 
         # and agreements
         for (_, role_num, _) in definitives.Definitive.list_by_game_id(sql_executor, int(game_id)):
-            definitive = definitives.Definitive(int(game_id), role_num, False)
+            definitive = definitives.Definitive(int(game_id), role_num, 0)
             definitive.delete_database(sql_executor)
 
         # delete votes
@@ -1935,6 +1935,129 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
+@API.resource('/game-commute-agree-solve/<game_id>')
+class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
+    """ GameCommuteAgreeSolveRessource """
+
+    def post(self, game_id: int) -> typing.Tuple[None, int]:
+        """
+        Commute agree to solve from after deadline to now by a clockwork
+        EXPOSED
+        """
+        mylogger.LOGGER.info("/game-commute-agree-solve/<game_id> - POST - commute agreeing from clockwork to solve with orders game id=%s", game_id)
+
+        args = FORCE_AGREE_PARSER.parse_args(strict=True)
+
+        adjudication_names = args['adjudication_names']
+
+        # needed for sending mails
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        assert game is not None
+
+        # game must not be archive or fast
+        if game.fast or game.archive:
+            del sql_executor
+            flask_restful.abort(404, msg="This game is archive or fast")
+
+        # game must be ongoing
+        if game.current_state != 1:
+            del sql_executor
+            flask_restful.abort(403, msg="Game does not seem to be ongoing")
+
+        # begin of protected section
+        with MOVE_GAME_LOCK_TABLE[game.name]:
+
+            # check orders are required
+            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+            needed_list = [o[1] for o in actives_list]
+            if not needed_list:
+                del sql_executor
+                flask_restful.abort(400, msg="There is no role that require orders")
+
+            # check orders are submitted
+            submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+            submitted_list = [o[1] for o in submissions_list]
+            if set(submitted_list) != set(needed_list):
+                del sql_executor
+                flask_restful.abort(400, msg="There is at least a role that does not seem to have submitted orders yet")
+
+            # check some orders are submitted agreed but after
+            definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
+            agreed_after_list = [o[1] for o in definitives_list if o[2] == 2]
+            if not agreed_after_list:
+                del sql_executor
+                flask_restful.abort(400, msg="There is no role that agrees to solve but only after the deadline")
+
+            if not game.past_deadline():
+                del sql_executor
+                flask_restful.abort(400, msg="We are not after deadline, please change deadline first.")
+
+            # handle definitive boolean
+            # game master forced player to agree to adjudicate
+            for role_id in agreed_after_list:
+                status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, True, adjudication_names, sql_executor)
+                if not status:
+                    break
+                if adjudicated:
+                    break
+
+        # end of protected section
+
+        if not status:
+            del sql_executor  # noqa: F821
+            flask_restful.abort(400, msg=f"Failed to agree (commute) to adjudicate : {agreement_report}")
+
+        if adjudicated:
+            # notify players
+
+            subject = f"La partie {game.name} a avancé (avec l'aide de l'automate)!"
+            game_id = game.identifier
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            addressees = []
+            for _, player_id, __ in allocations_list:
+                addressees.append(player_id)
+            body = "Vous pouvez continuer à jouer dans cette partie !\n"
+            body += "\n"
+            body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
+            body += "\n"
+            body += "Pour se rendre directement sur la partie :\n"
+            body += f"https://diplomania-gen.fr?game={game.name}"
+
+            json_dict = {
+                'addressees': " ".join([str(a) for a in addressees]),
+                'subject': subject,
+                'body': body,
+                'force': 0,
+            }
+
+            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/mail-players"
+            # for a rest API headers are presented differently
+            req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+            if req_result.status_code != 200:
+                print(f"ERROR from server  : {req_result.text}")
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                del sql_executor
+                flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+        sql_executor.commit()  # noqa: F821
+        del sql_executor  # noqa: F821
+
+        return None, 201
+
+
 @API.resource('/game-orders/<game_id>')
 class GameOrderRessource(flask_restful.Resource):  # type: ignore
     """ GameOrderRessource """
@@ -2003,6 +2126,12 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="Submitting orders is not possible for game master for non archive games")
 
+        # archive games and fast games stick to agree now
+        if game.fast or game.archive:
+            if definitive_value == 2:
+                del sql_executor
+                flask_restful.abort(403, msg="Submitting agreement after deadine is not possible for fast or archive games")
+
         # begin of protected section
         with MOVE_GAME_LOCK_TABLE[game.name]:
 
@@ -2022,7 +2151,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(400, msg="Did you convert orders from json to text ?")
 
-            # check the phase (sometimes two submission arrive simultanously)
+            # check the phase
             for the_order in the_orders:
                 if game.current_advancement % 5 in [0, 2]:
                     if the_order['order_type'] not in [1, 2, 3, 4, 5]:
@@ -2200,7 +2329,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
             # handle definitive boolean
             # player submitted orders and agreed (or not) to adjudicate
-            status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, bool(definitive_value), adjudication_names, sql_executor)  # noqa: F821
+            status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, definitive_value, adjudication_names, sql_executor)  # noqa: F821
 
         # end of protected section
 
@@ -2800,21 +2929,23 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
             # check pseudo in moderator list
             if pseudo not in the_moderators:
                 del sql_executor
-                flask_restful.abort(403, msg="You do not seem to play or master the game (or to be site moderator) so you are not allowed to see the submissions!")
+                flask_restful.abort(403, msg="You do not seem to play or master the game (or to be site moderator) so you are not alowed to see the submissions!")
 
         # submissions_list : those who submitted orders
         submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
         submitted_list = [o[1] for o in submissions_list]
 
-        # definitives_list : those who agreed to adjudicate with their orders
+        # definitives_list : those who agreed to adjudicate with their orders nows
         definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
-        agreed_list = [o[1] for o in definitives_list if o[2]]
+        agreed_now_list = [o[1] for o in definitives_list if o[2] == 1]
+        agreed_after_list = [o[1] for o in definitives_list if o[2] == 2]
 
         # game is anonymous : you get only information for your own role
         if game.anonymous:
             if role_id is not None and role_id != 0:
                 submitted_list = [r for r in submitted_list if r == role_id]
-                agreed_list = [r for r in agreed_list if r == role_id]
+                agreed_now_list = [r for r in agreed_now_list if r == role_id]
+                agreed_after_list = [r for r in agreed_after_list if r == role_id]
 
         # needed list : those who need to submit orders
         actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
@@ -2822,7 +2953,7 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        data = {'submitted': submitted_list, 'agreed': agreed_list, 'needed': needed_list}
+        data = {'submitted': submitted_list, 'agreed_now': agreed_now_list, 'agreed_after': agreed_after_list, 'needed': needed_list}
         return data, 200
 
 
@@ -2870,7 +3001,8 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
         allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
 
         dict_submitted_list: typing.Dict[int, typing.List[int]] = {}
-        dict_agreed_list: typing.Dict[int, typing.List[int]] = {}
+        dict_agreed_now_list: typing.Dict[int, typing.List[int]] = {}
+        dict_agreed_after_list: typing.Dict[int, typing.List[int]] = {}
         dict_needed_list: typing.Dict[int, typing.List[int]] = {}
         for game_id, _, role_id in allocations_list:
 
@@ -2878,9 +3010,10 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
             submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
             submitted_list = [o[1] for o in submissions_list]
 
-            # definitives_list : those who agreed to adjudicate with their orders
+            # definitives_list : those who agreed to adjudicate with their orders now
             definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
-            agreed_list = [o[1] for o in definitives_list if o[2]]
+            agreed_now_list = [o[1] for o in definitives_list if o[2] == 1]
+            agreed_after_list = [o[1] for o in definitives_list if o[2] == 2]
 
             # game is anonymous : you get only information for your own role
             game = games.Game.find_by_identifier(sql_executor, game_id)
@@ -2888,10 +3021,12 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
             if game.anonymous:
                 if role_id is not None and role_id != 0:
                     submitted_list = [r for r in submitted_list if r == role_id]
-                    agreed_list = [r for r in agreed_list if r == role_id]
+                    agreed_now_list = [r for r in agreed_now_list if r == role_id]
+                    agreed_after_list = [r for r in agreed_after_list if r == role_id]
 
             dict_submitted_list[game_id] = submitted_list
-            dict_agreed_list[game_id] = agreed_list
+            dict_agreed_now_list[game_id] = agreed_now_list
+            dict_agreed_after_list[game_id] = agreed_after_list
 
             # needed list : those who need to submit orders
             actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
@@ -2900,7 +3035,7 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
 
         del sql_executor
 
-        data = {'dict_submitted': dict_submitted_list, 'dict_agreed': dict_agreed_list, 'dict_needed': dict_needed_list}
+        data = {'dict_submitted': dict_submitted_list, 'dict_agreed_now': dict_agreed_now_list, 'dict_agreed_after': dict_agreed_after_list, 'dict_needed': dict_needed_list}
         return data, 200
 
 
