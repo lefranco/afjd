@@ -217,11 +217,11 @@ def show_news():
 
     suffering_games_loaded = stats_content['suffering_games']
     if suffering_games_loaded:
-        div_a5 <= "Les parties suivantes sont en cours et ont besoin de remplaçant"
+        div_a5 <= "Les parties suivantes sont en cours et ont besoin de remplaçant(s)"
         div_a5 <= html.BR()
         div_a5 <= formatted_games(suffering_games_loaded)
     else:
-        div_a5 <= "Aucune partie en cours n'a besoin de remplaçant."
+        div_a5 <= "Aucune partie en cours n'a besoin de remplaçant(s)."
 
     div_a5_tip = html.SPAN("Plus de détail dans le menu 'rejoindre une partie'", Class='tooltiptext')
     div_a5 <= div_a5_tip
@@ -360,7 +360,7 @@ def show_news():
     div_b1 <= html.DIV("Il faut toujours cocher 'd\'accord pour résoudre pour que la partie avance")
     div_b1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
     div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
-    div_b1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant : modifiez le paramètre de votre compte")
+    div_b1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant(s) : modifiez le paramètre de votre compte")
     div_b1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : jouer la partie sélectionnée / taguer")
     div_b1 <= html.DIV("Si vous souhaitez créer plusieurs parties par batch contactez l'administrateur pour obtenir les droits")
 
