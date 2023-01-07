@@ -35,7 +35,7 @@ SECRET_DATA = SECRET_CONFIG.section('JWT_SECRET_KEY')
 APP.config['JWT_SECRET_KEY'] = SECRET_DATA['key']
 
 # how long token is valid - beware they say no more than several hours...
-TOKEN_DURATION_DAYS = 7
+TOKEN_DURATION_DAYS = 20
 
 # default is 15 minutes - put it to one week !
 APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=TOKEN_DURATION_DAYS)
