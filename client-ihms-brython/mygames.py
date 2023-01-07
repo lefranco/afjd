@@ -771,7 +771,7 @@ def my_games(state_name):
     MY_PANEL <= html.DIV("(**) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(***) Accords (m)aintenant et (a)près la D.L. sur les (o)rdres soumis", Class='note')
+    MY_PANEL <= html.DIV("(***) Accords : m=maintenant et a=après la D.L.", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= information_about_quitting()
