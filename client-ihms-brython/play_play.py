@@ -1123,6 +1123,12 @@ def submit_orders():
         play.load_option(None, 'Consulter')
         return False
 
+    # cannot be archive game unless  game master
+    if play_low.GAME_PARAMETERS_LOADED['archive'] and play_low.ROLE_ID != 0:
+        alert("Ordonner pour une parties archive est réservé à l'arbitre")
+        play.load_option(None, 'Consulter')
+        return False
+
     # cannot be game master unless archive game
     if play_low.ROLE_ID == 0 and not play_low.GAME_PARAMETERS_LOADED['archive']:
         alert("Ordonner pour un arbitre n'est possible que pour les parties archive")
@@ -1925,6 +1931,12 @@ def submit_communication_orders():
     # cannot be game master
     if play_low.ROLE_ID == 0:
         alert("Ce n'est pas possible pour l'arbitre de cette partie")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # cannot be archive game
+    if play_low.GAME_PARAMETERS_LOADED['archive']:
+        alert("Ce n'est pas possible pour une partie archive")
         play.load_option(None, 'Consulter')
         return False
 
