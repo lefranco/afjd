@@ -10,6 +10,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import config
 import common
 import moderate
+import login
 
 import play_low
 import play_play
@@ -32,6 +33,9 @@ ITEM_NAME_SELECTED = None
 
 def load_option(_, item_name, direct_last_moves=False):
     """ load_option """
+
+    # should have a proper token if playing
+    login.check_token()
 
     play_low.MY_SUB_PANEL.clear()
     window.scroll(0, 0)
