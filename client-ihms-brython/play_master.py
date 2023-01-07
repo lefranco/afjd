@@ -205,7 +205,7 @@ def game_master():
         # changing game deadline : need token
         ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def send_recall_orders_email_callback(_, role_id):
+    def send_recall_orders_email_callback(ev, role_id):  # pylint: disable=invalid-name
         """ send_recall_orders_email_callback """
 
         pseudo_there = None
@@ -223,6 +223,8 @@ def game_master():
                 return
 
             common.info_dialog(f"Message de rappel (manque ordres) émis vers : {pseudo_there}")
+
+        ev.preventDefault()
 
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
         time_stamp_now = time.time()
@@ -265,7 +267,7 @@ def game_master():
         # sending email : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def send_recall_agreed_email_callback(_, role_id):
+    def send_recall_agreed_email_callback(ev, role_id):  # pylint: disable=invalid-name
         """ send_recall_agreed_email_callback """
 
         pseudo_there = None
@@ -283,6 +285,8 @@ def game_master():
                 return
 
             common.info_dialog(f"Message de rappel (manque d'accord pour résoudre) émis vers : {pseudo_there}")
+
+        ev.preventDefault()
 
         deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
         time_stamp_now = time.time()
@@ -325,7 +329,7 @@ def game_master():
         # sending email : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def send_welcome_email_callback(_, role_id):
+    def send_welcome_email_callback(ev, role_id):  # pylint: disable=invalid-name
         """ send_welcome_email_callback """
 
         pseudo_there = None
@@ -343,6 +347,8 @@ def game_master():
                 return
 
             common.info_dialog(f"Message de bienvenue émis vers : {pseudo_there}")
+
+        ev.preventDefault()
 
         subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
@@ -379,7 +385,7 @@ def game_master():
         # sending email : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def send_need_replacement_callback(_, role_id):
+    def send_need_replacement_callback(ev, role_id):  # pylint: disable=invalid-name
         """ send_need_replacement_callback """
 
         pseudo_there = None
@@ -401,6 +407,8 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             game_master()
+
+        ev.preventDefault()
 
         subject = f"Message de la part de l'arbitre de la partie {play_low.GAME} sur le site https://diplomania-gen.fr (AFJD)"
 
@@ -440,7 +448,7 @@ def game_master():
         # sending email : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def civil_disorder_callback(_, role_id):
+    def civil_disorder_callback(ev, role_id):  # pylint: disable=invalid-name
         """ civil_disorder_callback """
 
         def reply_callback(req):
@@ -461,6 +469,8 @@ def game_master():
             play_low.MY_SUB_PANEL.clear()
             game_master()
 
+        ev.preventDefault()
+
         names_dict = play_low.VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
 
@@ -476,7 +486,7 @@ def game_master():
         # submitting civil disorder : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def force_agreement_callback(_, role_id):
+    def force_agreement_callback(ev, role_id):  # pylint: disable=invalid-name
         """ force_agreement_callback """
 
         def reply_callback(req):
@@ -503,6 +513,8 @@ def game_master():
             play_low.load_special_stuff()
             game_master()
 
+        ev.preventDefault()
+
         inforced_names_dict = play_low.INFORCED_VARIANT_DATA.extract_names()
         inforced_names_dict_json = json.dumps(inforced_names_dict)
 
@@ -518,7 +530,7 @@ def game_master():
         # submitting force agreement : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def unallocate_role_callback(_, pseudo_removed, role_id):
+    def unallocate_role_callback(ev, pseudo_removed, role_id):  # pylint: disable=invalid-name
         """ unallocate_role_callback """
 
         def reply_callback(req):
@@ -539,6 +551,8 @@ def game_master():
             play_low.MY_SUB_PANEL.clear()
             play_low.load_special_stuff()
             game_master()
+
+        ev.preventDefault()
 
         json_dict = {
             'game_id': play_low.GAME_ID,
