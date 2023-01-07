@@ -806,8 +806,9 @@ def game_master():
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
                 if role_id not in agreed_roles_list:
-                    input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel accord", title="Ceci enverra un courriel demandant au joueur de manifester son accord pour résoudre la partie")
-                    input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_agreed_email_callback(e, r))
+                    if pseudo_there:
+                        input_send_recall_email = html.INPUT(type="submit", value="Courriel rappel accord", title="Ceci enverra un courriel demandant au joueur de manifester son accord pour résoudre la partie")
+                        input_send_recall_email.bind("click", lambda e, r=role_id: send_recall_agreed_email_callback(e, r))
         col <= input_send_recall_email
         row <= col
 
@@ -816,8 +817,9 @@ def game_master():
         if role_id in needed_roles_list:
             if role_id in submitted_roles_list:
                 if role_id not in agreed_roles_list:
-                    input_force_agreement = html.INPUT(type="submit", value="Forcer accord", title="Ceci forcera l'accord pour résoudre du joueur, déclenchant éventuellement la résolution")
-                    input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
+                    if pseudo_there:
+                        input_force_agreement = html.INPUT(type="submit", value="Forcer accord", title="Ceci forcera l'accord pour résoudre du joueur, déclenchant éventuellement la résolution")
+                        input_force_agreement.bind("click", lambda e, r=role_id: force_agreement_callback(e, r))
         col <= input_force_agreement
         row <= col
 
