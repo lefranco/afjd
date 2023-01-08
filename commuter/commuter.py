@@ -191,7 +191,7 @@ def main() -> None:
 
         # go to sleep
         print()
-        print("Going to sleep...")
+        print(f"Took {round(duration)} secs. Going now to sleep...")
         print()
         sleep_time = PERIOD_MINUTES * 60 - duration
         time.sleep(sleep_time)
