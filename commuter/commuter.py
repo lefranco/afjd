@@ -49,8 +49,6 @@ def read_parameters(variant_name_loaded: str, interface_chosen: str) -> typing.A
 def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_name: str) -> bool:
     """ commute_game """
 
-    mylogger.LOGGER.info(f"Trying to commute game {game_name}...")
-
     # get variant data
     host = lowdata.SERVER_CONFIG['GAME']['HOST']
     port = lowdata.SERVER_CONFIG['GAME']['PORT']
@@ -83,7 +81,7 @@ def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_na
     req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
     if req_result.status_code != 201:
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-        mylogger.LOGGER.info(f"Failed to commute game : {message}")
+        mylogger.LOGGER.info(f"Failed to commute game {game_name} : {message}")
         return False
 
     mylogger.LOGGER.info(f"Game {game_name} was commuted !")
@@ -106,27 +104,15 @@ def check_all_games(jwt_token: str) -> None:
     # scan games
     for game_id, game_dict in games_dict.items():
 
-        game_name = game_dict['name']
-
-        # get game data
-        host = lowdata.SERVER_CONFIG['GAME']['HOST']
-        port = lowdata.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game_name}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR: Failed to get game data")
-            return False
-        game_dict = req_result.json()
-
-        # can we process game ?
-
-        # restriction on game type
-        if game_dict['archive']:
-            continue
+        # fast game
         if game_dict['fast']:
             continue
 
-        # restriction on state
+        # archive game
+        if game_dict['fast']:
+            continue
+
+        # not ongoing game
         if game_dict['current_state'] != 1:
             continue
 
@@ -139,13 +125,26 @@ def check_all_games(jwt_token: str) -> None:
         if timestamp_now <= game_dict['deadline']:
             continue
 
+        game_name = game_dict['name']
+
+        # get game data
+        host = lowdata.SERVER_CONFIG['GAME']['HOST']
+        port = lowdata.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game_name}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR: Failed to get game data")
+            return False
+        game_dict = req_result.json()
+
+        # easy on the server !
+        time.sleep(2)
+
+        # can we process game ?
+
         print(game_name)
 
         variant_name = game_dict['variant']
-
-        # TODO remove
-        if game_name != 'test1':
-            continue
 
         commute_game(jwt_token, game_id, variant_name, game_name)
 
