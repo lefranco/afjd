@@ -212,23 +212,10 @@ class Role:
 
         self._identifier = identifier
 
-        # start centers the role have
-        self._start_centers: typing.List[Center] = []
-
     @property
     def identifier(self) -> int:
         """ property """
         return self._identifier
-
-    @property
-    def start_centers(self) -> typing.List[Center]:
-        """ property """
-        return self._start_centers
-
-    @start_centers.setter
-    def start_centers(self, start_centers: typing.List[Center]) -> None:
-        """ setter """
-        self._start_centers = start_centers
 
 
 class Variant:
@@ -266,8 +253,6 @@ class Variant:
             number = num + 1
             role = Role(number)
             self._roles[number] = role
-
-        assert len(raw_variant_content['start_centers']) == len(self._roles)
 
         # load the coast types
         self._coast_types = {}

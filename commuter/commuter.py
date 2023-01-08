@@ -81,7 +81,7 @@ def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_na
     req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
     if req_result.status_code != 201:
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-        mylogger.LOGGER.info("Failed to commute game %s : %s",game_name, message)
+        mylogger.LOGGER.info("Failed to commute game %s : %s", game_name, message)
         return False
 
     mylogger.LOGGER.info("Game %s was commuted !", game_name)
