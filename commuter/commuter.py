@@ -81,10 +81,10 @@ def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_na
     req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
     if req_result.status_code != 201:
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-        mylogger.LOGGER.info(f"Failed to commute game {game_name} : {message}")
+        mylogger.LOGGER.info("Failed to commute game %s : %s",game_name, message)
         return False
 
-    mylogger.LOGGER.info(f"Game {game_name} was commuted !")
+    mylogger.LOGGER.info("Game %s was commuted !", game_name)
     return True
 
 
@@ -134,18 +134,17 @@ def check_all_games(jwt_token: str) -> None:
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR: Failed to get game data")
-            return False
+            continue
+
         game_dict = req_result.json()
 
         # easy on the server !
         time.sleep(2)
 
-        # can we process game ?
-
+        # TODO remove
         print(game_name)
 
         variant_name = game_dict['variant']
-
         commute_game(jwt_token, game_id, variant_name, game_name)
 
 

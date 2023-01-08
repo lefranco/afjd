@@ -2013,9 +2013,9 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(400, msg="We are not after deadline, please change deadline first.")
 
             # handle definitive boolean
-            # game master forced player to agree to adjudicate
+            # automaton makes transition 2 (agree after)-> 1 (agree now)
             for role_id in agreed_after_list:
-                status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, True, adjudication_names, sql_executor)
+                status, adjudicated, agreement_report = agree.fake_post(game_id, role_id, 1, adjudication_names, sql_executor)
                 if not status:
                     break
                 if adjudicated:
