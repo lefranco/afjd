@@ -109,7 +109,7 @@ def check_all_games(jwt_token: str) -> None:
             continue
 
         # archive game
-        if game_dict['fast']:
+        if game_dict['archive']:
             continue
 
         # not ongoing game
