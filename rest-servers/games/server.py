@@ -1978,6 +1978,12 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="Game does not seem to be ongoing")
 
+        # game must not be actually finished
+
+        if game.current_advancement % 5 == 4 and (game.current_advancement + 1) // 5 >= game.nb_max_cycles_to_play:
+            del sql_executor
+            flask_restful.abort(403, msg="Game seems to be actually finished")
+
         # begin of protected section
         with MOVE_GAME_LOCK_TABLE[game.name]:
 
