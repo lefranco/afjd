@@ -140,6 +140,9 @@ FORCE_AGREE_PARSER = flask_restful.reqparse.RequestParser()
 FORCE_AGREE_PARSER.add_argument('role_id', type=int, required=True)
 FORCE_AGREE_PARSER.add_argument('adjudication_names', type=str, required=True)
 
+COMMUTE_AGREE_PARSER = flask_restful.reqparse.RequestParser()
+COMMUTE_AGREE_PARSER.add_argument('adjudication_names', type=str, required=True)
+
 SUBMISSION_PARSER2 = flask_restful.reqparse.RequestParser()
 SUBMISSION_PARSER2.add_argument('role_id', type=int, required=True)
 SUBMISSION_PARSER2.add_argument('names', type=str, required=True)
@@ -1946,7 +1949,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         """
         mylogger.LOGGER.info("/game-commute-agree-solve/<game_id> - POST - commute agreeing from clockwork to solve with orders game id=%s", game_id)
 
-        args = FORCE_AGREE_PARSER.parse_args(strict=True)
+        args = COMMUTE_AGREE_PARSER.parse_args(strict=True)
 
         adjudication_names = args['adjudication_names']
 

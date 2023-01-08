@@ -1088,8 +1088,8 @@ def submit_orders():
         label_after = html.LABEL(html.EM(option_after))
         buttons_right <= label_after
 
-        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), disabled=True)
-#        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2))
+#        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), disabled=True)
+        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2))
 
         input_after.bind("click", update_select)
         buttons_right <= input_after

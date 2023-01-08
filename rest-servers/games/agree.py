@@ -362,7 +362,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             # there cannot be delays for archive games
             if not game.archive:
 
-                # we are : insert this incident
+                # here we are : insert this incident
 
                 advancement = game.current_advancement
                 player_id = game.get_role(sql_executor, int(role_id))
@@ -377,13 +377,13 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
     actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
     needed_list = [o[1] for o in actives_list]
 
-    # submissions_list : those who submitted orders
+    # submitted_list : those who submitted orders
     submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
     submitted_list = [o[1] for o in submissions_list]
 
-    # definitives_list : those who agreed to adjudicate now
+    # agreed_now_list : those who agreed to adjudicate now
     definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
-    agreed_list = [o[1] for o in definitives_list if o[2] == 1]
+    agreed_now_list = [o[1] for o in definitives_list if o[2] == 1]
 
     if not game.archive:
 
@@ -392,13 +392,18 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             if role not in submitted_list:
                 return True, False, "Still some orders are missing"
 
-        # check all agreed
+        # check all others agreed
         for role in needed_list:
-            # ignore for role_id : it may not be in database yet
+            # ignore for role_id : dealt with later
             if role == role_id:
                 continue
-            if role not in agreed_list:
-                return True, False, "Still some agreements are missing"
+            if role not in agreed_now_list:
+                return True, False, "Still some agreements from others are missing"
+
+        # check we are not last with just agree but after
+        if definitive_value == 2:
+            # we must be before deadline (otherwise 2 would have been muted to 1)
+            return True, False, "Only your agreement is missing!"
 
     # now we can do adjudication itself
 
