@@ -46,22 +46,10 @@ def read_parameters(variant_name_loaded: str, interface_chosen: str) -> typing.A
     return parameters_read
 
 
-def commute_game(jwt_token: str, game_id: int, game_name: str) -> bool:
+def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_name: str) -> bool:
     """ commute_game """
 
     mylogger.LOGGER.info(f"Trying to commute game {game_name}...")
-
-    # get game data
-    host = lowdata.SERVER_CONFIG['GAME']['HOST']
-    port = lowdata.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/games/{game_name}"
-    req_result = SESSION.get(url)
-    if req_result.status_code != 200:
-        mylogger.LOGGER.error("ERROR: Failed to get game data")
-        return False
-    game_dict = req_result.json()
-
-    variant_name_loaded = game_dict['variant']
 
     # get variant data
     host = lowdata.SERVER_CONFIG['GAME']['HOST']
@@ -117,13 +105,49 @@ def check_all_games(jwt_token: str) -> None:
 
     # scan games
     for game_id, game_dict in games_dict.items():
+
         game_name = game_dict['name']
+
+        # get game data
+        host = lowdata.SERVER_CONFIG['GAME']['HOST']
+        port = lowdata.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game_name}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR: Failed to get game data")
+            return False
+        game_dict = req_result.json()
+
+        # can we process game ?
+
+        # restriction on game type
+        if game_dict['archive']:
+            continue
+        if game_dict['fast']:
+            continue
+
+        # restriction on state
+        if game_dict['current_state'] != 1:
+            continue
+
+        # game actually finished
+        if game_dict['current_advancement'] % 5 == 4 and (game_dict['current_advancement'] + 1) // 5 >= game_dict['nb_max_cycles_to_play']:
+            continue
+
+        # not after deadline
+        timestamp_now = time.time()
+        if timestamp_now <= game_dict['deadline']:
+            continue
+
+        print(game_name)
+
+        variant_name = game_dict['variant']
 
         # TODO remove
         if game_name != 'test1':
             continue
 
-        commute_game(jwt_token, game_id, game_name)
+        commute_game(jwt_token, game_id, variant_name, game_name)
 
 
 def main() -> None:
