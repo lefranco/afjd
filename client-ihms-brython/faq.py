@@ -10,28 +10,31 @@ FAQ_CONTENT_TABLE = {
     "Non, cela n'est pas prévu. Il doit y avoir 8 intervenants distincts sur une partie (arbitre y compris).",
 
     "Peut-on faire des erreurs d'ordres ?":
-    "Eh non. Les ordres sont 100% vérifiés avant d'être enregistrés. Par contre le menu 'taguer' dans une partie permet une communcation par ordres 'ésotériques'. Cela ne presente un intérêt que dans les parties sans communication.",
+    "Non. Les ordres sont 100% vérifiés avant d'être enregistrés. L'option de bienveillance vis à vis des débutants a été privilégiée. Par contre le menu 'taguer' dans une partie permet une communcation par ordres 'ésotériques'. Cela ne presente un intérêt que dans les parties sans communication.",
 
     "Que signifient toutes les couleurs de remplissage des regions sur la carte ?":
     "Une région prend la couleur du pays qui possède le centre qui s'y trouve. Sinon, elle prend la couleur du pays qui possède l'unité qui l'occupe. Sinon, elle prend la couleur géographique (ce critère restant subjectif) du pays.",
 
     "Quand a lieu la résolution ?":
-    "Quand le dernier joueur qui a des ordres à rendre coche sur la case 'd'accord pour la résolution' tout simplement (ou quand l'arbitre le fait à sa place pour éviter que la partie ne s'éternise).",
+    "Quand le dernier joueur qui a des ordres à rendre coche sur la case 'd'accord pour résoudre maintenant' tout simplement. Lire la question suivante...",
+    
+    "C'est tout ?":
+    "Non. Premièrement : un arbitre peut le faire à sa place pour éviter que la partie ne s'éternise, avec les mêmes conséquences. Deuxièmement un 'accord pour résoudre après la date limite' exprimé après la date limite devient un 'accord pour résoudre maintenant' avec les mêmes conséquences. Troisièmement : un petit automate vient regarder les parties dont la date limite est passée toutes les demies heures. Il se charge de soigeusement transformer tout 'accord pour résoudre après la date limite' en 'accord pour résoudre maintenant' toujours avec les mêmes conséquences.",
 
     "Pourquoi les dates limites changent-elles de couleur ?":
-    "Le code de couleur est assez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée. Rouge que la grâce est aussi passée. Soyez ponctuels !",
+    "Le code de couleur est assez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée. Rouge que la grâce est aussi passée. La grace n'a aucune incidence sur le jeu hormi ce code de couleur. Soyez ponctuels !",
 
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
-    "Passer ses ordres signifie réaliser une transition 'pas d'accord pour la résoltion' (ou pas d'information) -> 'd'accord pour la résolution'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels !",
+    "Passer ses ordres signifie réaliser une transition 'pas d'accord pour la résolution' (ou pas d'information) -> 'd'accord pour la résolution (maintenant ou après la date limite, peu importe)'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels (on l'a déjà dit ?) !",
 
     "Comment sont comptés les retards ?":
-    " Toute heure de retard entamée est due. Cela signifie qu'un retard indiqué '2h' est un retard de plus d'une heure et d'au plus deux heures (par rapport à la date limite au moment de la soumission)",
+    " Toute heure de retard entamée est due. Cela signifie qu'un retard indiqué '2' (2 heures)est un retard de plus d'une heure et d'au plus deux heures (par rapport à la date limite au moment de la soumission)",
 
     "Pourquoi les unités ne se déplacent pas dans le bac à sable ?":
     "Le bac à sable n'a pas vocation à déplacer les unités, il cherche à répondre à la question 'que se passerait-il si...'. Il faut bien lire le compte rendu des ordres sous forme de texte sous la carte.",
 
     "Il me restait une dernière unité, je pouvais retraiter, mais le système m'a carrément supprimé mon unité. C'est quoi ce bug ?":
-    "Non, c'est normal. Le système, pour une retraite d'hiver, supprime les unités d'un joueur qui n'a plus de centre et ne peut retraiter sur un centre. Cela anticipe sa disparition et évite d'avoir à attendre son ordre de suppression de ses dernières unités par la suite. Une euthanasie en quelque sorte !",
+    "Non, c'est normal. Le système, pour une retraite d'hiver, supprime les unités d'un joueur qui n'a plus de centre et ne peut retraiter sur un centre, ni avoir une retraite en conflit avec un autre joueur. Cela anticipe sa disparition et évite d'avoir à attendre son ordre de suppression de ses dernières unités par la suite. Une euthanasie en quelque sorte !",
 
     "Eh, je pense avoir trouvé un bug dans le moteur de résolution. Que faire ?":
     "Le moteur s'appuie sur le DATC. Il faut utiliser le lien en page d'accueil pour envoyer un courriel et signaler le problème. Reproduisez le soigneusement avec le bac à sable.",
@@ -43,10 +46,13 @@ FAQ_CONTENT_TABLE = {
     "Ces deux paramètres ont une version 'partie' et une version 'en cours' La première est celle entrée par le créateur de la partie. La deuxième est celle qui va s'appliquer, elle est initialisée à la valeur de la première. A la fin de la partie, la deuxième est effacée. L'arbitre peut également jouer avec l'autorisation des messages publics et privés pendant la partie. Les exportations de partie (pour savoir comment elle a été jouée) se baseront sur la première.",
 
     "Comment remplacer un joueur ?":
-    "C'est le rôle de l'arbitre. Il faut lui retirer le rôle dans la console d'arbitrage et attribuer le rôle à un autre joueur dans la partie, qu'il aura fallu faire venir au préalable cf. question suivante. ",
-
+    "C'est le rôle de l'arbitre. Il faut lui retirer le rôle dans la console d'arbitrage et attribuer le rôle à un autre joueur dans la partie, qu'il aura fallu faire venir au préalable cf. question suivante.",
+    
     "Comment mettre un joueur dans une partie ?":
     "Faire venir ou partir les joueurs de la partie se réalise par contre dans le menu appariement. Un joueur peut se metre ou se retire d'une partie, un arbitre peut mettre un joueur ou le retirer d'une partie. Il y a trois manière de rejoindre une partie : par le menu apariement(qui gère tous les cas), par le menu opportunités (qui liste les parties qui recrutent), par un hyper lien que quelqu'un vous aura envoyé s(pour vous inviter).",
+
+    "Comment ameuter les remplaçants pour un remplacement ?":
+    "Il faut enlever le rôle au joueur et le retirer de la partie (cf les deux questions précédentes). Un bouton est alors disponible dans la console d'arbitrage.",
 
     "Sur ma partie il y a un joueur bizarre. Depuis qu'un autre l'a stabbé, il passe son temps à lui donner du \"l'autre abruti\" et j'en passe et des meilleures. L'arbitre ne fait rien. Que dois-je faire  ?":
     "C'est à l'arbitre de le rappeler à l'ordre en principe. Si sa manière de traiter la chose ne vous plait pas, il faut déclarer un incident. Nous voulons une atmosphère cordiale sur le site.",
@@ -90,7 +96,10 @@ FAQ_CONTENT_TABLE = {
     """,
 
     "Qu'est ce qui change pour une partie 'en direct' ?":
-    "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en heures. Les retards sont comptés en minutes et non en heures entamées. Il est possible d'observer la partie (mise à jour régulière du plateau). Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres pour les joueurs automatiquement après la grâce. Pas de message de notification pour une telle partie.",
+    "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en heures. Les retards sont comptés en minutes et non en heures entamées. Il est possible d'observer la partie (mise à jour régulière du plateau). Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres pour les joueurs automatiquement après la grâce. Pas de message de notification pour une telle partie. Pas d'accord pour résoudre après la date limite",
+
+    "Qu'est ce qui change pour une partie 'archive' ?":
+    "Une telle partie n'est pas jouée sur le site. Elle est saisie par son arbitre à partir de feuilles d'ordres mais cette partie à eu lieu ailleurs (par exemple une table finale de championnat du monde. Avec juste un intérêt de consultation",
 
     "Pourquoi des parties sont distinguées ?":
     "Ce sont soit des parties modèles de tournoi que l'on veut retrouver plus rapidement, soit des parties archives sur lesquelles on veut attirer l'attention du badaud.",
