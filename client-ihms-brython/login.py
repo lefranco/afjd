@@ -299,7 +299,7 @@ def check_token():
     time_stamp_now = time.time()
     time_stamp_expiration = float(storage['LOGIN_EXPIRATION_TIME'])
     if time_stamp_now > time_stamp_expiration:
-        common.info_dialog("Votre jeton d'authentification a expiré.<br>Vous devez juste vous loguer à nouveau !")
+        alert("Votre jeton d'authentification a expiré... Vous devez juste vous loguer à nouveau !")
         logout()
 
 

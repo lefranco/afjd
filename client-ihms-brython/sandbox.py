@@ -246,8 +246,8 @@ def sandbox():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez soumis les ordres et la situation pour une simulation : {messages}")
+            messages = req_result['msg']
+            alert(f"Vous avez soumis les ordres et la situation pour une simulation : {messages}")
 
             if 'result' in req_result:
 

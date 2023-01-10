@@ -18,6 +18,8 @@ import config
 ADMIN_PSEUDO = 'Palpatine'
 ALTERNATE_ADMIN_PSEUDO = 'OrangeCar'
 
+PERSIST_TIME_SEC = 5
+
 
 def noreply_callback(_):
     """ noreply_callback """
@@ -27,7 +29,7 @@ def noreply_callback(_):
 def info_dialog(mess):
     """ info_dialog """
 
-    mydialog.InfoDialog("Information", mess)
+    mydialog.InfoDialog("Information", mess, remove_after=PERSIST_TIME_SEC)
 
 
 def check_admin():
