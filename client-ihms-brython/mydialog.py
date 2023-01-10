@@ -129,7 +129,7 @@ class Dialog(html.DIV):
         self.is_moving = False
         self.initial = [0, 0]  # defined at init
 
-    def close(self, *args):  # pylint: disable=unused-argument
+    def close(self, *_):
         """ close """
         self.remove()
 
@@ -208,7 +208,7 @@ async def Input(message=None):
 class InfoDialog(Dialog):
     """Dialog box with an information message and no "Ok / Cancel" button."""
 
-    def __init__(self, title, message, *, top=None, left=None, default_css=True, remove_after=None, ok="Ok"):
+    def __init__(self, title, message, *, top=None, left=None, default_css=True, remove_after=None, ok=None):
         """If remove_after is set, number of seconds after which the dialog is
         removed."""
         Dialog.__init__(self, title, top=top, left=left, default_css=default_css)
