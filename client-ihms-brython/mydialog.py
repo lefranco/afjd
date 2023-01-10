@@ -129,7 +129,7 @@ class Dialog(html.DIV):
         self.is_moving = False
         self.initial = [0, 0]  # defined at init
 
-    def close(self, _):
+    def close(self, *args):  # pylint: disable=unused-argument
         """ close """
         self.remove()
 
@@ -219,7 +219,6 @@ class InfoDialog(Dialog):
             self.panel <= html.DIV(self.ok_button, style={"text-align": "center"})
             self.ok_button.bind("click", lambda ev: self.remove())
         if remove_after:
-            assert False, "Do not use remove_after - prbbaly not working !"
             if not isinstance(remove_after, (int, float)):
                 raise TypeError("remove_after should be a number, not " + str(remove_after.__class__.__name__))
             window.setTimeout(self.close, remove_after * 1000)
