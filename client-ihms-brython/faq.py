@@ -17,7 +17,7 @@ FAQ_CONTENT_TABLE = {
 
     "Quand a lieu la résolution ?":
     "Quand le dernier joueur qui a des ordres à rendre coche sur la case 'd'accord pour résoudre maintenant' tout simplement. Lire la question suivante...",
-    
+
     "C'est tout ?":
     "Non. Premièrement : un arbitre peut le faire à sa place pour éviter que la partie ne s'éternise, avec les mêmes conséquences. Deuxièmement un 'accord pour résoudre après la date limite' exprimé après la date limite devient un 'accord pour résoudre maintenant' avec les mêmes conséquences. Troisièmement : un petit automate vient regarder les parties dont la date limite est passée toutes les demies heures. Il se charge de soigeusement transformer tout 'accord pour résoudre après la date limite' en 'accord pour résoudre maintenant' toujours avec les mêmes conséquences.",
 
@@ -47,7 +47,7 @@ FAQ_CONTENT_TABLE = {
 
     "Comment remplacer un joueur ?":
     "C'est le rôle de l'arbitre. Il faut lui retirer le rôle dans la console d'arbitrage et attribuer le rôle à un autre joueur dans la partie, qu'il aura fallu faire venir au préalable cf. question suivante.",
-    
+
     "Comment mettre un joueur dans une partie ?":
     "Faire venir ou partir les joueurs de la partie se réalise par contre dans le menu appariement. Un joueur peut se metre ou se retire d'une partie, un arbitre peut mettre un joueur ou le retirer d'une partie. Il y a trois manière de rejoindre une partie : par le menu apariement(qui gère tous les cas), par le menu opportunités (qui liste les parties qui recrutent), par un hyper lien que quelqu'un vous aura envoyé s(pour vous inviter).",
 
