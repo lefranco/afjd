@@ -8,6 +8,7 @@ import json
 import time
 import datetime
 import typing
+import math
 
 import requests
 
@@ -172,6 +173,25 @@ def main() -> None:
         return
     req_result = json.loads(req_result.text)
     jwt_token = req_result['AccessToken']  # type: ignore
+
+    # wait next hour+15 ou hour+45
+    timestamp_now = time.time()
+    second_position = math.ceil(timestamp_now) % (60 * 60)
+    if second_position < 15 * 60:
+        wait_time = 15 * 60 - second_position
+    elif second_position < 45 * 60:
+        wait_time = 45 * 60 - second_position
+    else:
+        wait_time = 15 * 60 + 60 * 60 - second_position
+
+    now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
+    now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S')
+
+    print()
+    print(f"Now {now_date_desc}. Waiting {wait_time//60}mn and {wait_time%60}sec...")
+    print()
+
+    time.sleep(wait_time)
 
     while True:
 
