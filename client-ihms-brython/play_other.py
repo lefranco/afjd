@@ -1249,8 +1249,8 @@ def negotiate(default_dest_set):
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            messages = req_result['msg']
-            alert(f"Le message a été envoyé ! {messages}")
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Le message a été envoyé ! {messages}", True)
 
             # back to where we started
             global CONTENT_BACKUP
@@ -1578,8 +1578,8 @@ def declare():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            messages = req_result['msg']
-            alert(f"La déclaration a été faite ! {messages}")
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"La déclaration a été faite ! {messages}", True)
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
