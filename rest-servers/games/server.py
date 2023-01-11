@@ -56,8 +56,6 @@ import assignments
 import dropouts
 import exporter
 
-# a little welcome message to new games
-WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
 
 SESSION = requests.Session()
 
@@ -189,6 +187,11 @@ GROUPING_PARSER = flask_restful.reqparse.RequestParser()
 GROUPING_PARSER.add_argument('game_id', type=int, required=True)
 GROUPING_PARSER.add_argument('delete', type=int, required=True)
 
+# Account allowed to usupr, to see logins and failed logins
+ADMIN_ACCOUNT_NAME = 'Palpatine'
+
+# a little welcome message to new games
+WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
 
 # creates some locks for some critical sections (where there can only be one at same time)
 # there is one lock per ongoing game
@@ -723,7 +726,7 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Game {name} does not exist")
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to alter a game!")
 
@@ -1609,7 +1612,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to rectify a position!")
 
@@ -5391,7 +5394,7 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)

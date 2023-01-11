@@ -125,6 +125,8 @@ REGISTRATION_UPDATE_PARSER.add_argument('value', type=int, required=True)
 IP_ADDRESS_PARSER = flask_restful.reqparse.RequestParser()
 IP_ADDRESS_PARSER.add_argument('ip_value', type=str, required=True)
 
+# Account allowed to usupr, to see logins and failed logins
+ADMIN_ACCOUNT_NAME = 'Palpatine'
 
 # to avoid sending emails in debug phase
 PREVENT_MAIL_CHECKING = False
@@ -1020,7 +1022,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             del sql_executor
             flask_restful.abort(403, msg="You are not allowed to change news!")
 
@@ -1326,7 +1328,7 @@ class CreatorListRessource(flask_restful.Resource):  # type: ignore
         # check user has right to add/remove creator (admin)
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             flask_restful.abort(403, msg="You are not allowed to edit the list of creators!")
 
         sql_executor = database.SqlExecutor()
@@ -1407,7 +1409,7 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
         # check user has right to add/remove moderator (admin)
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             flask_restful.abort(403, msg="You are not allowed to edit the list of moderators!")
 
         sql_executor = database.SqlExecutor()
@@ -1547,7 +1549,7 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update ELO data")
 
         try:
@@ -1620,7 +1622,7 @@ class ReliabilityRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update reliability data")
 
         try:
@@ -1689,7 +1691,7 @@ class RegularityRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update regularity data")
 
         try:
@@ -2280,7 +2282,7 @@ class IpAddressRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to get IP addresses")
 
         sql_executor = database.SqlExecutor()
@@ -2363,7 +2365,7 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         # TODO improve this with real admin account
-        if pseudo != 'Palpatine':
+        if pseudo != ADMIN_ACCOUNT_NAME:
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
