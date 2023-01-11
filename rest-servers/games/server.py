@@ -3051,6 +3051,78 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
         return data, 200
 
 
+@API.resource('/all-games-orders-submitted')
+class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
+    """ AllGamesOrdersSubmittedRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[int, typing.List[int]]], int]:
+        """
+        Gets list of roles which have submitted orders, orders are missing, orders are not needed for all ongoing games
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/all-games-orders-submitted - GET - getting which orders submitted, missing, not needed for all ongoing games")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # TODO improve this with real admin account
+        if pseudo != ADMIN_ACCOUNT_NAME:
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
+
+        sql_executor = database.SqlExecutor()
+
+        # get list of games in which player is involved
+        allocations_list = allocations.Allocation.inventory(sql_executor)
+
+        dict_submitted_list: typing.Dict[int, typing.List[int]] = {}
+        dict_agreed_now_list: typing.Dict[int, typing.List[int]] = {}
+        dict_agreed_after_list: typing.Dict[int, typing.List[int]] = {}
+        dict_needed_list: typing.Dict[int, typing.List[int]] = {}
+        for game_id, _, __ in allocations_list:
+
+            # game is not ongoing : ignore
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+            if game.current_state != 1:
+                continue
+
+            # submissions_list : those who submitted orders
+            submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+            submitted_list = [o[1] for o in submissions_list]
+
+            # definitives_list : those who agreed to adjudicate with their orders now
+            definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
+            agreed_now_list = [o[1] for o in definitives_list if o[2] == 1]
+            agreed_after_list = [o[1] for o in definitives_list if o[2] == 2]
+
+            dict_submitted_list[game_id] = submitted_list
+            dict_agreed_now_list[game_id] = agreed_now_list
+            dict_agreed_after_list[game_id] = agreed_after_list
+
+            # needed list : those who need to submit orders
+            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+            needed_list = [o[1] for o in actives_list]
+            dict_needed_list[game_id] = needed_list
+
+        del sql_executor
+
+        data = {'dict_submitted': dict_submitted_list, 'dict_agreed_now': dict_agreed_now_list, 'dict_agreed_after': dict_agreed_after_list, 'dict_needed': dict_needed_list}
+        return data, 200
+
+
 @API.resource('/simulation')
 class SimulationRessource(flask_restful.Resource):  # type: ignore
     """ SimulationRessource """
