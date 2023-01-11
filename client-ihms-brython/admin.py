@@ -2249,9 +2249,12 @@ def agreement_usage():
         thead <= col
     games_table <= thead
 
-    number_games = 0
 
     # default
+
+    number_games = 0
+    orders_in = 0
+    after_chosen = 0
 
     for game_id_str, data in sorted(games_dict.items()):
 
@@ -2353,6 +2356,9 @@ def agreement_usage():
                     # we have all orders : green
                     colour = config.ALL_ORDERS_IN_COLOUR
 
+                # stats
+                orders_in += nb_submitted
+
             if field == 'all_agreed':
                 value = ""
                 agreed_now_roles_list = submitted_data['agreed_now']
@@ -2366,6 +2372,9 @@ def agreement_usage():
                 if nb_agreed_now >= nb_submitted:
                     # we have all agreements : green
                     colour = config.ALL_AGREEMENTS_IN_COLOUR
+
+                # stats
+                after_chosen += nb_agreed_after
 
             if field == 'used_for_elo':
                 value = "Oui" if value else "Non"
@@ -2399,6 +2408,10 @@ def agreement_usage():
             row <= col
 
         games_table <= row
+
+    MY_SUB_PANEL <= html.DIV(f"Pourcentage d'utilisation de \"d'accord mais après la date limite\" par rapport aux ordres soumis : {(after_chosen*100)/orders_in:0.2f} % ({after_chosen}/{orders_in})", Class='important')
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
