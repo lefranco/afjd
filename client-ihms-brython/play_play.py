@@ -172,8 +172,8 @@ def submit_orders():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            messages = req_result['msg']
-            alert(f"Vous avez soumis les ordres : {messages}")
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Vous avez soumis les ordres : {messages}", True)
 
             # special : store ip address
             common.store_ip_address()
@@ -1365,8 +1365,8 @@ def submit_communication_orders():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            messages = req_result['msg']
-            alert(f"Vous avez déposé les ordres de communcation : {messages}")
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Vous avez déposé les ordres de communcation : {messages}", True)
 
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
@@ -2084,8 +2084,8 @@ def vote():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            messages = req_result['msg']
-            alert(f"Le vote a été enregistré ! {messages}")
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Le vote a été enregistré ! {messages}", True)
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
