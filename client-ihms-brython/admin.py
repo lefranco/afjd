@@ -17,13 +17,44 @@ import login
 import mapping
 import geometry
 import elo
+import memoize
 
 
-OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Comptes oisifs', 'Courriels non confirmés', 'Vérification des adresses IP', 'Vérification des courriels', 'Maintenance']
+OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Comptes oisifs', 'Courriels non confirmés', 'Vérification des adresses IP', 'Vérification des courriels', 'Utilisation des accords', 'Maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
 DOWNLOAD_LOG = False
+
+
+def get_all_games_roles_submitted_orders():
+    """ get_all_games_roles_submitted_orders : returns empty dict if problem """
+
+    dict_submitted_data = {}
+
+    def reply_callback(req):
+        nonlocal dict_submitted_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour toutes les parties en cours : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour toutes les parties en cours : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        dict_submitted_data = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-games-orders-submitted"
+
+    # get roles that submitted orders : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return dict_submitted_data
 
 
 def get_creators():
@@ -2121,7 +2152,7 @@ def show_ip_addresses():
 
 
 def show_all_emails():
-    """ all_emails """
+    """ show_all_emails """
 
     MY_SUB_PANEL <= html.H3("Liste joueurs avec leurs courriels")
 
@@ -2177,6 +2208,224 @@ def show_all_emails():
         emails_table <= row
 
     MY_SUB_PANEL <= emails_table
+
+
+def agreement_usage():
+    """ agreement_usage """
+
+    MY_SUB_PANEL <= html.H3("Utilisation du bouton 'd'accord pour résoudre'")
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    overall_time_before = time.time()
+
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    dict_submitted_data = get_all_games_roles_submitted_orders()
+    if not dict_submitted_data:
+        alert("Erreur chargement des soumissions dans les parties")
+        return
+
+    time_stamp_now = time.time()
+
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    games_table = html.TABLE()
+
+    # the display order
+    fields = ['name', 'deadline', 'current_advancement', 'all_orders_submitted', 'all_agreed', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres de tous(**)', 'all_agreed': 'accords de tous(***)', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'action': 'action'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    games_table <= thead
+
+    number_games = 0
+
+    # default
+
+    for game_id_str, data in sorted(games_dict.items()):
+
+        # must be ongoing game
+        if data['current_state'] != 1:
+            continue
+
+        game_id = int(game_id_str)
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        number_games += 1
+
+        submitted_data = {}
+        submitted_data['needed'] = dict_submitted_data['dict_needed'][str(game_id)]
+        submitted_data['submitted'] = dict_submitted_data['dict_submitted'][str(game_id)]
+        submitted_data['agreed_now'] = dict_submitted_data['dict_agreed_now'][str(game_id)]
+        submitted_data['agreed_after'] = dict_submitted_data['dict_agreed_after'][str(game_id)]
+
+        data['all_orders_submitted'] = None
+        data['all_agreed'] = None
+        data['new_declarations'] = None
+        data['new_messages'] = None
+
+        row = html.TR()
+        for field in fields:
+
+            value = data[field]
+            colour = None
+            game_name = data['name']
+
+            if field == 'name':
+                value = game_name
+
+            if field == 'deadline':
+                deadline_loaded = value
+                datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                value = datetime_deadline_loaded_str
+
+                time_unit = 60 if data['fast'] else 60 * 60
+                approach_duration = 24 * 60 * 60
+
+                # we are after deadline + grace
+                if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
+                    colour = config.PASSED_GRACE_COLOUR
+                # we are after deadline
+                elif time_stamp_now > deadline_loaded:
+                    colour = config.PASSED_DEADLINE_COLOUR
+                # deadline is today
+                elif time_stamp_now > deadline_loaded - approach_duration:
+                    colour = config.APPROACHING_DEADLINE_COLOUR
+
+            if field == 'current_advancement':
+                advancement_loaded = value
+                advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
+                advancement_season_readable = variant_data.season_name_table[advancement_season]
+                value = f"{advancement_season_readable} {advancement_year}"
+
+            if field == 'all_orders_submitted':
+                value = ""
+                submitted_roles_list = submitted_data['submitted']
+                nb_submitted = len(submitted_roles_list)
+                needed_roles_list = submitted_data['needed']
+                nb_needed = len(needed_roles_list)
+                stats = f"{nb_submitted}/{nb_needed}"
+                value = stats
+                if nb_submitted >= nb_needed:
+                    # we have all orders : green
+                    colour = config.ALL_ORDERS_IN_COLOUR
+
+            if field == 'all_agreed':
+                value = ""
+                agreed_now_roles_list = submitted_data['agreed_now']
+                nb_agreed_now = len(agreed_now_roles_list)
+                agreed_after_roles_list = submitted_data['agreed_after']
+                nb_agreed_after = len(agreed_after_roles_list)
+                submitted_roles_list = submitted_data['submitted']
+                nb_submitted = len(submitted_roles_list)
+                stats = f"{nb_agreed_now}m+{nb_agreed_after}a"
+                value = stats
+                if nb_agreed_now >= nb_submitted:
+                    # we have all agreements : green
+                    colour = config.ALL_AGREEMENTS_IN_COLOUR
+
+            if field == 'used_for_elo':
+                value = "Oui" if value else "Non"
+
+            if field == 'nopress_game':
+                value1 = value
+                value2 = data['nopress_current']
+                if value2 == value1:
+                    value = "Non" if value1 else "Oui"
+                else:
+                    value1 = "Non" if value1 else "Oui"
+                    value2 = "Non" if value2 else "Oui"
+                    value = f"{value1} ({value2})"
+
+            if field == 'nomessage_game':
+                value1 = value
+                value2 = data['nomessage_current']
+                if value2 == value1:
+                    value = "Non" if value1 else "Oui"
+                else:
+                    value1 = "Non" if value1 else "Oui"
+                    value2 = "Non" if value2 else "Oui"
+                    value = f"{value1} ({value2})"
+
+            col = html.TD(value)
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+
+            row <= col
+
+        games_table <= row
+
+    MY_SUB_PANEL <= games_table
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= html.DIV("(***) Accords : m=maintenant et a=après la D.L.", Class='note')
+    MY_SUB_PANEL <= html.BR()
+
+    # get GMT date and time
+    time_stamp_now = time.time()
+    date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
+    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+    special_legend = html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
+    MY_SUB_PANEL <= special_legend
+    MY_SUB_PANEL <= html.BR()
+
+    overall_time_after = time.time()
+    elapsed = overall_time_after - overall_time_before
+
+    stats = f"Temps de chargement de la page {elapsed} avec {number_games} partie(s)"
+    if number_games:
+        stats += f" soit {elapsed/number_games} par partie"
+
+    MY_SUB_PANEL <= html.DIV(stats, Class='load')
+    MY_SUB_PANEL <= html.BR()
 
 
 def maintain():
@@ -2297,6 +2546,8 @@ def load_option(_, item_name):
         show_ip_addresses()
     if item_name == 'Vérification des courriels':
         show_all_emails()
+    if item_name == 'Utilisation des accords':
+        agreement_usage()
     if item_name == 'Maintenance':
         maintain()
 
