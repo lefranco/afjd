@@ -2357,6 +2357,7 @@ def agreement_usage():
                     colour = config.ALL_ORDERS_IN_COLOUR
 
                 # stats
+                values['needed'] = nb_needed
                 values['submitted'] = nb_submitted
 
             if field == 'all_agreed':
@@ -2416,10 +2417,11 @@ def agreement_usage():
 
         # create entry
         if (nopress, nomessage) not in stats_collected:
-            stats_collected[(nopress, nomessage)] = {'nb_games': 0, 'agreed_now': 0, 'agreed_after': 0}
+            stats_collected[(nopress, nomessage)] = {'nb_games': 0, 'needed': 0, 'agreed_now': 0, 'agreed_after': 0}
 
         # fill entry
         stats_collected[(nopress, nomessage)]['nb_games'] += 1
+        stats_collected[(nopress, nomessage)]['needed'] += values['needed']
         stats_collected[(nopress, nomessage)]['agreed_now'] += values['agreed_now']
         stats_collected[(nopress, nomessage)]['agreed_after'] += values['agreed_after']
 
@@ -2429,6 +2431,7 @@ def agreement_usage():
     thead <= html.TD("Presse")
     thead <= html.TD("Messages")
     thead <= html.TD("Nombre de parties")
+    thead <= html.TD("Nombre d'ordres")
     thead <= html.TD("Nombre d'accord maintenant")
     thead <= html.TD("Nombre d'accord après")
     thead <= html.TD("% accords après")
@@ -2444,9 +2447,10 @@ def agreement_usage():
             row <= html.TD(f"{'Non' if nopress else 'Oui'}")
             row <= html.TD(f"{'Non' if nomessage else 'Oui'}")
             row <= html.TD(stats_collected[(nopress, nomessage)]['nb_games'])
+            row <= html.TD(stats_collected[(nopress, nomessage)]['needed'])
             row <= html.TD(stats_collected[(nopress, nomessage)]['agreed_now'])
             row <= html.TD(stats_collected[(nopress, nomessage)]['agreed_after'])
-            row <= html.TD(f"{100 * stats_collected[(nopress, nomessage)]['agreed_after'] / stats_collected[(nopress, nomessage)]['nb_games']:.2f}")
+            row <= html.TD(f"{100 * stats_collected[(nopress, nomessage)]['agreed_after'] / stats_collected[(nopress, nomessage)]['needed']:.2f}")
             stats_table <= row
 
     MY_SUB_PANEL <= stats_table
