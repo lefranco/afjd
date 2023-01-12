@@ -155,7 +155,7 @@ def main() -> None:
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
-    
+
     # get my IP address
     external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
 
