@@ -9,6 +9,7 @@ import time
 import datetime
 import typing
 import math
+import urllib.request
 
 import requests
 
@@ -154,18 +155,20 @@ def main() -> None:
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
+    
+    # get my IP address
+    external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
 
     # get a token
     pseudo = COMMUTER_ACCOUNT
     password = COMMUTER_PASSWORD
-    ip_value = ''
     host = lowdata.SERVER_CONFIG['USER']['HOST']
     port = lowdata.SERVER_CONFIG['USER']['PORT']
     url = f"{host}:{port}/login"
     json_dict = {
         'user_name': pseudo,
         'password': password,
-        'ip_address': ip_value
+        'ip_address': external_ip
     }
     req_result = SESSION.post(url, headers={'content-type': 'application/json'}, data=json.dumps(json_dict))
     if req_result.status_code != 200:
