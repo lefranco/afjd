@@ -37,7 +37,6 @@ SECRET_DATA = SECRET_CONFIG.section('JWT_SECRET_KEY')
 APP.config['JWT_SECRET_KEY'] = SECRET_DATA['key']
 
 # how long token is valid - beware they say no more than several hours...
-# if this is changed it must be changed for the same value in login.py from front end
 TOKEN_DURATION_DAYS = 20
 
 # default is 15 minutes - put it to 'TOKEN_DURATION_DAYS' days...
@@ -46,7 +45,7 @@ APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=TOKEN_DURATION_
 # Seems JWT variable is not used in this implementation but could be later on...
 JWT = flask_jwt_extended.JWTManager(APP)
 
-# Account allowed to usupr, to see logins and failed logins
+# Account allowed to usurp, to see logins and failed logins
 ADMIN_ACCOUNT_NAME = 'Palpatine'
 
 # to avoid repeat logins
@@ -276,7 +275,7 @@ def login_user() -> typing.Tuple[typing.Any, int]:
 
     # Identity can be any data that is json serializable
     access_token = flask_jwt_extended.create_access_token(identity=user_name)
-    return flask.jsonify(AccessToken=access_token), 200
+    return flask.jsonify(AccessToken=access_token, TokenDurationDays=TOKEN_DURATION_DAYS), 200
 
 
 @APP.route('/verify', methods=['GET'])

@@ -16,9 +16,6 @@ import index  # circular import
 MY_PANEL = html.DIV(id="login")
 MY_PANEL.attrs['style'] = 'display: table-row'
 
-# how long token is valid - must be same value as server.py from users access point
-TOKEN_DURATION_DAYS = 20
-
 
 def email_confirmed(pseudo):
     """ email_confirmed """
@@ -89,12 +86,22 @@ def login():
 
                 return
 
+            # extract data from request result
+            token_duration_days = req_result['TokenDurationDays']
+            access_token = req_result['AccessToken']
+
             # store data
+
+            # the peudo of player logged in
             storage['PSEUDO'] = pseudo
-            storage['JWT_TOKEN'] = req_result['AccessToken']
+            # the token itself
+            storage['JWT_TOKEN'] = access_token
+            # the login time
             time_stamp_now = time.time()
             storage['LOGIN_TIME'] = str(time_stamp_now)
-            storage['LOGIN_EXPIRATION_TIME'] = str(time_stamp_now + TOKEN_DURATION_DAYS * 24 * 3600)
+            # token expiration time
+            login_expiration_time = time_stamp_now + token_duration_days * 24 * 3600
+            storage['LOGIN_EXPIRATION_TIME'] = str(login_expiration_time)
 
             # inform user
             common.info_dialog(f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page")
