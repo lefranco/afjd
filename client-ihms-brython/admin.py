@@ -2249,12 +2249,10 @@ def agreement_usage():
         thead <= col
     games_table <= thead
 
-
-    # default
-
     number_games = 0
-    orders_in = 0
-    after_chosen = 0
+
+    # will aggregate stats
+    stats_collected = {}
 
     for game_id_str, data in sorted(games_dict.items()):
 
@@ -2309,6 +2307,8 @@ def agreement_usage():
         data['new_declarations'] = None
         data['new_messages'] = None
 
+        values = {}
+
         row = html.TR()
         for field in fields:
 
@@ -2357,7 +2357,7 @@ def agreement_usage():
                     colour = config.ALL_ORDERS_IN_COLOUR
 
                 # stats
-                orders_in += nb_submitted
+                values['submitted'] = nb_submitted
 
             if field == 'all_agreed':
                 value = ""
@@ -2374,7 +2374,8 @@ def agreement_usage():
                     colour = config.ALL_AGREEMENTS_IN_COLOUR
 
                 # stats
-                after_chosen += nb_agreed_after
+                values['agreed_now'] = nb_agreed_now
+                values['agreed_after'] = nb_agreed_after
 
             if field == 'used_for_elo':
                 value = "Oui" if value else "Non"
@@ -2409,8 +2410,46 @@ def agreement_usage():
 
         games_table <= row
 
-    MY_SUB_PANEL <= html.DIV(f"Pourcentage d'utilisation de \"d'accord mais après la date limite\" par rapport aux ordres soumis : {(after_chosen*100)/orders_in:0.2f} % ({after_chosen}/{orders_in})", Class='important')
-    MY_SUB_PANEL <= html.BR()
+        # stats
+        nopress = data['nopress_current']
+        nomessage = data['nomessage_current']
+
+        # create entry
+        if (nopress, nomessage) not in stats_collected:
+            stats_collected[(nopress, nomessage)] = {'nb_games': 0, 'agreed_now': 0, 'agreed_after': 0}
+
+        # fill entry
+        stats_collected[(nopress, nomessage)]['nb_games'] += 1
+        stats_collected[(nopress, nomessage)]['agreed_now'] += values['agreed_now']
+        stats_collected[(nopress, nomessage)]['agreed_after'] += values['agreed_after']
+
+    stats_table = html.TABLE()
+
+    thead = html.THEAD()
+    thead <= html.TD("Presse")
+    thead <= html.TD("Messages")
+    thead <= html.TD("Nombre de parties")
+    thead <= html.TD("Nombre d'accord maintenant")
+    thead <= html.TD("Nombre d'accord après")
+    thead <= html.TD("% accords après")
+    stats_table <= thead
+
+    for nopress in (True, False):
+        for nomessage in (True, False):
+
+            if (nopress, nomessage) not in stats_collected:
+                continue
+
+            row = html.TR()
+            row <= html.TD(f"{'Non' if nopress else 'Oui'}")
+            row <= html.TD(f"{'Non' if nomessage else 'Oui'}")
+            row <= html.TD(stats_collected[(nopress, nomessage)]['nb_games'])
+            row <= html.TD(stats_collected[(nopress, nomessage)]['agreed_now'])
+            row <= html.TD(stats_collected[(nopress, nomessage)]['agreed_after'])
+            row <= html.TD(f"{100 * stats_collected[(nopress, nomessage)]['agreed_after'] / stats_collected[(nopress, nomessage)]['nb_games']:.2f}")
+            stats_table <= row
+
+    MY_SUB_PANEL <= stats_table
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= games_table
