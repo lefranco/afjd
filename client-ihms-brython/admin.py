@@ -2433,8 +2433,8 @@ def agreement_usage():
     thead <= html.TD("Nombre de parties")
     thead <= html.TD("Nombre d'ordres")
     thead <= html.TD("Nombre d'accord maintenant")
-    thead <= html.TD("Nombre d'accord après")
-    thead <= html.TD("% accords après")
+    thead <= html.TD("Nombre d'accord juste après")
+    thead <= html.TD("% accords juste après")
     stats_table <= thead
 
     for nopress in (True, False):
@@ -2462,7 +2462,7 @@ def agreement_usage():
     MY_SUB_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_SUB_PANEL <= html.BR()
 
-    MY_SUB_PANEL <= html.DIV("(***) Accords : m=maintenant et a=après la D.L.", Class='note')
+    MY_SUB_PANEL <= html.DIV("(***) Accords : m=maintenant et a=juste après la D.L.", Class='note')
     MY_SUB_PANEL <= html.BR()
 
     # get GMT date and time

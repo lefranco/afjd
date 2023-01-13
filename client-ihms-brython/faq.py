@@ -19,13 +19,13 @@ FAQ_CONTENT_TABLE = {
     "Quand le dernier joueur qui a des ordres à rendre coche sur la case 'd'accord pour résoudre maintenant' tout simplement. Lire la question suivante...",
 
     "C'est tout ?":
-    "Non. Premièrement : un arbitre peut le faire à sa place pour éviter que la partie ne s'éternise, avec les mêmes conséquences. Deuxièmement un 'accord pour résoudre après la date limite' exprimé après la date limite devient un 'accord pour résoudre maintenant' avec les mêmes conséquences. Troisièmement : un petit automate vient regarder les parties dont la date limite est passée toutes les demies heures. Il se charge de soigeusement transformer tout 'accord pour résoudre après la date limite' en 'accord pour résoudre maintenant' toujours avec les mêmes conséquences.",
+    "Non. Premièrement : un arbitre peut le faire à sa place pour éviter que la partie ne s'éternise, avec les mêmes conséquences. Deuxièmement un 'accord pour résoudre juste après la date limite' exprimé après la date limite devient un 'accord pour résoudre maintenant' avec les mêmes conséquences. Troisièmement : un petit automate vient regarder les parties dont la date limite est passée toutes les demies heures. Il se charge de soigeusement transformer tout 'accord pour résoudre après la date limite' en 'accord pour résoudre maintenant' toujours avec les mêmes conséquences.",
 
     "Pourquoi les dates limites changent-elles de couleur ?":
     "Le code de couleur est assez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée. Rouge que la grâce est aussi passée. La grace n'a aucune incidence sur le jeu hormi ce code de couleur. Soyez ponctuels !",
 
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
-    "Passer ses ordres signifie réaliser une transition 'pas d'accord pour la résolution' (ou pas d'information) -> 'd'accord pour la résolution (maintenant ou après la date limite, peu importe)'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels (on l'a déjà dit ?) !",
+    "Passer ses ordres signifie réaliser une transition 'pas d'accord pour la résolution' (ou pas d'information) -> 'd'accord pour la résolution (maintenant ou juste après la date limite, peu importe)'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels (on l'a déjà dit ?) !",
 
     "Comment sont comptés les retards ?":
     " Toute heure de retard entamée est due. Cela signifie qu'un retard indiqué '2' (2 heures)est un retard de plus d'une heure et d'au plus deux heures (par rapport à la date limite au moment de la soumission)",
@@ -58,7 +58,7 @@ FAQ_CONTENT_TABLE = {
     "C'est à l'arbitre de le rappeler à l'ordre en principe. Si sa manière de traiter la chose ne vous plait pas, il faut déclarer un incident. Nous voulons une atmosphère cordiale sur le site.",
 
     "Que peut faire l'arbitre ?":
-    "L'arbitre connaît l'identité des joueurs de sa partie. Il démarre et arrête la partie. Il peut distinguer la partie. Il peut forcer des ordres de désordre civil pour un pays (si les paramètres de la partie le permettent). Il peut forcer un accord pour résoudre pour un pays (après la date limite). Il peut retirser ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
+    "L'arbitre connaît l'identité des joueurs de sa partie. Il démarre et arrête la partie. Il peut distinguer la partie. Il peut forcer des ordres de désordre civil pour un pays (si les paramètres de la partie le permettent). Il peut forcer un accord pour résoudre pour un pays (seulement après la date limite). Il peut retirer ou ajouter un joueur dans une partie, et allouer un rôle ou retirer un rôle à un joueur dans une partie. Il peut modifier une date limite (même si celle-ci est gérée par le système). Il gère également les paramètres de la partie.",
 
     "Que peut faire un créateur ?":
     "Un créateur peut créer plusieurs parties en une seul fois grace à un petit fichier csv contenant les joueurs dans les parties. Pour obtenir le statut de créateur et pouvoir réaliser cette opération consulter l'administrateur (en déclarant un incident par exemple)",
@@ -96,7 +96,7 @@ FAQ_CONTENT_TABLE = {
     """,
 
     "Qu'est ce qui change pour une partie 'en direct' ?":
-    "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en heures. Les retards sont comptés en minutes et non en heures entamées. Il est possible d'observer la partie (mise à jour régulière du plateau). Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres pour les joueurs automatiquement après la grâce. Pas de message de notification pour une telle partie. Pas d'accord pour résoudre après la date limite",
+    "Une telle partie est destinée à se dérouler comme sur un jeu de plateau. Le calcul des dates limites se fait en minutes et non en heures. Les retards sont comptés en minutes et non en heures entamées. Il est possible d'observer la partie (mise à jour régulière du plateau). Il est possible pour l'arbitre d'activer la supervision de la partie, qui forcera des ordres de désordre civil pour les joueurs automatiquement après la grâce. Pas de message de notification pour une telle partie. Pas d'accord pour résoudre après la date limite",
 
     "Qu'est ce qui change pour une partie 'archive' ?":
     "Une telle partie n'est pas jouée sur le site. Elle est saisie par son arbitre à partir de feuilles d'ordres mais cette partie à eu lieu ailleurs (par exemple une table finale de championnat du monde. Avec juste un intérêt de consultation",

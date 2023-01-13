@@ -9,9 +9,6 @@ WHYNOT_CONTENT_TABLE = {
     "Pourquoi je peux pas commettre des erreurs volontaires d'ordres ?":
     "Le moteur de jeu a été développé au départ en vérifiant les ordres en détail. Il a été réalisé il y plus de dix ans et il n'a pas été question de le refondre pour faire ce site. Ce componsant est particulièrement sophistiqué. Par ailleurs, cette solution présente l'avantage de ne pas laisser les joueurs débutants faire des erreurs *involontaires* d'ordres. Un sous menu complémentaitre nommé 'taguer' a été ajouté qui permet tout de même d'entrer des ordres de communication. L'option de faire exprès de se tromper dans ses ordres par ruse et d'incriminer le site n'est pas envisageable.",
 
-    "Pourquoi la résolution ne se déclenche pas automatiquement après la date limite, que les joueurs soient d'accord ou pas ? En plus je n'ai pas envie que la partie avance avant la date limite, cela m'inquiète !":
-    "Cela nécessite une sorte de mécanique infernale qui surveille les parties de manière périodique et déclenche des résolutions. Probablement une évolution payante pour le prestataire qui gère l'installation du serveur",
-
     "Pourquoi il faut un compte séparé entre joueur et arbitre sur une partie ?":
     "Cela a été implémenté ainsi au départ, et tous les développements s'appuient sur le compte (et le jeton prouvant l'identité) pour savoir si la requête vient d'un arbitre ou d'un joueur. Autoriser un même compte aurait beaucoup d'impacts sur toute la couche de vérification des autorisations. Pour une partie amicale, laisser l'arbitrage à un habitué du site, ou créer deux comptes séparés.",
 
