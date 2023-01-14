@@ -39,6 +39,7 @@ import events
 import event_images
 import registrations
 import addresses
+import emails
 import database
 
 
@@ -66,9 +67,9 @@ PLAYER_PARSER.add_argument('time_zone', type=str, required=False)
 PLAYERS_SELECT_PARSER = flask_restful.reqparse.RequestParser()
 PLAYERS_SELECT_PARSER.add_argument('selection', type=str, required=True)
 
-EMAIL_PARSER = flask_restful.reqparse.RequestParser()
-EMAIL_PARSER.add_argument('pseudo', type=str, required=True)
-EMAIL_PARSER.add_argument('code', type=str, required=True)
+CHECK_EMAIL_PARSER = flask_restful.reqparse.RequestParser()
+CHECK_EMAIL_PARSER.add_argument('pseudo', type=str, required=True)
+CHECK_EMAIL_PARSER.add_argument('code', type=int, required=True)
 
 SENDMAIL_PARSER = flask_restful.reqparse.RequestParser()
 SENDMAIL_PARSER.add_argument('addressees', type=str, required=True)
@@ -197,34 +198,28 @@ class ResendCodeRessource(flask_restful.Resource):  # type: ignore
         sql_executor = database.SqlExecutor()
 
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
-
         if player is None:
             del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
-        assert player is not None
+        # get a code
         code = random.randint(1000, 9999)
+
+        assert player is not None
         email_after = player.email
 
-        json_dict = {
-            'email_value': email_after,
-            'code': code
-        }
+        # put in database
+        email = emails.Email(email_after, code)
+        email.update_database(sql_executor)
 
-        # store the email/code in secure server
-        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
-        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
-        url = f"{host}:{port}/emails"
-        req_result = SESSION.post(url, data=json_dict)
-        if req_result.status_code != 201:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            del sql_executor
-            flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
+        # send email
         if not PREVENT_MAIL_CHECKING:
             if not mailer.send_mail_checker(code, email_after):
                 del sql_executor
                 flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
+
+        sql_executor.commit()
+        del sql_executor
 
         data = {'pseudo': pseudo, 'msg': 'Ok verification code generated and sent'}
         return data, 200
@@ -351,24 +346,16 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         email_after = player.email
         if email_after != email_before:
 
+            # player no more confirmed
             player.email_confirmed = False
+
+            # get a code
             code = random.randint(1000, 9999)
 
-            json_dict = {
-                'email_value': email_after,
-                'code': code
-            }
+            # put in database
+            email = emails.Email(email_after, code)
+            email.update_database(sql_executor)
 
-            # store the email/code in secure server
-            host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
-            port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
-            url = f"{host}:{port}/emails"
-            req_result = SESSION.post(url, data=json_dict)
-            if req_result.status_code != 201:
-                mylogger.LOGGER.error("ERROR = %s", req_result.text)
-                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                del sql_executor
-                flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
             if not PREVENT_MAIL_CHECKING:
                 if not mailer.send_mail_checker(code, email_after):
                     del sql_executor
@@ -658,23 +645,14 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
             # send email confirmation
             email_after = player.email
+
+            # get a code
             code = random.randint(1000, 9999)
 
-            json_dict = {
-                'email_value': email_after,
-                'code': code
-            }
+            # put in database
+            email = emails.Email(email_after, code)
+            email.update_database(sql_executor)
 
-            # store the email/code in secure server
-            host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
-            port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
-            url = f"{host}:{port}/emails"
-            req_result = SESSION.post(url, data=json_dict)
-            if req_result.status_code != 201:
-                mylogger.LOGGER.error("ERROR = %s", req_result.text)
-                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                del sql_executor
-                flask_restful.abort(400, msg=f"Failed to store email code!:{message}")
             if not PREVENT_MAIL_CHECKING:
                 if not mailer.send_mail_checker(code, email_after):
                     del sql_executor
@@ -889,9 +867,9 @@ class PlayerEmailsListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/emails')
-class EmailRessource(flask_restful.Resource):  # type: ignore
-    """ EmailRessource """
+@API.resource('/check-email')
+class CheckEmailRessource(flask_restful.Resource):  # type: ignore
+    """ CheckEmailRessource """
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
@@ -899,15 +877,15 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/emails - POST - checking pseudo/code")
+        mylogger.LOGGER.info("/check-email - POST - checking pseudo/code")
 
-        args = EMAIL_PARSER.parse_args(strict=True)
+        args = CHECK_EMAIL_PARSER.parse_args(strict=True)
         pseudo = args['pseudo']
+        code = args['code']
 
         sql_executor = database.SqlExecutor()
 
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
-
         if player is None:
             del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
@@ -915,26 +893,15 @@ class EmailRessource(flask_restful.Resource):  # type: ignore
         assert player is not None
         email_player = player.email
 
-        code = args['code']
+        email = emails.Email.find_by_value(sql_executor, email_player)
+        if email is None:
+            flask_restful.abort(404, msg=f"Email {email_player} does not exists")
 
-        json_dict = {
-            'email_value': email_player,
-            'code': code
-        }
-
-        # check code from user server
-        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
-        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
-        url = f"{host}:{port}/check-email"
-        req_result = SESSION.post(url, data=json_dict)
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            del sql_executor
-            flask_restful.abort(400, msg=f"Wrong code!:{message}")
+        assert email is not None
+        if email.code != code:
+            flask_restful.abort(401, msg="Code is incorrect")
 
         player.email_confirmed = True
-
         player.update_database(sql_executor)
 
         sql_executor.commit()
