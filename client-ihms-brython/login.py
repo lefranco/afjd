@@ -100,7 +100,7 @@ def login():
             storage['LOGIN_EXPIRATION_TIME'] = str(login_expiration_time)
 
             # inform user
-            common.info_dialog(f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page")
+            common.info_dialog(f"Connecté avec succès en tant que {pseudo} - cette information est rappelée en bas de la page", True)
             show_login()
 
             # request to validate email
