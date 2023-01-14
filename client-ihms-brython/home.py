@@ -736,13 +736,17 @@ MAX_LEN_GAME_NAME = 50
 MAX_LEN_EMAIL = 100
 
 
-def declare_incident():
+def declare_incident(json_dict_params):
     """ declare_incident """
 
-    email_loaded = ""
+    # load previous values if applicable
+    pseudo = json_dict_params['pseudo'] if json_dict_params and 'pseudo' in json_dict_params else None
+    email = json_dict_params['email'] if json_dict_params and 'email' in json_dict_params else None
+    game = json_dict_params['game'] if json_dict_params and 'game' in json_dict_params else None
+    description = json_dict_params['description'] if json_dict_params and 'description' in json_dict_params else None
 
-    def reply_callback(req):
-        nonlocal email_loaded
+    def get_email_reply_callback(req):
+        nonlocal email
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -753,7 +757,7 @@ def declare_incident():
                 alert("Réponse du serveur imprévue et non documentée")
             return
 
-        email_loaded = req_result['email']
+        email = req_result['email']
 
     def submit_incident_callback(ev):  # pylint: disable=invalid-name
         """ submit_incident_callback """
@@ -771,31 +775,55 @@ def declare_incident():
 
         ev.preventDefault()
 
-        if not input_email.value:
+        # get values from user input
+        pseudo = input_pseudo.value
+        email = input_email.value
+        game = input_game.value
+        description = input_description.value
+
+        # make data structure
+        json_dict_params = {
+            'pseudo': pseudo,
+            'email': email,
+            'game': game,
+            'description': description,
+        }
+
+        # start checking data
+
+        if not email:
             alert("Il faut obligatoirement un courriel (pour répondre)")
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            declare_incident()
+            declare_incident(json_dict_params)
             return
 
-        if input_email.value.find('@') == -1:
+        if email.find('@') == -1:
             alert("@ dans courriel manquant")
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            declare_incident()
+            declare_incident(json_dict_params)
+            return
+
+        if not declaration:
+            alert("Déclaration vide")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            declare_incident(json_dict_params)
             return
 
         subject = "Déclaration d'incident de la part du site https://diplomania-gen.fr (AFJD)"
         body = ""
-        body += f"pseudo : {input_pseudo.value}"
+        body += f"pseudo : {pseudo}"
         body += "\n\n"
-        body += f"courriel : {input_email.value}"
+        body += f"courriel : {email}"
         body += "\n\n"
-        body += f"partie : {input_game.value}"
+        body += f"partie : {game}"
         body += "\n\n"
-        body += f"description : {input_description.value}"
+        body += f"description : {description}"
         body += "\n\n"
         version = storage['VERSION']
         body += f"version : {version}"
@@ -819,27 +847,28 @@ def declare_incident():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        declare_incident()
+        declare_incident(json_dict_params)
 
     # get game if possible
-    game = ""
-    if 'GAME' in storage:
-        game = storage['GAME']
+    if not game:
+        if 'GAME' in storage:
+            game = storage['GAME']
 
     # get email if possible
-    pseudo = ""
-    if 'PSEUDO' in storage:
+    if not pseudo:
+        if 'PSEUDO' in storage:
 
-        pseudo = storage['PSEUDO']
+            pseudo = storage['PSEUDO']
 
-        json_dict = {}
+            if not email:
+                json_dict = {}
 
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/players/{pseudo}"
+                host = config.SERVER_CONFIG['PLAYER']['HOST']
+                port = config.SERVER_CONFIG['PLAYER']['PORT']
+                url = f"{host}:{port}/players/{pseudo}"
 
-        # reading data about account : need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+                # reading data about account : need token
+                ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=get_email_reply_callback, ontimeout=common.noreply_callback)
 
     title4 = html.H3("Déclarer un incident")
     MY_SUB_PANEL <= title4
@@ -868,21 +897,21 @@ def declare_incident():
     fieldset = html.FIELDSET()
     legend_pseudo = html.LEGEND("pseudo (facultatif)", title="Votre pseudo (si applicable)")
     fieldset <= legend_pseudo
-    input_pseudo = html.INPUT(type="text", value=pseudo)
+    input_pseudo = html.INPUT(type="text", value=pseudo if pseudo is not None else "")
     fieldset <= input_pseudo
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_email = html.LEGEND("courriel (obligatoire)", title="Votre courriel")
     fieldset <= legend_email
-    input_email = html.INPUT(type="text", value=email_loaded, size=MAX_LEN_EMAIL)
+    input_email = html.INPUT(type="text", value=email if email is not None else "", size=MAX_LEN_EMAIL)
     fieldset <= input_email
     form <= fieldset
 
     fieldset = html.FIELDSET()
     legend_game = html.LEGEND("partie (facultatif)", title="La partie (si applicable)")
     fieldset <= legend_game
-    input_game = html.INPUT(type="text", value=game, size=MAX_LEN_GAME_NAME)
+    input_game = html.INPUT(type="text", value=game if game is not None else "", size=MAX_LEN_GAME_NAME)
     fieldset <= input_game
     form <= fieldset
 
@@ -890,6 +919,8 @@ def declare_incident():
     legend_description = html.LEGEND("description", title="Description du problème")
     fieldset <= legend_description
     input_description = html.TEXTAREA(type="text", rows=8, cols=80)
+    if description is not None:
+        input_description <= description
     fieldset <= input_description
     form <= fieldset
 
@@ -1364,7 +1395,7 @@ def load_option(_, item_name):
     if item_name == 'Toutes les parties':
         all_games('en cours')
     if item_name == 'Déclarer un incident':
-        declare_incident()
+        declare_incident(None)
     if item_name == 'Foire aux questions':
         show_faq()
     if item_name == 'Pourquoi yapa':
