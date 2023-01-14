@@ -8,14 +8,7 @@ Data : populate database
 """
 
 import mylogger
-import emails
 import database
-
-
-def populate_emails(sql_executor: database.SqlExecutor) -> None:
-    """ inserts these items in database """
-
-    emails.Email.create_table(sql_executor)
 
 
 def populate(sql_executor: database.SqlExecutor) -> None:
@@ -24,7 +17,9 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     mylogger.LOGGER.warning("Populating...")
 
     sql_executor = database.SqlExecutor()
-    populate_emails(sql_executor)
+
+    # pass : no table (yet ?)
+
     del sql_executor
 
 
