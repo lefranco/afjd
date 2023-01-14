@@ -35,6 +35,35 @@ SEND_EMAIL_PARSER.add_argument('subject', type=str, required=True)
 SEND_EMAIL_PARSER.add_argument('body', type=str, required=True)
 SEND_EMAIL_PARSER.add_argument('addressees', type=str, required=True)
 
+SEND_EMAIL_SUPPORT_PARSER = flask_restful.reqparse.RequestParser()
+SEND_EMAIL_SUPPORT_PARSER.add_argument('subject', type=str, required=True)
+SEND_EMAIL_SUPPORT_PARSER.add_argument('body', type=str, required=True)
+
+
+@API.resource('/send-email-support')
+class SendMailSupportRessource(flask_restful.Resource):  # type: ignore
+    """ SendMailSupportRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Sends an email to support
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/send-mail-support - POST - sending email to support")
+
+        args = SEND_EMAIL_SUPPORT_PARSER.parse_args(strict=True)
+
+        subject = args['subject']
+        body = args['body']
+
+        status = mailer.send_mail(subject, body, [EMAIL_SUPPORT])
+        if not status:
+            flask_restful.abort(400, msg="Failed to send message to support")
+
+        data = {'msg': 'Email was send successfully to support'}
+        return data, 200
+
 
 @API.resource('/send-email')
 class SendEmailRessource(flask_restful.Resource):  # type: ignore
@@ -70,8 +99,6 @@ class SendEmailRessource(flask_restful.Resource):  # type: ignore
 
         # any token goes
 
-        # TODO : check if many addressees
-
         status = mailer.send_mail(subject, body, addressees_list)
         if not status:
             flask_restful.abort(400, msg="Failed to send message to player")
@@ -79,6 +106,21 @@ class SendEmailRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': 'Email was send successfully'}
         return data, 200
 
+
+def load_support_config() -> None:
+    """ load_support_config """
+
+    support_config = lowdata.ConfigFile('./config/support.ini')
+    for support in support_config.section_list():
+
+        assert support == 'support', "Section name is not 'support' in support configuration file"
+        support_data = support_config.section(support)
+
+    global EMAIL_SUPPORT
+    EMAIL_SUPPORT = support_data['EMAIL_SUPPORT']
+
+
+EMAIL_SUPPORT = ''
 
 # ---------------------------------
 # main
@@ -94,6 +136,7 @@ def main() -> None:
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
+    load_support_config()
     mailer.load_mail_config(APP)
 
     # emergency

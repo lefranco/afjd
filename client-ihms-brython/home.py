@@ -808,9 +808,9 @@ def declare_incident():
             'body': body,
         }
 
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/mail-support"
+        host = config.SERVER_CONFIG['EMAIL']['HOST']
+        port = config.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/send-email-support"
 
         # sending email to support : do not need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=submit_incident_reply_callback, ontimeout=common.noreply_callback)

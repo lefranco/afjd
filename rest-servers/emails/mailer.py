@@ -75,21 +75,5 @@ def send_mail(subject: str, body: str, addressees: typing.List[str]) -> bool:
     return True
 
 
-def send_mail_checker(code: int, email_dest: str) -> bool:
-    """ send_mail_checker """
-
-    subject = "Ceci est un email pour vérifier votre adresse email"
-    body = ""
-    body += "Vous recevez cet email pour valider votre compte."
-    body += "\n"
-    body += "Si vous êtes bien à l'origine de sa création, rendez-vous dans le menu mon compte/valider mon mail et entrez le code ci dessous."
-    body += "\n"
-    body += "Merci et bonnes parties."
-    body += "\n"
-    body += str(code)
-
-    return send_mail(subject, body, [email_dest])
-
-
 if __name__ == '__main__':
     assert False, "Do not run this script"
