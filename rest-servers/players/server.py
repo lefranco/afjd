@@ -25,7 +25,6 @@ import requests
 import mylogger
 import lowdata
 import populate
-import mailer
 import players
 import newss
 import news2s
@@ -71,16 +70,11 @@ CHECK_EMAIL_PARSER = flask_restful.reqparse.RequestParser()
 CHECK_EMAIL_PARSER.add_argument('pseudo', type=str, required=True)
 CHECK_EMAIL_PARSER.add_argument('code', type=int, required=True)
 
-SENDMAIL_PARSER = flask_restful.reqparse.RequestParser()
-SENDMAIL_PARSER.add_argument('addressees', type=str, required=True)
-SENDMAIL_PARSER.add_argument('subject', type=str, required=True)
-SENDMAIL_PARSER.add_argument('body', type=str, required=True)
-SENDMAIL_PARSER.add_argument('force', type=int, required=True)
-SENDMAIL_PARSER.add_argument('pretend_sender', type=str, required=False)
-
-SENDMAIL_PARSER2 = flask_restful.reqparse.RequestParser()
-SENDMAIL_PARSER2.add_argument('subject', type=str, required=True)
-SENDMAIL_PARSER2.add_argument('body', type=str, required=True)
+SEND_PLAYERS_EMAIL_PARSER = flask_restful.reqparse.RequestParser()
+SEND_PLAYERS_EMAIL_PARSER.add_argument('addressees', type=str, required=True)
+SEND_PLAYERS_EMAIL_PARSER.add_argument('subject', type=str, required=True)
+SEND_PLAYERS_EMAIL_PARSER.add_argument('body', type=str, required=True)
+SEND_PLAYERS_EMAIL_PARSER.add_argument('force', type=int, required=True)
 
 NEWS_PARSER = flask_restful.reqparse.RequestParser()
 NEWS_PARSER.add_argument('content', type=str, required=True)
@@ -129,9 +123,6 @@ IP_ADDRESS_PARSER.add_argument('ip_value', type=str, required=True)
 # Account allowed to usupr, to see logins and failed logins
 ADMIN_ACCOUNT_NAME = 'Palpatine'
 
-# to avoid sending emails in debug phase
-PREVENT_MAIL_CHECKING = False
-
 # pseudo must be at least that size
 LEN_PSEUDO_MIN = 3
 
@@ -141,6 +132,49 @@ LEN_EVENT_MAX = 50
 # max size in bytes of image (after b64)
 # let 's say one Mo
 MAX_SIZE_IMAGE = (4 / 3) * 1000000
+
+
+def email_checker_message(code: int) -> typing.Tuple[str, str]:
+    """ email_checker_message """
+
+    subject = "Ceci est un email pour vérifier votre adresse email"
+    body = ""
+    body += "Vous recevez cet email pour valider votre compte."
+    body += "\n"
+    body += f"Si vous êtes bien à l'origine de sa création, rendez-vous dans le menu mon compte/valider mon mail et entrez le code {code}"
+    body += "\n"
+    body += "Merci et bonnes parties."
+    body += "\n"
+    return subject, body
+
+
+def suppress_account_message(pseudo: str) -> typing.Tuple[str, str]:
+    """ suppress_account_message """
+
+    subject = f"Message de suppression de compte {pseudo} sur le site https://diplomania-gen.fr (AFJD)"
+    body = "Bonjour !"
+    body += "\n"
+    body += "Votre compte a été supprimé !"
+    return subject, body
+
+
+def event_registration_message(event_name: str, value: int) -> typing.Tuple[str, str]:
+    """ event_registration_message """
+
+    subject = f"Le statut de votre inscription dans l'événement {event_name} a été modifié"
+    body = ""
+    if value < 0:
+        body += "Votre inscription a été refusée :-( !\n"
+    elif value > 0:
+        body += "Votre inscription a été acceptée :-) !\n"
+    else:
+        body += "Votre inscription a été remise en attente ?!?!\n"
+    body += "\n"
+    body += "Vous pouvez contacter l'organisateur depuis le site\n"
+    body += "\n"
+    body += "Pour se rendre directement sur l'événement :\n"
+    body += f"https://diplomania-gen.fr?event={event_name}"
+    return subject, body
 
 
 @API.resource('/player-identifiers/<pseudo>')
@@ -206,17 +240,30 @@ class ResendCodeRessource(flask_restful.Resource):  # type: ignore
         code = random.randint(1000, 9999)
 
         assert player is not None
-        email_after = player.email
+        email_player = player.email
 
         # put in database
-        email = emails.Email(email_after, code)
+        email = emails.Email(email_player, code)
         email.update_database(sql_executor)
 
+        # get a message
+        subject, body = email_checker_message(code)
+        json_dict = {
+            'subject': subject,
+            'body': body,
+            'addressees': email_player,
+        }
+
         # send email
-        if not PREVENT_MAIL_CHECKING:
-            if not mailer.send_mail_checker(code, email_after):
-                del sql_executor
-                flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
+        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/send-email"
+        req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, data=json_dict)
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Failed to send email to {email_player} : {message}")
 
         sql_executor.commit()
         del sql_executor
@@ -345,6 +392,7 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
 
         email_after = player.email
         if email_after != email_before:
+            email_player = email_after
 
             # player no more confirmed
             player.email_confirmed = False
@@ -353,13 +401,27 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             code = random.randint(1000, 9999)
 
             # put in database
-            email = emails.Email(email_after, code)
+            email = emails.Email(email_player, code)
             email.update_database(sql_executor)
 
-            if not PREVENT_MAIL_CHECKING:
-                if not mailer.send_mail_checker(code, email_after):
-                    del sql_executor
-                    flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
+            # get a message
+            subject, body = email_checker_message(code)
+            json_dict = {
+                'subject': subject,
+                'body': body,
+                'addressees': email_player,
+            }
+
+            # send email
+            host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+            port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+            url = f"{host}:{port}/send-email"
+            req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, data=json_dict)
+            if req_result.status_code != 200:
+                mylogger.LOGGER.error("ERROR = %s", req_result.text)
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                del sql_executor
+                flask_restful.abort(400, msg=f"Failed to send email to {email_player} : {message}")
 
         player.update_database(sql_executor)
 
@@ -517,18 +579,26 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
         # ----------------------
 
         # notify player
+        email_player = player.email
 
-        # create message
-        subject = f"Message de suppression de compte {pseudo} sur le site https://diplomania-gen.fr (AFJD)"
-        body = "Bonjour !"
-        body += "\n"
-        body += "Votre compte a été supprimé !"
+        # get a message
+        subject, body = suppress_account_message(pseudo)
+        json_dict = {
+            'subject': subject,
+            'body': body,
+            'addressees': email_player,
+        }
 
-        # send message
-        status = mailer.send_mail(subject, body, [player.email], None)
-        if not status:
+        # send email
+        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/send-email"
+        req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, data=json_dict)
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             del sql_executor
-            flask_restful.abort(400, msg="Failed to send notification message")
+            flask_restful.abort(400, msg=f"Failed to send email to {email_player} : {message}")
 
         # delete player from ip addresses table
         addresses.Address.delete_by_player_id(sql_executor, player_id)
@@ -637,26 +707,9 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
             # create player here
             identifier = players.Player.free_identifier(sql_executor)
-
             player = players.Player(identifier, '', '', False, '', False, False, False, '', '', '', '', '')
             _ = player.load_json(args)
-
             player.update_database(sql_executor)
-
-            # send email confirmation
-            email_after = player.email
-
-            # get a code
-            code = random.randint(1000, 9999)
-
-            # put in database
-            email = emails.Email(email_after, code)
-            email.update_database(sql_executor)
-
-            if not PREVENT_MAIL_CHECKING:
-                if not mailer.send_mail_checker(code, email_after):
-                    del sql_executor
-                    flask_restful.abort(400, msg=f"Failed to send email to {email_after}")
 
             # create player on users server
             host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -668,6 +721,8 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                 del sql_executor
                 flask_restful.abort(400, msg=f"User creation failed!:{message}")
+
+            # we do not create an entry for checking email since we do not have a token yet
 
         sql_executor.commit()
         del sql_executor
@@ -739,9 +794,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/mail-players - POST - sending emails to a list of players")
 
-        args = SENDMAIL_PARSER.parse_args(strict=True)
-        force = args['force']
-        pretend_sender = args['pretend_sender']
+        args = SEND_PLAYERS_EMAIL_PARSER.parse_args(strict=True)
 
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -761,6 +814,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         subject = args['subject']
         body = args['body']
         addressees_submitted = args['addressees']
+        force = args['force']
 
         try:
             addressees_list = list(map(int, addressees_submitted.split()))
@@ -786,40 +840,28 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         # can happen that nobody is actually interested
         if addressees:
-            status = mailer.send_mail(subject, body, addressees, pretend_sender)
-            if not status:
+
+            json_dict = {
+                'subject': subject,
+                'body': body,
+                'addressees': addressees,
+            }
+
+            # send email
+            host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+            port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+            url = f"{host}:{port}/send-email"
+            req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, data=json_dict)
+            if req_result.status_code != 200:
+                mylogger.LOGGER.error("ERROR = %s", req_result.text)
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                 del sql_executor
-                flask_restful.abort(400, msg="Failed to send at least one message")
+                flask_restful.abort(400, msg=f"Failed to send email to at least one destinee : {message}")
 
         del sql_executor
 
         nb_mails = len(addressees)
         data = {'msg': f"Ok {nb_mails} email(s) successfully sent using {pseudo} account"}
-        return data, 200
-
-
-@API.resource('/mail-support')
-class MailSupportRessource(flask_restful.Resource):  # type: ignore
-    """ MailSupportRessource """
-
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-        """
-        Sends an email to support
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/mail-support - POST - sending email to support")
-
-        args = SENDMAIL_PARSER2.parse_args(strict=True)
-
-        subject = args['subject']
-        body = args['body']
-
-        status = mailer.send_mail(subject, body, [EMAIL_SUPPORT], None)
-        if not status:
-            flask_restful.abort(400, msg="Failed to send message to support")
-
-        data = {'msg': "Ok email successfully sent to support"}
         return data, 200
 
 
@@ -2169,6 +2211,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be an event with identifier {event_id}")
         assert event is not None
+        event_name = event.name
 
         # check the player exists
         player = players.Player.find_by_identifier(sql_executor, user_id)
@@ -2198,25 +2241,27 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         sql_executor.commit()
         del sql_executor
 
-        subject = f"Le statut de votre inscription dans l'événement {event.name} a été modifié"
-        body = ""
-        if value < 0:
-            body += "Votre inscription a été refusée :-( !\n"
-        elif value > 0:
-            body += "Votre inscription a été acceptée :-) !\n"
-        else:
-            body += "Votre inscription a été remise en attente ?!?!\n"
-        body += "\n"
-        body += "Vous pouvez contacter l'organisateur depuis le site\n"
-        body += "\n"
-        body += "Pour se rendre directement sur l'événement :\n"
-        body += f"https://diplomania-gen.fr?event={event.name}"
-
-        assert player is not None
         assert player_concerned is not None
-        status = mailer.send_mail(subject, body, [player_concerned.email], None)
-        if not status:
-            flask_restful.abort(400, msg="Failed to send message to player")
+        email_player = player_concerned.email
+
+        # get a message
+        subject, body = event_registration_message(event_name, value)
+        json_dict = {
+            'subject': subject,
+            'body': body,
+            'addressees': email_player,
+        }
+
+        # send email
+        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/send-email"
+        req_result = SESSION.post(url, headers={'AccessToken': jwt_token}, data=json_dict)
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Failed to send email to {email_player} : {message}")
 
         data = {'msg': 'Ok registration updated if present and email sent to player'}
         return data, 200
@@ -2348,21 +2393,9 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
         data = {'msg': "maintenance done"}
         return data, 200
 
-
-EMAIL_SUPPORT = ''
-
-
-def load_support_config() -> None:
-    """ load_support_config """
-
-    support_config = lowdata.ConfigFile('./config/support.ini')
-    for support in support_config.section_list():
-
-        assert support == 'support', "Section name is not 'support' in support configuration file"
-        support_data = support_config.section(support)
-
-    global EMAIL_SUPPORT
-    EMAIL_SUPPORT = support_data['EMAIL_SUPPORT']
+# ---------------------------------
+# main
+# ---------------------------------
 
 
 def main() -> None:
@@ -2374,8 +2407,6 @@ def main() -> None:
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
-    load_support_config()
-    mailer.load_mail_config(APP)
 
     # emergency
     if not database.db_present():
