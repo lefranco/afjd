@@ -74,10 +74,6 @@ def login():
                     alert(f"Erreur à la connexion : {req_result['message']}")
                 elif 'msg' in req_result:
                     alert(f"Problème à la connexion : {req_result['msg']}")
-
-                    # Too expensive to load list of players and see which is same with different case so just provide a little tip
-                    common.info_dialog("Vous vous trompez peut-être sur la casse de votre pseudo (et non sur le mot de passe), allez donc consulter la liste des inscrits (menu classement) pour vous rafraichir la mémoire...")
-
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
 
