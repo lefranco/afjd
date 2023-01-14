@@ -9,6 +9,7 @@ The server
 
 import typing
 import argparse
+import requests
 
 import waitress
 import flask
@@ -19,75 +20,65 @@ import flask_restful.reqparse  # type: ignore
 import lowdata
 import mylogger
 import populate
-import emails
 import database
+import mailer
 
 
 APP = flask.Flask(__name__)
 flask_cors.CORS(APP)
 API = flask_restful.Api(APP)
 
-EMAIL_PARSER = flask_restful.reqparse.RequestParser()
-EMAIL_PARSER.add_argument('email_value', type=str, required=True)
-EMAIL_PARSER.add_argument('code', type=int, required=True)
+SESSION = requests.Session()
+
+SEND_EMAIL_PARSER = flask_restful.reqparse.RequestParser()
+SEND_EMAIL_PARSER.add_argument('subject', type=str, required=True)
+SEND_EMAIL_PARSER.add_argument('body', type=str, required=True)
+SEND_EMAIL_PARSER.add_argument('addressees', type=str, required=True)
 
 
-@API.resource('/emails')
-class EmailsRessource(flask_restful.Resource):  # type: ignore
-    """ EmailsRessource """
+@API.resource('/send-email')
+class SendEmailRessource(flask_restful.Resource):  # type: ignore
+    """ SendEmailRessource """
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
-        add an email for a player
+        send an email
         PROTECTED : called only by player block (account creation/email change)
         """
 
-        mylogger.LOGGER.info("/emails - POST - adding/updating one email")
+        mylogger.LOGGER.info("/send-email - POST - sending one email")
 
-        args = EMAIL_PARSER.parse_args(strict=True)
-        email_value = args['email_value']
-        code = args['code']
+        args = SEND_EMAIL_PARSER.parse_args(strict=True)
 
-        email = emails.Email(email_value, code)
+        subject = args['subject']
+        body = args['body']
+        addressees = args['addressees']
+        addressees_list = addressees.split(',')
 
-        sql_executor = database.SqlExecutor()
-        email.update_database(sql_executor)
-        sql_executor.commit()
-        del sql_executor
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
-        data = {'msg': 'Email was added or updated'}
-        return data, 201
+        # any token goes
 
+        # TODO : check if many addressees
 
-@API.resource('/check-email')
-class CheckEmailRessource(flask_restful.Resource):  # type: ignore
-    """ CheckEmailRessource """
+        status = mailer.send_mail(subject, body, addressees_list)
+        if not status:
+            flask_restful.abort(400, msg="Failed to send message to player")
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-        """
-        Check if code is correct for email.
-        PROTECTED : called by block players
-        """
-
-        mylogger.LOGGER.info("/check-email - POST - checking code for email")
-
-        args = EMAIL_PARSER.parse_args(strict=True)
-        email_value = args['email_value']
-        code = args['code']
-
-        sql_executor = database.SqlExecutor()
-        email = emails.Email.find_by_value(sql_executor, email_value)
-        del sql_executor
-
-        if email is None:
-            flask_restful.abort(404, msg=f"Email {email_value} does not exists")
-
-        assert email is not None
-        if email.code != code:
-            flask_restful.abort(401, msg="Code is incorrect")
-
-        data = {'msg': 'Email is correct'}
+        data = {'msg': 'Email was send successfully'}
         return data, 200
+
 
 # ---------------------------------
 # main
@@ -103,6 +94,7 @@ def main() -> None:
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
+    mailer.load_mail_config(APP)
 
     # emergency
     if not database.db_present():
