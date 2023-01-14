@@ -194,6 +194,13 @@ def registrations():
 
         ev.preventDefault()
 
+        if 'PSEUDO' not in storage:
+            alert("Il faut être identifié")
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            registrations()
+            return
+
         if not input_message.value:
             alert("Contenu du message vide")
             # back to where we started
@@ -379,9 +386,9 @@ def registrations():
     contact_form <= html.DIV("Pensez à lui fournir le moyen de vous répondre !")
     contact_form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="Envoyer le courriel")
-    input_select_player.bind("click", sendmail_callback)
-    contact_form <= input_select_player
+    input_send_message = html.INPUT(type="submit", value="Envoyer le courriel")
+    input_send_message.bind("click", sendmail_callback)
+    contact_form <= input_send_message
 
     name = event_dict['name']
     start_date = event_dict['start_date']
@@ -455,8 +462,10 @@ def registrations():
 
     # provide people already in
     MY_SUB_PANEL <= html.H4("Contacter l'organisateur")
+
     # put button to register/un register
-    MY_SUB_PANEL <= contact_form
+    if 'PSEUDO' in storage:
+        MY_SUB_PANEL <= contact_form
 
     # provide people already in
     MY_SUB_PANEL <= html.H4("Ils/elles vous attendent :")
