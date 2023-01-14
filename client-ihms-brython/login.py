@@ -175,7 +175,7 @@ def login():
         if not effective:
             alert("Déjà déconnecté !")
         else:
-            common.info_dialog("Déconnecté avec succès")
+            common.info_dialog("Déconnecté avec succès", True)
 
         render(PANEL_MIDDLE)
 
