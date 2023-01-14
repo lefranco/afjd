@@ -237,7 +237,7 @@ def login_user() -> typing.Tuple[typing.Any, int]:
         return flask.jsonify({"msg": "Missing password parameter"}), 400
 
     # not mandatory
-    ip_address = flask.request.json.get('ip_address', None)
+    ip_address = flask.request.json.get('ip_address', 'none')
 
     sql_executor = database.SqlExecutor()
 
@@ -245,7 +245,7 @@ def login_user() -> typing.Tuple[typing.Any, int]:
 
         if not LOGIN_REPEAT_PREVENTER.can(user_name):
             del sql_executor
-            return flask.jsonify({"msg": "You have already tried to login a very short time ago"}), 400
+            return flask.jsonify({"msg": f"You have already tried to login a very short time ago. There must be at least {NO_REPEAT_DELAY_SEC} secs between two attempts..."}), 400
 
         LOGIN_REPEAT_PREVENTER.did(user_name)
 
