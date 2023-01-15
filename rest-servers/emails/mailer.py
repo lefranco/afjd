@@ -42,22 +42,12 @@ def load_mail_config(app: typing.Any) -> None:
     SENDER = app.config['MAIL_USERNAME']
 
 
-def send_mail(subject: str, body: str, addressees: typing.List[str]) -> bool:
+def send_mail(subject: str, body: str, addressee: str) -> bool:
     """ send_mail """
 
     sender = SENDER
-    recipients = None
-    bcc = None
 
-    # more than one addressee : send in bcc
-    # because we need to be fast so we send a single email
-    # little drawback : it may get into the spam box...
-    if len(addressees) == 1:
-        recipients = addressees
-    else:
-        bcc = addressees
-
-    msg = flask_mail.Message(subject, sender=sender, recipients=recipients, bcc=bcc)
+    msg = flask_mail.Message(subject, sender=sender, recipients=[addressee])
 
     msg.body = body
     msg.body += "\n"
