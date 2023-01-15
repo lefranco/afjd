@@ -810,7 +810,7 @@ def tournament_result():
     recap_table <= thead
 
     rank = 1
-    for pseudo, score in sorted(points.items(), key=lambda p: p[1], reverse=True):
+    for pseudo, score in sorted(points.items(), key=lambda p: float(p[1]), reverse=True):
         row = html.TR()
 
         col = html.TD(rank)
