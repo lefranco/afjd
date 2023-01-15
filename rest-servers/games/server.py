@@ -2979,7 +2979,7 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/all-player-games-orders-submitted - GET - getting which orders submitted, missing, not needed for all my games")
+        mylogger.LOGGER.info("/all-player-games-orders-submitted - GET - getting orders status for my games")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
