@@ -3354,6 +3354,37 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
             POST_MESSAGE_REPEAT_PREVENTER.did(int(game_id), role_id)
 
+        subject = f"Vous avez reçu un message dans la partie {game.name}"
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)  # noqa: F821
+        addressees = []
+        for _, player_id, role_id1 in allocations_list:
+            if role_id1 in dest_role_ids:
+                addressees.append(player_id)
+        body = "Vous pouvez aller consulter le message sur le site !\n"
+        body += "\n"
+        body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
+        body += "\n"
+        body += "Pour se rendre directement sur la partie :\n"
+        body += f"https://diplomania-gen.fr?game={game.name}"
+
+        json_dict = {
+            'addressees': " ".join([str(a) for a in addressees]),
+            'subject': subject,
+            'body': body,
+            'force': 0,
+        }
+
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+        # for a rest API headers are presented differently
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
@@ -3535,6 +3566,37 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             declaration.update_database(sql_executor)
 
             POST_DECLARATION_REPEAT_PREVENTER.did(int(game_id), role_id)
+
+        subject = f"Un joueur a posté une déclaration dans la partie {game.name}"
+        allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+        addressees = []
+        for _, player_id, role_id1 in allocations_list:
+            if role_id1 != role_id:
+                addressees.append(player_id)
+        body = "Vous pouvez aller consulter la déclaration sur le site !\n"
+        body += "\n"
+        body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
+        body += "\n"
+        body += "Pour se rendre directement sur la partie :\n"
+        body += f"https://diplomania-gen.fr?game={game.name}"
+
+        json_dict = {
+            'addressees': " ".join([str(a) for a in addressees]),
+            'subject': subject,
+            'body': body,
+            'force': 0,
+        }
+
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+        # for a rest API headers are presented differently
+        req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
         sql_executor.commit()
         del sql_executor
