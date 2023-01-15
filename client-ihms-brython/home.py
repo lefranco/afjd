@@ -807,7 +807,7 @@ def declare_incident(json_dict_params):
             declare_incident(json_dict_params)
             return
 
-        if not declaration:
+        if not description:
             alert("Déclaration vide")
 
             # back to where we started
