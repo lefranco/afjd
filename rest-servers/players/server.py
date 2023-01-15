@@ -841,10 +841,12 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         # can happen that nobody is actually interested
         if addressees:
 
+            addressees_list = ','.join(addressees)
+
             json_dict = {
                 'subject': subject,
                 'body': body,
-                'addressees': addressees,
+                'addressees': addressees_list,
             }
 
             # send email
