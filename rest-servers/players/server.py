@@ -54,8 +54,9 @@ PLAYER_PARSER.add_argument('password', type=str, required=False)
 PLAYER_PARSER.add_argument('email', type=str, required=False)
 PLAYER_PARSER.add_argument('email_confirmed', type=int, required=False)
 PLAYER_PARSER.add_argument('telephone', type=str, required=False)
-PLAYER_PARSER.add_argument('notify', type=int, required=False)
-PLAYER_PARSER.add_argument('replace', type=int, required=False)
+PLAYER_PARSER.add_argument('notify_adjudication', type=int, required=False)
+PLAYER_PARSER.add_argument('notify_message', type=int, required=False)
+PLAYER_PARSER.add_argument('notify_replace', type=int, required=False)
 PLAYER_PARSER.add_argument('newsletter', type=int, required=False)
 PLAYER_PARSER.add_argument('first_name', type=str, required=False)
 PLAYER_PARSER.add_argument('family_name', type=str, required=False)
@@ -644,7 +645,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         players_list = players.Player.inventory(sql_executor)
         del sql_executor
 
-        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone, 'email_confirmed': p.email_confirmed, 'replace': p.replace} for p in players_list}
+        data = {str(p.identifier): {'pseudo': p.pseudo, 'family_name': p.family_name, 'first_name': p.first_name, 'residence': p.residence, 'nationality': p.nationality, 'time_zone': p.time_zone, 'email_confirmed': p.email_confirmed, 'notify_replace': p.notify_replace} for p in players_list}
 
         return data, 200
 
@@ -707,7 +708,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
 
             # create player here
             identifier = players.Player.free_identifier(sql_executor)
-            player = players.Player(identifier, '', '', False, '', False, False, False, '', '', '', '', '')
+            player = players.Player(identifier, '', '', False, '', False, False, False, False, '', '', '', '', '')
             _ = player.load_json(args)
             player.update_database(sql_executor)
 
@@ -831,7 +832,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(404, msg=f"Failed to find pseudo with id={addressee_id}")
             assert pseudo_dest is not None
             # does not want to receive notifications
-            if not pseudo_dest.notify:
+            if not pseudo_dest.notify_adjudication:
                 # however force parameters makes them be still sent
                 if not force:
                     continue
@@ -841,12 +842,12 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         # can happen that nobody is actually interested
         if addressees:
 
-            addressees_list = ','.join(addressees)
+            addressees_str = ','.join(addressees)
 
             json_dict = {
                 'subject': subject,
                 'body': body,
-                'addressees': addressees_list,
+                'addressees': addressees_str,
             }
 
             # send email
@@ -2383,13 +2384,11 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
-        #  sql_executor = database.SqlExecutor()
+        #sql_executor = database.SqlExecutor()
 
-        # TODO : insert specific code here
+        #sql_executor.commit()
+        #del sql_executor
 
-        #  sql_executor.commit()
-
-        #  del sql_executor
         print("MAINTENANCE - done !!!", file=sys.stderr)
 
         data = {'msg': "maintenance done"}

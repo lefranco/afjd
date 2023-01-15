@@ -132,7 +132,7 @@ class Player:
         sql_executor.execute("CREATE TABLE players (identifier INT UNIQUE PRIMARY KEY, pseudo STR, player_data player)")
         sql_executor.execute("CREATE UNIQUE INDEX pseudo_player ON  players (pseudo)")
 
-    def __init__(self, identifier: int, pseudo: str, email: str, email_confirmed: bool, telephone: str, notify: bool, replace: bool, newsletter: bool, family_name: str, first_name: str, residence: str, nationality: str, time_zone: str) -> None:
+    def __init__(self, identifier: int, pseudo: str, email: str, email_confirmed: bool, telephone: str, notify_adjudication: bool, notify_message: bool, notify_replace: bool, newsletter: bool, family_name: str, first_name: str, residence: str, nationality: str, time_zone: str) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -143,8 +143,9 @@ class Player:
         self._email = email
         self._email_confirmed = email_confirmed
         self._telephone = telephone
-        self._notify = notify
-        self._replace = replace
+        self._notify_adjudication = notify_adjudication
+        self._notify_message = notify_message
+        self._notify_replace = notify_replace
         self._newsletter = newsletter
         self._first_name = first_name
         self._family_name = family_name
@@ -185,12 +186,16 @@ class Player:
             self._telephone = self._telephone[:LEN_TELEPHONE_MAX]
             changed = True
 
-        if 'notify' in json_dict and json_dict['notify'] is not None and json_dict['notify'] != self._notify:
-            self._notify = json_dict['notify']
+        if 'notify_adjudication' in json_dict and json_dict['notify_adjudication'] is not None and json_dict['notify_adjudication'] != self._notify_adjudication:
+            self._notify_adjudication = json_dict['notify_adjudication']
             changed = True
 
-        if 'replace' in json_dict and json_dict['replace'] is not None and json_dict['replace'] != self._replace:
-            self._replace = json_dict['replace']
+        if 'notify_message' in json_dict and json_dict['notify_message'] is not None and json_dict['notify_message'] != self._notify_message:
+            self._notify_message = json_dict['notify_message']
+            changed = True
+
+        if 'notify_replace' in json_dict and json_dict['notify_replace'] is not None and json_dict['notify_replace'] != self._notify_replace:
+            self._notify_replace = json_dict['notify_replace']
             changed = True
 
         if 'newsletter' in json_dict and json_dict['newsletter'] is not None and json_dict['newsletter'] != self._newsletter:
@@ -237,8 +242,9 @@ class Player:
             'email': self._email,
             'email_confirmed': self._email_confirmed,
             'telephone': self._telephone,
-            'notify': self._notify,
-            'replace': self._replace,
+            'notify_adjudication': self._notify_adjudication,
+            'notify_message': self._notify_message,
+            'notify_replace': self._notify_replace,
             'newsletter': self._newsletter,
             'family_name': self._family_name,
             'first_name': self._first_name,
@@ -304,14 +310,19 @@ class Player:
         self._email_confirmed = email_confirmed
 
     @property
-    def notify(self) -> bool:
+    def notify_adjudication(self) -> bool:
         """ property """
-        return self._notify
+        return self._notify_adjudication
 
     @property
-    def replace(self) -> bool:
+    def notify_message(self) -> bool:
         """ property """
-        return self._replace
+        return self._notify_message
+
+    @property
+    def notify_replace(self) -> bool:
+        """ property """
+        return self._notify_replace
 
     @property
     def newsletter(self) -> bool:
@@ -319,11 +330,11 @@ class Player:
         return self._newsletter
 
     def __str__(self) -> str:
-        return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} telephone={self._telephone} notify={self._notify} replace={self._replace} newsletter={self._newsletter} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality} time_zone={self._time_zone}"
+        return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} telephone={self._telephone} notify_adjudication={self._notify_adjudication} notify_message={self._notify_message} notify_replace={self._notify_replace} newsletter={self._newsletter} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality} time_zone={self._time_zone}"
 
     def adapt_player(self) -> bytes:
         """ To put an object in database """
-        return (f"{self._identifier}{database.STR_SEPARATOR}{self._pseudo}{database.STR_SEPARATOR}{self._email}{database.STR_SEPARATOR}{int(bool(self._email_confirmed))}{database.STR_SEPARATOR}{self._telephone}{database.STR_SEPARATOR}{int(bool(self._notify))}{database.STR_SEPARATOR}{int(bool(self._replace))}{database.STR_SEPARATOR}{int(bool(self._newsletter))}{database.STR_SEPARATOR}{self._family_name}{database.STR_SEPARATOR}{self._first_name}{database.STR_SEPARATOR}{self._residence}{database.STR_SEPARATOR}{self._nationality}{database.STR_SEPARATOR}{self._time_zone}").encode('ascii')
+        return (f"{self._identifier}{database.STR_SEPARATOR}{self._pseudo}{database.STR_SEPARATOR}{self._email}{database.STR_SEPARATOR}{int(bool(self._email_confirmed))}{database.STR_SEPARATOR}{self._telephone}{database.STR_SEPARATOR}{int(bool(self._notify_adjudication))}{database.STR_SEPARATOR}{int(bool(self._notify_message))}{database.STR_SEPARATOR}{int(bool(self._notify_replace))}{database.STR_SEPARATOR}{int(bool(self._newsletter))}{database.STR_SEPARATOR}{self._family_name}{database.STR_SEPARATOR}{self._first_name}{database.STR_SEPARATOR}{self._residence}{database.STR_SEPARATOR}{self._nationality}{database.STR_SEPARATOR}{self._time_zone}").encode('ascii')
 
 
 def convert_player(buffer: bytes) -> Player:
@@ -335,16 +346,17 @@ def convert_player(buffer: bytes) -> Player:
     email = tab[2].decode()
     email_confirmed = bool(int(tab[3].decode()))
     telephone = tab[4].decode()
-    notify = bool(int(tab[5].decode()))
-    replace = bool(int(tab[6].decode()))
-    newsletter = bool(int(tab[7].decode()))
-    family_name = tab[8].decode()
-    first_name = tab[9].decode()
-    residence = tab[10].decode()
-    nationality = tab[11].decode()
-    time_zone = tab[12].decode()
+    notify_adjudication = bool(int(tab[5].decode()))
+    notify_message = bool(int(tab[6].decode()))
+    notify_replace = bool(int(tab[7].decode()))
+    newsletter = bool(int(tab[8].decode()))
+    family_name = tab[9].decode()
+    first_name = tab[10].decode()
+    residence = tab[11].decode()
+    nationality = tab[12].decode()
+    time_zone = tab[13].decode()
 
-    player = Player(identifier, pseudo, email, email_confirmed, telephone, notify, replace, newsletter, family_name, first_name, residence, nationality, time_zone)
+    player = Player(identifier, pseudo, email, email_confirmed, telephone, notify_adjudication, notify_message, notify_replace, newsletter, family_name, first_name, residence, nationality, time_zone)
     return player
 
 

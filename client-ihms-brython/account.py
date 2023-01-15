@@ -79,8 +79,9 @@ def create_account(json_dict):
     password_again = json_dict['password_again'] if json_dict and 'password_again' in json_dict else None
     email = json_dict['email'] if json_dict and 'email' in json_dict else None
     telephone = json_dict['telephone'] if json_dict and 'telephone' in json_dict else None
-    notify = json_dict['notify'] if json_dict and 'notify' in json_dict else None
-    replace = json_dict['replace'] if json_dict and 'replace' in json_dict else None
+    notify_adjudication = json_dict['notify_adjudication'] if json_dict and 'notify_adjudication' in json_dict else None
+    notify_message = json_dict['notify_message'] if json_dict and 'notify_message' in json_dict else None
+    notify_replace = json_dict['notify_replace'] if json_dict and 'notify_replace' in json_dict else None
     newsletter = json_dict['newsletter'] if json_dict and 'newsletter' in json_dict else None
     family_name = json_dict['family_name'] if json_dict and 'pseudo' in json_dict else None
     first_name = json_dict['first_name'] if json_dict and 'family_name' in json_dict else None
@@ -96,8 +97,9 @@ def create_account(json_dict):
         nonlocal password_again
         nonlocal email
         nonlocal telephone
-        nonlocal notify
-        nonlocal replace
+        nonlocal notify_adjudication
+        nonlocal notify_message
+        nonlocal notify_replace
         nonlocal newsletter
         nonlocal family_name
         nonlocal first_name
@@ -129,8 +131,9 @@ def create_account(json_dict):
         password_again = input_password_again.value
         email = input_email.value
         telephone = input_telephone.value
-        notify = int(input_notify.checked)
-        replace = int(input_replace.checked)
+        notify_adjudication = int(input_notify_adjudication.checked)
+        notify_message = int(input_notify_message.checked)
+        notify_replace = int(input_notify_replace.checked)
         newsletter = int(input_newsletter.checked)
         family_name = input_family_name.value
         first_name = input_first_name.value
@@ -145,8 +148,9 @@ def create_account(json_dict):
             'password_again': password_again,
             'email': email,
             'telephone': telephone,
-            'notify': notify,
-            'replace': replace,
+            'notify_adjudication': notify_adjudication,
+            'notify_message': notify_message,
+            'notify_replace': notify_replace,
             'newsletter': newsletter,
             'family_name': family_name,
             'first_name': first_name,
@@ -266,21 +270,28 @@ def create_account(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_notify = html.LEGEND("Notifiez-moi sur les partie !", title="Devons nous vous envoyer un courriel sur chaque résolution de vos parties ?")
-    fieldset <= legend_notify
-    input_notify = html.INPUT(type="checkbox", checked=bool(notify) if notify is not None else True)
-    fieldset <= input_notify
+    legend_notify_adjudication = html.LEGEND("notification avancement parties", title="Envoyez moi un courriel sur chaque résolution de mes parties")
+    fieldset <= legend_notify_adjudication
+    input_notify_adjudication = html.INPUT(type="checkbox", checked=bool(notify_adjudication) if notify_adjudication is not None else True)
+    fieldset <= input_notify_adjudication
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_replace = html.LEGEND("Je veux remplacer !", title="Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
+    legend_notify_message = html.LEGEND("notification messages et presses parties", title="Envoyez moi un courriel sur chaque message ou presse de mes parties")
+    fieldset <= legend_notify_message
+    input_notify_message = html.INPUT(type="checkbox", checked=bool(notify_message) if notify_message is not None else True)
+    fieldset <= input_notify_message
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_replace = html.LEGEND("notification remplacement", title="Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
     fieldset <= legend_replace
     input_replace = html.INPUT(type="checkbox", checked=bool(replace) if replace is not None else False)
     fieldset <= input_replace
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_newsletter = html.LEGEND("Je veux recevoir la newsletter !", title="Envoyez moi la newsletter de l'association A.F.J.D.")
+    legend_newsletter = html.LEGEND("abonnement newsletter", title="Envoyez moi la newsletter de l'association A.F.J.D.")
     fieldset <= legend_newsletter
     input_newsletter = html.INPUT(type="checkbox", checked=bool(newsletter) if newsletter is not None else True)
     fieldset <= input_newsletter
@@ -301,7 +312,7 @@ def create_account(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_residence = html.LEGEND("résidence", title="Mettez votre lieu de résidence")
+    legend_residence = html.LEGEND("résidence (public)", title="Mettez votre lieu de résidence")
     fieldset <= legend_residence
     input_residence = html.SELECT(type="select-one", value="")
 
@@ -315,7 +326,7 @@ def create_account(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_nationality = html.LEGEND("nationalité", title="Mettez votre nationalité")
+    legend_nationality = html.LEGEND("nationalité (public)", title="Mettez votre nationalité")
     fieldset <= legend_nationality
     input_nationality = html.SELECT(type="select-one", value="")
 
@@ -329,7 +340,7 @@ def create_account(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_timezone = html.LEGEND("fuseau horaire", title="Pour mieux comprendre vos heures d'éveil")
+    legend_timezone = html.LEGEND("fuseau horaire (public)", title="Pour mieux comprendre vos heures d'éveil")
     fieldset <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
@@ -607,8 +618,9 @@ def edit_account():
     email_loaded = None
     email_confirmed_loaded = None
     telephone_loaded = None
-    notify_loaded = None
-    replace_loaded = None
+    notify_adjudication_loaded = None
+    notify_message_loaded = None
+    notify_replace_loaded = None
     newsletter_loaded = None
     family_name_loaded = None
     first_name_loaded = None
@@ -632,8 +644,9 @@ def edit_account():
             nonlocal email_loaded
             nonlocal email_confirmed_loaded
             nonlocal telephone_loaded
-            nonlocal notify_loaded
-            nonlocal replace_loaded
+            nonlocal notify_adjudication_loaded
+            nonlocal notify_message_loaded
+            nonlocal notify_replace_loaded
             nonlocal newsletter_loaded
             nonlocal family_name_loaded
             nonlocal first_name_loaded
@@ -660,8 +673,9 @@ def edit_account():
             email_loaded = req_result['email']
             email_confirmed_loaded = req_result['email_confirmed']
             telephone_loaded = req_result['telephone']
-            notify_loaded = req_result['notify']
-            replace_loaded = req_result['replace']
+            notify_adjudication_loaded = req_result['notify_adjudication']
+            notify_message_loaded = req_result['notify_message']
+            notify_replace_loaded = req_result['notify_replace']
             newsletter_loaded = req_result['newsletter']
             family_name_loaded = req_result['family_name']
             first_name_loaded = req_result['first_name']
@@ -713,8 +727,9 @@ def edit_account():
             return
 
         telephone = input_telephone.value
-        notify = int(input_notify.checked)
-        replace = int(input_replace.checked)
+        notify_adjudication = int(input_notify_adjudication.checked)
+        notify_message = int(input_notify_message.checked)
+        notify_replace = int(input_notify_replace.checked)
         newsletter = int(input_newsletter.checked)
         family_name = input_family_name.value
         first_name = input_first_name.value
@@ -726,8 +741,9 @@ def edit_account():
             'pseudo': pseudo,
             'email': email,
             'telephone': telephone,
-            'notify': notify,
-            'replace': replace,
+            'notify_adjudication': notify_adjudication,
+            'notify_message': notify_message,
+            'notify_replace': notify_replace,
             'newsletter': newsletter,
             'family_name': family_name,
             'first_name': first_name,
@@ -796,21 +812,28 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_notify = html.LEGEND("Notifiez-moi sur les parties !", title="Devons nous vous envoyer un courriel sur chaque résolution de vos parties ?")
-    fieldset <= legend_notify
-    input_notify = html.INPUT(type="checkbox", checked=notify_loaded)
-    fieldset <= input_notify
+    legend_notify_adjudication = html.LEGEND("notification avancement parties", title="Envoyez moi un courriel sur chaque résolution de mes parties")
+    fieldset <= legend_notify_adjudication
+    input_notify_adjudication = html.INPUT(type="checkbox", checked=notify_adjudication_loaded)
+    fieldset <= input_notify_adjudication
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_replace = html.LEGEND("Je veux remplacer !", title="Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
-    fieldset <= legend_replace
-    input_replace = html.INPUT(type="checkbox", checked=replace_loaded)
-    fieldset <= input_replace
+    legend_notify_message = html.LEGEND("notification messages et presses parties", title="Envoyez moi un courriel sur chaque message ou presse de mes parties")
+    fieldset <= legend_notify_message
+    input_notify_message = html.INPUT(type="checkbox", checked=notify_message_loaded)
+    fieldset <= input_notify_message
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_newsletter = html.LEGEND("Je veux recevoir la newsletter !", title="Envoyez moi par courriel la newsletter de l'A.F.J.D.")
+    legend_notify_replace = html.LEGEND("notification remplacement", title="Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
+    fieldset <= legend_notify_replace
+    input_notify_replace = html.INPUT(type="checkbox", checked=notify_replace_loaded)
+    fieldset <= input_notify_replace
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_newsletter = html.LEGEND("abonnement newsletter", title="Envoyez moi par courriel la newsletter de l'association A.F.J.D.")
     fieldset <= legend_newsletter
     input_newsletter = html.INPUT(type="checkbox", checked=newsletter_loaded)
     fieldset <= input_newsletter
@@ -831,7 +854,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_residence = html.LEGEND("résidence", title="Mettez votre lieu de résidence")
+    legend_residence = html.LEGEND("résidence (public)", title="Mettez votre lieu de résidence")
     fieldset <= legend_residence
     input_residence = html.SELECT(type="select-one", value="")
 
@@ -845,7 +868,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_nationality = html.LEGEND("nationalité", title="Mettez votre nationalité")
+    legend_nationality = html.LEGEND("nationalité (public)", title="Mettez votre nationalité")
     fieldset <= legend_nationality
     input_nationality = html.SELECT(type="select-one", value="")
 
@@ -859,7 +882,7 @@ def edit_account():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_timezone = html.LEGEND("fuseau horaire", title="Pour mieux comprendre vos heures d'éveil")
+    legend_timezone = html.LEGEND("fuseau horaire (public)", title="Pour mieux comprendre vos heures d'éveil")
     fieldset <= legend_timezone
     input_timezone = html.SELECT(type="select-one", value="")
 
