@@ -28,7 +28,7 @@ INPUT_FILE = None
 def check_creator(pseudo):
     """ check_creator """
 
-    priviledged = common.get_priviledged()
+    priviledged = common.PRIVILEDGED
     if not priviledged:
         return False
     creator_list = priviledged['creators']

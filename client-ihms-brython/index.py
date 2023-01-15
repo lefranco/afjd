@@ -173,7 +173,7 @@ def load_option(_, item_name):
             import admin  # pylint: disable=import-outside-toplevel
             admin.render(PANEL_MIDDLE)
 
-    priviledged = common.get_priviledged()
+    priviledged = common.PRIVILEDGED
     creator_list = priviledged['creators']
     moderators_list = priviledged['moderators']
 
