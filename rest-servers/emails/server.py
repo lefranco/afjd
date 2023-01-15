@@ -9,6 +9,9 @@ The server
 
 import typing
 import argparse
+import queue
+import threading
+import time
 import requests
 
 import waitress
@@ -40,6 +43,32 @@ SEND_EMAIL_SUPPORT_PARSER.add_argument('subject', type=str, required=True)
 SEND_EMAIL_SUPPORT_PARSER.add_argument('body', type=str, required=True)
 
 
+# time to wait after sending a message
+PAUSE_BETWEEN_SENDS_SEC = 1
+
+# to transmit messages to send
+MESSAGE_QUEUE: queue.Queue[typing.Tuple[str, str, str]] = queue.Queue()
+
+
+def sender_threaded_procedure() -> None:
+    """ does the actual sending of messages """
+
+    with APP.app_context():
+
+        while True:
+
+            # from queue
+            subject, body, addressee = MESSAGE_QUEUE.get()
+
+            mylogger.LOGGER.info("actually sending the email to %s", addressee)
+
+            status = mailer.send_mail(subject, body, addressee)
+            if not status:
+                mylogger.LOGGER.error("Failed sending one email to %s", addressee)
+
+            time.sleep(PAUSE_BETWEEN_SENDS_SEC)
+
+
 @API.resource('/send-email-support')
 class SendMailSupportRessource(flask_restful.Resource):  # type: ignore
     """ SendMailSupportRessource """
@@ -57,11 +86,9 @@ class SendMailSupportRessource(flask_restful.Resource):  # type: ignore
         subject = args['subject']
         body = args['body']
 
-        status = mailer.send_mail(subject, body, [EMAIL_SUPPORT])
-        if not status:
-            flask_restful.abort(400, msg="Failed to send message to support")
+        MESSAGE_QUEUE.put((subject, body, EMAIL_SUPPORT))
 
-        data = {'msg': 'Email was send successfully to support'}
+        data = {'msg': 'Email was successfully queued to be sent to support'}
         return data, 200
 
 
@@ -99,11 +126,10 @@ class SendEmailRessource(flask_restful.Resource):  # type: ignore
 
         # any token goes
 
-        status = mailer.send_mail(subject, body, addressees_list)
-        if not status:
-            flask_restful.abort(400, msg="Failed to send message to player")
+        for addressee in addressees_list:
+            MESSAGE_QUEUE.put((subject, body, addressee))
 
-        data = {'msg': 'Email was send successfully'}
+        data = {'msg': 'Email was successfully queued to be sent'}
         return data, 200
 
 
@@ -121,6 +147,7 @@ def load_support_config() -> None:
 
 
 EMAIL_SUPPORT = ''
+
 
 # ---------------------------------
 # main
@@ -151,6 +178,10 @@ def main() -> None:
 
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+
+    # use separate thread to send messages
+    sender_thread = threading.Thread(target=sender_threaded_procedure, daemon=True)
+    sender_thread.start()
 
     if args.debug:
         APP.run(debug=True, port=port)
