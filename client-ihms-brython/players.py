@@ -977,7 +977,7 @@ def show_creators():
 
     MY_SUB_PANEL <= html.H3("Les créateurs (de partie)")
 
-    priviledged = common.get_priviledged()
+    priviledged = common.PRIVILEDGED
     if not priviledged:
         return
     creators_list = priviledged['creators']
@@ -1010,7 +1010,7 @@ def show_moderators():
 
     MY_SUB_PANEL <= html.H3("Les modérateurs")
 
-    priviledged = common.get_priviledged()
+    priviledged = common.PRIVILEDGED
     if not priviledged:
         return
     moderators_list = priviledged['moderators']
