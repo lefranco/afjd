@@ -58,9 +58,9 @@ def sender_threaded_procedure() -> None:
         while True:
 
             # from queue
-            subject, body, addressee = MESSAGE_QUEUE.get()
+            pseudo, subject, body, addressee = MESSAGE_QUEUE.get()
 
-            mylogger.LOGGER.info("actually sending the email to %s", addressee)
+            mylogger.LOGGER.info("actually sending an email to %s using account %s", addressee, pseudo)
 
             status = mailer.send_mail(subject, body, addressee)
             if not status:
@@ -86,7 +86,7 @@ class SendMailSupportRessource(flask_restful.Resource):  # type: ignore
         subject = args['subject']
         body = args['body']
 
-        MESSAGE_QUEUE.put((subject, body, EMAIL_SUPPORT))
+        MESSAGE_QUEUE.put((None, subject, body, EMAIL_SUPPORT))
 
         data = {'msg': 'Email was successfully queued to be sent to support'}
         return data, 200
@@ -102,7 +102,7 @@ class SendEmailRessource(flask_restful.Resource):  # type: ignore
         PROTECTED : called only by player block (account creation/email change)
         """
 
-        mylogger.LOGGER.info("/send-email - POST - sending one email")
+        mylogger.LOGGER.info("/send-email - POST - sending email")
 
         args = SEND_EMAIL_PARSER.parse_args(strict=True)
 
@@ -125,9 +125,10 @@ class SendEmailRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         # any token goes
+        pseudo = req_result.json()['logged_in_as']
 
         for addressee in addressees_list:
-            MESSAGE_QUEUE.put((subject, body, addressee))
+            MESSAGE_QUEUE.put((pseudo, subject, body, addressee))
 
         data = {'msg': 'Email was successfully queued to be sent'}
         return data, 200
