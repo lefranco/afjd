@@ -257,7 +257,7 @@ def game_master():
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
-            'force': True,
+            'type': 'reminder',
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -319,7 +319,7 @@ def game_master():
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
-            'force': True,
+            'type': 'reminder',
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -375,7 +375,7 @@ def game_master():
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
-            'force': True,
+            'type': 'reminder',
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -428,6 +428,7 @@ def game_master():
         body += "Pour se rendre directement sur la partie :\n"
         body += f"https://diplomania-gen.fr?game={play_low.GAME}"
 
+        # need to filter here otherwise there would be too many
         players_dict = common.get_players_data()
         if not players_dict:
             alert("Erreur chargement dictionnaire joueurs")
@@ -438,7 +439,7 @@ def game_master():
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
-            'force': True,
+            'type': 'replacement',
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']

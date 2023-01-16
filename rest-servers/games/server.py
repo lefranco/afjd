@@ -441,7 +441,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                         'addressees': " ".join([str(a) for a in addressees]),
                         'subject': subject,
                         'body': body,
-                        'force': 1,
+                        'type': 'start_stop',
                     }
 
                     host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -486,7 +486,7 @@ class GameRessource(flask_restful.Resource):  # type: ignore
                         'addressees': " ".join([str(a) for a in addressees]),
                         'subject': subject,
                         'body': body,
-                        'force': 1,
+                        'type': 'start_stop',
                     }
 
                     host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1069,7 +1069,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
                     'addressees': " ".join([str(a) for a in addressees]),
                     'subject': subject,
                     'body': body,
-                    'force': 1,
+                    'type': 'start_stop',
                 }
 
                 host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -1917,7 +1917,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                     'addressees': " ".join([str(a) for a in addressees]),
                     'subject': subject,
                     'body': body,
-                    'force': 0,
+                    'type': 'adjudication',
                 }
 
                 host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -2050,7 +2050,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 'addressees': " ".join([str(a) for a in addressees]),
                 'subject': subject,
                 'body': body,
-                'force': 0,
+                'type': 'adjudication',
             }
 
             host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -2371,7 +2371,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     'addressees': " ".join([str(a) for a in addressees]),
                     'subject': subject,
                     'body': body,
-                    'force': 0,
+                    'type': 'adjudication',
                 }
 
                 host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -3371,7 +3371,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
-            'force': 0,
+            'type': 'message',
         }
 
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
@@ -3584,7 +3584,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
-            'force': 0,
+            'type': 'message',
         }
 
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
