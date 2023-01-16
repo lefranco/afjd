@@ -810,6 +810,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(400, msg=f"Bad authentication!:{message}")
 
+        # any token goes
         pseudo = req_result.json()['logged_in_as']
 
         subject = args['subject']
@@ -881,7 +882,7 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         nb_mails = len(addressees)
-        data = {'msg': f"Ok {nb_mails} email(s) successfully sent using {pseudo} account"}
+        data = {'msg': f"Ok {nb_mails} email(s) successfully posted using {pseudo} account"}
         return data, 200
 
 
