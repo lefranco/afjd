@@ -320,11 +320,15 @@ def date_last_visit_load(game_id, visit_type):
 def make_report_window(report_loaded):
     """ make_report_window """
 
+    report_table = html.TABLE()
+
+    if not report_loaded:
+        return report_table
+
     content = report_loaded['content']
     columns = 3
     lines = content.split('\n')
     split_size = (len(lines) + columns) // columns
-    report_table = html.TABLE()
     report_row = html.TR()
     report_table <= report_row
     for chunk_num in range(columns):
