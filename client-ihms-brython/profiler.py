@@ -124,7 +124,7 @@ class Profiler:
             'addressees': ADDRESS_ADMIN,
             'subject': subject,
             'body': body,
-            'force': 1,
+            'type': 'profile',
         }
 
         host, port = destination

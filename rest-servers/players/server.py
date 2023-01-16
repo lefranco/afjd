@@ -75,7 +75,7 @@ SEND_PLAYERS_EMAIL_PARSER = flask_restful.reqparse.RequestParser()
 SEND_PLAYERS_EMAIL_PARSER.add_argument('addressees', type=str, required=True)
 SEND_PLAYERS_EMAIL_PARSER.add_argument('subject', type=str, required=True)
 SEND_PLAYERS_EMAIL_PARSER.add_argument('body', type=str, required=True)
-SEND_PLAYERS_EMAIL_PARSER.add_argument('force', type=int, required=True)
+SEND_PLAYERS_EMAIL_PARSER.add_argument('type', type=str, required=True)
 
 NEWS_PARSER = flask_restful.reqparse.RequestParser()
 NEWS_PARSER.add_argument('content', type=str, required=True)
@@ -815,7 +815,16 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         subject = args['subject']
         body = args['body']
         addressees_submitted = args['addressees']
-        force = args['force']
+        type_ = args['type']
+
+        # I can get for type :
+        #  'reminder' : please enter order/agreement or just welcome and come in to play
+        #  'forced' : message from moderator or to organizer
+        #  'start_stop' : game started, stopped, complete and ready
+        #  'adjudication' : game has moved (from master/auomatoin/player)
+        #  'message' : press or message in game
+        #  'replacement' : need a replacement
+        #  'profile' : profile
 
         try:
             addressees_list = list(map(int, addressees_submitted.split()))
@@ -826,16 +835,24 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
         addressees: typing.List[str] = []
         for addressee_id in addressees_list:
+
+            # get player
             pseudo_dest = players.Player.find_by_identifier(sql_executor, addressee_id)
             if pseudo_dest is None:
                 del sql_executor
                 flask_restful.abort(404, msg=f"Failed to find pseudo with id={addressee_id}")
             assert pseudo_dest is not None
-            # does not want to receive notifications
-            if not pseudo_dest.notify_adjudication:
-                # however force parameters makes them be still sent
-                if not force:
+
+            # decide if send
+            if type_ == 'adjudication':
+                # does not want to receive adjudication notifications
+                if not pseudo_dest.notify_adjudication:
                     continue
+            if type_ == 'message':
+                # does not want to receive message/press notifications
+                if not pseudo_dest.notify_message:
+                    continue
+
             pseudo_dest_email = pseudo_dest.email
             addressees.append(pseudo_dest_email)
 

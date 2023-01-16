@@ -437,7 +437,7 @@ def sendmail():
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
-            'force': True,
+            'type': 'forced',
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
