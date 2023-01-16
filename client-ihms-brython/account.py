@@ -286,8 +286,8 @@ def create_account(json_dict):
     fieldset = html.FIELDSET()
     legend_replace = html.LEGEND("notification remplacement", title="Prévenez moi par courriel en cas de remplacement nécessaire sur une partie")
     fieldset <= legend_replace
-    input_replace = html.INPUT(type="checkbox", checked=bool(replace) if replace is not None else False)
-    fieldset <= input_replace
+    input_notify_replace = html.INPUT(type="checkbox", checked=bool(notify_replace) if notify_replace is not None else False)
+    fieldset <= input_notify_replace
     form <= fieldset
 
     fieldset = html.FIELDSET()
