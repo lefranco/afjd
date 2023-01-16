@@ -845,13 +845,21 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
             assert pseudo_dest is not None
 
             # decide if send
+
             if type_ == 'adjudication':
                 # does not want to receive adjudication notifications
                 if not pseudo_dest.notify_adjudication:
                     continue
+
             if type_ == 'message':
                 # does not want to receive message/press notifications
                 if not pseudo_dest.notify_message:
+                    continue
+
+            # security
+            if type_ == 'replacement':
+                # does not want to receive replacement notifications
+                if not pseudo_dest.notify_replace:
                     continue
 
             pseudo_dest_email = pseudo_dest.email
