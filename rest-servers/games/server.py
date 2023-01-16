@@ -3354,7 +3354,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
 
             POST_MESSAGE_REPEAT_PREVENTER.did(int(game_id), role_id)
 
-        subject = f"Vous avez reçu un message dans la partie {game.name}"
+        subject = f"Un joueur (ou l'arbitre) vous a envoyé un message dans la partie {game.name}"
         allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)  # noqa: F821
         addressees = []
         for _, player_id, role_id1 in allocations_list:
@@ -3567,7 +3567,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
             POST_DECLARATION_REPEAT_PREVENTER.did(int(game_id), role_id)
 
-        subject = f"Un joueur a posté une déclaration dans la partie {game.name}"
+        subject = f"Un joueur (ou l'arbitre) a posté une déclaration dans la partie {game.name}"
         allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
         addressees = []
         for _, player_id, role_id1 in allocations_list:
