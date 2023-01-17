@@ -74,7 +74,7 @@ def join_game():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez rejoint la partie : {messages}")
+            common.info_dialog(f"Vous avez rejoint la partie (en utilisant la page 'appariement') : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...", True)
 
             # back to where we started
             MY_SUB_PANEL.clear()
