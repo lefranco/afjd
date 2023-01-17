@@ -809,16 +809,16 @@ def get_all_emails():
     return emails_dict
 
 
-def store_ip_address():
-    """ store_ip_address """
+def send_ip_address():
+    """ send_ip_address """
 
     def reply_callback(req):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la mémorisation de l'adresse IP : {req_result['message']}")
+                alert(f"Erreur à l'envoi de l'adresse IP : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la mémorisation de l'adresse IP : {req_result['msg']}")
+                alert(f"Problème à l'envoi de l'adresse IP : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
