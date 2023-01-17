@@ -149,7 +149,8 @@ def check_all_games(jwt_token: str) -> None:
         success = commute_game(jwt_token, game_id, variant_name, game_name)
 
         if success:
-            print("commuted !")
+            print("commuted !", end='')
+        print()
 
 
 def main() -> None:
@@ -159,7 +160,11 @@ def main() -> None:
     lowdata.load_servers_config()
 
     # get my IP address
-    external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
+    try:
+        with urllib.request.urlopen('https://ident.me') as response:
+            external_ip = response.read().decode('utf8')
+    except:  # noqa: E722 pylint: disable=bare-except
+        external_ip = 'unknown'
 
     # get a token
     pseudo = COMMUTER_ACCOUNT
