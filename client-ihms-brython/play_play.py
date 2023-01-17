@@ -175,8 +175,8 @@ def submit_orders():
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"Vous avez soumis les ordres : {messages}", True)
 
-            # special : store ip address
-            common.store_ip_address()
+            # special : send ip address to server
+            common.send_ip_address()
 
             adjudicated = req_result['adjudicated']
             if adjudicated:

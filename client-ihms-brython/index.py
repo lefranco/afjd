@@ -70,13 +70,14 @@ def read_ip():
 
     def store_ip(req):
         if req.status != 200:
-            alert(f"Problem getting IP code={req.status=}")
+            # Problem getting IP
             return
         ip_value = req.read()
         storage['IPADDRESS'] = ip_value
 
     def no_ip():
-        alert("Failed to get IP (timeout)")
+        # Failed to get IP (timeout)
+        pass
 
     url = "https://ident.me"
     ajax.get(url, blocking=False, timeout=IP_TIMEOUT_SEC, oncomplete=store_ip, ontimeout=no_ip)
