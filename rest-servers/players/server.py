@@ -139,7 +139,8 @@ def email_checker_message(code: int) -> typing.Tuple[str, str]:
     """ email_checker_message """
 
     subject = "Ceci est un email pour vérifier votre adresse email"
-    body = ""
+    body = "Bonjour !\n"
+    body += "\n"
     body += "Vous recevez cet email pour valider votre compte."
     body += "\n"
     body += f"Si vous êtes bien à l'origine de sa création, rendez-vous dans le menu mon compte/valider mon mail et entrez le code {code}"
@@ -153,9 +154,9 @@ def suppress_account_message(pseudo: str) -> typing.Tuple[str, str]:
     """ suppress_account_message """
 
     subject = f"Message de suppression de compte {pseudo} sur le site https://diplomania-gen.fr (AFJD)"
-    body = "Bonjour !"
+    body = "Bonjour !\n"
     body += "\n"
-    body += "Votre compte a été supprimé !"
+    body += "Nous avons le regret de vous informer que votre compte sur le site a été supprimé !"
     return subject, body
 
 
@@ -163,13 +164,14 @@ def event_registration_message(event_name: str, value: int) -> typing.Tuple[str,
     """ event_registration_message """
 
     subject = f"Le statut de votre inscription dans l'événement {event_name} a été modifié"
-    body = ""
+    body = "Bonjour !\n"
+    body += "\n"
     if value < 0:
         body += "Votre inscription a été refusée :-( !\n"
     elif value > 0:
         body += "Votre inscription a été acceptée :-) !\n"
     else:
-        body += "Votre inscription a été remise en attente ?!?!\n"
+        body += "Votre inscription a été remise en attente :-o !\n"
     body += "\n"
     body += "Vous pouvez contacter l'organisateur depuis le site\n"
     body += "\n"

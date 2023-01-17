@@ -237,7 +237,7 @@ def game_master():
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
 
-        body = "Bonjour !"
+        body = "Bonjour !\n"
         body += "\n"
         body += "Il manque vos ordres et la date limite est passée. Merci d'aviser rapidement !"
         body += "\n"
@@ -299,7 +299,7 @@ def game_master():
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
 
-        body = "Bonjour !"
+        body = "Bonjour !\n"
         body += "\n"
         body += "Il manque votre confirmation d'être d'accord pour résoudre et la date limite est passée. Merci d'aviser rapidement !"
         body += "\n"
@@ -355,9 +355,9 @@ def game_master():
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
 
-        body = "Bonjour !"
+        body = "Bonjour !\n"
         body += "\n"
-        body += "J'ai l'immense honneur de vous informer que vous avez été mis dans la partie et pouvez donc commencer à jouer !"
+        body += "Nous avons l'immense honneur de vous informer que vous avez été mis dans la partie et pouvez donc commencer à jouer !"
         body += "\n"
         body += f"Le rôle qui vous a été attribué est {role_name}."
         body += "\n"
@@ -415,7 +415,7 @@ def game_master():
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
 
-        body = "Bonjour !"
+        body = "Bonjour !\n"
         body += "\n"
         body += "Cette partie a besoin d'un remplaçant. Vous aves demandé à être notifié dans un tel cas. Son arbitre vous sollicite !"
         body += "\n"
@@ -423,7 +423,7 @@ def game_master():
         body += "\n"
         body += "Comment s'y prendre ? Aller sur le site, onglet 'Rejoindre une partie', bouton 'j'en profite' de la ligne de la partie en rose (Il peut être judicieux d'aller tâter un peu la partie au préalable)"
         body += "\n"
-        body += "Si ces notifications vous agacent, allez sur le site modifier votre compte..."
+        body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
         body += "\n"
         body += "Pour se rendre directement sur la partie :\n"
         body += f"https://diplomania-gen.fr?game={play_low.GAME}"
