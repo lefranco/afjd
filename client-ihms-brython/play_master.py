@@ -433,7 +433,7 @@ def game_master():
         if not players_dict:
             alert("Erreur chargement dictionnaire joueurs")
             return
-        addressees = [p for p in players_dict if players_dict[str(p)]['replace']]
+        addressees = [p for p in players_dict if players_dict[str(p)]['notify_replace']]
 
         json_dict = {
             'addressees': " ".join([str(a) for a in addressees]),
