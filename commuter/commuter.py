@@ -143,11 +143,13 @@ def check_all_games(jwt_token: str) -> None:
         # easy on the server !
         time.sleep(2)
 
-        # TODO remove
-        print(game_name)
+        print(f"Trying game {game_name}...", end='')
 
         variant_name = game_dict['variant']
-        commute_game(jwt_token, game_id, variant_name, game_name)
+        success = commute_game(jwt_token, game_id, variant_name, game_name)
+
+        if success:
+            print("commuted !")
 
 
 def main() -> None:
