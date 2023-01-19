@@ -8,7 +8,6 @@ import json
 import time
 import datetime
 import typing
-import math
 import urllib.request
 
 import requests
@@ -29,6 +28,22 @@ PERIOD_MINUTES = 30
 INTERFACE_TABLE = {
     'standard': ['diplomania', 'diplomania_daltoniens', 'hasbro']
 }
+
+
+def load_credentials_config() -> None:
+    """ read credentials config """
+
+    global COMMUTER_ACCOUNT
+    global COMMUTER_PASSWORD
+
+    credentials_config = lowdata.ConfigFile('./config/credentials.ini')
+    for credential in credentials_config.section_list():
+
+        assert credential == 'credentials', "Section name is not 'credentials' in credentials configuration file"
+        credentials_data = credentials_config.section(credential)
+
+        COMMUTER_ACCOUNT = credentials_data['COMMUTER_ACCOUNT']
+        COMMUTER_PASSWORD = credentials_data['COMMUTER_PASSWORD']
 
 
 def get_inforced_interface_from_variant(variant: str) -> str:
@@ -158,6 +173,7 @@ def main() -> None:
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
+    load_credentials_config()
 
     # get my IP address
     try:
@@ -169,6 +185,7 @@ def main() -> None:
     # get a token
     pseudo = COMMUTER_ACCOUNT
     password = COMMUTER_PASSWORD
+
     host = lowdata.SERVER_CONFIG['USER']['HOST']
     port = lowdata.SERVER_CONFIG['USER']['PORT']
     url = f"{host}:{port}/login"
@@ -186,7 +203,7 @@ def main() -> None:
 
     # wait next hour+15 ou hour+45
     timestamp_now = time.time()
-    second_position = math.ceil(timestamp_now) % (60 * 60)
+    second_position = timestamp_now % (60 * 60)
     if second_position < 15 * 60:
         wait_time = 15 * 60 - second_position
     elif second_position < 45 * 60:
