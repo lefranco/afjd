@@ -212,10 +212,10 @@ def main() -> None:
         wait_time = 15 * 60 + 60 * 60 - second_position
 
     now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
-    now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S')
+    now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
 
     print()
-    print(f"Now {now_date_desc}. Waiting {wait_time//60}mn and {wait_time%60}sec...")
+    print(f"Now {now_date_desc}. Waiting {wait_time//60}mn and {round(wait_time%60)}sec...")
     print()
 
     time.sleep(wait_time)
@@ -225,7 +225,7 @@ def main() -> None:
         timestamp_now = time.time()
         timestamp_before = timestamp_now
         now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
-        now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S')
+        now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
 
         print()
         print(f"At {now_date_desc} trying all games...")
