@@ -223,6 +223,7 @@ def main() -> None:
     while True:
 
         timestamp_now = time.time()
+        timestamp_before = timestamp_now
         now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
         now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -231,15 +232,15 @@ def main() -> None:
         print()
 
         # try to commute all games
-        time_before = time.time()
         check_all_games(jwt_token)
-        time_after = time.time()
-        duration = time_after - time_before
 
         # go to sleep
         print()
-        print(f"Took {round(duration)} secs. Going now to sleep...")
+        print("Going now to sleep...")
         print()
+
+        timestamp_after = time.time()
+        duration = timestamp_after - timestamp_before
         sleep_time = PERIOD_MINUTES * 60 - duration
         time.sleep(sleep_time)
 
