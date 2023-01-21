@@ -455,6 +455,13 @@ def get_game_status():
         row <= col
         game_status_table <= row
 
+    if GAME_PARAMETERS_LOADED['nomessage_current']:
+        row = html.TR()
+        specific_information = html.DIV("Attention cette partie est sans messages : La communication privée entre les joueurs strictement interdite !", Class='important')
+        col = html.TD(specific_information, colspan="6")
+        row <= col
+        game_status_table <= row
+
     return game_status_table
 
 
