@@ -924,6 +924,48 @@ class GameSelectListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/active_players')
+class ActivePlayersRessource(flask_restful.Resource):  # type: ignore
+    """ ActivePlayersRessource """
+
+    # an allocation is a game-role-pseudo relation where role is -1
+
+    def get(self) -> typing.Tuple[typing.List[int], int]:
+        """
+        Get list active players)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/active_players - GET - get all active players")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # TODO improve this with real admin account
+        if pseudo != ADMIN_ACCOUNT_NAME:
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to get all active players")
+
+        sql_executor = database.SqlExecutor()
+        allocations_list = allocations.Allocation.inventory(sql_executor)
+        del sql_executor
+
+        data = list({p for (_, p, _) in allocations_list})
+
+        return data, 200
+
+
 @API.resource('/allocations')
 class AllocationListRessource(flask_restful.Resource):  # type: ignore
     """ AllocationListRessource """
@@ -1990,7 +2032,6 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="Game does not seem to be ongoing")
 
         # game must not be actually finished
-
         if game.current_advancement % 5 == 4 and (game.current_advancement + 1) // 5 >= game.nb_max_cycles_to_play:
             del sql_executor
             flask_restful.abort(403, msg="Game seems to be actually finished")

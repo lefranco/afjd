@@ -27,6 +27,37 @@ LONG_DURATION_LIMIT_SEC = 1.0
 DOWNLOAD_LOG = False
 
 
+def get_active_data():
+    """ get_active_data : returns empty list if problem """
+
+    active_data = []
+
+    def reply_callback(req):
+        nonlocal active_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement des actifs : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement des actifs : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        active_data = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/active_players"
+
+    # getting active data : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return active_data
+
+
 def get_all_games_roles_submitted_orders():
     """ get_all_games_roles_submitted_orders : returns empty dict if problem """
 
@@ -240,68 +271,6 @@ def get_ip_table():
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return list(addresses_list)
-
-
-def delete_account_callback(ev, player_pseudo):  # pylint: disable=invalid-name
-    """ delete_account_callback """
-
-    # first step : usurp to get a token
-    # second step : delete account using token
-
-    def reply_callback1(req):
-
-        def reply_callback2(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la suppression du compte {player_pseudo}: {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la suppression du compte {player_pseudo} : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Le compte {player_pseudo} a été supprimé : {messages}")
-
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            show_idle_data()
-
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à l'usurpation {player_pseudo} : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à l'usurpation {player_pseudo} : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        token = req_result['AccessToken']
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/players/{player_pseudo}"
-
-        # deleting account : need token (of player or of admin)
-        ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': token}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback2, ontimeout=common.noreply_callback)
-
-    ev.preventDefault()
-
-    json_dict = {
-        'usurped_user_name': player_pseudo,
-    }
-
-    host = config.SERVER_CONFIG['USER']['HOST']
-    port = config.SERVER_CONFIG['USER']['PORT']
-    url = f"{host}:{port}/usurp"
-
-    # usurping : need token
-    # note : since we access directly to the user server, we present the token in a slightly different way
-    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback1, ontimeout=common.noreply_callback)
 
 
 def change_news_admin():
@@ -1931,16 +1900,133 @@ def update_regularity():
 def show_idle_data():
     """ show_idle_data """
 
-    # get the games
-    games_dict = common.get_games_data()
-    if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
-        return
+    def delete_account_callback(ev, player_pseudo):  # pylint: disable=invalid-name
+        """ delete_account_callback """
+
+        # first step : usurp to get a token
+        # second step : delete account using token
+
+        def reply_callback1(req):
+
+            def reply_callback2(req):
+                req_result = json.loads(req.text)
+                if req.status != 200:
+                    if 'message' in req_result:
+                        alert(f"Erreur à la suppression du compte {player_pseudo}: {req_result['message']}")
+                    elif 'msg' in req_result:
+                        alert(f"Problème à la suppression du compte {player_pseudo} : {req_result['msg']}")
+                    else:
+                        alert("Réponse du serveur imprévue et non documentée")
+                    return
+
+                messages = "<br>".join(req_result['msg'].split('\n'))
+                common.info_dialog(f"Le compte {player_pseudo} a été supprimé : {messages}")
+
+                # back to where we started
+                MY_SUB_PANEL.clear()
+                show_idle_data()
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'usurpation {player_pseudo} : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'usurpation {player_pseudo} : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            token = req_result['AccessToken']
+
+            json_dict = {}
+
+            host = config.SERVER_CONFIG['PLAYER']['HOST']
+            port = config.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/players/{player_pseudo}"
+
+            # deleting account : need token (of player or of admin)
+            ajax.delete(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': token}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback2, ontimeout=common.noreply_callback)
+
+        ev.preventDefault()
+
+        json_dict = {
+            'usurped_user_name': player_pseudo,
+        }
+
+        host = config.SERVER_CONFIG['USER']['HOST']
+        port = config.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/usurp"
+
+        # usurping : need token
+        # note : since we access directly to the user server, we present the token in a slightly different way
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback1, ontimeout=common.noreply_callback)
+
+    def recall_account_callback(ev, player_pseudo):  # pylint: disable=invalid-name
+        """ recall_account_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'envoi du rappel: {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'envoi du rappel : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            common.info_dialog(f"Message émis vers : {player_pseudo}")
+
+        ev.preventDefault()
+
+        subject = "Message de la part de l'administrateur du site https://diplomania-gen.fr (AFJD)"
+        body = ""
+        body += f"Bonjour {player_pseudo}"
+        body += "\n\n"
+        body += "Votre compte sur le site est oisif. Nous ne pouvons accumuler des comptes qui ne jouent pas au risque de saturer l'interface de pseudonymes inutiles. Pourquoi avoir créé un compte si ce n'est pas pour jouer ?"
+        body += "\n\n"
+        body += "Il existe des parties d'initiations pour apprendre à jouer et maîtriser l'interface. Des parties cherchent en permanence à être complétées. Des tournois débutent régulièrement, avec ou sans négociations. Certains font même des parties en direct en s'appuyant sur Discord."
+        body += "\n\n"
+        body += "Ne soyez pas timides, franchissez le pas, profitez du site, il a été créée pour vous !"
+        body += "\n\n"
+        body += "Ludiquement,"
+
+        addressed_id = pseudo2id[player_pseudo]
+
+        json_dict = {
+            'addressees': str(addressed_id),
+            'subject': subject,
+            'body': body,
+            'type': 'forced',
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/mail-players"
+
+        # sending email : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        show_idle_data()
 
     players_dict = common.get_players_data()
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
         return
+
+    complete_set = {pd['pseudo'] for pd in players_dict.values()}
+
+    # get the link (allocations) of players
+    active_data = get_active_data()
+    if not active_data:
+        alert("Erreur chargement actifs")
+        return
+
+    active_set = {players_dict[str(i)]['pseudo'] for i in active_data}
+
+    idle_set = complete_set - active_set
 
     logins_list = get_last_logins()
     if not logins_list:
@@ -1948,37 +2034,14 @@ def show_idle_data():
         return
     last_login_time = {ll[0]: ll[2] for ll in logins_list}
 
-    idle_set = set()
-    for player_data in players_dict.values():
-        player = player_data['pseudo']
-        idle_set.add(player)
-
-    # get the link (allocations) of players
-    allocations_data = common.get_allocations_data()
-    if not allocations_data:
-        alert("Erreur chargement allocations")
-        return
-
-    players_alloc = allocations_data['players_dict']
-    for player_id, _ in players_alloc.items():
-        player = players_dict[str(player_id)]['pseudo']
-        if player in idle_set:
-            idle_set.remove(player)
-
-    masters_alloc = allocations_data['game_masters_dict']
-    for player_id, _ in masters_alloc.items():
-        player = players_dict[str(player_id)]['pseudo']
-        if player in idle_set:
-            idle_set.remove(player)
-
     idle_table = html.TABLE()
 
-    fields = ['id', 'player', 'last_login', 'delete']
+    fields = ['player', 'last_login', 'recall', 'delete']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'id': 'id', 'player': 'joueur', 'last_login': 'dernier login', 'delete': 'supprimer'}[field]
+        field_fr = {'player': 'joueur', 'last_login': 'dernier login', 'recall': 'rappeler', 'delete': 'supprimer'}[field]
         col = html.TD(field_fr)
         thead <= col
     idle_table <= thead
@@ -1995,9 +2058,6 @@ def show_idle_data():
 
             colour = None
 
-            if field == 'id':
-                value = pseudo2id[player]
-
             if field == 'player':
                 value = player
 
@@ -2011,6 +2071,13 @@ def show_idle_data():
                     date_now_gmt = mydatetime.fromtimestamp(time_stamp)
                     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
                     value = f"{date_now_gmt_str}"
+
+            if field == 'recall':
+                form = html.FORM()
+                input_delete_account = html.INPUT(type="image", src="./images/recall.jpg")
+                input_delete_account.bind("click", lambda e, p=player: recall_account_callback(e, p))
+                form <= input_delete_account
+                value = form
 
             if field == 'delete':
                 form = html.FORM()
@@ -2034,7 +2101,6 @@ def show_idle_data():
     MY_SUB_PANEL <= html.H3("Les oisifs")
     MY_SUB_PANEL <= idle_table
     MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
-    MY_SUB_PANEL <= html.DIV("Les joueurs dans des parties anonymes ne sont pas pris en compte", Class='note')
 
 
 def show_non_confirmed_data():
