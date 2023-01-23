@@ -1987,7 +1987,7 @@ def show_idle_data():
         body += "\n\n"
         body += "Il existe des parties d'initiations pour apprendre à jouer et maîtriser l'interface. Des parties cherchent en permanence à être complétées. Des tournois débutent régulièrement, avec ou sans négociations. Certains font même des parties en direct en s'appuyant sur Discord."
         body += "\n\n"
-        body += "Ne soyez pas timides, franchissez le pas, profitez du site, il a été créée pour vous !"
+        body += "Ne soyez pas timides, franchissez le pas, profitez du site, il a été créé pour vous !"
         body += "\n\n"
         body += "Ludiquement,"
 
