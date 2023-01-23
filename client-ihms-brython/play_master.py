@@ -248,7 +248,7 @@ def game_master():
 
         player_id_str = role2pseudo[role_id]
         player_id = int(player_id_str)
-        pseudo_there = id2pseudo[player_id]
+        pseudo_there = play_low.ID2PSEUDO[player_id]
 
         addressed_id = play_low.PLAYERS_DICT[pseudo_there]
         addressees = [addressed_id]
@@ -310,7 +310,7 @@ def game_master():
 
         player_id_str = role2pseudo[role_id]
         player_id = int(player_id_str)
-        pseudo_there = id2pseudo[player_id]
+        pseudo_there = play_low.ID2PSEUDO[player_id]
 
         addressed_id = play_low.PLAYERS_DICT[pseudo_there]
         addressees = [addressed_id]
@@ -366,7 +366,7 @@ def game_master():
 
         player_id_str = role2pseudo[role_id]
         player_id = int(player_id_str)
-        pseudo_there = id2pseudo[player_id]
+        pseudo_there = play_low.ID2PSEUDO[player_id]
 
         addressed_id = play_low.PLAYERS_DICT[pseudo_there]
         addressees = [addressed_id]
@@ -609,7 +609,7 @@ def game_master():
         # put role : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    def get_list_pseudo_allocatable_game(id2pseudo):
+    def get_list_pseudo_allocatable_game():
         """ get_list_pseudo_allocatable_game """
 
         pseudo_list = None
@@ -626,7 +626,7 @@ def game_master():
                     alert("Réponse du serveur imprévue et non documentée")
                 return None
 
-            pseudo_list = [id2pseudo[int(k)] for k, v in req_result.items() if v == -1]
+            pseudo_list = [play_low.ID2PSEUDO[int(k)] for k, v in req_result.items() if v == -1]
             return pseudo_list
 
         json_dict = {}
@@ -675,7 +675,6 @@ def game_master():
     # role flag
     play_low.stack_role_flag(play_low.MY_SUB_PANEL)
 
-    id2pseudo = {v: k for k, v in play_low.PLAYERS_DICT.items()}
     role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
     submitted_data = play_low.get_roles_submitted_orders(play_low.GAME_ID)
@@ -685,7 +684,7 @@ def game_master():
         return False
 
     # who can I put in this role
-    possible_given_role = get_list_pseudo_allocatable_game(id2pseudo)
+    possible_given_role = get_list_pseudo_allocatable_game()
 
     # votes
 
@@ -742,7 +741,7 @@ def game_master():
         if role_id in role2pseudo:
             player_id_str = role2pseudo[role_id]
             player_id = int(player_id_str)
-            pseudo_there = id2pseudo[player_id]
+            pseudo_there = play_low.ID2PSEUDO[player_id]
         col <= pseudo_there
         row <= col
 
@@ -955,7 +954,6 @@ def game_master():
 def supervise():
     """ supervise """
 
-    id2pseudo = {}
     role2pseudo = {}
     log_stack = None
 
@@ -1069,7 +1067,7 @@ def supervise():
             if role_id in role2pseudo:
                 player_id_str = role2pseudo[role_id]
                 player_id = int(player_id_str)
-                pseudo_there = id2pseudo[player_id]
+                pseudo_there = play_low.ID2PSEUDO[player_id]
             col <= pseudo_there
             row <= col
 
@@ -1219,9 +1217,6 @@ def supervise():
         """ supervise_callback """
 
         dialog.close(None)
-
-        nonlocal id2pseudo
-        id2pseudo = {v: k for k, v in play_low.PLAYERS_DICT.items()}
 
         nonlocal role2pseudo
         role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}

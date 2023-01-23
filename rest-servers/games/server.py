@@ -1332,6 +1332,30 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/game-master/<game_id>')
+class GameMasterRessource(flask_restful.Resource):  # type: ignore
+    """ GameRoleRessource """
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Optional[int], int]:
+        """
+        Get game master of a game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-master/<game_id> GETTING - getting game master game id=%s", game_id)
+
+        sql_executor = database.SqlExecutor()
+
+        allocations_list = allocations.Allocation.list_by_role_id_game_id(sql_executor, 0, game_id)
+
+        del sql_executor
+
+        players_id_list = [a[1] for a in allocations_list]
+        players_id = players_id_list[0] if players_id_list else None
+
+        return players_id, 200
+
+
 @API.resource('/game-role/<game_id>')
 class GameRoleRessource(flask_restful.Resource):  # type: ignore
     """ GameRoleRessource """

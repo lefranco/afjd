@@ -29,6 +29,7 @@ ROLE_ID = None
 
 # loaded in load_static_stuff
 PLAYERS_DICT = None
+ID2PSEUDO = None
 VARIANT_NAME_LOADED = None
 VARIANT_CONTENT_LOADED = None
 INTERFACE_CHOSEN = None
@@ -44,6 +45,7 @@ POSITION_DATA = None
 REPORT_LOADED = {}
 
 # loaded in load_special_stuff
+GAME_MASTER = None
 GAME_PLAYERS_DICT = {}
 
 
@@ -114,7 +116,6 @@ def make_rating_colours_window(variant_data, ratings, units, colours, game_scori
         rating_scoring_row <= col
 
     rolename2role_id = {VARIANT_DATA.role_name_table[v]: k for k, v in VARIANT_DATA.roles.items()}
-    id2pseudo = {v: k for k, v in PLAYERS_DICT.items()}
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
     # player
@@ -128,7 +129,7 @@ def make_rating_colours_window(variant_data, ratings, units, colours, game_scori
         if role_id in role2pseudo:
             player_id_str = role2pseudo[role_id]
             player_id = int(player_id_str)
-            pseudo_there = id2pseudo[player_id]
+            pseudo_there = ID2PSEUDO[player_id]
         col = html.TD(pseudo_there)
         players_row <= col
 
@@ -227,16 +228,50 @@ def game_transition_reload(game_id, advancement):
     return transition_loaded
 
 
+def get_game_master(game_id):
+    """ get_game_master """
+
+    master_loaded = None
+
+    def reply_callback(req):
+        nonlocal master_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement de l'arbitre de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement de l'arbitre de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        master_loaded = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-master/{game_id}"
+
+    # getting master : do not need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return master_loaded
+
+
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
-    # need to be first since used in get_game_status()
+    # need to be first since used in get_game_status() and in get_game_master()
     # get the players (all players)
     global PLAYERS_DICT
     PLAYERS_DICT = common.get_players()
     if not PLAYERS_DICT:
         alert("Erreur chargement info joueurs")
         return
+
+    global ID2PSEUDO
+    ID2PSEUDO = {v: k for k, v in PLAYERS_DICT.items()}
 
     # from game name get variant name
 
@@ -307,6 +342,14 @@ def load_static_stuff():
     else:
         INFORCED_VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, VARIANT_CONTENT_LOADED, inforced_interface_parameters_read)
         memoize.VARIANT_DATA_MEMOIZE_TABLE[(VARIANT_NAME_LOADED, interface_inforced)] = INFORCED_VARIANT_DATA
+
+    # get the game master
+    global GAME_MASTER
+    GAME_MASTER = ""
+
+    game_master_id = get_game_master(GAME_ID)
+    if game_master_id is not None:
+        GAME_MASTER = ID2PSEUDO[game_master_id]
 
 
 def load_dynamic_stuff():
@@ -440,25 +483,35 @@ def get_game_status():
     COUNTDOWN_COL = html.TD("")
     row <= COUNTDOWN_COL
 
+    # game master
+    desc = html.DIV()
+    if GAME_MASTER:
+        desc <= "Arbitre "
+        desc <= html.B(f"{GAME_MASTER}")
+    else:
+        desc <= "(pas d'arbitre)"
+
+    row <= desc
+
     game_status_table <= row
 
     row = html.TR()
 
-    col = html.TD(game_description, colspan="7")
+    col = html.TD(game_description, colspan="8")
     row <= col
     game_status_table <= row
 
     if GAME_PARAMETERS_LOADED['fast']:
         row = html.TR()
         specific_information = html.DIV("Partie en direct : utiliser le bouton 'recharger la partie' du menu 'Consulter'", Class='note')
-        col = html.TD(specific_information, colspan="6")
+        col = html.TD(specific_information, colspan="8")
         row <= col
         game_status_table <= row
 
     if GAME_PARAMETERS_LOADED['nomessage_current']:
         row = html.TR()
         specific_information = html.DIV("Attention cette partie est sans messages : La communication privée entre les joueurs strictement interdite !", Class='important')
-        col = html.TD(specific_information, colspan="6")
+        col = html.TD(specific_information, colspan="8")
         row <= col
         game_status_table <= row
 
