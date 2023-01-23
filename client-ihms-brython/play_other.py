@@ -37,27 +37,6 @@ def readable_season(advancement):
     return value
 
 
-def get_game_master(game_id):
-    """ get_game_master """
-
-    # get the link (allocations) of game masters
-    allocations_data = common.get_allocations_data()
-    if not allocations_data:
-        alert("Erreur chargement allocations")
-        return None
-
-    masters_alloc = allocations_data['game_masters_dict']
-
-    # get the game it self
-    for master_id, games_id in masters_alloc.items():
-        if game_id in games_id:
-            for pseudo, identifier in play_low.PLAYERS_DICT.items():
-                if str(identifier) == master_id:
-                    return pseudo
-
-    return None
-
-
 def date_last_visit_update(game_id, role_id, visit_type):
     """ date_last_visit_update """
 
@@ -232,8 +211,6 @@ def non_playing_information():
     if not (moderate.check_modo(play_low.PSEUDO) or play_low.ROLE_ID == 0 or not play_low.GAME_PARAMETERS_LOADED['anonymous']):
         return None
 
-    id2pseudo = {v: k for k, v in play_low.PLAYERS_DICT.items()}
-
     dangling_players = [p for p, d in play_low.GAME_PLAYERS_DICT.items() if d == - 1]
     if not dangling_players:
         return None
@@ -241,7 +218,7 @@ def non_playing_information():
     info = "Les pseudos suivants sont alloués à la partie sans rôle : "
     for dangling_player_id_str in dangling_players:
         dangling_player_id = int(dangling_player_id_str)
-        dangling_player = id2pseudo[dangling_player_id]
+        dangling_player = play_low.ID2PSEUDO[dangling_player_id]
         info += f"{dangling_player} "
 
     return html.EM(info)
@@ -789,54 +766,6 @@ def show_events_in_game():
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
     play_low.MY_SUB_PANEL <= html.BR()
 
-    game_master_pseudo = get_game_master(int(play_low.GAME_ID))
-    if game_master_pseudo is None:
-        play_low.MY_SUB_PANEL <= html.DIV("Pas d'arbitre pour cette partie ou erreur au chargement de l'arbitre de la partie", Class='important')
-    else:
-
-        game_master_table = html.TABLE()
-
-        fields = ['flag', 'role', 'player']
-
-        # header
-        thead = html.THEAD()
-        for field in fields:
-            field_fr = {'flag': 'drapeau', 'player': 'joueur', 'role': 'rôle'}[field]
-            col = html.TD(field_fr)
-            thead <= col
-        game_master_table <= thead
-
-        role_id = 0
-
-        row = html.TR()
-
-        # role flag
-        role = play_low.VARIANT_DATA.roles[role_id]
-        role_name = play_low.VARIANT_DATA.role_name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
-
-        if role_icon_img:
-            col = html.TD(role_icon_img)
-        else:
-            col = html.TD()
-        row <= col
-
-        # role name
-        role = play_low.VARIANT_DATA.roles[role_id]
-        role_name = play_low.VARIANT_DATA.role_name_table[role]
-
-        col = html.TD(role_name)
-        row <= col
-
-        # player
-        pseudo_there = game_master_pseudo
-        col = html.TD(pseudo_there)
-        row <= col
-
-        game_master_table <= row
-
-        play_low.MY_SUB_PANEL <= game_master_table
-
     # orders
     play_low.MY_SUB_PANEL <= html.H3("Ordres")
 
@@ -862,8 +791,6 @@ def show_events_in_game():
             return False
 
         role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
-
-        id2pseudo = {v: k for k, v in play_low.PLAYERS_DICT.items()}
 
         game_players_table = html.TABLE()
 
@@ -906,7 +833,7 @@ def show_events_in_game():
             if role_id in role2pseudo:
                 player_id_str = role2pseudo[role_id]
                 player_id = int(player_id_str)
-                pseudo_there = id2pseudo[player_id]
+                pseudo_there = play_low.ID2PSEUDO[player_id]
             col = html.TD(pseudo_there)
             row <= col
 
@@ -1028,8 +955,6 @@ def show_events_in_game():
         thead <= col
     game_dropouts_table <= thead
 
-    id2pseudo = {v: k for k, v in play_low.PLAYERS_DICT.items()}
-
     for role_id, player_id, time_stamp in sorted(game_dropouts, key=lambda d: d[2]):
 
         row = html.TR()
@@ -1053,7 +978,7 @@ def show_events_in_game():
 
         # pseudo
         col = html.TD()
-        pseudo_quitter = id2pseudo[player_id]
+        pseudo_quitter = play_low.ID2PSEUDO[player_id]
         col <= pseudo_quitter
         row <= col
 
@@ -1100,8 +1025,6 @@ def show_events_in_game():
         thead <= col
     game_incidents_table <= thead
 
-    id2pseudo = {v: k for k, v in play_low.PLAYERS_DICT.items()}
-
     for role_id, advancement, player_id, duration, time_stamp in sorted(game_incidents, key=lambda i: i[4]):
 
         row = html.TR()
@@ -1126,7 +1049,7 @@ def show_events_in_game():
         # pseudo
         col = html.TD()
         if player_id is not None:
-            col <= id2pseudo[player_id]
+            col <= play_low.ID2PSEUDO[player_id]
         row <= col
 
         # season
@@ -1401,13 +1324,11 @@ def negotiate(default_dest_set):
     fake_messages = [(MessageTypeEnum.SEASON, int(k), -1, -1, v, [], readable_season(int(k))) for k, v in game_transitions.items()]
     messages.extend(fake_messages)
 
-    id2pseudo = {v: k for k, v in play_low.PLAYERS_DICT.items()}
-
     # get the dropouts table
     game_dropouts = game_dropouts_reload(play_low.GAME_ID)
 
     # add fake messages (game dropouts)
-    fake_messages = [(MessageTypeEnum.DROPOUT, 0, -1, r, d, [], f"Le joueur {id2pseudo[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    fake_messages = [(MessageTypeEnum.DROPOUT, 0, -1, r, d, [], f"Le joueur {play_low.ID2PSEUDO[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
     messages.extend(fake_messages)
 
     # sort with all that was added
@@ -1421,7 +1342,6 @@ def negotiate(default_dest_set):
         thead <= col
     messages_table <= thead
 
-    game_master_pseudo = get_game_master(int(play_low.GAME_ID))
     role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
     for type_, _, id_, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
@@ -1457,12 +1377,12 @@ def negotiate(default_dest_set):
             # player
             pseudo_there = ""
             if from_role_id_msg == 0:
-                if game_master_pseudo:
-                    pseudo_there = game_master_pseudo
+                if play_low.GAME_MASTER:
+                    pseudo_there = play_low.GAME_MASTER
             elif from_role_id_msg in role2pseudo:
                 player_id_str = role2pseudo[from_role_id_msg]
                 player_id = int(player_id_str)
-                pseudo_there = id2pseudo[player_id]
+                pseudo_there = play_low.ID2PSEUDO[player_id]
 
             if pseudo_there:
                 col <= html.BR()
@@ -1481,12 +1401,12 @@ def negotiate(default_dest_set):
             # player
             pseudo_there = ""
             if dest_role_id_msg == 0:
-                if game_master_pseudo:
-                    pseudo_there = game_master_pseudo
+                if play_low.GAME_MASTER:
+                    pseudo_there = play_low.GAME_MASTER
             elif dest_role_id_msg in role2pseudo:
                 player_id_str = role2pseudo[dest_role_id_msg]
                 player_id = int(player_id_str)
-                pseudo_there = id2pseudo[player_id]
+                pseudo_there = play_low.ID2PSEUDO[player_id]
 
             col <= role_icon_img
             if pseudo_there:
@@ -1688,13 +1608,11 @@ def declare():
     fake_declarations = [(MessageTypeEnum.SEASON, int(k), -1, False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
     declarations.extend(fake_declarations)
 
-    id2pseudo = {v: k for k, v in play_low.PLAYERS_DICT.items()}
-
     # get the dropouts table
     game_dropouts = game_dropouts_reload(play_low.GAME_ID)
 
     # add fake messages (game dropouts)
-    fake_declarations = [(MessageTypeEnum.DROPOUT, 0, -1, False, r, d, f"Le joueur {id2pseudo[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    fake_declarations = [(MessageTypeEnum.DROPOUT, 0, -1, False, r, d, f"Le joueur {play_low.ID2PSEUDO[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
     declarations.extend(fake_declarations)
 
     # sort with all that was added
@@ -1708,9 +1626,7 @@ def declare():
         thead <= col
     declarations_table <= thead
 
-    game_master_pseudo = get_game_master(int(play_low.GAME_ID))
     role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
-    id2pseudo = {v: k for k, v in play_low.PLAYERS_DICT.items()}
 
     for type_, _, id_, anonymous, role_id_msg, time_stamp, content in declarations:
 
@@ -1746,12 +1662,12 @@ def declare():
 
             # player
             if role_id_msg == 0:
-                if game_master_pseudo:
-                    pseudo_there = game_master_pseudo
+                if play_low.GAME_MASTER:
+                    pseudo_there = play_low.GAME_MASTER
             elif role_id_msg in role2pseudo:
                 player_id_str = role2pseudo[role_id_msg]
                 player_id = int(player_id_str)
-                pseudo_there = id2pseudo[player_id]
+                pseudo_there = play_low.ID2PSEUDO[player_id]
 
         col = html.TD(Class=class_)
 

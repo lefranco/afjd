@@ -31,6 +31,14 @@ class Allocation:
         return allocations_found
 
     @staticmethod
+    def list_by_role_id_game_id(sql_executor: database.SqlExecutor, role_id: int, game_id: int) -> typing.List[typing.Tuple[int, int, int]]:
+        """ class lookup : finds the object in database from fame id """
+        allocations_found = sql_executor.execute("SELECT * FROM allocations where role_id = ? and game_id = ?", (role_id, game_id), need_result=True)
+        if not allocations_found:
+            return []
+        return allocations_found
+
+    @staticmethod
     def inventory(sql_executor: database.SqlExecutor) -> typing.List[typing.Tuple[int, int, int]]:
         """ class inventory : gives a list of all objects in database """
         allocations_found = sql_executor.execute("SELECT * FROM allocations", need_result=True)
