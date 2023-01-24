@@ -484,14 +484,11 @@ def get_game_status():
     row <= COUNTDOWN_COL
 
     # game master
-    desc = html.DIV()
     if GAME_MASTER:
-        desc <= "Arbitre "
-        desc <= html.B(f"{GAME_MASTER}")
+        col = html.TD(f"Arbitre {GAME_MASTER}")
     else:
-        desc <= "(pas d'arbitre)"
-
-    row <= desc
+        col = html.TD("(pas d'arbitre)")
+    row <= col
 
     game_status_table <= row
 
