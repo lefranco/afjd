@@ -595,7 +595,7 @@ def create_event(json_dict):
     fieldset = html.FIELDSET()
     legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
     fieldset <= legend_start_hour
-    input_start_hour = html.INPUT(type="time", value=start_hour if start_hour is not None else "")
+    input_start_hour = html.INPUT(type="time", value=start_hour if start_hour is not None else "", step=1)
     fieldset <= input_start_hour
     form <= fieldset
 
@@ -766,7 +766,7 @@ def edit_event():
     fieldset = html.FIELDSET()
     legend_start_hour = html.LEGEND("heure de début", title="Heure de l'événement")
     fieldset <= legend_start_hour
-    input_start_hour = html.INPUT(type="time", value=start_hour)
+    input_start_hour = html.INPUT(type="time", value=start_hour, step=1)
     fieldset <= input_start_hour
     form <= fieldset
 
