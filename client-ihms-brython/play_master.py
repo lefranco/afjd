@@ -909,7 +909,7 @@ def game_master():
     fieldset = html.FIELDSET()
     legend_deadline_hour = html.LEGEND("Heure de la date limite (hh:mm ou selon les réglages du navigateur)", title="La date limite. Dernière heure du jour pour soumettre les ordres. Après le joueur est en retard.")
     fieldset <= legend_deadline_hour
-    input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour)
+    input_deadline_hour = html.INPUT(type="time", value=deadline_loaded_hour, step=1)
     fieldset <= input_deadline_hour
     deadline_form <= fieldset
 
