@@ -8,6 +8,7 @@ import json
 import time
 import datetime
 import typing
+import argparse
 import urllib.request
 
 import requests
@@ -168,8 +169,29 @@ def check_all_games(jwt_token: str) -> None:
         print()
 
 
+def time_to_wait() -> float:
+    """ time_to_wait """
+
+    # wait next hour+15 ou hour+45
+
+    timestamp_now = time.time()
+    second_position = timestamp_now % (60 * 60)
+    if second_position < 15 * 60:
+        wait_time = 15 * 60 - second_position
+    elif second_position < 45 * 60:
+        wait_time = 45 * 60 - second_position
+    else:
+        wait_time = 15 * 60 + 60 * 60 - second_position
+
+    return wait_time
+
+
 def main() -> None:
     """ main """
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--force', required=False, help='force to do now', action='store_true')
+    args = parser.parse_args()
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
@@ -201,29 +223,24 @@ def main() -> None:
     req_result = json.loads(req_result.text)
     jwt_token = req_result['AccessToken']  # type: ignore
 
-    # wait next hour+15 ou hour+45
     timestamp_now = time.time()
-    second_position = timestamp_now % (60 * 60)
-    if second_position < 15 * 60:
-        wait_time = 15 * 60 - second_position
-    elif second_position < 45 * 60:
-        wait_time = 45 * 60 - second_position
-    else:
-        wait_time = 15 * 60 + 60 * 60 - second_position
-
     now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
     now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
 
     print()
-    print(f"Now {now_date_desc}. Waiting {wait_time//60}mn and {round(wait_time%60)}sec...")
+    print(f"Now {now_date_desc}. Waiting...")
     print()
 
-    time.sleep(wait_time)
+    # if force we go directly
+    if args.force:
+        print(f"Forced. Do no wait...")
+    else:
+        wait_time = time_to_wait()
+        time.sleep(wait_time)
 
     while True:
 
         timestamp_now = time.time()
-        timestamp_before = timestamp_now
         now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
         now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
 
@@ -236,13 +253,11 @@ def main() -> None:
 
         # go to sleep
         print()
-        print("Going now to sleep...")
+        print(f"Done. Now {now_date_desc}. Sleeping...")
         print()
 
-        timestamp_after = time.time()
-        duration = timestamp_after - timestamp_before
-        sleep_time = PERIOD_MINUTES * 60 - duration
-        time.sleep(sleep_time)
+        wait_time = time_to_wait()
+        time.sleep(wait_time)
 
 
 if __name__ == '__main__':
