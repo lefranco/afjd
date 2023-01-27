@@ -21,6 +21,9 @@ FAQ_CONTENT_TABLE = {
     "C'est tout ?":
     "Non. Premièrement : un arbitre peut le faire à sa place pour éviter que la partie ne s'éternise, avec les mêmes conséquences. Deuxièmement un 'accord pour résoudre juste après la date limite' exprimé après la date limite devient un 'accord pour résoudre maintenant' avec les mêmes conséquences. Troisièmement : un petit automate vient regarder les parties dont la date limite est passée toutes les demies heures. Il se charge de soigeusement transformer tout 'accord pour résoudre après la date limite' en 'accord pour résoudre maintenant' toujours avec les mêmes conséquences.",
 
+    "Comment est calculée la nouvelle date limite ?":
+    "On part de la date courante. On arrondit à l'heure précédente (si on est après la date limite) ou à l'heure suivante (si on est avant la date limite). On ajoute les heures correspondant à la prochaine saison à jouer. On passe le week-end si besoin. On ajoute ce qu'il faut pour être sur l'heure de la synchronisation si besoin (quitte à passer au jour suivant dans ce dernier cas).",
+
     "Pourquoi les dates limites changent-elles de couleur ?":
     "Le code de couleur est assez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée. Rouge que la grâce est aussi passée. La grace n'a aucune incidence sur le jeu hormi ce code de couleur. Soyez ponctuels !",
 
