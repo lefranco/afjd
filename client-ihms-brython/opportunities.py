@@ -236,12 +236,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'join', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_game', 'nomessage_game']
+    fields = ['name', 'go_game', 'join', 'deadline', 'current_state', 'current_advancement','last_season', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_game', 'nomessage_game']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'join': 'rejoindre', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué(**)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'join': 'rejoindre', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'last_season': 'dernière saison', 'allocated': 'alloué(**)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -249,7 +249,7 @@ def my_opportunities():
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'master', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']:
+        if field in ['name', 'master', 'deadline', 'current_state', 'current_advancement', 'last_season', 'allocated', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']:
 
             if field == 'name':
 
@@ -303,6 +303,10 @@ def my_opportunities():
         def key_function(g): return (int(g[1]['nopress_game']), int(g[1]['nopress_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nomessage_game':
         def key_function(g): return (int(g[1]['nomessage_game']), int(g[1]['nomessage_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'last_season':
+        def key_function(g): return g[1]['nb_max_cycles_to_play']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'allocated':
+        def key_function(g): return - (recruiting_games_dict[int(g[0])]['capacity'] - recruiting_games_dict[int(g[0])]['allocated']) # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
@@ -348,6 +352,7 @@ def my_opportunities():
         data['master'] = None
         data['join'] = None
         data['allocated'] = None
+        data['last_season'] = None
 
         # highlite ongoing games (replacement)
         field = 'current_state'
@@ -409,6 +414,13 @@ def my_opportunities():
             if field == 'current_advancement':
                 advancement_loaded = value
                 advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
+                advancement_season_readable = variant_data.season_name_table[advancement_season]
+                value = f"{advancement_season_readable} {advancement_year}"
+
+            if field == 'last_season':
+                value = data['nb_max_cycles_to_play']
+                advancement_max = value * 5 - 1
+                advancement_season, advancement_year = common.get_season(advancement_max, variant_data)
                 advancement_season_readable = variant_data.season_name_table[advancement_season]
                 value = f"{advancement_season_readable} {advancement_year}"
 
