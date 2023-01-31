@@ -13,11 +13,12 @@ import interface
 import mapping
 import memoize
 import scoring
+import mydatetime
 
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Retrouver à partir du courriel', 'Récupérer un courriel', 'Récupérer un téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement']
+OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Retrouver à partir du courriel', 'Récupérer un courriel', 'Récupérer un téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP']
 
 
 def check_modo(pseudo):
@@ -1065,6 +1066,148 @@ def change_manager():
     MY_SUB_PANEL <= form
 
 
+def show_last_submissions():
+    """ show_last_submissions """
+
+    MY_SUB_PANEL <= html.H3("Les dernières soumissions")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    ip_submission_table = common.get_ip_submission_table()
+    if not ip_submission_table:
+        return
+
+    submission_table = ip_submission_table['submissions_list']
+
+    players_table = html.TABLE()
+
+    fields = ['date', 'pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'date': 'date', 'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    for data in sorted(submission_table, key=lambda c: c[0], reverse=True):
+
+        row = html.TR()
+        for field in fields:
+
+            if field == 'date':
+                time_stamp = data[0]
+                submit_time = mydatetime.fromtimestamp(time_stamp)
+                submit_time_str = mydatetime.strftime(*submit_time)
+                value = submit_time_str
+
+            if field == 'pseudo':
+                value = num2pseudo[data[1]]
+
+            col = html.TD(value)
+
+            row <= col
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
+
+
+def show_ip_addresses():
+    """ show_ip_addresses """
+
+    MY_SUB_PANEL <= html.H3("Les adresses IP")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    ip_submission_table = common.get_ip_submission_table()
+    if not ip_submission_table:
+        return
+
+    ip_table = ip_submission_table['addresses_list']
+
+    players_table = html.TABLE()
+
+    fields = ['ip_value', 'pseudo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'ip_value': 'adresse IP', 'pseudo': 'pseudo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    # duplicated ones
+    sorted_ips = sorted([i[0] for i in ip_table])
+    duplicated_ips = {sorted_ips[i] for i in range(len(sorted_ips)) if (i < len(sorted_ips) - 1 and sorted_ips[i] == sorted_ips[i + 1]) or (i > 0 and sorted_ips[i] == sorted_ips[i - 1])}
+
+    # same as admin ones (or orangecar)
+    admin_ips = {i[0] for i in ip_table if num2pseudo[i[1]] in [common.ADMIN_PSEUDO, common.ALTERNATE_ADMIN_PSEUDO]}
+
+    for data in sorted(ip_table, key=lambda c: (c[0], num2pseudo[c[1]].upper())):
+
+        row = html.TR()
+        for field in fields:
+
+            if field == 'pseudo':
+                value = num2pseudo[data[1]]
+
+            if field == 'ip_value':
+                value = data[0]
+
+                if value in admin_ips:
+                    colour = 'blue'
+                elif value in duplicated_ips:
+                    colour = 'red'
+                else:
+                    colour = None
+
+            col = html.TD(value)
+
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+
+            row <= col
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -1109,6 +1252,10 @@ def load_option(_, item_name):
         revoke_master()
     if item_name == 'Changer responsable événement':
         change_manager()
+    if item_name == 'Les dernières soumissions d\'ordres':
+        show_last_submissions()
+    if item_name == 'Vérification des adresses IP':
+        show_ip_addresses()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name

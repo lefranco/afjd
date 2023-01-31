@@ -844,6 +844,37 @@ def send_ip_address():
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
 
+def get_ip_submission_table():
+    """ get_ip_submission_table """
+
+    ip_sub_list = {}
+
+    def reply_callback(req):
+        nonlocal ip_sub_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des addresses IP et dernières soumissions : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des addresses IP et dernières soumissions : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        ip_sub_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/ip_address"
+
+    # getting ip addresses or last submissions : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return dict(ip_sub_list)
+
+
 def verification_code(pseudo):
     """ verification_code """
     code = int(sum(map(lambda c: ord(c) ** 3.5, pseudo))) % 1000000
