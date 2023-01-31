@@ -236,7 +236,7 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'join', 'deadline', 'current_state', 'current_advancement','last_season', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_game', 'nomessage_game']
+    fields = ['name', 'go_game', 'join', 'deadline', 'current_state', 'current_advancement', 'last_season', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_game', 'nomessage_game']
 
     # header
     thead = html.THEAD()
@@ -306,7 +306,7 @@ def my_opportunities():
     elif sort_by == 'last_season':
         def key_function(g): return g[1]['nb_max_cycles_to_play']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'allocated':
-        def key_function(g): return - (recruiting_games_dict[int(g[0])]['capacity'] - recruiting_games_dict[int(g[0])]['allocated']) # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+        def key_function(g): return - (recruiting_games_dict[int(g[0])]['capacity'] - recruiting_games_dict[int(g[0])]['allocated'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
