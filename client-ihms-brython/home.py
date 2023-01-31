@@ -312,26 +312,53 @@ def show_news():
 
     title7 = html.H4("Liens très importants")
     div_a1 <= title7
-    note_bene_content = html.DIV()
+    note_bene_content = html.DIV(Class='note')
 
+    note_bene_content_table = html.TABLE()
+
+    row = html.TR()
+    note_bene_content_table <= row
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/explain.png")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/pay.png")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/chat.png")
+    col <= img
+    row <= col
+
+    row = html.TR()
+    note_bene_content_table <= row
+
+    col = html.TD()
     link3 = html.A(href="https://youtu.be/luOiAz9i7Ls", target="_blank")
     link3 <= "Je comprend rien à ce site, je veux des explications claires avec un tutorial Youtube !"
-    note_bene_content <= link3
-    note_bene_content <= html.BR()
-    note_bene_content <= html.BR()
+    col <= link3
+    row <= col
 
+    col = html.TD()
     link4 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-a-l-association-francophone-des-joueurs-de-diplomacy", target="_blank")
     link4 <= "Je veux payer ma cotisation à l'association (IMPORTANT)"
-    note_bene_content <= link4
-    note_bene_content <= html.BR()
-    note_bene_content <= html.BR()
+    col <= link4
+    row <= col
 
+    col = html.TD()
     link5 = html.A(href="https://discord.gg/mUWes7yEqR", target="_blank")
     link5 <= "Je veux aller causer sur Discord avec d'autres joueurs"
-    note_bene_content <= link5
-    note_bene_content <= html.BR()
-    note_bene_content <= html.BR()
+    col <= link5
+    row <= col
 
+    note_bene_content <= note_bene_content_table
     div_a1 <= note_bene_content
     div_a1_tip = html.SPAN("Plus de détail dans le menu 'accueil/brique sociale'", Class='tooltiptext')
     div_a1 <= div_a1_tip
