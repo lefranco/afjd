@@ -25,10 +25,6 @@ import index  # circular import
 
 OPTIONS = ['Vue d\'ensemble', 'Toutes les parties', 'Déclarer un incident', 'Foire aux questions', 'Pourquoi yapa', 'Coin technique', 'Choix d\'interface', 'Tester un scorage', 'Parties sans arbitres', 'Autres liens', 'Brique sociale']
 
-NOTE_CONTENT_STATED = """Bienvenue dans la première version du site Diplomania.
-Information importante : vous visualisez ici une interface au design rustique pour accéder au moteur de jeu.
-Merci de nous remonter vos remarques sur le forum ou sur le serveur Discord."""
-
 
 # for safety
 if 'ANNOUNCEMENT' not in storage:
@@ -314,18 +310,29 @@ def show_news():
     # ----
     div_a1 = html.DIV(Class='tooltip')
 
-    title7 = html.H4("Note importante")
+    title7 = html.H4("Liens très importants")
     div_a1 <= title7
     note_bene_content = html.DIV()
-    for line in NOTE_CONTENT_STATED.split("\n"):
-        note_bene_content <= line
-        note_bene_content <= html.BR()
-    note_content_table = html.TABLE()
-    row = html.TR()
-    note_content_table <= row
-    col = html.TD(note_bene_content)
-    row <= col
-    div_a1 <= note_content_table
+
+    link3 = html.A(href="https://youtu.be/luOiAz9i7Ls", target="_blank")
+    link3 <= "Je comprend rien à ce site, je veux des explications claires avec un tutorial Youtube !"
+    note_bene_content <= link3
+    note_bene_content <= html.BR()
+    note_bene_content <= html.BR()
+
+    link4 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-a-l-association-francophone-des-joueurs-de-diplomacy", target="_blank")
+    link4 <= "Je veux payer ma cotisation à l'association (IMPORTANT)"
+    note_bene_content <= link4
+    note_bene_content <= html.BR()
+    note_bene_content <= html.BR()
+
+    link5 = html.A(href="https://discord.gg/mUWes7yEqR", target="_blank")
+    link5 <= "Je veux aller causer sur Discord avec d'autres joueurs"
+    note_bene_content <= link5
+    note_bene_content <= html.BR()
+    note_bene_content <= html.BR()
+
+    div_a1 <= note_bene_content
     div_a1_tip = html.SPAN("Plus de détail dans le menu 'accueil/brique sociale'", Class='tooltiptext')
     div_a1 <= div_a1_tip
     div_homepage <= div_a1
@@ -1334,15 +1341,6 @@ def show_links():
     link2 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
     link2 <= "Participer au financement du développement du site"
     MY_SUB_PANEL <= link2
-
-    # ----
-
-    title3 = html.H4("Tutoriel youtube")
-    MY_SUB_PANEL <= title3
-
-    link3 = html.A(href="https://youtu.be/luOiAz9i7Ls", target="_blank")
-    link3 <= "Si vous comprenez rien à ce site, ce tutoriel va vous éclairer sur les points essentiels..."
-    MY_SUB_PANEL <= link3
 
     # ----
 
