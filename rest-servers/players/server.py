@@ -38,6 +38,7 @@ import events
 import event_images
 import registrations
 import addresses
+import submissions
 import emails
 import database
 
@@ -2304,11 +2305,11 @@ class IpAddressRessource(flask_restful.Resource):  # type: ignore
 
     def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[str, int]]], int]:
         """
-        Get list of IP addresses
+        Get list of IP addresses and last order input
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/ip_address - GET - getting ip addresses")
+        mylogger.LOGGER.info("/ip_address - GET - getting ip addresses and last order input")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -2324,28 +2325,34 @@ class IpAddressRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
         pseudo = req_result.json()['logged_in_as']
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
-            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to get IP addresses")
+        # check user has right to get list of last submissions (moderator)
 
         sql_executor = database.SqlExecutor()
+
+        moderators_list = moderators.Moderator.inventory(sql_executor)
+        the_moderators = [m[0] for m in moderators_list]
+        if pseudo not in the_moderators:
+            del sql_executor
+            flask_restful.abort(403, msg="You are not allowed to get list of last ip addresses and submissions (need to be moderator)!")
+
         addresses_list = addresses.Address.inventory(sql_executor)
+        submissions_list = submissions.Submission.inventory(sql_executor)
+
         del sql_executor
 
-        data = {'addresses_list': addresses_list}
-
+        data = {'addresses_list': addresses_list, 'submissions_list': submissions_list}
         return data, 200
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
-        Stores an IP address
+        Stores an IP address and last submission
         EXPOSED
         """
 
         args = IP_ADDRESS_PARSER.parse_args(strict=True)
         ip_value = args['ip_value']
 
-        mylogger.LOGGER.info("/ip_address/<pseudo> - POST - stores an IP address ip_value=%s", ip_value)
+        mylogger.LOGGER.info("/ip_address- POST - stores an IP address ip_value=%s", ip_value)
 
         # check from user server user is pseudo
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -2365,19 +2372,25 @@ class IpAddressRessource(flask_restful.Resource):  # type: ignore
         sql_executor = database.SqlExecutor()
 
         player = players.Player.find_by_pseudo(sql_executor, pseudo)
-
         if player is None:
             del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
         assert player is not None
+
         player_id = player.identifier
+
+        # store and ip address for player
         address = addresses.Address(ip_value, player_id)
         address.update_database(sql_executor)
 
+        # store a last submission date for player
+        submission = submissions.Submission(player_id)
+        submission.update_database(sql_executor)
+
         sql_executor.commit()
 
-        data = {'pseudo': pseudo, 'msg': 'Ok IP address stored'}
+        data = {'pseudo': pseudo, 'msg': 'Ok IP address and submission stored'}
         return data, 200
 
 
