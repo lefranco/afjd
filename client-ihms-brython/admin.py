@@ -2500,7 +2500,7 @@ def agreement_usage():
     thead <= html.TD("Nombre d'ordres")
     thead <= html.TD("Nombre d'accord maintenant")
     thead <= html.TD("Nombre d'accord juste après")
-    thead <= html.TD("% accords juste après")
+    thead <= html.TD("% accords juste après p.r. tous accords")
     stats_table <= thead
 
     for nopress in (True, False):
@@ -2516,7 +2516,10 @@ def agreement_usage():
             row <= html.TD(stats_collected[(nopress, nomessage)]['needed'])
             row <= html.TD(stats_collected[(nopress, nomessage)]['agreed_now'])
             row <= html.TD(stats_collected[(nopress, nomessage)]['agreed_after'])
-            row <= html.TD(f"{100 * stats_collected[(nopress, nomessage)]['agreed_after'] / stats_collected[(nopress, nomessage)]['needed']:.2f}")
+            if stats_collected[(nopress, nomessage)]['agreed_after'] + stats_collected[(nopress, nomessage)]['agreed_now']:
+                row <= html.TD(f"{100 * stats_collected[(nopress, nomessage)]['agreed_after'] / (stats_collected[(nopress, nomessage)]['agreed_after'] + stats_collected[(nopress, nomessage)]['agreed_now']):.2f}")
+            else:
+                row <= "na"
             stats_table <= row
 
     MY_SUB_PANEL <= stats_table
