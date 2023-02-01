@@ -86,7 +86,7 @@ def my_opportunities():
         selection.show_game_selected()
 
         # action of going to game page
-        index.load_option(None, 'Jouer la partie sélectionnée')
+        index.load_option(None, 'Aller dans la partie sélectionnée')
 
     def join_and_select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
         """ join_and_select_game_callback : the second way of joining a game : by a button """

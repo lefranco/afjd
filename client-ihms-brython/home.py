@@ -395,7 +395,7 @@ def show_news():
     div_b1 <= html.DIV("Pour les possesseurs d'appareil Android, une application spécifiques a été créée, allez sur le forum pour la télécharger")
     div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
     div_b1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant(s) : modifiez le paramètre de votre compte")
-    div_b1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : jouer la partie sélectionnée / taguer")
+    div_b1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : Aller dans la partie sélectionnée / taguer")
     div_b1 <= html.DIV("Si vous souhaitez créer plusieurs parties par batch contactez l'administrateur pour obtenir les droits")
 
     div_b1_tip = html.SPAN("Plus de détail dans le menu 'accueil/foire aux question'", Class='tooltiptext')
@@ -433,7 +433,7 @@ def all_games(state_name):
         selection.show_game_selected()
 
         # action of going to game page
-        index.load_option(None, 'Jouer la partie sélectionnée')
+        index.load_option(None, 'Aller dans la partie sélectionnée')
 
     def again(state_name):
         """ again """

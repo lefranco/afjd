@@ -77,7 +77,7 @@ def show_games():
         selection.show_game_selected()
 
         # action of going to game page
-        index.load_option(None, 'Jouer la partie sélectionnée')
+        index.load_option(None, 'Aller dans la partie sélectionnée')
 
     def change_button_mode_callback(_):
         if storage['GAME_ACCESS_MODE'] == 'button':
