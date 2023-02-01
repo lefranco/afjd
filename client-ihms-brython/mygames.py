@@ -208,7 +208,7 @@ def my_games(state_name):
         play.set_arrival(arrival)
 
         # action of going to game page
-        index.load_option(None, 'Jouer la partie sélectionnée')
+        index.load_option(None, 'Aller dans la partie sélectionnée')
 
     def start_game_callback(ev, game):  # pylint: disable=invalid-name
 

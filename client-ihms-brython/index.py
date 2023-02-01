@@ -37,7 +37,7 @@ H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de 
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Mes parties', 'Editer partie', 'Appariement', 'Sélectionner partie', 'Jouer la partie sélectionnée', 'Bac à sable', 'Interface tournois', 'Evénements', 'Classements', 'Création', 'Modération', 'Forum', 'Administration']
+OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Mes parties', 'Editer partie', 'Appariement', 'Sélectionner partie', 'Aller dans la partie sélectionnée', 'Bac à sable', 'Interface tournois', 'Evénements', 'Classements', 'Création', 'Modération', 'Forum', 'Administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -153,7 +153,7 @@ def load_option(_, item_name):
         pairing.render(PANEL_MIDDLE)
     if item_name == 'Sélectionner partie':
         selection.render(PANEL_MIDDLE)
-    if item_name == 'Jouer la partie sélectionnée':
+    if item_name == 'Aller dans la partie sélectionnée':
         play.render(PANEL_MIDDLE)
     if item_name == 'Bac à sable':
         sandbox.render(PANEL_MIDDLE)
@@ -214,13 +214,13 @@ def load_option(_, item_name):
         MENU_LEFT <= menu_item
 
     # quitting superviser : clear timer
-    if ITEM_NAME_SELECTED != 'jouer la partie sélectionnée':
+    if ITEM_NAME_SELECTED != 'Aller dans la partie sélectionnée':
         if play_master.SUPERVISE_REFRESH_TIMER is not None:
             timer.clear_interval(play_master.SUPERVISE_REFRESH_TIMER)
             play_master.SUPERVISE_REFRESH_TIMER = None
 
     # these cause some problems
-    if prev_item_selected in ['Jouer la partie sélectionnée', 'Bac à sable']:
+    if prev_item_selected in ['Aller dans la partie sélectionnée', 'Bac à sable']:
         document.unbind("keypress")
 
     if ITEM_NAME_SELECTED == 'Accueil':
@@ -254,7 +254,7 @@ if 'game' in document.query:
             arrival = document.query['arrival']
             # so that will go to proper page and/or do proper action
             play.set_arrival(arrival)
-        load_option(None, 'Jouer la partie sélectionnée')
+        load_option(None, 'Aller dans la partie sélectionnée')
     else:
         load_option(None, ITEM_NAME_SELECTED)
 elif 'event' in document.query:
