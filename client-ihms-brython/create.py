@@ -15,7 +15,7 @@ import interface
 import mapping
 
 
-OPTIONS = ['Créer plusieurs parties']
+OPTIONS = ['Créer plusieurs parties', 'Explications']
 
 MAX_NUMBER_GAMES = 200
 
@@ -418,36 +418,6 @@ def create_many_games():
         alert(f"La partie modèle est le partie '{game}'. Vérifiez que cela convient !")
         PREV_GAME = game
 
-    information = html.DIV(Class='note')
-    information <= "Vous devez composer un fichier CSV"
-    information <= html.BR()
-    information <= "Une ligne par partie"
-    information <= html.BR()
-    information <= "Sur chaque ligne, séparés pas des virgules (ou des points-virgules):"
-    items = html.UL()
-    items <= html.LI("le nom de la partie")
-    items <= html.LI("l'arbitre de la partie (cette colonne est redondante : c'est forcément votre pseudo)")
-    items <= html.LI("le premier joueur de la partie")
-    items <= html.LI("le deuxième joueur de la partie")
-    items <= html.LI("etc....")
-    information <= items
-    information <= "Utiliser l'ordre suivant pour la variante standard : Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie"
-    information <= html.BR()
-    information <= "Il est impossible d'attribuer l'arbitrage d'une partie à un autre joueur, donc vous pouvez mettre un arbitre différent à des fins de vérification mais la création des parties n'aura pas lieu."
-    information <= html.BR()
-    information <= "Les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée, dont la description - donc pensez bien à la modifier dans la partie modèle avant de créer les parties..."
-    information <= "Cela créée les parties, pas le tournoi. Il faut se mettre sur une partie, puis créée le tournoi et enfin insérer dedans les autres parties."
-    information <= html.BR()
-    information <= "Note : Soit vous utilisez comme modèle une partie existante, soit vous la créez pour l'occasion et la supprimez à la fin"
-
-    MY_SUB_PANEL <= information
-    MY_SUB_PANEL <= html.BR()
-
-    information2 = html.DIV(Class='important')
-    information2 <= "Le site peut vous fournir une ressource pour vous aider à créer le fichier CSV pour votre tournoi. Si vous êtes intéressé, allez dans accueil/coin technique"
-    MY_SUB_PANEL <= information2
-    MY_SUB_PANEL <= html.BR()
-
     form = html.FORM()
 
     fieldset = html.FIELDSET()
@@ -461,7 +431,6 @@ def create_many_games():
         INPUT_FILE = html.INPUT(type="file", accept='.csv')
     form <= INPUT_FILE
     form <= html.BR()
-
     form <= html.BR()
 
     input_create_games = html.INPUT(type="submit", value="Créer les parties")
@@ -469,6 +438,70 @@ def create_many_games():
     form <= input_create_games
 
     MY_SUB_PANEL <= form
+
+def explain_stuff():
+    """ explain_stuff """
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_creator(pseudo):
+        alert("Pas le bon compte (pas créateur)")
+        return
+
+    MY_SUB_PANEL <= html.H3("Spécifications  du fichier CSV")
+
+    information1 = html.DIV()
+    information1 <= "Vous devez composer un fichier CSV"
+    information1 <= html.BR()
+    information1 <= "Une ligne par partie"
+    information1 <= html.BR()
+    information1 <= "Sur chaque ligne, séparés pas des virgules (ou des points-virgules):"
+    items = html.UL()
+    items <= html.LI("le nom de la partie")
+    items <= html.LI("l'arbitre de la partie (cette colonne est redondante : c'est forcément votre pseudo)")
+    items <= html.LI("le premier joueur de la partie")
+    items <= html.LI("le deuxième joueur de la partie")
+    items <= html.LI("etc....")
+    information1 <= items
+    information1 <= "Utilisez l'ordre suivant pour la variante standard : Angleterre, France, Allemagne, Italie, Autriche, Russie, Turquie"
+    information1 <= html.BR()
+    information1 <= "Il est impossible d'attribuer l'arbitrage d'une partie à un autre joueur, donc vous pouvez mettre dans le fichier un arbitre différent à des fins de vérification mais la création des parties n'aura pas lieu."
+    information1 <= html.BR()
+    information1 <= "Les parties copieront un maximum de propriétés de la partie modèle que vous avez préalablement sélectionnée, dont la description - donc pensez bien à la modifier dans la partie modèle avant de créer les parties..."
+
+    MY_SUB_PANEL <= information1
+
+    MY_SUB_PANEL <= html.H3("Rappel de la procédure pour les arbitres assistants")
+
+    information2 = html.DIV()
+    modus = html.OL()
+    modus <= html.LI("Vous avez dû recevoir un fichier csv avec les donnees de vos parties à importer.")
+    modus <= html.LI("Allez sur le site. Choisissez le menu “Sélectionner partie”, et sélectionnez la partie modèle (T-BLITZ) parmi les parties distinguées, dans la dernière des quatre fenêtres (les parties “distinguées”). Cette etape est pertinente, car c’est cette partie qui definira les caracteristiques des parties que vous allez créer.")
+    modus <= html.LI("Allez dans le menu “Création”. Si vous ne voyez pas le menu, demandez les droits à l'administrateur")
+    modus <= html.LI("Cliquez sur “parcourir” pour choisir le fichier et selectionnez le fichier csv que vous avez reçu")
+    modus <= html.LI("Confirmez la création des parties...")
+    modus <= html.LI("Si votre connexion est lente, ignorez les messages bizarres comme par exemple “le navigateur attend une reponse du site”. C’est long, ca mouline, mais à la fin ça doit aboutir.")
+    modus <= html.LI("Si les parties se sont créées normalement, un sympathique message comme quoi tout s'est bien passé apparaît.")
+    modus <= html.LI("Les parties sont créés mais dans l'état “en attente”")
+    modus <= html.LI("Allez dans le menu “mes parties”, cliquez sur “en attente”, cliquez sur le bouton “basculer en mode avec colonnes action” si besoin.")
+    modus <= html.LI("Démarrez chacune des parties nouvelement créée une par une en cliquant sur les fusées.")
+    modus <= html.LI("Les parties sont démarrées ! Félicitations !")
+    modus <= html.LI("Vous pouvez mettre un message de bienvenue dans chaque partie en passant par le menu déclarer")
+    modus <= html.LI("En cas de souci contactez l'administateur")
+    information2 <= modus
+
+    MY_SUB_PANEL <= information2
+
+    MY_SUB_PANEL <= html.H3("Petit complément")
+
+    information3 = html.DIV()
+    information3 <= "Le site peut vous fournir une ressource pour vous aider à créer le fichier CSV pour votre tournoi. Si vous êtes intéressé, allez dans accueil/coin technique"
+    MY_SUB_PANEL <= information3
+    MY_SUB_PANEL <= html.BR()
 
 
 MY_PANEL = html.DIV()
@@ -501,6 +534,8 @@ def load_option(_, item_name):
 
     if item_name == 'Créer plusieurs parties':
         create_many_games()
+    if item_name == 'Explications':
+        explain_stuff()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
