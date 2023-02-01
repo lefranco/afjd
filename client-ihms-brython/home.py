@@ -23,7 +23,7 @@ import scoring
 import index  # circular import
 
 
-OPTIONS = ['Vue d\'ensemble', 'Toutes les parties', 'Déclarer un incident', 'Foire aux questions', 'Pourquoi yapa', 'Coin technique', 'Choix d\'interface', 'Tester un scorage', 'Parties sans arbitres', 'Autres liens', 'Brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Toutes les parties', 'Déclarer un incident', 'Foire aux questions', 'Pourquoi yapa', 'Coin technique', 'Choix d\'interface', 'Tester un scorage', 'Parties sans arbitres', 'Brique sociale']
 
 
 # for safety
@@ -347,14 +347,14 @@ def show_news():
     row <= col
 
     col = html.TD()
-    link4 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/adhesions/adhesion-a-l-association-francophone-des-joueurs-de-diplomacy", target="_blank")
-    link4 <= "Je veux payer ma cotisation à l'association (IMPORTANT)"
+    link4 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy", target="_blank")
+    link4 <= "Je souhaite contribuer au financement du site !"
     col <= link4
     row <= col
 
     col = html.TD()
     link5 = html.A(href="https://discord.gg/mUWes7yEqR", target="_blank")
-    link5 <= "Je veux aller causer sur Discord avec d'autres joueurs"
+    link5 <= "Je veux aller causer sur Discord avec d'autres joueurs !"
     col <= link5
     row <= col
 
@@ -1099,39 +1099,48 @@ def show_technical():
     title6 = html.H4("Règles simplifiées")
     MY_SUB_PANEL <= title6
 
-    link7 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
-    link7 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
-    MY_SUB_PANEL <= link7
+    link6 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
+    link6 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
+    MY_SUB_PANEL <= link6
 
     # --
 
     title7 = html.H4("Création de fichier de tournoi")
     MY_SUB_PANEL <= title7
 
-    link8 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
-    link8 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
-    MY_SUB_PANEL <= link8
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    link8 = html.A(href="./scripts/allocate.py", target="_blank")
-    link8 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
-    MY_SUB_PANEL <= link8
-
-    # --
-
-    title7 = html.H4("Remerciements")
-    MY_SUB_PANEL <= title7
-
-    link9 = html.A(href="https://brython.info/", target="_blank")
-    link9 <= "Outil utilisé pour ce site web"
-    MY_SUB_PANEL <= link9
+    link81 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
+    link81 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
+    MY_SUB_PANEL <= link81
 
     MY_SUB_PANEL <= html.P()
 
-    link10 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link10 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link10
+    link82 = html.A(href="./scripts/allocate.py", target="_blank")
+    link82 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
+    MY_SUB_PANEL <= link82
+
+    # --
+
+    title9 = html.H4("Document d'interface de l'API")
+    MY_SUB_PANEL <= title9
+
+    link9 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
+    link4 <= "Si vous voulez vous aussi développer votre front end..."
+    MY_SUB_PANEL <= link9
+
+    # --
+
+    title10 = html.H4("Remerciements")
+    MY_SUB_PANEL <= title10
+
+    link101 = html.A(href="https://brython.info/", target="_blank")
+    link101 <= "Outil utilisé pour ce site web"
+    MY_SUB_PANEL <= link101
+
+    MY_SUB_PANEL <= html.P()
+
+    link102 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link102 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link102
 
 
 def select_interface():
@@ -1354,31 +1363,6 @@ def show_no_game_masters_data():
     MY_SUB_PANEL <= no_game_masters_table
 
 
-def show_links():
-    """ show_links """
-
-    title = html.H3("Autres liens")
-    MY_SUB_PANEL <= title
-
-    # ----
-
-    title2 = html.H4("Parrainage")
-    MY_SUB_PANEL <= title2
-
-    link2 = html.A(href="https://www.helloasso.com/associations/association-francophone-des-joueurs-de-diplomacy/collectes/diplomania-fr-le-site-open-source", target="_blank")
-    link2 <= "Participer au financement du développement du site"
-    MY_SUB_PANEL <= link2
-
-    # ----
-
-    title4 = html.H4("Document d'interface de l'API")
-    MY_SUB_PANEL <= title4
-
-    link4 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
-    link4 <= "Si vous voulez vous aussi développer votre front end..."
-    MY_SUB_PANEL <= link4
-
-
 def social():
     """ social """
 
@@ -1433,8 +1417,6 @@ def load_option(_, item_name):
         test_scoring()
     if item_name == 'Parties sans arbitres':
         show_no_game_masters_data()
-    if item_name == 'Autres liens':
-        show_links()
     if item_name == 'Brique sociale':
         social()
 
