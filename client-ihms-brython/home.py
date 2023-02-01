@@ -381,11 +381,11 @@ def show_news():
         status = "en retard"
     abs_delta_time = abs(delta_time)
     if abs_delta_time > 60:
-        abs_delta_time /= 60
+        abs_delta_time //= 60
         unit = "minutes"
     else:
         unit = "secondes"
-    div_b1 <= html.DIV(f"Votre horloge locale est {status} de {abs_delta_time} {unit} sur celle du serveur", Class='note')
+    div_b1 <= html.DIV(f"Votre horloge locale est {status} d'environ {abs_delta_time} {unit} sur celle du serveur", Class='note')
     div_b1 <= html.BR()
 
     # rest
