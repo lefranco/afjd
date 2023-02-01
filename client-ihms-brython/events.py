@@ -368,7 +368,7 @@ def registrations():
             input_unregister_event.bind("click", lambda e: register_event_callback(e, False))
             register_form <= input_unregister_event
         else:
-            input_register_event = html.INPUT(type="submit", value="J'en profite !")
+            input_register_event = html.INPUT(type="submit", value="Mettez moi dedans !")
             input_register_event.bind("click", lambda e: register_event_callback(e, True))
             register_form <= input_register_event
     else:
