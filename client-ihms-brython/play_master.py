@@ -421,7 +421,7 @@ def game_master():
         body += "\n"
         body += f"Le rôle qui est libre est {role_name}."
         body += "\n"
-        body += "Comment s'y prendre ? Aller sur le site, onglet 'Rejoindre une partie', bouton 'j'en profite' de la ligne de la partie en rose (Il peut être judicieux d'aller tâter un peu la partie au préalable)"
+        body += "Comment s'y prendre ? Aller sur le site, onglet 'Rejoindre une partie', cliquez sur le bouton dans la colonne 'rejoindre' de la ligne de la partie en rose (Il peut être judicieux d'aller tâter un peu la partie au préalable)"
         body += "\n"
         body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
         body += "\n"
