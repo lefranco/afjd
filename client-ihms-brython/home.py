@@ -290,7 +290,7 @@ def show_news():
     ongoing_games = stats_content['ongoing_games']
     active_game_masters = stats_content['active_game_masters']
     active_players = stats_content['active_players']
-    div_a2 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité."
+    div_a2 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
     div_a2_tip = html.SPAN("Plus de détail dans le menu 'classement/joueurs'", Class='tooltiptext')
     div_a2 <= div_a2_tip
     div_homepage <= div_a2
