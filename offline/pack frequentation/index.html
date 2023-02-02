@@ -10,7 +10,7 @@
 <body onload="brython()">
 	<script src="https://code.highcharts.com/highcharts.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
-	
+
 	<!-- just calling python  -->
 	<script type="text/python" content-type="utf-8">
 
@@ -73,6 +73,24 @@ if not data:
     alert("Pas les données")
     exit()
 
+# change to int
+data = {int(k) : v for k,v in data.items()}
+
+# filter data : keep one per day (invent some)
+data2 = data.copy()
+data = {}
+prev_day_floor = 0
+for time_event, number_event in data2.items():
+    # will only keep first value of day
+    day_floor = (time_event // (24 * 3600)) * (24 * 3600)
+    if prev_day_floor:
+        gap = (day_floor - prev_day_floor) // (24 * 3600)
+        for inc in range(1, gap+1):
+            data[prev_day_floor + inc*(24*3600)] = number_event
+    else:
+        data[day_floor] = number_event
+    prev_day_floor = day_floor
+
 b_highchart = window.Highcharts.Chart.new
 
 b_highchart({
@@ -85,7 +103,7 @@ b_highchart({
 
     },
     'subtitle': {
-        'text': 'Un joueur est actif entre le moment de la première et la dernière résolution d\'une partie à laquelle il prend part',
+        'text': 'Un joueur est actif entre le moment de la première et la dernière résolution d\'une partie à laquelle il prend part.',
         'x': -20
     },
     'xAxis': {
