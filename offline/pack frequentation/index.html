@@ -81,15 +81,17 @@ data2 = data.copy()
 data = {}
 prev_day_floor = 0
 for time_event, number_event in data2.items():
-    # will only keep first value of day
+    # will only keep last value of day
     day_floor = (time_event // (24 * 3600)) * (24 * 3600)
+    # fills gap if applicable
     if prev_day_floor:
         gap = (day_floor - prev_day_floor) // (24 * 3600)
-        for inc in range(1, gap+1):
-            data[prev_day_floor + inc*(24*3600)] = number_event
-    else:
-        data[day_floor] = number_event
+        for inc in range(1, gap):
+            data[prev_day_floor + inc*(24*3600)] = prev_number_event
+    # always put value (will have last of day)
+    data[day_floor] = number_event
     prev_day_floor = day_floor
+    prev_number_event = number_event
 
 b_highchart = window.Highcharts.Chart.new
 
