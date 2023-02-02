@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Highcharts Example</title>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script src="brython.js"></script>
+	<script src="brython_modules.js"></script>
+</head>
+<body onload="brython()">
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+	
+	<!-- just calling python  -->
+	<script type="text/python" content-type="utf-8">
+
+import json
+import datetime
+
+from browser import window, ajax, alert
+
+
+def extract_frequentation_data():
+    """ extract_frequentation_data """
+
+    data = None
+
+    def noreply_callback(_):
+        """ noreply_callback """
+        alert("Problème (pas de réponse de la part du serveur)")
+
+    def reply_callback(req):
+
+        nonlocal data
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au calcul de l'évolution de la fréquentation : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au calcul de l'évolution de la fréquentation : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+
+            return
+
+        data = req_result
+
+
+    json_dict = {
+    }
+
+    host = "https://games.diplomania.fr"
+    port = 443
+    url = f"{host}:{port}/extract_histo_data"
+    TIMEOUT_SERVER = 5
+
+    # extract_histo_data : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return data
+
+
+def readable(time_stamp):
+
+    deadline_date = datetime.datetime.fromtimestamp(time_stamp, datetime.timezone.utc)
+    date_desc = deadline_date.strftime('%Y-%m-%d %H:%M:%S GMT')
+    return date_desc
+
+
+data = extract_frequentation_data()
+if not data:
+    alert("Pas les données")
+    exit()
+
+b_highchart = window.Highcharts.Chart.new
+
+b_highchart({
+    'chart':{
+        'renderTo': 'container'
+    },
+    'title': {
+        'text': 'Fréquentation du site',
+        'x': -20 #center
+
+    },
+    'subtitle': {
+        'text': 'Un joueur est actif entre le moment de la première et la dernière résolution d\'une partie qu\'il joue',
+        'x': -20
+    },
+    'xAxis': {
+        'categories': list(map(readable, data.keys()))
+    },
+    'yAxis': {
+        'title': {
+            'text': 'nombre de joueur actifs'
+        },
+        'plotLines': [{
+            'value': 0,
+            'width': 1,
+            'color': '#808080'
+        }]
+    },
+    'tooltip': {
+        'valueSuffix': 'j'
+    },
+    'legend': {
+        'layout': 'vertical',
+        'align': 'right',
+        'verticalAlign': 'middle',
+        'borderWidth': 0
+    },
+    'series': [{
+        'name': '',
+        'data': list(data.values())
+    }]
+})
+
+
+	</script>
+	<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</body>
+</html>
+
