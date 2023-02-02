@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	<title>Highcharts Example</title>
+	<title>Jeu Diplomatie en ligne</title>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 	<script src="brython.js"></script>
 	<script src="brython_modules.js"></script>
@@ -80,12 +80,12 @@ b_highchart({
         'renderTo': 'container'
     },
     'title': {
-        'text': 'Fréquentation du site',
+        'text': 'Fréquentation du site (en nombre de joueurs actifs)',
         'x': -20 #center
 
     },
     'subtitle': {
-        'text': 'Un joueur est actif entre le moment de la première et la dernière résolution d\'une partie qu\'il joue',
+        'text': 'Un joueur est actif entre le moment de la première et la dernière résolution d\'une partie à laquelle il prend part',
         'x': -20
     },
     'xAxis': {
@@ -93,7 +93,7 @@ b_highchart({
     },
     'yAxis': {
         'title': {
-            'text': 'nombre de joueur actifs'
+            'text': 'nombre de joueurs'
         },
         'plotLines': [{
             'value': 0,
