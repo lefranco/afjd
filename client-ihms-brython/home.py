@@ -23,7 +23,7 @@ import scoring
 import index  # circular import
 
 
-OPTIONS = ['Vue d\'ensemble', 'Toutes les parties', 'Déclarer un incident', 'Foire aux questions', 'Pourquoi yapa', 'Coin technique', 'Choix d\'interface', 'Tester un scorage', 'Parties sans arbitres', 'Brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Toutes les parties', 'Déclarer un incident', 'Foire aux questions', 'Pourquoi yapa', 'Coin technique', 'Choix d\'interface', 'Tester un scorage', 'Parties sans arbitres', 'Evolution de la fréquentation', 'Brique sociale']
 
 
 # for safety
@@ -191,6 +191,44 @@ def formatted_teaser(teasers):
         teaser_content <= html.BR()
 
     return teaser_content
+
+
+def extract_frequentation_data():
+    """ extract_frequentation_data """
+
+    data = None
+
+    def reply_callback(req):
+
+        nonlocal data
+
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au calcul de l'évolution de la fréquentation : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au calcul de l'évolution de la fréquentation : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+
+            # failed but refresh
+            MY_SUB_PANEL.clear()
+            frequentation_evolution()
+
+        data = req_result
+
+
+    json_dict = {
+    }
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/extract_histo_data"
+
+    # extract_histo_data : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return data
 
 
 def show_news():
@@ -1363,6 +1401,25 @@ def show_no_game_masters_data():
     MY_SUB_PANEL <= no_game_masters_table
 
 
+def frequentation_evolution():
+    """ frequentation_evolution """
+
+    MY_SUB_PANEL <= html.H3("Evolution de la fréquentation en joueurs")
+
+    data = extract_frequentation_data()
+    if not data:
+        alert("Pas les données")
+        return
+
+    desc = ""
+    for time_stamp_str, number in data.items():
+        time_stamp = int(time_stamp_str)
+        date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+        desc += f"{date_now_gmt_str} : {number}\n"
+
+    alert(desc)
+
 def social():
     """ social """
 
@@ -1417,6 +1474,8 @@ def load_option(_, item_name):
         test_scoring()
     if item_name == 'Parties sans arbitres':
         show_no_game_masters_data()
+    if item_name == 'Evolution de la fréquentation':
+        frequentation_evolution()
     if item_name == 'Brique sociale':
         social()
 

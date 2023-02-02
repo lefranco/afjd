@@ -5529,9 +5529,11 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
             game_data['players'] = {str(a[1]): a[2] for a in allocations_list if a[2] >= 1}
 
-            # get current_advancement
+            # get game
             game = games.Game.find_by_identifier(sql_executor, game_id)
             assert game is not None
+
+            # get current_advancement
             last_advancement_played = game.current_advancement - 1
             game_data['number_advancement_played'] = game.current_advancement
 
@@ -5547,8 +5549,6 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
             game_data['end_time_stamp'] = end_transition.time_stamp
 
             # get scoring, classic and name
-            game = games.Game.find_by_identifier(sql_executor, game_id)
-            assert game is not None
             game_name = game.name
             game_data['scoring'] = game.scoring
             game_data['classic'] = not game.nomessage_game
@@ -5576,6 +5576,118 @@ class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = {'games_dict': games_dict}
+        return data, 200
+
+
+@API.resource('/extract_histo_data')
+class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
+    """ ExtractHistoDataRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[int, int], int]:
+        """
+        Get information for historic of number of players etc...
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/extract_histo_data - GET - getting histo data ")
+
+        sql_executor = database.SqlExecutor()
+
+        # concerned_games
+        games_list = games.Game.inventory(sql_executor)
+        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.archive]
+
+        # time of spring 01
+        first_advancement = 1
+
+        # extract start_time, end_time and players from games
+        games_data = []
+        for game_id in concerned_games_list:
+
+            game_data: typing.Dict[str, typing.Any] = {}
+
+            # get start date
+            start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement)
+
+            if not start_transition:
+                # this game was not played
+                continue
+
+            assert start_transition is not None
+            start_time_stamp = start_transition.time_stamp
+
+            # get players
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            players = [a[1] for a in allocations_list if a[2] >= 1]
+
+            # get game
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+
+            # game is ongoing
+            if game.current_state == 1:
+                end_time_stamp = None
+
+            # game is finished
+            if game.current_state == 2:
+
+                # get current_advancement
+                last_advancement_played = game.current_advancement - 1
+                game_data['number_advancement_played'] = game.current_advancement
+
+                # get end date
+                end_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
+
+                assert end_transition is not None
+
+                # would lead to division by zero
+                if end_transition == start_transition:
+                    # this game was not played
+                    continue
+
+                end_time_stamp = end_transition.time_stamp
+
+            games_data.append((start_time_stamp, end_time_stamp, players))
+
+        del sql_executor
+
+        # build list of events (sorted)
+        event_table: typing.Dict[int, typing.List[typing.Tuple[bool, typing.List[int]]]] = {}
+        for start_time, end_time, players in games_data:
+
+            if end_time is not None:
+                assert end_time > start_time, "game starts after it ends"
+
+            if start_time not in event_table:
+                event_table[start_time] = []
+            event_table[start_time].append((True, players))
+
+            if end_time is not None:
+                if end_time not in event_table:
+                    event_table[end_time] = []
+                event_table[end_time].append((False, players))
+
+        # make history of number
+        list_cur_people = []
+        histo_number = {}
+        for ev_time, events in sorted(event_table.items(), key=lambda t: t[0]):
+            for ev_add, ev_players in events:
+                if ev_add:
+                    list_cur_people += ev_players
+                else:
+                    for player in ev_players:
+                        list_cur_people.remove(player)
+            histo_number[ev_time] = len(set(list_cur_people))
+
+        # clean history of numbers (remove dublins)
+        h_number_prec = 0
+        histo_number2 = histo_number.copy()
+        for h_time, h_number in histo_number.items():
+            if h_number == h_number_prec:
+                del histo_number2[h_time]
+            h_number_prec = h_number
+
+        data = histo_number2
         return data, 200
 
 
