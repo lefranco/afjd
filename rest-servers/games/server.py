@@ -5472,7 +5472,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         # games we can speak about the players
-        allowed_games = {g.identifier for g in games_list if g.current_state == 1}
+        allowed_games = {g.identifier for g in games_list if g.current_state == 1 and not game.archive}
 
         # players_dict
         game_masters_set = set()
