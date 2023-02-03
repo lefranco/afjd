@@ -857,6 +857,8 @@ def rectify_position():
         alert("ERREUR : identifiant de partie introuvable")
         return
 
+    alert("Attention :\n 1) Ne pas rectifier une position en dehors des phases de mouvements !\n 2) Ne pas supprimer une unité qui a déjà reçu un ordre !\n (DANGER !!!)")
+
     game_id = storage['GAME_ID']
 
     # from variant name get variant content
