@@ -89,7 +89,8 @@ for time_event, number_event in data2.items():
         for inc in range(1, gap):
             data[prev_day_floor + inc*(24*3600)] = prev_number_event
     # always put value (will have best of day)
-    data[day_floor] = number_event if number_event not in data else data[day_floor] < number_event
+    if number_event not in data or number_event > data[day_floor]:
+        data[day_floor] = number_event
     prev_day_floor = day_floor
     prev_number_event = number_event
 
