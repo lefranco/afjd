@@ -624,6 +624,10 @@ def tournament_result():
     tournament_id = tournament_dict['identifier']
     games_in = tournament_dict['games']
 
+    MY_SUB_PANEL <= f"Tournoi concerné : {tournament_name}"
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
     games_dict = common.get_games_data()
     if not games_dict:
         alert("Erreur chargement dictionnaire parties")
@@ -899,6 +903,11 @@ def revoke_master():
         alert("ERREUR : identifiant de partie introuvable")
         return
 
+    game_name = storage['GAME']
+    MY_SUB_PANEL <= f"Partie concernée : {game_name}"
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
     game_id = storage['GAME_ID']
 
     form = html.FORM()
@@ -969,6 +978,10 @@ def change_manager():
     events_dict = common.get_events_data()
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
+
+    MY_SUB_PANEL <= f"Evénement concerné : {event_name}"
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
 
     players_dict = common.get_players()
     if not players_dict:
