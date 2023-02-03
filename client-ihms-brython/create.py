@@ -439,6 +439,7 @@ def create_many_games():
 
     MY_SUB_PANEL <= form
 
+
 def explain_stuff():
     """ explain_stuff """
 
