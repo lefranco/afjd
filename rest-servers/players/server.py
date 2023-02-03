@@ -1267,61 +1267,6 @@ class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/find-player-from-email/<email>')
-class FindPlayerFromEmailRessource(flask_restful.Resource):  # type: ignore
-    """ FindPlayerFromEmailRessource """
-
-    def get(self, email: str) -> typing.Tuple[typing.Dict[str, str], int]:
-        """
-        Provides the pseudo from the email address
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/find-player-from-email - GET - get the pseudo from the email address=%s", email)
-
-        # check from user server user is pseudo
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
-
-        pseudo_requester = req_result.json()['logged_in_as']
-
-        sql_executor = database.SqlExecutor()
-
-        requester = players.Player.find_by_pseudo(sql_executor, pseudo_requester)
-
-        if requester is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"Requesting player {pseudo_requester} does not exist")
-
-        moderators_list = moderators.Moderator.inventory(sql_executor)
-        the_moderators = [m[0] for m in moderators_list]
-        if pseudo_requester not in the_moderators:
-            del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to get pseudo from email address! (need to be moderator)")
-
-        email2pseudo = {p.email: p.pseudo for p in players.Player.inventory(sql_executor)}
-
-        if email not in email2pseudo:
-            del sql_executor
-            flask_restful.abort(404, msg=f"No player with email {email} found")
-
-        del sql_executor
-
-        pseudo = email2pseudo[email]
-
-        data = {'pseudo': pseudo}
-        return data, 200
-
-
 @API.resource('/creators')
 class CreatorListRessource(flask_restful.Resource):  # type: ignore
     """ CreatorListRessource """

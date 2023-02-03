@@ -20,7 +20,7 @@ import elo
 import memoize
 
 
-OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Comptes oisifs', 'Courriels non confirmés', 'Vérification des courriels', 'Utilisation des accords', 'Maintenance']
+OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Comptes oisifs', 'Courriels non confirmés', 'Utilisation des accords', 'Maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -2119,65 +2119,6 @@ def show_non_confirmed_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} comptes non confirmés")
 
 
-def show_all_emails():
-    """ show_all_emails """
-
-    MY_SUB_PANEL <= html.H3("Liste joueurs avec leurs courriels")
-
-    if not common.check_admin():
-        alert("Pas le bon compte (pas admin)")
-        return
-
-    emails_dict = common.get_all_emails()
-    if not emails_dict:
-        return
-
-    emails_table = html.TABLE()
-
-    fields = ['pseudo', 'email']
-
-    # header
-    thead = html.THEAD()
-    for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'email': 'courriel'}[field]
-        col = html.TD(field_fr)
-        thead <= col
-    emails_table <= thead
-
-    # duplicated ones
-    sorted_emails = sorted([e[0] for e in emails_dict.values()])
-    duplicated_emails = {sorted_emails[i] for i in range(len(sorted_emails)) if (i < len(sorted_emails) - 1 and sorted_emails[i] == sorted_emails[i + 1]) or (i > 0 and sorted_emails[i] == sorted_emails[i - 1])}
-
-    for pseudo, (email, _, _) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
-
-        row = html.TR()
-        for field in fields:
-
-            colour = None
-
-            if field == 'pseudo':
-                value = pseudo
-
-            if field == 'email':
-                value = email
-
-                if value in duplicated_emails:
-                    colour = 'red'
-
-            col = html.TD(value)
-
-            if colour is not None:
-                col.style = {
-                    'background-color': colour
-                }
-
-            row <= col
-
-        emails_table <= row
-
-    MY_SUB_PANEL <= emails_table
-
-
 def agreement_usage():
     """ agreement_usage """
 
@@ -2569,8 +2510,6 @@ def load_option(_, item_name):
         show_idle_data()
     if item_name == 'Courriels non confirmés':
         show_non_confirmed_data()
-    if item_name == 'Vérification des courriels':
-        show_all_emails()
     if item_name == 'Utilisation des accords':
         agreement_usage()
     if item_name == 'Maintenance':
