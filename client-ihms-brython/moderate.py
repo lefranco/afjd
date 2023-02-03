@@ -18,7 +18,7 @@ import mydatetime
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Retrouver à partir du courriel', 'Récupérer un courriel', 'Récupérer un téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP']
+OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel', 'Récupérer un téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels']
 
 
 def check_modo(pseudo):
@@ -93,74 +93,6 @@ def get_tournament_players_data(tournament_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return tournament_players_dict
-
-
-def find_from_email_address():
-    """ find_from_email_address """
-
-    def find_from_email_addresss_callback(_):
-        """ find_from_email_addresss_callback """
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération du pseudo à partir du courriel : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération du pseudo à partir du courriel : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            pseudo_found = req_result['pseudo']
-            alert(f"Son pseudo est '{pseudo_found}'")
-
-        email = input_email.value
-        if not email:
-            alert("Courriel à retrouver manquant")
-            return
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/find-player-from-email/{email}"
-
-        # finding pseudo from email : need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        find_from_email_address()
-
-    MY_SUB_PANEL <= html.H3("Retrouver un compte par courriel")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    form = html.FORM()
-
-    fieldset = html.FIELDSET()
-    legend_email = html.LEGEND("courriel", title="Le courriel de la personne à identifier")
-    fieldset <= legend_email
-    input_email = html.INPUT(type="email", value="", size=MAX_LEN_EMAIL)
-    fieldset <= input_email
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_find_email = html.INPUT(type="submit", value="Retrouver le compte")
-    input_find_email.bind("click", find_from_email_addresss_callback)
-    form <= input_find_email
-
-    MY_SUB_PANEL <= form
 
 
 def change_news_modo():
@@ -241,10 +173,10 @@ def change_news_modo():
     MY_SUB_PANEL <= form
 
 
-def all_emails():
-    """ all_emails """
+def prepare_mailing():
+    """ prepare_mailing """
 
-    MY_SUB_PANEL <= html.H3("Liste joueurs avec leurs courriels")
+    MY_SUB_PANEL <= html.H3("Préparation d'un publipostage")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -351,7 +283,7 @@ def all_emails():
 def show_verif_codes():
     """ show_verif_codes """
 
-    MY_SUB_PANEL <= html.H3("Lister les codes de vérification")
+    MY_SUB_PANEL <= html.H3("Les codes de vérification pour le forum")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -452,7 +384,7 @@ def sendmail():
         MY_SUB_PANEL.clear()
         sendmail()
 
-    MY_SUB_PANEL <= html.H3("Envoyer un courriel")
+    MY_SUB_PANEL <= html.H3("Envoi de courriel individuel")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -539,7 +471,7 @@ def display_email_address():
         MY_SUB_PANEL.clear()
         display_email_address()
 
-    MY_SUB_PANEL <= html.H3("Afficher un courriel")
+    MY_SUB_PANEL <= html.H3("Afficher le courriel d'un compte")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -622,7 +554,7 @@ def display_phone_number():
         MY_SUB_PANEL.clear()
         display_phone_number()
 
-    MY_SUB_PANEL <= html.H3("Afficher un numéro de téléphone")
+    MY_SUB_PANEL <= html.H3("Afficher le numéro de téléphone d'un compte")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -665,7 +597,7 @@ def display_phone_number():
 def tournament_result():
     """ tournament_result """
 
-    MY_SUB_PANEL <= html.H3("Résultat intermédiaire du tournoi")
+    MY_SUB_PANEL <= html.H3("Résultats intermédiaires du tournoi")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1069,7 +1001,7 @@ def change_manager():
 def show_last_submissions():
     """ show_last_submissions """
 
-    MY_SUB_PANEL <= html.H3("Les dernières soumissions")
+    MY_SUB_PANEL <= html.H3("Les dernières soumissions d'ordres")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1132,7 +1064,7 @@ def show_last_submissions():
 def show_ip_addresses():
     """ show_ip_addresses """
 
-    MY_SUB_PANEL <= html.H3("Les adresses IP")
+    MY_SUB_PANEL <= html.H3("Vérification des doublons sur les adresses IP à la soumission d'ordres")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -1208,6 +1140,65 @@ def show_ip_addresses():
     MY_SUB_PANEL <= players_table
 
 
+def show_all_emails():
+    """ show_all_emails """
+
+    MY_SUB_PANEL <= html.H3("Vérification des doublons des courriels")
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    emails_dict = common.get_all_emails()
+    if not emails_dict:
+        return
+
+    emails_table = html.TABLE()
+
+    fields = ['pseudo', 'email']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'email': 'courriel'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    emails_table <= thead
+
+    # duplicated ones
+    sorted_emails = sorted([e[0] for e in emails_dict.values()])
+    duplicated_emails = {sorted_emails[i] for i in range(len(sorted_emails)) if (i < len(sorted_emails) - 1 and sorted_emails[i] == sorted_emails[i + 1]) or (i > 0 and sorted_emails[i] == sorted_emails[i - 1])}
+
+    for pseudo, (email, _, _) in sorted(emails_dict.items(), key=lambda t: t[1][0].upper()):
+
+        row = html.TR()
+        for field in fields:
+
+            colour = None
+
+            if field == 'pseudo':
+                value = pseudo
+
+            if field == 'email':
+                value = email
+
+                if value in duplicated_emails:
+                    colour = 'red'
+
+            col = html.TD(value)
+
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+
+            row <= col
+
+        emails_table <= row
+
+    MY_SUB_PANEL <= emails_table
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -1235,13 +1226,11 @@ def load_option(_, item_name):
     if item_name == 'Changer nouvelles':
         change_news_modo()
     if item_name == 'Préparer un publipostage':
-        all_emails()
+        prepare_mailing()
     if item_name == 'Codes de vérification':
         show_verif_codes()
     if item_name == 'Envoyer un courriel':
         sendmail()
-    if item_name == 'Retrouver à partir du courriel':
-        find_from_email_address()
     if item_name == 'Récupérer un courriel':
         display_email_address()
     if item_name == 'Récupérer un téléphone':
@@ -1256,6 +1245,8 @@ def load_option(_, item_name):
         show_last_submissions()
     if item_name == 'Vérification des adresses IP':
         show_ip_addresses()
+    if item_name == 'Vérification des courriels':
+        show_all_emails()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
