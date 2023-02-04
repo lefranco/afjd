@@ -2007,12 +2007,12 @@ def show_idle_data():
 
     idle_table = html.TABLE()
 
-    fields = ['player', 'last_login', 'recall', 'delete']
+    fields = ['player', 'id', 'last_login', 'recall', 'delete']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'player': 'joueur', 'last_login': 'dernier login', 'recall': 'rappeler', 'delete': 'supprimer'}[field]
+        field_fr = {'player': 'joueur', 'id': 'id', 'last_login': 'dernier login', 'recall': 'rappeler', 'delete': 'supprimer'}[field]
         col = html.TD(field_fr)
         thead <= col
     idle_table <= thead
@@ -2022,7 +2022,7 @@ def show_idle_data():
     time_stamp_now = time.time()
 
     count = 0
-    for player in sorted(idle_set, key=lambda p: pseudo2id[p]):
+    for player in sorted(idle_set, key=lambda p: int(last_login_time[p]) if p in last_login_time else 0, reverse=False):
         row = html.TR()
 
         for field in fields:
@@ -2031,6 +2031,9 @@ def show_idle_data():
 
             if field == 'player':
                 value = player
+
+            if field == 'id':
+                value = pseudo2id[player]
 
             if field == 'last_login':
                 value = ''
