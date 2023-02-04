@@ -1158,8 +1158,14 @@ def show_all_emails():
 
     MY_SUB_PANEL <= html.H3("Vérification des doublons des courriels")
 
-    if not common.check_admin():
-        alert("Pas le bon compte (pas admin)")
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
         return
 
     emails_dict = common.get_all_emails()
