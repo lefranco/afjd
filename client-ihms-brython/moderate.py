@@ -1174,12 +1174,12 @@ def show_all_emails():
 
     emails_table = html.TABLE()
 
-    fields = ['pseudo', 'email']
+    fields = ['email', 'pseudo']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'pseudo': 'pseudo', 'email': 'courriel'}[field]
+        field_fr = {'email': 'courriel', 'pseudo': 'pseudo'}[field]
         col = html.TD(field_fr)
         thead <= col
     emails_table <= thead
@@ -1195,14 +1195,14 @@ def show_all_emails():
 
             colour = None
 
-            if field == 'pseudo':
-                value = pseudo
-
             if field == 'email':
                 value = email
 
                 if value in duplicated_emails:
                     colour = 'red'
+
+            if field == 'pseudo':
+                value = pseudo
 
             col = html.TD(value)
 
