@@ -1597,6 +1597,56 @@ class AllocationPlayerRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/player-allocations2/<player_id>')
+class AllocationPlayer2Ressource(flask_restful.Resource):  # type: ignore
+    """ AllocationPlayer2Ressource """
+
+    def get(self, player_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Gets all allocations for the player (from moderator)
+        Note : here because data is in this database
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/player-allocations2/<player_id> - GET - get getting allocations for player player_id=%s from moderator", player_id)
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get moderator list
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+        the_moderators = req_result.json()
+
+        # check pseudo in moderator list
+        if pseudo not in the_moderators:
+            flask_restful.abort(403, msg="Need to be moderator to get list of all games by a player!")
+
+        sql_executor = database.SqlExecutor()
+        allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
+        del sql_executor
+
+        data = {str(a[0]): a[2] for a in allocations_list}
+        return data, 200
+
+
 @API.resource('/games-recruiting')
 class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
     """ GamesRecruitingRessource """
@@ -5472,7 +5522,7 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         # games we can speak about the players
-        allowed_games = {g.identifier for g in games_list if g.current_state == 1 and not game.archive}
+        allowed_games = {g.identifier for g in games_list if g.current_state == 1 and not g.archive}
 
         # players_dict
         game_masters_set = set()

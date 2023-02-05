@@ -3,6 +3,7 @@
 # pylint: disable=pointless-statement, expression-not-assigned
 
 import json
+import time
 
 from browser import html, ajax, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -18,7 +19,7 @@ import mydatetime
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels']
+OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Toutes les parties d\'un joueur', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels']
 
 
 def check_modo(pseudo):
@@ -93,6 +94,37 @@ def get_tournament_players_data(tournament_id):
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return tournament_players_dict
+
+
+def get_this_player_games_playing_in(player_id):
+    """ get_this_player_games_playing_in """
+
+    player_games_dict = None
+
+    def reply_callback(req):
+        nonlocal player_games_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récuperation de la liste des parties du joueur : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récuperation de la liste des parties du joueur : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        player_games_dict = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/player-allocations2/{player_id}"
+
+    # getting player games playing in list : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return dict(player_games_dict)
 
 
 def change_news_modo():
@@ -936,6 +968,178 @@ def change_manager():
     MY_SUB_PANEL <= form
 
 
+def show_player_games(pseudo_player, game_list):
+    """ show_player_games """
+
+    def display_all_games_callback(ev):  # pylint: disable=invalid-name
+        """ display_personal_info_callback """
+
+        ev.preventDefault()
+
+        selected_pseudo_player = input_player.value
+
+        player_id = players_dict[selected_pseudo_player]
+
+        player_games = get_this_player_games_playing_in(player_id)
+        if player_games is None:
+            alert("Erreur chargement liste parties jouées par le joueur")
+            return
+
+        game_list = [int(k) for k, v in player_games.items() if v >= 1]
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        show_player_games(selected_pseudo_player, game_list)
+
+    MY_SUB_PANEL <= html.H3("Toutes les parties d'un compte")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # all players can be investigated
+    possible_players = set(players_dict.keys())
+
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_player = html.LEGEND("Joueur", title="Sélectionner le joueur dont on veut la liste des parties")
+    fieldset <= legend_player
+    input_player = html.SELECT(type="select-one", value="")
+    for player_pseudo in sorted(possible_players, key=lambda pu: pu.upper()):
+        option = html.OPTION(player_pseudo)
+        input_player <= option
+    fieldset <= input_player
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_select_player = html.INPUT(type="submit", value="Récupérer la liste de ses parties")
+    input_select_player.bind("click", display_all_games_callback)
+    form <= input_select_player
+
+    MY_SUB_PANEL <= form
+
+    if pseudo_player:
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+
+        MY_SUB_PANEL <= f"Parties de {pseudo_player} (avec un role joueur et non arbitre)"
+        MY_SUB_PANEL <= html.BR()
+        MY_SUB_PANEL <= html.BR()
+
+    if game_list:
+        time_stamp_now = time.time()
+
+        games_table = html.TABLE()
+
+        # the display order
+        fields = ['current_state', 'name', 'deadline', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
+
+        # header
+        thead = html.THEAD()
+        for field in fields:
+            field_fr = {'current_state': 'état', 'name': 'nom', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)'}[field]
+            col = html.TD(field_fr)
+            thead <= col
+        games_table <= thead
+
+        for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0]), reverse=True):
+
+            game_id = int(game_id_str)
+            if game_id not in game_list:
+                continue
+
+            row = html.TR()
+            for field in fields:
+
+                value = data[field]
+                colour = None
+                game_name = data['name']
+
+                if field == 'current_state':
+                    if value == 1:
+                        colour = 'Orange'
+                    state_loaded = value
+                    for possible_state_code, possible_state_desc in config.STATE_CODE_TABLE.items():
+                        if possible_state_desc == state_loaded:
+                            state_loaded = possible_state_code
+                            break
+                    value = state_loaded
+
+                if field == 'name':
+                    value = game_name
+
+                if field == 'deadline':
+                    deadline_loaded = value
+                    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                    datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                    value = datetime_deadline_loaded_str
+
+                    time_unit = 60 if data['fast'] else 60 * 60
+                    approach_duration = 24 * 60 * 60
+
+                    # we are after deadline + grace
+                    if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
+                        colour = config.PASSED_GRACE_COLOUR
+                    # we are after deadline
+                    elif time_stamp_now > deadline_loaded:
+                        colour = config.PASSED_DEADLINE_COLOUR
+                    # deadline is today
+                    elif time_stamp_now > deadline_loaded - approach_duration:
+                        colour = config.APPROACHING_DEADLINE_COLOUR
+
+                if field == 'used_for_elo':
+                    value = "Oui" if value else "Non"
+
+                if field == 'nopress_game':
+                    value1 = value
+                    value2 = data['nopress_current']
+                    if value2 == value1:
+                        value = "Non" if value1 else "Oui"
+                    else:
+                        value1 = "Non" if value1 else "Oui"
+                        value2 = "Non" if value2 else "Oui"
+                        value = f"{value1} ({value2})"
+
+                if field == 'nomessage_game':
+                    value1 = value
+                    value2 = data['nomessage_current']
+                    if value2 == value1:
+                        value = "Non" if value1 else "Oui"
+                    else:
+                        value1 = "Non" if value1 else "Oui"
+                        value2 = "Non" if value2 else "Oui"
+                        value = f"{value1} ({value2})"
+
+                col = html.TD(value)
+                if colour is not None:
+                    col.style = {
+                        'background-color': colour
+                    }
+
+                row <= col
+            games_table <= row
+
+        MY_SUB_PANEL <= games_table
+        MY_SUB_PANEL <= html.BR()
+
+
 def show_last_submissions():
     """ show_last_submissions """
 
@@ -1183,6 +1387,8 @@ def load_option(_, item_name):
         revoke_master()
     if item_name == 'Changer responsable événement':
         change_manager()
+    if item_name == 'Toutes les parties d\'un joueur':
+        show_player_games(None, [])
     if item_name == 'Les dernières soumissions d\'ordres':
         show_last_submissions()
     if item_name == 'Vérification des adresses IP':
