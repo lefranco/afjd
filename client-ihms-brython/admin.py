@@ -2158,7 +2158,7 @@ def agreement_usage():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres de tous(**)', 'all_agreed': 'accords de tous(***)', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'action': 'action'}[field]
+        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'all_orders_submitted': 'ordres de tous(**)', 'all_agreed': 'accords de tous(***)', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
