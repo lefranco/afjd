@@ -18,7 +18,7 @@ import mydatetime
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel', 'Récupérer un téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels']
+OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels']
 
 
 def check_modo(pseudo):
@@ -431,130 +431,48 @@ def sendmail():
     MY_SUB_PANEL <= form
 
 
-def display_email_address():
-    """ display_email_address """
+def display_personal_info():
+    """ display_personal_info """
 
-    def display_email_address_callback(ev):  # pylint: disable=invalid-name
-        """ display_email_address_callback """
+    def display_personal_info_callback(ev):  # pylint: disable=invalid-name
+        """ display_personal_info_callback """
 
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la récupération du courriel : {req_result['message']}")
+                    alert(f"Erreur à la récupération des informations personnelles : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la récupération du courriel : {req_result['msg']}")
+                    alert(f"Problème à la récupération des informations personnelles : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
             email = req_result['email']
-            alert(f"Son courriel est '{email}'")
+            telephone = req_result['telephone']
+            alert(f"Son courriel est '{email}' et son téléphone est '{telephone}'")
 
         ev.preventDefault()
 
         contact_user_name = input_contact.value
         if not contact_user_name:
-            alert("User name à contacter manquant")
+            alert("User name manquant")
             return
 
         json_dict = {}
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-email/{contact_user_name}"
+        url = f"{host}:{port}/player-information/{contact_user_name}"
 
         # getting email: need token
         ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        display_email_address()
+        display_personal_info()
 
-    MY_SUB_PANEL <= html.H3("Afficher le courriel d'un compte")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if not check_modo(pseudo):
-        alert("Pas le bon compte (pas modo)")
-        return
-
-    players_dict = common.get_players()
-    if not players_dict:
-        return
-
-    # all players can be contacted
-    possible_contacts = set(players_dict.keys())
-
-    form = html.FORM()
-
-    fieldset = html.FIELDSET()
-    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter par courriel")
-    fieldset <= legend_contact
-    input_contact = html.SELECT(type="select-one", value="")
-    for contact_pseudo in sorted(possible_contacts, key=lambda pu: pu.upper()):
-        option = html.OPTION(contact_pseudo)
-        input_contact <= option
-    fieldset <= input_contact
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_select_player = html.INPUT(type="submit", value="Récupérer son courriel")
-    input_select_player.bind("click", display_email_address_callback)
-    form <= input_select_player
-
-    MY_SUB_PANEL <= form
-
-
-def display_phone_number():
-    """ get_phone_number """
-
-    def display_phone_number_callback(ev):  # pylint: disable=invalid-name
-        """ get_phone_number_callback """
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération de numéro de téléphone : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération de numéro de téléphone : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            telephone = req_result['telephone']
-            if telephone:
-                alert(f"Son numéro est '{telephone}'")
-            else:
-                alert("Pas de numéro entré !")
-
-        ev.preventDefault()
-
-        contact_user_name = input_contact.value
-        if not contact_user_name:
-            alert("User name à contacter manquant")
-            return
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-telephone/{contact_user_name}"
-
-        # getting private phone number : need token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        display_phone_number()
-
-    MY_SUB_PANEL <= html.H3("Afficher le numéro de téléphone d'un compte")
+    MY_SUB_PANEL <= html.H3("Afficher les informations personnelles d'un compte")
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
@@ -576,7 +494,7 @@ def display_phone_number():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur à contacter par téléphone")
+    legend_contact = html.LEGEND("Contact", title="Sélectionner le joueur dont on veut les informations personnelles")
     fieldset <= legend_contact
     input_contact = html.SELECT(type="select-one", value="")
     for contact_pseudo in sorted(possible_contacts, key=lambda pu: pu.upper()):
@@ -587,8 +505,8 @@ def display_phone_number():
 
     form <= html.BR()
 
-    input_select_player = html.INPUT(type="submit", value="Récupérer son numéro de téléphone")
-    input_select_player.bind("click", display_phone_number_callback)
+    input_select_player = html.INPUT(type="submit", value="Récupérer ses informations personnelles")
+    input_select_player.bind("click", display_personal_info_callback)
     form <= input_select_player
 
     MY_SUB_PANEL <= form
@@ -1250,10 +1168,8 @@ def load_option(_, item_name):
         show_verif_codes()
     if item_name == 'Envoyer un courriel':
         sendmail()
-    if item_name == 'Récupérer un courriel':
-        display_email_address()
-    if item_name == 'Récupérer un téléphone':
-        display_phone_number()
+    if item_name == 'Récupérer un courriel et téléphone':
+        display_personal_info()
     if item_name == 'Résultats tournoi':
         tournament_result()
     if item_name == 'Destituer arbitre':

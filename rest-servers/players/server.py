@@ -1155,69 +1155,13 @@ class News2Ressource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
-@API.resource('/player-telephone/<pseudo_player>')
-class PlayerTelephoneRessource(flask_restful.Resource):  # type: ignore
-    """ PlayerTelephoneRessource """
-
-    def get(self, pseudo_player: str) -> typing.Tuple[typing.Dict[str, str], int]:
-        """
-        Provides the phone number of a player
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/player-telephone - GET - get the phone number of player pseudo=%s", pseudo_player)
-
-        # check from user server user is pseudo
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
-
-        pseudo = req_result.json()['logged_in_as']
-
-        sql_executor = database.SqlExecutor()
-
-        requester = players.Player.find_by_pseudo(sql_executor, pseudo)
-
-        if requester is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"Requesting player {pseudo} does not exist")
-
-        moderators_list = moderators.Moderator.inventory(sql_executor)
-        the_moderators = [m[0] for m in moderators_list]
-        if pseudo not in the_moderators:
-            del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to get phone number! (need to be moderator)")
-
-        contact = players.Player.find_by_pseudo(sql_executor, pseudo_player)
-
-        if contact is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"Contact player {pseudo_player} does not exist")
-
-        del sql_executor
-
-        assert contact is not None
-        telephone = contact.telephone
-
-        data = {'telephone': telephone}
-        return data, 200
-
-
-@API.resource('/player-email/<pseudo_player>')
+@API.resource('/player-information/<pseudo_player>')
 class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
     """ PlayerEmailRessource """
 
     def get(self, pseudo_player: str) -> typing.Tuple[typing.Dict[str, str], int]:
         """
-        Provides the email address of a player
+        Provides the information (email address and telephone) of a player
         EXPOSED
         """
 
@@ -1262,8 +1206,9 @@ class PlayerEmailRessource(flask_restful.Resource):  # type: ignore
 
         assert contact is not None
         email = contact.email
+        telephone = contact.telephone
 
-        data = {'email': email}
+        data = {'email': email, 'telephone': telephone}
         return data, 200
 
 
