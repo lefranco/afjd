@@ -894,6 +894,13 @@ def change_manager():
 
     event_name = storage['EVENT']
     events_dict = common.get_events_data()
+
+    # delete obsolete event
+    if event_name not in [g['name'] for g in events_dict.values()]:
+        del storage['EVENT']
+        alert("Votre événement sélectionné n'existe plus")
+        return
+
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
 
