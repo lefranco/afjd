@@ -109,6 +109,7 @@ def populate_submissions(sql_executor: database.SqlExecutor) -> None:
 
     submissions.Submission.create_table(sql_executor)
 
+
 def populate_emails(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
 
