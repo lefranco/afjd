@@ -961,7 +961,7 @@ def show_replacement_data():
     # gather games to players
     player_games_dict = {}
     for player_id in players_dict:
-        if not players_dict[str(player_id)]['replace']:
+        if not players_dict[str(player_id)]['notify_replace']:
             continue
         player = players_dict[str(player_id)]['pseudo']
         if player not in player_games_dict:
