@@ -19,7 +19,7 @@ import mydatetime
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Toutes les parties d\'un joueur', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels']
+OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Toutes les parties d\'un joueur', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels', 'Courriels non confirmés']
 
 
 def check_modo(pseudo):
@@ -1347,6 +1347,63 @@ def show_all_emails():
     MY_SUB_PANEL <= emails_table
 
 
+def show_non_confirmed_data():
+    """ show_non_confirmed_data """
+
+    MY_SUB_PANEL <= html.H3("Les inscrits non confirmés")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    emails_dict = common.get_all_emails()
+    if not emails_dict:
+        return
+
+    players_table = html.TABLE()
+
+    fields = ['pseudo', 'email']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'email': 'courriel'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    players_table <= thead
+
+    count = 0
+    for pseudo, (email, confirmed, _) in sorted(emails_dict.items(), key=lambda t: t[0].upper()):
+
+        if confirmed:
+            continue
+
+        row = html.TR()
+        for field in fields:
+
+            if field == 'pseudo':
+                value = pseudo
+
+            if field == 'email':
+                value = email
+
+            col = html.TD(value)
+            row <= col
+
+            count += 1
+
+        players_table <= row
+
+    MY_SUB_PANEL <= players_table
+    MY_SUB_PANEL <= html.P(f"Il y a {count} comptes non confirmés")
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -1395,6 +1452,8 @@ def load_option(_, item_name):
         show_ip_addresses()
     if item_name == 'Vérification des courriels':
         show_all_emails()
+    if item_name == 'Courriels non confirmés':
+        show_non_confirmed_data()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
