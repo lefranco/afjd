@@ -247,8 +247,6 @@ def my_delays(ev):  # pylint: disable=invalid-name
         alert("Il faut se connecter au préalable")
         return
 
-    pseudo = storage['PSEUDO']
-
     delays_list = get_my_delays()
 
     games_dict = common.get_games_data()
@@ -274,7 +272,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
 
     number_games = 0
 
-    for game_id, role_id, advancement_delay, duration_delay, date_delay in sorted(delays_list, key=lambda t:t[4]):
+    for game_id, role_id, advancement_delay, duration_delay, date_delay in sorted(delays_list, key=lambda t: t[4]):
 
         data = games_dict[str(game_id)]
 
@@ -360,7 +358,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
         delays_table <= row
 
     MY_PANEL.clear()
-    MY_PANEL <= html.H2(f"Tous les retards sur toutes mes parties")
+    MY_PANEL <= html.H2("Tous les retards sur toutes mes parties")
     MY_PANEL <= delays_table
     MY_PANEL <= html.BR()
 
