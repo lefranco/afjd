@@ -313,7 +313,7 @@ def show_news():
     title7 = html.H4("Les glorieux", Class='news3')
     div_a1 <= title7
 
-    hall_content_loaded = "Orangcar : voiture la plus orange"
+    hall_content_loaded = "Orangecar : prix de la voiture la plus orange"
     hall_content = formatted_news(hall_content_loaded, False, 'news3')
     div_a1 <= hall_content
 
