@@ -136,13 +136,26 @@ LEN_EVENT_MAX = 50
 MAX_SIZE_IMAGE = (4 / 3) * 1000000
 
 
+def email_greeting_message(pseudo: str) -> typing.Tuple[str, str]:
+    """ email_greeting_message """
+
+    subject = "Ceci est un courriel de bienvenue sur le site !"
+    body = "Bonjour !\n"
+    body += "\n"
+    body += f"Vous recevez cet courriel parce que vous avez créé le compte avec le pseudo {pseudo}."
+    body += "\n"
+    body += "Merci et bienvenue sur le site."
+    body += "\n"
+    return subject, body
+
+
 def email_checker_message(code: int) -> typing.Tuple[str, str]:
     """ email_checker_message """
 
-    subject = "Ceci est un email pour vérifier votre adresse email"
+    subject = "Ceci est un courriel pour vérifier votre adresse courriel !"
     body = "Bonjour !\n"
     body += "\n"
-    body += "Vous recevez cet email pour valider votre compte."
+    body += "Vous recevez ce courriel pour valider votre compte."
     body += "\n"
     body += f"Si vous êtes bien à l'origine de sa création, rendez-vous dans le menu mon compte/valider mon mail et entrez le code {code}"
     body += "\n"
@@ -695,6 +708,28 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(404, msg=f"Time zone '{timezone_provided}' is not a time zone")
         else:
             args['time_zone'] = players.default_timezone()
+
+        # now we check email address
+
+        email_newcommer = args['email']
+
+        # get a message
+        subject, body = email_greeting_message(pseudo)
+        json_dict = {
+            'subject': subject,
+            'body': body,
+            'email': email_newcommer,
+        }
+
+        # send email
+        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/send-email-welcome"
+        req_result = SESSION.post(url, data=json_dict)
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(400, msg=f"Failed to send email to {email_newcommer} : {message}")
 
         sql_executor = database.SqlExecutor()
 
