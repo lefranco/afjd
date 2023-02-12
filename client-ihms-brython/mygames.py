@@ -186,6 +186,185 @@ def information_about_quitting():
     return information
 
 
+def get_my_delays():
+    """ get_my_delays """
+
+    delays_list = None
+
+    def reply_callback(req):
+        nonlocal delays_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des retards pour toutes mes parties : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des retards pour toutes mes parties : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        delays_list = req_result['incidents']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/player-game-incidents"
+
+    # get roles that submitted orders : need token (but may change)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return delays_list
+
+
+def my_delays(ev):  # pylint: disable=invalid-name
+    """ my_delays """
+
+    def select_game_callback(ev, game_name, game_data_sel, arrival):  # pylint: disable=invalid-name
+        """ select_game_callback """
+
+        ev.preventDefault()
+
+        # action of selecting game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
+        selection.show_game_selected()
+
+        # so that will go to proper page
+        play.set_arrival(arrival)
+
+        # action of going to game page
+        index.load_option(None, 'Aller dans la partie sélectionnée')
+
+    ev.preventDefault()
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    delays_list = get_my_delays()
+
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    delays_table = html.TABLE()
+
+    # the display order
+    fields = ['date', 'name', 'go_game', 'current_advancement', 'role_played', 'duration']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'date': 'date', 'name': 'nom', 'go_game': 'aller dans la partie', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'duration': 'durée'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    delays_table <= thead
+
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
+    number_games = 0
+
+    for game_id, role_id, advancement_delay, duration_delay, date_delay in sorted(delays_list, key=lambda t:t[4]):
+
+        data = games_dict[str(game_id)]
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        number_games += 1
+
+        row = html.TR()
+        for field in fields:
+
+            if field == 'date':
+                datetime_deadline_delay = mydatetime.fromtimestamp(date_delay)
+                datetime_deadline_delay_str = mydatetime.strftime2(*datetime_deadline_delay)
+                value = datetime_deadline_delay_str
+
+            if field == 'name':
+                game_name = data['name']
+                value = game_name
+
+            if field == 'go_game':
+
+                if storage['GAME_ACCESS_MODE'] == 'button':
+
+                    form = html.FORM()
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
+                    form <= input_jump_game
+                    value = form
+                else:
+                    img = html.IMG(src="./images/play.png")
+                    link = html.A(href=f"?game={game_name}", target="_blank")
+                    link <= img
+                    value = link
+
+            if field == 'current_advancement':
+                advancement_season, advancement_year = common.get_season(advancement_delay, variant_data)
+                advancement_season_readable = variant_data.season_name_table[advancement_season]
+                value = f"{advancement_season_readable} {advancement_year}"
+
+            if field == 'role_played':
+                role = variant_data.roles[role_id]
+                role_name = variant_data.role_name_table[role]
+                role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
+                value = role_icon_img
+
+            if field == 'duration':
+                value = duration_delay
+
+            col = html.TD(value)
+
+            row <= col
+
+        delays_table <= row
+
+    MY_PANEL.clear()
+    MY_PANEL <= html.H2(f"Tous les retards sur toutes mes parties")
+    MY_PANEL <= delays_table
+    MY_PANEL <= html.BR()
+
+
 def my_games(state_name):
     """ my_games """
 
@@ -801,10 +980,14 @@ def my_games(state_name):
 
             input_change_state = html.INPUT(type="submit", value=other_state_name)
             input_change_state.bind("click", lambda _, s=other_state_name: again(s))
-
             MY_PANEL <= input_change_state
-            MY_PANEL <= html.BR()
-            MY_PANEL <= html.BR()
+            MY_PANEL <= " "
+
+    MY_PANEL <= html.BR()
+    MY_PANEL <= html.BR()
+    input_my_delays = html.INPUT(type="submit", value="Consulter la liste de mes retards")
+    input_my_delays.bind("click", my_delays)
+    MY_PANEL <= input_my_delays
 
 
 def render(panel_middle):
