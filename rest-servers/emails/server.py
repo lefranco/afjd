@@ -91,15 +91,11 @@ class SendMailWelcomeRessource(flask_restful.Resource):  # type: ignore
 
         args = SEND_EMAIL_WELCOME_PARSER.parse_args(strict=True)
 
-        mylogger.LOGGER.info("/send-mail-welcome - POST - args ok")
-
         subject = args['subject']
         body = args['body']
         email_newcommer = args['email']
 
         MESSAGE_QUEUE.put((None, subject, body, email_newcommer))
-
-        mylogger.LOGGER.info("/send-mail-welcome - POST - queue ok")
 
         data = {'msg': 'Email was successfully queued to be sent to newcomer'}
         return data, 200
