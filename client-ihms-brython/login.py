@@ -105,8 +105,7 @@ def login():
 
             # request to validate email
             if not email_confirmed(pseudo):
-                alert("Merci de penser à vérifier votre adresse courriel. Cela évite que les message du site reviennent en erreur. Pour ce faire : mon_compte/valider mon courriel - 'me renvoyer un nouveau code', recopier le code du courriel que vous avez reçu et 'valider le courriel'")
-                alert("ATTENTION : Les comptes avec une adresses courriel en erreur sont susceptibles d'être fermés pour éviter de mettre le site en liste noire")
+                alert("Merci de penser à vérifier votre adresse courriel. Cela évite que les message du site reviennent en erreur. Pour ce faire : mon_compte/valider mon courriel - 'me renvoyer un nouveau code', recopier le code du courriel que vous avez reçu et 'valider le courriel'\n\nATTENTION : Les comptes avec une adresses courriel en erreur sont susceptibles d'être fermés pour éviter de mettre le site en liste noire")
 
             # goto directly to page my games
             index.load_option(None, 'Mes parties')
