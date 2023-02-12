@@ -123,11 +123,11 @@ def get_teaser_content():
     return teaser_content
 
 
-def formatted_news(news_content_loaded, admin):
+def formatted_news(news_content_loaded, admin, class_):
     """ formatted_news """
 
     # init
-    news_content = html.DIV(Class='news2' if admin else 'news')
+    news_content = html.DIV(Class=class_)
 
     # format
     if news_content_loaded is not None:
@@ -261,10 +261,10 @@ def show_news():
     # ----
     div_a3 = html.DIV(Class='tooltip')
 
-    title4 = html.H4("Dernières nouvelles moderateur", Class='news')
+    title4 = html.H4("Dernières nouvelles moderateur", Class='news2')
     div_a3 <= title4
     news_content_loaded2 = all_news_content_loaded['modo']
-    news_content2 = formatted_news(news_content_loaded2, False)
+    news_content2 = formatted_news(news_content_loaded2, False, 'news2')
     div_a3 <= news_content2
     div_a3_tip = html.SPAN("Vous pouvez contacter le modérateur par un MP sur le forum", Class='tooltiptext')
     div_a3 <= div_a3_tip
@@ -273,10 +273,10 @@ def show_news():
     # ----
     div_b3 = html.DIV(Class='tooltip')
 
-    title5 = html.H4("Dernières nouvelles administrateur", Class='news2')
+    title5 = html.H4("Dernières nouvelles administrateur", Class='news1')
     div_b3 <= title5
     news_content_loaded = all_news_content_loaded['admin']
-    news_content = formatted_news(news_content_loaded, True)
+    news_content = formatted_news(news_content_loaded, True, 'news1')
     div_b3 <= news_content
     div_b3_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu accueil/déclarer un incident'", Class='tooltiptext')
     div_b3 <= div_b3_tip
@@ -310,8 +310,60 @@ def show_news():
     # ----
     div_a1 = html.DIV(Class='tooltip')
 
-    title7 = html.H4("Liens très importants")
+    title7 = html.H4("Les glorieux", Class='news3')
     div_a1 <= title7
+
+    hall_content_loaded = "Orangcar : voiture la plus orange"
+    hall_content = formatted_news(hall_content_loaded, False, 'news3')
+    div_a1 <= hall_content
+
+    div_a1_tip = html.SPAN("Plus de détail XXX'", Class='tooltiptext')
+    div_a1 <= div_a1_tip
+    div_homepage <= div_a1
+
+    # ----
+    div_b1 = html.DIV(Class='tooltip')
+
+    title8 = html.H4("Divers")
+    div_b1 <= title8
+
+    # time shift
+
+    server_time = all_news_content_loaded['server_time']
+    local_time = time.time()
+    delta_time = round(local_time - server_time)
+    if delta_time > 0:
+        status = "en avance"
+    else:
+        status = "en retard"
+    abs_delta_time = abs(delta_time)
+    if abs_delta_time > 60:
+        abs_delta_time //= 60
+        unit = "minutes"
+    else:
+        unit = "secondes"
+    div_b1 <= html.DIV(f"Votre horloge locale est {status} d'environ {abs_delta_time} {unit} sur celle du serveur", Class='note')
+    div_b1 <= html.BR()
+
+    # rest
+
+    div_b1 <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
+    div_b1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
+    div_b1 <= html.DIV("Pour les possesseurs d'appareil Android, une application spécifiques a été créée, allez sur le forum pour la télécharger")
+    div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
+    div_b1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant(s) : modifiez le paramètre de votre compte")
+    div_b1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : Aller dans la partie sélectionnée / taguer")
+    div_b1 <= html.DIV("Si vous souhaitez créer plusieurs parties par batch contactez l'administrateur pour obtenir les droits")
+
+    div_b1_tip = html.SPAN("Plus de détail dans le menu 'accueil/foire aux question'", Class='tooltiptext')
+    div_b1 <= div_b1_tip
+    div_homepage <= div_b1
+
+    # ----
+    div_a0 = html.DIV(Class='tooltip')
+
+    title9 = html.H4("Liens très importants")
+    div_a0 <= title9
     note_bene_content = html.DIV(Class='note')
 
     note_bene_content_table = html.TABLE()
@@ -359,48 +411,10 @@ def show_news():
     row <= col
 
     note_bene_content <= note_bene_content_table
-    div_a1 <= note_bene_content
-    div_a1_tip = html.SPAN("Plus de détail dans le menu 'accueil/brique sociale'", Class='tooltiptext')
-    div_a1 <= div_a1_tip
-    div_homepage <= div_a1
-
-    # ----
-    div_b1 = html.DIV(Class='tooltip')
-
-    title8 = html.H4("Divers")
-    div_b1 <= title8
-
-    # time shift
-
-    server_time = all_news_content_loaded['server_time']
-    local_time = time.time()
-    delta_time = round(local_time - server_time)
-    if delta_time > 0:
-        status = "en avance"
-    else:
-        status = "en retard"
-    abs_delta_time = abs(delta_time)
-    if abs_delta_time > 60:
-        abs_delta_time //= 60
-        unit = "minutes"
-    else:
-        unit = "secondes"
-    div_b1 <= html.DIV(f"Votre horloge locale est {status} d'environ {abs_delta_time} {unit} sur celle du serveur", Class='note')
-    div_b1 <= html.BR()
-
-    # rest
-
-    div_b1 <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
-    div_b1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
-    div_b1 <= html.DIV("Pour les possesseurs d'appareil Android, une application spécifiques a été créée, allez sur le forum pour la télécharger")
-    div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
-    div_b1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant(s) : modifiez le paramètre de votre compte")
-    div_b1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : Aller dans la partie sélectionnée / taguer")
-    div_b1 <= html.DIV("Si vous souhaitez créer plusieurs parties par batch contactez l'administrateur pour obtenir les droits")
-
-    div_b1_tip = html.SPAN("Plus de détail dans le menu 'accueil/foire aux question'", Class='tooltiptext')
-    div_b1 <= div_b1_tip
-    div_homepage <= div_b1
+    div_a0 <= note_bene_content
+    div_a0_tip = html.SPAN("Plus de détail dans le menu 'accueil/brique sociale'", Class='tooltiptext')
+    div_a0 <= div_a0_tip
+    div_homepage <= div_a0
 
     # ----
 

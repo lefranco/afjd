@@ -176,14 +176,19 @@ legend{
     background-color: #EDA89E;
 }
 
-/* color of turkey in diplomania map EDE585 */
-.news{
-    background-color: #EDE585;
+/* xxx */
+.news1{
+    background-color: #FAFAD2;
 }
 
-/* color of turkey in diplomania map EDE585 */
+/* xxx */
 .news2{
-     background-color: #EDE585;
+     background-color: #F0E68C;
+}
+
+/* LightGoldenRodYellow */
+.news3{
+     background-color: #FFE4B5;
 }
 
 /* color of sea in diplomania map BBD9DC */
