@@ -72,6 +72,16 @@ def sender_threaded_procedure() -> None:
 
             status = mailer.send_mail(subject, body, addressee)
             if not status:
+
+                # report
+                body = ""
+                body += f"Destinataire : {addressee}"
+                body += "\n"
+                body += f"Sujet : {subject}"
+                body += "\n"
+                _ = mailer.send_mail("Echec à l'envoi d'un message !", body, EMAIL_SUPPORT)
+
+                # log
                 mylogger.LOGGER.error("Failed sending one email to %s", addressee)
 
             time.sleep(PAUSE_BETWEEN_SENDS_SEC)
