@@ -42,12 +42,17 @@ SEND_EMAIL_SUPPORT_PARSER = flask_restful.reqparse.RequestParser()
 SEND_EMAIL_SUPPORT_PARSER.add_argument('subject', type=str, required=True)
 SEND_EMAIL_SUPPORT_PARSER.add_argument('body', type=str, required=True)
 
+SEND_EMAIL_WELCOME_PARSER = flask_restful.reqparse.RequestParser()
+SEND_EMAIL_WELCOME_PARSER.add_argument('subject', type=str, required=True)
+SEND_EMAIL_WELCOME_PARSER.add_argument('body', type=str, required=True)
+SEND_EMAIL_WELCOME_PARSER.add_argument('email', type=str, required=True)
+
 
 # time to wait after sending a message
-PAUSE_BETWEEN_SENDS_SEC = 1
+PAUSE_BETWEEN_SENDS_SEC = 2
 
 # to transmit messages to send
-MESSAGE_QUEUE: queue.Queue[typing.Tuple[str, str, str]] = queue.Queue()
+MESSAGE_QUEUE: queue.Queue[typing.Tuple[typing.Optional[str], str, str, str]] = queue.Queue()
 
 
 def sender_threaded_procedure() -> None:
@@ -60,13 +65,44 @@ def sender_threaded_procedure() -> None:
             # from queue
             pseudo, subject, body, addressee = MESSAGE_QUEUE.get()
 
-            mylogger.LOGGER.info("actually sending an email to %s using account %s", addressee, pseudo)
+            if pseudo is None:
+                mylogger.LOGGER.info("actually sending an email to %s using no account", addressee)
+            else:
+                mylogger.LOGGER.info("actually sending an email to %s using account %s", addressee, pseudo)
 
             status = mailer.send_mail(subject, body, addressee)
             if not status:
                 mylogger.LOGGER.error("Failed sending one email to %s", addressee)
 
             time.sleep(PAUSE_BETWEEN_SENDS_SEC)
+
+
+@API.resource('/send-email-welcome')
+class SendMailWelcomeRessource(flask_restful.Resource):  # type: ignore
+    """ SendMailWelcomeRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Sends an email of welcome
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/send-mail-welcome - POST - sending welcome email")
+
+        args = SEND_EMAIL_WELCOME_PARSER.parse_args(strict=True)
+
+        mylogger.LOGGER.info("/send-mail-welcome - POST - args ok")
+
+        subject = args['subject']
+        body = args['body']
+        email_newcommer = args['email']
+
+        MESSAGE_QUEUE.put((None, subject, body, email_newcommer))
+
+        mylogger.LOGGER.info("/send-mail-welcome - POST - queue ok")
+
+        data = {'msg': 'Email was successfully queued to be sent to newcomer'}
+        return data, 200
 
 
 @API.resource('/send-email-support')
