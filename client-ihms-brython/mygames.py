@@ -985,7 +985,7 @@ def my_games(state_name):
 
     MY_PANEL <= html.BR()
     MY_PANEL <= html.BR()
-    input_my_delays = html.INPUT(type="submit", value="Consulter la liste de mes retards")
+    input_my_delays = html.INPUT(type="submit", value="Consulter la liste de tous mes retards")
     input_my_delays.bind("click", my_delays)
     MY_PANEL <= input_my_delays
 
