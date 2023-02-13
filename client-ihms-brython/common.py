@@ -911,5 +911,35 @@ def get_priviledged():
     return priviledged
 
 
+def get_news_content():
+    """ get_news_content """
+
+    news_content = {}
+
+    def reply_callback(req):
+        nonlocal news_content
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération du contenu des nouvelles : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération du contenu des nouvelles : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        news_content = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/news"
+
+    # get news : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return news_content
+
+
 # stored for usage
 PRIVILEDGED = get_priviledged()

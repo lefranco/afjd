@@ -33,36 +33,6 @@ if 'ALREADY_SPAMMED' not in storage:
     storage['ALREADY_SPAMMED'] = 'yes'
 
 
-def get_all_news_content():
-    """ get_all_news_content """
-
-    all_news_content = {}
-
-    def reply_callback(req):
-        nonlocal all_news_content
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération du contenu des nouvelles (admin+modo) : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération du contenu des nouvelles (admin+modo) : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        all_news_content = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/all_news"
-
-    # get news : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return all_news_content
-
-
 def get_stats_content():
     """ get_stats_content """
 
@@ -202,7 +172,7 @@ def show_news():
 
     # ----
     stats_content = get_stats_content()
-    all_news_content_loaded = get_all_news_content()
+    news_content_table_loaded = common.get_news_content()
     # ----
 
     # ----
@@ -261,10 +231,10 @@ def show_news():
     # ----
     div_a3 = html.DIV(Class='tooltip')
 
-    title4 = html.H4("Dernières nouvelles moderateur", Class='news2')
+    title4 = html.H4("Dernières nouvelles moderateur", Class='modo_news')
     div_a3 <= title4
-    news_content_loaded2 = all_news_content_loaded['modo']
-    news_content2 = formatted_news(news_content_loaded2, False, 'news2')
+    news_content_loaded2 = news_content_table_loaded['modo']
+    news_content2 = formatted_news(news_content_loaded2, False, 'modo_news')
     div_a3 <= news_content2
     div_a3_tip = html.SPAN("Vous pouvez contacter le modérateur par un MP sur le forum", Class='tooltiptext')
     div_a3 <= div_a3_tip
@@ -273,10 +243,10 @@ def show_news():
     # ----
     div_b3 = html.DIV(Class='tooltip')
 
-    title5 = html.H4("Dernières nouvelles administrateur", Class='news1')
+    title5 = html.H4("Dernières nouvelles administrateur", Class='admin_news')
     div_b3 <= title5
-    news_content_loaded = all_news_content_loaded['admin']
-    news_content = formatted_news(news_content_loaded, True, 'news1')
+    news_content_loaded = news_content_table_loaded['admin']
+    news_content = formatted_news(news_content_loaded, True, 'admin_news')
     div_b3 <= news_content
     div_b3_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu accueil/déclarer un incident'", Class='tooltiptext')
     div_b3 <= div_b3_tip
@@ -312,11 +282,9 @@ def show_news():
 
     title7 = html.H4("Les glorieux", Class='news3')
     div_a1 <= title7
-
-    hall_content_loaded = "Orangecar : prix de la voiture la plus orange"
-    hall_content = formatted_news(hall_content_loaded, False, 'news3')
+    hall_content_loaded = news_content_table_loaded['glory']
+    hall_content = formatted_news(hall_content_loaded, False, 'glory_news')
     div_a1 <= hall_content
-
     div_a1_tip = html.SPAN("Plus de détail XXX'", Class='tooltiptext')
     div_a1 <= div_a1_tip
     div_homepage <= div_a1
@@ -329,7 +297,7 @@ def show_news():
 
     # time shift
 
-    server_time = all_news_content_loaded['server_time']
+    server_time = news_content_table_loaded['server_time']
     local_time = time.time()
     delta_time = round(local_time - server_time)
     if delta_time > 0:

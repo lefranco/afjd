@@ -35,36 +35,6 @@ def check_modo(pseudo):
     return True
 
 
-def get_news_content2():
-    """ get_news_content2 """
-
-    news_content = None
-
-    def reply_callback(req):
-        nonlocal news_content
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération du contenu des nouvelles (modo) : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération du contenu des nouvelles (modo) : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        news_content = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/news2"
-
-    # get news : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return news_content
-
-
 def get_tournament_players_data(tournament_id):
     """ get_tournament_players_data : returns empty dict if problem """
 
@@ -155,12 +125,13 @@ def change_news_modo():
             return
 
         json_dict = {
+            'topic': 'modo',
             'content': news_content
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
         port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/news2"
+        url = f"{host}:{port}/news"
 
         # changing news : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -181,9 +152,11 @@ def change_news_modo():
         alert("Pas le bon compte (pas modo)")
         return
 
-    news_content_loaded2 = get_news_content2()
-    if news_content_loaded2 is None:
+    news_content_table_loaded = common.get_news_content()
+    if not news_content_table_loaded:
         return
+
+    news_content_loaded = news_content_table_loaded['modo']
 
     form = html.FORM()
 
@@ -191,7 +164,7 @@ def change_news_modo():
     legend_news_content = html.LEGEND("nouvelles", title="Saisir le nouveau contenu de nouvelles (modo)")
     fieldset <= legend_news_content
     input_news_content = html.TEXTAREA(type="text", rows=20, cols=100)
-    input_news_content <= news_content_loaded2
+    input_news_content <= news_content_loaded
     fieldset <= input_news_content
     form <= fieldset
 
