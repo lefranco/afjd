@@ -148,36 +148,6 @@ def get_moderators():
     return moderators_list
 
 
-def get_news_content():
-    """ get_news_content """
-
-    news_content = None
-
-    def reply_callback(req):
-        nonlocal news_content
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération du contenu des nouvelles : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération du contenu des nouvelles : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-        news_content = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['PLAYER']['HOST']
-    port = config.SERVER_CONFIG['PLAYER']['PORT']
-    url = f"{host}:{port}/news"
-
-    # get news : do not need token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return news_content
-
-
 def get_last_logins():
     """ get_last_logins """
 
@@ -270,6 +240,7 @@ def change_news_admin():
             return
 
         json_dict = {
+            'topic': 'admin',
             'content': news_content
         }
 
@@ -290,9 +261,11 @@ def change_news_admin():
         alert("Pas le bon compte (pas admin)")
         return
 
-    news_content_loaded = get_news_content()
-    if news_content_loaded is None:
+    news_content_table_loaded = common.get_news_content()
+    if not news_content_table_loaded:
         return
+
+    news_content_loaded = news_content_table_loaded['admin']
 
     form = html.FORM()
 
