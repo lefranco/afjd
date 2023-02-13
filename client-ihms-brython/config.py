@@ -35,7 +35,6 @@ with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
     SCORING_CODE_TABLE = json.load(read_file)
 
 # colours
-ALL_AGREEMENTS_IN_COLOUR = 'Chartreuse'
 ALL_ORDERS_IN_COLOUR = 'Chartreuse'
 
 PASSED_GRACE_COLOUR = 'Red'
