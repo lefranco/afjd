@@ -1035,7 +1035,7 @@ def show_game_quitters():
         thead <= col
     game_quitters_table <= thead
 
-    for game_id, _, player_id, time_stamp in quitters_data:
+    for game_id, _, player_id, time_stamp in sorted(quitters_data, key=lambda i: i[3], reverse=True):
 
         row = html.TR()
 

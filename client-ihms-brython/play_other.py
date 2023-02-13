@@ -888,7 +888,7 @@ def show_events_in_game():
         thead <= col
     game_incidents2_table <= thead
 
-    for role_id, advancement, time_stamp in sorted(game_incidents2, key=lambda i: i[2]):
+    for role_id, advancement, time_stamp in sorted(game_incidents2, key=lambda i: i[2], reverse=True):
 
         row = html.TR()
 
@@ -952,7 +952,7 @@ def show_events_in_game():
         thead <= col
     game_dropouts_table <= thead
 
-    for role_id, player_id, time_stamp in sorted(game_dropouts, key=lambda d: d[2]):
+    for role_id, player_id, time_stamp in sorted(game_dropouts, key=lambda d: d[2], reverse=True):
 
         row = html.TR()
 
@@ -1022,7 +1022,7 @@ def show_events_in_game():
         thead <= col
     game_incidents_table <= thead
 
-    for role_id, advancement, player_id, duration, time_stamp in sorted(game_incidents, key=lambda i: i[4]):
+    for role_id, advancement, player_id, duration, time_stamp in sorted(game_incidents, key=lambda i: i[4], reverse=True):
 
         row = html.TR()
 
