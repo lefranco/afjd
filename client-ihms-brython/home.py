@@ -353,6 +353,7 @@ def show_news():
     div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
     div_b1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant(s) : modifiez le paramètre de votre compte")
     div_b1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : Aller dans la partie sélectionnée / taguer")
+    div_b1 <= html.DIV("Si vous vous êtes inscrit dans une partie par erreur : sélectionner la partie puis menu Appariement / sous menu quitter la partie / bouton quitter la partie")
     div_b1 <= html.DIV("Si vous souhaitez créer plusieurs parties par batch contactez l'administrateur pour obtenir les droits")
 
     div_b1_tip = html.SPAN("Plus de détail dans le menu 'accueil/foire aux question'", Class='tooltiptext')
