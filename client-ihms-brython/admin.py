@@ -2233,13 +2233,8 @@ def agreement_usage():
                 nb_agreed_now = len(agreed_now_roles_list)
                 agreed_after_roles_list = submitted_data['agreed_after']
                 nb_agreed_after = len(agreed_after_roles_list)
-                submitted_roles_list = submitted_data['submitted']
-                nb_submitted = len(submitted_roles_list)
                 stats = f"{nb_agreed_now}m+{nb_agreed_after}a"
                 value = stats
-                if nb_agreed_now >= nb_submitted:
-                    # we have all agreements : green
-                    colour = config.ALL_AGREEMENTS_IN_COLOUR
 
                 # stats
                 values['agreed_now'] = nb_agreed_now
