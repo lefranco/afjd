@@ -27,7 +27,6 @@ import lowdata
 import populate
 import players
 import newss
-import news2s
 import moderators
 import creators
 import ratings
@@ -79,6 +78,7 @@ SEND_PLAYERS_EMAIL_PARSER.add_argument('body', type=str, required=True)
 SEND_PLAYERS_EMAIL_PARSER.add_argument('type', type=str, required=True)
 
 NEWS_PARSER = flask_restful.reqparse.RequestParser()
+NEWS_PARSER.add_argument('topic', type=str, required=True)
 NEWS_PARSER.add_argument('content', type=str, required=True)
 
 MODERATOR_PARSER = flask_restful.reqparse.RequestParser()
@@ -1023,30 +1023,6 @@ class CheckEmailRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/all_news')
-class AllNewsRessource(flask_restful.Resource):  # type: ignore
-    """ AllNewsRessource """
-
-    def get(self) -> typing.Tuple[typing.Any, int]:
-        """
-        Provides the latest news
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/news - GET - get the latest news (admin and modo) + server time")
-
-        sql_executor = database.SqlExecutor()
-        news_content1 = newss.News.content(sql_executor)
-        news_content2 = news2s.News.content(sql_executor)
-        del sql_executor
-
-        server_time = time.time()
-
-        data = {'admin': news_content1, 'modo': news_content2, 'server_time': server_time}
-
-        return data, 200
-
-
 @API.resource('/news')
 class NewsRessource(flask_restful.Resource):  # type: ignore
     """ NewsRessource """
@@ -1057,13 +1033,19 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/news - GET - get the latest news")
+        mylogger.LOGGER.info("/news - GET - get the latest news (admin and modo) + server time")
 
         sql_executor = database.SqlExecutor()
-        news_content = newss.News.content(sql_executor)
+
+        admin_content = newss.News.content(sql_executor, 'admin')
+        modo_content = newss.News.content(sql_executor, 'modo')
+        glory_content = newss.News.content(sql_executor, 'glory')
+
         del sql_executor
 
-        data = news_content
+        server_time = time.time()
+
+        data = {'admin': admin_content, 'modo': modo_content, 'glory': glory_content, 'server_time': server_time}
 
         return data, 200
 
@@ -1100,93 +1082,47 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
+        topic = args['topic']
+
+        if topic == 'admin':
+
+            # TODO improve this with real admin account
+            if pseudo != ADMIN_ACCOUNT_NAME:
+                del sql_executor
+                flask_restful.abort(403, msg="You are not allowed to change news!")
+
+        elif topic == 'modo':
+
+            requester = players.Player.find_by_pseudo(sql_executor, pseudo)
+
+            if requester is None:
+                del sql_executor
+                flask_restful.abort(404, msg=f"Requesting player {pseudo} does not exist")
+
+            moderators_list = moderators.Moderator.inventory(sql_executor)
+            the_moderators = [m[0] for m in moderators_list]
+            if pseudo not in the_moderators:
+                del sql_executor
+                flask_restful.abort(403, msg="You are not allowed to change moderator news! (need to be moderator)")
+
+        elif topic == 'glory':
             del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to change news!")
+            flask_restful.abort(404, msg="Not implemented")
+
+        else:
+            del sql_executor
+            flask_restful.abort(400, msg="What is this topic ?")
 
         content = args['content']
 
         # create news here
-        news = newss.News(content)
+        news = newss.News(topic, content)
         news.update_database(sql_executor)
 
         sql_executor.commit()
         del sql_executor
 
-        data = {'msg': 'Ok news created'}
-        return data, 201
-
-
-@API.resource('/news2')
-class News2Ressource(flask_restful.Resource):  # type: ignore
-    """ News2Ressource """
-
-    def get(self) -> typing.Tuple[typing.Any, int]:
-        """
-        Provides the latest news
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/news2 - GET - get the latest news (moderator)")
-
-        sql_executor = database.SqlExecutor()
-        news_content = news2s.News.content(sql_executor)
-        del sql_executor
-
-        data = news_content
-
-        return data, 200
-
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
-        """
-        Creates a new news
-        EXPOSED
-        """
-
-        mylogger.LOGGER.info("/news2 - POST - changing the news (moderator)")
-
-        args = NEWS_PARSER.parse_args(strict=True)
-
-        # check from user server user is pseudo
-        host = lowdata.SERVER_CONFIG['USER']['HOST']
-        port = lowdata.SERVER_CONFIG['USER']['PORT']
-        url = f"{host}:{port}/verify"
-        jwt_token = flask.request.headers.get('AccessToken')
-        if not jwt_token:
-            flask_restful.abort(400, msg="Missing authentication!")
-        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Bad authentication!:{message}")
-
-        pseudo = req_result.json()['logged_in_as']
-
-        sql_executor = database.SqlExecutor()
-
-        requester = players.Player.find_by_pseudo(sql_executor, pseudo)
-
-        if requester is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"Requesting player {pseudo} does not exist")
-
-        moderators_list = moderators.Moderator.inventory(sql_executor)
-        the_moderators = [m[0] for m in moderators_list]
-        if pseudo not in the_moderators:
-            del sql_executor
-            flask_restful.abort(403, msg="You are not allowed to change moderator news! (need to be moderator)")
-
-        content = args['content']
-
-        # create news here
-        news = news2s.News(content)
-        news.update_database(sql_executor)
-
-        sql_executor.commit()
-        del sql_executor
-
-        data = {'msg': 'Ok news (moderator) created'}
+        data = {'msg': f'Ok news ({topic}) created'}
         return data, 201
 
 
