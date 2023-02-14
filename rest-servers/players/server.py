@@ -1106,8 +1106,18 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(403, msg="You are not allowed to change moderator news! (need to be moderator)")
 
         elif topic == 'glory':
-            del sql_executor
-            flask_restful.abort(404, msg="Not implemented")
+
+            requester = players.Player.find_by_pseudo(sql_executor, pseudo)
+
+            if requester is None:
+                del sql_executor
+                flask_restful.abort(404, msg=f"Requesting player {pseudo} does not exist")
+
+            creators_list = creators.Creator.inventory(sql_executor)
+            the_creators = [c[0] for c in creators_list]
+            if pseudo not in the_creators:
+                del sql_executor
+                flask_restful.abort(403, msg="You are not allowed to change glorious! (need to be creator)")
 
         else:
             del sql_executor
@@ -1122,7 +1132,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
         sql_executor.commit()
         del sql_executor
 
-        data = {'msg': f'Ok news ({topic}) created'}
+        data = {'msg': f'Ok news/glory ({topic}) created'}
         return data, 201
 
 

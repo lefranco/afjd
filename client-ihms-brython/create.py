@@ -15,7 +15,7 @@ import interface
 import mapping
 
 
-OPTIONS = ['Créer plusieurs parties', 'Explications']
+OPTIONS = ['Editer les glorieux', 'Créer plusieurs parties', 'Explications']
 
 MAX_NUMBER_GAMES = 200
 
@@ -35,6 +35,87 @@ def check_creator(pseudo):
         return False
 
     return True
+
+
+def change_glorious():
+    """ change_glorious """
+
+    def change_glorious_callback(ev):  # pylint: disable=invalid-name
+        """ change_glorious_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification du contenu des glorieux : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification du contenu des glorieux : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Les glorieux ont été changées : {messages}")
+
+        ev.preventDefault()
+
+        glory_content = input_glory_content.value
+        if not glory_content:
+            alert("Contenu glorieux manquant")
+            return
+
+        json_dict = {
+            'topic': 'glory',
+            'content': glory_content
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/news"
+
+        # changing news : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        change_glorious()
+
+    MY_SUB_PANEL <= html.H3("Editer les glorieux")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_creator(pseudo):
+        alert("Pas le bon compte (pas créateur)")
+        return
+
+    news_content_table_loaded = common.get_news_content()
+    if not news_content_table_loaded:
+        return
+
+    glory_content_loaded = news_content_table_loaded['glory']
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_glory_content = html.LEGEND("glorieux", title="Saisir le nouveau contenu des glorieux")
+    fieldset <= legend_glory_content
+    input_glory_content = html.TEXTAREA(type="text", rows=20, cols=100)
+    input_glory_content <= glory_content_loaded
+    fieldset <= input_glory_content
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_glory_content = html.INPUT(type="submit", value="Mettre à jour")
+    input_change_glory_content.bind("click", change_glorious_callback)
+    form <= input_change_glory_content
+    form <= html.BR()
+
+    MY_SUB_PANEL <= form
 
 
 def check_batch(current_pseudo, games_to_create):
@@ -533,6 +614,8 @@ def load_option(_, item_name):
 
     PREV_GAME = ""
 
+    if item_name == 'Editer les glorieux':
+        change_glorious()
     if item_name == 'Créer plusieurs parties':
         create_many_games()
     if item_name == 'Explications':
