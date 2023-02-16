@@ -114,23 +114,24 @@ def countdown():
 
     # calculate display colour for deadline and countdown
 
-    time_unit = 60 if play_low.GAME_PARAMETERS_LOADED['fast'] else 60 * 60
-    approach_duration = 24 * 60 * 60
-
     colour = None
     time_stamp_now = time.time()
-    # we are after deadline + grace
-    if time_stamp_now > deadline_loaded + time_unit * play_low.GAME_PARAMETERS_LOADED['grace_duration']:
-        colour = config.PASSED_GRACE_COLOUR
-    # we are after deadline
-    elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
-        colour = config.PASSED_DEADLINE_COLOUR
-    # we are slightly after deadline
-    elif time_stamp_now > deadline_loaded:
-        colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
-    # deadline is today
-    elif time_stamp_now > deadline_loaded - approach_duration:
-        colour = config.APPROACHING_DEADLINE_COLOUR
+    if play_low.GAME_PARAMETERS_LOADED['fast']:
+        if time_stamp_now > deadline_loaded:
+            colour = config.PASSED_DEADLINE_COLOUR
+    else:
+        # we are after deadline + grace
+        if time_stamp_now > deadline_loaded + 60 * 60 * play_low.GAME_PARAMETERS_LOADED['grace_duration']:
+            colour = config.PASSED_GRACE_COLOUR
+        # we are after deadline + slight
+        elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
+            colour = config.PASSED_DEADLINE_COLOUR
+        # we are slightly after deadline
+        elif time_stamp_now > deadline_loaded:
+            colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
+        # deadline is today
+        elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
+            colour = config.APPROACHING_DEADLINE_COLOUR
 
     # set the colour
     if colour is not None:
