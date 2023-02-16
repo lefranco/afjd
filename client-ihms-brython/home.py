@@ -285,7 +285,7 @@ def show_news():
     hall_content_loaded = news_content_table_loaded['glory']
     hall_content = formatted_news(hall_content_loaded, False, 'glory_news')
     div_a1 <= hall_content
-    div_a1_tip = html.SPAN("Plus de détail XXX'", Class='tooltiptext')
+    div_a1_tip = html.SPAN("Plus de détail sur la page wikipedia https://fr.wikipedia.org/wiki/Palmar%C3%A8s_internationaux_de_Diplomatie", Class='tooltiptext')
     div_a1 <= div_a1_tip
     div_homepage <= div_a1
 
