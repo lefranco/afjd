@@ -25,7 +25,7 @@ FAQ_CONTENT_TABLE = {
     "On part de la date courante. On arrondit à l'heure précédente (si on est après la date limite) ou à l'heure suivante (si on est avant la date limite). On ajoute les heures correspondant à la prochaine saison à jouer. On passe le week-end si besoin. On ajoute ce qu'il faut pour être sur l'heure de la synchronisation si besoin (quitte à passer au jour suivant dans ce dernier cas).",
 
     "Pourquoi les dates limites changent-elles de couleur ?":
-    "Le code de couleur est assez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée. Rouge que la grâce est aussi passée. La grace n'a aucune incidence sur le jeu hormi ce code de couleur. Soyez ponctuels !",
+    "Le code de couleur est assez conventionnel. Jaune signifie que la date limite est proche (24h). Orange qu'elle est passée de moins de 15 minutes (délai de prise en compte de l'automate). Rouge qu'elle est passée de plus de 15 minutes. Rouge foncé que la grâce est aussi passée (en général 24 heures). La grace n'a aucune incidence sur le jeu hormis ce code de couleur et sert surtout à visualiser les parties qui stagnent. Soyez ponctuels !",
 
     "Il y a des retards indiqués. Dans quel cas un joueur est-il marqué en retard ?":
     "Passer ses ordres signifie réaliser une transition 'pas d'accord pour la résolution' (ou pas d'information) -> 'd'accord pour la résolution (maintenant ou juste après la date limite, peu importe)'. Un retard signifie que cela est réalisé après la date limite (que ce soit par le joueur ou par l'arbitre). Si l'arbitre reporte la date limite, le retard n'est pas effacé (mais il est impossible d'avoir deux retards sur une même saison.) Soyez ponctuels (on l'a déjà dit ?) !",
