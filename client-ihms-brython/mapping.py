@@ -1713,12 +1713,13 @@ class Order(Renderable):
             ctx.lineWidth = 1
             ctx.setLineDash([])
 
-            # a line (support)
+            # a bezier curve (offensive support)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
-            dest_point2 = geometry.PositionRecord((from_point_shifted.x_pos + dest_point_shifted.x_pos) // 2, (from_point_shifted.y_pos + dest_point_shifted.y_pos) // 2)
+            extra_point = geometry.PositionRecord(from_point_shifted.x_pos + (from_point2.x_pos - dest_point_shifted.x_pos), from_point_shifted.y_pos + (from_point2.y_pos - dest_point_shifted.y_pos))
+
             ctx.beginPath()
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
-            ctx.lineTo(dest_point2.x_pos, dest_point2.y_pos)
+            ctx.bezierCurveTo(extra_point.x_pos, extra_point.y_pos, from_point.x_pos, from_point.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y)
             ctx.stroke(); ctx.closePath()
 
         if self._order_type is OrderTypeEnum.DEF_SUPPORT_ORDER:
@@ -1804,12 +1805,13 @@ class Order(Renderable):
             ctx.lineWidth = 1
             ctx.setLineDash([])
 
-            # put a line (convoy)
+            # put a bezier curve (convoy)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
-            dest_point2 = geometry.PositionRecord((from_point_shifted.x_pos + dest_point_shifted.x_pos) // 2, (from_point_shifted.y_pos + dest_point_shifted.y_pos) // 2)
+            extra_point = geometry.PositionRecord(from_point_shifted.x_pos + (from_point2.x_pos - dest_point_shifted.x_pos), from_point_shifted.y_pos + (from_point2.y_pos - dest_point_shifted.y_pos))
+
             ctx.beginPath()
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
-            ctx.lineTo(dest_point2.x_pos, dest_point2.y_pos)
+            ctx.bezierCurveTo(extra_point.x_pos, extra_point.y_pos, from_point.x_pos, from_point.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y)
             ctx.stroke(); ctx.closePath()
 
         # -- retreats --
