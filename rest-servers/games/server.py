@@ -5421,6 +5421,47 @@ class RevokeRessource(flask_restful.Resource):  # type: ignore
         return data, 201
 
 
+@API.resource('/clear-old-delays')
+class ClearOldDelaysRessource(flask_restful.Resource):  # type: ignore
+    """ ClearOldDelaysRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        maintain
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/clear-old-delays - POST - clear old delays")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # TODO improve this with real admin account
+        if pseudo != ADMIN_ACCOUNT_NAME:
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to clear old delays")
+
+        sql_executor = database.SqlExecutor()
+        incidents.Incident.purge_old(sql_executor)
+        sql_executor.commit()
+
+        del sql_executor
+
+        data = {'msg': "clear old delays done"}
+        return data, 200
+
+
 @API.resource('/tournament-allocations/<tournament_id>')
 class TournamentGameRessource(flask_restful.Resource):  # type: ignore
     """ TournamentGameRessource """

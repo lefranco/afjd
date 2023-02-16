@@ -20,7 +20,7 @@ import elo
 import memoize
 
 
-OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Comptes oisifs', 'Utilisation des accords', 'Maintenance']
+OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Effacement des anciens retard', 'Comptes oisifs', 'Utilisation des accords', 'Maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -1841,6 +1841,66 @@ def update_regularity():
     MY_SUB_PANEL <= form
 
 
+def clear_old_delays():
+    """ clear_old_delays """
+
+    def clear_old_delays_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'effacement des anciens retards : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Erreur à l'effacement des anciens retards : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                clear_old_delays()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Vous avez effacé les anciens incidents : {messages}")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            clear_old_delays()
+
+        ev.preventDefault()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/clear-old-delays"
+
+        # clear old delays : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    MY_SUB_PANEL <= html.H3("Effacer les anciens retards")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    form = html.FORM()
+
+    input_clear_old_delays = html.INPUT(type="submit", value="Effacer les anciens retards")
+    input_clear_old_delays.bind("click", clear_old_delays_callback)
+    form <= input_clear_old_delays
+
+    MY_SUB_PANEL <= form
+
+
 def show_idle_data():
     """ show_idle_data """
 
@@ -2432,6 +2492,8 @@ def load_option(_, item_name):
         update_reliability()
     if item_name == 'Mise à jour de la régularité':
         update_regularity()
+    if item_name == 'Effacement des anciens retard':
+        clear_old_delays()
     if item_name == 'Comptes oisifs':
         show_idle_data()
     if item_name == 'Utilisation des accords':

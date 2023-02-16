@@ -16,6 +16,13 @@ class Incident:
     """ Class for handling an incident """
 
     @staticmethod
+    def purge_old(sql_executor: database.SqlExecutor) -> None:
+        """ purge old incidents """
+        now = time.time()
+        one_year_ago = now - 365.2 * 24. * 3600.
+        sql_executor.execute("DELETE FROM incidents WHERE date < ?", (one_year_ago,))
+
+    @staticmethod
     def list_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, int, int, int, int, float]]:
         """ class lookup : finds the object in database from game id """
         incidents_found = sql_executor.execute("SELECT * FROM incidents where player_id = ?", (player_id,), need_result=True)
