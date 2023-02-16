@@ -1709,10 +1709,6 @@ class Order(Renderable):
             dest_point_shifted_closer_x, dest_point_shifted_closer_y = shorten_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos)
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
-            # put back
-            ctx.lineWidth = 1
-            ctx.setLineDash([])
-
             # a bezier curve (offensive support)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
             extra_point = geometry.PositionRecord(from_point_shifted.x_pos + (from_point2.x_pos - dest_point_shifted.x_pos), from_point_shifted.y_pos + (from_point2.y_pos - dest_point_shifted.y_pos))
@@ -1721,6 +1717,10 @@ class Order(Renderable):
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
             ctx.bezierCurveTo(extra_point.x_pos, extra_point.y_pos, from_point.x_pos, from_point.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y)
             ctx.stroke(); ctx.closePath()
+
+            # put back
+            ctx.lineWidth = 1
+            ctx.setLineDash([])
 
         if self._order_type is OrderTypeEnum.DEF_SUPPORT_ORDER:
 
@@ -1801,10 +1801,6 @@ class Order(Renderable):
             dest_point_shifted_closer_x, dest_point_shifted_closer_y = shorten_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted.x_pos, dest_point_shifted.y_pos)
             draw_arrow(from_point_shifted.x_pos, from_point_shifted.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y, ctx)
 
-            # put back
-            ctx.lineWidth = 1
-            ctx.setLineDash([])
-
             # put a bezier curve (convoy)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
             extra_point = geometry.PositionRecord(from_point_shifted.x_pos + (from_point2.x_pos - dest_point_shifted.x_pos), from_point_shifted.y_pos + (from_point2.y_pos - dest_point_shifted.y_pos))
@@ -1813,6 +1809,10 @@ class Order(Renderable):
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
             ctx.bezierCurveTo(extra_point.x_pos, extra_point.y_pos, from_point.x_pos, from_point.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y)
             ctx.stroke(); ctx.closePath()
+
+            # put back
+            ctx.lineWidth = 1
+            ctx.setLineDash([])
 
         # -- retreats --
 
