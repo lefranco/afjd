@@ -324,8 +324,11 @@ def show_games():
                 if time_stamp_now > deadline_loaded + time_unit * data['grace_duration']:
                     colour = config.PASSED_GRACE_COLOUR
                 # we are after deadline
-                elif time_stamp_now > deadline_loaded:
+                elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
                     colour = config.PASSED_DEADLINE_COLOUR
+                # we are slightly after deadline
+                elif time_stamp_now > deadline_loaded:
+                    colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
                 # deadline is today
                 elif time_stamp_now > deadline_loaded - approach_duration:
                     colour = config.APPROACHING_DEADLINE_COLOUR
