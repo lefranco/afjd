@@ -34,11 +34,14 @@ with open("./data/timezone_list.json", "r", encoding="utf-8") as read_file:
 with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
     SCORING_CODE_TABLE = json.load(read_file)
 
+SLIGHT_DELAY_SEC = 15 * 60
+
 # colours
 ALL_ORDERS_IN_COLOUR = 'Chartreuse'
 
-PASSED_GRACE_COLOUR = 'Red'
-PASSED_DEADLINE_COLOUR = 'DarkOrange'
+PASSED_GRACE_COLOUR = 'FireBrick'
+PASSED_DEADLINE_COLOUR = 'Red'
+SLIGHTLY_PASSED_DEADLINE_COLOUR = 'DarkOrange'
 APPROACHING_DEADLINE_COLOUR = 'Yellow'
 
 NEED_REPLACEMENT = 'Pink'
