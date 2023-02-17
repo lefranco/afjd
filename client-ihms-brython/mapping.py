@@ -1696,7 +1696,7 @@ class Order(Renderable):
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
-            ctx.lineWidth = 2
+            ctx.lineWidth = 1.5
             ctx.setLineDash(DASH_PATTERN)
 
             # a dashed arrow (passive move)
@@ -1711,11 +1711,13 @@ class Order(Renderable):
 
             # a bezier curve (offensive support)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
-            extra_point = geometry.PositionRecord(from_point_shifted.x_pos + (from_point2.x_pos - dest_point_shifted.x_pos), from_point_shifted.y_pos + (from_point2.y_pos - dest_point_shifted.y_pos))
+            extra_point = geometry.PositionRecord(from_point_shifted.x_pos + (from_point2.x_pos - dest_point_shifted.x_pos) // 2, from_point_shifted.y_pos + (from_point2.y_pos - dest_point_shifted.y_pos) // 2)
+            middle_point_x = (from_point_shifted.x_pos + dest_point_shifted_closer_x) // 2
+            middle_point_y = (from_point_shifted.y_pos + dest_point_shifted_closer_y) // 2
 
             ctx.beginPath()
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
-            ctx.bezierCurveTo(extra_point.x_pos, extra_point.y_pos, from_point.x_pos, from_point.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y)
+            ctx.bezierCurveTo(extra_point.x_pos, extra_point.y_pos, from_point.x_pos, from_point.y_pos, middle_point_x, middle_point_y)
             ctx.stroke(); ctx.closePath()
 
             # put back
@@ -1788,7 +1790,7 @@ class Order(Renderable):
             ctx.strokeStyle = stroke_color.str_value()
             ctx.fillStyle = stroke_color.str_value()  # for draw_arrow
 
-            ctx.lineWidth = 2
+            ctx.lineWidth = 1.5
             ctx.setLineDash(DASH_PATTERN)
 
             # a dashed arrow (passive move)
@@ -1803,11 +1805,13 @@ class Order(Renderable):
 
             # put a bezier curve (convoy)
             from_point2 = self._position.variant.position_table[self._active_unit.zone]
-            extra_point = geometry.PositionRecord(from_point_shifted.x_pos + (from_point2.x_pos - dest_point_shifted.x_pos), from_point_shifted.y_pos + (from_point2.y_pos - dest_point_shifted.y_pos))
+            extra_point = geometry.PositionRecord(from_point_shifted.x_pos + (from_point2.x_pos - dest_point_shifted.x_pos) // 2, from_point_shifted.y_pos + (from_point2.y_pos - dest_point_shifted.y_pos) // 2)
+            middle_point_x = (from_point_shifted.x_pos + dest_point_shifted_closer_x) // 2
+            middle_point_y = (from_point_shifted.y_pos + dest_point_shifted_closer_y) // 2
 
             ctx.beginPath()
             ctx.moveTo(from_point2.x_pos, from_point2.y_pos)
-            ctx.bezierCurveTo(extra_point.x_pos, extra_point.y_pos, from_point.x_pos, from_point.y_pos, dest_point_shifted_closer_x, dest_point_shifted_closer_y)
+            ctx.bezierCurveTo(extra_point.x_pos, extra_point.y_pos, from_point.x_pos, from_point.y_pos, middle_point_x, middle_point_y)
             ctx.stroke(); ctx.closePath()
 
             # put back
