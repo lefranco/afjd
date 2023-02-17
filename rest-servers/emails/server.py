@@ -49,7 +49,7 @@ SEND_EMAIL_WELCOME_PARSER.add_argument('email', type=str, required=True)
 
 
 # time to wait after sending a message
-PAUSE_BETWEEN_SENDS_SEC = 2
+PAUSE_BETWEEN_SENDS_SEC = 5
 
 # to transmit messages to send
 MESSAGE_QUEUE: queue.Queue[typing.Tuple[typing.Optional[str], str, str, str]] = queue.Queue()
@@ -58,7 +58,7 @@ MESSAGE_QUEUE: queue.Queue[typing.Tuple[typing.Optional[str], str, str, str]] = 
 def sender_threaded_procedure() -> None:
     """ does the actual sending of messages """
 
-    with APP.app_context():
+    with APP.app_context():  # type: ignore
 
         while True:
 
@@ -70,8 +70,11 @@ def sender_threaded_procedure() -> None:
             else:
                 mylogger.LOGGER.info("actually sending an email to %s using account %s", addressee, pseudo)
 
-            status = mailer.send_mail(subject, body, addressee)
+            status, exception = mailer.send_mail(subject, body, addressee)
             if not status:
+
+                # log
+                mylogger.LOGGER.error("Failed sending one email to %s", addressee)
 
                 # report
                 body = ""
@@ -79,10 +82,9 @@ def sender_threaded_procedure() -> None:
                 body += "\n"
                 body += f"Sujet : {subject}"
                 body += "\n"
+                body += f"Exception : {exception}"
+                body += "\n"
                 _ = mailer.send_mail("Echec à l'envoi d'un message !", body, EMAIL_SUPPORT)
-
-                # log
-                mylogger.LOGGER.error("Failed sending one email to %s", addressee)
 
             time.sleep(PAUSE_BETWEEN_SENDS_SEC)
 

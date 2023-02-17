@@ -8,7 +8,6 @@ Justs sends an email
 """
 
 import typing
-import smtplib
 
 import flask_mail  # type: ignore
 
@@ -42,7 +41,7 @@ def load_mail_config(app: typing.Any) -> None:
     SENDER = app.config['MAIL_USERNAME']
 
 
-def send_mail(subject: str, body: str, addressee: str) -> bool:
+def send_mail(subject: str, body: str, addressee: str) -> typing.Tuple[bool, str]:
     """ send_mail """
 
     sender = SENDER
@@ -59,10 +58,10 @@ def send_mail(subject: str, body: str, addressee: str) -> bool:
     assert MAILER is not None
     try:
         MAILER.send(msg)
-    except smtplib.SMTPRecipientsRefused:
-        return False
+    except Exception as exception:  # noqa: E722 pylint: disable=bare-except
+        return False, str(exception)
 
-    return True
+    return True, ''
 
 
 if __name__ == '__main__':
