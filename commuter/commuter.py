@@ -23,7 +23,9 @@ SESSION = requests.Session()
 COMMUTER_ACCOUNT = "TheCommuter"
 COMMUTER_PASSWORD = "PythonRules78470!!!"
 
-PERIOD_MINUTES = 30
+
+# tilme to add to make sure to be after
+EPSILON_SEC = 5
 
 # simplest is to hard code displays of variants here
 INTERFACE_TABLE = {
@@ -45,6 +47,21 @@ def load_credentials_config() -> None:
 
         COMMUTER_ACCOUNT = credentials_data['COMMUTER_ACCOUNT']
         COMMUTER_PASSWORD = credentials_data['COMMUTER_PASSWORD']
+
+
+def get_server_time() -> typing.Tuple[bool, float]:
+    """ get_server_time """
+
+    host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+    port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/news"
+    req_result = SESSION.get(url)
+    if req_result.status_code != 200:
+        return False, -1
+    news_content_loaded = req_result.json()
+    server_time = news_content_loaded['server_time']
+
+    return True, server_time
 
 
 def get_inforced_interface_from_variant(variant: str) -> str:
@@ -172,16 +189,34 @@ def check_all_games(jwt_token: str) -> None:
 def time_to_wait() -> float:
     """ time_to_wait """
 
-    # wait next hour+15 ou hour+45
+    # get server time
+    status, server_time = get_server_time()
+    if not status:
+        print("ERROR: Failed to get server time")
+        return -1.
 
+    # theorical wait_time
     timestamp_now = time.time()
-    second_position = timestamp_now % (60 * 60)
-    if second_position < 15 * 60:
-        wait_time = 15 * 60 - second_position
-    elif second_position < 45 * 60:
-        wait_time = 45 * 60 - second_position
-    else:
-        wait_time = 15 * 60 + 60 * 60 - second_position
+    next_hour_time = (round(timestamp_now) // (60 * 60)) * (60 * 60) + (60 * 60)
+    wait_time = next_hour_time - timestamp_now
+
+    #  print(f"now {timestamp_now=}")
+    #  print(f"now {next_hour_time=}")
+    #  print(f"raw {wait_time=}")
+
+    # delta is difference between out time and server time
+    delta = timestamp_now - server_time
+    #  print(f"delta here - server = {delta=}")
+
+    # ajust wait time because server time is from our time
+    wait_time += delta
+
+    #  print(f"adjusted {wait_time=}")
+
+    # make sure we are after
+    wait_time += EPSILON_SEC
+
+    #  print(f"final {wait_time=}")
 
     return wait_time
 
@@ -233,19 +268,31 @@ def main() -> None:
 
     # if force we go directly
     if args.force:
-        print(f"Forced. Do no wait...")
+        print("Forced. Do no wait...")
     else:
         wait_time = time_to_wait()
+        if wait_time < 0:
+            print("ERROR: Failed to get wait time")
+            return
         time.sleep(wait_time)
 
     while True:
 
+        # get local time for display
         timestamp_now = time.time()
         now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
         now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
 
+        # get server time for display
+        status, server_time = get_server_time()
+        if not status:
+            print("ERROR: Failed to get server time")
+            return
+        server_date = datetime.datetime.fromtimestamp(server_time, datetime.timezone.utc)
+        server_date_desc = server_date.strftime('%Y-%m-%d %H:%M:%S GMT')
+
         print()
-        print(f"At {now_date_desc} trying all games...")
+        print(f"At {now_date_desc} local ({server_date_desc} server) trying all games...")
         print()
 
         # try to commute all games
@@ -253,10 +300,13 @@ def main() -> None:
 
         # go to sleep
         print()
-        print(f"Done. Now {now_date_desc}. Sleeping...")
+        print(f"Done. Now {now_date_desc}. Back to sleep...")
         print()
 
         wait_time = time_to_wait()
+        if wait_time < 0:
+            print("ERROR: Failed to get wait time")
+            return
         time.sleep(wait_time)
 
 
