@@ -317,11 +317,12 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
     return True, f"Adjudication performed for game {game.name} season {game.current_advancement}!"
 
 
-def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
+def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, bool, str]:
     """
     posts an agreement in a game (or a disagreement)
     returns
       * a status (True if no error)
+      * a late indicator (True if incident created)
       * an adjudication indicator (True is adjudication ready)
       * a message (explaining the error)
     """
@@ -336,7 +337,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
     # find the game
     game = games.Game.find_by_identifier(sql_executor, game_id)
     if game is None:
-        return False, False, "ERROR : Could not find the game"
+        return False, False, False, "ERROR : Could not find the game"
 
     # are we after deadline ?
     after_deadline = game.past_deadline()
@@ -352,7 +353,10 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
 
     # no agreement : this is the end
     if definitive_value == 0:
-        return True, False, "Player does not agree to adjudicate"
+        return True, False, False, "Player does not agree to adjudicate"
+
+    # if incident created
+    late = False
 
     if after_deadline:
 
@@ -367,11 +371,13 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
                 advancement = game.current_advancement
                 player_id = game.get_role(sql_executor, int(role_id))
                 if player_id is None:
-                    return False, False, "ERROR : Could not find the player identifier"
+                    return False, False, False, "ERROR : Could not find the player identifier"
 
                 duration = game.hours_after_deadline()
                 incident = incidents.Incident(int(game_id), int(role_id), advancement, player_id, duration)
                 incident.update_database(sql_executor)  # noqa: F821
+
+                late = True
 
     # needed list : those who need to submit orders
     actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
@@ -390,7 +396,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
         # check all submitted
         for role in needed_list:
             if role not in submitted_list:
-                return True, False, "Still some orders are missing"
+                return True, late, False, "Still some orders are missing"
 
         # check all others agreed
         for role in needed_list:
@@ -398,12 +404,12 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             if role == role_id:
                 continue
             if role not in agreed_now_list:
-                return True, False, "Still some agreements from others are missing"
+                return True, late, False, "Still some agreements from others are missing"
 
         # check we are not last with just agree but after
         if definitive_value == 2:
             # we must be before deadline (otherwise 2 would have been muted to 1)
-            return True, False, "Only your agreement is missing!"
+            return True, late, False, "Only your agreement is missing!"
 
     # now we can do adjudication itself
 
@@ -411,7 +417,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
     adj_status, adj_message = adjudicate(game_id, game, names, sql_executor)
 
     if not adj_status:
-        return True, adj_status, adj_message
+        return True, late, adj_status, adj_message
 
     # get all messages
     adj_messages: typing.List[str] = []
@@ -443,7 +449,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             break
 
     if not adj_status:
-        return True, adj_status, "\n".join(adj_messages)
+        return True, late, adj_status, "\n".join(adj_messages)
 
     # update deadline
     game.push_deadline()
@@ -454,7 +460,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
 
     # note : commit will be done by caller
 
-    return True, adj_status, "\n".join(adj_messages)
+    return True, late, adj_status, "\n".join(adj_messages)
 
 
 if __name__ == '__main__':
