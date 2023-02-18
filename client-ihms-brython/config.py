@@ -37,8 +37,8 @@ with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
 # yellow before that
 APPROACH_DELAY_SEC = 24 * 60 * 60
 
-# orange after vthat
-SLIGHT_DELAY_SEC = 15 * 60
+# orange after that
+SLIGHT_DELAY_SEC = 5
 
 # colours
 ALL_ORDERS_IN_COLOUR = 'Chartreuse'
