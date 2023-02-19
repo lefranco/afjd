@@ -813,7 +813,7 @@ def my_games(state_name):
                             flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
                             value = flag
                         elif role_id in agreed_after_roles_list:
-                            flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais juste après la date limite")
+                            flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais à la date limite")
                             value = flag
                         elif role_id in needed_roles_list:
                             flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
@@ -950,7 +950,7 @@ def my_games(state_name):
     MY_PANEL <= html.DIV("(**) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(***) Accords : m=maintenant et a=juste après la D.L.", Class='note')
+    MY_PANEL <= html.DIV("(***) Accords : m=maintenant et a=à la D.L.", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= information_about_quitting()

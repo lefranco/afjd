@@ -1084,7 +1084,7 @@ def submit_orders():
         buttons_right <= input_now
         buttons_right <= html.BR()
 
-        option_after = "juste après la DL !"
+        option_after = "à la DL !"
         label_after = html.LABEL(html.EM(option_after))
         buttons_right <= label_after
 

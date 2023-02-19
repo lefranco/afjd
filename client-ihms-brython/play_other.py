@@ -859,7 +859,7 @@ def show_events_in_game():
                     if role_id in agreed_now_roles_list:
                         flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
                     elif role_id in agreed_after_roles_list:
-                        flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre juste après la date limite")
+                        flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre à la date limite")
                     else:
                         flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
             col <= flag
