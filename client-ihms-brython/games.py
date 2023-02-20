@@ -218,7 +218,7 @@ def create_game(json_dict):
         if not specific_data:
             specific_data = "(sans particularité) "
 
-        description = f"Partie créée le {time_creation_str} (gmt) par {pseudo} variante {variant}. Cette partie est {specific_data}. Scorage {scoring_code}."
+        description = f"Partie créée le {time_creation_str} par {pseudo} variante {variant}. Cette partie est {specific_data}. Scorage {scoring_code}."
         state = 0
 
         # make data strucuture
