@@ -107,37 +107,6 @@ def join_game():
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
 
-def game_incidents_reload(game_id):
-    """ game_incidents_reload """
-
-    incidents = []
-
-    def reply_callback(req):
-        nonlocal incidents
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des incidents retards de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des incidents retards de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        incidents = req_result['incidents']
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-incidents/{game_id}"
-
-    # extracting incidents from a game : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return incidents
-
-
 def game_incidents2_reload(game_id):
     """ game_incidents2_reload """
 
@@ -1004,7 +973,7 @@ def show_events_in_game():
     play_low.MY_SUB_PANEL <= html.H3("Retards")
 
     # get the actual incidents of the game
-    game_incidents = game_incidents_reload(play_low.GAME_ID)
+    game_incidents = play_low.game_incidents_reload(play_low.GAME_ID)
     # there can be no incidents (if no incident of failed to load)
 
     game_incidents_table = html.TABLE()
@@ -1094,7 +1063,7 @@ def show_events_in_game():
 
     # header
     thead = html.THEAD()
-    for field in ['rang', 'role', 'retards']:
+    for field in ['rang', 'role', 'retards', 'nombre']:
         col = html.TD(field)
         thead <= col
     recap_table <= thead
@@ -1121,6 +1090,11 @@ def show_events_in_game():
         # incidents
         incidents_list = count.get(role_id, [])
         col = html.TD(" ".join([f"{i}" for i in incidents_list]))
+        row <= col
+
+        # incidents number
+        incidents_number = len(count.get(role_id, []))
+        col = html.TD(f"{incidents_number}")
         row <= col
 
         recap_table <= row
