@@ -700,6 +700,9 @@ def game_master():
     for _, role, vote_val in votes:
         vote_values_table[role] = bool(vote_val)
 
+    # incidents
+    game_incidents = play_low.game_incidents_reload(play_low.GAME_ID)
+
     submitted_roles_list = submitted_data['submitted']
     agreed_now_roles_list = submitted_data['agreed_now']
     agreed_after_roles_list = submitted_data['agreed_after']
@@ -708,7 +711,7 @@ def game_master():
     game_admin_table = html.TABLE()
 
     thead = html.THEAD()
-    for field in ['drapeau', 'rôle', 'joueur', 'communiquer la bienvenue', '', 'ordres du joueur', 'demander les ordres', 'mettre en désordre civil', '', 'accord du joueur', 'demander l\'accord', 'forcer l\'accord', '', 'vote du joueur', '', 'retirer le rôle', 'attribuer le rôle']:
+    for field in ['drapeau', 'rôle', 'joueur', '', 'retards', '', 'communiquer la bienvenue', '', 'ordres du joueur', 'demander les ordres', 'mettre en désordre civil', '', 'accord du joueur', 'demander l\'accord', 'forcer l\'accord', '', 'vote du joueur', '', 'retirer le rôle', 'attribuer le rôle']:
         col = html.TD(field)
         thead <= col
     game_admin_table <= thead
@@ -743,6 +746,24 @@ def game_master():
             player_id = int(player_id_str)
             pseudo_there = play_low.ID2PSEUDO[player_id]
         col <= pseudo_there
+        row <= col
+
+        # separator
+        col = html.TD()
+        row <= col
+
+        # delays
+        col = html.TD()
+        num_delays = ""
+        if role_id in role2pseudo:
+            player_id_str = role2pseudo[role_id]
+            player_id = int(player_id_str)
+            num_delays = len([_ for role_id2, _, player_id2, _, _ in game_incidents if role_id2 == role_id and player_id2 is None])
+        col <= num_delays
+        row <= col
+
+        # separator
+        col = html.TD()
         row <= col
 
         col = html.TD()
