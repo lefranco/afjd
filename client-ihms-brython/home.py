@@ -1111,7 +1111,7 @@ def show_technical():
     MY_SUB_PANEL <= title9
 
     link9 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
-    link4 <= "Si vous voulez vous aussi développer votre front end..."
+    link9 <= "Si vous voulez vous aussi développer votre front end..."
     MY_SUB_PANEL <= link9
 
     # --
