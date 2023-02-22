@@ -1092,8 +1092,17 @@ def show_technical():
 
     # --
 
-    title7 = html.H4("Création de fichier de tournoi")
+    title7 = html.H4("Création de fichiers de variante")
     MY_SUB_PANEL <= title7
+
+    link71 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
+    link71 <= "Comment créer les fichiers nécessaire pour une variante"
+    MY_SUB_PANEL <= link71
+
+    # --
+
+    title8 = html.H4("Création de fichier de tournoi")
+    MY_SUB_PANEL <= title8
 
     link81 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
     link81 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
