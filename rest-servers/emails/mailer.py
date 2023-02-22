@@ -58,7 +58,7 @@ def send_mail(subject: str, body: str, addressee: str) -> typing.Tuple[bool, str
     assert MAILER is not None
     try:
         MAILER.send(msg)
-    except Exception as exception:  # noqa: E722 pylint: disable=bare-except
+    except Exception as exception:  # pylint: disable=broad-except
         return False, str(exception)
 
     return True, ''
