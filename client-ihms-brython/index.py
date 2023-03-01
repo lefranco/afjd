@@ -26,6 +26,7 @@ import sandbox    # pylint: disable=wrong-import-position # noqa: E402
 import tournament    # pylint: disable=wrong-import-position # noqa: E402
 import events    # pylint: disable=wrong-import-position # noqa: E402
 import players    # pylint: disable=wrong-import-position # noqa: E402
+import technical    # pylint: disable=wrong-import-position # noqa: E402
 import create    # pylint: disable=wrong-import-position # noqa: E402
 import moderate    # pylint: disable=wrong-import-position # noqa: E402
 import forum    # pylint: disable=wrong-import-position # noqa: E402
@@ -37,7 +38,7 @@ H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de 
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Mes parties', 'Editer partie', 'Appariement', 'Sélectionner partie', 'Aller dans la partie sélectionnée', 'Bac à sable', 'Interface tournois', 'Evénements', 'Classements', 'Création', 'Modération', 'Forum', 'Administration']
+OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Mes parties', 'Editer partie', 'Appariement', 'Sélectionner partie', 'Aller dans la partie sélectionnée', 'Bac à sable', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -163,6 +164,8 @@ def load_option(_, item_name):
         events.render(PANEL_MIDDLE)
     if item_name == 'Classements':
         players.render(PANEL_MIDDLE)
+    if item_name == 'Technique':
+        technical.render(PANEL_MIDDLE)
     if item_name == 'Création':
         create.render(PANEL_MIDDLE)
     if item_name == 'Modération':
