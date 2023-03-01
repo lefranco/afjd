@@ -195,8 +195,8 @@ def show_news():
     # ----
     div_b5 = html.DIV(Class='tooltip')
 
-    title11 = html.H4("Les meilleurs joueurs du site (d'après le classement ELO)")
-    div_b5 <= title11
+    title2 = html.H4("Les meilleurs joueurs du site (d'après le classement ELO)")
+    div_b5 <= title2
     teaser_loaded = get_teaser_content()
     teaser = formatted_teaser(teaser_loaded) if teaser_loaded else "Aucun pour le moment."
     div_b5 <= teaser
@@ -208,8 +208,8 @@ def show_news():
     # ----
     div_a4 = html.DIV(Class='tooltip')
 
-    title2 = html.H4("Les événements qui recrutent")
-    div_a4 <= title2
+    title3 = html.H4("Les événements qui recrutent")
+    div_a4 <= title3
     news_events = html.OBJECT(data="https://diplomania-gen.fr/events/", width="100%", height="400", title="Evénements", alt="Evénements")
     div_a4 <= news_events
 
@@ -219,8 +219,8 @@ def show_news():
     # ----
     div_b4 = html.DIV(Class='tooltip')
 
-    title3 = html.H4("Dernières contributions sur les forums")
-    div_b4 <= title3
+    title4 = html.H4("Dernières contributions sur les forums")
+    div_b4 <= title4
     news_forum = html.OBJECT(data="https://diplomania-gen.fr/external_page.php", width="100%", height="400", title="Forums", alt="Forums")
     div_b4 <= news_forum
 
@@ -230,8 +230,8 @@ def show_news():
     # ----
     div_a3 = html.DIV(Class='tooltip')
 
-    title4 = html.H4("Dernières nouvelles moderateur", Class='modo_news')
-    div_a3 <= title4
+    title5 = html.H4("Dernières nouvelles moderateur", Class='modo_news')
+    div_a3 <= title5
     news_content_loaded2 = news_content_table_loaded['modo']
     news_content2 = formatted_news(news_content_loaded2, False, 'modo_news')
     div_a3 <= news_content2
@@ -242,39 +242,14 @@ def show_news():
     # ----
     div_b3 = html.DIV(Class='tooltip')
 
-    title5 = html.H4("Dernières nouvelles administrateur", Class='admin_news')
-    div_b3 <= title5
+    title6 = html.H4("Dernières nouvelles administrateur", Class='admin_news')
+    div_b3 <= title6
     news_content_loaded = news_content_table_loaded['admin']
     news_content = formatted_news(news_content_loaded, True, 'admin_news')
     div_b3 <= news_content
     div_b3_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu accueil/déclarer un incident'", Class='tooltiptext')
     div_b3 <= div_b3_tip
     div_homepage <= div_b3
-
-    # ----
-    div_a2 = html.DIV(Class='tooltip')
-
-    title9 = html.H4("Statistiques")
-    div_a2 <= title9
-    ongoing_games = stats_content['ongoing_games']
-    active_game_masters = stats_content['active_game_masters']
-    active_players = stats_content['active_players']
-    div_a2 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
-    div_a2_tip = html.SPAN("Plus de détail dans le menu 'classement/joueurs'", Class='tooltiptext')
-    div_a2 <= div_a2_tip
-    div_homepage <= div_a2
-
-    # ----
-    div_b2 = html.DIV(Class='tooltip')
-
-    title6 = html.H4("Charte du bon diplomate")
-    div_b2 <= title6
-    link2 = html.A(href="./docs/charte.pdf", target="_blank")
-    link2 <= "Lien vers la charte du bon diplomate"
-    div_b2 <= link2
-    div_b2_tip = html.SPAN("Plus de documents intéressants dans le menu 'accueil/coin technique'", Class='tooltiptext')
-    div_b2 <= div_b2_tip
-    div_homepage <= div_b2
 
     # ----
     div_a1 = html.DIV(Class='tooltip')
@@ -383,6 +358,19 @@ def show_news():
     div_a0_tip = html.SPAN("Plus de détail dans le menu 'accueil/brique sociale'", Class='tooltiptext')
     div_a0 <= div_a0_tip
     div_homepage <= div_a0
+
+    # ----
+    div_b0 = html.DIV(Class='tooltip')
+
+    title10 = html.H4("Statistiques")
+    div_b0 <= title10
+    ongoing_games = stats_content['ongoing_games']
+    active_game_masters = stats_content['active_game_masters']
+    active_players = stats_content['active_players']
+    div_b0 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
+    div_b0_tip = html.SPAN("Plus de détail dans le menu 'classement/joueurs'", Class='tooltiptext')
+    div_b0 <= div_b0_tip
+    div_homepage <= div_b0
 
     # ----
 
