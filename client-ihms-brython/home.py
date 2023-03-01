@@ -332,6 +332,12 @@ def show_news():
     col <= img
     row <= col
 
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/chart.png")
+    col <= img
+    row <= col
+
     row = html.TR()
     note_bene_content_table <= row
 
@@ -350,6 +356,12 @@ def show_news():
     col = html.TD()
     link5 = html.A(href="https://discord.gg/mUWes7yEqR", target="_blank")
     link5 <= "Je veux aller causer sur Discord avec d'autres joueurs !"
+    col <= link5
+    row <= col
+
+    col = html.TD()
+    link5 = html.A(href="./docs/charte.pdf", target="_blank")
+    link5 <= "La charte du bon diplomate - à lire absolument !"
     col <= link5
     row <= col
 
