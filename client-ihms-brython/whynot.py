@@ -18,9 +18,6 @@ WHYNOT_CONTENT_TABLE = {
     "Pourquoi je peux pas mettre un accent dans mon pseudo et dans le nom de la partie ?":
     "Cette contrainte est venue pour des raisons de simplicité, pour que les parties et les pseudo apparaissent simplement dans les liens URL. Le jeu en vaut-il la chandelle ?",
 
-    "Pourquoi quand je passe mes ordres je suis obligé de cliquer sous le label alors que je pourrais plus simplement cliquer n'importe où sur la zone ?":
-    "Parce qu'un implémentation plus simple a été réalisée qui détecte la position d'un clic non par rapport à son appartenance à un polygone, mais par sa proximité à un point central, situé juste en dessous de la légende et où se placent les unités.",
-
     "Pourquoi les unités sont placées parfois bizarrement dans leur zone sur la carte ?":
     "Ce placement est réalisé par un algorithme de centrage automatique sur le polygone de région. Pour améliorer cette position il faudrait modifier la carte elle-même puisque le positionnement manuel est trop fastidieux, surtout quand viendront des variantes avec des cartes ésotériques. Ce point sera remonté au concepteur de la carte.",
 

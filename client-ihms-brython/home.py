@@ -14,7 +14,6 @@ import config
 import common
 import mapping
 import faq
-import whynot
 import interface
 import memoize
 import selection
@@ -22,7 +21,7 @@ import selection
 import index  # circular import
 
 
-OPTIONS = ['Vue d\'ensemble', 'Toutes les parties', 'Déclarer un incident', 'Foire aux questions', 'Pourquoi yapa', 'Parties sans arbitres', 'Brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Toutes les parties', 'Déclarer un incident', 'Foire aux questions', 'Parties sans arbitres', 'Brique sociale']
 
 
 # for safety
@@ -990,41 +989,6 @@ def show_faq():
     MY_SUB_PANEL <= FAQ_CONTENT
 
 
-WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
-WHYNOT_CONTENT = html.DIV("faq")
-
-
-def show_whynot():
-    """ show_whynot """
-
-    def reveal_callback(_, question):
-        """ reveal_callback """
-
-        WHYNOT_DISPLAYED_TABLE[question] = not WHYNOT_DISPLAYED_TABLE[question]
-        MY_SUB_PANEL.clear()
-        show_whynot()
-
-    title1 = html.H3("Pourquoi c'est pas comme ça ?")
-    MY_SUB_PANEL <= title1
-
-    WHYNOT_CONTENT.clear()
-
-    for question_txt, answer_txt in whynot.WHYNOT_CONTENT_TABLE.items():
-
-        reveal_button = html.INPUT(type="submit", value=question_txt)
-        reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
-        WHYNOT_CONTENT <= reveal_button
-
-        if WHYNOT_DISPLAYED_TABLE[question_txt]:
-
-            whynot_elt = html.DIV(answer_txt)
-            WHYNOT_CONTENT <= whynot_elt
-
-        WHYNOT_CONTENT <= html.P()
-
-    MY_SUB_PANEL <= WHYNOT_CONTENT
-
-
 def show_no_game_masters_data():
     """ show_no_game_masters_data """
 
@@ -1122,8 +1086,6 @@ def load_option(_, item_name):
         declare_incident(None)
     if item_name == 'Foire aux questions':
         show_faq()
-    if item_name == 'Pourquoi yapa':
-        show_whynot()
     if item_name == 'Parties sans arbitres':
         show_no_game_masters_data()
     if item_name == 'Brique sociale':
