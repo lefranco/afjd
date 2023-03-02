@@ -13,7 +13,8 @@ import mydatetime
 import mydialog
 import config
 import common
-import selection
+import home
+
 import index  # circular import
 
 OPTIONS = ['Créer', 'Changer description', 'Changer anonymat', 'Changer accès messagerie', 'Changer scorage', 'Changer paramètres accès', 'Changer paramètres cadence', 'Changer état', 'Supprimer']
@@ -1589,7 +1590,7 @@ def delete_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"La partie a été supprimée : {messages}")
-            selection.unselect_game()
+            home.unselect_game()
 
             # go to select another game
             index.load_option(None, 'Sélectionner partie')

@@ -13,8 +13,10 @@ import config
 import interface
 import common
 import mapping
-import selection
 import memoize
+import home
+import play
+
 import index  # circular import
 
 
@@ -83,10 +85,11 @@ def my_opportunities():
         storage['GAME_VARIANT'] = game_variant
 
         common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
-        selection.show_game_selected()
+        home.show_game_selected()
 
         # action of going to game page
-        index.load_option(None, 'Aller dans la partie sélectionnée')
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
 
     def join_and_select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
         """ join_and_select_game_callback : the second way of joining a game : by a button """
@@ -507,8 +510,15 @@ def my_opportunities():
     MY_PANEL <= html.BR()
 
 
+PANEL_MIDDLE = None
+
+
 def render(panel_middle):
     """ render """
+
+    global PANEL_MIDDLE
+    PANEL_MIDDLE = panel_middle
+
     MY_PANEL.clear()
     my_opportunities()
     panel_middle <= MY_PANEL

@@ -14,11 +14,9 @@ import common
 import config
 import mapping
 import interface
-import selection
 import memoize
 import play
-
-import index  # circular import
+import home
 
 MY_PANEL = html.DIV(id="mygames")
 MY_PANEL.attrs['style'] = 'display: table-row'
@@ -233,13 +231,14 @@ def my_delays(ev):  # pylint: disable=invalid-name
         storage['GAME_VARIANT'] = game_variant
 
         common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
-        selection.show_game_selected()
+        home.show_game_selected()
 
         # so that will go to proper page
         play.set_arrival(arrival)
 
         # action of going to game page
-        index.load_option(None, 'Aller dans la partie sélectionnée')
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
 
     ev.preventDefault()
 
@@ -382,13 +381,14 @@ def my_games(state_name):
         storage['GAME_VARIANT'] = game_variant
 
         common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
-        selection.show_game_selected()
+        home.show_game_selected()
 
         # so that will go to proper page
         play.set_arrival(arrival)
 
         # action of going to game page
-        index.load_option(None, 'Aller dans la partie sélectionnée')
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
 
     def start_game_callback(ev, game):  # pylint: disable=invalid-name
 
@@ -990,8 +990,15 @@ def my_games(state_name):
     MY_PANEL <= input_my_delays
 
 
+PANEL_MIDDLE = None
+
+
 def render(panel_middle):
     """ render """
+
+    global PANEL_MIDDLE
+    PANEL_MIDDLE = panel_middle
+
     MY_PANEL.clear()
     my_games('en cours')
     panel_middle <= MY_PANEL
