@@ -11,7 +11,7 @@ import mydatetime
 import mydialog
 import config
 import common
-import sandbox
+import technical
 import mapping
 import moderate
 import index  # circular import
@@ -222,10 +222,10 @@ def show_position(direct_last_moves):
         """ callback_export_sandbox """
 
         # action on importing game
-        sandbox.import_position(play_low.POSITION_DATA)
+        technical.import_position(play_low.POSITION_DATA)
 
         # action of going to sandbox page
-        index.load_option(None, 'Bac à sable')
+        index.load_option(None, 'Technique')
 
     def callback_export_game_json(_):
         """ callback_export_game_json """
