@@ -902,11 +902,14 @@ def declare_incident(json_dict_params):
     possible_situations <= html.LI("Vous êtes persuadé qu'il y a de la triche quelque part ?")
     MY_SUB_PANEL <= possible_situations
 
-    text22 = html.P("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs)")
+    text22 = html.P(html.EM("Si votre déclaration concerne un retard, il faut vous adresser à l'arbitre de la partie."))
     MY_SUB_PANEL <= text22
 
-    text23 = html.P("Vous pouvez utiliser le formulaire ci-dessous pour déclarer un incident :")
+    text23 = html.P(html.B("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs)"))
     MY_SUB_PANEL <= text23
+
+    text24 = html.P("Vous pouvez utiliser le formulaire ci-dessous pour déclarer un incident :")
+    MY_SUB_PANEL <= text24
 
     form = html.FORM()
 
