@@ -146,8 +146,6 @@ def import_position(new_position_data):
     ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA)
 
 
-
-
 def sandbox():
     """ sandbox """
 
