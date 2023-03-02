@@ -360,9 +360,14 @@ def my_delays(ev):  # pylint: disable=invalid-name
         delays_table <= row
 
     MY_PANEL.clear()
-    MY_PANEL <= html.H2("Tous les retards sur toutes mes parties")
+    MY_PANEL <= html.H2("Tous mes retards sur toutes mes parties")
     MY_PANEL <= delays_table
     MY_PANEL <= html.BR()
+
+    MY_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) a réalisé la transition 'pas d'accord -> 'd'accord pour résoudre' après la date limite", Class='note')
+    MY_PANEL <= html.BR()
+
+    MY_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
 
 
 def my_games(state_name):
@@ -981,7 +986,7 @@ def my_games(state_name):
             input_change_state = html.INPUT(type="submit", value=other_state_name)
             input_change_state.bind("click", lambda _, s=other_state_name: again(s))
             MY_PANEL <= input_change_state
-            MY_PANEL <= " "
+            MY_PANEL <= "    "
 
     MY_PANEL <= html.BR()
     MY_PANEL <= html.BR()

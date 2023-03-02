@@ -744,10 +744,8 @@ def all_games(state_name):
 
             input_change_state = html.INPUT(type="submit", value=other_state_name)
             input_change_state.bind("click", lambda _, s=other_state_name: again(s))
-
             MY_SUB_PANEL <= input_change_state
-            MY_SUB_PANEL <= html.BR()
-            MY_SUB_PANEL <= html.BR()
+            MY_SUB_PANEL <= "    "
 
 
 MAX_LEN_GAME_NAME = 50

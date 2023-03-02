@@ -755,7 +755,7 @@ def tournament_result():
     MY_SUB_PANEL <= incident_table
 
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées (sauf pour les parties en direct - en minutes).  Un retard de 1 par exemple signifie un retard entre 1 seconde et 59 minutes, 59 secondes.", Class='note')
+    MY_SUB_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
 
     MY_SUB_PANEL <= html.H4("Désordres Civils")
     MY_SUB_PANEL <= incident_table2
