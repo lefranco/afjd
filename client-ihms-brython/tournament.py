@@ -14,10 +14,10 @@ import common
 import config
 import interface
 import mapping
-import selection
 import scoring
 import memoize
-import index  # circular import
+import home
+import play
 
 
 OPTIONS = ['Parties du tournoi', 'Joueurs du tournoi', 'Classement du tournoi', 'Incidents du tournoi', 'Créer un tournoi', 'Editer le tournoi', 'Supprimer le tournoi', 'Les tournois du site']
@@ -74,10 +74,11 @@ def show_games():
         storage['GAME_VARIANT'] = game_variant
 
         common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
-        selection.show_game_selected()
+        home.show_game_selected()
 
         # action of going to game page
-        index.load_option(None, 'Aller dans la partie sélectionnée')
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
 
     def change_button_mode_callback(_):
         if storage['GAME_ACCESS_MODE'] == 'button':
@@ -1357,8 +1358,14 @@ def load_option(_, item_name):
         MENU_LEFT <= menu_item
 
 
+PANEL_MIDDLE = None
+
+
 def render(panel_middle):
     """ render """
+
+    global PANEL_MIDDLE
+    PANEL_MIDDLE = panel_middle
 
     # always back to top
     global ITEM_NAME_SELECTED
