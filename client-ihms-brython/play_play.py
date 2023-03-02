@@ -1076,7 +1076,7 @@ def submit_orders():
         buttons_right <= label_definitive
         buttons_right <= html.BR()
 
-        option_now = "oui, maintenant !"
+        option_now = "maintenant"
         label_now = html.LABEL(html.EM(option_now))
         buttons_right <= label_now
         input_now = html.INPUT(type="radio", id="now", name="agreed", checked=(definitive_value == 1))
@@ -1084,7 +1084,7 @@ def submit_orders():
         buttons_right <= input_now
         buttons_right <= html.BR()
 
-        option_after = "à la DL !"
+        option_after = "à la date limite"
         label_after = html.LABEL(html.EM(option_after))
         buttons_right <= label_after
 
@@ -1095,7 +1095,7 @@ def submit_orders():
         buttons_right <= input_after
         buttons_right <= html.BR()
 
-        option_never = "non (pour le moment) !"
+        option_never = "non"
         label_never = html.LABEL(html.EM(option_never))
         buttons_right <= label_never
         input_never = html.INPUT(type="radio", id="never", name="agreed", checked=(definitive_value == 0))
