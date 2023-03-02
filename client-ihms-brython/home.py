@@ -288,7 +288,7 @@ def show_news():
 
     div_b1 <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
     div_b1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
-    div_b1 <= html.DIV("Pour les possesseurs d'appareil Android, une application spécifiques a été créée, allez sur le forum pour la télécharger")
+    div_b1 <= html.DIV("Pour les possesseurs d'appareil Android, une application spécifique a été créée, allez sur le forum pour la télécharger")
     div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
     div_b1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant(s) : modifiez le paramètre de votre compte")
     div_b1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : Aller dans la partie sélectionnée / taguer")
