@@ -12,9 +12,10 @@ import common
 import mapping
 import interface
 import scoring
+import whynot
 
 
-OPTIONS = ['Documents', 'Choix d\'interface', 'Tester un scorage', 'Evolution de la fréquentation']
+OPTIONS = ['Documents', 'Pourquoi yapa', 'Choix d\'interface', 'Tester un scorage', 'Evolution de la fréquentation']
 
 
 def show_technical():
@@ -128,6 +129,41 @@ def show_technical():
     link102 = html.A(href="https://www.flaticon.com/", target="_blank")
     link102 <= "Icônes utilisées pour ce site web"
     MY_SUB_PANEL <= link102
+
+
+WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
+WHYNOT_CONTENT = html.DIV("faq")
+
+
+def show_whynot():
+    """ show_whynot """
+
+    def reveal_callback(_, question):
+        """ reveal_callback """
+
+        WHYNOT_DISPLAYED_TABLE[question] = not WHYNOT_DISPLAYED_TABLE[question]
+        MY_SUB_PANEL.clear()
+        show_whynot()
+
+    title1 = html.H3("Pourquoi c'est pas comme ça ?")
+    MY_SUB_PANEL <= title1
+
+    WHYNOT_CONTENT.clear()
+
+    for question_txt, answer_txt in whynot.WHYNOT_CONTENT_TABLE.items():
+
+        reveal_button = html.INPUT(type="submit", value=question_txt)
+        reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
+        WHYNOT_CONTENT <= reveal_button
+
+        if WHYNOT_DISPLAYED_TABLE[question_txt]:
+
+            whynot_elt = html.DIV(answer_txt)
+            WHYNOT_CONTENT <= whynot_elt
+
+        WHYNOT_CONTENT <= html.P()
+
+    MY_SUB_PANEL <= WHYNOT_CONTENT
 
 
 def select_interface():
@@ -336,6 +372,8 @@ def load_option(_, item_name):
 
     if item_name == 'Documents':
         show_technical()
+    if item_name == 'Pourquoi yapa':
+        show_whynot()
     if item_name == 'Choix d\'interface':
         select_interface()
     if item_name == 'Tester un scorage':
