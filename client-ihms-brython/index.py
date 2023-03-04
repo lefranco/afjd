@@ -18,8 +18,8 @@ import play
 import home
 import login
 import account
-import opportunities
 import mygames
+import allgames
 import games
 import pairing
 import tournament
@@ -37,7 +37,7 @@ H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de 
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Mes parties', 'Editer partie', 'Appariement', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
+OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Mes parties', 'Parties', 'Editer partie', 'Appariement', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -143,10 +143,10 @@ def load_option(_, item_name):
         login.render(PANEL_MIDDLE)
     if item_name == 'Mon compte':
         account.render(PANEL_MIDDLE)
-    if item_name == 'Rejoindre une partie':
-        opportunities.render(PANEL_MIDDLE)
     if item_name == 'Mes parties':
         mygames.render(PANEL_MIDDLE)
+    if item_name == 'Parties':
+        allgames.render(PANEL_MIDDLE)
     if item_name == 'Editer partie':
         games.render(PANEL_MIDDLE)
     if item_name == 'Appariement':
@@ -268,7 +268,7 @@ document <= html.BR()
 
 login.check_token()
 login.show_login()
-home.show_game_selected()
+allgames.show_game_selected()
 
 document <= html.B("Contactez le support par courriel en cas de problème (cf. page d'accueil / onglet 'déclarer un incident'). Merci !")
 document <= html.BR()

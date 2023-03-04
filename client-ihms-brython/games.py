@@ -13,7 +13,7 @@ import mydatetime
 import mydialog
 import config
 import common
-import home
+import allgames
 
 import index  # circular import
 
@@ -1590,7 +1590,7 @@ def delete_game():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"La partie a été supprimée : {messages}")
-            home.unselect_game()
+            allgames.unselect_game()
 
             # go to select another game
             index.load_option(None, 'Sélectionner partie')

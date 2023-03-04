@@ -16,7 +16,7 @@ import interface
 import mapping
 import scoring
 import memoize
-import home
+import allgames
 import play
 
 
@@ -74,7 +74,7 @@ def show_games():
         storage['GAME_VARIANT'] = game_variant
 
         common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
-        home.show_game_selected()
+        allgames.show_game_selected()
 
         # action of going to game page
         PANEL_MIDDLE.clear()
