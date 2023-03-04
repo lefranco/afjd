@@ -2058,7 +2058,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
-        data = {'late': late, 'unsafe': unsafe, 'missing': missing, 'adjudicated': adjudicated, 'debug_message': debug_message, 'msg': "from game master"}
+        data = {'late': late, 'unsafe': unsafe, 'missing': missing, 'adjudicated': adjudicated, 'debug_message': debug_message, 'msg': "Forced!"}
         return data, 201
 
 
@@ -2511,7 +2511,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
-        data = {'late': late, 'unsafe': unsafe, 'missing': missing, 'adjudicated': adjudicated, 'debug_message': debug_message, 'msg': "from player"}
+        data = {'late': late, 'unsafe': unsafe, 'missing': missing, 'adjudicated': adjudicated, 'debug_message': debug_message, 'msg': submission_report}
 
         return data, 201
 
