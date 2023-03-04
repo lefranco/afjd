@@ -10,24 +10,25 @@ START_TIME = time.time()
 from browser import document, html, alert, timer, ajax  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-import config    # pylint: disable=wrong-import-position # noqa: E402
-import common    # pylint: disable=wrong-import-position # noqa: E402
-import home    # pylint: disable=wrong-import-position # noqa: E402
-import login    # pylint: disable=wrong-import-position # noqa: E402
-import account    # pylint: disable=wrong-import-position # noqa: E402
-import opportunities    # pylint: disable=wrong-import-position # noqa: E402
-import mygames    # pylint: disable=wrong-import-position # noqa: E402
-import games    # pylint: disable=wrong-import-position # noqa: E402
-import pairing    # pylint: disable=wrong-import-position # noqa: E402
-import play_master    # pylint: disable=wrong-import-position # noqa: E402
-import play    # pylint: disable=wrong-import-position # noqa: E402
-import tournament    # pylint: disable=wrong-import-position # noqa: E402
-import events    # pylint: disable=wrong-import-position # noqa: E402
-import players    # pylint: disable=wrong-import-position # noqa: E402
-import technical    # pylint: disable=wrong-import-position # noqa: E402
-import create    # pylint: disable=wrong-import-position # noqa: E402
-import moderate    # pylint: disable=wrong-import-position # noqa: E402
-import forum    # pylint: disable=wrong-import-position # noqa: E402
+import config
+import common
+import play_master
+import play
+
+import home
+import login
+import account
+import opportunities
+import mygames
+import games
+import pairing
+import tournament
+import events
+import players
+import technical
+import create
+import moderate
+import forum
 
 # TITLE is in index.html
 
