@@ -240,11 +240,11 @@ fieldset{
   background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
-#opportunities {
+#mygames {
   background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
-#mygames {
+#allgames {
   background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
@@ -272,7 +272,7 @@ fieldset{
   background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
-#players {
+#ratings {
   background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 

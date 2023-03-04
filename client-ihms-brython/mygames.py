@@ -16,7 +16,8 @@ import mapping
 import interface
 import memoize
 import play
-import home
+import allgames
+
 
 MY_PANEL = html.DIV(id="mygames")
 MY_PANEL.attrs['style'] = 'display: table-row'
@@ -231,7 +232,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
         storage['GAME_VARIANT'] = game_variant
 
         common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
-        home.show_game_selected()
+        allgames.show_game_selected()
 
         # so that will go to proper page
         play.set_arrival(arrival)
@@ -386,7 +387,7 @@ def my_games(state_name):
         storage['GAME_VARIANT'] = game_variant
 
         common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
-        home.show_game_selected()
+        allgames.show_game_selected()
 
         # so that will go to proper page
         play.set_arrival(arrival)
