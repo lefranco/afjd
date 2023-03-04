@@ -2009,13 +2009,13 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
             # handle definitive boolean
             # game master forced player to agree to adjudicate
-            status, late, adjudicated, agreement_report = agree.fake_post(game_id, role_id, True, adjudication_names, sql_executor)
+            status, late, unsafe, missing, adjudicated, debug_message = agree.fake_post(game_id, role_id, True, adjudication_names, sql_executor)
 
         # end of protected section
 
         if not status:
             del sql_executor  # noqa: F821
-            flask_restful.abort(400, msg=f"Failed to agree (forced) to adjudicate : {agreement_report}")
+            flask_restful.abort(400, msg=f"Failed to agree (forced) to adjudicate : {debug_message}")
 
         if adjudicated:
             # notify players
@@ -2058,13 +2058,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
-        # report incident inserted
-        late_comment = "(incident inserted - these orders come after deadline !)" if late else ""
-
-        if adjudicated:
-            data = {'adjudicated': adjudicated, 'msg': f"Ok adjudication was performed (initiated by game master): {agreement_report} {late_comment}"}
-        else:
-            data = {'adjudicated': adjudicated, 'msg': f"Ok agreement to solve stored for role {role_id} (forced by game master) (game adjudication:{agreement_report}) {late_comment}"}
+        data = {'late': late, 'unsafe': unsafe, 'missing': missing, 'adjudicated': adjudicated, 'debug_message': debug_message, 'msg': "from game master"}
         return data, 201
 
 
@@ -2145,7 +2139,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             # automaton makes transition 2 (agree after)-> 1 (agree now)
             for role_id in agreed_after_list:
                 # late cannot be set here
-                status, _, adjudicated, agreement_report = agree.fake_post(game_id, role_id, 1, adjudication_names, sql_executor)
+                status, _, __, ___, adjudicated, debug_message = agree.fake_post(game_id, role_id, 1, adjudication_names, sql_executor)
                 if not status:
                     break
                 if adjudicated:
@@ -2155,7 +2149,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
         if not status:
             del sql_executor  # noqa: F821
-            flask_restful.abort(400, msg=f"Failed to agree (commute) to adjudicate : {agreement_report}")
+            flask_restful.abort(400, msg=f"Failed to agree (commute) to adjudicate : {debug_message}")
 
         if adjudicated:
             # notify players
@@ -2164,7 +2158,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             game_id = game.identifier
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
             addressees = []
-            for _, player_id, __ in allocations_list:
+            for ____, player_id, _____ in allocations_list:
                 addressees.append(player_id)
             body = "Vous pouvez continuer à jouer dans cette partie !\n"
             body += "\n"
@@ -2468,13 +2462,13 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
             # handle definitive boolean
             # player submitted orders and agreed (or not) to adjudicate
-            status, late, adjudicated, agreement_report = agree.fake_post(game_id, role_id, definitive_value, adjudication_names, sql_executor)  # noqa: F821
+            status, late, unsafe, missing, adjudicated, debug_message = agree.fake_post(game_id, role_id, definitive_value, adjudication_names, sql_executor)  # noqa: F821
 
         # end of protected section
 
         if not status:
             del sql_executor  # noqa: F821
-            flask_restful.abort(400, msg=f"Failed to agree to adjudicate : {agreement_report}")
+            flask_restful.abort(400, msg=f"Failed to agree to adjudicate : {debug_message}")
 
         if adjudicated:
 
@@ -2517,13 +2511,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
 
-        # report incident inserted
-        late_comment = "(incident inserted - these orders come after deadline !)" if late else ""
-
-        if adjudicated:
-            data = {'adjudicated': adjudicated, 'msg': f"Ok adjudication was performed (initiated by player): {agreement_report} {late_comment}"}
-        else:
-            data = {'adjudicated': adjudicated, 'msg': f"Ok orders submitted {submission_report} and agreement {bool(definitive_value)} stored for role {role_id} (from player) (game adjudication:{agreement_report}) {late_comment}"}
+        data = {'late': late, 'unsafe': unsafe, 'missing': missing, 'adjudicated': adjudicated, 'debug_message': debug_message, 'msg': "from player"}
 
         return data, 201
 

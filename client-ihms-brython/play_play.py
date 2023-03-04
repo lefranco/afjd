@@ -173,11 +173,35 @@ def submit_orders():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
+
+            # to better undestand what is going on, on can use code below :
+            #  debug_message = req_result['debug_message'].split('\n')
+
             common.info_dialog(f"Vous avez soumis les ordres : {messages}", True)
 
             # special : send ip address to server
             common.send_ip_address()
 
+            # retard
+            late = req_result['late']
+            if late:
+                alert("Vous avez soumis vos ordres en retard !")
+
+            # pas vraiment soumis
+            unsafe = req_result['unsafe']
+            if unsafe:
+                alert("Vous avez juste enregistré vos ordres pour vous-même mais ils ne sont pas validés (car vous n'avez pas mis l'accord) !")
+
+            # pas vraiment soumis
+            missing = req_result['missing']
+            if missing == 1:
+                alert("Pas de résolution : il manque au moins un jeu d'ordres...")
+            if missing == 2:
+                alert("Pas de résolution : il manque au moins un accord...")
+            if missing == 3:
+                alert("Pas de résolution : c'est bien dommage, il ne manque que votre accord !")
+
+            # resolution
             adjudicated = req_result['adjudicated']
             if adjudicated:
                 # seems to be things not updated if back to orders
