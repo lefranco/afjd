@@ -24,7 +24,7 @@ import games
 import pairing
 import tournament
 import events
-import players
+import ratings
 import technical
 import create
 import moderate
@@ -156,7 +156,7 @@ def load_option(_, item_name):
     if item_name == 'Evénements':
         events.render(PANEL_MIDDLE)
     if item_name == 'Classements':
-        players.render(PANEL_MIDDLE)
+        ratings.render(PANEL_MIDDLE)
     if item_name == 'Technique':
         technical.render(PANEL_MIDDLE)
     if item_name == 'Création':
