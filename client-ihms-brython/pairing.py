@@ -11,11 +11,11 @@ import config
 import common
 
 
-OPTIONS = ['Rejoindre la partie', 'Quitter la partie', 'Prendre l\'arbitrage', 'Démissionner de l\'arbitrage']
+OPTIONS = ['Appariement']
 
 
-def join_game():
-    """ join_game : the first way of joining a game """
+def pairing():
+    """ pairing """
 
     def join_game_callback(ev):  # pylint: disable=invalid-name
 
@@ -31,7 +31,7 @@ def join_game():
 
                 # failed but refresh
                 MY_SUB_PANEL.clear()
-                join_game()
+                pairing()
 
                 return
 
@@ -40,7 +40,7 @@ def join_game():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            join_game()
+            pairing()
 
         ev.preventDefault()
 
@@ -57,36 +57,6 @@ def join_game():
         # adding allocation : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    MY_SUB_PANEL <= html.H3("Se mettre dans la partie")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    if 'GAME_ID' not in storage:
-        alert("ERREUR : identifiant de partie introuvable")
-        return
-
-    game_id = storage['GAME_ID']
-
-    form = html.FORM()
-
-    input_join_game = html.INPUT(type="submit", value="Rejoindre la partie sélectionnée")
-    input_join_game.bind("click", join_game_callback)
-    form <= input_join_game
-
-    MY_SUB_PANEL <= form
-
-
-def quit_game():
-    """ quit_game """
-
     def quit_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -101,7 +71,7 @@ def quit_game():
 
                 # failed but refresh
                 MY_SUB_PANEL.clear()
-                quit_game()
+                pairing()
 
                 return
 
@@ -110,7 +80,7 @@ def quit_game():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            quit_game()
+            pairing()
 
         ev.preventDefault()
 
@@ -128,36 +98,6 @@ def quit_game():
         # quitting a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    MY_SUB_PANEL <= html.H3("Se retirer de la partie")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    if 'GAME_ID' not in storage:
-        alert("ERREUR : identifiant de partie introuvable")
-        return
-
-    game_id = storage['GAME_ID']
-
-    form = html.FORM()
-
-    input_quit_game = html.INPUT(type="submit", value="Quitter la partie sélectionnée")
-    input_quit_game.bind("click", quit_game_callback)
-    form <= input_quit_game
-
-    MY_SUB_PANEL <= form
-
-
-def take_mastering_game():
-    """ take_mastering_game """
-
     def take_mastering_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -173,7 +113,7 @@ def take_mastering_game():
 
                 # failed but refresh
                 MY_SUB_PANEL.clear()
-                take_mastering_game()
+                pairing()
 
                 return
 
@@ -182,7 +122,7 @@ def take_mastering_game():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            take_mastering_game()
+            pairing()
 
         ev.preventDefault()
 
@@ -200,36 +140,6 @@ def take_mastering_game():
         # taking game mastering : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    MY_SUB_PANEL <= html.H3("Prendre l'arbitrage de la partie")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    if 'GAME_ID' not in storage:
-        alert("ERREUR : identifiant de partie introuvable")
-        return
-
-    game_id = storage['GAME_ID']
-
-    form = html.FORM()
-
-    input_join_game = html.INPUT(type="submit", value="Prendre l'arbitrage de la partie sélectionnée")
-    input_join_game.bind("click", take_mastering_game_callback)
-    form <= input_join_game
-
-    MY_SUB_PANEL <= form
-
-
-def quit_mastering_game():
-    """ quit_mastering_game """
-
     def quit_mastering_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -244,7 +154,7 @@ def quit_mastering_game():
 
                 # failed but refresh
                 MY_SUB_PANEL.clear()
-                quit_mastering_game()
+                pairing()
 
                 return
 
@@ -253,7 +163,7 @@ def quit_mastering_game():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            quit_mastering_game()
+            pairing()
 
         ev.preventDefault()
 
@@ -271,8 +181,6 @@ def quit_mastering_game():
         # giving up game mastering : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    MY_SUB_PANEL <= html.H3("Quitter l'arbitrage de la partie")
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -289,18 +197,45 @@ def quit_mastering_game():
 
     game_id = storage['GAME_ID']
 
-    form = html.FORM()
+    MY_SUB_PANEL <= html.H3("Se mettre dans la partie")
 
+    # join game
+
+    form = html.FORM()
+    input_join_game = html.INPUT(type="submit", value="Rejoindre la partie sélectionnée")
+    input_join_game.bind("click", join_game_callback)
+    form <= input_join_game
+    MY_SUB_PANEL <= form
+
+    # quit game
+
+    MY_SUB_PANEL <= html.H3("Se retirer de la partie")
+
+    form = html.FORM()
+    input_quit_game = html.INPUT(type="submit", value="Quitter la partie sélectionnée")
+    input_quit_game.bind("click", quit_game_callback)
+    form <= input_quit_game
+    MY_SUB_PANEL <= form
+
+    # take mastering
+
+    MY_SUB_PANEL <= html.H3("Prendre l'arbitrage de la partie")
+
+    form = html.FORM()
+    input_join_game = html.INPUT(type="submit", value="Prendre l'arbitrage de la partie sélectionnée")
+    input_join_game.bind("click", take_mastering_game_callback)
+    form <= input_join_game
+    MY_SUB_PANEL <= form
+
+    # quit mastering
+
+    MY_SUB_PANEL <= html.H3("Quitter l'arbitrage de la partie")
+
+    form = html.FORM()
     input_join_game = html.INPUT(type="submit", value="Démissionner de l'arbitrage de la partie sélectionnée")
     input_join_game.bind("click", quit_mastering_game_callback)
     form <= input_join_game
-
     MY_SUB_PANEL <= form
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    warning = html.DIV("Attention : Créer une partie anonyme, se retirer de l'arbitrage après avoir consulté la liste des joueurs et ensuite jouer dans cette partie... est considéré comme tricher !", Class='note')
-    MY_SUB_PANEL <= warning
 
 
 MY_PANEL = html.DIV()
@@ -327,14 +262,8 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Rejoindre la partie':
-        join_game()
-    if item_name == 'Quitter la partie':
-        quit_game()
-    if item_name == 'Prendre l\'arbitrage':
-        take_mastering_game()
-    if item_name == 'Démissionner de l\'arbitrage':
-        quit_mastering_game()
+    if item_name == 'Appariement':
+        pairing()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
