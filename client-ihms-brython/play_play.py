@@ -195,11 +195,11 @@ def submit_orders():
             # pas vraiment soumis
             missing = req_result['missing']
             if missing == 1:
-                alert("Pas de résolution : il manque au moins un jeu d'ordres...")
+                alert("Pas de résolution pour le moment : il manque au moins un jeu d'ordres...")
             if missing == 2:
-                alert("Pas de résolution : il manque au moins un accord...")
+                alert("Pas de résolution pour le moment : il manque au moins un accord...")
             if missing == 3:
-                alert("Pas de résolution : c'est bien dommage, il ne manque que votre accord !")
+                alert("Pas de résolution pour le moment : c'est bien dommage, il ne manque que votre accord !")
 
             # resolution
             adjudicated = req_result['adjudicated']
