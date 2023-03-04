@@ -317,15 +317,24 @@ def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: databas
     return True, f"Adjudication performed for game {game.name} season {game.current_advancement}!"
 
 
-def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, bool, str]:
+def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, bool, int, bool, str]:
     """
     posts an agreement in a game (or a disagreement)
     returns
       * a status (True if no error)
       * a late indicator (True if incident created)
-      * an adjudication indicator (True is adjudication ready)
-      * a message (explaining the error)
+      * an unsafe indicator (True player is unsafe - not protected against delay)
+      * a missing code 0 unknown 1 orders 2 agreements 3 only your agreement
+      * an adj_status adjudication indicator (True is adjudication was done)
+      * a debug message (more detailed information )
     """
+
+    status = True
+    late = False
+    unsafe = False
+    missing = 0
+    adjudicated = False
+    debug_message = ""
 
     # what was before ?
     definitive_before = 0
@@ -337,7 +346,9 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
     # find the game
     game = games.Game.find_by_identifier(sql_executor, game_id)
     if game is None:
-        return False, False, False, "ERROR : Could not find the game"
+        status = False
+        debug_message = "ERROR : Could not find the game"
+        return status, late, unsafe, missing, adjudicated, debug_message
 
     # are we after deadline ?
     after_deadline = game.past_deadline()
@@ -353,7 +364,9 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
 
     # no agreement : this is the end
     if definitive_value == 0:
-        return True, False, False, "Player does not agree to adjudicate"
+        unsafe = True
+        debug_message = "Player does not agree to adjudicate"
+        return status, late, unsafe, missing, adjudicated, debug_message
 
     # if incident created
     late = False
@@ -371,7 +384,9 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
                 advancement = game.current_advancement
                 player_id = game.get_role(sql_executor, int(role_id))
                 if player_id is None:
-                    return False, False, False, "ERROR : Could not find the player identifier"
+                    status = False
+                    debug_message = "ERROR : Could not find the player identifier"
+                    return status, late, unsafe, missing, adjudicated, debug_message
 
                 duration = game.hours_after_deadline()
                 incident = incidents.Incident(int(game_id), int(role_id), advancement, player_id, duration)
@@ -396,7 +411,9 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
         # check all submitted
         for role in needed_list:
             if role not in submitted_list:
-                return True, late, False, "Still some orders are missing"
+                missing = 1
+                debug_message = "Still some orders are missing"
+                return status, late, unsafe, missing, adjudicated, debug_message
 
         # check all others agreed
         for role in needed_list:
@@ -404,26 +421,31 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             if role == role_id:
                 continue
             if role not in agreed_now_list:
-                return True, late, False, "Still some agreements from others are missing"
+                missing = 2
+                debug_message = "Still some agreements from others are missing"
+                return status, late, unsafe, missing, adjudicated, debug_message
 
         # check we are not last with just agree but after
         if definitive_value == 2:
             # we must be before deadline (otherwise 2 would have been muted to 1)
-            return True, late, False, "Only your agreement is missing!"
+            missing = 3
+            debug_message = "Only your agreement is missing!"
+            return status, late, unsafe, missing, adjudicated, debug_message
 
     # now we can do adjudication itself
 
     # first adjudication
-    adj_status, adj_message = adjudicate(game_id, game, names, sql_executor)
+    adjudicated, adj_message = adjudicate(game_id, game, names, sql_executor)
 
-    if not adj_status:
-        return True, late, adj_status, adj_message
+    if not adjudicated:
+        debug_message = f"Failed first adjudication {adj_message} !"
+        return status, late, unsafe, missing, adjudicated, debug_message
 
     # get all messages
-    adj_messages: typing.List[str] = []
+    debug_messages: typing.List[str] = []
 
     # keep list of messages
-    adj_messages.append(adj_message)
+    debug_messages.append(adj_message)
 
     # all possible next adjudications
     while True:
@@ -434,33 +456,31 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
 
         # need orders : stop now
         if needed_list:
-            needed_message = "Orders needed now!"
-            adj_messages.append(needed_message)
+            debug_messages.append("Orders needed now!")
             break
 
         # one more adjudication
         adj_status, adj_message = adjudicate(game_id, game, names, sql_executor)
 
         # keep list of messages
-        adj_messages.append(adj_message)
+        debug_messages.append(adj_message)
 
         # error adjudicating : stop now (safer, but should not happen)
         if not adj_status:
-            break
-
-    if not adj_status:
-        return True, late, adj_status, "\n".join(adj_messages)
+            status = False
+            debug_message = "\n".join(debug_messages)
+            return status, late, unsafe, missing, adjudicated, debug_message
 
     # update deadline
     game.push_deadline()
     game.update_database(sql_executor)
 
-    push_message = "Deadline adjusted!"
-    adj_messages.append(push_message)
+    debug_messages.append("Deadline adjusted!")
 
     # note : commit will be done by caller
 
-    return True, late, adj_status, "\n".join(adj_messages)
+    debug_message = "\n".join(debug_messages)
+    return status, late, unsafe, missing, adjudicated, debug_message
 
 
 if __name__ == '__main__':
