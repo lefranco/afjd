@@ -21,7 +21,6 @@ import account
 import mygames
 import allgames
 import games
-import pairing
 import tournament
 import events
 import ratings
@@ -37,7 +36,7 @@ H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de 
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Mes parties', 'Parties', 'Editer partie', 'Appariement', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
+OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Mes parties', 'Parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -149,8 +148,6 @@ def load_option(_, item_name):
         allgames.render(PANEL_MIDDLE)
     if item_name == 'Editer partie':
         games.render(PANEL_MIDDLE)
-    if item_name == 'Appariement':
-        pairing.render(PANEL_MIDDLE)
     if item_name == 'Interface tournois':
         tournament.render(PANEL_MIDDLE)
     if item_name == 'Evénements':
