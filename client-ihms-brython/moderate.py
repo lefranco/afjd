@@ -1069,7 +1069,7 @@ def show_player_games(pseudo_player, game_list):
                             colour = config.PASSED_DEADLINE_COLOUR
                     else:
                         # we are after everything !
-                        if time_stamp_now > deadline_loaded + 60 * 60 * 24 * 7:
+                        if time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
                             colour = config.CRITICAL_COLOUR
                         # we are after deadline + grace
                         elif time_stamp_now > deadline_loaded + 60 * 60 * data['grace_duration']:

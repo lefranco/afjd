@@ -37,6 +37,9 @@ with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
 # yellow before that
 APPROACH_DELAY_SEC = 24 * 60 * 60
 
+# grey after that
+CRITICAL_DELAY_DAY = 7
+
 # orange after that
 SLIGHT_DELAY_SEC = 5
 

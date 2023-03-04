@@ -120,8 +120,11 @@ def countdown():
         if time_stamp_now > deadline_loaded:
             colour = config.PASSED_DEADLINE_COLOUR
     else:
+        # we are after everything !
+        if time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
+            colour = config.CRITICAL_COLOUR
         # we are after deadline + grace
-        if time_stamp_now > deadline_loaded + 60 * 60 * play_low.GAME_PARAMETERS_LOADED['grace_duration']:
+        elif time_stamp_now > deadline_loaded + 60 * 60 * play_low.GAME_PARAMETERS_LOADED['grace_duration']:
             colour = config.PASSED_GRACE_COLOUR
         # we are after deadline + slight
         elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
