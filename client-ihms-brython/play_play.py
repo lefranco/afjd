@@ -176,6 +176,7 @@ def submit_orders():
 
             # to better undestand what is going on, on can use code below :
             #  debug_message = req_result['debug_message'].split('\n')
+            #  common.info_dialog(f"debug_message : {debug_message}", True)
 
             common.info_dialog(f"Vous avez soumis les ordres : {messages}", True)
 
@@ -195,11 +196,11 @@ def submit_orders():
             # pas vraiment soumis
             missing = req_result['missing']
             if missing == 1:
-                alert("Pas de résolution pour le moment : il manque au moins un jeu d'ordres...")
+                alert("Il manque au moins un jeu d'ordres pour faire avancer la partie...")
             if missing == 2:
-                alert("Pas de résolution pour le moment : il manque au moins un accord...")
+                alert("Il manque au moins un accord pour faire avancer la partie...")
             if missing == 3:
-                alert("Pas de résolution pour le moment : c'est bien dommage, il ne manque que votre accord !")
+                alert("C'est bien dommage, il ne manque que votre accord !")
 
             # resolution
             adjudicated = req_result['adjudicated']
