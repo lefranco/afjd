@@ -2422,11 +2422,11 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     # remove
                     fake_unit.delete_database(sql_executor)  # noqa: F821
 
-                print(f"ERROR from server  : {req_result.text}")
+                # print(f"ERROR from server  : {req_result.text}")
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
 
                 del sql_executor
-                flask_restful.abort(400, msg=f"Failed to submit orders {message} : {submission_report}")
+                flask_restful.abort(400, msg=f":-( {submission_report}")
 
             # ok so orders are accepted
 
@@ -3347,9 +3347,9 @@ class SimulationRessource(flask_restful.Resource):  # type: ignore
 
         # adjudication failed
         if req_result.status_code != 201:
-            print(f"ERROR from server  : {req_result.text}")
+            #  print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to adjudicate {message} : {adjudication_report}")
+            flask_restful.abort(404, msg=f":- {adjudication_report}")
 
         # extract new report
         orders_result = req_result.json()['orders_result']
