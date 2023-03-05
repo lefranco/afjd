@@ -183,17 +183,17 @@ def submit_orders():
             # special : send ip address to server
             common.send_ip_address()
 
-            # retard
+            # late
             late = req_result['late']
             if late:
                 alert("Vous avez soumis vos ordres en retard !")
 
-            # pas vraiment soumis
+            # not really submitted
             unsafe = req_result['unsafe']
             if unsafe:
                 alert("Vous avez juste enregistré vos ordres pour vous-même mais ils ne sont pas validés (car vous n'avez pas mis l'accord) !")
 
-            # pas vraiment soumis
+            # why no adjudication
             missing = req_result['missing']
             if missing == 1:
                 alert("Il manque au moins un jeu d'ordres pour faire avancer la partie...")
@@ -202,7 +202,7 @@ def submit_orders():
             if missing == 3:
                 alert("C'est bien dommage, il ne manque que votre accord !")
 
-            # resolution
+            # adjudication was done
             adjudicated = req_result['adjudicated']
             if adjudicated:
                 # seems to be things not updated if back to orders
