@@ -244,9 +244,9 @@ def sandbox():
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Erreur à la soumission de situaion et ordres de simulation : {req_result['message']}")
+                    alert(f"Erreur à la soumission de situation et ordres de simulation : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la soumission de situaion et ordres de simulation : {req_result['msg']}")
+                    alert(f"Problème à la soumission de situation et ordres de simulation : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
