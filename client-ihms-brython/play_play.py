@@ -195,12 +195,10 @@ def submit_orders():
 
             # why no adjudication
             missing = req_result['missing']
-            if missing == 1:
-                alert("Il manque au moins un jeu d'ordres pour faire avancer la partie...")
             if missing == 2:
-                alert("Il manque au moins un accord pour faire avancer la partie...")
+                alert("Tous les ordres sont là, mais il manque au moins un accord pour faire avancer la partie !")
             if missing == 3:
-                alert("C'est bien dommage, il ne manque que votre accord !")
+                alert("C'est bien dommage, il ne manque que votre accord pour faire avancer la partie !")
 
             # adjudication was done
             adjudicated = req_result['adjudicated']
