@@ -42,14 +42,6 @@ def main() -> None:
             print(f"Failed to load {json_parameters_input} : {exception}")
             sys.exit(-1)
 
-    output = json.dumps(json_variant_data, indent=4, ensure_ascii=False)
-    with open(json_variant_output, 'w', encoding='utf-8') as file_ptr:
-        file_ptr.write(output)
-
-    output = json.dumps(json_parameters_data, indent=4, ensure_ascii=False)
-    with open(json_parameters_output, 'w', encoding='utf-8') as file_ptr:
-        file_ptr.write(output)
-
 
 if __name__ == '__main__':
     main()
