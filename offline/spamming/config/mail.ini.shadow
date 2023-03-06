@@ -1,0 +1,9 @@
+[mail]
+
+#MAIL_SERVER=smtp.orange.fr
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=465
+MAIL_USE_TLS=0
+MAIL_USE_SSL=1
+#MAIL_USERNAME=afjdiplo@gmail.com
+#MAIL_PASSWORD=xxxx
