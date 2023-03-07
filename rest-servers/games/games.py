@@ -35,8 +35,6 @@ MAX_CYCLES_TO_PLAY = 99
 MIN_VICTORY_CENTERS = 18
 MAX_VICTORY_CENTERS = 18
 
-# for the moment
-IMPOSED_VARIANT = 'standard'
 
 LOCATION = './data'
 EXTENSION = '.json'
@@ -182,11 +180,6 @@ class Game:
             self._variant = json_dict['variant']
             self._variant = database.sanitize_field(self._variant)
             self._variant = self._variant[:LEN_NAME_MAX]
-
-            # TODO : change later when variants are implemented
-            if self._variant != IMPOSED_VARIANT:
-                self._variant = IMPOSED_VARIANT
-
             changed = True
 
         if 'archive' in json_dict and json_dict['archive'] is not None and json_dict['archive'] != self._archive:
