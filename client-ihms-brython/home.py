@@ -14,7 +14,7 @@ import common
 import faq
 
 
-OPTIONS = ['Vue d\'ensemble', 'Déclarer un incident', 'Foire aux questions', 'Brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Déclarer un incident', 'Foire aux questions', 'Evolution de la fréquentation', 'Brique sociale']
 
 
 # for safety
@@ -629,6 +629,18 @@ def show_faq():
     MY_SUB_PANEL <= FAQ_CONTENT
 
 
+def frequentation_evolution():
+    """ frequentation_evolution """
+
+    # load frequentation directly
+
+    # use button
+    button = html.BUTTON("Lancement du calcul de fréquentation", id='frequentation_link')
+    MY_SUB_PANEL <= button
+    button.bind("click", lambda e: window.open("https://diplomania-gen.fr/frequentation"))
+    document['frequentation_link'].click()
+
+
 def social():
     """ social """
 
@@ -671,6 +683,8 @@ def load_option(_, item_name):
         declare_incident(None)
     if item_name == 'Foire aux questions':
         show_faq()
+    if item_name == 'Evolution de la fréquentation':
+        frequentation_evolution()
     if item_name == 'Brique sociale':
         social()
 
