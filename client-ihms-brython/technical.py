@@ -18,7 +18,7 @@ import whynot
 import geometry
 
 # sandbox must stay first
-OPTIONS = ['Bac à sable', 'Documents', 'Pourquoi yapa', 'Choix d\'interface', 'Tester un scorage', 'Evolution de la fréquentation']
+OPTIONS = ['Documents', 'Pourquoi yapa', 'Bac à sable', 'Choix d\'interface', 'Tester un scorage', 'Evolution de la fréquentation']
 
 
 LONG_DURATION_LIMIT_SEC = 1.0
@@ -144,6 +144,154 @@ def import_position(new_position_data):
 
     # digest the orders
     ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA)
+
+
+def show_technical():
+    """ show_technical """
+
+    title = html.H3("Coin technique")
+    MY_SUB_PANEL <= title
+
+    title1 = html.H4("Règles du jeu officielles")
+    MY_SUB_PANEL <= title1
+
+    link1 = html.A(href="https://media.wizards.com/2015/rules/diplomacy_rules.pdf", target="_blank")
+    MY_SUB_PANEL <= link1
+    link1 <= "Lien vers les règles officielles du jeu"
+
+    # --
+
+    title2 = html.H4("Algorithme de résolution (D.A.T.C.)")
+    MY_SUB_PANEL <= title2
+
+    link2 = html.A(href="http://web.inter.nl.net/users/L.B.Kruijswijk/", target="_blank")
+    link2 <= "Lien vers une description technique de l'algorithme de résolution utilisé"
+    MY_SUB_PANEL <= link2
+
+    # --
+
+    title3 = html.H4("Choix d'implémentation")
+    MY_SUB_PANEL <= title3
+
+    link3 = html.A(href="./docs/Compl_en.pdf", target="_blank")
+    link3 <= "Lien vers les choix de comportement pour le moteur de résolution"
+    MY_SUB_PANEL <= link3
+
+    # --
+
+    title4 = html.H4("Le scorage (la marque sur un tournoi)")
+    MY_SUB_PANEL <= title4
+
+    link4 = html.A(href="./docs/Scorings.pdf", target="_blank")
+    link4 <= "Lien vers les spécifications des systèmes de scorage sur le site"
+    MY_SUB_PANEL <= link4
+
+    # --
+
+    title5 = html.H4("Le calcul du ELO")
+    MY_SUB_PANEL <= title5
+
+    link5 = html.A(href="./docs/calcul_elo.pdf", target="_blank")
+    link5 <= "Lien vers les spécifications du calcul du ELO sur le site"
+    MY_SUB_PANEL <= link5
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    link6 = html.A(href="https://towardsdatascience.com/developing-a-generalized-elo-rating-system-for-multiplayer-games-b9b495e87802", target="_blank")
+    link6 <= "Lien vers la source d'inspiration pour le calcul du ELO sur le site"
+    MY_SUB_PANEL <= link6
+
+    # --
+
+    title6 = html.H4("Règles simplifiées")
+    MY_SUB_PANEL <= title6
+
+    link6 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
+    link6 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
+    MY_SUB_PANEL <= link6
+
+    # --
+
+    title7 = html.H4("Création de fichiers de variante")
+    MY_SUB_PANEL <= title7
+
+    link71 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
+    link71 <= "Comment créer les fichiers nécessaire pour une variante"
+    MY_SUB_PANEL <= link71
+
+    # --
+
+    title8 = html.H4("Création de fichier de tournoi")
+    MY_SUB_PANEL <= title8
+
+    link81 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
+    link81 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
+    MY_SUB_PANEL <= link81
+
+    MY_SUB_PANEL <= html.P()
+
+    link82 = html.A(href="./scripts/allocate.py", target="_blank")
+    link82 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
+    MY_SUB_PANEL <= link82
+
+    # --
+
+    title9 = html.H4("Document d'interface de l'API")
+    MY_SUB_PANEL <= title9
+
+    link9 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
+    link9 <= "Si vous voulez vous aussi développer votre front end..."
+    MY_SUB_PANEL <= link9
+
+    # --
+
+    title10 = html.H4("Remerciements")
+    MY_SUB_PANEL <= title10
+
+    link101 = html.A(href="https://brython.info/", target="_blank")
+    link101 <= "Outil utilisé pour ce site web"
+    MY_SUB_PANEL <= link101
+
+    MY_SUB_PANEL <= html.P()
+
+    link102 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link102 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link102
+
+
+WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
+WHYNOT_CONTENT = html.DIV("faq")
+
+
+def show_whynot():
+    """ show_whynot """
+
+    def reveal_callback(_, question):
+        """ reveal_callback """
+
+        WHYNOT_DISPLAYED_TABLE[question] = not WHYNOT_DISPLAYED_TABLE[question]
+        MY_SUB_PANEL.clear()
+        show_whynot()
+
+    title1 = html.H3("Pourquoi c'est pas comme ça ?")
+    MY_SUB_PANEL <= title1
+
+    WHYNOT_CONTENT.clear()
+
+    for question_txt, answer_txt in whynot.WHYNOT_CONTENT_TABLE.items():
+
+        reveal_button = html.INPUT(type="submit", value=question_txt)
+        reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
+        WHYNOT_CONTENT <= reveal_button
+
+        if WHYNOT_DISPLAYED_TABLE[question_txt]:
+
+            whynot_elt = html.DIV(answer_txt)
+            WHYNOT_CONTENT <= whynot_elt
+
+        WHYNOT_CONTENT <= html.P()
+
+    MY_SUB_PANEL <= WHYNOT_CONTENT
 
 
 def sandbox():
@@ -1078,154 +1226,6 @@ def sandbox():
 
     MY_SUB_PANEL <= html.H2("Le bac à sable : \"what if ?\"")
     MY_SUB_PANEL <= my_sub_panel2
-
-
-def show_technical():
-    """ show_technical """
-
-    title = html.H3("Coin technique")
-    MY_SUB_PANEL <= title
-
-    title1 = html.H4("Règles du jeu officielles")
-    MY_SUB_PANEL <= title1
-
-    link1 = html.A(href="https://media.wizards.com/2015/rules/diplomacy_rules.pdf", target="_blank")
-    MY_SUB_PANEL <= link1
-    link1 <= "Lien vers les règles officielles du jeu"
-
-    # --
-
-    title2 = html.H4("Algorithme de résolution (D.A.T.C.)")
-    MY_SUB_PANEL <= title2
-
-    link2 = html.A(href="http://web.inter.nl.net/users/L.B.Kruijswijk/", target="_blank")
-    link2 <= "Lien vers une description technique de l'algorithme de résolution utilisé"
-    MY_SUB_PANEL <= link2
-
-    # --
-
-    title3 = html.H4("Choix d'implémentation")
-    MY_SUB_PANEL <= title3
-
-    link3 = html.A(href="./docs/Compl_en.pdf", target="_blank")
-    link3 <= "Lien vers les choix de comportement pour le moteur de résolution"
-    MY_SUB_PANEL <= link3
-
-    # --
-
-    title4 = html.H4("Le scorage (la marque sur un tournoi)")
-    MY_SUB_PANEL <= title4
-
-    link4 = html.A(href="./docs/Scorings.pdf", target="_blank")
-    link4 <= "Lien vers les spécifications des systèmes de scorage sur le site"
-    MY_SUB_PANEL <= link4
-
-    # --
-
-    title5 = html.H4("Le calcul du ELO")
-    MY_SUB_PANEL <= title5
-
-    link5 = html.A(href="./docs/calcul_elo.pdf", target="_blank")
-    link5 <= "Lien vers les spécifications du calcul du ELO sur le site"
-    MY_SUB_PANEL <= link5
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    link6 = html.A(href="https://towardsdatascience.com/developing-a-generalized-elo-rating-system-for-multiplayer-games-b9b495e87802", target="_blank")
-    link6 <= "Lien vers la source d'inspiration pour le calcul du ELO sur le site"
-    MY_SUB_PANEL <= link6
-
-    # --
-
-    title6 = html.H4("Règles simplifiées")
-    MY_SUB_PANEL <= title6
-
-    link6 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
-    link6 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
-    MY_SUB_PANEL <= link6
-
-    # --
-
-    title7 = html.H4("Création de fichiers de variante")
-    MY_SUB_PANEL <= title7
-
-    link71 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
-    link71 <= "Comment créer les fichiers nécessaire pour une variante"
-    MY_SUB_PANEL <= link71
-
-    # --
-
-    title8 = html.H4("Création de fichier de tournoi")
-    MY_SUB_PANEL <= title8
-
-    link81 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
-    link81 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
-    MY_SUB_PANEL <= link81
-
-    MY_SUB_PANEL <= html.P()
-
-    link82 = html.A(href="./scripts/allocate.py", target="_blank")
-    link82 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
-    MY_SUB_PANEL <= link82
-
-    # --
-
-    title9 = html.H4("Document d'interface de l'API")
-    MY_SUB_PANEL <= title9
-
-    link9 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
-    link9 <= "Si vous voulez vous aussi développer votre front end..."
-    MY_SUB_PANEL <= link9
-
-    # --
-
-    title10 = html.H4("Remerciements")
-    MY_SUB_PANEL <= title10
-
-    link101 = html.A(href="https://brython.info/", target="_blank")
-    link101 <= "Outil utilisé pour ce site web"
-    MY_SUB_PANEL <= link101
-
-    MY_SUB_PANEL <= html.P()
-
-    link102 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link102 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link102
-
-
-WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
-WHYNOT_CONTENT = html.DIV("faq")
-
-
-def show_whynot():
-    """ show_whynot """
-
-    def reveal_callback(_, question):
-        """ reveal_callback """
-
-        WHYNOT_DISPLAYED_TABLE[question] = not WHYNOT_DISPLAYED_TABLE[question]
-        MY_SUB_PANEL.clear()
-        show_whynot()
-
-    title1 = html.H3("Pourquoi c'est pas comme ça ?")
-    MY_SUB_PANEL <= title1
-
-    WHYNOT_CONTENT.clear()
-
-    for question_txt, answer_txt in whynot.WHYNOT_CONTENT_TABLE.items():
-
-        reveal_button = html.INPUT(type="submit", value=question_txt)
-        reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
-        WHYNOT_CONTENT <= reveal_button
-
-        if WHYNOT_DISPLAYED_TABLE[question_txt]:
-
-            whynot_elt = html.DIV(answer_txt)
-            WHYNOT_CONTENT <= whynot_elt
-
-        WHYNOT_CONTENT <= html.P()
-
-    MY_SUB_PANEL <= WHYNOT_CONTENT
 
 
 def select_interface():
