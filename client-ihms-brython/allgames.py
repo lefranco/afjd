@@ -905,6 +905,7 @@ def select_game():
     rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
 
     for variant in variants:
+
         for current_state in current_states:
 
             form = html.FORM()
@@ -946,6 +947,12 @@ def select_game():
             row <= col
 
             select_table <= row
+
+        col = html.TD()
+        col <= "***"
+        row = html.TR()
+        row <= col
+        select_table <= row
 
     MY_SUB_PANEL <= select_table
 
