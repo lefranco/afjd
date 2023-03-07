@@ -281,16 +281,15 @@ def show_news():
 
     # rest
 
-    div_b1 <= html.DIV("Pour se creer un compte, utiliser le menu 'mon compte/créer un compte'")
-    div_b1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, allez dans 'accueil/choix d'interface'")
+    div_b1 <= html.DIV("Pour se creer un compte,  menu “mon compte” option “créer un compte”")
+    div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : menu “Mes parties” bouton “basculer en mode liens externes”")
+    div_b1 <= html.DIV("Pour être contacté en cas de besoin de remplaçant : “Mon compte” option “Editer mon compte” et modifiez le paramètre approprié")
+    div_b1 <= html.DIV("Pour entrer des 'faux' ordres (parties sans communication possible) : option “Taguer” depuis la page de la partie")
+    div_b1 <= html.DIV("Pour se désinscrire d'une partie (inscrit par erreur) : menu “Parties” option “Sélectionner partie” puis option “Appariement” et enfin bouton quitter la partie")
+    div_b1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, menu “Technique” option “Choix d'interface”")
     div_b1 <= html.DIV("Pour les possesseurs d'appareil Android, une application spécifique a été créée, allez sur le forum pour la télécharger")
-    div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : utilisez 'basculer en mode liens externes' depuis la page 'mes parties'")
-    div_b1 <= html.DIV("Si vous souhaitez être contacté en cas de besoin de remplaçant(s) : modifiez le paramètre de votre compte")
-    div_b1 <= html.DIV("Si vous souhaitez entrer des 'faux' ordres (parties sans communication possible) : Aller dans la partie sélectionnée / taguer")
-    div_b1 <= html.DIV("Si vous vous êtes inscrit dans une partie par erreur : sélectionner la partie puis menu Appariement / sous menu quitter la partie / bouton quitter la partie")
-    div_b1 <= html.DIV("Si vous souhaitez créer plusieurs parties par batch contactez l'administrateur pour obtenir les droits")
 
-    div_b1_tip = html.SPAN("Plus de détail dans le menu 'accueil/foire aux question'", Class='tooltiptext')
+    div_b1_tip = html.SPAN("Plus de détail dans le menu “Accueil” option “Foire aux question”", Class='tooltiptext')
     div_b1 <= div_b1_tip
     div_homepage <= div_b1
 

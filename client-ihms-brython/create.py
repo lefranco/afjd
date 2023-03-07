@@ -562,7 +562,7 @@ def explain_stuff():
     information2 = html.DIV()
     modus = html.OL()
     modus <= html.LI("Vous avez dû recevoir un fichier csv avec les donnees de vos parties à importer.")
-    modus <= html.LI("Allez sur le site. Choisissez le menu “Sélectionner partie”, et sélectionnez la partie modèle (T-BLITZ) parmi les parties distinguées, dans la dernière des quatre fenêtres (les parties “distinguées”). Cette etape est pertinente, car c’est cette partie qui definira les caracteristiques des parties que vous allez créer.")
+    modus <= html.LI("Allez sur le site. Choisissez le menu “Parties” option “Sélectionner partie”, et sélectionnez la partie modèle (T-BLITZ) parmi les parties distinguées, dans la dernière des quatre fenêtres (les parties “distinguées”). Cette etape est pertinente, car c’est cette partie qui definira les caracteristiques des parties que vous allez créer.")
     modus <= html.LI("Allez dans le menu “Création”. Si vous ne voyez pas le menu, demandez les droits à l'administrateur")
     modus <= html.LI("Cliquez sur “parcourir” pour choisir le fichier et selectionnez le fichier csv que vous avez reçu")
     modus <= html.LI("Confirmez la création des parties...")

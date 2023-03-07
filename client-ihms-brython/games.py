@@ -22,7 +22,6 @@ OPTIONS = ['Créer', 'Changer description', 'Changer anonymat', 'Changer accès 
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_VARIANT_NAME = 20
 
-DEFAULT_VARIANT = 'standard'
 DEFAULT_SCORING_CODE = "CDIP"
 DEFAULT_DEADLINE_TIME = 21
 DEFAULT_GRACE_DURATION = 24
@@ -30,6 +29,9 @@ DEFAULT_SPEED_MOVES = 72
 DEFAULT_SPEED_OTHERS = 24
 DEFAULT_VICTORY_CENTERS = 18
 DEFAULT_NB_CYCLES = 7
+
+# default is first one
+VARIANT_NAMES_LIST = ['standard', 'duel']
 
 
 def information_about_input():
@@ -160,7 +162,7 @@ def create_game(json_dict):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"La partie a été créé : {messages}")
-            alert("Maintenant vous devez la sélectionner par le menu 'Sélectionner partie'")
+            alert("Maintenant vous devez la sélectionner par le menu “Parties”, option “Sélectionner partie”")
 
         ev.preventDefault()
 
@@ -359,9 +361,16 @@ def create_game(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_variant = html.LEGEND("variante", title="(imposée pour me moment)")
+    legend_variant = html.LEGEND("variante", title="La variante de la partie")
     fieldset <= legend_variant
-    input_variant = html.INPUT(type="select-one", readonly=True, value=DEFAULT_VARIANT)
+    input_variant = html.SELECT(type="select-one", value="")
+
+    for variant_name in VARIANT_NAMES_LIST:
+        option = html.OPTION(variant_name)
+        if variant_name == VARIANT_NAMES_LIST[0]:
+            option.selected = True
+        input_variant <= option
+
     fieldset <= input_variant
     form <= fieldset
 
