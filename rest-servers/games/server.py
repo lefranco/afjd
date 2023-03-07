@@ -870,10 +870,18 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             report = reports.Report(game_id, time_stamp, WELCOME_TO_GAME)
             report.update_database(sql_executor)
 
+            # get variant
+            variant_name = game.variant
+            variant_dict = variants.Variant.get_by_name(variant_name)
+            if variant_dict is None:
+                del sql_executor
+                flask_restful.abort(404, msg=f"Variant {variant_name} doesn't exist")
+
+            # get number of roles from variant
+            nb_roles = int(variant_dict['roles']['number']) + 1
+
             # add a capacity
-            # TODO : get correct value from variant
-            value = 8
-            capacity = capacities.Capacity(game_id, value)
+            capacity = capacities.Capacity(game_id, nb_roles)
             capacity.update_database(sql_executor)
 
             # add that all players are active (those who own a center - that will do)
