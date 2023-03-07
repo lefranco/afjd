@@ -18,7 +18,7 @@ import whynot
 import geometry
 
 # sandbox must stay first
-OPTIONS = ['Documents', 'Pourquoi yapa', 'Bac à sable', 'Choix d\'interface', 'Tester un scorage', 'Evolution de la fréquentation']
+OPTIONS = ['Documents', 'Pourquoi yapa', 'Bac à sable', 'Choix d\'interface', 'Tester un scorage']
 
 
 LONG_DURATION_LIMIT_SEC = 1.0
@@ -1396,18 +1396,6 @@ def test_scoring():
     MY_SUB_PANEL <= form
 
 
-def frequentation_evolution():
-    """ frequentation_evolution """
-
-    # load frequentation directly
-
-    # use button
-    button = html.BUTTON("Lancement du calcul de fréquentation", id='frequentation_link')
-    MY_SUB_PANEL <= button
-    button.bind("click", lambda e: window.open("https://diplomania-gen.fr/frequentation"))
-    document['frequentation_link'].click()
-
-
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -1442,8 +1430,6 @@ def load_option(_, item_name):
         select_interface()
     if item_name == 'Tester un scorage':
         test_scoring()
-    if item_name == 'Evolution de la fréquentation':
-        frequentation_evolution()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
