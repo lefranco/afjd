@@ -1559,10 +1559,7 @@ def update_elo():
     if not games_dict:
         return
 
-    if 'GAME_VARIANT' not in storage:
-        alert("Pas de partie de référence")
-        return
-    variant_name = storage['GAME_VARIANT']
+    variant_name = config.FORCED_VARIANT_NAME
 
     variant_content = common.game_variant_content_reload(variant_name)
     interface_chosen = interface.get_interface_from_variant(variant_name)
