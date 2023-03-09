@@ -107,15 +107,6 @@ FAQ_CONTENT_TABLE = {
     "Pourquoi des parties sont distinguées ?":
     "Ce sont soit des parties modèles de tournoi que l'on veut retrouver plus rapidement, soit des parties archives sur lesquelles on veut attirer l'attention du badaud.",
 
-    "Est-il prévu de développer des variantes ?":
-    "Certainement. Hundred tient la corde pour le moment...",
-
-    "Je veux donner de l'argent pour le site. Que faire ?":
-    "Reportez-vous à la page d'accueil/liens du site pour le lien vers le site de recueil des dons.",
-
-    "Comment discuter avec les membres de la communauté":
-    "Reportez-vous à la page accueil/liens du site pour le lien vers la brique sociale.",
-
     "Ce site est-il le site de jeu officiel de l'Association Francophone des Joueurs de Diplomatie ?":
     "Oui.",
 
