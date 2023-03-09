@@ -1,110 +1,108 @@
 {
-"map": {
-"width": 812,
-"height": 718
-},
-
-"regions": {
-"1": {
-"name": "Cote"
-},
-"2": {
-"name": "Terre"
-},
-"3": {
-"name": "Mer"
-}
-},
-
-"units": {
-"1": {
-"name": "Armee"
-},
-"2": {
-"name": "Flotte"
-}
-},
-"roles": {
-"0": {
-	"name": "Arbitre",
-	"adjective_name": "Arbitre",
-	"letter_name": "M",
-	"red": [
-	0,
-	0
-	],
-	"green": [
-	0,
-	0
-	],
-	"blue": [
-	0,
-	0
-	]
-},
-"1": {
-	"name": "Allies",
-	"adjective_name": "allies",
-	"letter_name": "A",
-	"red": [
-	47,
-	131
-	],
-	"green": [
-	138,
-	185
-	],
-	"blue": [
-	170,
-	204
-	]
-},
-"2": {
-	"name": "Axe",
-	"adjective_name": "Axe",
-	"letter_name": "X",
-	 "red": [
-	                224,
-	                237
-	            ],
-	            "green": [
-	                110,
-	                168
-	            ],
-	            "blue": [
-	                93,
-	                158
-	            ]
-	        },
-"3": {
-	"name": "Italie",
-	"adjective_name": "italien",
-	"letter_name": "I",
-	"red": [
-	109,
-	168
-	],
-	"green": [
-	224,
-	237
-	],
-	"blue": [
-	105,
-	2165
-	]
-}
-},
-"coasts": {
-"1": {
-"name": "ce"
-},
-"2": {
-"name": "cn"
-},
-"3": {
-"name": "cs"
-}
-},
+	"map": {
+		"width": 812,
+		"height": 718
+	},
+	"regions": {
+		"1": {
+		"name": "Cote"
+		},
+		"2": {
+		"name": "Terre"
+		},
+		"3": {
+		"name": "Mer"
+		}
+	},
+		"units": {
+		"1": {
+		"name": "Armee"
+		},
+		"2": {
+		"name": "Flotte"
+		}
+	},
+		"roles": {
+		"0": {
+			"name": "Arbitre",
+			"adjective_name": "Arbitre",
+			"letter_name": "M",
+			"red": [
+				0,
+				0
+			],
+			"green": [
+				0,
+				0
+			],
+			"blue": [
+				0,
+				0
+			]
+		},
+		"1": {
+			"name": "Allies",
+			"adjective_name": "allies",
+			"letter_name": "A",
+			"red": [
+				47,
+				131
+			],
+			"green": [
+				138,
+				185
+			],
+			"blue": [
+				170,
+				204
+			]
+		},
+		"2": {
+			"name": "Axe",
+			"adjective_name": "Axe",
+			"letter_name": "X",
+	 		"red": [
+	       		224,
+	       		237
+	   		],
+	       	"green": [
+	          	110,
+	        	168
+	   		],
+	    	"blue": [
+	       		93,
+	       		158
+	    	]
+	  	},
+		"3": {
+			"name": "Italie",
+			"adjective_name": "italien",
+			"letter_name": "I",
+			"red": [
+				109,
+				168
+			],
+			"green": [
+				224,
+				237
+			],
+			"blue": [
+				105,
+				165
+			]
+		}
+	},
+		"coasts": {
+			"1": {
+		"name": "ce"
+		},
+		"2": {
+		"name": "cn"
+		},
+		"3": {
+		"name": "cs"
+		}
+	},
     "zones": {
         "1": {
             "name": "Adr",
