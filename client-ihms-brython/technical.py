@@ -23,8 +23,6 @@ OPTIONS = ['Documents', 'Pourquoi yapa', 'Bac à sable', 'Choix d\'interface', '
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
-VARIANT_NAME = "standard"
-
 
 class AutomatonStateEnum:
     """ AutomatonStateEnum """
@@ -36,7 +34,7 @@ class AutomatonStateEnum:
 
 
 # this will not change
-VARIANT_NAME_LOADED = VARIANT_NAME
+VARIANT_NAME_LOADED = config.FORCED_VARIANT_NAME
 
 # this will
 INTERFACE_CHOSEN = None

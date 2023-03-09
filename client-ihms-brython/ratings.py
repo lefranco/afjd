@@ -393,14 +393,7 @@ def show_rating_performance(classic, role_id):
     else:
         pseudo = None
 
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable (pour la variante)")
-        return
-
-    if 'GAME_VARIANT' not in storage:
-        alert("Pas de partie de référence")
-        return
-    variant_name = storage['GAME_VARIANT']
+    variant_name = config.FORCED_VARIANT_NAME
 
     variant_content = common.game_variant_content_reload(variant_name)
     interface_chosen = interface.get_interface_from_variant(variant_name)
