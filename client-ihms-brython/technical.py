@@ -1241,7 +1241,7 @@ def select_interface():
 
         # we do not go back to where we started
         # this is intended otherwise the new maps are not active
-        alert("Interface sélectionnée, rechangeremnt du site...")
+        alert("Interface sélectionnée, rechargement du site...")
 
     title1 = html.H3("Choix d'interface")
     MY_SUB_PANEL <= title1
