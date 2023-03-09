@@ -30,11 +30,7 @@ LEN_SCORING_MAX = 5
 MIN_CYCLES_TO_PLAY = 5
 MAX_CYCLES_TO_PLAY = 99
 
-# for safety (diplomacy standard)
-# to change later
-MIN_VICTORY_CENTERS = 18
-MAX_VICTORY_CENTERS = 18
-
+STANDARD_VICTORY_CENTERS = 18
 
 LOCATION = './data'
 EXTENSION = '.json'
@@ -275,7 +271,13 @@ class Game:
             changed = True
 
         if 'used_for_elo' in json_dict and json_dict['used_for_elo'] is not None and json_dict['used_for_elo'] != self._used_for_elo:
-            self._used_for_elo = json_dict['used_for_elo']
+
+            # safety : forced
+            if self._variant != 'standard':
+                self._used_for_elo = False
+            else:
+                self._used_for_elo = json_dict['used_for_elo']
+
             changed = True
 
         if 'play_weekend' in json_dict and json_dict['play_weekend'] is not None and json_dict['play_weekend'] != self._play_weekend:
@@ -314,10 +316,13 @@ class Game:
             changed = True
 
         if 'victory_centers' in json_dict and json_dict['victory_centers'] is not None and json_dict['victory_centers'] != self._victory_centers:
-            self._victory_centers = json_dict['victory_centers']
-            # safety
-            self._victory_centers = max(MIN_VICTORY_CENTERS, self._victory_centers)
-            self._victory_centers = min(MAX_VICTORY_CENTERS, self._victory_centers)
+
+            # safety : forced
+            if self._variant == 'standard':
+                self._victory_centers = STANDARD_VICTORY_CENTERS
+            else:
+                self._victory_centers = json_dict['victory_centers']
+
             changed = True
 
         if 'current_state' in json_dict and json_dict['current_state'] is not None and json_dict['current_state'] != self._current_state:

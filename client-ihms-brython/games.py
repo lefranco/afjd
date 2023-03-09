@@ -382,7 +382,7 @@ def create_game(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_used_for_elo = html.LEGEND("utilisée pour le élo", title="Partie sérieuse - les résultats de la partie comptent pour le calcul du élo sur le site")
+    legend_used_for_elo = html.LEGEND("utilisée pour le élo", title="Partie sérieuse - les résultats de la partie comptent pour le calcul du élo sur le site (forcé à faux pour les parties non standard)")
     fieldset <= legend_used_for_elo
     input_used_for_elo = html.INPUT(type="checkbox", checked=bool(used_for_elo) if used_for_elo is not None else True)
     fieldset <= input_used_for_elo
@@ -567,7 +567,7 @@ def create_game(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_victory_centers = html.LEGEND("victoire en centres", title="Combien de centres sont nécessaires pour gagner ?")
+    legend_victory_centers = html.LEGEND("victoire en centres", title=f"Combien de centres sont nécessaires pour gagner ? (forcé à {DEFAULT_VICTORY_CENTERS} pour les parties standard)")
     fieldset <= legend_victory_centers
     input_victory_centers = html.INPUT(type="number", value=victory_centers if victory_centers is not None else DEFAULT_VICTORY_CENTERS)
     fieldset <= input_victory_centers
