@@ -299,6 +299,11 @@ def main() -> None:
         # try to commute all games
         check_all_games(jwt_token)
 
+        # get local time for display again
+        timestamp_now = time.time()
+        now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
+        now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
+
         # go to sleep
         print()
         print(f"Done. Now {now_date_desc}. Back to sleep...")
