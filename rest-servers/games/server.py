@@ -2027,6 +2027,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg=f"Failed to agree (forced) to adjudicate : {debug_message}")
 
         if adjudicated:
+
             # notify players
 
             if not (game.fast or game.archive):
@@ -2161,6 +2162,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(400, msg=f"Failed to agree (commute) to adjudicate : {debug_message}")
 
         if adjudicated:
+
             # notify players
 
             subject = f"La partie {game.name} a avancé (avec l'aide de l'automate)!"
@@ -2514,6 +2516,22 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                     del sql_executor
                     flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+        else:
+
+            # put "not players" in disorder (will be done by first player to actually submit orders)
+
+            variant_name = game.variant
+            variant_data = variants.Variant.get_by_name(variant_name)
+            assert variant_data is not None
+
+            for role_id in variant_data['disorder']:
+                print(f"calling agree.disorder for {role_id=}", file=sys.stderr)
+                status, _, message = agree.disorder(game_id, role_id, game, variant_data, adjudication_names, sql_executor)  # noqa: F821
+                print(f"{status=} result {message=}", file=sys.stderr)
+                if not status:
+                    del sql_executor
+                    flask_restful.abort(400, msg=f"Failed to set power {role_id} in disorder : {message}")
 
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
