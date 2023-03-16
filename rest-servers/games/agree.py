@@ -11,6 +11,8 @@ import collections
 import json
 import time
 
+import sys
+
 import requests
 
 import ownerships
@@ -31,6 +33,138 @@ import lowdata
 
 
 SESSION = requests.Session()
+
+
+def disorder(game_id: int, role_id: int, game: games.Game, variant_dict: typing.Dict[str, typing.Any], names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
+    """ this will put role in disorder for game
+         returns status done message
+    """
+
+    # check orders are required
+    actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+    print(f"{actives_list=}", file=sys.stderr)
+    needed_list = [o[1] for o in actives_list]
+    print(f"{needed_list=}", file=sys.stderr)
+    if role_id not in needed_list:
+        return True, False, "This role does not seem to require any orders"
+
+    # check orders are not submitted
+    submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+    submitted_list = [o[1] for o in submissions_list]
+    if role_id in submitted_list:
+        return True, False, "This role seems to have already submitted orders"
+
+    # ======
+    # Orders
+    # ======
+
+    variant_dict_json = json.dumps(variant_dict)
+
+    # evaluate situation
+
+    # situation: get ownerships
+    ownership_dict: typing.Dict[str, int] = {}
+    game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
+    for _, center_num, role_num in game_ownerships:
+        ownership_dict[str(center_num)] = role_num
+
+    # situation: get units
+    game_units = units.Unit.list_by_game_id(sql_executor, game_id)
+    unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+    fake_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+    dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+    for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+        if fake:
+            fake_unit_dict[str(role_num)].append([type_num, zone_num])
+        elif region_dislodged_from_num:
+            dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
+        else:
+            unit_dict[str(role_num)].append([type_num, zone_num])
+
+    # situation: get forbiddens
+    forbidden_list = []
+    game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
+    for _, region_num in game_forbiddens:
+        forbidden_list.append(region_num)
+
+    situation_dict = {
+        'ownerships': ownership_dict,
+        'dislodged_ones': dislodged_unit_dict,
+        'units': unit_dict,
+        'fake_units': fake_unit_dict,
+        'forbiddens': forbidden_list,
+    }
+    situation_dict_json = json.dumps(situation_dict)
+
+    json_dict = {
+        'variant': variant_dict_json,
+        'advancement': game.current_advancement,
+        'situation': situation_dict_json,
+        'names': names,
+        'role': role_id,
+    }
+
+    # post to disorderer
+    host = lowdata.SERVER_CONFIG['SOLVER']['HOST']
+    port = lowdata.SERVER_CONFIG['SOLVER']['PORT']
+    url = f"{host}:{port}/disorder"
+    req_result = SESSION.post(url, data=json_dict)
+
+    if 'msg' in req_result.json():
+        submission_report = req_result.json()['msg']
+    else:
+        submission_report = "\n".join([req_result.json()['stderr'], req_result.json()['stdout']])
+
+    # adjudication failed
+    if req_result.status_code != 201:
+        print(f"ERROR from server  : {req_result.text}")
+        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+        return False, False, f"Failed to submit civil disorder {message} : {submission_report}"
+
+    # ok so orders are made up ok
+
+    orders_default = req_result.json()['orders_default']
+
+    print(f"disorderer returns {orders_default=}", file=sys.stderr)
+
+    # store orders
+
+    # purge previous
+
+    previous_orders = orders.Order.list_by_game_id_role_num(sql_executor, int(game_id), role_id)
+
+    # purge
+    for (_, role_num, _, zone_num, _, _) in previous_orders:
+        order = orders.Order(int(game_id), role_num, 0, zone_num, 0, 0)
+        order.delete_database(sql_executor)
+
+    # insert new ones
+    for the_order in orders_default:
+        order = orders.Order(int(game_id), 0, 0, 0, 0, 0)
+        order.load_json(the_order)
+        order.update_database(sql_executor)
+
+        # special case : build : create a fake unit
+        # this was done before submitting
+        # we tolerate that some extra fake unit may persist from previous submission
+
+    # insert this submission
+    submission = submissions.Submission(int(game_id), int(role_id))
+    submission.update_database(sql_executor)
+
+    # ======
+    # Agreement
+    # ======
+
+    definitive_value = 1
+
+    # update db here for agreement
+    definitive = definitives.Definitive(int(game_id), int(role_id), definitive_value)
+    definitive.update_database(sql_executor)  # noqa: F821
+
+    # note : commit will be done by caller
+
+    return True, True, "Civil disorder orders inserted"
 
 
 def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, str]:
