@@ -167,20 +167,14 @@ def disorder(game_id: int, role_id: int, game: games.Game, variant_dict: typing.
     return True, True, "Civil disorder orders inserted"
 
 
-def adjudicate(game_id: int, game: games.Game, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, str]:
+def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, typing.Any], names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, str]:
     """ this will perform game adjudication """
 
     # check game over
     if game.game_over():
         return False, "INFORMATION : game over !"
 
-    # evaluate variant
-    variant_name = game.variant
-    variant_dict = variants.Variant.get_by_name(variant_name)
-    if variant_dict is None:
-        return False, "ERROR : Could not find the variant"
-
-    variant_dict_json = json.dumps(variant_dict)
+    variant_dict_json = json.dumps(variant_data)
 
     # evaluate situation
 
@@ -566,10 +560,18 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             debug_message = "Only your agreement is missing!"
             return status, late, unsafe, missing, adjudicated, debug_message
 
+    # evaluate variant
+    variant_name = game.variant
+    variant_data = variants.Variant.get_by_name(variant_name)
+    if variant_data is None:
+        status = False
+        debug_message = "ERROR : Could not find the variant"
+        return status, late, unsafe, missing, adjudicated, debug_message
+
     # now we can do adjudication itself
 
     # first adjudication
-    adjudicated, adj_message = adjudicate(game_id, game, names, sql_executor)
+    adjudicated, adj_message = adjudicate(game_id, game, variant_data, names, sql_executor)
 
     if not adjudicated:
         debug_message = f"Failed first adjudication {adj_message} !"
@@ -584,17 +586,42 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
     # all possible next adjudications
     while True:
 
+        # civil disorder orders
+        for role_id1 in variant_data['disorder']:
+            print(f"calling agree.disorder for {role_id1=}", file=sys.stderr)
+            status, _, message = disorder(game_id, role_id1, game, variant_data, names, sql_executor)  # noqa: F821
+            print(f"{status=} result {message=}", file=sys.stderr)
+            # error disordering : stop now (safer, but should not happen)
+            if not status:
+                debug_messages.append(f"Failed to set power {role_id1} in disorder : {message}")
+                debug_message = "\n".join(debug_messages)
+                return status, late, unsafe, missing, adjudicated, debug_message
+
         # needed list : those who need to submit orders
         actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
         needed_list = [o[1] for o in actives_list]
 
-        # need orders : stop now
-        if needed_list:
+        # submitted_list : those who submitted orders
+        submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
+        submitted_list = [o[1] for o in submissions_list]
+
+        # agreed_now_list : those who agreed to adjudicate now
+        definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
+        agreed_now_list = [o[1] for o in definitives_list if o[2] == 1]
+
+        # can we proceed
+        orders_needed = False
+        for role in needed_list:
+            if role not in submitted_list or role not in agreed_now_list:
+                orders_needed = True
+                break
+
+        if orders_needed:
             debug_messages.append("Orders needed now!")
             break
 
         # one more adjudication
-        adj_status, adj_message = adjudicate(game_id, game, names, sql_executor)
+        adj_status, adj_message = adjudicate(game_id, game, variant_data, names, sql_executor)
 
         # keep list of messages
         debug_messages.append(adj_message)
