@@ -383,6 +383,12 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
         elo_raw_element = [classic, role_id, player_id, elo_value_int, change_int, game_id, number_games]
         elo_raw_list.append(elo_raw_element)
 
+    # table game -> start time (for sorting)
+    gameid2starttime = {gamename2gameid[k]: v['start_time_stamp'] for k, v in games_results_dict.items()}
+
+    # sort according to game start
+    elo_raw_list_sorted = sorted(elo_raw_list, key=lambda e: gameid2starttime[e[5]])
+
     # make teaser (just an abstract)
     teaser_text = "\n".join([f"{num2pseudo[e[2]]} : {e[3]} avec {num2rolename[e[1]]} en {'classique' if e[0] else 'blitz'}" for e in sorted(elo_raw_list, key=lambda ee: ee[3], reverse=True)][0: TEASER_KEEP])
 
@@ -399,7 +405,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     elo_information <= f"Time elapsed : {elapsed}"
     elo_information <= html.BR()
 
-    return elo_raw_list, teaser_text
+    return elo_raw_list_sorted, teaser_text
 
 
 def process_reliability(players_dict, games_results_dict, reliability_information):
