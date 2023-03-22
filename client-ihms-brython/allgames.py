@@ -90,6 +90,49 @@ def my_opportunities():
         PANEL_MIDDLE.clear()
         play.render(PANEL_MIDDLE)
 
+    def quit_and_select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
+        """ quit_and_select_game_callback : the second way of quitting a game : by a button """
+
+        def quit_game(game_name, game_data_sel):
+
+            def reply_callback(req):
+
+                req_result = json.loads(req.text)
+                if req.status != 200:
+                    if 'message' in req_result:
+                        alert(f"Erreur à la désinscription à la partie : {req_result['message']}")
+                    elif 'msg' in req_result:
+                        alert(f"Problème à la désinscription à la partie : {req_result['msg']}")
+                    else:
+                        alert("Réponse du serveur imprévue et non documentée")
+                    return
+
+                messages = "<br>".join(req_result['msg'].split('\n'))
+                common.info_dialog(f"Vous avez quitté la partie (en utilisant la page 'rejoindre') : {messages}", True)
+
+            game_id = game_data_sel[game_name][0]
+
+            json_dict = {
+                'game_id': game_id,
+                'player_pseudo': pseudo,
+                'delete': 1
+            }
+
+            host = config.SERVER_CONFIG['GAME']['HOST']
+            port = config.SERVER_CONFIG['GAME']['PORT']
+            url = f"{host}:{port}/allocations"
+
+            # adding allocation : need a token
+            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        ev.preventDefault()
+
+        # action of putting myself in game
+        quit_game(game_name, game_data_sel)
+
+        # action of going to the game
+        select_game_callback(ev, game_name, game_data_sel)
+
     def join_and_select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
         """ join_and_select_game_callback : the second way of joining a game : by a button """
 
@@ -390,7 +433,12 @@ def my_opportunities():
                 if player_id is None:
                     value = "Pas identifié"
                 elif game_id_str in player_games:
-                    value = "Déjà dedans"
+                    game_name = data['name']
+                    form = html.FORM()
+                    input_quit_game = html.INPUT(type="image", src="./images/leave.png")
+                    input_quit_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: quit_and_select_game_callback(e, gn, gds))
+                    form <= input_quit_game
+                    value = form
                 else:
                     game_name = data['name']
                     form = html.FORM()
@@ -479,6 +527,8 @@ def my_opportunities():
     MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
     MY_SUB_PANEL <= " "
     MY_SUB_PANEL <= html.IMG(src="./images/join.png", title="Pour se mettre dans la partie")
+    MY_SUB_PANEL <= " "
+    MY_SUB_PANEL <= html.IMG(src="./images/leave.png", title="Pour s'enlever de la partie")
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
