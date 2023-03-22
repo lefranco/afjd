@@ -594,7 +594,7 @@ def my_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous(**)', 'all_agreed': 'accords de tous(***)', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', 'action': 'action'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous(*)', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(**)', 'nomessage_game': 'privés(**)', 'action': 'action'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -843,7 +843,9 @@ def my_games(state_name):
 
             if field == 'all_agreed':
                 value = ""
-                if role_id is not None:
+                if data['anonymous']:
+                    value = "-"
+                elif role_id is not None:
                     agreed_now_roles_list = submitted_data['agreed_now']
                     nb_agreed_now = len(agreed_now_roles_list)
                     agreed_after_roles_list = submitted_data['agreed_after']
@@ -953,13 +955,10 @@ def my_games(state_name):
     MY_PANEL <= html.BR()
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
+    MY_PANEL <= html.DIV("(*) Accords : m=maintenant et a=à la D.L.", Class='note')
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("(**) Parties anonymes : le statut des ordres des autres joueurs n'est pas accessible", Class='note')
-    MY_PANEL <= html.BR()
-
-    MY_PANEL <= html.DIV("(***) Accords : m=maintenant et a=à la D.L.", Class='note')
+    MY_PANEL <= html.DIV("(**) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= information_about_quitting()
