@@ -842,16 +842,15 @@ def my_games(state_name):
                         colour = config.ALL_ORDERS_IN_COLOUR
 
             if field == 'all_agreed':
-                value = ""
-                if data['anonymous']:
-                    value = "-"
-                elif role_id is not None:
-                    agreed_now_roles_list = submitted_data['agreed_now']
-                    nb_agreed_now = len(agreed_now_roles_list)
-                    agreed_after_roles_list = submitted_data['agreed_after']
-                    nb_agreed_after = len(agreed_after_roles_list)
-                    stats = f"{nb_agreed_now}m+{nb_agreed_after}a"
-                    value = stats
+                value = "-"
+                if role_id is not None:
+                    if not data['anonymous'] or role_id == 0:
+                        agreed_now_roles_list = submitted_data['agreed_now']
+                        nb_agreed_now = len(agreed_now_roles_list)
+                        agreed_after_roles_list = submitted_data['agreed_after']
+                        nb_agreed_after = len(agreed_after_roles_list)
+                        stats = f"{nb_agreed_now}m+{nb_agreed_after}a"
+                        value = stats
 
             if field == 'new_declarations':
                 value = ""
