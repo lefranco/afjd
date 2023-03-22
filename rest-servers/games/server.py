@@ -2026,6 +2026,42 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             del sql_executor  # noqa: F821
             flask_restful.abort(400, msg=f"Failed to agree (forced) to adjudicate : {debug_message}")
 
+        # this may have caused player to be late
+        if late:
+            subject = f"L'arbitre de la partie {game.name} a forcé votre accord, ce qui vous inflige un retard !"
+            game_id = game.identifier
+            allocations_list = allocations.Allocation.list_by_role_id_game_id(sql_executor, role_id, game_id)
+            addressees = []
+            for _, player_id, __ in allocations_list:
+                addressees.append(player_id)
+
+            body = "Bonjour !\n"
+            body += "\n"
+            body += "L'arbitre a forcé votre accord sur cette partie et vous étiez en retard !\n"
+            body += "\n"
+            body += "Conclusion : vous avez un retard sur cette partie...\n"
+            body += "\n"
+            body += "Pour se rendre directement sur la partie :\n"
+            body += f"https://diplomania-gen.fr?game={game.name}"
+
+            json_dict = {
+                'addressees': " ".join([str(a) for a in addressees]),
+                'subject': subject,
+                'body': body,
+                'type': 'late',
+            }
+
+            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/mail-players"
+            # for a rest API headers are presented differently
+            req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+            if req_result.status_code != 200:
+                print(f"ERROR from server  : {req_result.text}")
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                del sql_executor
+                flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
         if adjudicated:
 
             # notify players

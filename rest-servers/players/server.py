@@ -863,7 +863,8 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         #  'reminder' : please enter order/agreement or just welcome and come in to play
         #  'forced' : message from moderator or to organizer
         #  'start_stop' : game started, stopped, complete and ready
-        #  'adjudication' : game has moved (from master/auomatoin/player)
+        #  'late' : master forced agreement and player is late
+        #  'adjudication' : game has moved (from master/automatoin/player)
         #  'message' : press or message in game
         #  'replacement' : need a replacement
         #  'profile' : profile
