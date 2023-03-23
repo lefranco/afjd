@@ -30,7 +30,7 @@ EPSILON_SEC = 5
 # simplest is to hard code displays of variants here
 INTERFACE_TABLE = {
     'standard': ['diplomania', 'diplomania_daltoniens', 'hasbro'],
-    'duel': ['diplomania']
+    'grandeguerre': ['diplomania']
 }
 
 
