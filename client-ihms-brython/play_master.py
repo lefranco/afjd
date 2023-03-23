@@ -959,7 +959,7 @@ def game_master():
     play_low.MY_SUB_PANEL <= game_admin_table
     play_low.MY_SUB_PANEL <= html.BR()
 
-    play_low.MY_SUB_PANEL <= html.DIV("Pour bénéficier du bouton premettant de contacter tous les remplaçants, il faut retirer le rôle au joueur (ci-dessus) puis éjecter le joueur de la partie (dans le menu appariement.)", Class='note')
+    play_low.MY_SUB_PANEL <= html.DIV("Pour bénéficier du bouton permettant de contacter tous les remplaçants, il faut retirer le rôle au joueur (ci-dessus) puis éjecter le joueur de la partie en utilisant le menu “Editer partie“ sous menu “Déplacer des joueurs“", Class='note')
 
     play_low.MY_SUB_PANEL <= html.H3("Date limite")
 

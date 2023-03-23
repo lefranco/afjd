@@ -181,7 +181,7 @@ def information_about_quitting():
     """ information_about_quitting """
 
     information = html.DIV(Class='note')
-    information <= "Pour quitter une partie, utiliser le menu 'appariement / quitter la partie'"
+    information <= "Pour quitter une partie, utiliser le menu “Parties“ sous menu “Appariement“"
     return information
 
 
