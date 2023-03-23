@@ -143,8 +143,6 @@ def get_games_data():
 def game_variant_content_reload(variant_name):
     """ game_variant_content_reload """
 
-    assert variant_name != "duel"
-
     variant_content_loaded = None
 
     def reply_callback(req):
