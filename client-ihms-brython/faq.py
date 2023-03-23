@@ -10,7 +10,7 @@ FAQ_CONTENT_TABLE = {
     "Non, cela n'est pas prévu. Il doit y avoir 8 intervenants distincts sur une partie (arbitre y compris).",
 
     "Peut-on faire des erreurs d'ordres ?":
-    "Non. Les ordres sont 100% vérifiés avant d'être enregistrés. L'option de bienveillance vis à vis des débutants a été privilégiée. Par contre le menu 'taguer' dans une partie permet une communcation par ordres 'ésotériques'. Cela ne presente un intérêt que dans les parties sans communication.",
+    "Non. Les ordres sont 100% vérifiés avant d'être enregistrés. L'option de bienveillance vis à vis des débutants a été privilégiée. Par contre le menu “Taguer“ dans une partie permet une communcation par ordres 'ésotériques'. Cela ne presente un intérêt que dans les parties sans communication.",
 
     "Que signifient toutes les couleurs de remplissage des regions sur la carte ?":
     "Une région prend la couleur du pays qui possède le centre qui s'y trouve. Sinon, elle prend la couleur du pays qui possède l'unité qui l'occupe. Sinon, elle prend la couleur géographique (ce critère restant subjectif) du pays.",
@@ -43,7 +43,7 @@ FAQ_CONTENT_TABLE = {
     "Le moteur s'appuie sur le DATC. Il faut utiliser le lien en page d'accueil pour envoyer un courriel et signaler le problème. Reproduisez le soigneusement avec le bac à sable.",
 
     "Où trouver des explications sur les paramètres des parties ?":
-    "Soit en survolant les titres à la création de la partie, soit en consultant le menu 'paramètres' d'une partie existante.",
+    "Soit en survolant les titres à la création de la partie, soit en consultant le menu “Paramètres“ d'une partie existante.",
 
     "Dans les paramètres des parties, la notion de messages publics et privés est dupliquée. Pourquoi  ?":
     "Ces deux paramètres ont une version 'partie' et une version 'en cours' La première est celle entrée par le créateur de la partie. La deuxième est celle qui va s'appliquer, elle est initialisée à la valeur de la première. A la fin de la partie, la deuxième est effacée. L'arbitre peut également jouer avec l'autorisation des messages publics et privés pendant la partie. Les exportations de partie (pour savoir comment elle a été jouée) se baseront sur la première.",
@@ -52,7 +52,7 @@ FAQ_CONTENT_TABLE = {
     "C'est le rôle de l'arbitre. Il faut lui retirer le rôle dans la console d'arbitrage et attribuer le rôle à un autre joueur dans la partie, qu'il aura fallu faire venir au préalable cf. question suivante.",
 
     "Comment mettre un joueur dans une partie ?":
-    "Faire venir ou partir les joueurs de la partie se réalise par contre dans le menu appariement. Un joueur peut se metre ou se retire d'une partie, un arbitre peut mettre un joueur ou le retirer d'une partie. Il y a trois manière de rejoindre une partie : par le menu apariement(qui gère tous les cas), par le menu opportunités (qui liste les parties qui recrutent), par un hyper lien que quelqu'un vous aura envoyé s(pour vous inviter).",
+    "Faire venir ou partir les joueurs de la partie se réalise par contre dans le editer parties / déplacer des joueurs. Un joueur peut se mettre ou se retire d'une partie, un arbitre peut mettre un joueur ou le retirer d'une partie. Pour un joueur, il y a trois manière de rejoindre une partie : par le menu “Parties“ sous menu “Appariement“ (qui gère tous les cas), par le menu opportunités (qui liste les parties qui recrutent), par un hyper lien que quelqu'un vous aura envoyé s(pour vous inviter).",
 
     "Comment ameuter les remplaçants pour un remplacement ?":
     "Il faut enlever le rôle au joueur et le retirer de la partie (cf les deux questions précédentes). Un bouton est alors disponible dans la console d'arbitrage.",

@@ -180,7 +180,7 @@ def show_news():
     else:
         div_a5 <= "Aucune partie en cours n'a besoin de remplaçant(s)."
 
-    div_a5_tip = html.SPAN("Plus de détail dans le menu 'rejoindre une partie'", Class='tooltiptext')
+    div_a5_tip = html.SPAN("Plus de détail dans le menu “Rejoindre une partie“", Class='tooltiptext')
     div_a5 <= div_a5_tip
     div_homepage <= div_a5
 
@@ -193,7 +193,7 @@ def show_news():
     teaser = formatted_teaser(teaser_loaded) if teaser_loaded else "Aucun pour le moment."
     div_b5 <= teaser
 
-    div_b5_tip = html.SPAN("Plus de détail dans le menu 'classements'", Class='tooltiptext')
+    div_b5_tip = html.SPAN("Plus de détail dans le menu “Classements“", Class='tooltiptext')
     div_b5 <= div_b5_tip
     div_homepage <= div_b5
 
@@ -239,7 +239,7 @@ def show_news():
     news_content_loaded = news_content_table_loaded['admin']
     news_content = formatted_news(news_content_loaded, True, 'admin_news')
     div_b3 <= news_content
-    div_b3_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu accueil/déclarer un incident'", Class='tooltiptext')
+    div_b3_tip = html.SPAN("Vous pouvez contacter l'administrateur par le menu “Accueil“ sous menu “Déclarer un incident“", Class='tooltiptext')
     div_b3 <= div_b3_tip
     div_homepage <= div_b3
 
@@ -289,7 +289,7 @@ def show_news():
     div_b1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, menu “Technique” option “Choix d'interface”")
     div_b1 <= html.DIV("Pour les possesseurs d'appareil Android, une application spécifique a été créée, allez sur le forum pour la télécharger")
 
-    div_b1_tip = html.SPAN("Plus de détail dans le menu “Accueil” option “Foire aux question”", Class='tooltiptext')
+    div_b1_tip = html.SPAN("Plus de détail dans le menu “Accueil” sous menu “Foire aux question”", Class='tooltiptext')
     div_b1 <= div_b1_tip
     div_homepage <= div_b1
 
@@ -358,7 +358,7 @@ def show_news():
 
     note_bene_content <= note_bene_content_table
     div_a0 <= note_bene_content
-    div_a0_tip = html.SPAN("Plus de détail dans le menu 'accueil/brique sociale'", Class='tooltiptext')
+    div_a0_tip = html.SPAN("Plus de détail dans le menu “Accueil“ sous menu “Brique sociale“", Class='tooltiptext')
     div_a0 <= div_a0_tip
     div_homepage <= div_a0
 
@@ -371,7 +371,7 @@ def show_news():
     active_game_masters = stats_content['active_game_masters']
     active_players = stats_content['active_players']
     div_b0 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
-    div_b0_tip = html.SPAN("Plus de détail dans le menu 'classement/joueurs'", Class='tooltiptext')
+    div_b0_tip = html.SPAN("Plus de détail dans le menu “Classement“ sous menu “Joueurs“", Class='tooltiptext')
     div_b0 <= div_b0_tip
     div_homepage <= div_b0
 

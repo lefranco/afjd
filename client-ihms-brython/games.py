@@ -162,7 +162,7 @@ def create_game(json_dict):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"La partie a été créé : {messages}")
-            alert("Maintenant vous devez la sélectionner par le menu “Parties”, option “Sélectionner partie”")
+            alert("Maintenant vous devez la sélectionner par le menu “Parties” sous menu “Sélectionner partie”")
 
         ev.preventDefault()
 

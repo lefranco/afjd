@@ -562,7 +562,7 @@ def explain_stuff():
     information2 = html.DIV()
     modus = html.OL()
     modus <= html.LI("Vous avez dû recevoir un fichier csv avec les donnees de vos parties à importer.")
-    modus <= html.LI("Allez sur le site. Choisissez le menu “Parties” option “Sélectionner partie”, et sélectionnez la partie modèle (T-BLITZ) parmi les parties distinguées, dans la dernière des quatre fenêtres (les parties “distinguées”). Cette etape est pertinente, car c’est cette partie qui definira les caracteristiques des parties que vous allez créer.")
+    modus <= html.LI("Allez sur le site. Choisissez le menu “Parties” sous menu “Sélectionner partie”, et sélectionnez la partie modèle (T-BLITZ) parmi les parties distinguées, dans la dernière des quatre fenêtres (les parties “distinguées”). Cette etape est pertinente, car c’est cette partie qui definira les caracteristiques des parties que vous allez créer.")
     modus <= html.LI("Allez dans le menu “Création”. Si vous ne voyez pas le menu, demandez les droits à l'administrateur")
     modus <= html.LI("Cliquez sur “parcourir” pour choisir le fichier et selectionnez le fichier csv que vous avez reçu")
     modus <= html.LI("Confirmez la création des parties...")
@@ -572,7 +572,7 @@ def explain_stuff():
     modus <= html.LI("Allez dans le menu “mes parties”, cliquez sur “en attente”, cliquez sur le bouton “basculer en mode avec colonnes action” si besoin.")
     modus <= html.LI("Démarrez chacune des parties nouvelement créée une par une en cliquant sur les fusées.")
     modus <= html.LI("Les parties sont démarrées ! Félicitations !")
-    modus <= html.LI("Vous pouvez mettre un message de bienvenue dans chaque partie en passant par le menu déclarer")
+    modus <= html.LI("Vous pouvez mettre un message de bienvenue dans chaque partie en passant par le menu “Déclarer“")
     modus <= html.LI("En cas de souci contactez l'administateur")
     information2 <= modus
 

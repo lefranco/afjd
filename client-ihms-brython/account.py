@@ -120,7 +120,7 @@ def create_account(json_dict):
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"Votre compte a été créé : {messages}")
-            alert("Maintenant vous devez vous identifier par le menu 'Connexion'")
+            alert("Maintenant vous devez vous identifier par le menu “Connexion“")
 
         ev.preventDefault()
 
