@@ -31,7 +31,7 @@ DEFAULT_VICTORY_CENTERS = 18
 DEFAULT_NB_CYCLES = 7
 
 # default is first one
-VARIANT_NAMES_LIST = ['standard', 'duel']
+VARIANT_NAMES_LIST = ['standard', 'grandeguerre']
 
 
 def information_about_input():
