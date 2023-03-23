@@ -957,9 +957,6 @@ def game_master():
     play_low.MY_SUB_PANEL <= html.H3("Gestion")
 
     play_low.MY_SUB_PANEL <= game_admin_table
-    play_low.MY_SUB_PANEL <= html.BR()
-
-    play_low.MY_SUB_PANEL <= html.DIV("Pour bénéficier du bouton permettant de contacter tous les remplaçants, il faut retirer le rôle au joueur (ci-dessus) puis éjecter le joueur de la partie en utilisant le menu “Editer partie“ sous menu “Déplacer des joueurs“", Class='note')
 
     play_low.MY_SUB_PANEL <= html.H3("Date limite")
 
@@ -967,6 +964,16 @@ def game_master():
     play_low.MY_SUB_PANEL <= html.BR()
 
     play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}", Class='note')
+
+    play_low.MY_SUB_PANEL <= html.H3("Informations")
+
+    play_low.MY_SUB_PANEL <= html.DIV("Arrêter la partie : menu “Editer partie“ sous menu “Changer l'état“", Class='note')
+    play_low.MY_SUB_PANEL <= html.BR()
+
+    play_low.MY_SUB_PANEL <= html.DIV("Changer les joueurs : menu “Editer partie“ sous menu “Déplacer des joueurs“ (en plus de d'attribuer/retirer le rôle)", Class='note')
+    play_low.MY_SUB_PANEL <= html.BR()
+
+    play_low.MY_SUB_PANEL <= html.DIV("Bénéficier du bouton permettant de contacter tous les remplaçants : retirer le rôle au joueur puis éjecter le joueur de la partie", Class='note')
     play_low.MY_SUB_PANEL <= html.BR()
 
     return True
