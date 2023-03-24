@@ -1318,6 +1318,69 @@ def pairing():
 def show_no_game_masters_data():
     """ show_no_game_masters_data """
 
+
+
+
+
+
+
+
+    def take_mastering_this_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la prise de l'arbitrage de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la prise de l'arbitrage de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                show_game_selected()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Vous avez pris l'arbitrage de la partie : {messages}")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            pairing()
+
+        ev.preventDefault()
+
+        game_id = game_data_sel[game_name][0]
+
+        json_dict = {
+            'game_id': game_id,
+            'role_id': 0,
+            'player_pseudo': pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/role-allocations"
+
+        # taking game mastering : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+
+
+
+
+
+
+
+
+    pseudo = None
+    if 'PSEUDO' in storage:
+        pseudo = storage['PSEUDO']
+
     # get the games
     games_dict = common.get_games_data()
     if not games_dict:
@@ -1341,14 +1404,17 @@ def show_no_game_masters_data():
     for load in masters_alloc.values():
         games_with_master += load
 
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
     no_game_masters_table = html.TABLE()
 
-    fields = ['game']
+    fields = ['game', 'take mastership']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'game': 'partie'}[field]
+        field_fr = {'game': 'partie', 'take mastership': 'prendre l\'arbitrage'}[field]
         col = html.TD(field_fr)
         thead <= col
     no_game_masters_table <= thead
@@ -1359,9 +1425,22 @@ def show_no_game_masters_data():
             continue
 
         row = html.TR()
+
         value = data['name']
         col = html.TD(value)
         row <= col
+
+        value = ""
+        if pseudo:
+            game_name = data['name']
+            form = html.FORM()
+            input_take_game = html.INPUT(type="image", src="./images/take.png")
+            input_take_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: take_mastering_this_game_callback(e, gn, gds))
+            form <= input_take_game
+            value = form
+        col = html.TD(value)
+        row <= col
+
         no_game_masters_table <= row
 
     MY_SUB_PANEL <= html.H3("Les parties sans arbitre")
