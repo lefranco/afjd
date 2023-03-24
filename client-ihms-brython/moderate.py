@@ -229,7 +229,7 @@ def prepare_mailing():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'courriel', 'confirmé', 'newsletter', 'patch']:
+    for field in ['pseudo', 'courriel', 'confirmé', 'newsletter', 'ne veut plus recevoir']:
         col = html.TD(field)
         thead <= col
     emails_table <= thead
