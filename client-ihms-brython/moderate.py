@@ -181,6 +181,36 @@ def change_news_modo():
 def prepare_mailing():
     """ prepare_mailing """
 
+    def patch_account_callback(ev, player_pseudo):  # pylint: disable=invalid-name
+        """ patch_account_callback """
+
+        def reply_callback(req):
+
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au patch {player_pseudo} : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au patch {player_pseudo} : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            prepare_mailing()
+
+        ev.preventDefault()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/remove-newsletter/{player_pseudo}"
+
+        # sending email : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     MY_SUB_PANEL <= html.H3("Préparation d'un publipostage")
 
     if 'PSEUDO' not in storage:
@@ -199,7 +229,7 @@ def prepare_mailing():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'courriel', 'confirmé', 'newsletter']:
+    for field in ['pseudo', 'courriel', 'confirmé', 'newsletter', 'patch']:
         col = html.TD(field)
         thead <= col
     emails_table <= thead
@@ -226,6 +256,14 @@ def prepare_mailing():
         row <= col
 
         col = html.TD("Oui" if newsletter else "Non")
+        row <= col
+
+        form = html.FORM()
+        input_patch_account = html.INPUT(type="image", src="./images/refuses.png")
+        input_patch_account.bind("click", lambda e, p=pseudo: patch_account_callback(e, p))
+        form <= input_patch_account
+
+        col = html.TD(form)
         row <= col
 
         emails_table <= row
