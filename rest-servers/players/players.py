@@ -329,6 +329,11 @@ class Player:
         """ property """
         return self._newsletter
 
+    @newsletter.setter
+    def newsletter(self, newsletter: bool) -> None:
+        """ setter """
+        self._newsletter = newsletter
+
     def __str__(self) -> str:
         return f"pseudo={self._pseudo} email={self._email} email_confirmed={self._email_confirmed} telephone={self._telephone} notify_adjudication={self._notify_adjudication} notify_message={self._notify_message} notify_replace={self._notify_replace} newsletter={self._newsletter} family_name={self._family_name} first_name={self._first_name} residence={self._residence} nationality={self._nationality} time_zone={self._time_zone}"
 
