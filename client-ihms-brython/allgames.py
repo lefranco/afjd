@@ -1318,13 +1318,6 @@ def pairing():
 def show_no_game_masters_data():
     """ show_no_game_masters_data """
 
-
-
-
-
-
-
-
     def take_mastering_this_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -1368,14 +1361,6 @@ def show_no_game_masters_data():
 
         # taking game mastering : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-
-
-
-
-
-
-
 
     pseudo = None
     if 'PSEUDO' in storage:
@@ -1445,6 +1430,10 @@ def show_no_game_masters_data():
 
     MY_SUB_PANEL <= html.H3("Les parties sans arbitre")
     MY_SUB_PANEL <= no_game_masters_table
+    MY_SUB_PANEL <= html.BR()
+
+    MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
+    MY_SUB_PANEL <= html.IMG(src="./images/take.png", title="Pour prendre l'arbitrage de la partie (sans sélectionner la partie)")
 
 
 MY_PANEL = html.DIV()
