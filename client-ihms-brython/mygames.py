@@ -829,17 +829,18 @@ def my_games(state_name):
                             value = flag
 
             if field == 'all_orders_submitted':
-                value = ""
+                value = "-"
                 if role_id is not None:
-                    submitted_roles_list = submitted_data['submitted']
-                    nb_submitted = len(submitted_roles_list)
-                    needed_roles_list = submitted_data['needed']
-                    nb_needed = len(needed_roles_list)
-                    stats = f"{nb_submitted}/{nb_needed}"
-                    value = stats
-                    if nb_submitted >= nb_needed:
-                        # we have all orders : green
-                        colour = config.ALL_ORDERS_IN_COLOUR
+                    if not data['anonymous'] or role_id == 0:
+                        submitted_roles_list = submitted_data['submitted']
+                        nb_submitted = len(submitted_roles_list)
+                        needed_roles_list = submitted_data['needed']
+                        nb_needed = len(needed_roles_list)
+                        stats = f"{nb_submitted}/{nb_needed}"
+                        value = stats
+                        if nb_submitted >= nb_needed:
+                            # we have all orders : green
+                            colour = config.ALL_ORDERS_IN_COLOUR
 
             if field == 'all_agreed':
                 value = "-"
