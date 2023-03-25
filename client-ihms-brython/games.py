@@ -45,10 +45,10 @@ def information_about_input():
 def information_about_playing():
     """ information_about_playing """
 
-    information = html.DIV(Class='note')
+    information = html.DIV(Class='important')
     information <= html.B("Vous voulez juste jouer ? ")
     information <= html.BR()
-    information <= "Créez-la partie et démissionnez ensuite de l'arbitrage (appariement). Un arbitre sera alloué automatiquement..."
+    information <= "Créez-la partie et démissionnez ensuite de l'arbitrage en utilisant le menu parties sous menu appariement. Un arbitre sera alloué automatiquement..."
     return information
 
 
@@ -160,9 +160,17 @@ def create_game(json_dict):
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
+            storage['GAME'] = name
+            storage['GAME_VARIANT'] = variant
+
+            game_id = common.get_game_id(name)
+            storage['GAME_ID'] = str(game_id)
+
+            common.info_dialog(f"Partie sélectionnée : {name} - cette information est rappelée en bas de la page")
+            allgames.show_game_selected()
+
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"La partie a été créé : {messages}")
-            alert("Maintenant vous devez la sélectionner par le menu “Parties” sous menu “Sélectionner partie”")
 
         ev.preventDefault()
 
