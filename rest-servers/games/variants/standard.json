@@ -57,7 +57,7 @@
 
     "year_zero" : 1900,
 
-	"disorder" : [],
+	"disorder" : {},
 
     "neighbouring": [
         {

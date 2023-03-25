@@ -42,9 +42,7 @@ def disorder(game_id: int, role_id: int, game: games.Game, variant_dict: typing.
 
     # check orders are required
     actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
-    print(f"{actives_list=}", file=sys.stderr)
     needed_list = [o[1] for o in actives_list]
-    print(f"{needed_list=}", file=sys.stderr)
     if role_id not in needed_list:
         return True, False, "This role does not seem to require any orders"
 
@@ -587,10 +585,9 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
     while True:
 
         # civil disorder orders
-        for role_id1 in variant_data['disorder']:
-            print(f"calling agree.disorder for {role_id1=}", file=sys.stderr)
+        for role_id1_str in variant_data['disorder']:
+            role_id1 = int(role_id1_str)
             status, _, message = disorder(game_id, role_id1, game, variant_data, names, sql_executor)  # noqa: F821
-            print(f"{status=} result {message=}", file=sys.stderr)
             # error disordering : stop now (safer, but should not happen)
             if not status:
                 debug_messages.append(f"Failed to set power {role_id1} in disorder : {message}")

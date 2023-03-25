@@ -480,22 +480,33 @@ class Game:
         if self._manual or self._archive:
             return
 
-        # we make a random order
+        # let's make a random order
+
         # get variant
         variant_name = self.variant
         variant_data = variants.Variant.get_by_name(variant_name)
         assert variant_data is not None
+
         # get number of players
         number_players = variant_data['roles']['number']
         role_list = list(range(1, number_players + 1))
+
+        # remove passives
+        for role_id_str in variant_data['disorder']:
+            role_id = int(role_id_str)
+            role_list.remove(role_id)
+
+        # shuffle between real players
         random.shuffle(role_list)
 
-        # we allocate players in the game according to this order
+        # we allocate players in the game according to this new order
         game_id = self.identifier
         allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
         num = 0
         for _, player_id, role_id in allocations_list:
             if role_id == 0:
+                continue
+            if role_id in list(map(int, variant_data['disorder'])):
                 continue
             role_id = role_list[num]
             num += 1
