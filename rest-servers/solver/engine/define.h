@@ -1,7 +1,7 @@
 #define EOS 		'\0'
 
 #define TAILLEMESSAGE   300
-#define TAILLENOMFIC    150
+#define TAILLENOMFIC    200
 #define TAILLEMOT       100
 #define TAILLEENTIER    15
 
