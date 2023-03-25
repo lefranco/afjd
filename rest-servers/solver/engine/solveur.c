@@ -671,11 +671,13 @@ int main(int argc, char *argv[]) {
 	decritactifs(NOMFICACTIFS);
 	decritvivants(NOMFICVIVANTS);
 
-	(void) sprintf(bufn1, "%d", ANNEEZERO + (SAISON - 1) / NSAISONS);
-	cherchechaine(__FILE__, 64, buf, 2, NOMSAISONAFFICHEE[(SAISON - 1)
+	if (OPTIONw) {
+		(void) sprintf(bufn1, "%d", ANNEEZERO + (SAISON - 1) / NSAISONS);
+		cherchechaine(__FILE__, 64, buf, 2, NOMSAISONAFFICHEE[(SAISON - 1)
 			% NSAISONS], bufn1); /*"Resolution %1 %2"*/
-	informer(buf);
-
+		informer(buf);
+	}
+	
 	if (OPTIONw) {
 		(void) sprintf(bufn1, "%d", nbphases);
 		cherchechaine(__FILE__, 67, buf, 1, bufn1); /*"Resolution en %1 phase(s)"*/
