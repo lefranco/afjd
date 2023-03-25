@@ -895,6 +895,30 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
             # allocate game master to game
             game.put_role(sql_executor, user_id, 0)
 
+        # if game has a passive role, fill it
+
+        variant_name = game.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+
+        for role_id_str, passive_pseudo in variant_data['disorder'].items():
+
+            role_id = int(role_id_str)
+
+            # get player identifier
+            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/player-identifiers/{passive_pseudo}"
+            req_result = SESSION.get(url)
+            if req_result.status_code != 200:
+                print(f"ERROR from server  : {req_result.text}")
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                flask_restful.abort(404, msg=f"Failed to get id from pseudo for {passive_pseudo} : {message}")
+            passive_user_id = req_result.json()
+
+            # allocate passive to game
+            game.put_role(sql_executor, passive_user_id, role_id)
+
         sql_executor.commit()
         del sql_executor
 
@@ -2555,16 +2579,15 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         else:
 
-            # put "not players" in disorder (will be done by first player to actually submit orders)
+            # put passive players in disorder (must be done by first player to actually submit orders in first turn so not to be in game creation of game start)
 
             variant_name = game.variant
             variant_data = variants.Variant.get_by_name(variant_name)
             assert variant_data is not None
 
-            for role_id in variant_data['disorder']:
-                print(f"calling agree.disorder for {role_id=}", file=sys.stderr)
+            for role_id_str in variant_data['disorder']:
+                role_id = int(role_id_str)
                 status, _, message = agree.disorder(game_id, role_id, game, variant_data, adjudication_names, sql_executor)  # noqa: F821
-                print(f"{status=} result {message=}", file=sys.stderr)
                 if not status:
                     del sql_executor
                     flask_restful.abort(400, msg=f"Failed to set power {role_id} in disorder : {message}")
