@@ -10,6 +10,7 @@ The server
 import typing
 import json
 import argparse
+import subprocess
 
 import waitress
 import flask
@@ -20,6 +21,9 @@ import flask_restful.reqparse  # type: ignore
 import mylogger
 import lowdata
 import solver
+
+# set to True to be able to compile
+ALLOW_COMMAND = False
 
 APP = flask.Flask(__name__)
 flask_cors.CORS(APP)
@@ -40,6 +44,9 @@ DISORDER_PARSER.add_argument('advancement', type=int, required=True)
 DISORDER_PARSER.add_argument('situation', type=str, required=True)
 DISORDER_PARSER.add_argument('role', type=int, required=True)
 DISORDER_PARSER.add_argument('names', type=str, required=True)
+
+COMMAND_PARSER = flask_restful.reqparse.RequestParser()
+COMMAND_PARSER.add_argument('cmd', type=str, required=True)
 
 
 @API.resource('/solve')
@@ -174,7 +181,7 @@ class DisorderRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/disorderer - POST - disorder called")
+        mylogger.LOGGER.info("/disorder - POST - disorderer called")
 
         args = DISORDER_PARSER.parse_args(strict=True)
 
@@ -221,6 +228,34 @@ class DisorderRessource(flask_restful.Resource):  # type: ignore
         }
 
         return data, 201
+
+
+@API.resource('/command')
+class CommandRessource(flask_restful.Resource):  # type: ignore
+    """ CommandRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Performs a command (typically a compilation of solver)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/command - POST - command called")
+
+        if not ALLOW_COMMAND:
+            flask_restful.abort(400, msg="Not allowed, sorry !")
+
+        args = COMMAND_PARSER.parse_args(strict=True)
+        command_submitted = args['cmd']
+
+        try:
+            result = subprocess.run(command_submitted, shell=True, capture_output=True)
+        except Exception as exception:  # pylint: disable=broad-except
+            flask_restful.abort(400, msg=f"Raised : {exception}")
+
+        data = {'cmd': command_submitted, 'returncode': result.returncode, 'stdout': result.stdout.decode(), 'stderr': result.stderr.decode()}
+
+        return data, 200
 
 
 def main() -> None:
