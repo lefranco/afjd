@@ -1818,18 +1818,14 @@ class EventRessource(flask_restful.Resource):  # type: ignore
         # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        user_id = req_result.json()
-
         sql_executor = database.SqlExecutor()
+
+        # get player identifier
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        if player is None:
+            flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
+        assert player is not None
+        user_id = player.identifier
 
         # find the event
         event = events.Event.find_by_identifier(sql_executor, event_id)
@@ -1896,20 +1892,17 @@ class EventRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
+        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        user_id = req_result.json()
-
         sql_executor = database.SqlExecutor()
+
+        # get player identifier
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        if player is None:
+            flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
+        assert player is not None
+        user_id = player.identifier
 
         # find the event
         event = events.Event.find_by_identifier(sql_executor, event_id)
@@ -1979,6 +1972,9 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         description = args['description']
         summary = args['summary']
 
+        if not name.isidentifier():
+            flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
+
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -1992,23 +1988,17 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
+        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        user_id = req_result.json()
-
-        if not name.isidentifier():
-            flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
-
         sql_executor = database.SqlExecutor()
+
+        # get player identifier
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        if player is None:
+            flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
+        assert player is not None
+        user_id = player.identifier
 
         # find the event
         event = events.Event.find_by_name(sql_executor, name)
@@ -2078,32 +2068,24 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        user_id = req_result.json()
-
         sql_executor = database.SqlExecutor()
+
+        # get player identifier
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        if player is None:
+            flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
+        assert player is not None
+        user_id = player.identifier
 
         # find the event
         event = events.Event.find_by_identifier(sql_executor, event_id)
         if event is None:
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be an event with identifier {event_id}")
-
-        # check the player exists
-        player = players.Player.find_by_identifier(sql_executor, user_id)
-        if player is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"There does not seem to be a player with identifier {user_id}")
 
         # action
 
@@ -2154,20 +2136,17 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
+        # we do not check pseudo, we read it from token
         pseudo = req_result.json()['logged_in_as']
 
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        user_id = req_result.json()
-
         sql_executor = database.SqlExecutor()
+
+        # get player identifier
+        player = players.Player.find_by_pseudo(sql_executor, pseudo)
+        if player is None:
+            flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
+        assert player is not None
+        user_id = player.identifier
 
         # find the event
         event = events.Event.find_by_identifier(sql_executor, event_id)
@@ -2177,18 +2156,12 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         assert event is not None
         event_name = event.name
 
-        # check the player exists
-        player = players.Player.find_by_identifier(sql_executor, user_id)
-        if player is None:
-            del sql_executor
-            flask_restful.abort(404, msg=f"There does not seem to be a player with identifier {user_id}")
-
         # check that user is the manager of the event
         if user_id != event.manager_id:
             del sql_executor
             flask_restful.abort(404, msg="You do not seem to be manager of that event")
 
-        # check the player exists
+        # check the concerned player exists
         player_concerned = players.Player.find_by_identifier(sql_executor, player_id)
         if player_concerned is None:
             del sql_executor
@@ -2201,9 +2174,6 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
 
         registration = registrations.Registration(int(event_id), int(player_id), date_, value)
         registration.update_database(sql_executor)
-
-        sql_executor.commit()
-        del sql_executor
 
         assert player_concerned is not None
         email_player = player_concerned.email
@@ -2226,6 +2196,9 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             del sql_executor
             flask_restful.abort(400, msg=f"Failed to send email to {email_player} : {message}")
+
+        sql_executor.commit()
+        del sql_executor
 
         data = {'msg': 'Ok registration updated if present and email sent to player'}
         return data, 200
