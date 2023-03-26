@@ -94,7 +94,6 @@ GAME_PARSER.add_argument('access_restriction_regularity', type=int, required=Fal
 GAME_PARSER.add_argument('access_restriction_performance', type=int, required=False)
 GAME_PARSER.add_argument('current_advancement', type=int, required=False)
 GAME_PARSER.add_argument('nb_max_cycles_to_play', type=int, required=False)
-GAME_PARSER.add_argument('victory_centers', type=int, required=False)
 GAME_PARSER.add_argument('current_state', type=int, required=False)
 
 # for game parameter alteration
@@ -856,7 +855,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
             # create game here
             identifier = games.Game.free_identifier(sql_executor)
-            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0, 0)
+            game = games.Game(identifier, '', '', '', False, False, False, False, False, False, False, '', 0, 0, False, 0, 0, False, 0, False, 0, False, False, False, False, 0, 0, 0, 0, 0, 0)
             _ = game.load_json(args)
             game.update_database(sql_executor)
 

@@ -27,7 +27,6 @@ DEFAULT_DEADLINE_TIME = 21
 DEFAULT_GRACE_DURATION = 24
 DEFAULT_SPEED_MOVES = 72
 DEFAULT_SPEED_OTHERS = 24
-DEFAULT_VICTORY_CENTERS = 18
 DEFAULT_NB_CYCLES = 7
 
 # default is first one
@@ -118,7 +117,6 @@ def create_game(json_dict):
     access_restriction_regularity = json_dict['access_restriction_regularity'] if json_dict and 'access_restriction_regularity' in json_dict else None
     access_restriction_performance = json_dict['access_restriction_performance'] if json_dict and 'access_restriction_performance' in json_dict else None
     nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play'] if json_dict and 'nb_max_cycles_to_play' in json_dict else None
-    victory_centers = json_dict['victory_centers'] if json_dict and 'victory_centers' in json_dict else None
 
     def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
@@ -147,7 +145,6 @@ def create_game(json_dict):
         nonlocal access_restriction_regularity
         nonlocal access_restriction_performance
         nonlocal nb_max_cycles_to_play
-        nonlocal victory_centers
 
         def reply_callback(req):
             req_result = json.loads(req.text)
@@ -241,11 +238,6 @@ def create_game(json_dict):
         except:  # noqa: E722 pylint: disable=bare-except
             nb_max_cycles_to_play = None
 
-        try:
-            victory_centers = int(input_victory_centers.value)
-        except:  # noqa: E722 pylint: disable=bare-except
-            victory_centers = None
-
         # these are automatic
         time_stamp_now = time.time()
         time_creation = mydatetime.fromtimestamp(time_stamp_now)
@@ -296,7 +288,6 @@ def create_game(json_dict):
             'access_restriction_regularity': access_restriction_regularity,
             'access_restriction_performance': access_restriction_performance,
             'nb_max_cycles_to_play': nb_max_cycles_to_play,
-            'victory_centers': victory_centers,
             'description': description,
             'current_state': state
         }
@@ -572,13 +563,6 @@ def create_game(json_dict):
     fieldset <= legend_nb_max_cycles_to_play
     input_nb_max_cycles_to_play = html.INPUT(type="number", value=nb_max_cycles_to_play if nb_max_cycles_to_play is not None else DEFAULT_NB_CYCLES)
     fieldset <= input_nb_max_cycles_to_play
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_victory_centers = html.LEGEND("victoire en centres", title=f"Combien de centres sont nécessaires pour gagner ? (forcé à {DEFAULT_VICTORY_CENTERS} pour les parties standard)")
-    fieldset <= legend_victory_centers
-    input_victory_centers = html.INPUT(type="number", value=victory_centers if victory_centers is not None else DEFAULT_VICTORY_CENTERS)
-    fieldset <= input_victory_centers
     form <= fieldset
 
     form <= html.BR()
