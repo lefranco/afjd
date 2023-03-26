@@ -213,7 +213,7 @@ class PlayerIdentifierRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         if player is None:
-            flask_restful.abort(404, msg=f"Player {player} doesn't exist")
+            flask_restful.abort(404, msg=f"Player {pseudo} doesn't exist")
 
         assert player is not None
         return player.identifier, 200
