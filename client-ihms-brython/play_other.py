@@ -224,6 +224,9 @@ def show_position(direct_last_moves):
         # action on importing game
         technical.import_position(play_low.POSITION_DATA)
 
+        # action on importing game
+        technical.set_arrival("sandbox")
+
         # action of going to sandbox page
         index.load_option(None, 'Technique')
 
