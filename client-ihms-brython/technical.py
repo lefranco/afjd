@@ -17,11 +17,19 @@ import scoring
 import whynot
 import geometry
 
+LONG_DURATION_LIMIT_SEC = 1.0
+
 # sandbox must stay first
 OPTIONS = ['Documents', 'Pourquoi yapa', 'Bac à sable', 'Choix d\'interface', 'Tester un scorage']
 
 
-LONG_DURATION_LIMIT_SEC = 1.0
+ARRIVAL = None
+
+
+def set_arrival(arrival):
+    """ set_arrival """
+    global ARRIVAL
+    ARRIVAL = arrival
 
 
 class AutomatonStateEnum:
@@ -33,10 +41,7 @@ class AutomatonStateEnum:
     SELECT_DESTINATION_STATE = 4
 
 
-# this will not change
-VARIANT_NAME_LOADED = config.FORCED_VARIANT_NAME
-
-# this will
+# this will come from variant
 INTERFACE_CHOSEN = None
 VARIANT_DATA = None
 POSITION_DATA = None
@@ -45,6 +50,15 @@ ORDERS_DATA = None
 
 # canvas backup to optimize drawing map when only orders change
 BACKUP_CANVAS = None
+
+
+def get_variant():
+    """ set_variant """
+
+    if 'GAME_VARIANT' in storage:
+        return storage['GAME_VARIANT']
+
+    return config.FORCED_VARIANT_NAME
 
 
 def save_context(ctx):
@@ -74,20 +88,22 @@ def create_initial_position():
     global POSITION_DATA
     global ORDERS_DATA
 
-    # from variant name get variant content
+    # get variant
+    variant_name = get_variant()
 
-    variant_content_loaded = common.game_variant_content_reload(VARIANT_NAME_LOADED)
+    # from variant name get variant content
+    variant_content_loaded = common.game_variant_content_reload(variant_name)
     if not variant_content_loaded:
         return
 
     # selected interface (user choice)
-    INTERFACE_CHOSEN = interface.get_interface_from_variant(VARIANT_NAME_LOADED)
+    INTERFACE_CHOSEN = interface.get_interface_from_variant(variant_name)
 
     # from display chose get display parameters
-    parameters_read = common.read_parameters(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    parameters_read = common.read_parameters(variant_name, INTERFACE_CHOSEN)
 
     # build variant data
-    VARIANT_DATA = mapping.Variant(VARIANT_NAME_LOADED, variant_content_loaded, parameters_read)
+    VARIANT_DATA = mapping.Variant(variant_name, variant_content_loaded, parameters_read)
 
     # get the position
     position_loaded = {'ownerships': {}, 'units': {}, 'forbiddens': {}, 'dislodged_ones': {}}
@@ -421,7 +437,8 @@ def sandbox():
                 report_window = common.make_report_window(fake_report_loaded)
                 display_left <= report_window
 
-        variant_name = VARIANT_NAME_LOADED
+        # get variant
+        variant_name = get_variant()
 
         names_dict = VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
@@ -1188,8 +1205,11 @@ def sandbox():
     canvas.bind("mousemove", callback_canvas_mouse_move)
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
+    # get variant
+    variant_name = get_variant()
+
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(VARIANT_NAME_LOADED, INTERFACE_CHOSEN)
+    img = common.read_image(variant_name, INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
     # left side
@@ -1427,12 +1447,12 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Bac à sable':
-        sandbox()
     if item_name == 'Documents':
         show_technical()
     if item_name == 'Pourquoi yapa':
         show_whynot()
+    if item_name == 'Bac à sable':
+        sandbox()
     if item_name == 'Choix d\'interface':
         select_interface()
     if item_name == 'Tester un scorage':
@@ -1464,6 +1484,12 @@ def render(panel_middle):
     # always back to top
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = OPTIONS[0]
+
+    # this means user wants to join game
+    if ARRIVAL == 'sandbox':
+        ITEM_NAME_SELECTED = 'Bac à sable'
+
+    set_arrival(None)
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
