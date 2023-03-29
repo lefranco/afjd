@@ -64,10 +64,9 @@ MESSAGE_QUEUE: queue.Queue[typing.Tuple[typing.Optional[str], str, str, str]] = 
 def sender_threaded_procedure() -> None:
     """ does the actual sending of messages """
 
-    with APP.app_context():  # type: ignore
+    with APP.app_context():
 
         error_counter = 0
-        failed = False
 
         while True:
 
@@ -84,50 +83,45 @@ def sender_threaded_procedure() -> None:
 
             # send ok
             if status:
-
                 error_counter = 0
-                failed = False
-
-            # send ko
-            else:
-
-                # log
-                if pseudo is None:
-                    mylogger.LOGGER.info("*** Failed sending an email to %s using no account", addressee)
-                else:
-                    mylogger.LOGGER.info("*** Failed sending an email to %s using account %s", addressee, pseudo)
-
-                subject2 = "Echec à l'envoi d'un message !"
-
-                # make and send email report (unsure to be successful)
-                body2 = ""
-                body2 += f"Destinataire : {addressee}"
-                body2 += "\n"
-                body2 += f"Sujet : {subject}"
-                body2 += "\n"
-                if pseudo is not None:
-                    body2 += f"Compte utilisé : {pseudo}"
-                    body2 += "\n"
-                body2 += f"Exception produite : {exception}"
-                body2 += "\n"
-                status2, _ = mailer.send_mail(subject2, body2, EMAIL_SUPPORT)
-
-                if not status2:
-                    mylogger.LOGGER.info("*** Also failed to send report to admin !")
-
-                # put failed message back on queue
-                MESSAGE_QUEUE.put((pseudo, subject, body, addressee))
-
-                # count errors
-                error_counter += 1
-                if error_counter >= MAX_ERROR_COUNTER_FAILURE:
-                    mylogger.LOGGER.error("*** GIVING UP SENDING EMAILS FOR THE MOMENT")
-                    failed = True
-
-            if failed:
-                time.sleep(PAUSE_BETWEEN_RETRIES_SEC)
-            else:
                 time.sleep(PAUSE_BETWEEN_SENDS_SEC)
+                continue
+
+            # Failed !
+
+            # log
+            if pseudo is None:
+                mylogger.LOGGER.info("*** Failed sending an email to %s using no account", addressee)
+            else:
+                mylogger.LOGGER.info("*** Failed sending an email to %s using account %s", addressee, pseudo)
+
+            subject2 = "Echec à l'envoi d'un message !"
+
+            # make and send email report (unsure to be successful)
+            body2 = ""
+            body2 += f"Destinataire : {addressee}"
+            body2 += "\n"
+            body2 += f"Sujet : {subject}"
+            body2 += "\n"
+            if pseudo is not None:
+                body2 += f"Compte utilisé : {pseudo}"
+                body2 += "\n"
+            body2 += f"Exception produite : {exception}"
+            body2 += "\n"
+            status2, _ = mailer.send_mail(subject2, body2, EMAIL_SUPPORT)
+
+            if not status2:
+                mylogger.LOGGER.info("*** Also failed to send report to admin !")
+
+            # put failed message back on queue
+            MESSAGE_QUEUE.put((pseudo, subject, body, addressee))
+
+            # count errors
+            error_counter += 1
+            if error_counter >= MAX_ERROR_COUNTER_FAILURE:
+                mylogger.LOGGER.error("*** GIVING UP SENDING EMAILS FOR THE MOMENT")
+                time.sleep(PAUSE_BETWEEN_RETRIES_SEC)
+                mylogger.LOGGER.error("*** NOW RESUMING SENDING EMAILS...")
 
 
 @API.resource('/send-email-welcome')
