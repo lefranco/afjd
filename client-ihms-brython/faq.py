@@ -7,7 +7,7 @@ FAQ_CONTENT_TABLE = {
     "Les messages issus de l'interface 'front end' sont en français (sauf omission à corriger rapidement). Les messages issus du serveur 'back end' sont en anglais.",
 
     "Peut-on jouer plusieurs rôles sur une partie ?":
-    "Non, cela n'est pas prévu. Il doit y avoir 8 intervenants distincts sur une partie (arbitre y compris).",
+    "Non, cela n'est pas possible. Il doit y avoir 8 intervenants distincts sur une partie (arbitre y compris). Le système se base sur l'identité pour trouver le rôle, et ainsi présenter l'interface idoine",
 
     "Peut-on faire des erreurs d'ordres ?":
     "Non. Les ordres sont 100% vérifiés avant d'être enregistrés. L'option de bienveillance vis à vis des débutants a été privilégiée. Par contre le menu “Taguer“ dans une partie permet une communcation par ordres 'ésotériques'. Cela ne presente un intérêt que dans les parties sans communication.",
