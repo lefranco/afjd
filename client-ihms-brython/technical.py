@@ -789,10 +789,6 @@ def sandbox():
         if selected_erase_unit is None:
             selected_erase_unit = selected_active_unit
 
-        # unit must be selected
-        if selected_erase_unit is None:
-            return
-
         # if unit does not have an order... remove unit
         if not ORDERS_DATA.is_ordered(selected_erase_unit):
 
@@ -809,7 +805,7 @@ def sandbox():
             ORDERS_DATA.remove_order(selected_erase_unit)
 
         # update map
-        callback_render(False)
+        callback_render(True)
 
         my_sub_panel2.removeChild(buttons_right)
         buttons_right = html.DIV(id='buttons_right')
