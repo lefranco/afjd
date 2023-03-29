@@ -49,13 +49,13 @@ SEND_EMAIL_WELCOME_PARSER.add_argument('email', type=str, required=True)
 
 
 # time to wait after sending a message
-PAUSE_BETWEEN_SENDS_SEC = 5
+PAUSE_BETWEEN_SENDS_SEC = 10
 
 # time to wait after failure
-PAUSE_BETWEEN_RETRIES_SEC = 10 * 60
+PAUSE_BETWEEN_RETRIES_SEC = 15 * 60
 
 # how many failures before saying failed
-MAX_ERROR_COUNTER_FAILURE = 5
+MAX_ERROR_COUNTER_FAILURE = 3
 
 # to transmit messages to send
 MESSAGE_QUEUE: queue.Queue[typing.Tuple[typing.Optional[str], str, str, str]] = queue.Queue()
