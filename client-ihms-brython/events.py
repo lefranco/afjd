@@ -208,7 +208,7 @@ def registrations():
             registrations()
             return
 
-        subject = f"Message de la part du joueur {pseudo} au sujet du tournoi {name} du site https://diplomania-gen.fr (AFJD)"
+        subject = f"Message de la part du joueur {pseudo} au sujet de l'événement {name} du site https://diplomania-gen.fr (AFJD)"
 
         body = input_message.value
 
@@ -218,7 +218,7 @@ def registrations():
             'addressees': " ".join([str(a) for a in addressees]),
             'subject': subject,
             'body': body,
-            'type': 'forced',
+            'type': 'question_event',
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']

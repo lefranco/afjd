@@ -1996,7 +1996,7 @@ def show_idle_data():
             'addressees': str(addressed_id),
             'subject': subject,
             'body': body,
-            'type': 'forced',
+            'type': 'please_play',
         }
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']

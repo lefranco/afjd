@@ -860,14 +860,20 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
         type_ = args['type']
 
         # I can get for type :
-        #  'reminder' : please enter order/agreement or just welcome and come in to play
-        #  'forced' : message from moderator or to organizer
-        #  'start_stop' : game started, stopped, complete and ready
-        #  'late' : master forced agreement and player is late
-        #  'adjudication' : game has moved (from master/automatoin/player)
-        #  'message' : press or message in game
-        #  'replacement' : need a replacement
-        #  'profile' : profile
+        # not forced :
+        #      'start_stop' : game started, stopped, complete and ready
+        #      'message' : press or message in game
+        #      'adjudication' : game has moved (from master/automatoin/player)
+        #      'reminder' : please enter order/agreement or just welcome and come in to play
+        # forced :
+        #      'please_play' : message from admin to player
+        #      'question_event' : message from player to event organizer
+        #      'direct_message' : message from moderator to player
+        #      'late' : master forced agreement and player is late
+        # replacement :
+        #      'replacement' : need a replacement
+        # profile :
+        #      'profile' : profile
 
         try:
             addressees_list = list(map(int, addressees_submitted.split()))
@@ -888,14 +894,19 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
 
             # decide if send
 
-            if type_ == 'adjudication':
-                # does not want to receive adjudication notifications
+            if type_ == 'start_stop':
+                # does not want to receive start/stop notifications
                 if not pseudo_dest.notify_adjudication:
                     continue
 
             if type_ == 'message':
                 # does not want to receive message/press notifications
                 if not pseudo_dest.notify_message:
+                    continue
+
+            if type_ == 'adjudication':
+                # does not want to receive adjudication notifications
+                if not pseudo_dest.notify_adjudication:
                     continue
 
             # security
