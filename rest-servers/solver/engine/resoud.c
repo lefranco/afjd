@@ -1221,8 +1221,10 @@ void suppressionelimines(void) {
 		if (nunit > 0 && ncent == 0) {
 
 			if (strcmp(NOMPROGRAMME, "JOUEUR")) { /* ne pas afficher si appel du joueur */
-				cherchechaine(__FILE__, 45, buf, 1, p->nom); /*"Suppression des unites du pays %1"*/
-				informer(buf);
+				if (OPTIONw) {
+					cherchechaine(__FILE__, 45, buf, 1, p->nom); /*"Suppression des unites du pays %1"*/
+					informer(buf);
+				}
 			}
 			for (q = UNITE.t; q < UNITE.t + UNITE.n; q++)
 				if (q->pays == p) {
@@ -1570,8 +1572,10 @@ void suppressionelimines2(void) {
 		/* si on arrive ici c'est que le pays est mort */
 
 		if (strcmp(NOMPROGRAMME, "JOUEUR")) { /* ne pas afficher si appel du joueur */
-			cherchechaine(__FILE__, 45, buf, 1, p->nom); /*"Suppression des unites du pays %1"*/
-			informer(buf);
+			if (OPTIONw) {
+				cherchechaine(__FILE__, 45, buf, 1, p->nom); /*"Suppression des unites du pays %1"*/
+				informer(buf);
+			}
 		}
 
 		for (r = DELOGEE.t; r < DELOGEE.t + DELOGEE.n; r++) {
