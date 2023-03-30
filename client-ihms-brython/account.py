@@ -54,7 +54,7 @@ def information_about_emails():
     """ information_about_emails """
 
     information = html.DIV(Class='note')
-    information <= "Vous recevrez un courriel au démarrage et à l'arrêt de vos parties. Un courriel de rappel de l'arbitre si vous êtes en retard sur les ordres. Un courriel de notification de résolution et/ou de message ou presse dans la partie mais dans ce dernier cas seulement si vous l'avez demandé. Un courriel à la suppression du compte. Un courriel à chaque modification d'adresse courriel pour vérifier celle-ci..."
+    information <= "Vous recevrez un courriel de rappel de l'arbitre si vous êtes en retard sur les ordres. Un courriel au démarrage et à l'arrêt de vos parties. Un courriel de notification de résolution et/ou de message ou presse dans la partie. Sauf dans le premier cas, seulement si vous l'avez demandé. Un courriel à la suppression du compte. Un courriel à chaque modification d'adresse courriel pour vérifier celle-ci..."
     information <= html.BR()
     information <= "Rien de plus !"
     information <= html.BR()
