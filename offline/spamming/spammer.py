@@ -8,8 +8,8 @@ Justs sends an email
 """
 
 import typing
+import argparse
 import configparser
-import sys
 import pathlib
 import time
 import smtplib
@@ -18,17 +18,34 @@ import flask
 import flask_mail  # type: ignore
 
 
-INTERVAL = 2
+INTERVAL = 5
 
-SUBJECT = "2021 L'année pour jouer à Diplomacy"
+# mailing suject
+SUBJECT = "2023 : Les dernières nouvelles de l'association diplomatie A.F.J.D !"
 
-SENDER = "afjdiplo@gmail.com"
+# mailing body
+BODY = """
+Bonjour.
+Vous trouverez en pièces jointes le compte rendu de la dernière assemblée générale, ainsi que la lettre du diplomate, en vous souhaitant bonne lecture.
+Si vous ne savez pas quoi faire ce week-end, pensez au championnat du monde francophone en face à face virtuel !
+Bien amicalement.
+Le bureau.
+"""
 
-BODY_FILE = "./body_NewsLetter2.html"
+# mailing official sender
+SENDER = "afjd_serveur_jeu@diplomania-gen.fr"
+
+# mailing real sender
+REPLY_TO = "afjdiplo@gmail.com"
+
+# list of attached files (must be PDF)
+PDF_ATT_FILES = ['./newletter_5.docx.pdf', 'AG_28_01_2023.pptx.pdf']
+
 
 MAILER = None
 
 APP = flask.Flask(__name__)
+
 
 class ConfigFile:
     """    Just reads an ini file   """
@@ -49,7 +66,8 @@ class ConfigFile:
         """ Accesses the list of sections of a config file  """
         return self._config.sections()
 
-def load_mail_config(app: typing.Any) -> None:
+
+def load_mail_config() -> None:
     """ read mail config """
 
     mail_config = ConfigFile('./config/mail.ini')
@@ -58,58 +76,64 @@ def load_mail_config(app: typing.Any) -> None:
         assert mailer == 'mail', "Section name is not 'mail' in mail configuration file"
         mail_data = mail_config.section(mailer)
 
-        app.config['MAIL_SERVER'] = mail_data['MAIL_SERVER']
-        app.config['MAIL_PORT'] = int(mail_data['MAIL_PORT'])
-        app.config['MAIL_USE_TLS'] = bool(int(mail_data['MAIL_USE_TLS']))
-        app.config['MAIL_USE_SSL'] = bool(int(mail_data['MAIL_USE_SSL']))
-        app.config['MAIL_USERNAME'] = mail_data['MAIL_USERNAME']
-        app.config['MAIL_PASSWORD'] = mail_data['MAIL_PASSWORD']
+        APP.config['MAIL_SERVER'] = mail_data['MAIL_SERVER']
+        APP.config['MAIL_PORT'] = int(mail_data['MAIL_PORT'])
+        APP.config['MAIL_USE_TLS'] = bool(int(mail_data['MAIL_USE_TLS']))
+        APP.config['MAIL_USE_SSL'] = bool(int(mail_data['MAIL_USE_SSL']))
+        APP.config['MAIL_USERNAME'] = mail_data['MAIL_USERNAME']
+        APP.config['MAIL_PASSWORD'] = mail_data['MAIL_PASSWORD']
 
-        assert app.config['MAIL_USERNAME'] == SENDER, "Use from same as sender to avoid being tagged as spam"
+        assert APP.config['MAIL_USERNAME'] == SENDER, "Use from same as sender to avoid being tagged as spam"
 
     global MAILER
-    MAILER = flask_mail.Mail(app)
+    MAILER = flask_mail.Mail(APP)
 
 
 def send_mail(email_dest: str) -> None:
     """ send email """
 
-    msg = flask_mail.Message(SUBJECT, sender=SENDER, recipients=[email_dest])
+    # make message
+    msg = flask_mail.Message(SUBJECT, sender=SENDER, body=BODY, reply_to=REPLY_TO, recipients=[email_dest])
 
-    # Body of message
-    with open(BODY_FILE, 'r') as filepointer:
-        # Create a text/plain message
-        msg.html = filepointer.read()
+    assert APP is not None
+
+    # add attachments
+    for att_file in PDF_ATT_FILES:
+        with APP.open_resource(att_file) as filepointer:
+            msg.attach(att_file, 'application/pdf', filepointer.read())
 
     assert MAILER is not None
+
+    # send
     MAILER.send(msg)
 
 
-def main():
+def main() -> None:
+    """ main """
 
-    # check arguments
-    if len(sys.argv) != 2:
-        print("Argument expected : <file with list of victims>")
-        return
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-v', '--victims_file', required=True, help='file with emails of victims')
+    args = parser.parse_args()
 
-    victim_list_file = sys.argv[1]
+    victim_list_file = args.victims_file
 
     path = pathlib.Path(victim_list_file)
-    if not path.exists():
-        print(f"Seems file '{victim_list_file}' does not exist")
-        return
+    assert path.exists(), f"Seems file '{victim_list_file}' does not exist"
 
-    load_mail_config(APP)
+    load_mail_config()
+
+    assert APP is not None
+
     with APP.app_context():
 
         already_spammed = set()
 
-        with open(victim_list_file) as filepointer:
+        with open(victim_list_file, encoding='utf-8') as filepointer:
             for line in filepointer:
                 line = line.rstrip('\n')
                 if line and not line.startswith("#"):
                     dest = line
-                    dest = dest.lower() # otherwise rejected
+                    dest = dest.lower()  # otherwise rejected
 
                 print(f"spamming '{dest}'... ", end='')
 
@@ -128,6 +152,7 @@ def main():
                 already_spammed.add(dest)
 
                 time.sleep(INTERVAL)
+
 
 if __name__ == '__main__':
     main()
