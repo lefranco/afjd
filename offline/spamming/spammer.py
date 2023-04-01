@@ -39,7 +39,7 @@ SENDER = "afjd_serveur_jeu@diplomania-gen.fr"
 REPLY_TO = "afjdiplo@gmail.com"
 
 # list of attached files (must be PDF)
-PDF_ATT_FILES = ['./newletter_5.docx.pdf', 'AG_28_01_2023.pptx.pdf']
+PDF_ATT_FILES = ['newletter_5.docx.pdf', 'AG_28_01_2023.pptx.pdf']
 
 
 MAILER = None
