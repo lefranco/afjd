@@ -172,13 +172,17 @@ def submit_orders():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-            messages = "<br>".join(req_result['msg'].split('\n'))
+            # use a strip to remove trainling "\n"
+            messages = "<br>".join(req_result['msg'].strip().split('\n'))
 
             # to better undestand what is going on, on can use code below :
             #  debug_message = req_result['debug_message'].split('\n')
             #  common.info_dialog(f"debug_message : {debug_message}", True)
 
-            common.info_dialog(f"Vous avez soumis les ordres : {messages}", True)
+            if messages:
+                common.info_dialog(f"Ordres validés avec le(s) message(s) : {messages}", True)
+            else:
+                common.info_dialog(f"Ordres validés !", True)
 
             # special : send ip address to server
             common.send_ip_address()
@@ -191,7 +195,7 @@ def submit_orders():
             # not really submitted
             unsafe = req_result['unsafe']
             if unsafe:
-                alert("Vous avez juste enregistré vos ordres pour vous-même mais ils ne sont pas validés (car vous n'avez pas mis l'accord) !")
+                alert("Vous n'avez pas mis l'accord, donc vos ordres sont juste enregistrés (pour vous-même) mais vous risquez encore un retard...")
 
             # why no adjudication
             missing = req_result['missing']
