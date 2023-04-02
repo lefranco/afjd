@@ -14,6 +14,8 @@ import common
 import faq
 
 
+THRESHOLD_DRIFT_ALERT_SEC= 59
+
 OPTIONS = ['Vue d\'ensemble', 'Déclarer un incident', 'Foire aux questions', 'Evolution de la fréquentation', 'Brique sociale']
 
 
@@ -276,8 +278,11 @@ def show_news():
         unit = "minutes"
     else:
         unit = "secondes"
-    div_b1 <= html.DIV(f"Votre horloge locale est {status} d'environ {abs_delta_time} {unit} sur celle du serveur", Class='note')
-    div_b1 <= html.BR()
+
+    # do not always display
+    if abs(delta_time) > THRESHOLD_DRIFT_ALERT_SEC:
+        div_b1 <= html.DIV(f"Votre horloge locale est {status} de {abs_delta_time} {unit} sur celle du serveur", Class='note')
+        div_b1 <= html.BR()
 
     # rest
 
