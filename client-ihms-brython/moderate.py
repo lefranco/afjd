@@ -229,7 +229,7 @@ def prepare_mailing():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'courriel', 'confirmé', 'newsletter', 'ne veut plus recevoir']:
+    for field in ['pseudo', 'courriel', 'confirmé', 'ne veut plus recevoir']:
         col = html.TD(field)
         thead <= col
     emails_table <= thead
@@ -255,9 +255,6 @@ def prepare_mailing():
         col = html.TD("Oui" if confirmed else "Non")
         row <= col
 
-        col = html.TD("Oui" if newsletter else "Non")
-        row <= col
-
         form = html.FORM()
         input_patch_account = html.INPUT(type="image", src="./images/refuses.png")
         input_patch_account.bind("click", lambda e, p=pseudo: patch_account_callback(e, p))
@@ -272,7 +269,7 @@ def prepare_mailing():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'courriel', 'confirmé', 'newsletter']:
+    for field in ['pseudo', 'courriel', 'newsletter']:
         col = html.TD(field)
         thead <= col
     emails_table2 <= thead
@@ -302,12 +299,6 @@ def prepare_mailing():
         row <= col
 
         col = html.TD("Oui" if confirmed else "Non")
-        col.style = {
-            'background-color': 'Red'
-        }
-        row <= col
-
-        col = html.TD("Oui" if newsletter else "Non")
         col.style = {
             'background-color': 'Red'
         }
