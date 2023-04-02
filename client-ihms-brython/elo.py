@@ -19,9 +19,6 @@ K_SLOPE = 2.
 
 VERIFY = False
 
-TEASER_KEEP = 7
-
-
 LAST_TIME = 0
 
 
@@ -44,7 +41,7 @@ def elapsed_then(elo_information, desc):
 
 
 def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_information):
-    """ process_elo """
+    """ returns elo_raw_list, teaser_text """
 
     global LAST_TIME
 
@@ -390,7 +387,12 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     elo_raw_list_sorted = sorted(elo_raw_list, key=lambda e: gameid2starttime[e[5]])
 
     # make teaser (just an abstract)
-    teaser_text = "\n".join([f"{num2pseudo[e[2]]} : {e[3]} avec {num2rolename[e[1]]} en {'classique' if e[0] else 'blitz'}" for e in sorted(elo_raw_list, key=lambda ee: ee[3], reverse=True)][0: TEASER_KEEP])
+    teaser_text = ""
+    for classic1 in (True, False):
+        for role_id1 in effective_roles:
+            elo_sub_raw_list = [e for e in elo_raw_list if e[0] == classic1 and e[1] == role_id1]
+            best_one = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0]
+            teaser_text += f"{num2pseudo[best_one[2]]} : {best_one[3]} avec {num2rolename[best_one[1]]} en {'classique' if best_one[0] else 'blitz'}\n"
 
     # date to teaser
     time_stamp = time.time()
