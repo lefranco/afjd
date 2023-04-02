@@ -760,8 +760,13 @@ def my_games(state_name):
                     if time_stamp_now > deadline_loaded:
                         colour = config.PASSED_DEADLINE_COLOUR
                 else:
+
+                    # game over
+                    if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                        colour = config.GAME_OVER_COLOUR
+
                     # we are after everything !
-                    if time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
+                    elif time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
                         colour = config.CRITICAL_COLOUR
                     # we are after deadline + grace
                     elif time_stamp_now > deadline_loaded + 60 * 60 * data['grace_duration']:
