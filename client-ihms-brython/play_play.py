@@ -182,7 +182,7 @@ def submit_orders():
             if messages:
                 common.info_dialog(f"Ordres validés avec le(s) message(s) : {messages}", True)
             else:
-                common.info_dialog(f"Ordres validés !", True)
+                common.info_dialog("Ordres validés !", True)
 
             # special : send ip address to server
             common.send_ip_address()
