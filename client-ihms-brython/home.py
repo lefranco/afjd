@@ -14,7 +14,8 @@ import common
 import faq
 
 
-THRESHOLD_DRIFT_ALERT_SEC= 59
+THRESHOLD_DRIFT_ALERT_SEC = 59
+
 
 OPTIONS = ['Vue d\'ensemble', 'Déclarer un incident', 'Foire aux questions', 'Evolution de la fréquentation', 'Brique sociale']
 
