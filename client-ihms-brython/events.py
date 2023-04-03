@@ -10,12 +10,11 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import common
 import mydialog
 import config
+import mydatetime
 import index  # circular import
 
 OPTIONS = ['Sélectionner un événement', 'Inscriptions', 'Créer un événement', 'Editer l\'événement', 'Gérer les participations', 'Supprimer l\'événement']
 
-# Too big files cause weird problemns especially in Internet Explorer
-MAX_IMAGE_SIZE = 50000
 
 MAX_LEN_EVENT_NAME = 50
 MAX_LEN_EVENT_LOCATION = 20
@@ -293,12 +292,12 @@ def registrations():
 
     joiners_table = html.TABLE()
 
-    fields = ['rank', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status']
+    fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'rank': 'rang', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut'}[field]
+        field_fr = {'rank': 'rang', 'date': 'date', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut'}[field]
         col = html.TD(field_fr)
         thead <= col
     joiners_table <= thead
@@ -312,7 +311,7 @@ def registrations():
     joiners_dict = {}
     for joiner in joiners:
         joiner_data = players_dict[str(joiner[0])].copy()
-        joiner_data.update({'status': joiner[1]})
+        joiner_data.update({'date': joiner[1], 'status': joiner[2]})
         joiners_dict[joiner[0]] = joiner_data
 
     # sorting is done by server
@@ -331,6 +330,11 @@ def registrations():
 
             if field == 'rank':
                 value = num + 1
+
+            if field == 'date':
+                date_reg_gmt = mydatetime.fromtimestamp(value)
+                date_reg_gmt_str = mydatetime.strftime(*date_reg_gmt)
+                value = date_reg_gmt_str
 
             if field in ['residence', 'nationality']:
                 code = value
@@ -867,12 +871,12 @@ def handle_joiners():
 
     joiners_table = html.TABLE()
 
-    fields = ['rank', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status', 'action']
+    fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status', 'action']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'rank': 'rang', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut', 'action': 'action'}[field]
+        field_fr = {'rank': 'rang', 'date': 'date', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut', 'action': 'action'}[field]
         col = html.TD(field_fr)
         thead <= col
     joiners_table <= thead
@@ -893,7 +897,7 @@ def handle_joiners():
     joiners_dict = {}
     for joiner in joiners:
         joiner_data = players_dict[str(joiner[0])].copy()
-        joiner_data.update({'status': joiner[1]})
+        joiner_data.update({'date': joiner[1], 'status': joiner[2]})
         joiners_dict[joiner[0]] = joiner_data
 
     # sorting is done by server
@@ -913,6 +917,11 @@ def handle_joiners():
 
             if field == 'rank':
                 value = num + 1
+
+            if field == 'date':
+                date_reg_gmt = mydatetime.fromtimestamp(value)
+                date_reg_gmt_str = mydatetime.strftime(*date_reg_gmt)
+                value = date_reg_gmt_str
 
             if field in ['residence', 'nationality']:
                 code = value
