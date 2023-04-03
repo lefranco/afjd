@@ -302,6 +302,14 @@ def show_position(direct_last_moves):
         position_data = play_low.POSITION_DATA
         orders_data = None
 
+        if advancement_selected < 0:
+            alert("Il n'y a rien avant, désolé !")
+            return
+
+        if advancement_selected > last_advancement:
+            alert("Il n'y a rien après, désolé !")
+            return
+
         if advancement_selected != last_advancement:
 
             transition_loaded = play_low.game_transition_reload(play_low.GAME_ID, advancement_selected)
