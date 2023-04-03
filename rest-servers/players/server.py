@@ -2039,7 +2039,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
 class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
     """ RegistrationEventRessource """
 
-    def get(self, event_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int]], int]:
+    def get(self, event_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:
         """
         Get list of registrations to the event
         EXPOSED
@@ -2051,7 +2051,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         registrations_list = registrations.Registration.list_by_event_id(sql_executor, int(event_id))
         del sql_executor
 
-        data = [(r[1], r[3]) for r in sorted(registrations_list, key=lambda rr: rr[2])]
+        data = [(r[1], r[2], r[3]) for r in sorted(registrations_list, key=lambda rr: rr[2])]
 
         return data, 200
 
