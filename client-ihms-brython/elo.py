@@ -392,13 +392,16 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
         for role_id1 in effective_roles:
             elo_sub_raw_list = [e for e in elo_raw_list if e[0] == classic1 and e[1] == role_id1]
             best_one = sorted(elo_sub_raw_list, key=lambda e: e[3], reverse=True)[0]
-            teaser_text += f"{num2pseudo[best_one[2]]} : {best_one[3]} avec {num2rolename[best_one[1]]} en {'classique' if best_one[0] else 'blitz'}\n"
+            teaser_text += f"{num2pseudo[best_one[2]]} {best_one[3]} {num2rolename[best_one[1]]} {'classique' if best_one[0] else 'blitz'}\n"
+
+    # separator
+    teaser_text += "\n"
 
     # date to teaser
     time_stamp = time.time()
     date_now_gmt = mydatetime.fromtimestamp(time_stamp)
     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
-    teaser_text += f"\n(en date du {date_now_gmt_str})"
+    teaser_text += f"{date_now_gmt_str}"
 
     # how long it took
     done_time = time.time()

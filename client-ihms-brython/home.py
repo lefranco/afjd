@@ -147,12 +147,50 @@ def formatted_games(suffering_games):
 def formatted_teaser(teasers):
     """ formatted_teaser """
 
-    # init
-    teaser_content = html.DIV(Class='teaser')
+    # collect data
+    data = {}
+    done = False
+    for line in teasers.split('\n'):
+        if line:
+            if done:
+                datation = line
+            else:
+                champion_data = line.split()
+                c_pseudo = champion_data[0]
+                c_score = int(champion_data[1])
+                c_role = champion_data[2]
+                c_mode = champion_data[3]
+                data[(c_role, c_mode)] = (c_pseudo, c_score)
+        else:
+            done = True
 
-    for champion in teasers.split('\n'):
-        teaser_content <= champion
-        teaser_content <= html.BR()
+    roles = sorted({d[0] for d in data})
+    modes = sorted({d[1] for d in data})
+
+    # init
+    teaser_content = html.DIV()
+
+    # data in table
+    teaser_content_table = html.TABLE()
+    title = html.TR()
+    for header in [' '] + roles:
+        title <= html.TD(html.B(header))
+    teaser_content_table <= title
+    for mode in modes:
+        row = html.TR()
+        row <= html.TD(html.B(mode))
+        for role in sorted(roles):
+            pseud, score = data[(role, mode)]
+            elem = html.DIV()
+            elem <= pseud
+            elem <= html.BR()
+            elem <= score
+            row <= html.TD(elem)
+        teaser_content_table <= row
+
+    teaser_content <= teaser_content_table
+    teaser_content <= html.BR()
+    teaser_content <= datation
 
     return teaser_content
 
