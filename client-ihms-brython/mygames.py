@@ -800,8 +800,7 @@ def my_games(state_name):
             if field == 'orders_submitted':
                 value = ""
                 if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
-                    flag = html.IMG(src="./images/game_over.png", title="Partie finie")
-                    value = flag
+                    value = "-"
                 else:
                     submitted_roles_list = submitted_data['submitted']
                     needed_roles_list = submitted_data['needed']
@@ -816,8 +815,7 @@ def my_games(state_name):
             if field == 'agreed':
                 value = ""
                 if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
-                    flag = html.IMG(src="./images/game_over.png", title="Partie finie")
-                    value = flag
+                    value = "-"
                 else:
                     submitted_roles_list = submitted_data['submitted']
                     agreed_now_roles_list = submitted_data['agreed_now']
@@ -835,28 +833,34 @@ def my_games(state_name):
 
             if field == 'all_orders_submitted':
                 value = "-"
-                if role_id is not None:
-                    if not data['anonymous'] or role_id == 0:
-                        submitted_roles_list = submitted_data['submitted']
-                        nb_submitted = len(submitted_roles_list)
-                        needed_roles_list = submitted_data['needed']
-                        nb_needed = len(needed_roles_list)
-                        stats = f"{nb_submitted}/{nb_needed}"
-                        value = stats
-                        if nb_submitted >= nb_needed:
-                            # we have all orders : green
-                            colour = config.ALL_ORDERS_IN_COLOUR
+                if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                    value = "-"
+                else:
+                    if role_id is not None:
+                        if not data['anonymous'] or role_id == 0:
+                            submitted_roles_list = submitted_data['submitted']
+                            nb_submitted = len(submitted_roles_list)
+                            needed_roles_list = submitted_data['needed']
+                            nb_needed = len(needed_roles_list)
+                            stats = f"{nb_submitted}/{nb_needed}"
+                            value = stats
+                            if nb_submitted >= nb_needed:
+                                # we have all orders : green
+                                colour = config.ALL_ORDERS_IN_COLOUR
 
             if field == 'all_agreed':
                 value = "-"
-                if role_id is not None:
-                    if not data['anonymous'] or role_id == 0:
-                        agreed_now_roles_list = submitted_data['agreed_now']
-                        nb_agreed_now = len(agreed_now_roles_list)
-                        agreed_after_roles_list = submitted_data['agreed_after']
-                        nb_agreed_after = len(agreed_after_roles_list)
-                        stats = f"{nb_agreed_now}m+{nb_agreed_after}a"
-                        value = stats
+                if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                    value = "-"
+                else:
+                    if role_id is not None:
+                        if not data['anonymous'] or role_id == 0:
+                            agreed_now_roles_list = submitted_data['agreed_now']
+                            nb_agreed_now = len(agreed_now_roles_list)
+                            agreed_after_roles_list = submitted_data['agreed_after']
+                            nb_agreed_after = len(agreed_after_roles_list)
+                            stats = f"{nb_agreed_now}m+{nb_agreed_after}a"
+                            value = stats
 
             if field == 'new_declarations':
                 value = ""
