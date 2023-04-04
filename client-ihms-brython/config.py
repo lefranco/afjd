@@ -46,7 +46,7 @@ SLIGHT_DELAY_SEC = 5
 # colours
 ALL_ORDERS_IN_COLOUR = 'Chartreuse'
 
-GAME_OVER_COLOUR = 'Green'
+GAME_OVER_COLOUR = 'Chartreuse'
 
 CRITICAL_COLOUR = 'Grey'
 PASSED_GRACE_COLOUR = 'Maroon'
