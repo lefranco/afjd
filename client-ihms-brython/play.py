@@ -176,9 +176,6 @@ def countdown():
     else:
         countdown_text = f"~ {remains // (24 * 3600)}j"
 
-    if image:
-        countdown_text = html.MARK(countdown_text)
-
     # insert text
     play_low.COUNTDOWN_COL.text = countdown_text
 
