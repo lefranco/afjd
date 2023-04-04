@@ -226,6 +226,10 @@ fieldset{
     border: 0;
 }
 
+mark{
+    background-color: #83B9CC;
+}
+
 /* color of sea in diplomania map BBD9DC */
 
 #home {

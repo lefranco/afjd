@@ -293,6 +293,7 @@ def show_games():
 
             value = data[field]
             colour = None
+            image = None
             fg_colour = None
             game_name = data['name']
 
@@ -325,7 +326,7 @@ def show_games():
 
                     # game over
                     if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
-                        colour = config.GAME_OVER_COLOUR
+                        image = "./images/gameover.jpg"
 
                     # we are after everything !
                     elif time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
@@ -388,6 +389,8 @@ def show_games():
                     value2 = "Non" if value2 else "Oui"
                     value = f"{value1} ({value2})"
 
+            if image:
+                value = html.MARK(value)
             col = html.TD(value)
             if colour is not None:
                 col.style = {
@@ -396,6 +399,10 @@ def show_games():
             if fg_colour is not None:
                 col.style = {
                     'color': fg_colour
+                }
+            if image is not None:
+                col.style = {
+                    'background-image': f"url('{image}')"
                 }
 
             row <= col
