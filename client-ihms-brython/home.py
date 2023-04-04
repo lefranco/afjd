@@ -173,17 +173,17 @@ def formatted_teaser(teasers):
     # data in table
     teaser_content_table = html.TABLE()
     title = html.TR()
-    for header in [' '] + roles:
+    for header in [' '] + modes:
         title <= html.TD(html.B(header))
     teaser_content_table <= title
-    for mode in modes:
+    for role in sorted(roles):
         row = html.TR()
-        row <= html.TD(html.B(mode))
-        for role in sorted(roles):
+        row <= html.TD(html.B(role))
+        for mode in modes:
             pseud, score = data[(role, mode)]
             elem = html.DIV()
             elem <= pseud
-            elem <= html.BR()
+            elem <= " "
             elem <= score
             row <= html.TD(elem)
         teaser_content_table <= row
