@@ -190,7 +190,7 @@ def formatted_teaser(teasers):
 
     teaser_content <= teaser_content_table
     teaser_content <= html.BR()
-    teaser_content <= datation
+    teaser_content <= html.EM(f"En date de {datation}")
 
     return teaser_content
 
