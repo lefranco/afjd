@@ -834,34 +834,40 @@ def my_games(state_name):
                 if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
                     value = "-"
                 else:
-                    if role_id is not None and role_id != 0:
-                        submitted_roles_list = submitted_data['submitted']
-                        needed_roles_list = submitted_data['needed']
-                        if role_id in submitted_roles_list:
-                            flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
-                            value = flag
-                        elif role_id in needed_roles_list:
-                            flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
-                            value = flag
+                    if role_id is not None:
+                        if role_id == 0:
+                            value = "-"
+                        else:
+                            submitted_roles_list = submitted_data['submitted']
+                            needed_roles_list = submitted_data['needed']
+                            if role_id in submitted_roles_list:
+                                flag = html.IMG(src="./images/orders_in.png", title="Les ordres sont validés")
+                                value = flag
+                            elif role_id in needed_roles_list:
+                                flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
+                                value = flag
 
             if field == 'agreed':
                 value = ""
                 if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
                     value = "-"
                 else:
-                    if role_id is not None and role_id != 0:
-                        submitted_roles_list = submitted_data['submitted']
-                        agreed_now_roles_list = submitted_data['agreed_now']
-                        agreed_after_roles_list = submitted_data['agreed_after']
-                        if role_id in agreed_now_roles_list:
-                            flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
-                            value = flag
-                        elif role_id in agreed_after_roles_list:
-                            flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais à la date limite")
-                            value = flag
-                        elif role_id in needed_roles_list:
-                            flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
-                            value = flag
+                    if role_id is not None:
+                        if role_id == 0:
+                            value = "-"
+                        else:
+                            submitted_roles_list = submitted_data['submitted']
+                            agreed_now_roles_list = submitted_data['agreed_now']
+                            agreed_after_roles_list = submitted_data['agreed_after']
+                            if role_id in agreed_now_roles_list:
+                                flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
+                                value = flag
+                            elif role_id in agreed_after_roles_list:
+                                flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais à la date limite")
+                                value = flag
+                            elif role_id in needed_roles_list:
+                                flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
+                                value = flag
 
             if field == 'new_declarations':
                 value = ""
