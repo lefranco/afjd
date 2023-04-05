@@ -115,7 +115,7 @@ def countdown():
     # calculate display colour for deadline and countdown
 
     colour = None
-    image = None
+    completed = False
     time_stamp_now = time.time()
     if play_low.GAME_PARAMETERS_LOADED['fast']:
         if time_stamp_now > deadline_loaded:
@@ -124,7 +124,10 @@ def countdown():
 
         # game over
         if play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']:
-            image = "./images/gameover.jpg"
+            colour = config.GAMEOVER_COLOUR
+            # keep value only for game master
+            if play_low.ROLE_ID is None or play_low.ROLE_ID != 0:
+                completed = True
 
         # we are after everything !
         elif time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
@@ -146,10 +149,6 @@ def countdown():
     if colour is not None:
         play_low.DEADLINE_COL.style = {
             'background-color': colour
-        }
-    if image is not None:
-        play_low.DEADLINE_COL.style = {
-            'background-image': f"url('{image}')"
         }
 
     # calculate text value of countdown
@@ -177,7 +176,10 @@ def countdown():
         countdown_text = f"~ {remains // (24 * 3600)}j"
 
     # insert text
-    play_low.COUNTDOWN_COL.text = countdown_text
+    if completed:
+        play_low.COUNTDOWN_COL.text = ""
+    else:
+        play_low.COUNTDOWN_COL.text = countdown_text
 
     # set the colour
     if colour is not None:

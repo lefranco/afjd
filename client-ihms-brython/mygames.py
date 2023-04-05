@@ -730,7 +730,6 @@ def my_games(state_name):
 
             value = data[field]
             colour = None
-            image = None
             game_name = data['name']
 
             if field == 'name':
@@ -764,7 +763,10 @@ def my_games(state_name):
 
                     # game over
                     if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
-                        image = "./images/gameover.jpg"
+                        colour = config.GAMEOVER_COLOUR
+                        # keep value only for game master
+                        if role_id is None or role_id != 0:
+                            value = "(terminée)"
 
                     # we are after everything !
                     elif time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
@@ -945,16 +947,10 @@ def my_games(state_name):
                             form <= input_stop_game
                             value = form
 
-            if image:
-                value = html.MARK(value)
             col = html.TD(value)
             if colour is not None:
                 col.style = {
                     'background-color': colour
-                }
-            if image is not None:
-                col.style = {
-                    'background-image': f"url('{image}')"
                 }
             row <= col
 
