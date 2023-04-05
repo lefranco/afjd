@@ -478,7 +478,9 @@ def get_game_status():
     global DEADLINE_COL
     content = f"DL {datetime_deadline_loaded_str}"
     if GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']:
-        content = html.MARK(content)
+        # keep value only for game master
+        if ROLE_ID is None or ROLE_ID != 0:
+            content = "(terminée)"
     DEADLINE_COL = html.TD(content)
     row <= DEADLINE_COL
 

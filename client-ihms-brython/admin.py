@@ -2209,7 +2209,6 @@ def agreement_usage():
 
             value = data[field]
             colour = None
-            image = None
             game_name = data['name']
 
             if field == 'name':
@@ -2224,11 +2223,13 @@ def agreement_usage():
                 if data['fast']:
                     if time_stamp_now > deadline_loaded:
                         colour = config.PASSED_DEADLINE_COLOUR
+                        value = ""
                 else:
 
                     # game over
                     if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
-                        image = "./images/gameover.png"
+                        colour = config.GAMEOVER_COLOUR
+                        value = "(terminée)"
 
                     # we are after everything !
                     elif time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
@@ -2308,10 +2309,6 @@ def agreement_usage():
             if colour is not None:
                 col.style = {
                     'background-color': colour
-                }
-            if image is not None:
-                col.style = {
-                    'background-image': image
                 }
 
             row <= col

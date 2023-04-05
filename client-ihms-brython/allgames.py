@@ -779,7 +779,6 @@ def all_games(state_name):
 
             value = data[field]
             colour = None
-            image = None
             game_name = data['name']
 
             if field == 'name':
@@ -810,11 +809,13 @@ def all_games(state_name):
                 if data['fast']:
                     if time_stamp_now > deadline_loaded:
                         colour = config.PASSED_DEADLINE_COLOUR
+                        value = ""
                 else:
 
                     # game over
                     if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
-                        image = "./images/gameover.jpg"
+                        colour = config.GAMEOVER_COLOUR
+                        value = "(terminée)"
 
                     # we are after everything !
                     elif time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
@@ -867,16 +868,10 @@ def all_games(state_name):
                     value2 = "Non" if value2 else "Oui"
                     value = f"{value1} ({value2})"
 
-            if image:
-                value = html.MARK(value)
             col = html.TD(value)
             if colour is not None:
                 col.style = {
                     'background-color': colour
-                }
-            if image is not None:
-                col.style = {
-                    'background-image': f"url('{image}')"
                 }
 
             row <= col
