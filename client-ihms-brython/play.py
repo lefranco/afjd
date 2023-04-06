@@ -110,6 +110,10 @@ COUNTDOWN_TIMER = None
 def countdown():
     """ countdown """
 
+    # only if game is ongoing
+    if int(play_low.GAME_PARAMETERS_LOADED['current_state']) != 1:
+        return
+
     deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
 
     # calculate display colour for deadline and countdown

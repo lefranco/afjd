@@ -751,38 +751,43 @@ def my_games(state_name):
                     value = link
 
             if field == 'deadline':
+
                 deadline_loaded = value
-                datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
-                value = datetime_deadline_loaded_str
+                value = ""
 
-                if data['fast']:
-                    if time_stamp_now > deadline_loaded:
-                        colour = config.PASSED_DEADLINE_COLOUR
-                else:
+                if int(data['current_state']) == 1:
 
-                    # game over
-                    if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
-                        colour = config.GAMEOVER_COLOUR
-                        # keep value only for game master
-                        if role_id is None or role_id != 0:
-                            value = "(terminée)"
+                    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                    datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                    value = datetime_deadline_loaded_str
 
-                    # we are after everything !
-                    elif time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
-                        colour = config.CRITICAL_COLOUR
-                    # we are after deadline + grace
-                    elif time_stamp_now > deadline_loaded + 60 * 60 * data['grace_duration']:
-                        colour = config.PASSED_GRACE_COLOUR
-                    # we are after deadline + slight
-                    elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
-                        colour = config.PASSED_DEADLINE_COLOUR
-                    # we are slightly after deadline
-                    elif time_stamp_now > deadline_loaded:
-                        colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
-                    # deadline is today
-                    elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
-                        colour = config.APPROACHING_DEADLINE_COLOUR
+                    if data['fast']:
+                        if time_stamp_now > deadline_loaded:
+                            colour = config.PASSED_DEADLINE_COLOUR
+                    else:
+
+                        # game over
+                        if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                            colour = config.GAMEOVER_COLOUR
+                            # keep value only for game master
+                            if role_id is None or role_id != 0:
+                                value = "(terminée)"
+
+                        # we are after everything !
+                        elif time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
+                            colour = config.CRITICAL_COLOUR
+                        # we are after deadline + grace
+                        elif time_stamp_now > deadline_loaded + 60 * 60 * data['grace_duration']:
+                            colour = config.PASSED_GRACE_COLOUR
+                        # we are after deadline + slight
+                        elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
+                            colour = config.PASSED_DEADLINE_COLOUR
+                        # we are slightly after deadline
+                        elif time_stamp_now > deadline_loaded:
+                            colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
+                        # deadline is today
+                        elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
+                            colour = config.APPROACHING_DEADLINE_COLOUR
 
             if field == 'current_advancement':
                 advancement_loaded = value
