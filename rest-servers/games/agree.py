@@ -165,12 +165,12 @@ def disorder(game_id: int, role_id: int, game: games.Game, variant_dict: typing.
     return True, True, "Civil disorder orders inserted"
 
 
-def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, typing.Any], names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, str]:
+def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, typing.Any], names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
     """ this will perform game adjudication """
 
     # check game over
     if game.game_over():
-        return False, "INFORMATION : game over !"
+        return True, False, "INFORMATION : game over !"
 
     variant_dict_json = json.dumps(variant_data)
 
@@ -240,7 +240,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     if req_result.status_code != 201:
         print(f"ERROR from server  : {req_result.text}")
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-        return False, f"ERROR : Failed to adjudicate {message} : {adjudication_report}"
+        return False, False, f"ERROR : Failed to adjudicate {message} : {adjudication_report}"
 
     # adjudication successful : backup for transition archive
 
@@ -406,7 +406,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     if req_result.status_code != 201:
         print(f"ERROR from server  : {req_result.text}")
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-        return False, f"ERROR : Failed to print communication orders {message}"
+        return False, False, f"ERROR : Failed to print communication orders {message}"
 
     # extract printed orders
     communication_orders_content = req_result.json()['orders_content']
@@ -440,7 +440,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     game.advance()
     game.update_database(sql_executor)
 
-    return True, f"Adjudication performed for game {game.name} season {game.current_advancement}!"
+    return True, True, f"Adjudication performed for game {game.name} season {game.current_advancement}!"
 
 
 def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, bool, int, bool, str]:
@@ -569,7 +569,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
     # now we can do adjudication itself
 
     # first adjudication
-    adjudicated, adj_message = adjudicate(game_id, game, variant_data, names, sql_executor)
+    adj_status, adjudicated, adj_message = adjudicate(game_id, game, variant_data, names, sql_executor)
 
     if not adjudicated:
         debug_message = f"Failed first adjudication {adj_message} !"
@@ -618,14 +618,19 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             break
 
         # one more adjudication
-        adj_status, adj_message = adjudicate(game_id, game, variant_data, names, sql_executor)
+        adj_status, adjudicated, adj_message = adjudicate(game_id, game, variant_data, names, sql_executor)
 
         # keep list of messages
         debug_messages.append(adj_message)
 
         # error adjudicating : stop now (safer, but should not happen)
         if not adj_status:
+            debug_message = "\n".join(debug_messages)
             status = False
+            return status, late, unsafe, missing, adjudicated, debug_message
+
+        # did not= adjudicate : stop now (happens if game is over
+        if not adjudicated:
             debug_message = "\n".join(debug_messages)
             return status, late, unsafe, missing, adjudicated, debug_message
 
