@@ -583,6 +583,7 @@ def create_event(json_dict):
     form = html.FORM()
 
     form <= html.DIV("Pas d'espaces ni de tirets dans le nom de l'événement", Class='note')
+    form <= html.DIV("Pour les liens, les mettre en début de ligne (http...)", Class='note')
     form <= html.BR()
 
     fieldset = html.FIELDSET()
@@ -754,6 +755,7 @@ def edit_event():
     form = html.FORM()
 
     form <= html.DIV("Pas d'espaces ni de tirets dans le nom de l'événement", Class='note')
+    form <= html.DIV("Pour les liens, les mettre en début de ligne (http...)", Class='note')
     form <= html.BR()
 
     fieldset = html.FIELDSET()
