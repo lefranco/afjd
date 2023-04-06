@@ -449,9 +449,11 @@ def my_opportunities():
 
             if field == 'deadline':
                 deadline_loaded = value
-                datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
-                datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
-                value = datetime_deadline_loaded_str
+                value = "(pas commencée)"
+                if int(data['current_state']) == 1:
+                    datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                    datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                    value = datetime_deadline_loaded_str
 
             if field == 'current_state':
                 state_loaded = value
