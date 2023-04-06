@@ -709,18 +709,6 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         else:
             args['time_zone'] = players.default_timezone()
 
-        # now we check email address
-
-        email_newcommer = args['email']
-
-        # get a message
-        subject, body = email_greeting_message(pseudo)
-        json_dict = {
-            'subject': subject,
-            'body': body,
-            'email': email_newcommer,
-        }
-
         sql_executor = database.SqlExecutor()
 
         with CREATE_PLAYER_LOCK:
@@ -757,6 +745,17 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
             # we do not create an entry for checking email since we do not have a token yet
 
         # send email
+        email_newcommer = args['email']
+
+        # get a message
+        subject, body = email_greeting_message(pseudo)
+        json_dict = {
+            'subject': subject,
+            'body': body,
+            'email': email_newcommer,
+        }
+
+        # send it
         host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
         port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
         url = f"{host}:{port}/send-email-welcome"
@@ -1983,6 +1982,9 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         location = args['location']
         description = args['description']
         summary = args['summary']
+
+        # additional filtering on name
+        name = name.replace(' ', '_')
 
         if not name.isidentifier():
             flask_restful.abort(400, msg=f"Name '{name}' is not a valid name")
