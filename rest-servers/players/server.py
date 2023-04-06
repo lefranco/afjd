@@ -721,16 +721,6 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
             'email': email_newcommer,
         }
 
-        # send email
-        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
-        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
-        url = f"{host}:{port}/send-email-welcome"
-        req_result = SESSION.post(url, data=json_dict)
-        if req_result.status_code != 200:
-            mylogger.LOGGER.error("ERROR = %s", req_result.text)
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(400, msg=f"Failed to send email to {email_newcommer} : {message}")
-
         sql_executor = database.SqlExecutor()
 
         with CREATE_PLAYER_LOCK:
@@ -765,6 +755,17 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(400, msg=f"User creation failed!:{message}")
 
             # we do not create an entry for checking email since we do not have a token yet
+
+        # send email
+        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/send-email-welcome"
+        req_result = SESSION.post(url, data=json_dict)
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Failed to send email to {email_newcommer} : {message}")
 
         sql_executor.commit()
         del sql_executor
