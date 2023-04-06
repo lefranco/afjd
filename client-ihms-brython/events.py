@@ -429,7 +429,12 @@ def registrations():
     event_information <= " :"
     event_information <= html.BR()
     for line in description.split('\n'):
-        event_information <= line
+        if line.startswith("http"):
+            anchor = html.A(href=line, target="_blank")
+            anchor <= line
+            event_information <= anchor
+        else:
+            event_information <= line
         event_information <= html.BR()
 
     # button for creating account

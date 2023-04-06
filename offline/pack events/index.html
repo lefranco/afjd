@@ -76,7 +76,12 @@ for event_id, event_dict in sorted(events_data.items(), key=lambda t:t[0], rever
 
     div_event_box <= html.BR()
     for line in event_dict['summary'].split('\n'):
-        div_event_box <= line
+        if line.startswith("http"):
+            anchor = html.A(href=line, target="_blank")
+            anchor <= line
+            div_event_box <= anchor
+        else:
+            div_event_box <= line
         div_event_box <= html.BR()
     document <= div_event_box
     document <= html.HR()
