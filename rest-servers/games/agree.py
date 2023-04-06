@@ -629,7 +629,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             status = False
             return status, late, unsafe, missing, adjudicated, debug_message
 
-        # did not= adjudicate : stop now (happens if game is over
+        # did not= adjudicate : stop now (happens if game is over)
         if not adjudicated:
             debug_message = "\n".join(debug_messages)
             return status, late, unsafe, missing, adjudicated, debug_message
