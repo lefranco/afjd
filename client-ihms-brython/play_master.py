@@ -768,9 +768,10 @@ def game_master():
 
         col = html.TD()
         input_send_welcome_email = ""
-        if pseudo_there:
-            input_send_welcome_email = html.INPUT(type="submit", value="Courriel bienvenue", title="Ceci enverra un courriel de bienvenue au joueur. A utiliser pour un nouveau joueur ou au démarrage de la partie")
-            input_send_welcome_email.bind("click", lambda e, r=role_id: send_welcome_email_callback(e, r))
+        if str(role_id) not in play_low.VARIANT_CONTENT_LOADED['disorder']:
+            if pseudo_there:
+                input_send_welcome_email = html.INPUT(type="submit", value="Courriel bienvenue", title="Ceci enverra un courriel de bienvenue au joueur. A utiliser pour un nouveau joueur ou au démarrage de la partie")
+                input_send_welcome_email.bind("click", lambda e, r=role_id: send_welcome_email_callback(e, r))
         col <= input_send_welcome_email
         row <= col
 
@@ -867,9 +868,10 @@ def game_master():
 
         col = html.TD()
         input_unallocate_role = ""
-        if pseudo_there:
-            input_unallocate_role = html.INPUT(type="submit", value="Retirer le rôle", title="Ceci enlèvera le rôle au joueur")
-            input_unallocate_role.bind("click", lambda e, p=pseudo_there, r=role_id: unallocate_role_callback(e, p, r))
+        if str(role_id) not in play_low.VARIANT_CONTENT_LOADED['disorder']:
+            if pseudo_there:
+                input_unallocate_role = html.INPUT(type="submit", value="Retirer le rôle", title="Ceci enlèvera le rôle au joueur")
+                input_unallocate_role.bind("click", lambda e, p=pseudo_there, r=role_id: unallocate_role_callback(e, p, r))
         col <= input_unallocate_role
         row <= col
 
