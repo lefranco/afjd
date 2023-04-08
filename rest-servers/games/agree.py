@@ -537,8 +537,12 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
         # check all submitted
         for role in needed_list:
             if role not in submitted_list:
-                missing = 1
-                debug_message = "Still some orders are missing"
+                if game.anonymous:
+                    missing = 10
+                    debug_message = "Something missing - not telling !"
+                else:
+                    missing = 1
+                    debug_message = "Still some orders are missing"
                 return status, late, unsafe, missing, adjudicated, debug_message
 
         # check all others agreed
@@ -547,15 +551,23 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             if role == role_id:
                 continue
             if role not in agreed_now_list:
-                missing = 2
-                debug_message = "Still some agreements from others are missing"
+                if game.anonymous:
+                    missing = 10
+                    debug_message = "Something missing - not telling !"
+                else:
+                    missing = 2
+                    debug_message = "Still some agreements from others are missing"
                 return status, late, unsafe, missing, adjudicated, debug_message
 
         # check we are not last with just agree but after
         if definitive_value == 2:
             # we must be before deadline (otherwise 2 would have been muted to 1)
-            missing = 3
-            debug_message = "Only your agreement is missing!"
+            if game.anonymous:
+                missing = 10
+                debug_message = "Something missing - not telling !"
+            else:
+                missing = 3
+                debug_message = "Only your agreement is missing!"
             return status, late, unsafe, missing, adjudicated, debug_message
 
     # evaluate variant
