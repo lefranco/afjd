@@ -1116,7 +1116,7 @@ def show_events_in_game():
     # a bit of humour !
     if game_incidents:
 
-        play_low.MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) a réalisé la transition 'pas d'accord -> 'd'accord pour résoudre' après la date limite", Class='note')
+        play_low.MY_SUB_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) a réalisé la transition 'pas d'accord pour le résolution' -> 'd'accord pour résoudre' après la date limite", Class='note')
         play_low.MY_SUB_PANEL <= html.BR()
 
         play_low.MY_SUB_PANEL <= html.DIV("Seuls les pseudos de joueurs en retard qui depuis ont été remplacés apparaissent (ces retards ne sont pas comptés dans le récapitulatif)", Class='note')

@@ -365,7 +365,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
     MY_PANEL <= delays_table
     MY_PANEL <= html.BR()
 
-    MY_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) a réalisé la transition 'pas d'accord -> 'd'accord pour résoudre' après la date limite", Class='note')
+    MY_PANEL <= html.DIV("Un retard signifie que le joueur (ou l'arbitre) a réalisé la transition 'pas d'accord pour la résolution' -> 'd'accord pour résoudre' après la date limite", Class='note')
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
