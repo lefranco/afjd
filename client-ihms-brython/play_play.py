@@ -198,15 +198,12 @@ def submit_orders():
                 alert("Vous n'avez pas mis l'accord, donc vos ordres sont juste enregistrés (pour vous-même) mais vous risquez encore un retard...")
 
             # why no adjudication
-            missing = req_result['missing']
-            if missing == 1:
-                alert("Il manque au moins un ordre pour faire avancer la partie !")
-            if missing == 2:
-                alert("Tous les ordres sont là, mais il manque au moins un accord pour faire avancer la partie !")
-            if missing == 3:
-                alert("C'est bien dommage, il ne manque plus que votre accord pour faire avancer la partie !")
-            if missing == 10:
-                alert("Il manque quelque chose (ordre(s) ou accord(s)) pour faire avancer la partie mais cette partie est anonyme !")
+            #  missing = req_result['missing']
+            # we certainly *could* use it if server filled it in...
+            # but we do nothing because :
+            # if gunboat : gives information about other players
+            # if negociation : gives information about possible stab
+            # so server does not fill it
 
             # adjudication was done
             adjudicated = req_result['adjudicated']

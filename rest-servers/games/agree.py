@@ -450,7 +450,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
       * a status (True if no error)
       * a late indicator (True if incident created)
       * an unsafe indicator (True player is unsafe - not protected against delay)
-      * a missing code 0 unknown 1 orders 2 agreements 3 only your agreement
+      * a missing code (not used)
       * an adj_status adjudication indicator (True is adjudication was done)
       * a debug message (more detailed information )
     """
@@ -458,7 +458,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
     status = True
     late = False
     unsafe = False
-    missing = 0
+    missing = 0  # not used - see below
     adjudicated = False
     debug_message = ""
 
@@ -537,12 +537,7 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
         # check all submitted
         for role in needed_list:
             if role not in submitted_list:
-                if game.anonymous:
-                    missing = 10
-                    debug_message = "Something missing - not telling !"
-                else:
-                    missing = 1
-                    debug_message = "Still some orders are missing"
+                debug_message = "Something missing - not telling ! (1)"
                 return status, late, unsafe, missing, adjudicated, debug_message
 
         # check all others agreed
@@ -551,23 +546,13 @@ def fake_post(game_id: int, role_id: int, definitive_value: int, names: str, sql
             if role == role_id:
                 continue
             if role not in agreed_now_list:
-                if game.anonymous:
-                    missing = 10
-                    debug_message = "Something missing - not telling !"
-                else:
-                    missing = 2
-                    debug_message = "Still some agreements from others are missing"
+                debug_message = "Something missing - not telling ! (2)"
                 return status, late, unsafe, missing, adjudicated, debug_message
 
         # check we are not last with just agree but after
         if definitive_value == 2:
             # we must be before deadline (otherwise 2 would have been muted to 1)
-            if game.anonymous:
-                missing = 10
-                debug_message = "Something missing - not telling !"
-            else:
-                missing = 3
-                debug_message = "Only your agreement is missing!"
+            debug_message = "Something missing - not telling ! (3)"
             return status, late, unsafe, missing, adjudicated, debug_message
 
     # evaluate variant
