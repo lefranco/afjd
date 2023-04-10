@@ -1116,8 +1116,10 @@ def submit_orders():
         label_after = html.LABEL(html.EM(option_after))
         buttons_right <= label_after
 
-#        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), disabled=True)
-        input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2))
+        if play_low.GAME_PARAMETERS_LOADED['fast'] or play_low.GAME_PARAMETERS_LOADED['archive']:
+            input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2), disabled=True)
+        else:
+            input_after = html.INPUT(type="radio", id="after", name="agreed", checked=(definitive_value == 2))
 
         input_after.bind("click", update_select)
         buttons_right <= input_after
