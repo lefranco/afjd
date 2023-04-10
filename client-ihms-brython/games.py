@@ -17,7 +17,7 @@ import allgames
 
 import index  # circular import
 
-OPTIONS = ['Créer', 'Changer description', 'Changer anonymat', 'Changer accès messagerie', 'Changer scorage', 'Changer paramètres accès', 'Changer paramètres cadence', 'Changer état', 'Déplacer des joueurs', 'Supprimer']
+OPTIONS = ['Créer', 'Changer anonymat', 'Changer accès messagerie', 'Changer description', 'Changer scorage', 'Changer paramètres accès', 'Changer paramètres cadence', 'Changer état', 'Déplacer des joueurs', 'Supprimer']
 
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_VARIANT_NAME = 20
@@ -574,124 +574,6 @@ def create_game(json_dict):
     MY_SUB_PANEL <= form
 
 
-def change_description_game():
-    """ change_description_game """
-
-    # declare the values
-    description_loaded = None
-
-    def change_description_reload():
-        """ change_description_reload """
-
-        status = True
-
-        def local_noreply_callback(_):
-            """ local_noreply_callback """
-            nonlocal status
-            alert("Problème (pas de réponse de la part du serveur)")
-            status = False
-
-        def reply_callback(req):
-            nonlocal status
-            nonlocal description_loaded
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la récupération de la description de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la récupération de la description de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                status = False
-                return
-
-            description_loaded = req_result['description']
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # getting game data : no need for token
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
-
-        return status
-
-    def change_description_game_callback(ev):  # pylint: disable=invalid-name
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la modification de la description de la partie : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la modification de la description de la partie : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"La description a été modifiée : {messages}")
-
-        ev.preventDefault()
-
-        description = input_description.value
-
-        json_dict = {
-            'name': game,
-            'description': description,
-        }
-
-        host = config.SERVER_CONFIG['GAME']['HOST']
-        port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/games/{game}"
-
-        # changing game description : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        change_description_game()
-
-    MY_SUB_PANEL <= html.H3("Changement de la description")
-
-    if 'GAME' not in storage:
-        alert("Il faut choisir la partie au préalable")
-        return
-
-    game = storage['GAME']
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    status = change_description_reload()
-    if not status:
-        return
-
-    form = html.FORM()
-
-    form <= information_about_input()
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'une partie entre étudiants de l'ETIAM'")
-    fieldset <= legend_description
-    input_description = html.TEXTAREA(type="text", rows=8, cols=80)
-    input_description <= description_loaded
-    fieldset <= input_description
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_change_description_game = html.INPUT(type="submit", value="Changer la description de la partie")
-    input_change_description_game.bind("click", change_description_game_callback)
-    form <= input_change_description_game
-
-    MY_SUB_PANEL <= form
-
-
 def change_anonymity_game():
     """ change_anonymity_game """
 
@@ -933,6 +815,124 @@ def change_access_messages_game():
     input_change_message_game = html.INPUT(type="submit", value="Changer l'accès aux messages publics et privés de la partie")
     input_change_message_game.bind("click", change_access_messages_games_callback)
     form <= input_change_message_game
+
+    MY_SUB_PANEL <= form
+
+
+def change_description_game():
+    """ change_description_game """
+
+    # declare the values
+    description_loaded = None
+
+    def change_description_reload():
+        """ change_description_reload """
+
+        status = True
+
+        def local_noreply_callback(_):
+            """ local_noreply_callback """
+            nonlocal status
+            alert("Problème (pas de réponse de la part du serveur)")
+            status = False
+
+        def reply_callback(req):
+            nonlocal status
+            nonlocal description_loaded
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération de la description de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération de la description de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                status = False
+                return
+
+            description_loaded = req_result['description']
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # getting game data : no need for token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=local_noreply_callback)
+
+        return status
+
+    def change_description_game_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification de la description de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification de la description de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"La description a été modifiée : {messages}")
+
+        ev.preventDefault()
+
+        description = input_description.value
+
+        json_dict = {
+            'name': game,
+            'description': description,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/games/{game}"
+
+        # changing game description : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        change_description_game()
+
+    MY_SUB_PANEL <= html.H3("Changement de la description")
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    status = change_description_reload()
+    if not status:
+        return
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_description = html.LEGEND("description", title="Cela peut être long. Exemple : 'une partie entre étudiants de l'ETIAM'")
+    fieldset <= legend_description
+    input_description = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_description <= description_loaded
+    fieldset <= input_description
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_description_game = html.INPUT(type="submit", value="Changer la description de la partie")
+    input_change_description_game.bind("click", change_description_game_callback)
+    form <= input_change_description_game
 
     MY_SUB_PANEL <= form
 
@@ -1900,8 +1900,6 @@ MY_PANEL <= MENU_LEFT
 MENU_SELECTION = html.UL()
 MENU_LEFT <= MENU_SELECTION
 
-ITEM_NAME_SELECTED = OPTIONS[0]
-
 MY_SUB_PANEL = html.DIV(id="games")
 MY_PANEL <= MY_SUB_PANEL
 
@@ -1914,12 +1912,12 @@ def load_option(_, item_name):
 
     if item_name == 'Créer':
         create_game(None)
-    if item_name == 'Changer description':
-        change_description_game()
     if item_name == 'Changer anonymat':
         change_anonymity_game()
     if item_name == 'Changer accès messagerie':
         change_access_messages_game()
+    if item_name == 'Changer description':
+        change_description_game()
     if item_name == 'Changer scorage':
         change_scoring_game()
     if item_name == 'Changer paramètres accès':
@@ -1956,8 +1954,13 @@ def load_option(_, item_name):
 def render(panel_middle):
     """ render """
 
-    # always back to top
     global ITEM_NAME_SELECTED
-    ITEM_NAME_SELECTED = OPTIONS[0]
+
+    if 'GAME' in storage:
+        ITEM_NAME_SELECTED = 'Changer anonymat'
+    else:
+        ITEM_NAME_SELECTED = OPTIONS[0]
+
+    # always back to top
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

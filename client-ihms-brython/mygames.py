@@ -17,6 +17,7 @@ import interface
 import memoize
 import play
 import allgames
+import games
 
 
 MY_PANEL = html.DIV(id="mygames")
@@ -396,6 +397,25 @@ def my_games(state_name):
         PANEL_MIDDLE.clear()
         play.render(PANEL_MIDDLE)
 
+    def edit_game_callback(ev, game_name):  # pylint: disable=invalid-name
+        """ edit_game_callback """
+
+        ev.preventDefault()
+
+        # action of selecting game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
+        allgames.show_game_selected()
+
+        # action of going to edit game page
+        PANEL_MIDDLE.clear()
+        games.render(PANEL_MIDDLE)
+
     def start_game_callback(ev, game):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -574,9 +594,9 @@ def my_games(state_name):
     if 'ACTION_COLUMN_MODE' not in storage:
         storage['ACTION_COLUMN_MODE'] = 'not_displayed'
     if storage['ACTION_COLUMN_MODE'] == 'not_displayed':
-        button = html.BUTTON("Basculer en mode avec colonne action", Class='btn-menu')
+        button = html.BUTTON("Basculer en mode avec les colonnes d'action", Class='btn-menu')
     else:
-        button = html.BUTTON("Basculer en mode sans colonne action", Class='btn-menu')
+        button = html.BUTTON("Basculer en mode sans les colonnes d'action", Class='btn-menu')
     button.bind("click", change_action_mode_callback)
     MY_PANEL <= button
 
@@ -589,12 +609,12 @@ def my_games(state_name):
     fields = ['name', 'go_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
 
     if storage['ACTION_COLUMN_MODE'] == 'displayed':
-        fields.extend(['action'])
+        fields.extend(['edit', 'startstop'])
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous(*)', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(**)', 'nomessage_game': 'privés(**)', 'action': 'action'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous(*)', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(**)', 'nomessage_game': 'privés(**)', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -723,7 +743,8 @@ def my_games(state_name):
         data['all_agreed'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
-        data['action'] = None
+        data['edit'] = None
+        data['startstop'] = None
 
         row = html.TR()
         for field in fields:
@@ -935,7 +956,23 @@ def my_games(state_name):
                     value2 = "Non" if value2 else "Oui"
                     value = f"{value1} ({value2})"
 
-            if field == 'action':
+            if field == 'edit':
+                value = ""
+                if storage['ACTION_COLUMN_MODE'] == 'displayed':
+                    if role_id == 0:
+                        if storage['GAME_ACCESS_MODE'] == 'button':
+                            form = html.FORM()
+                            input_edit_game = html.INPUT(type="image", src="./images/edit_game.png")
+                            input_edit_game.bind("click", lambda e, g=game_name: edit_game_callback(e, g))
+                            form <= input_edit_game
+                            value = form
+                        else:
+                            img = html.IMG(src="./images/edit_game.png")
+                            link = html.A(href=f"?edit_game={game_name}", target="_blank")
+                            link <= img
+                            value = link
+
+            if field == 'startstop':
                 value = ""
                 if storage['ACTION_COLUMN_MODE'] == 'displayed':
                     if role_id == 0:
