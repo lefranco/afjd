@@ -24,14 +24,17 @@ class Random:
     """ Random provider """
 
     def __init__(self):
-        self._seed = int(time.time())
+        self._next = int(time.time())
 
     def choice(self, values):
         """ chooses an element """
 
-        self._seed += 1
-        a_val = self._seed * 15485863
-        position = int(a_val ** 3 % 2038074743 / 2038074743)
+        self._next *= 1103515245
+        self._next + 12345
+        self._next //= 65536
+
+        position = self._next % len(values)
+
         return values[position]
 
 
