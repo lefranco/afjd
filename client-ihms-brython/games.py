@@ -1904,8 +1904,13 @@ MY_SUB_PANEL = html.DIV(id="games")
 MY_PANEL <= MY_SUB_PANEL
 
 
+ITEM_NAME_SELECTED = None
+
+
 def load_option(_, item_name):
     """ load_option """
+
+    global ITEM_NAME_SELECTED
 
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
@@ -1931,7 +1936,6 @@ def load_option(_, item_name):
     if item_name == 'Supprimer':
         delete_game()
 
-    global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
 
     MENU_LEFT.clear()

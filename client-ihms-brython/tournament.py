@@ -324,31 +324,30 @@ def show_games():
                     value = datetime_deadline_loaded_str
 
                     if data['fast']:
-                        if time_stamp_now > deadline_loaded:
-                            colour = config.PASSED_DEADLINE_COLOUR
-                            value = ""
+                        factor = 60
                     else:
+                        factor = 60 * 60
 
-                        # game over
-                        if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
-                            colour = config.GAMEOVER_COLOUR
-                            value = "(terminée)"
+                    # game over
+                    if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                        colour = config.GAMEOVER_COLOUR
+                        value = "(terminée)"
 
-                        # we are after everything !
-                        elif time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
-                            colour = config.CRITICAL_COLOUR
-                        # we are after deadline + grace
-                        elif time_stamp_now > deadline_loaded + 60 * 60 * data['grace_duration']:
-                            colour = config.PASSED_GRACE_COLOUR
-                        # we are after deadline + slight
-                        elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
-                            colour = config.PASSED_DEADLINE_COLOUR
-                        # we are slightly after deadline
-                        elif time_stamp_now > deadline_loaded:
-                            colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
-                        # deadline is today
-                        elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
-                            colour = config.APPROACHING_DEADLINE_COLOUR
+                    # we are after everything !
+                    elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
+                        colour = config.CRITICAL_COLOUR
+                    # we are after deadline + grace
+                    elif time_stamp_now > deadline_loaded + factor * data['grace_duration']:
+                        colour = config.PASSED_GRACE_COLOUR
+                    # we are after deadline + slight
+                    elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
+                        colour = config.PASSED_DEADLINE_COLOUR
+                    # we are slightly after deadline
+                    elif time_stamp_now > deadline_loaded:
+                        colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
+                    # deadline is today
+                    elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
+                        colour = config.APPROACHING_DEADLINE_COLOUR
 
             if field == 'current_advancement':
                 advancement_loaded = value

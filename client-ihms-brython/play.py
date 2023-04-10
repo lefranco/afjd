@@ -121,33 +121,34 @@ def countdown():
     colour = None
     completed = False
     time_stamp_now = time.time()
+
     if play_low.GAME_PARAMETERS_LOADED['fast']:
-        if time_stamp_now > deadline_loaded:
-            colour = config.PASSED_DEADLINE_COLOUR
+        factor = 60
     else:
+        factor = 60 * 60
 
-        # game over
-        if play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']:
-            colour = config.GAMEOVER_COLOUR
-            # keep value only for game master
-            if play_low.ROLE_ID is None or play_low.ROLE_ID != 0:
-                completed = True
+    # game over
+    if play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']:
+        colour = config.GAMEOVER_COLOUR
+        # keep value only for game master
+        if play_low.ROLE_ID is None or play_low.ROLE_ID != 0:
+            completed = True
 
-        # we are after everything !
-        elif time_stamp_now > deadline_loaded + 60 * 60 * 24 * config.CRITICAL_DELAY_DAY:
-            colour = config.CRITICAL_COLOUR
-        # we are after deadline + grace
-        elif time_stamp_now > deadline_loaded + 60 * 60 * play_low.GAME_PARAMETERS_LOADED['grace_duration']:
-            colour = config.PASSED_GRACE_COLOUR
-        # we are after deadline + slight
-        elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
-            colour = config.PASSED_DEADLINE_COLOUR
-        # we are slightly after deadline
-        elif time_stamp_now > deadline_loaded:
-            colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
-        # deadline is today
-        elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
-            colour = config.APPROACHING_DEADLINE_COLOUR
+    # we are after everything !
+    elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
+        colour = config.CRITICAL_COLOUR
+    # we are after deadline + grace
+    elif time_stamp_now > deadline_loaded + factor * play_low.GAME_PARAMETERS_LOADED['grace_duration']:
+        colour = config.PASSED_GRACE_COLOUR
+    # we are after deadline + slight
+    elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
+        colour = config.PASSED_DEADLINE_COLOUR
+    # we are slightly after deadline
+    elif time_stamp_now > deadline_loaded:
+        colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
+    # deadline is today
+    elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
+        colour = config.APPROACHING_DEADLINE_COLOUR
 
     # set the colour
     if colour is not None:
