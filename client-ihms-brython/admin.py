@@ -2035,17 +2035,19 @@ def show_idle_data():
 
     idle_table = html.TABLE()
 
-    fields = ['player', 'id', 'last_login', 'recall', 'delete']
+    fields = ['player', 'id', 'last_login', 'email', 'recall', 'delete']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'player': 'joueur', 'id': 'id', 'last_login': 'dernier login', 'recall': 'rappeler', 'delete': 'supprimer'}[field]
+        field_fr = {'player': 'joueur', 'id': 'id', 'last_login': 'dernier login', 'email': 'courriel', 'recall': 'rappeler', 'delete': 'supprimer'}[field]
         col = html.TD(field_fr)
         thead <= col
     idle_table <= thead
 
     pseudo2id = {v['pseudo']: int(k) for k, v in players_dict.items()}
+
+    emails_dict = common.get_all_emails()
 
     time_stamp_now = time.time()
 
@@ -2073,6 +2075,12 @@ def show_idle_data():
                     date_now_gmt = mydatetime.fromtimestamp(time_stamp)
                     date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
                     value = f"{date_now_gmt_str}"
+
+            if field == 'email':
+                email, _, __ = emails_dict[player]
+                email_link = html.A(href=f"mailto:{email}")
+                email_link <= email
+                value = email_link
 
             if field == 'recall':
                 form = html.FORM()
