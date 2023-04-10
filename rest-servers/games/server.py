@@ -3155,12 +3155,11 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         agreed_now_list = [o[1] for o in definitives_list if o[2] == 1]
         agreed_after_list = [o[1] for o in definitives_list if o[2] == 2]
 
-        # game is anonymous : you get only information for your own role
-        if game.anonymous:
-            if role_id is not None and role_id != 0:
-                submitted_list = [r for r in submitted_list if r == role_id]
-                agreed_now_list = [r for r in agreed_now_list if r == role_id]
-                agreed_after_list = [r for r in agreed_after_list if r == role_id]
+        # you get only information for your own role
+        if role_id is not None and role_id != 0:
+            submitted_list = [r for r in submitted_list if r == role_id]
+            agreed_now_list = [r for r in agreed_now_list if r == role_id]
+            agreed_after_list = [r for r in agreed_after_list if r == role_id]
 
         # needed list : those who need to submit orders
         actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
