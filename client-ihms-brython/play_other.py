@@ -742,7 +742,6 @@ def show_events_in_game():
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
     play_low.MY_SUB_PANEL <= html.BR()
 
-
     # incidents2
     play_low.MY_SUB_PANEL <= html.H3("Désordres civils")
 
