@@ -1001,7 +1001,8 @@ def supervise():
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
-        ev.preventDefault()
+        if ev is not None:
+            ev.preventDefault()
 
         names_dict = play_low.VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
@@ -1038,7 +1039,8 @@ def supervise():
                 message = "Résolution forcée par la console suite forçage accord"
                 log_stack.insert(message)
 
-        ev.preventDefault()
+        if ev is not None:
+            ev.preventDefault()
 
         inforced_names_dict = play_low.INFORCED_VARIANT_DATA.extract_names()
         inforced_names_dict_json = json.dumps(inforced_names_dict)
