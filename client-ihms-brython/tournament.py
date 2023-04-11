@@ -1244,6 +1244,25 @@ def delete_tournament():
 def show_tournaments_data():
     """ show_tournaments_data """
 
+    def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
+        """ select_game_callback """
+
+        ev.preventDefault()
+
+        # action of selecting game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
+        allgames.show_game_selected()
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        render(PANEL_MIDDLE)
+
     # get the games
     games_dict = common.get_games_data()
     if not games_dict:
@@ -1276,22 +1295,34 @@ def show_tournaments_data():
 
     tournaments_table = html.TABLE()
 
-    fields = ['tournament', 'creator', 'games']
+    fields = ['tournament', 'go_tournament', 'creator', 'games']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'tournament': 'tournoi', 'creator': 'créateur', 'games': 'parties'}[field]
+        field_fr = {'tournament': 'tournoi', 'go_tournament': 'aller dans le tournoi', 'creator': 'créateur', 'games': 'parties'}[field]
         col = html.TD(field_fr)
         thead <= col
     tournaments_table <= thead
 
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
     count = 0
-    for tournament_id, data in sorted(tournaments_dict.items(), key=lambda m: m[0].upper()):
+    for tournament_id, data in sorted(tournaments_dict.items(), key=lambda m: int(m[0]), reverse=True):
         row = html.TR()
         for field in fields:
             if field == 'tournament':
                 value = data['name']
+            if field == 'go_tournament':
+                games_ids = groupings_dict[str(tournament_id)]
+                games_names = sorted([games_dict[str(i)]['name'] for i in games_ids], key=lambda m: m.upper())
+                game_name = games_names[0]
+                form = html.FORM()
+                input_jump_game = html.INPUT(type="image", src="./images/look.png")
+                input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                form <= input_jump_game
+                value = form
             if field == 'creator':
                 director_id = assignments_dict[str(tournament_id)]
                 director_pseudo = players_dict[str(director_id)]['pseudo']
@@ -1308,6 +1339,8 @@ def show_tournaments_data():
 
     MY_SUB_PANEL <= html.H3("Les tournois du site")
     MY_SUB_PANEL <= tournaments_table
+    MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans les tournois :", Class='note')
+    MY_SUB_PANEL <= html.IMG(src="./images/look.png", title="Pour aller dans le tournoi (en sélectionnant une partie du tournoi)")
     MY_SUB_PANEL <= html.P(f"Il y a {count} tournois")
 
 
