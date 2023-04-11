@@ -36,7 +36,9 @@ H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de 
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['Accueil', 'Connexion', 'Rejoindre une partie', 'Mon compte', 'Mes parties','Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
+
+OPTIONS = ['Accueil', 'Connexion', 'Rejoindre une partie', 'Mon compte', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
+
 
 # overall_top
 OVERALL_TOP = html.DIV()
