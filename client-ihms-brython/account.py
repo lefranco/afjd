@@ -12,7 +12,7 @@ import config
 import common
 import login
 
-OPTIONS = ['Créer un compte', 'Mot de passe', 'Valider mon courriel', 'Mon code forum', 'Editer', 'Supprimer']
+OPTIONS = ['Valider mon courriel', 'Editer', 'Mot de passe', 'Mon code forum', 'Supprimer']
 
 
 MIN_LEN_PSEUDO = 3
@@ -369,94 +369,6 @@ def create_account(json_dict):
     MY_SUB_PANEL <= information_about_emails()
 
 
-def change_password():
-    """ change_password """
-
-    def change_password_callback(ev):  # pylint: disable=invalid-name
-        """ change_password_callback """
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la modification de mot de passe : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la modification de mot de passe : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Votre mot de passe a été changé : {messages}")
-
-        ev.preventDefault()
-
-        new_password = input_new_password.value
-        if not new_password:
-            alert("Nouveau mot de passe manquant")
-            MY_SUB_PANEL.clear()
-            change_password()
-            return
-
-        new_password_again = input_new_password_again.value
-        if new_password_again != new_password:
-            alert("Les mots de passe ne correspondent pas")
-            MY_SUB_PANEL.clear()
-            change_password()
-            return
-
-        json_dict = {
-            'pseudo': pseudo,
-            'password': new_password,
-        }
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/players/{pseudo}"
-
-        # changing password : need token
-        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        change_password()
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    MY_SUB_PANEL <= html.H3("Changement de mot de passe")
-
-    pseudo = storage['PSEUDO']
-
-    form = html.FORM()
-
-    form <= information_about_input()
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_new_password = html.LEGEND("nouveau mot de passe", title="Le nouveau mot de passe")
-    fieldset <= legend_new_password
-    input_new_password = html.INPUT(type="password", value="")
-    fieldset <= input_new_password
-    form <= fieldset
-
-    fieldset = html.FIELDSET()
-    legend_new_password_again = html.LEGEND("nouveau mot de passe encore", title="Le nouveau mot de passe")
-    fieldset <= legend_new_password_again
-    input_new_password_again = html.INPUT(type="password", value="")
-    fieldset <= input_new_password_again
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_change_password = html.INPUT(type="submit", value="Changer le mot de passe")
-    input_change_password.bind("click", change_password_callback)
-    form <= input_change_password
-
-    MY_SUB_PANEL <= form
-
-
 def validate_email():
     """ validate_email """
 
@@ -586,29 +498,6 @@ def validate_email():
     form2 <= html.BR()
 
     MY_SUB_PANEL <= form2
-
-
-def forum_code():
-    """ forum_code """
-
-    MY_SUB_PANEL <= html.H3("Code pour le forum")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    legende_code_forum = html.DIV(Class='note')
-    legende_code_forum <= "Votre code à utiliser sur le forum est : "
-    MY_SUB_PANEL <= legende_code_forum
-
-    MY_SUB_PANEL <= html.BR()
-
-    code_forum = html.DIV(Class='important')
-    code_value = common.verification_code(pseudo)
-    code_forum <= code_value
-    MY_SUB_PANEL <= code_forum
 
 
 def edit_account():
@@ -904,6 +793,117 @@ def edit_account():
     MY_SUB_PANEL <= form
 
 
+def change_password():
+    """ change_password """
+
+    def change_password_callback(ev):  # pylint: disable=invalid-name
+        """ change_password_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la modification de mot de passe : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la modification de mot de passe : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Votre mot de passe a été changé : {messages}")
+
+        ev.preventDefault()
+
+        new_password = input_new_password.value
+        if not new_password:
+            alert("Nouveau mot de passe manquant")
+            MY_SUB_PANEL.clear()
+            change_password()
+            return
+
+        new_password_again = input_new_password_again.value
+        if new_password_again != new_password:
+            alert("Les mots de passe ne correspondent pas")
+            MY_SUB_PANEL.clear()
+            change_password()
+            return
+
+        json_dict = {
+            'pseudo': pseudo,
+            'password': new_password,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/players/{pseudo}"
+
+        # changing password : need token
+        ajax.put(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        change_password()
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    MY_SUB_PANEL <= html.H3("Changement de mot de passe")
+
+    pseudo = storage['PSEUDO']
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_new_password = html.LEGEND("nouveau mot de passe", title="Le nouveau mot de passe")
+    fieldset <= legend_new_password
+    input_new_password = html.INPUT(type="password", value="")
+    fieldset <= input_new_password
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_new_password_again = html.LEGEND("nouveau mot de passe encore", title="Le nouveau mot de passe")
+    fieldset <= legend_new_password_again
+    input_new_password_again = html.INPUT(type="password", value="")
+    fieldset <= input_new_password_again
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_change_password = html.INPUT(type="submit", value="Changer le mot de passe")
+    input_change_password.bind("click", change_password_callback)
+    form <= input_change_password
+
+    MY_SUB_PANEL <= form
+
+
+def forum_code():
+    """ forum_code """
+
+    MY_SUB_PANEL <= html.H3("Code pour le forum")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    legende_code_forum = html.DIV(Class='note')
+    legende_code_forum <= "Votre code à utiliser sur le forum est : "
+    MY_SUB_PANEL <= legende_code_forum
+
+    MY_SUB_PANEL <= html.BR()
+
+    code_forum = html.DIV(Class='important')
+    code_value = common.verification_code(pseudo)
+    code_forum <= code_value
+    MY_SUB_PANEL <= code_forum
+
+
 def delete_account():
     """ delete_account """
 
@@ -998,18 +998,20 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Créer un compte':
-        create_account(None)
-    if item_name == 'Mot de passe':
-        change_password()
     if item_name == 'Valider mon courriel':
         validate_email()
-    if item_name == 'Mon code forum':
-        forum_code()
     if item_name == 'Editer':
         edit_account()
+    if item_name == 'Mot de passe':
+        change_password()
+    if item_name == 'Mon code forum':
+        forum_code()
     if item_name == 'Supprimer':
         delete_account()
+
+    # special : not in menu
+    if item_name == 'Créer un compte':
+        create_account(None)
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
@@ -1036,8 +1038,8 @@ def render(panel_middle):
 
     global ITEM_NAME_SELECTED
 
-    if 'PSEUDO' in storage:
-        ITEM_NAME_SELECTED = 'Editer'
+    if 'PSEUDO' not in storage:
+        ITEM_NAME_SELECTED = 'Créer un compte'
     else:
         ITEM_NAME_SELECTED = OPTIONS[0]
 
