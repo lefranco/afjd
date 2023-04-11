@@ -20,7 +20,7 @@ import index  # circular import
 
 
 # sandbox must stay first
-OPTIONS = ['Sélectionner une partie', 'Aller dans la partie sélectionnée', 'Rejoindre une partie', 'Toutes les parties', 'Appariement', 'Parties sans arbitres',]
+OPTIONS = ['Rejoindre une partie', 'Sélectionner une partie', 'Aller dans la partie sélectionnée', 'Toutes les parties', 'Appariement', 'Parties sans arbitres',]
 
 
 def information_about_games():
@@ -561,6 +561,180 @@ def my_opportunities():
     MY_SUB_PANEL <= html.BR()
 
 
+def select_game(selected_variant, selected_state):
+    """ select_game """
+
+    def select_variant_callback(ev, input_state):  # pylint: disable=invalid-name
+        """ select_game_callback """
+
+        nonlocal selected_variant
+
+        ev.preventDefault()
+
+        sel_variant = input_state.value
+        selected_variant = sel_variant
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        select_game(selected_variant, selected_state)
+
+    def select_state_callback(ev, input_state):  # pylint: disable=invalid-name
+        """ select_state_callback """
+
+        nonlocal selected_state
+
+        ev.preventDefault()
+
+        sel_state = input_state.value
+        selected_state = config.STATE_CODE_TABLE[sel_state]
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        select_game(selected_variant, selected_state)
+
+    def select_game_callback(ev, input_game, game_data_sel):  # pylint: disable=invalid-name
+        """ select_game_callback """
+
+        ev.preventDefault()
+
+        game_name = input_game.value
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
+        show_game_selected()
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        select_game(selected_variant, selected_state)
+
+    games_data = common.get_games_data()
+    if not games_data:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    # variant selector
+    # ----------------
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_variant = html.LEGEND("Sélection de la variante", title="Sélection de la variante")
+    fieldset <= legend_variant
+
+    # list the variants we have
+    variant_list = {d['variant'] for d in games_data.values()}
+
+    input_variant = html.SELECT(type="select-one", value="")
+    for variant in variant_list:
+        option = html.OPTION(variant)
+        if variant == selected_variant:
+            option.selected = True
+        input_variant <= option
+    fieldset <= input_variant
+    form <= fieldset
+
+    input_select_variant = html.INPUT(type="submit", value="Sélectionner")
+    input_select_variant.bind("click", lambda e, i=input_variant: select_variant_callback(e, i))
+    form <= input_select_variant
+
+    MY_SUB_PANEL <= form
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    # state selector
+    # ----------------
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_state = html.LEGEND("Sélection de l'état", title="Sélection de l'état")
+    fieldset <= legend_state
+
+    # list the states we have
+    state_list = {d['current_state'] for d in games_data.values()}
+
+    rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
+
+    input_state = html.SELECT(type="select-one", value="")
+    for current_state in state_list:
+        current_state_str = rev_state_code_table[current_state]
+        option = html.OPTION(current_state_str)
+        if current_state == selected_state:
+            option.selected = True
+        input_state <= option
+    fieldset <= input_state
+    form <= fieldset
+
+    input_select_state = html.INPUT(type="submit", value="Sélectionner")
+    input_select_state.bind("click", lambda e, i=input_state: select_state_callback(e, i))
+    form <= input_select_state
+
+    MY_SUB_PANEL <= form
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    # game selector
+    # ----------------
+
+    form = html.FORM()
+    fieldset = html.FIELDSET()
+    legend_game = html.LEGEND("Sélection de la partie", title="Sélection de la partie")
+    fieldset <= legend_game
+
+    # list the games we have
+    game_list = sorted([g['name'] for g in games_data.values() if g['variant'] == selected_variant and g['current_state'] == selected_state], key=lambda n: n.upper())
+
+    input_game = html.SELECT(type="select-one", value="")
+    for game in game_list:
+        option = html.OPTION(game)
+        if 'GAME' in storage:
+            if storage['GAME'] == game:
+                option.selected = True
+        input_game <= option
+    fieldset <= input_game
+    form <= fieldset
+
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_data.items()}
+
+    input_select_game = html.INPUT(type="submit", value="Sélectionner")
+    input_select_game.bind("click", lambda e, ig=input_game, gds=game_data_sel: select_game_callback(e, ig, gds))
+    form <= input_select_game
+
+    MY_SUB_PANEL <= form
+
+
+def unselect_game():
+    """ unselect_game """
+    if 'GAME' in storage:
+        del storage['GAME']
+        show_game_selected()
+
+
+def show_game_selected():
+    """  show_game_selected """
+
+    log_message = html.DIV()
+    if 'GAME' in storage:
+        log_message <= "La partie sélectionnée est "
+        log_message <= html.B(storage['GAME'])
+    else:
+        log_message <= "Pas de partie sélectionnée..."
+
+    show_game_selected_panel = html.DIV(id="show_game_selected")
+    show_game_selected_panel.attrs['style'] = 'text-align: left'
+    show_game_selected_panel <= log_message
+
+    if 'show_game_selected' in document:
+        del document['show_game_selected']
+
+    document <= show_game_selected_panel
+
+
 def all_games(state_name):
     """all_games """
 
@@ -921,180 +1095,6 @@ def all_games(state_name):
             input_change_state.bind("click", lambda _, s=other_state_name: again(s))
             MY_SUB_PANEL <= input_change_state
             MY_SUB_PANEL <= "    "
-
-
-def select_game(selected_variant, selected_state):
-    """ select_game """
-
-    def select_variant_callback(ev, input_state):  # pylint: disable=invalid-name
-        """ select_game_callback """
-
-        nonlocal selected_variant
-
-        ev.preventDefault()
-
-        sel_variant = input_state.value
-        selected_variant = sel_variant
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        select_game(selected_variant, selected_state)
-
-    def select_state_callback(ev, input_state):  # pylint: disable=invalid-name
-        """ select_state_callback """
-
-        nonlocal selected_state
-
-        ev.preventDefault()
-
-        sel_state = input_state.value
-        selected_state = config.STATE_CODE_TABLE[sel_state]
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        select_game(selected_variant, selected_state)
-
-    def select_game_callback(ev, input_game, game_data_sel):  # pylint: disable=invalid-name
-        """ select_game_callback """
-
-        ev.preventDefault()
-
-        game_name = input_game.value
-        storage['GAME'] = game_name
-        game_id = game_data_sel[game_name][0]
-        storage['GAME_ID'] = game_id
-        game_variant = game_data_sel[game_name][1]
-        storage['GAME_VARIANT'] = game_variant
-
-        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
-        show_game_selected()
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        select_game(selected_variant, selected_state)
-
-    games_data = common.get_games_data()
-    if not games_data:
-        alert("Erreur chargement dictionnaire parties")
-        return
-
-    # variant selector
-    # ----------------
-
-    form = html.FORM()
-
-    fieldset = html.FIELDSET()
-    legend_variant = html.LEGEND("Sélection de la variante", title="Sélection de la variante")
-    fieldset <= legend_variant
-
-    # list the variants we have
-    variant_list = {d['variant'] for d in games_data.values()}
-
-    input_variant = html.SELECT(type="select-one", value="")
-    for variant in variant_list:
-        option = html.OPTION(variant)
-        if variant == selected_variant:
-            option.selected = True
-        input_variant <= option
-    fieldset <= input_variant
-    form <= fieldset
-
-    input_select_variant = html.INPUT(type="submit", value="Sélectionner")
-    input_select_variant.bind("click", lambda e, i=input_variant: select_variant_callback(e, i))
-    form <= input_select_variant
-
-    MY_SUB_PANEL <= form
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    # state selector
-    # ----------------
-
-    form = html.FORM()
-
-    fieldset = html.FIELDSET()
-    legend_state = html.LEGEND("Sélection de l'état", title="Sélection de l'état")
-    fieldset <= legend_state
-
-    # list the states we have
-    state_list = {d['current_state'] for d in games_data.values()}
-
-    rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
-
-    input_state = html.SELECT(type="select-one", value="")
-    for current_state in state_list:
-        current_state_str = rev_state_code_table[current_state]
-        option = html.OPTION(current_state_str)
-        if current_state == selected_state:
-            option.selected = True
-        input_state <= option
-    fieldset <= input_state
-    form <= fieldset
-
-    input_select_state = html.INPUT(type="submit", value="Sélectionner")
-    input_select_state.bind("click", lambda e, i=input_state: select_state_callback(e, i))
-    form <= input_select_state
-
-    MY_SUB_PANEL <= form
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    # game selector
-    # ----------------
-
-    form = html.FORM()
-    fieldset = html.FIELDSET()
-    legend_game = html.LEGEND("Sélection de la partie", title="Sélection de la partie")
-    fieldset <= legend_game
-
-    # list the games we have
-    game_list = sorted([g['name'] for g in games_data.values() if g['variant'] == selected_variant and g['current_state'] == selected_state], key=lambda n: n.upper())
-
-    input_game = html.SELECT(type="select-one", value="")
-    for game in game_list:
-        option = html.OPTION(game)
-        if 'GAME' in storage:
-            if storage['GAME'] == game:
-                option.selected = True
-        input_game <= option
-    fieldset <= input_game
-    form <= fieldset
-
-    # create a table to pass information about selected game
-    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_data.items()}
-
-    input_select_game = html.INPUT(type="submit", value="Sélectionner")
-    input_select_game.bind("click", lambda e, ig=input_game, gds=game_data_sel: select_game_callback(e, ig, gds))
-    form <= input_select_game
-
-    MY_SUB_PANEL <= form
-
-
-def unselect_game():
-    """ unselect_game """
-    if 'GAME' in storage:
-        del storage['GAME']
-        show_game_selected()
-
-
-def show_game_selected():
-    """  show_game_selected """
-
-    log_message = html.DIV()
-    if 'GAME' in storage:
-        log_message <= "La partie sélectionnée est "
-        log_message <= html.B(storage['GAME'])
-    else:
-        log_message <= "Pas de partie sélectionnée..."
-
-    show_game_selected_panel = html.DIV(id="show_game_selected")
-    show_game_selected_panel.attrs['style'] = 'text-align: left'
-    show_game_selected_panel <= log_message
-
-    if 'show_game_selected' in document:
-        del document['show_game_selected']
-
-    document <= show_game_selected_panel
 
 
 def pairing():
@@ -1466,13 +1466,13 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
+    if item_name == 'Rejoindre une partie':
+        my_opportunities()
     if item_name == 'Sélectionner une partie':
         select_game(config.FORCED_VARIANT_NAME, 1)
     if item_name == 'Aller dans la partie sélectionnée':
         PANEL_MIDDLE.clear()
         play.render(PANEL_MIDDLE)
-    if item_name == 'Rejoindre une partie':
-        my_opportunities()
     if item_name == 'Toutes les parties':
         all_games('en cours')
     if item_name == 'Appariement':
