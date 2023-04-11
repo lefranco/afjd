@@ -2091,7 +2091,7 @@ def show_idle_data():
 
             if field == 'delete':
                 form = html.FORM()
-                input_delete_account = html.INPUT(type="image", src="./images/delete.jpg")
+                input_delete_account = html.INPUT(type="image", src="./images/delete.png")
                 input_delete_account.bind("click", lambda e, p=player: delete_account_callback(e, p))
                 form <= input_delete_account
                 value = form
