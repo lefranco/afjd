@@ -181,6 +181,12 @@ def load_option(_, item_name):
     # items in menu
     for possible_item_name in OPTIONS:
 
+        # do not display some options
+        if possible_item_name in ['Mon compte', 'Mes parties', 'Editer partie']:
+            if pseudo is None:
+                continue
+
+
         # do not display menu create if not creator
         if possible_item_name == 'Création':
             if pseudo is None or pseudo not in creator_list:
