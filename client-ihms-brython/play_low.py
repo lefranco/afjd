@@ -505,7 +505,7 @@ def get_game_status():
 
     if GAME_PARAMETERS_LOADED['fast']:
         row = html.TR()
-        specific_information = html.DIV("Partie en direct : utiliser le bouton 'recharger la partie' du menu 'Consulter'", Class='note')
+        specific_information = html.DIV("Partie en direct : utiliser le bouton 'recharger la partie' du menu 'Consulter' en attendant la résolution (puis retourner aux ordres)", Class='important')
         col = html.TD(specific_information, colspan="8")
         row <= col
         game_status_table <= row
