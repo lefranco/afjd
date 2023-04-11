@@ -1008,6 +1008,8 @@ def my_games(state_name):
     MY_PANEL <= " "
     MY_PANEL <= html.IMG(src="./images/press_published.jpg", title="Pour aller voir les nouvelles presses")
     MY_PANEL <= " "
+    MY_PANEL <= html.IMG(src="./images/edit_game.png", title="Pour éditer les paramètres de la partie")
+    MY_PANEL <= " "
     MY_PANEL <= html.IMG(src="./images/start_game.jpg", title="Pour démarrer la partie")
     MY_PANEL <= " "
     MY_PANEL <= html.IMG(src="./images/stop_game.png", title="Pour arrêter la partie")
