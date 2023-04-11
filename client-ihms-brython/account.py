@@ -12,7 +12,7 @@ import config
 import common
 import login
 
-OPTIONS = ['Valider mon courriel', 'Editer', 'Mot de passe', 'Mon code forum', 'Supprimer']
+OPTIONS = ['Editer', 'Valider mon courriel', 'Mot de passe', 'Mon code forum', 'Supprimer']
 
 
 MIN_LEN_PSEUDO = 3
@@ -369,137 +369,6 @@ def create_account(json_dict):
     MY_SUB_PANEL <= information_about_emails()
 
 
-def validate_email():
-    """ validate_email """
-
-    def send_new_code_callback(ev):  # pylint: disable=invalid-name
-        """ send_new_code_callback """
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la demande de renvoi de code de validation : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la demande de renvoi de code de validation : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}")
-
-        ev.preventDefault()
-
-        json_dict = {}
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/resend-code"
-
-        # asking resend of verification code for account : need token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        validate_email()
-
-    def validate_email_callback(ev):  # pylint: disable=invalid-name
-        """ validate_email_callback """
-
-        def reply_callback(req):
-            req_result = json.loads(req.text)
-            if req.status != 200:
-                if 'message' in req_result:
-                    alert(f"Erreur à la validation de l'adresse mail : {req_result['message']}")
-                elif 'msg' in req_result:
-                    alert(f"Problème à la validation de l'adresse mail : {req_result['msg']}")
-                else:
-                    alert("Réponse du serveur imprévue et non documentée")
-                return
-
-            messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Félicitations, votre courriel a été validé : {messages}")
-
-        ev.preventDefault()
-
-        if not input_confirmation_code.value:
-            alert("Code de confirmation mal saisi")
-            MY_SUB_PANEL.clear()
-            validate_email()
-            return
-
-        try:
-            confirmation_code_int = int(input_confirmation_code.value)
-        except:  # noqa: E722 pylint: disable=bare-except
-            alert("Code de confirmation incorrect")
-            MY_SUB_PANEL.clear()
-            validate_email()
-            return
-
-        if not 1000 <= confirmation_code_int <= 9999:
-            alert("Le code de confirmation doit utiliser 4 chiffres")
-            MY_SUB_PANEL.clear()
-            validate_email()
-            return
-
-        json_dict = {
-            'pseudo': pseudo,
-            'code': confirmation_code_int,
-        }
-
-        host = config.SERVER_CONFIG['PLAYER']['HOST']
-        port = config.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/check-email"
-
-        # checking a code for email : no need for token
-        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-        # back to where we started
-        MY_SUB_PANEL.clear()
-        validate_email()
-
-    MY_SUB_PANEL <= html.H3("Validation du courriel")
-
-    if 'PSEUDO' not in storage:
-        alert("Il faut se connecter au préalable")
-        return
-
-    pseudo = storage['PSEUDO']
-
-    form = html.FORM()
-
-    form <= information_about_input()
-    form <= html.BR()
-
-    fieldset = html.FIELDSET()
-    legend_confirmation_code = html.LEGEND("code de confirmation", title="Le code reçu par courriel")
-    fieldset <= legend_confirmation_code
-    input_confirmation_code = html.INPUT(type="number", value="", required=True)
-    fieldset <= input_confirmation_code
-    form <= fieldset
-
-    form <= html.BR()
-
-    input_validate_email = html.INPUT(type="submit", value="Valider le courriel")
-    input_validate_email.bind("click", validate_email_callback)
-    form <= input_validate_email
-    form <= html.BR()
-
-    MY_SUB_PANEL <= form
-
-    MY_SUB_PANEL <= html.BR()
-
-    form2 = html.FORM()
-
-    input_send_new_code = html.INPUT(type="submit", value="Me renvoyer un nouveau code")
-    input_send_new_code.bind("click", send_new_code_callback)
-    form2 <= input_send_new_code
-    form2 <= html.BR()
-
-    MY_SUB_PANEL <= form2
-
-
 def edit_account():
     """ edit_account """
 
@@ -793,6 +662,136 @@ def edit_account():
     MY_SUB_PANEL <= form
 
 
+def validate_email():
+    """ validate_email """
+
+    def send_new_code_callback(ev):  # pylint: disable=invalid-name
+        """ send_new_code_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la demande de renvoi de code de validation : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la demande de renvoi de code de validation : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Nouveau code de vérification de l'adresse couriel envoyé : {messages}")
+
+        ev.preventDefault()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/resend-code"
+
+        # asking resend of verification code for account : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        validate_email()
+
+    def validate_email_callback(ev):  # pylint: disable=invalid-name
+        """ validate_email_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la validation de l'adresse mail : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la validation de l'adresse mail : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Félicitations, votre courriel a été validé : {messages}")
+
+        ev.preventDefault()
+
+        if not input_confirmation_code.value:
+            alert("Code de confirmation mal saisi")
+            MY_SUB_PANEL.clear()
+            validate_email()
+            return
+
+        try:
+            confirmation_code_int = int(input_confirmation_code.value)
+        except:  # noqa: E722 pylint: disable=bare-except
+            alert("Code de confirmation incorrect")
+            MY_SUB_PANEL.clear()
+            validate_email()
+            return
+
+        if not 1000 <= confirmation_code_int <= 9999:
+            alert("Le code de confirmation doit utiliser 4 chiffres")
+            MY_SUB_PANEL.clear()
+            validate_email()
+            return
+
+        json_dict = {
+            'pseudo': pseudo,
+            'code': confirmation_code_int,
+        }
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/check-email"
+
+        # checking a code for email : no need for token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        validate_email()
+
+    MY_SUB_PANEL <= html.H3("Validation du courriel")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    form = html.FORM()
+
+    form <= information_about_input()
+    form <= html.BR()
+
+    fieldset = html.FIELDSET()
+    legend_confirmation_code = html.LEGEND("code de confirmation", title="Le code reçu par courriel")
+    fieldset <= legend_confirmation_code
+    input_confirmation_code = html.INPUT(type="number", value="", required=True)
+    fieldset <= input_confirmation_code
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_validate_email = html.INPUT(type="submit", value="Valider le courriel")
+    input_validate_email.bind("click", validate_email_callback)
+    form <= input_validate_email
+    form <= html.BR()
+
+    MY_SUB_PANEL <= form
+
+    MY_SUB_PANEL <= html.BR()
+
+    form2 = html.FORM()
+
+    input_send_new_code = html.INPUT(type="submit", value="Me renvoyer un nouveau code")
+    input_send_new_code.bind("click", send_new_code_callback)
+    form2 <= input_send_new_code
+    form2 <= html.BR()
+
+    MY_SUB_PANEL <= form2
+
 def change_password():
     """ change_password """
 
@@ -998,10 +997,10 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Valider mon courriel':
-        validate_email()
     if item_name == 'Editer':
         edit_account()
+    if item_name == 'Valider mon courriel':
+        validate_email()
     if item_name == 'Mot de passe':
         change_password()
     if item_name == 'Mon code forum':
