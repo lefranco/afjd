@@ -1306,7 +1306,7 @@ def show_tournaments_data():
         tournaments_table <= row
         count += 1
 
-    MY_SUB_PANEL <= html.H3("Les tournois")
+    MY_SUB_PANEL <= html.H3("Les tournois du site")
     MY_SUB_PANEL <= tournaments_table
     MY_SUB_PANEL <= html.P(f"Il y a {count} tournois")
 
@@ -1384,7 +1384,7 @@ def render(panel_middle):
     # always back to top
     global ITEM_NAME_SELECTED
 
-    ITEM_NAME_SELECTED = 'Créer un tournoi'
+    ITEM_NAME_SELECTED = 'Les tournois du site'
 
     if 'GAME' in storage:
         game = storage['GAME']
