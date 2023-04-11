@@ -186,7 +186,6 @@ def load_option(_, item_name):
             if pseudo is None:
                 continue
 
-
         # do not display menu create if not creator
         if possible_item_name == 'Création':
             if pseudo is None or pseudo not in creator_list:

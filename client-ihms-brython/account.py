@@ -792,6 +792,7 @@ def validate_email():
 
     MY_SUB_PANEL <= form2
 
+
 def change_password():
     """ change_password """
 
