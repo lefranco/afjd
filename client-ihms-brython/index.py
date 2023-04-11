@@ -36,7 +36,7 @@ H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de 
 H2.attrs['style'] = 'text-align: center'
 document <= H2
 
-OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Mes parties', 'Rejoindre une partie', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
+OPTIONS = ['Accueil', 'Connexion', 'Rejoindre une partie', 'Mon compte', 'Mes parties','Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
 
 # overall_top
 OVERALL_TOP = html.DIV()
@@ -140,12 +140,12 @@ def load_option(_, item_name):
         home.render(PANEL_MIDDLE)
     if item_name == 'Connexion':
         login.render(PANEL_MIDDLE)
+    if item_name == 'Rejoindre une partie':
+        allgames.render(PANEL_MIDDLE)
     if item_name == 'Mon compte':
         account.render(PANEL_MIDDLE)
     if item_name == 'Mes parties':
         mygames.render(PANEL_MIDDLE)
-    if item_name == 'Rejoindre une partie':
-        allgames.render(PANEL_MIDDLE)
     if item_name == 'Editer partie':
         games.render(PANEL_MIDDLE)
     if item_name == 'Interface tournois':
