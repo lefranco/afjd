@@ -325,7 +325,6 @@ def show_news():
 
     # rest
 
-    div_b1 <= html.DIV("Pour se creer un compte,  menu “mon compte” option “créer un compte”")
     div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : menu “Mes parties” bouton “basculer en mode liens externes”")
     div_b1 <= html.DIV("Pour être contacté en cas de besoin de remplaçant : “Mon compte” option “Editer mon compte” et modifiez le paramètre approprié")
     div_b1 <= html.DIV("Pour entrer des 'faux' ordres (parties sans communication possible) : option “Taguer” depuis la page de la partie")
