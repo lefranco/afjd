@@ -1,4 +1,30 @@
 
+
+@import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);
+/* Base */
+
+h1 {
+  position: relative;
+  color: hsl(0, 0%, 10%);
+  font-size: medium;
+  font-weight: bold;
+  font-family: "Anonymous Pro", monospace;
+  letter-spacing: 1px;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typewriter 6s steps(30) 1s 1 normal both;
+}
+
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 1500px;
+  }
+}
+
+
 h3{counter-reset: composite}
 
 

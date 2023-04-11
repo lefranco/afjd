@@ -31,10 +31,9 @@ import forum
 
 # TITLE is in index.html
 
-# H2
-H2 = html.DIV("Diplomania - le site de l'Association Francophone des Joueurs de Diplomatie (brique jeu)")
-H2.attrs['style'] = 'text-align: center'
-document <= H2
+# H1
+MAIN_TITLE = html.H1("Diplomania - le site de l'Association Francophone des Joueurs de Diplomatie (brique jeu)")
+document <= MAIN_TITLE
 
 
 OPTIONS = ['Accueil', 'Connexion', 'Rejoindre une partie', 'Mon compte', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
