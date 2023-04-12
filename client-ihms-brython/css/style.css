@@ -1,30 +1,62 @@
-
-
-@import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);
-/* Base */
+ 
 
 h1 {
-  position: relative;
-  color: hsl(0, 0%, 10%);
-  font-size: medium;
-  font-weight: bold;
-  font-family: "Anonymous Pro", monospace;
-  letter-spacing: 1px;
-  overflow: hidden;
-  white-space: nowrap;
-  animation: typewriter 6s steps(30) 1s 1 normal both;
-}
-
-@keyframes typewriter {
-  from {
-    width: 0;
-  }
-  to {
-    width: 1500px;
-  }
+    animation: text-shadow 1.5s ease-in-out;
+    animation-iteration-count: 3;
+    font-size: 1.5em;
+    font-weight: 900;
+    line-height: 1;
 }
 
 
+@keyframes text-shadow {
+    0% {  
+        transform: translateY(0);
+        text-shadow: 
+            0 0 0 #0c2ffb, 
+            0 0 0 #2cfcfd, 
+            0 0 0 #fb203b, 
+            0 0 0 #fefc4b;
+    }
+
+    20% {  
+        transform: translateY(-1em);
+        text-shadow: 
+            0 0.125em 0 #0c2ffb, 
+            0 0.25em 0 #2cfcfd, 
+            0 -0.125em 0 #fb203b, 
+            0 -0.25em 0 #fefc4b;
+    }
+
+    40% {  
+        transform: translateY(0.5em);
+        text-shadow: 
+            0 -0.0625em 0 #0c2ffb, 
+            0 -0.125em 0 #2cfcfd, 
+            0 0.0625em 0 #fb203b, 
+            0 0.125em 0 #fefc4b;
+    }
+    
+   60% {
+        transform: translateY(-0.25em);
+        text-shadow: 
+            0 0.03125em 0 #0c2ffb, 
+            0 0.0625em 0 #2cfcfd, 
+            0 -0.03125em 0 #fb203b, 
+            0 -0.0625em 0 #fefc4b;
+    }
+
+    80% {  
+        transform: translateY(0);
+        text-shadow: 
+            0 0 0 #0c2ffb, 
+            0 0 0 #2cfcfd, 
+            0 0 0 #fb203b, 
+            0 0 0 #fefc4b;
+    }
+}
+
+   
 h3{counter-reset: composite}
 
 
