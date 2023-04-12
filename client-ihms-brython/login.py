@@ -235,11 +235,12 @@ def login():
 
     # --
 
-    input_logout = html.INPUT(type="submit", value="Déconnexion")
-    input_logout.bind("click", logout_callback)
-    form <= input_logout
-    form <= html.BR()
-    form <= html.BR()
+    if 'PSEUDO' in storage:
+        input_logout = html.INPUT(type="submit", value="Déconnexion")
+        input_logout.bind("click", logout_callback)
+        form <= input_logout
+        form <= html.BR()
+        form <= html.BR()
 
     # --
 
