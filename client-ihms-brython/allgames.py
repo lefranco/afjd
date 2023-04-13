@@ -334,6 +334,8 @@ def my_opportunities():
     sort_by = storage['SORT_BY_OPPORTUNITIES']
     reverse_needed = bool(storage['REVERSE_NEEDED_OPPORTUNITIES'] == 'True')
 
+    gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
+
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'name':
@@ -352,6 +354,8 @@ def my_opportunities():
         def key_function(g): return g[1]['nb_max_cycles_to_play']  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'allocated':
         def key_function(g): return - (recruiting_games_dict[int(g[0])]['capacity'] - recruiting_games_dict[int(g[0])]['allocated'])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'deadline':
+        def key_function(g): return int(gameover[int(g[0])]), int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
@@ -887,6 +891,8 @@ def all_games(state_name):
     sort_by = storage['SORT_BY_HOME']
     reverse_needed = bool(storage['REVERSE_NEEDED_HOME'] == 'True')
 
+    gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
+
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'name':
@@ -901,6 +907,8 @@ def all_games(state_name):
         def key_function(g): return (int(g[1]['nopress_game']), int(g[1]['nopress_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'nomessage_game':
         def key_function(g): return (int(g[1]['nomessage_game']), int(g[1]['nomessage_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'deadline':
+        def key_function(g): return int(gameover[int(g[0])]), int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
@@ -993,7 +1001,7 @@ def all_games(state_name):
                         factor = 60 * 60
 
                     # game over
-                    if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                    if gameover[game_id]:
                         colour = config.GAMEOVER_COLOUR
                         value = "(terminée)"
 
