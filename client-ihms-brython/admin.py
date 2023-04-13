@@ -2157,6 +2157,8 @@ def agreement_usage():
     # will aggregate stats
     stats_collected = {}
 
+    gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
+
     for game_id_str, data in sorted(games_dict.items()):
 
         # must be ongoing game
@@ -2234,7 +2236,7 @@ def agreement_usage():
                     factor = 60 * 60
 
                 # game over
-                if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                if gameover[game_id]:
                     colour = config.GAMEOVER_COLOUR
                     value = "(terminée)"
 

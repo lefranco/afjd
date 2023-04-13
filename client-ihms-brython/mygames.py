@@ -664,6 +664,8 @@ def my_games(state_name):
     sort_by = storage['SORT_BY_MYGAMES']
     reverse_needed = bool(storage['REVERSE_NEEDED_MYGAMES'] == 'True')
 
+    gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
+
     if sort_by == 'creation':
         def key_function(g): return int(g[0])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'name':
@@ -678,6 +680,8 @@ def my_games(state_name):
         def key_function(g): return (int(g[1]['nomessage_game']), int(g[1]['nomessage_current']))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'role_played':
         def key_function(g): return int(dict_role_id.get(g[0], -1))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'deadline':
+        def key_function(g): return int(gameover[int(g[0])]), int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
@@ -788,7 +792,7 @@ def my_games(state_name):
                         factor = 60 * 60
 
                     # game over
-                    if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                    if gameover[game_id]:
                         colour = config.GAMEOVER_COLOUR
                         # keep value only for game master
                         if role_id is None or role_id != 0:
@@ -828,7 +832,7 @@ def my_games(state_name):
 
             if field == 'all_orders_submitted':
                 value = "-"
-                if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                if gameover[game_id]:
                     value = "-"
                 else:
                     if role_id is not None:
@@ -845,7 +849,7 @@ def my_games(state_name):
 
             if field == 'all_agreed':
                 value = "-"
-                if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                if gameover[game_id]:
                     value = "-"
                 else:
                     if role_id is not None:
@@ -859,7 +863,7 @@ def my_games(state_name):
 
             if field == 'orders_submitted':
                 value = ""
-                if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                if gameover[game_id]:
                     value = "-"
                 else:
                     if role_id is not None:
@@ -877,7 +881,7 @@ def my_games(state_name):
 
             if field == 'agreed':
                 value = ""
-                if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                if gameover[game_id]:
                     value = "-"
                 else:
                     if role_id is not None:

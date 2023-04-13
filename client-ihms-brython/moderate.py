@@ -1046,6 +1046,9 @@ def show_player_games(pseudo_player, game_list):
         MY_SUB_PANEL <= html.BR()
 
     if game_list:
+
+        gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
+
         time_stamp_now = time.time()
 
         games_table = html.TABLE()
@@ -1099,7 +1102,7 @@ def show_player_games(pseudo_player, game_list):
                         factor = 60 * 60
 
                     # game over
-                    if data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play']:
+                    if gameover[game_id]:
                         colour = config.GAMEOVER_COLOUR
                         value = "(terminée)"
 
