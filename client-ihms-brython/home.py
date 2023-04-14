@@ -12,12 +12,13 @@ import user_config
 import config
 import common
 import faq
+import tips
 
 
 THRESHOLD_DRIFT_ALERT_SEC = 59
 
 
-OPTIONS = ['Vue d\'ensemble', 'Déclarer un incident', 'Foire aux questions', 'Evolution de la fréquentation', 'Brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Déclarer un incident', 'Foire aux questions', 'Les petits tuyaux', 'Evolution de la fréquentation', 'Brique sociale']
 
 
 # for safety
@@ -299,48 +300,8 @@ def show_news():
     # ----
     div_b1 = html.DIV(Class='tooltip')
 
-    title8 = html.H4("Divers")
-    div_b1 <= title8
-
-    # time shift
-
-    server_time = news_content_table_loaded['server_time']
-    local_time = time.time()
-    delta_time = round(local_time - server_time)
-    if delta_time > 0:
-        status = "en avance"
-    else:
-        status = "en retard"
-    abs_delta_time = abs(delta_time)
-    if abs_delta_time > 60:
-        abs_delta_time //= 60
-        unit = "minutes"
-    else:
-        unit = "secondes"
-
-    # do not always display
-    if abs(delta_time) > THRESHOLD_DRIFT_ALERT_SEC:
-        div_b1 <= html.DIV(f"Votre horloge locale est {status} de {abs_delta_time} {unit} sur celle du serveur", Class='note')
-        div_b1 <= html.BR()
-
-    # rest
-
-    div_b1 <= html.DIV("Pour avoir les parties dans des onglets séparés sur votre smartphone : menu “Mes parties” bouton “basculer en mode liens externes”")
-    div_b1 <= html.DIV("Pour être contacté en cas de besoin de remplaçant : “Mon compte” option “Editer mon compte” et modifiez le paramètre approprié")
-    div_b1 <= html.DIV("Pour entrer des 'faux' ordres (parties sans communication possible) : option “Taguer” depuis la page de la partie")
-    div_b1 <= html.DIV("Pour se désinscrire d'une partie (inscrit par erreur) : menu “Parties” option “Sélectionner partie” puis option “Appariement” et enfin bouton quitter la partie")
-    div_b1 <= html.DIV("Pour les daltoniens, une carte avec des couleurs spécifiques a été créée, menu “Technique” option “Choix d'interface”")
-    div_b1 <= html.DIV("Pour les possesseurs d'appareil Android, une application spécifique a été créée, allez sur le forum pour la télécharger")
-
-    div_b1_tip = html.SPAN("Plus de détail dans le menu “Accueil” sous menu “Foire aux question”", Class='tooltiptext')
-    div_b1 <= div_b1_tip
-    div_homepage <= div_b1
-
-    # ----
-    div_a0 = html.DIV(Class='tooltip')
-
     title9 = html.H4("Liens très importants")
-    div_a0 <= title9
+    div_b1 <= title9
     note_bene_content = html.DIV(Class='note')
 
     note_bene_content_table = html.TABLE()
@@ -400,21 +361,52 @@ def show_news():
     row <= col
 
     note_bene_content <= note_bene_content_table
-    div_a0 <= note_bene_content
-    div_a0_tip = html.SPAN("Plus de détail dans le menu “Accueil“ sous menu “Brique sociale“", Class='tooltiptext')
+    div_b1 <= note_bene_content
+    div_b1_tip = html.SPAN("Plus de détail dans le menu “Accueil“ sous menu “Brique sociale“", Class='tooltiptext')
+    div_b1 <= div_b1_tip
+    div_homepage <= div_b1
+
+    # ----
+    div_a0 = html.DIV(Class='tooltip')
+
+    title10 = html.H4("Statistiques")
+    div_a0 <= title10
+    ongoing_games = stats_content['ongoing_games']
+    active_game_masters = stats_content['active_game_masters']
+    active_players = stats_content['active_players']
+    div_a0 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
+    div_a0_tip = html.SPAN("Plus de détail dans le menu “Classement“ sous menu “Joueurs“", Class='tooltiptext')
     div_a0 <= div_a0_tip
     div_homepage <= div_a0
 
     # ----
     div_b0 = html.DIV(Class='tooltip')
 
-    title10 = html.H4("Statistiques")
-    div_b0 <= title10
-    ongoing_games = stats_content['ongoing_games']
-    active_game_masters = stats_content['active_game_masters']
-    active_players = stats_content['active_players']
-    div_b0 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
-    div_b0_tip = html.SPAN("Plus de détail dans le menu “Classement“ sous menu “Joueurs“", Class='tooltiptext')
+    title8 = html.H4("Divers")
+    div_b0 <= title8
+
+    # time shift
+
+    server_time = news_content_table_loaded['server_time']
+    local_time = time.time()
+    delta_time = round(local_time - server_time)
+    if delta_time > 0:
+        status = "en avance"
+    else:
+        status = "en retard"
+    abs_delta_time = abs(delta_time)
+    if abs_delta_time > 60:
+        abs_delta_time //= 60
+        unit = "minutes"
+    else:
+        unit = "secondes"
+
+    # do not always display
+    if abs(delta_time) > THRESHOLD_DRIFT_ALERT_SEC:
+        div_b0 <= html.DIV(f"Votre horloge locale est {status} de {abs_delta_time} {unit} sur celle du serveur", Class='note')
+        div_b0 <= html.BR()
+
+    div_b0_tip = html.SPAN("Plus de détail dans le menu “Accueil” sous menu “Foire aux question”", Class='tooltiptext')
     div_b0 <= div_b0_tip
     div_homepage <= div_b0
 
@@ -639,6 +631,9 @@ def declare_incident(json_dict_params):
 FAQ_DISPLAYED_TABLE = {k: False for k in faq.FAQ_CONTENT_TABLE}
 FAQ_CONTENT = html.DIV("faq")
 
+TIPS_DISPLAYED_TABLE = {k: False for k in tips.TIPS_CONTENT_TABLE}
+TIPS_CONTENT = html.DIV("tips")
+
 
 def show_faq():
     """ show_faq """
@@ -669,6 +664,37 @@ def show_faq():
         FAQ_CONTENT <= html.P()
 
     MY_SUB_PANEL <= FAQ_CONTENT
+
+
+def show_tips():
+    """ show_tips """
+
+    def reveal_callback(_, question):
+        """ reveal_callback """
+
+        TIPS_DISPLAYED_TABLE[question] = not TIPS_DISPLAYED_TABLE[question]
+        MY_SUB_PANEL.clear()
+        show_tips()
+
+    title1 = html.H3("Les petits tuyaux")
+    MY_SUB_PANEL <= title1
+
+    TIPS_CONTENT.clear()
+
+    for question_txt, answer_txt in tips.TIPS_CONTENT_TABLE.items():
+
+        reveal_button = html.INPUT(type="submit", value=question_txt)
+        reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
+        TIPS_CONTENT <= reveal_button
+
+        if TIPS_DISPLAYED_TABLE[question_txt]:
+
+            tip_elt = html.DIV(answer_txt)
+            TIPS_CONTENT <= tip_elt
+
+        TIPS_CONTENT <= html.P()
+
+    MY_SUB_PANEL <= TIPS_CONTENT
 
 
 def frequentation_evolution():
@@ -725,6 +751,8 @@ def load_option(_, item_name):
         declare_incident(None)
     if item_name == 'Foire aux questions':
         show_faq()
+    if item_name == 'Les petits tuyaux':
+        show_tips()
     if item_name == 'Evolution de la fréquentation':
         frequentation_evolution()
     if item_name == 'Brique sociale':
