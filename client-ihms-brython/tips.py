@@ -6,7 +6,7 @@ TIPS_CONTENT_TABLE = {
     "Pour avoir les parties dans des onglets séparés sur votre smartphone":
     "Utiliser le menu “Mes parties” bouton “basculer en mode liens externes”",
 
-    "Pour être contacté en cas de besoin de remplaçant : ":
+    "Pour être contacté en cas de besoin de remplaçant":
     "Utiliser le menu “Mon compte” sous-menu “Editer mon compte” et modifiez le paramètre approprié",
 
     "Pour entrer des 'faux' ordres (parties sans communication possible)":
