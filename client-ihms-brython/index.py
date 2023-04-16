@@ -32,7 +32,7 @@ import forum
 # TITLE is in index.html
 
 # H1
-MAIN_TITLE = html.H1("Diplomania - le site de l'Association Francophone des Joueurs de Diplomatie.")
+MAIN_TITLE = html.H1("Diplomania - le site de l'Association Francophone des Joueurs de Diplomacy.")
 document <= MAIN_TITLE
 
 
