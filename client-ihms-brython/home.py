@@ -658,7 +658,7 @@ def show_faq():
 
         if FAQ_DISPLAYED_TABLE[question_txt]:
 
-            faq_elt = html.DIV(answer_txt)
+            faq_elt = html.DIV(answer_txt, Class='faq-info')
             FAQ_CONTENT <= faq_elt
 
         FAQ_CONTENT <= html.P()
@@ -689,7 +689,7 @@ def show_tips():
 
         if TIPS_DISPLAYED_TABLE[question_txt]:
 
-            tip_elt = html.DIV(answer_txt)
+            tip_elt = html.DIV(answer_txt, Class='faq-info')
             TIPS_CONTENT <= tip_elt
 
         TIPS_CONTENT <= html.P()

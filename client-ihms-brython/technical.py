@@ -309,7 +309,7 @@ def show_whynot():
 
         if WHYNOT_DISPLAYED_TABLE[question_txt]:
 
-            whynot_elt = html.DIV(answer_txt)
+            whynot_elt = html.DIV(answer_txt, Class='faq-info')
             WHYNOT_CONTENT <= whynot_elt
 
         WHYNOT_CONTENT <= html.P()
