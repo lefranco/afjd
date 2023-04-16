@@ -626,13 +626,19 @@ class Game:
 
         return True
 
-    def terminate(self) -> None:
-        """ start the game """
+    def debrief(self) -> None:
+        """ debrief the game """
 
         # clear restrictions
         self._anonymous = False
         self._nomessage_current = False
         self._nopress_current = False
+
+    def terminate(self) -> None:
+        """ start the game """
+
+        # clear restrictions (to make sure)
+        self.debrief()
 
         # set a fake deadline far in future
         self._deadline = 10000000000

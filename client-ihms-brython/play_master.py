@@ -77,6 +77,38 @@ SUPERVISE_REFRESH_PERIOD_SEC = 15
 def game_master():
     """ game_master """
 
+    def debrief_game_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au debrief de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au debrief de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"La partie a été modifiée pour le debrief : {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            play_low.load_dynamic_stuff()
+            game_master()
+
+        ev.preventDefault()
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/debrief-game/{play_low.GAME}"
+
+        # debrief : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
     def change_deadline_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -907,6 +939,9 @@ def game_master():
         game_admin_table <= row
 
     deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
+
+    # form for debrief
+
     deadline_form = html.FORM()
 
     dl_gmt = html.DIV("ATTENTION : vous devez entrer une date limite en temps GMT", Class='important')
@@ -959,6 +994,19 @@ def game_master():
     input_push_deadline_game.bind("click", sync_deadline_game_callback)
     deadline_form <= input_push_deadline_game
 
+    # form for debrief
+
+    debrief_form = html.FORM()
+
+    debrief_action = html.DIV("Lève l'anonymat et ouvre les canaux de communication (réversible)", Class='None')
+    special_legend = html.LEGEND(debrief_action)
+    debrief_form <= special_legend
+
+    debrief_form <= html.BR()
+    input_debrief_game = html.INPUT(type="submit", value="Debrief !")
+    input_debrief_game.bind("click", debrief_game_callback)
+    debrief_form <= input_debrief_game
+
     play_low.MY_SUB_PANEL <= html.H3("Gestion")
 
     play_low.MY_SUB_PANEL <= game_admin_table
@@ -970,6 +1018,13 @@ def game_master():
 
     play_low.MY_SUB_PANEL <= html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
 
+    play_low.MY_SUB_PANEL <= html.H3("Debrief de la partie")
+
+    if play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']:
+        play_low.MY_SUB_PANEL <= debrief_form
+    else:
+        play_low.MY_SUB_PANEL <= "Partie en cours..."
+
     play_low.MY_SUB_PANEL <= html.H3("Informations")
 
     play_low.MY_SUB_PANEL <= html.DIV("Arrêter la partie : menu “Editer partie“ sous menu “Changer l'état“", Class='note')
@@ -979,6 +1034,9 @@ def game_master():
     play_low.MY_SUB_PANEL <= html.BR()
 
     play_low.MY_SUB_PANEL <= html.DIV("Bénéficier du bouton permettant de contacter tous les remplaçants : retirer le rôle au joueur puis éjecter le joueur de la partie", Class='note')
+    play_low.MY_SUB_PANEL <= html.BR()
+
+    play_low.MY_SUB_PANEL <= html.DIV("Revenir sur le debriefing : menu “Editer partie“ sous menu “Changer anonymat“ et “Changer accès messagerie“", Class='note')
     play_low.MY_SUB_PANEL <= html.BR()
 
     return True
