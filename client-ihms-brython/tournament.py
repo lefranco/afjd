@@ -930,6 +930,10 @@ def create_tournament():
 
     game_id = storage['GAME_ID']
 
+    information = html.DIV(Class='important')
+    information <= f"Vous êtes sur le point de créer un tournoi qui contiendra (pour commencer) la partie sélectionnée ({game}) "
+    MY_SUB_PANEL <= information
+
     form = html.FORM()
 
     legend_title_main = html.H3("Paramètres principaux du tournoi - ne peuvent plus être changés le tournoi crée")
