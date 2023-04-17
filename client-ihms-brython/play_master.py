@@ -687,13 +687,7 @@ def game_master():
         play.load_option(None, 'Consulter')
         return False
 
-    # game needs to be ongoing - not waiting
-    if play_low.GAME_PARAMETERS_LOADED['current_state'] == 0:
-        alert("La partie n'est pas encore démarrée")
-        play.load_option(None, 'Consulter')
-        return False
-
-    # game needs to be ongoing - not finished
+    # game needs to be waiting or ongoing - not finished or distinguished
     if play_low.GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
         alert("La partie est déjà terminée")
         play.load_option(None, 'Consulter')
