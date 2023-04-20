@@ -1132,6 +1132,8 @@ def negotiate(default_dest_set):
     # put time stamp of last visit of declarations as now
     date_last_visit_update(play_low.GAME_ID, play_low.ROLE_ID, config.MESSAGES_TYPE)
 
+    role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
+
     form = html.FORM()
 
     fieldset = html.FIELDSET()
@@ -1161,14 +1163,31 @@ def negotiate(default_dest_set):
         role_name = play_low.VARIANT_DATA.role_name_table[role_dest]
         role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id_dest}.jpg", title=role_name)
 
+        # player
+        pseudo_there = ""
+        if role_id_dest == 0:
+            if play_low.GAME_MASTER:
+                pseudo_there = play_low.GAME_MASTER
+        elif role_id_dest in role2pseudo:
+            player_id_str = role2pseudo[role_id_dest]
+            player_id = int(player_id_str)
+            pseudo_there = play_low.ID2PSEUDO[player_id]
+
         # the alternative
         input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set)
-        col = html.TD()
-        col <= input_dest
 
         # necessary to link flag with button
         label_dest = html.LABEL(role_icon_img, for_=str(role_id_dest))
+
+        # create col
+        col = html.TD()
+
+        # now put stuff
+        col <= input_dest
         col <= label_dest
+        if pseudo_there:
+            col <= html.BR()
+            col <= html.CENTER(pseudo_there)
 
         row <= col
 
@@ -1216,8 +1235,6 @@ def negotiate(default_dest_set):
         col = html.TD(html.B(title))
         thead <= col
     messages_table <= thead
-
-    role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
     for type_, _, id_, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
 
