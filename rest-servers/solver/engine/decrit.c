@@ -502,7 +502,7 @@ static void decritretraites(FILE *fd, _PAYS *pays, BOOL affpays) {
 			break;
 
 		case SUICIDE:
-			(void) fprintf(fd, " A");
+			(void) fprintf(fd, " D");
 			break;
 
 		}

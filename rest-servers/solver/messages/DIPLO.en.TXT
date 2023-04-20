@@ -107,7 +107,7 @@ parse.c#11#It is preferable not to use parenthesis for coasts
 parse.c#12#Problem definition of a province
 parse.c#13#Missing end of line after province
 parse.c#14#Missing second name or end of line after province
-parse.c#15#Do not use the 'R A' construction (remove the 'R')
+parse.c#15#Do not use the 'R D' construction (remove the 'R')
 parse.c#16#Problem definition of a centre on the province
 parse.c#17#Province %1 not declared
 parse.c#18#Missing end of line after centre
@@ -131,7 +131,7 @@ parse.c#35#Problem definition of a neighbourarmy 2nd province (or area within pr
 parse.c#36#It is preferable to attach the coast to the province
 parse.c#37#Province (or area within province) %1 not declared
 parse.c#38#Missing end of line after neighbourarmy
-parse.c#39#Use 'A' for a dispersion retreat (off the board) rather than 'R' and nothing
+parse.c#39#Use 'D' for a dispersion retreat (off the board) rather than 'R' and nothing
 parse.c#40#Problem definition of a neighbourfleet on province (or area within province)
 parse.c#41#It is preferable to attach the coast to the province
 parse.c#42#Province (or area within province) %1 not declared
