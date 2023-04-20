@@ -41,8 +41,8 @@
 			]
 		},
 		"1": {
-			"name": "Allies",
-			"adjective_name": "allies",
+			"name": "Entente",
+			"adjective_name": "entente",
 			"letter_name": "A",
 			"red": [
 				47,
@@ -58,8 +58,8 @@
 			]
 		},
 		"2": {
-			"name": "Axe",
-			"adjective_name": "Axe",
+			"name": "Alliance",
+			"adjective_name": "alliance",
 			"letter_name": "X",
 	 		"red": [
 	       		224,
