@@ -107,7 +107,7 @@ parse.c#11#Il est préférable de ne pas utiliser de parenthèse pour les côtes
 parse.c#12#Problème définition d'une province
 parse.c#13#Manque fin de ligne après province
 parse.c#14#Manque deuxième nom ou fin de ligne après province
-parse.c#15#Ne pas utiliser la construction 'R A' (enlever le ('R')
+parse.c#15#Ne pas utiliser la construction 'R D' (enlever le ('R')
 parse.c#16#Problème définition d'un centre sur la province
 parse.c#17#Province %1 non déclarée
 parse.c#18#Manque fin de ligne après centre
@@ -131,7 +131,7 @@ parse.c#35#Problème définition d'un voisinarmée 2e province (ou zone dans une
 parse.c#36#Il est préférable d'accoler la côte à la province
 parse.c#37#Province (ou zone dans une province) %1 non déclarée
 parse.c#38#Manque fin de ligne après voisinarmée
-parse.c#39#Utiliser 'A' pour une retraite dispersion (hors du plateau) plutôt que 'R' et rien
+parse.c#39#Utiliser 'D' pour une retraite dispersion (hors du plateau) plutôt que 'R' et rien
 parse.c#40#Problème définition d'un voisinflotte 1e province (ou zone dans une province)
 parse.c#41#Il est préférable d'accoler la côte à la province
 parse.c#42#Province (ou zone dans une province) %1 non déclarée
