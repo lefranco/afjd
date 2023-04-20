@@ -1947,7 +1947,7 @@ class Order(Renderable):
             dest_zone_name = variant.zone_name_table[self._destination_zone]
             return f"{self._active_unit} R {dest_zone_name}"
         if self._order_type is OrderTypeEnum.DISBAND_ORDER:
-            return f"{self._active_unit} A"
+            return f"{self._active_unit} D"
         if self._order_type is OrderTypeEnum.BUILD_ORDER:
             return f"+ {self._active_unit}"
         if self._order_type is OrderTypeEnum.REMOVE_ORDER:
