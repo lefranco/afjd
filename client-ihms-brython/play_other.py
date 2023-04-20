@@ -1183,11 +1183,14 @@ def negotiate(default_dest_set):
         col = html.TD()
 
         # now put stuff
-        col <= input_dest
         col <= label_dest
+        col <= html.BR()
+        col <= html.B(role_name)
+        col <= html.BR()
         if pseudo_there:
+            col <= pseudo_there
             col <= html.BR()
-            col <= html.CENTER(pseudo_there)
+        col <= html.CENTER(input_dest)
 
         row <= col
 
