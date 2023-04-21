@@ -1181,6 +1181,9 @@ def negotiate(default_dest_set):
 
         # create col
         col = html.TD()
+        col.style = {
+            'width': '70px'
+        }
 
         # now put stuff
         col <= label_dest
