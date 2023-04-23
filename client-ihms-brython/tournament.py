@@ -102,10 +102,6 @@ def show_games():
 
     overall_time_before = time.time()
 
-    # title
-    title = html.H3("Parties du tournoi")
-    MY_SUB_PANEL <= title
-
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -116,7 +112,11 @@ def show_games():
         alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
+    # title
     tournament_name = TOURNAMENT_DICT['name']
+    title = html.H3(f"Parties du tournoi {tournament_name}")
+    MY_SUB_PANEL <= title
+
     games_in = TOURNAMENT_DICT['games']
 
     games_dict = common.get_games_data()
@@ -412,9 +412,6 @@ def show_games():
 
         games_table <= row
 
-    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
-    MY_SUB_PANEL <= html.BR()
-
     MY_SUB_PANEL <= games_table
     MY_SUB_PANEL <= html.BR()
 
@@ -447,12 +444,14 @@ def show_games():
 def show_players():
     """ show_players """
 
-    title = html.H3("Les participants au tournoi")
-    MY_SUB_PANEL <= title
-
     if not TOURNAMENT_DICT:
         alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
+
+    # title
+    tournament_name = TOURNAMENT_DICT['name']
+    title = html.H3(f"Les participants du tournoi {tournament_name}")
+    MY_SUB_PANEL <= title
 
     tournament_id = TOURNAMENT_DICT['identifier']
 
@@ -495,10 +494,6 @@ def show_ratings():
 
     overall_time_before = time.time()
 
-    # title
-    title = html.H3("Classement du tournoi")
-    MY_SUB_PANEL <= title
-
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -509,7 +504,11 @@ def show_ratings():
         alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
+    # title
     tournament_name = TOURNAMENT_DICT['name']
+    title = html.H3(f"Le classement du tournoi {tournament_name}")
+    MY_SUB_PANEL <= title
+
     tournament_id = TOURNAMENT_DICT['identifier']
     games_in = TOURNAMENT_DICT['games']
 
@@ -627,8 +626,6 @@ def show_ratings():
         ratings_table <= row
         rank += 1
 
-    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= ratings_table
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
@@ -647,10 +644,6 @@ def show_incidents():
 
     overall_time_before = time.time()
 
-    # title
-    title = html.H3("Incidents du tournoi")
-    MY_SUB_PANEL <= title
-
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -659,7 +652,11 @@ def show_incidents():
         alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
+    # title
     tournament_name = TOURNAMENT_DICT['name']
+    title = html.H3(f"Les incidents du tournoi {tournament_name}")
+    MY_SUB_PANEL <= title
+
     tournament_id = TOURNAMENT_DICT['identifier']
 
     games_dict = common.get_games_data()
@@ -825,11 +822,7 @@ def show_incidents():
 
         tournament_incidents_table <= row
 
-    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
-    MY_SUB_PANEL <= html.BR()
-
     MY_SUB_PANEL <= html.DIV("Les noms des joueurs sont remplacés par des alias &lt;nom de partie&gt;##&lt;nom du rôle&gt;", Class='note')
-    MY_SUB_PANEL <= html.BR()
 
     title2 = html.H4("Désordres civils du tournoi")
     MY_SUB_PANEL <= title2
@@ -1054,8 +1047,6 @@ def edit_tournament():
         # removing a game from a tournament : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    MY_SUB_PANEL <= html.H3("Mettre dans ou enlever des parties du tournoi")
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -1075,7 +1066,11 @@ def edit_tournament():
         alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
+    # title
     tournament_name = TOURNAMENT_DICT['name']
+    title = html.H3(f"Mettre dans ou enlever des parties du tournoi {tournament_name}")
+    MY_SUB_PANEL <= title
+
     tournament_id = TOURNAMENT_DICT['identifier']
     games_in = TOURNAMENT_DICT['games']
 
@@ -1158,8 +1153,6 @@ def edit_tournament():
     input_remove_from_tournament.bind("click", remove_from_tournament_callback)
     form <= input_remove_from_tournament
 
-    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= form
 
 
@@ -1218,8 +1211,6 @@ def delete_tournament():
         MY_SUB_PANEL.clear()
         delete_tournament()
 
-    MY_SUB_PANEL <= html.H3("Suppression")
-
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
         return
@@ -1236,7 +1227,10 @@ def delete_tournament():
         alert("Pas de partie sélectionnée ou pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
         return
 
+    # title
     tournament_name = TOURNAMENT_DICT['name']
+    title = html.H3(f"Suppression du tournoi {tournament_name}")
+    MY_SUB_PANEL <= title
 
     form = html.FORM()
 
@@ -1244,8 +1238,6 @@ def delete_tournament():
     input_delete_tournament.bind("click", delete_tournament_callback_confirm)
     form <= input_delete_tournament
 
-    MY_SUB_PANEL <= html.DIV(f"Tournoi {tournament_name}", Class='note')
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= form
 
 
