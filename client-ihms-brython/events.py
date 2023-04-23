@@ -444,9 +444,7 @@ def registrations():
         account_button = html.BUTTON("Je n'ai pas de compte, je veux le créer !", Class='btn-menu')
         account_button.bind("click", create_account_callback)
 
-    MY_SUB_PANEL <= html.H3("Inscriptions")
-
-    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
+    MY_SUB_PANEL <= html.H3(f"Inscriptions à l'événement {name}")
 
     MY_SUB_PANEL <= html.H4("Toutes les informations")
 
@@ -724,8 +722,6 @@ def edit_event():
         MY_SUB_PANEL.clear()
         create_event(json_dict)
 
-    MY_SUB_PANEL <= html.H3("Edition d'événement")
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -739,7 +735,11 @@ def edit_event():
         alert("Il faut sélectionner un événement au préalable")
         return
 
+    # title
     event_name = storage['EVENT']
+    title = html.H3(f"Edition de l'événement {event_name}")
+    MY_SUB_PANEL <= title
+
     events_dict = common.get_events_data()
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
@@ -819,8 +819,6 @@ def edit_event():
     input_edit_event.bind("click", edit_event_callback)
     form <= input_edit_event
 
-    MY_SUB_PANEL <= html.DIV(f"Evénement {event_name}", Class='important')
-    MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= form
 
 
@@ -861,8 +859,6 @@ def handle_joiners():
         MY_SUB_PANEL.clear()
         handle_joiners()
 
-    MY_SUB_PANEL <= html.H3("Gérer les participations")
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -894,11 +890,14 @@ def handle_joiners():
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
 
+    # title
     event_name = storage['EVENT']
+    title = html.H3(f"Gérer les participations de l'événement {event_name}")
+    MY_SUB_PANEL <= title
+
     events_dict = common.get_events_data()
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
-    event_dict = get_event_data(event_id)
 
     joiners = get_registrations(event_id)
     joiners_dict = {}
@@ -976,11 +975,6 @@ def handle_joiners():
 
         joiners_table <= row
 
-    name = event_dict['name']
-
-    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
-    MY_SUB_PANEL <= html.BR()
-
     MY_SUB_PANEL <= joiners_table
 
 
@@ -1035,8 +1029,6 @@ def delete_event():
         # back to where we started (actually to select)
         load_option(None, 'Sélectionner un événement')
 
-    MY_SUB_PANEL <= html.H3("Suppression de l'événement")
-
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
         return
@@ -1050,11 +1042,14 @@ def delete_event():
         alert("Il faut sélectionner un événement au préalable")
         return
 
+    # title
     event_name = storage['EVENT']
+    title = html.H3(f"Suppression de l'événement {event_name}")
+    MY_SUB_PANEL <= title
+
     events_dict = common.get_events_data()
     eventname2id = {v['name']: int(k) for k, v in events_dict.items()}
     event_id = eventname2id[event_name]
-    event_dict = get_event_data(event_id)
 
     form = html.FORM()
 
@@ -1065,11 +1060,6 @@ def delete_event():
     players_dict = common.get_players_data()
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
-
-    name = event_dict['name']
-
-    MY_SUB_PANEL <= html.DIV(f"Evénement {name}", Class='important')
-    MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= form
 
