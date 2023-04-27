@@ -544,16 +544,6 @@ def my_opportunities():
     MY_SUB_PANEL <= html.DIV("(**) On prend en compte l'arbitre dans le nombre de joueurs", Class='note')
     MY_SUB_PANEL <= html.BR()
 
-    # get GMT date and time
-    time_stamp_now = time.time()
-    date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
-    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
-
-    special_legend = html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
-    MY_SUB_PANEL <= special_legend
-
-    MY_SUB_PANEL <= html.BR()
-
     overall_time_after = time.time()
     elapsed = overall_time_after - overall_time_before
 
@@ -1075,14 +1065,6 @@ def all_games(state_name):
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
-    MY_SUB_PANEL <= html.BR()
-
-    # get GMT date and time
-    time_stamp_now = time.time()
-    date_now_gmt = mydatetime.fromtimestamp(time_stamp_now)
-    date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
-    special_info = html.DIV(f"Pour information, date et heure actuellement sur votre horloge locale : {date_now_gmt_str}")
-    MY_SUB_PANEL <= special_info
     MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time.time()
