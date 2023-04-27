@@ -178,14 +178,6 @@ def get_all_player_games_roles_submitted_orders():
     return dict_submitted_data
 
 
-def information_about_quitting():
-    """ information_about_quitting """
-
-    information = html.DIV(Class='note')
-    information <= "Pour quitter une partie, utiliser le menu “Parties“ sous menu “Appariement“"
-    return information
-
-
 def get_my_delays():
     """ get_my_delays """
 
@@ -1024,9 +1016,6 @@ def my_games(state_name):
     MY_PANEL <= html.BR()
 
     MY_PANEL <= html.DIV("(**) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
-    MY_PANEL <= html.BR()
-
-    MY_PANEL <= information_about_quitting()
     MY_PANEL <= html.BR()
 
     # get GMT date and time
