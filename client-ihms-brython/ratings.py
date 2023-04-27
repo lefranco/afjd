@@ -359,8 +359,7 @@ def show_rating_performance(classic, role_id):
         MY_SUB_PANEL <= html.BR()
         MY_SUB_PANEL <= html.DIV(f"La moyenne des ELO est de {average}", Class='note')
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.DIV("Le changement est indiqué est celui global pour le joueur, celui entre parenthèse pour le rôle donné.", Class='note')
+        MY_SUB_PANEL <= html.DIV("Le changement indiqué est celui global pour le joueur, celui entre parenthèse pour le rôle donné.", Class='note')
 
     def sort_by_callback(_, new_sort_by):
 
