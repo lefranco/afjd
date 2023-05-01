@@ -3326,17 +3326,17 @@ class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: i
         return data, 200
 
 
-@API.resource('/all-games-orders-submitted')
-class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
-    """ AllGamesOrdersSubmittedRessource """
+@API.resource('/all-games-missing-orders')
+class AllGamesMissingOrdersRessource(flask_restful.Resource):  # type: ignore
+    """ AllGamesMissingOrdersRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[int, typing.List[int]]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[int, typing.Dict[int, int]], int]:
         """
-        Gets list of roles which have submitted orders, orders are missing, orders are not needed for all ongoing games
+        Gets list of roles which are late all ongoing games
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/all-games-orders-submitted - GET - getting which orders submitted, missing, not needed for all ongoing games")
+        mylogger.LOGGER.info("/all-games-late-orders - GET - getting which are late for all ongoing games")
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -3353,20 +3353,32 @@ class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
-            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
+        # check moderator rights
+
+        # get moderator list
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+        the_moderators = req_result.json()
+
+        # check pseudo in moderator list
+        if pseudo not in the_moderators:
+            flask_restful.abort(403, msg="You do not seem to be site moderator) so you are not alowed to see all the missing orders!")
+
+        # result to build
+        dict_missing_list: typing.Dict[int, typing.Dict[int, int]] = {}
 
         sql_executor = database.SqlExecutor()
+        games_list = sql_executor.execute("select identifier from games", need_result=True)
+        if not games_list:
+            games_list = []
+        games_id_list = [g[0] for g in games_list]
 
-        # get list of games in which player is involved
-        allocations_list = allocations.Allocation.inventory(sql_executor)
-
-        dict_submitted_list: typing.Dict[int, typing.List[int]] = {}
-        dict_agreed_now_list: typing.Dict[int, typing.List[int]] = {}
-        dict_agreed_after_list: typing.Dict[int, typing.List[int]] = {}
-        dict_needed_list: typing.Dict[int, typing.List[int]] = {}
-        for game_id, _, __ in allocations_list:
+        for game_id in games_id_list:
 
             # game is not ongoing : ignore
             game = games.Game.find_by_identifier(sql_executor, game_id)
@@ -3374,27 +3386,28 @@ class AllGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
             if game.current_state != 1:
                 continue
 
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            role2player = {r: p for _, p, r in allocations_list}
+
+            # needed list : those who need to submit orders
+            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
+            needed_list = [o[1] for o in actives_list]
+
             # submissions_list : those who submitted orders
             submissions_list = submissions.Submission.list_by_game_id(sql_executor, game_id)
             submitted_list = [o[1] for o in submissions_list]
 
             # definitives_list : those who agreed to adjudicate with their orders now
             definitives_list = definitives.Definitive.list_by_game_id(sql_executor, game_id)
-            agreed_now_list = [o[1] for o in definitives_list if o[2] == 1]
-            agreed_after_list = [o[1] for o in definitives_list if o[2] == 2]
+            agreed_now_after_list = [o[1] for o in definitives_list if o[2] in [1, 2]]
 
-            dict_submitted_list[game_id] = submitted_list
-            dict_agreed_now_list[game_id] = agreed_now_list
-            dict_agreed_after_list[game_id] = agreed_after_list
-
-            # needed list : those who need to submit orders
-            actives_list = actives.Active.list_by_game_id(sql_executor, game_id)
-            needed_list = [o[1] for o in actives_list]
-            dict_needed_list[game_id] = needed_list
+            # missing_list
+            missing_list = [r for r in needed_list if r not in submitted_list or r not in agreed_now_after_list]
+            dict_missing_list[game_id] = {r: role2player[r] for r in missing_list}
 
         del sql_executor
 
-        data = {'dict_submitted': dict_submitted_list, 'dict_agreed_now': dict_agreed_now_list, 'dict_agreed_after': dict_agreed_after_list, 'dict_needed': dict_needed_list}
+        data = dict_missing_list
         return data, 200
 
 
