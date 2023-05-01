@@ -1194,8 +1194,10 @@ void calculedisparitions(void) {
 
 		if(ncentres == 0 && ncentresavant > 0) {
 
-			cherchechaine(__FILE__, 25, buf, 1, p->nom); /*"Le pays %1 vient de disparaitre de la partie"*/
-			avertir(buf);
+			if (OPTIONw) {
+				cherchechaine(__FILE__, 25, buf, 1, p->nom); /*"Le pays %1 vient de disparaitre de la partie"*/
+				avertir(buf);
+			}
 
 			DISPARITION.t[DISPARITION.n].pays = p;
 			DISPARITION.t[DISPARITION.n].annee = ANNEEZERO + (SAISON / NSAISONS);
