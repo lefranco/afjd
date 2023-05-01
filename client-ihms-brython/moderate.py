@@ -224,12 +224,32 @@ def all_missing_orders():
         alert("Erreur chargement dictionnaire parties")
         return
 
-    players_dict = common.get_players()
+    players_dict = common.get_players_data()
     if not players_dict:
         return
 
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
+    masters_alloc = allocations_data['game_masters_dict']
+
+    # gather game to master
+    game_master_dict = {}
+    for master_id, games_id in masters_alloc.items():
+        master = players_dict[str(master_id)]['pseudo']
+        for game_id in games_id:
+            game = games_dict[str(game_id)]['name']
+            game_master_dict[game] = master
+
+    players_dict2 = common.get_players()
+    if not players_dict2:
+        return
+
     # pseudo from number
-    num2pseudo = {v: k for k, v in players_dict.items()}
+    num2pseudo = {v: k for k, v in players_dict2.items()}
 
     dict_missing_orders_data = get_all_games_roles_missing_orders()
     if not dict_missing_orders_data:
@@ -239,12 +259,12 @@ def all_missing_orders():
     delays_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'late', 'deadline', 'current_advancement', 'variant', 'used_for_elo']
+    fields = ['name', 'late', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'late': 'en retard', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo'}[field]
+        field_fr = {'name': 'nom', 'late': 'en retard', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre'}[field]
         col = html.TD(field_fr)
         thead <= col
     delays_table <= thead
@@ -256,6 +276,7 @@ def all_missing_orders():
     for game_id_str, data in sorted(games_dict.items()):
 
         data['late'] = None
+        data['master'] = None
 
         # must be ongoing game
         if data['current_state'] != 1:
@@ -368,6 +389,12 @@ def all_missing_orders():
 
             if field == 'used_for_elo':
                 value = "Oui" if value else "Non"
+
+            if field == 'master':
+                game_name = data['name']
+                # some games do not have a game master
+                master_name = game_master_dict.get(game_name, '')
+                value = master_name
 
             col = html.TD(value)
             if colour is not None:
