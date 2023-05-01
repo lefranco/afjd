@@ -123,8 +123,6 @@ def disorder(game_id: int, role_id: int, game: games.Game, variant_dict: typing.
 
     orders_default = req_result.json()['orders_default']
 
-    print(f"disorderer returns {orders_default=}", file=sys.stderr)
-
     # store orders
 
     # purge previous
