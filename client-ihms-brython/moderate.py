@@ -19,7 +19,7 @@ import mydatetime
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['Changer nouvelles', 'Tous les retards', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Toutes les parties d\'un joueur', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels', 'Courriels non confirmés']
+OPTIONS = ['Changer nouvelles', 'Tous les ordres manquants', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Toutes les parties d\'un joueur', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels', 'Courriels non confirmés']
 
 
 def check_modo(pseudo):
@@ -35,34 +35,34 @@ def check_modo(pseudo):
     return True
 
 
-def get_all_games_roles_submitted_orders():
-    """ get_all_games_roles_submitted_orders : returns empty dict if problem """
+def get_all_games_roles_missing_orders():
+    """ get_all_games_roles_missing_orders : returns empty dict if problem """
 
-    dict_submitted_data = {}
+    dict_missing_orders_data = {}
 
     def reply_callback(req):
-        nonlocal dict_submitted_data
+        nonlocal dict_missing_orders_data
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour toutes les parties en cours : {req_result['message']}")
+                alert(f"Erreur à la récupération des rôles dont il manque les ordres pour toutes les parties en cours : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour toutes les parties en cours : {req_result['msg']}")
+                alert(f"Problème à la récupération des rôles dont il manque les ordres pour toutes les parties en cours : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-        dict_submitted_data = req_result
+        dict_missing_orders_data = req_result
 
     json_dict = {}
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/all-games-orders-submitted"
+    url = f"{host}:{port}/all-games-missing-orders"
 
     # get roles that submitted orders : need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
-    return dict_submitted_data
+    return dict_missing_orders_data
 
 
 def get_tournament_players_data(tournament_id):
@@ -208,10 +208,10 @@ def change_news_modo():
     MY_SUB_PANEL <= form
 
 
-def all_delays():
-    """ all_delays """
+def all_missing_orders():
+    """ all_missing_orders """
 
-    MY_SUB_PANEL <= html.H3("Tous les retards")
+    MY_SUB_PANEL <= html.H3("Tous les ordres manquants")
 
     pseudo = storage['PSEUDO']
 
@@ -224,20 +224,27 @@ def all_delays():
         alert("Erreur chargement dictionnaire parties")
         return
 
-    dict_submitted_data = get_all_games_roles_submitted_orders()
-    if not dict_submitted_data:
-        alert("Erreur chargement des soumissions dans les parties")
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict.items()}
+
+    dict_missing_orders_data = get_all_games_roles_missing_orders()
+    if not dict_missing_orders_data:
+        alert("Erreur chargement des ordres manquants dans les parties")
         return
 
     delays_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'deadline', 'current_advancement', 'variant', 'used_for_elo']
+    fields = ['name', 'late', 'deadline', 'current_advancement', 'variant', 'used_for_elo']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo'}[field]
+        field_fr = {'name': 'nom', 'late': 'en retard', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo'}[field]
         col = html.TD(field_fr)
         thead <= col
     delays_table <= thead
@@ -248,6 +255,8 @@ def all_delays():
 
     for game_id_str, data in sorted(games_dict.items()):
 
+        data['late'] = None
+
         # must be ongoing game
         if data['current_state'] != 1:
             continue
@@ -255,7 +264,7 @@ def all_delays():
         game_id = int(game_id_str)
 
         # must not be game over
-        if gameover[game_id] :
+        if gameover[game_id]:
             continue
 
         # must be late
@@ -304,6 +313,18 @@ def all_delays():
 
             if field == 'name':
                 value = game_name
+
+            if field == 'late':
+                value = html.DIV()
+                for role_id_str, player_id in dict_missing_orders_data[game_id_str].items():
+                    role_id = int(role_id_str)
+                    role = variant_data.roles[role_id]
+                    role_name = variant_data.role_name_table[role]
+                    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
+                    value <= role_icon_img
+                    value <= " "
+                    value <= num2pseudo[player_id]
+                    value <= html.BR()
 
             if field == 'deadline':
                 deadline_loaded = value
@@ -1631,8 +1652,8 @@ def load_option(_, item_name):
 
     if item_name == 'Changer nouvelles':
         change_news_modo()
-    if item_name == 'Tous les retards':
-        all_delays()
+    if item_name == 'Tous les ordres manquants':
+        all_missing_orders()
     if item_name == 'Préparer un publipostage':
         prepare_mailing()
     if item_name == 'Codes de vérification':
