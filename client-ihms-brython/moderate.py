@@ -19,7 +19,7 @@ import mydatetime
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['Changer nouvelles', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Toutes les parties d\'un joueur', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels', 'Courriels non confirmés']
+OPTIONS = ['Changer nouvelles', 'Tous les retards', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Toutes les parties d\'un joueur', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels', 'Courriels non confirmés']
 
 
 def check_modo(pseudo):
@@ -33,6 +33,36 @@ def check_modo(pseudo):
         return False
 
     return True
+
+
+def get_all_games_roles_submitted_orders():
+    """ get_all_games_roles_submitted_orders : returns empty dict if problem """
+
+    dict_submitted_data = {}
+
+    def reply_callback(req):
+        nonlocal dict_submitted_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des rôles qui ont soumis des ordres pour toutes les parties en cours : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des rôles qui ont soumis des ordres pour toutes les parties en cours : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        dict_submitted_data = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-games-orders-submitted"
+
+    # get roles that submitted orders : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return dict_submitted_data
 
 
 def get_tournament_players_data(tournament_id):
@@ -176,6 +206,159 @@ def change_news_modo():
     form <= html.BR()
 
     MY_SUB_PANEL <= form
+
+
+def all_delays():
+    """ all_delays """
+
+    MY_SUB_PANEL <= html.H3("Tous les retards")
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    dict_submitted_data = get_all_games_roles_submitted_orders()
+    if not dict_submitted_data:
+        alert("Erreur chargement des soumissions dans les parties")
+        return
+
+    delays_table = html.TABLE()
+
+    # the display order
+    fields = ['name', 'deadline', 'current_advancement', 'variant', 'used_for_elo']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'name': 'nom', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    delays_table <= thead
+
+    time_stamp_now = time.time()
+
+    gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
+
+    for game_id_str, data in sorted(games_dict.items()):
+
+        # must be ongoing game
+        if data['current_state'] != 1:
+            continue
+
+        game_id = int(game_id_str)
+
+        # must not be game over
+        if gameover[game_id] :
+            continue
+
+        # must be late
+        deadline_loaded = data['deadline']
+        if time_stamp_now <= deadline_loaded:
+            continue
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        row = html.TR()
+        for field in fields:
+
+            value = data[field]
+            colour = None
+            game_name = data['name']
+
+            if field == 'name':
+                value = game_name
+
+            if field == 'deadline':
+                deadline_loaded = value
+                datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
+                datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
+                value = datetime_deadline_loaded_str
+
+                if data['fast']:
+                    factor = 60
+                else:
+                    factor = 60 * 60
+
+                # game over
+                if gameover[game_id]:
+                    # should not happen here
+                    colour = config.GAMEOVER_COLOUR
+                    value = "(terminée)"
+
+                # we are after everything !
+                elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
+                    colour = config.CRITICAL_COLOUR
+                # we are after deadline + grace
+                elif time_stamp_now > deadline_loaded + factor * data['grace_duration']:
+                    colour = config.PASSED_GRACE_COLOUR
+                # we are after deadline + slight
+                elif time_stamp_now > deadline_loaded + config.SLIGHT_DELAY_SEC:
+                    colour = config.PASSED_DEADLINE_COLOUR
+                # we are slightly after deadline
+                elif time_stamp_now > deadline_loaded:
+                    colour = config.SLIGHTLY_PASSED_DEADLINE_COLOUR
+                # deadline is today
+                elif time_stamp_now > deadline_loaded - config.APPROACH_DELAY_SEC:
+                    # should not happen here
+                    colour = config.APPROACHING_DEADLINE_COLOUR
+
+            if field == 'current_advancement':
+                advancement_loaded = value
+                advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
+                advancement_season_readable = variant_data.season_name_table[advancement_season]
+                value = f"{advancement_season_readable} {advancement_year}"
+
+            if field == 'used_for_elo':
+                value = "Oui" if value else "Non"
+
+            col = html.TD(value)
+            if colour is not None:
+                col.style = {
+                    'background-color': colour
+                }
+
+            row <= col
+
+        delays_table <= row
+
+    MY_SUB_PANEL <= delays_table
 
 
 def prepare_mailing():
@@ -1448,6 +1631,8 @@ def load_option(_, item_name):
 
     if item_name == 'Changer nouvelles':
         change_news_modo()
+    if item_name == 'Tous les retards':
+        all_delays()
     if item_name == 'Préparer un publipostage':
         prepare_mailing()
     if item_name == 'Codes de vérification':
