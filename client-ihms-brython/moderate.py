@@ -273,7 +273,8 @@ def all_missing_orders():
 
     gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
 
-    for game_id_str, data in sorted(games_dict.items()):
+    # force sort according to deadline (latest games first of course)
+    for game_id_str, data in sorted(games_dict.items(), key=lambda t: t[1]['deadline']):
 
         data['late'] = None
         data['master'] = None
