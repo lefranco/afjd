@@ -383,7 +383,7 @@ resoud.c#19#Ajustements : suppressions : %1 : mauvais chiffre : (%2 unité(s), %
 resoud.c#20#L'unité %1 soutient une unité pour attaquer qui requiert son propre convoi
 resoud.c#21#Le centre %1 change de proprietaire : %2 -> %3
 resoud.c#22#Le centre %1 à maintenant un proprietaire : %2
-resoud.c#23#La partie est finie, le joueur %1 est déclaré vainqueur
+resoud.c#23#Le joueur %1 possède maintenant la stricte majorité des centres, en général cela signifie qu'il est déclaré vainqueur
 resoud.c#24#La partie est bloquee, tous les joueurs survivants sont déclarés vainqueurs
 resoud.c#25#Le pays %1 vient de disparaitre de la partie
 resoud.c#26#L'unité %1 soutient une unité compatriote pour attaquer qui n'effectue pas exactement le même déplacement (différence de côte) (=> accepté)

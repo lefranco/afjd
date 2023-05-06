@@ -383,7 +383,7 @@ resoud.c#19#Adjustments : removals : %1 : bad number : (%2 unit(s), %3 centre(s)
 resoud.c#20#Unit %1 is supporting a unit to attack which requires its own convoying
 resoud.c#21#Centre %1 has a new owner : %2 -> %3
 resoud.c#22#Centre %1 now has an owner : %2
-resoud.c#23#The game is over, player %1 is declared winner
+resoud.c#23#Player %1 now owns the strict majority of centers, usually this means that s/he is declared winner
 resoud.c#24#The game is blocked, all surviving players are declared winner
 resoud.c#25#Country %1 has just dissapeared from the game
 resoud.c#26#Unit %1 is supporting a compatriot unit to attack which does not perform exactly the move (difference of coasts) (=> accepted)
