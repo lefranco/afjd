@@ -18,7 +18,7 @@ import tips
 THRESHOLD_DRIFT_ALERT_SEC = 59
 
 
-OPTIONS = ['Vue d\'ensemble', 'Déclarer un incident', 'Foire aux questions', 'Les petits tuyaux', 'Evolution de la fréquentation', 'Brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Chatter en direct', 'Déclarer un incident', 'Foire aux questions', 'Les petits tuyaux', 'Evolution de la fréquentation', 'Brique sociale']
 
 
 # for safety
@@ -333,6 +333,12 @@ def show_news():
     col <= img
     row <= col
 
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/abydos.jpeg")
+    col <= img
+    row <= col
+
     row = html.TR()
     note_bene_content_table <= row
 
@@ -357,6 +363,12 @@ def show_news():
     col = html.TD()
     link5 = html.A(href="./docs/charte.pdf", target="_blank")
     link5 <= "La charte du bon diplomate - à lire absolument !"
+    col <= link5
+    row <= col
+
+    col = html.TD()
+    link5 = html.A(href="https://sites.google.com/view/abydosfr/accueil", target="_blank")
+    link5 <= "Le site dédié à Diplomacy de notre ami Abydos !"
     col <= link5
     row <= col
 
@@ -420,6 +432,19 @@ def show_news():
         if announcement:
             alert(announcement)
         storage['ALREADY_SPAMMED'] = 'yes'
+
+
+
+
+
+def live_chat():
+    """ live_chat """
+
+    title1 = html.H3("Salon de discussion interactive")
+    MY_SUB_PANEL <= title1
+
+    MY_SUB_PANEL <= "Bientôt, bientôt !"
+
 
 
 MAX_LEN_GAME_NAME = 50
@@ -747,6 +772,8 @@ def load_option(_, item_name):
 
     if item_name == 'Vue d\'ensemble':
         show_news()
+    if item_name == 'Chatter en direct':
+        live_chat()
     if item_name == 'Déclarer un incident':
         declare_incident(None)
     if item_name == 'Foire aux questions':
