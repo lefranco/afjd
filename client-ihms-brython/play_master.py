@@ -20,6 +20,15 @@ import play_low
 SUPERVISE_REFRESH_TIMER = None
 
 
+HELP_CONTENT_TABLE = {
+
+    "Arrêter la partie" : "menu “Editer partie“ sous menu “Changer l'état“",
+    "Changer les joueurs" : "menu “Editer partie“ sous menu “Déplacer des joueurs“ (en plus de d'attribuer/retirer le rôle)",
+    "Bénéficier du bouton permettant de contacter tous les remplaçants" : "retirer le rôle au joueur puis éjecter le joueur de la partie",
+    "Revenir sur le debriefing" : "menu “Editer partie“ sous menu “Changer anonymat“ et “Changer accès messagerie“",
+}
+
+
 class Random:
     """ Random provider """
 
@@ -1019,19 +1028,24 @@ def game_master():
     else:
         play_low.MY_SUB_PANEL <= "Partie en cours..."
 
-    play_low.MY_SUB_PANEL <= html.H3("Informations")
+    play_low.MY_SUB_PANEL <= html.H3("Aide memoire")
 
-    play_low.MY_SUB_PANEL <= html.DIV("Arrêter la partie : menu “Editer partie“ sous menu “Changer l'état“", Class='note')
-    play_low.MY_SUB_PANEL <= html.BR()
+    HELP_TABLE = html.TABLE()
+    for question_txt, answer_txt in HELP_CONTENT_TABLE.items():
 
-    play_low.MY_SUB_PANEL <= html.DIV("Changer les joueurs : menu “Editer partie“ sous menu “Déplacer des joueurs“ (en plus de d'attribuer/retirer le rôle)", Class='note')
-    play_low.MY_SUB_PANEL <= html.BR()
+        row = html.TR()
 
-    play_low.MY_SUB_PANEL <= html.DIV("Bénéficier du bouton permettant de contacter tous les remplaçants : retirer le rôle au joueur puis éjecter le joueur de la partie", Class='note')
-    play_low.MY_SUB_PANEL <= html.BR()
+        col = html.TD()
+        col <= question_txt
+        row <= col
 
-    play_low.MY_SUB_PANEL <= html.DIV("Revenir sur le debriefing : menu “Editer partie“ sous menu “Changer anonymat“ et “Changer accès messagerie“", Class='note')
-    play_low.MY_SUB_PANEL <= html.BR()
+        col = html.TD()
+        col <= answer_txt
+        row <= col
+
+        HELP_TABLE <= row
+
+    play_low.MY_SUB_PANEL <= HELP_TABLE
 
     return True
 
