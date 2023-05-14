@@ -167,7 +167,7 @@ def show_games():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)', }[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'current_state': 'état', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)', }[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -418,9 +418,6 @@ def show_games():
     MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
     MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time.time()
