@@ -606,7 +606,7 @@ def my_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous(*)', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics(**)', 'nomessage_game': 'privés(**)', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -850,7 +850,7 @@ def my_games(state_name):
                             nb_agreed_now = len(agreed_now_roles_list)
                             agreed_after_roles_list = submitted_data['agreed_after']
                             nb_agreed_after = len(agreed_after_roles_list)
-                            stats = f"{nb_agreed_now}m+{nb_agreed_after}a"
+                            stats = f"{nb_agreed_now} ma. {nb_agreed_after} dl"
                             value = stats
 
             if field == 'orders_submitted':
@@ -1010,12 +1010,6 @@ def my_games(state_name):
     MY_PANEL <= " "
     MY_PANEL <= html.IMG(src="./images/stop_game.png", title="Pour arrêter la partie")
     MY_PANEL <= html.BR()
-    MY_PANEL <= html.BR()
-
-    MY_PANEL <= html.DIV("(*) Accords : m=maintenant et a=à la D.L.", Class='note')
-    MY_PANEL <= html.BR()
-
-    MY_PANEL <= html.DIV("(**) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_PANEL <= html.BR()
 
     overall_time_after = time.time()

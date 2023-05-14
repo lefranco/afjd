@@ -286,7 +286,7 @@ def my_opportunities():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'join': 'rejoindre', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'last_season': 'dernière saison', 'allocated': 'alloué(**)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'join': 'rejoindre', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'last_season': 'dernière saison', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -536,12 +536,6 @@ def my_opportunities():
     MY_SUB_PANEL <= " "
     MY_SUB_PANEL <= html.IMG(src="./images/leave.png", title="Pour s'enlever de la partie")
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= html.DIV("(**) On prend en compte l'arbitre dans le nombre de joueurs", Class='note')
     MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time.time()
@@ -832,7 +826,7 @@ def all_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics(*)', 'nomessage_game': 'privés(*)'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'id': 'id', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -1062,9 +1056,6 @@ def all_games(state_name):
     MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
     MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
     MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= html.DIV("(*) Messagerie possible sur la partie, si le paramètre applicable actuellement est différent (partie terminée) il est indiqué entre parenthèses", Class='note')
     MY_SUB_PANEL <= html.BR()
 
     overall_time_after = time.time()
