@@ -501,7 +501,7 @@ def prepare_mailing():
 
     # header
     thead = html.THEAD()
-    for field in ['pseudo', 'courriel', 'newsletter']:
+    for field in ['pseudo', 'courriel', 'confirmé']:
         col = html.TD(field)
         thead <= col
     emails_table2 <= thead
@@ -538,9 +538,9 @@ def prepare_mailing():
 
         emails_table2 <= row
 
-    MY_SUB_PANEL <= html.H4("Publipostage")
+    MY_SUB_PANEL <= html.H4("Ceux qui sont d'accord pour recevoir la newletter")
     MY_SUB_PANEL <= emails_table
-    MY_SUB_PANEL <= html.H4("Information (ATTENTION : ne pas envoyer la lettre d'information)")
+    MY_SUB_PANEL <= html.H4("Ceux qui ne le sont pas (pour information)")
     MY_SUB_PANEL <= emails_table2
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.DIV("Les courriels en gras sont confimés, les courriels en italique ne le sont pas.", Class='note')
