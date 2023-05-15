@@ -22,10 +22,12 @@ SUPERVISE_REFRESH_TIMER = None
 
 HELP_CONTENT_TABLE = {
 
-    "Arrêter la partie" : "menu “Editer partie“ sous menu “Changer l'état“",
-    "Changer les joueurs" : "menu “Editer partie“ sous menu “Déplacer des joueurs“ (en plus de d'attribuer/retirer le rôle)",
-    "Bénéficier du bouton permettant de contacter tous les remplaçants" : "retirer le rôle au joueur puis éjecter le joueur de la partie",
-    "Revenir sur le debriefing" : "menu “Editer partie“ sous menu “Changer anonymat“ et “Changer accès messagerie“",
+    "Comment arrêter la partie ?" : "menu “Editer partie“ sous menu “Changer l'état“",
+    "Comment changer des joueurs ?" : "menu “Editer partie“ sous menu “Déplacer des joueurs“ (en plus de d'attribuer/retirer le rôle)",
+    "Comment bénéficier du bouton permettant de contacter tous les remplaçants ?" : "retirer le rôle au joueur puis éjecter le joueur de la partie (cf. comment changer des joueurs)",
+    "Comment effacer un retard ?" : "sous menu “retards“ de la partie et utiliser le bouton “supprimer“ en face du retard",
+    "Comment effacer un abandon ?" : "sous menu “retards“ de la partie et utiliser le bouton “supprimer“ en face de l'abandon",
+    "Comment revenir sur le debriefing ?" : "menu “Editer partie“ sous menu “Changer anonymat“ et “Changer accès messagerie“",
 }
 
 
@@ -1036,7 +1038,7 @@ def game_master():
         row = html.TR()
 
         col = html.TD()
-        col <= question_txt
+        col <= html.B(question_txt)
         row <= col
 
         col = html.TD()
