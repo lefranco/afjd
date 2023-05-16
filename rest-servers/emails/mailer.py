@@ -41,19 +41,19 @@ def load_mail_config(app: typing.Any) -> None:
     SENDER = app.config['MAIL_USERNAME']
 
 
-def send_mail(subject: str, body: str, addressee: str) -> typing.Tuple[bool, str]:
+def send_mail(subject: str, body: str, addressee: str, reply_to: typing.Optional[str]) -> typing.Tuple[bool, str]:
     """ send_mail """
 
     sender = SENDER
 
-    msg = flask_mail.Message(subject, sender=sender, recipients=[addressee])
+    msg = flask_mail.Message(subject, sender=sender, recipients=[addressee], reply_to=reply_to)
 
     msg.body = body
     msg.body += "\n"
     msg.body += "\n"
     msg.body += f"adresse web du site : {SITE_ADDRESS}"
     msg.body += "\n"
-    msg.body += "Ne pas répondre à ce message !"
+    msg.body += "Répondre à ce message !"
 
     assert MAILER is not None
     try:

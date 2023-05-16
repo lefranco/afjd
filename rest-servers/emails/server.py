@@ -41,6 +41,7 @@ SEND_EMAIL_PARSER.add_argument('addressees', type=str, required=True)
 SEND_EMAIL_SUPPORT_PARSER = flask_restful.reqparse.RequestParser()
 SEND_EMAIL_SUPPORT_PARSER.add_argument('subject', type=str, required=True)
 SEND_EMAIL_SUPPORT_PARSER.add_argument('body', type=str, required=True)
+SEND_EMAIL_SUPPORT_PARSER.add_argument('reply_to', type=str, required=True)
 
 SEND_EMAIL_WELCOME_PARSER = flask_restful.reqparse.RequestParser()
 SEND_EMAIL_WELCOME_PARSER.add_argument('subject', type=str, required=True)
@@ -58,7 +59,7 @@ PAUSE_BETWEEN_RETRIES_SEC = 15 * 60
 MAX_ERROR_COUNTER_FAILURE = 3
 
 # to transmit messages to send
-MESSAGE_QUEUE: queue.Queue[typing.Tuple[typing.Optional[str], str, str, str]] = queue.Queue()
+MESSAGE_QUEUE: queue.Queue[typing.Tuple[typing.Optional[str], str, str, str, typing.Optional[str]]] = queue.Queue()
 
 
 def sender_threaded_procedure() -> None:
@@ -71,7 +72,7 @@ def sender_threaded_procedure() -> None:
         while True:
 
             # from queue
-            pseudo, subject, body, addressee = MESSAGE_QUEUE.get()
+            pseudo, subject, body, addressee, reply_to = MESSAGE_QUEUE.get()
 
             if pseudo is None:
                 mylogger.LOGGER.info("actually sending an email to %s using no account", addressee)
@@ -79,7 +80,7 @@ def sender_threaded_procedure() -> None:
                 mylogger.LOGGER.info("actually sending an email to %s using account %s", addressee, pseudo)
 
             # send
-            status, exception = mailer.send_mail(subject, body, addressee)
+            status, exception = mailer.send_mail(subject, body, addressee, reply_to)
 
             # send ok
             if status:
@@ -108,13 +109,13 @@ def sender_threaded_procedure() -> None:
                 body2 += "\n"
             body2 += f"Exception produite : {exception}"
             body2 += "\n"
-            status2, _ = mailer.send_mail(subject2, body2, EMAIL_SUPPORT)
+            status2, _ = mailer.send_mail(subject2, body2, EMAIL_SUPPORT, None)
 
             if not status2:
                 mylogger.LOGGER.info("*** Also failed to send report to admin !")
 
             # put failed message back on queue
-            MESSAGE_QUEUE.put((pseudo, subject, body, addressee))
+            MESSAGE_QUEUE.put((pseudo, subject, body, addressee, reply_to))
 
             # count errors
             error_counter += 1
@@ -142,7 +143,7 @@ class SendMailWelcomeRessource(flask_restful.Resource):  # type: ignore
         body = args['body']
         email_newcommer = args['email']
 
-        MESSAGE_QUEUE.put((None, subject, body, email_newcommer))
+        MESSAGE_QUEUE.put((None, subject, body, email_newcommer, None))
 
         data = {'msg': 'Email was successfully queued to be sent to newcomer'}
         return data, 200
@@ -164,8 +165,9 @@ class SendMailSupportRessource(flask_restful.Resource):  # type: ignore
 
         subject = args['subject']
         body = args['body']
+        reply_to = args['reply_to']
 
-        MESSAGE_QUEUE.put((None, subject, body, EMAIL_SUPPORT))
+        MESSAGE_QUEUE.put((None, subject, body, EMAIL_SUPPORT, reply_to))
 
         data = {'msg': 'Email was successfully queued to be sent to support'}
         return data, 200
@@ -207,7 +209,7 @@ class SendEmailRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         for addressee in addressees_list:
-            MESSAGE_QUEUE.put((pseudo, subject, body, addressee))
+            MESSAGE_QUEUE.put((pseudo, subject, body, addressee, None))
 
         data = {'msg': 'Email was successfully queued to be sent'}
         return data, 200

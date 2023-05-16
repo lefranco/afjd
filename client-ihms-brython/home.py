@@ -537,6 +537,7 @@ def declare_incident(json_dict_params):
         json_dict = {
             'subject': subject,
             'body': body,
+            'reply_to': email,
         }
 
         host = config.SERVER_CONFIG['EMAIL']['HOST']
