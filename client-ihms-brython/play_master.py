@@ -1032,7 +1032,7 @@ def game_master():
 
     play_low.MY_SUB_PANEL <= html.H3("Aide memoire")
 
-    HELP_TABLE = html.TABLE()
+    help_table = html.TABLE()
     for question_txt, answer_txt in HELP_CONTENT_TABLE.items():
 
         row = html.TR()
@@ -1045,9 +1045,9 @@ def game_master():
         col <= answer_txt
         row <= col
 
-        HELP_TABLE <= row
+        help_table <= row
 
-    play_low.MY_SUB_PANEL <= HELP_TABLE
+    play_low.MY_SUB_PANEL <= help_table
 
     return True
 
