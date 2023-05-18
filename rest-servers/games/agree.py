@@ -11,8 +11,6 @@ import collections
 import json
 import time
 
-import sys
-
 import requests
 
 import ownerships

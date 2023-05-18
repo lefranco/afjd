@@ -3649,7 +3649,14 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
                 addressees.append(player_id)
         body = "Bonjour !\n"
         body += "\n"
-        body += "Vous pouvez aller consulter le message sur le site !\n"
+        body += "Contenu du message en question:\n"
+
+        body += "================\n"
+        body += payload
+        body += "\n"
+        body += "================\n"
+
+        body += "Vous pouvez aller consulter le message et y répondre sur le site....\n"
         body += "\n"
         body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
         body += "\n"
@@ -3864,7 +3871,14 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
                 addressees.append(player_id)
         body = "Bonjour !\n"
         body += "\n"
-        body += "Vous pouvez aller consulter la déclaration sur le site !\n"
+        body += "Contenu de la déclaration en question:\n"
+
+        body += "================\n"
+        body += payload
+        body += "\n"
+        body += "================\n"
+
+        body += "Vous pouvez aller consulter la déclaration et y répondre sur le site !\n"
         body += "\n"
         body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
         body += "\n"
