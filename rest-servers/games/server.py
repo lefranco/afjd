@@ -159,11 +159,13 @@ SIMULATION_PARSER.add_argument('names', type=str, required=True)
 
 DECLARATION_PARSER = flask_restful.reqparse.RequestParser()
 DECLARATION_PARSER.add_argument('role_id', type=int, required=True)
+DECLARATION_PARSER.add_argument('role_name', type=str, required=True)
 DECLARATION_PARSER.add_argument('anonymous', type=int, required=True)
 DECLARATION_PARSER.add_argument('content', type=str, required=True)
 
 MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
 MESSAGE_PARSER.add_argument('role_id', type=int, required=True)
+MESSAGE_PARSER.add_argument('role_name', type=str, required=True)
 MESSAGE_PARSER.add_argument('dest_role_ids', type=str, required=True)
 MESSAGE_PARSER.add_argument('content', type=str, required=True)
 
@@ -3547,6 +3549,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         args = MESSAGE_PARSER.parse_args(strict=True)
 
         role_id = args['role_id']
+        role_name = args['role_name']
         dest_role_ids_submitted = args['dest_role_ids']
         payload = args['content']
 
@@ -3649,8 +3652,10 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
                 addressees.append(player_id)
         body = "Bonjour !\n"
         body += "\n"
-        body += "Contenu du message en question:\n"
 
+        body += f"Auteur du message : {role_name}\n"
+        body += "\n"
+        body += "Contenu du message :\n"
         body += "================\n"
         body += payload
         body += "\n"
@@ -3784,6 +3789,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         args = DECLARATION_PARSER.parse_args(strict=True)
 
         role_id = args['role_id']
+        role_name = args['role_name']
         anonymous = args['anonymous']
         payload = args['content']
 
@@ -3871,8 +3877,10 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
                 addressees.append(player_id)
         body = "Bonjour !\n"
         body += "\n"
-        body += "Contenu de la déclaration en question:\n"
 
+        body += f"Auteur de la déclaration : {role_name}\n"
+        body += "\n"
+        body += "Contenu de la déclaration :\n"
         body += "================\n"
         body += payload
         body += "\n"

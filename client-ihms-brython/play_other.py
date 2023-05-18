@@ -1078,9 +1078,14 @@ def negotiate(default_dest_set):
             negotiate({})
             return
 
+        role_id = play_low.ROLE_ID
+        role = play_low.VARIANT_DATA.roles[role_id]
+        role_name = play_low.VARIANT_DATA.role_name_table[role]
+
         json_dict = {
-            'dest_role_ids': dest_role_ids,
             'role_id': play_low.ROLE_ID,
+            'dest_role_ids': dest_role_ids,
+            'role_name': role_name,
             'content': content
         }
 
@@ -1415,9 +1420,14 @@ def declare():
             declare()
             return
 
+        role_id = play_low.ROLE_ID
+        role = play_low.VARIANT_DATA.roles[role_id]
+        role_name = play_low.VARIANT_DATA.role_name_table[role]
+
         json_dict = {
             'role_id': play_low.ROLE_ID,
             'anonymous': anonymous,
+            'role_name': role_name,
             'content': content
         }
 
