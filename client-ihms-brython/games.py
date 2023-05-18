@@ -94,7 +94,7 @@ def create_game(json_dict):
 
     # load previous values if applicable
     name = json_dict['name'] if json_dict and 'name' in json_dict else None
-    variant = json_dict['variant'] if json_dict and 'variant' in json_dict else None
+    variant = json_dict['variant'] if json_dict and 'variant' in json_dict else VARIANT_NAMES_LIST[0]
     archive = json_dict['archive'] if json_dict and 'archive' in json_dict else None
     used_for_elo = json_dict['used_for_elo'] if json_dict and 'used_for_elo' in json_dict else None
     manual = json_dict['manual'] if json_dict and 'manual' in json_dict else None
@@ -102,7 +102,7 @@ def create_game(json_dict):
     nomessage_game = json_dict['nomessage_game'] if json_dict and 'nomessage_game' in json_dict else None
     nopress_game = json_dict['nopress_game'] if json_dict and 'nopress_game' in json_dict else None
     fast = json_dict['fast'] if json_dict and 'fast' in json_dict else None
-    scoring_code = json_dict['scoring_code'] if json_dict and 'scoring_code' in json_dict else None
+    scoring_code = json_dict['scoring'] if json_dict and 'scoring' in json_dict else list(config.SCORING_CODE_TABLE.values())[0]
     deadline_hour = json_dict['deadline_hour'] if json_dict and 'deadline_hour' in json_dict else None
     deadline_sync = json_dict['deadline_sync'] if json_dict and 'deadline_sync' in json_dict else None
     grace_duration = json_dict['grace_duration'] if json_dict and 'grace_duration' in json_dict else None
@@ -118,6 +118,9 @@ def create_game(json_dict):
     access_restriction_performance = json_dict['access_restriction_performance'] if json_dict and 'access_restriction_performance' in json_dict else None
     nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play'] if json_dict and 'nb_max_cycles_to_play' in json_dict else None
 
+    # conversion
+    scoring = {v:k for k,v in config.SCORING_CODE_TABLE.items()}[scoring_code]
+
     def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
 
@@ -130,7 +133,7 @@ def create_game(json_dict):
         nonlocal nomessage_game
         nonlocal nopress_game
         nonlocal fast
-        nonlocal scoring_code
+        nonlocal scoring
         nonlocal deadline_hour
         nonlocal deadline_sync
         nonlocal grace_duration
@@ -182,7 +185,7 @@ def create_game(json_dict):
         nomessage_game = int(input_nomessage_game.checked)
         nopress_game = int(input_nopress_game.checked)
         fast = int(input_fast.checked)
-        scoring_code = config.SCORING_CODE_TABLE[input_scoring.value]
+        scoring = input_scoring.value
 
         try:
             deadline_hour = int(input_deadline_hour.value)
@@ -259,10 +262,13 @@ def create_game(json_dict):
         if not specific_data:
             specific_data = "(sans particularité) "
 
-        description = f"Partie créée le {time_creation_str} par {pseudo} variante {variant}. Cette partie est {specific_data}. Scorage {scoring_code}."
+        description = f"Partie créée le {time_creation_str} par {pseudo} variante {variant}. Cette partie est {specific_data}. Scorage {scoring}."
         state = 0
 
-        # make data strucuture
+        # conversion
+        scoring_code = config.SCORING_CODE_TABLE[scoring]
+
+        # make data structure
         json_dict = {
             'name': name,
             'variant': variant,
@@ -366,7 +372,7 @@ def create_game(json_dict):
 
     for variant_name in VARIANT_NAMES_LIST:
         option = html.OPTION(variant_name)
-        if variant_name == VARIANT_NAMES_LIST[0]:
+        if variant_name == variant: # always defined
             option.selected = True
         input_variant <= option
 
@@ -439,7 +445,7 @@ def create_game(json_dict):
 
     for scoring_name in config.SCORING_CODE_TABLE:
         option = html.OPTION(scoring_name)
-        if config.SCORING_CODE_TABLE[scoring_name] == (scoring_code if scoring_code is not None else DEFAULT_SCORING_CODE):
+        if scoring_name == scoring: # always defined
             option.selected = True
         input_scoring <= option
 
@@ -999,11 +1005,11 @@ def change_scoring_game():
 
         ev.preventDefault()
 
-        scoring_code = config.SCORING_CODE_TABLE[input_scoring.value]
+        scoring = config.SCORING_CODE_TABLE[input_scoring.value]
 
         json_dict = {
             'name': game,
-            'scoring': scoring_code,
+            'scoring': scoring,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
