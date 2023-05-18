@@ -434,7 +434,6 @@ def show_news():
         storage['ALREADY_SPAMMED'] = 'yes'
 
 
-
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_EMAIL = 100
 
