@@ -119,7 +119,7 @@ def create_game(json_dict):
     nb_max_cycles_to_play = json_dict['nb_max_cycles_to_play'] if json_dict and 'nb_max_cycles_to_play' in json_dict else None
 
     # conversion
-    scoring = {v:k for k,v in config.SCORING_CODE_TABLE.items()}[scoring_code]
+    scoring = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[scoring_code]
 
     def create_game_callback(ev):  # pylint: disable=invalid-name
         """ create_game_callback """
@@ -372,7 +372,7 @@ def create_game(json_dict):
 
     for variant_name in VARIANT_NAMES_LIST:
         option = html.OPTION(variant_name)
-        if variant_name == variant: # always defined
+        if variant_name == variant:
             option.selected = True
         input_variant <= option
 
@@ -445,7 +445,7 @@ def create_game(json_dict):
 
     for scoring_name in config.SCORING_CODE_TABLE:
         option = html.OPTION(scoring_name)
-        if scoring_name == scoring: # always defined
+        if scoring_name == scoring:
             option.selected = True
         input_scoring <= option
 

@@ -90,9 +90,9 @@ def create_account(json_dict):
     timezone_code = json_dict['time_zone'] if json_dict and 'time_zone' in json_dict else DEFAULT_TIMEZONE_CODE
 
     # conversion
-    residence = {v:k for k,v in config.COUNTRY_CODE_TABLE.items()}[residence_code]
-    nationality = {v:k for k,v in config.COUNTRY_CODE_TABLE.items()}[nationality_code]
-    timezone = {v:k for k,v in config.TIMEZONE_CODE_TABLE.items()}[timezone_code]
+    residence = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}[residence_code]
+    nationality = {v: k for k, v in config.COUNTRY_CODE_TABLE.items()}[nationality_code]
+    timezone = {v: k for k, v in config.TIMEZONE_CODE_TABLE.items()}[timezone_code]
 
     def create_account_callback(ev):  # pylint: disable=invalid-name
         """ create_account_callback """
@@ -328,7 +328,7 @@ def create_account(json_dict):
 
     for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if country_name == (residence if residence is not None else DEFAULT_COUNTRY):
+        if country_name == residence:
             option.selected = True
         input_residence <= option
 
@@ -342,7 +342,7 @@ def create_account(json_dict):
 
     for country_name in config.COUNTRY_CODE_TABLE:
         option = html.OPTION(country_name)
-        if country_name == (nationality if nationality is not None else DEFAULT_COUNTRY):
+        if country_name == nationality:
             option.selected = True
         input_nationality <= option
 
@@ -356,7 +356,7 @@ def create_account(json_dict):
 
     for timezone_cities in config.TIMEZONE_CODE_TABLE:
         option = html.OPTION(timezone_cities)
-        if timezone_cities == (timezone if timezone is not None else DEFAULT_TIMEZONE):
+        if timezone_cities == timezone:
             option.selected = True
         input_timezone <= option
 
