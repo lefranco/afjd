@@ -18,7 +18,7 @@ def c_diplo(solo_threshold, ratings):
     # detect solo
     best_role_name = list(ratings.keys())[0]
     if ratings[best_role_name] > solo_threshold:
-        ratings[best_role_name] = solo_reward
+        score[best_role_name] = solo_reward
         return score
 
     # participation point
