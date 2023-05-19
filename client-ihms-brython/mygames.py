@@ -178,6 +178,36 @@ def get_all_player_games_roles_submitted_orders():
     return dict_submitted_data
 
 
+def get_games_date_change_data():
+    """ get_games_date_change_data : returnes empty dict if problem """
+
+    games_dict = {}
+
+    def reply_callback(req):
+        nonlocal games_dict
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des derniers changements des parties : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des derniers changements des parties : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        games_dict = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/date_last_change_games"
+
+    # getting changes games list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return games_dict
+
+
 def get_my_delays():
     """ get_my_delays """
 
@@ -542,6 +572,11 @@ def my_games(state_name):
         alert("Erreur chargement dictionnaire parties")
         return
 
+    games_changes_dict = get_games_date_change_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire changements parties")
+        return
+
     dict_submitted_data = get_all_player_games_roles_submitted_orders()
     if not dict_submitted_data:
         alert("Erreur chargement des soumissions dans les parties")
@@ -598,7 +633,7 @@ def my_games(state_name):
     games_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
+    fields = ['name', 'go_game', 'changed', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
 
     if storage['ACTION_COLUMN_MODE'] == 'displayed':
         fields.extend(['edit', 'startstop'])
@@ -606,7 +641,7 @@ def my_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'changed': 'changée', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -614,7 +649,7 @@ def my_games(state_name):
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
-        if field in ['name', 'deadline', 'current_advancement', 'role_played', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']:
+        if field in ['name', 'changed', 'deadline', 'current_advancement', 'role_played', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']:
 
             if field == 'name':
 
@@ -674,6 +709,8 @@ def my_games(state_name):
         def key_function(g): return int(dict_role_id.get(g[0], -1))  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     elif sort_by == 'deadline':
         def key_function(g): return int(gameover[int(g[0])]), int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
+    elif sort_by == 'changed':
+        def key_function(g): return games_changes_dict.get(g[0], 0)  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
@@ -733,6 +770,7 @@ def my_games(state_name):
         submitted_data['agreed_after'] = dict_submitted_data['dict_agreed_after'][str(game_id)]
 
         data['go_game'] = None
+        data['changed'] = None
         data['orders_submitted'] = None
         data['agreed'] = None
         data['all_orders_submitted'] = None
@@ -766,6 +804,16 @@ def my_games(state_name):
                     link = html.A(href=f"?game={game_name}", target="_blank")
                     link <= img
                     value = link
+
+            if field == 'changed':
+                value = '-'
+                if game_id_str in games_changes_dict:
+                    changed_loaded = games_changes_dict[game_id_str]
+                    datetime_changed_loaded = mydatetime.fromtimestamp(changed_loaded)
+                    datetime_changed_loaded_str = mydatetime.strftime2(*datetime_changed_loaded)
+                    value = datetime_changed_loaded_str
+                    if changed_loaded > time_stamp_now - 24 * 60 * 60:
+                        value = html.B(value)
 
             if field == 'deadline':
 
