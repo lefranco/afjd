@@ -1126,6 +1126,13 @@ def submit_orders():
         buttons_right <= html.BR()
 
         option_never = "non"
+
+        # warning for this button if after deadline
+        deadline_loaded = play_low.GAME_PARAMETERS_LOADED['deadline']
+        time_stamp_now = time.time()
+        if time_stamp_now > deadline_loaded:
+            option_never += " (ATTENTION : retard !)"
+
         label_never = html.LABEL(html.EM(option_never))
         buttons_right <= label_never
         input_never = html.INPUT(type="radio", id="never", name="agreed", checked=(definitive_value == 0))
