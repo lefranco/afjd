@@ -6018,6 +6018,58 @@ class ExtractHistoDataRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/date_last_change_games')
+class DateLastChangeGamesRessource(flask_restful.Resource):  # type: ignore
+    """ DateLastChangeGamesRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[int, int], int]:
+        """
+        Get date last change of all games
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/date_last_change_games - GET - date last change of all games ")
+
+        sql_executor = database.SqlExecutor()
+
+        # concerned_games
+        games_list = games.Game.inventory(sql_executor)
+        concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.archive]
+
+        # time of spring 01
+        first_advancement = 1
+
+        games_dict = {}
+        for game_id in concerned_games_list:
+
+            # get start date
+            start_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, first_advancement)
+
+            if not start_transition:
+                # this game was not played
+                continue
+
+            assert start_transition is not None
+
+            # get game
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+
+            # get current_advancement
+            last_advancement_played = game.current_advancement - 1
+
+            # get end date
+            end_transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, last_advancement_played)
+
+            assert end_transition is not None
+            games_dict[game_id] = end_transition.time_stamp
+
+        del sql_executor
+
+        data = games_dict
+        return data, 200
+
+
 @API.resource('/maintain')
 class MaintainRessource(flask_restful.Resource):  # type: ignore
     """ MaintainRessource """
