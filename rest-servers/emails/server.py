@@ -65,6 +65,13 @@ MESSAGE_QUEUE: queue.Queue[typing.Tuple[typing.Optional[str], str, str, str, typ
 def sender_threaded_procedure() -> None:
     """ does the actual sending of messages """
 
+    def will_retry(exception: str) -> bool:
+        """ will_retry """
+        # put failed message back on queue (only if not bad address)
+        if exception.find("Recipient address rejected: Domain not found") != -1:
+            return False
+        return True
+
     with APP.app_context():
 
         error_counter = 0
@@ -98,6 +105,8 @@ def sender_threaded_procedure() -> None:
 
             subject2 = "Echec à l'envoi d'un message !"
 
+            will_retry_message = will_retry(exception)
+
             # make and send email report (unsure to be successful)
             body2 = ""
             body2 += f"Destinataire : {addressee}"
@@ -109,13 +118,15 @@ def sender_threaded_procedure() -> None:
                 body2 += "\n"
             body2 += f"Exception produite : {exception}"
             body2 += "\n"
+            body2 += f"Vais retenter : {'oui' if will_retry_message else 'non'}"
+            body2 += "\n"
             status2, _ = mailer.send_mail(subject2, body2, EMAIL_SUPPORT, None)
 
             if not status2:
                 mylogger.LOGGER.info("*** Also failed to send report to admin !")
 
-            # put failed message back on queue
-            MESSAGE_QUEUE.put((pseudo, subject, body, addressee, reply_to))
+            if will_retry_message:
+                MESSAGE_QUEUE.put((pseudo, subject, body, addressee, reply_to))
 
             # count errors
             error_counter += 1
