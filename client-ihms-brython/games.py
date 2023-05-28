@@ -1833,9 +1833,9 @@ def delete_game():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la suppresssion de la partie : {req_result['message']}")
+                    alert(f"Erreur à la suppression de la partie : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la suppresssion de la partie : {req_result['msg']}")
+                    alert(f"Problème à la suppression de la partie : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
