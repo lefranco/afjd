@@ -2410,13 +2410,13 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(403, msg="Submitting agreement after deadine is not possible for fast or archive games")
 
-        # must not be game over
-        if game.game_over():
-            del sql_executor
-            flask_restful.abort(403, msg="Game is finished !")
-
         # begin of protected section
         with MOVE_GAME_LOCK_TABLE[game.name]:
+
+            # must not be game over
+            if game.game_over():
+                del sql_executor
+                flask_restful.abort(403, msg="Game is finished !")
 
             # check orders are required
             # needed list : those who need to submit orders
