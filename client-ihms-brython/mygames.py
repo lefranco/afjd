@@ -658,8 +658,8 @@ def my_games(state_name):
 
     if storage['GAME_SHOW_MODE'] == 'reduced':
         fields.remove('changed')
+        fields.remove('all_orders_submitted')
         fields.remove('all_agreed')
-        fields.remove('orders_submitted')
         fields.remove('variant')
         fields.remove('used_for_elo')
         fields.remove('nopress_game')
