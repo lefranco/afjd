@@ -3405,7 +3405,7 @@ class AllGamesMissingOrdersRessource(flask_restful.Resource):  # type: ignore
 
             # missing_list
             missing_list = [r for r in needed_list if r not in submitted_list or r not in agreed_now_after_list]
-            dict_missing_list[game_id] = {r: role2player[r] for r in missing_list}
+            dict_missing_list[game_id] = {r: role2player[r] for r in missing_list if r in role2player}
 
         del sql_executor
 
