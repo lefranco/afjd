@@ -1155,8 +1155,10 @@ void modifpossessions(void) {
 				if (p->pays == s)
 					ncentres++;
 			if (ncentres > (CENTRE.n / 2)) {
-				cherchechaine(__FILE__, 23, buf, 1, s->nom); /*"La partie est finie, le joueur %1 est declare vainqueur"*/
-				avertir(buf);
+				if (OPTIONw) {
+					cherchechaine(__FILE__, 23, buf, 1, s->nom); /*"La partie est finie, le joueur %1 est declare vainqueur"*/
+					avertir(buf);
+				}
 			}
 		}
 
