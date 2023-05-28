@@ -511,6 +511,14 @@ def my_games(state_name):
         MY_PANEL.clear()
         my_games(state_name)
 
+    def change_show_mode_callback(_):
+        if storage['GAME_SHOW_MODE'] == 'complete':
+            storage['GAME_SHOW_MODE'] = 'reduced'
+        else:
+            storage['GAME_SHOW_MODE'] = 'complete'
+        MY_PANEL.clear()
+        my_games(state_name)
+
     def change_button_mode_callback(_):
         if storage['GAME_ACCESS_MODE'] == 'button':
             storage['GAME_ACCESS_MODE'] = 'link'
@@ -604,6 +612,19 @@ def my_games(state_name):
 
     time_stamp_now = time.time()
 
+    # button for switching mode (display)
+    if 'GAME_SHOW_MODE' not in storage:
+        storage['GAME_SHOW_MODE'] = 'complete'
+    if storage['GAME_SHOW_MODE'] == 'complete':
+        button = html.BUTTON("Basculer en mode restreint (affiche moins de colonnes)", Class='btn-menu')
+    else:
+        button = html.BUTTON("Basculer en mode complet (affiche toutes les colonnes)", Class='btn-menu')
+    button.bind("click", change_show_mode_callback)
+    MY_PANEL <= button
+
+    # separator
+    MY_PANEL <= " "
+
     # button for switching mode
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
@@ -634,6 +655,15 @@ def my_games(state_name):
 
     # the display order
     fields = ['name', 'go_game', 'changed', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
+
+    if storage['GAME_SHOW_MODE'] == 'reduced':
+        fields.remove('changed')
+        fields.remove('all_agreed')
+        fields.remove('orders_submitted')
+        fields.remove('variant')
+        fields.remove('used_for_elo')
+        fields.remove('nopress_game')
+        fields.remove('nomessage_game')
 
     if storage['ACTION_COLUMN_MODE'] == 'displayed':
         fields.extend(['edit', 'startstop'])
