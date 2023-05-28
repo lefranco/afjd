@@ -1158,9 +1158,9 @@ def delete_tournament():
             req_result = json.loads(req.text)
             if req.status != 200:
                 if 'message' in req_result:
-                    alert(f"Erreur à la suppresssion du tournoi : {req_result['message']}")
+                    alert(f"Erreur à la suppression du tournoi : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème à la suppresssion du tournoi : {req_result['msg']}")
+                    alert(f"Problème à la suppression du tournoi : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
