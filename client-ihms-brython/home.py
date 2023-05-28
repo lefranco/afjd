@@ -306,6 +306,8 @@ def show_news():
 
     note_bene_content_table = html.TABLE()
 
+    # ======================
+
     row = html.TR()
     note_bene_content_table <= row
 
@@ -333,11 +335,7 @@ def show_news():
     col <= img
     row <= col
 
-    col = html.TD()
-    col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/abydos.jpeg")
-    col <= img
-    row <= col
+    # ----------------------
 
     row = html.TR()
     note_bene_content_table <= row
@@ -366,11 +364,42 @@ def show_news():
     col <= link5
     row <= col
 
+    # ======================
+
+    row = html.TR()
+    note_bene_content_table <= row
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/facebook.png")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/abydos.jpeg")
+    col <= img
+    row <= col
+
+    # ----------------------
+
+    row = html.TR()
+    note_bene_content_table <= row
+
+    col = html.TD()
+    link5 = html.A(href="https://www.facebook.com/groups/104700706277433", target="_blank")
+    link5 <= "La page Facebook de l'association"
+    col <= link5
+    row <= col
+
     col = html.TD()
     link5 = html.A(href="https://sites.google.com/view/abydosfr/accueil", target="_blank")
     link5 <= "Le site dédié à Diplomacy de notre ami Abydos !"
     col <= link5
     row <= col
+
+
+    # ======================
 
     note_bene_content <= note_bene_content_table
     div_b1 <= note_bene_content
