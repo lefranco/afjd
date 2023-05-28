@@ -377,6 +377,12 @@ def show_news():
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/twitter.png")
+    col <= img
+    row <= col
+
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
     img = html.IMG(src="./images/abydos.jpeg")
     col <= img
     row <= col
@@ -389,6 +395,12 @@ def show_news():
     col = html.TD()
     link5 = html.A(href="https://www.facebook.com/groups/104700706277433", target="_blank")
     link5 <= "La page Facebook de l'association"
+    col <= link5
+    row <= col
+
+    col = html.TD()
+    link5 = html.A(href="https://twitter.com/asso_diplo", target="_blank")
+    link5 <= "La page Twitter de l'association"
     col <= link5
     row <= col
 
