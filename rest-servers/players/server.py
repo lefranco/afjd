@@ -1045,7 +1045,7 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/news - GET - get the latest news (admin and modo) + server time")
+        mylogger.LOGGER.info("/news - GET - get the latest news (admin and modo) + chats + server time")
 
         sql_executor = database.SqlExecutor()
 
@@ -1055,9 +1055,18 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
+        # get chats contents
+        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/chat-messages"
+        req_result = SESSION.get(url)
+        chats_content = []
+        if req_result.status_code == 200:
+            chats_content = req_result.json()
+
         server_time = time.time()
 
-        data = {'admin': admin_content, 'modo': modo_content, 'glory': glory_content, 'server_time': server_time}
+        data = {'admin': admin_content, 'modo': modo_content, 'glory': glory_content, 'chats': chats_content, 'server_time': server_time}
 
         return data, 200
 
