@@ -736,7 +736,7 @@ def my_games(state_name):
     dict_role_id = get_all_roles_allocated_to_player()
     if not dict_role_id:
         alert("Il semble que vous ne jouiez dans aucune partie... Quel dommage !")
-        return
+        #return
 
     player_id = common.get_player_id(pseudo)
     if player_id is None:
@@ -764,22 +764,22 @@ def my_games(state_name):
         return
 
     dict_time_stamp_last_declarations = date_last_declarations()
-    if not dict_time_stamp_last_declarations:
+    if dict_role_id and not dict_time_stamp_last_declarations:
         alert("Erreur chargement dates dernières déclarations des parties")
         return
 
     dict_time_stamp_last_messages = date_last_messages()
-    if not dict_time_stamp_last_messages:
+    if dict_role_id and not dict_time_stamp_last_messages:
         alert("Erreur chargement dates derniers messages des parties")
         return
 
     dict_time_stamp_last_visits_declarations = date_last_visit_load_all_games(config.DECLARATIONS_TYPE)
-    if not dict_time_stamp_last_visits_declarations:
+    if dict_role_id and not dict_time_stamp_last_visits_declarations:
         alert("Erreur chargement dates visites dernières declarations des parties")
         return
 
     dict_time_stamp_last_visits_messages = date_last_visit_load_all_games(config.MESSAGES_TYPE)
-    if not dict_time_stamp_last_visits_messages:
+    if dict_role_id and not dict_time_stamp_last_visits_messages:
         alert("Erreur chargement dates visites derniers messages des parties")
         return
 
