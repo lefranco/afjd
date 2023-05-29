@@ -13,12 +13,13 @@ import config
 import common
 import faq
 import tips
+import mydatetime
 
 
 THRESHOLD_DRIFT_ALERT_SEC = 59
 
 
-OPTIONS = ['Vue d\'ensemble', 'Déclarer un incident', 'Foire aux questions', 'Les petits tuyaux', 'Evolution de la fréquentation', 'Brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Chatter en direct', 'Déclarer un incident', 'Foire aux questions', 'Les petits tuyaux', 'Evolution de la fréquentation', 'Brique sociale']
 
 
 # for safety
@@ -86,6 +87,36 @@ def get_teaser_content():
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return teaser_content
+
+
+def get_chat_messages():
+    """ get_chat_messages """
+
+    chat_messages = {}
+
+    def reply_callback(req):
+        nonlocal chat_messages
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des messages chat : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des messages chat : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        chat_messages = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/chats"
+
+    # get chats : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return chat_messages
 
 
 def formatted_news(news_content_loaded, admin, class_):
@@ -474,6 +505,169 @@ def show_news():
         storage['ALREADY_SPAMMED'] = 'yes'
 
 
+RANDOM = common.Random()
+MAX_CHAT_NUMBER = 999
+CHAT_NUMBER = RANDOM.choice(list(range(1, MAX_CHAT_NUMBER + 1)))
+
+
+def live_chat():
+    """ live_chat """
+
+    def add_chat_callback(ev):  # pylint: disable=invalid-name
+        """ add_chat_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'ajout de message chat : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'ajout de message chat : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            live_chat()
+
+        ev.preventDefault()
+
+        content = input_message.value
+
+        if not content:
+            alert("Pas de contenu pour ce message !")
+            MY_SUB_PANEL.clear()
+            live_chat()
+            return
+
+        if 'PSEUDO' in storage:
+            author = storage['PSEUDO']
+        else:
+            author = f"anonyme_{CHAT_NUMBER}"
+
+        json_dict = {
+            'author': author,
+            'content': content,
+        }
+
+        host = config.SERVER_CONFIG['EMAIL']['HOST']
+        port = config.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/chat-messages"
+
+        # adding a chat : do not need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def chats_reload_callback(ev):  # pylint: disable=invalid-name
+        """ chats_reload_callback """
+
+        if ev is not None:
+            ev.preventDefault()
+
+        chat_messages = []
+
+        def reply_callback(req):
+            nonlocal chat_messages
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération des messages chats : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération des messages chats : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            chat_messages = req_result
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['EMAIL']['HOST']
+        port = config.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/chat-messages"
+
+        # extracting chats : do not need token
+        chat_messages = []
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return chat_messages
+
+    title4 = html.H3("Chatter en direct")
+    MY_SUB_PANEL <= title4
+
+    chats = chats_reload_callback(None)
+    # there can be no message (if no declaration of failed to load)
+
+    chats_table = html.TABLE()
+
+    thead = html.THEAD()
+    for title in ['Date', 'Auteur', 'Contenu']:
+        col = html.TD(html.B(title))
+        thead <= col
+    chats_table <= thead
+
+    for time_stamp, author, content in chats:
+
+        row = html.TR()
+
+        date_desc_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_desc_gmt_str = mydatetime.strftime(*date_desc_gmt)
+        col = html.TD(f"{date_desc_gmt_str}", Class='text')
+        row <= col
+
+        col = html.TD(author, Class='text')
+        row <= col
+
+        col = html.TD(Class='text')
+        for line in content.split('\n'):
+            # new so put in bold
+            col <= line
+            col <= html.BR()
+        row <= col
+
+        chats_table <= row
+
+    # reload
+
+    form1 = html.FORM()
+    input_reload_all = html.INPUT(type="submit", value="Recharger les messages")
+    input_reload_all.bind("click", chats_reload_callback)
+    form1 <= input_reload_all
+
+    # say
+
+    form2 = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_message = html.LEGEND("Votre message", title="Qu'avez vous à dire ?")
+    fieldset <= legend_message
+    input_message = html.TEXTAREA(type="text", rows=4, cols=80)
+    fieldset <= input_message
+    form2 <= fieldset
+
+    input_say_message = html.INPUT(type="submit", value="Envoyer")
+    input_say_message.bind("click", add_chat_callback)
+    form2 <= input_say_message
+
+    information1 = html.DIV(Class='important')
+    information1 <= "La première vocation du chat est de fournir une aide rapide aux nouveaux arrivants sur le site."
+
+    information2 = html.DIV(Class='note')
+    information2 <= "Les messages persistent au moins 24 heures. L'auteur des messages n'est pas garanti par le système. Ce chat rustique n'a pas destination à remplacer le salon Discord"
+
+    # display items
+
+    MY_SUB_PANEL <= information1
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= information2
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= form1
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= chats_table
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= form2
+
+
 MAX_LEN_GAME_NAME = 50
 MAX_LEN_EMAIL = 100
 
@@ -800,6 +994,8 @@ def load_option(_, item_name):
 
     if item_name == 'Vue d\'ensemble':
         show_news()
+    if item_name == 'Chatter en direct':
+        live_chat()
     if item_name == 'Déclarer un incident':
         declare_incident(None)
     if item_name == 'Foire aux questions':
