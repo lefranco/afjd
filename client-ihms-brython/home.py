@@ -242,9 +242,11 @@ def show_news():
     # ----
     div_a5 = html.DIV(Class='tooltip')
 
-    title1 = html.H4("Remplacements urgents")
+    title1 = html.H4("Remplacements urgents et dernier chats")
     div_a5 <= title1
 
+    div_a5 <= "Remplacements :"
+    div_a5 <= html.BR()
     suffering_games_loaded = stats_content['suffering_games']
     if suffering_games_loaded:
         div_a5 <= "Les parties suivantes sont en cours et ont besoin de remplaçant(s)"
@@ -252,6 +254,16 @@ def show_news():
         div_a5 <= formatted_games(suffering_games_loaded)
     else:
         div_a5 <= "Aucune partie en cours n'a besoin de remplaçant(s)."
+
+    chat_content_loaded = news_content_table_loaded['chats']
+    if chat_content_loaded:
+        last_chat = chat_content_loaded[-1]
+        last_chat_message = last_chat[2]
+        div_a5 <= html.BR()
+        div_a5 <= html.BR()
+        div_a5 <= "Dernier chat :"
+        div_a5 <= html.BR()
+        div_a5 <= html.EM(last_chat_message)
 
     div_a5_tip = html.SPAN("Plus de détail dans le menu “Rejoindre une partie“", Class='tooltiptext')
     div_a5 <= div_a5_tip
