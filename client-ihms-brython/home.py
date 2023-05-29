@@ -410,7 +410,6 @@ def show_news():
     col <= link5
     row <= col
 
-
     # ======================
 
     note_bene_content <= note_bene_content_table
