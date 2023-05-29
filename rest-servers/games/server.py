@@ -4570,6 +4570,56 @@ class PlayerGameIncidentsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/player-game-dropouts')
+class PlayerGameDropoutsRessource(flask_restful.Resource):  # type: ignore
+    """ PlayerGameDropoutsRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, int, float]]], int]:
+        """
+        Gets list of incidents dropout for given player
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/player-game-dropouts - GET - getting incidents for player")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # dropouts_list : those who quitted the game
+        dropouts_list = dropouts.Dropout.list_by_player_id(sql_executor, user_id)
+        dropout_list = [(o[0], o[1], o[3]) for o in dropouts_list]
+
+        del sql_executor
+
+        data = {'dropouts': dropout_list}
+        return data, 200
+
+
 @API.resource('/game-incidents/<game_id>')
 class GameIncidentsRessource(flask_restful.Resource):  # type: ignore
     """ GameIncidentsRessource """

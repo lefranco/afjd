@@ -44,7 +44,7 @@ class Dropout:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS dropouts")
-        sql_executor.execute("CREATE TABLE dropouts (game_id INTEGER, role_num INTEGER, player_id INTEGER,  date real)")
+        sql_executor.execute("CREATE TABLE dropouts (game_id INTEGER, role_num INTEGER, player_id INTEGER, date real)")
 
     def __init__(self, game_id: int, role_num: int, player_id: int) -> None:
 
