@@ -258,14 +258,15 @@ def show_news():
     chat_content_loaded = news_content_table_loaded['chats']
     if chat_content_loaded:
         last_chat = chat_content_loaded[-1]
+        last_chat_author = last_chat[1]
         last_chat_message = last_chat[2]
         div_a5 <= html.BR()
         div_a5 <= html.BR()
         div_a5 <= "Dernier chat :"
         div_a5 <= html.BR()
-        div_a5 <= html.EM(last_chat_message)
+        div_a5 <= html.B(f"{last_chat_author} : {last_chat_message}")
 
-    div_a5_tip = html.SPAN("Plus de détail dans le menu “Rejoindre une partie“", Class='tooltiptext')
+    div_a5_tip = html.SPAN("Plus de détail dans le menu “Rejoindre une partie“ et dans le menu “Chatter en direct“", Class='tooltiptext')
     div_a5 <= div_a5_tip
     div_homepage <= div_a5
 
@@ -556,7 +557,7 @@ def live_chat():
         if 'PSEUDO' in storage:
             author = storage['PSEUDO']
         else:
-            author = f"anonyme_{CHAT_NUMBER}"
+            author = f"anonyme#{CHAT_NUMBER}"
 
         json_dict = {
             'author': author,
