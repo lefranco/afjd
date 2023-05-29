@@ -4574,7 +4574,7 @@ class PlayerGameIncidentsRessource(flask_restful.Resource):  # type: ignore
 class PlayerGameDropoutsRessource(flask_restful.Resource):  # type: ignore
     """ PlayerGameDropoutsRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, int, int, float]]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[typing.Tuple[int, int, float]]], int]:
         """
         Gets list of incidents dropout for given player
         EXPOSED
