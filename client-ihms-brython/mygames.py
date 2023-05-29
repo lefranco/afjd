@@ -736,7 +736,6 @@ def my_games(state_name):
     dict_role_id = get_all_roles_allocated_to_player()
     if not dict_role_id:
         alert("Il semble que vous ne jouiez dans aucune partie... Quel dommage !")
-        #return
 
     player_id = common.get_player_id(pseudo)
     if player_id is None:
