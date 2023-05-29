@@ -394,6 +394,179 @@ def my_delays(ev):  # pylint: disable=invalid-name
     MY_PANEL <= html.DIV("Les retards sont en heures entamées", Class='note')
 
 
+def get_my_dropouts():
+    """ get_my_dropouts """
+
+    dropouts_list = None
+
+    def reply_callback(req):
+        nonlocal dropouts_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des abandons pour toutes mes parties : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des abandons pour toutes mes parties : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        dropouts_list = req_result['dropouts']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/player-game-dropouts"
+
+    # get roles that submitted orders : need token (but may change)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return dropouts_list
+
+
+def my_dropouts(ev):  # pylint: disable=invalid-name
+    """ my_dropouts """
+
+    def select_game_callback(ev, game_name, game_data_sel, arrival):  # pylint: disable=invalid-name
+        """ select_game_callback """
+
+        ev.preventDefault()
+
+        # action of selecting game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
+        allgames.show_game_selected()
+
+        # so that will go to proper page
+        play.set_arrival(arrival)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
+
+    ev.preventDefault()
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    dropouts_list = get_my_dropouts()
+
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    dropouts_table = html.TABLE()
+
+    # the display order
+    fields = ['date', 'name', 'used_for_elo', 'go_game', 'role_played']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'date': 'date', 'name': 'nom', 'used_for_elo': 'elo', 'go_game': 'aller dans la partie', 'role_played': 'rôle joué'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    dropouts_table <= thead
+
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
+    number_games = 0
+
+    for game_id, role_id, date_dropout in sorted(dropouts_list, key=lambda t: t[2], reverse=True):
+
+        data = games_dict[str(game_id)]
+
+        # variant is available
+        variant_name_loaded = data['variant']
+
+        # from variant name get variant content
+        if variant_name_loaded in memoize.VARIANT_CONTENT_MEMOIZE_TABLE:
+            variant_content_loaded = memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded]
+        else:
+            variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+            if not variant_content_loaded:
+                alert("Erreur chargement données variante de la partie")
+                return
+            memoize.VARIANT_CONTENT_MEMOIZE_TABLE[variant_name_loaded] = variant_content_loaded
+
+        # selected display (user choice)
+        interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
+
+        # build variant data
+
+        if (variant_name_loaded, interface_chosen) in memoize.VARIANT_DATA_MEMOIZE_TABLE:
+            variant_data = memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
+            memoize.VARIANT_DATA_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = variant_data
+
+        number_games += 1
+
+        row = html.TR()
+        for field in fields:
+
+            if field == 'date':
+                datetime_deadline_dropout = mydatetime.fromtimestamp(date_dropout)
+                datetime_deadline_dropout_str = mydatetime.strftime2(*datetime_deadline_dropout)
+                value = datetime_deadline_dropout_str
+
+            if field == 'name':
+                game_name = data['name']
+                value = game_name
+
+            if field == 'used_for_elo':
+                value = "Oui" if data['used_for_elo'] else "Non"
+
+            if field == 'go_game':
+
+                if storage['GAME_ACCESS_MODE'] == 'button':
+
+                    form = html.FORM()
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel, a=None: select_game_callback(e, gn, gds, a))
+                    form <= input_jump_game
+                    value = form
+                else:
+                    img = html.IMG(src="./images/play.png")
+                    link = html.A(href=f"?game={game_name}", target="_blank")
+                    link <= img
+                    value = link
+
+            if field == 'role_played':
+                role = variant_data.roles[role_id]
+                role_name = variant_data.role_name_table[role]
+                role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
+                value = role_icon_img
+
+            col = html.TD(value)
+
+            row <= col
+
+        dropouts_table <= row
+
+    MY_PANEL.clear()
+    MY_PANEL <= html.H2("Tous mes abandons sur toutes mes parties")
+    MY_PANEL <= dropouts_table
+    MY_PANEL <= html.BR()
+
+
 def my_games(state_name):
     """ my_games """
 
@@ -1114,6 +1287,12 @@ def my_games(state_name):
     input_my_delays = html.INPUT(type="submit", value="Consulter la liste de tous mes retards")
     input_my_delays.bind("click", my_delays)
     MY_PANEL <= input_my_delays
+
+    MY_PANEL <= html.BR()
+    MY_PANEL <= html.BR()
+    input_my_dropouts = html.INPUT(type="submit", value="Consulter la liste de tous mes abandons")
+    input_my_dropouts.bind("click", my_dropouts)
+    MY_PANEL <= input_my_dropouts
 
 
 PANEL_MIDDLE = None
