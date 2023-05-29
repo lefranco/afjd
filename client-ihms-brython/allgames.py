@@ -271,9 +271,9 @@ def my_opportunities():
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
-        button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
     else:
-        button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
     button.bind("click", change_button_mode_callback)
     MY_SUB_PANEL <= button
     MY_SUB_PANEL <= html.BR()
@@ -811,9 +811,9 @@ def all_games(state_name):
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
-        button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
     else:
-        button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
     button.bind("click", change_button_mode_callback)
     MY_SUB_PANEL <= button
     MY_SUB_PANEL <= html.BR()

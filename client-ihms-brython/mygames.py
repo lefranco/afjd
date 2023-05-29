@@ -789,9 +789,9 @@ def my_games(state_name):
     if 'GAME_SHOW_MODE' not in storage:
         storage['GAME_SHOW_MODE'] = 'complete'
     if storage['GAME_SHOW_MODE'] == 'complete':
-        button = html.BUTTON("Basculer en mode restreint (affiche moins de colonnes)", Class='btn-menu')
+        button = html.BUTTON("Mode restreint (affiche moins de colonnes)", Class='btn-menu')
     else:
-        button = html.BUTTON("Basculer en mode complet (affiche toutes les colonnes)", Class='btn-menu')
+        button = html.BUTTON("Mode complet (affiche toutes les colonnes)", Class='btn-menu')
     button.bind("click", change_show_mode_callback)
     MY_PANEL <= button
 
@@ -802,9 +802,9 @@ def my_games(state_name):
     if 'GAME_ACCESS_MODE' not in storage:
         storage['GAME_ACCESS_MODE'] = 'button'
     if storage['GAME_ACCESS_MODE'] == 'button':
-        button = html.BUTTON("Basculer en mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode liens externes (plus lent mais conserve cette page)", Class='btn-menu')
     else:
-        button = html.BUTTON("Basculer en mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
+        button = html.BUTTON("Mode boutons (plus rapide mais remplace cette page)", Class='btn-menu')
     button.bind("click", change_button_mode_callback)
     MY_PANEL <= button
 
@@ -815,9 +815,9 @@ def my_games(state_name):
     if 'ACTION_COLUMN_MODE' not in storage:
         storage['ACTION_COLUMN_MODE'] = 'not_displayed'
     if storage['ACTION_COLUMN_MODE'] == 'not_displayed':
-        button = html.BUTTON("Basculer en mode avec les colonnes d'action", Class='btn-menu')
+        button = html.BUTTON("Mode avec les colonnes d'action", Class='btn-menu')
     else:
-        button = html.BUTTON("Basculer en mode sans les colonnes d'action", Class='btn-menu')
+        button = html.BUTTON("Mode sans les colonnes d'action", Class='btn-menu')
     button.bind("click", change_action_mode_callback)
     MY_PANEL <= button
 
