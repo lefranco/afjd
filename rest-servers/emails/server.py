@@ -48,6 +48,9 @@ SEND_EMAIL_WELCOME_PARSER.add_argument('subject', type=str, required=True)
 SEND_EMAIL_WELCOME_PARSER.add_argument('body', type=str, required=True)
 SEND_EMAIL_WELCOME_PARSER.add_argument('email', type=str, required=True)
 
+CHAT_MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
+CHAT_MESSAGE_PARSER.add_argument('author', type=str, required=True)
+CHAT_MESSAGE_PARSER.add_argument('content', type=str, required=True)
 
 # time to wait after sending a message
 PAUSE_BETWEEN_SENDS_SEC = 10
@@ -224,6 +227,50 @@ class SendEmailRessource(flask_restful.Resource):  # type: ignore
 
         data = {'msg': 'Email was successfully queued to be sent'}
         return data, 200
+
+
+CHATS: typing.List[typing.Tuple[float, str, str]] = []
+CHAT_PERSISTANCE_SEC = 24 * 60 * 60
+
+@API.resource('/chat-messages')
+class ChatMessageRessource(flask_restful.Resource):  # type: ignore
+    """ ChatMessageRessource """
+
+    def get(self) -> typing.Tuple[typing.List[typing.Tuple[float, str, str]], int]:
+        """
+        Gets all chats
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/chat-messages - GET - retrieving all chats")
+
+        return CHATS, 200
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Adds a chat
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/chat-messages - POST - add chat message")
+
+        args = CHAT_MESSAGE_PARSER.parse_args(strict=True)
+
+        author = args['author']
+        content = args['content']
+
+        global CHATS
+
+        # insert
+        now = time.time()
+        chat = (now, author, content)
+        CHATS.append(chat)
+
+        # filter
+        CHATS = [c for c in CHATS if c[0] > now - CHAT_PERSISTANCE_SEC]
+
+        data = {'msg': 'Chat message was inserted'}
+        return data, 201
 
 
 def load_support_config() -> None:

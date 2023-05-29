@@ -4,6 +4,7 @@
 
 
 import json
+import time
 
 from browser import html, ajax, alert  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -48,6 +49,24 @@ def check_admin():
         return False
 
     return True
+
+
+class Random:
+    """ Random provider """
+
+    def __init__(self):
+        self._next = int(time.time())
+
+    def choice(self, values):
+        """ chooses an element """
+
+        self._next *= 1103515245
+        self._next + 12345
+        self._next //= 65536
+
+        position = self._next % len(values)
+
+        return values[position]
 
 
 def get_players():
