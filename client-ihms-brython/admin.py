@@ -1953,7 +1953,7 @@ def show_idle_data():
         body += "\n\n"
         body += "Votre compte sur le site est oisif. Nous ne pouvons accumuler des comptes qui ne jouent pas au risque de saturer l'interface de pseudonymes inutiles. Pourquoi avoir créé un compte si ce n'est pas pour jouer ?"
         body += "\n\n"
-        body += "Il existe des parties d'initiations pour apprendre à jouer et maîtriser l'interface. Des parties cherchent en permanence à être complétées. Des parties amicales et des tournois débutent régulièrement, avec ou sans négociations. Certains font même des parties en direct en s'appuyant sur Discord."
+        body += "Un 'chat' est intégré au site qui permet de poser toute question en direct au sujet de son fonctionnement. Il existe des parties d'initiations pour apprendre à jouer et maîtriser l'interface. Des parties cherchent en permanence à être complétées. Des parties amicales et des tournois débutent régulièrement, avec ou sans négociations. Certains font même des parties en 'direct' en s'appuyant sur Discord !"
         body += "\n\n"
         body += "Ne soyez pas timides, franchissez le pas, profitez du site, il a été créé pour vous !"
         body += "\n\n"
