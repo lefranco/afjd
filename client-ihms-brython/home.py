@@ -264,7 +264,7 @@ def show_news():
         div_a5 <= html.BR()
         div_a5 <= "Dernier chat :"
         div_a5 <= html.BR()
-        div_a5 <= html.B(f"{last_chat_author} : {last_chat_message}")
+        div_a5 <= html.DIV(f"{last_chat_author} : {last_chat_message}", Class='chat_sample')
 
     div_a5_tip = html.SPAN("Plus de détail dans le menu “Rejoindre une partie“ et dans le menu “Chatter en direct“", Class='tooltiptext')
     div_a5 <= div_a5_tip

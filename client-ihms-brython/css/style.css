@@ -128,6 +128,12 @@ a:visited{
   background-image: linear-gradient(180deg, #98E4ED, #83B9CC 40%, #EDE585);
 }
 
+
+/* Chat sample */
+.chat_sample {
+  color: red;
+}
+
 /* faq, whynot, tip */
 .faq-info {
   font-size: 16px;
