@@ -3874,7 +3874,10 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
             POST_DECLARATION_REPEAT_PREVENTER.did(int(game_id), role_id)
 
-        subject = f"Un joueur (ou l'arbitre) a posté une déclaration dans la partie {game.name}"
+        if anonymous:
+            subject = f"Un joueur a posté une déclaration anonyme dans la partie {game.name}"
+        else:
+            subject = f"Un joueur (ou l'arbitre) a posté une déclaration dans la partie {game.name}"
         allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
         addressees = []
         for _, player_id, role_id1 in allocations_list:
@@ -3883,8 +3886,9 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         body = "Bonjour !\n"
         body += "\n"
 
-        body += f"Auteur de la déclaration : {role_name}\n"
-        body += "\n"
+        if not anonymous:
+            body += f"Auteur de la déclaration : {role_name}\n"
+            body += "\n"
         body += "Contenu de la déclaration :\n"
         body += "================\n"
         body += payload

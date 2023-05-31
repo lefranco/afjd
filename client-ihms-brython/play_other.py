@@ -1420,15 +1420,15 @@ def declare():
             declare()
             return
 
+        role_id = play_low.ROLE_ID
         if anonymous:
-            role_name = "(anonyme !)"
+            role_name = ""
         else:
-            role_id = play_low.ROLE_ID
             role = play_low.VARIANT_DATA.roles[role_id]
             role_name = play_low.VARIANT_DATA.role_name_table[role]
 
         json_dict = {
-            'role_id': play_low.ROLE_ID,
+            'role_id': role_id,
             'anonymous': anonymous,
             'role_name': role_name,
             'content': content
