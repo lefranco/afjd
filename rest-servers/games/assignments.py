@@ -55,7 +55,8 @@ class Assignment:
 
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        sql_executor.execute("INSERT OR REPLACE INTO assignements (tournament_id, player_id) VALUES (?, ?)", (self._tournament_id, self._player_id))
+        sql_executor.execute("DELETE FROM assignements WHERE tournament_id = ?", (self._tournament_id,))
+        sql_executor.execute("INSERT INTO assignements (tournament_id, player_id) VALUES (?, ?)", (self._tournament_id, self._player_id))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """

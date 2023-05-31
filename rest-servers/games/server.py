@@ -184,6 +184,9 @@ TOURNAMENT_PARSER = flask_restful.reqparse.RequestParser()
 TOURNAMENT_PARSER.add_argument('name', type=str, required=True)
 TOURNAMENT_PARSER.add_argument('game_id', type=int, required=True)
 
+TOURNAMENT_PARSER2 = flask_restful.reqparse.RequestParser()
+TOURNAMENT_PARSER2.add_argument('director_id', type=int, required=True)
+
 GROUPING_PARSER = flask_restful.reqparse.RequestParser()
 GROUPING_PARSER.add_argument('game_id', type=int, required=True)
 GROUPING_PARSER.add_argument('delete', type=int, required=True)
@@ -6126,6 +6129,75 @@ class DateLastChangeGamesRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         data = games_dict
+        return data, 200
+
+
+@API.resource('/tournaments_manager/<tournament_id>')
+class TournamentManagerRessource(flask_restful.Resource):  # type: ignore
+    """ TournamentManagerRessource """
+
+    def post(self, tournament_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Updates an tournament (director)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/tournaments_manager/<tournament_id> - PUT - updating director event with id=%s", tournament_id)
+
+        args = TOURNAMENT_PARSER2.parse_args(strict=True)
+
+        director_id = args['director_id']
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        sql_executor = database.SqlExecutor()
+
+        # find the tournament
+        tournament = tournaments.Tournament.find_by_identifier(sql_executor, tournament_id)
+        if tournament is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Tournament {tournament_id} doesn't exist")
+
+        assert tournament is not None
+
+        # check moderator rights
+
+        # get moderator list
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            del sql_executor
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+        the_moderators = req_result.json()
+
+        # check pseudo in moderator list
+        if pseudo not in the_moderators:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be site moderator) so you are not allowed to change tournament director")
+
+        # update tournament here
+        tournament.put_director(sql_executor, director_id)
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'identifier': tournament_id, 'msg': 'Ok director updated'}
         return data, 200
 
 
