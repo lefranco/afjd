@@ -1717,7 +1717,7 @@ class EventManagerRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/events/<event_id> - PUT - updating manager event with id=%s", event_id)
+        mylogger.LOGGER.info("/events_manager/<event_id> - PUT - updating manager event with id=%s", event_id)
 
         args = EVENT_PARSER2.parse_args(strict=True)
 

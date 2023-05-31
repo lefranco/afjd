@@ -19,7 +19,7 @@ import mydatetime
 
 MAX_LEN_EMAIL = 100
 
-OPTIONS = ['Changer nouvelles', 'Tous les ordres manquants', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable événement', 'Toutes les parties d\'un joueur', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels', 'Courriels non confirmés']
+OPTIONS = ['Changer nouvelles', 'Tous les ordres manquants', 'Préparer un publipostage', 'Codes de vérification', 'Envoyer un courriel', 'Récupérer un courriel et téléphone', 'Résultats tournoi', 'Destituer arbitre', 'Changer responsable tournoi', 'Changer responsable événement', 'Toutes les parties d\'un joueur', 'Les dernières soumissions d\'ordres', 'Vérification des adresses IP', 'Vérification des courriels', 'Courriels non confirmés']
 
 
 def check_modo(pseudo):
@@ -1103,6 +1103,103 @@ def revoke_master():
     MY_SUB_PANEL <= form
 
 
+def change_director():
+    """ change_director """
+
+    def promote_directors_callback(ev):  # pylint: disable=invalid-name
+        """ promote_directors_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la promotion responsable tournoi : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la promotion responsable tournoi : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            common.info_dialog(f"Il a été promu responsable: {director}")
+
+        ev.preventDefault()
+
+        director = input_director.value
+        director_id = players_dict[director]
+
+        json_dict = {
+            'director_id': director_id,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/tournaments_manager/{tournament_id}"
+
+        # updating a tournament : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        change_director()
+
+    MY_SUB_PANEL <= html.H3("Changer le responsable du tournoi")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game = storage['GAME']
+
+    tournament_dict = common.get_tournament_data(game)
+    if not tournament_dict:
+        alert("Pas de tournoi pour cette partie ou problème au chargement liste des parties du tournoi")
+        return
+
+    tournament_name = tournament_dict['name']
+    tournament_id = tournament_dict['identifier']
+
+    MY_SUB_PANEL <= f"Tournoi concerné : {tournament_name}"
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    players_dict = common.get_players()
+    if not players_dict:
+        return
+
+    # all players can be selected
+    possible_directors = set(players_dict.keys())
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_director = html.LEGEND("Responsable", title="Sélectionner le nouveau responsable")
+    fieldset <= legend_director
+    input_director = html.SELECT(type="select-one", value="")
+    for director_pseudo in sorted(possible_directors, key=lambda pu: pu.upper()):
+        option = html.OPTION(director_pseudo)
+        input_director <= option
+    fieldset <= input_director
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_select_player = html.INPUT(type="submit", value="Promouvoir responsable")
+    input_select_player.bind("click", promote_directors_callback)
+    form <= input_select_player
+
+    MY_SUB_PANEL <= form
+
+
 def change_manager():
     """ change_manager """
 
@@ -1178,13 +1275,13 @@ def change_manager():
     if not players_dict:
         return
 
-    # all players can be usurped
+    # all players can be selected
     possible_managers = set(players_dict.keys())
 
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_manager = html.LEGEND("Destinataire", title="Sélectionner le nouveau responsable")
+    legend_manager = html.LEGEND("Responsable", title="Sélectionner le nouveau responsable")
     fieldset <= legend_manager
     input_manager = html.SELECT(type="select-one", value="")
     for manager_pseudo in sorted(possible_managers, key=lambda pu: pu.upper()):
@@ -1694,6 +1791,8 @@ def load_option(_, item_name):
         tournament_result()
     if item_name == 'Destituer arbitre':
         revoke_master()
+    if item_name == 'Changer responsable tournoi':
+        change_director()
     if item_name == 'Changer responsable événement':
         change_manager()
     if item_name == 'Toutes les parties d\'un joueur':
