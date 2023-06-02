@@ -24,6 +24,37 @@ MY_PANEL = html.DIV(id="mygames")
 MY_PANEL.attrs['style'] = 'display: table-row'
 
 
+def get_ready_games():
+    """ get_ready_games : returns empty list if error or no game"""
+
+    ready_games_list = []
+
+    def reply_callback(req):
+        nonlocal ready_games_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des parties qui sont prêtes : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des parties qui sont prêtes : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        ready_games_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/games-ready"
+
+    # getting ready games list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return ready_games_list
+
+
 def get_all_roles_allocated_to_player():
     """ get all roles the player has in all the games : returns empty dict if problem"""
 
@@ -788,9 +819,9 @@ def my_games(state_name):
 
     if state == 1:
 
-        suffering_games: typing.List[str] = []
+        suffering_games = []
 
-        recruiting_games_list = common.get_recruiting_games()
+        ready_games_list = get_ready_games()
         # there can be no message (if no game of failed to load)
 
         for game_id_str, data in games_dict.items():
@@ -803,18 +834,20 @@ def my_games(state_name):
             if game_id not in games_id_player:
                 continue
 
+            # must be game master
             role_id = dict_role_id[str(game_id)]
             if role_id != 0:
                 continue
 
-            game_name = data['name']
+            # game must not need players
+            if game_id not in ready_games_list:
+                continue
 
-            if game_id not in recruiting_games_list:
-                suffering_games.append(game_name)
+            game_name = data['name']
+            suffering_games.append(game_name)
 
         if suffering_games:
             alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
-
 
     time_stamp_now = time.time()
 
