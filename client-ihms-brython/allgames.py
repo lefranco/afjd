@@ -31,6 +31,37 @@ def information_about_games():
     return information
 
 
+def get_recruiting_games():
+    """ get_recruiting_games : returns empty list if error or no game"""
+
+    recruiting_games_list = []
+
+    def reply_callback(req):
+        nonlocal recruiting_games_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de la liste des parties qui recrutent : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de la liste des parties qui recrutent : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        recruiting_games_list = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/games-recruiting"
+
+    # getting recruiting games list : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return recruiting_games_list
+
+
 def my_opportunities():
     """ my_opportunities """
 
@@ -187,7 +218,7 @@ def my_opportunities():
             alert("Erreur chargement liste parties jouées")
             return
 
-    recruiting_games_list = common.get_recruiting_games()
+    recruiting_games_list = get_recruiting_games()
     # there can be no message (if no game of failed to load)
 
     recruiting_games_dict = {tr[0]: {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
@@ -453,7 +484,7 @@ def my_opportunities():
                 allocated = recruiting_games_dict[int(game_id_str)]['allocated']
                 capacity = recruiting_games_dict[int(game_id_str)]['capacity']
                 value = f"{allocated}/{capacity}"
-                if allocated == capacity:
+                if allocated >= capacity:
                     colour = config.ALL_ORDERS_IN_COLOUR
 
             if field == 'used_for_elo':
