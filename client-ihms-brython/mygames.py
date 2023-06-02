@@ -808,7 +808,7 @@ def my_games(state_name):
             game_name = data['name']
 
             if game_id not in recruiting_games_list:
-                alert(f"Il faut démarer la partie en attente {game_name} qui est complète !")
+                alert(f"Il faut démarrer la partie en attente {game_name} qui est complète !")
             else:
                 print("pas complete")
 
