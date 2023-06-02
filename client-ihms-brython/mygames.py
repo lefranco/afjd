@@ -782,6 +782,36 @@ def my_games(state_name):
         alert("Erreur chargement dates visites derniers messages des parties")
         return
 
+    games_id_player = {int(n) for n in player_games}
+
+    # is there a startable game ?
+
+    if state == 1:
+
+        recruiting_games_list = common.get_recruiting_games()
+        # there can be no message (if no game of failed to load)
+
+        for game_id_str, data in games_dict.items():
+
+            if data['current_state'] != 0:
+                continue
+
+            # do not display games players does not participate into
+            game_id = int(game_id_str)
+            if game_id not in games_id_player:
+                continue
+
+            role_id = dict_role_id[str(game_id)]
+            if role_id != 0:
+                continue
+
+            game_name = data['name']
+
+            if game_id not in recruiting_games_list:
+                alert(f"Il faut démarer la partie en attente {game_name} qui est complète !")
+            else:
+                print("pas complete")
+
     time_stamp_now = time.time()
 
     # button for switching mode (display)
@@ -814,9 +844,9 @@ def my_games(state_name):
     if 'ACTION_COLUMN_MODE' not in storage:
         storage['ACTION_COLUMN_MODE'] = 'not_displayed'
     if storage['ACTION_COLUMN_MODE'] == 'not_displayed':
-        button = html.BUTTON("Mode avec les colonnes d'action", Class='btn-menu')
+        button = html.BUTTON("Mode avec les colonnes d'action (arrêter/démarrer)", Class='btn-menu')
     else:
-        button = html.BUTTON("Mode sans les colonnes d'action", Class='btn-menu')
+        button = html.BUTTON("Mode sans les colonnes d'action (arrêter/démarrer)", Class='btn-menu')
     button.bind("click", change_action_mode_callback)
     MY_PANEL <= button
 
@@ -876,8 +906,6 @@ def my_games(state_name):
         col = html.TD(buttons)
         row <= col
     games_table <= row
-
-    games_id_player = {int(n) for n in player_games}
 
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
