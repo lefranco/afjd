@@ -788,6 +788,8 @@ def my_games(state_name):
 
     if state == 1:
 
+        suffering_games: typing.List[str] = []
+
         recruiting_games_list = common.get_recruiting_games()
         # there can be no message (if no game of failed to load)
 
@@ -808,9 +810,11 @@ def my_games(state_name):
             game_name = data['name']
 
             if game_id not in recruiting_games_list:
-                alert(f"Il faut démarrer la partie en attente {game_name} qui est complète !")
-            else:
-                print("pas complete")
+                suffering_games.append(game_name)
+
+        if suffering_games:
+            alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
+
 
     time_stamp_now = time.time()
 
