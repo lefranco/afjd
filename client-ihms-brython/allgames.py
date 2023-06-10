@@ -265,7 +265,6 @@ def my_opportunities():
         button.bind("click", create_account_callback)
         MY_SUB_PANEL <= button
         MY_SUB_PANEL <= html.BR()
-        MY_SUB_PANEL <= html.BR()
 
     # button for switching mode
     if 'GAME_ACCESS_MODE' not in storage:
