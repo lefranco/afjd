@@ -161,6 +161,7 @@ DECLARATION_PARSER = flask_restful.reqparse.RequestParser()
 DECLARATION_PARSER.add_argument('role_id', type=int, required=True)
 DECLARATION_PARSER.add_argument('role_name', type=str, required=True)
 DECLARATION_PARSER.add_argument('anonymous', type=int, required=True)
+DECLARATION_PARSER.add_argument('announce', type=int, required=True)
 DECLARATION_PARSER.add_argument('content', type=str, required=True)
 
 MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
@@ -719,8 +720,8 @@ class GameRessource(flask_restful.Resource):  # type: ignore
             content.delete_database(sql_executor)
 
         # delete declarations
-        for (_, _, _, content_id) in declarations.Declaration.list_by_game_id(sql_executor, int(game_id)):
-            declaration = declarations.Declaration(0, 0, False, content_id)
+        for (_, _, _, _, content_id) in declarations.Declaration.list_by_game_id(sql_executor, int(game_id)):
+            declaration = declarations.Declaration(0, 0, False, False, content_id)
             declaration.delete_database(sql_executor)
 
         # delete messages
@@ -1756,6 +1757,7 @@ class AllocationPlayer2Ressource(flask_restful.Resource):  # type: ignore
         data = {str(a[0]): a[2] for a in allocations_list}
         return data, 200
 
+
 @API.resource('/games-ready')
 class GamesReadyRessource(flask_restful.Resource):  # type: ignore
     """ GamesReadyRessource """
@@ -1777,6 +1779,7 @@ class GamesReadyRessource(flask_restful.Resource):  # type: ignore
         data = [tr[0] for tr in full_games_data if tr[1] >= tr[2]]
 
         return data, 200
+
 
 @API.resource('/games-recruiting')
 class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
@@ -3820,6 +3823,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         role_id = args['role_id']
         role_name = args['role_name']
         anonymous = args['anonymous']
+        announce = args['announce']
         payload = args['content']
 
         # check authentication from user server
@@ -3893,15 +3897,19 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             content.update_database(sql_executor)
 
             # create a declaration linked to the content
-            declaration = declarations.Declaration(int(game_id), role_id, anonymous, identifier)
+            declaration = declarations.Declaration(int(game_id), role_id, anonymous, announce, identifier)
             declaration.update_database(sql_executor)
 
             POST_DECLARATION_REPEAT_PREVENTER.did(int(game_id), role_id)
 
-        if anonymous:
-            subject = f"Un joueur a posté une déclaration anonyme dans la partie {game.name}"
+        if announce:
+            subject = f"Un modérateur a posté une déclaration (annonce) dans la partie {game.name}"
+        elif anonymous:
+            subject = f"Un joueur (ou l'arbitre) a posté une déclaration anonyme dans la partie {game.name}"
+        elif role_id == 0:
+            subject = f"L'arbitre a posté une déclaration dans la partie {game.name}"
         else:
-            subject = f"Un joueur (ou l'arbitre) a posté une déclaration dans la partie {game.name}"
+            subject = f"Un joueur a posté une déclaration dans la partie {game.name}"
         allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
         addressees = []
         for _, player_id, role_id1 in allocations_list:
@@ -4005,11 +4013,11 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         declarations_list = declarations.Declaration.list_with_content_by_game_id(sql_executor, game_id)
 
         declarations_list_ret = []
-        for _, identifier, author_num, anonymous, time_stamp, content in declarations_list:
+        for _, identifier, author_num, anonymous, announce, time_stamp, content in declarations_list:
             if anonymous and role_id != 0:
-                declarations_list_ret.append((identifier, anonymous, -1, time_stamp, content.payload))
+                declarations_list_ret.append((identifier, announce, anonymous, -1, time_stamp, content.payload))
             else:
-                declarations_list_ret.append((identifier, anonymous, author_num, time_stamp, content.payload))
+                declarations_list_ret.append((identifier, announce, anonymous, author_num, time_stamp, content.payload))
 
         del sql_executor
 
@@ -4068,7 +4076,7 @@ class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
 
             # gather declarations
             declarations_list = declarations.Declaration.list_with_content_by_game_id(sql_executor, game_id)
-            for _, _, _, _, time_stamp_found, _ in declarations_list:
+            for _, _, _, _, _, time_stamp_found, _ in declarations_list:
                 time_stamp = time_stamp_found
                 break
 
