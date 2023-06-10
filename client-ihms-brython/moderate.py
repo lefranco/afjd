@@ -736,6 +736,9 @@ def make_announce():
             make_announce()
             return
 
+        # to avoid typing all over again
+        storage['ANNOUNCE'] = content
+
         role_id = 0
         role_name = pseudo
         anonymous = False
@@ -779,12 +782,17 @@ def make_announce():
 
     game_id = storage['GAME_ID']
 
+    announce = ""
+    if 'ANNOUNCE' in storage:
+        announce = storage['ANNOUNCE']
+
     form = html.FORM()
 
     fieldset = html.FIELDSET()
     legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer dans la partiee ?")
     fieldset <= legend_declaration
     input_declaration = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_declaration <= announce
     fieldset <= input_declaration
     form <= fieldset
 
