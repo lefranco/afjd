@@ -1411,6 +1411,7 @@ def declare():
         ev.preventDefault()
 
         anonymous = input_anonymous.checked
+        announce = False
 
         content = input_declaration.value
 
@@ -1430,6 +1431,7 @@ def declare():
         json_dict = {
             'role_id': role_id,
             'anonymous': anonymous,
+            'announce': announce,
             'role_name': role_name,
             'content': content
         }
@@ -1510,24 +1512,24 @@ def declare():
     # there can be no message (if no declaration of failed to load)
 
     # insert new field 'type'
-    declarations = [(MessageTypeEnum.TEXT, 0, i, a, r, t, c) for (i, a, r, t, c) in declarations]
+    declarations = [(MessageTypeEnum.TEXT, 0, i, ann, ano, r, t, c) for (i, ann, ano, r, t, c) in declarations]
 
     # get the transition table
     game_transitions = game_transitions_reload(play_low.GAME_ID)
 
     # add fake declarations (game transitions) and sort
-    fake_declarations = [(MessageTypeEnum.SEASON, int(k), -1, False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
+    fake_declarations = [(MessageTypeEnum.SEASON, int(k), -1, False, False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
     declarations.extend(fake_declarations)
 
     # get the dropouts table
     game_dropouts = game_dropouts_reload(play_low.GAME_ID)
 
     # add fake messages (game dropouts)
-    fake_declarations = [(MessageTypeEnum.DROPOUT, 0, -1, False, r, d, f"Le joueur {play_low.ID2PSEUDO[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    fake_declarations = [(MessageTypeEnum.DROPOUT, 0, -1, False, False, r, d, f"Le joueur {play_low.ID2PSEUDO[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
     declarations.extend(fake_declarations)
 
     # sort with all that was added
-    declarations.sort(key=lambda d: (float(d[5]), float(d[1])), reverse=True)
+    declarations.sort(key=lambda d: (float(d[6]), float(d[1])), reverse=True)
 
     declarations_table = html.TABLE()
 
@@ -1539,10 +1541,12 @@ def declare():
 
     role2pseudo = {v: k for k, v in play_low.GAME_PLAYERS_DICT.items()}
 
-    for type_, _, id_, anonymous, role_id_msg, time_stamp, content in declarations:
+    for type_, _, id_, announce, anonymous, role_id_msg, time_stamp, content in declarations:
 
         if type_ is MessageTypeEnum.TEXT:
-            if anonymous:
+            if announce:
+                class_ = 'text_announce'
+            elif anonymous:
                 class_ = 'text_anonymous'
             else:
                 class_ = 'text'
