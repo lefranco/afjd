@@ -3902,17 +3902,17 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(403, msg="You do not seem to be the game master of the game or the player in charge of the role")
 
-        # checks relative to no press
-        if game.nopress_current:
+            # checks relative to no press
+            if game.nopress_current:
 
-            # find game master
-            assert game is not None
-            game_master_id = game.get_role(sql_executor, 0)
+                # find game master
+                assert game is not None
+                game_master_id = game.get_role(sql_executor, 0)
 
-            # must be game master
-            if user_id != game_master_id:
-                del sql_executor
-                flask_restful.abort(403, msg="Only game master may declare in a 'no press' game")
+                # must be game master
+                if user_id != game_master_id:
+                    del sql_executor
+                    flask_restful.abort(403, msg="Only game master may declare in a 'no press' game")
 
         # create declaration here
         with POST_DECLARATION_LOCK:
