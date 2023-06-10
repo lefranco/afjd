@@ -530,7 +530,7 @@ def show_game_parameters():
             'nopress_game': ("blocage des messages publics (déclaration) pour la partie", "si oui on ne peut pas déclarer - sauf l'arbitre", "Tout message public de joueur est impossible"),
             'nomessage_current': ("blocage des messages privés (négociation) pour le moment", "si oui on ne peut pas négocier - valeur utilisée pour accorder l'accès ou pas - cette valeur est modifiable pendant la partie", "effacé en fin de partie"),
             'nopress_current': ("blocage des messages publics (déclaration) pour le moment", "si oui on ne peut pas déclarer - valeur utilisée pour accorder l'accès ou pas - cette valeur est modifiable pendant la partie", "effacé en fin de partie"),
-            'fast': ("en direct", "la partie est jouée comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs"),
+            'fast': ("en direct", "la partie est jouée en temps réel comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie"),
             'scoring': ("code du scorage", "le système de scorage appliqué", "Se reporter à Accueil/Coin technique pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface"),
             'deadline_hour': ("heure de la date limite", "entre 0 et 23", "Heure à laquelle le système placera la date limite dans la journée si la synchronisation est souhaitée"),
