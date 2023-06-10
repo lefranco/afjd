@@ -3841,6 +3841,28 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
+        sql_executor = database.SqlExecutor()
+
+        if announce:
+
+            # check moderator rights
+
+            # get moderator list
+            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/moderators"
+            req_result = SESSION.get(url)
+            if req_result.status_code != 200:
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                del sql_executor
+                flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+            the_moderators = req_result.json()
+
+            # check pseudo in moderator list
+            if pseudo not in the_moderators:
+                del sql_executor
+                flask_restful.abort(403, msg="You need to be site moderator to post an announce in a game")
+
         # get player identifier
         host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
         port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
@@ -3851,8 +3873,6 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
-
-        sql_executor = database.SqlExecutor()
 
         # check user has right to post declatation - must be player of game master
 
