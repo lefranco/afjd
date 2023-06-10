@@ -452,7 +452,7 @@ def rectify_parameters():
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_fast = html.LEGEND("en direct", title="Partie en direct - jouée en une soirée")
+    legend_fast = html.LEGEND("en direct", title="Partie en direct - jouée en temps réel comme sur un plateau")
     fieldset <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=fast_loaded)
     fieldset <= input_fast

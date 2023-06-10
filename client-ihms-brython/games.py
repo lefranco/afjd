@@ -401,7 +401,7 @@ def create_game(json_dict):
     form <= fieldset
 
     fieldset = html.FIELDSET()
-    legend_fast = html.LEGEND("en direct", title="ATTENTION ! Ne cocher que pour une partie comme sur un plateau - qui se joue en une soirée ! Le calcul des dates limites se fait en minutes au lieu d'heures.")
+    legend_fast = html.LEGEND("en direct", title="ATTENTION ! Ne cocher que pour une partie comme sur un plateau - qui se joue en temps réel comme sur un plateau ! Le calcul des dates limites se fait en minutes au lieu d'heures.")
     fieldset <= legend_fast
     input_fast = html.INPUT(type="checkbox", checked=bool(fast) if fast is not None else False)
     fieldset <= input_fast
