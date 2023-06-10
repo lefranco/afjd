@@ -21,11 +21,11 @@ MAX_LEN_EMAIL = 100
 
 OPTIONS = [
     # communication
-    'Changer nouvelles', 'Préparer un publipostage', 'Envoyer un courriel', 'Résultats du tournoi', 'Publier une annonce', 'Récupérer un courriel et téléphone',
+    'Changer nouvelles', 'Préparer un publipostage', 'Envoyer un courriel', 'Résultats du tournoi', 'Annoncer dans la partie', 'Récupérer un courriel et téléphone',
     # surveillance
     'Tous les ordres manquants', 'Toutes les parties d\'un joueur', 'Dernières soumissions d\'ordres', 'Vérification adresses IP', 'Vérification courriels', 'Courriels non confirmés', 'Codes de vérification',
     # management
-    'Destituer arbitre', 'Changer responsable tournoi', 'Changer responsable événement']
+    'Destituer arbitre partie', 'Changer responsable tournoi', 'Changer responsable événement']
 
 
 def check_modo(pseudo):
@@ -702,8 +702,99 @@ def tournament_result():
 def make_announce():
     """ make_announce """
 
-    pass  # TODO
+    def add_declaration_callback(ev):  # pylint: disable=invalid-name
+        """ add_declaration_callback """
 
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'ajout de déclaration (annonce) dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'ajout de déclaration (annonce) dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"La déclaration (annonce) a été faite ! {messages}", True)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            make_announce()
+
+        ev.preventDefault()
+
+        anonymous = False
+        announce = True
+
+        content = input_declaration.value
+
+        if not content:
+            alert("Pas de contenu pour cette déclaration !")
+            MY_SUB_PANEL.clear()
+            make_announce()
+            return
+
+        role_id = 0
+        role_name = pseudo
+        anonymous = False
+        announce = True
+
+        json_dict = {
+            'role_id': role_id,
+            'anonymous': anonymous,
+            'announce': announce,
+            'role_name': role_name,
+            'content': content
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-declarations/{game_id}"
+
+        # adding a declaration in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    MY_SUB_PANEL <= html.H3("Annoncer dans la partie")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return
+
+    game_name = storage['GAME']
+    MY_SUB_PANEL <= f"Partie concernée : {game_name}"
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    game_id = storage['GAME_ID']
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer dans la partiee ?")
+    fieldset <= legend_declaration
+    input_declaration = html.TEXTAREA(type="text", rows=8, cols=80)
+    fieldset <= input_declaration
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_declare_in_game = html.INPUT(type="submit", value="Déclarer dans la partie")
+    input_declare_in_game.bind("click", add_declaration_callback)
+    form <= input_declare_in_game
+
+    MY_SUB_PANEL <= form
 
 def display_personal_info():
     """ display_personal_info """
@@ -1787,7 +1878,7 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-        # communication
+    # communication
     if item_name == 'Changer nouvelles':
         change_news_modo()
     if item_name == 'Préparer un publipostage':
@@ -1796,11 +1887,11 @@ def load_option(_, item_name):
         sendmail()
     if item_name == 'Résultats du tournoi':
         tournament_result()
-    if item_name == 'Publier une annonce':
+    if item_name == 'Annoncer dans la partie':
         make_announce()
     if item_name == 'Récupérer un courriel et téléphone':
         display_personal_info()
-        # surveillance
+    # surveillance
     if item_name == 'Tous les ordres manquants':
         all_missing_orders()
     if item_name == 'Toutes les parties d\'un joueur':
@@ -1815,8 +1906,8 @@ def load_option(_, item_name):
         show_non_confirmed_data()
     if item_name == 'Codes de vérification':
         show_verif_codes()
-        # management
-    if item_name == 'Destituer arbitre':
+    # management
+    if item_name == 'Destituer arbitre partie':
         revoke_master()
     if item_name == 'Changer responsable tournoi':
         change_director()

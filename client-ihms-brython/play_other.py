@@ -1569,20 +1569,21 @@ def declare():
 
         role_icon_img = ""
         pseudo_there = ""
-        if role_id_msg != -1:
+        if not announce:
+            if role_id_msg != -1:
 
-            role = play_low.VARIANT_DATA.roles[role_id_msg]
-            role_name = play_low.VARIANT_DATA.role_name_table[role]
-            role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id_msg}.jpg", title=role_name)
+                role = play_low.VARIANT_DATA.roles[role_id_msg]
+                role_name = play_low.VARIANT_DATA.role_name_table[role]
+                role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id_msg}.jpg", title=role_name)
 
-            # player
-            if role_id_msg == 0:
-                if play_low.GAME_MASTER:
-                    pseudo_there = play_low.GAME_MASTER
-            elif role_id_msg in role2pseudo:
-                player_id_str = role2pseudo[role_id_msg]
-                player_id = int(player_id_str)
-                pseudo_there = play_low.ID2PSEUDO[player_id]
+                # player
+                if role_id_msg == 0:
+                    if play_low.GAME_MASTER:
+                        pseudo_there = play_low.GAME_MASTER
+                elif role_id_msg in role2pseudo:
+                    player_id_str = role2pseudo[role_id_msg]
+                    player_id = int(player_id_str)
+                    pseudo_there = play_low.ID2PSEUDO[player_id]
 
         col = html.TD(Class=class_)
 
