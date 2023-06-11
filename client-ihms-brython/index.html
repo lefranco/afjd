@@ -24,15 +24,16 @@
 <div id='spinner'>
 <span class=pyspinner>
 Chargement en cours... un peu de patience !
+</span>
 </div>
 
 <!-- just calling python  -->
-<script type="text/python" content-type="utf-8">
+<script type="text/python">
 import index
 </script>
 
 <!-- version  -->
-<script language="JavaScript" content-type="utf-8">
+<script>
 var xhReq = new XMLHttpRequest();
 xhReq.open("HEAD", "brython_modules.js", false);
 xhReq.send(null);
