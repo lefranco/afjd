@@ -23,14 +23,6 @@ import index  # circular import
 OPTIONS = ['Rejoindre une partie', 'Sélectionner une partie', 'Aller dans la partie sélectionnée', 'Toutes les parties', 'Appariement', 'Parties sans arbitres',]
 
 
-def information_about_games():
-    """ information_about_games """
-
-    information = html.DIV(Class='note')
-    information <= "Pour connaître tous les paramètres de la partie, cliquez sur le bouton de la partie dans la colonne 'aller dans la partie'"
-    return information
-
-
 def get_recruiting_games():
     """ get_recruiting_games : returns empty list if error or no game"""
 
@@ -255,9 +247,6 @@ def my_opportunities():
     # Title
     MY_SUB_PANEL <= html.H2("Parties qui recrutent des joueurs")
 
-    MY_SUB_PANEL <= information_about_games()
-    MY_SUB_PANEL <= html.BR()
-
     # button for creating account
     if 'PSEUDO' not in storage:
         # shortcut to create account
@@ -285,7 +274,7 @@ def my_opportunities():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'join': 'rejoindre', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'last_season': 'dernière saison', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'join': 'rejoindre', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'last_season': 'dernière saison', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead

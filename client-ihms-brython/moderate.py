@@ -804,6 +804,7 @@ def make_announce():
 
     MY_SUB_PANEL <= form
 
+
 def display_personal_info():
     """ display_personal_info """
 
