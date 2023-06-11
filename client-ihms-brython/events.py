@@ -696,19 +696,19 @@ def edit_event():
         if not name:
             alert("Nom d'événement manquant")
             MY_SUB_PANEL.clear()
-            create_event(json_dict)
+            edit_event(json_dict)
             return
 
         if len(name) > MAX_LEN_EVENT_NAME:
             alert("Nom d'événement trop long")
             MY_SUB_PANEL.clear()
-            create_event(json_dict)
+            edit_event(json_dict)
             return
 
         if len(location) > MAX_LEN_EVENT_LOCATION:
             alert("Lieu de l'événement trop long")
             MY_SUB_PANEL.clear()
-            create_event(json_dict)
+            edit_event(json_dict)
             return
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
