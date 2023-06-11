@@ -696,19 +696,19 @@ def edit_event():
         if not name:
             alert("Nom d'événement manquant")
             MY_SUB_PANEL.clear()
-            edit_event(json_dict)
+            edit_event()
             return
 
         if len(name) > MAX_LEN_EVENT_NAME:
             alert("Nom d'événement trop long")
             MY_SUB_PANEL.clear()
-            edit_event(json_dict)
+            edit_event()
             return
 
         if len(location) > MAX_LEN_EVENT_LOCATION:
             alert("Lieu de l'événement trop long")
             MY_SUB_PANEL.clear()
-            edit_event(json_dict)
+            edit_event()
             return
 
         host = config.SERVER_CONFIG['PLAYER']['HOST']
@@ -720,7 +720,7 @@ def edit_event():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        edit_event(json_dict)
+        edit_event()
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
