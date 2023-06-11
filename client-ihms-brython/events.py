@@ -720,7 +720,7 @@ def edit_event():
 
         # back to where we started
         MY_SUB_PANEL.clear()
-        create_event(json_dict)
+        edit_event(json_dict)
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
