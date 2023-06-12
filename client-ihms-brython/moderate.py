@@ -21,7 +21,7 @@ MAX_LEN_EMAIL = 100
 
 OPTIONS = [
     # communication
-    'Changer nouvelles', 'Préparer un publipostage', 'Envoyer un courriel', 'Résultats du tournoi', 'Annoncer dans la partie', 'Récupérer un courriel et téléphone',
+    'Changer nouvelles', 'Préparer un publipostage', 'Envoyer un courriel', 'Résultats du tournoi', 'Annonce générale', 'Annoncer dans la partie', 'Récupérer un courriel et téléphone',
     # surveillance
     'Tous les ordres manquants', 'Toutes les parties d\'un joueur', 'Dernières soumissions d\'ordres', 'Vérification adresses IP', 'Vérification courriels', 'Courriels non confirmés', 'Codes de vérification',
     # management
@@ -699,8 +699,91 @@ def tournament_result():
     MY_SUB_PANEL <= incident_table2
 
 
-def make_announce():
-    """ make_announce """
+def general_announce():
+    """ general_announce """
+
+    def add_declaration_callback(ev):  # pylint: disable=invalid-name
+        """ add_declaration_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'ajout annonce générale dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'ajout annonce générale dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"L'annonce générale a été faite ! {messages}", True)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            general_announce()
+
+        ev.preventDefault()
+
+        content = input_declaration.value
+
+        if not content:
+            alert("Pas de contenu pour cette déclaration !")
+            MY_SUB_PANEL.clear()
+            game_announce()
+            return
+
+        # to avoid typing all over again
+        storage['ANNOUNCE'] = content
+
+        json_dict = {
+            'content': content
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/announce-games"
+
+        # adding a declaration in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    MY_SUB_PANEL <= html.H3("Annoncer dans toutes la partie en cours")
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    announce = ""
+    if 'ANNOUNCE' in storage:
+        announce = storage['ANNOUNCE']
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_declaration = html.LEGEND("Votre déclaration", title="Qu'avez vous à déclarer dans toutes les parties en cours ?")
+    fieldset <= legend_declaration
+    input_declaration = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_declaration <= announce
+    fieldset <= input_declaration
+    form <= fieldset
+
+    form <= html.BR()
+
+    input_declare_in_game = html.INPUT(type="submit", value="Déclarer dans toutes les parties en cours")
+    input_declare_in_game.bind("click", add_declaration_callback)
+    form <= input_declare_in_game
+
+    MY_SUB_PANEL <= form
+
+
+def game_announce():
+    """ game_announce """
 
     def add_declaration_callback(ev):  # pylint: disable=invalid-name
         """ add_declaration_callback """
@@ -721,7 +804,7 @@ def make_announce():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            make_announce()
+            game_announce()
 
         ev.preventDefault()
 
@@ -733,14 +816,14 @@ def make_announce():
         if not content:
             alert("Pas de contenu pour cette déclaration !")
             MY_SUB_PANEL.clear()
-            make_announce()
+            game_announce()
             return
 
         # to avoid typing all over again
         storage['ANNOUNCE'] = content
 
         role_id = 0
-        role_name = pseudo
+        role_name = ""
         anonymous = False
         announce = True
 
@@ -1896,8 +1979,10 @@ def load_option(_, item_name):
         sendmail()
     if item_name == 'Résultats du tournoi':
         tournament_result()
+    if item_name == 'Annonce générale':
+        general_announce()
     if item_name == 'Annoncer dans la partie':
-        make_announce()
+        game_announce()
     if item_name == 'Récupérer un courriel et téléphone':
         display_personal_info()
     # surveillance
