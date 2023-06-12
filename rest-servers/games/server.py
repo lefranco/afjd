@@ -164,6 +164,9 @@ DECLARATION_PARSER.add_argument('anonymous', type=int, required=True)
 DECLARATION_PARSER.add_argument('announce', type=int, required=True)
 DECLARATION_PARSER.add_argument('content', type=str, required=True)
 
+DECLARATION_PARSER2 = flask_restful.reqparse.RequestParser()
+DECLARATION_PARSER2.add_argument('content', type=str, required=True)
+
 MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
 MESSAGE_PARSER.add_argument('role_id', type=int, required=True)
 MESSAGE_PARSER.add_argument('role_name', type=str, required=True)
@@ -3949,7 +3952,10 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         body = "Bonjour !\n"
         body += "\n"
 
-        if not anonymous:
+        if announce:
+            body += f"Auteur de la déclaration (annonce) : {pseudo}\n"
+            body += "\n"
+        elif not anonymous:
             body += f"Auteur de la déclaration : {role_name}\n"
             body += "\n"
         body += "Contenu de la déclaration :\n"
@@ -6259,6 +6265,191 @@ class TournamentManagerRessource(flask_restful.Resource):  # type: ignore
 
         data = {'identifier': tournament_id, 'msg': 'Ok director updated'}
         return data, 200
+
+
+@API.resource('/announce-games')
+class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
+    """  AnnounceGamesRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Insert declaration in database for all ongoing games
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/announce-games - POST - creating declaration in all ongoing games")
+
+        args = DECLARATION_PARSER2.parse_args(strict=True)
+
+        payload = args['content']
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # check user has right to post announce - must be moderator
+
+        # check moderator rights
+
+        # get moderator list
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+        the_moderators = req_result.json()
+
+        # check pseudo in moderator list
+        if pseudo not in the_moderators:
+            flask_restful.abort(403, msg="You need to be site moderator to post a general announce")
+
+        sql_executor = database.SqlExecutor()
+
+        games_list = sql_executor.execute("select identifier from games", need_result=True)
+        if not games_list:
+            games_list = []
+        games_id_list = [g[0] for g in games_list]
+
+        table: typing.Dict[int, typing.List[int]] = collections.defaultdict(list)
+        for game_id in games_id_list:
+
+            # game is not ongoing : ignore
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+            if game.current_state != 1:
+                continue
+
+            table[game_id] = []
+
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            for _, player_id, __ in allocations_list:
+                table[game_id].append(player_id)
+
+        # now we simplify
+
+        useful_games: typing.List[int] = []
+        iterations = 0
+
+        while True:
+
+            if not table:
+                break
+
+            iterations += 1
+            #  print(f"{iterations=} ", file=sys.stderr)
+
+            # list remaining players
+            players = set.union(*(map(lambda x: set(x), table.values())))
+            #  print(f"{players=} ", file=sys.stderr)
+
+            # count games per player
+            nb_games = {p: len([g for g in table if p in table[g]]) for p in players}
+            #  print(f"{nb_games=} ", file=sys.stderr)
+
+            # take the game  with most isolated players
+            best_game = min(table, key=lambda g: max(nb_games[p] for p in table[g]))
+            #  print(f"{best_game=} ", file=sys.stderr)
+            useful_games.append(best_game)
+            #  print(f"{useful_games=} ", file=sys.stderr)
+
+            # reduce the problem
+            # 1/ store selected players
+            selected = set(table[best_game])
+            #  print(f"{selected=} ", file=sys.stderr)
+            # 2/ remove selected players from their games
+            for game_id in table:
+                table[game_id] = [p for p in table[game_id] if p not in selected]
+            # 3/ remove useless games
+            table = {k: v for k, v in table.items() if v}
+            #  print(f"{table=} ", file=sys.stderr)
+
+        role_id = 0
+        role_name = pseudo
+
+        for game_id in useful_games:
+
+            # create declaration here
+            with POST_DECLARATION_LOCK:
+
+                if not POST_DECLARATION_REPEAT_PREVENTER.can(int(game_id), role_id):
+                    del sql_executor
+                    flask_restful.abort(400, msg="You have already declared a very short time ago")
+
+                # create a content
+                identifier = contents.Content.free_identifier(sql_executor)
+                time_stamp = int(time.time())  # now
+                content = contents.Content(identifier, int(game_id), time_stamp, payload)
+                content.update_database(sql_executor)
+
+                # create a declaration linked to the content
+                declaration = declarations.Declaration(int(game_id), 0, False, True, identifier)
+                declaration.update_database(sql_executor)
+
+                POST_DECLARATION_REPEAT_PREVENTER.did(int(game_id), role_id)
+
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+
+            subject = f"Un modérateur a posté une déclaration (annonce) dans la partie {game.name}"
+            allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
+            addressees = []
+            for _, player_id, role_id1 in allocations_list:
+                if role_id1 != role_id:
+                    addressees.append(player_id)
+            body = "Bonjour !\n"
+            body += "\n"
+
+            body += f"Auteur de la déclaration : {role_name}\n"
+            body += "\n"
+            body += "Contenu de la déclaration :\n"
+            body += "================\n"
+            body += payload
+            body += "\n"
+            body += "================\n"
+
+            body += "Vous pouvez aller consulter la déclaration et y répondre sur le site !\n"
+            body += "\n"
+            body += "Note : Vous pouvez désactiver cette notification en modifiant un paramètre de votre compte sur le site.\n"
+            body += "\n"
+            body += "Pour se rendre directement sur la partie :\n"
+            body += f"https://diplomania-gen.fr?game={game.name}"
+
+            json_dict = {
+                'addressees': " ".join([str(a) for a in addressees]),
+                'subject': subject,
+                'body': body,
+                'type': 'message',
+            }
+
+            host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+            port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/mail-players"
+            # for a rest API headers are presented differently
+            req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+            if req_result.status_code != 200:
+                print(f"ERROR from server  : {req_result.text}")
+                message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                del sql_executor
+                flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+        sql_executor.commit()
+        del sql_executor
+
+        data = {'msg': "Ok announce inserted as declaration in games."}
+        return data, 201
 
 
 @API.resource('/maintain')
