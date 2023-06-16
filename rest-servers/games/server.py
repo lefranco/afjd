@@ -4051,12 +4051,10 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
         the_moderators = req_result.json()
 
+        role_id: typing.Optional[int] = 0
+
         # check pseudo in moderator list
-        if pseudo in the_moderators:
-
-            role_id = 0
-
-        else:
+        if pseudo not in the_moderators:
 
             # get the role
             assert game is not None
@@ -6371,7 +6369,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
             #  print(f"{iterations=} ", file=sys.stderr)
 
             # list remaining players
-            players = set.union(*(map(set, table.values())))
+            players = map(int, set.union(*(map(set, table.values()))))  # type: ignore
             #  print(f"{players=} ", file=sys.stderr)
 
             # count games per player
@@ -6379,6 +6377,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
             #  print(f"{nb_games=} ", file=sys.stderr)
 
             # take the game  with most isolated players
+
             best_game = min(table, key=lambda g: max(nb_games[p] for p in table[g]))
             #  print(f"{best_game=} ", file=sys.stderr)
             useful_games.append(best_game)
