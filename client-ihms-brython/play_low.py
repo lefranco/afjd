@@ -228,37 +228,6 @@ def game_transition_reload(game_id, advancement):
     return transition_loaded
 
 
-def get_game_master(game_id):
-    """ get_game_master """
-
-    master_loaded = None
-
-    def reply_callback(req):
-        nonlocal master_loaded
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur au chargement de l'arbitre de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème au chargement de l'arbitre de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        master_loaded = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-master/{game_id}"
-
-    # getting master : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return master_loaded
-
-
 def load_static_stuff():
     """ load_static_stuff : loads global data """
 
@@ -347,7 +316,7 @@ def load_static_stuff():
     global GAME_MASTER
     GAME_MASTER = ""
 
-    game_master_id = get_game_master(GAME_ID)
+    game_master_id = common.get_game_master(GAME_ID)
     if game_master_id is not None:
         GAME_MASTER = ID2PSEUDO[game_master_id]
 
@@ -398,7 +367,7 @@ def load_special_stuff():
 
     # get the players of the game
     # need a token for this
-    GAME_PLAYERS_DICT = get_game_players_data(GAME_ID)
+    GAME_PLAYERS_DICT = common.get_game_players_data(GAME_ID)
     if not GAME_PLAYERS_DICT:
         alert("Erreur chargement joueurs de la partie")
         return
@@ -581,37 +550,6 @@ def show_board(panel):
     rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, units, colours, game_scoring)
     panel <= rating_colours_window
     panel <= html.BR()
-
-
-def get_game_players_data(game_id):
-    """ get_game_players_data : returns empty dict if problem """
-
-    game_players_dict = {}
-
-    def reply_callback(req):
-        nonlocal game_players_dict
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération de la liste des joueurs de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération de la liste des joueurs de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        game_players_dict = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-allocations/{game_id}"
-
-    # getting game allocation : need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return game_players_dict
 
 
 def game_report_reload(game_id):

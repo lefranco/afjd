@@ -20,23 +20,6 @@ import play  # circular import
 import play_low
 
 
-class MessageTypeEnum:
-    """ MessageTypeEnum """
-
-    TEXT = 1
-    SEASON = 2
-    DROPOUT = 3
-
-
-def readable_season(advancement):
-    """ readable_season """
-
-    advancement_season, advancement_year = common.get_season(advancement, play_low.VARIANT_DATA)
-    advancement_season_readable = play_low.VARIANT_DATA.season_name_table[advancement_season]
-    value = f"{advancement_season_readable} {advancement_year}"
-    return value
-
-
 def date_last_visit_update(game_id, role_id, visit_type):
     """ date_last_visit_update """
 
@@ -577,68 +560,6 @@ def show_game_parameters():
     return True
 
 
-def game_dropouts_reload(game_id):
-    """ game_dropouts_reload """
-
-    dropouts = []
-
-    def reply_callback(req):
-        nonlocal dropouts
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des abandons de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des abandons de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        dropouts = req_result['dropouts']
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-dropouts/{game_id}"
-
-    # extracting dropouts from a game : no need for token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return dropouts
-
-
-def game_transitions_reload(game_id):
-    """ game_transitions_reload : returns empty dict if problem (or no data) """
-
-    transitions_loaded = {}
-
-    def reply_callback(req):
-        nonlocal transitions_loaded
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur au chargement des transitions de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème au chargement des transitions de la partie: {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        transitions_loaded = req_result
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-transitions/{game_id}"
-
-    # getting transitions : do not need a token
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return transitions_loaded
-
-
 def show_events_in_game():
     """ show_events_in_game """
 
@@ -807,7 +728,7 @@ def show_events_in_game():
     play_low.MY_SUB_PANEL <= html.H3("Abandons")
 
     # get the actual dropouts of the game
-    game_dropouts = game_dropouts_reload(play_low.GAME_ID)
+    game_dropouts = common.game_dropouts_reload(play_low.GAME_ID)
     # there can be no incidents (if no incident of failed to load)
 
     game_dropouts_table = html.TABLE()
@@ -1220,20 +1141,20 @@ def negotiate(default_dest_set):
     # there can be no message (if no message of failed to load)
 
     # insert new field 'type'
-    messages = [(MessageTypeEnum.TEXT, 0, i, f, t, d, c) for (i, f, t, d, c) in messages]
+    messages = [(common.MessageTypeEnum.TEXT, 0, i, f, t, d, c) for (i, f, t, d, c) in messages]
 
     # get the transition table
-    game_transitions = game_transitions_reload(play_low.GAME_ID)
+    game_transitions = common.game_transitions_reload(play_low.GAME_ID)
 
     # add fake messages (game transitions)
-    fake_messages = [(MessageTypeEnum.SEASON, int(k), -1, -1, v, [], readable_season(int(k))) for k, v in game_transitions.items()]
+    fake_messages = [(common.MessageTypeEnum.SEASON, int(k), -1, -1, v, [], common.readable_season(int(k), play_low.VARIANT_DATA)) for k, v in game_transitions.items()]
     messages.extend(fake_messages)
 
     # get the dropouts table
-    game_dropouts = game_dropouts_reload(play_low.GAME_ID)
+    game_dropouts = common.game_dropouts_reload(play_low.GAME_ID)
 
     # add fake messages (game dropouts)
-    fake_messages = [(MessageTypeEnum.DROPOUT, 0, -1, r, d, [], f"Le joueur {play_low.ID2PSEUDO[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    fake_messages = [(common.MessageTypeEnum.DROPOUT, 0, -1, r, d, [], f"Le joueur {play_low.ID2PSEUDO[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
     messages.extend(fake_messages)
 
     # sort with all that was added
@@ -1249,11 +1170,11 @@ def negotiate(default_dest_set):
 
     for type_, _, id_, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
 
-        if type_ is MessageTypeEnum.TEXT:
+        if type_ is common.MessageTypeEnum.TEXT:
             class_ = 'text'
-        elif type_ is MessageTypeEnum.SEASON:
+        elif type_ is common.MessageTypeEnum.SEASON:
             class_ = 'season'
-        elif type_ is MessageTypeEnum.DROPOUT:
+        elif type_ is common.MessageTypeEnum.DROPOUT:
             class_ = 'dropout'
 
         row = html.TR()
@@ -1512,20 +1433,20 @@ def declare():
     # there can be no message (if no declaration of failed to load)
 
     # insert new field 'type'
-    declarations = [(MessageTypeEnum.TEXT, 0, i, ann, ano, r, t, c) for (i, ann, ano, r, t, c) in declarations]
+    declarations = [(common.MessageTypeEnum.TEXT, 0, i, ann, ano, r, t, c) for (i, ann, ano, r, t, c) in declarations]
 
     # get the transition table
-    game_transitions = game_transitions_reload(play_low.GAME_ID)
+    game_transitions = common.game_transitions_reload(play_low.GAME_ID)
 
     # add fake declarations (game transitions) and sort
-    fake_declarations = [(MessageTypeEnum.SEASON, int(k), -1, False, False, -1, v, readable_season(int(k))) for k, v in game_transitions.items()]
+    fake_declarations = [(common.MessageTypeEnum.SEASON, int(k), -1, False, False, -1, v, common.readable_season(int(k), play_low.VARIANT_DATA)) for k, v in game_transitions.items()]
     declarations.extend(fake_declarations)
 
     # get the dropouts table
-    game_dropouts = game_dropouts_reload(play_low.GAME_ID)
+    game_dropouts = common.game_dropouts_reload(play_low.GAME_ID)
 
     # add fake messages (game dropouts)
-    fake_declarations = [(MessageTypeEnum.DROPOUT, 0, -1, False, False, r, d, f"Le joueur {play_low.ID2PSEUDO[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    fake_declarations = [(common.MessageTypeEnum.DROPOUT, 0, -1, False, False, r, d, f"Le joueur {play_low.ID2PSEUDO[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
     declarations.extend(fake_declarations)
 
     # sort with all that was added
@@ -1543,16 +1464,16 @@ def declare():
 
     for type_, _, id_, announce, anonymous, role_id_msg, time_stamp, content in declarations:
 
-        if type_ is MessageTypeEnum.TEXT:
+        if type_ is common.MessageTypeEnum.TEXT:
             if announce:
                 class_ = 'text_announce'
             elif anonymous:
                 class_ = 'text_anonymous'
             else:
                 class_ = 'text'
-        elif type_ is MessageTypeEnum.SEASON:
+        elif type_ is common.MessageTypeEnum.SEASON:
             class_ = 'season'
-        elif type_ is MessageTypeEnum.DROPOUT:
+        elif type_ is common.MessageTypeEnum.DROPOUT:
             class_ = 'dropout'
 
         row = html.TR()
