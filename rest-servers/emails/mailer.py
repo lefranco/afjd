@@ -53,7 +53,8 @@ def send_mail(subject: str, body: str, addressee: str, reply_to: typing.Optional
     msg.body += "\n"
     msg.body += f"adresse web du site : {SITE_ADDRESS}"
     msg.body += "\n"
-    msg.body += "Répondre à ce message !"
+    if not reply_to:
+        msg.body += "Ne pas répondre à ce message !"
 
     assert MAILER is not None
     try:
