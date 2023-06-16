@@ -21,7 +21,7 @@ MAX_LEN_EMAIL = 100
 
 OPTIONS = [
     # communication
-    'Changer nouvelles', 'Préparer un publipostage', 'Envoyer un courriel', 'Résultats du tournoi', 'Annonce dans toutes les parties', 'Annoncer dans la partie', 'Récupérer un courriel et téléphone',
+    'Changer nouvelles', 'Préparer un publipostage', 'Envoyer un courriel', 'Résultats du tournoi', 'Annoncer dans toutes les parties', 'Annoncer dans la partie', 'Récupérer un courriel et téléphone',
     # surveillance
     'Tous les ordres manquants', 'Toutes les parties d\'un joueur', 'Dernières soumissions d\'ordres', 'Vérification adresses IP', 'Vérification courriels', 'Courriels non confirmés', 'Codes de vérification',
     # management
@@ -733,9 +733,6 @@ def general_announce():
             game_announce()
             return
 
-        # to avoid typing all over again
-        storage['ANNOUNCE'] = content
-
         json_dict = {
             'content': content
         }
@@ -760,8 +757,6 @@ def general_announce():
         return
 
     announce = ""
-    if 'ANNOUNCE' in storage:
-        announce = storage['ANNOUNCE']
 
     form = html.FORM()
 
@@ -2159,7 +2154,7 @@ def load_option(_, item_name):
         sendmail()
     if item_name == 'Résultats du tournoi':
         tournament_result()
-    if item_name == 'Annonce dans toutes les parties':
+    if item_name == 'Annoncer dans toutes les parties':
         general_announce()
     if item_name == 'Annoncer dans la partie':
         game_announce()
