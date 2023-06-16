@@ -2755,7 +2755,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         role_id = game.find_role(sql_executor, player_id)
         if role_id is None:
             del sql_executor
-            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+            flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id}")
 
         # not allowed for game master
         if role_id == 0 and not game.archive:
@@ -3163,7 +3163,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
         role_id = game.find_role(sql_executor, player_id)
         if role_id is None:
             del sql_executor
-            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+            flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id}")
 
         # not allowed for game master
         if role_id == 0:
@@ -3776,7 +3776,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         role_id = game.find_role(sql_executor, player_id)
         if role_id is None:
             del sql_executor
-            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+            flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id}")
 
         # gather messages
         assert role_id is not None
@@ -4031,7 +4031,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # check user has right to read declaration - must be player of game master
+        # check user has right to read declaration - must be player of game master or moderator
 
         # find the game
         game = games.Game.find_by_identifier(sql_executor, game_id)
@@ -4039,12 +4039,31 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # get the role
-        assert game is not None
-        role_id = game.find_role(sql_executor, player_id)
-        if role_id is None:
-            del sql_executor
-            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+        # check moderator rights
+
+        # get moderator list
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/moderators"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get list of moderators {message}")
+        the_moderators = req_result.json()
+
+        # check pseudo in moderator list
+        if pseudo in the_moderators:
+
+            role_id = 0
+
+        else:
+
+            # get the role
+            assert game is not None
+            role_id = game.find_role(sql_executor, player_id)
+            if role_id is None:
+                del sql_executor
+                flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id} or be site moderator")
 
         # gather declarations
         declarations_list = declarations.Declaration.list_with_content_by_game_id(sql_executor, game_id)
@@ -4314,7 +4333,7 @@ class GameVisitsRessource(flask_restful.Resource):  # type: ignore
         role_id = game.find_role(sql_executor, player_id)
         if role_id is None:
             del sql_executor
-            flask_restful.abort(403, msg=f"You do not seem play or master game {game_id}")
+            flask_restful.abort(403, msg=f"You do not seem to play or master game {game_id}")
 
         # serves as default (very long time ago)
         time_stamp = 0

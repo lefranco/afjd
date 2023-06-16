@@ -21,7 +21,7 @@ MAX_LEN_EMAIL = 100
 
 OPTIONS = [
     # communication
-    'Changer nouvelles', 'Préparer un publipostage', 'Envoyer un courriel', 'Résultats du tournoi', 'Annonce générale', 'Annoncer dans la partie', 'Récupérer un courriel et téléphone',
+    'Changer nouvelles', 'Préparer un publipostage', 'Envoyer un courriel', 'Résultats du tournoi', 'Annonce dans toutes les parties', 'Annoncer dans la partie', 'Récupérer un courriel et téléphone',
     # surveillance
     'Tous les ordres manquants', 'Toutes les parties d\'un joueur', 'Dernières soumissions d\'ordres', 'Vérification adresses IP', 'Vérification courriels', 'Courriels non confirmés', 'Codes de vérification',
     # management
@@ -842,6 +842,36 @@ def game_announce():
         # adding a declaration in a game : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    def declarations_reload(game_id):
+        """ declarations_reload """
+
+        declarations = []
+
+        def reply_callback(req):
+            nonlocal declarations
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération de déclarations dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération de déclarations dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            declarations = req_result['declarations_list']
+
+        json_dict = {}
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-declarations/{game_id}"
+
+        # extracting declarations from a game : need token (or not?)
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        return declarations
+
     MY_SUB_PANEL <= html.H3("Annoncer dans la partie")
 
     if 'PSEUDO' not in storage:
@@ -863,7 +893,44 @@ def game_announce():
     MY_SUB_PANEL <= html.BR()
     MY_SUB_PANEL <= html.BR()
 
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return
+
     game_id = storage['GAME_ID']
+
+    players_dict = common.get_players()
+    if not players_dict:
+        alert("Erreur chargement info joueurs")
+        return
+
+    id2pseudo = {v: k for k, v in players_dict.items()}
+
+    game_master_id = common.get_game_master(game_id)
+    if game_master_id is not None:
+        game_master = id2pseudo[game_master_id]
+
+    game_players_dict = common.get_game_players_data(game_id)
+    if not game_players_dict:
+        alert("Erreur chargement joueurs de la partie")
+        return
+
+    variant_name_loaded = storage['GAME_VARIANT']
+
+    # from variant name get variant content
+
+    variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
+    if not variant_content_loaded:
+        return
+
+    # selected interface (user choice)
+    interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
+
+    # from interface chose get display parameters
+    parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+
+    # build variant data
+    variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
     announce = ""
     if 'ANNOUNCE' in storage:
@@ -881,11 +948,124 @@ def game_announce():
 
     form <= html.BR()
 
-    input_declare_in_game = html.INPUT(type="submit", value="Déclarer dans la partie")
+    input_declare_in_game = html.INPUT(type="submit", value="Déclarer (annoncer) dans la partie")
     input_declare_in_game.bind("click", add_declaration_callback)
     form <= input_declare_in_game
 
     MY_SUB_PANEL <= form
+
+    # now we display declarations
+
+    declarations = declarations_reload(game_id)
+    # there can be no message (if no declaration of failed to load)
+
+    # insert new field 'type'
+    declarations = [(common.MessageTypeEnum.TEXT, 0, i, ann, ano, r, t, c) for (i, ann, ano, r, t, c) in declarations]
+
+    # get the transition table
+    game_transitions = common.game_transitions_reload(game_id)
+
+    # add fake declarations (game transitions) and sort
+    fake_declarations = [(common.MessageTypeEnum.SEASON, int(k), -1, False, False, -1, v, common.readable_season(int(k), variant_data)) for k, v in game_transitions.items()]
+    declarations.extend(fake_declarations)
+
+    # get the dropouts table
+    game_dropouts = common.game_dropouts_reload(game_id)
+
+    # add fake messages (game dropouts)
+    fake_declarations = [(common.MessageTypeEnum.DROPOUT, 0, -1, False, False, r, d, f"Le joueur {id2pseudo[p]} avec ce rôle a quitté la partie...") for r, p, d in game_dropouts]
+    declarations.extend(fake_declarations)
+
+    # sort with all that was added
+    declarations.sort(key=lambda d: (float(d[6]), float(d[1])), reverse=True)
+
+    declarations_table = html.TABLE()
+
+    thead = html.THEAD()
+    for title in ['id', 'Date', 'Auteur', 'Contenu']:
+        col = html.TD(html.B(title))
+        thead <= col
+    declarations_table <= thead
+
+    role2pseudo = {v: k for k, v in game_players_dict.items()}
+
+    for type_, _, id_, announce, anonymous, role_id_msg, time_stamp, content in declarations:
+
+        if type_ is common.MessageTypeEnum.TEXT:
+            if announce:
+                class_ = 'text_announce'
+            elif anonymous:
+                class_ = 'text_anonymous'
+            else:
+                class_ = 'text'
+        elif type_ is common.MessageTypeEnum.SEASON:
+            class_ = 'season'
+        elif type_ is common.MessageTypeEnum.DROPOUT:
+            class_ = 'dropout'
+
+        row = html.TR()
+
+        id_txt = str(id_) if id_ != -1 else ""
+        col = html.TD(id_txt, Class=class_)
+        row <= col
+
+        date_desc_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_desc_gmt_str = mydatetime.strftime(*date_desc_gmt)
+
+        col = html.TD(f"{date_desc_gmt_str}", Class=class_)
+        row <= col
+
+        role_icon_img = ""
+        pseudo_there = ""
+        if not announce:
+            if role_id_msg != -1:
+
+                role = variant_data.roles[role_id_msg]
+                role_name = variant_data.role_name_table[role]
+                role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/roles/{role_id_msg}.jpg", title=role_name)
+
+                # player
+                if role_id_msg == 0:
+                    if game_master:
+                        pseudo_there = game_master
+                elif role_id_msg in role2pseudo:
+                    player_id_str = role2pseudo[role_id_msg]
+                    player_id = int(player_id_str)
+                    pseudo_there = id2pseudo[player_id]
+
+        col = html.TD(Class=class_)
+
+        col <= role_icon_img
+        if pseudo_there:
+            col <= html.BR()
+            col <= pseudo_there
+
+        row <= col
+
+        col = html.TD(Class=class_)
+
+        for line in content.split('\n'):
+            col <= line
+            col <= html.BR()
+
+        row <= col
+
+        declarations_table <= row
+
+    # now we can display
+
+    # header very simplified
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    # declarations already
+    MY_SUB_PANEL <= declarations_table
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    information = html.DIV(Class='note')
+    information <= "Le pseudo affiché est celui du joueur en cours, pas forcément celui de l'auteur réel du message"
+    MY_SUB_PANEL <= information
 
 
 def display_personal_info():
@@ -1979,7 +2159,7 @@ def load_option(_, item_name):
         sendmail()
     if item_name == 'Résultats du tournoi':
         tournament_result()
-    if item_name == 'Annonce générale':
+    if item_name == 'Annonce dans toutes les parties':
         general_announce()
     if item_name == 'Annoncer dans la partie':
         game_announce()
