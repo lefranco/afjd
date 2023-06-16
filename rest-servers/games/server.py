@@ -6352,7 +6352,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
             #  print(f"{iterations=} ", file=sys.stderr)
 
             # list remaining players
-            players = set.union(*(map(lambda x: set(x), table.values())))
+            players = set.union(*(map(set, table.values())))
             #  print(f"{players=} ", file=sys.stderr)
 
             # count games per player
