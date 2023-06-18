@@ -33,6 +33,9 @@ FAQ_CONTENT_TABLE = {
     "Comment sont comptés les retards ?":
     " Toute heure de retard entamée est due. Cela signifie qu'un retard indiqué '2' (2 heures)est un retard de plus d'une heure et d'au plus deux heures (par rapport à la date limite au moment de la soumission)",
 
+    "Est ce que je peux écrire n'importe quoi dans les messages et les presses ?":
+     "Non ! Les messages sont privés entre émetteur et destinataire(s). Les presses sont privées dans la partie et modérateur du site (qui peut les lire et en écrire). Dans les deux cas le contenu doit respecter la charte. L'administrateur peut sur demande lire un message pour vérifier. Contenu inaproprié ? Déclarez un incident ! (reperez le message par son id)",
+
     "Pourquoi les unités ne se déplacent pas dans le bac à sable ?":
     "Le bac à sable n'a pas vocation à déplacer les unités, il cherche à répondre à la question 'que se passerait-il si...'. Il faut bien lire le compte rendu des ordres sous forme de texte sous la carte.",
 
