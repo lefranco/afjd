@@ -1484,7 +1484,10 @@ def declare():
 
         role_icon_img = ""
         pseudo_there = ""
-        if not announce:
+        if announce:
+            player_id = role_id_msg
+            pseudo_there = play_low.ID2PSEUDO[player_id]
+        else:
             if role_id_msg != -1:
 
                 role = play_low.VARIANT_DATA.roles[role_id_msg]
