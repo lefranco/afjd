@@ -3873,6 +3873,9 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(404, msg="Must pretend to be game master for announce")
 
+            # use the user_id as role
+            role_id = user_id
+
             if anonymous:
                 del sql_executor
                 flask_restful.abort(404, msg="Must not be anonymous for announce")
@@ -6315,6 +6318,17 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
         # check user has right to post announce - must be moderator
 
         # check moderator rights
@@ -6394,7 +6408,9 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
             table = {k: v for k, v in table.items() if v}
             #  print(f"{table=} ", file=sys.stderr)
 
-        role_id = 0
+        # use the user_id as role
+        role_id = user_id
+
         role_name = pseudo
 
         for game_id in useful_games:
@@ -6413,7 +6429,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
                 content.update_database(sql_executor)
 
                 # create a declaration linked to the content
-                declaration = declarations.Declaration(int(game_id), 0, False, True, identifier)
+                declaration = declarations.Declaration(int(game_id), role_id, False, True, identifier)
                 declaration.update_database(sql_executor)
 
                 POST_DECLARATION_REPEAT_PREVENTER.did(int(game_id), role_id)
