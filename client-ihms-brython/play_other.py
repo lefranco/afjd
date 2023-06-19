@@ -947,12 +947,25 @@ def show_events_in_game():
 CONTENT_BACKUP = None
 
 
-def negotiate(default_dest_set):
+def negotiate(default_dest_set, def_focus_role_id):
     """ negotiate """
 
-    def answer_callback(_, dest_set):
+    def focus_callback(ev, role_id):
+        """ focus_callback """
+        nonlocal focus_role_id
+        ev.preventDefault()
+        if role_id == focus_role_id:
+            focus_role_id = None
+        else:
+            focus_role_id = role_id
         play_low.MY_SUB_PANEL.clear()
-        negotiate(dest_set)
+        negotiate({}, focus_role_id)
+
+    def answer_callback(ev, dest_set):
+        """ answer_callback """
+        ev.preventDefault()
+        play_low.MY_SUB_PANEL.clear()
+        negotiate(dest_set, focus_role_id)
 
     def add_message_callback(ev):  # pylint: disable=invalid-name
         """ add_message_callback """
@@ -975,7 +988,7 @@ def negotiate(default_dest_set):
             global CONTENT_BACKUP
             CONTENT_BACKUP = None
             play_low.MY_SUB_PANEL.clear()
-            negotiate({})
+            negotiate({}, focus_role_id)
 
         ev.preventDefault()
 
@@ -990,13 +1003,13 @@ def negotiate(default_dest_set):
         if not content:
             alert("Pas de contenu pour ce message !")
             play_low.MY_SUB_PANEL.clear()
-            negotiate({})
+            negotiate({}, focus_role_id)
             return
 
         if not dest_role_ids:
             alert("Pas de destinataire pour ce message !")
             play_low.MY_SUB_PANEL.clear()
-            negotiate({})
+            negotiate({}, focus_role_id)
             return
 
         role_id = play_low.ROLE_ID
@@ -1055,6 +1068,9 @@ def negotiate(default_dest_set):
     # get time stamp of last visit of declarations
     time_stamp_last_visit = common.date_last_visit_load(play_low.GAME_ID, config.MESSAGES_TYPE)
 
+    # copy
+    focus_role_id = def_focus_role_id
+
     # put time stamp of last visit of declarations as now
     date_last_visit_update(play_low.GAME_ID, play_low.ROLE_ID, config.MESSAGES_TYPE)
 
@@ -1089,6 +1105,14 @@ def negotiate(default_dest_set):
         role_name = play_low.VARIANT_DATA.role_name_table[role_dest]
         role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id_dest}.jpg", title=role_name)
 
+        # to restrict
+        action = "Focus" if role_id_dest != focus_role_id else "Défocus"
+        button_focus = html.BUTTON(action, Class='btn-menu')
+        button_focus.bind("click", lambda e, r=role_id_dest: focus_callback(e, r))
+
+        # necessary to link flag with button
+        label_dest = html.LABEL(role_icon_img, for_=str(role_id_dest))
+
         # player
         pseudo_there = ""
         if role_id_dest == 0:
@@ -1102,9 +1126,6 @@ def negotiate(default_dest_set):
         # the alternative
         input_dest = html.INPUT(type="checkbox", id=str(role_id_dest), checked=role_id_dest in default_dest_set)
 
-        # necessary to link flag with button
-        label_dest = html.LABEL(role_icon_img, for_=str(role_id_dest))
-
         # create col
         col = html.TD()
         col.style = {
@@ -1112,13 +1133,12 @@ def negotiate(default_dest_set):
         }
 
         # now put stuff
-        col <= label_dest
+        col <= html.CENTER(button_focus)
         col <= html.BR()
-        col <= html.B(role_name)
-        col <= html.BR()
+        col <= html.CENTER(label_dest)
+        col <= html.CENTER(html.B(role_name))
         if pseudo_there:
-            col <= pseudo_there
-            col <= html.BR()
+            col <= html.CENTER(pseudo_there)
         col <= html.CENTER(input_dest)
 
         row <= col
@@ -1171,6 +1191,10 @@ def negotiate(default_dest_set):
     for type_, _, id_, from_role_id_msg, time_stamp, dest_role_id_msgs, content in messages:
 
         if type_ is common.MessageTypeEnum.TEXT:
+            # if focusing ignore other messages
+            if focus_role_id is not None:
+                if focus_role_id not in [from_role_id_msg] + dest_role_id_msgs:
+                    continue
             class_ = 'text'
         elif type_ is common.MessageTypeEnum.SEASON:
             class_ = 'season'
