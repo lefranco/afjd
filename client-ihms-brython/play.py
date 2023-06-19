@@ -49,7 +49,7 @@ def load_option(_, item_name, direct_last_moves=False):
     if item_name == 'Taguer':
         status = play_play.submit_communication_orders()
     if item_name == 'Négocier':
-        status = play_other.negotiate({})
+        status = play_other.negotiate({}, None)
     if item_name == 'Déclarer':
         status = play_other.declare()
     if item_name == 'Voter':
