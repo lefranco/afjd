@@ -1234,6 +1234,8 @@ def negotiate(default_dest_set, def_focus_role_id):
 
             if pseudo_there:
                 col <= html.BR()
+                if focus_role_id is not None and from_role_id_msg == focus_role_id:
+                    pseudo_there = html.B(pseudo_there)
                 col <= pseudo_there
 
         row <= col
@@ -1259,6 +1261,8 @@ def negotiate(default_dest_set, def_focus_role_id):
             col <= role_icon_img
             if pseudo_there:
                 col <= html.BR()
+                if focus_role_id is not None and dest_role_id_msg == focus_role_id:
+                    pseudo_there = html.B(pseudo_there)
                 col <= pseudo_there
 
             # separator
