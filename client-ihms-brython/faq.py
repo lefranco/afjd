@@ -37,7 +37,7 @@ FAQ_CONTENT_TABLE = {
     "Non ! Les messages sont privés entre émetteur et destinataire(s). Les presses sont privées dans la partie et modérateur du site (qui peut les lire et en écrire). Dans les deux cas le contenu doit respecter la charte. L'administrateur peut sur demande lire un message pour vérifier. Contenu inaproprié ? Déclarez un incident ! (reperez le message par son id)",
 
     "C'est quoi le 'focus' dans l'interface messagerie de la partie ?":
-    "Cela permet de se limiter aux échanges avec un seul protagonistes (qui s'affiche alors en gras)",
+    "Cela permet de se limiter aux échanges avec un seul des protagonistes présents (qui s'affiche alors en gras)",
 
     "Pourquoi les unités ne se déplacent pas dans le bac à sable ?":
     "Le bac à sable n'a pas vocation à déplacer les unités, il cherche à répondre à la question 'que se passerait-il si...'. Il faut bien lire le compte rendu des ordres sous forme de texte sous la carte.",
