@@ -1247,7 +1247,7 @@ def submit_orders():
         return False
 
     # digest the orders
-    orders_data = mapping.Orders(orders_loaded, play_low.POSITION_DATA)
+    orders_data = mapping.Orders(orders_loaded, play_low.POSITION_DATA, False)
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -2046,7 +2046,7 @@ def submit_communication_orders():
         return False
 
     # digest the orders
-    orders_data = mapping.Orders(communication_orders_loaded, play_low.POSITION_DATA)
+    orders_data = mapping.Orders(communication_orders_loaded, play_low.POSITION_DATA, False)
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)

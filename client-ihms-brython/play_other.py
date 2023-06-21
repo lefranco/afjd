@@ -308,9 +308,12 @@ def show_position(direct_last_moves):
                 position_loaded = transition_loaded['situation']
                 position_data = mapping.Position(position_loaded, play_low.VARIANT_DATA)
 
+                # do we have comm orders ?
+                communication_orders_are_present = report_loaded.count('*') > 1
+
                 # digest the orders
                 orders_loaded = transition_loaded['orders']
-                orders_data = mapping.Orders(orders_loaded, position_data)
+                orders_data = mapping.Orders(orders_loaded, position_data, communication_orders_are_present)
 
             else:
 
@@ -950,7 +953,7 @@ CONTENT_BACKUP = None
 def negotiate(default_dest_set, def_focus_role_id):
     """ negotiate """
 
-    def focus_callback(ev, role_id):
+    def focus_callback(ev, role_id):  # pylint: disable=invalid-name
         """ focus_callback """
         nonlocal focus_role_id
         ev.preventDefault()
@@ -961,7 +964,7 @@ def negotiate(default_dest_set, def_focus_role_id):
         play_low.MY_SUB_PANEL.clear()
         negotiate({}, focus_role_id)
 
-    def answer_callback(ev, dest_set):
+    def answer_callback(ev, dest_set):  # pylint: disable=invalid-name
         """ answer_callback """
         ev.preventDefault()
         play_low.MY_SUB_PANEL.clear()
