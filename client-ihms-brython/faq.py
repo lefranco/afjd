@@ -36,6 +36,9 @@ FAQ_CONTENT_TABLE = {
     "Est ce que je peux écrire n'importe quoi dans les messages et les presses ?":
     "Non ! Les messages sont privés entre émetteur et destinataire(s). Les presses sont privées dans la partie et modérateur du site (qui peut les lire et en écrire). Dans les deux cas le contenu doit respecter la charte. L'administrateur peut sur demande lire un message pour vérifier. Contenu inaproprié ? Déclarez un incident ! (reperez le message par son id)",
 
+    "C'est quoi cette petite pastille rose en haut à gauche dans la carte ?":
+    "Celà attire l'attention sur la présence d'ordres de communications.",
+
     "C'est quoi le 'focus' dans l'interface messagerie de la partie ?":
     "Cela permet de se limiter aux échanges avec un seul des protagonistes présents (qui s'affiche alors en gras)",
 

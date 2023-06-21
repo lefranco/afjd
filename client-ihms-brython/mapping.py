@@ -1955,10 +1955,18 @@ class Order(Renderable):
         return ""
 
 
+# comm witness
+
+# rectangle
+COMMUNICATION_ORDER_PATH = geometry.Polygon([geometry.PositionRecord(*t) for t in [(30, 15), (60, 15), (60, 30), (30, 30), (30, 15)]])
+# magenta (like text)
+COMMUNICATION_ORDER_COLOR = ColourRecord(red=255, green=0, blue=255)
+
+
 class Orders(Renderable):
     """ A set of orders that can be displayed / requires position """
 
-    def __init__(self, server_dict, position: Position) -> None:
+    def __init__(self, server_dict, position: Position, communication_orders_present: bool) -> None:
 
         self._position = position
 
@@ -2005,6 +2013,9 @@ class Orders(Renderable):
 
             order = Order(self._position, order_type, active_unit, passive_unit, destination_zone)
             self._orders.append(order)
+
+        # comm orders
+        self._communication_orders_present = communication_orders_present
 
     def insert_order(self, order: Order) -> None:
         """ insert_order """
@@ -2092,6 +2103,9 @@ class Orders(Renderable):
         # orders
         for order in self._orders:
             order.render(ctx)
+
+        if self._communication_orders_present:
+            fill_zone(ctx, COMMUNICATION_ORDER_PATH, COMMUNICATION_ORDER_COLOR)
 
     def save_json(self):
         """ export as list of dict """
