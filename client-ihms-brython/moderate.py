@@ -1645,7 +1645,7 @@ def show_ip_addresses():
     duplicated_ips = {sorted_ips[i] for i in range(len(sorted_ips)) if (i < len(sorted_ips) - 1 and sorted_ips[i] == sorted_ips[i + 1]) or (i > 0 and sorted_ips[i] == sorted_ips[i - 1])}
 
     # same as admin ones (or orangecar)
-    admin_ips = {i[0] for i in ip_table if num2pseudo[i[1]] in [common.ADMIN_PSEUDO, common.ALTERNATE_ADMIN_PSEUDO]}
+    admin_ips = {i[0] for i in ip_table if num2pseudo[i[1]] == common.ADMIN_PSEUDO}
 
     for data in sorted(ip_table, key=lambda c: (c[0], num2pseudo[c[1]].upper())):
 

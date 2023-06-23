@@ -17,7 +17,6 @@ import config
 
 # TODO improve this with real admin account
 ADMIN_PSEUDO = 'Palpatine'
-ALTERNATE_ADMIN_PSEUDO = 'OrangeCar'
 
 PERSIST_TIME_SEC = 5
 
