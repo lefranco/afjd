@@ -296,9 +296,3 @@ spinner.className = 'pycorpse'
 
 # spinner dissipates
 spinner.parentElement.removeChild(spinner)
-
-if 'PSEUDO' in storage:
-    PSEUDO_VALUE = storage['PSEUDO']
-
-    HOST = config.SERVER_CONFIG['PLAYER']['HOST']
-    PORT = config.SERVER_CONFIG['PLAYER']['PORT']
