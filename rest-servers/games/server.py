@@ -788,16 +788,6 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-
         sql_executor = database.SqlExecutor()
 
         # find the game
@@ -1867,17 +1857,6 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         pseudo = req_result.json()['logged_in_as']
-
-        # get player identifier
-        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-        url = f"{host}:{port}/player-identifiers/{pseudo}"
-        req_result = SESSION.get(url)
-        if req_result.status_code != 200:
-            print(f"ERROR from server  : {req_result.text}")
-            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
-        #  user_id = req_result.json()  #  we do not use this variable
 
         sql_executor = database.SqlExecutor()
 
