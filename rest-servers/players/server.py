@@ -122,9 +122,6 @@ REGISTRATION_UPDATE_PARSER.add_argument('value', type=int, required=True)
 IP_ADDRESS_PARSER = flask_restful.reqparse.RequestParser()
 IP_ADDRESS_PARSER.add_argument('ip_value', type=str, required=True)
 
-# Account allowed to usupr, to see logins and failed logins
-ADMIN_ACCOUNT_NAME = 'Palpatine'
-
 # pseudo must be at least that size
 LEN_PSEUDO_MIN = 3
 
@@ -1113,10 +1110,10 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         if topic == 'admin':
 
-            # TODO improve this with real admin account
-            if pseudo != ADMIN_ACCOUNT_NAME:
+            admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
+            if pseudo != admin_pseudo:
                 del sql_executor
-                flask_restful.abort(403, msg="You are not allowed to change news!")
+                flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to change news!")
 
         elif topic == 'modo':
 
@@ -1324,13 +1321,12 @@ class CreatorListRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # check user has right to add/remove creator (admin)
-
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
-            flask_restful.abort(403, msg="You are not allowed to edit the list of creators!")
-
         sql_executor = database.SqlExecutor()
+
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
+        if pseudo != admin_pseudo:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to edit the list of creators!")
 
         player = players.Player.find_by_pseudo(sql_executor, player_pseudo)
 
@@ -1405,13 +1401,12 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # check user has right to add/remove moderator (admin)
-
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
-            flask_restful.abort(403, msg="You are not allowed to edit the list of moderators!")
-
         sql_executor = database.SqlExecutor()
+
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)   # noqa: F821
+        if pseudo != admin_pseudo:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to edit the list of moderators!")
 
         player = players.Player.find_by_pseudo(sql_executor, player_pseudo)
 
@@ -1548,29 +1543,31 @@ class RawEloRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
         pseudo = req_result.json()['logged_in_as']
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
+        sql_executor = database.SqlExecutor()
+
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
+        if pseudo != admin_pseudo:
+            del sql_executor
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update ELO data")
 
         try:
             elo_list = json.loads(elo_list_submitted)
         except json.JSONDecodeError:
+            del sql_executor   # noqa: F821
             flask_restful.abort(400, msg="Did you convert elo table from json to text ?")
 
-        sql_executor = database.SqlExecutor()
-
         # put the raw ratings
-        ratings.Rating.create_table(sql_executor)
+        ratings.Rating.create_table(sql_executor)   # noqa: F821
         for elo in elo_list:
             rating = ratings.Rating(*elo)
-            rating.update_database(sql_executor)
+            rating.update_database(sql_executor)   # noqa: F821
 
         # put the teaser
         teaser = teasers.Teaser(teaser_submitted)
-        teaser.update_database(sql_executor)
+        teaser.update_database(sql_executor)   # noqa: F821
 
-        sql_executor.commit()
-        del sql_executor
+        sql_executor.commit()   # noqa: F821
+        del sql_executor   # noqa: F821
 
         data = {'msg': "ELO update done"}
         return data, 200
@@ -1621,25 +1618,27 @@ class ReliabilityRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
+        sql_executor = database.SqlExecutor()
+
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
+        if pseudo != admin_pseudo:
+            del sql_executor
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update reliability data")
 
         try:
             reliability_list = json.loads(reliability_list_submitted)
         except json.JSONDecodeError:
+            del sql_executor
             flask_restful.abort(400, msg="Did you convert reliability table from json to text ?")
 
-        sql_executor = database.SqlExecutor()
-
         # put the raw ratings
-        ratings3.Rating3.create_table(sql_executor)
+        ratings3.Rating3.create_table(sql_executor)   # noqa: F821
         for reliability in reliability_list:
             rating = ratings3.Rating3(*reliability)
-            rating.update_database(sql_executor)
+            rating.update_database(sql_executor)   # noqa: F821
 
-        sql_executor.commit()
-        del sql_executor
+        sql_executor.commit()   # noqa: F821
+        del sql_executor   # noqa: F821
 
         data = {'msg': "reliability update done"}
         return data, 200
@@ -1690,25 +1689,27 @@ class RegularityRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
+        sql_executor = database.SqlExecutor()
+
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
+        if pseudo != admin_pseudo:
+            del sql_executor   # noqa: F821
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to update regularity data")
 
         try:
             regularity_list = json.loads(regularity_list_submitted)
         except json.JSONDecodeError:
+            del sql_executor
             flask_restful.abort(400, msg="Did you convert regularity table from json to text ?")
 
-        sql_executor = database.SqlExecutor()
-
         # put the raw ratings
-        ratings2.Rating2.create_table(sql_executor)
+        ratings2.Rating2.create_table(sql_executor)  # noqa: F821
         for regularity in regularity_list:
             rating = ratings2.Rating2(*regularity)
-            rating.update_database(sql_executor)
+            rating.update_database(sql_executor)  # noqa: F821
 
-        sql_executor.commit()
-        del sql_executor
+        sql_executor.commit()  # noqa: F821
+        del sql_executor  # noqa: F821
 
         data = {'msg': "regularity update done"}
         return data, 200
@@ -2355,15 +2356,18 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
         pseudo = req_result.json()['logged_in_as']
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
+        sql_executor = database.SqlExecutor()
+
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
+        if pseudo != admin_pseudo:
+            del sql_executor
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
-        #  sql_executor = database.SqlExecutor()
 
         #  sql_executor.commit()
-        #  del sql_executor
+
+        del sql_executor
 
         print("MAINTENANCE - done !!!", file=sys.stderr)
 
