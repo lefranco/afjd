@@ -508,6 +508,12 @@ class PlayerRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Player {pseudo} is a moderator")
 
+        # cannot quit if admin
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
+        if pseudo == admin_pseudo:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Player {pseudo} is a admin")
+
         # ----------------------
         # second checks externally (games)
         # ----------------------
@@ -1437,9 +1443,9 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
 class PriviledgedListRessource(flask_restful.Resource):  # type: ignore
     """ PriviledgedListRessource """
 
-    def get(self) -> typing.Tuple[typing.Dict[str, typing.List[str]], int]:
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Union[typing.List[str], typing.Optional[str]]], int]:
         """
-        Provides list of all priviledged (creators or moderators)
+        Provides list of all priviledged (creators, moderators and admin)
         EXPOSED
         """
 
@@ -1448,12 +1454,13 @@ class PriviledgedListRessource(flask_restful.Resource):  # type: ignore
         sql_executor = database.SqlExecutor()
         creators_list = creators.Creator.inventory(sql_executor)
         moderators_list = moderators.Moderator.inventory(sql_executor)
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
         del sql_executor
 
         c_list = [c[0] for c in creators_list]
         m_list = [m[0] for m in moderators_list]
 
-        return {'creators': c_list, 'moderators': m_list}, 200
+        return {'creators': c_list, 'moderators': m_list, 'admin': admin_pseudo}, 200
 
 
 @API.resource('/elo_rating/<classic>')

@@ -110,6 +110,14 @@ class Player:
         return players_found[0][0]  # type: ignore
 
     @staticmethod
+    def find_admin_pseudo(sql_executor: database.SqlExecutor) -> typing.Optional[str]:
+        """ class lookup : finds the first pseudo in database """
+        pseudo_found = sql_executor.execute("SELECT pseudo FROM players where identifier = ?", (1,), need_result=True)
+        if not pseudo_found:
+            return None
+        return pseudo_found[0][0]  # type: ignore
+
+    @staticmethod
     def inventory(sql_executor: database.SqlExecutor) -> typing.List['Player']:
         """ class inventory : gives a list of all objects in database """
         players_found = sql_executor.execute("SELECT player_data FROM players", need_result=True)
