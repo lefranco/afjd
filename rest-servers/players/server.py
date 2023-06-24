@@ -1434,6 +1434,25 @@ class ModeratorListRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/pseudo-admin')
+class PseudoAdminRessource(flask_restful.Resource):  # type: ignore
+    """ CheckAdminRessource """
+
+    def get(self) -> typing.Tuple[typing.Optional[str], int]:
+        """
+        Give pseudo of admin (for users module)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/pseudo-admin - POST - get admin pseudo")
+        sql_executor = database.SqlExecutor()
+        admin_pseudo = players.Player.find_admin_pseudo(sql_executor)
+        del sql_executor
+
+        data = admin_pseudo
+        return data, 200
+
+
 @API.resource('/priviledged')
 class PriviledgedListRessource(flask_restful.Resource):  # type: ignore
     """ PriviledgedListRessource """

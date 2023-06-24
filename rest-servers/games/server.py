@@ -195,9 +195,6 @@ GROUPING_PARSER = flask_restful.reqparse.RequestParser()
 GROUPING_PARSER.add_argument('game_id', type=int, required=True)
 GROUPING_PARSER.add_argument('delete', type=int, required=True)
 
-# Account allowed to usupr, to see logins and failed logins
-ADMIN_ACCOUNT_NAME = 'Palpatine'
-
 # a little welcome message to new games
 WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
 
@@ -810,8 +807,19 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"Game {name} does not exist")
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
+        # get admin pseudo
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/pseudo-admin"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
+        admin_pseudo = req_result.json()
+
+        # check user is admin
+        if pseudo != admin_pseudo:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to alter a game!")
 
@@ -1067,8 +1075,19 @@ class ActivePlayersRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
+        # get admin pseudo
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/pseudo-admin"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
+        admin_pseudo = req_result.json()
+
+        # check user is admin
+        if pseudo != admin_pseudo:
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to get all active players")
 
         sql_executor = database.SqlExecutor()
@@ -1870,8 +1889,19 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
+        # get admin pseudo
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/pseudo-admin"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
+        admin_pseudo = req_result.json()
+
+        # check user is admin
+        if pseudo != admin_pseudo:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to rectify a position!")
 
@@ -5780,8 +5810,19 @@ class ClearOldDelaysRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
+        # get admin pseudo
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/pseudo-admin"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
+        admin_pseudo = req_result.json()
+
+        # check user is admin
+        if pseudo != admin_pseudo:
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to clear old delays")
 
         sql_executor = database.SqlExecutor()
@@ -6513,8 +6554,19 @@ class MaintainRessource(flask_restful.Resource):  # type: ignore
 
         pseudo = req_result.json()['logged_in_as']
 
-        # TODO improve this with real admin account
-        if pseudo != ADMIN_ACCOUNT_NAME:
+        # get admin pseudo
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/pseudo-admin"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
+        admin_pseudo = req_result.json()
+
+        # check user is admin
+        if pseudo != admin_pseudo:
             flask_restful.abort(403, msg="You do not seem to be site administrator so you are not allowed to maintain")
 
         print("MAINTENANCE - start !!!", file=sys.stderr)
