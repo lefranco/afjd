@@ -18,6 +18,7 @@ import flask
 import flask_cors
 import flask_jwt_extended
 import werkzeug.security
+import requests
 
 import lowdata
 import mylogger
@@ -26,6 +27,8 @@ import users
 import logins
 import failures
 import database
+
+SESSION = requests.Session()
 
 
 APP = flask.Flask(__name__)
@@ -44,9 +47,6 @@ APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=TOKEN_DURATION_
 
 # Seems JWT variable is not used in this implementation but could be later on...
 JWT = flask_jwt_extended.JWTManager(APP)
-
-# Account allowed to usurp, to see logins and failed logins
-ADMIN_ACCOUNT_NAME = 'Palpatine'
 
 # to avoid repeat logins
 NO_REPEAT_DELAY_SEC = 15
@@ -310,7 +310,19 @@ def usurp_user() -> typing.Tuple[typing.Any, int]:
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
 
-    if logged_in_as != ADMIN_ACCOUNT_NAME:
+    # get admin pseudo
+    host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+    port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/pseudo-admin"
+    req_result = SESSION.get(url)
+    if req_result.status_code != 200:
+        print(f"ERROR from server  : {req_result.text}")
+        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+        return {"msg": f"Failed to get pseudo admin {message}"}, 404
+    admin_pseudo = req_result.json()
+
+    # check user is admin
+    if logged_in_as != admin_pseudo:
         return {"msg": "Wrong user_name to perform operation"}, 403
 
     assert flask.request.json is not None
@@ -344,7 +356,19 @@ def logins_list() -> typing.Tuple[typing.Any, int]:
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
 
-    if logged_in_as != ADMIN_ACCOUNT_NAME:
+    # get admin pseudo
+    host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+    port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/pseudo-admin"
+    req_result = SESSION.get(url)
+    if req_result.status_code != 200:
+        print(f"ERROR from server  : {req_result.text}")
+        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+        return {"msg": f"Failed to get pseudo admin {message}"}, 404
+    admin_pseudo = req_result.json()
+
+    # check user is admin
+    if logged_in_as != admin_pseudo:
         return {"msg": "Wrong user_name to perform operation"}, 403
 
     sql_executor = database.SqlExecutor()
@@ -368,7 +392,19 @@ def failures_list() -> typing.Tuple[typing.Any, int]:
     # Access the identity of the current user with get_jwt_identity
     logged_in_as = flask_jwt_extended.get_jwt_identity()
 
-    if logged_in_as != ADMIN_ACCOUNT_NAME:
+    # get admin pseudo
+    host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+    port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/pseudo-admin"
+    req_result = SESSION.get(url)
+    if req_result.status_code != 200:
+        print(f"ERROR from server  : {req_result.text}")
+        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+        return {"msg": f"Failed to get pseudo admin {message}"}, 404
+    admin_pseudo = req_result.json()
+
+    # check user is admin
+    if logged_in_as != admin_pseudo:
         return {"msg": "Wrong user_name to perform operation"}, 403
 
     sql_executor = database.SqlExecutor()
