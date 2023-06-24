@@ -10,7 +10,6 @@ START_TIME = time.time()
 from browser import document, html, alert, timer, ajax  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
-import config
 import common
 import play_master
 import play

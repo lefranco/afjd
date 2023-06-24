@@ -15,9 +15,6 @@ import mapping
 import config
 
 
-# TODO improve this with real admin account
-ADMIN_PSEUDO = 'Palpatine'
-
 PERSIST_TIME_SEC = 5
 
 
@@ -43,8 +40,11 @@ def check_admin():
 
     pseudo = storage['PSEUDO']
 
-    # TODO improve this with real admin account
-    if pseudo != ADMIN_PSEUDO:
+    priviledged = PRIVILEDGED
+    if not priviledged:
+        return False
+    admin_pseudo = priviledged['admin']
+    if pseudo != admin_pseudo:
         return False
 
     return True
