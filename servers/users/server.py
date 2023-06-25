@@ -48,9 +48,6 @@ RESCUE_TOKEN_DURATION_MIN = 15
 # how long token is valid - beware they say no more than several hours...
 USURP_TOKEN_DURATION_MIN = 10
 
-# default is 15 minutes - put it to 'TOKEN_DURATION_DAYS' days...
-# useless ??? APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=LOGIN_TOKEN_DURATION_DAYS)
-
 # Seems JWT variable is not used in this implementation but could be later on...
 JWT = flask_jwt_extended.JWTManager(APP)
 
@@ -58,8 +55,7 @@ JWT = flask_jwt_extended.JWTManager(APP)
 NO_LOGIN_REPEAT_DELAY_SEC = 15
 
 # to avoid repeat rescue
-#  TODO PUT BACK 600
-NO_RESCUE_REPEAT_DELAY_SEC = 1
+NO_RESCUE_REPEAT_DELAY_SEC = 600
 
 # ---------------------------------
 # users
