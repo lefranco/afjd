@@ -55,7 +55,7 @@ JWT = flask_jwt_extended.JWTManager(APP)
 NO_LOGIN_REPEAT_DELAY_SEC = 15
 
 # to avoid repeat rescue
-NO_RESCUE_REPEAT_DELAY_SEC = 600
+NO_RESCUE_REPEAT_DELAY_SEC = 300
 
 # ---------------------------------
 # users
