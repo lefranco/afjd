@@ -7,7 +7,7 @@ import time
 START_TIME = time.time()
 
 
-from browser import document, html, alert, timer, ajax  # pylint: disable=import-error
+from browser import document, html, alert, timer, ajax, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import common
@@ -242,8 +242,20 @@ PANEL_MIDDLE = html.DIV()
 OVERALL <= PANEL_MIDDLE
 
 # starts here
-if 'game' in document.query:
+if 'rescue' in document.query:
+    if 'pseudo' in document.query:
+        passed_pseudo = document.query['pseudo']
+        storage['PSEUDO'] = passed_pseudo
+    if 'token' in document.query:
+        passed_token = document.query['token']
+        storage['JWT_TOKEN'] = passed_token
+    window.history.pushState({}, document.title, "/")
+    alert("Changez votre mot de passe rapidement !")
+    account.set_rescue()
+    load_option(None, 'Mon compte')
+elif 'game' in document.query:
     QUERY_GAME_NAME = document.query['game']
+    window.history.pushState({}, document.title, "/")
     if load_game(QUERY_GAME_NAME):
         if 'arrival' in document.query:
             arrival = document.query['arrival']
@@ -256,6 +268,7 @@ if 'game' in document.query:
         load_option(None, ITEM_NAME_SELECTED)
 elif 'edit_game' in document.query:
     QUERY_GAME_NAME = document.query['edit_game']
+    window.history.pushState({}, document.title, "/")
     if load_game(QUERY_GAME_NAME):
         load_option(None, 'Accueil')
         PANEL_MIDDLE.clear()
@@ -264,6 +277,7 @@ elif 'edit_game' in document.query:
         load_option(None, ITEM_NAME_SELECTED)
 elif 'event' in document.query:
     QUERY_EVENT_NAME = document.query['event']
+    window.history.pushState({}, document.title, "/")
     if check_event(QUERY_EVENT_NAME):
         storage['EVENT'] = QUERY_EVENT_NAME
         events.set_arrival()
