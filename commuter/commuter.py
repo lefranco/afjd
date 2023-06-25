@@ -20,8 +20,8 @@ import lowdata
 
 SESSION = requests.Session()
 
-COMMUTER_ACCOUNT = "TheCommuter"
-COMMUTER_PASSWORD = "PythonRules78470!!!"
+COMMUTER_ACCOUNT = ""
+COMMUTER_PASSWORD = ""
 
 
 # tilme to add to make sure to be after
@@ -91,6 +91,8 @@ def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_na
     url = f"{host}:{port}/variants/{variant_name_loaded}"
     req_result = SESSION.get(url)
     if req_result.status_code != 200:
+        if 'msg' in req_result.json():
+            print(req_result.json()['msg'])
         mylogger.LOGGER.error("ERROR: Failed to get variant data")
         return False
     variant_content_loaded = req_result.json()
@@ -133,6 +135,8 @@ def check_all_games(jwt_token: str) -> None:
     url = f"{host}:{port}/games"
     req_result = SESSION.get(url)
     if req_result.status_code != 200:
+        if 'msg' in req_result.json():
+            print(req_result.json()['msg'])
         print("ERROR: Failed to get games")
         return
     games_dict = req_result.json()
@@ -169,6 +173,8 @@ def check_all_games(jwt_token: str) -> None:
         url = f"{host}:{port}/games/{game_name}"
         req_result = SESSION.get(url)
         if req_result.status_code != 200:
+            if 'msg' in req_result.json():
+                print(req_result.json()['msg'])
             mylogger.LOGGER.error("ERROR: Failed to get game data")
             continue
 
@@ -254,6 +260,8 @@ def main() -> None:
     }
     req_result = SESSION.post(url, headers={'content-type': 'application/json'}, data=json.dumps(json_dict))
     if req_result.status_code != 200:
+        if 'msg' in req_result.json():
+            print(req_result.json()['msg'])
         print("ERROR: Failed to get token")
         return
     req_result = json.loads(req_result.text)
