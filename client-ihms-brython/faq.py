@@ -82,7 +82,10 @@ FAQ_CONTENT_TABLE = {
     "Un administrateur peut modifier ses nouvelles. Il peut se substituer à un inscrit (donc cela implique qu'il puisse, s'il le souhaite, lire tous les messages privés et publics de toutes les parties). Il peut rectifier les paramètres fixes (en théorie) et la position d'une partie. Il peut savoir les dates des dernières connexions réussies et manquées (erreur de pseudo/mot de passe). Il gère la liste des créateurs et des modérateurs. Il peut (provisoirement) mettre à jour le elo, la fiabilité et la régularité. Il peut voir les comptes oisifs et les comptes qui n'ont pas confirmé leur adresse courriel.",
 
     "Comment créer une partie dans laquelle je joue ?":
-    "Il faut créer la partie, puis se retirer de l'arbitrage et demander à un arbitre de parties du site d'en prendre l'arbitrage.",
+    "Il faut créer la partie, puis se retirer de l'arbitrage. Un arbitre de parties du site se chargera d'en prendre l'arbitrage.",
+
+    "J'ai oublié mon mot de passe. Au secours !":
+    "Entrer son pseudo et cliquer 'Mot de passe oublié'. Un courriel est envoyé avec un lien. Cliquer sur le mien amène sur le site avec une authentification valable un temps limité. Se dépêcher de modifier sont mot de passe.",
 
     "Comment créer un gros tournoi ?":
     """
