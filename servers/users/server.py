@@ -40,16 +40,25 @@ SECRET_DATA = SECRET_CONFIG.section('JWT_SECRET_KEY')
 APP.config['JWT_SECRET_KEY'] = SECRET_DATA['key']
 
 # how long token is valid - beware they say no more than several hours...
-TOKEN_DURATION_DAYS = 20
+LOGIN_TOKEN_DURATION_DAY = 20
+
+# how long token is valid - beware they say no more than several hours...
+RESCUE_TOKEN_DURATION_MIN = 15
+
+# how long token is valid - beware they say no more than several hours...
+USURP_TOKEN_DURATION_MIN = 10
 
 # default is 15 minutes - put it to 'TOKEN_DURATION_DAYS' days...
-APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=TOKEN_DURATION_DAYS)
+# useless ??? APP.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=LOGIN_TOKEN_DURATION_DAYS)
 
 # Seems JWT variable is not used in this implementation but could be later on...
 JWT = flask_jwt_extended.JWTManager(APP)
 
 # to avoid repeat logins
-NO_REPEAT_DELAY_SEC = 15
+NO_LOGIN_REPEAT_DELAY_SEC = 15
+
+# to avoid repeat rescue
+NO_RESCUE_REPEAT_DELAY_SEC = 600
 
 # ---------------------------------
 # users
@@ -59,6 +68,10 @@ NO_REPEAT_DELAY_SEC = 15
 class RepeatPreventer(typing.Dict[str, float]):
     """ Table """
 
+    def __init__(self, no_repeat_delay_sec: int):
+        self._no_repeat_delay_sec = no_repeat_delay_sec
+        super().__init__()
+
     def can(self, user_name: str) -> bool:
         """ can """
 
@@ -66,7 +79,7 @@ class RepeatPreventer(typing.Dict[str, float]):
             return True
 
         now = time.time()
-        return now > self[user_name] + NO_REPEAT_DELAY_SEC
+        return now > self[user_name] + self._no_repeat_delay_sec
 
     def did(self, user_name: str) -> None:
         """ did """
@@ -76,7 +89,7 @@ class RepeatPreventer(typing.Dict[str, float]):
         self[user_name] = now
 
         # house clean
-        obsoletes = [k for (k, v) in self.items() if v < now - NO_REPEAT_DELAY_SEC]
+        obsoletes = [k for (k, v) in self.items() if v < now - self._no_repeat_delay_sec]
         for key in obsoletes:
             del self[key]
 
@@ -209,8 +222,11 @@ def change_user() -> typing.Tuple[typing.Any, int]:
     return flask.jsonify({"msg": "User was changed"}), 201
 
 
-LOGIN_REPEAT_PREVENTER = RepeatPreventer()
+LOGIN_REPEAT_PREVENTER = RepeatPreventer(NO_LOGIN_REPEAT_DELAY_SEC)
 LOGIN_LOCK = threading.Lock()
+
+RESCUE_REPEAT_PREVENTER = RepeatPreventer(NO_RESCUE_REPEAT_DELAY_SEC)
+RESCUE_LOCK = threading.Lock()
 
 
 @APP.route('/login', methods=['POST'])
@@ -245,7 +261,7 @@ def login_user() -> typing.Tuple[typing.Any, int]:
 
         if not LOGIN_REPEAT_PREVENTER.can(user_name):
             del sql_executor
-            return flask.jsonify({"msg": f"You have already tried to login a very short time ago. There must be at least {NO_REPEAT_DELAY_SEC} secs between two attempts..."}), 400
+            return flask.jsonify({"msg": f"You have already tried to login a very short time ago. There must be at least {NO_LOGIN_REPEAT_DELAY_SEC} secs between two attempts..."}), 400
 
         LOGIN_REPEAT_PREVENTER.did(user_name)
 
@@ -274,8 +290,8 @@ def login_user() -> typing.Tuple[typing.Any, int]:
     del sql_executor
 
     # Identity can be any data that is json serializable
-    access_token = flask_jwt_extended.create_access_token(identity=user_name)
-    return flask.jsonify(AccessToken=access_token, TokenDurationDays=TOKEN_DURATION_DAYS), 200
+    access_token = flask_jwt_extended.create_access_token(identity=user_name, expires_delta=datetime.timedelta(days=LOGIN_TOKEN_DURATION_DAY))
+    return flask.jsonify(AccessToken=access_token, TokenDurationDays=LOGIN_TOKEN_DURATION_DAY), 200
 
 
 @APP.route('/verify', methods=['GET'])
@@ -338,7 +354,56 @@ def usurp_user() -> typing.Tuple[typing.Any, int]:
         return flask.jsonify({"msg": "Bad usurped_user_name"}), 401
 
     # Identity can be any data that is json serializable
-    access_token = flask_jwt_extended.create_access_token(identity=usurped_user_name)
+    access_token = flask_jwt_extended.create_access_token(identity=usurped_user_name, expires_delta=datetime.timedelta(minutes=USURP_TOKEN_DURATION_MIN))
+
+    return flask.jsonify(AccessToken=access_token), 200
+
+
+@APP.route('/rescue', methods=['POST'])
+def rescue_user() -> typing.Tuple[typing.Any, int]:
+    """
+    Provide a method to create access tokens. The create_access_token()
+    function is used to actually generate the token, and you can return
+    it to the caller however you choose.
+    Rescue procedure : password was forgotten
+    No need for password, but the token is sent by email
+    EXPOSED : called by all ihms that have password forgotten input
+    """
+
+    mylogger.LOGGER.info("/rescue - POST - rescue in a user")
+
+    if not flask.request.is_json:
+        return flask.jsonify({"msg": "Missing JSON in request"}), 400
+
+    assert flask.request.json is not None
+    user_name = flask.request.json.get('user_name', None)
+    if not user_name:
+        return {"msg": "Missing user_name parameter"}, 400
+
+    sql_executor = database.SqlExecutor()
+
+    with RESCUE_LOCK:
+
+        if not RESCUE_REPEAT_PREVENTER.can(user_name):
+            del sql_executor
+            return flask.jsonify({"msg": f"You have already tried to rescue a short time ago. There must be at least {NO_RESCUE_REPEAT_DELAY_SEC} secs between two attempts..."}), 400
+
+        RESCUE_REPEAT_PREVENTER.did(user_name)
+
+        user = users.User.find_by_name(sql_executor, user_name)
+
+        if user is None:
+
+            del sql_executor
+            return flask.jsonify({"msg": "User does not exist"}), 404
+
+        # TODO keep a trace of the rescue
+
+    sql_executor.commit()
+    del sql_executor
+
+    # Identity can be any data that is json serializable
+    access_token = flask_jwt_extended.create_access_token(identity=user_name, expires_delta=datetime.timedelta(minutes=RESCUE_TOKEN_DURATION_MIN))
     return flask.jsonify(AccessToken=access_token), 200
 
 
