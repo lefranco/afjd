@@ -122,6 +122,10 @@ REGISTRATION_UPDATE_PARSER.add_argument('value', type=int, required=True)
 IP_ADDRESS_PARSER = flask_restful.reqparse.RequestParser()
 IP_ADDRESS_PARSER.add_argument('ip_value', type=str, required=True)
 
+RESCUE_PLAYER_PARSER = flask_restful.reqparse.RequestParser()
+RESCUE_PLAYER_PARSER.add_argument('rescued_user', type=str, required=True)
+RESCUE_PLAYER_PARSER.add_argument('access_token', type=str, required=True)
+
 # pseudo must be at least that size
 LEN_PSEUDO_MIN = 3
 
@@ -131,6 +135,25 @@ LEN_EVENT_MAX = 50
 # max size in bytes of image (after b64)
 # let 's say one Mo
 MAX_SIZE_IMAGE = (4 / 3) * 1000000
+
+
+def email_rescue_message(pseudo: str, access_token: str) -> typing.Tuple[str, str]:
+    """ email_rescue_message """
+
+    url = f"https://diplomania-gen.fr?rescue=1&pseudo={pseudo}&token={access_token}"
+
+    subject = "Ceci est un courriel pour récupérer l'accès à votre compte dont vous avez oublié le mot de passe !"
+    body = "Bonjour !\n"
+    body += "\n"
+    body += f"Vous recevez ce courriel pour recupérer votre compte avec le pseudo {pseudo}."
+    body += "\n"
+    body += "Cliquez sur le lien ci-dessous :"
+    body += "\n"
+    body += url
+    body += "\n"
+    body += "Si vous n'êtes pas à l'origine de sa création, ignorez le (déclarez un incident si cela se répète)"
+    body += "\n"
+    return subject, body
 
 
 def email_greeting_message(pseudo: str) -> typing.Tuple[str, str]:
@@ -761,7 +784,7 @@ class PlayerListRessource(flask_restful.Resource):  # type: ignore
         # send it
         host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
         port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
-        url = f"{host}:{port}/send-email-welcome"
+        url = f"{host}:{port}/send-email-simple"
         req_result = SESSION.post(url, data=json_dict)
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
@@ -2346,6 +2369,57 @@ class IpAddressRessource(flask_restful.Resource):  # type: ignore
         sql_executor.commit()
 
         data = {'pseudo': pseudo, 'msg': 'Ok IP address and submission stored'}
+        return data, 200
+
+
+@API.resource('/rescue-player')
+class RescuePlayerRessource(flask_restful.Resource):  # type: ignore
+    """ RescuePlayerRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Rescue a player
+        PROTECTED
+        """
+
+        mylogger.LOGGER.info("/rescue-player - POST - rescue a player")
+
+        args = RESCUE_PLAYER_PARSER.parse_args(strict=True)
+
+        rescued_pseudo = args['rescued_user']
+        access_token = args['access_token']
+
+        sql_executor = database.SqlExecutor()
+
+        rescued_player = players.Player.find_by_pseudo(sql_executor, rescued_pseudo)
+        if rescued_player is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Player {rescued_pseudo} does not exists")
+        assert rescued_player is not None
+
+        email_rescued_player = rescued_player.email
+
+        # get a message
+        subject, body = email_rescue_message(rescued_pseudo, access_token)
+
+        json_dict = {
+            'subject': subject,
+            'body': body,
+            'email': email_rescued_player,
+        }
+
+        # send it
+        host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
+        port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
+        url = f"{host}:{port}/send-email-simple"
+        req_result = SESSION.post(url, data=json_dict)
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
+            flask_restful.abort(400, msg=f"Failed to send email to {email_rescued_player} : {message}")
+
+        data = {'msg': "rescue message sent"}
         return data, 200
 
 

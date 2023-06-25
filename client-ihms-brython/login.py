@@ -159,11 +159,43 @@ def login():
     def forgot_callback(ev):  # pylint: disable=invalid-name
         """ forgot_callback """
 
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur au sauvetage : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème au sauvetage : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but still refresh window
+                render(PANEL_MIDDLE)
+
+                return
+
+            alert("Un lien de sauvetage vous a été envoyé par courriel...")
+            render(PANEL_MIDDLE)
+
         ev.preventDefault()
 
-        alert("Désolé: la récupération du mot de passe n'est pas encore implémentée - vous pouvez contacter le support (cf. page d'accueil / onglet 'déclarer un incident') qui vous forcera un nouveau mot de passe")
+        pseudo = input_pseudo.value
 
-        render(PANEL_MIDDLE)
+        if not pseudo:
+            alert("Il manque le pseudo !")
+            render(PANEL_MIDDLE)
+            return
+
+        host = config.SERVER_CONFIG['USER']['HOST']
+        port = config.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/rescue"
+
+        json_dict = {
+            'user_name': pseudo,
+        }
+
+        # rescue (getting token) : no need for token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     def logout_callback(ev):  # pylint: disable=invalid-name
         """ logout_callback """

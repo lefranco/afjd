@@ -43,10 +43,10 @@ SEND_EMAIL_SUPPORT_PARSER.add_argument('subject', type=str, required=True)
 SEND_EMAIL_SUPPORT_PARSER.add_argument('body', type=str, required=True)
 SEND_EMAIL_SUPPORT_PARSER.add_argument('reply_to', type=str, required=True)
 
-SEND_EMAIL_WELCOME_PARSER = flask_restful.reqparse.RequestParser()
-SEND_EMAIL_WELCOME_PARSER.add_argument('subject', type=str, required=True)
-SEND_EMAIL_WELCOME_PARSER.add_argument('body', type=str, required=True)
-SEND_EMAIL_WELCOME_PARSER.add_argument('email', type=str, required=True)
+SEND_EMAIL_SIMPLE_PARSER = flask_restful.reqparse.RequestParser()
+SEND_EMAIL_SIMPLE_PARSER.add_argument('subject', type=str, required=True)
+SEND_EMAIL_SIMPLE_PARSER.add_argument('body', type=str, required=True)
+SEND_EMAIL_SIMPLE_PARSER.add_argument('email', type=str, required=True)
 
 CHAT_MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
 CHAT_MESSAGE_PARSER.add_argument('author', type=str, required=True)
@@ -139,19 +139,19 @@ def sender_threaded_procedure() -> None:
                 mylogger.LOGGER.error("*** NOW RESUMING SENDING EMAILS...")
 
 
-@API.resource('/send-email-welcome')
-class SendMailWelcomeRessource(flask_restful.Resource):  # type: ignore
-    """ SendMailWelcomeRessource """
+@API.resource('/send-email-simple')
+class SendMailSimpleRessource(flask_restful.Resource):  # type: ignore
+    """ SendMailSimpleRessource """
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
-        Sends an email of welcome
+        Simply sends an email (no token) usage : welecome and rescue
         EXPOSED
         """
 
         mylogger.LOGGER.info("/send-mail-welcome - POST - sending welcome email")
 
-        args = SEND_EMAIL_WELCOME_PARSER.parse_args(strict=True)
+        args = SEND_EMAIL_SIMPLE_PARSER.parse_args(strict=True)
 
         subject = args['subject']
         body = args['body']
@@ -159,7 +159,7 @@ class SendMailWelcomeRessource(flask_restful.Resource):  # type: ignore
 
         MESSAGE_QUEUE.put((None, subject, body, email_newcommer, None))
 
-        data = {'msg': 'Email was successfully queued to be sent to newcomer'}
+        data = {'msg': 'Email was successfully queued to be sent'}
         return data, 200
 
 
@@ -231,6 +231,7 @@ class SendEmailRessource(flask_restful.Resource):  # type: ignore
 
 CHATS: typing.List[typing.Tuple[float, str, str]] = []
 CHAT_PERSISTANCE_SEC = 24 * 60 * 60
+
 
 @API.resource('/chat-messages')
 class ChatMessageRessource(flask_restful.Resource):  # type: ignore

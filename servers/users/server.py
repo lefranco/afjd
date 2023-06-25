@@ -58,7 +58,8 @@ JWT = flask_jwt_extended.JWTManager(APP)
 NO_LOGIN_REPEAT_DELAY_SEC = 15
 
 # to avoid repeat rescue
-NO_RESCUE_REPEAT_DELAY_SEC = 600
+#  TODO PUT BACK 600
+NO_RESCUE_REPEAT_DELAY_SEC = 1
 
 # ---------------------------------
 # users
@@ -399,12 +400,27 @@ def rescue_user() -> typing.Tuple[typing.Any, int]:
 
         # TODO keep a trace of the rescue
 
-    sql_executor.commit()
-    del sql_executor
+        del sql_executor
 
-    # Identity can be any data that is json serializable
-    access_token = flask_jwt_extended.create_access_token(identity=user_name, expires_delta=datetime.timedelta(minutes=RESCUE_TOKEN_DURATION_MIN))
-    return flask.jsonify(AccessToken=access_token), 200
+        # Identity can be any data that is json serializable
+        access_token = flask_jwt_extended.create_access_token(identity=user_name, expires_delta=datetime.timedelta(minutes=RESCUE_TOKEN_DURATION_MIN))
+
+        json_dict = {
+            'rescued_user': user_name,
+            'access_token': access_token
+        }
+
+        # pass to player module
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/rescue-player"
+        req_result = SESSION.post(url, data=json_dict)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            return {"msg": f"Failed to rescue player {message}"}, 404
+
+        return flask.jsonify({}), 200
 
 
 @APP.route('/logins_list', methods=['POST'])

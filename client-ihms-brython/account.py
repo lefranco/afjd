@@ -23,6 +23,15 @@ DEFAULT_COUNTRY_CODE = "FRA"
 DEFAULT_TIMEZONE_CODE = "UTC+01:00"
 
 
+RESCUE = False
+
+
+def set_rescue():
+    """ set_rescue """
+    global RESCUE
+    RESCUE = True
+
+
 def information_about_input():
     """ information_about_account """
 
@@ -1046,12 +1055,16 @@ def load_option(_, item_name):
 def render(panel_middle):
     """ render """
 
+    global RESCUE
     global ITEM_NAME_SELECTED
 
     if 'PSEUDO' not in storage:
         ITEM_NAME_SELECTED = 'Créer un compte'
     else:
-        ITEM_NAME_SELECTED = OPTIONS[0]
+        if RESCUE:
+            ITEM_NAME_SELECTED = 'Mot de passe'
+        else:
+            ITEM_NAME_SELECTED = OPTIONS[0]
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
