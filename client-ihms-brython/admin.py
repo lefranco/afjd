@@ -19,7 +19,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Effacement des anciens retard', 'Comptes oisifs', 'Maintenance']
+OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Récupérations demandées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Effacement des anciens retard', 'Comptes oisifs', 'Maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -179,6 +179,38 @@ def get_last_failures():
     ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return failures_list
+
+
+def get_last_rescues():
+    """ get_last_rescues """
+
+    rescues_list = None
+
+    def reply_callback(req):
+        nonlocal rescues_list
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des demandes de récupération : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des demandes de récupération : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        rescues_list = req_result['rescue_list']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['USER']['HOST']
+    port = config.SERVER_CONFIG['USER']['PORT']
+    url = f"{host}:{port}/rescues_list"
+
+    # failures_list list : need token
+    # note : since we access directly to the user server, we present the token in a slightly different way
+    ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'Authorization': f"Bearer {storage['JWT_TOKEN']}"}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return rescues_list
 
 
 def change_news_admin():
@@ -1074,6 +1106,84 @@ def last_failures():
 
     MY_SUB_PANEL <= html.H4("Par inscrit")
     MY_SUB_PANEL <= failures_summary
+
+
+def last_rescues():
+    """ rescues """
+
+    MY_SUB_PANEL <= html.H3("Récupérations demandées")
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    rescues_list = get_last_rescues()
+
+    # to get the sum
+    rescues_recap = {}
+
+    # chronologically
+
+    rescues_table = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'adresse IP', 'date']:
+        col = html.TD(field)
+        thead <= col
+    rescues_table <= thead
+
+    for pseudo, ip_address, time_stamp in sorted(rescues_list, key=lambda f: f[2], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        if ip_address is None:
+            ip_address = '-'
+        col = html.TD(ip_address)
+        row <= col
+
+        date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+        col = html.TD(date_now_gmt_str)
+        row <= col
+
+        rescues_table <= row
+
+        # to get the sum
+        if pseudo not in rescues_recap:
+            rescues_recap[pseudo] = 0
+        rescues_recap[pseudo] += 1
+
+    # per player
+
+    rescues_summary = html.TABLE()
+
+    # header
+    thead = html.THEAD()
+    for field in ['pseudo', 'number']:
+        col = html.TD(field)
+        thead <= col
+    rescues_summary <= thead
+
+    for pseudo, number in sorted(rescues_recap.items(), key=lambda ll: ll[1], reverse=True):
+        row = html.TR()
+
+        col = html.TD(pseudo)
+        row <= col
+
+        col = html.TD(number)
+        row <= col
+
+        rescues_summary <= row
+
+    # Now display
+
+    MY_SUB_PANEL <= html.H4("Chronologiquement")
+    MY_SUB_PANEL <= rescues_table
+
+    MY_SUB_PANEL <= html.H4("Par inscrit")
+    MY_SUB_PANEL <= rescues_summary
 
 
 def edit_creators():
@@ -2182,6 +2292,8 @@ def load_option(_, item_name):
         last_logins()
     if item_name == 'Connexions manquées':
         last_failures()
+    if item_name == 'Récupérations demandées':
+        last_rescues()
     if item_name == 'Editer les modérateurs':
         edit_moderators()
     if item_name == 'Editer les créateurs':
