@@ -10,6 +10,8 @@ Data : populate database
 import mylogger
 import users
 import logins
+import failures
+import rescues
 import database
 
 
@@ -28,7 +30,13 @@ def populate_logins(sql_executor: database.SqlExecutor) -> None:
 def populate_failures(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
 
-    logins.Login.create_table(sql_executor)
+    failures.Failure.create_table(sql_executor)
+
+
+def populate_rescues(sql_executor: database.SqlExecutor) -> None:
+    """ inserts these items in database """
+
+    rescues.Rescue.create_table(sql_executor)
 
 
 def populate(sql_executor: database.SqlExecutor) -> None:
@@ -38,6 +46,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_users(sql_executor)
     populate_logins(sql_executor)
     populate_failures(sql_executor)
+    populate_rescues(sql_executor)
 
 
 if __name__ == '__main__':

@@ -1055,7 +1055,6 @@ def load_option(_, item_name):
 def render(panel_middle):
     """ render """
 
-    global RESCUE
     global ITEM_NAME_SELECTED
 
     if 'PSEUDO' not in storage:

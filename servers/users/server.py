@@ -26,6 +26,7 @@ import populate
 import users
 import logins
 import failures
+import rescues
 import database
 
 SESSION = requests.Session()
@@ -377,6 +378,9 @@ def rescue_user() -> typing.Tuple[typing.Any, int]:
     if not user_name:
         return {"msg": "Missing user_name parameter"}, 400
 
+    # not mandatory
+    ip_address = flask.request.json.get('ip_address', 'none')
+
     sql_executor = database.SqlExecutor()
 
     with RESCUE_LOCK:
@@ -394,7 +398,12 @@ def rescue_user() -> typing.Tuple[typing.Any, int]:
             del sql_executor
             return flask.jsonify({"msg": "User does not exist"}), 404
 
-        # TODO keep a trace of the rescue
+        # keep a trace of the rescue
+        # we keep a trace of the rescue if user exists
+        rescue = rescues.Rescue(user_name, ip_address)
+        rescue.update_database(sql_executor)
+
+        sql_executor.commit()
 
         del sql_executor
 
@@ -489,6 +498,43 @@ def failures_list() -> typing.Tuple[typing.Any, int]:
     del sql_executor
 
     return flask.jsonify({"failure_list": failure_list}), 200
+
+
+@APP.route('/rescues_list', methods=['POST'])
+@flask_jwt_extended.jwt_required()  # type: ignore   # pylint: disable=no-value-for-parameter
+def rescues_list() -> typing.Tuple[typing.Any, int]:
+    """
+    Protect a view with jwt_required, which requires a valid access token
+    in the request to access.
+    EXPOSED : Get list of all rescues
+    """
+
+    mylogger.LOGGER.info("/rescues_list - POST - list of all rescues (request for email with link to get token to change password)")
+
+    # Access the identity of the current user with get_jwt_identity
+    logged_in_as = flask_jwt_extended.get_jwt_identity()
+
+    # get admin pseudo
+    host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+    port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/pseudo-admin"
+    req_result = SESSION.get(url)
+    if req_result.status_code != 200:
+        print(f"ERROR from server  : {req_result.text}")
+        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+        return {"msg": f"Failed to get pseudo admin {message}"}, 404
+    admin_pseudo = req_result.json()
+
+    # check user is admin
+    if logged_in_as != admin_pseudo:
+        return {"msg": "Wrong user_name to perform operation"}, 403
+
+    sql_executor = database.SqlExecutor()
+    rescue_list = rescues.Rescue.find_all(sql_executor)
+    del sql_executor
+
+    return flask.jsonify({"rescue_list": rescue_list}), 200
+
 
 # ---------------------------------
 # main
