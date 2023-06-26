@@ -20,6 +20,7 @@ import lowdata
 
 SESSION = requests.Session()
 
+# read from parameter file
 COMMUTER_ACCOUNT = ""
 COMMUTER_PASSWORD = ""
 
