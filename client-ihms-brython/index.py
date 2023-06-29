@@ -242,49 +242,56 @@ PANEL_MIDDLE = html.DIV()
 OVERALL <= PANEL_MIDDLE
 
 # starts here
-if 'rescue' in document.query:
+if 'game' in document.query:
+    QUERY_GAME_NAME = document.query['game']
+    if load_game(QUERY_GAME_NAME):
+        if 'arrival' in document.query:
+            arrival = document.query['arrival']
+            # so that will go to proper page and/or do proper action
+            play.set_arrival(arrival)
+        # stick to game name
+        window.history.pushState({}, document.title, f"?game={QUERY_GAME_NAME}")
+        load_option(None, 'Accueil')
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
+    else:
+        alert("Partie inconnue !")
+        load_option(None, ITEM_NAME_SELECTED)
+elif 'edit_game' in document.query:
+    QUERY_GAME_NAME = document.query['edit_game']
+    if load_game(QUERY_GAME_NAME):
+        window.history.pushState({}, document.title, "/")
+        load_option(None, 'Accueil')
+        PANEL_MIDDLE.clear()
+        games.render(PANEL_MIDDLE)
+    else:
+        alert("Partie inconnue !")
+        window.history.pushState({}, document.title, "/")
+        load_option(None, ITEM_NAME_SELECTED)
+elif 'event' in document.query:
+    QUERY_EVENT_NAME = document.query['event']
+    if check_event(QUERY_EVENT_NAME):
+        storage['EVENT'] = QUERY_EVENT_NAME
+        events.set_arrival()
+        window.history.pushState({}, document.title, "/")
+        load_option(None, 'Evénements')
+    else:
+        alert("Evénement inconnu !")
+        window.history.pushState({}, document.title, "/")
+        load_option(None, ITEM_NAME_SELECTED)
+elif 'rescue' in document.query:
     if 'pseudo' in document.query:
         passed_pseudo = document.query['pseudo']
         storage['PSEUDO'] = passed_pseudo
     if 'token' in document.query:
         passed_token = document.query['token']
         storage['JWT_TOKEN'] = passed_token
-    window.history.pushState({}, document.title, "/")
     alert("Changez votre mot de passe rapidement !")
     account.set_rescue()
+    window.history.pushState({}, document.title, "/")
     load_option(None, 'Mon compte')
-elif 'game' in document.query:
-    QUERY_GAME_NAME = document.query['game']
-    window.history.pushState({}, document.title, "/")
-    if load_game(QUERY_GAME_NAME):
-        if 'arrival' in document.query:
-            arrival = document.query['arrival']
-            # so that will go to proper page and/or do proper action
-            play.set_arrival(arrival)
-        load_option(None, 'Accueil')
-        PANEL_MIDDLE.clear()
-        play.render(PANEL_MIDDLE)
-    else:
-        load_option(None, ITEM_NAME_SELECTED)
-elif 'edit_game' in document.query:
-    QUERY_GAME_NAME = document.query['edit_game']
-    window.history.pushState({}, document.title, "/")
-    if load_game(QUERY_GAME_NAME):
-        load_option(None, 'Accueil')
-        PANEL_MIDDLE.clear()
-        games.render(PANEL_MIDDLE)
-    else:
-        load_option(None, ITEM_NAME_SELECTED)
-elif 'event' in document.query:
-    QUERY_EVENT_NAME = document.query['event']
-    window.history.pushState({}, document.title, "/")
-    if check_event(QUERY_EVENT_NAME):
-        storage['EVENT'] = QUERY_EVENT_NAME
-        events.set_arrival()
-        load_option(None, 'Evénements')
-    else:
-        load_option(None, ITEM_NAME_SELECTED)
 else:
+    window.history.pushState({}, document.title, "/")
     load_option(None, ITEM_NAME_SELECTED)
 
 document <= html.BR()
