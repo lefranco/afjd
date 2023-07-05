@@ -1517,7 +1517,8 @@ def declare():
         pseudo_there = ""
         if announce:
             player_id = role_id_msg
-            pseudo_there = play_low.ID2PSEUDO[player_id]
+            if player_id in play_low.ID2PSEUDO:
+                pseudo_there = play_low.ID2PSEUDO[player_id]
         else:
             if role_id_msg != -1:
 

@@ -232,6 +232,27 @@ class RepeatPreventer(typing.Dict[typing.Tuple[int, int], float]):
             del self[key]
 
 
+def notify_last_line(sql_executor: database.SqlExecutor, game_id: int, payload: str) -> None:
+    """ notify_last_line """
+
+    # create declaration here
+    with POST_DECLARATION_LOCK:
+
+        # create a content
+        identifier = contents.Content.free_identifier(sql_executor)
+        time_stamp = int(time.time())  # now
+        content = contents.Content(identifier, int(game_id), time_stamp, payload)
+        content.update_database(sql_executor)
+
+        role_id = -1
+        anonymous = False
+        announce = True
+
+        # create a declaration linked to the content
+        declaration = declarations.Declaration(int(game_id), role_id, anonymous, announce, identifier)
+        declaration.update_database(sql_executor)
+
+
 @API.resource('/variants/<name>')
 class VariantIdentifierRessource(flask_restful.Resource):  # type: ignore
     """ VariantIdentifierRessource """
@@ -2201,6 +2222,10 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
         if adjudicated:
 
+            # reload game
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+
             # notify players
 
             if not (game.fast or game.archive):
@@ -2237,6 +2262,11 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                     del sql_executor
                     flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+                # declaration from system
+                if game.last_year():
+                    payload = "Attention, dernière saison !"
+                    notify_last_line(sql_executor, game_id, payload)
 
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
@@ -2336,6 +2366,10 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
 
         if adjudicated:
 
+            # reload game
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+
             # notify players
 
             subject = f"La partie {game.name} a avancé (avec l'aide de l'automate)!"
@@ -2368,6 +2402,11 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                 del sql_executor
                 flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+            # declaration from system
+            if game.last_year():
+                payload = "Attention, dernière saison !"
+                notify_last_line(sql_executor, game_id, payload)
 
         sql_executor.commit()  # noqa: F821
         del sql_executor  # noqa: F821
@@ -2659,6 +2698,10 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
         if adjudicated:
 
+            # reload game
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+
             if not (game.fast or game.archive):
 
                 # notify players
@@ -2694,6 +2737,11 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
                     del sql_executor
                     flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+
+                # declaration from system
+                if game.last_year():
+                    payload = "Attention, dernière saison !"
+                    notify_last_line(sql_executor, game_id, payload)  # noqa: F821
 
         else:
 
