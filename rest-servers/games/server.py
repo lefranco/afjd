@@ -2699,7 +2699,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         if adjudicated:
 
             # reload game
-            game = games.Game.find_by_identifier(sql_executor, game_id)
+            game = games.Game.find_by_identifier(sql_executor, game_id)  # noqa: F821
             assert game is not None
 
             if not (game.fast or game.archive):
