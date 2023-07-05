@@ -260,13 +260,13 @@ if 'game' in document.query:
 elif 'edit_game' in document.query:
     QUERY_GAME_NAME = document.query['edit_game']
     if load_game(QUERY_GAME_NAME):
-        window.history.pushState({}, document.title, "/")
+        # stick to game name
+        window.history.pushState({}, document.title, f"?edit_game={QUERY_GAME_NAME}")
         load_option(None, 'Accueil')
         PANEL_MIDDLE.clear()
         games.render(PANEL_MIDDLE)
     else:
         alert("Partie inconnue !")
-        window.history.pushState({}, document.title, "/")
         load_option(None, ITEM_NAME_SELECTED)
 elif 'event' in document.query:
     QUERY_EVENT_NAME = document.query['event']

@@ -881,9 +881,9 @@ def my_games(state_name):
     if 'ACTION_COLUMN_MODE' not in storage:
         storage['ACTION_COLUMN_MODE'] = 'not_displayed'
     if storage['ACTION_COLUMN_MODE'] == 'not_displayed':
-        button = html.BUTTON("Mode avec les colonnes d'action (arrêter/démarrer)", Class='btn-menu')
+        button = html.BUTTON("Mode avec les colonnes d'action (éditer+arrêter/démarrer)", Class='btn-menu')
     else:
-        button = html.BUTTON("Mode sans les colonnes d'action (arrêter/démarrer)", Class='btn-menu')
+        button = html.BUTTON("Mode sans les colonnes d'action (éditer+arrêter/démarrer)", Class='btn-menu')
     button.bind("click", change_action_mode_callback)
     MY_PANEL <= button
 
