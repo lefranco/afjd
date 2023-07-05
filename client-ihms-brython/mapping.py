@@ -999,6 +999,11 @@ class Variant(Renderable):
         return self._legend_position_table
 
     @property
+    def centers(self):
+        """ property """
+        return self._centers
+
+    @property
     def zones(self):
         """ property """
         return self._zones
@@ -1034,8 +1039,8 @@ class Unit(Highliteable, Renderable):
         # must be somewhere (not a fake unit in sandbox)
         if self._zone:
 
-            # must not already have a coulour there (owned by someone)
-            if self._zone.region.center not in self._position.owner_table:
+            # must not be on a center
+            if not self._zone.region.center:
 
                 # special coasts : we get the big one
                 zone = self._zone.parent_zone if self._zone.parent_zone else self._zone
