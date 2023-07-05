@@ -5,7 +5,7 @@
 import json
 import time
 
-from browser import html, ajax, alert, window  # pylint: disable=import-error
+from browser import html, ajax, alert, document, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 import config
@@ -15,6 +15,7 @@ import mapping
 import memoize
 import scoring
 import mydatetime
+import play
 
 
 MAX_LEN_EMAIL = 100
@@ -39,6 +40,26 @@ def check_modo(pseudo):
         return False
 
     return True
+
+
+def show_game_selected():
+    """  show_game_selected """
+
+    log_message = html.DIV()
+    if 'GAME' in storage:
+        log_message <= "La partie sélectionnée est "
+        log_message <= html.B(storage['GAME'])
+    else:
+        log_message <= "Pas de partie sélectionnée..."
+
+    show_game_selected_panel = html.DIV(id="show_game_selected")
+    show_game_selected_panel.attrs['style'] = 'text-align: left'
+    show_game_selected_panel <= log_message
+
+    if 'show_game_selected' in document:
+        del document['show_game_selected']
+
+    document <= show_game_selected_panel
 
 
 def get_all_games_roles_missing_orders():
@@ -1150,6 +1171,25 @@ def display_personal_info():
 def all_missing_orders():
     """ all_missing_orders """
 
+    def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
+        """ select_game_callback """
+
+        ev.preventDefault()
+
+        # action of selecting game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
+        show_game_selected()
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
+
     MY_SUB_PANEL <= html.H3("Tous les ordres manquants")
 
     pseudo = storage['PSEUDO']
@@ -1198,12 +1238,12 @@ def all_missing_orders():
     delays_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'late', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master']
+    fields = ['name', 'go_game', 'late', 'deadline', 'current_advancement', 'variant', 'used_for_elo', 'master']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'late': 'en retard', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'late': 'en retard', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre'}[field]
         col = html.TD(field_fr)
         thead <= col
     delays_table <= thead
@@ -1212,9 +1252,13 @@ def all_missing_orders():
 
     gameover = {int(game_id_str): data['current_advancement'] % 5 == 4 and (data['current_advancement'] + 1) // 5 >= data['nb_max_cycles_to_play'] for game_id_str, data in games_dict.items()}
 
+    # create a table to pass information about selected game
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
     # force sort according to deadline (latest games first of course)
     for game_id_str, data in sorted(games_dict.items(), key=lambda t: t[1]['deadline']):
 
+        data['go_game'] = None
         data['late'] = None
         data['master'] = None
 
@@ -1274,6 +1318,19 @@ def all_missing_orders():
 
             if field == 'name':
                 value = game_name
+
+            if field == 'go_game':
+                if storage['GAME_ACCESS_MODE'] == 'button':
+                    form = html.FORM()
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                    form <= input_jump_game
+                    value = form
+                else:
+                    img = html.IMG(src="./images/play.png")
+                    link = html.A(href=f"?game={game_name}", target="_blank")
+                    link <= img
+                    value = link
 
             if field == 'late':
                 value = html.DIV()
@@ -1351,6 +1408,25 @@ def all_missing_orders():
 
 def show_player_games(pseudo_player, game_list):
     """ show_player_games """
+
+    def select_game_callback(ev, game_name, game_data_sel):  # pylint: disable=invalid-name
+        """ select_game_callback """
+
+        ev.preventDefault()
+
+        # action of selecting game
+        storage['GAME'] = game_name
+        game_id = game_data_sel[game_name][0]
+        storage['GAME_ID'] = game_id
+        game_variant = game_data_sel[game_name][1]
+        storage['GAME_VARIANT'] = game_variant
+
+        common.info_dialog(f"Partie sélectionnée : {game_name} - cette information est rappelée en bas de la page")
+        show_game_selected()
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        play.render(PANEL_MIDDLE)
 
     def display_all_games_callback(ev):  # pylint: disable=invalid-name
         """ display_personal_info_callback """
@@ -1433,17 +1509,22 @@ def show_player_games(pseudo_player, game_list):
         games_table = html.TABLE()
 
         # the display order
-        fields = ['current_state', 'name', 'deadline', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
+        fields = ['current_state', 'name', 'go_game', 'deadline', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
 
         # header
         thead = html.THEAD()
         for field in fields:
-            field_fr = {'current_state': 'état', 'name': 'nom', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
+            field_fr = {'current_state': 'état', 'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
             col = html.TD(field_fr)
             thead <= col
         games_table <= thead
 
+        # create a table to pass information about selected game
+        game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
+
         for game_id_str, data in sorted(games_dict.items(), key=lambda t: int(t[0]), reverse=True):
+
+            data['go_game'] = None
 
             game_id = int(game_id_str)
             if game_id not in game_list:
@@ -1468,6 +1549,19 @@ def show_player_games(pseudo_player, game_list):
 
                 if field == 'name':
                     value = game_name
+
+                if field == 'go_game':
+                    if storage['GAME_ACCESS_MODE'] == 'button':
+                        form = html.FORM()
+                        input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                        input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                        form <= input_jump_game
+                        value = form
+                    else:
+                        img = html.IMG(src="./images/play.png")
+                        link = html.A(href=f"?game={game_name}", target="_blank")
+                        link <= img
+                        value = link
 
                 if field == 'deadline':
                     deadline_loaded = value
@@ -2209,10 +2303,14 @@ def load_option(_, item_name):
 
 
 # starts here
+PANEL_MIDDLE = None
 
 
 def render(panel_middle):
     """ render """
+
+    global PANEL_MIDDLE
+    PANEL_MIDDLE = panel_middle
 
     # always back to top
     global ITEM_NAME_SELECTED
