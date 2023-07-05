@@ -613,6 +613,11 @@ class Game:
             return self._cd_possible_retreats
         return self._cd_possible_builds
 
+    def last_year(self) -> bool:
+        """ last_year """
+
+        return self._current_advancement // 5 >= self._nb_max_cycles_to_play - 1
+
     def game_over(self) -> bool:
         """ game_over """
 
