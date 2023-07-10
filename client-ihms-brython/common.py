@@ -780,7 +780,7 @@ def get_player_games_playing_in(player_id):
     # getting player games playing in list : need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
-    return dict(player_games_dict)
+    return player_games_dict
 
 
 def get_events_data():
