@@ -2104,6 +2104,19 @@ def show_idle_data():
 
     active_set = {players_dict[str(i)]['pseudo'] for i in active_data}
 
+    # ignore admin
+    priviledged = common.PRIVILEDGED
+    admin_pseudo = priviledged['admin']
+    active_set.add(admin_pseudo)
+
+    # ignore moderators
+    moderators_list = get_moderators()
+    active_set.update(moderators_list)
+
+    # ignore creators
+    creators_list = get_creators()
+    active_set.update(creators_list)
+
     idle_set = complete_set - active_set
 
     logins_list = get_last_logins()
