@@ -20,7 +20,7 @@ import index  # circular import
 
 
 # sandbox must stay first
-OPTIONS = ['Rejoindre une partie', 'Sélectionner une partie', 'Aller dans la partie sélectionnée', 'Toutes les parties', 'Appariement', 'Parties sans arbitres',]
+OPTIONS = ['Rejoindre une partie', 'Sélectionner une partie', 'Aller dans la partie sélectionnée', 'Toutes les parties', 'Appariement', 'Parties sans arbitres', 'Parties sans tournoi']
 
 
 def get_recruiting_games():
@@ -1411,6 +1411,53 @@ def show_no_game_masters_data():
     MY_SUB_PANEL <= html.IMG(src="./images/take.png", title="Pour prendre l'arbitrage de la partie (sans sélectionner la partie)")
 
 
+def show_no_tournaments_data():
+    """ show_no_tournaments_data """
+
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    # get the groupings
+    groupings_dict = common.get_groupings_data()
+    if not groupings_dict:
+        alert("Pas de groupements ou erreur chargement dictionnaire groupements")
+        return
+
+    games_grouped_list = sum(groupings_dict.values(), [])
+
+    no_tournament_table = html.TABLE()
+
+    fields = ['game']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'game': 'partie'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    no_tournament_table <= thead
+
+    for identifier, data in sorted(games_dict.items(), key=lambda g: g[1]['name'].upper()):
+
+        if int(identifier) in games_grouped_list:
+            continue
+
+        row = html.TR()
+
+        value = data['name']
+        col = html.TD(value)
+        row <= col
+
+        no_tournament_table <= row
+
+    MY_SUB_PANEL <= html.H3("Les parties sans tournoi")
+    MY_SUB_PANEL <= no_tournament_table
+    MY_SUB_PANEL <= html.BR()
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -1448,6 +1495,8 @@ def load_option(_, item_name):
         pairing()
     if item_name == 'Parties sans arbitres':
         show_no_game_masters_data()
+    if item_name == 'Parties sans tournoi':
+        show_no_tournaments_data()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
