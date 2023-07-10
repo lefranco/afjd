@@ -813,7 +813,7 @@ def my_games(state_name):
         alert("Erreur chargement dates visites derniers messages des parties")
         return
 
-    games_id_player = {int(n) for n in player_games}
+    games_id_player = {int(n) for n in player_games.keys()}
 
     # is there a startable game ?
 

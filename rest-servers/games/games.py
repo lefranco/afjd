@@ -615,8 +615,11 @@ class Game:
 
     def last_year(self) -> bool:
         """ last_year """
+        return self._current_advancement == (self._nb_max_cycles_to_play - 1) * 5
 
-        return self._current_advancement // 5 >= self._nb_max_cycles_to_play - 1
+    def last_season(self) -> bool:
+        """ last_season """
+        return self._current_advancement == (self._nb_max_cycles_to_play - 1) * 5 + 2
 
     def game_over(self) -> bool:
         """ game_over """

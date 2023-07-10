@@ -1475,7 +1475,7 @@ def declare():
     declarations.extend(fake_declarations)
 
     # sort with all that was added
-    declarations.sort(key=lambda d: (float(d[6]), float(d[1])), reverse=True)
+    declarations.sort(key=lambda d: (float(d[6]), float(int(d[2] != -1)), float(d[1])), reverse=True)
 
     declarations_table = html.TABLE()
 
