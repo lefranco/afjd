@@ -190,7 +190,23 @@ def suppress_account_message(pseudo: str) -> typing.Tuple[str, str]:
     subject = f"Message de suppression de compte {pseudo} sur le site https://diplomania-gen.fr (AFJD)"
     body = "Bonjour !\n"
     body += "\n"
-    body += "Nous avons le regret de vous informer que votre compte sur le site a été supprimé !"
+    body += "Ton compte sur le site a été supprimé !"
+    body += "\n"
+    body += "\n"
+
+    # in case admin is acting
+    body += "Cas particulier : si tu n'es pas à l'origine de cette suppression mais l'administrateur, le message ci-dessous t'est adressé :"
+    body += "\n"
+    body += " ================="
+    body += "\n"
+    body += "Tu as créé un compte sur Diplomania.fr mais tu ne t'es pas connecté depuis très longtemps, nous avons donc dû supprimer ton compte."
+    body += "\n"
+    body += "Bien sûr, si tu souhaites te réinscrire, tu pourras le faire sur le site ou n'hésite pas à nous écrire."
+    body += "\n"
+    body += "Ludiquement"
+    body += "\n"
+    body += "================="
+
     return subject, body
 
 
