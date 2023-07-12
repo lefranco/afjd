@@ -121,37 +121,6 @@ def game_incidents2_reload(game_id):
     return incidents
 
 
-def game_note_reload(game_id):
-    """ game_note_reload """
-
-    content = None
-
-    def reply_callback(req):
-        nonlocal content
-        req_result = json.loads(req.text)
-        if req.status != 200:
-            if 'message' in req_result:
-                alert(f"Erreur à la récupération des notes de la partie : {req_result['message']}")
-            elif 'msg' in req_result:
-                alert(f"Problème à la récupération des notes de la partie : {req_result['msg']}")
-            else:
-                alert("Réponse du serveur imprévue et non documentée")
-            return
-
-        content = req_result['content']
-
-    json_dict = {}
-
-    host = config.SERVER_CONFIG['GAME']['HOST']
-    port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-notes/{game_id}"
-
-    # extracting vote from a game : need token (or not?)
-    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return content
-
-
 def non_playing_information():
     """ non_playing_information """
 
@@ -1646,7 +1615,7 @@ def note():
         play.load_option(None, 'Consulter')
         return False
 
-    content_loaded = game_note_reload(play_low.GAME_ID)
+    content_loaded = common.game_note_reload(play_low.GAME_ID)
     if content_loaded is None:
         alert("Erreur chargement note")
         play.load_option(None, 'Consulter')

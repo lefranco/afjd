@@ -362,6 +362,11 @@ def load_special_stuff():
     if PSEUDO is None:
         return
 
+    if ROLE_ID is not None:
+        content_loaded = common.game_note_reload(GAME_ID)
+        if content_loaded:
+            common.info_dialog("Attention, vous avez pris des notes dans cette partie !")
+
     if not (moderate.check_modo(PSEUDO) or ROLE_ID == 0 or not GAME_PARAMETERS_LOADED['anonymous']):
         return
 
