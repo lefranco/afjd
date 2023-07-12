@@ -1317,7 +1317,7 @@ def show_no_game_masters_data():
 
             # back to where we started
             MY_SUB_PANEL.clear()
-            pairing()
+            show_no_game_masters_data()
 
         ev.preventDefault()
 
