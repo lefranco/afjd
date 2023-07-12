@@ -1039,17 +1039,20 @@ class Unit(Highliteable, Renderable):
         # must be somewhere (not a fake unit in sandbox)
         if self._zone:
 
-            # must not be on a center
-            if not self._zone.region.center:
+            # must not be dislodged
+            if self._dislodged_origin is None:
 
-                # special coasts : we get the big one
-                zone = self._zone.parent_zone if self._zone.parent_zone else self._zone
+                # must not be on a center
+                if not self._zone.region.center:
 
-                # must not be at sea
-                if zone.region.region_type is not RegionTypeEnum.SEA_REGION:
-                    path = self._position.variant.path_table[zone]
-                    background_fill_color = self._position.variant.background_colour_table[self._role]
-                    fill_zone(ctx, path, background_fill_color)
+                    # special coasts : we get the big one
+                    zone = self._zone.parent_zone if self._zone.parent_zone else self._zone
+
+                    # must not be at sea
+                    if zone.region.region_type is not RegionTypeEnum.SEA_REGION:
+                        path = self._position.variant.path_table[zone]
+                        background_fill_color = self._position.variant.background_colour_table[self._role]
+                        fill_zone(ctx, path, background_fill_color)
 
         fill_color = self._position.variant.item_colour_table[self._role]
 
