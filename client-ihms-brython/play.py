@@ -203,12 +203,20 @@ def render(panel_middle):
         alert("Il faut choisir la partie au préalable")
         return
 
-    play_low.GAME = storage['GAME']
-
     if 'GAME_ID' not in storage:
         alert("ERREUR : identifiant de partie introuvable")
         return
 
+    # check that game exists
+    game_name = storage['GAME']
+    if not common.get_game_data(game_name):
+        alert(f"La partie {game_name} n'existe plus, probablement...")
+        del storage['GAME']
+        del storage['GAME_ID']
+        return
+
+    # ok
+    play_low.GAME = storage['GAME']
     play_low.GAME_ID = storage['GAME_ID']
 
     # Connected but not player
