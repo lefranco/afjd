@@ -20,7 +20,7 @@ import index  # circular import
 
 
 # sandbox must stay first
-OPTIONS = ['Rejoindre une partie', 'Sélectionner une partie', 'Aller dans la partie sélectionnée', 'Toutes les parties', 'Appariement', 'Parties sans arbitres', 'Parties sans tournoi']
+OPTIONS = ['Rejoindre une partie', 'Sélectionner une partie', 'Toutes les parties', 'Appariement', 'Parties sans arbitres', 'Parties sans tournoi']
 
 
 def get_recruiting_games():
@@ -1486,9 +1486,6 @@ def load_option(_, item_name):
         my_opportunities()
     if item_name == 'Sélectionner une partie':
         select_game(config.FORCED_VARIANT_NAME, 1)
-    if item_name == 'Aller dans la partie sélectionnée':
-        PANEL_MIDDLE.clear()
-        play.render(PANEL_MIDDLE)
     if item_name == 'Toutes les parties':
         all_games('en cours')
     if item_name == 'Appariement':

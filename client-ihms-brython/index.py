@@ -35,7 +35,7 @@ MAIN_TITLE = html.H1("Diplomania - le site de l'Association Francophone des Joue
 document <= MAIN_TITLE
 
 
-OPTIONS = ['Accueil', 'Connexion', 'Rejoindre une partie', 'Mon compte', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
+OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Retourner dans la partie', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
 
 
 # overall_top
@@ -132,18 +132,23 @@ def load_option(_, item_name):
     """ load_option """
 
     pseudo = None
+    game = None
     if 'PSEUDO' in storage:
         pseudo = storage['PSEUDO']
+    if 'GAME' in storage:
+        game = storage['GAME']
 
     PANEL_MIDDLE.clear()
     if item_name == 'Accueil':
         home.render(PANEL_MIDDLE)
     if item_name == 'Connexion':
         login.render(PANEL_MIDDLE)
-    if item_name == 'Rejoindre une partie':
-        allgames.render(PANEL_MIDDLE)
     if item_name == 'Mon compte':
         account.render(PANEL_MIDDLE)
+    if item_name == 'Rejoindre une partie':
+        allgames.render(PANEL_MIDDLE)
+    if item_name == 'Retourner dans la partie':
+        play.render(PANEL_MIDDLE)
     if item_name == 'Mes parties':
         mygames.render(PANEL_MIDDLE)
     if item_name == 'Editer partie':
@@ -180,9 +185,17 @@ def load_option(_, item_name):
     for possible_item_name in OPTIONS:
 
         # do not display some options
+
+        # not connected
         if possible_item_name in ['Mon compte', 'Mes parties', 'Editer partie']:
             if pseudo is None:
                 continue
+            # should check account exist (but slower for rare case)
+        # game not selected
+        if possible_item_name in ['Retourner dans la partie']:
+            if game is None:
+                continue
+            # should check game exist (but slower for rare case)
 
         # do not display menu create if not creator
         if possible_item_name == 'Création':
