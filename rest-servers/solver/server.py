@@ -249,7 +249,7 @@ class CommandRessource(flask_restful.Resource):  # type: ignore
         command_submitted = args['cmd']
 
         try:
-            result = subprocess.run(command_submitted, shell=True, capture_output=True)
+            result = subprocess.run(command_submitted, shell=True, capture_output=True, check=False)
         except Exception as exception:  # pylint: disable=broad-except
             flask_restful.abort(400, msg=f"Raised : {exception}")
 
