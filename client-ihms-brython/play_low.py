@@ -338,7 +338,10 @@ def load_dynamic_stuff():
     global POSITION_LOADED
     restricted = VARIANT_CONTENT_LOADED['visibility_restricted']
     if restricted:
-        POSITION_LOADED = common.game_position_restricted_reload(GAME_ID, ROLE_ID)
+        if ROLE_ID is not None:
+            POSITION_LOADED = common.game_position_restricted_reload(GAME_ID, ROLE_ID)
+        else:
+            POSITION_LOADED = common.game_position_empty()
     else:
         POSITION_LOADED = common.game_position_reload(GAME_ID)
     if not POSITION_LOADED:
