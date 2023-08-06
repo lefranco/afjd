@@ -169,7 +169,7 @@ def get_games_data():
 def game_variant_content_reload(variant_name):
     """ game_variant_content_reload """
 
-    variant_content_loaded = None
+    variant_content_loaded = {}
 
     def reply_callback(req):
         nonlocal variant_content_loaded
@@ -232,10 +232,10 @@ def game_position_empty():
     """ game_position_empty """
 
     return {
-       'ownerships': {},
-       'dislodged_ones': {},
-       'units': {},
-       'forbiddens': {},
+        'ownerships': {},
+        'dislodged_ones': {},
+        'units': {},
+        'forbiddens': {},
     }
 
 
