@@ -15,6 +15,7 @@ import time
 import argparse
 import sys
 import threading
+import pathlib
 
 import waitress
 import flask
@@ -1837,17 +1838,17 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game-restricted-positions/<game_id>')
+@API.resource('/game-restricted-positions/<game_id>/<role_id>')
 class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
     """ GameRestrictedPositionRessource """
 
-    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
         Gets position of the game (restricted : foggy variant mainly)
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-restricted-positions/<game_id> - GET - getting restricted position for game id=%s", game_id)
+        mylogger.LOGGER.info("/game-restricted-positions/<game_id> - GET - getting restricted position for game id=%s role id=%s", game_id, role_id)
 
         sql_executor = database.SqlExecutor()
 
@@ -1866,6 +1867,16 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         if not visibility_restricted:
             del sql_executor
             flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is not restricted !")
+
+        # load the visibility data
+        location = './data'
+        name = f'{variant_name}_visibility'
+        extension = '.json'
+        full_name_file = pathlib.Path(location, name).with_suffix(extension)
+        assert full_name_file.exists(), "Missing file stating visibilities for brouillard"
+        with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
+            visibility_data = json.load(file_ptr)
+        assert isinstance(visibility_data, dict), "File file stating visibilities for brouillard is not a dict"
 
         # get ownerships
         ownership_dict = {}

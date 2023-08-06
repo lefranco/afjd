@@ -852,7 +852,10 @@ def rectify_position():
 
     # get the position from server
     restricted = variant_content_loaded['visibility_restricted']
-    position_loaded = common.game_position_reload(game_id, restricted)
+    if restricted:
+        position_loaded = common.game_position_restricted_reload(game_id, 0)
+    else:
+        position_loaded = common.game_position_reload(game_id)
     if not position_loaded:
         return
 
