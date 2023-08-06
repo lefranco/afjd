@@ -1868,12 +1868,47 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is not restricted !")
 
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # who is player for role ?
+        assert game is not None
+        player_id = game.get_role(sql_executor, int(role_id))
+
+        # must be player
+        if user_id != player_id:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the player or game master who corresponds to this role")
+
         # load the visibility data
         location = './data'
         name = f'{variant_name}_visibility'
         extension = '.json'
         full_name_file = pathlib.Path(location, name).with_suffix(extension)
-        assert full_name_file.exists(), "Missing file stating visibilities for brouillard"
+        assert full_name_file.exists(), f"Missing file stating visibilities for {variant_name}"
         with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
             visibility_data = json.load(file_ptr)
         assert isinstance(visibility_data, dict), "File file stating visibilities for brouillard is not a dict"
@@ -1901,6 +1936,13 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
+
+        # for testing : restring to what is owned
+        ownership_dict2 = {k: v for k, v in ownership_dict.items() if v == role_id}
+        ownership_dict = ownership_dict2
+
+        unit_dict2 = {k: v for k, v in unit_dict.items() if k == str(role_id)}
+        unit_dict = unit_dict2
 
         del sql_executor
 
