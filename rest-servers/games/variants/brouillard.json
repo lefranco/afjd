@@ -59,7 +59,7 @@
 
     "disorder" : {},
 
-    "visibility_restricted" : false,
+    "visibility_restricted" : true,
 
     "neighbouring": [
         {
