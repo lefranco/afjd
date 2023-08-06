@@ -1948,6 +1948,22 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # check the game position is not protected
+        assert game is not None
+        variant_name = game.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+        visibility_restricted = variant_data['visibility_restricted']
+        if visibility_restricted:
+            del sql_executor
+            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is restricted !")
+
         # get ownerships
         ownership_dict = {}
         game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)

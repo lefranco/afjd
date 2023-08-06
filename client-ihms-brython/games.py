@@ -30,7 +30,7 @@ DEFAULT_SPEED_OTHERS = 24
 DEFAULT_NB_CYCLES = 7
 
 # default is first one
-VARIANT_NAMES_LIST = ['standard', 'grandeguerre']
+VARIANT_NAMES_LIST = ['standard', 'grandeguerre', 'brouillard']
 
 
 def information_about_input():
