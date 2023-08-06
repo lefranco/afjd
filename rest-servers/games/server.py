@@ -1943,7 +1943,9 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
             }
             return data, 200
 
-        # now we can start hiding
+        del sql_executor
+
+        # now we can start hiding stuff
 
         # load the visibility data
         location = './data'
@@ -1952,24 +1954,58 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         full_name_file = pathlib.Path(location, name).with_suffix(extension)
         assert full_name_file.exists(), f"Missing file stating visibilities for {variant_name}"
         with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
-            visibility_data = json.load(file_ptr)
-        assert isinstance(visibility_data, dict), "File file stating visibilities for brouillard is not a dict"
+            data_json = json.load(file_ptr)
+        assert isinstance(data_json, dict), "File file stating visibilities for brouillard is not a dict"
+        center2region = data_json['center2region']
+        zone2region = data_json['zone2region']
+        visibility_table = data_json['visibility_table']
 
-        # for testing : restring to what is owned
-        ownership_dict2 = {k: v for k, v in ownership_dict.items() if v == int(role_id)}
-        ownership_dict = ownership_dict2
+        # what regions do I occupy ?
+        occupied_regions = set()
+        # where I have a center
+        occupied_regions |= {center2region[k] for k, v in ownership_dict.items() if v == int(role_id)}
+        # where I have a unit
+        occupied_regions |= {zone2region[str(u[1])] for k, v in unit_dict.items() if int(k) == int(role_id) for u in v}
+        # where I have a dislodged unit
+        occupied_regions |= {zone2region[str(u[1])] for k, v in dislodged_unit_dict.items() if int(k) == int(role_id) for u in v}
 
-        unit_dict2 = {k: v for k, v in unit_dict.items() if k == role_id}
-        unit_dict = unit_dict2
+        print(f"{occupied_regions=}", file=sys.stderr)
 
-        del sql_executor
+        # what regions are adjacent to what I occupy ?
+        adjacent_regions = set().union(*(visibility_table[str(r)] for r in occupied_regions))
+
+        print(f"{adjacent_regions=}", file=sys.stderr)
+
+        # seen region
+        seen_regions = occupied_regions | adjacent_regions
+        print(f"{seen_regions=}", file=sys.stderr)
+
+        # ownership uses a center
+        ownership_dict2 = {k: v for k, v in ownership_dict.items() if center2region[k] in seen_regions}
+
+        # units use a zone
+        unit_dict2 = {}
+        for role, role_units in unit_dict.items():
+            selected = [v for v in role_units if v[1] in seen_regions]
+            if selected:
+                unit_dict2[role] = selected
+
+        dislodged_unit_dict2 = {}
+        for role, role_dis_units in dislodged_unit_dict.items():
+            selected = [v for v in role_dis_units if v[1] in seen_regions]
+            if selected:
+                dislodged_unit_dict2[role] = selected
+
+        # forbiddens use region
+        forbidden_list2 = [f for f in forbidden_list if f in seen_regions]
 
         data = {
-            'ownerships': ownership_dict,
-            'dislodged_ones': dislodged_unit_dict,
-            'units': unit_dict,
-            'forbiddens': forbidden_list,
+            'ownerships': ownership_dict2,
+            'dislodged_ones': dislodged_unit_dict2,
+            'units': unit_dict2,
+            'forbiddens': forbidden_list2,
         }
+
         return data, 200
 
 
