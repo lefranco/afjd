@@ -1969,16 +1969,11 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         # where I have a dislodged unit
         occupied_regions |= {zone2region[str(u[1])] for k, v in dislodged_unit_dict.items() if int(k) == int(role_id) for u in v}
 
-        print(f"{occupied_regions=}", file=sys.stderr)
-
         # what regions are adjacent to what I occupy ?
         adjacent_regions = set().union(*(visibility_table[str(r)] for r in occupied_regions))
 
-        print(f"{adjacent_regions=}", file=sys.stderr)
-
         # seen region
         seen_regions = occupied_regions | adjacent_regions
-        print(f"{seen_regions=}", file=sys.stderr)
 
         # ownership uses a center
         ownership_dict2 = {k: v for k, v in ownership_dict.items() if center2region[k] in seen_regions}
