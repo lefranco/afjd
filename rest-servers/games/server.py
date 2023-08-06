@@ -1956,10 +1956,10 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         assert isinstance(visibility_data, dict), "File file stating visibilities for brouillard is not a dict"
 
         # for testing : restring to what is owned
-        ownership_dict2 = {k: v for k, v in ownership_dict.items() if v == role_id}
+        ownership_dict2 = {k: v for k, v in ownership_dict.items() if v == int(role_id)}
         ownership_dict = ownership_dict2
 
-        unit_dict2 = {k: v for k, v in unit_dict.items() if k == str(role_id)}
+        unit_dict2 = {k: v for k, v in unit_dict.items() if k == role_id}
         unit_dict = unit_dict2
 
         del sql_executor
