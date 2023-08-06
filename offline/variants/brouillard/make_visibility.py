@@ -53,10 +53,20 @@ def main() -> None:
         assert all(region1 in visibility[r] for r in regions_set), "Symetry issue in visibility table"
 
     # polish the visibility table before jsonifying it
+    visibility_table = {str(k): sorted(list(v)) for k, v in sorted(visibility.items())}
 
-    visibility_json = {str(k): sorted(list(v)) for k, v in sorted(visibility.items())}
+    # need the center -> region table
+    centers = parameters_read['centers']
+    center2region = {str(i+1): r for i, r in enumerate(centers)}
 
-    output = json.dumps(visibility_json, indent=4)
+    # store things
+    data_json = {
+        'center2region' : center2region,
+        'zone2region' : zone2region,
+        'visibility_table' : visibility_table,
+    }
+
+    output = json.dumps(data_json, indent=4)
     with open(args.output_file, "w", encoding='utf-8') as write_file:
         write_file.write(output)
 
