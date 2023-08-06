@@ -197,7 +197,7 @@ def game_variant_content_reload(variant_name):
     return variant_content_loaded
 
 
-def game_position_reload(game_id, restricted):
+def game_position_reload(game_id):
     """ game_position_reload """
 
     position_loaded = None
@@ -207,9 +207,9 @@ def game_position_reload(game_id, restricted):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur au chargement de la position de la partie {restricted=} : {req_result['message']}")
+                alert(f"Erreur au chargement de la position de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème au chargement de la position de la partie {restricted=} : {req_result['msg']}")
+                alert(f"Problème au chargement de la position de la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
@@ -220,15 +220,41 @@ def game_position_reload(game_id, restricted):
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-positions/{game_id}"
+
+    # getting game position : do not need a token if not restricted
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+    return position_loaded
+
+
+def game_position_restricted_reload(game_id, role_id):
+    """ game_position_restricted_reload """
+
+    position_loaded = None
+
+    def reply_callback(req):
+        nonlocal position_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement de la position (restricted) de la partie  : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement de la position (restricted) de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        position_loaded = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-restricted-positions/{game_id}/{role_id}"
 
     # getting game position : need a token if restricted
-    if restricted:
-        url = f"{host}:{port}/game-restricted-positions/{game_id}"
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
-    else:
-        # getting game position : do not need a token if not restricted
-        url = f"{host}:{port}/game-positions/{game_id}"
-        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return position_loaded
 
