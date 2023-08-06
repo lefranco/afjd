@@ -336,7 +336,8 @@ def load_dynamic_stuff():
 
     # get the position from server
     global POSITION_LOADED
-    POSITION_LOADED = common.game_position_reload(GAME_ID)
+    restricted = VARIANT_CONTENT_LOADED['visibility_restricted']
+    POSITION_LOADED = common.game_position_reload(GAME_ID, restricted)
     if not POSITION_LOADED:
         alert("Erreur chargement position")
         return

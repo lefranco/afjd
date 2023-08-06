@@ -1837,6 +1837,71 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/game-restricted-positions/<game_id>')
+class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
+    """ GameRestrictedPositionRessource """
+
+    def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Gets position of the game (restricted : foggy variant mainly)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-restricted-positions/<game_id> - GET - getting restricted position for game id=%s", game_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # check the game position is protected
+        assert game is not None
+        variant_name = game.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+        visibility_restricted = variant_data['visibility_restricted']
+        if not visibility_restricted:
+            del sql_executor
+            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is not restricted !")
+
+        # get ownerships
+        ownership_dict = {}
+        game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
+        for _, center_num, role_num in game_ownerships:
+            ownership_dict[str(center_num)] = role_num
+
+        # get units
+        unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+        game_units = units.Unit.list_by_game_id(sql_executor, game_id)
+        for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+            if fake:
+                pass  # this is confidential
+            elif region_dislodged_from_num:
+                dislodged_unit_dict[str(role_num)].append([type_num, zone_num, region_dislodged_from_num])
+            else:
+                unit_dict[str(role_num)].append([type_num, zone_num])
+
+        # get forbiddens
+        forbidden_list = []
+        game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
+        for _, region_num in game_forbiddens:
+            forbidden_list.append(region_num)
+
+        del sql_executor
+
+        data = {
+            'ownerships': ownership_dict,
+            'dislodged_ones': dislodged_unit_dict,
+            'units': unit_dict,
+            'forbiddens': forbidden_list,
+        }
+        return data, 200
+
+
 @API.resource('/game-positions/<game_id>')
 class GamePositionRessource(flask_restful.Resource):  # type: ignore
     """ GamePositionRessource """
