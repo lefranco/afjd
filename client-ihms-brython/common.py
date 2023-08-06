@@ -228,6 +228,17 @@ def game_position_reload(game_id):
     return position_loaded
 
 
+def game_position_empty():
+    """ game_position_empty """
+
+    return {
+       'ownerships': {},
+       'dislodged_ones': {},
+       'units': {},
+       'forbiddens': {},
+    }
+
+
 def game_position_restricted_reload(game_id, role_id):
     """ game_position_restricted_reload """
 

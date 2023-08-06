@@ -1868,6 +1868,11 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is not restricted !")
 
+        # check a role is provided
+        if role_id is None:
+            del sql_executor
+            flask_restful.abort(404, msg="Role is missing !")
+
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -1903,16 +1908,6 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the player or game master who corresponds to this role")
 
-        # load the visibility data
-        location = './data'
-        name = f'{variant_name}_visibility'
-        extension = '.json'
-        full_name_file = pathlib.Path(location, name).with_suffix(extension)
-        assert full_name_file.exists(), f"Missing file stating visibilities for {variant_name}"
-        with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
-            visibility_data = json.load(file_ptr)
-        assert isinstance(visibility_data, dict), "File file stating visibilities for brouillard is not a dict"
-
         # get ownerships
         ownership_dict = {}
         game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
@@ -1936,6 +1931,29 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
+
+        # game master gets a clear picture
+        if int(role_id) == 0:
+            del sql_executor
+            data = {
+                'ownerships': ownership_dict,
+                'dislodged_ones': dislodged_unit_dict,
+                'units': unit_dict,
+                'forbiddens': forbidden_list,
+            }
+            return data, 200
+
+        # now we can start hiding
+
+        # load the visibility data
+        location = './data'
+        name = f'{variant_name}_visibility'
+        extension = '.json'
+        full_name_file = pathlib.Path(location, name).with_suffix(extension)
+        assert full_name_file.exists(), f"Missing file stating visibilities for {variant_name}"
+        with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
+            visibility_data = json.load(file_ptr)
+        assert isinstance(visibility_data, dict), "File file stating visibilities for brouillard is not a dict"
 
         # for testing : restring to what is owned
         ownership_dict2 = {k: v for k, v in ownership_dict.items() if v == role_id}
