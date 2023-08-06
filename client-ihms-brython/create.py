@@ -8,6 +8,7 @@ import time
 from browser import html, alert, ajax, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
+import mydatetime
 import mydialog
 import config
 import common
@@ -15,7 +16,7 @@ import interface
 import mapping
 
 
-OPTIONS = ['Editer les glorieux', 'Créer plusieurs parties', 'Explications']
+OPTIONS = ['Editer les glorieux', 'Créer plusieurs parties', 'Explications', 'Mur de la honte']
 
 MAX_NUMBER_GAMES = 200
 
@@ -35,6 +36,38 @@ def check_creator(pseudo):
         return False
 
     return True
+
+
+def get_quitters_data():
+    """ get_quitters_data : returns empty dict on error """
+
+    quitters_data = {}
+
+    def reply_callback(req):
+        nonlocal quitters_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des abandons : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des abandons : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        quitters_data = req_result['dropouts']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-game-dropouts"
+
+    # we do not really care if a hacker manages to get this information without being a creator
+    # getting allocations : no need for token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return quitters_data
 
 
 def change_glorious():
@@ -586,6 +619,71 @@ def explain_stuff():
     MY_SUB_PANEL <= html.BR()
 
 
+def show_game_quitters():
+    """ show_game_quitters """
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return
+
+    pseudo = storage['PSEUDO']
+
+    if not check_creator(pseudo):
+        alert("Pas le bon compte (pas créateur)")
+        return
+
+    MY_SUB_PANEL <= html.H3("Les joueurs qui ont abandonné une partie")
+
+    # get the games
+    games_dict = common.get_games_data()
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    # get the players (masters)
+    players_dict = common.get_players_data()
+    if not players_dict:
+        alert("Erreur chargement dictionnaire joueurs")
+        return
+
+    # get the quitters
+    quitters_data = get_quitters_data()
+    # there can be no quitters
+
+    game_quitters_table = html.TABLE()
+
+    fields = ['player', 'game', 'date']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'player': 'joueur', 'game': 'partie', 'date': 'date'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    game_quitters_table <= thead
+
+    for game_id, _, player_id, time_stamp in sorted(quitters_data, key=lambda i: i[3], reverse=True):
+
+        row = html.TR()
+
+        player_name = players_dict[str(player_id)]['pseudo']
+        col = html.TD(player_name)
+        row <= col
+
+        game_name = games_dict[str(game_id)]['name']
+        col = html.TD(game_name)
+        row <= col
+
+        date_now_gmt = mydatetime.fromtimestamp(time_stamp)
+        date_now_gmt_str = mydatetime.strftime(*date_now_gmt)
+        col = html.TD(date_now_gmt_str)
+        row <= col
+
+        game_quitters_table <= row
+
+    MY_SUB_PANEL <= game_quitters_table
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -620,6 +718,8 @@ def load_option(_, item_name):
         create_many_games()
     if item_name == 'Explications':
         explain_stuff()
+    if item_name == 'Mur de la honte':
+        show_game_quitters()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
