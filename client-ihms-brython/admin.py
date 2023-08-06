@@ -851,7 +851,8 @@ def rectify_position():
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
     # get the position from server
-    position_loaded = common.game_position_reload(game_id)
+    restricted = variant_content_loaded['visibility_restricted']
+    position_loaded = common.game_position_reload(game_id, restricted)
     if not position_loaded:
         return
 
