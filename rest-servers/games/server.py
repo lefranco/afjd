@@ -2832,6 +2832,16 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             for _, region_num in game_forbiddens:
                 forbidden_list.append(region_num)
 
+            # apply visibility if the game position is protected
+            variant_name = game.variant
+            variant_data = variants.Variant.get_by_name(variant_name)
+            assert variant_data is not None
+            visibility_restricted = variant_data['visibility_restricted']
+            if visibility_restricted:
+                # now we can start hiding stuff
+                # this will update last parameters
+                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list)
+
             situation_dict = {
                 'ownerships': ownership_dict,
                 'dislodged_ones': dislodged_unit_dict,
@@ -3340,6 +3350,27 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
                 unit_dict[str(role_num)].append([type_num, zone_num])
             else:
                 unit_dict[str(role_num)].append([type_num, zone_num])
+
+        # apply visibility if the game position is protected
+        variant_name = game.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+        visibility_restricted = variant_data['visibility_restricted']
+        if visibility_restricted:
+
+            # situation: get ownerships
+            ownership_dict: typing.Dict[str, int] = {}
+            game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)  # noqa: F821
+            for _, center_num, role_num in game_ownerships:
+                ownership_dict[str(center_num)] = role_num
+
+            # now we can start hiding stuff
+            # need these two parameters
+            dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = {}
+            forbidden_list: typing.List[int] = []
+
+            # this will update last paramet
+            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list)
 
         # check orders (rough check)
 
