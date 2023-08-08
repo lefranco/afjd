@@ -208,6 +208,78 @@ MOVE_GAME_LOCK_TABLE: typing.Dict[str, threading.Lock] = {}
 NO_REPEAT_DELAY_SEC = 15
 
 
+def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int]) -> None:
+    """ apply_visibility
+    this will change the parameters
+    TODO : add orders list/dict as parameter
+    """
+
+    # load the visibility data
+    location = './data'
+    name = f'{variant_name}_visibility'
+    extension = '.json'
+    full_name_file = pathlib.Path(location, name).with_suffix(extension)
+    assert full_name_file.exists(), f"Missing file stating visibilities for {variant_name}"
+    with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
+        data_json = json.load(file_ptr)
+    assert isinstance(data_json, dict), "File file stating visibilities for brouillard is not a dict"
+    center2region = data_json['center2region']
+    zone2region = data_json['zone2region']
+    visibility_table = data_json['visibility_table']
+
+    # what regions do I occupy ?
+    occupied_regions = set()
+    # where I have a center
+    occupied_regions |= {center2region[k] for k, v in ownership_dict.items() if v == int(role_id)}
+    # where I have a unit
+    occupied_regions |= {zone2region[str(u[1])] for k, v in unit_dict.items() if int(k) == int(role_id) for u in v}
+    # where I have a dislodged unit
+    occupied_regions |= {zone2region[str(u[1])] for k, v in dislodged_unit_dict.items() if int(k) == int(role_id) for u in v}
+
+    # what regions are adjacent to what I occupy ?
+    adjacent_regions = set().union(*(visibility_table[str(r)] for r in occupied_regions))
+
+    # seen region
+    seen_regions = occupied_regions | adjacent_regions
+
+    # ownership uses a center
+    ownership_dict2 = {k: v for k, v in ownership_dict.items() if center2region[k] in seen_regions}
+
+    # units use a zone
+    unit_dict2 = {}
+    for role, role_units in unit_dict.items():
+        selected = [v for v in role_units if zone2region[str(v[1])] in seen_regions]
+        if selected:
+            unit_dict2[role] = selected
+
+    dislodged_unit_dict2 = {}
+    for role, role_dis_units in dislodged_unit_dict.items():
+        selected = [v for v in role_dis_units if zone2region[str(v[1])] in seen_regions]
+        if selected:
+            dislodged_unit_dict2[role] = selected
+
+    # forbiddens use region
+    forbidden_list2 = [f for f in forbidden_list if f in seen_regions]
+
+    # update parameters
+
+    # ownership_dict
+    ownership_dict.clear()
+    ownership_dict.update(ownership_dict2)
+
+    # ownership_dict
+    unit_dict.clear()
+    unit_dict.update(unit_dict2)
+
+    # ownership_dict
+    dislodged_unit_dict.clear()
+    dislodged_unit_dict.update(dislodged_unit_dict2)
+
+    # ownership_dict
+    forbidden_list.clear()
+    forbidden_list.extend(forbidden_list2)
+
+
 class RepeatPreventer(typing.Dict[typing.Tuple[int, int], float]):
     """ Table """
 
@@ -1920,7 +1992,7 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be the player or game master who corresponds to this role or site administrator")
 
         # get ownerships
-        ownership_dict = {}
+        ownership_dict: typing.Dict[str, int] = {}
         game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
         for _, center_num, role_num in game_ownerships:
             ownership_dict[str(center_num)] = role_num
@@ -1938,7 +2010,7 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
                 unit_dict[str(role_num)].append([type_num, zone_num])
 
         # get forbiddens
-        forbidden_list = []
+        forbidden_list: typing.List[int] = []
         game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
@@ -1957,59 +2029,14 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         del sql_executor
 
         # now we can start hiding stuff
-
-        # load the visibility data
-        location = './data'
-        name = f'{variant_name}_visibility'
-        extension = '.json'
-        full_name_file = pathlib.Path(location, name).with_suffix(extension)
-        assert full_name_file.exists(), f"Missing file stating visibilities for {variant_name}"
-        with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
-            data_json = json.load(file_ptr)
-        assert isinstance(data_json, dict), "File file stating visibilities for brouillard is not a dict"
-        center2region = data_json['center2region']
-        zone2region = data_json['zone2region']
-        visibility_table = data_json['visibility_table']
-
-        # what regions do I occupy ?
-        occupied_regions = set()
-        # where I have a center
-        occupied_regions |= {center2region[k] for k, v in ownership_dict.items() if v == int(role_id)}
-        # where I have a unit
-        occupied_regions |= {zone2region[str(u[1])] for k, v in unit_dict.items() if int(k) == int(role_id) for u in v}
-        # where I have a dislodged unit
-        occupied_regions |= {zone2region[str(u[1])] for k, v in dislodged_unit_dict.items() if int(k) == int(role_id) for u in v}
-
-        # what regions are adjacent to what I occupy ?
-        adjacent_regions = set().union(*(visibility_table[str(r)] for r in occupied_regions))
-
-        # seen region
-        seen_regions = occupied_regions | adjacent_regions
-
-        # ownership uses a center
-        ownership_dict2 = {k: v for k, v in ownership_dict.items() if center2region[k] in seen_regions}
-
-        # units use a zone
-        unit_dict2 = {}
-        for role, role_units in unit_dict.items():
-            selected = [v for v in role_units if zone2region[str(v[1])] in seen_regions]
-            if selected:
-                unit_dict2[role] = selected
-
-        dislodged_unit_dict2 = {}
-        for role, role_dis_units in dislodged_unit_dict.items():
-            selected = [v for v in role_dis_units if zone2region[str(v[1])] in seen_regions]
-            if selected:
-                dislodged_unit_dict2[role] = selected
-
-        # forbiddens use region
-        forbidden_list2 = [f for f in forbidden_list if f in seen_regions]
+        # this will update last parameters
+        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list)
 
         data = {
-            'ownerships': ownership_dict2,
-            'dislodged_ones': dislodged_unit_dict2,
-            'units': unit_dict2,
-            'forbiddens': forbidden_list2,
+            'ownerships': ownership_dict,
+            'dislodged_ones': dislodged_unit_dict,
+            'units': unit_dict,
+            'forbiddens': forbidden_list,
         }
 
         return data, 200
