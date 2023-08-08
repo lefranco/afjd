@@ -1903,10 +1903,21 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         assert game is not None
         player_id = game.get_role(sql_executor, int(role_id))
 
-        # must be player
-        if user_id != player_id:
+        # get admin pseudo
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/pseudo-admin"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get pseudo admin {message}")
+        admin_pseudo = req_result.json()
+
+        # must be player, game master or admin
+        if user_id != player_id and pseudo != admin_pseudo:
             del sql_executor
-            flask_restful.abort(403, msg="You do not seem to be the player or game master who corresponds to this role")
+            flask_restful.abort(403, msg="You do not seem to be the player or game master who corresponds to this role or site administrator")
 
         # get ownerships
         ownership_dict = {}
