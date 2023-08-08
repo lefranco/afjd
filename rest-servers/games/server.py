@@ -1981,13 +1981,13 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         # units use a zone
         unit_dict2 = {}
         for role, role_units in unit_dict.items():
-            selected = [v for v in role_units if v[1] in seen_regions]
+            selected = [v for v in role_units if zone2region[str(v[1])] in seen_regions]
             if selected:
                 unit_dict2[role] = selected
 
         dislodged_unit_dict2 = {}
         for role, role_dis_units in dislodged_unit_dict.items():
-            selected = [v for v in role_dis_units if v[1] in seen_regions]
+            selected = [v for v in role_dis_units if zone2region[str(v[1])] in seen_regions]
             if selected:
                 dislodged_unit_dict2[role] = selected
 
