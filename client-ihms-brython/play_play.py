@@ -713,13 +713,16 @@ def submit_orders():
                     deducted_role = center.owner_start
                     if deducted_role is not None:
                         if play_low.ROLE_ID in (0, deducted_role.identifier):
-                            if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
-                                fake_unit = mapping.Army(play_low.POSITION_DATA, deducted_role, selected_build_zone, None)
-                            if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
-                                fake_unit = mapping.Fleet(play_low.POSITION_DATA, deducted_role, selected_build_zone, None)
-                            # create order
-                            order = mapping.Order(play_low.POSITION_DATA, selected_order_type, fake_unit, None, None)
-                            orders_data.insert_order(order)
+                            if region not in play_low.POSITION_DATA.occupant_table:
+                                if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
+                                    fake_unit = mapping.Army(play_low.POSITION_DATA, deducted_role, selected_build_zone, None)
+                                if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                                    fake_unit = mapping.Fleet(play_low.POSITION_DATA, deducted_role, selected_build_zone, None)
+                                # create order
+                                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, fake_unit, None, None)
+                                orders_data.insert_order(order)
+                            else:
+                                alert("Bien essayé, mais il y a déjà une unité à cet endroit !")
                         else:
                             alert("Bien essayé, mais ce centre ne vous appartient pas !")
                     else:
