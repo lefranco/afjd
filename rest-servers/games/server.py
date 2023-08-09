@@ -2240,6 +2240,67 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/game-restricted-transitions/<game_id>/<advancement>/<role_id>')
+class GameRestrictedTransitionRessource(flask_restful.Resource):  # type: ignore
+    """ GameRestrictedTransitionRessource """
+
+    def get(self, game_id: int, advancement: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Gets the full restricted report  (transition : postions + orders + report) of adjudication for the game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-restricted-transitions/<game_id>/<advancement>/<role_id> - GET - getting transition game id=%s advancement=%s role id=%s ", game_id, advancement, role_id)
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # check the game position is protected
+        assert game is not None
+        variant_name = game.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+        visibility_restricted = variant_data['visibility_restricted']
+        if not visibility_restricted:
+            del sql_executor
+            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is not restricted !")
+
+        # check a role is provided
+        if role_id is None:
+            del sql_executor
+            flask_restful.abort(404, msg="Role is missing !")
+
+        # find the transition
+        transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, advancement)
+        if transition is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"Transition happens to be missing for {game_id} / {advancement}")
+
+        assert transition is not None
+
+        if int(role_id) != 0:
+            # TODO : get a partial picture of things
+            del sql_executor
+            data = {'time_stamp': transition.time_stamp, 'situation': {'ownerships': {}, 'dislodged_ones' : {}, 'units': {}, 'forbiddens': []}, 'orders': {'orders': [], 'fake_units': [] }, 'report_txt': "---"}
+            return data, 200
+
+        # extract transition data
+        assert transition is not None
+        the_situation = json.loads(transition.situation_json)
+        the_orders = json.loads(transition.orders_json)
+        report_txt = transition.report_txt
+
+        del sql_executor
+
+        data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
+        return data, 200
+
+
 @API.resource('/game-transitions/<game_id>/<advancement>')
 class GameTransitionRessource(flask_restful.Resource):  # type: ignore
     """ GameTransitionRessource """
@@ -2259,6 +2320,16 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
         if game is None:
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # check the game position is not protected
+        assert game is not None
+        variant_name = game.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+        visibility_restricted = variant_data['visibility_restricted']
+        if visibility_restricted:
+            del sql_executor
+            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is restricted !")
 
         # find the transition
         transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, advancement)
