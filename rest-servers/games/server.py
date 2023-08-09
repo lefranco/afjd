@@ -208,10 +208,9 @@ MOVE_GAME_LOCK_TABLE: typing.Dict[str, threading.Lock] = {}
 NO_REPEAT_DELAY_SEC = 15
 
 
-def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int]) -> None:
+def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int], orders_list: typing.List[typing.List[int]], fake_units_list: typing.List[typing.List[int]]) -> None:
     """ apply_visibility
     this will change the parameters
-    TODO : add orders list/dict as parameter
     """
 
     # load the visibility data
@@ -222,7 +221,7 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
     assert full_name_file.exists(), f"Missing file stating visibilities for {variant_name}"
     with open(full_name_file, 'r', encoding="utf-8") as file_ptr:
         data_json = json.load(file_ptr)
-    assert isinstance(data_json, dict), "File file stating visibilities for brouillard is not a dict"
+    assert isinstance(data_json, dict), f"File file stating visibilities for {variant_name} is not a dict"
     center2region = data_json['center2region']
     zone2region = data_json['zone2region']
     visibility_table = data_json['visibility_table']
@@ -261,23 +260,37 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
     # forbiddens use region
     forbidden_list2 = [f for f in forbidden_list if f in seen_regions]
 
+    # see orders if see unit, passive (simple)
+    orders_list2 = [o for o in orders_list if zone2region[str(o[3])] in seen_regions and (o[4] == 0 or zone2region[str(o[4])] in seen_regions) and (o[5] == 0 or zone2region[str(o[5])] in seen_regions)]
+
+    # see fake unit if sees region where it will appear
+    fake_units_list2 = [f for f in fake_units_list if zone2region[str(f[2])] in seen_regions]
+
     # update parameters
 
     # ownership_dict
     ownership_dict.clear()
     ownership_dict.update(ownership_dict2)
 
-    # ownership_dict
+    # unit_dict
     unit_dict.clear()
     unit_dict.update(unit_dict2)
 
-    # ownership_dict
+    # dislodged_unit_dict
     dislodged_unit_dict.clear()
     dislodged_unit_dict.update(dislodged_unit_dict2)
 
-    # ownership_dict
+    # forbidden_list
     forbidden_list.clear()
     forbidden_list.extend(forbidden_list2)
+
+    # orders_list
+    orders_list.clear()
+    orders_list.extend(orders_list2)
+
+    # fake_units_list
+    fake_units_list.clear()
+    fake_units_list.extend(fake_units_list2)
 
 
 class RepeatPreventer(typing.Dict[typing.Tuple[int, int], float]):
@@ -2028,9 +2041,12 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
+        orders_list = []
+        fake_units_list = []
+
         # now we can start hiding stuff
         # this will update last parameters
-        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list)
+        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
 
         data = {
             'ownerships': ownership_dict,
@@ -2282,18 +2298,16 @@ class GameRestrictedReportRessource(flask_restful.Resource):  # type: ignore
 
         assert report is not None
 
-        if int(role_id) != 0:
-            # TODO : get a partial picture of things
+        if int(role_id) == 0:
+            # extract report data
+            content = report.content
             del sql_executor
-            data = {'time_stamp': report.time_stamp, 'content': "---"}
+            data = {'time_stamp': report.time_stamp, 'content': content}
             return data, 200
 
-        # extract report data
-        content = report.content
-
+        # otherwise nothing
         del sql_executor
-
-        data = {'time_stamp': report.time_stamp, 'content': content}
+        data = {'time_stamp': report.time_stamp, 'content': "---"}
         return data, 200
 
 
@@ -2421,21 +2435,31 @@ class GameRestrictedTransitionRessource(flask_restful.Resource):  # type: ignore
 
         assert transition is not None
 
-        if int(role_id) != 0:
-            # TODO : get a partial picture of things
-            del sql_executor
-            data = {'time_stamp': transition.time_stamp, 'situation': {'ownerships': {}, 'dislodged_ones': {}, 'units': {}, 'forbiddens': []}, 'orders': {'orders': [], 'fake_units': []}, 'report_txt': "---"}
-            return data, 200
-
         # extract transition data
-        assert transition is not None
         the_situation = json.loads(transition.situation_json)
         the_orders = json.loads(transition.orders_json)
         report_txt = transition.report_txt
 
+        if int(role_id) == 0:
+            del sql_executor
+            data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
+            return data, 200
+
+        # get a partial picture of things
         del sql_executor
 
-        data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
+        ownership_dict = the_situation['ownerships']
+        dislodged_unit_dict = the_situation['dislodged_ones']
+        unit_dict = the_situation['units']
+        forbidden_list = the_situation['forbiddens']
+
+        orders_list = the_orders['orders']
+        fake_units_list = the_orders['fake_units']
+
+        # this will update last parameters
+        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
+
+        data = {'time_stamp': transition.time_stamp, 'situation': {'ownerships': ownership_dict, 'dislodged_ones': dislodged_unit_dict, 'units': unit_dict, 'forbiddens': forbidden_list}, 'orders': {'orders': orders_list, 'fake_units': fake_units_list}, 'report_txt': "---"}
         return data, 200
 
 
@@ -3041,6 +3065,9 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             for _, region_num in game_forbiddens:
                 forbidden_list.append(region_num)
 
+            orders_list = []
+            fake_units_list = []
+
             # apply visibility if the game position is protected
             variant_name = game.variant
             variant_data = variants.Variant.get_by_name(variant_name)
@@ -3049,7 +3076,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             if visibility_restricted:
                 # now we can start hiding stuff
                 # this will update last parameters
-                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list)
+                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
 
             situation_dict = {
                 'ownerships': ownership_dict,
@@ -3578,8 +3605,11 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = {}
             forbidden_list: typing.List[int] = []
 
+            orders_list = []
+            fake_units_list = []
+
             # this will update last paramet
-            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list)
+            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
 
         # check orders (rough check)
 
