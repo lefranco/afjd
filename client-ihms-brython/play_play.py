@@ -1292,7 +1292,14 @@ def submit_orders():
         if advancement_selected < 0:
             break
 
-        transition_loaded = play_low.game_transition_reload(play_low.GAME_ID, advancement_selected)
+        restricted = play_low.VARIANT_CONTENT_LOADED['visibility_restricted']
+        if restricted:
+            if play_low.ROLE_ID is None:
+                transition_loaded = None
+            else:
+                transition_loaded = play_low.game_transition_restricted_reload(play_low.GAME_ID, advancement_selected, play_low.ROLE_ID)
+        else:
+            transition_loaded = play_low.game_transition_reload(play_low.GAME_ID, advancement_selected)
         if not transition_loaded:
             break
 
