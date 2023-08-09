@@ -385,10 +385,16 @@ def load_dynamic_stuff():
 
     # need to be after game parameters (advancement -> season)
     global REPORT_LOADED
-    REPORT_LOADED = game_report_reload(GAME_ID)
-    if not REPORT_LOADED:
-        alert("Erreur chargement rapport")
-        return
+    restricted = VARIANT_CONTENT_LOADED['visibility_restricted']
+    if restricted:
+        if ROLE_ID is None:
+            REPORT_LOADED = None
+        else:
+            REPORT_LOADED = game_restricted_report_reload(GAME_ID, ROLE_ID)
+    else:
+        REPORT_LOADED = game_report_reload(GAME_ID)
+
+    # REPORT_LOADED can be none
 
 
 def load_special_stuff():
@@ -593,6 +599,37 @@ def show_board(panel):
     rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, units, colours, game_scoring)
     panel <= rating_colours_window
     panel <= html.BR()
+
+
+def game_restricted_report_reload(game_id, role_id):
+    """ game_restricted_report_reload """
+
+    report_loaded = {}
+
+    def reply_callback(req):
+        nonlocal report_loaded
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur au chargement du rapport de résolution restricted de la partie : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème au chargement du rapport de résolution restricted de la partie : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+
+        report_loaded = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/game-restricted-reports/{game_id}/{role_id}"
+
+    # getting variant : need a token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return report_loaded
 
 
 def game_report_reload(game_id):
