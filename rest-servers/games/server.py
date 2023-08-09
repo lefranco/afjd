@@ -2239,6 +2239,41 @@ class GameRestrictedReportRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(404, msg="Role is missing !")
 
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # who is player for role ?
+        assert game is not None
+        player_id = game.get_role(sql_executor, int(role_id))
+
+        # must be player, game master
+        if user_id != player_id:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the player or game master who corresponds to this role")
+
         # find the report
         report = reports.Report.find_by_identifier(sql_executor, game_id)
         if report is None:
@@ -2342,6 +2377,41 @@ class GameRestrictedTransitionRessource(flask_restful.Resource):  # type: ignore
         if role_id is None:
             del sql_executor
             flask_restful.abort(404, msg="Role is missing !")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # who is player for role ?
+        assert game is not None
+        player_id = game.get_role(sql_executor, int(role_id))
+
+        # must be player, game master
+        if user_id != player_id:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the player or game master who corresponds to this role")
 
         # find the transition
         transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, advancement)
