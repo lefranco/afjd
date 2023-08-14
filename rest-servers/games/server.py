@@ -2041,12 +2041,12 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
 
         del sql_executor
 
-        orders_list = []
-        fake_units_list = []
+        orders_list2: typing.List[typing.List[int]] = []
+        fake_units_list2: typing.List[typing.List[int]] = []
 
         # now we can start hiding stuff
         # this will update last parameters
-        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
+        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
 
         data = {
             'ownerships': ownership_dict,
@@ -3065,8 +3065,8 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             for _, region_num in game_forbiddens:
                 forbidden_list.append(region_num)
 
-            orders_list = []
-            fake_units_list = []
+            orders_list2: typing.List[typing.List[int]] = []
+            fake_units_list2: typing.List[typing.List[int]] = []
 
             # apply visibility if the game position is protected
             variant_name = game.variant
@@ -3076,7 +3076,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             if visibility_restricted:
                 # now we can start hiding stuff
                 # this will update last parameters
-                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
+                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
 
             situation_dict = {
                 'ownerships': ownership_dict,
@@ -3605,11 +3605,11 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = {}
             forbidden_list: typing.List[int] = []
 
-            orders_list = []
-            fake_units_list = []
+            orders_list2: typing.List[typing.List[int]] = []
+            fake_units_list2: typing.List[typing.List[int]] = []
 
             # this will update last paramet
-            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
+            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
 
         # check orders (rough check)
 
