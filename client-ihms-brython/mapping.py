@@ -1418,6 +1418,10 @@ class Position(Renderable):
             role = self._variant.geographic_owner_table[zone]
             zone.render2(ctx, role)
 
+        # empty centers
+        for center in self._variant.centers.values():
+            center.render(ctx)
+
         # ownerships
         for ownership in self._ownerships:
             ownership.render(ctx)
