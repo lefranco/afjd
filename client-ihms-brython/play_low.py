@@ -480,12 +480,17 @@ def get_game_status():
     desc = html.DIV()
     desc <= "Partie "
     desc <= html.B(f"{game_name}")
-    desc <= f" ({game_variant})"
-
     col = html.TD(desc)
     row <= col
     col = html.TD(f"id={GAME_ID}")
     row <= col
+
+    # variant + link
+    link = html.A(href=f"./variants/{game_variant}/description.pdf", target="_blank")
+    link <= f"Variante {game_variant}"
+    col = html.TD(link)
+    row <= col
+
     col = html.TD(f"Etat {game_state_readable}")
     row <= col
     col = html.TD(f"Saison {game_season}")
@@ -517,7 +522,7 @@ def get_game_status():
 
     row = html.TR()
 
-    col = html.TD(game_description, colspan="8")
+    col = html.TD(game_description, colspan="9")
     row <= col
     game_status_table <= row
 

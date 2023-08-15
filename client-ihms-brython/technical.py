@@ -217,69 +217,60 @@ def show_technical():
 
     # --
 
-    title6 = html.H4("Les variantes implémentées")
+    title6 = html.H4("Création de fichiers de variante")
     MY_SUB_PANEL <= title6
 
-    link6 = html.A(href="./docs/Variants.pdf", target="_blank")
-    link6 <= "Lien vers les spécifications des variantes sur le site"
+    link6 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
+    link6 <= "Comment créer les fichiers nécessaire pour une variante"
     MY_SUB_PANEL <= link6
 
     # --
 
-    title7 = html.H4("Création de fichiers de variante")
+    title7 = html.H4("Règles simplifiées")
     MY_SUB_PANEL <= title7
 
-    link7 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
-    link7 <= "Comment créer les fichiers nécessaire pour une variante"
+    link7 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
+    link7 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
     MY_SUB_PANEL <= link7
 
     # --
 
-    title8 = html.H4("Règles simplifiées")
+    title8 = html.H4("Création de fichier de tournoi")
     MY_SUB_PANEL <= title8
 
-    link8 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
-    link8 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
-    MY_SUB_PANEL <= link8
+    link81 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
+    link81 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
+    MY_SUB_PANEL <= link81
+
+    MY_SUB_PANEL <= html.P()
+
+    link82 = html.A(href="./scripts/allocate.py", target="_blank")
+    link82 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
+    MY_SUB_PANEL <= link82
 
     # --
 
-    title9 = html.H4("Création de fichier de tournoi")
+    title9 = html.H4("Document d'interface de l'API")
     MY_SUB_PANEL <= title9
 
-    link91 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
-    link91 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
+    link91 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
+    link91 <= "Si vous voulez vous aussi développer votre front end..."
     MY_SUB_PANEL <= link91
 
-    MY_SUB_PANEL <= html.P()
-
-    link92 = html.A(href="./scripts/allocate.py", target="_blank")
-    link92 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
-    MY_SUB_PANEL <= link92
-
     # --
 
-    title10 = html.H4("Document d'interface de l'API")
+    title10 = html.H4("Remerciements")
     MY_SUB_PANEL <= title10
 
-    link101 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
-    link101 <= "Si vous voulez vous aussi développer votre front end..."
+    link101 = html.A(href="https://brython.info/", target="_blank")
+    link101 <= "Outil utilisé pour ce site web"
     MY_SUB_PANEL <= link101
-
-    # --
-
-    title11 = html.H4("Remerciements")
-    MY_SUB_PANEL <= title11
-
-    link111 = html.A(href="https://brython.info/", target="_blank")
-    link111 <= "Outil utilisé pour ce site web"
-    MY_SUB_PANEL <= link111
 
     MY_SUB_PANEL <= html.P()
 
-    link112 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link112 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link112
+    link102 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link102 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link102
 
 
 WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
