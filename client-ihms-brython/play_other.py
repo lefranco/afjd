@@ -151,6 +151,7 @@ def show_position(direct_last_moves):
     position_data = None
     adv_last_moves = None
     fake_report_loaded = None
+    orders_data_txt = ""
 
     def callback_refresh(_):
         """ callback_refresh """
@@ -169,6 +170,12 @@ def show_position(direct_last_moves):
         play_low.load_dynamic_stuff()
         play_low.MY_SUB_PANEL.clear()
         play.load_option(None, 'Consulter')
+
+    def callback_text_orders(_):
+        """ callback_text_orders """
+
+        if orders_data_txt:
+            alert(orders_data_txt)
 
     def callback_export_sandbox(_):
         """ callback_export_sandbox """
@@ -226,6 +233,7 @@ def show_position(direct_last_moves):
 
         nonlocal position_data
         nonlocal fake_report_loaded
+        nonlocal orders_data_txt
 
         def callback_render(_):
             """ callback_render """
@@ -290,6 +298,9 @@ def show_position(direct_last_moves):
                 # digest the orders
                 orders_loaded = transition_loaded['orders']
                 orders_data = mapping.Orders(orders_loaded, position_data, communication_orders_are_present)
+
+                # make a text version (for fog mainly)
+                orders_data_txt = str(orders_data)
 
             else:
 
@@ -415,6 +426,13 @@ def show_position(direct_last_moves):
                 buttons_right <= html.BR()
 
         buttons_right <= html.H3("Divers")
+
+        if orders_data_txt:
+            input_show_orders_text = html.INPUT(type="submit", value="Visualiser les ordres en texte")
+            input_show_orders_text.bind("click", callback_text_orders)
+            buttons_right <= input_show_orders_text
+            buttons_right <= html.BR()
+            buttons_right <= html.BR()
 
         input_export_sandbox = html.INPUT(type="submit", value="Exporter la partie vers le bac à sable")
         input_export_sandbox.bind("click", callback_export_sandbox)
