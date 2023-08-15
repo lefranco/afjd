@@ -514,6 +514,13 @@ def get_game_status():
     COUNTDOWN_COL = html.TD("")
     row <= COUNTDOWN_COL
 
+    # scoring + link
+    scoring = GAME_PARAMETERS_LOADED['scoring']
+    link = html.A(href=f"./scorings/{scoring}.pdf", target="_blank")
+    link <= f"Scorage {scoring}"
+    col = html.TD(link)
+    row <= col
+
     # game master
     if GAME_MASTER:
         col = html.TD(f"Arbitre {GAME_MASTER}")
@@ -525,7 +532,7 @@ def get_game_status():
 
     row = html.TR()
 
-    col = html.TD(game_description, colspan="9")
+    col = html.TD(game_description, colspan="10")
     row <= col
     game_status_table <= row
 

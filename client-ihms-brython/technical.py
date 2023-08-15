@@ -196,9 +196,15 @@ def show_technical():
     title4 = html.H4("Le scorage (la marque sur un tournoi)")
     MY_SUB_PANEL <= title4
 
-    link4 = html.A(href="./docs/Scorings.pdf", target="_blank")
-    link4 <= "Lien vers les spécifications des systèmes de scorage sur le site"
-    MY_SUB_PANEL <= link4
+    scoring_table = html.TABLE()
+    row = html.TR()
+    for scoring_name, scoring in config.SCORING_CODE_TABLE.items():
+        link = html.A(href=f"./scorings/{scoring}.pdf", target="_blank")
+        link <= f"{scoring_name}"
+        col = html.TD(link)
+        row <= col
+    scoring_table <= row
+    MY_SUB_PANEL <= scoring_table
 
     # --
 
