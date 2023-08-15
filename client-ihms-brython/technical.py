@@ -198,8 +198,8 @@ def show_technical():
 
     scoring_table = html.TABLE()
     row = html.TR()
-    for scoring_name, scoring in config.SCORING_CODE_TABLE.items():
-        link = html.A(href=f"./scorings/{scoring}.pdf", target="_blank")
+    for scoring_name, scoring1 in config.SCORING_CODE_TABLE.items():
+        link = html.A(href=f"./scorings/{scoring1}.pdf", target="_blank")
         link <= f"{scoring_name}"
         col = html.TD(link)
         row <= col
