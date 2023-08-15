@@ -2131,5 +2131,20 @@ class Orders(Renderable):
         """" how many (builds) """
         return len(self._orders)
 
+    def display(self) -> str:
+        """" nice to read """
+
+        text = ""
+        roles_present = {o.active_unit.role for o in self._orders}
+        for role in sorted(roles_present, key=lambda r: r.identifier):
+            role_name = self._position.variant.role_name_table[role]
+            text += role_name
+            text += "\n"
+            orders_role = '\n'.join([str(o) for o in self._orders if o.active_unit.role == role])
+            text += orders_role
+            text += "\n"
+            text += "\n"
+        return text
+
     def __str__(self) -> str:
         return '\n'.join([str(o) for o in self._orders])
