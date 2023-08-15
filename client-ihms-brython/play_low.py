@@ -109,9 +109,12 @@ def make_rating_colours_window(variant_data, ratings, units, colours, game_scori
     rating_table <= rating_scoring_row
     col = html.TD(html.B(f"{scoring_name} :"))
     rating_scoring_row <= col
+    restricted = VARIANT_CONTENT_LOADED['visibility_restricted']
     for role_name in ratings:
-        score_dis = float(score_table[role_name])
-        role_score = f"{float(score_dis):.2f}"
+        score_dis = score_table[role_name]
+        role_score = ""
+        if not restricted or ROLE_ID == 0:
+            role_score = f"{float(score_dis):.2f}"
         col = html.TD(role_score)
         rating_scoring_row <= col
 
