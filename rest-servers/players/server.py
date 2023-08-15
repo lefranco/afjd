@@ -105,6 +105,7 @@ EVENT_PARSER.add_argument('start_date', type=str, required=False)
 EVENT_PARSER.add_argument('start_hour', type=str, required=False)
 EVENT_PARSER.add_argument('end_date', type=str, required=False)
 EVENT_PARSER.add_argument('location', type=str, required=False)
+EVENT_PARSER.add_argument('external', type=str, required=False)
 EVENT_PARSER.add_argument('description', type=str, required=False)
 EVENT_PARSER.add_argument('summary', type=str, required=False)
 EVENT_PARSER.add_argument('image', type=str, required=False)
@@ -1822,7 +1823,7 @@ class EventManagerRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You are not allowed to change event manager (need to be moderator)")
 
         # update event here
-        event = events.Event(int(event_id), event.name, event.start_date, event.start_hour, event.end_date, event.location, event.description, event.summary, manager_id)
+        event = events.Event(int(event_id), event.name, event.start_date, event.start_hour, event.end_date, event.location, event.external, event.description, event.summary, manager_id)
         event.update_database(sql_executor)
 
         sql_executor.commit()
@@ -1861,7 +1862,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         image = image_bytes.decode() if image_bytes else None
 
-        data = {'name': event.name, 'start_date': event.start_date, 'start_hour': event.start_hour, 'end_date': event.end_date, 'location': event.location, 'description': event.description, 'summary': event.summary, 'manager_id': event.manager_id, 'image': image}
+        data = {'name': event.name, 'start_date': event.start_date, 'start_hour': event.start_hour, 'end_date': event.end_date, 'location': event.location, 'external': event.external, 'description': event.description, 'summary': event.summary, 'manager_id': event.manager_id, 'image': image}
 
         return data, 200
 
@@ -1934,7 +1935,7 @@ class EventRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(400, msg=f"Event name {name} is too long")
 
             # update event here
-            event = events.Event(int(event_id), name, start_date, start_hour, end_date, location, description, summary, user_id)
+            event = events.Event(int(event_id), name, start_date, start_hour, end_date, location, event.external, description, summary, user_id)
             event.update_database(sql_executor)
 
         # update event_image here
@@ -2055,6 +2056,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
         start_hour = args['start_hour']
         end_date = args['end_date']
         location = args['location']
+        external = bool(int(args['external']))
         description = args['description']
         summary = args['summary']
 
@@ -2103,7 +2105,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
 
         # create event here
         identifier = events.Event.free_identifier(sql_executor)
-        event = events.Event(identifier, name, start_date, start_hour, end_date, location, description, summary, user_id)
+        event = events.Event(identifier, name, start_date, start_hour, end_date, location, external, description, summary, user_id)
         event.update_database(sql_executor)
 
         sql_executor.commit()
@@ -2175,6 +2177,12 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         if event is None:
             del sql_executor
             flask_restful.abort(404, msg=f"There does not seem to be an event with identifier {event_id}")
+
+        assert event is not None
+
+        if event.external:
+            del sql_executor
+            flask_restful.abort(404, msg="This is an external event : no registration on this site, sorry !")
 
         # action
 
