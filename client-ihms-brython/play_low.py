@@ -515,9 +515,9 @@ def get_game_status():
     row <= COUNTDOWN_COL
 
     # scoring + link
-    scoring = GAME_PARAMETERS_LOADED['scoring']
-    link = html.A(href=f"./scorings/{scoring}.pdf", target="_blank")
-    link <= f"Scorage {scoring}"
+    scoring1 = GAME_PARAMETERS_LOADED['scoring']
+    link = html.A(href=f"./scorings/{scoring1}.pdf", target="_blank")
+    link <= f"Scorage {scoring1}"
     col = html.TD(link)
     row <= col
 
