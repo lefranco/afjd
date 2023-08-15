@@ -399,6 +399,7 @@ def registrations():
     start_hour = event_dict['start_hour']
     end_date = event_dict['end_date']
     location = event_dict['location']
+    external = event_dict['external']
     description = event_dict['description']
 
     manager_id = event_dict['manager_id']
@@ -423,6 +424,10 @@ def registrations():
 
     event_information <= html.B("Lieu")
     event_information <= f" : {location}"
+    event_information <= html.BR()
+
+    event_information <= html.B("Externe")
+    event_information <= f" : {'Oui' if external else 'Non'}"
     event_information <= html.BR()
 
     event_information <= html.B("Description complète")
@@ -457,15 +462,18 @@ def registrations():
 
     MY_SUB_PANEL <= html.H4("Votre inscription")
 
-    # tell the guy his situation
-    MY_SUB_PANEL <= html.DIV(player_status, Class='important')
-    MY_SUB_PANEL <= html.BR()
-
     # put button to register/un register
-    if 'PSEUDO' in storage:
-        MY_SUB_PANEL <= register_form
+    if external:
+        MY_SUB_PANEL <= html.EM("Attention : l'inscription est externe, c'est à dire qu'elle n'est pas gérée sur le site.")
     else:
-        MY_SUB_PANEL <= account_button
+        # tell the guy his situation
+        MY_SUB_PANEL <= html.DIV(player_status, Class='important')
+        MY_SUB_PANEL <= html.BR()
+
+        if 'PSEUDO' in storage:
+            MY_SUB_PANEL <= register_form
+        else:
+            MY_SUB_PANEL <= account_button
 
     # provide people already in
     MY_SUB_PANEL <= html.H4("Contacter l'organisateur")
@@ -488,6 +496,7 @@ def create_event(json_dict):
     start_hour = json_dict['start_hour'] if json_dict and 'start_hour' in json_dict else None
     end_date = json_dict['end_date'] if json_dict and 'end_date' in json_dict else None
     location = json_dict['location'] if json_dict and 'location' in json_dict else None
+    external = json_dict['external'] if json_dict and 'external' in json_dict else None
     description = json_dict['description'] if json_dict and 'description' in json_dict else None
     summary = json_dict['summary'] if json_dict and 'summary' in json_dict else None
 
@@ -499,6 +508,7 @@ def create_event(json_dict):
         nonlocal start_hour
         nonlocal end_date
         nonlocal location
+        nonlocal external
         nonlocal description
         nonlocal summary
 
@@ -525,6 +535,7 @@ def create_event(json_dict):
         start_hour = input_start_hour.value
         end_date = input_end_date.value
         location = input_location.value
+        external = int(input_external.checked)
         description = input_description.value
         summary = input_summary.value
 
@@ -535,6 +546,7 @@ def create_event(json_dict):
             'start_hour': start_hour,
             'end_date': end_date,
             'location': location,
+            'external': external,
             'description': description,
             'summary': summary,
         }
@@ -619,6 +631,13 @@ def create_event(json_dict):
     fieldset <= legend_location
     input_location = html.INPUT(type="text", value=location if location is not None else DEFAULT_EVENT_LOCATION, size=MAX_LEN_EVENT_LOCATION)
     fieldset <= input_location
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_external = html.LEGEND("externe", title="L'événement est-il externe au site")
+    fieldset <= legend_external
+    input_external = html.INPUT(type="checkbox", checked=False)
+    fieldset <= input_external
     form <= fieldset
 
     form <= html.BR()

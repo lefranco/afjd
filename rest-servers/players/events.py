@@ -67,7 +67,7 @@ class Event:
         sql_executor.execute("CREATE TABLE events (identifier INTEGER UNIQUE PRIMARY KEY, name STR, event_data event)")
         sql_executor.execute("CREATE UNIQUE INDEX name_event ON events (name)")
 
-    def __init__(self, identifier: int, name: str, start_date: str, start_hour: str, end_date: str, location: str, description: str, summary: str, manager_id: int) -> None:
+    def __init__(self, identifier: int, name: str, start_date: str, start_hour: str, end_date: str, location: str, external: bool, description: str, summary: str, manager_id: int) -> None:
 
         assert isinstance(identifier, int), "identifier must be an int"
         self._identifier = identifier
@@ -86,6 +86,9 @@ class Event:
 
         assert isinstance(location, str), "location must be a str"
         self._location = database.sanitize_field(location)[:LEN_LOCATION_MAX]
+
+        assert isinstance(external, bool), "external must be a bool"
+        self._external = bool(int(external))
 
         assert isinstance(description, str), "description must be a str"
         self._description = description
@@ -144,6 +147,11 @@ class Event:
         return self._location
 
     @property
+    def external(self) -> bool:
+        """ property """
+        return self._external
+
+    @property
     def description(self) -> str:
         """ property """
         return self._description
@@ -159,13 +167,13 @@ class Event:
         return self._manager_id
 
     def __str__(self) -> str:
-        return f"name={self._name} start_date={self._start_date} start_hour={self._start_hour} end_date={self._end_date} location={self._location} description={self._description} summary={self._summary} manager_id={self._manager_id} "
+        return f"name={self._name} start_date={self._start_date} start_hour={self._start_hour} end_date={self._end_date} location={self._location} external={self._external} description={self._description} summary={self._summary} manager_id={self._manager_id} "
 
     def adapt_event(self) -> bytes:
         """ To put an object in database """
         compressed_description = database.compress_text(self._description)
         compressed_summary = database.compress_text(self._summary)
-        return (f"{self._identifier}{database.STR_SEPARATOR}{self._name}{database.STR_SEPARATOR}{self._start_date}{database.STR_SEPARATOR}{self._start_hour}{database.STR_SEPARATOR}{self._end_date}{database.STR_SEPARATOR}{self._location}{database.STR_SEPARATOR}{compressed_description}{database.STR_SEPARATOR}{compressed_summary}{database.STR_SEPARATOR}{self._manager_id}").encode('ascii')
+        return (f"{self._identifier}{database.STR_SEPARATOR}{self._name}{database.STR_SEPARATOR}{self._start_date}{database.STR_SEPARATOR}{self._start_hour}{database.STR_SEPARATOR}{self._end_date}{database.STR_SEPARATOR}{self._location}{database.STR_SEPARATOR}{int(self._external)}{database.STR_SEPARATOR}{compressed_description}{database.STR_SEPARATOR}{compressed_summary}{database.STR_SEPARATOR}{self._manager_id}").encode('ascii')
 
 
 def convert_event(buffer: bytes) -> Event:
@@ -178,15 +186,16 @@ def convert_event(buffer: bytes) -> Event:
     start_hour = tab[3].decode()
     end_date = tab[4].decode()
     location = tab[5].decode()
+    external = bool(int(tab[6].decode()))
 
-    compressed_description = tab[6].decode()
+    compressed_description = tab[7].decode()
     description = database.uncompress_text(compressed_description)
 
-    compressed_summary = tab[7].decode()
+    compressed_summary = tab[8].decode()
     summary = database.uncompress_text(compressed_summary)
 
-    manager_id = int(tab[8].decode())
-    event = Event(identifier, name, start_date, start_hour, end_date, location, description, summary, manager_id)
+    manager_id = int(tab[9].decode())
+    event = Event(identifier, name, start_date, start_hour, end_date, location, external, description, summary, manager_id)
     return event
 
 
