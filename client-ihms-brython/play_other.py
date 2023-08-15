@@ -300,7 +300,7 @@ def show_position(direct_last_moves):
                 orders_data = mapping.Orders(orders_loaded, position_data, communication_orders_are_present)
 
                 # make a text version (for fog mainly)
-                orders_data_txt = str(orders_data)
+                orders_data_txt = orders_data.display()
 
             else:
 
