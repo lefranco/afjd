@@ -29,9 +29,6 @@ DEFAULT_SPEED_MOVES = 72
 DEFAULT_SPEED_OTHERS = 24
 DEFAULT_NB_CYCLES = 7
 
-# default is first one
-VARIANT_NAMES_LIST = ['standard', 'grandeguerre', 'brouillard']
-
 
 def information_about_input():
     """ information_about_account """
@@ -94,7 +91,7 @@ def create_game(json_dict):
 
     # load previous values if applicable
     name = json_dict['name'] if json_dict and 'name' in json_dict else None
-    variant = json_dict['variant'] if json_dict and 'variant' in json_dict else VARIANT_NAMES_LIST[0]
+    variant = json_dict['variant'] if json_dict and 'variant' in json_dict else config.VARIANT_NAMES_LIST[0]
     archive = json_dict['archive'] if json_dict and 'archive' in json_dict else None
     used_for_elo = json_dict['used_for_elo'] if json_dict and 'used_for_elo' in json_dict else None
     manual = json_dict['manual'] if json_dict and 'manual' in json_dict else None
@@ -370,7 +367,7 @@ def create_game(json_dict):
     fieldset <= legend_variant
     input_variant = html.SELECT(type="select-one", value="")
 
-    for variant_name in VARIANT_NAMES_LIST:
+    for variant_name in config.VARIANT_NAMES_LIST:
         option = html.OPTION(variant_name)
         if variant_name == variant:
             option.selected = True

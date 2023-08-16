@@ -35,6 +35,10 @@ with open("./data/timezone_list.json", "r", encoding="utf-8") as read_file:
 with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
     SCORING_CODE_TABLE = json.load(read_file)
 
+# default is first one
+VARIANT_NAMES_LIST = ['standard', 'grandeguerre', 'brouillard']
+
+
 # yellow before that
 APPROACH_DELAY_SEC = 24 * 60 * 60
 

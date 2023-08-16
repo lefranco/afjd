@@ -223,12 +223,24 @@ def show_technical():
 
     # --
 
-    title6 = html.H4("Création de fichiers de variante")
-    MY_SUB_PANEL <= title6
+    title61 = html.H4("Les variantes")
+    MY_SUB_PANEL <= title61
 
-    link6 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
-    link6 <= "Comment créer les fichiers nécessaire pour une variante"
-    MY_SUB_PANEL <= link6
+    scoring_table = html.TABLE()
+    row = html.TR()
+    for variant in config.VARIANT_NAMES_LIST:
+        link = html.A(href=f"./variants/{variant}/description.pdf", target="_blank")
+        link <= f"{variant}"
+        col = html.TD(link)
+        row <= col
+    scoring_table <= row
+    MY_SUB_PANEL <= scoring_table
+
+    MY_SUB_PANEL <= html.BR()
+
+    link62 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
+    link62 <= "Comment créer les fichiers nécessaire pour une variante"
+    MY_SUB_PANEL <= link62
 
     # --
 
