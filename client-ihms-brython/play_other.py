@@ -307,6 +307,14 @@ def show_position(direct_last_moves):
                 # to force current map to be displayed
                 advancement_selected = last_advancement
 
+                # erase
+                orders_data_txt = ""
+
+        else:
+
+            # erase
+            orders_data_txt = ""
+
         # now we can display
         play_low.MY_SUB_PANEL.clear()
         #  play_low.MY_SUB_PANEL.attrs['style'] = 'display:table-row'
