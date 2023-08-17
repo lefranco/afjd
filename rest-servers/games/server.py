@@ -2720,7 +2720,7 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 # declaration from system
                 payload = ""
                 if game.last_season():
-                    payload = "Attention, dernière saison !"
+                    payload = "Attention, dernier automne !"
                 elif game.last_year():
                     payload = "Attention, dernière année !"
                 if payload:
@@ -2864,7 +2864,7 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
             # declaration from system
             payload = ""
             if game.last_season():
-                payload = "Attention, dernière saison !"
+                payload = "Attention, dernier automne ! !"
             elif game.last_year():
                 payload = "Attention, dernière année !"
             if payload:
@@ -3216,7 +3216,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 # declaration from system
                 payload = ""
                 if game.last_season():
-                    payload = "Attention, dernière saison !"
+                    payload = "Attention, dernier automne ! !"
                 elif game.last_year():
                     payload = "Attention, dernière année !"
                 if payload:
