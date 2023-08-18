@@ -260,8 +260,14 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
     # forbiddens use region
     forbidden_list2 = [f for f in forbidden_list if f in seen_regions]
 
-    # see orders if see unit, passive (simple)
-    orders_list2 = [o for o in orders_list if zone2region[str(o[3])] in seen_regions and (o[4] == 0 or zone2region[str(o[4])] in seen_regions) and (o[5] == 0 or zone2region[str(o[5])] in seen_regions)]
+    # table of unit ownership to detect my orders
+    unit_owner = {}
+    for role, role_units in unit_dict.items():
+        for unit in role_units:
+            unit_owner[unit[1]] = int(role)
+
+    # see orders if my order or I see unit, passive (simple)
+    orders_list2 = [o for o in orders_list if unit_owner[o[3]] == int(role_id) or (zone2region[str(o[3])] in seen_regions and (o[4] == 0 or zone2region[str(o[4])] in seen_regions) and (o[5] == 0 or zone2region[str(o[5])] in seen_regions))]
 
     # see fake unit if sees region where it will appear
     fake_units_list2 = [f for f in fake_units_list if zone2region[str(f[2])] in seen_regions]
