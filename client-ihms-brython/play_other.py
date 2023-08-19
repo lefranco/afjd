@@ -948,6 +948,239 @@ def show_events_in_game():
     return True
 
 
+def pairing():
+    """ pairing """
+
+    def join_game_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'inscription à la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Erreur à l'inscription à la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                play_low.MY_SUB_PANEL.clear()
+                pairing()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Vous avez rejoint la partie : {messages}<br>Attention, c'est un réel engagement à ne pas prendre à la légère.<br>Un abandon pourrait compromettre votre inscription à de futures parties sur le site...", True)
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            pairing()
+
+        ev.preventDefault()
+
+        json_dict = {
+            'game_id': game_id,
+            'player_pseudo': pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/allocations"
+
+        # adding allocation : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def quit_game_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la désinscription de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Erreur à la désinscription de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                play_low.MY_SUB_PANEL.clear()
+                pairing()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Vous avez quitté la partie : {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            pairing()
+
+        ev.preventDefault()
+
+        json_dict = {
+            'game_id': game_id,
+            'player_pseudo': pseudo,
+            'delete': 1
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/allocations"
+
+        # should be a delete but body in delete requests is more or less forbidden
+        # quitting a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def take_mastering_game_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à la prise de l'arbitrage de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la prise de l'arbitrage de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                play_low.MY_SUB_PANEL.clear()
+                pairing()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Vous avez pris l'arbitrage de la partie : {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            pairing()
+
+        ev.preventDefault()
+
+        json_dict = {
+            'game_id': game_id,
+            'role_id': 0,
+            'player_pseudo': pseudo,
+            'delete': 0
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/role-allocations"
+
+        # taking game mastering : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def quit_mastering_game_callback(ev):  # pylint: disable=invalid-name
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la démission de l'arbitrage de la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la démission de l'arbitrage de la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                play_low.MY_SUB_PANEL.clear()
+                pairing()
+
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Vous avez quitté l'arbitrage de la partie : {messages}")
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            pairing()
+
+        ev.preventDefault()
+
+        json_dict = {
+            'game_id': game_id,
+            'role_id': 0,
+            'player_pseudo': pseudo,
+            'delete': 1
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/role-allocations"
+
+        # giving up game mastering : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    if 'PSEUDO' not in storage:
+        alert("Il faut se connecter au préalable")
+        return False
+
+    if 'GAME' not in storage:
+        alert("Il faut choisir la partie au préalable")
+        return False
+
+    if 'GAME_ID' not in storage:
+        alert("ERREUR : identifiant de partie introuvable")
+        return False
+
+    # game status
+    play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
+    play_low.MY_SUB_PANEL <= html.BR()
+
+    pseudo = storage['PSEUDO']
+    game_id = storage['GAME_ID']
+
+    # role flag if applicable
+    if play_low.ROLE_ID is not None:
+        play_low.stack_role_flag(play_low.MY_SUB_PANEL)
+
+    play_low.MY_SUB_PANEL <= html.H3("Se mettre dans la partie (à condition de ne pas déjà y être, charge à l'arbitre d'attribuer ensuite un rôle)")
+
+    # join game
+
+    form = html.FORM()
+    input_join_game = html.INPUT(type="submit", value="Je rejoins la partie")
+    input_join_game.bind("click", join_game_callback)
+    form <= input_join_game
+    play_low.MY_SUB_PANEL <= form
+
+    # quit game
+
+    play_low.MY_SUB_PANEL <= html.H3("Se retirer de la partie (à condition d'y être déjà et de ne pas y avoir un rôle attribué)")
+
+    form = html.FORM()
+    input_quit_game = html.INPUT(type="submit", value="Je quitte la partie !")
+    input_quit_game.bind("click", quit_game_callback)
+    form <= input_quit_game
+    play_low.MY_SUB_PANEL <= form
+
+    # take mastering
+
+    play_low.MY_SUB_PANEL <= html.H3("Prendre l'arbitrage de la partie (à condition qu'il n'y ait pas déjà un arbitre)")
+
+    form = html.FORM()
+    input_join_game = html.INPUT(type="submit", value="Je prends l'arbitrage !")
+    input_join_game.bind("click", take_mastering_game_callback)
+    form <= input_join_game
+    play_low.MY_SUB_PANEL <= form
+
+    # quit mastering
+
+    play_low.MY_SUB_PANEL <= html.H3("Quitter l'arbitrage de cette partie (à condition d'en être l'arbitre)")
+
+    form = html.FORM()
+    input_join_game = html.INPUT(type="submit", value="Je démissionne de l'arbitrage !")
+    input_join_game.bind("click", quit_mastering_game_callback)
+    form <= input_join_game
+    play_low.MY_SUB_PANEL <= form
+
+    return True
+
+
 # the idea is not to loose the content of a message if not destinee were specified
 CONTENT_BACKUP = None
 
