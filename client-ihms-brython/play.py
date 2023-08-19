@@ -17,7 +17,7 @@ import play_play
 import play_master
 import play_other
 
-OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Paramètres', 'Retards', 'Superviser']
+OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Appariement', 'Paramètres', 'Retards', 'Superviser']
 
 ARRIVAL = None
 
@@ -54,10 +54,12 @@ def load_option(_, item_name, direct_last_moves=False):
         status = play_other.declare()
     if item_name == 'Voter':
         status = play_play.vote()
-    if item_name == 'Arbitrer':
-        status = play_master.game_master()
     if item_name == 'Noter':
         status = play_other.note()
+    if item_name == 'Arbitrer':
+        status = play_master.game_master()
+    if item_name == 'Appariement':
+        status = play_other.pairing()
     if item_name == 'Paramètres':
         status = play_other.show_game_parameters()
     if item_name == 'Retards':
