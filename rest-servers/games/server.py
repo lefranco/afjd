@@ -2034,8 +2034,8 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
 
-        # game not ongoing or game master : you get get a clear picture
-        if game.current_state != 1 or int(role_id) == 0:
+        # game not ongoing or game master or game actually finished : you get get a clear picture
+        if game.current_state != 1 or int(role_id) == 0 or (game.current_advancement % 5 == 4 and (game.current_advancement + 1) // 5 >= game.nb_max_cycles_to_play):
             del sql_executor
             data = {
                 'ownerships': ownership_dict,
@@ -2304,8 +2304,8 @@ class GameRestrictedReportRessource(flask_restful.Resource):  # type: ignore
 
         assert report is not None
 
-        # game not ongoing or game master : you get get a clear picture
-        if game.current_state != 1 or int(role_id) == 0:
+        # game not ongoing or game master or game actually finished : you get get a clear picture
+        if game.current_state != 1 or int(role_id) == 0 or (game.current_advancement % 5 == 4 and (game.current_advancement + 1) // 5 >= game.nb_max_cycles_to_play):
             # extract report data
             content = report.content
             del sql_executor
@@ -2447,8 +2447,8 @@ class GameRestrictedTransitionRessource(flask_restful.Resource):  # type: ignore
         the_orders = json.loads(transition.orders_json)
         report_txt = transition.report_txt
 
-        # game not ongoing or game master : you get get a clear picture
-        if game.current_state != 1 or int(role_id) == 0:
+        # game not ongoing or game master or game actually finished : you get get a clear picture
+        if game.current_state != 1 or int(role_id) == 0 or (game.current_advancement % 5 == 4 and (game.current_advancement + 1) // 5 >= game.nb_max_cycles_to_play):
             del sql_executor
             data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
             return data, 200
