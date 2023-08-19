@@ -6957,33 +6957,28 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
                 break
 
             iterations += 1
-            #  print(f"{iterations=} ", file=sys.stderr)
 
             # list remaining players
             players = map(int, set.union(*(map(set, table.values()))))  # type: ignore
-            #  print(f"{players=} ", file=sys.stderr)
 
             # count games per player
             nb_games = {p: len([g for g in table if p in table[g]]) for p in players}
-            #  print(f"{nb_games=} ", file=sys.stderr)
 
             # take the game  with most isolated players
 
             best_game = min(table, key=lambda g: max(nb_games[p] for p in table[g]))
-            #  print(f"{best_game=} ", file=sys.stderr)
             useful_games.append(best_game)
-            #  print(f"{useful_games=} ", file=sys.stderr)
 
             # reduce the problem
             # 1/ store selected players
             selected = set(table[best_game])
-            #  print(f"{selected=} ", file=sys.stderr)
+
             # 2/ remove selected players from their games
             for game_id in table:
                 table[game_id] = [p for p in table[game_id] if p not in selected]
+
             # 3/ remove useless games
             table = {k: v for k, v in table.items() if v}
-            #  print(f"{table=} ", file=sys.stderr)
 
         # use the user_id as role
         role_id = user_id
