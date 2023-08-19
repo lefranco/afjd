@@ -2034,8 +2034,8 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
 
-        # game master gets a clear picture
-        if int(role_id) == 0:
+        # game not ongoing or game master : you get get a clear picture
+        if game.current_state != 1 or int(role_id) == 0:
             del sql_executor
             data = {
                 'ownerships': ownership_dict,
@@ -2304,7 +2304,8 @@ class GameRestrictedReportRessource(flask_restful.Resource):  # type: ignore
 
         assert report is not None
 
-        if int(role_id) == 0:
+        # game not ongoing or game master : you get get a clear picture
+        if game.current_state != 1 or int(role_id) == 0:
             # extract report data
             content = report.content
             del sql_executor
@@ -2446,7 +2447,8 @@ class GameRestrictedTransitionRessource(flask_restful.Resource):  # type: ignore
         the_orders = json.loads(transition.orders_json)
         report_txt = transition.report_txt
 
-        if int(role_id) == 0:
+        # game not ongoing or game master : you get get a clear picture
+        if game.current_state != 1 or int(role_id) == 0:
             del sql_executor
             data = {'time_stamp': transition.time_stamp, 'situation': the_situation, 'orders': the_orders, 'report_txt': report_txt}
             return data, 200
