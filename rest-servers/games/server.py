@@ -265,6 +265,8 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
     for role, role_units in unit_dict.items():
         for unit in role_units:
             unit_owner[unit[1]] = int(role)
+    for fake in fake_units_list:
+        unit_owner[fake[2]] = fake[3]
 
     # see orders if my order or I see unit, passive (simple)
     orders_list2 = [o for o in orders_list if unit_owner[o[3]] == int(role_id) or (zone2region[str(o[3])] in seen_regions and (o[4] == 0 or zone2region[str(o[4])] in seen_regions) and (o[5] == 0 or zone2region[str(o[5])] in seen_regions))]
@@ -3616,7 +3618,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             orders_list2: typing.List[typing.List[int]] = []
             fake_units_list2: typing.List[typing.List[int]] = []
 
-            # this will update last paramet
+            # this will update last parameters
             apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
 
         # check orders (rough check)
