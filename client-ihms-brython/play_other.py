@@ -1117,6 +1117,7 @@ def pairing():
 
     if 'PSEUDO' not in storage:
         alert("Il faut se connecter au préalable")
+        play.load_option(None, 'Consulter')
         return False
 
     if 'GAME' not in storage:
