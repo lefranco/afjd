@@ -1214,6 +1214,7 @@ def edit_creators():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"Le joueur a été promu créateur : {messages}")
+            alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1256,6 +1257,7 @@ def edit_creators():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"Le joueur a été déchu du rôle de créateur : {messages}")
+            alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1378,6 +1380,7 @@ def edit_moderators():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"Le joueur a été promu modérateur : {messages}")
+            alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
             MY_SUB_PANEL.clear()
@@ -1420,6 +1423,7 @@ def edit_moderators():
 
             messages = "<br>".join(req_result['msg'].split('\n'))
             common.info_dialog(f"Le joueur a été déchu du rôle de modérateur : {messages}")
+            alert("Recharger la page pour une prise en compte dans le navigateur en cours d'utilisation")
 
             # back to where we started
             MY_SUB_PANEL.clear()
