@@ -133,7 +133,7 @@ class MyText(tkinter.Text):
 class Application(tkinter.Frame):
     """ Tkinter application """
 
-    def __init__(self, parameter_file: str, map_file: str, debug: bool, master: tkinter.Tk):
+    def __init__(self, parameter_file: str, map_file: str, master: tkinter.Tk):
 
         # standard stuff
         tkinter.Frame.__init__(self, master)
@@ -141,8 +141,7 @@ class Application(tkinter.Frame):
         self.grid()
 
         # actual creation of widgets
-        if not debug:
-            self.create_widgets(self, parameter_file, map_file)
+        self.create_widgets(self, parameter_file, map_file)
 
     def create_widgets(self, main_frame: tkinter.Frame, parameter_file: str, map_file: str) -> None:
         """ create all widgets for application """
@@ -241,12 +240,23 @@ def study_image(map_file: str, debug: bool, root: typing.Any) -> None:
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # pylint: disable=c-extension-no-member
     thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]  # pylint: disable=c-extension-no-member
 
+    # Filter using contour hierarchy
+    cnts, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2:]
+    hierarchy = hierarchy[0]
+    for component in zip(cnts, hierarchy):
+        currentContour = component[0]
+        currentHierarchy = component[1]
+        x,y,w,h = cv2.boundingRect(currentContour)
+        # Has inner contours which means it is unfilled
+        if currentHierarchy[3] > 0:
+            cv2.putText(image, 'Unfilled', (x,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (36,255,12), 2)
+        # No child which means it is filled
+        elif currentHierarchy[2] == -1:
+            cv2.putText(image, 'Filled', (x,y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (36,255,12), 2)
+
     if debug:
-        imgpil = PIL.Image.fromarray(thresh)
-        imgtk = PIL.ImageTk.PhotoImage(image=imgpil)
-        label = tkinter.Label(root, image=imgtk)
-        label.image = imgtk  # type: ignore # keep reference
-        label.grid(row=1, column=1, sticky='we')
+        cv2.imshow('image', thresh)
+        cv2.waitKey()
 
 
 def main_loop(debug: bool, parameter_file: str, map_file: str) -> None:
@@ -266,7 +276,7 @@ def main_loop(debug: bool, parameter_file: str, map_file: str) -> None:
     # create app
     root.title(window_name)
 
-    app = Application(parameter_file, map_file, debug, master=root)
+    app = Application(parameter_file, map_file, master=root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
 
     # for polygons : use opencv
