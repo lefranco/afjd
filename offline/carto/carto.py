@@ -25,6 +25,8 @@ INFO_WIDTH1 = 30
 INFO_HEIGHT2 = 20
 INFO_WIDTH2 = 30
 
+TITLE = "Détection de position de polygone..."
+
 
 class VersionRecord(typing.NamedTuple):
     """ All version related information  """
@@ -120,8 +122,8 @@ class Application(tkinter.Frame):
             information2 = f"{time.time()}"
             self.polygon.display(information2)
 
-        def detect_callback():
-            print("detect button was pressed")
+        def do_something_callback():
+            print("do_something button was pressed")
 
         self.menu_bar = tkinter.Menu(main_frame)
 
@@ -142,7 +144,7 @@ class Application(tkinter.Frame):
         frame_title = tkinter.Frame(main_frame)
         frame_title.grid(row=1, column=1, sticky='we')
 
-        label = tkinter.Label(frame_title, text="Détection des polygones et de position")
+        label = tkinter.Label(frame_title, text=TITLE)
         label.grid(row=1, column=1, sticky='we')
 
         # frame carto
@@ -189,7 +191,7 @@ class Application(tkinter.Frame):
         frame_buttons_information = tkinter.Frame(main_frame)
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
 
-        self.button = tkinter.Button(frame_buttons_information, text="detect", command=detect_callback)
+        self.button = tkinter.Button(frame_buttons_information, text="do something", command=do_something_callback)
         self.button.grid(row=1, column=1, sticky='we')
 
         self.mouse_pos = MyText(frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
@@ -231,6 +233,7 @@ def main_loop(parameter_file: str, map_file: str) -> None:
 
     app = Application(parameter_file, map_file, master=root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
+
 
     # tkinter main loop
     app.mainloop()
