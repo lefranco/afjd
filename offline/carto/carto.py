@@ -41,7 +41,10 @@ import tkinter.messagebox
 import tkinter.filedialog
 import tkinter.scrolledtext
 
-import cv2  #type: ignore
+import PIL.Image
+import PIL.ImageTk
+
+import cv2  # type: ignore
 
 # Important : name of file with version information
 VERSION_FILE_NAME = "./version.ini"
@@ -130,7 +133,7 @@ class MyText(tkinter.Text):
 class Application(tkinter.Frame):
     """ Tkinter application """
 
-    def __init__(self, parameter_file: str, map_file: str, master: tkinter.Tk):
+    def __init__(self, parameter_file: str, map_file: str, debug: bool, master: tkinter.Tk):
 
         # standard stuff
         tkinter.Frame.__init__(self, master)
@@ -138,7 +141,8 @@ class Application(tkinter.Frame):
         self.grid()
 
         # actual creation of widgets
-        self.create_widgets(self, parameter_file, map_file)
+        if not debug:
+            self.create_widgets(self, parameter_file, map_file)
 
     def create_widgets(self, main_frame: tkinter.Frame, parameter_file: str, map_file: str) -> None:
         """ create all widgets for application """
@@ -229,13 +233,24 @@ class Application(tkinter.Frame):
         self.master.quit()
 
 
-CV2_IMAGE = None
+def study_image(map_file: str, debug: bool, root: typing.Any) -> None:
+    """ study_image """
+
+    image = cv2.imread(map_file)  # pylint: disable=c-extension-no-member
+
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # pylint: disable=c-extension-no-member
+    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]  # pylint: disable=c-extension-no-member
+
+    if debug:
+        imgpil = PIL.Image.fromarray(thresh)
+        imgtk = PIL.ImageTk.PhotoImage(image=imgpil)
+        label = tkinter.Label(root, image=imgtk)
+        label.image = imgtk  # type: ignore # keep reference
+        label.grid(row=1, column=1, sticky='we')
 
 
-def main_loop(parameter_file: str, map_file: str) -> None:
+def main_loop(debug: bool, parameter_file: str, map_file: str) -> None:
     """ main_loop """
-
-    global CV2_IMAGE
 
     root = tkinter.Tk()
 
@@ -251,13 +266,11 @@ def main_loop(parameter_file: str, map_file: str) -> None:
     # create app
     root.title(window_name)
 
-    app = Application(parameter_file, map_file, master=root)
+    app = Application(parameter_file, map_file, debug, master=root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
 
     # for polygons : use opencv
-    tmp_image = cv2.imread(map_file)  # pylint: disable=c-extension-no-member
-    blue, green, red = cv2.split(tmp_image)  # pylint: disable=c-extension-no-member
-    CV2_IMAGE = cv2.merge((red, green, blue))  # pylint: disable=c-extension-no-member
+    study_image(map_file, debug, root)
 
     # tkinter main loop
     app.mainloop()
@@ -271,15 +284,17 @@ def main() -> None:
     """ main """
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('-d', '--debug', required=False, help='Show contours (debug)', action='store_true')
     parser.add_argument('-m', '--map_file', required=True, help='Load a map file at start')
     parser.add_argument('-p', '--parameter_file', required=True, help='Load a map file at start')
     args = parser.parse_args()
 
     #  load files at start
+    debug = args.debug
     map_file = args.map_file
     parameter_file = args.parameter_file
 
-    main_loop(parameter_file, map_file)
+    main_loop(debug, parameter_file, map_file)
 
     print("The End")
 
