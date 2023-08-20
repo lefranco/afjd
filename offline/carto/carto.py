@@ -28,6 +28,9 @@ import PIL.ImageTk
             if point_prec:
                 self.canvas.create_line(point_prec[0], point_prec[1], point[0], point[1], fill="yellow")
             point_prec = point
+
+opencv version is 4.6.0
+
 """
 
 import argparse
@@ -35,6 +38,7 @@ import typing
 import os
 import configparser
 import json
+import time
 
 import tkinter
 import tkinter.messagebox
@@ -151,11 +155,31 @@ class Application(tkinter.Frame):
 
         def click_callback(event: typing.Any) -> None:
 
-            information1 = f"clicked on x={event.x} y={event.y} !"
+            x_mouse, y_mouse = event.x, event.y
+
+            information1 = f"clicked on x={x_mouse} y={y_mouse} !"
             self.mouse_pos.display(information1)
 
-            information2 = "xxx"
-            self.polygon.display(information2)
+            information2 = ""
+            for x_pos, y_pos, w_val, h_val in CONTOUR_TABLE:
+                if x_pos <= x_mouse <= x_pos + w_val and y_pos <= y_mouse <= y_pos + h_val:
+
+                    # get poly created
+                    poly = CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)]
+
+                    # display on map
+                    point_prec: typing.Optional[typing.Tuple[int]] = None
+                    for point in poly:
+                        if point_prec:
+                            self.canvas.create_line(point_prec[0], point_prec[1], point[0], point[1], fill="yellow")
+                        point_prec = point
+
+                    # display as text
+                    information2 = str(poly)
+                    self.polygon.display(information2)
+
+                    time.sleep(1)
+
 
         def do_callback() -> None:
             print("do button was pressed")
@@ -235,28 +259,36 @@ class Application(tkinter.Frame):
 def study_image(map_file: str, debug: bool, root: typing.Any) -> None:
     """ study_image """
 
+    global CONTOUR_TABLE
+
     image = cv2.imread(map_file)  # pylint: disable=c-extension-no-member
 
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # pylint: disable=c-extension-no-member
-    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]  # pylint: disable=c-extension-no-member
+
+    _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)  # pylint: disable=c-extension-no-member
 
     # Filter using contour hierarchy
-    cnts, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2:]
-    hierarchy = hierarchy[0]
-    for component in zip(cnts, hierarchy):
-        currentContour = component[0]
-        currentHierarchy = component[1]
-        x,y,w,h = cv2.boundingRect(currentContour)
-        # Has inner contours which means it is unfilled
-        if currentHierarchy[3] > 0:
-            cv2.putText(image, 'Unfilled', (x,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (36,255,12), 2)
-        # No child which means it is filled
-        elif currentHierarchy[2] == -1:
-            cv2.putText(image, 'Filled', (x,y-5), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (36,255,12), 2)
+    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+    hierarchy_good = hierarchy[0]
+
+    for currentContour, currentHierarchy in zip(contours, hierarchy_good):
+
+        if currentHierarchy[3] > 0 or currentHierarchy[2] != -1:
+            continue
+
+        x_pos, y_pos, w_val, h_val = cv2.boundingRect(currentContour)
+
+        CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)] = list(map(lambda p:p[0], currentContour.tolist()))
 
     if debug:
+        print(CONTOUR_TABLE)
         cv2.imshow('image', thresh)
         cv2.waitKey()
+        exit()
+
+
+CONTOUR_TABLE = {}
 
 
 def main_loop(debug: bool, parameter_file: str, map_file: str) -> None:
