@@ -2,7 +2,10 @@
 
 """
 
-# Bellow code to display a cv image
+# Below code to display a cv image
+import PIL.Image
+import PIL.ImageTk
+
     imgpil = PIL.Image.fromarray(CV2_IMAGE)
     imgtk = PIL.ImageTk.PhotoImage(image=imgpil)
     label = tkinter.Label(main_frame, image=imgtk)
@@ -10,14 +13,14 @@
     label.grid(row=1, column=1, sticky='we')
 
 
-# Bellow code to put legends
+# Below code to put legends
     for zone_data in parameters_data['zones'].values():
         name = zone_data['name']
         x_legend_pos = zone_data['x_legend_pos']
         y_legend_pos = zone_data['y_legend_pos']
         self.canvas.create_text(x_legend_pos, y_legend_pos, font=("Arial", 8), text=name, fill='black')
 
-# Bellow code to put polygons
+# Below code to put polygons
     for zone_data in parameters_data['zone_areas'].values():
         area = zone_data['area']
         point_prec: typing.Optional[typing.Tuple[int]] = None
@@ -26,8 +29,6 @@
                 self.canvas.create_line(point_prec[0], point_prec[1], point[0], point[1], fill="yellow")
             point_prec = point
 """
-
-
 
 import argparse
 import typing
@@ -40,9 +41,7 @@ import tkinter.messagebox
 import tkinter.filedialog
 import tkinter.scrolledtext
 
-import cv2
-import PIL.Image
-import PIL.ImageTk
+import cv2  #type: ignore
 
 # Important : name of file with version information
 VERSION_FILE_NAME = "./version.ini"
@@ -114,15 +113,17 @@ VERSION_INFORMATION = load_version_information()
 class MyText(tkinter.Text):
     """ MyText """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: typing.Any, **kwargs: typing.Any) -> None:
         tkinter.Text.__init__(self, *args, **kwargs)
         self.config(state=tkinter.DISABLED)
 
-    def display(self, content: str):
+    def display(self, content: str) -> None:
+        """ display """
+
         self.config(state=tkinter.NORMAL)
         self.delete(1.0, tkinter.END)
-        self.insert(tkinter.END, content)  # type: ignore
-        self.see("end")  # type: ignore
+        self.insert(tkinter.END, content)
+        self.see("end")
         self.config(state=tkinter.DISABLED)
 
 
@@ -145,7 +146,7 @@ class Application(tkinter.Frame):
         def about() -> None:
             tkinter.messagebox.showinfo("About", str(VERSION_INFORMATION))
 
-        def click_callback(event):
+        def click_callback(event: typing.Any) -> None:
 
             information1 = f"clicked on x={event.x} y={event.y} !"
             self.mouse_pos.display(information1)
@@ -153,8 +154,8 @@ class Application(tkinter.Frame):
             information2 = "xxx"
             self.polygon.display(information2)
 
-        def convert_callback():
-            print("convert button was pressed")
+        def do_callback() -> None:
+            print("do button was pressed")
 
         self.menu_bar = tkinter.Menu(main_frame)
 
@@ -167,7 +168,7 @@ class Application(tkinter.Frame):
         self.menu_help.add_command(label="About...", command=about)
         self.menu_bar.add_cascade(label="Help", menu=self.menu_help)
 
-        self.master.config(menu=self.menu_bar)
+        self.master.config(menu=self.menu_bar)  # type: ignore
 
         # frame title
         # -----------
@@ -205,7 +206,7 @@ class Application(tkinter.Frame):
         frame_buttons_information = tkinter.Frame(main_frame)
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
 
-        self.button = tkinter.Button(frame_buttons_information, text="convert", command=convert_callback)
+        self.button = tkinter.Button(frame_buttons_information, text="do", command=do_callback)
         self.button.grid(row=1, column=1, sticky='we')
 
         self.mouse_pos = MyText(frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
@@ -254,9 +255,9 @@ def main_loop(parameter_file: str, map_file: str) -> None:
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
 
     # for polygons : use opencv
-    tmp_image = cv2.imread(map_file)
-    blue, green, red = cv2.split(tmp_image)
-    CV2_IMAGE = cv2.merge((red, green, blue))
+    tmp_image = cv2.imread(map_file)  # pylint: disable=c-extension-no-member
+    blue, green, red = cv2.split(tmp_image)  # pylint: disable=c-extension-no-member
+    CV2_IMAGE = cv2.merge((red, green, blue))  # pylint: disable=c-extension-no-member
 
     # tkinter main loop
     app.mainloop()
@@ -284,6 +285,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-
     main()
-
