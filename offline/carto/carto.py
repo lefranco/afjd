@@ -1,18 +1,48 @@
 #!/usr/bin/env python3
 
-""" an ihm based on tkinter """
+"""
+
+# Bellow code to display a cv image
+    imgpil = PIL.Image.fromarray(CV2_IMAGE)
+    imgtk = PIL.ImageTk.PhotoImage(image=imgpil)
+    label = tkinter.Label(main_frame, image=imgtk)
+    label.image = imgtk  # type: ignore # keep reference
+    label.grid(row=1, column=1, sticky='we')
+
+
+# Bellow code to put legends
+    for zone_data in parameters_data['zones'].values():
+        name = zone_data['name']
+        x_legend_pos = zone_data['x_legend_pos']
+        y_legend_pos = zone_data['y_legend_pos']
+        self.canvas.create_text(x_legend_pos, y_legend_pos, font=("Arial", 8), text=name, fill='black')
+
+# Bellow code to put polygons
+    for zone_data in parameters_data['zone_areas'].values():
+        area = zone_data['area']
+        point_prec: typing.Optional[typing.Tuple[int]] = None
+        for point in area:
+            if point_prec:
+                self.canvas.create_line(point_prec[0], point_prec[1], point[0], point[1], fill="yellow")
+            point_prec = point
+"""
+
+
 
 import argparse
 import typing
 import os
 import configparser
 import json
-import time
 
 import tkinter
 import tkinter.messagebox
 import tkinter.filedialog
 import tkinter.scrolledtext
+
+import cv2
+import PIL.Image
+import PIL.ImageTk
 
 # Important : name of file with version information
 VERSION_FILE_NAME = "./version.ini"
@@ -82,6 +112,7 @@ VERSION_INFORMATION = load_version_information()
 
 
 class MyText(tkinter.Text):
+    """ MyText """
 
     def __init__(self, *args, **kwargs):
         tkinter.Text.__init__(self, *args, **kwargs)
@@ -119,11 +150,11 @@ class Application(tkinter.Frame):
             information1 = f"clicked on x={event.x} y={event.y} !"
             self.mouse_pos.display(information1)
 
-            information2 = f"{time.time()}"
+            information2 = "xxx"
             self.polygon.display(information2)
 
-        def do_something_callback():
-            print("do_something button was pressed")
+        def convert_callback():
+            print("convert button was pressed")
 
         self.menu_bar = tkinter.Menu(main_frame)
 
@@ -168,30 +199,13 @@ class Application(tkinter.Frame):
         self.filename = tkinter.PhotoImage(file=map_file)
         self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
 
-        if False:
-            # put legends
-            for zone_data in parameters_data['zones'].values():
-                name = zone_data['name']
-                x_legend_pos = zone_data['x_legend_pos']
-                y_legend_pos = zone_data['y_legend_pos']
-                self.canvas.create_text(x_legend_pos, y_legend_pos, font=("Arial", 8), text=name, fill='black')
-
-            # put polygons
-            for zone_data in parameters_data['zone_areas'].values():
-                area = zone_data['area']
-                point_prec = None
-                for point in area:
-                    if point_prec:
-                        self.canvas.create_line(point_prec[0], point_prec[1], point[0], point[1], fill="yellow")
-                    point_prec = point
-
         # frame buttons and information
         # -----------
 
         frame_buttons_information = tkinter.Frame(main_frame)
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
 
-        self.button = tkinter.Button(frame_buttons_information, text="do something", command=do_something_callback)
+        self.button = tkinter.Button(frame_buttons_information, text="convert", command=convert_callback)
         self.button.grid(row=1, column=1, sticky='we')
 
         self.mouse_pos = MyText(frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
@@ -214,8 +228,13 @@ class Application(tkinter.Frame):
         self.master.quit()
 
 
+CV2_IMAGE = None
+
+
 def main_loop(parameter_file: str, map_file: str) -> None:
     """ main_loop """
+
+    global CV2_IMAGE
 
     root = tkinter.Tk()
 
@@ -234,6 +253,10 @@ def main_loop(parameter_file: str, map_file: str) -> None:
     app = Application(parameter_file, map_file, master=root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
 
+    # for polygons : use opencv
+    tmp_image = cv2.imread(map_file)
+    blue, green, red = cv2.split(tmp_image)
+    CV2_IMAGE = cv2.merge((red, green, blue))
 
     # tkinter main loop
     app.mainloop()
@@ -263,3 +286,4 @@ def main() -> None:
 if __name__ == "__main__":
 
     main()
+
