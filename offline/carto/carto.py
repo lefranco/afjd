@@ -121,18 +121,28 @@ VERSION_INFORMATION = load_version_information()
 class MyText(tkinter.Text):
     """ MyText """
 
-    def __init__(self, *args: typing.Any, **kwargs: typing.Any) -> None:
+    def __init__(self, root: typing.Any, *args: typing.Any, **kwargs: typing.Any) -> None:
         tkinter.Text.__init__(self, *args, **kwargs)
         self.config(state=tkinter.DISABLED)
+        self._root = root
+        self._content = ""
 
     def display(self, content: str) -> None:
         """ display """
+
+        self._content = content
 
         self.config(state=tkinter.NORMAL)
         self.delete(1.0, tkinter.END)
         self.insert(tkinter.END, content)
         #  self.see("end")
         self.config(state=tkinter.DISABLED)
+
+    def clipboard(self) -> None:
+        """ clipboard """
+
+        self._root.clipboard_clear()
+        self._root.clipboard_append(self._content)
 
 
 class Application(tkinter.Frame):
@@ -197,10 +207,10 @@ class Application(tkinter.Frame):
                 break
 
         def copy_position_callback() -> None:
-            print("copy position button was pressed")
+            self.mouse_pos.clipboard()  # type: ignore
 
         def copy_area_callback() -> None:
-            print("copy area button was pressed")
+            self.polygon.clipboard()  # type: ignore
 
         self.menu_bar = tkinter.Menu(main_frame)
 
@@ -251,13 +261,13 @@ class Application(tkinter.Frame):
         frame_buttons_information = tkinter.Frame(main_frame)
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
 
-        self.mouse_pos = MyText(frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
+        self.mouse_pos = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
         self.mouse_pos.grid(row=1, column=1, sticky='we')
 
         self.button = tkinter.Button(frame_buttons_information, text="copy position", command=copy_position_callback)
         self.button.grid(row=2, column=1, sticky='we')
 
-        self.polygon = MyText(frame_buttons_information, height=INFO_HEIGHT2, width=INFO_WIDTH2)
+        self.polygon = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT2, width=INFO_WIDTH2)
         self.polygon.grid(row=3, column=1, sticky='we')
 
         self.button = tkinter.Button(frame_buttons_information, text="copy area", command=copy_area_callback)
