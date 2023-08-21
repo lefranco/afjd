@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 """
 
 # Below code to display a cv image
@@ -38,17 +39,17 @@ import typing
 import os
 import configparser
 import json
-import time
+import sys
+import itertools
 
 import tkinter
 import tkinter.messagebox
 import tkinter.filedialog
 import tkinter.scrolledtext
 
-import PIL.Image
-import PIL.ImageTk
-
 import cv2  # type: ignore
+
+import geometry
 
 # Important : name of file with version information
 VERSION_FILE_NAME = "./version.ini"
@@ -130,7 +131,7 @@ class MyText(tkinter.Text):
         self.config(state=tkinter.NORMAL)
         self.delete(1.0, tkinter.END)
         self.insert(tkinter.END, content)
-        self.see("end")
+        #  self.see("end")
         self.config(state=tkinter.DISABLED)
 
 
@@ -157,32 +158,49 @@ class Application(tkinter.Frame):
 
             x_mouse, y_mouse = event.x, event.y
 
-            information1 = f"clicked on x={x_mouse} y={y_mouse} !"
-            self.mouse_pos.display(information1)
+            information1 = f'"xpos": {x_mouse},\n"y_pos": {y_mouse}'
+            self.mouse_pos.display(information1)  # type: ignore
 
             information2 = ""
+
+            # erase
+            self.polygon.display(information2)  # type: ignore
+
             for x_pos, y_pos, w_val, h_val in CONTOUR_TABLE:
-                if x_pos <= x_mouse <= x_pos + w_val and y_pos <= y_mouse <= y_pos + h_val:
 
-                    # get poly created
-                    poly = CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)]
+                # must be inside box
+                if not x_pos <= x_mouse <= x_pos + w_val and y_pos <= y_mouse <= y_pos + h_val:
+                    continue
 
-                    # display on map
-                    point_prec: typing.Optional[typing.Tuple[int]] = None
-                    for point in poly:
-                        if point_prec:
-                            self.canvas.create_line(point_prec[0], point_prec[1], point[0], point[1], fill="yellow")
-                        point_prec = point
+                # get poly created
+                poly = CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)]
 
-                    # display as text
-                    information2 = str(poly)
-                    self.polygon.display(information2)
+                # must be inside poly
+                designated_pos = geometry.PositionRecord(x_pos=x_mouse, y_pos=y_mouse)
+                area_poly = geometry.Polygon([geometry.PositionRecord(*t) for t in poly])
+                if not area_poly.is_inside_me(designated_pos):
+                    continue
 
-                    time.sleep(1)
+                # redraw map
+                self.filename = tkinter.PhotoImage(file=map_file)  # pylint: disable=attribute-defined-outside-init
+                self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
 
+                # display on map
+                for point1, point2 in itertools.pairwise(poly):
+                    self.canvas.create_line(point1[0], point1[1], point2[0], point2[1], fill="yellow")
 
-        def do_callback() -> None:
-            print("do button was pressed")
+                # display as text
+                information2 = str(poly)
+                self.polygon.display(information2)  # type: ignore
+
+                # only first
+                break
+
+        def copy_position_callback() -> None:
+            print("copy position button was pressed")
+
+        def copy_area_callback() -> None:
+            print("copy area button was pressed")
 
         self.menu_bar = tkinter.Menu(main_frame)
 
@@ -233,17 +251,21 @@ class Application(tkinter.Frame):
         frame_buttons_information = tkinter.Frame(main_frame)
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
 
-        self.button = tkinter.Button(frame_buttons_information, text="do", command=do_callback)
-        self.button.grid(row=1, column=1, sticky='we')
-
         self.mouse_pos = MyText(frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
-        self.mouse_pos.grid(row=2, column=1, sticky='we')
+        self.mouse_pos.grid(row=1, column=1, sticky='we')
+
+        self.button = tkinter.Button(frame_buttons_information, text="copy position", command=copy_position_callback)
+        self.button.grid(row=2, column=1, sticky='we')
 
         self.polygon = MyText(frame_buttons_information, height=INFO_HEIGHT2, width=INFO_WIDTH2)
         self.polygon.grid(row=3, column=1, sticky='we')
 
+        self.button = tkinter.Button(frame_buttons_information, text="copy area", command=copy_area_callback)
+        self.button.grid(row=4, column=1, sticky='we')
+
     def menu_reload_map(self) -> None:
         """ as it says """
+
         # TODO
         print("should reload map")
 
@@ -256,7 +278,7 @@ class Application(tkinter.Frame):
         self.master.quit()
 
 
-def study_image(map_file: str, debug: bool, root: typing.Any) -> None:
+def study_image(map_file: str, debug: bool) -> None:
     """ study_image """
 
     global CONTOUR_TABLE
@@ -267,28 +289,26 @@ def study_image(map_file: str, debug: bool, root: typing.Any) -> None:
 
     _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)  # pylint: disable=c-extension-no-member
 
-    # Filter using contour hierarchy
-    contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    # Filter using contour h
+    contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # pylint: disable=c-extension-no-member
 
-    hierarchy_good = hierarchy[0]
+    for current_contour in contours:
 
-    for currentContour, currentHierarchy in zip(contours, hierarchy_good):
+        x_pos, y_pos, w_val, h_val = cv2.boundingRect(current_contour)  # pylint: disable=c-extension-no-member
 
-        if currentHierarchy[3] > 0 or currentHierarchy[2] != -1:
-            continue
+        CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)] = list(map(lambda p: p[0], current_contour.tolist()))  # type: ignore
 
-        x_pos, y_pos, w_val, h_val = cv2.boundingRect(currentContour)
-
-        CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)] = list(map(lambda p:p[0], currentContour.tolist()))
+    # sort to put smaller first bounding rect first
+    CONTOUR_TABLE = {k: CONTOUR_TABLE[k] for k in sorted(CONTOUR_TABLE, key=lambda b: b[2] * b[3])}
 
     if debug:
         print(CONTOUR_TABLE)
-        cv2.imshow('image', thresh)
-        cv2.waitKey()
-        exit()
+        cv2.imshow('image', thresh)  # pylint: disable=c-extension-no-member
+        cv2.waitKey()  # pylint: disable=c-extension-no-member
+        sys.exit()
 
 
-CONTOUR_TABLE = {}
+CONTOUR_TABLE: typing.Dict[typing.Tuple[int, int, int, int], typing.List[int]] = {}
 
 
 def main_loop(debug: bool, parameter_file: str, map_file: str) -> None:
@@ -312,7 +332,7 @@ def main_loop(debug: bool, parameter_file: str, map_file: str) -> None:
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
 
     # for polygons : use opencv
-    study_image(map_file, debug, root)
+    study_image(map_file, debug)
 
     # tkinter main loop
     app.mainloop()
