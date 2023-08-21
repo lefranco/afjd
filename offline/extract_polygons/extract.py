@@ -140,7 +140,7 @@ class Application(tkinter.Frame):
 
             x_mouse, y_mouse = event.x, event.y
 
-            information1 = f'"xpos": {x_mouse},\n"y_pos": {y_mouse}'
+            information1 = f'"x_pos": {x_mouse},\n"y_pos": {y_mouse},\n"x_legend_pos": {x_mouse},\n"y_legend_pos": {y_mouse - 14}'
             self.mouse_pos.display(information1)
 
             information2 = ""
@@ -282,6 +282,8 @@ def study_image(map_file: str, debug: bool) -> None:
     """ study_image """
 
     global CONTOUR_TABLE
+
+    CONTOUR_TABLE = {}
 
     image = cv2.imread(map_file)  # pylint: disable=c-extension-no-member
 
