@@ -242,12 +242,10 @@ class Application(tkinter.Frame):
 
         with open(parameter_file, "r", encoding="utf-8") as read_file:
             parameters_data = json.load(read_file)
-        width = parameters_data['map']['width']
-        height = parameters_data['map']['height']
 
-        print(f"Map : {width=} {height=}")
+        self.filename = tkinter.PhotoImage(file=map_file)
 
-        self.canvas = tkinter.Canvas(frame_carto, width=width, height=height)
+        self.canvas = tkinter.Canvas(frame_carto, width=self.filename.width(), height=self.filename.height())
         self.canvas.grid(row=1, column=1)
 
         self.canvas.bind("<Button-1>", click_callback)
@@ -330,7 +328,7 @@ def main_loop(debug: bool, parameter_file: str, map_file: str) -> None:
     root.geometry("+0+0")
     root.resizable(False, False)
 
-    print(f"Working now with file parameter file {parameter_file} and map file {map_file}...")
+    print(f"Working now with file parameter file '{parameter_file}' and map file '{map_file}'...")
 
     # use description of first register as overall title
     window_name = "Diplomania map zone extracting tool"
