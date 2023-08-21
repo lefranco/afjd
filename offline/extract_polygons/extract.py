@@ -3,38 +3,6 @@
 
 """
 
-# Below code to display a cv image
-import PIL.Image
-import PIL.ImageTk
-
-    imgpil = PIL.Image.fromarray(CV2_IMAGE)
-    imgtk = PIL.ImageTk.PhotoImage(image=imgpil)
-    label = tkinter.Label(main_frame, image=imgtk)
-    label.image = imgtk  # type: ignore # keep reference
-    label.grid(row=1, column=1, sticky='we')
-
-
-# Below code to put legends
-    for zone_data in parameters_data['zones'].values():
-        name = zone_data['name']
-        x_legend_pos = zone_data['x_legend_pos']
-        y_legend_pos = zone_data['y_legend_pos']
-        self.canvas.create_text(x_legend_pos, y_legend_pos, font=("Arial", 8), text=name, fill='black')
-
-# Below code to put polygons
-    for zone_data in parameters_data['zone_areas'].values():
-        area = zone_data['area']
-        point_prec: typing.Optional[typing.Tuple[int]] = None
-        for point in area:
-            if point_prec:
-                self.canvas.create_line(point_prec[0], point_prec[1], point[0], point[1], fill="yellow")
-            point_prec = point
-
-# Below code to read parameters
-import json
-    with open(parameter_file, "r", encoding="utf-8") as read_file:
-        parameters_data = json.load(read_file)
-
 opencv version is 4.6.0
 
 """
@@ -385,6 +353,10 @@ def main() -> None:
     #  load files at start
     debug = args.debug
     map_file = args.map_file
+
+    if not os.path.exists(map_file):
+        print(f"File '{map_file}' does not seem to exist, please advise !", file=sys.stderr)
+        sys.exit(-1)
 
     main_loop(debug, map_file)
 
