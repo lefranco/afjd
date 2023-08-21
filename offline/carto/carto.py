@@ -30,6 +30,11 @@ import PIL.ImageTk
                 self.canvas.create_line(point_prec[0], point_prec[1], point[0], point[1], fill="yellow")
             point_prec = point
 
+# Below code to read parameters
+import json
+    with open(parameter_file, "r", encoding="utf-8") as read_file:
+        parameters_data = json.load(read_file)
+
 opencv version is 4.6.0
 
 """
@@ -38,7 +43,6 @@ import argparse
 import typing
 import os
 import configparser
-import json
 import sys
 import itertools
 
@@ -148,7 +152,7 @@ class MyText(tkinter.Text):
 class Application(tkinter.Frame):
     """ Tkinter application """
 
-    def __init__(self, parameter_file: str, map_file: str, master: tkinter.Tk):
+    def __init__(self, map_file: str, master: tkinter.Tk):
 
         # standard stuff
         tkinter.Frame.__init__(self, master)
@@ -156,9 +160,9 @@ class Application(tkinter.Frame):
         self.grid()
 
         # actual creation of widgets
-        self.create_widgets(self, parameter_file, map_file)
+        self.create_widgets(self, map_file)
 
-    def create_widgets(self, main_frame: tkinter.Frame, parameter_file: str, map_file: str) -> None:
+    def create_widgets(self, main_frame: tkinter.Frame, map_file: str) -> None:
         """ create all widgets for application """
 
         def about() -> None:
@@ -176,6 +180,10 @@ class Application(tkinter.Frame):
             # erase
             self.polygon.display(information2)  # type: ignore
 
+            # redraw map
+            self.filename = tkinter.PhotoImage(file=map_file)  # pylint: disable=attribute-defined-outside-init
+            self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)  # type: ignore
+
             for x_pos, y_pos, w_val, h_val in CONTOUR_TABLE:
 
                 # must be inside box
@@ -187,17 +195,13 @@ class Application(tkinter.Frame):
 
                 # must be inside poly
                 designated_pos = geometry.PositionRecord(x_pos=x_mouse, y_pos=y_mouse)
-                area_poly = geometry.Polygon([geometry.PositionRecord(*t) for t in poly])
+                area_poly = geometry.Polygon([geometry.PositionRecord(*t) for t in poly])  # type: ignore
                 if not area_poly.is_inside_me(designated_pos):
                     continue
 
-                # redraw map
-                self.filename = tkinter.PhotoImage(file=map_file)  # pylint: disable=attribute-defined-outside-init
-                self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
-
                 # display on map
-                for point1, point2 in itertools.pairwise(poly):
-                    self.canvas.create_line(point1[0], point1[1], point2[0], point2[1], fill="yellow")
+                flat_points = itertools.chain.from_iterable(poly)
+                self.canvas.create_polygon(*flat_points, fill="red")  # type: ignore
 
                 # display as text
                 information2 = str(poly)
@@ -205,6 +209,10 @@ class Application(tkinter.Frame):
 
                 # only first
                 break
+
+            else:
+                information2 = "Failed!"
+                self.polygon.display(information2)  # type: ignore
 
         def copy_position_callback() -> None:
             self.mouse_pos.clipboard()  # type: ignore
@@ -240,14 +248,12 @@ class Application(tkinter.Frame):
         frame_carto = tkinter.Frame(main_frame)
         frame_carto.grid(row=2, column=1, sticky='we')
 
-        with open(parameter_file, "r", encoding="utf-8") as read_file:
-            parameters_data = json.load(read_file)
-
         self.filename = tkinter.PhotoImage(file=map_file)
 
         self.canvas = tkinter.Canvas(frame_carto, width=self.filename.width(), height=self.filename.height())
         self.canvas.grid(row=1, column=1)
 
+        # clicking
         self.canvas.bind("<Button-1>", click_callback)
 
         self.filename = tkinter.PhotoImage(file=map_file)
@@ -319,7 +325,7 @@ def study_image(map_file: str, debug: bool) -> None:
 CONTOUR_TABLE: typing.Dict[typing.Tuple[int, int, int, int], typing.List[int]] = {}
 
 
-def main_loop(debug: bool, parameter_file: str, map_file: str) -> None:
+def main_loop(debug: bool, map_file: str) -> None:
     """ main_loop """
 
     root = tkinter.Tk()
@@ -328,7 +334,7 @@ def main_loop(debug: bool, parameter_file: str, map_file: str) -> None:
     root.geometry("+0+0")
     root.resizable(False, False)
 
-    print(f"Working now with file parameter file '{parameter_file}' and map file '{map_file}'...")
+    print(f"Working now with map file '{map_file}'...")
 
     # use description of first register as overall title
     window_name = "Diplomania map zone extracting tool"
@@ -336,7 +342,7 @@ def main_loop(debug: bool, parameter_file: str, map_file: str) -> None:
     # create app
     root.title(window_name)
 
-    app = Application(parameter_file, map_file, master=root)
+    app = Application(map_file, master=root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
 
     # for polygons : use opencv
@@ -356,15 +362,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', required=False, help='Show contours (debug)', action='store_true')
     parser.add_argument('-m', '--map_file', required=True, help='Load a map file at start')
-    parser.add_argument('-p', '--parameter_file', required=True, help='Load a map file at start')
     args = parser.parse_args()
 
     #  load files at start
     debug = args.debug
     map_file = args.map_file
-    parameter_file = args.parameter_file
 
-    main_loop(debug, parameter_file, map_file)
+    main_loop(debug, map_file)
 
     print("The End")
 
