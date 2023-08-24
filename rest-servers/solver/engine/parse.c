@@ -399,15 +399,11 @@ void readtoken(char *word, TOKEN *tok) {
 			return;
 		}
 		if (!strcmp(word, "CO")) {
-			cherchechaine(__FILE__, 3, buf, 0); /*"La carte standard DIPLOMATIE n'a pas de cote ouest"*/
-			avertir(buf);
 			tok->id = UNECOTEOUEST;
 			(void) strcpy(tok->val, "CO");
 			return;
 		}
 		if (!strcmp(word, "WC")) {
-			cherchechaine(__FILE__, 4, buf, 0); /*"La carte standard DIPLOMATIE n'a pas de cote ouest"*/
-			avertir(buf);
 			tok->id = UNECOTEOUEST;
 			(void) strcpy(tok->val, "WC");
 			return;

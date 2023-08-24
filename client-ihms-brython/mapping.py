@@ -390,11 +390,12 @@ class Zone(Highliteable, Renderable):
 
         path = self._variant.path_table[self]
         ctx.beginPath()
-        for n, p in enumerate(path.points):  # pylint: disable=invalid-name
-            if not n:
-                ctx.moveTo(p.x_pos, p.y_pos)
-            else:
-                ctx.lineTo(p.x_pos, p.y_pos)
+        first_point = path.points[0]
+        ctx.moveTo(first_point.x_pos, first_point.y_pos)
+        for point in path.points[1:]:
+            ctx.lineTo(point.x_pos, point.y_pos)
+        ctx.lineTo(first_point.x_pos, first_point.y_pos)
+
         stroke_color = outline_colour
         ctx.strokeStyle = stroke_color.str_value()
         ctx.stroke(); ctx.closePath()
