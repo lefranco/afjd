@@ -42,6 +42,7 @@ class AutomatonStateEnum:
 
 
 # this will come from variant
+VARIANT_NAME = None
 INTERFACE_CHOSEN = None
 VARIANT_DATA = None
 POSITION_DATA = None
@@ -87,23 +88,24 @@ def create_initial_position():
     global VARIANT_DATA
     global POSITION_DATA
     global ORDERS_DATA
+    global VARIANT_NAME
 
     # get variant
-    variant_name = get_variant()
+    VARIANT_NAME = get_variant()
 
     # from variant name get variant content
-    variant_content_loaded = common.game_variant_content_reload(variant_name)
+    variant_content_loaded = common.game_variant_content_reload(VARIANT_NAME)
     if not variant_content_loaded:
         return
 
     # selected interface (user choice)
-    INTERFACE_CHOSEN = interface.get_interface_from_variant(variant_name)
+    INTERFACE_CHOSEN = interface.get_interface_from_variant(VARIANT_NAME)
 
     # from display chose get display parameters
-    parameters_read = common.read_parameters(variant_name, INTERFACE_CHOSEN)
+    parameters_read = common.read_parameters(VARIANT_NAME, INTERFACE_CHOSEN)
 
     # build variant data
-    VARIANT_DATA = mapping.Variant(variant_name, variant_content_loaded, parameters_read)
+    VARIANT_DATA = mapping.Variant(VARIANT_NAME, variant_content_loaded, parameters_read)
 
     # get the position
     position_loaded = {'ownerships': {}, 'units': {}, 'forbiddens': {}, 'dislodged_ones': {}}
@@ -125,8 +127,8 @@ def import_position(new_position_data):
     global ORDERS_DATA
 
     # make sure we are ready
-    if not POSITION_DATA:
-        create_initial_position()
+    # this will fill global 'VARIANT_NAME'
+    create_initial_position()
 
     # get loaded units
     loaded_units = new_position_data.save_json()
@@ -446,9 +448,6 @@ def sandbox():
                 report_window = common.make_report_window(fake_report_loaded)
                 display_left <= report_window
 
-        # get variant
-        variant_name = get_variant()
-
         names_dict = VARIANT_DATA.extract_names()
         names_dict_json = json.dumps(names_dict)
 
@@ -464,7 +463,7 @@ def sandbox():
         orders_list_dict_json = json.dumps(orders_list_dict)
 
         json_dict = {
-            'variant_name': variant_name,
+            'variant_name': VARIANT_NAME,
             'names': names_dict_json,
             'units': units_list_dict_json,
             'orders': orders_list_dict_json,
@@ -1116,8 +1115,12 @@ def sandbox():
     # starts here
 
     # make sure we are ready
-    if not POSITION_DATA:
-        create_initial_position()
+    # this will fill global 'VARIANT_NAME'
+    create_initial_position()
+
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.DIV(f"Variante : {VARIANT_NAME}", Class='instruction')
+    MY_SUB_PANEL <= html.BR()
 
     # finds data about the dragged unit
     unit_info_table = {}
@@ -1178,6 +1181,10 @@ def sandbox():
     display_very_left <= html.BR()
 
     display_very_left <= html.BR()
+    display_very_left <= html.DIV("Pour tester une autre variante, sélectionnez une partie de la variante en question au préalable", Class='important')
+    display_very_left <= html.BR()
+
+    display_very_left <= html.BR()
     display_very_left <= html.DIV("Pour avoir la situation d'une partie, aller dans la partie puis cliquer 'exporter vers le bac à sable'", Class='note')
     display_very_left <= html.BR()
 
@@ -1210,11 +1217,8 @@ def sandbox():
     canvas.bind("mousemove", callback_canvas_mouse_move)
     canvas.bind("mouseleave", callback_canvas_mouse_leave)
 
-    # get variant
-    variant_name = get_variant()
-
     # put background (this will call the callback that display the whole map)
-    img = common.read_image(variant_name, INTERFACE_CHOSEN)
+    img = common.read_image(VARIANT_NAME, INTERFACE_CHOSEN)
     img.bind('load', lambda _: callback_render(True))
 
     # left side
