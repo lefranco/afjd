@@ -70,8 +70,11 @@ def sender_threaded_procedure() -> None:
 
     def will_retry(exception: str) -> bool:
         """ will_retry """
-        # put failed message back on queue (only if not bad address)
+        # do not put failed message back on queue if bad address
         if exception.find("Recipient address rejected: Domain not found") != -1:
+            return False
+        # do not put failed message back on queue if surrogate error (emoji)
+        if exception.find("surrogates not allowed") != -1:
             return False
         return True
 
@@ -91,6 +94,9 @@ def sender_threaded_procedure() -> None:
 
             # send
             status, exception = mailer.send_mail(subject, body, addressee, reply_to)
+
+            ##  import sys
+            ##  print(f"{subject=},  {addressee=}, {reply_to=}  -> {status=} {exception=}", file=sys.stderr)
 
             # send ok
             if status:
@@ -119,6 +125,8 @@ def sender_threaded_procedure() -> None:
             if pseudo is not None:
                 body2 += f"Compte utilisé : {pseudo}"
                 body2 += "\n"
+            body2 += f"Répondre à : {reply_to}"
+            body2 += "\n"
             body2 += f"Exception produite : {exception}"
             body2 += "\n"
             body2 += f"Vais retenter : {'oui' if will_retry_message else 'non'}"
