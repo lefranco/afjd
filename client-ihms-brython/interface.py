@@ -10,6 +10,7 @@ INTERFACE_TABLE = {
     'standard': ['diplomania', 'diplomania_daltoniens', 'hasbro'],
     'grandeguerre': ['diplomania'],
     'brouillard': ['diplomania'],
+    'hundred': ['diplomania'],
 }
 
 
