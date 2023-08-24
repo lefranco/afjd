@@ -95,8 +95,6 @@ heuris.c#12#The neighbouring are between compatible province (or area within pro
 heuris.c#13#Symetry neighbouring is respected.
 parse.c#1#Use '-' rather than 'TO'
 parse.c#2#Use 'H' rather than 'T'
-parse.c#3#Standard DIPLOMACY map does not have a west coast
-parse.c#4#Standard DIPLOMACY map does not have a west coast
 parse.c#5#Do not use this unexpected caracter : '%1' (%2)
 parse.c#6#Too many lines
 parse.c#7#Too long word

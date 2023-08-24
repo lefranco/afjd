@@ -45,16 +45,16 @@
             "adjective_name": "anglais",
             "letter_name": "E",
             "red": [
-                47,
-                131
+                206,
+                226
             ],
             "green": [
-                138,
-                185
+                15,
+                35
             ],
             "blue": [
-                170,
-                204
+                37,
+                57
             ]
         },
         "2": {
@@ -62,16 +62,16 @@
             "adjective_name": "francais",
             "letter_name": "F",
             "red": [
-                83,
-                152
+                19,
+                39
             ],
             "green": [
-                210,
-                228
+                83,
+                103
             ],
             "blue": [
-                224,
-                237
+                180,
+                200
             ]
         },
         "3": {
@@ -79,16 +79,16 @@
             "adjective_name": "bourguigon",
             "letter_name": "B",
             "red": [
-                173,
-                206
+                51,
+                71
             ],
             "green": [
-                122,
-                176
+                51,
+                71
             ],
             "blue": [
-                55,
-                135
+                51,
+                71
             ]
         }
     },
@@ -127,9 +127,9 @@
             "name": "Anj",
             "full_name": "Anjou",
 			"x_pos": 252,
-			"y_pos": 391,
+			"y_pos": 394,
 			"x_legend_pos": 252,
-			"y_legend_pos": 377
+			"y_legend_pos": 380
         },
         "4": {
             "name": "Ara",
@@ -174,18 +174,18 @@
         "9": {
             "name": "Cal",
             "full_name": "Calais",
-			"x_pos": 327,
-			"y_pos": 306,
-			"x_legend_pos": 327,
-			"y_legend_pos": 292
+			"x_pos": 324,
+			"y_pos": 309,
+			"x_legend_pos": 324,
+			"y_legend_pos": 295
         },
         "10": {
             "name": "Can",
             "full_name": "Cantons",
-			"x_pos": 476,
-			"y_pos": 424,
-			"x_legend_pos": 476,
-			"y_legend_pos": 410
+			"x_pos": 473,
+			"y_pos": 427,
+			"x_legend_pos": 473,
+			"y_legend_pos": 413
         			},
         "11": {
             "name": "Cas",
@@ -214,9 +214,9 @@
         "14": {
             "name": "Dev",
             "full_name": "Devon",
-			"x_pos": 191,
+			"x_pos": 195,
 			"y_pos": 274,
-			"x_legend_pos": 191,
+			"x_legend_pos": 195,
 			"y_legend_pos": 260
         },
         "15": {
@@ -231,17 +231,17 @@
             "name": "Eng",
             "full_name": "English Channel",
 			"x_pos": 177,
-			"y_pos": 326,
+			"y_pos": 333,
 			"x_legend_pos": 177,
-			"y_legend_pos": 312
+			"y_legend_pos": 319
         },
         "17": {
             "name": "Fla",
             "full_name": "Flanders",
 			"x_pos": 386,
-			"y_pos": 287,
+			"y_pos": 295,
 			"x_legend_pos": 386,
-			"y_legend_pos": 273
+			"y_legend_pos": 281
         },
         "18": {
             "name": "Fri",
@@ -262,10 +262,10 @@
         "20": {
             "name": "Hol",
             "full_name": "Holland",
-			"x_pos": 410,
-			"y_pos": 257,
-			"x_legend_pos": 410,
-			"y_legend_pos": 243
+			"x_pos": 406,
+			"y_pos": 260,
+			"x_legend_pos": 406,
+			"y_legend_pos": 246
         },
         "21": {
             "name": "Iri",
@@ -286,10 +286,10 @@
         "23": {
             "name": "Lon",
             "full_name": "London",
-			"x_pos": 231,
-			"y_pos": 268,
-			"x_legend_pos": 231,
-			"y_legend_pos": 254
+			"x_pos": 233,
+			"y_pos": 275,
+			"x_legend_pos": 233,
+			"y_legend_pos": 261
         },
         "24": {
             "name": "Lor",
@@ -326,10 +326,10 @@
         "28": {
             "name": "Nom",
             "full_name": "Normandy",
-			"x_pos": 271,
-			"y_pos": 354,
-			"x_legend_pos": 271,
-			"y_legend_pos": 3
+            "x_pos": 270,
+            "y_pos": 360,
+            "x_legend_pos": 270,
+            "y_legend_pos": 347
         },
         "29": {
             "name": "Nor",
@@ -343,9 +343,9 @@
             "name": "Not",
             "full_name": "Northumbria",
 			"x_pos": 193,
-			"y_pos": 188,
+			"y_pos": 195,
 			"x_legend_pos": 193,
-			"y_legend_pos": 174
+			"y_legend_pos": 181
         },
         "31": {
             "name": "Orl",
@@ -391,17 +391,17 @@
             "name": "Sco",
             "full_name": "Scotland",
 			"x_pos": 160,
-			"y_pos": 77,
+			"y_pos": 82,
 			"x_legend_pos": 160,
-			"y_legend_pos": 63
+			"y_legend_pos": 68
         },
         "37": {
             "name": "Str",
             "full_name": "Straits of Dover",
 			"x_pos": 327,
-			"y_pos": 259,
+			"y_pos": 262,
 			"x_legend_pos": 327,
-			"y_legend_pos": 245
+			"y_legend_pos": 248
         },
         "38": {
             "name": "Pal",
@@ -422,9 +422,9 @@
         "40": {
             "name": "Tou",
             "full_name": "Toulouse",
-			"x_pos": 304,
+			"x_pos": 308,
 			"y_pos": 547,
-			"x_legend_pos": 304,
+			"x_legend_pos": 308,
 			"y_legend_pos": 533
         },
         "41": {
@@ -433,23 +433,23 @@
 			"x_pos": 158,
 			"y_pos": 231,
 			"x_legend_pos": 158,
-			"y_legend_pos": 217
+			"y_legend_pos": 220
         },
         "42": {
             "name": "",
             "full_name": "",
 			"x_pos": 207,
 			"y_pos": 154,
-			"x_legend_pos": 207,
-			"y_legend_pos": 140
+			"x_legend_pos": 215,
+			"y_legend_pos": 166
         },
         "43": {
             "name": "",
             "full_name": "",
 			"x_pos": 170,
 			"y_pos": 160,
-			"x_legend_pos": 170,
-			"y_legend_pos": 146
+            "x_legend_pos": 164,
+            "y_legend_pos": 172
         },
         "44": {
             "name": "",
@@ -457,7 +457,7 @@
 			"x_pos": 215,
 			"y_pos": 572,
 			"x_legend_pos": 215,
-			"y_legend_pos": 558
+			"y_legend_pos": 592
         },
         "45": {
             "name": "",
@@ -471,7 +471,7 @@
     "centers": {
         "1": {
 			"x_pos": 215,
-			"y_pos": 414
+			"y_pos": 416
 		},
         "2": {
 			"x_pos": 354,
@@ -510,20 +510,20 @@
 			"y_pos": 241
         },
         "11": {
-			"x_pos": 380,
-			"y_pos": 334
+			"x_pos": 266,
+			"y_pos": 277
         },
         "12": {
 			"x_pos": 422,
 			"y_pos": 309
         },
         "13": {
-			"x_pos": 292,
-			"y_pos": 331
+			"x_pos": 290,
+			"y_pos": 333
         },
         "14": {
 			"x_pos": 295,
-			"y_pos": 414
+			"y_pos": 416
         },
         "15": {
 			"x_pos": 313,
@@ -666,7 +666,7 @@
         "40": {
             "area": [[280, 529], [302, 514], [308, 511], [313, 511], [333, 519], [343, 525], [351, 527], [363, 538], [344, 548], [343, 580], [302, 577], [288, 569], [287, 567], [285, 567], [280, 560]] },
         "41": {
-            "area": [[205, 247], [216, 285], [216, 290], [213, 293], [199, 298], [185, 306], [182, 306], [162, 294], [157, 293], [155, 296], [154, 303], [151, 307], [146, 308], [137, 305], [124, 304], [110, 315], [104, 314], [140, 278], [172, 277], [184, 257], [177, 243], [180, 239], [198, 239]] },
+            "area": [[180, 220], [180, 223], [173, 237], [173, 242], [180, 255], [161, 269], [147, 260], [141, 263], [137, 263], [130, 259], [112, 261], [110, 259], [111, 255], [140, 243], [145, 229], [141, 227], [139, 217], [134, 217], [148, 205], [153, 204], [167, 206]] },
         "42": {
             "area": [[205, 147], [210, 148], [214, 152], [214, 156], [208, 161], [203, 160], [199, 156], [199, 152]] },
         "43": {

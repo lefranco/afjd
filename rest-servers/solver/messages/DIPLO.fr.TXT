@@ -95,8 +95,6 @@ heuris.c#12#Les voisinages se font entre provinces (ou zone dans une province) c
 heuris.c#13#La symétrie des voisinages est respectée
 parse.c#1#Utiliser '-' plutôt que 'TO'
 parse.c#2#Utiliser 'H' plutôt que 'T'
-parse.c#3#La carte standard DIPLOMATIE n'a pas de côte ouest
-parse.c#4#La carte standard DIPLOMATIE n'a pas de côte ouest
 parse.c#5#Ne pas utiliser ce caractère non reconnu : '%1' (%2)
 parse.c#6#Trop de lignes
 parse.c#7#Mot trop long

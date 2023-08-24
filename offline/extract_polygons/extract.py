@@ -28,10 +28,10 @@ VERSION_FILE_NAME = "./version.ini"
 
 VERSION_SECTION = "version"
 
-INFO_HEIGHT1 = 10
+INFO_HEIGHT1 = 5
 INFO_WIDTH1 = 30
 
-INFO_HEIGHT2 = 20
+INFO_HEIGHT2 = 15
 INFO_WIDTH2 = 30
 
 TITLE = "Détection de position de polygone..."
@@ -140,7 +140,7 @@ class Application(tkinter.Frame):
 
             x_mouse, y_mouse = event.x, event.y
 
-            information1 = f'"x_pos": {x_mouse},\n"y_pos": {y_mouse},\n"x_legend_pos": {x_mouse},\n"y_legend_pos": {y_mouse - 14}'
+            information1 = f'"x_pos": {x_mouse},\n"y_pos": {y_mouse}'
             self.mouse_pos.display(information1)
 
             information2 = ""
