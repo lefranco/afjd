@@ -1118,10 +1118,6 @@ def sandbox():
     # this will fill global 'VARIANT_NAME'
     create_initial_position()
 
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.DIV(f"Variante : {VARIANT_NAME}", Class='instruction')
-    MY_SUB_PANEL <= html.BR()
-
     # finds data about the dragged unit
     unit_info_table = {}
 
@@ -1260,7 +1256,7 @@ def sandbox():
     my_sub_panel2 <= display_left
     my_sub_panel2 <= buttons_right
 
-    MY_SUB_PANEL <= html.H2("Le bac à sable : \"what if ?\"")
+    MY_SUB_PANEL <= html.H2(f"Le bac à sable (variante {VARIANT_NAME})")
     MY_SUB_PANEL <= my_sub_panel2
 
 
