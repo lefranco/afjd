@@ -73,9 +73,6 @@ def sender_threaded_procedure() -> None:
         # do not put failed message back on queue if bad address
         if exception.find("Recipient address rejected: Domain not found") != -1:
             return False
-        # do not put failed message back on queue if surrogate error (emoji)
-        if exception.find("surrogates not allowed") != -1:
-            return False
         return True
 
     with APP.app_context():
@@ -92,11 +89,11 @@ def sender_threaded_procedure() -> None:
             else:
                 mylogger.LOGGER.info("actually sending an email to %s using account %s", addressee, pseudo)
 
-            # send
-            status, exception = mailer.send_mail(subject, body, addressee, reply_to)
+            # protection
+            body_safe = body.encode('ascii', errors='ignore').decode()
 
-            ##  import sys
-            ##  print(f"{subject=},  {addressee=}, {reply_to=}  -> {status=} {exception=}", file=sys.stderr)
+            # send
+            status, exception = mailer.send_mail(subject, body_safe, addressee, reply_to)
 
             # send ok
             if status:

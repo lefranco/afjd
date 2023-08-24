@@ -878,6 +878,8 @@ def declare_incident(json_dict_params):
     form <= fieldset
 
     fieldset = html.FIELDSET()
+    fieldset <= "Ne pas utiliser les emoticons et autres caractères ésotériques"
+    fieldset <= html.BR()
     fieldset <= "Il est toujours bienvenu de fournir une procédure pour reproduire le problème ainsi que la différence entre le résultat obtenu et le résultat attendu..."
     form <= fieldset
 
