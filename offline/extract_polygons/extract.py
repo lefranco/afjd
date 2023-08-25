@@ -171,7 +171,7 @@ class Application(tkinter.Frame):
 
                 # display on map
                 flat_points = itertools.chain.from_iterable(poly)  # type: ignore
-                self.canvas.create_polygon(*flat_points, fill="red")
+                self.canvas.create_polygon(*flat_points, fill='red', outline='blue', stipple='gray25')
 
                 # display as text
                 information2 = str(poly)
