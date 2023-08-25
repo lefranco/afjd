@@ -90,7 +90,7 @@ def sender_threaded_procedure() -> None:
                 mylogger.LOGGER.info("actually sending an email to %s using account %s", addressee, pseudo)
 
             # protection
-            body_safe = body.encode('ascii', errors='ignore').decode()
+            body_safe = body.encode('utf-8', errors='ignore').decode()
 
             # send
             status, exception = mailer.send_mail(subject, body_safe, addressee, reply_to)
