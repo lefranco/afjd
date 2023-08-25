@@ -28,7 +28,7 @@ VERSION_FILE_NAME = "./version.ini"
 
 VERSION_SECTION = "version"
 
-INFO_HEIGHT1 = 5
+INFO_HEIGHT1 = 3
 INFO_WIDTH1 = 30
 
 INFO_HEIGHT2 = 15
@@ -190,6 +190,9 @@ class Application(tkinter.Frame):
         def copy_area_callback() -> None:
             self.polygon.clipboard()
 
+        def copy_position2_callback() -> None:
+            print("TODO")
+
         self.menu_bar = tkinter.Menu(main_frame)
 
         self.menu_file = tkinter.Menu(self.menu_bar, tearoff=0)
@@ -234,17 +237,32 @@ class Application(tkinter.Frame):
         frame_buttons_information = tkinter.Frame(main_frame)
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
 
-        self.mouse_pos = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
-        self.mouse_pos.grid(row=1, column=1, sticky='we')
+        self.mouse_pos_label = tkinter.Label(frame_buttons_information, text="Position du click :")
+        self.mouse_pos_label.grid(row=1, column=1, sticky='we')
 
-        self.button = tkinter.Button(frame_buttons_information, text="copy position", command=copy_position_callback)
-        self.button.grid(row=2, column=1, sticky='we')
+        self.mouse_pos = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
+        self.mouse_pos.grid(row=2, column=1, sticky='we')
+
+        self.mouse_pos_button = tkinter.Button(frame_buttons_information, text="copy position", command=copy_position_callback)
+        self.mouse_pos_button.grid(row=3, column=1, sticky='we')
+
+        self.polygon_label = tkinter.Label(frame_buttons_information, text="Polygone autour du click :")
+        self.polygon_label.grid(row=4, column=1, sticky='we')
 
         self.polygon = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT2, width=INFO_WIDTH2)
-        self.polygon.grid(row=3, column=1, sticky='we')
+        self.polygon.grid(row=5, column=1, sticky='we')
 
-        self.button = tkinter.Button(frame_buttons_information, text="copy area", command=copy_area_callback)
-        self.button.grid(row=4, column=1, sticky='we')
+        self.polygon_button = tkinter.Button(frame_buttons_information, text="copy area", command=copy_area_callback)
+        self.polygon_button.grid(row=6, column=1, sticky='we')
+
+        self.middle_pos_label = tkinter.Label(frame_buttons_information, text="Position du milieu du polygone :")
+        self.middle_pos_label.grid(row=7, column=1, sticky='we')
+
+        self.middle_pos = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
+        self.middle_pos.grid(row=8, column=1, sticky='we')
+
+        self.middle_pos_button = tkinter.Button(frame_buttons_information, text="copy position", command=copy_position2_callback)
+        self.middle_pos_button.grid(row=9, column=1, sticky='we')
 
     def menu_load_new_map(self) -> None:
         """ as it says """
