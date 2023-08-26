@@ -34,6 +34,7 @@ INTERFACE_TABLE = {
     'grandeguerre': ['diplomania'],
     'brouillard': ['diplomania'],
     'hundred': ['diplomania'],
+    'moderne': ['diplomania'],
 }
 
 
