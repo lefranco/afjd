@@ -79,16 +79,16 @@
             "adjective_name": "bourguigon",
             "letter_name": "B",
             "red": [
-                51,
-                71
+                107,
+                127
             ],
             "green": [
-                51,
-                71
+                13,
+                33
             ],
             "blue": [
-                51,
-                71
+                13,
+                33
             ]
         }
     },
