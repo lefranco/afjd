@@ -11,6 +11,7 @@ import argparse
 import json
 import sys
 import typing
+import pprint
 
 
 def main() -> None:
@@ -106,20 +107,15 @@ def main() -> None:
     neighbouring = {z: (neighbouring_army[z] if z in neighbouring_army else set()) | (neighbouring_fleet[z] if z in neighbouring_fleet else set()) for z in list(neighbouring_army.keys())+list(neighbouring_fleet.keys())}
 
     distancing = []
-    for _ in range(2):
-        distancing_type = []
-        for role in roles:
-            distancing_role = {}
+    for role in roles:
+        distancing_role = []
+        for _ in range(2):
+            distancing_type_role = {}
             for zone in zones:
-                distancing_role[str(zone)] = distance(role, zone)
-            distancing_type.append(distancing_role)
-        distancing.append(distancing_type)
+                distancing_type_role[str(zone)] = distance(role, zone)
+            distancing_role.append(distancing_type_role)
+        distancing.append(distancing_role)
     #print(f"{distancing=}")
-
-    # check
-    if distancing_ != distancing:
-        print(f"{distancing_=}")
-        print(f"{distancing=}")
 
     json_output_data = {'distancing': distancing}
 
