@@ -11,13 +11,12 @@ import argparse
 import json
 import sys
 import typing
-import pprint
 
 
 def main() -> None:
     """ main """
 
-    def check_symetry(neighbouring):
+    def check_symetry(neighbouring: typing.Dict[int, typing.Set[int]]) -> None:
 
         for unit, neighbours in neighbouring.items():
             for unit2 in neighbours:
@@ -26,28 +25,21 @@ def main() -> None:
 
     def distance(role: int, zone: int) -> int:
 
-        #print(f"search distance {role} {zone=}")
-
         dist = 0
 
         reachables = {center2region[c] for c in start_centers[role]}
-        #print(f"{reachables=}")
 
         while True:
-
-            #print(f"{dist=}")
 
             if zone2region[zone] in map(lambda z: zone2region[z], reachables):
                 return dist
 
             new_ones = set.union(*(neighbouring[z] for z in reachables))
-            #print(f"{new_ones=}")
 
             reachables.update(new_ones)
-            #print(f"{reachables=}")
 
             dist += 1
-            assert dist <= 20, f"Infinite loop ! for {role=} {zone=}"
+            assert dist <= 30, f"Infinite loop ! for {role=} {zone=}"
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--variant_input', required=True, help='Input variant json file')
@@ -83,7 +75,8 @@ def main() -> None:
     neighbouring_ = json_variant_data['neighbouring']
     #  print(f"{neighbouring_=}")
 
-    distancing_ = json_variant_data['distancing']
+    # TODO : compare this old one with result
+    #  distancing_ = json_variant_data['distancing']
     #  print(f"{distancing__=}")
 
     roles = list(range(1, roles_['number'] + 1))
@@ -115,7 +108,7 @@ def main() -> None:
 
     check_symetry(neighbouring_fleet)
 
-    neighbouring = {z: (neighbouring_army[z] if z in neighbouring_army else set()) | (neighbouring_fleet[z] if z in neighbouring_fleet else set()) for z in list(neighbouring_army.keys())+list(neighbouring_fleet.keys())}
+    neighbouring = {z: (neighbouring_army[z] if z in neighbouring_army else set()) | (neighbouring_fleet[z] if z in neighbouring_fleet else set()) for z in list(neighbouring_army.keys()) + list(neighbouring_fleet.keys())}
 
     distancing = []
     for role in roles:
@@ -126,7 +119,7 @@ def main() -> None:
                 distancing_type_role[str(zone)] = distance(role, zone)
             distancing_role.append(distancing_type_role)
         distancing.append(distancing_role)
-    #print(f"{distancing=}")
+    #  print(f"{distancing=}")
 
     json_output_data = {'distancing': distancing}
 
