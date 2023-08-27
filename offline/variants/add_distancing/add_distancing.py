@@ -17,6 +17,13 @@ import pprint
 def main() -> None:
     """ main """
 
+    def check_symetry(neighbouring):
+
+        for unit, neighbours in neighbouring.items():
+            for unit2 in neighbours:
+                if unit not in neighbouring[unit2]:
+                    print(f"WARNING : By {'army' if neighbouring==neighbouring_army else 'fleet'} {unit2} neighbour of {unit} but not the other way round")
+
     def distance(role: int, zone: int) -> int:
 
         #print(f"search distance {role} {zone=}")
@@ -101,8 +108,12 @@ def main() -> None:
     neighbouring_army = {int(zone): set(neighbours) for zone, neighbours in neighbouring_[0].items()}
     #  print(f"{neighbouring_army=}")
 
+    check_symetry(neighbouring_army)
+
     neighbouring_fleet = {int(zone): set(neighbours) for zone, neighbours in neighbouring_[1].items()}
     #  print(f"{neighbouring_fleet=}")
+
+    check_symetry(neighbouring_fleet)
 
     neighbouring = {z: (neighbouring_army[z] if z in neighbouring_army else set()) | (neighbouring_fleet[z] if z in neighbouring_fleet else set()) for z in list(neighbouring_army.keys())+list(neighbouring_fleet.keys())}
 
