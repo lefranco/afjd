@@ -8,30 +8,30 @@
 #define MAXPASSES       10
 #define BLOCAGE			3      /* en annees */
 
-#define NPAYSS          8
-#define NREGIONS        100
-#define NCENTRES        50
-#define NCENTREDEPARTS  30
-#define NZONES          100
-#define NARMEEVOISINS   300
-#define NFLOTTEVOISINS  300
+#define NPAYSS          50
+#define NREGIONS        200
+#define NCENTRES        100
+#define NCENTREDEPARTS  60
+#define NZONES          250
+#define NARMEEVOISINS   1000
+#define NFLOTTEVOISINS  1000
 
-#define NUNITES         50
-#define NUNITEFUTURES   25
-#define NPOSSESSIONS    50
+#define NUNITES         100
+#define NUNITEFUTURES   50
+#define NPOSSESSIONS    100
 
-#define NMOUVEMENTS     50
-#define NRETRAITES      20
-#define NAJUSTEMENTS    20
+#define NMOUVEMENTS     100
+#define NRETRAITES      50
+#define NAJUSTEMENTS    50
 
-#define NINTERDITS      10
-#define NDELOGEES       10
-#define NANEANTIES      10
+#define NINTERDITS      20
+#define NDELOGEES       20
+#define NANEANTIES      20
 
 #define NCOTESPOSSS     10
 
 #define NDISPARITIONS 	NPAYSS
-#define NELOIGNEMENTS   1500
+#define NELOIGNEMENTS   5000
 
 #define INF(a,b) ((a) < (b) ? (a) : (b))
 
