@@ -4158,6 +4158,9 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         dest_role_ids_submitted = args['dest_role_ids']
         payload = args['content']
 
+        # protection from "surrogates not allowed"
+        payload_safe = payload.encode('utf-8', errors='ignore').decode()
+
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -4239,7 +4242,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
             # create a content
             identifier = contents.Content.free_identifier(sql_executor)  # noqa: F821
             time_stamp = int(time.time())  # now
-            content = contents.Content(identifier, int(game_id), time_stamp, payload)
+            content = contents.Content(identifier, int(game_id), time_stamp, payload_safe)
             content.update_database(sql_executor)  # noqa: F821
 
             # create a message linked to the content
@@ -4262,7 +4265,7 @@ class GameMessageRessource(flask_restful.Resource):  # type: ignore
         body += "\n"
         body += "Contenu du message :\n"
         body += "================\n"
-        body += payload
+        body += payload_safe
         body += "\n"
         body += "================\n"
 
@@ -4399,6 +4402,9 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
         announce = args['announce']
         payload = args['content']
 
+        # protection from "surrogates not allowed"
+        payload_safe = payload.encode('utf-8', errors='ignore').decode()
+
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -4500,7 +4506,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             # create a content
             identifier = contents.Content.free_identifier(sql_executor)
             time_stamp = int(time.time())  # now
-            content = contents.Content(identifier, int(game_id), time_stamp, payload)
+            content = contents.Content(identifier, int(game_id), time_stamp, payload_safe)
             content.update_database(sql_executor)
 
             # create a declaration linked to the content
@@ -4533,7 +4539,7 @@ class GameDeclarationRessource(flask_restful.Resource):  # type: ignore
             body += "\n"
         body += "Contenu de la déclaration :\n"
         body += "================\n"
-        body += payload
+        body += payload_safe
         body += "\n"
         body += "================\n"
 
