@@ -123,7 +123,7 @@ def main() -> None:
 
     json_output_data = {'distancing': distancing}
 
-    output = json.dumps(json_output_data)
+    output = json.dumps(json_output_data, indent=4)
     with open(json_distancing_output, 'w', encoding='utf-8') as write_file:
         write_file.write(output)
 
