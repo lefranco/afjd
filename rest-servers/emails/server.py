@@ -89,7 +89,7 @@ def sender_threaded_procedure() -> None:
             else:
                 mylogger.LOGGER.info("actually sending an email to %s using account %s", addressee, pseudo)
 
-            # protection
+            # protection from "surrogates not allowed"
             body_safe = body.encode('utf-8', errors='ignore').decode()
 
             # send
