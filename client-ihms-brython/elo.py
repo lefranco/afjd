@@ -90,7 +90,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
 
         # extract information
         game_start_time = game_data['start_time_stamp']
-        game_scoring_dict = game_data['scoring']
+        game_scoring_name = game_data['scoring']
         centers_number_dict = game_data['centers_number']
         game_players_dict = game_data['players']
         classic = game_data['classic']
@@ -110,9 +110,10 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
 
         # calculate scoring
         before = time.time()
-        ratings = {num2rolename[n]: centers_number_dict[str(n)] if str(n) in centers_number_dict else 0 for n in variant_data.roles if n >= 1}
+        raw_ratings = {num2rolename[n]: centers_number_dict[str(n)] if str(n) in centers_number_dict else 0 for n in variant_data.roles if n >= 1}
+        ratings =  dict(sorted(raw_ratings.items(), key=lambda i: i[1], reverse=True))
         solo_threshold = variant_data.number_centers() // 2
-        score_table = scoring.scoring(game_scoring_dict, solo_threshold, ratings)
+        score_table = scoring.scoring(game_scoring_name, solo_threshold, ratings)
         after = time.time()
         scoring_calculation_time += (after - before)
 
@@ -176,6 +177,12 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
 
         if VERIFY:
             elo_information <= f"{time_creation_str=} {game_name=} {classic=}"
+            elo_information <= html.BR()
+            elo_information <= f"{game_scoring_name=}"
+            elo_information <= html.BR()
+            elo_information <= f"{solo_threshold=}"
+            elo_information <= html.BR()
+            elo_information <= f"{ratings=}"
             elo_information <= html.BR()
             elo_information <= f"{pseudo_table=}"
             elo_information <= html.BR()
