@@ -22,6 +22,7 @@ import tkinter.scrolledtext
 import cv2  # type: ignore
 
 import geometry
+import polylabel
 
 # Important : name of file with version information
 VERSION_FILE_NAME = "./version.ini"
@@ -177,6 +178,15 @@ class Application(tkinter.Frame):
                 information2 = str(poly)
                 self.polygon.display(information2)
 
+                # middle
+                polygons = [poly]
+                polylabel_x_f, polylabel_y_f = polylabel.polylabel(polygons, precision=0.1)  # type: ignore
+                polylabel_x, polylabel_y = round(polylabel_x_f), round(polylabel_y_f)
+                self.canvas.create_line(polylabel_x + 5, polylabel_y, polylabel_x - 5, polylabel_y, fill='blue')
+                self.canvas.create_line(polylabel_x, polylabel_y + 5, polylabel_x, polylabel_y - 5, fill='blue')
+                information2 = f'"x_pos": {polylabel_x},\n"y_pos": {y_mouse}'
+                self.middle_pos.display(information2)
+
                 # only first
                 break
 
@@ -191,12 +201,11 @@ class Application(tkinter.Frame):
             self.polygon.clipboard()
 
         def copy_position2_callback() -> None:
-            print("TODO")
+            self.center_pos.clipboard()
 
         self.menu_bar = tkinter.Menu(main_frame)
 
         self.menu_file = tkinter.Menu(self.menu_bar, tearoff=0)
-        self.menu_file.add_command(label="Load new map", command=self.menu_load_new_map)
         self.menu_file.add_command(label="Exit", command=self.menu_complete_quit)
         self.menu_bar.add_cascade(label="File", menu=self.menu_file)
 
@@ -237,16 +246,16 @@ class Application(tkinter.Frame):
         frame_buttons_information = tkinter.Frame(main_frame)
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
 
-        self.mouse_pos_label = tkinter.Label(frame_buttons_information, text="Position du click :")
+        self.mouse_pos_label = tkinter.Label(frame_buttons_information, text="Position of click :")
         self.mouse_pos_label.grid(row=1, column=1, sticky='we')
 
         self.mouse_pos = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
         self.mouse_pos.grid(row=2, column=1, sticky='we')
 
-        self.mouse_pos_button = tkinter.Button(frame_buttons_information, text="copy position", command=copy_position_callback)
+        self.mouse_pos_button = tkinter.Button(frame_buttons_information, text="copy click position", command=copy_position_callback)
         self.mouse_pos_button.grid(row=3, column=1, sticky='we')
 
-        self.polygon_label = tkinter.Label(frame_buttons_information, text="Polygone autour du click :")
+        self.polygon_label = tkinter.Label(frame_buttons_information, text="Polygon around click :")
         self.polygon_label.grid(row=4, column=1, sticky='we')
 
         self.polygon = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT2, width=INFO_WIDTH2)
@@ -255,37 +264,14 @@ class Application(tkinter.Frame):
         self.polygon_button = tkinter.Button(frame_buttons_information, text="copy area", command=copy_area_callback)
         self.polygon_button.grid(row=6, column=1, sticky='we')
 
-        self.middle_pos_label = tkinter.Label(frame_buttons_information, text="Position du milieu du polygone :")
+        self.middle_pos_label = tkinter.Label(frame_buttons_information, text="Position of middle of polygon :")
         self.middle_pos_label.grid(row=7, column=1, sticky='we')
 
         self.middle_pos = MyText(self.master, frame_buttons_information, height=INFO_HEIGHT1, width=INFO_WIDTH1)
         self.middle_pos.grid(row=8, column=1, sticky='we')
 
-        self.middle_pos_button = tkinter.Button(frame_buttons_information, text="copy position", command=copy_position2_callback)
+        self.middle_pos_button = tkinter.Button(frame_buttons_information, text="copy middle position", command=copy_position2_callback)
         self.middle_pos_button.grid(row=9, column=1, sticky='we')
-
-    def menu_load_new_map(self) -> None:
-        """ as it says """
-
-        # get file with other config
-        self.map_file = tkinter.filedialog.askopenfilename(  # pylint: disable=attribute-defined-outside-init
-            initialdir=".",
-            title="Select map file to use",
-            filetypes=(("png", "*.png"), ("all files", "*.*")))
-
-        print(f"Switching to map file {self.map_file=}")
-
-        # study
-        study_image(self.map_file, False)
-
-        # create image map
-        self.image_map = tkinter.PhotoImage(file=self.map_file)  # pylint: disable=attribute-defined-outside-init
-
-        # resize canvas
-        self.canvas.config(width=self.image_map.width(), height=self.image_map.height())
-
-        # redraw map
-        self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.image_map)
 
     def menu_complete_quit(self) -> None:
         """ as it says """
