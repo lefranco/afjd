@@ -30,10 +30,10 @@ def main() -> None:
             print(f"Failed to load {json_input} : {exception}")
             sys.exit(-1)
 
-    for zone_data in json_data['centers'].values():
+    for zone_data in json_data['zones'].values():
 
-        center_data["x_pos"] += 7
-        center_data["y_pos"] += 9
+        zone_data["y_pos"] += 6
+        zone_data["y_legend_pos"] += 6
 
     output = json.dumps(json_data, indent=4)
     with open(json_output, 'w') as file_ptr:
