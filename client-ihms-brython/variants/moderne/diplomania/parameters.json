@@ -253,8 +253,8 @@
 "139" : {"name" :"slo", "full_name" : "slo", "x_pos" :411, "y_pos" :380, "x_legend_pos" :411, "y_legend_pos" :366},
 "140" : {"name" :"osa", "full_name" : "osa", "x_pos" :122, "y_pos" :700, "x_legend_pos" :122, "y_legend_pos" :686},
 "141" : {"name" :"arm", "full_name" : "arm", "x_pos" :701, "y_pos" :467, "x_legend_pos" :701, "y_legend_pos" :453},
-"142" : {"name" :"", "full_name" : "", "x_pos" :826, "y_pos" :483, "x_legend_pos" :850, "y_legend_pos" :483},
-"143" : {"name" :"", "full_name" : "", "x_pos" :871, "y_pos" :572, "x_legend_pos" :894, "y_legend_pos" :571}
+"142" : {"name" :"", "full_name" : "", "x_pos" :826, "y_pos" :483, "x_legend_pos" :850, "y_legend_pos" :484},
+"143" : {"name" :"", "full_name" : "", "x_pos" :871, "y_pos" :572, "x_legend_pos" :892, "y_legend_pos" :574}
 },
 
 
