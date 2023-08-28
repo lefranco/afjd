@@ -201,7 +201,7 @@ class Application(tkinter.Frame):
             self.polygon.clipboard()
 
         def copy_position2_callback() -> None:
-            self.center_pos.clipboard()
+            self.middle_pos.clipboard()
 
         self.menu_bar = tkinter.Menu(main_frame)
 
