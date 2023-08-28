@@ -156,7 +156,7 @@ class Application(tkinter.Frame):
 
         def save_callback() -> None:
 
-            output = json.dumps(self.json_parameters_data, indent=4)
+            output = json.dumps(self.json_parameters_data, indent=4, ensure_ascii=False)
             with open(parameters_file, "w", encoding='utf-8') as write_file:
                 write_file.write(output)
 
