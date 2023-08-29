@@ -24,7 +24,7 @@ VERSION_FILE_NAME = "./version.ini"
 VERSION_SECTION = "version"
 
 
-TITLE = "Ajustements des positions..."
+TITLE = "Ajusting positions..."
 
 
 class VersionRecord(typing.NamedTuple):
