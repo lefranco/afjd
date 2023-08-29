@@ -34,7 +34,7 @@ INFO_WIDTH1 = 30
 INFO_HEIGHT2 = 15
 INFO_WIDTH2 = 30
 
-TITLE = "Détection de position de polygone..."
+TITLE = "Polygons positions detection..."
 
 
 class VersionRecord(typing.NamedTuple):
