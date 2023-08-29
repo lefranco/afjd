@@ -2,9 +2,7 @@
 
 
 """
-File : check_json.py
-
-parses to check json files
+Calculates distancing, the boring part of variant file
 """
 
 import argparse
@@ -74,10 +72,6 @@ def main() -> None:
 
     neighbouring_ = json_variant_data['neighbouring']
     #  print(f"{neighbouring_=}")
-
-    # TODO : compare this old one with result
-    #  distancing_ = json_variant_data['distancing']
-    #  print(f"{distancing__=}")
 
     roles = list(range(1, roles_['number'] + 1))
     #  print(f"{roles=}")

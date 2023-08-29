@@ -2,9 +2,7 @@
 
 
 """
-File : check_json.py
-
-parses to check json files
+Shifts all position of same delta
 """
 
 import argparse

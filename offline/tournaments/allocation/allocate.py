@@ -2,8 +2,6 @@
 
 
 """
-File : allocate.py
-
 Solves the problem of allocating players in a Diplomacy tournament
 For 1000 players takes 35 seconds on an average laptop
 """
@@ -248,7 +246,7 @@ def try_and_error(depth: int) -> bool:
     # 2) players which are in more games (more efficient than less games for some reason)
     # 3) identifier of player (for readability)
 
-    players_sorted = sorted(acceptable_players, key=lambda p: (sum([INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()]), len(p.games_in()), p.number))  # type: ignore
+    players_sorted = sorted(acceptable_players, key=lambda p: (sum(INTERACTION[frozenset([pp, p])] for pp in game.players_in_game()), len(p.games_in()), p.number))  # type: ignore
 
     # find a player to put in
     for player in players_sorted:
@@ -403,8 +401,7 @@ def main() -> None:
     random.shuffle(PLAYERS_DATA)
 
     # make players
-    for player_id, _ in enumerate(PLAYERS_DATA):
-        name = PLAYERS_DATA[player_id]
+    for player_id, (player_id, name) in enumerate(PLAYERS_DATA.items()):
         player = Player(name, player_id)
         PLAYERS.append(player)
 

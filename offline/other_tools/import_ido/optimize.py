@@ -2,9 +2,8 @@
 
 
 """
-File : optimize.py
-
 optimize parameter file
+shift positions to avoid them to be too close
 """
 
 import typing

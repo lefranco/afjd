@@ -2,9 +2,7 @@
 
 
 """
-File : mailer.py
-
-Justs sends an email
+Justs sends plenty of emails
 """
 
 import typing

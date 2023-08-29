@@ -2,9 +2,8 @@
 
 
 """
-
-opencv version is 4.6.0
-
+Extracts positions, polygons, polygon middle from map
+Uses opencv version is 4.6.0
 """
 
 import argparse
