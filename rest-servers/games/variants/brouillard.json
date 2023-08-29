@@ -56,6 +56,7 @@
     ],
 
     "year_zero" : 1900,
+    "increment" : 1,
 
     "disorder" : {},
 

@@ -48,6 +48,7 @@
 	],
  
 	"year_zero" : 1913,
+	"increment" : 1,
 
 	"disorder" : {"3" : "Italie"},
 	
