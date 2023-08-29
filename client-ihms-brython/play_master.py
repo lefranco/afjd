@@ -900,16 +900,17 @@ def game_master():
         col = html.TD()
         form = ""
         if not pseudo_there:
-            form = html.FORM()
 
             if not possible_given_role:
 
+                form = html.FORM()
                 input_contact_replacers = html.INPUT(type="submit", value="Contacter les remplaçants", title="Ceci contactera tous les remplaçants déclarés volontaires du site", display='inline')
                 input_contact_replacers.bind("click", lambda e, r=role_id: send_need_replacement_callback(e, r))
                 form <= input_contact_replacers
 
-            else:
+            elif not(play_low.GAME_PARAMETERS_LOADED['current_state'] == 0 and not play_low.GAME_PARAMETERS_LOADED['manual']):
 
+                form = html.FORM()
                 input_for_role = html.SELECT(type="select-one", value="", display='inline')
                 for play_role_pseudo in sorted(possible_given_role, key=lambda p: p.upper()):
                     option = html.OPTION(play_role_pseudo)
