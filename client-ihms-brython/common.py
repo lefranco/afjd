@@ -319,7 +319,7 @@ def get_season(advancement, variant) -> None:
     len_season_cycle = len(DIPLOMACY_SEASON_CYCLE)
     advancement_season_num = advancement % len_season_cycle + 1
     advancement_season = mapping.SeasonEnum.from_code(advancement_season_num)
-    advancement_year = (advancement // len_season_cycle) + 1 + variant.year_zero
+    advancement_year = (advancement // len_season_cycle) * variant.increment + 1 + variant.year_zero
     return advancement_season, advancement_year
 
 

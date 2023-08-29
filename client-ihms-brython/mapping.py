@@ -658,8 +658,9 @@ class Variant(Renderable):
                 for zone_num in role_start_units2:
                     zone = self._zones[zone_num]
 
-        # load the year zero
+        # load the year zero and increment
         self._year_zero = int(raw_variant_content['year_zero'])
+        self._increment = int(raw_variant_content['increment'])
 
         # load the neighbouring
         for num, neighbourings in enumerate(raw_variant_content['neighbouring']):
@@ -1019,6 +1020,10 @@ class Variant(Renderable):
         """ property """
         return self._year_zero
 
+    @property
+    def increment(self) -> int:
+        """ property """
+        return self._increment
 
 class Unit(Highliteable, Renderable):
     """ A unit """
