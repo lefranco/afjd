@@ -1522,6 +1522,10 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                 del sql_executor
                 flask_restful.abort(403, msg="You cannot put the game master of the game as a player in the game")
 
+            if game.current_state == 0 and not game.manual:
+                del sql_executor
+                flask_restful.abort(400, msg="This is a manual game, allocation will be done at game start")
+
             role_id_found = game.find_role(sql_executor, player_id)
             if role_id_found == role_id:
                 del sql_executor

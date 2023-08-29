@@ -722,6 +722,11 @@ class Game:
         return self._fast
 
     @property
+    def manual(self) -> bool:
+        """ property """
+        return self._manual
+
+    @property
     def grace_duration(self) -> int:
         """ property """
         return self._grace_duration
