@@ -3,7 +3,7 @@
 
 """
 
-opencv version is 4.6.0
+adjust positions
 
 """
 
@@ -86,6 +86,7 @@ FONT = ('Arial 7')
 SHIFT_X = 0
 SHIFT_Y = -20
 
+
 class Application(tkinter.Frame):
     """ Tkinter application """
 
@@ -98,6 +99,9 @@ class Application(tkinter.Frame):
 
         # actual creation of widgets
         self.create_widgets(self, map_file, parameters_file)
+
+        # data
+        self.focused_zone_data: typing.Optional[typing.Dict[str, typing.Any]] = None
 
     def create_widgets(self, main_frame: tkinter.Frame, map_file: str, parameters_file: str) -> None:
         """ create all widgets for application """
@@ -151,7 +155,7 @@ class Application(tkinter.Frame):
 
             assert closest_zone_data is not None
 
-            self.focused_zone_data = closest_zone_data
+            self.focused_zone_data = closest_zone_data  # pylint: disable=attribute-defined-outside-init
             self.canvas.create_text(closest_zone_data['x_pos'] + SHIFT_X, closest_zone_data['y_pos'] + SHIFT_Y, text=closest_zone_data['name'], fill='red', font=FONT)
 
         def save_callback() -> None:
@@ -211,8 +215,6 @@ class Application(tkinter.Frame):
             assert zone_data['y_pos'] == zone_data['y_legend_pos'] + 14 or not zone_data['name'], f"Problem with y for zone {zone_data['name']}"
             self.canvas.create_text(zone_data['x_pos'] + SHIFT_X, zone_data['y_pos'] + SHIFT_Y, text=zone_data['name'], fill='black', font=FONT)
 
-        self.focused_zone_data = None
-
         # clicking
         self.canvas.bind("<Button-1>", click_callback)
 
@@ -230,6 +232,7 @@ class Application(tkinter.Frame):
 
         self.mouse_pos_button = tkinter.Button(frame_buttons_information, text="save", command=save_callback)
         self.mouse_pos_button.grid(row=1, column=1, sticky='we')
+
 
     def menu_complete_quit(self) -> None:
 
