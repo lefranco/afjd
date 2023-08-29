@@ -180,7 +180,7 @@ def show_technical():
     title2 = html.H4("Algorithme de résolution (D.A.T.C.)")
     MY_SUB_PANEL <= title2
 
-    link2 = html.A(href="http://web.inter.nl.net/users/L.B.Kruijswijk/", target="_blank")
+    link2 = html.A(href="./docs/DATC.html", target="_blank")
     link2 <= "Lien vers une description technique de l'algorithme de résolution utilisé"
     MY_SUB_PANEL <= link2
 
