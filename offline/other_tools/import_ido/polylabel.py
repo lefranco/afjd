@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# type: ignore
+# pylint: disable=invalid-name
+
 """
 polylabel
 from site :
@@ -9,8 +12,6 @@ https://blog.mapbox.com/a-new-algorithm-for-finding-a-visual-center-of-a-polygon
 import time
 import queue
 import math
-
-# pylint: disable=invalid-name
 
 
 def _point_to_polygon_distance(x, y, polygon):

@@ -2,8 +2,7 @@
 
 
 """
-File : make.py
-
+Make visibility file for brouillard variant
 """
 
 import typing

@@ -2,8 +2,6 @@
 
 
 """
-File : check.py
-
 Checks a solution for the problem of allocating players in a Diplomacy tournament
 For 1000 players takes 35 seconds on an average laptop
 """
@@ -115,7 +113,7 @@ def main() -> None:
     parser.add_argument('-p', '--print', action='store_true', required=False, help='output description for checking')
     args = parser.parse_args()
 
-    player_table: typing.Dict[str, Player] = dict()
+    player_table: typing.Dict[str, Player] = {}
 
     # load players file
     with open(args.tournament_file, "r", encoding='utf-8') as csv_read_file:

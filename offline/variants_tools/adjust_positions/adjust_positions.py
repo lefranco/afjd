@@ -2,9 +2,7 @@
 
 
 """
-
-adjust positions
-
+Graphic tool to adjust positions
 """
 
 import argparse
@@ -232,7 +230,6 @@ class Application(tkinter.Frame):
 
         self.mouse_pos_button = tkinter.Button(frame_buttons_information, text="save", command=save_callback)
         self.mouse_pos_button.grid(row=1, column=1, sticky='we')
-
 
     def menu_complete_quit(self) -> None:
 

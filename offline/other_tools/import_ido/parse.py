@@ -2,9 +2,9 @@
 
 
 """
-File : parse.py
-
-parses a svg file to make json information
+parses a svg file (from ido) to make json information
+variant file is input
+parameter file is input and output
 """
 
 import argparse
@@ -101,8 +101,8 @@ class Path:
 
     def middle(self) -> typing.Tuple[float, float]:
         """ middle of area for centers """
-        middle_x = (min([p[0] for p in self.points]) + max([p[0] for p in self.points])) / 2.
-        middle_y = (min([p[1] for p in self.points]) + max([p[1] for p in self.points])) / 2.
+        middle_x = (min(p[0] for p in self.points) + max(p[0] for p in self.points)) / 2.
+        middle_y = (min(p[1] for p in self.points) + max(p[1] for p in self.points)) / 2.
         return middle_x, middle_y
 
     def polygon(self) -> typing.List[typing.List[float]]:
