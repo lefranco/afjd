@@ -112,7 +112,7 @@ def main():
     json_data["situation"] = situation
 
     output_file = "result.json"
-    output = json.dumps(json_data, indent=4)
+    output = json.dumps(json_data, indent=4, ensure_ascii=False)
     with open(output_file, 'w') as file_ptr:
         file_ptr.write(output)
 
