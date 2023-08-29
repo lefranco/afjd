@@ -33,7 +33,7 @@ def main() -> None:
         zone_data["y_pos"] += 6
         zone_data["y_legend_pos"] += 6
 
-    output = json.dumps(json_data, indent=4)
+    output = json.dumps(json_data, indent=4, ensure_ascii=False)
     with open(json_output, 'w', encoding='utf-8') as file_ptr:
         file_ptr.write(output)
 

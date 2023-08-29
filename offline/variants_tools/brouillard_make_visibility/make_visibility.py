@@ -66,7 +66,7 @@ def main() -> None:
     }
 
     output = json.dumps(data_json, indent=4)
-    with open(args.output_file, "w", encoding='utf-8') as write_file:
+    with open(args.output_file, "w", encoding='utf-8', ensure_ascii=False) as write_file:
         write_file.write(output)
 
 
