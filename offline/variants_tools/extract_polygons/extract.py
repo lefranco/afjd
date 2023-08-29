@@ -302,7 +302,7 @@ def study_image(map_file: str, debug: bool) -> None:
 
         x_pos, y_pos, w_val, h_val = cv2.boundingRect(current_contour)  # pylint: disable=c-extension-no-member
 
-        current_contour2 = cv2.approxPolyDP(current_contour, 1, True)
+        current_contour2 = cv2.approxPolyDP(current_contour, 1, True)  # pylint: disable=c-extension-no-member
 
         CONTOUR_TABLE[(x_pos, y_pos, w_val, h_val)] = list(map(lambda p: p[0], current_contour2.tolist()))  # type: ignore
 

@@ -57,13 +57,13 @@ def main() -> None:
 
     # need the center -> region table
     centers = parameters_read['centers']
-    center2region = {str(i+1): r for i, r in enumerate(centers)}
+    center2region = {str(i + 1): r for i, r in enumerate(centers)}
 
     # store things
     data_json = {
-        'center2region' : center2region,
-        'zone2region' : zone2region,
-        'visibility_table' : visibility_table,
+        'center2region': center2region,
+        'zone2region': zone2region,
+        'visibility_table': visibility_table,
     }
 
     output = json.dumps(data_json, indent=4)
