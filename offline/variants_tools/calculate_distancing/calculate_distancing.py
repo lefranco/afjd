@@ -14,24 +14,25 @@ import typing
 # if reached, there is a problem !
 MAX_DIST = 20
 
+
 def main() -> None:
     """ main """
 
     def check_non_reflexivity(neighbouring: typing.Dict[int, typing.Set[int]]) -> None:
         """ checks no zone is neighbour to itself """
-           
+
         for zone, neighbours in neighbouring.items():
-            assert unit not in neighbours, "f"Problem with {zone=} neighbour if itself""
+            assert zone not in neighbours, f"Problem with {zone=} neighbouring itself"
 
     def check_types(neighbouring: typing.Dict[int, typing.Set[int]]) -> None:
         """ checks army neighboring considers land ans coasts and fleet neighboring considers sea and coasts """
 
-        def check_type(zone):
-            if neighbouring==neighbouring_army:
+        def check_type(zone: int) -> None:
+            if neighbouring == neighbouring_army:
                 assert zone2type[zone] in [1, 2], f"Problem with {zone=} as army"
             else:
                 assert zone2type[zone] in [1, 3], f"Problem with {zone=} as fleet"
-            
+
         for zone, neighbours in neighbouring.items():
             check_type(zone)
             for zone1 in neighbours:
@@ -106,7 +107,7 @@ def main() -> None:
     regions = list(range(1, len(regions_) + 1))
     #  print(f"{regions=}")
 
-    zone2type = {i+1 : t for i, t in enumerate(regions_)}
+    zone2type = {i + 1: t for i, t in enumerate(regions_)}
     zone2type.update({len(regions) + 1 + i: 1 for i in range(len(coastal_zones))})
     #  print(f"{zone2type=}")
 
@@ -160,4 +161,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-
