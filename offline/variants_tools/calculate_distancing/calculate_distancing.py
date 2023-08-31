@@ -11,17 +11,41 @@ import sys
 import typing
 
 
+# if reached, there is a problem !
+MAX_DIST = 20
+
 def main() -> None:
     """ main """
 
+    def check_non_reflexivity(neighbouring: typing.Dict[int, typing.Set[int]]) -> None:
+        """ checks no zone is neighbour to itself """
+           
+        for zone, neighbours in neighbouring.items():
+            assert unit not in neighbours, "f"Problem with {zone=} neighbour if itself""
+
+    def check_types(neighbouring: typing.Dict[int, typing.Set[int]]) -> None:
+        """ checks army neighboring considers land ans coasts and fleet neighboring considers sea and coasts """
+
+        def check_type(zone):
+            if neighbouring==neighbouring_army:
+                assert zone2type[zone] in [1, 2], f"Problem with {zone=} as army"
+            else:
+                assert zone2type[zone] in [1, 3], f"Problem with {zone=} as fleet"
+            
+        for zone, neighbours in neighbouring.items():
+            check_type(zone)
+            for zone1 in neighbours:
+                check_type(zone1)
+
     def check_symetry(neighbouring: typing.Dict[int, typing.Set[int]]) -> None:
+        """ checks that is A sees B, B sees A """
 
         for unit, neighbours in neighbouring.items():
             for unit2 in neighbours:
-                if unit not in neighbouring[unit2]:
-                    print(f"WARNING : By {'army' if neighbouring==neighbouring_army else 'fleet'} {unit2} neighbour of {unit} but not the other way round")
+                assert unit in neighbouring[unit2], f"By {'army' if neighbouring==neighbouring_army else 'fleet'} {unit2} neighbour of {unit} but not the other way round"
 
     def distance(role: int, zone: int) -> int:
+        """ distance of role to zone is lesser distance of start units to zone """
 
         dist = 0
 
@@ -29,15 +53,18 @@ def main() -> None:
 
         while True:
 
+            # have we reached it ?
             if zone2region[zone] in map(lambda z: zone2region[z], reachables):
                 return dist
 
+            # calculate more
             new_ones = set.union(*(neighbouring[z] for z in reachables))
 
+            # put them in
             reachables.update(new_ones)
 
             dist += 1
-            assert dist <= 30, f"Infinite loop ! for {role=} {zone=}"
+            assert dist <= MAX_DIST, f"Infinite loop ! for {role=} {zone=}"
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--variant_input', required=True, help='Input variant json file')
@@ -79,6 +106,10 @@ def main() -> None:
     regions = list(range(1, len(regions_) + 1))
     #  print(f"{regions=}")
 
+    zone2type = {i+1 : t for i, t in enumerate(regions_)}
+    zone2type.update({len(regions) + 1 + i: 1 for i in range(len(coastal_zones))})
+    #  print(f"{zone2type=}")
+
     start_centers = {i + 1: s for i, s in enumerate(start_centers_)}
     #  print(f"{start_centers=}")
 
@@ -95,12 +126,16 @@ def main() -> None:
     neighbouring_army = {int(zone): set(neighbours) for zone, neighbours in neighbouring_[0].items()}
     #  print(f"{neighbouring_army=}")
 
+    check_non_reflexivity(neighbouring_army)
     check_symetry(neighbouring_army)
+    check_types(neighbouring_army)
 
     neighbouring_fleet = {int(zone): set(neighbours) for zone, neighbours in neighbouring_[1].items()}
     #  print(f"{neighbouring_fleet=}")
 
+    check_non_reflexivity(neighbouring_fleet)
     check_symetry(neighbouring_fleet)
+    check_types(neighbouring_fleet)
 
     neighbouring = {z: (neighbouring_army[z] if z in neighbouring_army else set()) | (neighbouring_fleet[z] if z in neighbouring_fleet else set()) for z in list(neighbouring_army.keys()) + list(neighbouring_fleet.keys())}
 
@@ -117,6 +152,7 @@ def main() -> None:
 
     json_output_data = {'distancing': distancing}
 
+    # save distancing in file to add to variant file
     output = json.dumps(json_output_data, indent=4, ensure_ascii=False)
     with open(json_distancing_output, 'w', encoding='utf-8') as write_file:
         write_file.write(output)
@@ -124,3 +160,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+
