@@ -1298,7 +1298,7 @@
             "y_pos": 348,
             "x_legend_pos": 285,
             "y_legend_pos": 334,
-            "display": 3
+            "display": 4
         },
         "133": {
             "name": "sax",
@@ -1307,7 +1307,7 @@
             "y_pos": 357,
             "x_legend_pos": 330,
             "y_legend_pos": 343,
-            "display": 3
+            "display": 4
         },
         "134": {
             "name": "sil",
