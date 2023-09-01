@@ -175,6 +175,24 @@ def registrations():
         # go to create account page
         index.load_option(None, 'Mon compte')
 
+    def store_information_callback(ev):  # pylint: disable=invalid-name
+        """ store_information_callback """
+
+        if 'PSEUDO' not in storage:
+            alert("Il faut être identifié")
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            registrations()
+            return
+
+        print(f"{input_information.value=}")
+
+        alert("Pas implémenté")
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        registrations()
+
     def sendmail_callback(ev):  # pylint: disable=invalid-name
         """ sendmail_callback """
 
@@ -285,19 +303,19 @@ def registrations():
     event_dict = get_event_data(event_id)
 
     joiners = get_registrations(event_id)
-    dict_status = {j[0]: j[1] for j in joiners}
+    dict_status = {j[0]: j[2] for j in joiners}
     player_joined = False
     if player_id is not None:
         player_joined = player_id in dict_status
 
     joiners_table = html.TABLE()
 
-    fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'status']
+    fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'infos', 'status']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'rank': 'rang', 'date': 'date', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'status': 'statut'}[field]
+        field_fr = {'rank': 'rang', 'date': 'date', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'infos': 'infos', 'status': 'statut'}[field]
         col = html.TD(field_fr)
         thead <= col
     joiners_table <= thead
@@ -318,6 +336,7 @@ def registrations():
     for num, data in enumerate(joiners_dict.values()):
 
         data['rank'] = None
+        data['infos'] = "TBD"
 
         colour = None
         if 'PSEUDO' in storage:
@@ -377,6 +396,19 @@ def registrations():
             register_form <= input_register_event
     else:
         player_status = "Vous n'êtes pas identifié"
+
+    detail_form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_message = html.LEGEND("Vos informations", title="Mettez les informations complémentaires")
+    fieldset <= legend_message
+    input_information = html.TEXTAREA(type="text", rows=8, cols=80)
+    fieldset <= input_information
+    detail_form <= fieldset
+
+    input_store_information = html.INPUT(type="submit", value="Enregistrer")
+    input_store_information.bind("click", store_information_callback)
+    detail_form <= input_store_information
 
     contact_form = html.FORM()
 
@@ -474,6 +506,12 @@ def registrations():
             MY_SUB_PANEL <= register_form
         else:
             MY_SUB_PANEL <= account_button
+
+    # provide more data about registration
+    if 'PSEUDO' in storage:
+        if player_joined:
+            MY_SUB_PANEL <= html.H4("Détailler votre inscrption")
+            MY_SUB_PANEL <= detail_form
 
     # provide people already in
     MY_SUB_PANEL <= html.H4("Contacter l'organisateur")
