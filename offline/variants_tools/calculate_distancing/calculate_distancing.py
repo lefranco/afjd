@@ -9,6 +9,7 @@ import argparse
 import json
 import sys
 import typing
+import os
 
 
 # if reached, there is a problem !
@@ -74,6 +75,10 @@ def main() -> None:
 
     json_variant_input = args.variant_input
     json_distancing_output = args.distancing_output
+
+    if not os.path.exists(json_variant_input):
+        print(f"File '{json_variant_input}' does not seem to exist, please advise !", file=sys.stderr)
+        sys.exit(-1)
 
     # load variant from json data file
     with open(json_variant_input, "r", encoding='utf-8') as read_file:

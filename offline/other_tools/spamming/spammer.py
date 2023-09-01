@@ -8,7 +8,8 @@ Justs sends plenty of emails
 import typing
 import argparse
 import configparser
-import pathlib
+import os
+import sys
 import time
 import smtplib
 
@@ -115,8 +116,9 @@ def main() -> None:
 
     victim_list_file = args.victims_file
 
-    path = pathlib.Path(victim_list_file)
-    assert path.exists(), f"Seems file '{victim_list_file}' does not exist"
+    if not os.path.exists(victim_list_file):
+        print(f"File '{victim_list_file}' does not seem to exist, please advise !", file=sys.stderr)
+        sys.exit(-1)
 
     load_mail_config()
 
