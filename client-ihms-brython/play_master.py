@@ -908,7 +908,7 @@ def game_master():
                 input_contact_replacers.bind("click", lambda e, r=role_id: send_need_replacement_callback(e, r))
                 form <= input_contact_replacers
 
-            elif not(play_low.GAME_PARAMETERS_LOADED['current_state'] == 0 and not play_low.GAME_PARAMETERS_LOADED['manual']):
+            elif not (play_low.GAME_PARAMETERS_LOADED['current_state'] == 0 and not play_low.GAME_PARAMETERS_LOADED['manual']):
 
                 form = html.FORM()
                 input_for_role = html.SELECT(type="select-one", value="", display='inline')
