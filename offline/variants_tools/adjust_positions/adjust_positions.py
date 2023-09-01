@@ -98,7 +98,7 @@ class Application(tkinter.Frame):
 
         # data
         self.focused_zone_data: typing.Optional[typing.Dict[str, typing.Any]] = None
-        self.legend_selected = True  # TODO change
+        self.legend_selected = True
 
         # actual creation of widgets
         self.create_widgets(self, map_file, parameters_file)
@@ -160,8 +160,6 @@ class Application(tkinter.Frame):
 
         def click_callback(event: typing.Any) -> None:
             x_mouse, y_mouse = event.x, event.y
-
-            print("click_callback")
 
             min_dist = 100000.
 
