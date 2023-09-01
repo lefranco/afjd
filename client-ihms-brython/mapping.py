@@ -1025,6 +1025,7 @@ class Variant(Renderable):
         """ property """
         return self._increment
 
+
 class Unit(Highliteable, Renderable):
     """ A unit """
 
