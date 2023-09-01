@@ -82,7 +82,8 @@ VERSION_INFORMATION = load_version_information()
 FONT = ('Arial 7')
 
 SHIFT_X = 0
-SHIFT_Y = -20
+SHIFT_Y = -6
+RADIUS = 7
 
 
 class Application(tkinter.Frame):
@@ -95,11 +96,12 @@ class Application(tkinter.Frame):
         self.master = master
         self.grid()
 
-        # actual creation of widgets
-        self.create_widgets(self, map_file, parameters_file)
-
         # data
         self.focused_zone_data: typing.Optional[typing.Dict[str, typing.Any]] = None
+        self.legend_selected = True  # TODO change
+
+        # actual creation of widgets
+        self.create_widgets(self, map_file, parameters_file)
 
     def create_widgets(self, main_frame: tkinter.Frame, map_file: str, parameters_file: str) -> None:
         """ create all widgets for application """
@@ -107,54 +109,83 @@ class Application(tkinter.Frame):
         def about() -> None:
             tkinter.messagebox.showinfo("About", str(VERSION_INFORMATION))
 
+        def redraw() -> None:
+
+            # map
+            self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
+
+            # legends and units
+            zones_data = self.json_parameters_data['zones']
+            for zone_data in zones_data.values():
+
+                fill = 'red' if zone_data is self.focused_zone_data and self.legend_selected else 'black'
+                x_pos_read = zone_data['x_legend_pos']
+                y_pos_read = zone_data['y_legend_pos']
+                self.canvas.create_text(x_pos_read + SHIFT_X, y_pos_read + SHIFT_Y, text=zone_data['name'], fill=fill, font=FONT)
+
+                fill = 'red' if zone_data is self.focused_zone_data and not self.legend_selected else 'black'
+                x_pos_read = zone_data['x_pos']
+                y_pos_read = zone_data['y_pos']
+                self.canvas.create_oval(x_pos_read + SHIFT_X - RADIUS, y_pos_read + SHIFT_Y - RADIUS, x_pos_read + SHIFT_X + RADIUS, y_pos_read + SHIFT_Y + RADIUS, width=1, outline=fill)
+
         def arrow_callback(event: typing.Any) -> None:
 
-            if self.focused_zone_data is not None:
+            if self.focused_zone_data is None:
+                return
+
+            if self.legend_selected:
+
+                if event.keysym == 'Right':
+                    self.focused_zone_data['x_legend_pos'] += 1
+                if event.keysym == 'Left':
+                    self.focused_zone_data['x_legend_pos'] -= 1
+                if event.keysym == 'Down':
+                    self.focused_zone_data['y_legend_pos'] += 1
+                if event.keysym == 'Up':
+                    self.focused_zone_data['y_legend_pos'] -= 1
+
+            else:
 
                 if event.keysym == 'Right':
                     self.focused_zone_data['x_pos'] += 1
-                    self.focused_zone_data['x_legend_pos'] += 1
                 if event.keysym == 'Left':
                     self.focused_zone_data['x_pos'] -= 1
-                    self.focused_zone_data['x_legend_pos'] -= 1
                 if event.keysym == 'Down':
                     self.focused_zone_data['y_pos'] += 1
-                    self.focused_zone_data['y_legend_pos'] += 1
                 if event.keysym == 'Up':
                     self.focused_zone_data['y_pos'] -= 1
-                    self.focused_zone_data['y_legend_pos'] -= 1
 
-                # map
-                self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
-
-                # legends
-                zones_data = self.json_parameters_data['zones']
-                for zone_data in zones_data.values():
-                    self.canvas.create_text(zone_data['x_pos'] + SHIFT_X, zone_data['y_pos'] + SHIFT_Y, text=zone_data['name'], fill='black', font=FONT)
-
-                self.canvas.create_text(self.focused_zone_data['x_pos'] + SHIFT_X, self.focused_zone_data['y_pos'] + SHIFT_Y, text=self.focused_zone_data['name'], fill='red', font=FONT)
+            # redraw
+            redraw()
 
         def click_callback(event: typing.Any) -> None:
             x_mouse, y_mouse = event.x, event.y
 
-            if self.focused_zone_data is not None:
-                self.canvas.create_text(self.focused_zone_data['x_pos'] + SHIFT_X, self.focused_zone_data['y_pos'] + SHIFT_Y, text=self.focused_zone_data['name'], fill='black', font=FONT)
+            print("click_callback")
 
             min_dist = 100000.
 
             zones_data = self.json_parameters_data['zones']
-            closest_zone_data = None
+
             for zone_data in zones_data.values():
+
+                zone_x, zone_y = zone_data['x_legend_pos'] + SHIFT_X, zone_data['y_legend_pos'] + SHIFT_Y
+                dist = math.sqrt((zone_x - x_mouse) ** 2 + (zone_y - y_mouse) ** 2)
+                if dist < min_dist:
+                    min_dist = dist
+                    self.legend_selected = True
+                    self.focused_zone_data = zone_data
+
                 zone_x, zone_y = zone_data['x_pos'] + SHIFT_X, zone_data['y_pos'] + SHIFT_Y
                 dist = math.sqrt((zone_x - x_mouse) ** 2 + (zone_y - y_mouse) ** 2)
                 if dist < min_dist:
                     min_dist = dist
-                    closest_zone_data = zone_data
+                    self.legend_selected = False
+                    self.focused_zone_data = zone_data
 
-            assert closest_zone_data is not None
+            assert self.focused_zone_data is not None
 
-            self.focused_zone_data = closest_zone_data  # pylint: disable=attribute-defined-outside-init
-            self.canvas.create_text(closest_zone_data['x_pos'] + SHIFT_X, closest_zone_data['y_pos'] + SHIFT_Y, text=closest_zone_data['name'], fill='red', font=FONT)
+            redraw()
 
         def save_callback() -> None:
 
@@ -203,15 +234,8 @@ class Application(tkinter.Frame):
                 print(f"Failed to load {parameters_file} : {exception}")
                 sys.exit(-1)
 
-        # map
-        self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
-
-        # legends
-        zones_data = self.json_parameters_data['zones']
-        for zone_data in zones_data.values():
-            assert zone_data['x_pos'] == zone_data['x_legend_pos'] or not zone_data['name'], f"Problem with x for zone {zone_data['name']}"
-            assert zone_data['y_pos'] == zone_data['y_legend_pos'] + 14 or not zone_data['name'], f"Problem with y for zone {zone_data['name']}"
-            self.canvas.create_text(zone_data['x_pos'] + SHIFT_X, zone_data['y_pos'] + SHIFT_Y, text=zone_data['name'], fill='black', font=FONT)
+        # draw
+        redraw()
 
         # clicking
         self.canvas.bind("<Button-1>", click_callback)
