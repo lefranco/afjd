@@ -111,7 +111,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
         # calculate scoring
         before = time.time()
         raw_ratings = {num2rolename[n]: centers_number_dict[str(n)] if str(n) in centers_number_dict else 0 for n in variant_data.roles if n >= 1}
-        ratings =  dict(sorted(raw_ratings.items(), key=lambda i: i[1], reverse=True))
+        ratings = dict(sorted(raw_ratings.items(), key=lambda i: i[1], reverse=True))
         solo_threshold = variant_data.number_centers() // 2
         score_table = scoring.scoring(game_scoring_name, solo_threshold, ratings)
         after = time.time()
