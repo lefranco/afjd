@@ -27,7 +27,7 @@ VERSION_FILE_NAME = "./version.ini"
 
 VERSION_SECTION = "version"
 
-TITLE = "Adjust legend and units : \nRclick to select legend or unit, click to select both, arrows to move selected, ctrl right to move faster, ctrl left to move slower, save to save to file"
+TITLE = "Adjust legend and units : \nclick to select legend or unit, right-click to select both, arrows to move selected, ctrl right to move faster, ctrl left to move slower, save to save to file"
 
 
 class VersionRecord(typing.NamedTuple):
@@ -342,7 +342,7 @@ class Application(tkinter.Frame):
             # draw
             draw(self.focused_num_zone, True)
 
-        def click_callback(event: typing.Any) -> None:
+        def rclick_callback(event: typing.Any) -> None:
             x_mouse, y_mouse = event.x, event.y
 
             # update on screen
@@ -373,7 +373,7 @@ class Application(tkinter.Frame):
             erase(self.focused_num_zone)
             draw(self.focused_num_zone, True)
 
-        def rclick_callback(event: typing.Any) -> None:
+        def click_callback(event: typing.Any) -> None:
             x_mouse, y_mouse = event.x, event.y
 
             # update on screen
