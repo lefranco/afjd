@@ -242,9 +242,9 @@
         "3": {
             "name": "sue",
             "full_name": "Suède",
-            "x_pos": 376,
+            "x_pos": 371,
             "y_pos": 218,
-            "x_legend_pos": 376,
+            "x_legend_pos": 371,
             "y_legend_pos": 204
         },
         "4": {
@@ -394,9 +394,9 @@
         "22": {
             "name": "mrs",
             "full_name": "Marseille",
-            "x_pos": 249,
-            "y_pos": 427,
-            "x_legend_pos": 249,
+            "x_pos": 247,
+            "y_pos": 425,
+            "x_legend_pos": 254,
             "y_legend_pos": 413
         },
         "23": {
@@ -410,9 +410,9 @@
         "24": {
             "name": "sui",
             "full_name": "Suisse",
-            "x_pos": 283,
+            "x_pos": 282,
             "y_pos": 393,
-            "x_legend_pos": 298,
+            "x_legend_pos": 297,
             "y_legend_pos": 395
         },
         "25": {
@@ -426,10 +426,10 @@
         "26": {
             "name": "hol",
             "full_name": "Hollande",
-            "x_pos": 276,
-            "y_pos": 318,
-            "x_legend_pos": 276,
-            "y_legend_pos": 304
+            "x_pos": 273,
+            "y_pos": 310,
+            "x_legend_pos": 280,
+            "y_legend_pos": 301
         },
         "27": {
             "name": "mun",
@@ -452,8 +452,8 @@
             "full_name": "Hambourg",
             "x_pos": 303,
             "y_pos": 311,
-            "x_legend_pos": 303,
-            "y_legend_pos": 297
+            "x_legend_pos": 318,
+            "y_legend_pos": 299
         },
         "30": {
             "name": "ber",
@@ -514,10 +514,10 @@
         "37": {
             "name": "kha",
             "full_name": "Kharkov",
-            "x_pos": 593,
-            "y_pos": 325,
-            "x_legend_pos": 593,
-            "y_legend_pos": 311
+            "x_pos": 590,
+            "y_pos": 321,
+            "x_legend_pos": 613,
+            "y_legend_pos": 318
         },
         "38": {
             "name": "rou",
@@ -596,8 +596,8 @@
             "full_name": "Milan",
             "x_pos": 306,
             "y_pos": 428,
-            "x_legend_pos": 306,
-            "y_legend_pos": 414
+            "x_legend_pos": 314,
+            "y_legend_pos": 415
         },
         "48": {
             "name": "rom",
@@ -690,10 +690,10 @@
         "59": {
             "name": "ank",
             "full_name": "Ankara",
-            "x_pos": 604,
-            "y_pos": 487,
-            "x_legend_pos": 604,
-            "y_legend_pos": 473
+            "x_pos": 587,
+            "y_pos": 488,
+            "x_legend_pos": 587,
+            "y_legend_pos": 474
         },
         "60": {
             "name": "ada",
@@ -910,9 +910,9 @@
         "85": {
             "name": "pru",
             "full_name": "Prusse",
-            "x_pos": 389,
-            "y_pos": 307,
-            "x_legend_pos": 389,
+            "x_pos": 381,
+            "y_pos": 304,
+            "x_legend_pos": 393,
             "y_legend_pos": 293,
             "display": 6
         },
@@ -945,10 +945,10 @@
         "89": {
             "name": "sin",
             "full_name": "Sinaï",
-            "x_pos": 607,
-            "y_pos": 663,
-            "x_legend_pos": 607,
-            "y_legend_pos": 649,
+            "x_pos": 605,
+            "y_pos": 661,
+            "x_legend_pos": 604,
+            "y_legend_pos": 647,
             "display": 10
         },
         "90": {
@@ -970,10 +970,10 @@
         "92": {
             "name": "irk",
             "full_name": "Irak",
-            "x_pos": 719,
-            "y_pos": 573,
-            "x_legend_pos": 719,
-            "y_legend_pos": 559
+            "x_pos": 716,
+            "y_pos": 565,
+            "x_legend_pos": 716,
+            "y_legend_pos": 551
         },
         "93": {
             "name": "aze",
@@ -1075,17 +1075,17 @@
         "105": {
             "name": "hel",
             "full_name": "Baie de Héligoland",
-            "x_pos": 296,
-            "y_pos": 283,
-            "x_legend_pos": 304,
-            "y_legend_pos": 269
+            "x_pos": 295,
+            "y_pos": 281,
+            "x_legend_pos": 302,
+            "y_legend_pos": 270
         },
         "106": {
             "name": "bhm",
             "full_name": "Mer de Bornholm",
-            "x_pos": 372,
-            "y_pos": 283,
-            "x_legend_pos": 372,
+            "x_pos": 367,
+            "y_pos": 280,
+            "x_legend_pos": 376,
             "y_legend_pos": 269
         },
         "107": {
@@ -1108,7 +1108,7 @@
             "name": "man",
             "full_name": "Manche",
             "x_pos": 191,
-            "y_pos": 330,
+            "y_pos": 326,
             "x_legend_pos": 162,
             "y_legend_pos": 327
         },
@@ -1163,10 +1163,10 @@
         "116": {
             "name": "lig",
             "full_name": "Mer Ligurienne",
-            "x_pos": 291,
-            "y_pos": 463,
-            "x_legend_pos": 291,
-            "y_legend_pos": 449
+            "x_pos": 281,
+            "y_pos": 461,
+            "x_legend_pos": 295,
+            "y_legend_pos": 453
         },
         "117": {
             "name": "tyr",
@@ -1243,9 +1243,9 @@
         "126": {
             "name": "mro",
             "full_name": "Mer Rouge",
-            "x_pos": 629,
+            "x_pos": 636,
             "y_pos": 720,
-            "x_legend_pos": 629,
+            "x_legend_pos": 624,
             "y_legend_pos": 706
         },
         "127": {
@@ -1259,9 +1259,9 @@
         "128": {
             "name": "per",
             "full_name": "Golfe Persique",
-            "x_pos": 839,
+            "x_pos": 833,
             "y_pos": 600,
-            "x_legend_pos": 839,
+            "x_legend_pos": 833,
             "y_legend_pos": 586
         },
         "129": {
@@ -1370,10 +1370,10 @@
         "141": {
             "name": "arm",
             "full_name": "Arménie",
-            "x_pos": 697,
+            "x_pos": 699,
             "y_pos": 463,
-            "x_legend_pos": 690,
-            "y_legend_pos": 452
+            "x_legend_pos": 691,
+            "y_legend_pos": 451
         },
         "142": {
             "name": "",
