@@ -124,8 +124,8 @@ def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> None:  # 
     # canon
     p3 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
     p3[0].x = x - 2; p3[0].y = y - 7
-    p3[1].x = x + 4; p3[1].y = y - 15
-    p3[2].x = x + 5; p3[2].y = y - 13
+    p3[1].x = x + 3; p3[1].y = y - 14
+    p3[2].x = x + 4; p3[2].y = y - 12
     p3[3].x = x; p3[3].y = y - 7
 
     flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p3))
@@ -311,6 +311,21 @@ class Application(tkinter.Frame):
 
             redraw()
 
+        def check_callback() -> None:
+
+            zones_data = self.json_parameters_data['zones']
+
+            for zone_data in zones_data.values():
+
+                zone_legend_x, zone_legend_y = zone_data['x_legend_pos'], zone_data['y_legend_pos']
+                zone_x, zone_y = zone_data['x_pos'], zone_data['y_pos']
+
+                if zone_legend_x != zone_x and zone_data['name']:
+                    print(f"Warning x<> for {zone_data['name']}")
+
+                if zone_legend_y + 14 != zone_y and zone_data['name']:
+                    print(f"Warning y<>y+14 for {zone_data['name']}")
+
         def save_callback() -> None:
 
             output = json.dumps(self.json_parameters_data, indent=4, ensure_ascii=False)
@@ -384,8 +399,11 @@ class Application(tkinter.Frame):
         frame_buttons_information = tkinter.Frame(main_frame)
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
 
-        self.mouse_pos_button = tkinter.Button(frame_buttons_information, text="save", command=save_callback)
-        self.mouse_pos_button.grid(row=1, column=1, sticky='we')
+        self.check_button = tkinter.Button(frame_buttons_information, text="check", command=check_callback)
+        self.check_button.grid(row=1, column=1, sticky='we')
+
+        self.save_button = tkinter.Button(frame_buttons_information, text="save", command=save_callback)
+        self.save_button.grid(row=2, column=1, sticky='we')
 
     def menu_complete_quit(self) -> None:
 
