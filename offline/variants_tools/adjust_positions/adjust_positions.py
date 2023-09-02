@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-
 """
 Graphic tool to adjust positions
 """
+
+# pylint: disable=multiple-statements
 
 import argparse
 import typing
@@ -12,11 +13,13 @@ import configparser
 import sys
 import json
 import math
+import itertools
 
 import tkinter
 import tkinter.messagebox
 import tkinter.filedialog
 import tkinter.scrolledtext
+
 
 # Important : name of file with version information
 VERSION_FILE_NAME = "./version.ini"
@@ -80,16 +83,128 @@ def load_version_information() -> VersionRecord:
 VERSION_INFORMATION = load_version_information()
 
 FONT = ('Arial 7')
+SHIFT_LEGEND_X = 0
+SHIFT_LEGEND_Y = -6
 
-SHIFT_X = 0
-SHIFT_Y = -6
-RADIUS = 7
+SHIFT_UNIT_X = 0
+SHIFT_UNIT_Y = -3
+
+
+class Point:
+    """ Point for easier compatbility with old C software (do not use a record here) """
+    def __init__(self) -> None:
+        self.x = 0  # pylint: disable=invalid-name
+        self.y = 0  # pylint: disable=invalid-name
+
+
+def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> None:  # pylint: disable=invalid-name
+    """ display an army the stabbeur way """
+
+    # the ctx.strokeStyle and ctx.fillStyle should be defined
+
+    # socle
+    p1 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
+    p1[0].x = x - 15; p1[0].y = y + 6
+    p1[1].x = x - 15; p1[1].y = y + 9
+    p1[2].x = x + 6; p1[2].y = y + 9
+    p1[3].x = x + 6; p1[3].y = y + 6
+
+    flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p1))
+    canvas.create_polygon(*flat_points, outline=outline, fill='')
+
+    # coin
+    p2 = [Point() for _ in range(3)]  # pylint: disable=invalid-name
+    p2[0].x = x - 9; p2[0].y = y + 6
+    p2[1].x = x - 4; p2[1].y = y + 6
+    p2[2].x = x - 7; p2[2].y = y + 3
+
+    flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p2))
+    canvas.create_polygon(*flat_points, outline=outline, fill='')
+
+    # canon
+    p3 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
+    p3[0].x = x - 2; p3[0].y = y - 7
+    p3[1].x = x + 4; p3[1].y = y - 15
+    p3[2].x = x + 5; p3[2].y = y - 13
+    p3[3].x = x; p3[3].y = y - 7
+
+    flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p3))
+    canvas.create_polygon(*flat_points, outline=outline, fill='')
+
+    # cercle autour roue exterieure
+    # simplified
+    radius = 6
+    canvas.create_oval(x - radius, y - radius, x + radius, y + radius, outline=outline)
+#    ctx.arc(x, y, 6, 0, 2 * math.pi, False)
+
+    # roue interieure
+    # simplified
+    radius = 2
+    canvas.create_oval(x - radius, y - radius, x + radius, y + radius, outline=outline)
+#    ctx.arc(x, y, 2, 0, 2 * math.pi, False)
+
+    # exterieur coin
+    p4 = [Point() for _ in range(2)]  # pylint: disable=invalid-name
+    p4[0].x = x - 7; p4[0].y = y + 3
+    p4[1].x = x - 9; p4[1].y = y + 6
+
+    flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p4))
+    canvas.create_polygon(*flat_points, outline=outline, fill='')
+
+
+def stabbeur_fleet(x: int, y: int, canvas: typing.Any, outline: str) -> None:  # pylint: disable=invalid-name
+    """ display a fleet the stabbeur way """
+
+    # gros oeuvre
+    p1 = [Point() for _ in range(33)]  # pylint: disable=invalid-name
+    p1[0].x = x - 15; p1[0].y = y + 4
+    p1[1].x = x + 16; p1[1].y = y + 4
+    p1[2].x = x + 15; p1[2].y = y
+    p1[3].x = x + 10; p1[3].y = y
+    p1[4].x = x + 10; p1[4].y = y - 3
+    p1[5].x = x + 7; p1[5].y = y - 3
+    p1[6].x = x + 7; p1[6].y = y - 2
+    p1[7].x = x + 4; p1[7].y = y - 2
+    p1[8].x = x + 4; p1[8].y = y - 9
+    p1[9].x = x + 3; p1[9].y = y - 9
+    p1[10].x = x + 3; p1[10].y = y - 6
+    p1[11].x = x - 1; p1[11].y = y - 6
+    p1[12].x = x - 1; p1[12].y = y - 9
+    p1[13].x = x - 2; p1[13].y = y - 9
+    p1[14].x = x - 2; p1[14].y = y - 13
+    p1[15].x = x - 3; p1[15].y = y - 13
+    p1[16].x = x - 3; p1[16].y = y - 6
+    p1[17].x = x - 6; p1[17].y = y - 6
+    p1[18].x = x - 6; p1[18].y = y - 5
+    p1[19].x = x - 3; p1[19].y = y - 5
+    p1[20].x = x - 3; p1[20].y = y - 4
+    p1[21].x = x - 4; p1[21].y = y - 3
+    p1[22].x = x - 4; p1[22].y = y - 2
+    p1[23].x = x - 5; p1[23].y = y - 2
+    p1[24].x = x - 5; p1[24].y = y - 3
+    p1[25].x = x - 9; p1[25].y = y - 3
+    p1[26].x = x - 9; p1[26].y = y
+    p1[27].x = x - 12; p1[27].y = y
+    p1[28].x = x - 12; p1[28].y = y - 1
+    p1[29].x = x - 13; p1[29].y = y - 1
+    p1[30].x = x - 13; p1[30].y = y
+    p1[31].x = x - 12; p1[31].y = y
+    p1[32].x = x - 15; p1[32].y = y + 4
+
+    flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p1))
+    canvas.create_polygon(*flat_points, outline=outline, fill='')
+
+    # hublots
+    for i in range(5):
+        radius = 1
+        canvas.create_oval(x - 8 + 5 * i + 1 - radius, y + 1 - radius, x - 8 + 5 * i + 1 + radius, y + 1 + radius, outline=outline)
+        #ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2 * math.pi, False)
 
 
 class Application(tkinter.Frame):
     """ Tkinter application """
 
-    def __init__(self, map_file: str, parameters_file: str, master: tkinter.Tk):
+    def __init__(self, map_file: str, variant_file: str, parameters_file: str, master: tkinter.Tk):
 
         # standard stuff
         tkinter.Frame.__init__(self, master)
@@ -101,9 +216,9 @@ class Application(tkinter.Frame):
         self.legend_selected = True
 
         # actual creation of widgets
-        self.create_widgets(self, map_file, parameters_file)
+        self.create_widgets(self, variant_file, map_file, parameters_file)
 
-    def create_widgets(self, main_frame: tkinter.Frame, map_file: str, parameters_file: str) -> None:
+    def create_widgets(self, main_frame: tkinter.Frame, variant_file: str, map_file: str, parameters_file: str) -> None:
         """ create all widgets for application """
 
         def about() -> None:
@@ -114,19 +229,30 @@ class Application(tkinter.Frame):
             # map
             self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
 
+            # types
+            regions_data = self.json_variant_data['regions']
+            zone2type = {i + 1: r for i, r in enumerate(regions_data)}
+            coastal_zones_data = self.json_variant_data['coastal_zones']
+            zone2type.update({len(regions_data) + i + 1: c[0] for i, c in enumerate(coastal_zones_data)})
+
             # legends and units
             zones_data = self.json_parameters_data['zones']
-            for zone_data in zones_data.values():
+            for num_zone_str, zone_data in zones_data.items():
 
                 fill = 'red' if zone_data is self.focused_zone_data and self.legend_selected else 'black'
                 x_pos_read = zone_data['x_legend_pos']
                 y_pos_read = zone_data['y_legend_pos']
-                self.canvas.create_text(x_pos_read + SHIFT_X, y_pos_read + SHIFT_Y, text=zone_data['name'], fill=fill, font=FONT)
 
-                fill = 'red' if zone_data is self.focused_zone_data and not self.legend_selected else 'black'
+                self.canvas.create_text(x_pos_read + SHIFT_LEGEND_X, y_pos_read + SHIFT_LEGEND_Y, text=zone_data['name'], fill=fill, font=FONT)
+
+                outline = 'red' if zone_data is self.focused_zone_data and not self.legend_selected else 'black'
                 x_pos_read = zone_data['x_pos']
                 y_pos_read = zone_data['y_pos']
-                self.canvas.create_oval(x_pos_read + SHIFT_X - RADIUS, y_pos_read + SHIFT_Y - RADIUS, x_pos_read + SHIFT_X + RADIUS, y_pos_read + SHIFT_Y + RADIUS, width=1, outline=fill)
+
+                if zone2type[int(num_zone_str)] in (1, 2):
+                    stabbeur_army(x_pos_read + SHIFT_UNIT_X, y_pos_read + SHIFT_UNIT_Y, self.canvas, outline=outline)
+                if zone2type[int(num_zone_str)] in (2, 3):
+                    stabbeur_fleet(x_pos_read + SHIFT_UNIT_X, y_pos_read + SHIFT_UNIT_Y, self.canvas, outline=outline)
 
         def arrow_callback(event: typing.Any) -> None:
 
@@ -167,14 +293,14 @@ class Application(tkinter.Frame):
 
             for zone_data in zones_data.values():
 
-                zone_x, zone_y = zone_data['x_legend_pos'] + SHIFT_X, zone_data['y_legend_pos'] + SHIFT_Y
+                zone_x, zone_y = zone_data['x_legend_pos'] + SHIFT_LEGEND_X, zone_data['y_legend_pos'] + SHIFT_LEGEND_Y
                 dist = math.sqrt((zone_x - x_mouse) ** 2 + (zone_y - y_mouse) ** 2)
                 if dist < min_dist:
                     min_dist = dist
                     self.legend_selected = True
                     self.focused_zone_data = zone_data
 
-                zone_x, zone_y = zone_data['x_pos'] + SHIFT_X, zone_data['y_pos'] + SHIFT_Y
+                zone_x, zone_y = zone_data['x_pos'] + SHIFT_UNIT_X, zone_data['y_pos'] + SHIFT_UNIT_Y
                 dist = math.sqrt((zone_x - x_mouse) ** 2 + (zone_y - y_mouse) ** 2)
                 if dist < min_dist:
                     min_dist = dist
@@ -224,6 +350,14 @@ class Application(tkinter.Frame):
         self.canvas = tkinter.Canvas(frame_carto, width=self.filename.width(), height=self.filename.height())
         self.canvas.grid(row=1, column=1)
 
+        # load variant data from json data file
+        with open(variant_file, "r", encoding='utf-8') as read_file:
+            try:
+                self.json_variant_data = json.load(read_file)
+            except Exception as exception:  # pylint: disable=broad-except
+                print(f"Failed to load {variant_file} : {exception}")
+                sys.exit(-1)
+
         # load parameters from json data file
         with open(parameters_file, "r", encoding='utf-8') as read_file:
             try:
@@ -263,7 +397,7 @@ class Application(tkinter.Frame):
         self.master.quit()
 
 
-def main_loop(map_file: str, parameters_file: str) -> None:
+def main_loop(map_file: str, variant_file: str, parameters_file: str) -> None:
     """ main_loop """
 
     root = tkinter.Tk()
@@ -280,7 +414,7 @@ def main_loop(map_file: str, parameters_file: str) -> None:
     # create app
     root.title(window_name)
 
-    app = Application(map_file, parameters_file, master=root)
+    app = Application(map_file, variant_file, parameters_file, master=root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
 
     # tkinter main loop
@@ -296,22 +430,28 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-m', '--map_file', required=True, help='Load a map file at start')
+    parser.add_argument('-v', '--variant_file', required=True, help='Load variant json file')
     parser.add_argument('-p', '--parameters_file', required=True, help='Load a parameters file at start')
     args = parser.parse_args()
 
     #  load files at start
     map_file = args.map_file
+    variant_file = args.variant_file
     parameters_file = args.parameters_file
 
     if not os.path.exists(map_file):
         print(f"File '{map_file}' does not seem to exist, please advise !", file=sys.stderr)
         sys.exit(-1)
 
+    if not os.path.exists(variant_file):
+        print(f"File '{variant_file}' does not seem to exist, please advise !", file=sys.stderr)
+        sys.exit(-1)
+
     if not os.path.exists(parameters_file):
         print(f"File '{map_file}' does not seem to exist, please advise !", file=sys.stderr)
         sys.exit(-1)
 
-    main_loop(map_file, parameters_file)
+    main_loop(map_file, variant_file, parameters_file)
 
     print("The End")
 
