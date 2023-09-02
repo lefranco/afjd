@@ -175,19 +175,36 @@ def registrations():
         # go to create account page
         index.load_option(None, 'Mon compte')
 
-    def store_information_callback(ev):  # pylint: disable=invalid-name
+    def store_comment_callback(ev):  # pylint: disable=invalid-name
         """ store_information_callback """
 
-        if 'PSEUDO' not in storage:
-            alert("Il faut être identifié")
-            # back to where we started
-            MY_SUB_PANEL.clear()
-            registrations()
-            return
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status not in [200, 201]:
+                if 'message' in req_result:
+                    alert(f"Erreur au commentaire de l'inscription : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème commentaire de l'inscription à l'événement : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
 
-        print(f"{input_information.value=}")
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Le comentaire d'inscription a été prise en compte : {messages}")
 
-        alert("Pas implémenté")
+        ev.preventDefault()
+
+        host = config.SERVER_CONFIG['PLAYER']['HOST']
+        port = config.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/registrations/{event_id}"
+
+        json_dict = {
+            'delete': False,
+            'comment': input_comment.value,
+        }
+
+        # commenting registration to an event : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
         # back to where we started
         MY_SUB_PANEL.clear()
@@ -277,6 +294,7 @@ def registrations():
 
         json_dict = {
             'delete': not register,
+            'comment': '',
         }
 
         # registrating to an event : need token
@@ -303,19 +321,23 @@ def registrations():
     event_dict = get_event_data(event_id)
 
     joiners = get_registrations(event_id)
-    dict_status = {j[0]: j[2] for j in joiners}
+    dict_status = {j[0]: (j[2], j[3]) for j in joiners}
     player_joined = False
+    player_status = 0
+    player_comment = ""
     if player_id is not None:
         player_joined = player_id in dict_status
+        if player_joined:
+            player_status, player_comment = dict_status[player_id]
 
     joiners_table = html.TABLE()
 
-    fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'infos', 'status']
+    fields = ['rank', 'date', 'pseudo', 'first_name', 'family_name', 'residence', 'nationality', 'time_zone', 'comment', 'status']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'rank': 'rang', 'date': 'date', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'infos': 'infos', 'status': 'statut'}[field]
+        field_fr = {'rank': 'rang', 'date': 'date', 'pseudo': 'pseudo', 'first_name': 'prénom', 'family_name': 'nom', 'residence': 'résidence', 'nationality': 'nationalité', 'time_zone': 'fuseau horaire', 'comment': 'commentaire', 'status': 'statut'}[field]
         col = html.TD(field_fr)
         thead <= col
     joiners_table <= thead
@@ -329,14 +351,13 @@ def registrations():
     joiners_dict = {}
     for joiner in joiners:
         joiner_data = players_dict[str(joiner[0])].copy()
-        joiner_data.update({'date': joiner[1], 'status': joiner[2]})
+        joiner_data.update({'date': joiner[1], 'status': joiner[2], 'comment': joiner[3]})
         joiners_dict[joiner[0]] = joiner_data
 
     # sorting is done by server
     for num, data in enumerate(joiners_dict.values()):
 
         data['rank'] = None
-        data['infos'] = "TBD"
 
         colour = None
         if 'PSEUDO' in storage:
@@ -375,15 +396,14 @@ def registrations():
     if 'PSEUDO' in storage:
         if player_joined:
             assert player_id is not None
-            status = dict_status[player_id]
-            if status < 0:
-                player_status = "Votre inscription est refusée"
-            elif status > 0:
-                player_status = "Votre inscription est acceptée"
+            if player_status < 0:
+                player_status_str = "Votre inscription est refusée"
+            elif player_status > 0:
+                player_status_str = "Votre inscription est acceptée"
             else:
-                player_status = "Votre inscription est en attente"
+                player_status_str = "Votre inscription est en attente"
         else:
-            player_status = "Vous n'êtes pas inscrit"
+            player_status_str = "Vous n'êtes pas inscrit"
 
         register_form = html.FORM()
         if player_joined:
@@ -395,20 +415,21 @@ def registrations():
             input_register_event.bind("click", lambda e: register_event_callback(e, True))
             register_form <= input_register_event
     else:
-        player_status = "Vous n'êtes pas identifié"
+        player_status_str = "Vous n'êtes pas identifié"
 
     detail_form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_message = html.LEGEND("Vos informations", title="Mettez les informations complémentaires")
+    legend_message = html.LEGEND("Votre commentaire", title="Mettez un commentaire (rondes jouées typiquement)")
     fieldset <= legend_message
-    input_information = html.TEXTAREA(type="text", rows=8, cols=80)
-    fieldset <= input_information
+    input_comment = html.TEXTAREA(type="text", rows=8, cols=80)
+    input_comment <= player_comment
+    fieldset <= input_comment
     detail_form <= fieldset
 
-    input_store_information = html.INPUT(type="submit", value="Enregistrer")
-    input_store_information.bind("click", store_information_callback)
-    detail_form <= input_store_information
+    input_store_comment = html.INPUT(type="submit", value="Enregistrer")
+    input_store_comment.bind("click", store_comment_callback)
+    detail_form <= input_store_comment
 
     contact_form = html.FORM()
 
@@ -489,8 +510,9 @@ def registrations():
     MY_SUB_PANEL <= html.BR()
 
     # provide the link
-    url = f"https://diplomania-gen.fr?event={name}"
-    MY_SUB_PANEL <= f"Pour inviter un joueur à rejoindre cet événement, lui envoyer le lien : '{url}'"
+    if not external:
+        url = f"https://diplomania-gen.fr?event={name}"
+        MY_SUB_PANEL <= f"Pour inviter un joueur à rejoindre cet événement, lui envoyer le lien : '{url}'"
 
     MY_SUB_PANEL <= html.H4("Votre inscription")
 
@@ -499,7 +521,7 @@ def registrations():
         MY_SUB_PANEL <= html.EM("Attention : l'inscription est externe, c'est à dire qu'elle n'est pas gérée sur le site.")
     else:
         # tell the guy his situation
-        MY_SUB_PANEL <= html.DIV(player_status, Class='important')
+        MY_SUB_PANEL <= html.DIV(player_status_str, Class='important')
         MY_SUB_PANEL <= html.BR()
 
         if 'PSEUDO' in storage:
@@ -510,19 +532,20 @@ def registrations():
     # provide more data about registration
     if 'PSEUDO' in storage:
         if player_joined:
-            MY_SUB_PANEL <= html.H4("Détailler votre inscrption")
+            MY_SUB_PANEL <= html.H4("Commentez votre inscription")
             MY_SUB_PANEL <= detail_form
 
-    # provide people already in
-    MY_SUB_PANEL <= html.H4("Contacter l'organisateur")
+    # provide mean to contact organizer
 
     # put button to register/un register
     if 'PSEUDO' in storage:
+        MY_SUB_PANEL <= html.H4("Contacter l'organisateur")
         MY_SUB_PANEL <= contact_form
 
     # provide people already in
-    MY_SUB_PANEL <= html.H4("Ils/elles vous attendent :")
-    MY_SUB_PANEL <= joiners_table
+    if not external:
+        MY_SUB_PANEL <= html.H4("Ils/elles vous attendent :")
+        MY_SUB_PANEL <= joiners_table
 
 
 def create_event(json_dict):
