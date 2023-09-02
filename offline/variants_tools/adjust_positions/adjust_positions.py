@@ -94,10 +94,10 @@ class Point:
         self.y = 0  # pylint: disable=invalid-name
 
 
-def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> None:  # pylint: disable=invalid-name
+def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> typing.List[typing.Any]:  # pylint: disable=invalid-name
     """ display an army the stabbeur way """
 
-    # the ctx.strokeStyle and ctx.fillStyle should be defined
+    items = []
 
     # socle
     p1 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
@@ -107,7 +107,8 @@ def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> None:  # 
     p1[3].x = x + 6; p1[3].y = y + 6
 
     flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p1))
-    canvas.create_polygon(*flat_points, outline=outline, fill='')
+    polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
+    items.append(polygon)
 
     # coin
     p2 = [Point() for _ in range(3)]  # pylint: disable=invalid-name
@@ -116,7 +117,8 @@ def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> None:  # 
     p2[2].x = x - 7; p2[2].y = y + 3
 
     flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p2))
-    canvas.create_polygon(*flat_points, outline=outline, fill='')
+    polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
+    items.append(polygon)
 
     # canon
     p3 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
@@ -126,19 +128,20 @@ def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> None:  # 
     p3[3].x = x; p3[3].y = y - 7
 
     flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p3))
-    canvas.create_polygon(*flat_points, outline=outline, fill='')
+    polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
+    items.append(polygon)
 
     # cercle autour roue exterieure
     # simplified
     radius = 6
-    canvas.create_oval(x - radius, y - radius, x + radius, y + radius, outline=outline)
-#    ctx.arc(x, y, 6, 0, 2 * math.pi, False)
+    oval = canvas.create_oval(x - radius, y - radius, x + radius, y + radius, outline=outline)
+    items.append(oval)
 
     # roue interieure
     # simplified
     radius = 2
-    canvas.create_oval(x - radius, y - radius, x + radius, y + radius, outline=outline)
-#    ctx.arc(x, y, 2, 0, 2 * math.pi, False)
+    oval = canvas.create_oval(x - radius, y - radius, x + radius, y + radius, outline=outline)
+    items.append(oval)
 
     # exterieur coin
     p4 = [Point() for _ in range(2)]  # pylint: disable=invalid-name
@@ -146,11 +149,16 @@ def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> None:  # 
     p4[1].x = x - 9; p4[1].y = y + 6
 
     flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p4))
-    canvas.create_polygon(*flat_points, outline=outline, fill='')
+    polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
+    items.append(polygon)
+
+    return items
 
 
-def stabbeur_fleet(x: int, y: int, canvas: typing.Any, outline: str) -> None:  # pylint: disable=invalid-name
+def stabbeur_fleet(x: int, y: int, canvas: typing.Any, outline: str) -> typing.List[typing.Any]:  # pylint: disable=invalid-name
     """ display a fleet the stabbeur way """
+
+    items = []
 
     # gros oeuvre
     p1 = [Point() for _ in range(33)]  # pylint: disable=invalid-name
@@ -189,13 +197,16 @@ def stabbeur_fleet(x: int, y: int, canvas: typing.Any, outline: str) -> None:  #
     p1[32].x = x - 15; p1[32].y = y + 4
 
     flat_points = itertools.chain.from_iterable(map(lambda p: (p.x, p.y), p1))
-    canvas.create_polygon(*flat_points, outline=outline, fill='')
+    polygon = canvas.create_polygon(*flat_points, outline=outline, fill='')
+    items.append(polygon)
 
     # hublots
     for i in range(5):
         radius = 1
-        canvas.create_oval(x - 8 + 5 * i + 1 - radius, y + 1 - radius, x - 8 + 5 * i + 1 + radius, y + 1 + radius, outline=outline)
-        #ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2 * math.pi, False)
+        oval = canvas.create_oval(x - 8 + 5 * i + 1 - radius, y + 1 - radius, x - 8 + 5 * i + 1 + radius, y + 1 + radius, outline=outline)
+        items.append(oval)
+
+    return items
 
 
 class SelectedEnum(enum.Enum):
@@ -242,7 +253,7 @@ class Application(tkinter.Frame):
                 sys.exit(-1)
 
         # data
-        self.focused_zone_data: typing.Optional[typing.Dict[str, typing.Any]] = None
+        self.focused_num_zone: typing.Optional[int] = None
         self.selected = SelectedEnum.NOTHING
 
         # types
@@ -257,72 +268,92 @@ class Application(tkinter.Frame):
         # speed
         self.speed = 1
 
-        # actual creation of widgets
-        self.create_widgets(self, variant_file, map_file, parameters_file)
+        # items table
+        self.item_table: typing.Dict[int, typing.Any] = {}
 
-    def create_widgets(self, main_frame: tkinter.Frame, variant_file: str, map_file: str, parameters_file: str) -> None:
+        # actual creation of widgets
+        self.create_widgets(self, map_file, parameters_file)
+
+    def create_widgets(self, main_frame: tkinter.Frame, map_file: str, parameters_file: str) -> None:
         """ create all widgets for application """
 
         def about() -> None:
             tkinter.messagebox.showinfo("About", str(VERSION_INFORMATION))
 
-        def redraw() -> None:
+        def erase(num_zone: int) -> None:
 
-            # map
-            self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
+            for item in self.item_table[num_zone]:
+                self.canvas.delete(item)
 
-            # legends and units
-            for num_zone_str, zone_data in self.zones_data.items():
+        def draw(num_zone: int, highlited: bool) -> None:
 
-                fill = 'red' if zone_data is self.focused_zone_data and self.selected.legend_selected() else 'black'
-                x_pos_read = zone_data['x_legend_pos']
-                y_pos_read = zone_data['y_legend_pos']
+            self.item_table[num_zone] = []
 
-                self.canvas.create_text(x_pos_read + SHIFT_LEGEND_X, y_pos_read + SHIFT_LEGEND_Y, text=zone_data['name'], fill=fill, font=FONT)
+            zone_data = self.zones_data[str(num_zone)]
 
-                outline = 'red' if zone_data is self.focused_zone_data and self.selected.unit_selected() else 'black'
-                x_pos_read = zone_data['x_pos']
-                y_pos_read = zone_data['y_pos']
+            fill = 'red' if highlited and self.selected.legend_selected() else 'black'
+            x_pos_read = zone_data['x_legend_pos']
+            y_pos_read = zone_data['y_legend_pos']
 
-                if self.zone2type[int(num_zone_str)] in (1, 2):
-                    stabbeur_army(x_pos_read, y_pos_read, self.canvas, outline=outline)
-                if self.zone2type[int(num_zone_str)] in (1, 3):
-                    stabbeur_fleet(x_pos_read, y_pos_read, self.canvas, outline=outline)
+            item = self.canvas.create_text(x_pos_read + SHIFT_LEGEND_X, y_pos_read + SHIFT_LEGEND_Y, text=zone_data['name'], fill=fill, font=FONT)
+            self.item_table[num_zone].append(item)
+
+            outline = 'red' if highlited and self.selected.unit_selected() else 'black'
+            x_pos_read = zone_data['x_pos']
+            y_pos_read = zone_data['y_pos']
+
+            if self.zone2type[num_zone] in (1, 2):
+                items = stabbeur_army(x_pos_read, y_pos_read, self.canvas, outline=outline)
+                self.item_table[num_zone].extend(items)
+            if self.zone2type[num_zone] in (1, 3):
+                items = stabbeur_fleet(x_pos_read, y_pos_read, self.canvas, outline=outline)
+                self.item_table[num_zone].extend(items)
 
         def arrow_callback(event: typing.Any) -> None:
 
-            if self.focused_zone_data is None:
+            if self.focused_num_zone is None:
                 return
+
+            # erase
+            erase(self.focused_num_zone)
+
+            zone_data = self.zones_data[str(self.focused_num_zone)]
 
             if self.selected.legend_selected():
                 if event.keysym == 'Right':
-                    self.focused_zone_data['x_legend_pos'] += self.speed
+                    zone_data['x_legend_pos'] += self.speed
                 if event.keysym == 'Left':
-                    self.focused_zone_data['x_legend_pos'] -= self.speed
+                    zone_data['x_legend_pos'] -= self.speed
                 if event.keysym == 'Down':
-                    self.focused_zone_data['y_legend_pos'] += self.speed
+                    zone_data['y_legend_pos'] += self.speed
                 if event.keysym == 'Up':
-                    self.focused_zone_data['y_legend_pos'] -= self.speed
+                    zone_data['y_legend_pos'] -= self.speed
 
             if self.selected.unit_selected():
                 if event.keysym == 'Right':
-                    self.focused_zone_data['x_pos'] += self.speed
+                    zone_data['x_pos'] += self.speed
                 if event.keysym == 'Left':
-                    self.focused_zone_data['x_pos'] -= self.speed
+                    zone_data['x_pos'] -= self.speed
                 if event.keysym == 'Down':
-                    self.focused_zone_data['y_pos'] += self.speed
+                    zone_data['y_pos'] += self.speed
                 if event.keysym == 'Up':
-                    self.focused_zone_data['y_pos'] -= self.speed
+                    zone_data['y_pos'] -= self.speed
 
-            # redraw
-            redraw()
+            # draw
+            draw(self.focused_num_zone, True)
 
         def click_callback(event: typing.Any) -> None:
             x_mouse, y_mouse = event.x, event.y
 
-            min_dist = 100000.
+            # update on screen
+            if self.focused_num_zone is not None:
+                erase(self.focused_num_zone)
+                draw(self.focused_num_zone, False)
 
-            for zone_data in self.zones_data.values():
+            min_dist = 100000.
+            self.focused_num_zone = None
+
+            for num_zone_str, zone_data in self.zones_data.items():
 
                 zone_x_1, zone_y_1 = zone_data['x_legend_pos'] + SHIFT_LEGEND_X, zone_data['y_legend_pos'] + SHIFT_LEGEND_Y
                 zone_x_2, zone_y_2 = zone_data['x_pos'], zone_data['y_pos']
@@ -334,38 +365,48 @@ class Application(tkinter.Frame):
                 if dist < min_dist:
                     min_dist = dist
                     self.selected = SelectedEnum.BOTH
-                    self.focused_zone_data = zone_data
+                    self.focused_num_zone = int(num_zone_str)
 
-            assert self.focused_zone_data is not None
+            assert self.focused_num_zone is not None
 
-            redraw()
+            # update on screen
+            erase(self.focused_num_zone)
+            draw(self.focused_num_zone, True)
 
         def rclick_callback(event: typing.Any) -> None:
             x_mouse, y_mouse = event.x, event.y
 
-            min_dist = 100000.
+            # update on screen
+            if self.focused_num_zone is not None:
+                erase(self.focused_num_zone)
+                draw(self.focused_num_zone, False)
 
-            for zone_data in self.zones_data.values():
+            min_dist = 100000.
+            self.focused_num_zone = None
+
+            for num_zone_str, zone_data in self.zones_data.items():
 
                 zone_x, zone_y = zone_data['x_legend_pos'] + SHIFT_LEGEND_X, zone_data['y_legend_pos'] + SHIFT_LEGEND_Y
                 dist = math.sqrt((zone_x - x_mouse) ** 2 + (zone_y - y_mouse) ** 2)
                 if dist < min_dist:
                     min_dist = dist
                     self.selected = SelectedEnum.LEGEND
-                    self.focused_zone_data = zone_data
+                    self.focused_num_zone = int(num_zone_str)
 
                 zone_x, zone_y = zone_data['x_pos'], zone_data['y_pos']
                 dist = math.sqrt((zone_x - x_mouse) ** 2 + (zone_y - y_mouse) ** 2)
                 if dist < min_dist:
                     min_dist = dist
                     self.selected = SelectedEnum.UNIT
-                    self.focused_zone_data = zone_data
+                    self.focused_num_zone = int(num_zone_str)
 
-            assert self.focused_zone_data is not None
+            assert self.focused_num_zone is not None
 
-            redraw()
+            # update on screen
+            erase(self.focused_num_zone)
+            draw(self.focused_num_zone, True)
 
-        def key_callback(event):
+        def key_callback(event: typing.Any) -> None:
 
             if event.keysym == 'Control_L':
                 if self.speed > 1:
@@ -426,8 +467,13 @@ class Application(tkinter.Frame):
         self.canvas = tkinter.Canvas(frame_carto, width=self.filename.width(), height=self.filename.height())
         self.canvas.grid(row=1, column=1)
 
-        # draw
-        redraw()
+        # map
+        self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
+
+        # legends and units
+        for num_zone_str in self.zones_data:
+            num_zone = int(num_zone_str)
+            draw(num_zone, False)
 
         # clicking
         self.canvas.bind("<Button-1>", click_callback)
