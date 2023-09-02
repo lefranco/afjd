@@ -115,6 +115,7 @@ EVENT_PARSER2.add_argument('manager_id', type=int, required=True)
 
 REGISTRATION_PARSER = flask_restful.reqparse.RequestParser()
 REGISTRATION_PARSER.add_argument('delete', type=int, required=True)
+REGISTRATION_PARSER.add_argument('comment', type=str, required=True)
 
 REGISTRATION_UPDATE_PARSER = flask_restful.reqparse.RequestParser()
 REGISTRATION_UPDATE_PARSER.add_argument('player_id', type=int, required=True)
@@ -1189,8 +1190,11 @@ class NewsRessource(flask_restful.Resource):  # type: ignore
 
         content = args['content']
 
+        # protection from "surrogates not allowed"
+        content_safe = content.encode('utf-8', errors='ignore').decode()
+
         # create news here
-        news = newss.News(topic, content)
+        news = newss.News(topic, content_safe)
         news.update_database(sql_executor)
 
         sql_executor.commit()
@@ -2131,7 +2135,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         registrations_list = registrations.Registration.list_by_event_id(sql_executor, int(event_id))
         del sql_executor
 
-        data = [(r[1], r[2], r[3]) for r in sorted(registrations_list, key=lambda rr: rr[2])]
+        data = [(r[1], r[2], r[3], r[4]) for r in sorted(registrations_list, key=lambda rr: rr[2])]
 
         return data, 200
 
@@ -2146,6 +2150,10 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         args = REGISTRATION_PARSER.parse_args(strict=True)
 
         delete = args['delete']
+        comment = args['comment']
+
+        # protection from "surrogates not allowed"
+        comment_safe = comment.encode('utf-8', errors='ignore').decode()
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -2189,7 +2197,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
         if not delete:
 
             now = time.time()
-            registration = registrations.Registration(int(event_id), user_id, now, 0)
+            registration = registrations.Registration(int(event_id), user_id, now, 0, comment_safe)
             registration.update_database(sql_executor)
 
             sql_executor.commit()
@@ -2198,7 +2206,7 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             data = {'msg': 'Ok registration updated or created'}
             return data, 201
 
-        registration = registrations.Registration(int(event_id), user_id, 0., 0)
+        registration = registrations.Registration(int(event_id), user_id, 0., 0, '')
         registration.delete_database(sql_executor)
 
         sql_executor.commit()
@@ -2265,11 +2273,11 @@ class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(404, msg=f"There does not seem to be a player with identifier {player_id}")
 
         # action
+        regis = registrations.Registration.find_date_comment_by_event_id_player_id(sql_executor, event_id, player_id)
+        assert regis is not None
+        date_, comment = regis
 
-        date_ = registrations.Registration.find_date_by_event_id_player_id(sql_executor, event_id, player_id)
-        assert date_ is not None
-
-        registration = registrations.Registration(int(event_id), int(player_id), date_, value)
+        registration = registrations.Registration(int(event_id), int(player_id), date_, value, comment)
         registration.update_database(sql_executor)
 
         assert player_concerned is not None
