@@ -226,9 +226,31 @@ class Application(tkinter.Frame):
         self.master = master
         self.grid()
 
+        # load variant data from json data file
+        with open(variant_file, "r", encoding='utf-8') as read_file:
+            try:
+                self.json_variant_data = json.load(read_file)
+            except Exception as exception:  # pylint: disable=broad-except
+                print(f"Failed to load {variant_file} : {exception}")
+                sys.exit(-1)
+
+        # load parameters from json data file
+        with open(parameters_file, "r", encoding='utf-8') as read_file:
+            try:
+                self.json_parameters_data = json.load(read_file)
+            except Exception as exception:  # pylint: disable=broad-except
+                print(f"Failed to load {parameters_file} : {exception}")
+                sys.exit(-1)
+
         # data
         self.focused_zone_data: typing.Optional[typing.Dict[str, typing.Any]] = None
         self.selected = SelectedEnum.NOTHING
+
+        # types
+        regions_data = self.json_variant_data['regions']
+        self.zone2type = {i + 1: r for i, r in enumerate(regions_data)}
+        coastal_zones_data = self.json_variant_data['coastal_zones']
+        self.zone2type.update({len(regions_data) + i + 1: c[0] for i, c in enumerate(coastal_zones_data)})
 
         # actual creation of widgets
         self.create_widgets(self, variant_file, map_file, parameters_file)
@@ -244,12 +266,6 @@ class Application(tkinter.Frame):
             # map
             self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
 
-            # types
-            regions_data = self.json_variant_data['regions']
-            zone2type = {i + 1: r for i, r in enumerate(regions_data)}
-            coastal_zones_data = self.json_variant_data['coastal_zones']
-            zone2type.update({len(regions_data) + i + 1: c[0] for i, c in enumerate(coastal_zones_data)})
-
             # legends and units
             zones_data = self.json_parameters_data['zones']
             for num_zone_str, zone_data in zones_data.items():
@@ -264,9 +280,9 @@ class Application(tkinter.Frame):
                 x_pos_read = zone_data['x_pos']
                 y_pos_read = zone_data['y_pos']
 
-                if zone2type[int(num_zone_str)] in (1, 2):
+                if self.zone2type[int(num_zone_str)] in (1, 2):
                     stabbeur_army(x_pos_read, y_pos_read, self.canvas, outline=outline)
-                if zone2type[int(num_zone_str)] in (1, 3):
+                if self.zone2type[int(num_zone_str)] in (1, 3):
                     stabbeur_fleet(x_pos_read, y_pos_read, self.canvas, outline=outline)
 
         def arrow_callback(event: typing.Any) -> None:
@@ -404,22 +420,6 @@ class Application(tkinter.Frame):
 
         self.canvas = tkinter.Canvas(frame_carto, width=self.filename.width(), height=self.filename.height())
         self.canvas.grid(row=1, column=1)
-
-        # load variant data from json data file
-        with open(variant_file, "r", encoding='utf-8') as read_file:
-            try:
-                self.json_variant_data = json.load(read_file)
-            except Exception as exception:  # pylint: disable=broad-except
-                print(f"Failed to load {variant_file} : {exception}")
-                sys.exit(-1)
-
-        # load parameters from json data file
-        with open(parameters_file, "r", encoding='utf-8') as read_file:
-            try:
-                self.json_parameters_data = json.load(read_file)
-            except Exception as exception:  # pylint: disable=broad-except
-                print(f"Failed to load {parameters_file} : {exception}")
-                sys.exit(-1)
 
         # draw
         redraw()
