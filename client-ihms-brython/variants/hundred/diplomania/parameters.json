@@ -118,10 +118,10 @@
         "2": {
             "name": "Ang",
             "full_name": "Anglia",
-            "x_pos": 236,
-            "y_pos": 217,
-            "x_legend_pos": 236,
-            "y_legend_pos": 203,
+            "x_pos": 233,
+            "y_pos": 221,
+            "x_legend_pos": 233,
+            "y_legend_pos": 207,
             "display": 1
         },
         "3": {
@@ -145,25 +145,25 @@
             "name": "Atl",
             "full_name": "Atlantic",
             "x_pos": 27,
-            "y_pos": 540,
+            "y_pos": 554,
             "x_legend_pos": 27,
-            "y_legend_pos": 526
+            "y_legend_pos": 540
         },
         "6": {
             "name": "Bis",
             "full_name": "Biscay",
-            "x_pos": 141,
-            "y_pos": 464,
-            "x_legend_pos": 141,
-            "y_legend_pos": 450
+            "x_pos": 138,
+            "y_pos": 468,
+            "x_legend_pos": 138,
+            "y_legend_pos": 454
         },
         "7": {
             "name": "Brs",
             "full_name": "Bristol Channel",
-            "x_pos": 81,
-            "y_pos": 291,
-            "x_legend_pos": 81,
-            "y_legend_pos": 277
+            "x_pos": 74,
+            "y_pos": 340,
+            "x_legend_pos": 74,
+            "y_legend_pos": 326
         },
         "8": {
             "name": "Bri",
@@ -209,10 +209,10 @@
         "13": {
             "name": "Dau",
             "full_name": "Dauphina",
-            "x_pos": 398,
-            "y_pos": 468,
-            "x_legend_pos": 398,
-            "y_legend_pos": 454
+            "x_pos": 394,
+            "y_pos": 474,
+            "x_legend_pos": 394,
+            "y_legend_pos": 460
         },
         "14": {
             "name": "Dev",
@@ -249,10 +249,10 @@
         "18": {
             "name": "Fri",
             "full_name": "Fridland",
-            "x_pos": 437,
-            "y_pos": 227,
-            "x_legend_pos": 437,
-            "y_legend_pos": 213,
+            "x_pos": 439,
+            "y_pos": 218,
+            "x_legend_pos": 420,
+            "y_legend_pos": 216,
             "display": 3
         },
         "19": {
@@ -266,18 +266,18 @@
         "20": {
             "name": "Hol",
             "full_name": "Holland",
-            "x_pos": 401,
+            "x_pos": 415,
             "y_pos": 260,
-            "x_legend_pos": 401,
-            "y_legend_pos": 246
+            "x_legend_pos": 395,
+            "y_legend_pos": 250
         },
         "21": {
             "name": "Iri",
             "full_name": "Irish Sea",
-            "x_pos": 97,
-            "y_pos": 212,
-            "x_legend_pos": 97,
-            "y_legend_pos": 198
+            "x_pos": 91,
+            "y_pos": 221,
+            "x_legend_pos": 91,
+            "y_legend_pos": 207
         },
         "22": {
             "name": "Lim",
@@ -291,8 +291,8 @@
         "23": {
             "name": "Lon",
             "full_name": "London",
-            "x_pos": 232,
-            "y_pos": 276,
+            "x_pos": 239,
+            "y_pos": 275,
             "x_legend_pos": 232,
             "y_legend_pos": 262
         },
@@ -324,18 +324,18 @@
         "27": {
             "name": "Min",
             "full_name": "Minch",
-            "x_pos": 47,
-            "y_pos": 39,
-            "x_legend_pos": 47,
-            "y_legend_pos": 25
+            "x_pos": 41,
+            "y_pos": 79,
+            "x_legend_pos": 41,
+            "y_legend_pos": 65
         },
         "28": {
             "name": "Nom",
             "full_name": "Normandy",
             "x_pos": 269,
-            "y_pos": 363,
-            "x_legend_pos": 269,
-            "y_legend_pos": 349
+            "y_pos": 353,
+            "x_legend_pos": 238,
+            "y_legend_pos": 351
         },
         "29": {
             "name": "Nor",
@@ -348,27 +348,27 @@
         "30": {
             "name": "Not",
             "full_name": "Northumbria",
-            "x_pos": 193,
-            "y_pos": 195,
-            "x_legend_pos": 193,
-            "y_legend_pos": 181,
+            "x_pos": 194,
+            "y_pos": 178,
+            "x_legend_pos": 194,
+            "y_legend_pos": 164,
             "display": 1
         },
         "31": {
             "name": "Orl",
             "full_name": "Orleanais",
-            "x_pos": 327,
-            "y_pos": 416,
-            "x_legend_pos": 327,
-            "y_legend_pos": 402
+            "x_pos": 328,
+            "y_pos": 422,
+            "x_legend_pos": 328,
+            "y_legend_pos": 408
         },
         "32": {
             "name": "Par",
             "full_name": "Paris",
-            "x_pos": 352,
-            "y_pos": 368,
-            "x_legend_pos": 352,
-            "y_legend_pos": 354
+            "x_pos": 345,
+            "y_pos": 364,
+            "x_legend_pos": 345,
+            "y_legend_pos": 350
         },
         "33": {
             "name": "Poi",
@@ -391,10 +391,10 @@
         "35": {
             "name": "Sav",
             "full_name": "Savoy",
-            "x_pos": 497,
-            "y_pos": 484,
-            "x_legend_pos": 497,
-            "y_legend_pos": 470
+            "x_pos": 503,
+            "y_pos": 492,
+            "x_legend_pos": 503,
+            "y_legend_pos": 478
         },
         "36": {
             "name": "Sco",
@@ -415,9 +415,9 @@
         "38": {
             "name": "Pal",
             "full_name": "The Pale",
-            "x_pos": 23,
+            "x_pos": 25,
             "y_pos": 201,
-            "x_legend_pos": 23,
+            "x_legend_pos": 25,
             "y_legend_pos": 187
         },
         "39": {
@@ -431,18 +431,18 @@
         "40": {
             "name": "Tou",
             "full_name": "Toulouse",
-            "x_pos": 308,
-            "y_pos": 547,
-            "x_legend_pos": 308,
-            "y_legend_pos": 533
+            "x_pos": 312,
+            "y_pos": 549,
+            "x_legend_pos": 312,
+            "y_legend_pos": 535
         },
         "41": {
             "name": "Wal",
             "full_name": "Wales",
-            "x_pos": 158,
-            "y_pos": 231,
-            "x_legend_pos": 158,
-            "y_legend_pos": 217,
+            "x_pos": 155,
+            "y_pos": 246,
+            "x_legend_pos": 155,
+            "y_legend_pos": 232,
             "display": 1
         },
         "42": {
