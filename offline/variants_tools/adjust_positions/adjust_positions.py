@@ -27,7 +27,7 @@ VERSION_FILE_NAME = "./version.ini"
 
 VERSION_SECTION = "version"
 
-TITLE = "Adjust legend and units : \nclick to select legend or unit, right-click to select both, arrows to move selected,ctrl right to move faster, ctrl left to move slower,\nj to join unit and legend, save to save to file"
+TITLE = "Adjust legend and units : \nclick to select legend or unit, right-click to select both, arrows to move selected, + to move faster, - to move slower,\nj to join unit and legend, save to save to file"
 
 
 class VersionRecord(typing.NamedTuple):
@@ -410,13 +410,11 @@ class Application(tkinter.Frame):
             draw(self.focused_num_zone, True)
 
         def key_callback(event: typing.Any) -> None:
-
-            if event.keysym == 'Control_L':
-                if self.speed > 1:
-                    self.speed -= 1
-
-            if event.keysym == 'Control_R':
+            if event.char == '+':
                 self.speed += 1
+            if event.char == '-':
+                if self.speed > 1:
+                    self.speed += 1
 
         def join_callback(_: typing.Any) -> None:
 
