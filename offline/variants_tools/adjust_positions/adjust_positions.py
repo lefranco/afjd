@@ -27,8 +27,7 @@ VERSION_FILE_NAME = "./version.ini"
 
 VERSION_SECTION = "version"
 
-
-TITLE = "Ajusting positions..."
+TITLE = "Adjust legend and units : \nRclick to select legend or unit, click to select both, arrows to move selected, ctrl right to move faster, ctrl left to move slower, save to save to file"
 
 
 class VersionRecord(typing.NamedTuple):
@@ -252,6 +251,12 @@ class Application(tkinter.Frame):
         coastal_zones_data = self.json_variant_data['coastal_zones']
         self.zone2type.update({len(regions_data) + i + 1: c[0] for i, c in enumerate(coastal_zones_data)})
 
+        # zones
+        self.zones_data = self.json_parameters_data['zones']
+
+        # speed
+        self.speed = 1
+
         # actual creation of widgets
         self.create_widgets(self, variant_file, map_file, parameters_file)
 
@@ -267,8 +272,7 @@ class Application(tkinter.Frame):
             self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
 
             # legends and units
-            zones_data = self.json_parameters_data['zones']
-            for num_zone_str, zone_data in zones_data.items():
+            for num_zone_str, zone_data in self.zones_data.items():
 
                 fill = 'red' if zone_data is self.focused_zone_data and self.selected.legend_selected() else 'black'
                 x_pos_read = zone_data['x_legend_pos']
@@ -291,38 +295,34 @@ class Application(tkinter.Frame):
                 return
 
             if self.selected.legend_selected():
-
                 if event.keysym == 'Right':
-                    self.focused_zone_data['x_legend_pos'] += 1
+                    self.focused_zone_data['x_legend_pos'] += self.speed
                 if event.keysym == 'Left':
-                    self.focused_zone_data['x_legend_pos'] -= 1
+                    self.focused_zone_data['x_legend_pos'] -= self.speed
                 if event.keysym == 'Down':
-                    self.focused_zone_data['y_legend_pos'] += 1
+                    self.focused_zone_data['y_legend_pos'] += self.speed
                 if event.keysym == 'Up':
-                    self.focused_zone_data['y_legend_pos'] -= 1
+                    self.focused_zone_data['y_legend_pos'] -= self.speed
 
             if self.selected.unit_selected():
-
                 if event.keysym == 'Right':
-                    self.focused_zone_data['x_pos'] += 1
+                    self.focused_zone_data['x_pos'] += self.speed
                 if event.keysym == 'Left':
-                    self.focused_zone_data['x_pos'] -= 1
+                    self.focused_zone_data['x_pos'] -= self.speed
                 if event.keysym == 'Down':
-                    self.focused_zone_data['y_pos'] += 1
+                    self.focused_zone_data['y_pos'] += self.speed
                 if event.keysym == 'Up':
-                    self.focused_zone_data['y_pos'] -= 1
+                    self.focused_zone_data['y_pos'] -= self.speed
 
             # redraw
             redraw()
 
-        def rclick_callback(event: typing.Any) -> None:
+        def click_callback(event: typing.Any) -> None:
             x_mouse, y_mouse = event.x, event.y
 
             min_dist = 100000.
 
-            zones_data = self.json_parameters_data['zones']
-
-            for zone_data in zones_data.values():
+            for zone_data in self.zones_data.values():
 
                 zone_x_1, zone_y_1 = zone_data['x_legend_pos'] + SHIFT_LEGEND_X, zone_data['y_legend_pos'] + SHIFT_LEGEND_Y
                 zone_x_2, zone_y_2 = zone_data['x_pos'], zone_data['y_pos']
@@ -340,14 +340,12 @@ class Application(tkinter.Frame):
 
             redraw()
 
-        def click_callback(event: typing.Any) -> None:
+        def rclick_callback(event: typing.Any) -> None:
             x_mouse, y_mouse = event.x, event.y
 
             min_dist = 100000.
 
-            zones_data = self.json_parameters_data['zones']
-
-            for zone_data in zones_data.values():
+            for zone_data in self.zones_data.values():
 
                 zone_x, zone_y = zone_data['x_legend_pos'] + SHIFT_LEGEND_X, zone_data['y_legend_pos'] + SHIFT_LEGEND_Y
                 dist = math.sqrt((zone_x - x_mouse) ** 2 + (zone_y - y_mouse) ** 2)
@@ -367,11 +365,18 @@ class Application(tkinter.Frame):
 
             redraw()
 
+        def key_callback(event):
+
+            if event.keysym == 'Control_L':
+                if self.speed > 1:
+                    self.speed -= 1
+
+            if event.keysym == 'Control_R':
+                self.speed += 1
+
         def check_callback() -> None:
 
-            zones_data = self.json_parameters_data['zones']
-
-            for zone_data in zones_data.values():
+            for zone_data in self.zones_data.values():
 
                 zone_legend_x, zone_legend_y = zone_data['x_legend_pos'], zone_data['y_legend_pos']
                 zone_x, zone_y = zone_data['x_pos'], zone_data['y_pos']
@@ -433,6 +438,9 @@ class Application(tkinter.Frame):
         self.master.bind("<Right>", arrow_callback)
         self.master.bind("<Up>", arrow_callback)
         self.master.bind("<Down>", arrow_callback)
+
+        # ctrl
+        self.master.bind("<Key>", key_callback)
 
         # frame buttons and information
         # -----------

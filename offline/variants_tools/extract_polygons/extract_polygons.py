@@ -34,7 +34,7 @@ INFO_WIDTH1 = 30
 INFO_HEIGHT2 = 15
 INFO_WIDTH2 = 30
 
-TITLE = "Polygons positions detection..."
+TITLE = "Polygons positions detection : click anywhere to get information to be copied pasted"
 
 
 class VersionRecord(typing.NamedTuple):
