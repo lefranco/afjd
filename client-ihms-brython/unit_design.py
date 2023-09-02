@@ -47,8 +47,8 @@ def stabbeur_army(x: int, y: int, ctx):  # pylint: disable=invalid-name
     # canon
     p3 = [Point() for _ in range(4)]  # pylint: disable=invalid-name
     p3[0].x = x - 2; p3[0].y = y - 7
-    p3[1].x = x + 4; p3[1].y = y - 15
-    p3[2].x = x + 5; p3[2].y = y - 13
+    p3[1].x = x + 3; p3[1].y = y - 14
+    p3[2].x = x + 4; p3[2].y = y - 12
     p3[3].x = x; p3[3].y = y - 7
     ctx.beginPath()
     for n, p in enumerate(p3):  # pylint: disable=invalid-name
