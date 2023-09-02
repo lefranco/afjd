@@ -220,7 +220,7 @@ class Application(tkinter.Frame):
         frame_title = tkinter.Frame(main_frame)
         frame_title.grid(row=1, column=1, sticky='we')
 
-        label = tkinter.Label(frame_title, text=TITLE)
+        label = tkinter.Label(frame_title, text=TITLE, justify=tkinter.LEFT)
         label.grid(row=1, column=1, sticky='we')
 
         # frame carto

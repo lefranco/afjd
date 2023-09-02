@@ -27,7 +27,7 @@ VERSION_FILE_NAME = "./version.ini"
 
 VERSION_SECTION = "version"
 
-TITLE = "Adjust legend and units : \nclick to select legend or unit, right-click to select both, arrows to move selected, ctrl right to move faster, ctrl left to move slower, save to save to file"
+TITLE = "Adjust legend and units : \nclick to select legend or unit, right-click to select both, arrows to move selected,ctrl right to move faster, ctrl left to move slower,\nj to join unit and legend, save to save to file"
 
 
 class VersionRecord(typing.NamedTuple):
@@ -83,8 +83,11 @@ def load_version_information() -> VersionRecord:
 VERSION_INFORMATION = load_version_information()
 
 FONT = ('Arial 7')
+
 SHIFT_LEGEND_X = 0
 SHIFT_LEGEND_Y = -6
+DELTA_LEGEND_EXPECTED_X = 0
+DELTA_LEGEND_EXPECTED_Y = -14
 
 
 class Point:
@@ -415,6 +418,21 @@ class Application(tkinter.Frame):
             if event.keysym == 'Control_R':
                 self.speed += 1
 
+        def join_callback(_: typing.Any) -> None:
+
+            if self.focused_num_zone is None:
+                return
+
+            erase(self.focused_num_zone)
+
+            zone_data = self.zones_data[str(self.focused_num_zone)]
+
+            zone_data['x_legend_pos'] = zone_data['x_pos'] + DELTA_LEGEND_EXPECTED_X
+            zone_data['y_legend_pos'] = zone_data['y_pos'] + DELTA_LEGEND_EXPECTED_Y
+
+            # update on screen
+            draw(self.focused_num_zone, True)
+
         def check_callback() -> None:
 
             for zone_data in self.zones_data.values():
@@ -422,10 +440,10 @@ class Application(tkinter.Frame):
                 zone_legend_x, zone_legend_y = zone_data['x_legend_pos'], zone_data['y_legend_pos']
                 zone_x, zone_y = zone_data['x_pos'], zone_data['y_pos']
 
-                if zone_legend_x != zone_x and zone_data['name']:
+                if zone_legend_x != zone_x + DELTA_LEGEND_EXPECTED_X and zone_data['name']:
                     print(f"Warning x<> for {zone_data['name']}")
 
-                if zone_legend_y + 14 != zone_y and zone_data['name']:
+                if zone_legend_y != zone_y + DELTA_LEGEND_EXPECTED_Y and zone_data['name']:
                     print(f"Warning y<>y+14 for {zone_data['name']}")
 
         def save_callback() -> None:
@@ -452,7 +470,7 @@ class Application(tkinter.Frame):
         frame_title = tkinter.Frame(main_frame)
         frame_title.grid(row=1, column=1, sticky='we')
 
-        label = tkinter.Label(frame_title, text=TITLE)
+        label = tkinter.Label(frame_title, text=TITLE, justify=tkinter.LEFT)
         label.grid(row=1, column=1, sticky='we')
 
         # frame carto
@@ -487,6 +505,7 @@ class Application(tkinter.Frame):
 
         # ctrl
         self.master.bind("<Key>", key_callback)
+        self.master.bind("<Key-j>", join_callback)
 
         # frame buttons and information
         # -----------
