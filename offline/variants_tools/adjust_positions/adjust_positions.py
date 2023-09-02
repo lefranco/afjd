@@ -14,6 +14,7 @@ import sys
 import json
 import math
 import itertools
+import enum
 
 import tkinter
 import tkinter.messagebox
@@ -85,9 +86,6 @@ VERSION_INFORMATION = load_version_information()
 FONT = ('Arial 7')
 SHIFT_LEGEND_X = 0
 SHIFT_LEGEND_Y = -6
-
-SHIFT_UNIT_X = 0
-SHIFT_UNIT_Y = -2
 
 
 class Point:
@@ -201,6 +199,23 @@ def stabbeur_fleet(x: int, y: int, canvas: typing.Any, outline: str) -> None:  #
         #ctx.arc(x - 8 + 5 * i + 1, y + 1, 1, 0, 2 * math.pi, False)
 
 
+class SelectedEnum(enum.Enum):
+    """ SelectedEnum """
+
+    NOTHING = 1
+    LEGEND = 2
+    UNIT = 3
+    BOTH = 4
+
+    def legend_selected(self) -> bool:
+        """ legend_selected """
+        return self in [SelectedEnum.LEGEND, SelectedEnum.BOTH]
+
+    def unit_selected(self) -> bool:
+        """ unit_selected """
+        return self in [SelectedEnum.UNIT, SelectedEnum.BOTH]
+
+
 class Application(tkinter.Frame):
     """ Tkinter application """
 
@@ -213,7 +228,7 @@ class Application(tkinter.Frame):
 
         # data
         self.focused_zone_data: typing.Optional[typing.Dict[str, typing.Any]] = None
-        self.legend_selected = True
+        self.selected = SelectedEnum.NOTHING
 
         # actual creation of widgets
         self.create_widgets(self, variant_file, map_file, parameters_file)
@@ -239,27 +254,27 @@ class Application(tkinter.Frame):
             zones_data = self.json_parameters_data['zones']
             for num_zone_str, zone_data in zones_data.items():
 
-                fill = 'red' if zone_data is self.focused_zone_data and self.legend_selected else 'black'
+                fill = 'red' if zone_data is self.focused_zone_data and self.selected.legend_selected() else 'black'
                 x_pos_read = zone_data['x_legend_pos']
                 y_pos_read = zone_data['y_legend_pos']
 
                 self.canvas.create_text(x_pos_read + SHIFT_LEGEND_X, y_pos_read + SHIFT_LEGEND_Y, text=zone_data['name'], fill=fill, font=FONT)
 
-                outline = 'red' if zone_data is self.focused_zone_data and not self.legend_selected else 'black'
+                outline = 'red' if zone_data is self.focused_zone_data and self.selected.unit_selected() else 'black'
                 x_pos_read = zone_data['x_pos']
                 y_pos_read = zone_data['y_pos']
 
                 if zone2type[int(num_zone_str)] in (1, 2):
-                    stabbeur_army(x_pos_read + SHIFT_UNIT_X, y_pos_read + SHIFT_UNIT_Y, self.canvas, outline=outline)
+                    stabbeur_army(x_pos_read, y_pos_read, self.canvas, outline=outline)
                 if zone2type[int(num_zone_str)] in (1, 3):
-                    stabbeur_fleet(x_pos_read + SHIFT_UNIT_X, y_pos_read + SHIFT_UNIT_Y, self.canvas, outline=outline)
+                    stabbeur_fleet(x_pos_read, y_pos_read, self.canvas, outline=outline)
 
         def arrow_callback(event: typing.Any) -> None:
 
             if self.focused_zone_data is None:
                 return
 
-            if self.legend_selected:
+            if self.selected.legend_selected():
 
                 if event.keysym == 'Right':
                     self.focused_zone_data['x_legend_pos'] += 1
@@ -270,7 +285,7 @@ class Application(tkinter.Frame):
                 if event.keysym == 'Up':
                     self.focused_zone_data['y_legend_pos'] -= 1
 
-            else:
+            if self.selected.unit_selected():
 
                 if event.keysym == 'Right':
                     self.focused_zone_data['x_pos'] += 1
@@ -282,6 +297,31 @@ class Application(tkinter.Frame):
                     self.focused_zone_data['y_pos'] -= 1
 
             # redraw
+            redraw()
+
+        def rclick_callback(event: typing.Any) -> None:
+            x_mouse, y_mouse = event.x, event.y
+
+            min_dist = 100000.
+
+            zones_data = self.json_parameters_data['zones']
+
+            for zone_data in zones_data.values():
+
+                zone_x_1, zone_y_1 = zone_data['x_legend_pos'] + SHIFT_LEGEND_X, zone_data['y_legend_pos'] + SHIFT_LEGEND_Y
+                zone_x_2, zone_y_2 = zone_data['x_pos'], zone_data['y_pos']
+                zone_x = (zone_x_1 + zone_x_2) / 2
+                zone_y = (zone_y_1 + zone_y_2) / 2
+
+                dist = math.sqrt((zone_x - x_mouse) ** 2 + (zone_y - y_mouse) ** 2)
+
+                if dist < min_dist:
+                    min_dist = dist
+                    self.selected = SelectedEnum.BOTH
+                    self.focused_zone_data = zone_data
+
+            assert self.focused_zone_data is not None
+
             redraw()
 
         def click_callback(event: typing.Any) -> None:
@@ -297,14 +337,14 @@ class Application(tkinter.Frame):
                 dist = math.sqrt((zone_x - x_mouse) ** 2 + (zone_y - y_mouse) ** 2)
                 if dist < min_dist:
                     min_dist = dist
-                    self.legend_selected = True
+                    self.selected = SelectedEnum.LEGEND
                     self.focused_zone_data = zone_data
 
-                zone_x, zone_y = zone_data['x_pos'] + SHIFT_UNIT_X, zone_data['y_pos'] + SHIFT_UNIT_Y
+                zone_x, zone_y = zone_data['x_pos'], zone_data['y_pos']
                 dist = math.sqrt((zone_x - x_mouse) ** 2 + (zone_y - y_mouse) ** 2)
                 if dist < min_dist:
                     min_dist = dist
-                    self.legend_selected = False
+                    self.selected = SelectedEnum.UNIT
                     self.focused_zone_data = zone_data
 
             assert self.focused_zone_data is not None
@@ -386,6 +426,7 @@ class Application(tkinter.Frame):
 
         # clicking
         self.canvas.bind("<Button-1>", click_callback)
+        self.canvas.bind("<Button-3>", rclick_callback)
 
         # arrows
         self.master.bind("<Left>", arrow_callback)
