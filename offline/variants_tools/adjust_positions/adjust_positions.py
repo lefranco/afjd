@@ -87,7 +87,7 @@ SHIFT_LEGEND_X = 0
 SHIFT_LEGEND_Y = -6
 
 SHIFT_UNIT_X = 0
-SHIFT_UNIT_Y = -3
+SHIFT_UNIT_Y = -2
 
 
 class Point:
@@ -251,7 +251,7 @@ class Application(tkinter.Frame):
 
                 if zone2type[int(num_zone_str)] in (1, 2):
                     stabbeur_army(x_pos_read + SHIFT_UNIT_X, y_pos_read + SHIFT_UNIT_Y, self.canvas, outline=outline)
-                if zone2type[int(num_zone_str)] in (2, 3):
+                if zone2type[int(num_zone_str)] in (1, 3):
                     stabbeur_fleet(x_pos_read + SHIFT_UNIT_X, y_pos_read + SHIFT_UNIT_Y, self.canvas, outline=outline)
 
         def arrow_callback(event: typing.Any) -> None:
