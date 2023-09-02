@@ -258,18 +258,18 @@
         "5": {
             "name": "gor",
             "full_name": "Gorki",
-            "x_pos": 615,
-            "y_pos": 190,
-            "x_legend_pos": 615,
-            "y_legend_pos": 176
+            "x_pos": 608,
+            "y_pos": 178,
+            "x_legend_pos": 608,
+            "y_legend_pos": 164
         },
         "6": {
             "name": "mos",
             "full_name": "Moscou",
-            "x_pos": 591,
-            "y_pos": 245,
-            "x_legend_pos": 591,
-            "y_legend_pos": 231
+            "x_pos": 561,
+            "y_pos": 235,
+            "x_legend_pos": 561,
+            "y_legend_pos": 221
         },
         "7": {
             "name": "lit",
@@ -339,9 +339,9 @@
             "name": "sve",
             "full_name": "Séville",
             "x_pos": 102,
-            "y_pos": 470,
+            "y_pos": 472,
             "x_legend_pos": 102,
-            "y_legend_pos": 456
+            "y_legend_pos": 458
         },
         "16": {
             "name": "mad",
@@ -354,8 +354,8 @@
         "17": {
             "name": "bar",
             "full_name": "Barcelone",
-            "x_pos": 174,
-            "y_pos": 466,
+            "x_pos": 172,
+            "y_pos": 464,
             "x_legend_pos": 190,
             "y_legend_pos": 454
         },
@@ -451,7 +451,7 @@
             "name": "ham",
             "full_name": "Hambourg",
             "x_pos": 303,
-            "y_pos": 311,
+            "y_pos": 307,
             "x_legend_pos": 318,
             "y_legend_pos": 299
         },
@@ -530,10 +530,10 @@
         "39": {
             "name": "bul",
             "full_name": "Bulgarie",
-            "x_pos": 487,
+            "x_pos": 471,
             "y_pos": 466,
             "x_legend_pos": 487,
-            "y_legend_pos": 452
+            "y_legend_pos": 456
         },
         "40": {
             "name": "gre",
@@ -564,8 +564,8 @@
             "full_name": "Tchécoslovaquie",
             "x_pos": 363,
             "y_pos": 359,
-            "x_legend_pos": 363,
-            "y_legend_pos": 345
+            "x_legend_pos": 352,
+            "y_legend_pos": 351
         },
         "44": {
             "name": "aut",
@@ -586,10 +586,10 @@
         "46": {
             "name": "ven",
             "full_name": "Venise",
-            "x_pos": 332,
+            "x_pos": 331,
             "y_pos": 428,
-            "x_legend_pos": 332,
-            "y_legend_pos": 414
+            "x_legend_pos": 335,
+            "y_legend_pos": 413
         },
         "47": {
             "name": "mil",
@@ -604,8 +604,8 @@
             "full_name": "Rome",
             "x_pos": 334,
             "y_pos": 484,
-            "x_legend_pos": 330,
-            "y_legend_pos": 475
+            "x_legend_pos": 326,
+            "y_legend_pos": 474
         },
         "49": {
             "name": "nap",
@@ -613,7 +613,7 @@
             "x_pos": 374,
             "y_pos": 527,
             "x_legend_pos": 353,
-            "y_legend_pos": 499
+            "y_legend_pos": 498
         },
         "50": {
             "name": "mar",
@@ -659,9 +659,9 @@
             "name": "asw",
             "full_name": "Assouan",
             "x_pos": 546,
-            "y_pos": 718,
-            "x_legend_pos": 546,
-            "y_legend_pos": 704
+            "y_pos": 716,
+            "x_legend_pos": 537,
+            "y_legend_pos": 702
         },
         "56": {
             "name": "isr",
@@ -682,9 +682,9 @@
         "58": {
             "name": "irn",
             "full_name": "Iran",
-            "x_pos": 840,
+            "x_pos": 858,
             "y_pos": 528,
-            "x_legend_pos": 840,
+            "x_legend_pos": 858,
             "y_legend_pos": 514
         },
         "59": {
@@ -698,10 +698,10 @@
         "60": {
             "name": "ada",
             "full_name": "Adana",
-            "x_pos": 660,
-            "y_pos": 508,
+            "x_pos": 629,
+            "y_pos": 510,
             "x_legend_pos": 660,
-            "y_legend_pos": 494
+            "y_legend_pos": 501
         },
         "61": {
             "name": "izm",
@@ -714,16 +714,16 @@
         "62": {
             "name": "ist",
             "full_name": "Istambul",
-            "x_pos": 533,
-            "y_pos": 509,
-            "x_legend_pos": 533,
+            "x_pos": 523,
+            "y_pos": 508,
+            "x_legend_pos": 537,
             "y_legend_pos": 495
         },
         "63": {
             "name": "por",
             "full_name": "Portugal",
-            "x_pos": 85,
-            "y_pos": 443,
+            "x_pos": 79,
+            "y_pos": 446,
             "x_legend_pos": 97,
             "y_legend_pos": 433
         },
@@ -788,10 +788,10 @@
         "71": {
             "name": "kaz",
             "full_name": "Kazakhstan",
-            "x_pos": 874,
-            "y_pos": 408,
-            "x_legend_pos": 874,
-            "y_legend_pos": 394
+            "x_pos": 864,
+            "y_pos": 394,
+            "x_legend_pos": 864,
+            "y_legend_pos": 380
         },
         "72": {
             "name": "cau",
@@ -849,8 +849,8 @@
         "78": {
             "name": "auv",
             "full_name": "Auvergne",
-            "x_pos": 222,
-            "y_pos": 435,
+            "x_pos": 217,
+            "y_pos": 433,
             "x_legend_pos": 222,
             "y_legend_pos": 421,
             "display": 2
@@ -870,7 +870,7 @@
             "x_pos": 226,
             "y_pos": 337,
             "x_legend_pos": 236,
-            "y_legend_pos": 336,
+            "y_legend_pos": 334,
             "display": 2
         },
         "81": {
@@ -901,8 +901,8 @@
         "84": {
             "name": "tos",
             "full_name": "Toscane",
-            "x_pos": 319,
-            "y_pos": 457,
+            "x_pos": 318,
+            "y_pos": 456,
             "x_legend_pos": 311,
             "y_legend_pos": 447,
             "display": 5
@@ -910,8 +910,8 @@
         "85": {
             "name": "pru",
             "full_name": "Prusse",
-            "x_pos": 381,
-            "y_pos": 304,
+            "x_pos": 378,
+            "y_pos": 301,
             "x_legend_pos": 393,
             "y_legend_pos": 293,
             "display": 6
@@ -919,10 +919,10 @@
         "86": {
             "name": "apu",
             "full_name": "Apulie",
-            "x_pos": 374,
+            "x_pos": 377,
             "y_pos": 495,
-            "x_legend_pos": 366,
-            "y_legend_pos": 484,
+            "x_legend_pos": 364,
+            "y_legend_pos": 486,
             "display": 5
         },
         "87": {
@@ -995,9 +995,9 @@
             "name": "ana",
             "full_name": "Anatolie",
             "x_pos": 577,
-            "y_pos": 538,
+            "y_pos": 536,
             "x_legend_pos": 577,
-            "y_legend_pos": 524,
+            "y_legend_pos": 521,
             "display": 9
         },
         "96": {
@@ -1107,9 +1107,9 @@
         "109": {
             "name": "man",
             "full_name": "Manche",
-            "x_pos": 191,
-            "y_pos": 326,
-            "x_legend_pos": 162,
+            "x_pos": 186,
+            "y_pos": 325,
+            "x_legend_pos": 158,
             "y_legend_pos": 327
         },
         "110": {
@@ -1268,9 +1268,9 @@
             "name": "sib",
             "full_name": "Sibérie",
             "x_pos": 846,
-            "y_pos": 208,
+            "y_pos": 127,
             "x_legend_pos": 846,
-            "y_legend_pos": 194,
+            "y_legend_pos": 113,
             "display": 7
         },
         "130": {
@@ -1303,8 +1303,8 @@
         "133": {
             "name": "sax",
             "full_name": "Saxe",
-            "x_pos": 330,
-            "y_pos": 357,
+            "x_pos": 338,
+            "y_pos": 359,
             "x_legend_pos": 330,
             "y_legend_pos": 343,
             "display": 4
@@ -1312,10 +1312,10 @@
         "134": {
             "name": "sil",
             "full_name": "Silésie",
-            "x_pos": 387,
-            "y_pos": 338,
-            "x_legend_pos": 387,
-            "y_legend_pos": 324,
+            "x_pos": 390,
+            "y_pos": 333,
+            "x_legend_pos": 381,
+            "y_legend_pos": 323,
             "display": 6
         },
         "135": {
@@ -1332,8 +1332,8 @@
             "full_name": "Moldavie",
             "x_pos": 505,
             "y_pos": 407,
-            "x_legend_pos": 505,
-            "y_legend_pos": 393
+            "x_legend_pos": 502,
+            "y_legend_pos": 394
         },
         "137": {
             "name": "mac",
