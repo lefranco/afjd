@@ -268,10 +268,10 @@
         "12": {
             "name": "Boh",
             "full_name": "Bohème",
-            "x_pos": 395,
-            "y_pos": 420,
-            "x_legend_pos": 395,
-            "y_legend_pos": 406,
+            "x_pos": 406,
+            "y_pos": 419,
+            "x_legend_pos": 390,
+            "y_legend_pos": 413,
             "display": 5
         },
         "13": {
@@ -415,8 +415,8 @@
             "full_name": "Baie de Helgoland",
             "x_pos": 303,
             "y_pos": 320,
-            "x_legend_pos": 303,
-            "y_legend_pos": 306
+            "x_legend_pos": 312,
+            "y_legend_pos": 309
         },
         "30": {
             "name": "Hol",
@@ -474,8 +474,8 @@
             "full_name": "Liverpool",
             "x_pos": 203,
             "y_pos": 327,
-            "x_legend_pos": 203,
-            "y_legend_pos": 313,
+            "x_legend_pos": 196,
+            "y_legend_pos": 312,
             "display": 1
         },
         "37": {
@@ -627,10 +627,10 @@
         "54": {
             "name": "Rou",
             "full_name": "Roumanie",
-            "x_pos": 522,
-            "y_pos": 498,
-            "x_legend_pos": 522,
-            "y_legend_pos": 484
+            "x_pos": 519,
+            "y_pos": 492,
+            "x_legend_pos": 553,
+            "y_legend_pos": 481
         },
         "55": {
             "name": "Ser",
@@ -661,10 +661,10 @@
         "58": {
             "name": "Ska",
             "full_name": "Skagerrak",
-            "x_pos": 336,
-            "y_pos": 272,
-            "x_legend_pos": 336,
-            "y_legend_pos": 258
+            "x_pos": 328,
+            "y_pos": 274,
+            "x_legend_pos": 341,
+            "y_legend_pos": 264
         },
         "59": {
             "name": "Smy",
@@ -746,10 +746,10 @@
         "68": {
             "name": "Tyr",
             "full_name": "Tyrol",
-            "x_pos": 361,
-            "y_pos": 465,
-            "x_legend_pos": 382,
-            "y_legend_pos": 455,
+            "x_pos": 380,
+            "y_pos": 460,
+            "x_legend_pos": 355,
+            "y_legend_pos": 475,
             "display": 5
         },
         "69": {
@@ -782,10 +782,10 @@
         "72": {
             "name": "PGa",
             "full_name": "Pays de Galles",
-            "x_pos": 193,
-            "y_pos": 362,
+            "x_pos": 197,
+            "y_pos": 360,
             "x_legend_pos": 197,
-            "y_legend_pos": 352,
+            "y_legend_pos": 388,
             "display": 1
         },
         "73": {
