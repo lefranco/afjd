@@ -414,7 +414,7 @@ class Application(tkinter.Frame):
                 self.speed += 1
             if event.char == '-':
                 if self.speed > 1:
-                    self.speed += 1
+                    self.speed -= 1
 
         def join_callback(_: typing.Any) -> None:
 
