@@ -12,6 +12,7 @@ INTERFACE_TABLE = {
     'brouillard': ['diplomania'],
     'hundred': ['diplomania'],
     'moderne': ['diplomania'],
+    'aegemonie': ['diplomania'],
 }
 
 

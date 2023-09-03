@@ -1,0 +1,46 @@
+{
+
+   "author" : "Lei Saarlanein",
+
+   "regions": [
+       1
+   ],
+
+   "centers": [
+       1
+    ],
+
+    "roles": {
+       "number" : 1
+    },
+
+    "start_centers": [
+      [1]
+    ],
+
+    "type_coasts": {
+      "number" : 0
+    },
+
+    "coastal_zones": [
+    ],
+
+    "start_units": [
+      {"1" : [1],         "2" : []}
+    ],
+
+    "year_zero" : -500,
+    "increment" : 10,
+
+    "disorder" : {},
+
+    "visibility_restricted" : false,
+    
+    "neighbouring" : [
+        {
+        },
+        {
+       }
+    ],
+    "distancing": [[{"1": 0}],[{"1": 0}]]
+}
