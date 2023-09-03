@@ -566,9 +566,22 @@ def legend_font() -> str:
 
 LEGEND_FONT = legend_font()
 
+def author_font() -> str:
+    """ legend_font """
+
+    font_style = 'italic'
+    font_variant = 'normal'
+    font_weight = 'lighter'
+    font_size = 'small'
+    font_family = 'Arial'
+    return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"
+
+AUTHOR_FONT = author_font()
+AUTHOR_X_POS = 30
+AUTHOR_Y_POS = 20
+
 # center
 CENTER_COLOUR = ColourRecord(red=200, green=200, blue=200)  # light grey
-
 
 class Variant(Renderable):
     """ A variant """
@@ -580,6 +593,9 @@ class Variant(Renderable):
         # =================
         # from variant file
         # =================
+
+        # load the author
+        self._author = raw_variant_content['author']
 
         # load the regions
         self._regions = {}
@@ -890,6 +906,10 @@ class Variant(Renderable):
         # put legends actually
         for zone in self._zones.values():
             zone.render(ctx)
+
+        # put the author
+        ctx.font = AUTHOR_FONT
+        ctx.fillText(f"Variante : {self._author}", AUTHOR_X_POS, AUTHOR_Y_POS)
 
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
