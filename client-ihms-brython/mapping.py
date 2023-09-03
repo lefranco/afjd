@@ -579,9 +579,9 @@ def authors_font() -> str:
 
 
 AUTHORS_FONT = authors_font()
-VARIANT_AUTHOR_X_POS = 30
+VARIANT_AUTHOR_X_POS = 10
 VARIANT_AUTHOR_Y_POS = 20
-MAP_AUTHOR_X_POS = 30
+MAP_AUTHOR_X_POS = 10
 MAP_AUTHOR_Y_POS = 35
 
 # center
