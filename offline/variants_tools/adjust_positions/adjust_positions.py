@@ -97,6 +97,13 @@ class Point:
         self.y = 0  # pylint: disable=invalid-name
 
 
+
+def stabbeur_center(x: int, y: int, canvas: typing.Any):  # pylint: disable=invalid-name
+    """ display a center the stabbeur way """
+
+    oval = canvas.create_oval(x - 5, y - 5, x + 5, y + 5, outline='black')
+
+
 def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> typing.List[typing.Any]:  # pylint: disable=invalid-name
     """ display an army the stabbeur way """
 
@@ -265,6 +272,9 @@ class Application(tkinter.Frame):
         coastal_zones_data = self.json_variant_data['coastal_zones']
         self.zone2type.update({len(regions_data) + i + 1: c[0] for i, c in enumerate(coastal_zones_data)})
 
+        # centers
+        self.centers_data = self.json_parameters_data['centers']
+
         # zones
         self.zones_data = self.json_parameters_data['zones']
 
@@ -311,6 +321,12 @@ class Application(tkinter.Frame):
             if self.zone2type[num_zone] in (1, 3):
                 items = stabbeur_fleet(x_pos_read, y_pos_read, self.canvas, outline=outline)
                 self.item_table[num_zone].extend(items)
+
+        def draw2(num_center: int) -> None:
+            center_data = self.centers_data[str(num_center)]
+            x_pos_read = center_data['x_pos']
+            y_pos_read = center_data['y_pos']
+            stabbeur_center(x_pos_read, y_pos_read, self.canvas)
 
         def arrow_callback(event: typing.Any) -> None:
 
@@ -485,6 +501,11 @@ class Application(tkinter.Frame):
 
         # map
         self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
+
+        # centers
+        for num_center_str in self.centers_data:
+            num_center = int(num_center_str)
+            draw2(num_center)
 
         # legends and units
         for num_zone_str in self.zones_data:
