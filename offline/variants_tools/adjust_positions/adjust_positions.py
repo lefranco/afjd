@@ -270,7 +270,11 @@ class Application(tkinter.Frame):
         regions_data = self.json_variant_data['regions']
         self.zone2type = {i + 1: r for i, r in enumerate(regions_data)}
         coastal_zones_data = self.json_variant_data['coastal_zones']
-        self.zone2type.update({len(regions_data) + i + 1: c[0] for i, c in enumerate(coastal_zones_data)})
+        # put a 3 for sea but is a coast
+        self.zone2type.update({len(regions_data) + i + 1: 3 for i, c in enumerate(coastal_zones_data)})
+        # put a 2 for army but is a coast
+        for r, _ in coastal_zones_data:
+            self.zone2type[r] = 2
 
         # centers
         self.centers_data = self.json_parameters_data['centers']
