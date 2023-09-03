@@ -270,11 +270,19 @@ class Application(tkinter.Frame):
         regions_data = self.json_variant_data['regions']
         self.zone2type = {i + 1: r for i, r in enumerate(regions_data)}
         coastal_zones_data = self.json_variant_data['coastal_zones']
+
         # put a 3 for sea but is a coast
         self.zone2type.update({len(regions_data) + i + 1: 3 for i, c in enumerate(coastal_zones_data)})
+
         # put a 2 for army but is a coast
+        coasts_data = self.json_parameters_data['coasts']
         for r, _ in coastal_zones_data:
             self.zone2type[r] = 2
+
+        # legends of special coasts
+        self.zone2leg = {}
+        for ind, (r, c) in enumerate(coastal_zones_data):
+            self.zone2leg[len(regions_data) + ind + 1] = coasts_data[str(c)]['name']
 
         # centers
         self.centers_data = self.json_parameters_data['centers']
@@ -312,7 +320,9 @@ class Application(tkinter.Frame):
             x_pos_read = zone_data['x_legend_pos']
             y_pos_read = zone_data['y_legend_pos']
 
-            item = self.canvas.create_text(x_pos_read + SHIFT_LEGEND_X, y_pos_read + SHIFT_LEGEND_Y, text=zone_data['name'], fill=fill, font=FONT)
+            legend = zone_data['name'] if zone_data['name'] else self.zone2leg[num_zone]
+
+            item = self.canvas.create_text(x_pos_read + SHIFT_LEGEND_X, y_pos_read + SHIFT_LEGEND_Y, text=legend, fill=fill, font=FONT)
             self.item_table[num_zone].append(item)
 
             outline = 'red' if highlited and self.selected.unit_selected() else 'black'
