@@ -183,7 +183,7 @@ class Application(tkinter.Frame):
                 polylabel_x, polylabel_y = round(polylabel_x_f), round(polylabel_y_f)
                 self.canvas.create_line(polylabel_x + 5, polylabel_y, polylabel_x - 5, polylabel_y, fill='blue')
                 self.canvas.create_line(polylabel_x, polylabel_y + 5, polylabel_x, polylabel_y - 5, fill='blue')
-                information2 = f'"x_pos": {polylabel_x},\n"y_pos": {y_mouse}'
+                information2 = f'"x_pos": {polylabel_x},\n"y_pos": {polylabel_y}'
                 self.middle_pos.display(information2)
 
                 # only first
