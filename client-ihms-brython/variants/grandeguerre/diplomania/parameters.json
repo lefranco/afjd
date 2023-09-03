@@ -204,7 +204,7 @@
             "y_pos": 419,
             "x_legend_pos": 390,
             "y_legend_pos": 413,
-            "display": 5
+            "display": 2
         },
         "13": {
             "name": "Bot",
@@ -682,7 +682,7 @@
             "y_pos": 460,
             "x_legend_pos": 355,
             "y_legend_pos": 475,
-            "display": 5
+            "display": 2
         },
         "69": {
             "name": "Ukr",
