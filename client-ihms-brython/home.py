@@ -26,7 +26,7 @@ OPTIONS = ['Vue d\'ensemble', 'Chatter en direct', 'Déclarer un incident', 'Foi
 if 'ANNOUNCEMENT' not in storage:
     storage['ANNOUNCEMENT'] = ""
 if 'ALREADY_SPAMMED' not in storage:
-    storage['ALREADY_SPAMMED'] = 'yes'
+    storage['ALREADY_SPAMMED'] = 'no'
 
 
 def get_stats_content():
