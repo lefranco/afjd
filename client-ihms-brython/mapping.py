@@ -566,8 +566,9 @@ def legend_font() -> str:
 
 LEGEND_FONT = legend_font()
 
-def author_font() -> str:
-    """ legend_font """
+
+def authors_font() -> str:
+    """ authors_font """
 
     font_style = 'italic'
     font_variant = 'normal'
@@ -576,12 +577,16 @@ def author_font() -> str:
     font_family = 'Arial'
     return f"{font_style} {font_variant} {font_weight} {font_size} {font_family}"
 
-AUTHOR_FONT = author_font()
-AUTHOR_X_POS = 30
-AUTHOR_Y_POS = 20
+
+AUTHORS_FONT = authors_font()
+VARIANT_AUTHOR_X_POS = 30
+VARIANT_AUTHOR_Y_POS = 20
+MAP_AUTHOR_X_POS = 30
+MAP_AUTHOR_Y_POS = 35
 
 # center
 CENTER_COLOUR = ColourRecord(red=200, green=200, blue=200)  # light grey
+
 
 class Variant(Renderable):
     """ A variant """
@@ -594,8 +599,9 @@ class Variant(Renderable):
         # from variant file
         # =================
 
-        # load the author
-        self._author = raw_variant_content['author']
+        # load the authors
+        self._variant_author = raw_variant_content['author']
+        self._map_author = raw_parameters_content['author']
 
         # load the regions
         self._regions = {}
@@ -907,9 +913,10 @@ class Variant(Renderable):
         for zone in self._zones.values():
             zone.render(ctx)
 
-        # put the author
-        ctx.font = AUTHOR_FONT
-        ctx.fillText(f"Variante : {self._author}", AUTHOR_X_POS, AUTHOR_Y_POS)
+        # put the authors
+        ctx.font = AUTHORS_FONT
+        ctx.fillText(f"Variante : {self._variant_author}", VARIANT_AUTHOR_X_POS, VARIANT_AUTHOR_Y_POS)
+        ctx.fillText(f"Carte : {self._map_author}", MAP_AUTHOR_X_POS, MAP_AUTHOR_Y_POS)
 
     def extract_names(self):
         """ extract the names we are using to pass them to adjudicator """
