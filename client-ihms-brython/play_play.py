@@ -709,26 +709,45 @@ def submit_orders():
                 # create fake unit
                 region = selected_build_zone.region
                 center = region.center
-                if center is not None:
-                    deducted_role = center.owner_start
-                    if deducted_role is not None:
-                        if play_low.ROLE_ID in (0, deducted_role.identifier):
-                            if region not in play_low.POSITION_DATA.occupant_table:
-                                if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
-                                    fake_unit = mapping.Army(play_low.POSITION_DATA, deducted_role, selected_build_zone, None)
-                                if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
-                                    fake_unit = mapping.Fleet(play_low.POSITION_DATA, deducted_role, selected_build_zone, None)
-                                # create order
-                                order = mapping.Order(play_low.POSITION_DATA, selected_order_type, fake_unit, None, None)
-                                orders_data.insert_order(order)
-                            else:
-                                alert("Bien essayé, mais il y a déjà une unité à cet endroit !")
-                        else:
-                            alert("Bien essayé, mais ce centre ne vous appartient pas !")
-                    else:
-                        alert("On ne peut pas construire sur ce centre !")
+                if center is None:
+                    alert("Bien essayé, mais il n'y a pas de centre à cet endroit !")
+                elif region in play_low.POSITION_DATA.occupant_table:
+                    alert("Bien essayé, mais il y a déjà une unité à cet endroit !")
+                elif center not in play_low.POSITION_DATA.owner_table:
+                    alert("Bien essayé, mais ce centre n'appartient à personne !")
                 else:
-                    alert("Pas de centre à cet endroit !")
+                    # becomes tricky
+                    accepted = True
+                    deducted_role = play_low.POSITION_DATA.owner_table[center].role
+                    if play_low.ROLE_ID == 0:  # game master
+                        if not play_low.VARIANT_CONTENT_LOADED['build_everywhere']:
+                            expected_role = center.owner_start
+                            if not expected_role:
+                                alert("Bien essayé mais ce n'est pas un centre de départ !")
+                                accepted = False
+                            elif expected_role is not deducted_role:
+                                alert("Bien essayé mais ce n'est pas une variante dans laquelle on peut construire partout !")
+                                accepted = False
+                    else:  # player
+                        if play_low.ROLE_ID is not deducted_role.identifier:
+                            alert("Bien essayé, mais ce centre ne vous appartient pas ")
+                            accepted = False
+                        elif not play_low.VARIANT_CONTENT_LOADED['build_everywhere']:
+                            expected_role = center.owner_start
+                            if not expected_role:
+                                alert("Bien essayé mais ce n'est pas un centre de départ !")
+                                accepted = False
+                            elif expected_role is not deducted_role:
+                                alert("Bien essayé mais ce n'est pas une variante dans laquelle on peut construire partout !")
+                                accepted = False
+                    if accepted:  # actual build
+                        if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
+                            fake_unit = mapping.Army(play_low.POSITION_DATA, deducted_role, selected_build_zone, None)
+                        if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                            fake_unit = mapping.Fleet(play_low.POSITION_DATA, deducted_role, selected_build_zone, None)
+                        # create order
+                        order = mapping.Order(play_low.POSITION_DATA, selected_order_type, fake_unit, None, None)
+                        orders_data.insert_order(order)
 
             # update map
             callback_render(False)

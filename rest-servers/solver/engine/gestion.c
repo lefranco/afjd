@@ -44,26 +44,45 @@ void lesajustements(_PAYS *pays, int *possessions, int *unites, int *possibles) 
 		if (t->pays == pays)
 			(*unites)++;
 
-	(*possibles) = 0;
-	for (v = CENTREDEPART.t; v < CENTREDEPART.t + CENTREDEPART.n; v++) {
-		if (v->pays != pays)
-			continue; /* pas centre de depart du bon pays */
 
-		for (t = UNITE.t; t < UNITE.t + UNITE.n; t++)
-			if (t->zone->region == v->centre->region)
-				break;
-		if (t != UNITE.t + UNITE.n)
-			continue; /* centre occupe */
+	if(!OPTIONE) {
+		/* standard : can only build on start centers */
+		(*possibles) = 0;
+		for (v = CENTREDEPART.t; v < CENTREDEPART.t + CENTREDEPART.n; v++) {
+			if (v->pays != pays)
+				continue; /* pas centre de depart du bon pays */
 
-		for (s = POSSESSION.t; s < POSSESSION.t + POSSESSION.n; s++)
-			if (s->centre == v->centre)
-				break;
-		if (s == POSSESSION.t + POSSESSION.n)
-			continue; /* centre possede par personne */
-		else if (s->pays != pays)
-			continue; /* centre possede par un autre */
+			for (t = UNITE.t; t < UNITE.t + UNITE.n; t++)
+				if (t->zone->region == v->centre->region)
+					break;
+			if (t != UNITE.t + UNITE.n)
+				continue; /* centre occupe */
 
-		(*possibles)++;
+			for (s = POSSESSION.t; s < POSSESSION.t + POSSESSION.n; s++)
+				if (s->centre == v->centre)
+					break;
+			if (s == POSSESSION.t + POSSESSION.n)
+				continue; /* centre possede par personne */
+			else if (s->pays != pays)
+				continue; /* centre possede par un autre */
+
+			(*possibles)++;
+		}
+	} else {
+		/* can build on all owned centers */
+		(*possibles) = 0;
+		for (s = POSSESSION.t; s < POSSESSION.t + POSSESSION.n; s++) {
+			if (s->pays != pays)
+				continue; /* pas possession  du bon pays */
+
+			for (t = UNITE.t; t < UNITE.t + UNITE.n; t++)
+				if (t->zone->region == s->centre->region)
+					break;
+			if (t != UNITE.t + UNITE.n)
+				continue; /* centre occupe */
+
+			(*possibles)++;
+		}
 	}
 }
 

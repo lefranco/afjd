@@ -236,19 +236,35 @@ void calculajustements(_PAYS *pays, int *ncentres, int *nunites,
 		if (q->pays == pays)
 			(*ncentres)++;
 
-	*najustementspossibles = 0;
-	for (v = CENTREDEPART.t; v < CENTREDEPART.t + CENTREDEPART.n; v++) {
-		if (v->pays != pays)
-			continue; /* pas centre de depart du bon pays */
-		for (r = UNITE.t; r < UNITE.t + UNITE.n; r++)
-			if (r->zone->region == v->centre->region)
-				break;
-		if (r != UNITE.t + UNITE.n)
-			continue; /* centre occupe */
+	if(!OPTIONE) {
+		/* standard : can only build on start centers */
+		*najustementspossibles = 0;
+		for (v = CENTREDEPART.t; v < CENTREDEPART.t + CENTREDEPART.n; v++) {
+			if (v->pays != pays)
+				continue; /* pas centre de depart du bon pays */
+			for (r = UNITE.t; r < UNITE.t + UNITE.n; r++)
+				if (r->zone->region == v->centre->region)
+					break;
+			if (r != UNITE.t + UNITE.n)
+				continue; /* centre occupe */
 
-		for (q = POSSESSION.t; q < POSSESSION.t + POSSESSION.n; q++)
-			if (q->centre == v->centre && q->pays == pays)
-				(*najustementspossibles)++;
+			for (q = POSSESSION.t; q < POSSESSION.t + POSSESSION.n; q++)
+				if (q->centre == v->centre && q->pays == pays)
+					(*najustementspossibles)++;
+		}
+	} else {
+		/* can build on all owned centers */
+		*najustementspossibles = 0;
+		for (q = POSSESSION.t; q < POSSESSION.t + POSSESSION.n; q++) {
+			if (q->pays != pays)
+				continue; /* pas centre de depart du bon pays */
+			for (r = UNITE.t; r < UNITE.t + UNITE.n; r++)
+				if (r->zone->region == q->centre->region)
+					break;
+			if (r != UNITE.t + UNITE.n)
+				continue; /* centre occupe */
+			(*najustementspossibles)++;
+		}
 	}
 }
 

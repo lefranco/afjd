@@ -529,6 +529,12 @@ def solve(variant: typing.Dict[str, typing.Any], advancement: int, situation: ty
                 f"-x{initial_role}",
             ]
 
+        # build everywhere
+        if variant['build_everywhere']:
+            call_list += [
+                "-E",
+            ]
+
         # run solver
         result = subprocess.run(
             call_list,

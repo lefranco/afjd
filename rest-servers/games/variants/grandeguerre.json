@@ -52,8 +52,8 @@
 	"year_zero" : 1913,
 	"increment" : 1,
 
+	"build_everywhere" : false,
 	"disorder" : {"3" : "Italie"},
-	
 	"visibility_restricted" : false,
 
 "neighbouring": [
