@@ -146,14 +146,14 @@ def main() -> None:
     neighbouring = {z: (neighbouring_army[z] if z in neighbouring_army else set()) | (neighbouring_fleet[z] if z in neighbouring_fleet else set()) for z in list(neighbouring_army.keys()) + list(neighbouring_fleet.keys())}
 
     distancing = []
-    for role in roles:
-        distancing_role = []
-        for _ in range(2):
-            distancing_type_role = {}
+    for _ in range(2):
+        distancing_type = []
+        for role in roles:
+            distancing_role_type = {}
             for zone in zones:
-                distancing_type_role[str(zone)] = distance(role, zone)
-            distancing_role.append(distancing_type_role)
-        distancing.append(distancing_role)
+                distancing_role_type[str(zone)] = distance(role, zone)
+            distancing_type.append(distancing_role_type)
+        distancing.append(distancing_type)
     #  print(f"{distancing=}")
 
     json_output_data = {'distancing': distancing}
