@@ -220,18 +220,10 @@ static void parametres(int argc, char **argv)
 			} else if (!strcmp(*argv, "-C")) {
 				if (etat != PARAMINIT)
 					impromptu("'-C'");
-				if (OPTIONE) {
-					cherchechaine(__FILE__, 22, buf, 0); /*"Option -C et -E incompatibles"*/
-					erreur(NULL, ERRPARAMS, buf);
-				}
 				OPTIONC = TRUE;
 			} else if (!strcmp(*argv, "-E")) {
 				if (etat != PARAMINIT)
 					impromptu("'-E'");
-				if (OPTIONC) {
-					cherchechaine(__FILE__, 23, buf, 0); /*"Option -E et -C incompatibles"*/
-					erreur(NULL, ERRPARAMS, buf);
-				}
 				OPTIONE = TRUE;
 			} else if (!strcmp(*argv, "-v")) {
 				if (etat != PARAMINIT)
@@ -481,11 +473,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	inverseparametrex();
-
-	if (OPTIONE) {
-		calculeeloignements();
-		exit(0);
-	}
 
 	if (OPTIONC) {
 		verifiecarte();

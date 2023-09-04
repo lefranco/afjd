@@ -3334,14 +3334,16 @@ void parseajustements(char *nomfic) {
 					cherchechaine(__FILE__, 251, buf, 1, zonedest->region->nom); /*"Région %1 pas centre "*/
 					erreurparse(pays, LACARTE, FALSE, buf);
 				}
-				if ((centredepart = cherchecentredepart(zonedest->region->nom))
-						== NULL) {
-					cherchechaine(__FILE__, 214, buf, 1, zonedest->region->nom); /*"Centre %1 pas centre de depart"*/
-					erreurparse(pays, LACARTE, FALSE, buf);
-				}
-				if (centredepart->pays != pays) {
-					cherchechaine(__FILE__, 215, buf, 0); /*"Pas centre de depart du bon pays"*/
-					erreurparse(pays, LACARTE, FALSE, buf);
+				if(!OPTIONE) {
+					if ((centredepart = cherchecentredepart(zonedest->region->nom))
+							== NULL) {
+						cherchechaine(__FILE__, 214, buf, 1, zonedest->region->nom); /*"Centre %1 pas centre de depart"*/
+						erreurparse(pays, LACARTE, FALSE, buf);
+					}
+					if (centredepart->pays != pays) {
+						cherchechaine(__FILE__, 215, buf, 0); /*"Pas centre de depart du bon pays"*/
+						erreurparse(pays, LACARTE, FALSE, buf);
+					}
 				}
 				if (!possede(pays, centredepart->centre)) {
 					cherchechaine(__FILE__, 216, buf, 0); /*"Le pays ne possede pas le centre"*/

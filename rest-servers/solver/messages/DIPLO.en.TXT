@@ -301,9 +301,9 @@ parse.c#210#Province (or area within province) %1 unknown for removal or build (
 parse.c#211#Superfluous  elements in an adjustment order
 parse.c#212#Unit %1 to suppress unknown
 parse.c#213#Unit %1 to suppress not of the country of the order giver
-parse.c#214#Centre %1 not starting centre
-parse.c#215#Not starting centre of the right country
-parse.c#216#The country does not own the centre
+parse.c#214#Centre %1 not starting centre (use option E to overrule this)
+parse.c#215#Not starting centre of the right country (use option E to overrule this)
+parse.c#216#The country does not own the centre 
 parse.c#217#Attention : if a province has split coasts, one should specify it when building a fleet
 parse.c#218#Unit to add is not of the type that may be put on the province (or area within province)
 parse.c#219#There is already a unit at this place
@@ -419,12 +419,10 @@ solveur.c#14#-p<n> <fic>	: Creates prototypes orders of country <n> in <fic>
 solveur.c#15#-P<n> <fic>	: Creates orders of country <n> in <fic> (most simple ones)
 solveur.c#16#-R		: Avoids disbands should retreat orders be missing
 solveur.c#17#-S		: Stability in centres involves stop of the game
-solveur.c#18#-E		: Calculates distances (standard output)
+solveur.c#18#-E		: Can build everywhere
 solveur.c#19#-C		: Checks the map
 solveur.c#20#-w		: Switches to verbose mode
 solveur.c#21#-v		: Displays program version
-solveur.c#22#Option -C and -E incompatible
-solveur.c#23#Option -E and -C incompatible
 solveur.c#24#Option x
 solveur.c#25#Option P/p
 solveur.c#26#Option O
