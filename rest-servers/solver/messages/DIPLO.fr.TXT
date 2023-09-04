@@ -301,9 +301,9 @@ parse.c#210#Province (ou zone dans une province) %1 inconnue pour la constructio
 parse.c#211#Elements superflus dans un ordre d'ajustements
 parse.c#212#unité %1 à supprimer inconnue
 parse.c#213#unité %1 à supprimer pas du pays du donneur d'ordres
-parse.c#214#Centre %1 pas centre de depart
-parse.c#215#Pas centre de depart du bon pays
-parse.c#216#Le pays ne possedé pas le centre
+parse.c#214#Centre %1 pas centre de depart (utiliser option E pour forcer)
+parse.c#215#Pas centre de depart du bon pays (utiliser option E pour forcer)
+parse.c#216#Le pays ne possède pas le centre 
 parse.c#217#Attention : si la province a des côtes, il vaut mieux la spécifier lors de la construction d'une flotte
 parse.c#218#L'unité à ajouter n'est pas du type de celles qui peuvent être placées sur la  province (ou zone dans une province)
 parse.c#219#Il y a déjà une unité à cet endroit
@@ -419,12 +419,10 @@ solveur.c#14#-p<n> <fic>	: crée des prototypes d'ordres du pays <n> dans <fic>
 solveur.c#15#-P<n> <fic>	: crée des ordres du pays <n> dans <fic> (les plus simples)
 solveur.c#16#-R		: Evite les destructions cas de défaut d'ordres de retraite
 solveur.c#17#-S		: La stabilite en centres entraine l'arret de la partie
-solveur.c#18#-E		: Calcule les éloignements (sortie standard)
+solveur.c#18#-E		: Peut construire partout
 solveur.c#19#-C		: Verifie la carte
 solveur.c#20#-w		: Branche le mode bavard
 solveur.c#21#-v		: Affiche la version du programme
-solveur.c#22#Option -C et -E incompatibles
-solveur.c#23#Option -E et -C incompatibles
 solveur.c#24#Option x
 solveur.c#25#Option P/p
 solveur.c#26#Option O
