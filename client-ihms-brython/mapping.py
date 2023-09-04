@@ -603,6 +603,9 @@ class Variant(Renderable):
         self._variant_author = raw_variant_content['author']
         self._map_author = raw_parameters_content['author']
 
+        # build everywhere
+        self._build_everywhere = raw_variant_content['build_everywhere']
+
         # load the regions
         self._regions = {}
         for num, code in enumerate(raw_variant_content['regions']):
@@ -1051,6 +1054,11 @@ class Variant(Renderable):
     def increment(self) -> int:
         """ property """
         return self._increment
+
+    @property
+    def build_everywhere(self) -> bool:
+        """ property """
+        return self._build_everywhere
 
 
 class Unit(Highliteable, Renderable):
@@ -1618,7 +1626,10 @@ class Position(Renderable):
 
         nb_ownerships = len([o for o in self._ownerships if o.role == role])
         nb_units = len([u for u in self._units if u.role == role])
-        nb_free_centers = len([c for c in role.start_centers if c in self._owner_table and self._owner_table[c].role == role and c.region not in self._occupant_table])
+        if self.variant.build_everywhere:
+            nb_free_centers = len([c for c in self.variant.centers.values() if c in self._owner_table and self._owner_table[c].role == role and c.region not in self._occupant_table])
+        else:
+            nb_free_centers = len([c for c in role.start_centers if c in self._owner_table and self._owner_table[c].role == role and c.region not in self._occupant_table])
 
         nb_builds = min(nb_ownerships - nb_units, nb_free_centers)
         return nb_builds, nb_ownerships, nb_units, nb_free_centers

@@ -162,14 +162,6 @@ void readtoken(char *word, TOKEN *tok) {
 			return;
 		}
 		break;
-	case CODE('–',EOS): /* caractere bizarre equivalent a '-' */
-		if (!strcmp(word, "–")) {
-			cherchechaine(__FILE__, 93, buf, 0); /*"Utiliser '-' plutot que '–'"*/
-			avertir(buf);
-			tok->id = UNEATTAQUESUPPRESSION;
-			return;
-		}
-		break;
 	case CODE('T','O'):
 		if (!strcmp(word, "TO")) {
 			cherchechaine(__FILE__, 1, buf, 0); /*"Utiliser '-' plutot que 'TO'"*/
@@ -723,7 +715,7 @@ static void parsezone(FILE *fd) {
 		(void) strcpy(ZONE.t[ZONE.n].specificite, tok.val);
 		break;
 	case UNEOUVRANTE:
-		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 		break;
 	default:
@@ -764,7 +756,7 @@ static void parsearmeevoisin(FILE *fd) {
 		(void) strcat(nomzone, tok.val);
 		break;
 	case UNEOUVRANTE:
-		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 		break;
 	default:
@@ -792,7 +784,7 @@ static void parsearmeevoisin(FILE *fd) {
 		(void) strcat(nomzone, tok.val);
 		break;
 	case UNEOUVRANTE:
-		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 		break;
 	default:
@@ -837,7 +829,7 @@ static void parseflottevoisin(FILE *fd) {
 		(void) strcat(nomzone, tok.val);
 		break;
 	case UNEOUVRANTE:
-		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 		break;
 	default:
@@ -985,7 +977,7 @@ static void parseunite(FILE *fd) {
 		(void) strcat(nomzone, tok.val);
 		break;
 	case UNEOUVRANTE:
-		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 		break;
 	default:
@@ -1089,7 +1081,7 @@ static void parsedelogee(FILE *fd) {
 		(void) strcat(nomzone, tok.val);
 		break;
 	case UNEOUVRANTE:
-		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 		break;
 	default:
@@ -1155,7 +1147,7 @@ static void parsedelogee(FILE *fd) {
 		(void) strcat(nomzone, tok.val);
 		break;
 	case UNEOUVRANTE:
-		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 		break;
 	default:
@@ -1200,7 +1192,7 @@ static void parsedelogee(FILE *fd) {
 		(void) strcat(nomzone, tok.val);
 		break;
 	case UNEOUVRANTE:
-		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+		cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 		break;
 	default:
@@ -1426,7 +1418,7 @@ static void verifdisparitions(void) {
 			if(r == POSSESSION.t + POSSESSION.n) {
 
 				if (OPTIONw) {
-					cherchechaine(__FILE__, 268, buf, 1, p->nom); /*"Pays %1 sans centre mais pas disparu (rectifié)"*/
+					cherchechaine(__FILE__, 268, buf, 1, p->nom); /*"Pays %1 sans centre mais pas disparu (rectifiï¿½)"*/
 					avertir(buf);
 				}
 
@@ -1737,12 +1729,12 @@ void parsemouvements(char *nomfic) {
 			gettoken(fd, &tok);
 			switch (tok.id) {
 			case UNEOUVRANTE:
-				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 				informer(buf);
 				ouverte = TRUE;
 				break;
 			case UNSLASH:
-				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les côtes"*/
+				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les cï¿½tes"*/
 				informer(buf);
 				break;
 			default:
@@ -1875,12 +1867,12 @@ void parsemouvements(char *nomfic) {
 			gettoken(fd, &tok);
 			switch (tok.id) {
 			case UNEOUVRANTE:
-				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 				informer(buf);
 				ouverte = TRUE;
 				break;
 			case UNSLASH:
-				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les côtes"*/
+				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les cï¿½tes"*/
 				informer(buf);
 				break;
 			default:
@@ -2007,10 +1999,10 @@ void parsemouvements(char *nomfic) {
 		case MOUV7:
 			if (tok.id != CHAINE) {
 				if (typemouvement != CONVOI) {
-					cherchechaine(__FILE__, 242, buf, 0); /*"Attend la désignation de la destination l'unité soutenue offensivement"*/
+					cherchechaine(__FILE__, 242, buf, 0); /*"Attend la dï¿½signation de la destination l'unitï¿½ soutenue offensivement"*/
 					erreurparse(pays, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 				} else {
-					cherchechaine(__FILE__, 243, buf, 0); /*"Attend la désignation de la destination de l'unité convoyée"*/
+					cherchechaine(__FILE__, 243, buf, 0); /*"Attend la dï¿½signation de la destination de l'unitï¿½ convoyï¿½e"*/
 					erreurparse(pays, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 				}
 			}
@@ -2019,12 +2011,12 @@ void parsemouvements(char *nomfic) {
 			gettoken(fd, &tok);
 			switch (tok.id) {
 			case UNEOUVRANTE:
-				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 				informer(buf);
 				ouverte = TRUE;
 				break;
 			case UNSLASH:
-				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les côtes"*/
+				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les cï¿½tes"*/
 				informer(buf);
 				break;
 			default:
@@ -2099,10 +2091,10 @@ void parsemouvements(char *nomfic) {
 		case MOUV10:
 			if (tok.id != CHAINE) {
 				if (typemouvement != CONVOI) {
-					cherchechaine(__FILE__, 240, buf, 0); /*"Attend la désignation de l'unité soutenue offensivement"*/
+					cherchechaine(__FILE__, 240, buf, 0); /*"Attend la dï¿½signation de l'unitï¿½ soutenue offensivement"*/
 					erreurparse(pays, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 				} else {
-					cherchechaine(__FILE__, 241, buf, 0); /*"Attend la désignation de l'unité convoyée"*/
+					cherchechaine(__FILE__, 241, buf, 0); /*"Attend la dï¿½signation de l'unitï¿½ convoyï¿½e"*/
 					erreurparse(pays, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 				}
 			}
@@ -2111,12 +2103,12 @@ void parsemouvements(char *nomfic) {
 			gettoken(fd, &tok);
 			switch (tok.id) {
 			case UNEOUVRANTE:
-				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 				informer(buf);
 				ouverte = TRUE;
 				break;
 			case UNSLASH:
-				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les côtes"*/
+				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les cï¿½tes"*/
 				informer(buf);
 				break;
 			default:
@@ -2187,7 +2179,7 @@ void parsemouvements(char *nomfic) {
 
 			} else { /* Le type de l'unite passive a ete omis */
 
-				/* Recherche d'armée */
+				/* Recherche d'armï¿½e */
 				(void) strcpy(nomunite, zonedest->region->nom);
 				(void) strcat(nomunite, zonedest->specificite);
 				(void) strcat(nomunite, "A");
@@ -2199,7 +2191,7 @@ void parsemouvements(char *nomfic) {
 				(void) strcat(nomunite, "F");
 				unitepasstrouv2 = chercheunite(nomunite);
 
-				/* Pas trouve ni armée ni flotte */
+				/* Pas trouve ni armï¿½e ni flotte */
 				if (unitepasstrouv1 == NULL && unitepasstrouv2 == NULL) {
 
 					if (!strcmp(zonedest->specificite, "") && cotesexistent(
@@ -2221,7 +2213,7 @@ void parsemouvements(char *nomfic) {
 					}
 				}
 
-				/* Trouvé à la fois armée et flotte (possible grace aux synonymes) */
+				/* Trouvï¿½ ï¿½ la fois armï¿½e et flotte (possible grace aux synonymes) */
 				if (unitepasstrouv1 != NULL && unitepasstrouv2 != NULL) {
 					cherchechaine(__FILE__, 228, buf, 2, zonedest->region->nom,
 							zonedest->specificite); /*"Ambiguite sur l'unite possible en %1%2"*/
@@ -2248,7 +2240,7 @@ void parsemouvements(char *nomfic) {
 
 		case MOUVFIN:
 			if (tok.id != FINLIGNE && tok.id != FINFICHIER) {
-				cherchechaine(__FILE__, 145, buf, 0); /*"Eléments superflus dans un ordre de mouvement"*/
+				cherchechaine(__FILE__, 145, buf, 0); /*"Elï¿½ments superflus dans un ordre de mouvement"*/
 				erreurparse(pays, SYNTAXIQUE, FALSE, buf);
 			}
 			ungettoken(&tok); /* Se remet sur la bonne ligne */
@@ -2278,7 +2270,7 @@ void parsemouvements(char *nomfic) {
 					erreurparse(pays, LESREGLES, FALSE, buf);
 				}
 				if (!peutconvoyer(unite, unitepass, NULL)) {
-					cherchechaine(__FILE__, 233, buf, 0); /*"La flotte n'a pas acces à l'armée"*/
+					cherchechaine(__FILE__, 233, buf, 0); /*"La flotte n'a pas acces ï¿½ l'armï¿½e"*/
 					erreurparse(pays, LASITUATION, FALSE, buf);
 				}
 				if (!convoipossible(NULL, unitepass->zone, zonedest)) {
@@ -2358,7 +2350,7 @@ void parsemouvements(char *nomfic) {
 				}
 				if (unitepass->zone->region == zonedest->region) {
 					if (unitepass->zone != zonedest) {
-						cherchechaine(__FILE__, 244, buf, 0); /*"Attention : on ne peut aller d'une cote à une autre"*/
+						cherchechaine(__FILE__, 244, buf, 0); /*"Attention : on ne peut aller d'une cote ï¿½ une autre"*/
 						informer(buf);
 					}
 					cherchechaine(__FILE__, 155, buf, 0); /*"L'unite soutient pour faire du sur place (!)"*/
@@ -2426,7 +2418,7 @@ void parsemouvements(char *nomfic) {
 				}
 				if (unite->zone->region == zonedest->region) {
 					if (unite->zone != zonedest) {
-						cherchechaine(__FILE__, 244, buf, 0); /*"Attention : on ne peut aller d'une cote à une autre"*/
+						cherchechaine(__FILE__, 244, buf, 0); /*"Attention : on ne peut aller d'une cote ï¿½ une autre"*/
 						informer(buf);
 					}
 					cherchechaine(__FILE__, 162, buf, 0); /*"L'unite tente de faire du surplace (!)"*/
@@ -2616,12 +2608,12 @@ void parseretraites(char *nomfic) {
 			gettoken(fd, &tok);
 			switch (tok.id) {
 			case UNEOUVRANTE:
-				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 				informer(buf);
 				ouverte = TRUE;
 				break;
 			case UNSLASH:
-				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les côtes"*/
+				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les cï¿½tes"*/
 				informer(buf);
 				break;
 			default:
@@ -2782,12 +2774,12 @@ void parseretraites(char *nomfic) {
 			gettoken(fd, &tok);
 			switch (tok.id) {
 			case UNEOUVRANTE:
-				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 				informer(buf);
 				ouverte = TRUE;
 				break;
 			case UNSLASH:
-				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les côtes"*/
+				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les cï¿½tes"*/
 				informer(buf);
 				break;
 			default:
@@ -2832,7 +2824,7 @@ void parseretraites(char *nomfic) {
 
 		case RETRFIN:
 			if (tok.id != FINLIGNE && tok.id != FINFICHIER) {
-				cherchechaine(__FILE__, 185, buf, 0); /*"Eléments superflus dans un ordre de retraites"*/
+				cherchechaine(__FILE__, 185, buf, 0); /*"Elï¿½ments superflus dans un ordre de retraites"*/
 				erreurparse(pays, SYNTAXIQUE, FALSE, buf);
 			}
 			ungettoken(&tok); /* Se remet sur la bonne ligne */
@@ -2877,7 +2869,7 @@ void parseretraites(char *nomfic) {
 				}
 				if (delogee->unite->zone->region == zonedest->region) {
 					if (delogee->unite->zone != zonedest) {
-						cherchechaine(__FILE__, 244, buf, 0); /*"Attention : on ne peut aller d'une cote à une autre"*/
+						cherchechaine(__FILE__, 244, buf, 0); /*"Attention : on ne peut aller d'une cote ï¿½ une autre"*/
 						informer(buf);
 					}
 					cherchechaine(__FILE__, 260, buf, 0); /*"L'unite retraitant tente de faire du surplace (!)"*/
@@ -2940,6 +2932,7 @@ void parseajustements(char *nomfic) {
 	TYPEUNITE typeunite;
 	TYPEAJUSTEMENT typeajustement;
 	_CENTREDEPART *centredepart;
+	_CENTRE *centre;
 	_ZONE *zonedest;
 	_UNITE *unite;
 	_PAYS *pays, *paysprec;
@@ -3120,12 +3113,12 @@ void parseajustements(char *nomfic) {
 			gettoken(fd, &tok);
 			switch (tok.id) {
 			case UNEOUVRANTE:
-				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthèse pour les côtes"*/
+				cherchechaine(__FILE__, 11, buf, 0); /*"Ne pas utiliser de parenthï¿½se pour les cï¿½tes"*/
 				informer(buf);
 				ouverte = TRUE;
 				break;
 			case UNSLASH:
-				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les côtes"*/
+				cherchechaine(__FILE__, 25, buf, 0); /*"Ne pas utiliser de slash '/' pour les cï¿½tes"*/
 				informer(buf);
 				break;
 			default:
@@ -3177,7 +3170,7 @@ void parseajustements(char *nomfic) {
 							cherchechaine(__FILE__, 194, buf, 0); /*"Attention : pas de cote pour une armee"*/
 							avertir(buf);
 						}
-						cherchechaine(__FILE__, 201, buf, 0); /*"L'unite a ajouter n'est pas du type de celles qui peuvent etre placees sur la  province (ou zone dans une province)" d'après le type fourni */
+						cherchechaine(__FILE__, 201, buf, 0); /*"L'unite a ajouter n'est pas du type de celles qui peuvent etre placees sur la  province (ou zone dans une province)" d'aprï¿½s le type fourni */
 						erreurparse(pays, LESREGLES, FALSE, buf);
 						break;
 					case SUPPRIME:
@@ -3207,8 +3200,8 @@ void parseajustements(char *nomfic) {
 
 				switch (typeajustement) { /* On va deviner le type de l'unite */
 
-				case SUPPRIME: /* D'après ce qu'on trouve à cet endroit */
-					/* Pas de message d'erreur à ce niveau, on verra plus tard,
+				case SUPPRIME: /* D'aprï¿½s ce qu'on trouve ï¿½ cet endroit */
+					/* Pas de message d'erreur ï¿½ ce niveau, on verra plus tard,
 					 on se contente de trouver le type d'unite le plus plausible */
 					switch (zonedest->typezone) {
 					case TERRE:
@@ -3250,8 +3243,8 @@ void parseajustements(char *nomfic) {
 					} /* switch typezone */
 					break;
 
-				case AJOUTE: /* D'après ce qu'on peut mettre à cet endroit */
-					cherchechaine(__FILE__, 245, buf, 0); /*"Attention : il faut préciser le type de l'unité à construire"*/
+				case AJOUTE: /* D'aprï¿½s ce qu'on peut mettre ï¿½ cet endroit */
+					cherchechaine(__FILE__, 245, buf, 0); /*"Attention : il faut prï¿½ciser le type de l'unitï¿½ ï¿½ construire"*/
 					avertir(buf);
 					switch (zonedest->typezone) {
 					case TERRE:
@@ -3294,7 +3287,7 @@ void parseajustements(char *nomfic) {
 				avertir(buf);
 				/* Fall through */
 			default:
-				cherchechaine(__FILE__, 211, buf, 0); /*"Eléments superflus dans un ordre d'ajustements"*/
+				cherchechaine(__FILE__, 211, buf, 0); /*"Elï¿½ments superflus dans un ordre d'ajustements"*/
 				erreurparse(pays, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 				break;
 			}
@@ -3330,11 +3323,12 @@ void parseajustements(char *nomfic) {
 				break;
 
 			case AJOUTE:
-				if ((cherchecentre(zonedest->region->nom)) == NULL) {
-					cherchechaine(__FILE__, 251, buf, 1, zonedest->region->nom); /*"Région %1 pas centre "*/
+				if ((centre = cherchecentre(zonedest->region->nom)) == NULL) {
+					cherchechaine(__FILE__, 251, buf, 1, zonedest->region->nom); /*"Rï¿½gion %1 pas centre "*/
 					erreurparse(pays, LACARTE, FALSE, buf);
 				}
 				if(!OPTIONE) {
+					/* Standard rules : we worry about the center being a start center */
 					if ((centredepart = cherchecentredepart(zonedest->region->nom))
 							== NULL) {
 						cherchechaine(__FILE__, 214, buf, 1, zonedest->region->nom); /*"Centre %1 pas centre de depart"*/
@@ -3345,7 +3339,7 @@ void parseajustements(char *nomfic) {
 						erreurparse(pays, LACARTE, FALSE, buf);
 					}
 				}
-				if (!possede(pays, centredepart->centre)) {
+				if (!possede(pays, centre)) {
 					cherchechaine(__FILE__, 216, buf, 0); /*"Le pays ne possede pas le centre"*/
 					erreurparse(pays, LASITUATION, FALSE, buf);
 				}

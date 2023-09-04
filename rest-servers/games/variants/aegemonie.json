@@ -32,8 +32,8 @@
     "year_zero" : -500,
     "increment" : 10,
 
+    "build_everywhere" : false,
     "disorder" : {},
-
     "visibility_restricted" : false,
     
     "neighbouring" : [
