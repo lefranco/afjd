@@ -540,17 +540,17 @@
             "name": "gre",
             "full_name": "Grèce",
             "x_pos": 441,
-            "y_pos": 532,
-            "x_legend_pos": 441,
-            "y_legend_pos": 518
+            "y_pos": 533,
+            "x_legend_pos": 430,
+            "y_legend_pos": 514
         },
         "41": {
             "name": "ser",
             "full_name": "Serbie",
             "x_pos": 424,
-            "y_pos": 453,
+            "y_pos": 457,
             "x_legend_pos": 424,
-            "y_legend_pos": 439
+            "y_legend_pos": 431
         },
         "42": {
             "name": "hon",
