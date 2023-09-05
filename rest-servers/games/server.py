@@ -265,6 +265,9 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
     for role, role_units in unit_dict.items():
         for unit in role_units:
             unit_owner[unit[1]] = int(role)
+    for role, role_units in dislodged_unit_dict.items():
+        for unit in role_units:
+            unit_owner[unit[1]] = int(role)
     for fake in fake_units_list:
         unit_owner[fake[2]] = fake[3]
 
