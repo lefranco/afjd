@@ -419,18 +419,18 @@
         "25": {
             "name": "bel",
             "full_name": "Belgique",
-            "x_pos": 260,
-            "y_pos": 332,
-            "x_legend_pos": 244,
-            "y_legend_pos": 326
+            "x_pos": 261,
+            "y_pos": 331,
+            "x_legend_pos": 245,
+            "y_legend_pos": 325
         },
         "26": {
             "name": "hol",
             "full_name": "Hollande",
-            "x_pos": 273,
-            "y_pos": 310,
-            "x_legend_pos": 283,
-            "y_legend_pos": 296
+            "x_pos": 268,
+            "y_pos": 303,
+            "x_legend_pos": 272,
+            "y_legend_pos": 320
         },
         "27": {
             "name": "mun",
@@ -870,8 +870,8 @@
             "full_name": "Picardie",
             "x_pos": 226,
             "y_pos": 337,
-            "x_legend_pos": 238,
-            "y_legend_pos": 334,
+            "x_legend_pos": 251,
+            "y_legend_pos": 348,
             "display": 2
         },
         "81": {
