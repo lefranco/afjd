@@ -317,10 +317,10 @@
         "26": {
             "name": "Med",
             "full_name": "Mediterranean Sea",
-            "x_pos": 47,
-            "y_pos": 49,
-            "x_legend_pos": 47,
-            "y_legend_pos": 35
+            "x_pos": 397,
+            "y_pos": 687,
+            "x_legend_pos": 397,
+            "y_legend_pos": 673
         },
         "27": {
             "name": "Min",
