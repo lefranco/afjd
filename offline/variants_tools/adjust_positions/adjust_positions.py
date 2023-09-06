@@ -523,7 +523,6 @@ class Application(tkinter.Frame):
                 if zone_legend_y != zone_y + DELTA_LEGEND_EXPECTED_Y and zone_data['name']:
                     content += f"Warning y<>y+14 for {zone_data['name']}\n"
 
-            print(f"{content=}")
             tkinter.messagebox.showinfo(title="check", message=content)
 
         def save_callback() -> None:
