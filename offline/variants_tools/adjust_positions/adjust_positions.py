@@ -21,13 +21,15 @@ import tkinter.messagebox
 import tkinter.filedialog
 import tkinter.scrolledtext
 
+import polylabel
+
 
 # Important : name of file with version information
 VERSION_FILE_NAME = "./version.ini"
 
 VERSION_SECTION = "version"
 
-TITLE = "Adjust legend and units : \nclick to select legend or unit, right-click to select both, arrows to move selected, + to move faster, - to move slower,\nj to join unit and legend, save to save to file"
+TITLE = "Adjust legend and units : \nclick to select legend or unit, right-click to select both, arrows to move selected, + to move faster, - to move slower,\nj to join unit and legend, m to move to middle, save to save to file"
 
 
 class VersionRecord(typing.NamedTuple):
@@ -97,11 +99,10 @@ class Point:
         self.y = 0  # pylint: disable=invalid-name
 
 
-
-def stabbeur_center(x: int, y: int, canvas: typing.Any):  # pylint: disable=invalid-name
+def stabbeur_center(x: int, y: int, canvas: typing.Any) -> None:  # pylint: disable=invalid-name
     """ display a center the stabbeur way """
 
-    oval = canvas.create_oval(x - 5, y - 5, x + 5, y + 5, outline='black')
+    _ = canvas.create_oval(x - 5, y - 5, x + 5, y + 5, outline='black')
 
 
 def stabbeur_army(x: int, y: int, canvas: typing.Any, outline: str) -> typing.List[typing.Any]:  # pylint: disable=invalid-name
@@ -276,13 +277,13 @@ class Application(tkinter.Frame):
 
         # put a 2 for army but is a coast
         coasts_data = self.json_parameters_data['coasts']
-        for r, _ in coastal_zones_data:
-            self.zone2type[r] = 2
+        for reg, _ in coastal_zones_data:
+            self.zone2type[reg] = 2
 
         # legends of special coasts
         self.zone2leg = {}
-        for ind, (r, c) in enumerate(coastal_zones_data):
-            self.zone2leg[len(regions_data) + ind + 1] = coasts_data[str(c)]['name']
+        for ind, (_, coa) in enumerate(coastal_zones_data):
+            self.zone2leg[len(regions_data) + ind + 1] = coasts_data[str(coa)]['name']
 
         # centers
         self.centers_data = self.json_parameters_data['centers']
@@ -290,11 +291,17 @@ class Application(tkinter.Frame):
         # zones
         self.zones_data = self.json_parameters_data['zones']
 
+        # zones areas
+        self.zone_areas = self.json_parameters_data['zone_areas']
+
         # speed
         self.speed = 1
 
         # items table
         self.item_table: typing.Dict[int, typing.Any] = {}
+
+        # backup
+        self.prev_zone_data = {}
 
         # actual creation of widgets
         self.create_widgets(self, map_file, parameters_file)
@@ -351,6 +358,7 @@ class Application(tkinter.Frame):
             erase(self.focused_num_zone)
 
             zone_data = self.zones_data[str(self.focused_num_zone)]
+            self.prev_zone_data = zone_data.copy()
 
             if self.selected.legend_selected():
                 if event.keysym == 'Right':
@@ -446,6 +454,19 @@ class Application(tkinter.Frame):
                 if self.speed > 1:
                     self.speed -= 1
 
+        def undo_callback(_: typing.Any) -> None:
+
+            if self.focused_num_zone is None:
+                return
+
+            erase(self.focused_num_zone)
+
+            zone_data = self.prev_zone_data.copy()
+            self.zones_data[str(self.focused_num_zone)] = zone_data
+
+            # update on screen
+            draw(self.focused_num_zone, True)
+
         def join_callback(_: typing.Any) -> None:
 
             if self.focused_num_zone is None:
@@ -454,6 +475,32 @@ class Application(tkinter.Frame):
             erase(self.focused_num_zone)
 
             zone_data = self.zones_data[str(self.focused_num_zone)]
+            self.prev_zone_data = zone_data.copy()
+
+            zone_data['x_legend_pos'] = zone_data['x_pos'] + DELTA_LEGEND_EXPECTED_X
+            zone_data['y_legend_pos'] = zone_data['y_pos'] + DELTA_LEGEND_EXPECTED_Y
+
+            # update on screen
+            draw(self.focused_num_zone, True)
+
+        def middle_callback(_: typing.Any) -> None:
+
+            if self.focused_num_zone is None:
+                return
+
+            erase(self.focused_num_zone)
+
+            area_data = self.zone_areas[str(self.focused_num_zone)]['area']
+
+            polygons = [area_data]
+            polylabel_x_f, polylabel_y_f = polylabel.polylabel(polygons, precision=0.1)  # type: ignore
+            polylabel_x, polylabel_y = round(polylabel_x_f), round(polylabel_y_f)
+
+            zone_data = self.zones_data[str(self.focused_num_zone)]
+            self.prev_zone_data = zone_data.copy()
+
+            zone_data['x_pos'] = polylabel_x - DELTA_LEGEND_EXPECTED_X // 2
+            zone_data['y_pos'] = polylabel_y - DELTA_LEGEND_EXPECTED_Y // 2
 
             zone_data['x_legend_pos'] = zone_data['x_pos'] + DELTA_LEGEND_EXPECTED_X
             zone_data['y_legend_pos'] = zone_data['y_pos'] + DELTA_LEGEND_EXPECTED_Y
@@ -539,6 +586,8 @@ class Application(tkinter.Frame):
         # ctrl
         self.master.bind("<Key>", key_callback)
         self.master.bind("<Key-j>", join_callback)
+        self.master.bind("<Key-m>", middle_callback)
+        self.master.bind("<Key-u>", undo_callback)
 
         # frame buttons and information
         # -----------
