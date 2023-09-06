@@ -29,7 +29,7 @@ VERSION_FILE_NAME = "./version.ini"
 
 VERSION_SECTION = "version"
 
-TITLE = "Adjust legend and units : \nclick to select legend or unit, right-click to select both, arrows to move selected, + to move faster, - to move slower,\nj to join unit and legend, m to move to middle, save to save to file"
+TITLE = "Adjust legend and units : \nclick to select legend or unit, right-click to select both, arrows to move selected, + to move faster, - to move slower,\nj to join unit and legend, m to move to middle, u to undo last action, check button to check and save button to save to file"
 
 
 class VersionRecord(typing.NamedTuple):
@@ -510,16 +510,21 @@ class Application(tkinter.Frame):
 
         def check_callback() -> None:
 
+            content = ""
+
             for zone_data in self.zones_data.values():
 
                 zone_legend_x, zone_legend_y = zone_data['x_legend_pos'], zone_data['y_legend_pos']
                 zone_x, zone_y = zone_data['x_pos'], zone_data['y_pos']
 
                 if zone_legend_x != zone_x + DELTA_LEGEND_EXPECTED_X and zone_data['name']:
-                    print(f"Warning x<> for {zone_data['name']}")
+                    content += f"Warning x<> for {zone_data['name']}\n"
 
                 if zone_legend_y != zone_y + DELTA_LEGEND_EXPECTED_Y and zone_data['name']:
-                    print(f"Warning y<>y+14 for {zone_data['name']}")
+                    content += f"Warning y<>y+14 for {zone_data['name']}\n"
+
+            print(f"{content=}")
+            tkinter.messagebox.showinfo(title="check", message=content)
 
         def save_callback() -> None:
 
