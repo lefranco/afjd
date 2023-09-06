@@ -499,8 +499,8 @@ class Application(tkinter.Frame):
             zone_data = self.zones_data[str(self.focused_num_zone)]
             self.prev_zone_data = zone_data.copy()
 
-            zone_data['x_pos'] = polylabel_x - DELTA_LEGEND_EXPECTED_X // 2
-            zone_data['y_pos'] = polylabel_y - DELTA_LEGEND_EXPECTED_Y // 2
+            zone_data['x_pos'] = polylabel_x - DELTA_LEGEND_EXPECTED_X // 2 + SHIFT_LEGEND_X
+            zone_data['y_pos'] = polylabel_y - DELTA_LEGEND_EXPECTED_Y // 2 + SHIFT_LEGEND_Y
 
             zone_data['x_legend_pos'] = zone_data['x_pos'] + DELTA_LEGEND_EXPECTED_X
             zone_data['y_legend_pos'] = zone_data['y_pos'] + DELTA_LEGEND_EXPECTED_Y
