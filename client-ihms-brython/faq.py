@@ -119,7 +119,7 @@ FAQ_CONTENT_TABLE = {
     "Pourquoi des parties sont distinguées ?":
     "Ce sont soit des parties modèles de tournoi que l'on veut retrouver plus rapidement, soit des parties archives sur lesquelles on veut attirer l'attention du badaud.",
 
-    "Ce site est-il le site de jeu officiel de l'Association Francophone des Joueurs de Diplomatie ?":
+    "Ce site est-il le site de jeu officiel de l'Association Francophone des Joueurs de Diplomacy ?":
     "Oui.",
 
     "(Pour les modérateurs) Quels sont les codes pour écrire sur le mur ?":
