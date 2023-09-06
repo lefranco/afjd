@@ -235,10 +235,10 @@
         "2": {
             "name": "nor",
             "full_name": "Norvège",
-            "x_pos": 334,
-            "y_pos": 181,
-            "x_legend_pos": 334,
-            "y_legend_pos": 167
+            "x_pos": 337,
+            "y_pos": 175,
+            "x_legend_pos": 337,
+            "y_legend_pos": 161
         },
         "3": {
             "name": "sue",
@@ -259,18 +259,18 @@
         "5": {
             "name": "gor",
             "full_name": "Gorki",
-            "x_pos": 608,
-            "y_pos": 178,
-            "x_legend_pos": 608,
-            "y_legend_pos": 164
+            "x_pos": 611,
+            "y_pos": 177,
+            "x_legend_pos": 611,
+            "y_legend_pos": 163
         },
         "6": {
             "name": "mos",
             "full_name": "Moscou",
             "x_pos": 561,
-            "y_pos": 235,
+            "y_pos": 234,
             "x_legend_pos": 561,
-            "y_legend_pos": 221
+            "y_legend_pos": 220
         },
         "7": {
             "name": "lit",
@@ -291,10 +291,10 @@
         "9": {
             "name": "ros",
             "full_name": "Rostov",
-            "x_pos": 647,
-            "y_pos": 404,
-            "x_legend_pos": 647,
-            "y_legend_pos": 390
+            "x_pos": 638,
+            "y_pos": 397,
+            "x_legend_pos": 638,
+            "y_legend_pos": 383
         },
         "10": {
             "name": "ire",
@@ -619,10 +619,10 @@
         "50": {
             "name": "mar",
             "full_name": "Maroc",
-            "x_pos": 45,
-            "y_pos": 592,
-            "x_legend_pos": 45,
-            "y_legend_pos": 578
+            "x_pos": 47,
+            "y_pos": 591,
+            "x_legend_pos": 47,
+            "y_legend_pos": 577
         },
         "51": {
             "name": "tun",
@@ -635,10 +635,10 @@
         "52": {
             "name": "lib",
             "full_name": "Libye",
-            "x_pos": 376,
-            "y_pos": 688,
-            "x_legend_pos": 376,
-            "y_legend_pos": 674
+            "x_pos": 329,
+            "y_pos": 683,
+            "x_legend_pos": 329,
+            "y_legend_pos": 669
         },
         "53": {
             "name": "ale",
@@ -675,18 +675,18 @@
         "57": {
             "name": "ara",
             "full_name": "Arabie Saoudite",
-            "x_pos": 753,
-            "y_pos": 678,
-            "x_legend_pos": 753,
-            "y_legend_pos": 664
+            "x_pos": 731,
+            "y_pos": 651,
+            "x_legend_pos": 731,
+            "y_legend_pos": 637
         },
         "58": {
             "name": "irn",
             "full_name": "Iran",
-            "x_pos": 896,
-            "y_pos": 525,
-            "x_legend_pos": 896,
-            "y_legend_pos": 511
+            "x_pos": 875,
+            "y_pos": 524,
+            "x_legend_pos": 875,
+            "y_legend_pos": 510
         },
         "59": {
             "name": "ank",
@@ -731,10 +731,10 @@
         "64": {
             "name": "our",
             "full_name": "Oural",
-            "x_pos": 663,
-            "y_pos": 96,
-            "x_legend_pos": 663,
-            "y_legend_pos": 82,
+            "x_pos": 662,
+            "y_pos": 82,
+            "x_legend_pos": 662,
+            "y_legend_pos": 68,
             "display": 7
         },
         "65": {
@@ -764,10 +764,10 @@
         "68": {
             "name": "vol",
             "full_name": "Volga",
-            "x_pos": 689,
-            "y_pos": 296,
-            "x_legend_pos": 689,
-            "y_legend_pos": 282,
+            "x_pos": 702,
+            "y_pos": 240,
+            "x_legend_pos": 702,
+            "y_legend_pos": 226,
             "display": 7
         },
         "69": {
@@ -789,18 +789,18 @@
         "71": {
             "name": "kaz",
             "full_name": "Kazakhstan",
-            "x_pos": 864,
-            "y_pos": 394,
-            "x_legend_pos": 864,
-            "y_legend_pos": 380
+            "x_pos": 874,
+            "y_pos": 395,
+            "x_legend_pos": 874,
+            "y_legend_pos": 381
         },
         "72": {
             "name": "cau",
             "full_name": "Caucase",
-            "x_pos": 698,
-            "y_pos": 405,
-            "x_legend_pos": 698,
-            "y_legend_pos": 391
+            "x_pos": 688,
+            "y_pos": 394,
+            "x_legend_pos": 688,
+            "y_legend_pos": 380
         },
         "73": {
             "name": "cly",
@@ -929,18 +929,18 @@
         "87": {
             "name": "alg",
             "full_name": "Algérie",
-            "x_pos": 183,
-            "y_pos": 599,
-            "x_legend_pos": 183,
-            "y_legend_pos": 585
+            "x_pos": 197,
+            "y_pos": 598,
+            "x_legend_pos": 197,
+            "y_legend_pos": 584
         },
         "88": {
             "name": "sae",
             "full_name": "Sahara Oriental",
-            "x_pos": 477,
-            "y_pos": 699,
-            "x_legend_pos": 477,
-            "y_legend_pos": 685,
+            "x_pos": 478,
+            "y_pos": 704,
+            "x_legend_pos": 478,
+            "y_legend_pos": 690,
             "display": 10
         },
         "89": {
@@ -971,10 +971,10 @@
         "92": {
             "name": "irk",
             "full_name": "Irak",
-            "x_pos": 716,
-            "y_pos": 565,
-            "x_legend_pos": 716,
-            "y_legend_pos": 551
+            "x_pos": 706,
+            "y_pos": 558,
+            "x_legend_pos": 706,
+            "y_legend_pos": 544
         },
         "93": {
             "name": "aze",
@@ -1004,18 +1004,18 @@
         "96": {
             "name": "oan",
             "full_name": "Océan Atlantique Nord",
-            "x_pos": 81,
-            "y_pos": 172,
-            "x_legend_pos": 81,
-            "y_legend_pos": 158
+            "x_pos": 96,
+            "y_pos": 158,
+            "x_legend_pos": 96,
+            "y_legend_pos": 144
         },
         "97": {
             "name": "oar",
             "full_name": "Océan Arctique",
-            "x_pos": 234,
-            "y_pos": 34,
-            "x_legend_pos": 234,
-            "y_legend_pos": 20
+            "x_pos": 222,
+            "y_pos": 36,
+            "x_legend_pos": 222,
+            "y_legend_pos": 22
         },
         "98": {
             "name": "mba",
@@ -1036,10 +1036,10 @@
         "100": {
             "name": "nvg",
             "full_name": "Mer de Norvège",
-            "x_pos": 269,
-            "y_pos": 129,
-            "x_legend_pos": 269,
-            "y_legend_pos": 115
+            "x_pos": 246,
+            "y_pos": 120,
+            "x_legend_pos": 246,
+            "y_legend_pos": 106
         },
         "101": {
             "name": "gob",
@@ -1060,10 +1060,10 @@
         "103": {
             "name": "nrd",
             "full_name": "Mer du Nord",
-            "x_pos": 266,
-            "y_pos": 254,
-            "x_legend_pos": 266,
-            "y_legend_pos": 240
+            "x_pos": 262,
+            "y_pos": 255,
+            "x_legend_pos": 262,
+            "y_legend_pos": 241
         },
         "104": {
             "name": "ska",
@@ -1116,26 +1116,26 @@
         "110": {
             "name": "oma",
             "full_name": "Océan Moyen Atlantique",
-            "x_pos": 51,
-            "y_pos": 361,
-            "x_legend_pos": 51,
-            "y_legend_pos": 347
+            "x_pos": 59,
+            "y_pos": 352,
+            "x_legend_pos": 59,
+            "y_legend_pos": 338
         },
         "111": {
             "name": "bbi",
             "full_name": "Golfe de Gascogne",
-            "x_pos": 150,
-            "y_pos": 395,
-            "x_legend_pos": 150,
-            "y_legend_pos": 381
+            "x_pos": 151,
+            "y_pos": 386,
+            "x_legend_pos": 151,
+            "y_legend_pos": 372
         },
         "112": {
             "name": "oas",
             "full_name": "Océan Atlantique Sud",
-            "x_pos": 30,
-            "y_pos": 509,
-            "x_legend_pos": 30,
-            "y_legend_pos": 495
+            "x_pos": 35,
+            "y_pos": 517,
+            "x_legend_pos": 35,
+            "y_legend_pos": 503
         },
         "113": {
             "name": "dgi",
@@ -1148,50 +1148,50 @@
         "114": {
             "name": "ome",
             "full_name": "Mer Méditeranéenne Occidentale",
-            "x_pos": 233,
-            "y_pos": 521,
-            "x_legend_pos": 233,
-            "y_legend_pos": 507
+            "x_pos": 232,
+            "y_pos": 519,
+            "x_legend_pos": 232,
+            "y_legend_pos": 505
         },
         "115": {
             "name": "gly",
             "full_name": "Golfe de Lyon",
-            "x_pos": 239,
-            "y_pos": 477,
-            "x_legend_pos": 239,
-            "y_legend_pos": 463
+            "x_pos": 235,
+            "y_pos": 474,
+            "x_legend_pos": 235,
+            "y_legend_pos": 460
         },
         "116": {
             "name": "lig",
             "full_name": "Mer Ligurienne",
-            "x_pos": 281,
-            "y_pos": 461,
-            "x_legend_pos": 295,
-            "y_legend_pos": 453
+            "x_pos": 276,
+            "y_pos": 457,
+            "x_legend_pos": 291,
+            "y_legend_pos": 449
         },
         "117": {
             "name": "tyr",
             "full_name": "Mer Tyrrhénienne",
-            "x_pos": 317,
-            "y_pos": 522,
-            "x_legend_pos": 317,
-            "y_legend_pos": 508
+            "x_pos": 315,
+            "y_pos": 513,
+            "x_legend_pos": 315,
+            "y_legend_pos": 499
         },
         "118": {
             "name": "mal",
             "full_name": "Mer Maltaise",
-            "x_pos": 333,
-            "y_pos": 583,
-            "x_legend_pos": 333,
-            "y_legend_pos": 569
+            "x_pos": 332,
+            "y_pos": 588,
+            "x_legend_pos": 332,
+            "y_legend_pos": 574
         },
         "119": {
             "name": "ion",
             "full_name": "Mer Ionnienne",
-            "x_pos": 414,
-            "y_pos": 572,
-            "x_legend_pos": 414,
-            "y_legend_pos": 558
+            "x_pos": 411,
+            "y_pos": 573,
+            "x_legend_pos": 411,
+            "y_legend_pos": 559
         },
         "120": {
             "name": "adr",
@@ -1204,26 +1204,26 @@
         "121": {
             "name": "mli",
             "full_name": "Mer de Libye",
-            "x_pos": 391,
-            "y_pos": 623,
-            "x_legend_pos": 391,
-            "y_legend_pos": 609
+            "x_pos": 390,
+            "y_pos": 624,
+            "x_legend_pos": 390,
+            "y_legend_pos": 610
         },
         "122": {
             "name": "ege",
             "full_name": "Mer Egée",
-            "x_pos": 486,
-            "y_pos": 558,
-            "x_legend_pos": 486,
-            "y_legend_pos": 544
+            "x_pos": 485,
+            "y_pos": 555,
+            "x_legend_pos": 485,
+            "y_legend_pos": 541
         },
         "123": {
             "name": "eme",
             "full_name": "Mer Méditérranéenne Orientale",
-            "x_pos": 559,
-            "y_pos": 600,
-            "x_legend_pos": 559,
-            "y_legend_pos": 586
+            "x_pos": 537,
+            "y_pos": 597,
+            "x_legend_pos": 537,
+            "y_legend_pos": 583
         },
         "124": {
             "name": "noo",
@@ -1252,10 +1252,10 @@
         "127": {
             "name": "gar",
             "full_name": "Golfe Arabique",
-            "x_pos": 841,
-            "y_pos": 720,
-            "x_legend_pos": 841,
-            "y_legend_pos": 706
+            "x_pos": 896,
+            "y_pos": 696,
+            "x_legend_pos": 896,
+            "y_legend_pos": 682
         },
         "128": {
             "name": "per",
@@ -1268,10 +1268,10 @@
         "129": {
             "name": "sib",
             "full_name": "Sibérie",
-            "x_pos": 846,
-            "y_pos": 127,
-            "x_legend_pos": 846,
-            "y_legend_pos": 113,
+            "x_pos": 840,
+            "y_pos": 107,
+            "x_legend_pos": 840,
+            "y_legend_pos": 93,
             "display": 7
         },
         "130": {
@@ -1323,9 +1323,9 @@
             "name": "pod",
             "full_name": "Podolia",
             "x_pos": 484,
-            "y_pos": 366,
+            "y_pos": 367,
             "x_legend_pos": 484,
-            "y_legend_pos": 352,
+            "y_legend_pos": 353,
             "display": 8
         },
         "136": {
@@ -1363,10 +1363,10 @@
         "140": {
             "name": "osa",
             "full_name": "Sahara Occidental",
-            "x_pos": 115,
-            "y_pos": 691,
-            "x_legend_pos": 115,
-            "y_legend_pos": 677
+            "x_pos": 80,
+            "y_pos": 683,
+            "x_legend_pos": 80,
+            "y_legend_pos": 669
         },
         "141": {
             "name": "arm",
