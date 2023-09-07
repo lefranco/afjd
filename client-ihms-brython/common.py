@@ -326,7 +326,7 @@ def get_season(advancement, variant) -> None:
 def get_last_year(nb_max_cycles_to_play, variant) -> None:
     """ get_last_year """
 
-    last_year = nb_max_cycles_to_play * variant.increment +   variant.year_zero
+    last_year = nb_max_cycles_to_play * variant.increment + variant.year_zero
     return last_year
 
 
@@ -448,7 +448,8 @@ def read_image(variant_name_loaded, interface_chosen):
     """ read_image """
 
     # create image
-    image = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png")
+    # change version 1234 in map.png?v=1234 to force refreseh
+    image = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png?v=1234")
 
     # it must not move on screen !
     image.attrs['style'] = 'position: absolute;'
