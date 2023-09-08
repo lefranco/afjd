@@ -2593,7 +2593,8 @@ class GameRestrictedTransitionRessource(flask_restful.Resource):  # type: ignore
         forbidden_list = the_situation['forbiddens']
 
         # TEMPORARY PATCH
-        # TODO REMOVE
+        # TODO REMOVE AFTER SUPRRESION OF TWO FIRST FOG TEST GAMES
+        # AND AFTER RE TEST NEW FOG GAME
         if 'lighted_unit_zones_list'not in the_situation:
             the_situation['lighted_unit_zones_list'] = []
         lighted_unit_zones_list = the_situation['lighted_unit_zones_list']
