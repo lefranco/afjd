@@ -2212,7 +2212,7 @@ def light_my_units():
                 selected_active_unit = None
 
                 # switch back to initial state selecting unit
-                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+                legend_select_unit = html.DIV("Cliquez sur l'unité à allumer", Class='instruction')
                 buttons_right <= legend_select_unit
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
@@ -2224,8 +2224,8 @@ def light_my_units():
 
                 automaton_state = AutomatonStateEnum.SELECT_OTHER_STATE
 
-            buttons_right <= html.BR()
-            put_submit(buttons_right)
+                buttons_right <= html.BR()
+                put_submit(buttons_right)
 
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
@@ -2287,6 +2287,8 @@ def light_my_units():
         buttons_right <= input_submit
         buttons_right <= html.BR()
         buttons_right <= html.BR()
+
+        buttons_right <= html.DIV("Principe de l'allumage des unités : On ne peut allumer que ses propres unités. L'allumage est irréversible jusquà la résolution où il est effacé. Une unité allumée devient visible par tout le monde et distinguée comme telle sur la carte. Comme l'unité est visible elle peut être convoyée et soutenue offensivement (ce dernier point étant le but de l'allumage au départ)")
 
     # need to be connected
     if play_low.PSEUDO is None:
