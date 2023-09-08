@@ -74,6 +74,7 @@ def fill_zone(ctx, zone_area, fill_colour):
     ctx.fillStyle = fill_colour.str_value()  # filling zone
 
     # change transparency
+    prev_global_alpha = ctx.globalAlpha
     ctx.globalAlpha = TRANSPARENCY
 
     ctx.beginPath()
@@ -85,7 +86,7 @@ def fill_zone(ctx, zone_area, fill_colour):
     ctx.fill(); ctx.stroke(); ctx.closePath()
 
     # restore transparency
-    ctx.globalAlpha = 1
+    ctx.globalAlpha = prev_global_alpha
 
 
 class Renderable:
@@ -1061,6 +1062,11 @@ class Variant(Renderable):
         return self._build_everywhere
 
 
+# lighted units
+BLUR_COLOR = 'Black'
+BLUR_VALUE = 20
+
+
 class Unit(Highliteable, Renderable):
     """ A unit """
 
@@ -1069,6 +1075,7 @@ class Unit(Highliteable, Renderable):
         self._role = role
         self._zone = zone
         self._dislodged_origin = dislodged_origin
+        self._lighted = False
 
     def is_disloged(self):
         """ dislodged """
@@ -1102,6 +1109,12 @@ class Unit(Highliteable, Renderable):
         if active:
             fill_color = fill_color.highlite_colour()
 
+        if self._lighted:
+            prev_shadow_color = ctx.shadowColor
+            ctx.shadowColor = BLUR_COLOR
+            prev_shadow_blur = ctx.shadowBlur
+            ctx.shadowBlur = BLUR_VALUE
+
         ctx.fillStyle = fill_color.str_value()  # for unit
 
         outline_colour = fill_color.outline_colour()
@@ -1133,6 +1146,10 @@ class Unit(Highliteable, Renderable):
         # more stuff if dislodged
         if self._dislodged_origin is not None:
             self.render_as_dislodged(x, y, ctx)
+
+        if self._lighted:
+            ctx.shadowColor = prev_shadow_color
+            ctx.shadowBlur = prev_shadow_blur
 
     def render_as_dislodged(self, x_pos: int, y_pos: int, ctx) -> None:
         """ render additional stuff when dislodged """
@@ -1228,6 +1245,16 @@ class Unit(Highliteable, Renderable):
     def dislodged_origin(self) -> Region:
         """ property """
         return self._dislodged_origin
+
+    @property
+    def lighted(self) -> bool:
+        """ property """
+        return self._lighted
+
+    @lighted.setter
+    def lighted(self, lighted: bool) -> None:
+        """ setter """
+        self._lighted = lighted
 
     def __str__(self) -> str:
         variant = self._position.variant
@@ -1388,6 +1415,15 @@ class Position(Renderable):
 
         # units
         units = server_dict['units']
+
+        # TEMPORARY PATCH
+        # TODO REMOVE
+        if 'lighted_units_zones' not in server_dict:
+            server_dict['lighted_units_zones'] = []
+
+        # lighted zones
+        lighted_units_zones = server_dict['lighted_units_zones']
+
         self._units = []
         for role_num_str, role_units in units.items():
             role_num = int(role_num_str)
@@ -1399,6 +1435,8 @@ class Position(Renderable):
                     unit = Army(self, role, zone, None)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:
                     unit = Fleet(self, role, zone, None)  # type: ignore
+                if zone.identifier in lighted_units_zones:
+                    unit.lighted = True
                 self._units.append(unit)
                 region = zone.region
                 self._occupant_table[region] = unit
