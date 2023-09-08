@@ -175,10 +175,10 @@
         "9": {
             "name": "Bel",
             "full_name": "Belgique",
-            "x_pos": 283,
+            "x_pos": 285,
             "y_pos": 408,
-            "x_legend_pos": 265,
-            "y_legend_pos": 398
+            "x_legend_pos": 263,
+            "y_legend_pos": 396
         },
         "10": {
             "name": "Ber",
@@ -235,9 +235,9 @@
         "16": {
             "name": "Bul",
             "full_name": "Bulgarie",
-            "x_pos": 542,
-            "y_pos": 527,
-            "x_legend_pos": 527,
+            "x_pos": 538,
+            "y_pos": 523,
+            "x_legend_pos": 521,
             "y_legend_pos": 521
         },
         "17": {
@@ -354,7 +354,7 @@
             "name": "Hol",
             "full_name": "Hollande",
             "x_pos": 293,
-            "y_pos": 377,
+            "y_pos": 378,
             "x_legend_pos": 296,
             "y_legend_pos": 364
         },
@@ -389,7 +389,7 @@
             "x_pos": 240,
             "y_pos": 366,
             "x_legend_pos": 216,
-            "y_legend_pos": 383,
+            "y_legend_pos": 378,
             "display": 1
         },
         "35": {
@@ -751,47 +751,47 @@
             "full_name": "",
             "x_pos": 563,
             "y_pos": 513,
-            "x_legend_pos": 582,
-            "y_legend_pos": 512
+            "x_legend_pos": 569,
+            "y_legend_pos": 502
         },
         "77": {
             "name": "",
             "full_name": "",
-            "x_pos": 537,
-            "y_pos": 546,
-            "x_legend_pos": 540,
-            "y_legend_pos": 567
+            "x_pos": 552,
+            "y_pos": 537,
+            "x_legend_pos": 551,
+            "y_legend_pos": 551
         },
         "78": {
             "name": "",
             "full_name": "",
             "x_pos": 145,
             "y_pos": 524,
-            "x_legend_pos": 145,
-            "y_legend_pos": 509
+            "x_legend_pos": 168,
+            "y_legend_pos": 526
         },
         "79": {
             "name": "",
             "full_name": "",
             "x_pos": 136,
             "y_pos": 619,
-            "x_legend_pos": 136,
-            "y_legend_pos": 643
+            "x_legend_pos": 149,
+            "y_legend_pos": 631
         },
         "80": {
             "name": "",
             "full_name": "",
             "x_pos": 589,
             "y_pos": 70,
-            "x_legend_pos": 565,
-            "y_legend_pos": 63
+            "x_legend_pos": 591,
+            "y_legend_pos": 54
         },
         "81": {
             "name": "",
             "full_name": "",
             "x_pos": 512,
             "y_pos": 234,
-            "x_legend_pos": 494,
+            "x_legend_pos": 514,
             "y_legend_pos": 220
         }
     },
