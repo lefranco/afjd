@@ -29,6 +29,7 @@ import populate
 import allocations
 import ownerships
 import units
+import lighted_units
 import actives
 import submissions
 import communication_orders
@@ -196,6 +197,10 @@ GROUPING_PARSER = flask_restful.reqparse.RequestParser()
 GROUPING_PARSER.add_argument('game_id', type=int, required=True)
 GROUPING_PARSER.add_argument('delete', type=int, required=True)
 
+LIGHT_PARSER = flask_restful.reqparse.RequestParser()
+LIGHT_PARSER.add_argument('zone_num', type=int, required=True)
+
+
 # a little welcome message to new games
 WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
 
@@ -208,7 +213,7 @@ MOVE_GAME_LOCK_TABLE: typing.Dict[str, threading.Lock] = {}
 NO_REPEAT_DELAY_SEC = 15
 
 
-def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int], orders_list: typing.List[typing.List[int]], fake_units_list: typing.List[typing.List[int]]) -> None:
+def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int], orders_list: typing.List[typing.List[int]], fake_units_list: typing.List[typing.List[int]], lighted_unit_zones_list: typing.List[int]) -> None:
     """ apply_visibility
     this will change the parameters
     """
@@ -238,8 +243,11 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
     # what regions are adjacent to what I occupy ?
     adjacent_regions = set().union(*(visibility_table[str(r)] for r in occupied_regions))
 
+    # effect of the light
+    lighted_regions = {zone2region[str(z)] for z in lighted_unit_zones_list}
+
     # seen region
-    seen_regions = occupied_regions | adjacent_regions
+    seen_regions = occupied_regions | adjacent_regions | lighted_regions
 
     # ownership uses a center
     ownership_dict2 = {k: v for k, v in ownership_dict.items() if center2region[k] in seen_regions}
@@ -1938,6 +1946,99 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/game-light-unit/<game_id>/<role_id>')
+class GameLightUnitRessource(flask_restful.Resource):  # type: ignore
+    """ GameLightUnitRessource """
+
+    def post(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Lights a unit of a game
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/game-light-unit/<game_id>/<role_id> - POST - light a unit game id=%s role_id=%s", game_id, role_id)
+
+        args = LIGHT_PARSER.parse_args(strict=True)
+        zone_submitted = args['zone_num']
+
+        sql_executor = database.SqlExecutor()
+
+        # find the game
+        game = games.Game.find_by_identifier(sql_executor, game_id)
+        if game is None:
+            del sql_executor
+            flask_restful.abort(404, msg=f"There does not seem to be a game with identifier {game_id}")
+
+        # check the game position is protected
+        assert game is not None
+        variant_name = game.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+        visibility_restricted = variant_data['visibility_restricted']
+        if not visibility_restricted:
+            del sql_executor
+            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is not restricted !")
+
+        # check a role is provided
+        if role_id is None:
+            del sql_executor
+            flask_restful.abort(404, msg="Role is missing !")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        user_id = req_result.json()
+
+        # who is player for role ?
+        assert game is not None
+        player_id = game.get_role(sql_executor, int(role_id))
+
+        # must be player
+        if user_id != player_id:
+            del sql_executor
+            flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
+
+        # light the unit
+        game_units = units.Unit.list_by_game_id(sql_executor, game_id)
+        zone_role_game_units = [(u[2], u[3]) for u in game_units]
+
+        # unit must exist
+        if (int(zone_submitted), int(role_id)) not in zone_role_game_units:
+            del sql_executor
+            flask_restful.abort(403, msg="There does not seem to exist such a unit")
+
+        # create the light
+        lighted_unit = lighted_units.LightedUnit(int(game_id), int(zone_submitted), int(role_id))
+        lighted_unit.update_database(sql_executor)
+        sql_executor.commit()
+
+        del sql_executor
+
+        data = {'msg': 'Ok unit enlighted'}
+        return data, 201
+
+
 @API.resource('/game-restricted-positions/<game_id>/<role_id>')
 class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
     """ GameRestrictedPositionRessource """
@@ -1948,7 +2049,7 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-restricted-positions/<game_id> - GET - getting restricted position for game id=%s role id=%s", game_id, role_id)
+        mylogger.LOGGER.info("/game-restricted-positions/<game_id>/<role_id> - GET - getting restricted position for game id=%s role id=%s", game_id, role_id)
 
         sql_executor = database.SqlExecutor()
 
@@ -2043,6 +2144,21 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
 
+        # special : get lighted units
+        all_lighted_game_units = lighted_units.LightedUnit.list_by_game_id(sql_executor, game_id)
+        all_lighted_zones = [lz[1] for lz in all_lighted_game_units]
+
+        lighted_unit_zones_list: typing.List[int] = []
+        game_units = units.Unit.list_by_game_id(sql_executor, game_id)
+        for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+            if fake:
+                continue
+            if region_dislodged_from_num:
+                continue
+            if zone_num not in all_lighted_zones:
+                continue
+            lighted_unit_zones_list.append(zone_num)
+
         # game not ongoing or game master or game actually finished : you get get a clear picture
         if game.current_state != 1 or int(role_id) == 0 or (game.current_advancement % 5 == 4 and (game.current_advancement + 1) // 5 >= game.nb_max_cycles_to_play):
             del sql_executor
@@ -2051,6 +2167,7 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
                 'dislodged_ones': dislodged_unit_dict,
                 'units': unit_dict,
                 'forbiddens': forbidden_list,
+                'lighted_units_zones': lighted_unit_zones_list,
             }
             return data, 200
 
@@ -2061,13 +2178,14 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
 
         # now we can start hiding stuff
         # this will update last parameters
-        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
+        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, lighted_unit_zones_list)
 
         data = {
             'ownerships': ownership_dict,
             'dislodged_ones': dislodged_unit_dict,
             'units': unit_dict,
             'forbiddens': forbidden_list,
+            'lighted_units_zones': lighted_unit_zones_list,
         }
 
         return data, 200
@@ -2224,6 +2342,9 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         for _, region_num in game_forbiddens:
             forbidden_list.append(region_num)
 
+        # no light
+        lighted_unit_zones_list: typing.List[int] = []
+
         del sql_executor
 
         data = {
@@ -2231,6 +2352,7 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
             'dislodged_ones': dislodged_unit_dict,
             'units': unit_dict,
             'forbiddens': forbidden_list,
+            'lighted_units_zones': lighted_unit_zones_list,
         }
         return data, 200
 
@@ -2470,11 +2592,17 @@ class GameRestrictedTransitionRessource(flask_restful.Resource):  # type: ignore
         unit_dict = the_situation['units']
         forbidden_list = the_situation['forbiddens']
 
+        # TEMPORARY PATCH
+        # TODO REMOVE
+        if 'lighted_unit_zones_list'not in the_situation:
+            the_situation['lighted_unit_zones_list'] = []
+        lighted_unit_zones_list = the_situation['lighted_unit_zones_list']
+
         orders_list = the_orders['orders']
         fake_units_list = the_orders['fake_units']
 
         # this will update last parameters
-        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
+        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list, lighted_unit_zones_list)
 
         data = {'time_stamp': transition.time_stamp, 'situation': {'ownerships': ownership_dict, 'dislodged_ones': dislodged_unit_dict, 'units': unit_dict, 'forbiddens': forbidden_list}, 'orders': {'orders': orders_list, 'fake_units': fake_units_list}, 'report_txt': "---"}
         return data, 200
@@ -3076,6 +3204,21 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 else:
                     unit_dict[str(role_num)].append([type_num, zone_num])
 
+            # special : get lighted units
+            all_lighted_game_units = lighted_units.LightedUnit.list_by_game_id(sql_executor, game_id)  # noqa: F821
+            all_lighted_zones = [lz[1] for lz in all_lighted_game_units]
+
+            lighted_unit_zones_list: typing.List[int] = []
+            game_units = units.Unit.list_by_game_id(sql_executor, game_id)  # noqa: F821
+            for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
+                if fake:
+                    continue
+                if region_dislodged_from_num:
+                    continue
+                if zone_num not in all_lighted_zones:
+                    continue
+                lighted_unit_zones_list.append(zone_num)
+
             # situation: get forbiddens
             forbidden_list = []
             game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)  # noqa: F821
@@ -3093,7 +3236,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             if visibility_restricted:
                 # now we can start hiding stuff
                 # this will update last parameters
-                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
+                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, lighted_unit_zones_list)
 
             situation_dict = {
                 'ownerships': ownership_dict,
@@ -3621,12 +3764,13 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             # need these two parameters
             dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = {}
             forbidden_list: typing.List[int] = []
+            lighted_unit_zones_list: typing.List[int] = []
 
             orders_list2: typing.List[typing.List[int]] = []
             fake_units_list2: typing.List[typing.List[int]] = []
 
             # this will update last parameters
-            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
+            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, lighted_unit_zones_list)
 
         # check orders (rough check)
 

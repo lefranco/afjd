@@ -29,6 +29,7 @@ class AutomatonStateEnum:
     SELECT_PASSIVE_UNIT_STATE = 3
     SELECT_DESTINATION_STATE = 4
     SELECT_BUILD_UNIT_TYPE_STATE = 5
+    SELECT_OTHER_STATE = 6
 
 
 # canvas backup to optimize drawing map when only orders change
@@ -1405,7 +1406,7 @@ def submit_orders():
 
 
 def submit_communication_orders():
-    """ submit_orders """
+    """ submit_communication_orders """
 
     selected_active_unit = None
     selected_passive_unit = None
@@ -1432,7 +1433,7 @@ def submit_communication_orders():
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez déposé les ordres de communcation : {messages}", True)
+            common.info_dialog(f"Vous avez déposé les ordres de communication : {messages}", True)
 
         orders_list_dict = orders_data.save_json()
         orders_list_dict_json = json.dumps(orders_list_dict)
@@ -2025,6 +2026,12 @@ def submit_communication_orders():
         play.load_option(None, 'Consulter')
         return False
 
+    # game needs to dissallow messages
+    if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
+        alert("La partie permet les messages")
+        play.load_option(None, 'Consulter')
+        return False
+
     # need to have orders to submit
 
     submitted_data = play_low.get_roles_submitted_orders(play_low.GAME_ID)
@@ -2121,6 +2128,283 @@ def submit_communication_orders():
     if not orders_data.empty():
         put_erase_all(buttons_right)
     put_submit(buttons_right)
+
+    # overall
+    my_sub_panel2 = html.DIV()
+    my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left
+    my_sub_panel2 <= buttons_right
+
+    play_low.MY_SUB_PANEL <= my_sub_panel2
+
+    return True
+
+
+def light_my_units():
+    """ light_my_units """
+
+    selected_active_unit = None
+    automaton_state = None
+    buttons_right = None
+
+    def light_unit_callback(_):
+        """ light_unit_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur allumage d'unité : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème allumage d'unité : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Vous avez allumé une unité (vérifiez directement sur la carte) : {messages}", True)
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            # reload position
+            play_low.load_dynamic_stuff()
+            light_my_units()
+
+        json_dict = {
+            'zone_num': selected_active_unit.zone.identifier,
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-light-unit/{play_low.GAME_ID}/{play_low.ROLE_ID}"
+
+        # showing units : need a token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def callback_canvas_click(event):
+        """ callback_canvas_click """
+
+        nonlocal automaton_state
+        nonlocal selected_active_unit
+        nonlocal buttons_right
+
+        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+
+        if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
+
+            selected_active_unit = play_low.POSITION_DATA.closest_unit(pos, None)
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+            # role flag
+            play_low.stack_role_flag(buttons_right)
+
+            # button last moves
+            play_low.stack_last_moves_button(buttons_right)
+
+            # gm can pass orders on archive games
+            if play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]:
+
+                alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
+
+                selected_active_unit = None
+
+                # switch back to initial state selecting unit
+                legend_select_unit = html.DIV("Cliquez sur l'unité à ordonner (clic-long pour effacer)", Class='instruction')
+                buttons_right <= legend_select_unit
+
+                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+            else:
+
+                legend_selected_unit = html.DIV(f"L'unité sélectionnée est {selected_active_unit}")
+                buttons_right <= legend_selected_unit
+
+                automaton_state = AutomatonStateEnum.SELECT_OTHER_STATE
+
+            buttons_right <= html.BR()
+            put_submit(buttons_right)
+
+            my_sub_panel2 <= buttons_right
+            play_low.MY_SUB_PANEL <= my_sub_panel2
+
+            return
+
+        if automaton_state is AutomatonStateEnum.SELECT_OTHER_STATE:
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+            # role flag
+            play_low.stack_role_flag(buttons_right)
+
+            # button last moves
+            play_low.stack_last_moves_button(buttons_right)
+
+            buttons_right <= html.BR()
+            put_submit(buttons_right)
+
+            my_sub_panel2 <= buttons_right
+            play_low.MY_SUB_PANEL <= my_sub_panel2
+
+            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+            return
+
+    def callback_render(refresh):
+        """ callback_render """
+
+        if refresh:
+
+            # put the background map first
+            ctx.drawImage(img, 0, 0)
+
+            # put the centers
+            play_low.VARIANT_DATA.render(ctx)
+
+            # put the position
+            play_low.POSITION_DATA.render(ctx)
+
+            # put the legends at the end
+            play_low.VARIANT_DATA.render_legends(ctx)
+
+            # save
+            save_context(ctx)
+
+        else:
+
+            # restore
+            restore_context(ctx)
+
+    def put_submit(buttons_right):
+        """ put_submit """
+
+        input_submit = html.INPUT(type="submit", value="Allumer cette unité (attention, c'est irréversible !)")
+        input_submit.bind("click", light_unit_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_submit
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+    # need to be connected
+    if play_low.PSEUDO is None:
+        alert("Il faut se connecter au préalable")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # need to have a role
+    if play_low.ROLE_ID is None:
+        alert("Il ne semble pas que vous soyez joueur dans ou arbitre de cette partie")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # cannot be game master
+    if play_low.ROLE_ID == 0:
+        alert("Ce n'est pas possible pour l'arbitre de cette partie")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # cannot be archive game
+    if play_low.GAME_PARAMETERS_LOADED['archive']:
+        alert("Ce n'est pas possible pour une partie archive")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # game needs to be ongoing - not waiting
+    if play_low.GAME_PARAMETERS_LOADED['current_state'] == 0:
+        alert("La partie n'est pas encore démarrée")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # game needs to be ongoing - not finished
+    if play_low.GAME_PARAMETERS_LOADED['current_state'] in [2, 3]:
+        alert("La partie est déjà terminée")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # variant must be foggy
+    if not play_low.VARIANT_CONTENT_LOADED['visibility_restricted']:
+        alert("La variante ne restrint pas la visibilité")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # need to have orders to submit
+
+    submitted_data = play_low.get_roles_submitted_orders(play_low.GAME_ID)
+    if not submitted_data:
+        alert("Erreur chargement données de soumission")
+        play.load_option(None, 'Consulter')
+        return False
+
+    if play_low.ROLE_ID not in submitted_data['needed']:
+        alert("Vous n'avez pas d'ordre à passer")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # check gameover
+    # game over when adjustments to play
+    # game over when last year
+    current_advancement = play_low.GAME_PARAMETERS_LOADED['current_advancement']
+    nb_max_cycles_to_play = play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
+    if current_advancement % 5 == 4 and (current_advancement + 1) // 5 >= nb_max_cycles_to_play:
+        alert("La partie est arrivée à échéance")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # now we can display
+
+    # header
+
+    # game status
+    play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
+
+    # create canvas
+    map_size = play_low.VARIANT_DATA.map_size
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return False
+
+    canvas.bind("mousedown", callback_canvas_click)
+
+    # put background (this will call the callback that display the whole map)
+    img = common.read_image(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN)
+    img.bind('load', lambda _: callback_render(True))
+
+    ratings = play_low.POSITION_DATA.role_ratings()
+    units = play_low.POSITION_DATA.role_units()
+    colours = play_low.POSITION_DATA.role_colours()
+    game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
+    rating_colours_window = play_low.make_rating_colours_window(play_low.VARIANT_DATA, ratings, units, colours, game_scoring)
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    helper = html.DIV(".")
+    display_left <= helper
+    display_left <= canvas
+    display_left <= html.BR()
+    display_left <= rating_colours_window
+
+    # right side
+
+    buttons_right = html.DIV(id='buttons_right')
+    buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+    # role flag
+    play_low.stack_role_flag(buttons_right)
+
+    # button last moves
+    play_low.stack_last_moves_button(buttons_right)
+
+    legend_select_unit = html.DIV("Cliquez sur l'unité à allumer", Class='instruction')
+    buttons_right <= legend_select_unit
+    automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     # overall
     my_sub_panel2 = html.DIV()

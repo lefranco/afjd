@@ -17,7 +17,7 @@ import play_play
 import play_master
 import play_other
 
-OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Appariement', 'Paramètres', 'Retards', 'Superviser']
+OPTIONS = ['Consulter', 'Ordonner', 'Taguer', 'Allumer', 'Négocier', 'Déclarer', 'Voter', 'Noter', 'Arbitrer', 'Appariement', 'Paramètres', 'Retards', 'Superviser']
 
 ARRIVAL = None
 
@@ -48,6 +48,8 @@ def load_option(_, item_name, direct_last_moves=False):
         status = play_play.submit_orders()
     if item_name == 'Taguer':
         status = play_play.submit_communication_orders()
+    if item_name == 'Allumer':
+        status = play_play.light_my_units()
     if item_name == 'Négocier':
         status = play_other.negotiate({}, None)
     if item_name == 'Déclarer':
@@ -78,6 +80,16 @@ def load_option(_, item_name, direct_last_moves=False):
 
     # items in menu
     for possible_item_name in OPTIONS:
+
+        # do not display menu tag if message game
+        if possible_item_name == 'Taguer':
+            if not play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
+                continue
+
+        # do not display menu show if not fog
+        if possible_item_name == 'Allumer':
+            if not play_low.VARIANT_CONTENT_LOADED['visibility_restricted']:
+                continue
 
         # do not display menu supervise if not fast game
         if possible_item_name == 'Superviser':
