@@ -1416,8 +1416,7 @@ class Position(Renderable):
         # units
         units = server_dict['units']
 
-        # TEMPORARY PATCH
-        # TODO REMOVE
+        # For historical reasons this may happen
         if 'lighted_units_zones' not in server_dict:
             server_dict['lighted_units_zones'] = []
 
