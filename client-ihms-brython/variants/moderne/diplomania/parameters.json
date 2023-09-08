@@ -483,10 +483,10 @@
         "33": {
             "name": "kra",
             "full_name": "Cracovie",
-            "x_pos": 422,
-            "y_pos": 346,
-            "x_legend_pos": 441,
-            "y_legend_pos": 350
+            "x_pos": 445,
+            "y_pos": 349,
+            "x_legend_pos": 412,
+            "y_legend_pos": 345
         },
         "34": {
             "name": "kie",
