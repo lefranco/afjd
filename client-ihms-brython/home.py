@@ -854,8 +854,11 @@ def declare_incident(json_dict_params):
     text23 = html.P(html.B("S'il s'agit d'un bug, il est peut-être déjà corrigé, essayez de recharger le cache de votre navigateur au préalable (par exemple en utilisant CTRL+F5 - selon les navigateurs)"))
     MY_SUB_PANEL <= text23
 
-    text24 = html.P("Vous pouvez utiliser le formulaire ci-dessous pour déclarer un incident :")
-    MY_SUB_PANEL <= text24
+    text23 = html.P(html.B("Si vous préférez une approche plus 'moderne', vous pouvez utiliser le serveur discord dont le lien est en page d'accueil 'Feedback est support'"))
+    MY_SUB_PANEL <= text23
+
+    text25 = html.P("Formulaire de déclaration d'incident :")
+    MY_SUB_PANEL <= text25
 
     form = html.FORM()
 
