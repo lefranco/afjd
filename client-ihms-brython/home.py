@@ -369,7 +369,7 @@ def show_news():
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/chat.png")
+    img = html.IMG(src="./images/support.png")
     col <= img
     row <= col
 
@@ -397,8 +397,8 @@ def show_news():
     row <= col
 
     col = html.TD()
-    link5 = html.A(href="https://discord.gg/mUWes7yEqR", target="_blank")
-    link5 <= "Je veux aller causer sur Discord avec d'autres joueurs !"
+    link5 = html.A(href="https://discord.gg/7wpBanK6", target="_blank")
+    link5 <= "Feedback et support du site diplomania sur Discord !"
     col <= link5
     row <= col
 
@@ -431,6 +431,12 @@ def show_news():
     col <= img
     row <= col
 
+    col = html.TD()
+    col.attrs['style'] = 'text-align:center;'
+    img = html.IMG(src="./images/chat.png")
+    col <= img
+    row <= col
+
     # ----------------------
 
     row = html.TR()
@@ -452,6 +458,12 @@ def show_news():
     link5 = html.A(href="https://sites.google.com/view/abydosfr/accueil", target="_blank")
     link5 <= "Le site dédié à Diplomacy de notre ami Abydos !"
     col <= link5
+    row <= col
+
+    col = html.TD()
+    link51 = html.A(href="https://discord.gg/mUWes7yEqR", target="_blank")
+    link51 <= "Causer sur le Discord de l'Association avec d'autres joueurs !"
+    col <= link51
     row <= col
 
     # ======================
