@@ -35,7 +35,7 @@ MAIN_TITLE = html.H1("Diplomania - le site de l'Association Francophone des Joue
 document <= MAIN_TITLE
 
 
-OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Retourner dans la partie', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Technique', 'Création', 'Modération', 'Forum', 'Administration']
+OPTIONS = ['Accueil', 'Connexion', 'Mon compte', 'Rejoindre une partie', 'Retourner dans la partie', 'Mes parties', 'Editer partie', 'Interface tournois', 'Evénements', 'Classements', 'Bac à sable', 'Création', 'Modération', 'Forum', 'Administration']
 
 
 # overall_top
@@ -159,7 +159,7 @@ def load_option(_, item_name):
         events.render(PANEL_MIDDLE)
     if item_name == 'Classements':
         ratings.render(PANEL_MIDDLE)
-    if item_name == 'Technique':
+    if item_name == 'Bac à sable':
         technical.render(PANEL_MIDDLE)
     if item_name == 'Création':
         create.render(PANEL_MIDDLE)

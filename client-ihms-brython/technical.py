@@ -20,7 +20,7 @@ import geometry
 LONG_DURATION_LIMIT_SEC = 1.0
 
 # sandbox must stay first
-OPTIONS = ['Documents', 'Pourquoi yapa', 'Bac à sable', 'Choix d\'interface', 'Tester un scorage']
+OPTIONS = ['Bac à sable', 'Documents', 'Pourquoi yapa', 'Choix d\'interface', 'Tester un scorage']
 
 
 ARRIVAL = None
@@ -165,7 +165,7 @@ def import_position(new_position_data):
 def show_technical():
     """ show_technical """
 
-    title = html.H3("Coin technique")
+    title = html.H3("Coin des documents technique")
     MY_SUB_PANEL <= title
 
     title1 = html.H4("Règles du jeu officielles")
@@ -1452,12 +1452,12 @@ def load_option(_, item_name):
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
+    if item_name == 'Bac à sable':
+        sandbox()
     if item_name == 'Documents':
         show_technical()
     if item_name == 'Pourquoi yapa':
         show_whynot()
-    if item_name == 'Bac à sable':
-        sandbox()
     if item_name == 'Choix d\'interface':
         select_interface()
     if item_name == 'Tester un scorage':
