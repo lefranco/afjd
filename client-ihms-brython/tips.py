@@ -16,7 +16,7 @@ TIPS_CONTENT_TABLE = {
     "Utiliser le menu “Rejoindre un partie” sous-menu “Sélectionner partie” puis option “Appariement” et enfin bouton quitter la partie",
 
     "Pour les daltoniens":
-    "Une carte avec des couleurs spécifiques a été créée, menu “Technique” option “Choix d'interface”",
+    "Une carte avec des couleurs spécifiques a été créée, menu “Bac à sable” option “Choix d'interface”",
 
     "Pour les possesseurs d'appareil Android":
     "Une application spécifique a été créée, allez sur le forum pour la télécharger",

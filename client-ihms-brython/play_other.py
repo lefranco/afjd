@@ -187,7 +187,7 @@ def show_position(direct_last_moves):
         technical.set_arrival("sandbox")
 
         # action of going to sandbox page
-        index.load_option(None, 'Technique')
+        index.load_option(None, 'Bac à sable')
 
     def callback_export_game_json(_):
         """ callback_export_game_json """
@@ -520,7 +520,7 @@ def show_game_parameters():
             'nopress_current': ("blocage des messages publics (déclaration) pour le moment", "si oui on ne peut pas déclarer - valeur utilisée pour accorder l'accès ou pas - cette valeur est modifiable pendant la partie", "effacé en fin de partie"),
             'fast': ("en direct", "la partie est jouée en temps réel comme sur un plateau", "Les paramètres de calcul des dates limites sont en minutes et non en heures, pas de courriel de notification aux joueurs"),
             'manual': ("attribution manuelle des rôle", "L'arbitre doit attribuer les roles", "Le système ne réalise pas l'attribution des roles au démarrage de la partie"),
-            'scoring': ("code du scorage", "le système de scorage appliqué", "Se reporter à Accueil/Coin technique pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface"),
+            'scoring': ("code du scorage", "le système de scorage appliqué", "Se reporter à Accueil/Bac à sable/Documents pour le détail des scorages implémentés. Note : Le calcul est réalisé dans l'interface"),
             'deadline_hour': ("heure de la date limite", "entre 0 et 23", "Heure à laquelle le système placera la date limite dans la journée si la synchronisation est souhaitée"),
             'deadline_sync': ("synchronisation de la date limite", "oui ou non", "Le système synchronise la date limite à une heure précise dans la journée"),
             'grace_duration': ("durée de la grâce", "en heures", "L'arbitre tolère un retard d'autant d'heures avant de placer des désordres civils"),
