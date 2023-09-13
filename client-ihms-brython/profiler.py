@@ -1,4 +1,24 @@
-""" profiler """
+""" profiler
+
+usage :
+
+import profiler
+
+
+profiler.PROFILER.start_mes("my games")
+profiler.PROFILER.start_mes("preambule")
+xxx
+profiler.PROFILER.stop_mes()
+profiler.PROFILER.stop_mes()
+
+pseudo = storage['PSEUDO']
+version = storage['VERSION']
+destination = config.SERVER_CONFIG['PLAYER']['HOST'], config.SERVER_CONFIG['EMAIL']['PORT']
+timeout = config.TIMEOUT_SERVER
+
+profiler.PROFILER.send_report(pseudo, version, destination, timeout)
+
+"""
 
 # pylint: disable=wrong-import-order, wrong-import-position
 
