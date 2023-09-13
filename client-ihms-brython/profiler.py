@@ -105,10 +105,6 @@ class Profiler:
 
         elapsed = cur_measure.duration()
 
-        # otherwise too much spam
-        if elapsed < THRESHOLD:
-            return
-
         subject = f"stats for {pseudo} ({elapsed})"
         body = ""
         body += f"{self}"
@@ -136,6 +132,9 @@ class Profiler:
 
         # sending email : need token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=timeout, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
+
+        # reset
+        self._main_measure = None
 
     def __str__(self):
 
