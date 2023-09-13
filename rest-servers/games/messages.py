@@ -16,6 +16,14 @@ class Message:
     """ Class for handling a message """
 
     @staticmethod
+    def last_date_by_player_id(sql_executor: database.SqlExecutor, player_id: int) -> typing.List[typing.Tuple[int, float]]:
+        """ class lookup : finds the object in database from fame id """
+        messages_found = sql_executor.execute("SELECT allocations.game_id, max(contents.time_stamp) as latest FROM allocations, messages, contents WHERE allocations.player_id = ? AND contents.identifier = messages.content_id AND messages.addressee_num = allocations.role_id AND messages.game_id = allocations.game_id GROUP BY allocations.game_id", (player_id,), need_result=True)
+        if not messages_found:
+            return []
+        return messages_found
+
+    @staticmethod
     def list_with_content_by_game_id(sql_executor: database.SqlExecutor, game_id: int) -> typing.List[typing.Tuple[int, int, int, int, int, contents.Content]]:
         """ class lookup : finds the object in database from fame id """
         messages_found = sql_executor.execute("SELECT game_id, identifier, author_num, addressee_num, time_stamp, content_data FROM messages INNER JOIN contents ON contents.identifier = messages.content_id where game_id = ? ORDER BY time_stamp DESC", (game_id,), need_result=True)

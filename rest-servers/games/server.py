@@ -4850,6 +4850,8 @@ class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
+        before_time = time.time()
+
         # get list of games in which player is involved
         allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
 
@@ -4866,6 +4868,9 @@ class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
                 break
 
             dict_time_stamp[game_id] = time_stamp
+
+        after_time = time.time()
+        print(f"date-last-game-declarations : ELAPSED {after_time - before_time}sec", file=sys.stderr)
 
         del sql_executor
 
@@ -4913,27 +4918,13 @@ class DateLastGameMessagesRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        # get list of games in which player is involved
-        allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
+        before_time = time.time()
 
-        dict_time_stamp: typing.Dict[int, int] = {}
-        for game_id, _, role_id in allocations_list:
+        messages_list = messages.Message.last_date_by_player_id(sql_executor, player_id)
+        dict_time_stamp = dict(messages_list)
 
-            # serves as default value (long time ago)
-            time_stamp = 0
-
-            # gather messages
-            messages_list = messages.Message.list_with_content_by_game_id(sql_executor, game_id)
-            for _, _, _, addressee_num, time_stamp_found, _ in messages_list:
-
-                # must be addressee
-                if addressee_num != int(role_id):
-                    continue
-
-                time_stamp = time_stamp_found
-                break
-
-            dict_time_stamp[game_id] = time_stamp
+        after_time = time.time()
+        print(f"date-last-game-messages-OPT : ELAPSED {after_time - before_time}sec", file=sys.stderr)
 
         del sql_executor
 
@@ -6919,6 +6910,8 @@ class DateLastChangeGamesRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
+        before_time = time.time()
+
         # concerned_games
         games_list = games.Game.inventory(sql_executor)
         concerned_games_list = [g.identifier for g in games_list if g.current_state in [1, 2] and not g.archive]
@@ -6950,6 +6943,9 @@ class DateLastChangeGamesRessource(flask_restful.Resource):  # type: ignore
 
             assert end_transition is not None
             games_dict[game_id] = end_transition.time_stamp
+
+        after_time = time.time()
+        print(f"date_last_change_games : ELAPSED {after_time - before_time}sec", file=sys.stderr)
 
         del sql_executor
 
