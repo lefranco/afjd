@@ -385,7 +385,7 @@ def registrations():
                 value = {-1: "Refusé", 0: "En attente", 1: "Accepté"}[value]
 
             if field == 'comment':
-                value =  "<br>".join(value.split('\n'))
+                value = "<br>".join(value.split('\n'))
 
             col = html.TD(value)
             if colour is not None:
