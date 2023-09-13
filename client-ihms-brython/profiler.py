@@ -66,11 +66,15 @@ class Profiler:
     """ Profiler """
 
     def __init__(self):
-        self._main_measure = Measure("root", None)
-        self._current_measure = self._main_measure
+        self._main_measure = None
+        self._current_measure = None
 
     def start_mes(self, legend):
         """ start """
+
+        if self._main_measure is None:
+            self._main_measure = Measure("root", None)
+            self._current_measure = self._main_measure
 
         cur_measure = self._current_measure
         new_measure = Measure(legend, cur_measure)
