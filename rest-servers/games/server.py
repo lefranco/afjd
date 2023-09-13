@@ -973,10 +973,18 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/games - GET - get getting all games names")
 
         sql_executor = database.SqlExecutor()
+
+        before_time = time.time()
+
         games_list = games.Game.inventory(sql_executor)
+
         del sql_executor
 
         data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_game': g.nopress_game, 'nomessage_game': g.nomessage_game, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo} for g in games_list}
+
+        after_time = time.time()
+        print(f"get games : ELAPSED {after_time - before_time}sec", file=sys.stderr)
+
         return data, 200
 
     def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
@@ -4852,12 +4860,11 @@ class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
 
         before_time = time.time()
 
+        declarations_list = declarations.Declaration.last_date_by_player_id(sql_executor, player_id)
+        dict_time_stamp = dict(declarations_list)
 
         after_time = time.time()
         print(f"date-last-game-declarations-OPT : ELAPSED {after_time - before_time}sec", file=sys.stderr)
-
-        declarations_list = declarations.Declaration.last_date_by_player_id(sql_executor, player_id)
-        dict_time_stamp = dict(declarations_list)
 
         del sql_executor
 

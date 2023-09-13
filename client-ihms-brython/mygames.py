@@ -845,6 +845,8 @@ def my_games(state_name):
         if suffering_games:
             alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
 
+    profiler.PROFILER.start_mes("display - A")
+
     time_stamp_now = time.time()
 
     # button for switching mode (display)
@@ -910,6 +912,9 @@ def my_games(state_name):
         thead <= col
     games_table <= thead
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("display B")
+
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
@@ -938,6 +943,9 @@ def my_games(state_name):
         col = html.TD(buttons)
         row <= col
     games_table <= row
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("display C")
 
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
@@ -974,6 +982,9 @@ def my_games(state_name):
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("display D")
+
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
         if data['current_state'] != state:
@@ -983,6 +994,8 @@ def my_games(state_name):
         game_id = int(game_id_str)
         if game_id not in games_id_player:
             continue
+
+        profiler.PROFILER.start_mes(f"display game {data['name']}")
 
         # variant is available
         variant_name_loaded = data['variant']
@@ -1289,7 +1302,12 @@ def my_games(state_name):
                 }
             row <= col
 
+        profiler.PROFILER.stop_mes()
+
         games_table <= row
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("display E")
 
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
@@ -1340,6 +1358,8 @@ def my_games(state_name):
     input_my_dropouts.bind("click", my_dropouts)
     MY_PANEL <= input_my_dropouts
 
+    # display last bit
+    profiler.PROFILER.stop_mes()
     # display
     profiler.PROFILER.stop_mes()
     # root
