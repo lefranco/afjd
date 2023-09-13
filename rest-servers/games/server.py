@@ -960,6 +960,34 @@ class AlterGameRessource(flask_restful.Resource):  # type: ignore
 CREATE_GAME_LOCK = threading.Lock()
 
 
+@API.resource('/games-in-state/<current_state>')
+class GameStateListRessource(flask_restful.Resource):  # type: ignore
+    """ GameStateListRessource """
+
+    def get(self, current_state: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Get list of all games (dictionary identifier -> name)
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/games/<state> - GET - get getting all games names current_state=%s", current_state)
+
+        sql_executor = database.SqlExecutor()
+
+        before_time = time.time()
+
+        games_list = games.Game.inventory(sql_executor)
+
+        del sql_executor
+
+        data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_game': g.nopress_game, 'nomessage_game': g.nomessage_game, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo} for g in games_list if g.current_state == int(current_state)}
+
+        after_time = time.time()
+        print(f"get games by state : ELAPSED {after_time - before_time}sec", file=sys.stderr)
+
+        return data, 200
+
+
 @API.resource('/games')
 class GameListRessource(flask_restful.Resource):  # type: ignore
     """ GameListRessource """

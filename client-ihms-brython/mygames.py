@@ -763,9 +763,10 @@ def my_games(state_name):
         return
 
     profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("get_games_data")
+    profiler.PROFILER.start_mes("get_games_data(state)")
 
-    games_dict = common.get_games_data()
+    # little optim : we pass the state so front will only request games in that state
+    games_dict = common.get_games_data(state)
     if not games_dict:
         alert("Erreur chargement dictionnaire parties")
         return
