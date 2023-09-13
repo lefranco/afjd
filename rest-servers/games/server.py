@@ -4852,25 +4852,12 @@ class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
 
         before_time = time.time()
 
-        # get list of games in which player is involved
-        allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
-
-        dict_time_stamp: typing.Dict[int, int] = {}
-        for game_id, _, _ in allocations_list:
-
-            # serves as default value (long time ago)
-            time_stamp = 0
-
-            # gather declarations
-            declarations_list = declarations.Declaration.list_with_content_by_game_id(sql_executor, game_id)
-            for _, _, _, _, _, time_stamp_found, _ in declarations_list:
-                time_stamp = time_stamp_found
-                break
-
-            dict_time_stamp[game_id] = time_stamp
 
         after_time = time.time()
-        print(f"date-last-game-declarations : ELAPSED {after_time - before_time}sec", file=sys.stderr)
+        print(f"date-last-game-declarations-OPT : ELAPSED {after_time - before_time}sec", file=sys.stderr)
+
+        declarations_list = declarations.Declaration.last_date_by_player_id(sql_executor, player_id)
+        dict_time_stamp = dict(declarations_list)
 
         del sql_executor
 
