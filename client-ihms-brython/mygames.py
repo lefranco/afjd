@@ -19,6 +19,8 @@ import play
 import allgames
 import games
 
+import profiler
+
 
 MY_PANEL = html.DIV(id="mygames")
 MY_PANEL.attrs['style'] = 'display: table-row'
@@ -751,6 +753,9 @@ def my_games(state_name):
         MY_PANEL.clear()
         my_games(state_name)
 
+    profiler.PROFILER.start_mes("my games")
+    profiler.PROFILER.start_mes("preambule")
+
     overall_time_before = time.time()
 
     # title
@@ -764,54 +769,87 @@ def my_games(state_name):
 
     pseudo = storage['PSEUDO']
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("get_all_roles_allocated_to_player")
+
     dict_role_id = get_all_roles_allocated_to_player()
     if not dict_role_id:
         alert("Il semble que vous ne jouiez dans aucune partie... Quel dommage !")
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("get_player_id")
 
     player_id = common.get_player_id(pseudo)
     if player_id is None:
         alert("Erreur chargement identifiant joueur")
         return
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("get_player_games_playing_in")
+
     player_games = common.get_player_games_playing_in(player_id)
     if player_games is None:
         alert("Erreur chargement liste parties joueés")
         return
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("get_games_data")
 
     games_dict = common.get_games_data()
     if not games_dict:
         alert("Erreur chargement dictionnaire parties")
         return
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("get_games_date_change_data")
+
     games_changes_dict = get_games_date_change_data()
     if not games_dict:
         alert("Erreur chargement dictionnaire changements parties")
         return
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("get_all_player_games_roles_submitted_orders")
 
     dict_submitted_data = get_all_player_games_roles_submitted_orders()
     if not dict_submitted_data:
         alert("Erreur chargement des soumissions dans les parties")
         return
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("date_last_declarations")
+
     dict_time_stamp_last_declarations = date_last_declarations()
     if dict_role_id and not dict_time_stamp_last_declarations:
         alert("Erreur chargement dates dernières déclarations des parties")
         return
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("date_last_messages")
 
     dict_time_stamp_last_messages = date_last_messages()
     if dict_role_id and not dict_time_stamp_last_messages:
         alert("Erreur chargement dates derniers messages des parties")
         return
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("date_last_visit_load_all_games declarations")
+
     dict_time_stamp_last_visits_declarations = date_last_visit_load_all_games(config.DECLARATIONS_TYPE)
     if dict_role_id and not dict_time_stamp_last_visits_declarations:
         alert("Erreur chargement dates visites dernières declarations des parties")
         return
 
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("date_last_visit_load_all_games messages")
+
     dict_time_stamp_last_visits_messages = date_last_visit_load_all_games(config.MESSAGES_TYPE)
     if dict_role_id and not dict_time_stamp_last_visits_messages:
         alert("Erreur chargement dates visites derniers messages des parties")
         return
+
+    profiler.PROFILER.stop_mes()
+    profiler.PROFILER.start_mes("display")
 
     games_id_player = {int(n) for n in player_games.keys()}
 
@@ -1229,7 +1267,7 @@ def my_games(state_name):
             if field == 'new_messages':
                 value = ""
                 if role_id is not None:
-                    if dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
+                    if str(game_id) in dict_time_stamp_last_messages and dict_time_stamp_last_messages[str(game_id)] > dict_time_stamp_last_visits_messages[str(game_id)]:
 
                         arrival = "messages"
                         if storage['GAME_ACCESS_MODE'] == 'button':
@@ -1357,6 +1395,18 @@ def my_games(state_name):
     input_my_dropouts = html.INPUT(type="submit", value="Consulter la liste de tous mes abandons")
     input_my_dropouts.bind("click", my_dropouts)
     MY_PANEL <= input_my_dropouts
+
+    # display
+    profiler.PROFILER.stop_mes()
+    # root
+    profiler.PROFILER.stop_mes()
+
+    pseudo = storage['PSEUDO']
+    version = storage['VERSION']
+    destination = config.SERVER_CONFIG['PLAYER']['HOST'], config.SERVER_CONFIG['EMAIL']['PORT']
+    timeout = config.TIMEOUT_SERVER
+
+    profiler.PROFILER.send_report(pseudo, version, destination, timeout)
 
 
 PANEL_MIDDLE = None
