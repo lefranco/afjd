@@ -142,7 +142,7 @@ def date_last_declarations():
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/date-last-declarations"
+    url = f"{host}:{port}/date-last-declarations-opt"
 
     # getting last game declaration : need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -212,7 +212,7 @@ def get_all_player_games_roles_submitted_orders():
 
 
 def get_games_date_change_data():
-    """ get_games_date_change_data : returnes empty dict if problem """
+    """ get_games_date_change_data : returns empty dict if problem """
 
     games_dict = {}
 
@@ -1249,7 +1249,7 @@ def my_games(state_name):
             if field == 'new_declarations':
                 value = ""
                 if role_id is not None:
-                    if dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
+                    if str(game_id) in dict_time_stamp_last_declarations and dict_time_stamp_last_declarations[str(game_id)] > dict_time_stamp_last_visits_declarations[str(game_id)]:
 
                         arrival = "declarations"
                         if storage['GAME_ACCESS_MODE'] == 'button':
