@@ -587,8 +587,8 @@ def select_game(selected_variant, selected_state):
         MY_SUB_PANEL.clear()
         select_game(selected_variant, selected_state)
 
-    games_data = common.get_games_data()
-    if not games_data:
+    games_dict = common.get_games_data()
+    if not games_dict:
         alert("Erreur chargement dictionnaire parties")
         return
 
@@ -602,7 +602,7 @@ def select_game(selected_variant, selected_state):
     fieldset <= legend_variant
 
     # list the variants we have
-    variant_list = {d['variant'] for d in games_data.values()}
+    variant_list = {d['variant'] for d in games_dict.values()}
 
     input_variant = html.SELECT(type="select-one", value="")
     for variant in variant_list:
