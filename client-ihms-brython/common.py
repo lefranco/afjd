@@ -136,7 +136,7 @@ def get_players_data():
     return dict(players_dict)
 
 
-def get_games_data(current_state = None):
+def get_games_data(current_state=None):
     """ get_games_data : returnes empty dict if problem """
 
     games_dict = {}
