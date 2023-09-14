@@ -631,7 +631,7 @@ def select_game(selected_variant, selected_state):
     fieldset <= legend_state
 
     # list the states we have
-    state_list = {d['current_state'] for d in games_data.values()}
+    state_list = {d['current_state'] for d in games_dict.values()}
 
     rev_state_code_table = {v: k for k, v in config.STATE_CODE_TABLE.items()}
 
@@ -662,7 +662,7 @@ def select_game(selected_variant, selected_state):
     fieldset <= legend_game
 
     # list the games we have
-    game_list = sorted([g['name'] for g in games_data.values() if g['variant'] == selected_variant and g['current_state'] == selected_state], key=lambda n: n.upper())
+    game_list = sorted([g['name'] for g in games_dict.values() if g['variant'] == selected_variant and g['current_state'] == selected_state], key=lambda n: n.upper())
 
     input_game = html.SELECT(type="select-one", value="")
     for game in game_list:
@@ -675,7 +675,7 @@ def select_game(selected_variant, selected_state):
     form <= fieldset
 
     # create a table to pass information about selected game
-    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_data.items()}
+    game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
 
     input_select_game = html.INPUT(type="submit", value="Sélectionner")
     input_select_game.bind("click", lambda e, ig=input_game, gds=game_data_sel: select_game_callback(e, ig, gds))
