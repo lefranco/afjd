@@ -19,8 +19,6 @@ import play
 import allgames
 import games
 
-import profiler
-
 
 MY_PANEL = html.DIV(id="mygames")
 MY_PANEL.attrs['style'] = 'display: table-row'
@@ -723,9 +721,6 @@ def my_games(state_name):
         MY_PANEL.clear()
         my_games(state_name)
 
-    profiler.PROFILER.start_mes("my games")
-    profiler.PROFILER.start_mes("preambule")
-
     overall_time_before = time.time()
 
     # title
@@ -739,31 +734,19 @@ def my_games(state_name):
 
     pseudo = storage['PSEUDO']
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("get_all_roles_allocated_to_player")
-
     dict_role_id = get_all_roles_allocated_to_player()
     if not dict_role_id:
         alert("Il semble que vous ne jouiez dans aucune partie... Quel dommage !")
-
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("get_player_id")
 
     player_id = common.get_player_id(pseudo)
     if player_id is None:
         alert("Erreur chargement identifiant joueur")
         return
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("get_player_games_playing_in")
-
     player_games = common.get_player_games_playing_in(player_id)
     if player_games is None:
         alert("Erreur chargement liste parties joueés")
         return
-
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("get_games_data(state)")
 
     # little optim : we pass the state so front will only request games in that state
     games_dict = common.get_games_data(state)
@@ -771,44 +754,26 @@ def my_games(state_name):
         alert("Erreur chargement dictionnaire parties")
         return
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("get_all_player_games_roles_submitted_orders")
-
     dict_submitted_data = get_all_player_games_roles_submitted_orders()
     if not dict_submitted_data:
         alert("Erreur chargement des soumissions dans les parties")
         return
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("date_last_declarations")
-
     dict_time_stamp_last_declarations = date_last_declarations()
     # may be empty
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("date_last_messages")
-
     dict_time_stamp_last_messages = date_last_messages()
     # may be empty
-
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("date_last_visit_load_all_games declarations")
 
     dict_time_stamp_last_visits_declarations = date_last_visit_load_all_games(config.DECLARATIONS_TYPE)
     if dict_role_id and not dict_time_stamp_last_visits_declarations:
         alert("Erreur chargement dates visites dernières declarations des parties")
         return
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("date_last_visit_load_all_games messages")
-
     dict_time_stamp_last_visits_messages = date_last_visit_load_all_games(config.MESSAGES_TYPE)
     if dict_role_id and not dict_time_stamp_last_visits_messages:
         alert("Erreur chargement dates visites derniers messages des parties")
         return
-
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("display")
 
     games_id_player = {int(n) for n in player_games.keys()}
 
@@ -845,8 +810,6 @@ def my_games(state_name):
 
         if suffering_games:
             alert(f"Il faut démarrer la(les) partie(s) en attente {' '.join(suffering_games)} qui est(sont) complète(s) !")
-
-    profiler.PROFILER.start_mes("display - A")
 
     time_stamp_now = time.time()
 
@@ -913,9 +876,6 @@ def my_games(state_name):
         thead <= col
     games_table <= thead
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("display B")
-
     row = html.TR()
     for field in fields:
         buttons = html.DIV()
@@ -944,9 +904,6 @@ def my_games(state_name):
         col = html.TD(buttons)
         row <= col
     games_table <= row
-
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("display C")
 
     # create a table to pass information about selected game
     game_data_sel = {v['name']: (k, v['variant']) for k, v in games_dict.items()}
@@ -983,9 +940,6 @@ def my_games(state_name):
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("display D")
-
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
         if data['current_state'] != state:
@@ -995,8 +949,6 @@ def my_games(state_name):
         game_id = int(game_id_str)
         if game_id not in games_id_player:
             continue
-
-        profiler.PROFILER.start_mes(f"display game {data['name']}")
 
         # variant is available
         variant_name_loaded = data['variant']
@@ -1303,12 +1255,7 @@ def my_games(state_name):
                 }
             row <= col
 
-        profiler.PROFILER.stop_mes()
-
         games_table <= row
-
-    profiler.PROFILER.stop_mes()
-    profiler.PROFILER.start_mes("display E")
 
     MY_PANEL <= games_table
     MY_PANEL <= html.BR()
@@ -1358,20 +1305,6 @@ def my_games(state_name):
     input_my_dropouts = html.INPUT(type="submit", value="Consulter la liste de tous mes abandons")
     input_my_dropouts.bind("click", my_dropouts)
     MY_PANEL <= input_my_dropouts
-
-    # display last bit
-    profiler.PROFILER.stop_mes()
-    # display
-    profiler.PROFILER.stop_mes()
-    # root
-    profiler.PROFILER.stop_mes()
-
-    pseudo = storage['PSEUDO']
-    version = storage['VERSION']
-    destination = config.SERVER_CONFIG['PLAYER']['HOST'], config.SERVER_CONFIG['EMAIL']['PORT']
-    timeout = config.TIMEOUT_SERVER
-
-    profiler.PROFILER.send_report(pseudo, version, destination, timeout)
 
 
 PANEL_MIDDLE = None
