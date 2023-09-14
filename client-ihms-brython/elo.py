@@ -80,7 +80,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
     num_players = len(effective_roles)
 
     # table rank -> score
-    static_score_table = {r: (ALPHA ** (num_players - r) - 1) / sum(ALPHA ** (num_players - i) - 1 for i in range(1, num_players + 1)) for r in range(1, num_players + 1)}
+    static_score_table = {r: (ALPHA ** (num_players + 1 - r) - 1) / sum(ALPHA ** (num_players + 1 - i) - 1 for i in range(1, num_players + 1)) for r in range(1, num_players + 1)}
 
     # ------------------
     # 1 Parse all games
@@ -114,17 +114,31 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
         ratings = dict(sorted(raw_ratings.items(), key=lambda i: i[1], reverse=True))
         solo_threshold = variant_data.number_centers() // 2
         score_table = scoring.scoring(game_scoring_name, solo_threshold, ratings)
+
+        # check
+        if not any(map(lambda s: s > 0, score_table.values())):
+            elo_information <= f"WARNING {game_name}: ignored because no positive score !!!!"
+            elo_information <= html.BR()
+            continue
+
+        relevant_score_table = {r: s for r, s in score_table.items() if s > 0}
         after = time.time()
         scoring_calculation_time += (after - before)
 
         # calculate performance
         before = time.time()
         # get everyones's rank
-        ranking_table = {r: len([ss for ss in score_table.values() if ss > s]) + 1 for r, s in score_table.items()}
+        ranking_table = {r: len([ss for ss in relevant_score_table.values() if ss > s]) + 1 for r, s in relevant_score_table.items()}
         # get everyones's sharing
-        shared_table = {r: len([ss for ss in score_table.values() if ss == s]) for r, s in score_table.items()}
+        shared_table = {r: len([ss for ss in relevant_score_table.values() if ss == s]) for r, s in relevant_score_table.items()}
+
         # get performance from rank and sharing
-        performed_table = {r: sum(static_score_table[ranking_table[r] + i] for i in range(shared_table[r])) / shared_table[r] for r in score_table}
+        # for scorers
+        raw_performed_table = {r: sum(static_score_table[ranking_table[r] + i] for i in range(shared_table[r])) / shared_table[r] for r in relevant_score_table}
+        performed_table = {r: raw_performed_table[r] / sum(raw_performed_table.values()) for r in raw_performed_table}
+        # for non scorers
+        performed_table.update({r: 0 for r, s in score_table.items() if s <= 0})
+
         after = time.time()
         performance_calculation_time += (after - before)
 
@@ -188,6 +202,8 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
             elo_information <= html.BR()
             elo_information <= f"{score_table=}"
             elo_information <= html.BR()
+            elo_information <= f"{relevant_score_table=}"
+            elo_information <= html.BR()
             elo_information <= f"{ranking_table=}"
             elo_information <= html.BR()
             elo_information <= f"{expected_table=}"
@@ -210,7 +226,7 @@ def process_elo(variant_data, players_dict, games_results_dict, games_dict, elo_
             # K parameter must decrease other number of games
             k_player = max(K_MAX_CONSTANT // 2, K_MAX_CONSTANT - number_games_table[(player, role_name, classic)] / K_SLOPE)
 
-            delta = k_player * num_players * (num_players / 2.) * (performed_table[role_name] - expected_table[role_name])
+            delta = k_player * (num_players * (num_players - 1) / 2) * (performed_table[role_name] - expected_table[role_name])
 
             # just a little check
             if role_name in loosers and delta > 0:
