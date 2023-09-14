@@ -2027,7 +2027,7 @@ def submit_communication_orders():
         return False
 
     # game needs to dissallow messages
-    if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
+    if not play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
         alert("La partie permet les messages")
         play.load_option(None, 'Consulter')
         return False
