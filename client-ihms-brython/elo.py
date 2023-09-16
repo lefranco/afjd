@@ -10,7 +10,7 @@ import mydatetime
 import scoring
 
 ALPHA = 1.5
-D_CONSTANT = 400.
+D_CONSTANT = 600.
 DEFAULT_ELO = 1500.
 MINIMUM_ELO = 1000.
 
