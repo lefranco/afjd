@@ -498,8 +498,9 @@ def get_game_status():
     # option + link
     col = ""
     if game_fog:
-        link = html.A(href=f"./options/brouillard/description.pdf", target="_blank")
-        link <= f"brouillard de guerre !"
+        game_option = "brouillard"
+        link = html.A(href=f"./options/{game_option}/description.pdf", target="_blank")
+        link <= f"Option {game_option} !"
         col = html.TD(link)
     row <= col
 
