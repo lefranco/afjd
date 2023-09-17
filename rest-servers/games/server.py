@@ -199,8 +199,9 @@ GROUPING_PARSER.add_argument('game_id', type=int, required=True)
 GROUPING_PARSER.add_argument('delete', type=int, required=True)
 
 IMAGINE_PARSER = flask_restful.reqparse.RequestParser()
-IMAGINE_PARSER.add_argument('zone_num', type=int, required=True)
 IMAGINE_PARSER.add_argument('type_num', type=int, required=True)
+IMAGINE_PARSER.add_argument('zone_num', type=int, required=True)
+IMAGINE_PARSER.add_argument('role_num', type=int, required=True)
 
 
 # a little welcome message to new games
@@ -1997,8 +1998,9 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
         mylogger.LOGGER.info("/game-imagine-unit/<game_id>/<role_id> - POST - imagine a unit game id=%s role_id=%s", game_id, role_id)
 
         args = IMAGINE_PARSER.parse_args(strict=True)
-        zone_submitted = args['zone_num']
         type_submitted = args['type_num']
+        zone_submitted = args['zone_num']
+        role_submitted = args['role_num']
 
         sql_executor = database.SqlExecutor()
 
@@ -2055,7 +2057,7 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
 
         # create the imagined unit
-        imagined_unit = imagined_units.ImaginedUnit(int(game_id), int(zone_submitted), int(role_id), int(type_submitted))
+        imagined_unit = imagined_units.ImaginedUnit(int(game_id), int(type_submitted), int(zone_submitted), int(role_submitted))
         imagined_unit.update_database(sql_executor)
         sql_executor.commit()
 

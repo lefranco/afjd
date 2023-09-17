@@ -320,7 +320,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
 
     # purge imagined units
     for (_, zone_num, role_num, type_num) in imagined_units.ImaginedUnit.list_by_game_id(sql_executor, int(game_id)):
-        imagined_unit = imagined_units.ImaginedUnit(int(game_id), zone_num, role_num, type_num)
+        imagined_unit = imagined_units.ImaginedUnit(int(game_id), type_num, zone_num, role_num)
         imagined_unit.delete_database(sql_executor)
 
     # purge actives
