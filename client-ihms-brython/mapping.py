@@ -1416,12 +1416,7 @@ class Position(Renderable):
         # units
         units = server_dict['units']
 
-        # For historical reasons this may happen
-        if 'imagined_units_zones' not in server_dict:
-            server_dict['imagined_units_zones'] = []
-
-        # imagined zones
-        imagined_units_zones = server_dict['imagined_units_zones']
+        print(f"{units=}")
 
         self._units = []
         for role_num_str, role_units in units.items():
@@ -1434,8 +1429,30 @@ class Position(Renderable):
                     unit = Army(self, role, zone, None)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:
                     unit = Fleet(self, role, zone, None)  # type: ignore
-                if zone.identifier in imagined_units_zones:
-                    unit.imagined = True
+                self._units.append(unit)
+                region = zone.region
+                self._occupant_table[region] = unit
+
+        # For historical reasons this may happen
+        if 'imagined_units' not in server_dict:
+            server_dict['imagined_units'] = {}
+
+        # imagined units
+        imagined_units = server_dict['imagined_units']
+
+        print(f"{imagined_units=}")
+
+        for role_num_str, role_units in imagined_units.items():
+            role_num = int(role_num_str)
+            role = variant._roles[role_num]
+            for type_unit_code, zone_number in role_units:
+                type_unit = UnitTypeEnum.from_code(type_unit_code)
+                zone = variant._zones[zone_number]
+                if type_unit is UnitTypeEnum.ARMY_UNIT:
+                    unit = Army(self, role, zone, None)
+                if type_unit is UnitTypeEnum.FLEET_UNIT:
+                    unit = Fleet(self, role, zone, None)  # type: ignore
+                unit.imagined = True
                 self._units.append(unit)
                 region = zone.region
                 self._occupant_table[region] = unit

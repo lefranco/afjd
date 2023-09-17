@@ -2171,8 +2171,9 @@ def imagine_units():
             imagine_units()
 
         json_dict = {
+            'type_num': 1 if isinstance(mapping.UnitTypeEnum.ARMY_UNIT ,imagined_unit) else 2,
             'zone_num': imagined_unit.zone.identifier,
-            'type_num': imagined_unit.zone.identifier,
+            'role_num': imagined_unit.role.identifier,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']

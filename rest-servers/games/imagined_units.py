@@ -35,12 +35,15 @@ class ImaginedUnit:
         """ creation of table from scratch """
 
         sql_executor.execute("DROP TABLE IF EXISTS imagined_units")
-        sql_executor.execute("CREATE TABLE imagined_units (game_id INTEGER, zone_num INTEGER, role_num INTEGER, type_num INTEGER)")
+        sql_executor.execute("CREATE TABLE imagined_units (game_id INTEGER, type_num INTEGER, zone_num INTEGER, role_num INTEGER)")
 
-    def __init__(self, game_id: int, zone_num: int, role_num: int, type_num: int) -> None:
+    def __init__(self, game_id: int, type_num: int, zone_num: int, role_num: int) -> None:
 
         assert isinstance(game_id, int), "game_id must be an int"
         self._game_id = game_id
+
+        assert isinstance(type_num, int), "type_num must be an int"
+        self._type_num = type_num
 
         assert isinstance(zone_num, int), "zone_num must be an int"
         self._zone_num = zone_num
@@ -48,19 +51,16 @@ class ImaginedUnit:
         assert isinstance(role_num, int), "role_num must be an int"
         self._role_num = role_num
 
-        assert isinstance(type_num, int), "type_num must be an int"
-        self._type_num = type_num
-
     def update_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Pushes changes from object to database """
-        sql_executor.execute("INSERT OR REPLACE INTO imagined_units (game_id, zone_num, role_num, type_num) VALUES (?, ?, ?, ?)", (self._game_id, self._zone_num, self._role_num, self._type_num))
+        sql_executor.execute("INSERT OR REPLACE INTO imagined_units (game_id, type_num, zone_num, role_num) VALUES (?, ?, ?, ?)", (self._game_id, self._type_num, self._zone_num, self._role_num))
 
     def delete_database(self, sql_executor: database.SqlExecutor) -> None:
         """ Removes object from database """
         sql_executor.execute("DELETE FROM imagined_units WHERE game_id = ? AND zone_num = ?", (self._game_id, self._zone_num))
 
     def __str__(self) -> str:
-        return f"game_id={self._game_id} zone_num={self._zone_num} role_num={self._role_num} type_num={self._type_num}"
+        return f"game_id={self._game_id} type_num={self._type_num} zone_num={self._zone_num} role_num={self._role_num}"
 
 
 if __name__ == '__main__':
