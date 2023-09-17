@@ -42,7 +42,6 @@
 
     "build_everywhere" : true,
     "disorder" : {},
-    "visibility_restricted" : false,
     
     "neighbouring" : [
         {

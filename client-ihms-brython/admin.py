@@ -833,8 +833,6 @@ def rectify_position():
 
     alert("Attention :\n 1) Ne pas rectifier une position en dehors des phases de mouvements !\n 2) Ne pas supprimer une unité qui a déjà reçu un ordre !\n (DANGER !!!)")
 
-    game_id = storage['GAME_ID']
-
     # from variant name get variant content
 
     variant_content_loaded = common.game_variant_content_reload(variant_name_loaded)
@@ -850,10 +848,19 @@ def rectify_position():
     # build variant data
     variant_data = mapping.Variant(variant_name_loaded, variant_content_loaded, parameters_read)
 
+    game_name = storage['GAME']
+
+    parameters_loaded = common.game_parameters_reload(game_name)
+    if not parameters_loaded:
+        alert("Impossible de récupérer les paramètres de la partie modèle")
+        return
+
+    game_id = storage['GAME_ID']
+
     # get the position from server
-    restricted = variant_content_loaded['visibility_restricted']
-    if restricted:
-        position_loaded = common.game_position_restricted_reload(game_id, 0)
+    fog_of_war = parameters_loaded['fog']
+    if fog_of_war:
+        position_loaded = common.game_position_fog_of_war_reload(game_id, 0)
     else:
         position_loaded = common.game_position_reload(game_id)
     if not position_loaded:

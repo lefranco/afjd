@@ -198,8 +198,9 @@ GROUPING_PARSER = flask_restful.reqparse.RequestParser()
 GROUPING_PARSER.add_argument('game_id', type=int, required=True)
 GROUPING_PARSER.add_argument('delete', type=int, required=True)
 
-LIGHT_PARSER = flask_restful.reqparse.RequestParser()
-LIGHT_PARSER.add_argument('zone_num', type=int, required=True)
+IMAGINE_PARSER = flask_restful.reqparse.RequestParser()
+IMAGINE_PARSER.add_argument('zone_num', type=int, required=True)
+IMAGINE_PARSER.add_argument('type_num', type=int, required=True)
 
 
 # a little welcome message to new games
@@ -220,7 +221,7 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
     """
 
     # load the visibility data
-    location = './data'
+    location = './variants'
     name = f'{variant_name}_visibility'
     extension = '.json'
     full_name_file = pathlib.Path(location, name).with_suffix(extension)
@@ -1983,20 +1984,21 @@ class GamesRecruitingRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game-light-unit/<game_id>/<role_id>')
+@API.resource('/game-imagine-unit/<game_id>/<role_id>')
 class GameLightUnitRessource(flask_restful.Resource):  # type: ignore
     """ GameLightUnitRessource """
 
     def post(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
-        Lights a unit of a game
+        Imagine a unit of a game
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-light-unit/<game_id>/<role_id> - POST - light a unit game id=%s role_id=%s", game_id, role_id)
+        mylogger.LOGGER.info("/game-imagine-unit/<game_id>/<role_id> - POST - light a unit game id=%s role_id=%s", game_id, role_id)
 
-        args = LIGHT_PARSER.parse_args(strict=True)
+        args = IMAGINE_PARSER.parse_args(strict=True)
         zone_submitted = args['zone_num']
+        type_submitted = args['type_num']
 
         sql_executor = database.SqlExecutor()
 
@@ -2008,13 +2010,9 @@ class GameLightUnitRessource(flask_restful.Resource):  # type: ignore
 
         # check the game position is protected
         assert game is not None
-        variant_name = game.variant
-        variant_data = variants.Variant.get_by_name(variant_name)
-        assert variant_data is not None
-        visibility_restricted = variant_data['visibility_restricted']
-        if not visibility_restricted:
+        if not game.fog:
             del sql_executor
-            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is not restricted !")
+            flask_restful.abort(404, msg="This game is not fog of war !")
 
         # check a role is provided
         if role_id is None:
@@ -2056,37 +2054,37 @@ class GameLightUnitRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
 
-        # light the unit
-        game_units = units.Unit.list_by_game_id(sql_executor, game_id)
-        zone_role_game_units = [(u[2], u[3]) for u in game_units]
+        ## light the unit
+        #game_units = units.Unit.list_by_game_id(sql_executor, game_id)
+        #zone_role_game_units = [(u[2], u[3]) for u in game_units]
 
-        # unit must exist
-        if (int(zone_submitted), int(role_id)) not in zone_role_game_units:
-            del sql_executor
-            flask_restful.abort(403, msg="There does not seem to exist such a unit")
+        ## unit must exist
+        #if (int(zone_submitted), int(role_id)) not in zone_role_game_units:
+            #del sql_executor
+            #flask_restful.abort(403, msg="There does not seem to exist such a unit")
 
-        # create the light
-        lighted_unit = lighted_units.LightedUnit(int(game_id), int(zone_submitted), int(role_id))
-        lighted_unit.update_database(sql_executor)
-        sql_executor.commit()
+        ## create the light
+        #lighted_unit = lighted_units.LightedUnit(int(game_id), int(zone_submitted), int(role_id))
+        #lighted_unit.update_database(sql_executor)
+        #sql_executor.commit()
 
         del sql_executor
 
-        data = {'msg': 'Ok unit enlighted'}
+        data = {'msg': 'Not implemented !'}
         return data, 201
 
 
-@API.resource('/game-restricted-positions/<game_id>/<role_id>')
-class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
-    """ GameRestrictedPositionRessource """
+@API.resource('/game-fog-of-war-positions/<game_id>/<role_id>')
+class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
+    """ GameFogOfWarPositionRessource """
 
     def get(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
-        Gets position of the game (restricted : foggy variant mainly)
+        Gets position of the game (fog of war : foggy variant mainly)
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-restricted-positions/<game_id>/<role_id> - GET - getting restricted position for game id=%s role id=%s", game_id, role_id)
+        mylogger.LOGGER.info("/game-fog-of-war-positions/<game_id>/<role_id> - GET - getting fog of war position for game id=%s role id=%s", game_id, role_id)
 
         sql_executor = database.SqlExecutor()
 
@@ -2098,13 +2096,9 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
 
         # check the game position is protected
         assert game is not None
-        variant_name = game.variant
-        variant_data = variants.Variant.get_by_name(variant_name)
-        assert variant_data is not None
-        visibility_restricted = variant_data['visibility_restricted']
-        if not visibility_restricted:
+        if not game.fog:
             del sql_executor
-            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is not restricted !")
+            flask_restful.abort(404, msg="This game is not fog of war !")
 
         # check a role is provided
         if role_id is None:
@@ -2215,6 +2209,7 @@ class GameRestrictedPositionRessource(flask_restful.Resource):  # type: ignore
 
         # now we can start hiding stuff
         # this will update last parameters
+        variant_name = game.variant
         apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, lighted_unit_zones_list)
 
         data = {
@@ -2347,13 +2342,9 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
 
         # check the game position is not protected
         assert game is not None
-        variant_name = game.variant
-        variant_data = variants.Variant.get_by_name(variant_name)
-        assert variant_data is not None
-        visibility_restricted = variant_data['visibility_restricted']
-        if visibility_restricted:
+        if game.fog:
             del sql_executor
-            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is restricted !")
+            flask_restful.abort(404, msg="This game is fog of war !")
 
         # get ownerships
         ownership_dict = {}
@@ -2394,9 +2385,9 @@ class GamePositionRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game-restricted-reports/<game_id>/<role_id>')
-class GameRestrictedReportRessource(flask_restful.Resource):  # type: ignore
-    """ GameRestrictedReportRessource """
+@API.resource('/game-fog-of-war-reports/<game_id>/<role_id>')
+class GameFogOfWarReportRessource(flask_restful.Resource):  # type: ignore
+    """ GameFogOfWarReportRessource """
 
     def get(self, game_id: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
@@ -2404,7 +2395,7 @@ class GameRestrictedReportRessource(flask_restful.Resource):  # type: ignore
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-reports/<game_id>/<role_id> - GET - getting restricted report game id=%s role_id=%s", game_id, role_id)
+        mylogger.LOGGER.info("/game-reports/<game_id>/<role_id> - GET - getting fog of war report game id=%s role_id=%s", game_id, role_id)
 
         sql_executor = database.SqlExecutor()
 
@@ -2416,13 +2407,9 @@ class GameRestrictedReportRessource(flask_restful.Resource):  # type: ignore
 
         # check the game position is protected
         assert game is not None
-        variant_name = game.variant
-        variant_data = variants.Variant.get_by_name(variant_name)
-        assert variant_data is not None
-        visibility_restricted = variant_data['visibility_restricted']
-        if not visibility_restricted:
+        if not game.fog:
             del sql_executor
-            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is not restricted !")
+            flask_restful.abort(404, msg="This game is not fog of war !")
 
         # check a role is provided
         if role_id is None:
@@ -2508,13 +2495,9 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
 
         # check the game position is not protected
         assert game is not None
-        variant_name = game.variant
-        variant_data = variants.Variant.get_by_name(variant_name)
-        assert variant_data is not None
-        visibility_restricted = variant_data['visibility_restricted']
-        if visibility_restricted:
+        if game.fog:
             del sql_executor
-            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is restricted !")
+            flask_restful.abort(404, msg="This game is fog of war !")
 
         # find the report
         report = reports.Report.find_by_identifier(sql_executor, game_id)
@@ -2532,17 +2515,17 @@ class GameReportRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
-@API.resource('/game-restricted-transitions/<game_id>/<advancement>/<role_id>')
-class GameRestrictedTransitionRessource(flask_restful.Resource):  # type: ignore
-    """ GameRestrictedTransitionRessource """
+@API.resource('/game-fog-of-war-transitions/<game_id>/<advancement>/<role_id>')
+class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
+    """ GameFogOfWarTransitionRessource """
 
     def get(self, game_id: int, advancement: int, role_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
         """
-        Gets the full restricted report  (transition : postions + orders + report) of adjudication for the game
+        Gets the full fog of war report  (transition : postions + orders + report) of adjudication for the game
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/game-restricted-transitions/<game_id>/<advancement>/<role_id> - GET - getting transition game id=%s advancement=%s role id=%s ", game_id, advancement, role_id)
+        mylogger.LOGGER.info("/game-fog-of-war-transitions/<game_id>/<advancement>/<role_id> - GET - getting transition game id=%s advancement=%s role id=%s ", game_id, advancement, role_id)
 
         sql_executor = database.SqlExecutor()
 
@@ -2554,13 +2537,9 @@ class GameRestrictedTransitionRessource(flask_restful.Resource):  # type: ignore
 
         # check the game position is protected
         assert game is not None
-        variant_name = game.variant
-        variant_data = variants.Variant.get_by_name(variant_name)
-        assert variant_data is not None
-        visibility_restricted = variant_data['visibility_restricted']
-        if not visibility_restricted:
+        if not game.fog:
             del sql_executor
-            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is not restricted !")
+            flask_restful.abort(404, msg="This game is not fog of war !")
 
         # check a role is provided
         if role_id is None:
@@ -2640,6 +2619,7 @@ class GameRestrictedTransitionRessource(flask_restful.Resource):  # type: ignore
         fake_units_list = the_orders['fake_units']
 
         # this will update last parameters
+        variant_name = game.variant
         apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list, lighted_unit_zones_list)
 
         data = {'time_stamp': transition.time_stamp, 'situation': {'ownerships': ownership_dict, 'dislodged_ones': dislodged_unit_dict, 'units': unit_dict, 'forbiddens': forbidden_list}, 'orders': {'orders': orders_list, 'fake_units': fake_units_list}, 'report_txt': "---"}
@@ -2668,13 +2648,9 @@ class GameTransitionRessource(flask_restful.Resource):  # type: ignore
 
         # check the game position is not protected
         assert game is not None
-        variant_name = game.variant
-        variant_data = variants.Variant.get_by_name(variant_name)
-        assert variant_data is not None
-        visibility_restricted = variant_data['visibility_restricted']
-        if visibility_restricted:
+        if game.fog:
             del sql_executor
-            flask_restful.abort(404, msg="This game is in a variant for which visibility of game position is restricted !")
+            flask_restful.abort(404, msg="This game is fog of war !")
 
         # find the transition
         transition = transitions.Transition.find_by_game_advancement(sql_executor, game_id, advancement)
@@ -3267,11 +3243,7 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             fake_units_list2: typing.List[typing.List[int]] = []
 
             # apply visibility if the game position is protected
-            variant_name = game.variant
-            variant_data = variants.Variant.get_by_name(variant_name)
-            assert variant_data is not None
-            visibility_restricted = variant_data['visibility_restricted']
-            if visibility_restricted:
+            if game.fog:
                 # now we can start hiding stuff
                 # this will update last parameters
                 apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, lighted_unit_zones_list)
@@ -3785,12 +3757,8 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             else:
                 unit_dict[str(role_num)].append([type_num, zone_num])
 
-        # apply visibility if the game position is protected
-        variant_name = game.variant
-        variant_data = variants.Variant.get_by_name(variant_name)
-        assert variant_data is not None
-        visibility_restricted = variant_data['visibility_restricted']
-        if visibility_restricted:
+        # apply visibility if the game is fog
+        if game.fog:
 
             # situation: get ownerships
             ownership_dict: typing.Dict[str, int] = {}
@@ -3808,6 +3776,7 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             fake_units_list2: typing.List[typing.List[int]] = []
 
             # this will update last parameters
+            variant_name = game.variant
             apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, lighted_unit_zones_list)
 
         # check orders (rough check)
