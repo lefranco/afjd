@@ -92,6 +92,7 @@ def create_game(json_dict):
     # load previous values if applicable
     name = json_dict['name'] if json_dict and 'name' in json_dict else None
     variant = json_dict['variant'] if json_dict and 'variant' in json_dict else config.VARIANT_NAMES_LIST[0]
+    fog = json_dict['fog'] if json_dict and 'fog' in json_dict else None
     archive = json_dict['archive'] if json_dict and 'archive' in json_dict else None
     used_for_elo = json_dict['used_for_elo'] if json_dict and 'used_for_elo' in json_dict else None
     manual = json_dict['manual'] if json_dict and 'manual' in json_dict else None
@@ -123,6 +124,7 @@ def create_game(json_dict):
 
         nonlocal name
         nonlocal variant
+        nonlocal fog
         nonlocal archive
         nonlocal used_for_elo
         nonlocal manual
@@ -175,6 +177,7 @@ def create_game(json_dict):
 
         name = input_name.value
         variant = input_variant.value
+        fog = int(input_fog.checked)
         archive = int(input_archive.checked)
         used_for_elo = int(input_used_for_elo.checked)
         manual = int(input_manual.checked)
@@ -244,6 +247,8 @@ def create_game(json_dict):
         time_creation_str = mydatetime.strftime(*time_creation)
 
         specific_data = ""
+        if fog:
+            specific_data += "brouillard de guerre"
         if archive:
             specific_data += "archive "
         if manual:
@@ -269,6 +274,7 @@ def create_game(json_dict):
         json_dict = {
             'name': name,
             'variant': variant,
+            'fog': fog,
             'archive': archive,
             'used_for_elo': used_for_elo,
             'manual': manual,
@@ -374,6 +380,13 @@ def create_game(json_dict):
         input_variant <= option
 
     fieldset <= input_variant
+    form <= fieldset
+
+    fieldset = html.FIELDSET()
+    legend_fog = html.LEGEND("brouillard de guerre !", title="Brouillard de guerre : on ne voit que les unités voisines de ses unités et ses centres")
+    fieldset <= legend_fog
+    input_fog = html.INPUT(type="checkbox", checked=bool(fog) if fog is not None else False)
+    fieldset <= input_fog
     form <= fieldset
 
     fieldset = html.FIELDSET()

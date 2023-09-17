@@ -457,6 +457,7 @@ def get_game_status():
     game_name = GAME_PARAMETERS_LOADED['name']
     game_description = GAME_PARAMETERS_LOADED['description']
     game_variant = GAME_PARAMETERS_LOADED['variant']
+    game_fog = GAME_PARAMETERS_LOADED['fog']
 
     state_loaded = GAME_PARAMETERS_LOADED['current_state']
     for possible_state_code, possible_state_desc in config.STATE_CODE_TABLE.items():
@@ -492,6 +493,14 @@ def get_game_status():
     link = html.A(href=f"./variants/{game_variant}/description.pdf", target="_blank")
     link <= f"Variante {game_variant}"
     col = html.TD(link)
+    row <= col
+
+    # option + link
+    col = ""
+    if game_fog:
+        link = html.A(href=f"./options/brouillard/description.pdf", target="_blank")
+        link <= f"brouillard de guerre !"
+        col = html.TD(link)
     row <= col
 
     col = html.TD(f"Etat {game_state_readable}")
@@ -532,7 +541,7 @@ def get_game_status():
 
     row = html.TR()
 
-    col = html.TD(game_description, colspan="10")
+    col = html.TD(game_description, colspan="11")
     row <= col
     game_status_table <= row
 
