@@ -1062,7 +1062,7 @@ class Variant(Renderable):
         return self._build_everywhere
 
 
-# lighted units
+# imagined units
 BLUR_COLOR = 'Black'
 BLUR_VALUE = 20
 
@@ -1075,7 +1075,7 @@ class Unit(Highliteable, Renderable):
         self._role = role
         self._zone = zone
         self._dislodged_origin = dislodged_origin
-        self._lighted = False
+        self._imagined = False
 
     def is_disloged(self):
         """ dislodged """
@@ -1109,7 +1109,7 @@ class Unit(Highliteable, Renderable):
         if active:
             fill_color = fill_color.highlite_colour()
 
-        if self._lighted:
+        if self._imagined:
             prev_shadow_color = ctx.shadowColor
             ctx.shadowColor = BLUR_COLOR
             prev_shadow_blur = ctx.shadowBlur
@@ -1147,7 +1147,7 @@ class Unit(Highliteable, Renderable):
         if self._dislodged_origin is not None:
             self.render_as_dislodged(x, y, ctx)
 
-        if self._lighted:
+        if self._imagined:
             ctx.shadowColor = prev_shadow_color
             ctx.shadowBlur = prev_shadow_blur
 
@@ -1247,14 +1247,14 @@ class Unit(Highliteable, Renderable):
         return self._dislodged_origin
 
     @property
-    def lighted(self) -> bool:
+    def imagined(self) -> bool:
         """ property """
-        return self._lighted
+        return self._imagined
 
-    @lighted.setter
-    def lighted(self, lighted: bool) -> None:
+    @imagined.setter
+    def imagined(self, imagined: bool) -> None:
         """ setter """
-        self._lighted = lighted
+        self._imagined = imagined
 
     def __str__(self) -> str:
         variant = self._position.variant
@@ -1417,11 +1417,11 @@ class Position(Renderable):
         units = server_dict['units']
 
         # For historical reasons this may happen
-        if 'lighted_units_zones' not in server_dict:
-            server_dict['lighted_units_zones'] = []
+        if 'imagined_units_zones' not in server_dict:
+            server_dict['imagined_units_zones'] = []
 
-        # lighted zones
-        lighted_units_zones = server_dict['lighted_units_zones']
+        # imagined zones
+        imagined_units_zones = server_dict['imagined_units_zones']
 
         self._units = []
         for role_num_str, role_units in units.items():
@@ -1434,8 +1434,8 @@ class Position(Renderable):
                     unit = Army(self, role, zone, None)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:
                     unit = Fleet(self, role, zone, None)  # type: ignore
-                if zone.identifier in lighted_units_zones:
-                    unit.lighted = True
+                if zone.identifier in imagined_units_zones:
+                    unit.imagined = True
                 self._units.append(unit)
                 region = zone.region
                 self._occupant_table[region] = unit

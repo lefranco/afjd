@@ -15,7 +15,7 @@ import requests
 
 import ownerships
 import units
-import lighted_units
+import imagined_units
 import actives
 import submissions
 import communication_orders
@@ -267,26 +267,15 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     for _, region_num in game_forbiddens:
         forbidden_list.append(region_num)
 
-    # special : get lighted units
-    all_lighted_game_units = lighted_units.LightedUnit.list_by_game_id(sql_executor, game_id)
-    all_lighted_zones = [lz[1] for lz in all_lighted_game_units]
-
-    lighted_unit_zones_list: typing.List[int] = []
-    game_units = units.Unit.list_by_game_id(sql_executor, game_id)
-    for _, type_num, zone_num, role_num, region_dislodged_from_num, fake in game_units:
-        if fake:
-            continue
-        if region_dislodged_from_num:
-            continue
-        if zone_num not in all_lighted_zones:
-            continue
+    # TODO fill this
+    imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = {}
 
     position_transition_dict = {
         'ownerships': ownership_dict,
         'dislodged_ones': dislodged_unit_dict2,
         'units': unit_dict2,
         'forbiddens': forbidden_list,
-        'lighted_units_zones': lighted_unit_zones_list,
+        'imagined_units': imagined_unit_dict,
     }
 
     # orders for transition
@@ -329,10 +318,10 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
         forbidden = forbiddens.Forbidden(int(game_id), center_num)
         forbidden.delete_database(sql_executor)
 
-    # purge lighted units
-    for (_, zone_num, role_num) in lighted_units.LightedUnit.list_by_game_id(sql_executor, int(game_id)):
-        lighted_unit = lighted_units.LightedUnit(int(game_id), zone_num, role_num)
-        lighted_unit.delete_database(sql_executor)
+    # purge imagined units
+    for (_, zone_num, role_num, type_num) in imagined_units.ImaginedUnit.list_by_game_id(sql_executor, int(game_id)):
+        imagined_unit = imagined_units.ImaginedUnit(int(game_id), zone_num, role_num, type_num)
+        imagined_unit.delete_database(sql_executor)
 
     # purge actives
     for (_, role_num) in actives.Active.list_by_game_id(sql_executor, int(game_id)):

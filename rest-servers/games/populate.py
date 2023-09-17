@@ -14,7 +14,7 @@ import communication_orders
 import orders
 import ownerships
 import units
-import lighted_units
+import imagined_units
 import forbiddens
 import reports
 import capacities
@@ -82,9 +82,9 @@ def populate_units(sql_executor: database.SqlExecutor) -> None:
     units.Unit.create_table(sql_executor)
 
 
-def populate_lighted_units(sql_executor: database.SqlExecutor) -> None:
+def populate_imagined_units(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
-    lighted_units.LightedUnit.create_table(sql_executor)
+    imagined_units.ImaginedUnit.create_table(sql_executor)
 
 
 def populate_forbiddens(sql_executor: database.SqlExecutor) -> None:
@@ -181,7 +181,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_orders(sql_executor)
     populate_ownerships(sql_executor)
     populate_units(sql_executor)
-    populate_lighted_units(sql_executor)
+    populate_imagined_units(sql_executor)
     populate_forbiddens(sql_executor)
     populate_games(sql_executor)
     populate_messages(sql_executor)

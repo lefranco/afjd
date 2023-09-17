@@ -29,7 +29,6 @@ class AutomatonStateEnum:
     SELECT_PASSIVE_UNIT_STATE = 3
     SELECT_DESTINATION_STATE = 4
     SELECT_BUILD_UNIT_TYPE_STATE = 5
-    SELECT_OTHER_STATE = 6
 
 
 # canvas backup to optimize drawing map when only orders change
@@ -2146,6 +2145,7 @@ def imagine_units():
     selected_active_unit = None
     automaton_state = None
     buttons_right = None
+    imagined_unit = None
 
     def imagine_unit_callback(_):
         """ imagine_unit_callback """
@@ -2171,7 +2171,8 @@ def imagine_units():
             imagine_units()
 
         json_dict = {
-            'zone_num': selected_active_unit.zone.identifier,
+            'zone_num': imagined_unit.zone.identifier,
+            'type_num': imagined_unit.zone.identifier,
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -2187,12 +2188,13 @@ def imagine_units():
         nonlocal automaton_state
         nonlocal selected_active_unit
         nonlocal buttons_right
+        nonlocal imagined_unit
 
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
-        if automaton_state is AutomatonStateEnum.SELECT_ACTIVE_STATE:
+        if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
 
-            selected_active_unit = play_low.POSITION_DATA.closest_unit(pos, None)
+            selected_dest_zone = play_low.VARIANT_DATA.closest_zone(pos)
 
             my_sub_panel2.removeChild(buttons_right)
             buttons_right = html.DIV(id='buttons_right')
@@ -2204,45 +2206,26 @@ def imagine_units():
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
 
-            # gm can pass orders on archive games
-            if play_low.ROLE_ID != 0 and selected_active_unit.role != play_low.VARIANT_DATA.roles[play_low.ROLE_ID]:
-
-                alert("Bien essayé, mais cette unité ne vous appartient pas (ou vous n'avez pas d'ordre à valider).")
-
-                selected_active_unit = None
-
-                # switch back to initial state selecting unit
-                legend_select_unit = html.DIV("Cliquez sur l'unité à allumer", Class='instruction')
-                buttons_right <= legend_select_unit
-
-                automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+            selected_active_unit = None
+            if selected_dest_zone.region in play_low.POSITION_DATA.occupant_table:
+                alert("Il y a une unité ici")
 
             else:
 
-                legend_selected_unit = html.DIV(f"L'unité sélectionnée est {selected_active_unit}")
-                buttons_right <= legend_selected_unit
+                other_role_id = (play_low.ROLE_ID + 1) % len(play_low.VARIANT_DATA.roles)
+                other_role = play_low.VARIANT_DATA.roles[other_role_id]
 
-                automaton_state = AutomatonStateEnum.SELECT_OTHER_STATE
+                if selected_dest_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION:
+                    imagined_unit = mapping.Army(play_low.POSITION_DATA, other_role, selected_dest_zone, None)
+                if selected_dest_zone.region.region_type is mapping.RegionTypeEnum.SEA_REGION:
+                    imagined_unit = mapping.Fleet(play_low.POSITION_DATA, other_role, selected_dest_zone, None)
 
-                buttons_right <= html.BR()
-                put_submit(buttons_right)
+                # TODO : solve this (may put army or fleet here)
+                if selected_dest_zone.region.region_type is mapping.RegionTypeEnum.COAST_REGION:
+                    imagined_unit = mapping.Fleet(play_low.POSITION_DATA, other_role, selected_dest_zone, None)
 
-            my_sub_panel2 <= buttons_right
-            play_low.MY_SUB_PANEL <= my_sub_panel2
-
-            return
-
-        if automaton_state is AutomatonStateEnum.SELECT_OTHER_STATE:
-
-            my_sub_panel2.removeChild(buttons_right)
-            buttons_right = html.DIV(id='buttons_right')
-            buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-
-            # role flag
-            play_low.stack_role_flag(buttons_right)
-
-            # button last moves
-            play_low.stack_last_moves_button(buttons_right)
+                legend_imagined_unit = html.DIV(f"L'unité imaginée est {imagined_unit}")
+                buttons_right <= legend_imagined_unit
 
             buttons_right <= html.BR()
             put_submit(buttons_right)
@@ -2250,7 +2233,6 @@ def imagine_units():
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
 
-            automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
             return
 
     def callback_render(refresh):
@@ -2288,7 +2270,7 @@ def imagine_units():
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        buttons_right <= html.DIV("Principe de l'allumage des unités : On ne peut allumer que ses propres unités. L'allumage est irréversible jusquà la résolution où il est effacé. Une unité allumée devient visible par tout le monde et distinguée comme telle sur la carte. Comme l'unité est visible elle peut être convoyée et soutenue offensivement (ce dernier point étant le but de l'allumage au départ)")
+        buttons_right <= html.DIV("Principe de l'imagination des unités : On imagine une unité sur la carte. Une unité imaginée peut être convoyée et soutenue offensivement (ce dernier point étant le but de l'opération). Si l'unité n'a pas le bon type ou n'existe pas, l'ordre sera annulé à la résolution")
 
     # need to be connected
     if play_low.PSEUDO is None:
@@ -2404,9 +2386,9 @@ def imagine_units():
     # button last moves
     play_low.stack_last_moves_button(buttons_right)
 
-    legend_select_unit = html.DIV("Cliquez sur l'unité à allumer", Class='instruction')
+    legend_select_unit = html.DIV("Cliquez la zone où créer, modifier ou supprimer une unité imaginée", Class='instruction')
     buttons_right <= legend_select_unit
-    automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+    automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
 
     # overall
     my_sub_panel2 = html.DIV()
