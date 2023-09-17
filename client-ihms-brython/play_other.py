@@ -511,6 +511,7 @@ def show_game_parameters():
         row = html.TR()
 
         parameter_name, explanation, effect = {
+            'fog': ("brouillard", "la visibilité des unités est restreinte", "Les joueurs ne voient que les unités voisines de leurs centres et leurs unités"),
             'archive': ("archive", "la partie n'est pas jouée, elle est juste consultable", "L'arbitre peut passer des ordres, les dates limites ne sont pas gérées, le système autorise les résolutions sans tenir compte des soumissions des joueurs, le système ne réalise pas l'attribution des roles au démarrage de la partie, pas de courriel de notification aux joueurs"),
             'used_for_elo': ("utilisée pour le calcul du élo", "oui ou non", "Le résultat de la partie est pris en compte dans le calcul du élo des joueurs du site"),
             'anonymous': ("anonyme", "on sait pas qui joue quel rôle dans la partie - cette valeur est modifiable pendant la partie", "Seul l'arbitre peut savoir qui joue et les joueurs ne savent pas qui a passé les ordres  - effacé à la fin de la partie"),
