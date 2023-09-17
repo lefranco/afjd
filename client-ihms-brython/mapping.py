@@ -1416,8 +1416,6 @@ class Position(Renderable):
         # units
         units = server_dict['units']
 
-        print(f"{units=}")
-
         self._units = []
         for role_num_str, role_units in units.items():
             role_num = int(role_num_str)
@@ -1439,8 +1437,6 @@ class Position(Renderable):
 
         # imagined units
         imagined_units = server_dict['imagined_units']
-
-        print(f"{imagined_units=}")
 
         for role_num_str, role_units in imagined_units.items():
             role_num = int(role_num_str)
