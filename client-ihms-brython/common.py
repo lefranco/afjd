@@ -240,7 +240,7 @@ def game_position_empty():
         'dislodged_ones': {},
         'units': {},
         'forbiddens': {},
-        'lighted_units_zones': [],
+        'imagined_units_zones': [],
     }
 
 
