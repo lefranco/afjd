@@ -65,8 +65,8 @@ def main() -> None:
         'visibility_table': visibility_table,
     }
 
-    output = json.dumps(data_json, indent=4)
-    with open(args.output_file, "w", encoding='utf-8', ensure_ascii=False) as write_file:
+    output = json.dumps(data_json, indent=4, ensure_ascii=False)
+    with open(args.output_file, "w", encoding='utf-8') as write_file:
         write_file.write(output)
 
 
