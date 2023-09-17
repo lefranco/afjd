@@ -109,11 +109,11 @@ def make_rating_colours_window(variant_data, ratings, units, colours, game_scori
     rating_table <= rating_scoring_row
     col = html.TD(html.B(f"{scoring_name} :"))
     rating_scoring_row <= col
-    restricted = VARIANT_CONTENT_LOADED['visibility_restricted']
+    fog_of_war = GAME_PARAMETERS_LOADED['fog']
     for role_name in ratings:
         score_dis = score_table[role_name]
         role_score = ""
-        if not restricted or ROLE_ID == 0:
+        if not fog_of_war or ROLE_ID == 0:
             role_score = f"{float(score_dis):.2f}"
         col = html.TD(role_score)
         rating_scoring_row <= col
@@ -200,8 +200,8 @@ def get_roles_submitted_orders(game_id):
     return submitted_data
 
 
-def game_transition_restricted_reload(game_id, advancement, role_id):
-    """ game_transition_restricted_reload : returns empty dict if problem (or no data) """
+def game_transition_fog_of_war_reload(game_id, advancement, role_id):
+    """ game_transition_fog_of_war_reload : returns empty dict if problem (or no data) """
 
     transition_loaded = {}
 
@@ -210,9 +210,9 @@ def game_transition_restricted_reload(game_id, advancement, role_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur au chargement de la transition restricted de la partie : {req_result['message']}")
+                alert(f"Erreur au chargement de la transition (brouillard) de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème au chargement de la transition restricted de la partie : {req_result['msg']}")
+                alert(f"Problème au chargement de la transition (brouillard) de la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
@@ -223,7 +223,7 @@ def game_transition_restricted_reload(game_id, advancement, role_id):
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-restricted-transitions/{game_id}/{advancement}/{role_id}"
+    url = f"{host}:{port}/game-fog-of-war-transitions/{game_id}/{advancement}/{role_id}"
 
     # getting variant : need a token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -370,10 +370,10 @@ def load_dynamic_stuff():
 
     # get the position from server
     global POSITION_LOADED
-    restricted = VARIANT_CONTENT_LOADED['visibility_restricted']
-    if restricted:
+    fog_of_war = GAME_PARAMETERS_LOADED['fog']
+    if fog_of_war:
         if ROLE_ID is not None:
-            POSITION_LOADED = common.game_position_restricted_reload(GAME_ID, ROLE_ID)
+            POSITION_LOADED = common.game_position_fog_of_war_reload(GAME_ID, ROLE_ID)
         else:
             POSITION_LOADED = common.game_position_empty()
     else:
@@ -388,12 +388,12 @@ def load_dynamic_stuff():
 
     # need to be after game parameters (advancement -> season)
     global REPORT_LOADED
-    restricted = VARIANT_CONTENT_LOADED['visibility_restricted']
-    if restricted:
+    fog_of_war = GAME_PARAMETERS_LOADED['fog']
+    if fog_of_war:
         if ROLE_ID is None:
             REPORT_LOADED = None
         else:
-            REPORT_LOADED = game_restricted_report_reload(GAME_ID, ROLE_ID)
+            REPORT_LOADED = game_fog_of_war_report_reload(GAME_ID, ROLE_ID)
     else:
         REPORT_LOADED = game_report_reload(GAME_ID)
 
@@ -626,8 +626,8 @@ def show_board(panel):
     panel <= html.BR()
 
 
-def game_restricted_report_reload(game_id, role_id):
-    """ game_restricted_report_reload """
+def game_fog_of_war_report_reload(game_id, role_id):
+    """ game_fog_of_war_report_reload """
 
     report_loaded = {}
 
@@ -636,9 +636,9 @@ def game_restricted_report_reload(game_id, role_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur au chargement du rapport de résolution restricted de la partie : {req_result['message']}")
+                alert(f"Erreur au chargement du rapport de résolution (brouillard) de la partie : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème au chargement du rapport de résolution restricted de la partie : {req_result['msg']}")
+                alert(f"Problème au chargement du rapport de résolution (brouillard) de la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
@@ -649,7 +649,7 @@ def game_restricted_report_reload(game_id, role_id):
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-restricted-reports/{game_id}/{role_id}"
+    url = f"{host}:{port}/game-fog-of-war-reports/{game_id}/{role_id}"
 
     # getting variant : need a token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)

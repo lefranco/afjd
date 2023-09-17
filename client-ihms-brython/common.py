@@ -226,7 +226,7 @@ def game_position_reload(game_id):
     port = config.SERVER_CONFIG['GAME']['PORT']
     url = f"{host}:{port}/game-positions/{game_id}"
 
-    # getting game position : do not need a token if not restricted
+    # getting game position : do not need a token if not fog_of_war
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return position_loaded
@@ -244,8 +244,8 @@ def game_position_empty():
     }
 
 
-def game_position_restricted_reload(game_id, role_id):
-    """ game_position_restricted_reload """
+def game_position_fog_of_war_reload(game_id, role_id):
+    """ game_position_fog_of_war_reload """
 
     position_loaded = None
 
@@ -254,9 +254,9 @@ def game_position_restricted_reload(game_id, role_id):
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
-                alert(f"Erreur au chargement de la position (restricted) de la partie  : {req_result['message']}")
+                alert(f"Erreur au chargement de la position (brouillard) de la partie  : {req_result['message']}")
             elif 'msg' in req_result:
-                alert(f"Problème au chargement de la position (restricted) de la partie : {req_result['msg']}")
+                alert(f"Problème au chargement de la position (brouillard) de la partie : {req_result['msg']}")
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
@@ -267,9 +267,9 @@ def game_position_restricted_reload(game_id, role_id):
 
     host = config.SERVER_CONFIG['GAME']['HOST']
     port = config.SERVER_CONFIG['GAME']['PORT']
-    url = f"{host}:{port}/game-restricted-positions/{game_id}/{role_id}"
+    url = f"{host}:{port}/game-fog-of-war-positions/{game_id}/{role_id}"
 
-    # getting game position : need a token if restricted
+    # getting game position : need a token if fog_of_war
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=noreply_callback)
 
     return position_loaded

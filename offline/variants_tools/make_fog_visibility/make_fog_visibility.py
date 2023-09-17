@@ -2,7 +2,7 @@
 
 
 """
-Make visibility file for brouillard variant
+Make visibility file for fog option of variant
 """
 
 import typing

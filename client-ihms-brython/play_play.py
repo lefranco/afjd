@@ -1312,12 +1312,12 @@ def submit_orders():
         if advancement_selected < 0:
             break
 
-        restricted = play_low.VARIANT_CONTENT_LOADED['visibility_restricted']
-        if restricted:
+        fog_of_war = play_low.GAME_PARAMETERS_LOADED['fog']
+        if fog_of_war:
             if play_low.ROLE_ID is None:
                 transition_loaded = None
             else:
-                transition_loaded = play_low.game_transition_restricted_reload(play_low.GAME_ID, advancement_selected, play_low.ROLE_ID)
+                transition_loaded = play_low.game_transition_fog_of_war_reload(play_low.GAME_ID, advancement_selected, play_low.ROLE_ID)
         else:
             transition_loaded = play_low.game_transition_reload(play_low.GAME_ID, advancement_selected)
         if not transition_loaded:
@@ -2140,35 +2140,35 @@ def submit_communication_orders():
     return True
 
 
-def light_my_units():
-    """ light_my_units """
+def imagine_units():
+    """ imagine_units """
 
     selected_active_unit = None
     automaton_state = None
     buttons_right = None
 
-    def light_unit_callback(_):
-        """ light_unit_callback """
+    def imagine_unit_callback(_):
+        """ imagine_unit_callback """
 
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Erreur allumage d'unité : {req_result['message']}")
+                    alert(f"Erreur imagine d'unité : {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème allumage d'unité : {req_result['msg']}")
+                    alert(f"Problème imagine d'unité : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez allumé une unité (vérifiez directement sur la carte) : {messages}", True)
+            common.info_dialog(f"Vous avez imaginé une unité (vérifiez directement sur la carte) : {messages}", True)
 
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             # reload position
             play_low.load_dynamic_stuff()
-            light_my_units()
+            imagine_units()
 
         json_dict = {
             'zone_num': selected_active_unit.zone.identifier,
@@ -2176,7 +2176,7 @@ def light_my_units():
 
         host = config.SERVER_CONFIG['GAME']['HOST']
         port = config.SERVER_CONFIG['GAME']['PORT']
-        url = f"{host}:{port}/game-light-unit/{play_low.GAME_ID}/{play_low.ROLE_ID}"
+        url = f"{host}:{port}/game-imagine-unit/{play_low.GAME_ID}/{play_low.ROLE_ID}"
 
         # showing units : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
@@ -2281,8 +2281,8 @@ def light_my_units():
     def put_submit(buttons_right):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="Allumer cette unité (attention, c'est irréversible !)")
-        input_submit.bind("click", light_unit_callback)
+        input_submit = html.INPUT(type="submit", value="Imaginer cette unité")
+        input_submit.bind("click", imagine_unit_callback)
         buttons_right <= html.BR()
         buttons_right <= input_submit
         buttons_right <= html.BR()
@@ -2327,7 +2327,7 @@ def light_my_units():
         return False
 
     # variant must be foggy
-    if not play_low.VARIANT_CONTENT_LOADED['visibility_restricted']:
+    if not play_low.GAME_PARAMETERS_LOADED['fog']:
         alert("La variante ne restrint pas la visibilité")
         play.load_option(None, 'Consulter')
         return False
