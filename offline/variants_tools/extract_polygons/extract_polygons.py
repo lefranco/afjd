@@ -325,7 +325,7 @@ def main_loop(debug: bool, map_file: str) -> None:
 
     # put main window upper left hand side
     root.geometry("+0+0")
-    root.resizable(False, False)
+    #root.resizable(False, False)
 
     print(f"Working now with map file '{map_file}'...")
 
