@@ -165,6 +165,43 @@ def disorder(game_id: int, role_id: int, game: games.Game, variant_dict: typing.
 def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, typing.Any], names: str, sql_executor: database.SqlExecutor) -> typing.Tuple[bool, bool, str]:
     """ this will perform game adjudication """
 
+    def unit_there(unit_zone: int) -> typing.Optional[int]:
+        """ Returns the type of the unit there or None """
+        for _, type_num, zone_num, _, _, _ in game_units:
+            if zone_num == unit_zone:
+                return type_num
+        return None
+
+    def may_move(type_unit: int, unit_zone: int, dest_zone: int) -> bool:
+        """ Returns True if a unit can move from start to dest """
+        neighbour_table = variant_data['neighbouring'][type_unit - 1]
+        if str(unit_zone) not in neighbour_table:
+            return False
+        return dest_zone in neighbour_table[str(unit_zone)]
+
+    def safe_version(order: typing.List[int]) -> typing.List[int]:
+        """ change to hold if unsafe (because what was imagined was wrong) """
+
+        role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num = order
+
+        if order_type_num == 2:  # off supp
+
+            type_unit = unit_there(passive_unit_zone_num)
+            if not type_unit:  # unit must exist
+                return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
+            if not may_move(type_unit, passive_unit_zone_num, destination_zone_num):  # must be able to move there
+                return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
+
+        if order_type_num == 5:  # convoy
+
+            type_unit = unit_there(passive_unit_zone_num)
+            if not type_unit:  # unit must exist
+                return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
+            if type_unit != 1:  # need to be army
+                return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
+
+        return order
+
     # check game over
     if game.game_over():
         return True, False, "INFORMATION : game over !"
@@ -212,6 +249,11 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     orders_from_game = orders.Order.list_by_game_id(sql_executor, game_id)
     for _, role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num in orders_from_game:
         orders_list.append([role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num])
+
+    # fog : remove unsafe orders
+    if game.fog:
+        orders_list = [safe_version(o) for o in orders_list]
+
     orders_list_json = json.dumps(orders_list)
 
     json_dict = {
@@ -319,8 +361,8 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
         forbidden.delete_database(sql_executor)
 
     # purge imagined units
-    for (_, zone_num, role_num, type_num) in imagined_units.ImaginedUnit.list_by_game_id(sql_executor, int(game_id)):
-        imagined_unit = imagined_units.ImaginedUnit(int(game_id), type_num, zone_num, role_num)
+    for (_, role_id, zone_num, role_num, type_num) in imagined_units.ImaginedUnit.list_by_game_id(sql_executor, int(game_id)):
+        imagined_unit = imagined_units.ImaginedUnit(int(game_id), role_id, type_num, zone_num, role_num)
         imagined_unit.delete_database(sql_executor)
 
     # purge actives
