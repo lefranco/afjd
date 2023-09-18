@@ -2022,6 +2022,7 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         pseudo = req_result.json()['logged_in_as']
@@ -2034,6 +2035,7 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
@@ -2099,6 +2101,7 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         pseudo = req_result.json()['logged_in_as']
@@ -2111,6 +2114,7 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
@@ -2401,6 +2405,7 @@ class GameFogOfWarReportRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         pseudo = req_result.json()['logged_in_as']
@@ -2413,6 +2418,7 @@ class GameFogOfWarReportRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
@@ -2531,6 +2537,7 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             mylogger.LOGGER.error("ERROR = %s", req_result.text)
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(401, msg=f"Bad authentication!:{message}")
 
         pseudo = req_result.json()['logged_in_as']
@@ -2543,6 +2550,7 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         if req_result.status_code != 200:
             print(f"ERROR from server  : {req_result.text}")
             message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            del sql_executor
             flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
         user_id = req_result.json()
 
