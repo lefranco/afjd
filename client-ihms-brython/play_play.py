@@ -2171,7 +2171,7 @@ def imagine_units():
             imagine_units()
 
         json_dict = {
-            'type_num': 1 if isinstance(mapping.UnitTypeEnum.ARMY_UNIT ,imagined_unit) else 2,
+            'type_num': 1 if isinstance(imagined_unit, mapping.Army) else 2,
             'zone_num': imagined_unit.zone.identifier,
             'role_num': imagined_unit.role.identifier,
         }
@@ -2213,7 +2213,7 @@ def imagine_units():
 
             else:
 
-                other_role_id = (play_low.ROLE_ID + 1) % len(play_low.VARIANT_DATA.roles)
+                other_role_id = (play_low.ROLE_ID + 1) % (len(play_low.VARIANT_DATA.roles) - 1)
                 other_role = play_low.VARIANT_DATA.roles[other_role_id]
 
                 if selected_dest_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION:

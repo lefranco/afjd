@@ -246,9 +246,6 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
     # what regions are adjacent to what I occupy ?
     adjacent_regions = set().union(*(visibility_table[str(r)] for r in occupied_regions))
 
-    # TODO : add visibility to imagined units
-    # use 'imagined_unit_dict' parameter
-
     # seen region
     seen_regions = occupied_regions | adjacent_regions
 
@@ -261,6 +258,9 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
         selected = [v for v in role_units if zone2region[str(v[1])] in seen_regions]
         if selected:
             unit_dict2[role] = selected
+
+    # add the imagined units
+    unit_dict2.update(imagined_unit_dict)
 
     dislodged_unit_dict2 = {}
     for role, role_dis_units in dislodged_unit_dict.items():
@@ -977,16 +977,11 @@ class GameStateListRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        before_time = time.time()
-
         games_list = games.Game.inventory(sql_executor)
 
         del sql_executor
 
         data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_game': g.nopress_game, 'nomessage_game': g.nomessage_game, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo} for g in games_list if g.current_state == int(current_state)}
-
-        after_time = time.time()
-        print(f"get games by state : ELAPSED {after_time - before_time}sec", file=sys.stderr)
 
         return data, 200
 
@@ -1005,16 +1000,11 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        before_time = time.time()
-
         games_list = games.Game.inventory(sql_executor)
 
         del sql_executor
 
         data = {str(g.identifier): {'name': g.name, 'variant': g.variant, 'fog': g.fog, 'description': g.description, 'deadline': g.deadline, 'current_advancement': g.current_advancement, 'current_state': g.current_state, 'archive': g.archive, 'fast': g.fast, 'anonymous': g.anonymous, 'grace_duration': g.grace_duration, 'scoring': g.scoring, 'nopress_game': g.nopress_game, 'nomessage_game': g.nomessage_game, 'nopress_current': g.nopress_current, 'nomessage_current': g.nomessage_current, 'nb_max_cycles_to_play': g.nb_max_cycles_to_play, 'used_for_elo': g.used_for_elo} for g in games_list}
-
-        after_time = time.time()
-        print(f"get games : ELAPSED {after_time - before_time}sec", file=sys.stderr)
 
         return data, 200
 
@@ -2057,7 +2047,7 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
             flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
 
         # create the imagined unit
-        imagined_unit = imagined_units.ImaginedUnit(int(game_id), int(type_submitted), int(zone_submitted), int(role_submitted))
+        imagined_unit = imagined_units.ImaginedUnit(int(game_id), int(role_id), int(type_submitted), int(zone_submitted), int(role_submitted))
         imagined_unit.update_database(sql_executor)
         sql_executor.commit()
 
@@ -2170,8 +2160,8 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
 
         # get imagined units
         imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-        imagined_game_units = imagined_units.ImaginedUnit.list_by_game_id(sql_executor, game_id)
-        for _, type_num, zone_num, role_num in imagined_game_units:
+        imagined_game_units = imagined_units.ImaginedUnit.list_by_game_id_role_num(sql_executor, game_id, role_id)
+        for _, _, type_num, zone_num, role_num in imagined_game_units:
             imagined_unit_dict[str(role_num)].append([type_num, zone_num])
 
         # game not ongoing or game master or game actually finished : you get get a clear picture
@@ -3204,8 +3194,8 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
 
             # get imagined units
             imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-            imagined_game_units = imagined_units.ImaginedUnit.list_by_game_id(sql_executor, game_id)  # noqa: F821
-            for _, type_num, zone_num, role_num in imagined_game_units:
+            imagined_game_units = imagined_units.ImaginedUnit.list_by_game_id_role_num(sql_executor, game_id, role_id)  # noqa: F821
+            for _, _, type_num, zone_num, role_num in imagined_game_units:
                 imagined_unit_dict[str(role_num)].append([type_num, zone_num])
 
             # situation: get forbiddens
@@ -4831,13 +4821,8 @@ class DateLastDeclarationsRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        before_time = time.time()
-
         declarations_list = declarations.Declaration.last_date_by_player_id(sql_executor, player_id)
         dict_time_stamp = dict(declarations_list)
-
-        after_time = time.time()
-        print(f"date-last-game-declarations-OPT : ELAPSED {after_time - before_time}sec", file=sys.stderr)
 
         del sql_executor
 
@@ -4885,13 +4870,8 @@ class DateLastGameMessagesRessource(flask_restful.Resource):  # type: ignore
 
         sql_executor = database.SqlExecutor()
 
-        before_time = time.time()
-
         messages_list = messages.Message.last_date_by_player_id(sql_executor, player_id)
         dict_time_stamp = dict(messages_list)
-
-        after_time = time.time()
-        print(f"date-last-game-messages-OPT : ELAPSED {after_time - before_time}sec", file=sys.stderr)
 
         del sql_executor
 
