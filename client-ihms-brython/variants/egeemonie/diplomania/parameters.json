@@ -1,0 +1,897 @@
+{
+    "author" : "Bangkok-man",
+    "map": {
+        "width": 1000,
+        "height": 919
+    },
+    "regions": {
+        "1": {
+            "name": "Cote"
+        },
+        "2": {
+            "name": "Terre"
+        },
+        "3": {
+            "name": "Mer"
+        }
+    },
+    "units": {
+        "1": {
+            "name": "Armee"
+        },
+        "2": {
+            "name": "Flotte"
+        }
+    },
+
+  "roles": {
+	"0": {
+		"name": "Arbitre",
+		"adjective_name": "Arbitre",
+		"letter_name": "X",
+		"red": [
+			0,
+			0
+		],
+		"green": [
+			0,
+			0
+		],
+		"blue": [
+
+			0,
+			0
+		]
+	},
+	"1": {
+		"name": "Athenes",
+		"adjective_name": "Atheniene",
+		"letter_name": "A",
+		"red": [
+			63,
+			0
+		],
+		"green": [
+			72,
+			168
+		],
+		"blue": [
+			204,
+			243
+		]
+	},
+	"2": {
+		"name": "Crete",
+		"adjective_name": "Cretoise",
+		"letter_name": "C",
+		"red": [
+			255,
+			196
+		],
+		"green": [
+			242,
+			255
+		],
+		"blue": [
+			0,
+			15
+		]
+	},
+	"3": {
+		"name": "Ionia",
+		"adjective_name": "Ionienne",
+		"letter_name": "I",
+		"red": [
+			0,
+			14
+		],
+		"green": [
+			151,
+			209
+		],
+		"blue": [
+			93,
+			69
+		]
+	},
+	"4": {
+		"name": "Macedoine",
+		"adjective_name": "Macedonienne",
+		"letter_name": "M",
+		"red": [
+			232,
+			253
+		],
+		"green": [
+			102,
+			127
+		],
+		"blue": [
+			4,
+			40
+		]
+	},
+	"5": {
+		"name": "Sparte",
+		"adjective_name": "Spartiate",
+		"letter_name": "S",
+		"red": [
+			255,
+			235
+		],
+		"green": [
+			0,
+			28
+		],
+		"blue": [
+			0,
+			36
+		]
+	},
+	"6": {
+		"name": "Troie",
+		"adjective_name": "Troyenne",
+		"letter_name": "T",
+		"red": [
+			255,
+			184
+		],
+		"green": [
+			174,
+			61
+		],
+		"blue": [
+			200,
+			186
+		]
+	}
+  },
+
+	"coasts": {
+	},
+
+	"zones": {
+				"1": {
+					"name": "AGS",
+					"full_name": "Argos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"2": {
+					"name": "LAK",
+					"full_name": "Lakonia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"3": {
+					"name": "SPA",
+					"full_name": "Sparta",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"4": {
+					"name": "PYL",
+					"full_name": "Pylos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"5": {
+					"name": "OLY",
+					"full_name": "Olympia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"6": {
+					"name": "ACH",
+					"full_name": "Achaia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"7": {
+					"name": "ARC",
+					"full_name": "Arkadia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"8": {
+					"name": "KOR",
+					"full_name": "Korinthios",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"9": {
+					"name": "MEG",
+					"full_name": "Megara",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"10": {
+					"name": "ATH",
+					"full_name": "Athinai",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"11": {
+					"name": "MAR",
+					"full_name": "Marathon",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"12": {
+					"name": "ERE",
+					"full_name": "Eretre",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"13": {
+					"name": "CHK",
+					"full_name": "Chalkis",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"14": {
+					"name": "BEO",
+					"full_name": "Beotia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"15": {
+					"name": "TEB",
+					"full_name": "Thebai",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"16": {
+					"name": "DPH",
+					"full_name": "Delphoi",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"17": {
+					"name": "ETO",
+					"full_name": "Etolia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"18": {
+					"name": "STR",
+					"full_name": "Stratos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"19": {
+					"name": "AMB",
+					"full_name": "Ambragia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"20": {
+					"name": "DOL",
+					"full_name": "Dolopia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"21": {
+					"name": "MAL",
+					"full_name": "Malis",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"22": {
+					"name": "LAR",
+					"full_name": "Larissa",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"23": {
+					"name": "ELY",
+					"full_name": "Elymaia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"24": {
+					"name": "EPE",
+					"full_name": "Epeiros",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"25": {
+					"name": "ILY",
+					"full_name": "Ilyria",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"26": {
+					"name": "LYN",
+					"full_name": "Lyncestus",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"27": {
+					"name": "DIO",
+					"full_name": "Dion",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"28": {
+					"name": "PEL",
+					"full_name": "Pella",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"29": {
+					"name": "PAN",
+					"full_name": "Paionia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"30": {
+					"name": "LET",
+					"full_name": "Lete",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"31": {
+					"name": "HKK",
+					"full_name": "Halkidiki",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"32": {
+					"name": "MYG",
+					"full_name": "Mygdonia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"33": {
+					"name": "TRA",
+					"full_name": "Thraki",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"34": {
+					"name": "ODR",
+					"full_name": "Odrysia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"35": {
+					"name": "HLP",
+					"full_name": "Hellespont",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"36": {
+					"name": "BYZ",
+					"full_name": "Byzantion",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"37": {
+					"name": "BIT",
+					"full_name": "Bithynia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"38": {
+					"name": "KUZ",
+					"full_name": "Kuzykos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"39": {
+					"name": "TRO",
+					"full_name": "Troia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"40": {
+					"name": "PER",
+					"full_name": "Pergamon",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"41": {
+					"name": "MYS",
+					"full_name": "Mysia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"42": {
+					"name": "PRY",
+					"full_name": "Phrygia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"43": {
+					"name": "LYD",
+					"full_name": "Lydia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"44": {
+					"name": "XAN",
+					"full_name": "Xanthos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"45": {
+					"name": "CAR",
+					"full_name": "Caria",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"46": {
+					"name": "HAL",
+					"full_name": "Halicarnassos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"47": {
+					"name": "MIL",
+					"full_name": "Miletos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"48": {
+					"name": "EPH",
+					"full_name": "Ephesus",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"49": {
+					"name": "SAR",
+					"full_name": "Sardis",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"50": {
+					"name": "SMY",
+					"full_name": "Smyrna",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"51": {
+					"name": "LES",
+					"full_name": "Lesbos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"52": {
+					"name": "CHI",
+					"full_name": "Chiros",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"53": {
+					"name": "RHO",
+					"full_name": "Rhodos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"54": {
+					"name": "ZAK",
+					"full_name": "Zakros",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"55": {
+					"name": "LYT",
+					"full_name": "Lyttos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"56": {
+					"name": "KNO",
+					"full_name": "Knossos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"57": {
+					"name": "CYD",
+					"full_name": "Cydonia",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"58": {
+					"name": "PHA",
+					"full_name": "Phaistos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"59": {
+					"name": "SAM",
+					"full_name": "Samos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"60": {
+					"name": "aNAX",
+					"full_name": "Naxos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"61": {
+					"name": "aTER",
+					"full_name": "Thera",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"62": {
+					"name": "aDEL",
+					"full_name": "Delos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"63": {
+					"name": "aLIM",
+					"full_name": "Limnos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"64": {
+					"name": "pLYC",
+					"full_name": "Lykia Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"65": {
+					"name": "KAR",
+					"full_name": "Karpathio Pegalos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"66": {
+					"name": "pKRI",
+					"full_name": "Kritiko Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"67": {
+					"name": "pION",
+					"full_name": "Ionio Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"68": {
+					"name": "pEXO",
+					"full_name": "Exoterico Ionio Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"69": {
+					"name": "sHYD",
+					"full_name": "Steno Hydrus",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"70": {
+					"name": "kKOR",
+					"full_name": "Korinthios Kolpos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"71": {
+					"name": "ITH",
+					"full_name": "Ithaca Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"72": {
+					"name": "sZAK",
+					"full_name": "Steno Zakynthos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"73": {
+					"name": "pLAK",
+					"full_name": "Lakonia Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"74": {
+					"name": "pMYR",
+					"full_name": "Myrtoo Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"75": {
+					"name": "kSAR",
+					"full_name": "Saronikos Kolpos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"76": {
+					"name": "kEVV",
+					"full_name": "Evvoiko Kolpos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"77": {
+					"name": "aSPO",
+					"full_name": "Sporades",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"78": {
+					"name": "kTRM",
+					"full_name": "Thermaikos Kolpos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"79": {
+					"name": "pTKK",
+					"full_name": "Thrakiko Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"80": {
+					"name": "kADR",
+					"full_name": "Adrmytinos Kolpos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"81": {
+					"name": "sMIT",
+					"full_name": "Steno Mitilinis",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"82": {
+					"name": "pIKA",
+					"full_name": "Ikario Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"83": {
+					"name": "aDOD",
+					"full_name": "Dodecanese",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"84": {
+					"name": "pPRO",
+					"full_name": "Propontis Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				},
+				"85": {
+					"name": "pPEX",
+					"full_name": "Pont Euxinos Pelagos",
+					"x_pos": 466,
+					"y_pos": 568,
+					"x_legend_pos": 466,
+					"y_legend_pos": 554
+				}
+	},
+	
+    "centers": {
+        "1": {
+            "x_pos": 215,
+            "y_pos": 416
+        }
+    },
+    
+    "seasons": {
+        "1": {
+            "name": "Printemps"
+        },
+        "2": {
+            "name": "Ete"
+        },
+        "3": {
+            "name": "Automne"
+        },
+        "4": {
+            "name": "Hiver"
+        },
+        "5": {
+            "name": "Ajustements"
+        }
+    },
+    
+    "orders": {
+        "1": {
+            "name": "Attaquer"
+        },
+        "2": {
+            "name": "Soutenir offensivement"
+        },
+        "3": {
+            "name": "Soutenir defensivement"
+        },
+        "4": {
+            "name": "Tenir"
+        },
+        "5": {
+            "name": "Convoyer"
+        },
+        "6": {
+            "name": "Retraiter"
+        },
+        "7": {
+            "name": "Disperser"
+        },
+        "8": {
+            "name": "Construire"
+        },
+        "9": {
+            "name": "Supprimer"
+        }
+    },
+    
+    "zone_areas": {
+        "1": {
+            "area": [ [100, 100], [200, 100], [200, 200], [100, 200] ]
+        }
+    }
+}
+
