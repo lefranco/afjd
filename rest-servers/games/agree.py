@@ -172,39 +172,74 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
                 return type_num
         return None
 
-    def may_move(type_unit: int, unit_zone: int, dest_zone: int) -> bool:
-        """ Returns True if a unit can move from start to dest """
+    def may_direct_move(type_unit: int, unit_zone: int, dest_zone: int) -> bool:
+        """ Returns True if a unit can directly move from start to dest """
         neighbour_table = variant_data['neighbouring'][type_unit - 1]
         if str(unit_zone) not in neighbour_table:
             return False
         return dest_zone in neighbour_table[str(unit_zone)]
 
+    def may_convoy_move(unit_zone: int, dest_zone: int) -> bool:
+        """ Returns True if a unit can move by convoy from start to dest """
+
+        # the fleets that are at sea
+        sea_fleets = {z for us in unit_dict.values() for (t, z) in us if t == 2 and variant_data['regions'][z - 1] == 3}
+
+        # the fleet the army can reach
+        accessible_fleets = {f for f in sea_fleets if unit_zone in map(lambda z: zone2region[z], variant_data['neigbouring'][1][str(f)])}
+
+        while True:
+
+            # stop if dest_zone is accessible
+            if any((dest_zone in map(lambda z: zone2region[z], variant_data['neigbouring'][1][str(f)])) for f in accessible_fleets):
+                return True
+
+            # more fleets
+            accessible_fleets2 = {f2 for f in accessible_fleets for f2 in variant_data['neigbouring'][1][str(f)] if f2 in sea_fleets and f2 not in accessible_fleets}
+
+            # stop if no more fleets
+            if not accessible_fleets2:
+                return False
+
+            # append
+            accessible_fleets.update(accessible_fleets2)
+
     def safe_version(order: typing.List[int]) -> typing.List[int]:
         """ change to hold if unsafe (because what was imagined was wrong) """
 
+        # decompose the order
         role_num, order_type_num, active_unit_zone_num, passive_unit_zone_num, destination_zone_num = order
 
-        if order_type_num == 2:  # off supp
+        # only these can be wrong
+        if order_type_num not in [2, 5]:
+            return order
 
-            type_unit = unit_there(passive_unit_zone_num)
-            if not type_unit:  # unit must exist
-                return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
-            if not may_move(type_unit, passive_unit_zone_num, destination_zone_num):  # must be able to move there
-                return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
+        # passive unit must exist
+        type_unit = unit_there(passive_unit_zone_num)
+        if not type_unit:
+            return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
 
+        # convoy : passive must be army
         if order_type_num == 5:  # convoy
-
-            type_unit = unit_there(passive_unit_zone_num)
-            if not type_unit:  # unit must exist
-                return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
             if type_unit != 1:  # need to be army
                 return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
 
-        return order
+        if may_direct_move(type_unit, passive_unit_zone_num, destination_zone_num):  # must be able to move there
+            return order
+
+        if type_unit == 1:
+            if may_convoy_move(passive_unit_zone_num, destination_zone_num):  # must be able to move there
+                return order
+
+        return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
 
     # check game over
     if game.game_over():
         return True, False, "INFORMATION : game over !"
+
+    # zone2region
+    zone2region = {r: r for r in range(1, len(variant_data['regions']) + 1)}
+    zone2region.update({len(zone2region) + i + 1: c[0] for i, c in enumerate(variant_data['coastal_zones'])})
 
     variant_dict_json = json.dumps(variant_data)
 
