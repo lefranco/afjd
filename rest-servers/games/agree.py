@@ -344,15 +344,11 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     for _, region_num in game_forbiddens:
         forbidden_list.append(region_num)
 
-    # TODO fill this
-    imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = {}
-
     position_transition_dict = {
         'ownerships': ownership_dict,
         'dislodged_ones': dislodged_unit_dict2,
         'units': unit_dict2,
         'forbiddens': forbidden_list,
-        'imagined_units': imagined_unit_dict,
     }
 
     # orders for transition
