@@ -1070,12 +1070,12 @@ BLUR_VALUE = 20
 class Unit(Highliteable, Renderable):
     """ A unit """
 
-    def __init__(self, position: 'Position', role: Role, zone: Zone, dislodged_origin) -> None:
+    def __init__(self, position: 'Position', role: Role, zone: Zone, dislodged_origin, imagined) -> None:
         self._position = position
         self._role = role
         self._zone = zone
         self._dislodged_origin = dislodged_origin
-        self._imagined = False
+        self._imagined = imagined
 
     def is_disloged(self):
         """ dislodged """
@@ -1229,7 +1229,9 @@ class Unit(Highliteable, Renderable):
             dislodger_legend = self._position.variant.zone_name_table[zone_dislodger]
             dislodged_info = f"- delogée par une unité venue de la région {dislodger_legend}"
 
-        return f"Une {type_name} appartenant au joueur {adjective} positionnée en {zone_full_name} {dislodged_info}."
+        imagined_info = 'imaginée' if self._imagined else ''
+
+        return f"Une {type_name} {imagined_info} appartenant au joueur {adjective} positionnée en {zone_full_name} {dislodged_info}."
 
     @property
     def zone(self) -> Zone:
@@ -1251,11 +1253,6 @@ class Unit(Highliteable, Renderable):
         """ property """
         return self._imagined
 
-    @imagined.setter
-    def imagined(self, imagined: bool) -> None:
-        """ setter """
-        self._imagined = imagined
-
     def __str__(self) -> str:
         variant = self._position.variant
         zone = self._zone
@@ -1265,7 +1262,7 @@ class Unit(Highliteable, Renderable):
         if isinstance(self, Fleet):
             type_name = variant.unit_name_table[UnitTypeEnum.FLEET_UNIT]
         type_name_initial = type_name[0]
-        return f"{type_name_initial} {name}"
+        return f"{type_name_initial} {name} {'(i)' if self._imagined else ''}"
 
 
 # position for units in reserve table
@@ -1424,9 +1421,9 @@ class Position(Renderable):
                 type_unit = UnitTypeEnum.from_code(type_unit_code)
                 zone = variant._zones[zone_number]
                 if type_unit is UnitTypeEnum.ARMY_UNIT:
-                    unit = Army(self, role, zone, None)
+                    unit = Army(self, role, zone, None, False)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:
-                    unit = Fleet(self, role, zone, None)  # type: ignore
+                    unit = Fleet(self, role, zone, None, False)  # type: ignore
                 self._units.append(unit)
                 region = zone.region
                 self._occupant_table[region] = unit
@@ -1445,10 +1442,9 @@ class Position(Renderable):
                 type_unit = UnitTypeEnum.from_code(type_unit_code)
                 zone = variant._zones[zone_number]
                 if type_unit is UnitTypeEnum.ARMY_UNIT:
-                    unit = Army(self, role, zone, None)
+                    unit = Army(self, role, zone, None, True)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:
-                    unit = Fleet(self, role, zone, None)  # type: ignore
-                unit.imagined = True
+                    unit = Fleet(self, role, zone, None, True)  # type: ignore
                 self._units.append(unit)
                 region = zone.region
                 self._occupant_table[region] = unit
@@ -1473,9 +1469,9 @@ class Position(Renderable):
                 dislodger_zone = variant._zones[dislodger_zone_number]
                 dislodger_region = dislodger_zone.region
                 if type_unit is UnitTypeEnum.ARMY_UNIT:
-                    dislodged_unit = Army(self, role, zone, dislodger_region)
+                    dislodged_unit = Army(self, role, zone, dislodger_region, False)
                 if type_unit is UnitTypeEnum.FLEET_UNIT:
-                    dislodged_unit = Fleet(self, role, zone, dislodger_region)  # type: ignore
+                    dislodged_unit = Fleet(self, role, zone, dislodger_region, False)  # type: ignore
                 self._dislodged_units.append(dislodged_unit)
                 # the dislodger occupying the region is forgotten
                 region = zone.region
@@ -2088,9 +2084,9 @@ class Orders(Renderable):
             zone = self._position.variant.zones[zone_num]
             role = self._position.variant.roles[role_num]
             if unit_type is UnitTypeEnum.ARMY_UNIT:
-                fake_unit = Army(self._position, role, zone, None)
+                fake_unit = Army(self._position, role, zone, None, False)
             if unit_type is UnitTypeEnum.FLEET_UNIT:
-                fake_unit = Fleet(self._position, role, zone, None)  # type: ignore
+                fake_unit = Fleet(self._position, role, zone, None, False)  # type: ignore
             self._fake_units[zone_num] = fake_unit
 
         # orders

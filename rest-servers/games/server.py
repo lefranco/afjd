@@ -202,6 +202,7 @@ IMAGINE_PARSER = flask_restful.reqparse.RequestParser()
 IMAGINE_PARSER.add_argument('type_num', type=int, required=True)
 IMAGINE_PARSER.add_argument('zone_num', type=int, required=True)
 IMAGINE_PARSER.add_argument('role_num', type=int, required=True)
+IMAGINE_PARSER.add_argument('delete', type=int, required=True)
 
 
 # a little welcome message to new games
@@ -216,7 +217,7 @@ MOVE_GAME_LOCK_TABLE: typing.Dict[str, threading.Lock] = {}
 NO_REPEAT_DELAY_SEC = 15
 
 
-def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int], orders_list: typing.List[typing.List[int]], fake_units_list: typing.List[typing.List[int]], imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]]) -> None:
+def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int], orders_list: typing.List[typing.List[int]], fake_units_list: typing.List[typing.List[int]]) -> None:
     """ apply_visibility
     this will change the parameters
     """
@@ -258,9 +259,6 @@ def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dic
         selected = [v for v in role_units if zone2region[str(v[1])] in seen_regions]
         if selected:
             unit_dict2[role] = selected
-
-    # add the imagined units
-    unit_dict2.update(imagined_unit_dict)
 
     dislodged_unit_dict2 = {}
     for role, role_dis_units in dislodged_unit_dict.items():
@@ -1991,6 +1989,7 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
         type_submitted = args['type_num']
         zone_submitted = args['zone_num']
         role_submitted = args['role_num']
+        delete = args['delete']
 
         sql_executor = database.SqlExecutor()
 
@@ -2047,6 +2046,19 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
         if user_id != player_id:
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
+
+        if delete:
+            # TODO : check deleted unit not as passive in order
+
+            # create the imagined unit
+            imagined_unit = imagined_units.ImaginedUnit(int(game_id), int(role_id), int(type_submitted), int(zone_submitted), int(role_submitted))
+            imagined_unit.delete_database(sql_executor)
+            sql_executor.commit()
+
+            del sql_executor
+
+            data = {'msg': 'Imagined unit deleted!'}
+            return data, 201
 
         # create the imagined unit
         imagined_unit = imagined_units.ImaginedUnit(int(game_id), int(role_id), int(type_submitted), int(zone_submitted), int(role_submitted))
@@ -2188,7 +2200,7 @@ class GameFogOfWarPositionRessource(flask_restful.Resource):  # type: ignore
         # now we can start hiding stuff
         # this will update last parameters
         variant_name = game.variant
-        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, imagined_unit_dict)
+        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
 
         data = {
             'ownerships': ownership_dict,
@@ -2590,19 +2602,12 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         unit_dict = the_situation['units']
         forbidden_list = the_situation['forbiddens']
 
-        # TEMPORARY PATCH
-        # TODO REMOVE AFTER SUPRRESION OF TWO FIRST FOG TEST GAMES
-        # AND AFTER RE TEST NEW FOG GAME
-        if 'imagined_units'not in the_situation:
-            the_situation['imagined_units'] = []
-        imagined_unit_dict = the_situation['imagined_units']
-
         orders_list = the_orders['orders']
         fake_units_list = the_orders['fake_units']
 
         # this will update last parameters
         variant_name = game.variant
-        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list, imagined_unit_dict)
+        apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
 
         data = {'time_stamp': transition.time_stamp, 'situation': {'ownerships': ownership_dict, 'dislodged_ones': dislodged_unit_dict, 'units': unit_dict, 'forbiddens': forbidden_list}, 'orders': {'orders': orders_list, 'fake_units': fake_units_list}, 'report_txt': "---"}
         return data, 200
@@ -3200,12 +3205,6 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                 else:
                     unit_dict[str(role_num)].append([type_num, zone_num])
 
-            # get imagined units
-            imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
-            imagined_game_units = imagined_units.ImaginedUnit.list_by_game_id_role_num(sql_executor, game_id, role_id)  # noqa: F821
-            for _, _, type_num, zone_num, role_num in imagined_game_units:
-                imagined_unit_dict[str(role_num)].append([type_num, zone_num])
-
             # situation: get forbiddens
             forbidden_list = []
             game_forbiddens = forbiddens.Forbidden.list_by_game_id(sql_executor, game_id)  # noqa: F821
@@ -3219,7 +3218,16 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
             if game.fog:
                 # now we can start hiding stuff
                 # this will update last parameters
-                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, imagined_unit_dict)
+                apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
+
+                # get imagined units
+                imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = collections.defaultdict(list)
+                imagined_game_units = imagined_units.ImaginedUnit.list_by_game_id_role_num(sql_executor, game_id, role_id)  # noqa: F821
+                for _, _, type_num, zone_num, role_num in imagined_game_units:
+                    imagined_unit_dict[str(role_num)].append([type_num, zone_num])
+
+                # add them to submission
+                unit_dict.update(imagined_unit_dict)
 
             situation_dict = {
                 'ownerships': ownership_dict,
@@ -3743,14 +3751,13 @@ class GameCommunicationOrderRessource(flask_restful.Resource):  # type: ignore
             # need these two parameters
             dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = {}
             forbidden_list: typing.List[int] = []
-            imagined_unit_dict: typing.Dict[str, typing.List[typing.List[int]]] = {}
 
             orders_list2: typing.List[typing.List[int]] = []
             fake_units_list2: typing.List[typing.List[int]] = []
 
             # this will update last parameters
             variant_name = game.variant
-            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2, imagined_unit_dict)
+            apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list2, fake_units_list2)
 
         # check orders (rough check)
 

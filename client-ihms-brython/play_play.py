@@ -31,6 +31,14 @@ class AutomatonStateEnum:
     SELECT_BUILD_UNIT_TYPE_STATE = 5
 
 
+class AutomatonStateEnum2:
+    """ AutomatonStateEnum2 """
+
+    SELECT_ACTION_STATE = 1
+    SELECT_POSITION_STATE = 2
+    SELECT_UNIT_STATE = 3
+
+
 # canvas backup to optimize drawing map when only orders change
 BACKUP_CANVAS = None
 
@@ -360,7 +368,7 @@ def submit_orders():
         nonlocal automaton_state
         nonlocal buttons_right
 
-        if automaton_state == AutomatonStateEnum.SELECT_BUILD_UNIT_TYPE_STATE:
+        if automaton_state is AutomatonStateEnum.SELECT_BUILD_UNIT_TYPE_STATE:
 
             selected_build_unit_type = build_unit_type
 
@@ -403,7 +411,7 @@ def submit_orders():
         # to stop catching keyboard
         document.unbind("keypress")
 
-        if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
+        if automaton_state is AutomatonStateEnum.SELECT_ORDER_STATE:
 
             selected_order_type = order_type
 
@@ -563,7 +571,7 @@ def submit_orders():
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         # this is a shortcut
-        if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
+        if automaton_state is AutomatonStateEnum.SELECT_ORDER_STATE:
 
             if advancement_season in [mapping.SeasonEnum.SPRING_SEASON, mapping.SeasonEnum.AUTUMN_SEASON]:
                 selected_order_type = mapping.OrderTypeEnum.ATTACK_ORDER
@@ -742,9 +750,9 @@ def submit_orders():
                                 accepted = False
                     if accepted:  # actual build
                         if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
-                            fake_unit = mapping.Army(play_low.POSITION_DATA, deducted_role, selected_build_zone, None)
+                            fake_unit = mapping.Army(play_low.POSITION_DATA, deducted_role, selected_build_zone, None, False)
                         if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
-                            fake_unit = mapping.Fleet(play_low.POSITION_DATA, deducted_role, selected_build_zone, None)
+                            fake_unit = mapping.Fleet(play_low.POSITION_DATA, deducted_role, selected_build_zone, None, False)
                         # create order
                         order = mapping.Order(play_low.POSITION_DATA, selected_order_type, fake_unit, None, None)
                         orders_data.insert_order(order)
@@ -1492,7 +1500,7 @@ def submit_communication_orders():
         # to stop catching keyboard
         document.unbind("keypress")
 
-        if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
+        if automaton_state is AutomatonStateEnum.SELECT_ORDER_STATE:
 
             selected_order_type = order_type
 
@@ -1593,7 +1601,7 @@ def submit_communication_orders():
         pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
         # this is a shortcut
-        if automaton_state == AutomatonStateEnum.SELECT_ORDER_STATE:
+        if automaton_state is AutomatonStateEnum.SELECT_ORDER_STATE:
 
             selected_order_type = mapping.OrderTypeEnum.ATTACK_ORDER
             automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
@@ -2146,34 +2154,40 @@ def imagine_units():
     automaton_state = None
     buttons_right = None
     imagined_unit = None
+    selected_build_unit_type = None
 
-    def imagine_unit_callback(_):
+    def imagine_unit_callback(_, delete):
         """ imagine_unit_callback """
 
         def reply_callback(req):
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
-                    alert(f"Erreur imagine d'unité : {req_result['message']}")
+                    alert(f"Erreur imagine d'unité {delete=}: {req_result['message']}")
                 elif 'msg' in req_result:
-                    alert(f"Problème imagine d'unité : {req_result['msg']}")
+                    alert(f"Problème imagine d'unité {delete=} : {req_result['msg']}")
                 else:
                     alert("Réponse du serveur imprévue et non documentée")
                 return
 
             messages = "<br>".join(req_result['msg'].split('\n'))
-            common.info_dialog(f"Vous avez imaginé une unité (vérifiez directement sur la carte) : {messages}", True)
-
+            if delete:
+                common.info_dialog(f"Vous avez cessé d'imaginer une unité (vérifiez directement sur la carte) : {messages}", True)
+            else:
+                common.info_dialog(f"Vous avez imaginé une unité (vérifiez directement sur la carte) : {messages}", True)
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             # reload position
             play_low.load_dynamic_stuff()
             imagine_units()
 
+        considered_unit = selected_active_unit if delete else imagined_unit
+
         json_dict = {
-            'type_num': 1 if isinstance(imagined_unit, mapping.Army) else 2,
-            'zone_num': imagined_unit.zone.identifier,
-            'role_num': imagined_unit.role.identifier,
+            'type_num': 1 if isinstance(considered_unit, mapping.Army) else 2,
+            'zone_num': considered_unit.zone.identifier,
+            'role_num': considered_unit.role.identifier,
+            'delete' : delete
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -2183,6 +2197,64 @@ def imagine_units():
         # showing units : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
+    def select_built_unit_type_callback(_, build_unit_type):
+        """ select_built_unit_type_callback """
+
+        nonlocal selected_build_unit_type
+        nonlocal automaton_state
+        nonlocal buttons_right
+
+        if automaton_state is AutomatonStateEnum2.SELECT_ACTION_STATE:
+
+            selected_build_unit_type = build_unit_type
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+            # role flag
+            play_low.stack_role_flag(buttons_right)
+
+            # button last moves
+            play_low.stack_last_moves_button(buttons_right)
+
+            legend_select_active = html.DIV("Sélectionner la zone où la mettre", Class='instruction')
+            buttons_right <= legend_select_active
+
+            my_sub_panel2 <= buttons_right
+            play_low.MY_SUB_PANEL <= my_sub_panel2
+
+            # it is a zone we need now
+            automaton_state = AutomatonStateEnum2.SELECT_POSITION_STATE
+            return
+
+    def select_remove_unit_callback(_):
+        """ select_remove_unit_callback """
+
+        nonlocal automaton_state
+        nonlocal buttons_right
+
+        if automaton_state is AutomatonStateEnum2.SELECT_ACTION_STATE:
+
+            my_sub_panel2.removeChild(buttons_right)
+            buttons_right = html.DIV(id='buttons_right')
+            buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+            # role flag
+            play_low.stack_role_flag(buttons_right)
+
+            # button last moves
+            play_low.stack_last_moves_button(buttons_right)
+
+            legend_select_active = html.DIV("Sélectionner l'unité à ne plus imaginer", Class='instruction')
+            buttons_right <= legend_select_active
+
+            my_sub_panel2 <= buttons_right
+            play_low.MY_SUB_PANEL <= my_sub_panel2
+
+            # it is a zone we need now
+            automaton_state = AutomatonStateEnum2.SELECT_UNIT_STATE
+
     def callback_canvas_click(event):
         """ callback_canvas_click """
 
@@ -2191,9 +2263,37 @@ def imagine_units():
         nonlocal buttons_right
         nonlocal imagined_unit
 
-        pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+        if automaton_state is AutomatonStateEnum2.SELECT_UNIT_STATE:
 
-        if automaton_state is AutomatonStateEnum.SELECT_DESTINATION_STATE:
+            pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
+
+            selected_active_unit = play_low.POSITION_DATA.closest_unit(pos, False)
+
+            if not selected_active_unit.imagined:
+                alert("Cette unité est réelle !")
+
+            else:
+                my_sub_panel2.removeChild(buttons_right)
+                buttons_right = html.DIV(id='buttons_right')
+                buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+                # role flag
+                play_low.stack_role_flag(buttons_right)
+
+                # button last moves
+                play_low.stack_last_moves_button(buttons_right)
+
+                buttons_right <= html.BR()
+                put_submit(buttons_right, True)
+
+                my_sub_panel2 <= buttons_right
+                play_low.MY_SUB_PANEL <= my_sub_panel2
+
+            return
+
+        if automaton_state is AutomatonStateEnum2.SELECT_POSITION_STATE:
+
+            pos = geometry.PositionRecord(x_pos=event.x - canvas.abs_left, y_pos=event.y - canvas.abs_top)
 
             selected_dest_zone = play_low.VARIANT_DATA.closest_zone(pos)
 
@@ -2209,27 +2309,32 @@ def imagine_units():
 
             selected_active_unit = None
             if selected_dest_zone.region in play_low.POSITION_DATA.occupant_table:
-                alert("Il y a une unité ici")
+                alert("Il y a déjà une unité ici")
+
+            elif selected_dest_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION and selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                alert("On met pas une flotte en terre")
+
+            elif selected_dest_zone.region.region_type is mapping.RegionTypeEnum.SEA_REGION and selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
+                alert("On met pas une armée en mer")
+
+            # TODO traiter les côtes spéciales
 
             else:
 
-                other_role_id = (play_low.ROLE_ID + 1) % (len(play_low.VARIANT_DATA.roles) - 1)
+                # choose next role in list (arbitrary)
+                other_role_id = play_low.ROLE_ID % (len(play_low.VARIANT_DATA.roles) - 1) + 1
                 other_role = play_low.VARIANT_DATA.roles[other_role_id]
 
-                if selected_dest_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION:
-                    imagined_unit = mapping.Army(play_low.POSITION_DATA, other_role, selected_dest_zone, None)
-                if selected_dest_zone.region.region_type is mapping.RegionTypeEnum.SEA_REGION:
-                    imagined_unit = mapping.Fleet(play_low.POSITION_DATA, other_role, selected_dest_zone, None)
-
-                # TODO : solve this (may put army or fleet here)
-                if selected_dest_zone.region.region_type is mapping.RegionTypeEnum.COAST_REGION:
-                    imagined_unit = mapping.Fleet(play_low.POSITION_DATA, other_role, selected_dest_zone, None)
+                if selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
+                    imagined_unit = mapping.Army(play_low.POSITION_DATA, other_role, selected_dest_zone, None, False)
+                if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                    imagined_unit = mapping.Fleet(play_low.POSITION_DATA, other_role, selected_dest_zone, None, False)
 
                 legend_imagined_unit = html.DIV(f"L'unité imaginée est {imagined_unit}")
                 buttons_right <= legend_imagined_unit
 
             buttons_right <= html.BR()
-            put_submit(buttons_right)
+            put_submit(buttons_right, False)
 
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
@@ -2261,11 +2366,14 @@ def imagine_units():
             # restore
             restore_context(ctx)
 
-    def put_submit(buttons_right):
+    def put_submit(buttons_right, delete):
         """ put_submit """
 
-        input_submit = html.INPUT(type="submit", value="Imaginer cette unité")
-        input_submit.bind("click", imagine_unit_callback)
+        if delete:
+            input_submit = html.INPUT(type="submit", value="Ne plus imaginer cette unité")
+        else:
+            input_submit = html.INPUT(type="submit", value="Imaginer une unité à cet endroit")
+        input_submit.bind("click", lambda e: imagine_unit_callback(e, delete))
         buttons_right <= html.BR()
         buttons_right <= input_submit
         buttons_right <= html.BR()
@@ -2387,9 +2495,26 @@ def imagine_units():
     # button last moves
     play_low.stack_last_moves_button(buttons_right)
 
-    legend_select_unit = html.DIV("Cliquez la zone où créer, modifier ou supprimer une unité imaginée", Class='instruction')
+    for unit_type in mapping.UnitTypeEnum.inventory():
+        input_select = html.INPUT(type="submit", value=f"Imaginer une {play_low.VARIANT_DATA.unit_name_table[unit_type]}")
+        buttons_right <= html.BR()
+        input_select.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
+        buttons_right <= html.BR()
+        buttons_right <= input_select
+
+    input_remove = html.INPUT(type="submit", value="Retirer une unité des imaginées")
+    buttons_right <= html.BR()
+    input_remove.bind("click", select_remove_unit_callback)
+    buttons_right <= html.BR()
+    buttons_right <= input_remove
+
+    buttons_right <= html.BR()
+    buttons_right <= html.BR()
+
+    legend_select_unit = html.DIV("Cliquez sur l'action à réaliser", Class='instruction')
     buttons_right <= legend_select_unit
-    automaton_state = AutomatonStateEnum.SELECT_DESTINATION_STATE
+
+    automaton_state = AutomatonStateEnum2.SELECT_ACTION_STATE
 
     # overall
     my_sub_panel2 = html.DIV()
