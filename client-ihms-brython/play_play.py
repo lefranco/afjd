@@ -2187,7 +2187,7 @@ def imagine_units():
             'type_num': 1 if isinstance(considered_unit, mapping.Army) else 2,
             'zone_num': considered_unit.zone.identifier,
             'role_num': considered_unit.role.identifier,
-            'delete' : delete
+            'delete': delete
         }
 
         host = config.SERVER_CONFIG['GAME']['HOST']
@@ -2196,6 +2196,46 @@ def imagine_units():
 
         # showing units : need a token
         ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    def reset_callback(_):
+        """ reset_callback """
+
+        nonlocal buttons_right
+        nonlocal automaton_state
+
+        my_sub_panel2.removeChild(buttons_right)
+        buttons_right = html.DIV(id='buttons_right')
+        buttons_right.attrs['style'] = 'display: table-cell; width=15%; vertical-align: top;'
+
+        # role flag
+        play_low.stack_role_flag(buttons_right)
+
+        # button last moves
+        play_low.stack_last_moves_button(buttons_right)
+
+        for unit_type in mapping.UnitTypeEnum.inventory():
+            input_select = html.INPUT(type="submit", value=f"Imaginer une {play_low.VARIANT_DATA.unit_name_table[unit_type]}")
+            buttons_right <= html.BR()
+            input_select.bind("click", lambda e, u=unit_type: select_built_unit_type_callback(e, u))
+            buttons_right <= html.BR()
+            buttons_right <= input_select
+
+        input_remove = html.INPUT(type="submit", value="Retirer une unité des imaginées")
+        buttons_right <= html.BR()
+        input_remove.bind("click", select_remove_unit_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_remove
+
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
+
+        legend_select_unit = html.DIV("Cliquez sur l'action à réaliser", Class='instruction')
+        buttons_right <= legend_select_unit
+
+        my_sub_panel2 <= buttons_right
+        play_low.MY_SUB_PANEL <= my_sub_panel2
+
+        automaton_state = AutomatonStateEnum2.SELECT_ACTION_STATE
 
     def select_built_unit_type_callback(_, build_unit_type):
         """ select_built_unit_type_callback """
@@ -2218,7 +2258,7 @@ def imagine_units():
             # button last moves
             play_low.stack_last_moves_button(buttons_right)
 
-            legend_select_active = html.DIV("Sélectionner la zone où la mettre", Class='instruction')
+            legend_select_active = html.DIV("Sélectionner la zone où mettre cette unité", Class='instruction')
             buttons_right <= legend_select_active
 
             my_sub_panel2 <= buttons_right
@@ -2285,6 +2325,7 @@ def imagine_units():
 
                 buttons_right <= html.BR()
                 put_submit(buttons_right, True)
+                put_reset(buttons_right)
 
                 my_sub_panel2 <= buttons_right
                 play_low.MY_SUB_PANEL <= my_sub_panel2
@@ -2309,15 +2350,35 @@ def imagine_units():
 
             selected_active_unit = None
             if selected_dest_zone.region in play_low.POSITION_DATA.occupant_table:
-                alert("Il y a déjà une unité ici")
+                alert("Bien essayé, mais il y a déjà une unité ici !")
+                legend_imagined_unit = html.DIV("Sélectionner la zone où mettre cette unité")
+                buttons_right <= legend_imagined_unit
 
-            elif selected_dest_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION and selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
-                alert("On met pas une flotte en terre")
-
+            # prevent putting armies in sea
             elif selected_dest_zone.region.region_type is mapping.RegionTypeEnum.SEA_REGION and selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
-                alert("On met pas une armée en mer")
+                alert("On ne met pas une armée en mer !")
+                legend_imagined_unit = html.DIV("Sélectionner la zone où mettre cette unité")
+                buttons_right <= legend_imagined_unit
 
-            # TODO traiter les côtes spéciales
+            # prevent putting fleets inland
+            elif selected_dest_zone.region.region_type is mapping.RegionTypeEnum.LAND_REGION and selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                alert("On ne met pas une flotte en terre !")
+                legend_imagined_unit = html.DIV("Sélectionner la zone où mettre cette unité")
+                buttons_right <= legend_imagined_unit
+
+            # prevent putting army on specific coast
+            elif selected_dest_zone.coast_type is not None and selected_build_unit_type is mapping.UnitTypeEnum.ARMY_UNIT:
+                alert("On ne met pas une armée sur une côte spéciale !")
+                legend_imagined_unit = html.DIV("Sélectionner la zone où mettre cette unité")
+                buttons_right <= legend_imagined_unit
+
+            # prevent putting fleets on region with specific coasts
+            elif selected_dest_zone.coast_type is None and len([z for z in play_low.VARIANT_DATA.zones.values() if z.region == selected_dest_zone.region]) > 1:
+                # prevent putting fleet on non specific coasts if exists
+                if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                    alert("On ne met pas une flotte sur une région qui par ailleurs comporte une côte spéciale !")
+                    legend_imagined_unit = html.DIV("Sélectionner la zone où mettre cette unité")
+                    buttons_right <= legend_imagined_unit
 
             else:
 
@@ -2333,8 +2394,9 @@ def imagine_units():
                 legend_imagined_unit = html.DIV(f"L'unité imaginée est {imagined_unit}")
                 buttons_right <= legend_imagined_unit
 
-            buttons_right <= html.BR()
-            put_submit(buttons_right, False)
+                buttons_right <= html.BR()
+                put_submit(buttons_right, False)
+                put_reset(buttons_right)
 
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
@@ -2365,6 +2427,16 @@ def imagine_units():
 
             # restore
             restore_context(ctx)
+
+    def put_reset(buttons_right):
+        """ put_reset """
+
+        input_reset = html.INPUT(type="submit", value="Reset")
+        input_reset.bind("click", reset_callback)
+        buttons_right <= html.BR()
+        buttons_right <= input_reset
+        buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
     def put_submit(buttons_right, delete):
         """ put_submit """

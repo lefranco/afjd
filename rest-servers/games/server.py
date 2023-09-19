@@ -217,6 +217,14 @@ MOVE_GAME_LOCK_TABLE: typing.Dict[str, threading.Lock] = {}
 NO_REPEAT_DELAY_SEC = 15
 
 
+def apply_supported(complete_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], orders_list: typing.List[typing.List[int]]) -> None:
+    """ apply_supported
+    this will change the parameters
+    """
+
+    # TODO: add units of 'complete_unit_dict' to 'unit_dict' that appear as passive in 'orders_list'
+
+
 def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int], orders_list: typing.List[typing.List[int]], fake_units_list: typing.List[typing.List[int]]) -> None:
     """ apply_visibility
     this will change the parameters
@@ -2605,9 +2613,15 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         orders_list = the_orders['orders']
         fake_units_list = the_orders['fake_units']
 
+        # backup orders
+        complete_orders_list = orders_list.copy()
+
         # this will update last parameters
         variant_name = game.variant
         apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
+
+        # this will insert supported units that need to be seen (this will update unit_dict parameter)
+        apply_supported(complete_orders_list, unit_dict, orders_list)
 
         data = {'time_stamp': transition.time_stamp, 'situation': {'ownerships': ownership_dict, 'dislodged_ones': dislodged_unit_dict, 'units': unit_dict, 'forbiddens': forbidden_list}, 'orders': {'orders': orders_list, 'fake_units': fake_units_list}, 'report_txt': "---"}
         return data, 200
