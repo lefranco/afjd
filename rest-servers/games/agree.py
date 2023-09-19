@@ -10,6 +10,7 @@ import typing
 import collections
 import json
 import time
+import sys
 
 import requests
 
@@ -312,7 +313,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
 
     # adjudication failed
     if req_result.status_code != 201:
-        print(f"ERROR from server  : {req_result.text}")
+        print(f"ERROR from server  : {req_result.text}", file=sys.stderr)
         message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
         return False, False, f"ERROR : Failed to adjudicate {message} : {adjudication_report}"
 
