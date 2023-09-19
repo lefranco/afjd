@@ -773,9 +773,9 @@ def rectify_position():
 
             # create unit
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
-                new_unit = mapping.Army(position_data, role, selected_drop_zone, None)
+                new_unit = mapping.Army(position_data, role, selected_drop_zone, None, False)
             if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-                new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None)
+                new_unit = mapping.Fleet(position_data, role, selected_drop_zone, None, False)
 
             # remove previous occupant if applicable
             if selected_drop_region in position_data.occupant_table:
@@ -896,9 +896,9 @@ def rectify_position():
             col = html.TD()
 
             if type_unit is mapping.UnitTypeEnum.ARMY_UNIT:
-                draggable_unit = mapping.Army(position_data, role, None, None)
+                draggable_unit = mapping.Army(position_data, role, None, None, False)
             if type_unit is mapping.UnitTypeEnum.FLEET_UNIT:
-                draggable_unit = mapping.Fleet(position_data, role, None, None)
+                draggable_unit = mapping.Fleet(position_data, role, None, None, False)
 
             identifier = f"unit_{num}"
             unit_canvas = html.CANVAS(id=identifier, width=32, height=32, alt="Draguez moi!")
