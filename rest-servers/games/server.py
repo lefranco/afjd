@@ -2071,8 +2071,37 @@ class GameImagineUnitRessource(flask_restful.Resource):  # type: ignore
             del sql_executor
             flask_restful.abort(403, msg="You do not seem to be the player who corresponds to this role")
 
+        # safety checks for buggy front end
+        variant_name = game.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+
+        if int(type_submitted) not in [1, 2]:
+            del sql_executor
+            flask_restful.abort(403, msg="'type_submitted' is wrong !")
+
+        if int(zone_submitted) not in range(1, len(variant_data['regions']) + len(variant_data['coastal_zones']) + 1):
+            del sql_executor
+            flask_restful.abort(403, msg="'zone_submitted' is wrong !")
+
+        if int(role_submitted) not in range(1, variant_data['roles']['number'] + 1):
+            del sql_executor
+            flask_restful.abort(403, msg="'role_submitted' is wrong !")
+
         if delete:
-            # TODO : check deleted unit not as passive in order
+
+            # IMPORTANT : check deleted unit not as passive in order
+
+            # gvet the orders
+            orders_list = orders.Order.list_by_game_id_role_num(sql_executor, int(game_id), int(role_id))
+
+            # get the passives that need to be referenced
+            passives_zones = {o[4] for o in orders_list if o[4] != 0}
+
+            # cannot remove reference to one of these
+            if zone_submitted in passives_zones:
+                del sql_executor
+                flask_restful.abort(403, msg="Remove order referencing this unit first !")
 
             # create the imagined unit
             imagined_unit = imagined_units.ImaginedUnit(int(game_id), int(role_id), int(type_submitted), int(zone_submitted), int(role_submitted))
