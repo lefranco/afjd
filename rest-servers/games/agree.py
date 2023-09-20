@@ -184,19 +184,19 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
         """ Returns True if a unit can move by convoy from start to dest """
 
         # the fleets that are at sea
-        sea_fleets = {z for us in unit_dict.values() for (t, z) in us if t == 2 and variant_data['regions'][z - 1] == 3}
+        sea_fleets = {z for us in unit_dict.values() for (t, z) in us if t == 2 and variant_data['regions'][zone2region[z] - 1] == 3}
 
         # the fleet the army can reach
-        accessible_fleets = {f for f in sea_fleets if unit_zone in map(lambda z: zone2region[z], variant_data['neigbouring'][1][str(f)])}
+        accessible_fleets = {f for f in sea_fleets if unit_zone in map(lambda z: zone2region[z], variant_data['neighbouring'][1][str(f)])}
 
         while True:
 
             # stop if dest_zone is accessible
-            if any((dest_zone in map(lambda z: zone2region[z], variant_data['neigbouring'][1][str(f)])) for f in accessible_fleets):
+            if any((dest_zone in map(lambda z: zone2region[z], variant_data['neighbouring'][1][str(f)])) for f in accessible_fleets):
                 return True
 
             # more fleets
-            accessible_fleets2 = {f2 for f in accessible_fleets for f2 in variant_data['neigbouring'][1][str(f)] if f2 in sea_fleets and f2 not in accessible_fleets}
+            accessible_fleets2 = {f2 for f in accessible_fleets for f2 in variant_data['neighbouring'][1][str(f)] if f2 in sea_fleets and f2 not in accessible_fleets}
 
             # stop if no more fleets
             if not accessible_fleets2:
@@ -353,7 +353,10 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
     }
 
     # orders for transition
-    orders_transition_list = orders.Order.list_by_game_id(sql_executor, game_id)
+
+    #  should be : orders_transition_list = orders.Order.list_by_game_id(sql_executor, game_id)
+    #  but if fog : remove unsafe orders
+    orders_transition_list = [[game_id, o[0], o[1], o[2], o[3], o[4]] for o in orders_list]
 
     units_transition_list = units.Unit.list_by_game_id(sql_executor, game_id)
     fake_units_transition_list = [u for u in units_transition_list if u[5]]
@@ -393,7 +396,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
         forbidden.delete_database(sql_executor)
 
     # purge imagined units
-    for (_, role_id, zone_num, role_num, type_num) in imagined_units.ImaginedUnit.list_by_game_id(sql_executor, int(game_id)):
+    for (_, role_id, type_num, zone_num, role_num) in imagined_units.ImaginedUnit.list_by_game_id(sql_executor, int(game_id)):
         imagined_unit = imagined_units.ImaginedUnit(int(game_id), role_id, type_num, zone_num, role_num)
         imagined_unit.delete_database(sql_executor)
 
