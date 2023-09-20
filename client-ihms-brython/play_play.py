@@ -2442,16 +2442,16 @@ def imagine_units():
         """ put_submit """
 
         if delete:
-            input_submit = html.INPUT(type="submit", value="Ne plus imaginer cette unité")
+            input_submit = html.INPUT(type="submit", value="On l'enlève !")
         else:
-            input_submit = html.INPUT(type="submit", value="Imaginer une unité à cet endroit")
+            input_submit = html.INPUT(type="submit", value="On la met !")
         input_submit.bind("click", lambda e: imagine_unit_callback(e, delete))
         buttons_right <= html.BR()
         buttons_right <= input_submit
         buttons_right <= html.BR()
         buttons_right <= html.BR()
 
-        buttons_right <= html.DIV("Principe de l'imagination des unités : On imagine une unité sur la carte. Une unité imaginée peut être convoyée et soutenue offensivement (ce dernier point étant le but de l'opération). Si l'unité n'a pas le bon type ou n'existe pas, l'ordre sera annulé à la résolution")
+        buttons_right <= html.DIV("Principe de l'imagination des unités : On imagine une unité sur la carte. Une unité imaginée peut être convoyée et soutenue offensivement (ce dernier point étant le but de l'opération). Si l'unité n'a pas le bon type ou n'existe pas, l'ordre sera annulé à la résolution. Ne pas retirer une unité qui est l'objet d'un soutien ou d'un convoi bien sûr !")
 
     # need to be connected
     if play_low.PSEUDO is None:
