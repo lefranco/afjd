@@ -222,7 +222,23 @@ def apply_supported(complete_unit_dict: typing.Dict[str, typing.List[typing.List
     this will change the parameters
     """
 
-    # TODO: add units of 'complete_unit_dict' to 'unit_dict' that appear as passive in 'orders_list'
+    # adding units of 'complete_unit_dict' to 'unit_dict' that appear as passive in 'orders_list'
+
+    # the units we know
+    known_units_zones = {u[0] for us in unit_dict.values() for u in us}
+
+    # the dangling passives that need to be referenced
+    dangling_passives_zones = {o[4] for o in orders_list if o[4] != 0 and o[4] not in known_units_zones}
+
+    # complete table of all units
+    complete_unit_reference_table = {u[1]: (r, u[0]) for r, us in complete_unit_dict.items() for u in us}
+
+    # now we can complete the units
+    for zone_num in dangling_passives_zones:
+        role_num, type_num = complete_unit_reference_table[zone_num]
+        if role_num not in unit_dict:
+            unit_dict[role_num] = []
+        unit_dict[role_num].append([type_num, zone_num])
 
 
 def apply_visibility(variant_name: str, role_id: int, ownership_dict: typing.Dict[str, int], dislodged_unit_dict: typing.Dict[str, typing.List[typing.List[int]]], unit_dict: typing.Dict[str, typing.List[typing.List[int]]], forbidden_list: typing.List[int], orders_list: typing.List[typing.List[int]], fake_units_list: typing.List[typing.List[int]]) -> None:
@@ -2614,14 +2630,14 @@ class GameFogOfWarTransitionRessource(flask_restful.Resource):  # type: ignore
         fake_units_list = the_orders['fake_units']
 
         # backup orders
-        complete_orders_list = orders_list.copy()
+        complete_unit_dict = unit_dict.copy()
 
         # this will update last parameters
         variant_name = game.variant
         apply_visibility(variant_name, role_id, ownership_dict, dislodged_unit_dict, unit_dict, forbidden_list, orders_list, fake_units_list)
 
         # this will insert supported units that need to be seen (this will update unit_dict parameter)
-        apply_supported(complete_orders_list, unit_dict, orders_list)
+        apply_supported(complete_unit_dict, unit_dict, orders_list)
 
         data = {'time_stamp': transition.time_stamp, 'situation': {'ownerships': ownership_dict, 'dislodged_ones': dislodged_unit_dict, 'units': unit_dict, 'forbiddens': forbidden_list}, 'orders': {'orders': orders_list, 'fake_units': fake_units_list}, 'report_txt': "---"}
         return data, 200
