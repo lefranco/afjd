@@ -136,23 +136,32 @@ class Application(tkinter.Frame):
         def about() -> None:
             tkinter.messagebox.showinfo("About", str(VERSION_INFORMATION))
 
+        def put_image() -> None:
+
+            self.image_map = tkinter.PhotoImage(file=self.map_file)  # pylint: disable=attribute-defined-outside-init
+
+            self.canvas = tkinter.Canvas(frame_carto, width=self.image_map.width(), height=self.image_map.height())  # pylint: disable=attribute-defined-outside-init
+            self.canvas.grid(row=1, column=1)
+
+            # canvas
+            self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.image_map)
+
+            # clicking
+            self.canvas.bind("<Button-1>", click_callback)
+
         def click_callback(event: typing.Any) -> None:
 
             x_mouse, y_mouse = event.x, event.y
 
             information1 = f'"x_pos": {x_mouse},\n"y_pos": {y_mouse}'
-            self.mouse_pos.display(information1)
+            self.mouse_pos.display(information1)  # type: ignore
 
             information2 = ""
 
             # erase
-            self.polygon.display(information2)
+            self.polygon.display(information2)  # type: ignore
 
-            # create image map
-            self.image_map = tkinter.PhotoImage(file=map_file)  # pylint: disable=attribute-defined-outside-init
-
-            # canvas
-            self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.image_map)
+            put_image()
 
             for x_pos, y_pos, w_val, h_val in CONTOUR_TABLE:
 
@@ -175,7 +184,7 @@ class Application(tkinter.Frame):
 
                 # display as text
                 information2 = str(poly)
-                self.polygon.display(information2)
+                self.polygon.display(information2)  # type: ignore
 
                 # middle
                 polygons = [poly]
@@ -184,23 +193,30 @@ class Application(tkinter.Frame):
                 self.canvas.create_line(polylabel_x + 5, polylabel_y, polylabel_x - 5, polylabel_y, fill='blue')
                 self.canvas.create_line(polylabel_x, polylabel_y + 5, polylabel_x, polylabel_y - 5, fill='blue')
                 information2 = f'"x_pos": {polylabel_x},\n"y_pos": {polylabel_y}'
-                self.middle_pos.display(information2)
+                self.middle_pos.display(information2)  # type: ignore
 
                 # only first
                 break
 
             else:
                 information2 = "Failed!"
-                self.polygon.display(information2)
+                self.polygon.display(information2)  # type: ignore
+
+        def reload_callback() -> None:
+
+            # redo study
+            study_image(self.map_file, False)
+
+            put_image()
 
         def copy_position_callback() -> None:
-            self.mouse_pos.clipboard()
+            self.mouse_pos.clipboard()  # type: ignore
 
         def copy_area_callback() -> None:
-            self.polygon.clipboard()
+            self.polygon.clipboard()  # type: ignore
 
         def copy_position2_callback() -> None:
-            self.middle_pos.clipboard()
+            self.middle_pos.clipboard()  # type: ignore
 
         self.menu_bar = tkinter.Menu(main_frame)
 
@@ -230,20 +246,17 @@ class Application(tkinter.Frame):
         frame_carto.grid(row=2, column=1, sticky='we')
 
         self.map_file = map_file
-        self.filename = tkinter.PhotoImage(file=self.map_file)
+        put_image()
 
-        self.canvas = tkinter.Canvas(frame_carto, width=self.filename.width(), height=self.filename.height())
-        self.canvas.grid(row=1, column=1)
-
-        # clicking
-        self.canvas.bind("<Button-1>", click_callback)
-        self.canvas.create_image(0, 0, anchor=tkinter.NW, image=self.filename)
 
         # frame buttons and information
         # -----------
 
         frame_buttons_information = tkinter.Frame(main_frame)
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
+
+        self.reload_button = tkinter.Button(frame_buttons_information, text="Reload map file", command=reload_callback)
+        self.reload_button.grid(row=0, column=1, sticky='we')
 
         self.mouse_pos_label = tkinter.Label(frame_buttons_information, text="Position of click :")
         self.mouse_pos_label.grid(row=1, column=1, sticky='we')
@@ -309,7 +322,6 @@ def study_image(map_file: str, debug: bool) -> None:
     CONTOUR_TABLE = {k: CONTOUR_TABLE[k] for k in sorted(CONTOUR_TABLE, key=lambda b: b[2] * b[3])}
 
     if debug:
-        print(CONTOUR_TABLE)
         cv2.imshow('image', thresh)  # pylint: disable=c-extension-no-member
         cv2.waitKey()  # pylint: disable=c-extension-no-member
         sys.exit()
