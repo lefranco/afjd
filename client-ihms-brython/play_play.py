@@ -2310,25 +2310,37 @@ def imagine_units():
             selected_active_unit = play_low.POSITION_DATA.closest_unit(pos, False)
 
             if not selected_active_unit.imagined:
+
                 alert("Cette unité est réelle !")
-
-            else:
-                my_sub_panel2.removeChild(buttons_right)
-                buttons_right = html.DIV(id='buttons_right')
-                buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
-
-                # role flag
-                play_low.stack_role_flag(buttons_right)
-
-                # button last moves
-                play_low.stack_last_moves_button(buttons_right)
-
-                buttons_right <= html.BR()
-                put_submit(buttons_right, True)
                 put_reset(buttons_right)
 
-                my_sub_panel2 <= buttons_right
-                play_low.MY_SUB_PANEL <= my_sub_panel2
+            else:
+
+                # must not be linked to order
+                dangling_passives_zones = {o[4] for o in orders_loaded['orders'] if o[4] != 0}
+
+                if selected_active_unit.zone.identifier in dangling_passives_zones:
+
+                    alert("Cette unité est l'objet d'un soutien offensif ou d'un convoi, il faut modifier l'ordre au préalable !")
+                    put_reset(buttons_right)
+
+                else:
+                    my_sub_panel2.removeChild(buttons_right)
+                    buttons_right = html.DIV(id='buttons_right')
+                    buttons_right.attrs['style'] = 'display: table-cell; width: 15%; vertical-align: top;'
+
+                    # role flag
+                    play_low.stack_role_flag(buttons_right)
+
+                    # button last moves
+                    play_low.stack_last_moves_button(buttons_right)
+
+                    buttons_right <= html.BR()
+                    put_submit(buttons_right, True)
+                    put_reset(buttons_right)
+
+                    my_sub_panel2 <= buttons_right
+                    play_low.MY_SUB_PANEL <= my_sub_panel2
 
             return
 
@@ -2531,6 +2543,13 @@ def imagine_units():
     ctx = canvas.getContext("2d")
     if ctx is None:
         alert("Il faudrait utiliser un navigateur plus récent !")
+        return False
+
+    # get the orders from server
+    orders_loaded = game_orders_reload(play_low.GAME_ID)
+    if not orders_loaded:
+        alert("Erreur chargement ordres")
+        play.load_option(None, 'Consulter')
         return False
 
     canvas.bind("mousedown", callback_canvas_click)
