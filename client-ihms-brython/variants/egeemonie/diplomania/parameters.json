@@ -343,10 +343,10 @@
         "25": {
             "name": "ILY",
             "full_name": "Ilyria",
-            "x_pos": 84,
-            "y_pos": 49,
-            "x_legend_pos": 84,
-            "y_legend_pos": 35
+            "x_pos": 77,
+            "y_pos": 114,
+            "x_legend_pos": 77,
+            "y_legend_pos": 100
         },
         "26": {
             "name": "LYN",
