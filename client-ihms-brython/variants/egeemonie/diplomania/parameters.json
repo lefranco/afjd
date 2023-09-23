@@ -149,10 +149,10 @@
         "1": {
             "name": "AGS",
             "full_name": "Argos",
-            "x_pos": 347,
-            "y_pos": 504,
-            "x_legend_pos": 347,
-            "y_legend_pos": 490
+            "x_pos": 346,
+            "y_pos": 500,
+            "x_legend_pos": 317,
+            "y_legend_pos": 508
         },
         "2": {
             "name": "LAK",
@@ -174,18 +174,18 @@
         "4": {
             "name": "PYL",
             "full_name": "Pylos",
-            "x_pos": 241,
-            "y_pos": 570,
-            "x_legend_pos": 241,
-            "y_legend_pos": 556
+            "x_pos": 240,
+            "y_pos": 559,
+            "x_legend_pos": 240,
+            "y_legend_pos": 545
         },
         "5": {
             "name": "OLY",
             "full_name": "Olympia",
-            "x_pos": 218,
-            "y_pos": 487,
-            "x_legend_pos": 218,
-            "y_legend_pos": 473
+            "x_pos": 214,
+            "y_pos": 482,
+            "x_legend_pos": 214,
+            "y_legend_pos": 468
         },
         "6": {
             "name": "ACH",
@@ -206,34 +206,34 @@
         "8": {
             "name": "KOR",
             "full_name": "Korinthios",
-            "x_pos": 308,
-            "y_pos": 464,
-            "x_legend_pos": 308,
-            "y_legend_pos": 450
+            "x_pos": 314,
+            "y_pos": 466,
+            "x_legend_pos": 306,
+            "y_legend_pos": 453
         },
         "9": {
             "name": "MEG",
             "full_name": "Megara",
             "x_pos": 390,
             "y_pos": 444,
-            "x_legend_pos": 390,
-            "y_legend_pos": 430
+            "x_legend_pos": 363,
+            "y_legend_pos": 458
         },
         "10": {
             "name": "ATH",
             "full_name": "Athinai",
             "x_pos": 427,
             "y_pos": 469,
-            "x_legend_pos": 427,
-            "y_legend_pos": 455
+            "x_legend_pos": 413,
+            "y_legend_pos": 459
         },
         "11": {
             "name": "MAR",
             "full_name": "Marathon",
-            "x_pos": 427,
-            "y_pos": 437,
-            "x_legend_pos": 427,
-            "y_legend_pos": 423
+            "x_pos": 418,
+            "y_pos": 434,
+            "x_legend_pos": 407,
+            "y_legend_pos": 422
         },
         "12": {
             "name": "ERE",
@@ -246,10 +246,10 @@
         "13": {
             "name": "CHK",
             "full_name": "Chalkis",
-            "x_pos": 374,
-            "y_pos": 346,
-            "x_legend_pos": 374,
-            "y_legend_pos": 332,
+            "x_pos": 394,
+            "y_pos": 362,
+            "x_legend_pos": 372,
+            "y_legend_pos": 344,
             "display": 1
         },
         "14": {
@@ -257,16 +257,16 @@
             "full_name": "Beotia",
             "x_pos": 343,
             "y_pos": 381,
-            "x_legend_pos": 343,
-            "y_legend_pos": 367
+            "x_legend_pos": 364,
+            "y_legend_pos": 395
         },
         "15": {
             "name": "TEB",
             "full_name": "Thebai",
-            "x_pos": 344,
+            "x_pos": 348,
             "y_pos": 416,
-            "x_legend_pos": 344,
-            "y_legend_pos": 402
+            "x_legend_pos": 332,
+            "y_legend_pos": 413
         },
         "16": {
             "name": "DPH",
@@ -303,10 +303,10 @@
         "20": {
             "name": "DOL",
             "full_name": "Dolopia",
-            "x_pos": 244,
-            "y_pos": 334,
-            "x_legend_pos": 244,
-            "y_legend_pos": 320
+            "x_pos": 254,
+            "y_pos": 351,
+            "x_legend_pos": 254,
+            "y_legend_pos": 337
         },
         "21": {
             "name": "MAL",
@@ -319,9 +319,9 @@
         "22": {
             "name": "LAR",
             "full_name": "Larissa",
-            "x_pos": 310,
+            "x_pos": 319,
             "y_pos": 274,
-            "x_legend_pos": 310,
+            "x_legend_pos": 319,
             "y_legend_pos": 260
         },
         "23": {
@@ -351,10 +351,10 @@
         "26": {
             "name": "LYN",
             "full_name": "Lyncestus",
-            "x_pos": 186,
-            "y_pos": 105,
-            "x_legend_pos": 186,
-            "y_legend_pos": 91,
+            "x_pos": 203,
+            "y_pos": 130,
+            "x_legend_pos": 203,
+            "y_legend_pos": 116,
             "display": 4
         },
         "27": {
@@ -368,10 +368,10 @@
         "28": {
             "name": "PEL",
             "full_name": "Pella",
-            "x_pos": 298,
-            "y_pos": 112,
-            "x_legend_pos": 298,
-            "y_legend_pos": 98
+            "x_pos": 257,
+            "y_pos": 106,
+            "x_legend_pos": 257,
+            "y_legend_pos": 92
         },
         "29": {
             "name": "PAN",
@@ -466,9 +466,9 @@
         "40": {
             "name": "PER",
             "full_name": "Pergamon",
-            "x_pos": 728,
+            "x_pos": 734,
             "y_pos": 302,
-            "x_legend_pos": 728,
+            "x_legend_pos": 734,
             "y_legend_pos": 288
         },
         "41": {
@@ -571,26 +571,26 @@
         "53": {
             "name": "RHO",
             "full_name": "Rhodos",
-            "x_pos": 807,
-            "y_pos": 674,
-            "x_legend_pos": 807,
-            "y_legend_pos": 660
+            "x_pos": 809,
+            "y_pos": 668,
+            "x_legend_pos": 793,
+            "y_legend_pos": 699
         },
         "54": {
             "name": "ZAK",
             "full_name": "Zakros",
-            "x_pos": 632,
-            "y_pos": 822,
-            "x_legend_pos": 632,
-            "y_legend_pos": 808
+            "x_pos": 628,
+            "y_pos": 819,
+            "x_legend_pos": 601,
+            "y_legend_pos": 829
         },
         "55": {
             "name": "LYT",
             "full_name": "Lyttos",
             "x_pos": 581,
             "y_pos": 809,
-            "x_legend_pos": 581,
-            "y_legend_pos": 795,
+            "x_legend_pos": 562,
+            "y_legend_pos": 801,
             "display": 2
         },
         "56": {
@@ -598,24 +598,24 @@
             "full_name": "Knossos",
             "x_pos": 517,
             "y_pos": 800,
-            "x_legend_pos": 517,
-            "y_legend_pos": 786
+            "x_legend_pos": 491,
+            "y_legend_pos": 796
         },
         "57": {
             "name": "CYD",
             "full_name": "Cydonia",
             "x_pos": 417,
-            "y_pos": 788,
+            "y_pos": 790,
             "x_legend_pos": 417,
-            "y_legend_pos": 774
+            "y_legend_pos": 776
         },
         "58": {
             "name": "PHA",
             "full_name": "Phaistos",
-            "x_pos": 528,
+            "x_pos": 526,
             "y_pos": 830,
-            "x_legend_pos": 528,
-            "y_legend_pos": 816,
+            "x_legend_pos": 553,
+            "y_legend_pos": 829,
             "display": 2
         },
         "59": {
@@ -637,18 +637,18 @@
         "61": {
             "name": "aTER",
             "full_name": "Thera",
-            "x_pos": 546,
-            "y_pos": 642,
-            "x_legend_pos": 546,
-            "y_legend_pos": 628
+            "x_pos": 538,
+            "y_pos": 660,
+            "x_legend_pos": 538,
+            "y_legend_pos": 646
         },
         "62": {
             "name": "aDEL",
             "full_name": "Delos",
             "x_pos": 531,
-            "y_pos": 503,
+            "y_pos": 439,
             "x_legend_pos": 531,
-            "y_legend_pos": 489
+            "y_legend_pos": 425
         },
         "63": {
             "name": "aLIM",
@@ -710,18 +710,18 @@
         "70": {
             "name": "kKOR",
             "full_name": "Korinthios Kolpos",
-            "x_pos": 318,
-            "y_pos": 436,
-            "x_legend_pos": 318,
-            "y_legend_pos": 422
+            "x_pos": 322,
+            "y_pos": 435,
+            "x_legend_pos": 296,
+            "y_legend_pos": 429
         },
         "71": {
             "name": "ITH",
             "full_name": "Ithaca Pelagos",
-            "x_pos": 149,
-            "y_pos": 420,
-            "x_legend_pos": 149,
-            "y_legend_pos": 406
+            "x_pos": 163,
+            "y_pos": 423,
+            "x_legend_pos": 163,
+            "y_legend_pos": 409
         },
         "72": {
             "name": "sZAK",
@@ -752,10 +752,10 @@
         "75": {
             "name": "kSAR",
             "full_name": "Saronikos Kolpos",
-            "x_pos": 390,
-            "y_pos": 491,
-            "x_legend_pos": 390,
-            "y_legend_pos": 477,
+            "x_pos": 415,
+            "y_pos": 516,
+            "x_legend_pos": 415,
+            "y_legend_pos": 502,
             "display": 1
         },
         "76": {
@@ -763,16 +763,16 @@
             "full_name": "Evvoiko Kolpos",
             "x_pos": 365,
             "y_pos": 369,
-            "x_legend_pos": 365,
-            "y_legend_pos": 355
+            "x_legend_pos": 346,
+            "y_legend_pos": 360
         },
         "77": {
             "name": "aSPO",
             "full_name": "Sporades",
             "x_pos": 458,
-            "y_pos": 335,
+            "y_pos": 356,
             "x_legend_pos": 458,
-            "y_legend_pos": 321
+            "y_legend_pos": 342
         },
         "78": {
             "name": "kTRM",
@@ -820,10 +820,10 @@
         "83": {
             "name": "aDOD",
             "full_name": "Dodecanese",
-            "x_pos": 695,
-            "y_pos": 593,
-            "x_legend_pos": 695,
-            "y_legend_pos": 579
+            "x_pos": 689,
+            "y_pos": 600,
+            "x_legend_pos": 689,
+            "y_legend_pos": 586
         },
         "84": {
             "name": "pPRO",
