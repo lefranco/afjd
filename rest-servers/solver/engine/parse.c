@@ -1239,15 +1239,28 @@ static void parseinterdit(FILE *fd) {
 static void parseanneezero(FILE *fd) {
 	TOKEN tok;
 	char buf[TAILLEMESSAGE];
-
+	BOOL negative = FALSE;
 
 	gettoken(fd, &tok);
+	if (tok.id != NOMBRE && tok.id != UNEATTAQUESUPPRESSION) {
+		cherchechaine(__FILE__, 270, buf, 0); /*"Manque l'anneezero"*/
+		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
+	}
+
+	if (tok.id == UNEATTAQUESUPPRESSION) {
+		negative = TRUE;
+		gettoken(fd, &tok);
+	}
+
 	if (tok.id != NOMBRE) {
 		cherchechaine(__FILE__, 270, buf, 0); /*"Manque l'anneezero"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 	}
 
 	ANNEEZERO = tok.val2;
+	if(negative) {
+		ANNEEZERO = - ANNEEZERO;
+	}
 
 	gettoken(fd, &tok);
 	if (tok.id != FINLIGNE) {
@@ -1262,6 +1275,7 @@ static void parsesaison(FILE *fd) {
 	int annee, saison;
 	char buf[TAILLEMESSAGE];
 	char bufn1[TAILLEENTIER];
+	BOOL negative = FALSE;
 
 	gettoken(fd, &tok);
 	saison = -1; /* Evite un avertissemnt du compilateur */
@@ -1287,11 +1301,22 @@ static void parsesaison(FILE *fd) {
 	}
 
 	gettoken(fd, &tok);
+	if (tok.id != NOMBRE && tok.id != UNEATTAQUESUPPRESSION) {
+		cherchechaine(__FILE__, 95, buf, 0); /*"Manque l'annee pour la saison"*/
+		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
+	}
+	if(tok.id == UNEATTAQUESUPPRESSION) {
+		negative = TRUE;
+		gettoken(fd, &tok);
+	}
 	if (tok.id != NOMBRE) {
 		cherchechaine(__FILE__, 95, buf, 0); /*"Manque l'annee pour la saison"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 	}
 	annee = tok.val2;
+	if(negative) {
+		annee = - annee;
+	}
 	if (annee < ANNEEZERO+1 || annee > ANNEEZERO+MAXIMUMANNEE) {
 		(void) sprintf(bufn1, "%d", annee);
 		cherchechaine(__FILE__, 96, buf, 1, bufn1); /*"%1 : Annee saison invraisemblable"*/
@@ -1313,6 +1338,7 @@ static void parsesaisonmodif(FILE *fd) {
 	int annee, saison;
 	char buf[TAILLEMESSAGE];
 	char bufn1[TAILLEENTIER];
+	BOOL negative = FALSE;
 
 	gettoken(fd, &tok);
 	if (tok.id != UNHIVER) {
@@ -1321,12 +1347,23 @@ static void parsesaisonmodif(FILE *fd) {
 	}
 
 	gettoken(fd, &tok);
+	if (tok.id != NOMBRE && tok.id != UNEATTAQUESUPPRESSION) {
+		cherchechaine(__FILE__, 99, buf, 0); /*"Manque l'annee pour la saisonmodif"*/
+		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
+	}
+	if(tok.id == UNEATTAQUESUPPRESSION) {
+		negative = TRUE;
+		gettoken(fd, &tok);
+	}
 	if (tok.id != NOMBRE) {
 		cherchechaine(__FILE__, 99, buf, 0); /*"Manque l'annee pour la saisonmodif"*/
 		erreurparse(NULL, SYNTAXIQUE, tok.id == FINLIGNE, buf);
 	}
 	saison = 3; /* hiver */
 	annee = tok.val2;
+	if(negative) {
+		annee = - annee;
+	}
 	if (annee < ANNEEZERO || annee > ANNEEZERO+MAXIMUMANNEE) {
 		(void) sprintf(bufn1, "%d", annee);
 		cherchechaine(__FILE__, 100, buf, 1, bufn1); /*"%1 : Annee saison modif invraisemblable"*/
