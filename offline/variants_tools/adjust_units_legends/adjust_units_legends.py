@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Graphic tool to adjust positions
+Graphic tool to adjust positions units and legends
 """
 
 # pylint: disable=multiple-statements
@@ -627,7 +627,7 @@ def main_loop(map_file: str, variant_file: str, parameters_file: str) -> None:
     print(f"Working now with map file '{map_file}' and parameter file '{parameters_file}'...")
 
     # use description of first register as overall title
-    window_name = "Diplomania map item position adjustment tool"
+    window_name = "Diplomania map units and legends position adjustment tool"
 
     # create app
     root.title(window_name)
