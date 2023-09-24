@@ -46,15 +46,15 @@
             "adjective_name": "anglais",
             "letter_name": "E",
             "red": [
-                206,
+                196,
                 226
             ],
             "green": [
-                15,
+                5,
                 35
             ],
             "blue": [
-                37,
+                27,
                 57
             ]
         },
@@ -63,15 +63,15 @@
             "adjective_name": "francais",
             "letter_name": "F",
             "red": [
-                19,
+                9,
                 39
             ],
             "green": [
-                83,
+                73,
                 103
             ],
             "blue": [
-                180,
+                170,
                 200
             ]
         },
@@ -80,16 +80,16 @@
             "adjective_name": "bourguigon",
             "letter_name": "B",
             "red": [
-                107,
-                127
+                215,
+                255
             ],
             "green": [
-                13,
-                33
+                215,
+                255
             ],
             "blue": [
                 13,
-                33
+                43
             ]
         }
     },
