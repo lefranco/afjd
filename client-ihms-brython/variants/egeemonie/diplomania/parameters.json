@@ -272,9 +272,9 @@
             "name": "DPH",
             "full_name": "Delphoi",
             "x_pos": 289,
-            "y_pos": 392,
-            "x_legend_pos": 289,
-            "y_legend_pos": 378
+            "y_pos": 399,
+            "x_legend_pos": 283,
+            "y_legend_pos": 379
         },
         "17": {
             "name": "ETO",
@@ -654,9 +654,9 @@
             "name": "aLIM",
             "full_name": "Limnos",
             "x_pos": 534,
-            "y_pos": 280,
+            "y_pos": 302,
             "x_legend_pos": 534,
-            "y_legend_pos": 266
+            "y_legend_pos": 288
         },
         "64": {
             "name": "pLYC",
