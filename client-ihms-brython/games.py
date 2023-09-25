@@ -1600,8 +1600,9 @@ def change_state_game():
 
     form = html.FORM()
 
-    form <= information_about_start_game()
-    form <= html.BR()
+    if state_loaded == 0:
+        form <= information_about_start_game()
+        form <= html.BR()
 
     fieldset = html.FIELDSET()
     legend_state = html.LEGEND("état", title="Etat de la partie : en attente, en cours, terminée ou distinguée.")
