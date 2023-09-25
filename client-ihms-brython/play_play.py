@@ -2385,12 +2385,10 @@ def imagine_units():
                 buttons_right <= legend_imagined_unit
 
             # prevent putting fleets on region with specific coasts
-            elif selected_dest_zone.coast_type is None and len([z for z in play_low.VARIANT_DATA.zones.values() if z.region == selected_dest_zone.region]) > 1:
-                # prevent putting fleet on non specific coasts if exists
-                if selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
-                    alert("On ne met pas une flotte sur une région qui par ailleurs comporte une côte spéciale !")
-                    legend_imagined_unit = html.DIV("Sélectionner la zone où mettre cette unité")
-                    buttons_right <= legend_imagined_unit
+            elif selected_dest_zone.coast_type is None and len([z for z in play_low.VARIANT_DATA.zones.values() if z.region == selected_dest_zone.region]) > 1 and selected_build_unit_type is mapping.UnitTypeEnum.FLEET_UNIT:
+                alert("On ne met pas une flotte sur une région qui par ailleurs comporte une côte spéciale !")
+                legend_imagined_unit = html.DIV("Sélectionner la zone où mettre cette unité")
+                buttons_right <= legend_imagined_unit
 
             else:
 
