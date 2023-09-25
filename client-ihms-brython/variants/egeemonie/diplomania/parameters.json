@@ -667,13 +667,12 @@
             "y_legend_pos": 787
         },
         "65": {
-            "name": "KAR",
+            "name": "pKAR",
             "full_name": "Karpathio Pegalos",
             "x_pos": 682,
             "y_pos": 722,
             "x_legend_pos": 682,
-            "y_legend_pos": 708,
-            "display": 2
+            "y_legend_pos": 708
         },
         "66": {
             "name": "pKRI",
@@ -716,7 +715,7 @@
             "y_legend_pos": 429
         },
         "71": {
-            "name": "ITH",
+            "name": "kITH",
             "full_name": "Ithaca Pelagos",
             "x_pos": 163,
             "y_pos": 423,
@@ -729,8 +728,7 @@
             "x_pos": 196,
             "y_pos": 536,
             "x_legend_pos": 196,
-            "y_legend_pos": 522,
-            "display": 5
+            "y_legend_pos": 522
         },
         "73": {
             "name": "pLAK",
@@ -738,8 +736,7 @@
             "x_pos": 251,
             "y_pos": 665,
             "x_legend_pos": 251,
-            "y_legend_pos": 651,
-            "display": 5
+            "y_legend_pos": 651
         },
         "74": {
             "name": "pMYR",
@@ -755,8 +752,7 @@
             "x_pos": 415,
             "y_pos": 516,
             "x_legend_pos": 415,
-            "y_legend_pos": 502,
-            "display": 1
+            "y_legend_pos": 502
         },
         "76": {
             "name": "kEVV",
@@ -788,8 +784,7 @@
             "x_pos": 546,
             "y_pos": 145,
             "x_legend_pos": 546,
-            "y_legend_pos": 131,
-            "display": 6
+            "y_legend_pos": 131
         },
         "80": {
             "name": "kADR",
@@ -797,8 +792,7 @@
             "x_pos": 607,
             "y_pos": 238,
             "x_legend_pos": 607,
-            "y_legend_pos": 224,
-            "display": 6
+            "y_legend_pos": 224
         },
         "81": {
             "name": "sMIT",
@@ -814,8 +808,7 @@
             "x_pos": 628,
             "y_pos": 481,
             "x_legend_pos": 628,
-            "y_legend_pos": 467,
-            "display": 3
+            "y_legend_pos": 467
         },
         "83": {
             "name": "aDOD",
@@ -831,8 +824,7 @@
             "x_pos": 828,
             "y_pos": 120,
             "x_legend_pos": 828,
-            "y_legend_pos": 106,
-            "display": 6
+            "y_legend_pos": 106
         },
         "85": {
             "name": "pPEX",
