@@ -30,6 +30,13 @@ DEFAULT_SPEED_OTHERS = 24
 DEFAULT_NB_CYCLES = 7
 
 
+def information_about_start_game():
+    """ information_about_account """
+
+    information = html.DIV(Class='important')
+    information <= "Si la partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !"
+    return information
+
 def information_about_input():
     """ information_about_account """
 
@@ -1593,7 +1600,7 @@ def change_state_game():
 
     form = html.FORM()
 
-    form <= information_about_input()
+    form <= information_about_start_game()
     form <= html.BR()
 
     fieldset = html.FIELDSET()

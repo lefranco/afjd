@@ -940,6 +940,8 @@ def my_games(state_name):
     else:
         def key_function(g): return int(g[1][sort_by])  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
+    startable_game_present = False
+
     for game_id_str, data in sorted(games_dict.items(), key=key_function, reverse=reverse_needed):
 
         if data['current_state'] != state:
@@ -1241,6 +1243,7 @@ def my_games(state_name):
                             input_start_game.bind("click", lambda e, g=game_name: start_game_callback(e, g))
                             form <= input_start_game
                             value = form
+                            startable_game_present = True
                         if state == 1:
                             form = html.FORM()
                             input_stop_game = html.INPUT(type="image", src="./images/stop_game.png")
@@ -1272,7 +1275,10 @@ def my_games(state_name):
     MY_PANEL <= html.IMG(src="./images/start_game.jpg", title="Pour démarrer la partie")
     MY_PANEL <= " "
     MY_PANEL <= html.IMG(src="./images/stop_game.png", title="Pour arrêter la partie")
-    MY_PANEL <= html.BR()
+    if startable_game_present:
+        MY_PANEL <= html.BR()
+        MY_PANEL <= html.BR()
+        MY_PANEL <= html.DIV("Si une partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !", Class='important')
     MY_PANEL <= html.BR()
 
     overall_time_after = time.time()
