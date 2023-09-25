@@ -11,7 +11,7 @@ xxx
 profiler.PROFILER.stop_mes()
 profiler.PROFILER.stop_mes()
 
-pseudo = storage['PSEUDO']
+pseudo = storage['PSEUDO'] if 'PSEUDO' in storage else '???'
 version = storage['VERSION']
 destination = config.SERVER_CONFIG['PLAYER']['HOST'], config.SERVER_CONFIG['EMAIL']['PORT']
 timeout = config.TIMEOUT_SERVER
