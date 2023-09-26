@@ -783,7 +783,7 @@ def all_games(state_name):
 
     state = config.STATE_CODE_TABLE[state_name]
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(state)
     if not games_dict:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -807,8 +807,9 @@ def all_games(state_name):
     for master_id, games_id in masters_alloc.items():
         master = players_dict[str(master_id)]['pseudo']
         for game_id in games_id:
-            game = games_dict[str(game_id)]['name']
-            game_master_dict[game] = master
+            if str(game_id) in games_dict:
+                game = games_dict[str(game_id)]['name']
+                game_master_dict[game] = master
 
     time_stamp_now = time.time()
 

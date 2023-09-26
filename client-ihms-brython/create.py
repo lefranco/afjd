@@ -154,12 +154,6 @@ def change_glorious():
 def check_batch(current_pseudo, games_to_create):
     """ check_batch """
 
-    games_dict = common.get_games_data()
-    if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
-        return False
-    games_dict = dict(games_dict)
-
     players_dict = common.get_players_data()
     if not players_dict:
         alert("Erreur chargement dictionnaire joueurs")
