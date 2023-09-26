@@ -215,10 +215,20 @@ def my_opportunities():
 
     recruiting_games_dict = {tr[0]: {'allocated': tr[1], 'capacity': tr[2]} for tr in recruiting_games_list}
 
-    games_dict = common.get_games_data()
+    state = 0
+    games_dict = common.get_games_data(state)
     if not games_dict:
-        alert("Erreur chargement dictionnaire parties")
+        alert(f"Erreur chargement dictionnaire parties etat {state}")
         return
+
+    state = 1
+    games_dict2 = common.get_games_data(state)
+    if not games_dict2:
+        alert(f"Erreur chargement dictionnaire parties etat {state}")
+        return
+
+    # join both dicts
+    games_dict.update(games_dict2)
 
     games_dict_recruiting = {k: v for k, v in games_dict.items() if int(k) in recruiting_games_dict}
 
@@ -241,8 +251,9 @@ def my_opportunities():
     for master_id, games_id in masters_alloc.items():
         master = players_dict[str(master_id)]['pseudo']
         for game_id in games_id:
-            game = games_dict[str(game_id)]['name']
-            game_master_dict[game] = master
+            if str(game_id) in games_dict:
+                game = games_dict[str(game_id)]['name']
+                game_master_dict[game] = master
 
     # Title
     MY_SUB_PANEL <= html.H2("Parties qui recrutent des joueurs")
@@ -374,7 +385,13 @@ def my_opportunities():
         # selected interface (user choice)
         interface_chosen = interface.get_interface_from_variant(variant_name_loaded)
 
-        parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+        # parameters
+
+        if (variant_name_loaded, interface_chosen) in memoize.PARAMETERS_READ_MEMOIZE_TABLE:
+            parameters_read = memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)]
+        else:
+            parameters_read = common.read_parameters(variant_name_loaded, interface_chosen)
+            memoize.PARAMETERS_READ_MEMOIZE_TABLE[(variant_name_loaded, interface_chosen)] = parameters_read
 
         # build variant data
 
