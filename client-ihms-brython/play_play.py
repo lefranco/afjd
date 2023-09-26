@@ -83,7 +83,7 @@ def stack_role_builds(frame):
 def game_orders_reload(game_id):
     """ game_orders_reload """
 
-    orders_loaded = None
+    orders_loaded = {}
 
     def reply_callback(req):
         nonlocal orders_loaded
