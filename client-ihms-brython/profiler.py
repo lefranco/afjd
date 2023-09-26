@@ -42,9 +42,8 @@ import_user_config_time = after_user_config - before_user_config
 ADDRESS_ADMIN = "1"
 
 
-# only send mail if more thant this
-THRESHOLD = 10.
-
+# debug
+DEBUG = False
 
 class Measure:
     """ Measure """
@@ -81,6 +80,7 @@ class Measure:
         elapsed_ms = round(elapsed * 1000.)
         return f"{self._legend} : {elapsed_ms}ms"
 
+DEPTH = 0
 
 class Profiler:
     """ Profiler """
@@ -91,6 +91,12 @@ class Profiler:
 
     def start_mes(self, legend):
         """ start """
+
+        global DEPTH
+
+        if DEBUG:
+            print(f"{' '*DEPTH}start_mes({legend})")
+            DEPTH += 1
 
         if self._main_measure is None:
             self._main_measure = Measure("root", None)
@@ -103,6 +109,12 @@ class Profiler:
 
     def stop_mes(self):
         """ terminate """
+
+        global DEPTH
+
+        if DEBUG:
+            DEPTH -= 1
+            print(f"{' '*DEPTH}stop_mes()")
 
         cur_measure = self._current_measure
         cur_measure.terminate()
