@@ -45,6 +45,7 @@ ADDRESS_ADMIN = "1"
 # debug
 DEBUG = False
 
+
 class Measure:
     """ Measure """
 
@@ -80,7 +81,9 @@ class Measure:
         elapsed_ms = round(elapsed * 1000.)
         return f"{self._legend} : {elapsed_ms}ms"
 
+
 DEPTH = 0
+
 
 class Profiler:
     """ Profiler """
