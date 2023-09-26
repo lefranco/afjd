@@ -1198,7 +1198,7 @@ def all_missing_orders():
         alert("Pas le bon compte (pas modo)")
         return
 
-    games_dict = common.get_games_data()
+    games_dict = common.get_games_data(1)
     if not games_dict:
         alert("Erreur chargement dictionnaire parties")
         return
@@ -1220,8 +1220,9 @@ def all_missing_orders():
     for master_id, games_id in masters_alloc.items():
         master = players_dict[str(master_id)]['pseudo']
         for game_id in games_id:
-            game = games_dict[str(game_id)]['name']
-            game_master_dict[game] = master
+            if str(game_id) in games_dict:
+                game = games_dict[str(game_id)]['name']
+                game_master_dict[game] = master
 
     players_dict2 = common.get_players()
     if not players_dict2:
