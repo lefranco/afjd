@@ -37,6 +37,7 @@ def information_about_start_game():
     information <= "Si la partie n'a pas le bon nombre de joueurs, elle ne pourra pas être démarrée !"
     return information
 
+
 def information_about_input():
     """ information_about_account """
 
