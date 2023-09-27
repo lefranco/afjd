@@ -53,6 +53,7 @@ INTER_COMMUTATION_TIME_SEC = 2
 INTERFACE_TABLE = {
     'standard': ['diplomania', 'diplomania_daltoniens', 'hasbro'],
     'grandeguerre': ['diplomania'],
+    'grandeguerreexpansionniste': ['diplomania'],
     'hundred': ['diplomania'],
     'moderne': ['diplomania'],
     'egeemonie': ['diplomania'],
@@ -194,7 +195,7 @@ def check_all_games(jwt_token: str) -> None:
         mylogger.LOGGER.info(f"Trying game {game_name}...")
 
         success = commute_game(jwt_token, game_id, variant_name, game_name)
-        
+
         if success:
             mylogger.LOGGER.info("+++ commuted ! +++)
 
@@ -219,7 +220,7 @@ def acting_threaded_procedure() -> None:
     """ does the actual scheduled work """
 
     with APP.app_context():
-    
+
         # get a token
         pseudo = COMMUTER_ACCOUNT
         password = COMMUTER_PASSWORD
@@ -246,9 +247,9 @@ def acting_threaded_procedure() -> None:
         now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
 
         mylogger.LOGGER.info(f"Now {now_date_desc}. Waiting...")
-    
+
         wait_time = time_to_wait()
-        time.sleep(wait_time)    
+        time.sleep(wait_time)
 
         while True:
 
@@ -270,7 +271,7 @@ def acting_threaded_procedure() -> None:
 
             # go to sleep
             mylogger.LOGGER.info(f"Done. Now {now_date_desc}...")
-            
+
             # TODO : insert here all scheduled tasks
             time.sleep(10)
 
@@ -297,13 +298,13 @@ class AccessLogsRessource(flask_restful.Resource):  # type: ignore
         """
 
         mylogger.LOGGER.info("/access-logs - POST - accessing logs")
-        
+
         # TODO : extract from database
 
         data = {'msg': 'NOT IMPLEMENTED'}
         return data, 200
 
-        
+
 # ---------------------------------
 # main
 # ---------------------------------

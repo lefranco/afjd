@@ -32,6 +32,7 @@ EPSILON_SEC = 5
 INTERFACE_TABLE = {
     'standard': ['diplomania', 'diplomania_daltoniens', 'hasbro'],
     'grandeguerre': ['diplomania'],
+    'grandeguerreexpansionniste': ['diplomania'],
     'hundred': ['diplomania'],
     'moderne': ['diplomania'],
     'egeemonie': ['diplomania'],

@@ -9,6 +9,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 INTERFACE_TABLE = {
     'standard': ['diplomania', 'diplomania_daltoniens', 'hasbro'],
     'grandeguerre': ['diplomania'],
+    'grandeguerreexpansionniste': ['diplomania'],
     'hundred': ['diplomania'],
     'moderne': ['diplomania'],
     'egeemonie': ['diplomania'],
