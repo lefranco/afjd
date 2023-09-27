@@ -20,7 +20,7 @@ import index  # circular import
 OPTIONS = ['Créer', 'Changer anonymat', 'Changer accès messagerie', 'Changer description', 'Changer scorage', 'Changer paramètres accès', 'Changer paramètres cadence', 'Changer état', 'Déplacer des joueurs', 'Supprimer']
 
 MAX_LEN_GAME_NAME = 50
-MAX_LEN_VARIANT_NAME = 20
+MAX_LEN_VARIANT_NAME = 50
 
 DEFAULT_SCORING_CODE = "CDIP"
 DEFAULT_DEADLINE_TIME = 21
