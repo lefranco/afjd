@@ -13,7 +13,7 @@ import config
 import mydatetime
 import index  # circular import
 
-OPTIONS = ['Sélectionner un événement', 'Inscriptions', 'Créer un événement', 'Editer l\'événement', 'Gérer les participations', 'Supprimer l\'événement']
+OPTIONS = ['Sélectionner un événement', 'Inscription', 'Créer un événement', 'Editer l\'événement', 'Gérer les participations', 'Supprimer l\'événement']
 
 
 MAX_LEN_EVENT_NAME = 50
@@ -505,7 +505,7 @@ def registrations():
         account_button = html.BUTTON("Je n'ai pas de compte, je veux le créer !", Class='btn-menu')
         account_button.bind("click", create_account_callback)
 
-    MY_SUB_PANEL <= html.H3(f"Inscriptions à l'événement {name}")
+    MY_SUB_PANEL <= html.H3(f"Inscription à l'événement {name}")
 
     MY_SUB_PANEL <= html.H4("Toutes les informations")
 
@@ -1173,7 +1173,7 @@ def load_option(_, item_name):
 
     if item_name == 'Sélectionner un événement':
         select_event()
-    if item_name == 'Inscriptions':
+    if item_name == 'Inscription':
         registrations()
     if item_name == 'Créer un événement':
         create_event(None)
@@ -1215,7 +1215,7 @@ def render(panel_middle):
 
     # this means user wants to join game
     if ARRIVAL:
-        ITEM_NAME_SELECTED = 'Inscriptions'
+        ITEM_NAME_SELECTED = 'Inscription'
 
     ARRIVAL = False
     load_option(None, ITEM_NAME_SELECTED)
