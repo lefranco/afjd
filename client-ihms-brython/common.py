@@ -324,14 +324,20 @@ def get_season(advancement, variant) -> None:
     len_season_cycle = len(DIPLOMACY_SEASON_CYCLE)
     advancement_season_num = advancement % len_season_cycle + 1
     advancement_season = mapping.SeasonEnum.from_code(advancement_season_num)
-    advancement_year = ((advancement // len_season_cycle) + 1) * variant.increment + variant.year_zero
+
+    advancement_play_year = ((advancement // len_season_cycle) + 1) * variant.increment + variant.year_zero
+    advancement_real_year = (advancement // len_season_cycle) + 1
+    advancement_year = f"{advancement_play_year} ({advancement_real_year})"
+
     return advancement_season, advancement_year
 
 
 def get_last_year(nb_max_cycles_to_play, variant) -> None:
     """ get_last_year """
 
-    last_year = nb_max_cycles_to_play * variant.increment + variant.year_zero
+    play_last_year = nb_max_cycles_to_play * variant.increment + variant.year_zero
+    real_last_year = nb_max_cycles_to_play
+    last_year = f"{play_last_year} ({real_last_year})"
     return last_year
 
 
