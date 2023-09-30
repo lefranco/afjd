@@ -227,7 +227,8 @@ def show_rating_performance(classic, role_id):
         elif sort_by == 'number':
             def key_function(r): return r[6]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
-        rank = 1
+        elo_sorted = sorted(rating_list, key=lambda r: r[3], reverse=True)
+        rank_table = {p[2]: i + 1 for i,p in enumerate(elo_sorted)}
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
@@ -241,7 +242,7 @@ def show_rating_performance(classic, role_id):
             for field in fields:
 
                 if field == 'rank':
-                    value = rank
+                    value = rank_table[rating[2]]
 
                 if field == 'player':
                     value = player
@@ -274,7 +275,6 @@ def show_rating_performance(classic, role_id):
                 row <= col
 
             ratings_table <= row
-            rank += 1
 
         average = round(sum(r[3] for r in rating_list) / len(rating_list))
         return ratings_table, average
@@ -460,7 +460,8 @@ def show_rating_reliability():
         elif sort_by == 'number':
             def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
-        rank = 1
+        reliability_sorted = sorted(rating_list, key=lambda r: r[1], reverse=True)
+        rank_table = {p[0]: i + 1 for i,p in enumerate(reliability_sorted)}
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
@@ -474,7 +475,7 @@ def show_rating_reliability():
             for field in fields:
 
                 if field == 'rank':
-                    value = rank
+                    value = rank_table[rating[0]]
 
                 if field == 'player':
                     value = player
@@ -500,7 +501,6 @@ def show_rating_reliability():
                 row <= col
 
             ratings_table <= row
-            rank += 1
 
         return ratings_table
 
@@ -622,7 +622,8 @@ def show_rating_regularity():
         elif sort_by == 'number':
             def key_function(r): return r[5]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
-        rank = 1
+        regularity_sorted = sorted(rating_list, key=lambda r: r[1], reverse=True)
+        rank_table = {p[0]: i + 1 for i,p in enumerate(regularity_sorted)}
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
@@ -636,7 +637,7 @@ def show_rating_regularity():
             for field in fields:
 
                 if field == 'rank':
-                    value = rank
+                    value = rank_table[rating[0]]
 
                 if field == 'player':
                     value = player
@@ -665,7 +666,6 @@ def show_rating_regularity():
                 row <= col
 
             ratings_table <= row
-            rank += 1
 
         return ratings_table
 
