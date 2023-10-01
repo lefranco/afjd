@@ -228,7 +228,7 @@ def show_rating_performance(classic, role_id):
             def key_function(r): return r[6]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
         elo_sorted = sorted(rating_list, key=lambda r: r[3], reverse=True)
-        rank_table = {p[2]: i + 1 for i,p in enumerate(elo_sorted)}
+        rank_table = {p[2]: i + 1 for i, p in enumerate(elo_sorted)}
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
@@ -461,7 +461,7 @@ def show_rating_reliability():
             def key_function(r): return r[4]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
         reliability_sorted = sorted(rating_list, key=lambda r: r[1], reverse=True)
-        rank_table = {p[0]: i + 1 for i,p in enumerate(reliability_sorted)}
+        rank_table = {p[0]: i + 1 for i, p in enumerate(reliability_sorted)}
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
@@ -623,7 +623,7 @@ def show_rating_regularity():
             def key_function(r): return r[5]  # noqa: E704 # pylint: disable=multiple-statements, invalid-name
 
         regularity_sorted = sorted(rating_list, key=lambda r: r[1], reverse=True)
-        rank_table = {p[0]: i + 1 for i,p in enumerate(regularity_sorted)}
+        rank_table = {p[0]: i + 1 for i, p in enumerate(regularity_sorted)}
 
         for rating in sorted(rating_list, key=key_function, reverse=reverse_needed):
 
