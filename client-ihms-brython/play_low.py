@@ -466,12 +466,8 @@ def get_game_status():
             break
 
     advancement_loaded = GAME_PARAMETERS_LOADED['current_advancement']
-    advancement_season, advancement_year = common.get_season(advancement_loaded, VARIANT_DATA)
-    advancement_season_readable = VARIANT_DATA.season_name_table[advancement_season]
-    game_season = f"{advancement_season_readable} {advancement_year}"
-
     nb_max_cycles_to_play = GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
-    last_year_played = common.get_last_year(nb_max_cycles_to_play, VARIANT_DATA)
+    game_season = common.get_full_season(advancement_loaded, VARIANT_DATA, nb_max_cycles_to_play)
 
     deadline_loaded = GAME_PARAMETERS_LOADED['deadline']
     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
@@ -508,8 +504,6 @@ def get_game_status():
     row <= col
     col = html.TD(f"Saison {game_season}")
     row <= col
-    col = html.TD(f"Fin {last_year_played}")
-    row <= col
 
     global DEADLINE_COL
     content = f"DL {datetime_deadline_loaded_str}"
@@ -542,7 +536,7 @@ def get_game_status():
 
     row = html.TR()
 
-    col = html.TD(game_description, colspan="11")
+    col = html.TD(game_description, colspan="10")
     row <= col
     game_status_table <= row
 
@@ -566,9 +560,8 @@ def get_game_status():
 def get_game_status_histo(variant_data, advancement_selected):
     """ get_game_status_histo """
 
-    advancement_selected_season, advancement_selected_year = common.get_season(advancement_selected, variant_data)
-    advancement_selected_season_readable = variant_data.season_name_table[advancement_selected_season]
-    game_season = f"{advancement_selected_season_readable} {advancement_selected_year}"
+    nb_max_cycles_to_play = GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
+    game_season = common.get_full_season(advancement_selected, variant_data, nb_max_cycles_to_play)
 
     game_status_table = html.TABLE()
     row = html.TR()

@@ -423,7 +423,7 @@ def show_position(direct_last_moves):
 
         for adv_sample in range(4, last_advancement, 5):
 
-            adv_sample_season, adv_sample_year = common.get_season(adv_sample, play_low.VARIANT_DATA)
+            adv_sample_season, adv_sample_year = common.get_short_season(adv_sample, play_low.VARIANT_DATA)
             adv_sample_season_readable = play_low.VARIANT_DATA.season_name_table[adv_sample_season]
 
             input_last = html.INPUT(type="submit", value=f"{adv_sample_season_readable} {adv_sample_year}")
@@ -710,9 +710,8 @@ def show_events_in_game():
         row <= col
 
         # season
-        advancement_season, advancement_year = common.get_season(advancement, play_low.VARIANT_DATA)
-        advancement_season_readable = play_low.VARIANT_DATA.season_name_table[advancement_season]
-        game_season = f"{advancement_season_readable} {advancement_year}"
+        nb_max_cycles_to_play = play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
+        game_season = common.get_full_season(advancement, play_low.VARIANT_DATA, nb_max_cycles_to_play)
         col = html.TD(game_season)
         row <= col
 
@@ -850,9 +849,8 @@ def show_events_in_game():
         row <= col
 
         # season
-        advancement_season, advancement_year = common.get_season(advancement, play_low.VARIANT_DATA)
-        advancement_season_readable = play_low.VARIANT_DATA.season_name_table[advancement_season]
-        game_season = f"{advancement_season_readable} {advancement_year}"
+        nb_max_cycles_to_play = play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
+        game_season = common.get_full_season(advancement, play_low.VARIANT_DATA, nb_max_cycles_to_play)
         col = html.TD(game_season)
         row <= col
 

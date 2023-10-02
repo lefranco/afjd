@@ -1255,7 +1255,7 @@ def submit_orders():
     play_low.MY_SUB_PANEL <= play_low.GAME_STATUS
 
     advancement_loaded = play_low.GAME_PARAMETERS_LOADED['current_advancement']
-    advancement_season, _ = common.get_season(advancement_loaded, play_low.VARIANT_DATA)
+    advancement_season, _ = common.get_short_season(advancement_loaded, play_low.VARIANT_DATA)
 
     # create canvas
     map_size = play_low.VARIANT_DATA.map_size
