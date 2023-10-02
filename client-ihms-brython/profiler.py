@@ -7,7 +7,9 @@ import profiler
 
 profiler.PROFILER.start_mes("my games")
 profiler.PROFILER.start_mes("preambule")
-xxx
+
+<code to profile>
+
 profiler.PROFILER.stop_mes()
 profiler.PROFILER.stop_mes()
 
