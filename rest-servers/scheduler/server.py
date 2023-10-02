@@ -9,9 +9,10 @@ The server
 
 import typing
 import argparse
-import queue
 import threading
 import time
+import json
+import datetime
 import requests
 
 import waitress
@@ -24,7 +25,7 @@ import lowdata
 import mylogger
 import populate
 import database
-import mailer
+import mapping
 
 
 APP = flask.Flask(__name__)
@@ -197,7 +198,7 @@ def check_all_games(jwt_token: str) -> None:
         success = commute_game(jwt_token, game_id, variant_name, game_name)
 
         if success:
-            mylogger.LOGGER.info("+++ commuted ! +++)
+            mylogger.LOGGER.info("+++ commuted ! +++")
 
         # easy on the server !
         time.sleep(INTER_COMMUTATION_TIME_SEC)
@@ -224,6 +225,7 @@ def acting_threaded_procedure() -> None:
         # get a token
         pseudo = COMMUTER_ACCOUNT
         password = COMMUTER_PASSWORD
+        external_ip = "(commuter)"
 
         host = lowdata.SERVER_CONFIG['USER']['HOST']
         port = lowdata.SERVER_CONFIG['USER']['PORT']
@@ -248,8 +250,8 @@ def acting_threaded_procedure() -> None:
 
         mylogger.LOGGER.info(f"Now {now_date_desc}. Waiting...")
 
-        wait_time = time_to_wait()
-        time.sleep(wait_time)
+        ####  wait_time = time_to_wait()
+        ####  time.sleep(wait_time)
 
         while True:
 
@@ -273,7 +275,7 @@ def acting_threaded_procedure() -> None:
             mylogger.LOGGER.info(f"Done. Now {now_date_desc}...")
 
             # TODO : insert here all scheduled tasks
-            time.sleep(10)
+            ####  time.sleep(10)
 
             # get local time for display again
             timestamp_now = time.time()
@@ -283,8 +285,10 @@ def acting_threaded_procedure() -> None:
             # go to sleep
             mylogger.LOGGER.info(f"Done. Now {now_date_desc}. Back to sleep...")
 
-            wait_time = time_to_wait()
-            time.sleep(wait_time)
+            ####  wait_time = time_to_wait()
+            ####  time.sleep(wait_time)
+
+            break  ##### TODO REMOVE
 
 
 @API.resource('/access-logs')
