@@ -306,39 +306,45 @@ def tournament_position_reload(tournament_id):
     return positions_loaded
 
 
-def readable_season(advancement, variant_data):
-    """ readable_season """
-
-    advancement_season, advancement_year = get_season(advancement, variant_data)
-    advancement_season_readable = variant_data.season_name_table[advancement_season]
-    value = f"{advancement_season_readable} {advancement_year}"
-    return value
-
-
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
 
-def get_season(advancement, variant) -> None:
-    """ get_season """
+def get_short_season(advancement, variant):
+    """ get_short_season """
 
     len_season_cycle = len(DIPLOMACY_SEASON_CYCLE)
     advancement_season_num = advancement % len_season_cycle + 1
     advancement_season = mapping.SeasonEnum.from_code(advancement_season_num)
 
     advancement_play_year = ((advancement // len_season_cycle) + 1) * variant.increment + variant.year_zero
-    advancement_real_year = (advancement // len_season_cycle) + 1
-    advancement_year = f"{advancement_play_year} ({advancement_real_year})"
 
-    return advancement_season, advancement_year
+    return advancement_season, advancement_play_year
 
 
-def get_last_year(nb_max_cycles_to_play, variant) -> None:
-    """ get_last_year """
+def readable_season(advancement, variant):
+    """ readable_season """
+
+    advancement_season, advancement_year = get_short_season(advancement, variant)
+    advancement_season_readable = variant.season_name_table[advancement_season]
+    description = f"{advancement_season_readable} {advancement_year}"
+    return description
+
+
+def get_full_season(advancement, variant, nb_max_cycles_to_play):
+    """ get_full_season """
+
+    advancement_season, advancement_year = get_short_season(advancement, variant)
+    advancement_season_readable = variant.season_name_table[advancement_season]
 
     play_last_year = nb_max_cycles_to_play * variant.increment + variant.year_zero
+
+    len_season_cycle = len(DIPLOMACY_SEASON_CYCLE)
+    real_year = advancement // len_season_cycle + 1
     real_last_year = nb_max_cycles_to_play
-    last_year = f"{play_last_year} ({real_last_year})"
-    return last_year
+
+    full_season = f"{advancement_season_readable} {advancement_year} (fin {play_last_year} [{real_year}/{real_last_year}])"
+
+    return full_season
 
 
 def get_role_allocated_to_player_in_game(game_id):

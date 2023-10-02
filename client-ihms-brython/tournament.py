@@ -355,9 +355,8 @@ def show_games():
 
             if field == 'current_advancement':
                 advancement_loaded = value
-                advancement_season, advancement_year = common.get_season(advancement_loaded, variant_data)
-                advancement_season_readable = variant_data.season_name_table[advancement_season]
-                value = f"{advancement_season_readable} {advancement_year}"
+                nb_max_cycles_to_play = data['nb_max_cycles_to_play']
+                value = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play)
 
                 # special : a colour to see how far games have got (cannot go up to 255 - not readable)
                 delta = max(1, max_advancement - min_advancement)
@@ -716,9 +715,8 @@ def show_incidents():
         row <= col
 
         # season
-        advancement_season, advancement_year = common.get_season(advancement, variant_data)
-        advancement_season_readable = variant_data.season_name_table[advancement_season]
-        game_season = f"{advancement_season_readable} {advancement_year}"
+        nb_max_cycles_to_play = data['nb_max_cycles_to_play']
+        game_season = common.get_full_season(advancement, variant_data, nb_max_cycles_to_play)
         col = html.TD(game_season)
         row <= col
 
@@ -793,9 +791,8 @@ def show_incidents():
         row <= col
 
         # season
-        advancement_season, advancement_year = common.get_season(advancement, variant_data)
-        advancement_season_readable = variant_data.season_name_table[advancement_season]
-        game_season = f"{advancement_season_readable} {advancement_year}"
+        nb_max_cycles_to_play = data['nb_max_cycles_to_play']
+        game_season = common.get_full_season(advancement, variant_data, nb_max_cycles_to_play)
         col = html.TD(game_season)
         row <= col
 
