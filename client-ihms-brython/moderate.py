@@ -1382,7 +1382,7 @@ def all_missing_orders():
             if field == 'current_advancement':
                 advancement_loaded = value
                 nb_max_cycles_to_play = data['nb_max_cycles_to_play']
-                value = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play)
+                value = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
 
             if field == 'used_for_elo':
                 value = "Oui" if value else "Non"

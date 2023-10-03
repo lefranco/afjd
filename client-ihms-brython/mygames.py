@@ -366,7 +366,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
 
             if field == 'current_advancement':
                 nb_max_cycles_to_play = data['nb_max_cycles_to_play']
-                value = common.get_full_season(advancement_delay, variant_data, nb_max_cycles_to_play)
+                value = common.get_full_season(advancement_delay, variant_data, nb_max_cycles_to_play, False)
 
             if field == 'role_played':
                 role = variant_data.roles[role_id]
@@ -1073,7 +1073,7 @@ def my_games(state_name):
             if field == 'current_advancement':
                 advancement_loaded = value
                 nb_max_cycles_to_play = data['nb_max_cycles_to_play']
-                value = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play)
+                value = common.get_full_season(advancement_loaded, variant_data, nb_max_cycles_to_play, False)
 
             if field == 'role_played':
                 value = ""
