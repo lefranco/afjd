@@ -81,19 +81,63 @@ def load_option(_, item_name, direct_last_moves=False):
     # items in menu
     for possible_item_name in OPTIONS:
 
-        # do not display menu tag if message game
+        if possible_item_name == 'Ordonner':
+            if play_low.GAME_PARAMETERS_LOADED['archive']:
+                # do not display menu order if archive and not master
+                if not (play_low.ROLE_ID is not None and play_low.ROLE_ID == 0):
+                    continue
+            else:
+                # do not display menu order if not archive and not player
+                if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 1):
+                    continue
+
         if possible_item_name == 'Taguer':
+            # do not display menu tag if message game
             if not play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
                 continue
-
-        # do not display menu show if not fog
-        if possible_item_name == 'Imaginer':
-            if not play_low.GAME_PARAMETERS_LOADED['fog']:
+            # do not display menu order if not player
+            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 1):
                 continue
 
-        # do not display menu supervise if not fast game
+        if possible_item_name == 'Imaginer':
+            # do not display menu show if not fog
+            if not play_low.GAME_PARAMETERS_LOADED['fog']:
+                continue
+            # do not display menu order if not player
+            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 1):
+                continue
+
+        if possible_item_name == 'Négocier':
+            # do not display menu Négovier if not player of master
+            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
+                continue
+
+        if possible_item_name == 'Déclarer':
+            # do not display menu Déclarer if not player of master
+            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
+                continue
+
+        if possible_item_name == 'Voter':
+            # do not display menu Voter if not player of master
+            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
+                continue
+
+        if possible_item_name == 'Noter':
+            # do not display menu Noter if not player of master
+            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
+                continue
+
+        if possible_item_name == 'Arbitrer':
+            # do not display menu Arbitrer if not master
+            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID == 0):
+                    continue
+
         if possible_item_name == 'Superviser':
+            # do not display menu supervise if not fast game
             if not play_low.GAME_PARAMETERS_LOADED['fast']:
+                continue
+            # do not display menu Superviser if not master
+            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID == 0):
                 continue
 
         if possible_item_name == ITEM_NAME_SELECTED:
