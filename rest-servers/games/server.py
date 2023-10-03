@@ -1400,7 +1400,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(400, msg="Error cound not find capacity of the game")
 
             assert game_capacity is not None
-            if len(allocations_list) >= game_capacity:
+            if game.current_state == 0 and len(allocations_list) >= game_capacity:
 
                 # it is : send notification to game master
 
