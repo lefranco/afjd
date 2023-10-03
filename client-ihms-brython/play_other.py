@@ -711,7 +711,7 @@ def show_events_in_game():
 
         # season
         nb_max_cycles_to_play = play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
-        game_season = common.get_full_season(advancement, play_low.VARIANT_DATA, nb_max_cycles_to_play)
+        game_season = common.get_full_season(advancement, play_low.VARIANT_DATA, nb_max_cycles_to_play, False)
         col = html.TD(game_season)
         row <= col
 
@@ -850,7 +850,7 @@ def show_events_in_game():
 
         # season
         nb_max_cycles_to_play = play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
-        game_season = common.get_full_season(advancement, play_low.VARIANT_DATA, nb_max_cycles_to_play)
+        game_season = common.get_full_season(advancement, play_low.VARIANT_DATA, nb_max_cycles_to_play, False)
         col = html.TD(game_season)
         row <= col
 
