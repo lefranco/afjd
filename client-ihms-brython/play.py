@@ -108,22 +108,22 @@ def load_option(_, item_name, direct_last_moves=False):
                 continue
 
         if possible_item_name == 'Négocier':
-            # do not display menu Négovier if not player of master
+            # do not display menu Négovier if not player or master
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
                 continue
 
         if possible_item_name == 'Déclarer':
-            # do not display menu Déclarer if not player of master
+            # do not display menu Déclarer if not player or master
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
                 continue
 
         if possible_item_name == 'Voter':
-            # do not display menu Voter if not player of master
-            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
+            # do not display menu Voter if not player
+            if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 1):
                 continue
 
         if possible_item_name == 'Noter':
-            # do not display menu Noter if not player of master
+            # do not display menu Noter if not player or master
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID >= 0):
                 continue
 
