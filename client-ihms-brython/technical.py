@@ -198,15 +198,15 @@ def show_technical():
     title4 = html.H4("Le scorage (la marque sur un tournoi)")
     MY_SUB_PANEL <= title4
 
-    scoring_table = html.TABLE()
+    scorings_table = html.TABLE()
     row = html.TR()
     for scoring_name, scoring1 in config.SCORING_CODE_TABLE.items():
         link = html.A(href=f"./scorings/{scoring1}.pdf", target="_blank")
         link <= f"{scoring_name}"
         col = html.TD(link)
         row <= col
-    scoring_table <= row
-    MY_SUB_PANEL <= scoring_table
+    scorings_table <= row
+    MY_SUB_PANEL <= scorings_table
 
     # --
 
@@ -228,15 +228,15 @@ def show_technical():
     title61 = html.H4("Les variantes")
     MY_SUB_PANEL <= title61
 
-    scoring_table = html.TABLE()
+    variants_table = html.TABLE()
     row = html.TR()
     for variant in config.VARIANT_NAMES_LIST:
         link = html.A(href=f"./variants/{variant}/description.pdf", target="_blank")
         link <= f"{variant}"
         col = html.TD(link)
         row <= col
-    scoring_table <= row
-    MY_SUB_PANEL <= scoring_table
+    variants_table <= row
+    MY_SUB_PANEL <= variants_table
 
     MY_SUB_PANEL <= html.BR()
 
@@ -246,51 +246,68 @@ def show_technical():
 
     # --
 
-    title7 = html.H4("Règles simplifiées")
+    title7 = html.H4("Les options")
     MY_SUB_PANEL <= title7
 
-    link7 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
-    link7 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
-    MY_SUB_PANEL <= link7
+    options_table = html.TABLE()
+    row = html.TR()
+    for option in ['brouillard']:
+        link = html.A(href=f"./options/{option}/description.pdf", target="_blank")
+        link <= f"{option}"
+        col = html.TD(link)
+        row <= col
+    options_table <= row
+    MY_SUB_PANEL <= options_table
+
+    MY_SUB_PANEL <= html.BR()
 
     # --
 
-    title8 = html.H4("Création de fichier de tournoi")
+    title8 = html.H4("Règles simplifiées")
     MY_SUB_PANEL <= title8
 
-    link81 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
-    link81 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
-    MY_SUB_PANEL <= link81
-
-    MY_SUB_PANEL <= html.P()
-
-    link82 = html.A(href="./scripts/allocate.py", target="_blank")
-    link82 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
-    MY_SUB_PANEL <= link82
+    link8 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
+    link8 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
+    MY_SUB_PANEL <= link8
 
     # --
 
-    title9 = html.H4("Document d'interface de l'API")
+    title9 = html.H4("Création de fichier de tournoi")
     MY_SUB_PANEL <= title9
 
-    link91 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
-    link91 <= "Si vous voulez vous aussi développer votre front end..."
+    link91 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
+    link91 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
     MY_SUB_PANEL <= link91
-
-    # --
-
-    title10 = html.H4("Remerciements")
-    MY_SUB_PANEL <= title10
-
-    link101 = html.A(href="https://brython.info/", target="_blank")
-    link101 <= "Outil utilisé pour ce site web"
-    MY_SUB_PANEL <= link101
 
     MY_SUB_PANEL <= html.P()
 
-    link102 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link102 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link102
+    link92 = html.A(href="./scripts/allocate.py", target="_blank")
+    link92 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
+    MY_SUB_PANEL <= link92
+
+    # --
+
+    title10 = html.H4("Document d'interface de l'API")
+    MY_SUB_PANEL <= title10
+
+    link101 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
+    link101 <= "Si vous voulez vous aussi développer votre front end..."
+    MY_SUB_PANEL <= link101
+
+    # --
+
+    title11 = html.H4("Remerciements")
+    MY_SUB_PANEL <= title11
+
+    link111 = html.A(href="https://brython.info/", target="_blank")
+    link111 <= "Outil utilisé pour ce site web"
+    MY_SUB_PANEL <= link111
+
+    MY_SUB_PANEL <= html.P()
+
+    link112 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link112 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link112
 
 
 WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
