@@ -176,18 +176,18 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
                     return type_num
             return None
 
-        def unit_almost_there(unit_zone: int) -> typing.Optional[typing.Tuple[int, int]]:
-            """ Returns the type and zone  of the unit almost there or None
-            Spain becomes Spain south coast if there is a fleet there
-            Spain south coast becomes Spain  if there is a army there
+        def unit_almost_there(unit_zone: int) -> typing.Tuple[typing.Optional[int], typing.Optional[int]]:
+            """ Returns the type and zone of the unit almost there or None
+            So that Spain becomes Spain south coast if there is a fleet there
+            So that Spain south coast becomes Spain  if there is a army there
             """
             for _, type_num, zone_num, _, _, _ in game_units:
                 if zone2region[zone_num] == zone2region[unit_zone]:
                     return type_num, zone_num
-            return None
+            return None, None
 
         def almost_destination(type_unit: int, from_zone: int, dest_zone: int) -> typing.Optional[int]:
-            """ change des zone to suit type unit """
+            """ Changes destination zone to suit unit type """
 
             # army : switch to region
             if type_unit == 1:
@@ -209,7 +209,7 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
             return dest_zone in neighbour_table[str(unit_zone)]
 
         def may_convoy_move(unit_zone: int, dest_zone: int) -> bool:
-            """ Returns True if a unit can move by convoy from start to dest """
+            """ Returns True if a unit (army) can move by convoy from start to dest """
 
             # the fleets that are at sea
             sea_fleets = {z for us in unit_dict.values() for (t, z) in us if t == 2 and variant_data['regions'][zone2region[z] - 1] == 3}
@@ -240,21 +240,20 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
         if order_type_num not in [2, 5]:
             return order
 
-        # passive unit must exist
+        # passive unit must exist and movement be possible
         type_unit = unit_there(passive_unit_zone_num)
-        if type_unit is not None:
-            mdm = may_direct_move(type_unit, passive_unit_zone_num, destination_zone_num)
         if not type_unit or not may_direct_move(type_unit, passive_unit_zone_num, destination_zone_num):
-            almost = unit_almost_there(passive_unit_zone_num)
-            if not almost:
+            type_unit2, passive_unit_zone_num2 = unit_almost_there(passive_unit_zone_num)
+            if not type_unit2:
                 return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
-            # alter the order
-            type_unit, passive_unit_zone_num = almost
-            almost2 = almost_destination(type_unit, passive_unit_zone_num, destination_zone_num)
-            if not almost2:
+            type_unit = type_unit2
+            assert passive_unit_zone_num2 is not None
+            passive_unit_zone_num = passive_unit_zone_num2
+            destination_zone_num2 = almost_destination(type_unit, passive_unit_zone_num, destination_zone_num)
+            if not destination_zone_num2:
                 return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
-            destination_zone_num = almost2
-            # alter order
+            destination_zone_num = destination_zone_num2
+            # alter the order itself
             order[3] = passive_unit_zone_num
             order[4] = destination_zone_num
 
