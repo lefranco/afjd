@@ -242,7 +242,9 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
 
         # passive unit must exist
         type_unit = unit_there(passive_unit_zone_num)
-        if not type_unit:
+        if type_unit is not None:
+            mdm = may_direct_move(type_unit, passive_unit_zone_num, destination_zone_num)
+        if not type_unit or not may_direct_move(type_unit, passive_unit_zone_num, destination_zone_num):
             almost = unit_almost_there(passive_unit_zone_num)
             if not almost:
                 return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
@@ -252,6 +254,9 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
             if not almost2:
                 return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
             destination_zone_num = almost2
+            # alter order
+            order[3] = passive_unit_zone_num
+            order[4] = destination_zone_num
 
         # convoy : passive must be army
         if order_type_num == 5:  # convoy
