@@ -12,17 +12,8 @@ WHYNOT_CONTENT_TABLE = {
     "Pourquoi il faut un compte séparé entre joueur et arbitre sur une partie ?":
     "Cela a été implémenté ainsi au départ, et tous les développements s'appuient sur le compte (et le jeton prouvant l'identité) pour savoir si la requête vient d'un arbitre ou d'un joueur. Autoriser un même compte aurait beaucoup d'impacts sur toute la couche de vérification des autorisations. Pour une partie amicale, laisser l'arbitrage à un habitué du site, ou créer deux comptes séparés.",
 
-    "Pourquoi il faut un compte sur la brique sociale et un compte sur la brique jeu ?":
-    "Nous avons pas encore trouvé ni le temps ni les compétences pour faire en sorte de partager l'identifiant entre les deux",
-
     "Pourquoi je peux pas mettre un accent dans mon pseudo et dans le nom de la partie ?":
     "Cette contrainte est venue pour des raisons de simplicité, pour que les parties et les pseudo apparaissent simplement dans les liens URL. Le jeu en vaut-il la chandelle ?",
-
-    "Pourquoi les unités sont placées parfois bizarrement dans leur zone sur la carte ?":
-    "Ce placement est réalisé par un algorithme de centrage automatique sur le polygone de région. Pour améliorer cette position il faudrait modifier la carte elle-même puisque le positionnement manuel est trop fastidieux, surtout quand viendront des variantes avec des cartes ésotériques. Ce point sera remonté au concepteur de la carte.",
-
-    "Pourquoi je peux pas récupérer mon mot de passe à partir de mon adresse courriel ?":
-    "C'est assez long à réaliser. C'est prévu dans un avenir assez proche.",
 
     "Pourquoi il n'y a pas de fiche joueur ?":
     "C'est prévu dans un avenir très proche. Néanmoins les participations aux parties anonymes resteront invisibles...",
