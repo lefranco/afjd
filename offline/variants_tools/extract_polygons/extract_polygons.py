@@ -119,6 +119,8 @@ class MyText(tkinter.Text):
         self._root.clipboard_clear()
         self._root.clipboard_append(self._content)
 
+DELTA_LEGEND_EXPECTED_X = 0
+DELTA_LEGEND_EXPECTED_Y = -14
 
 class Application(tkinter.Frame):
     """ Tkinter application """
@@ -208,8 +210,10 @@ class Application(tkinter.Frame):
 
                 # store as data
                 self.export_data['poly'] = poly
-                self.export_data['x_pos'] = polylabel_x
-                self.export_data['y_pos'] = polylabel_y
+                self.export_data['x_middle_pos'] = polylabel_x
+                self.export_data['y_middle_pos'] = polylabel_y
+                self.export_data['x_click_pos'] = x_mouse
+                self.export_data['y_click_pos'] = y_mouse
 
                 # only first
                 break
@@ -218,7 +222,7 @@ class Application(tkinter.Frame):
                 information2 = "Failed!"
                 self.polygon.display(information2)
 
-        def export_callback(num: int) -> None:
+        def export_zone_callback(num: int) -> None:
 
             if not self.export_data:
                 tkinter.messagebox.showinfo(title="Error", message="Nothing to export !")
@@ -235,15 +239,40 @@ class Application(tkinter.Frame):
             # update pos
             if str(num) not in json_parameters_data['zones']:
                 json_parameters_data['zones'][str(num)] = {}
-            json_parameters_data['zones'][str(num)]['x_pos'] = self.export_data['x_pos']
-            json_parameters_data['zones'][str(num)]['y_pos'] = self.export_data['y_pos']
-            json_parameters_data['zones'][str(num)]['x_legend_pos'] = self.export_data['x_pos']
-            json_parameters_data['zones'][str(num)]['y_legend_pos'] = self.export_data['y_pos']
+            json_parameters_data['zones'][str(num)]['x_pos'] = self.export_data['x_middle_pos']
+            json_parameters_data['zones'][str(num)]['y_pos'] = self.export_data['y_middle_pos']
+            json_parameters_data['zones'][str(num)]['x_legend_pos'] = self.export_data['x_middle_pos'] + DELTA_LEGEND_EXPECTED_X
+            json_parameters_data['zones'][str(num)]['y_legend_pos'] = self.export_data['y_middle_pos'] + DELTA_LEGEND_EXPECTED_Y
 
             # update poly
             if str(num) not in json_parameters_data['zone_areas']:
                 json_parameters_data['zone_areas'][str(num)] = {}
             json_parameters_data['zone_areas'][str(num)]['area'] = self.export_data['poly']
+
+            # save parameters to json data file
+            output = json.dumps(json_parameters_data, indent=4, ensure_ascii=False)
+            with open(self.parameters_file, 'w', encoding='utf-8') as file_ptr:
+                file_ptr.write(output)
+
+        def export_center_callback(num: int) -> None:
+
+            if not self.export_data:
+                tkinter.messagebox.showinfo(title="Error", message="Nothing to export !")
+                return
+
+            # load parameters from json data file
+            with open(self.parameters_file, "r", encoding='utf-8') as read_file:
+                try:
+                    json_parameters_data = json.load(read_file)
+                except Exception as exception:  # pylint: disable=broad-except
+                    print(f"Failed to load {parameters_file} : {exception}")
+                    sys.exit(-1)
+
+            # update center
+            if str(num) not in json_parameters_data['zones']:
+                json_parameters_data['zones'][str(num)] = {}
+            json_parameters_data['centers'][str(num)]['x_pos'] = self.export_data['x_click_pos']
+            json_parameters_data['centers'][str(num)]['y_pos'] = self.export_data['y_click_pos']
 
             # save parameters to json data file
             output = json.dumps(json_parameters_data, indent=4, ensure_ascii=False)
@@ -290,7 +319,7 @@ class Application(tkinter.Frame):
         # frame carto
         # -----------
 
-        frame_carto = tkinter.Frame(main_frame)
+        frame_carto = tkinter.LabelFrame(main_frame, text="The map")
         frame_carto.grid(row=2, column=1, sticky='we')
 
         self.map_file = map_file
@@ -299,7 +328,7 @@ class Application(tkinter.Frame):
         # frame buttons and information
         # -----------
 
-        frame_buttons_information = tkinter.Frame(main_frame)
+        frame_buttons_information = tkinter.LabelFrame(main_frame, text="Selection and information")
         frame_buttons_information.grid(row=2, column=2, sticky='nw')
 
         self.reload_button = tkinter.Button(frame_buttons_information, text="Reload map file", command=reload_callback)
@@ -354,21 +383,32 @@ class Application(tkinter.Frame):
                 print(f"Failed to load {parameters_file} : {exception}")
                 sys.exit(-1)
 
-        frame_export = tkinter.Frame(main_frame)
-        frame_export.grid(row=2, column=3, sticky='nw')
+        frame_export_zones = tkinter.LabelFrame(main_frame, text="Export zones (polygon + middle)")
+        frame_export_zones.grid(row=2, column=3, sticky='nw')
 
-        for num, zone in enumerate(json_parameters_data['zones'].values()):
+        for number, zone in json_parameters_data['zones'].items():
+
             if zone['name']:
                 legend = zone['name']
             else:
-                zone_num = num - len(json_variant_data['regions'])
-                region_num, coast_num = json_variant_data['coastal_zones'][zone_num]
+                zone_num = int(number) - len(json_variant_data['regions'])
+                region_num, coast_num = json_variant_data['coastal_zones'][zone_num - 1]
                 region_name = json_parameters_data['zones'][str(region_num)]['name']
                 coast_name = json_parameters_data['coasts'][str(coast_num)]['name']
                 legend = f"{region_name}{coast_name}"
 
-            self.export_button = tkinter.Button(frame_export, text=legend, command=lambda num=num: export_callback(num + 1))  # type: ignore
-            self.export_button.grid(row=num % BUTTONS_PER_COLUMN + 1, column=num // BUTTONS_PER_COLUMN + 1, sticky='we')
+            export_button = tkinter.Button(frame_export_zones, text=legend, command=lambda number=number: export_zone_callback(int(number)))  # type: ignore
+            export_button.grid(row=(int(number) - 1) % BUTTONS_PER_COLUMN + 1, column=(int(number) - 1) // BUTTONS_PER_COLUMN + 1, sticky='we')
+
+        frame_export_centers = tkinter.LabelFrame(main_frame, text="Export centers (click)")
+        frame_export_centers.grid(row=2, column=4, sticky='nw')
+
+        for number in json_parameters_data['centers']:
+
+            num_zone = json_variant_data['centers'][int(number) - 1]
+            legend = json_parameters_data['zones'][str(num_zone)]['name']
+            export_button = tkinter.Button(frame_export_centers, text=legend, command=lambda number=number: export_center_callback(int(number)))  # type: ignore
+            export_button.grid(row=(int(number) - 1) % BUTTONS_PER_COLUMN + 1, column=(int(number) - 1) // BUTTONS_PER_COLUMN + 1, sticky='we')
 
     def menu_complete_quit(self) -> None:
         """ as it says """
