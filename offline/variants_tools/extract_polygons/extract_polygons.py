@@ -130,6 +130,9 @@ class Application(tkinter.Frame):
         self.master = master
         self.grid()
 
+        # data to export
+        self.export_data: typing.Dict[str, typing.Any] = {}
+
         # actual creation of widgets
         self.create_widgets(self, map_file, variant_file, parameters_file)
 
@@ -215,7 +218,11 @@ class Application(tkinter.Frame):
                 information2 = "Failed!"
                 self.polygon.display(information2)
 
-        def export_callback(num) -> None:
+        def export_callback(num: int) -> None:
+
+            if not self.export_data:
+                tkinter.messagebox.showinfo(title="Error", message="Nothing to export !")
+                return
 
             # load parameters from json data file
             with open(self.parameters_file, "r", encoding='utf-8') as read_file:
@@ -327,6 +334,7 @@ class Application(tkinter.Frame):
 
         # frame export
         # -----------
+        self.export_data = {}
         self.variant_file = variant_file
         self.parameters_file = parameters_file
 
@@ -359,7 +367,7 @@ class Application(tkinter.Frame):
                 coast_name = json_parameters_data['coasts'][str(coast_num)]['name']
                 legend = f"{region_name}{coast_name}"
 
-            self.export_button = tkinter.Button(frame_export, text=legend, command=lambda num=num: export_callback(num+1) )
+            self.export_button = tkinter.Button(frame_export, text=legend, command=lambda num=num: export_callback(num + 1))  # type: ignore
             self.export_button.grid(row=num % BUTTONS_PER_COLUMN + 1, column=num // BUTTONS_PER_COLUMN + 1, sticky='we')
 
     def menu_complete_quit(self) -> None:
