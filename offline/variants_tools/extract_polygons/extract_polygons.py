@@ -35,7 +35,7 @@ INFO_WIDTH1 = 30
 INFO_HEIGHT2 = 15
 INFO_WIDTH2 = 30
 
-NBUTTONS = 25
+BUTTONS_PER_COLUMN = 24
 
 TITLE = "Polygons positions detection : click anywhere to get information to be copied pasted"
 
@@ -157,14 +157,17 @@ class Application(tkinter.Frame):
             x_mouse, y_mouse = event.x, event.y
 
             information1 = f'"x_pos": {x_mouse},\n"y_pos": {y_mouse}'
-            self.mouse_pos.display(information1)  # type: ignore
+            self.mouse_pos.display(information1)
 
             information2 = ""
 
             # erase
-            self.polygon.display(information2)  # type: ignore
+            self.polygon.display(information2)
 
             put_image()
+
+            # data to export
+            self.export_data = {}
 
             for x_pos, y_pos, w_val, h_val in CONTOUR_TABLE:
 
@@ -187,7 +190,9 @@ class Application(tkinter.Frame):
 
                 # display as text
                 information2 = str(poly)
-                self.polygon.display(information2)  # type: ignore
+                self.polygon.display(information2)
+
+                # store as data
 
                 # middle
                 polygons = [poly]
@@ -196,18 +201,47 @@ class Application(tkinter.Frame):
                 self.canvas.create_line(polylabel_x + 5, polylabel_y, polylabel_x - 5, polylabel_y, fill='blue')
                 self.canvas.create_line(polylabel_x, polylabel_y + 5, polylabel_x, polylabel_y - 5, fill='blue')
                 information2 = f'"x_pos": {polylabel_x},\n"y_pos": {polylabel_y}'
-                self.middle_pos.display(information2)  # type: ignore
+                self.middle_pos.display(information2)
+
+                # store as data
+                self.export_data['poly'] = poly
+                self.export_data['x_pos'] = polylabel_x
+                self.export_data['y_pos'] = polylabel_y
 
                 # only first
                 break
 
             else:
                 information2 = "Failed!"
-                self.polygon.display(information2)  # type: ignore
+                self.polygon.display(information2)
 
-        def export_callback() -> None:
+        def export_callback(num) -> None:
 
-            print("export_callback()")
+            # load parameters from json data file
+            with open(self.parameters_file, "r", encoding='utf-8') as read_file:
+                try:
+                    json_parameters_data = json.load(read_file)
+                except Exception as exception:  # pylint: disable=broad-except
+                    print(f"Failed to load {parameters_file} : {exception}")
+                    sys.exit(-1)
+
+            # update pos
+            if str(num) not in json_parameters_data['zones']:
+                json_parameters_data['zones'][str(num)] = {}
+            json_parameters_data['zones'][str(num)]['x_pos'] = self.export_data['x_pos']
+            json_parameters_data['zones'][str(num)]['y_pos'] = self.export_data['y_pos']
+            json_parameters_data['zones'][str(num)]['x_legend_pos'] = self.export_data['x_pos']
+            json_parameters_data['zones'][str(num)]['y_legend_pos'] = self.export_data['y_pos']
+
+            # update poly
+            if str(num) not in json_parameters_data['zone_areas']:
+                json_parameters_data['zone_areas'][str(num)] = {}
+            json_parameters_data['zone_areas'][str(num)]['area'] = self.export_data['poly']
+
+            # save parameters to json data file
+            output = json.dumps(json_parameters_data, indent=4, ensure_ascii=False)
+            with open(self.parameters_file, 'w', encoding='utf-8') as file_ptr:
+                file_ptr.write(output)
 
         def reload_callback() -> None:
 
@@ -217,13 +251,13 @@ class Application(tkinter.Frame):
             put_image()
 
         def copy_position_callback() -> None:
-            self.mouse_pos.clipboard()  # type: ignore
+            self.mouse_pos.clipboard()
 
         def copy_area_callback() -> None:
-            self.polygon.clipboard()  # type: ignore
+            self.polygon.clipboard()
 
         def copy_position2_callback() -> None:
-            self.middle_pos.clipboard()  # type: ignore
+            self.middle_pos.clipboard()
 
         self.menu_bar = tkinter.Menu(main_frame)
 
@@ -254,7 +288,6 @@ class Application(tkinter.Frame):
 
         self.map_file = map_file
         put_image()
-
 
         # frame buttons and information
         # -----------
@@ -292,14 +325,13 @@ class Application(tkinter.Frame):
         self.middle_pos_button = tkinter.Button(frame_buttons_information, text="copy middle position", command=copy_position2_callback)
         self.middle_pos_button.grid(row=9, column=1, sticky='we')
 
-
         # frame export
         # -----------
         self.variant_file = variant_file
         self.parameters_file = parameters_file
 
         # load variant data from json data file
-        with open(variant_file, "r", encoding='utf-8') as read_file:
+        with open(self.variant_file, "r", encoding='utf-8') as read_file:
             try:
                 json_variant_data = json.load(read_file)
             except Exception as exception:  # pylint: disable=broad-except
@@ -307,7 +339,7 @@ class Application(tkinter.Frame):
                 sys.exit(-1)
 
         # load parameters from json data file
-        with open(parameters_file, "r", encoding='utf-8') as read_file:
+        with open(self.parameters_file, "r", encoding='utf-8') as read_file:
             try:
                 json_parameters_data = json.load(read_file)
             except Exception as exception:  # pylint: disable=broad-except
@@ -327,8 +359,8 @@ class Application(tkinter.Frame):
                 coast_name = json_parameters_data['coasts'][str(coast_num)]['name']
                 legend = f"{region_name}{coast_name}"
 
-            self.export_button = tkinter.Button(frame_export, text=legend, command=export_callback)
-            self.export_button.grid(row=num%NBUTTONS+1, column=num//NBUTTONS+1, sticky='we')
+            self.export_button = tkinter.Button(frame_export, text=legend, command=lambda num=num: export_callback(num+1) )
+            self.export_button.grid(row=num % BUTTONS_PER_COLUMN + 1, column=num // BUTTONS_PER_COLUMN + 1, sticky='we')
 
     def menu_complete_quit(self) -> None:
         """ as it says """
