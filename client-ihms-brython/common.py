@@ -468,7 +468,7 @@ def read_image(variant_name_loaded, interface_chosen):
 
     # create image
     # change version 12345 in map.png?v=12345 to force refreseh
-    image = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png?v=12345")
+    image = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/map.png?v=123456")
 
     # it must not move on screen !
     image.attrs['style'] = 'position: absolute;'
