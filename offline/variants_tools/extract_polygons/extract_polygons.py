@@ -12,6 +12,7 @@ import os
 import configparser
 import sys
 import itertools
+import json
 
 import tkinter
 import tkinter.messagebox
@@ -33,6 +34,8 @@ INFO_WIDTH1 = 30
 
 INFO_HEIGHT2 = 15
 INFO_WIDTH2 = 30
+
+NBUTTONS = 25
 
 TITLE = "Polygons positions detection : click anywhere to get information to be copied pasted"
 
@@ -120,7 +123,7 @@ class MyText(tkinter.Text):
 class Application(tkinter.Frame):
     """ Tkinter application """
 
-    def __init__(self, map_file: str, master: tkinter.Tk):
+    def __init__(self, map_file: str, variant_file: str, parameters_file: str, master: tkinter.Tk):
 
         # standard stuff
         tkinter.Frame.__init__(self, master)
@@ -128,9 +131,9 @@ class Application(tkinter.Frame):
         self.grid()
 
         # actual creation of widgets
-        self.create_widgets(self, map_file)
+        self.create_widgets(self, map_file, variant_file, parameters_file)
 
-    def create_widgets(self, main_frame: tkinter.Frame, map_file: str) -> None:
+    def create_widgets(self, main_frame: tkinter.Frame, map_file: str, variant_file: str, parameters_file: str) -> None:
         """ create all widgets for application """
 
         def about() -> None:
@@ -201,6 +204,10 @@ class Application(tkinter.Frame):
             else:
                 information2 = "Failed!"
                 self.polygon.display(information2)  # type: ignore
+
+        def export_callback() -> None:
+
+            print("export_callback()")
 
         def reload_callback() -> None:
 
@@ -285,6 +292,44 @@ class Application(tkinter.Frame):
         self.middle_pos_button = tkinter.Button(frame_buttons_information, text="copy middle position", command=copy_position2_callback)
         self.middle_pos_button.grid(row=9, column=1, sticky='we')
 
+
+        # frame export
+        # -----------
+        self.variant_file = variant_file
+        self.parameters_file = parameters_file
+
+        # load variant data from json data file
+        with open(variant_file, "r", encoding='utf-8') as read_file:
+            try:
+                json_variant_data = json.load(read_file)
+            except Exception as exception:  # pylint: disable=broad-except
+                print(f"Failed to load {variant_file} : {exception}")
+                sys.exit(-1)
+
+        # load parameters from json data file
+        with open(parameters_file, "r", encoding='utf-8') as read_file:
+            try:
+                json_parameters_data = json.load(read_file)
+            except Exception as exception:  # pylint: disable=broad-except
+                print(f"Failed to load {parameters_file} : {exception}")
+                sys.exit(-1)
+
+        frame_export = tkinter.Frame(main_frame)
+        frame_export.grid(row=2, column=3, sticky='nw')
+
+        for num, zone in enumerate(json_parameters_data['zones'].values()):
+            if zone['name']:
+                legend = zone['name']
+            else:
+                zone_num = num - len(json_variant_data['regions'])
+                region_num, coast_num = json_variant_data['coastal_zones'][zone_num]
+                region_name = json_parameters_data['zones'][str(region_num)]['name']
+                coast_name = json_parameters_data['coasts'][str(coast_num)]['name']
+                legend = f"{region_name}{coast_name}"
+
+            self.export_button = tkinter.Button(frame_export, text=legend, command=export_callback)
+            self.export_button.grid(row=num%NBUTTONS+1, column=num//NBUTTONS+1, sticky='we')
+
     def menu_complete_quit(self) -> None:
         """ as it says """
         self.on_closing()
@@ -330,7 +375,7 @@ def study_image(map_file: str, debug: bool) -> None:
 CONTOUR_TABLE: typing.Dict[typing.Tuple[int, int, int, int], typing.List[int]] = {}
 
 
-def main_loop(debug: bool, map_file: str) -> None:
+def main_loop(debug: bool, map_file: str, variant_file: str, parameters_file: str) -> None:
     """ main_loop """
 
     root = tkinter.Tk()
@@ -347,7 +392,7 @@ def main_loop(debug: bool, map_file: str) -> None:
     # create app
     root.title(window_name)
 
-    app = Application(map_file, master=root)
+    app = Application(map_file, variant_file, parameters_file, master=root)
     root.protocol("WM_DELETE_WINDOW", app.on_closing)
 
     # for polygons : use opencv
@@ -367,17 +412,29 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', required=False, help='Show contours (debug)', action='store_true')
     parser.add_argument('-m', '--map_file', required=True, help='Load a map file at start')
+    parser.add_argument('-v', '--variant_file', required=True, help='Load variant json file')
+    parser.add_argument('-p', '--parameters_file', required=True, help='Load a parameters file at start')
     args = parser.parse_args()
 
     #  load files at start
     debug = args.debug
+    variant_file = args.variant_file
     map_file = args.map_file
+    parameters_file = args.parameters_file
 
     if not os.path.exists(map_file):
         print(f"File '{map_file}' does not seem to exist, please advise !", file=sys.stderr)
         sys.exit(-1)
 
-    main_loop(debug, map_file)
+    if not os.path.exists(variant_file):
+        print(f"File '{variant_file}' does not seem to exist, please advise !", file=sys.stderr)
+        sys.exit(-1)
+
+    if not os.path.exists(parameters_file):
+        print(f"File '{map_file}' does not seem to exist, please advise !", file=sys.stderr)
+        sys.exit(-1)
+
+    main_loop(debug, map_file, variant_file, parameters_file)
 
     print("The End")
 
