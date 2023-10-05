@@ -47,8 +47,6 @@ def main() -> None:
     for zone_areas_data in json_data['zone_areas'].values():
         zone_areas_data['area'] = [[x+x_shift, y+y_shift] for x,y in zone_areas_data['area']]
 
-
-
     output = json.dumps(json_data, indent=4, ensure_ascii=False)
     with open(json_output, 'w', encoding='utf-8') as file_ptr:
         file_ptr.write(output)
