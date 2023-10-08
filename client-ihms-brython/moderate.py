@@ -1041,7 +1041,7 @@ def game_announce():
 
                 role = variant_data.roles[role_id_msg]
                 role_name = variant_data.role_name_table[role]
-                role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/roles/{role_id_msg}.jpg", title=role_name)
+                role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id_msg, role_name)
 
                 # player
                 if role_id_msg == 0:
@@ -1339,7 +1339,7 @@ def all_missing_orders():
                     role_id = int(role_id_str)
                     role = variant_data.roles[role_id]
                     role_name = variant_data.role_name_table[role]
-                    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
+                    role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
                     value <= role_icon_img
                     value <= " "
                     value <= num2pseudo[player_id]

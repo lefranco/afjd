@@ -353,11 +353,8 @@ def show_position(direct_last_moves):
         display_left <= canvas
         display_left <= html.BR()
 
-        ratings = position_data.role_ratings()
-        units = play_low.POSITION_DATA.role_units()
-        colours = position_data.role_colours()
         game_scoring = play_low.GAME_PARAMETERS_LOADED['scoring']
-        rating_colours_window = play_low.make_rating_colours_window(play_low.VARIANT_DATA, ratings, units, colours, game_scoring)
+        rating_colours_window = play_low.make_rating_colours_window(play_low.VARIANT_DATA, position_data, play_low.INTERFACE_CHOSEN, game_scoring)
 
         display_left <= rating_colours_window
         display_left <= html.BR()
@@ -695,7 +692,7 @@ def show_events_in_game():
         # role flag
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+        role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)
@@ -758,7 +755,7 @@ def show_events_in_game():
         # role flag
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+        role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)
@@ -828,7 +825,7 @@ def show_events_in_game():
         # role flag
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+        role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
 
         if role_icon_img:
             col = html.TD(role_icon_img)
@@ -908,12 +905,8 @@ def show_events_in_game():
         # role flag
         role = play_low.VARIANT_DATA.roles[role_id]
         role_name = play_low.VARIANT_DATA.role_name_table[role]
-        role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
-
-        if role_icon_img:
-            col = html.TD(role_icon_img)
-        else:
-            col = html.TD()
+        role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
+        col = html.TD(role_icon_img)
         row <= col
 
         # incidents
@@ -1341,7 +1334,7 @@ def negotiate(default_dest_set, def_focus_role_id):
 
         role_dest = play_low.VARIANT_DATA.roles[role_id_dest]
         role_name = play_low.VARIANT_DATA.role_name_table[role_dest]
-        role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id_dest}.jpg", title=role_name)
+        role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id_dest, role_name)
 
         # to restrict
         action = "Focus" if role_id_dest != focus_role_id else "Défocus"
@@ -1457,7 +1450,7 @@ def negotiate(default_dest_set, def_focus_role_id):
 
             role = play_low.VARIANT_DATA.roles[from_role_id_msg]
             role_name = play_low.VARIANT_DATA.role_name_table[role]
-            role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{from_role_id_msg}.jpg", title=role_name)
+            role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, from_role_id_msg, role_name)
             col <= role_icon_img
 
             # player
@@ -1484,7 +1477,7 @@ def negotiate(default_dest_set, def_focus_role_id):
 
             role = play_low.VARIANT_DATA.roles[dest_role_id_msg]
             role_name = play_low.VARIANT_DATA.role_name_table[role]
-            role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{dest_role_id_msg}.jpg", title=role_name)
+            role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, dest_role_id_msg, role_name)
 
             # player
             pseudo_there = ""
@@ -1759,7 +1752,7 @@ def declare():
 
                 role = play_low.VARIANT_DATA.roles[role_id_msg]
                 role_name = play_low.VARIANT_DATA.role_name_table[role]
-                role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id_msg}.jpg", title=role_name)
+                role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id_msg, role_name)
 
                 # player
                 if role_id_msg == 0:
