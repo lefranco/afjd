@@ -37,6 +37,7 @@ SEND_EMAIL_PARSER = flask_restful.reqparse.RequestParser()
 SEND_EMAIL_PARSER.add_argument('subject', type=str, required=True)
 SEND_EMAIL_PARSER.add_argument('body', type=str, required=True)
 SEND_EMAIL_PARSER.add_argument('addressees', type=str, required=True)
+SEND_EMAIL_PARSER.add_argument('reply_to', type=str, required=False)
 
 SEND_EMAIL_SUPPORT_PARSER = flask_restful.reqparse.RequestParser()
 SEND_EMAIL_SUPPORT_PARSER.add_argument('subject', type=str, required=True)
@@ -208,6 +209,7 @@ class SendEmailRessource(flask_restful.Resource):  # type: ignore
 
         subject = args['subject']
         body = args['body']
+        reply_to = args['reply_to']
         addressees = args['addressees']
         addressees_list = addressees.split(',')
 
@@ -228,7 +230,7 @@ class SendEmailRessource(flask_restful.Resource):  # type: ignore
         pseudo = req_result.json()['logged_in_as']
 
         for addressee in addressees_list:
-            MESSAGE_QUEUE.put((pseudo, subject, body, addressee, None))
+            MESSAGE_QUEUE.put((pseudo, subject, body, addressee, reply_to))
 
         data = {'msg': 'Email was successfully queued to be sent'}
         return data, 200

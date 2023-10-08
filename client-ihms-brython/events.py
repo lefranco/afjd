@@ -443,7 +443,7 @@ def registrations():
     fieldset <= input_message
     contact_form <= fieldset
 
-    contact_form <= html.DIV("Pensez à lui fournir le moyen de vous répondre !")
+    contact_form <= html.DIV("Votre message lui parviendra par courriel, il pourra y répondre en utilisant votre adresse déclarée sur le site.")
     contact_form <= html.BR()
 
     input_send_message = html.INPUT(type="submit", value="Envoyer le courriel")
