@@ -474,8 +474,8 @@
             "full_name": "Liverpool",
             "x_pos": 203,
             "y_pos": 327,
-            "x_legend_pos": 196,
-            "y_legend_pos": 312,
+            "x_legend_pos": 195,
+            "y_legend_pos": 311,
             "display": 1
         },
         "37": {
@@ -729,10 +729,10 @@
         "66": {
             "name": "Tus",
             "full_name": "Tuscany",
-            "x_pos": 356,
+            "x_pos": 359,
             "y_pos": 533,
-            "x_legend_pos": 344,
-            "y_legend_pos": 527,
+            "x_legend_pos": 346,
+            "y_legend_pos": 526,
             "display": 4
         },
         "67": {
@@ -766,8 +766,8 @@
             "full_name": "Venice",
             "x_pos": 355,
             "y_pos": 502,
-            "x_legend_pos": 373,
-            "y_legend_pos": 485,
+            "x_legend_pos": 374,
+            "y_legend_pos": 482,
             "display": 4
         },
         "71": {
@@ -825,8 +825,8 @@
         "77": {
             "name": "",
             "full_name": "",
-            "x_pos": 552,
-            "y_pos": 537,
+            "x_pos": 539,
+            "y_pos": 546,
             "x_legend_pos": 551,
             "y_legend_pos": 551
         },
@@ -6629,6 +6629,46 @@
                 [
                     211,
                     312
+                ],
+                [
+                    213,
+                    343
+                ],
+                [
+                    206,
+                    347
+                ],
+                [
+                    202,
+                    347
+                ],
+                [
+                    198,
+                    342
+                ],
+                [
+                    200,
+                    341
+                ],
+                [
+                    199,
+                    340
+                ],
+                [
+                    202,
+                    336
+                ],
+                [
+                    204,
+                    342
+                ],
+                [
+                    207,
+                    344
+                ],
+                [
+                    211,
+                    342
                 ],
                 [
                     211,
