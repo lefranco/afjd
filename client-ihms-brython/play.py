@@ -130,7 +130,7 @@ def load_option(_, item_name, direct_last_moves=False):
         if possible_item_name == 'Arbitrer':
             # do not display menu Arbitrer if not master
             if not (play_low.ROLE_ID is not None and play_low.ROLE_ID == 0):
-                    continue
+                continue
 
         if possible_item_name == 'Superviser':
             # do not display menu supervise if not fast game
