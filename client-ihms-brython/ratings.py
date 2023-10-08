@@ -257,7 +257,7 @@ def show_rating_performance(classic, role_id):
                     role_id = rating[1]
                     role = variant_data.roles[role_id]
                     role_name = variant_data.role_name_table[role]
-                    role_icon_img = html.IMG(src=f"./variants/{variant_name}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
+                    role_icon_img = common.display_flag(variant_name, interface_chosen, role_id, role_name)
                     value = role_icon_img
 
                 if field == 'game':
@@ -302,9 +302,10 @@ def show_rating_performance(classic, role_id):
         for poss_role_id in variant_data.roles:
             if poss_role_id >= 1 and poss_role_id != role_id:
                 form = html.FORM()
-                input_change_role = html.INPUT(type="image", src=f"./variants/{variant_name}/{interface_chosen}/roles/{poss_role_id}.jpg")
-                input_change_role.bind("click", lambda e, r=poss_role_id: switch_role_callback(e, r))
-                form <= input_change_role
+                role_name = variant_data.role_name_table[poss_role_id]
+                role_icon_img = common.display_flag(variant_name, interface_chosen, poss_role_id, role_name)
+                role_icon_img.bind("click", lambda e, r=poss_role_id: switch_role_callback(e, r))
+                form <= role_icon_img
                 col = html.TD(form)
                 row <= col
         switch_role_buttons_table <= row

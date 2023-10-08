@@ -49,10 +49,28 @@ GAME_MASTER = None
 GAME_PLAYERS_DICT = {}
 
 
-def make_rating_colours_window(variant_data, ratings, units, colours, game_scoring):
+def make_rating_colours_window(variant_data, position_data, interface_, game_scoring):
     """ make_rating_window """
 
+    ratings = position_data.role_ratings()
+    units = position_data.role_units()
+    colours = position_data.role_colours()
+
     rating_table = html.TABLE()
+
+    # flags
+    rolename2role_id = {VARIANT_DATA.role_name_table[v]: k for k, v in VARIANT_DATA.roles.items()}
+    variant_name = variant_data.name
+    flags_row = html.TR()
+    rating_table <= flags_row
+    col = html.TD(html.B("Drapeaux :"))
+    flags_row <= col
+    for role_name in ratings:
+        col = html.TD()
+        role_id = rolename2role_id[role_name]
+        role_icon_img = common.display_flag(variant_name, interface_, role_id, role_name)
+        col <= role_icon_img
+        flags_row <= col
 
     # roles
     rating_names_row = html.TR()
@@ -118,7 +136,6 @@ def make_rating_colours_window(variant_data, ratings, units, colours, game_scori
         col = html.TD(role_score)
         rating_scoring_row <= col
 
-    rolename2role_id = {VARIANT_DATA.role_name_table[v]: k for k, v in VARIANT_DATA.roles.items()}
     role2pseudo = {v: k for k, v in GAME_PLAYERS_DICT.items()}
 
     # player
@@ -441,7 +458,7 @@ def stack_role_flag(frame):
     # role flag
     role = VARIANT_DATA.roles[ROLE_ID]
     role_name = VARIANT_DATA.role_name_table[role]
-    role_icon_img = html.IMG(src=f"./variants/{VARIANT_NAME_LOADED}/{INTERFACE_CHOSEN}/roles/{ROLE_ID}.jpg", title=role_name)
+    role_icon_img = common.display_flag(VARIANT_NAME_LOADED, INTERFACE_CHOSEN, ROLE_ID, role_name)
     frame <= role_icon_img
     frame <= html.BR()
     frame <= html.BR()
@@ -617,11 +634,8 @@ def show_board(panel):
     panel <= html.BR()
 
     # ratings
-    ratings = POSITION_DATA.role_ratings()
-    units = POSITION_DATA.role_units()
-    colours = POSITION_DATA.role_colours()
     game_scoring = GAME_PARAMETERS_LOADED['scoring']
-    rating_colours_window = make_rating_colours_window(VARIANT_DATA, ratings, units, colours, game_scoring)
+    rating_colours_window = make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN, game_scoring)
     panel <= rating_colours_window
     panel <= html.BR()
 

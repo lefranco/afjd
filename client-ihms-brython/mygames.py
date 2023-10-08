@@ -371,7 +371,7 @@ def my_delays(ev):  # pylint: disable=invalid-name
             if field == 'role_played':
                 role = variant_data.roles[role_id]
                 role_name = variant_data.role_name_table[role]
-                role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
+                role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
                 value = role_icon_img
 
             if field == 'duration':
@@ -552,7 +552,7 @@ def my_dropouts(ev):  # pylint: disable=invalid-name
             if field == 'role_played':
                 role = variant_data.roles[role_id]
                 role_name = variant_data.role_name_table[role]
-                role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
+                role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
                 value = role_icon_img
 
             col = html.TD(value)
@@ -1082,7 +1082,7 @@ def my_games(state_name):
                 else:
                     role = variant_data.roles[role_id]
                     role_name = variant_data.role_name_table[role]
-                    role_icon_img = html.IMG(src=f"./variants/{variant_name_loaded}/{interface_chosen}/roles/{role_id}.jpg", title=role_name)
+                    role_icon_img = common.display_flag(variant_name_loaded, interface_chosen, role_id, role_name)
                 value = role_icon_img
 
             if field == 'all_orders_submitted':

@@ -751,7 +751,7 @@ def game_master():
 
         # flag
         col = html.TD()
-        role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+        role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
         col <= role_icon_img
         row <= col
 
@@ -1138,7 +1138,7 @@ def supervise():
 
             # flag
             col = html.TD()
-            role_icon_img = html.IMG(src=f"./variants/{play_low.VARIANT_NAME_LOADED}/{play_low.INTERFACE_CHOSEN}/roles/{role_id}.jpg", title=role_name)
+            role_icon_img = common.display_flag(play_low.VARIANT_NAME_LOADED, play_low.INTERFACE_CHOSEN, role_id, role_name)
             col <= role_icon_img
             row <= col
 

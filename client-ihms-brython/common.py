@@ -306,6 +306,12 @@ def tournament_position_reload(tournament_id):
     return positions_loaded
 
 
+def display_flag(variant_name, interface, role_id, role_name):
+    """ display_flag """
+
+    return html.IMG(src=f"./variants/{variant_name}/{interface}/roles/{role_id}.jpg", title=role_name)
+
+
 DIPLOMACY_SEASON_CYCLE = [1, 2, 1, 2, 3]
 
 
