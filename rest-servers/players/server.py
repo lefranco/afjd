@@ -973,6 +973,22 @@ class MailPlayersListRessource(flask_restful.Resource):  # type: ignore
                 'addressees': addressees_str,
             }
 
+            if type_ in ['please_play', 'question_event', 'direct_message']:
+
+                sender = players.Player.find_by_pseudo(sql_executor, pseudo)
+                if sender is None:
+                    del sql_executor
+                    flask_restful.abort(404, msg=f"Player {pseudo} does not exist")
+
+                assert sender is not None
+                reply_to = sender.email
+
+                json_dict.update(
+                    {
+                        'reply_to': reply_to,
+                    }
+                )
+
             # send email
             host = lowdata.SERVER_CONFIG['EMAIL']['HOST']
             port = lowdata.SERVER_CONFIG['EMAIL']['PORT']
@@ -2123,7 +2139,7 @@ class EventListRessource(flask_restful.Resource):  # type: ignore
 class RegistrationEventRessource(flask_restful.Resource):  # type: ignore
     """ RegistrationEventRessource """
 
-    def get(self, event_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int]], int]:
+    def get(self, event_id: int) -> typing.Tuple[typing.List[typing.Tuple[int, int, int, str]], int]:
         """
         Get list of registrations to the event
         EXPOSED
