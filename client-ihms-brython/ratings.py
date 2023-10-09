@@ -299,10 +299,10 @@ def show_rating_performance(classic, role_id):
         row = html.TR()
         col = html.TD("Cliquer sur le pays pour le détail ->")
         row <= col
-        for poss_role_id in variant_data.roles:
+        for poss_role_id, poss_role in variant_data.roles.items():
             if poss_role_id >= 1 and poss_role_id != role_id:
                 form = html.FORM()
-                role_name = variant_data.role_name_table[poss_role_id]
+                role_name = variant_data.role_name_table[poss_role]
                 role_icon_img = common.display_flag(variant_name, interface_chosen, poss_role_id, role_name)
                 role_icon_img.bind("click", lambda e, r=poss_role_id: switch_role_callback(e, r))
                 form <= role_icon_img
