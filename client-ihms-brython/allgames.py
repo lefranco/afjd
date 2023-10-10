@@ -440,6 +440,8 @@ def my_opportunities():
             if field == 'join':
                 if player_id is None:
                     value = "Pas identifié"
+                elif game_name not in game_master_dict:
+                    value = "Pas d'arbitre"
                 elif game_id_str in player_games:
                     game_name = data['name']
                     form = html.FORM()

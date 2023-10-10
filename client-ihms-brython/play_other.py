@@ -1135,21 +1135,31 @@ def pairing():
 
     # join game
 
-    form = html.FORM()
-    input_join_game = html.INPUT(type="submit", value="Je rejoins la partie")
-    input_join_game.bind("click", join_game_callback)
-    form <= input_join_game
-    play_low.MY_SUB_PANEL <= form
+    if not play_low.GAME_MASTER:
+        information = html.DIV(Class='important')
+        information <= "Impossible de rejoindre cette partie, pas d'arbitre !"
+        play_low.MY_SUB_PANEL <= information
+    else:
+        form = html.FORM()
+        input_join_game = html.INPUT(type="submit", value="Je rejoins la partie")
+        input_join_game.bind("click", join_game_callback)
+        form <= input_join_game
+        play_low.MY_SUB_PANEL <= form
 
     # quit game
 
     play_low.MY_SUB_PANEL <= html.H3("Se retirer de la partie (à condition d'y être déjà et de ne pas y avoir un rôle attribué)")
 
-    form = html.FORM()
-    input_quit_game = html.INPUT(type="submit", value="Je quitte la partie !")
-    input_quit_game.bind("click", quit_game_callback)
-    form <= input_quit_game
-    play_low.MY_SUB_PANEL <= form
+    if not play_low.GAME_MASTER:
+        information = html.DIV(Class='important')
+        information <= "Impossible de quitter cette partie, pas d'arbitre !"
+        play_low.MY_SUB_PANEL <= information
+    else:
+        form = html.FORM()
+        input_quit_game = html.INPUT(type="submit", value="Je quitte la partie !")
+        input_quit_game.bind("click", quit_game_callback)
+        form <= input_quit_game
+        play_low.MY_SUB_PANEL <= form
 
     # take mastering
 
