@@ -305,7 +305,10 @@ def render(panel_middle):
 
     # this means user wants to join game
     if ARRIVAL == 'rejoindre':
-        play_other.join_game()
+        if not play_low.GAME_MASTER:
+            alert("Impossible de rejoindre cette partie, pas d'arbitre !")
+        else:
+            play_other.join_game()
 
     if play_low.ROLE_ID is not None:
 
