@@ -253,6 +253,12 @@ class Center(Renderable):
         ctx.arc(x, y, center_design.CENTER_RAY, 0, 2 * math.pi, False)
         ctx.fill(); ctx.stroke(); ctx.closePath()
 
+        # distinguish start centers
+        if self._owner_start:
+            ctx.beginPath()
+            ctx.arc(x, y, center_design.CENTER_RAY + 2, 0, 2 * math.pi, False)
+            ctx.stroke(); ctx.closePath()
+
     @property
     def region(self) -> 'Region':
         """ property """
