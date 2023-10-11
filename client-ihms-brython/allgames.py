@@ -366,6 +366,8 @@ def my_opportunities():
 
         number_games += 1
 
+        game_id = int(game_id_str)
+
         # variant is available
         variant_name_loaded = data['variant']
 
@@ -458,12 +460,20 @@ def my_opportunities():
                     value = form
 
             if field == 'deadline':
+
                 deadline_loaded = value
                 value = ""
+
                 if int(data['current_state']) == 1:
+
                     datetime_deadline_loaded = mydatetime.fromtimestamp(deadline_loaded)
                     datetime_deadline_loaded_str = mydatetime.strftime2(*datetime_deadline_loaded)
                     value = datetime_deadline_loaded_str
+
+                    # game over
+                    if gameover[game_id]:
+                        colour = config.GAMEOVER_COLOUR
+                        value = "(terminée)"
 
             if field == 'current_state':
                 state_loaded = value
