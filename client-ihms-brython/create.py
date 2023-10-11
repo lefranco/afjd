@@ -207,7 +207,7 @@ def check_batch(current_pseudo, games_to_create):
     return not error
 
 
-def perform_batch(current_game_name, games_to_create_data):
+def perform_batch(current_pseudo, current_game_name, games_to_create_data):
     """ perform_batch """
 
     def create_game(current_game_name, game_to_create_name):
@@ -253,6 +253,15 @@ def perform_batch(current_game_name, games_to_create_data):
         # obviously different state (starting)
         json_dict['current_state'] = 0
         json_dict['current_advancement'] = 0
+
+        # obviously different description
+        time_stamp_now = time.time()
+        time_creation = mydatetime.fromtimestamp(time_stamp_now)
+        time_creation_str = mydatetime.strftime(*time_creation)
+        variant = json_dict['variant']
+        scoring = json_dict['scoring']
+        description = f"Partie créée par batch le {time_creation_str} par {current_pseudo} variante {variant}. Scorage {scoring}."
+        json_dict['description'] = description
 
         # logically : manual allocation (otherwise at start random allocation will spoil csv file allocation)
         json_dict['manual'] = int(True)
@@ -417,7 +426,7 @@ def create_many_games():
             def create_games_callback2(_, dialog):
                 """ create_games_callback2 """
                 dialog.close(None)
-                perform_batch(game, games_to_create)
+                perform_batch(pseudo, game, games_to_create)
 
             games_to_create = {}
 
@@ -589,11 +598,11 @@ def explain_stuff():
     information2 = html.DIV()
     modus = html.OL()
     modus <= html.LI("Vous avez dû recevoir un fichier csv avec les donnees de vos parties à importer.")
-    modus <= html.LI("Allez sur le site. Choisissez le menu “Parties” sous menu “Sélectionner partie”, et sélectionnez la partie modèle (T-BLITZ) parmi les parties distinguées, dans la dernière des quatre fenêtres (les parties “distinguées”). Cette etape est pertinente, car c’est cette partie qui definira les caracteristiques des parties que vous allez créer.")
+    modus <= html.LI("Allez sur le site. Choisissez le menu “Rejoindre une partie” sous menu “Sélectionner une partie”. Restreignez le choix dans la fenêtre “sélection de l'état” aux parties “distinguées”. Eventuellement filtrez aussi sur la variante. Sélectionnez finalement la partie modèle (T-BLITZ par exemple). Cette etape est pertinente, car c’est cette partie qui definira presque toutes les caracteristiques des parties que vous allez créer.")
     modus <= html.LI("Allez dans le menu “Création”. Si vous ne voyez pas le menu, demandez les droits à l'administrateur")
     modus <= html.LI("Cliquez sur “parcourir” pour choisir le fichier et selectionnez le fichier csv que vous avez reçu")
     modus <= html.LI("Confirmez la création des parties...")
-    modus <= html.LI("Si votre connexion est lente, ignorez les messages bizarres comme par exemple “le navigateur attend une reponse du site”. C’est long, ca mouline, mais à la fin ça doit aboutir.")
+    modus <= html.LI("Si votre connexion est lente, ignorez les messages bizarres comme par exemple “le navigateur attend une reponse du site”. C’est long, ça mouline, mais à la fin ça doit aboutir.")
     modus <= html.LI("Si les parties se sont créées normalement, un sympathique message comme quoi tout s'est bien passé apparaît.")
     modus <= html.LI("Les parties sont créés mais dans l'état “en attente”")
     modus <= html.LI("Allez dans le menu “mes parties”, cliquez sur “en attente”, cliquez sur le bouton “basculer en mode avec colonnes action” si besoin.")
