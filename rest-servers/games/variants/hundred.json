@@ -40,6 +40,7 @@
     "year_zero" : 1420,
     "increment" : 5,
 
+    "ignore_solo" : false,
     "build_everywhere" : true,
     "disorder" : {},
     

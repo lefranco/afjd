@@ -489,9 +489,9 @@ class DebriefGameRessource(flask_restful.Resource):  # type: ignore
         if game.current_state != 1:
             flask_restful.abort(404, msg="Game is not ongoing")
 
-        # game must be gameover
-        if not game.game_over():
-            flask_restful.abort(404, msg="Game is not finished")
+        # game must be finished or soloed
+        if not (game.game_finished() or game.game_soloed(sql_executor)):
+            flask_restful.abort(404, msg="Game is not finished or soloed")
 
         # debrief
         game.debrief()
@@ -3158,10 +3158,10 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
         # begin of protected section
         with MOVE_GAME_LOCK_TABLE[game.name]:
 
-            # must not be game over
-            if game.game_over():
+            # must not be finished or soloed
+            if game.game_finished() or game.game_soloed(sql_executor):
                 del sql_executor
-                flask_restful.abort(403, msg="Game is finished !")
+                flask_restful.abort(403, msg="Game is finished or soloed!")
 
             # check orders are required
             # needed list : those who need to submit orders

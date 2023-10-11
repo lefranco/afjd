@@ -1237,13 +1237,19 @@ def submit_orders():
             play.load_option(None, 'Consulter')
             return False
 
-    # check gameover
+    # check game soloed
+    if play_low.POSITION_DATA.solo_detected():
+        alert("La partie est terminée parce qu'un solo a été réalisé !")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # check game finished
     # game over when adjustments to play
     # game over when last year
     current_advancement = play_low.GAME_PARAMETERS_LOADED['current_advancement']
     nb_max_cycles_to_play = play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']
     if current_advancement % 5 == 4 and (current_advancement + 1) // 5 >= nb_max_cycles_to_play:
-        alert("La partie est arrivée à échéance")
+        alert("La partie est terminée parce qu'arrivée à échéance")
         play.load_option(None, 'Consulter')
         return False
 
@@ -2049,7 +2055,13 @@ def submit_communication_orders():
         play.load_option(None, 'Consulter')
         return False
 
-    # check gameover
+    # check game soloed
+    if play_low.POSITION_DATA.solo_detected():
+        alert("La partie est terminée parce qu'un solo a été réalisé !")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # check game finished
     # game over when adjustments to play
     # game over when last year
     current_advancement = play_low.GAME_PARAMETERS_LOADED['current_advancement']
@@ -2512,7 +2524,13 @@ def imagine_units():
         play.load_option(None, 'Consulter')
         return False
 
-    # check gameover
+    # check game soloed
+    if play_low.POSITION_DATA.solo_detected():
+        alert("La partie est terminée parce qu'un solo a été réalisé !")
+        play.load_option(None, 'Consulter')
+        return False
+
+    # check game finished
     # game over when adjustments to play
     # game over when last year
     current_advancement = play_low.GAME_PARAMETERS_LOADED['current_advancement']

@@ -52,6 +52,7 @@
 	"year_zero" : 1913,
 	"increment" : 1,
 
+    "ignore_solo" : true,
 	"build_everywhere" : true,
 	"disorder" : {"3" : "Italie"},
 

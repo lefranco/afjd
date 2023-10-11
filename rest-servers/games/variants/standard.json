@@ -60,6 +60,7 @@
     "year_zero" : 1900,
     "increment" : 1,
 
+    "ignore_solo" : false,
     "build_everywhere" : false,
     "disorder" : {},
 

@@ -613,6 +613,9 @@ class Variant(Renderable):
         # build everywhere
         self._build_everywhere = raw_variant_content['build_everywhere']
 
+        # ignore_solo
+        self._ignore_solo = raw_variant_content['ignore_solo']
+
         # load the regions
         self._regions = {}
         for num, code in enumerate(raw_variant_content['regions']):
@@ -1066,6 +1069,11 @@ class Variant(Renderable):
     def build_everywhere(self) -> bool:
         """ property """
         return self._build_everywhere
+
+    @property
+    def ignore_solo(self) -> bool:
+        """ property """
+        return self._ignore_solo
 
 
 # imagined units
@@ -1689,6 +1697,13 @@ class Position(Renderable):
     def units_list(self):
         """ units_list """
         return self._units
+
+    def solo_detected(self):
+        """ Is a solo detected ? """
+        if self._variant.ignore_solo:
+            return False
+        raw_list = [len([o for o in self._ownerships if o.role == self._variant.roles[i]]) for i in self._variant.roles if i != 0]
+        return max(raw_list) > len(self._variant.centers) // 2
 
     def role_ratings(self):
         """ a rating of roles """
