@@ -72,6 +72,7 @@
     "year_zero" : -600,
     "increment" : 5,
 
+    "ignore_solo" : false,
     "build_everywhere" : false,
     "disorder" : {},
 

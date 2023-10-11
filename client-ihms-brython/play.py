@@ -177,7 +177,6 @@ def countdown():
     # calculate display colour for deadline and countdown
 
     colour = None
-    completed = False
     time_stamp_now = time.time()
 
     if play_low.GAME_PARAMETERS_LOADED['fast']:
@@ -185,13 +184,9 @@ def countdown():
     else:
         factor = 60 * 60
 
-    # game over
+    # game finished or solo
     if play_low.GAME_PARAMETERS_LOADED['current_advancement'] % 5 == 4 and (play_low.GAME_PARAMETERS_LOADED['current_advancement'] + 1) // 5 >= play_low.GAME_PARAMETERS_LOADED['nb_max_cycles_to_play']:
         colour = config.GAMEOVER_COLOUR
-        # keep value only for game master
-        if play_low.ROLE_ID is None or play_low.ROLE_ID != 0:
-            completed = True
-
     # we are after everything !
     elif time_stamp_now > deadline_loaded + factor * 24 * config.CRITICAL_DELAY_DAY:
         colour = config.CRITICAL_COLOUR
@@ -239,10 +234,7 @@ def countdown():
         countdown_text = f"~ {remains // (24 * 3600)}j"
 
     # insert text
-    if completed:
-        play_low.COUNTDOWN_COL.text = ""
-    else:
-        play_low.COUNTDOWN_COL.text = countdown_text
+    play_low.COUNTDOWN_COL.text = countdown_text
 
     # set the colour
     if colour is not None:
@@ -294,6 +286,9 @@ def render(panel_middle):
     play_low.load_static_stuff()
     play_low.load_dynamic_stuff()
     play_low.load_special_stuff()
+
+    if play_low.POSITION_DATA.solo_detected():
+        alert("Attention : solo sur cette partie !")
 
     # initiates new countdown
     countdown()

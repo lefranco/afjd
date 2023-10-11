@@ -271,9 +271,13 @@ def adjudicate(game_id: int, game: games.Game, variant_data: typing.Dict[str, ty
 
         return [role_num, 4, active_unit_zone_num, 0, 0]  # hold
 
-    # check game over
-    if game.game_over():
-        return True, False, "INFORMATION : game over !"
+    # check game is finished
+    if game.game_finished():
+        return True, False, "INFORMATION : game is finished !"
+
+    # check game is soloed
+    if game.game_soloed(sql_executor):
+        return True, False, "INFORMATION : game is soloed !"
 
     # zone2region
     zone2region = {r: r for r in range(1, len(variant_data['regions']) + 1)}

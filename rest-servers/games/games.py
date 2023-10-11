@@ -14,6 +14,7 @@ import random
 import datetime
 import time
 import math
+import collections
 
 import database
 import allocations
@@ -629,8 +630,8 @@ class Game:
         """ last_season """
         return self._current_advancement == (self._nb_max_cycles_to_play - 1) * 5 + 2
 
-    def game_over(self) -> bool:
-        """ game_over """
+    def game_finished(self) -> bool:
+        """ game_finished """
 
         # game over when adjustments to play
         if self._current_advancement % 5 != 4:
@@ -641,6 +642,32 @@ class Game:
             return False
 
         return True
+
+    def game_soloed(self, sql_executor: database.SqlExecutor) -> bool:
+        """ game_soloed """
+
+        # get variant
+        variant_name = self.variant
+        variant_data = variants.Variant.get_by_name(variant_name)
+        assert variant_data is not None
+
+        # some variants ignore solo
+        if variant_data['ignore_solo']:
+            return False
+
+        game_id = self.identifier
+
+        # situation: get ownerships
+        game_ownerships = ownerships.Ownership.list_by_game_id(sql_executor, game_id)
+        list_owners = [r for _, _, r in game_ownerships]
+        counter = collections.Counter(list_owners)
+        _, ncentersmax = counter.most_common(1)[0]
+
+        # game over when adjustments to play
+        if ncentersmax > len(variant_data['centers']) // 2:
+            return True
+
+        return False
 
     def debrief(self) -> None:
         """ debrief the game """
