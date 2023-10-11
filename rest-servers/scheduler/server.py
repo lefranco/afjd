@@ -8,36 +8,35 @@ The server
 """
 
 import typing
-import argparse
-import threading
-import time
+
 import json
 import datetime
-import requests
+import time
+import argparse
+import threading
+
 
 import waitress
 import flask
 import flask_cors
 import flask_restful  # type: ignore
 import flask_restful.reqparse  # type: ignore
+import requests
 
-import lowdata
 import mylogger
 import populate
+import lowdata
 import database
 import mapping
 
+
+SESSION = requests.Session()
 
 APP = flask.Flask(__name__)
 flask_cors.CORS(APP)
 API = flask_restful.Api(APP)
 
-SESSION = requests.Session()
 
-
-CHAT_MESSAGE_PARSER = flask_restful.reqparse.RequestParser()
-CHAT_MESSAGE_PARSER.add_argument('author', type=str, required=True)
-CHAT_MESSAGE_PARSER.add_argument('content', type=str, required=True)
 
 
 # read from parameter file
@@ -325,14 +324,14 @@ def main() -> None:
     lowdata.load_servers_config()
 
     # emergency
-    if not database.db_present():
+    #if not database.db_present():
 
-        mylogger.LOGGER.info("Emergency populate procedure")
+        #mylogger.LOGGER.info("Emergency populate procedure")
 
-        sql_executor = database.SqlExecutor()
-        populate.populate(sql_executor)
-        sql_executor.commit()
-        del sql_executor
+        #sql_executor = database.SqlExecutor()
+        #populate.populate(sql_executor)
+        #sql_executor.commit()
+        #del sql_executor
 
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['SCHEDULER']['PORT']
