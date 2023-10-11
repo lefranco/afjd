@@ -36,7 +36,7 @@ with open("./data/scoring_list.json", "r", encoding="utf-8") as read_file:
     SCORING_CODE_TABLE = json.load(read_file)
 
 # default is first one
-VARIANT_NAMES_LIST = ['standard', 'grandeguerre', 'grandeguerreexpansionniste', 'hundred', 'moderne', 'egeemonie']
+VARIANT_NAMES_LIST = ['standard', 'standard_pds', 'grandeguerre', 'grandeguerreexpansionniste', 'hundred', 'moderne', 'egeemonie']
 
 
 # yellow before that
