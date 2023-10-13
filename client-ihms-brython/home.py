@@ -421,7 +421,7 @@ def show_news():
 
     col = html.TD()
     col.attrs['style'] = 'text-align:center;'
-    img = html.IMG(src="./images/twitter.png")
+    img = html.IMG(src="./images/learn.png")
     col <= img
     row <= col
 
@@ -449,8 +449,8 @@ def show_news():
     row <= col
 
     col = html.TD()
-    link5 = html.A(href="https://twitter.com/asso_diplo", target="_blank")
-    link5 <= "La page Twitter de l'association"
+    link5 = html.A(href="https://youtu.be/d-ddAqTNDzA?si=Raf-hKFpgjMgdmf0", target="_blank")
+    link5 <= "Je veux apprendre à jouer à Diplomatie avec un tutorial Youtube"
     col <= link5
     row <= col
 
