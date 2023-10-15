@@ -156,12 +156,33 @@ def submit_orders():
     stored_event = None
     down_click_time = None
     buttons_right = None
+    orders_status = None
 
     input_now = None
     input_after = None
     input_never = None
 
+    orders_in = None
     definitive_value = None
+
+    def stack_orders_status(frame):
+        """ stack_orders_status """
+
+        nonlocal orders_status
+
+        orders_status = html.DIV(id='orders_status')
+
+        if orders_in is False:
+            flag = html.IMG(src="./images/orders_missing.png", title="Les ordres ne sont pas validés")
+        elif definitive_value == 1:
+            flag = html.IMG(src="./images/agreed.jpg", title="D'accord pour résoudre maintenant")
+        elif definitive_value == 2:
+            flag = html.IMG(src="./images/agreed_after.jpg", title="D'accord pour résoudre mais à la date limite")
+        elif definitive_value == 0:
+            flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
+
+        orders_status <= flag
+        frame <= orders_status
 
     def cancel_submit_orders_callback(_, dialog):
         dialog.close(None)
@@ -169,7 +190,12 @@ def submit_orders():
     def submit_orders_callback(_, warned=False, dialog2=None):
         """ submit_orders_callback """
 
+        nonlocal definitive_value
+
         def reply_callback(req):
+
+            nonlocal orders_in
+
             req_result = json.loads(req.text)
             if req.status != 201:
                 if 'message' in req_result:
@@ -194,6 +220,10 @@ def submit_orders():
 
             # special : send ip address to server
             common.send_ip_address()
+
+            orders_in = True
+            buttons_right.removeChild(orders_status)
+            stack_orders_status(buttons_right)
 
             # late
             late = req_result['late']
@@ -308,6 +338,9 @@ def submit_orders():
             buttons_right <= html.BR()
             put_submit(buttons_right)
 
+        # orders status
+        stack_orders_status(buttons_right)
+
         automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
 
     def erase_all_callback(_):
@@ -358,6 +391,9 @@ def submit_orders():
             buttons_right <= html.BR()
             put_submit(buttons_right)
 
+        # orders status
+        stack_orders_status(buttons_right)
+
         my_sub_panel2 <= buttons_right
         play_low.MY_SUB_PANEL <= my_sub_panel2
 
@@ -393,6 +429,9 @@ def submit_orders():
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 buttons_right <= html.BR()
                 put_submit(buttons_right)
+
+            # orders status
+            stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
@@ -554,6 +593,9 @@ def submit_orders():
                 buttons_right <= html.BR()
                 put_submit(buttons_right)
 
+            # orders status
+            stack_orders_status(buttons_right)
+
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
 
@@ -673,6 +715,9 @@ def submit_orders():
                 buttons_right <= html.BR()
                 put_submit(buttons_right)
 
+            # orders status
+            stack_orders_status(buttons_right)
+
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
 
@@ -784,6 +829,9 @@ def submit_orders():
                 buttons_right <= html.BR()
                 put_submit(buttons_right)
 
+            # orders status
+            stack_orders_status(buttons_right)
+
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
 
@@ -855,6 +903,9 @@ def submit_orders():
             if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
                 buttons_right <= html.BR()
                 put_submit(buttons_right)
+
+            # orders status
+            stack_orders_status(buttons_right)
 
             my_sub_panel2 <= buttons_right
             play_low.MY_SUB_PANEL <= my_sub_panel2
@@ -945,6 +996,9 @@ def submit_orders():
         if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
             buttons_right <= html.BR()
             put_submit(buttons_right)
+
+        # orders status
+        stack_orders_status(buttons_right)
 
         my_sub_panel2 <= buttons_right
         play_low.MY_SUB_PANEL <= my_sub_panel2
@@ -1110,6 +1164,7 @@ def submit_orders():
         buttons_right <= html.BR()
         buttons_right <= input_rest_hold
         buttons_right <= html.BR()
+        buttons_right <= html.BR()
 
     def put_submit(buttons_right):
         """ put_submit """
@@ -1181,6 +1236,7 @@ def submit_orders():
         if play_low.GAME_PARAMETERS_LOADED['nomessage_current']:
             buttons_right <= html.BR()
             buttons_right <= html.DIV("Pour communiquer avec des ordres (ordres invalides) utilisez le sous menu 'taguer'", Class='Note')
+        buttons_right <= html.BR()
 
     # need to be connected
     if play_low.PSEUDO is None:
@@ -1284,6 +1340,7 @@ def submit_orders():
 
     # digest the orders
     orders_data = mapping.Orders(orders_loaded, play_low.POSITION_DATA, False)
+    orders_in = not orders_data.empty()
 
     # hovering effect
     canvas.bind("mousemove", callback_canvas_mouse_move)
@@ -1403,6 +1460,9 @@ def submit_orders():
     if not orders_data.empty() or advancement_season is mapping.SeasonEnum.ADJUST_SEASON:
         buttons_right <= html.BR()
         put_submit(buttons_right)
+
+    # orders status
+    stack_orders_status(buttons_right)
 
     # overall
     my_sub_panel2 = html.DIV()
