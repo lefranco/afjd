@@ -23,8 +23,6 @@ DEFAULT_EVENT_LOCATION = "Diplomania"
 
 ARRIVAL = False
 
-INPUT_FILE = None
-
 
 def set_arrival():
     """ set_arrival """

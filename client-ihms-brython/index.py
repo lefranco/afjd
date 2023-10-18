@@ -3,6 +3,8 @@
 # pylint: disable=pointless-statement, expression-not-assigned, wrong-import-order, wrong-import-position
 
 import time
+import json
+import base64  # TODO hardcode function
 
 START_TIME = time.time()
 
@@ -14,6 +16,7 @@ import common
 import play_master
 import play
 
+import config
 import home
 import login
 import account
@@ -95,6 +98,36 @@ def check_event(event_name):
     return True
 
 
+def get_site_image():
+    """ get_site_image """
+
+    image_content = ""
+
+    def reply_callback(req):
+        nonlocal image_content
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération de l'image du site : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération de l'image du site : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        image_content = req_result['image']
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['PLAYER']['HOST']
+    port = config.SERVER_CONFIG['PLAYER']['PORT']
+    url = f"{host}:{port}/site_image"
+
+    # get site image : do not need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return image_content
+
+
 def load_game(game_name):
     """ load_game """
 
@@ -126,6 +159,12 @@ def set_flag(_, value):
     """ set_flag """
     storage['flag'] = value
     load_option(_, ITEM_NAME_SELECTED)
+
+
+# site image
+SITE_IMAGE_CONTENT = None
+if SITE_IMAGE_CONTENT is None:
+    SITE_IMAGE_CONTENT = get_site_image()
 
 
 def load_option(_, item_name):
@@ -233,9 +272,14 @@ def load_option(_, item_name):
 
     if ITEM_NAME_SELECTED == 'Accueil':
         if 'flag' not in storage or storage['flag'] == 'True':
-            emotion_img = html.IMG(src="./images/EDC2023.jpg", alt="EDC2023")
+
+            # b64 decode from server
+            image_bytes = base64.standard_b64decode(SITE_IMAGE_CONTENT.encode())
+            image_b64 = base64.b64encode(image_bytes).decode()
+            site_img = html.IMG(src=f"data:image/jpeg;base64,{image_b64}", alt="Image du site")
+
             MENU_LEFT <= html.BR()
-            MENU_LEFT <= emotion_img
+            MENU_LEFT <= site_img
             MENU_LEFT <= html.BR()
             button = html.BUTTON("-", Class='btn-menu')
             button.bind("click", lambda e: set_flag(e, 'False'))
@@ -313,6 +357,7 @@ document <= html.BR()
 login.check_token()
 login.show_login()
 allgames.show_game_selected()
+get_site_image()
 
 document <= html.B("Contactez le support par courriel en cas de problème (cf. page d'accueil / onglet 'déclarer un incident'). Merci !")
 document <= html.BR()
