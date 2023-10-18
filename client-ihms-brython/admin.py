@@ -4,6 +4,7 @@
 
 import json
 import time
+import base64  # TODO hardcode function
 
 from browser import document, html, ajax, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -19,11 +20,15 @@ import geometry
 import elo
 
 
-OPTIONS = ['Changer nouvelles', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Récupérations demandées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Effacement des anciens retard', 'Comptes oisifs', 'Maintenance']
+OPTIONS = ['Changer nouvelles', 'Changer image', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Récupérations demandées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Effacement des anciens retard', 'Comptes oisifs', 'Maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
 DOWNLOAD_LOG = False
+
+# max size in bytes of image (after b64)
+# let 's say one Mo
+MAX_SIZE_IMAGE = (4 / 3) * 1000000
 
 
 def get_active_data():
@@ -284,6 +289,109 @@ def change_news_admin():
     input_change_news_content.bind("click", change_news_admin_callback)
     form <= input_change_news_content
     form <= html.BR()
+
+    MY_SUB_PANEL <= form
+
+
+INPUT_FILE = None
+
+
+def change_site_image():
+    """ change_site_image """
+
+    def put_site_picture_callback(ev):  # pylint: disable=invalid-name
+        """ put_site_picture_callback """
+
+        def onload_callback(_):
+            """ onload_callback """
+
+            def reply_callback(req):
+                req_result = json.loads(req.text)
+                if req.status != 201:
+                    if 'message' in req_result:
+                        alert(f"Erreur à la modification de l'image du site : {req_result['message']}")
+                    elif 'msg' in req_result:
+                        alert(f"Problème à la modification de l'image du site  : {req_result['msg']}")
+                    else:
+                        alert("Réponse du serveur imprévue et non documentée")
+                    return
+
+                messages = "<br>".join(req_result['msg'].split('\n'))
+                common.info_dialog(f"L'image du site a été changée : {messages}")
+
+            # get the image content
+            image_bytes = bytes(window.Array["from"](window.Uint8Array.new(reader.result)))
+
+            if len(image_bytes) > MAX_SIZE_IMAGE:
+                alert(f"Ce fichier est trop gros : la limite est {MAX_SIZE_IMAGE} octets")
+                return
+
+            # b64 encode to pass it on server
+            try:
+                image_str = base64.standard_b64encode(image_bytes).decode()
+            except:  # noqa: E722 pylint: disable=bare-except
+                alert("Problème à l'encodage pour le web... ")
+                return
+
+            json_dict = {
+                'image': image_str
+            }
+
+            host = config.SERVER_CONFIG['PLAYER']['HOST']
+            port = config.SERVER_CONFIG['PLAYER']['PORT']
+            url = f"{host}:{port}/site_image"
+
+            # changing site image : need token
+            ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        ev.preventDefault()
+
+        if not INPUT_FILE.files:
+
+            alert("Pas de fichier")
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            change_site_image()
+            return
+
+        # Create a new DOM FileReader instance
+        reader = window.FileReader.new()
+        # Extract the file
+        file_name = INPUT_FILE.files[0]
+        # Read the file content as text
+        reader.bind("load", onload_callback)
+        reader.readAsArrayBuffer(file_name)
+
+        # back to where we started
+        MY_SUB_PANEL.clear()
+        change_site_image()
+
+    MY_SUB_PANEL <= html.H3("Changer l'image du site")
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    form = html.FORM()
+
+    fieldset = html.FIELDSET()
+    legend_name = html.LEGEND("Ficher JPG uniquement ! (et rester inférieur en taille à 200x200 pixels)")
+    fieldset <= legend_name
+    form <= fieldset
+
+    # need to make this global to keep it (only way it seems)
+    global INPUT_FILE
+    if INPUT_FILE is None:
+        INPUT_FILE = html.INPUT(type="file", accept='.jpg')
+    form <= INPUT_FILE
+    form <= html.BR()
+
+    form <= html.BR()
+
+    input_put_picture = html.INPUT(type="submit", value="Mettre cette image")
+    input_put_picture.bind("click", put_site_picture_callback)
+    form <= input_put_picture
 
     MY_SUB_PANEL <= form
 
@@ -2314,6 +2422,8 @@ def load_option(_, item_name):
 
     if item_name == 'Changer nouvelles':
         change_news_admin()
+    if item_name == 'Changer image':
+        change_site_image()
     if item_name == 'Usurper':
         usurp()
     if item_name == 'Rectifier les paramètres':

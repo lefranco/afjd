@@ -34,11 +34,11 @@ import ratings2
 import ratings3
 import teasers
 import events
-import event_images
 import registrations
 import addresses
 import submissions
 import emails
+import site_image
 import database
 
 
@@ -108,7 +108,9 @@ EVENT_PARSER.add_argument('location', type=str, required=False)
 EVENT_PARSER.add_argument('external', type=str, required=False)
 EVENT_PARSER.add_argument('description', type=str, required=False)
 EVENT_PARSER.add_argument('summary', type=str, required=False)
-EVENT_PARSER.add_argument('image', type=str, required=False)
+
+SITE_IMAGE_PARSER = flask_restful.reqparse.RequestParser()
+SITE_IMAGE_PARSER.add_argument('image', type=str, required=True)
 
 EVENT_PARSER2 = flask_restful.reqparse.RequestParser()
 EVENT_PARSER2.add_argument('manager_id', type=int, required=True)
@@ -1853,6 +1855,57 @@ class EventManagerRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/site_image')
+class SiteImageRessource(flask_restful.Resource):  # type: ignore
+    """ SiteImageRessource """
+
+    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Updates a new site image
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/site_image - POST - updating site image")
+
+        args = SITE_IMAGE_PARSER.parse_args(strict=True)
+
+        image_str = args['image']
+        image_bytes = image_str.encode()
+
+        if len(image_bytes) > MAX_SIZE_IMAGE:
+            flask_restful.abort(404, msg="Too big an image this is, please try a smaller one !")
+
+        image = site_image.SiteImage(image_bytes)
+
+        sql_executor = database.SqlExecutor()
+
+        image.update_database(sql_executor)
+        sql_executor.commit()
+
+        data = {'msg': 'Ok inserted'}
+        return data, 201
+
+    def get(self) -> typing.Tuple[typing.Any, int]:
+        """
+        Provides the site image
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/news - GET - get the site image")
+
+        sql_executor = database.SqlExecutor()
+
+        # find the site image
+        image_bytes = site_image.SiteImage.content(sql_executor)
+        image_content = image_bytes.decode() if image_bytes else None
+
+        del sql_executor
+
+        data = {'image': image_content}
+
+        return data, 200
+
+
 @API.resource('/events/<event_id>')
 class EventRessource(flask_restful.Resource):  # type: ignore
     """ EventRessource """
@@ -1875,14 +1928,9 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         assert event is not None
 
-        # find the event image
-        image_bytes = event_images.EventImage.find_by_identifier(sql_executor, event_id)
-
         del sql_executor
 
-        image = image_bytes.decode() if image_bytes else None
-
-        data = {'name': event.name, 'start_date': event.start_date, 'start_hour': event.start_hour, 'end_date': event.end_date, 'location': event.location, 'external': event.external, 'description': event.description, 'summary': event.summary, 'manager_id': event.manager_id, 'image': image}
+        data = {'name': event.name, 'start_date': event.start_date, 'start_hour': event.start_hour, 'end_date': event.end_date, 'location': event.location, 'external': event.external, 'description': event.description, 'summary': event.summary, 'manager_id': event.manager_id}
 
         return data, 200
 
@@ -1905,9 +1953,6 @@ class EventRessource(flask_restful.Resource):  # type: ignore
         location = args['location']
         description = args['description']
         summary = args['summary']
-
-        # either encode_image is set (update image)
-        image = args['image']
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1957,20 +2002,6 @@ class EventRessource(flask_restful.Resource):  # type: ignore
             # update event here
             event = events.Event(int(event_id), name, start_date, start_hour, end_date, location, event.external, description, summary, user_id)
             event.update_database(sql_executor)
-
-        # update event_image here
-        if image is not None:
-
-            if len(image) > MAX_SIZE_IMAGE:
-                del sql_executor
-                flask_restful.abort(404, msg="Too big an image this is, please try a smaller one !")
-
-            image_bytes = image.encode()
-            event_image = event_images.EventImage(int(event_id), image_bytes)
-            if image_bytes == b'':
-                event_image.delete_database(sql_executor)
-            else:
-                event_image.update_database(sql_executor)
 
         sql_executor.commit()
         del sql_executor
@@ -2026,10 +2057,6 @@ class EventRessource(flask_restful.Resource):  # type: ignore
 
         # delete registrations
         event.delete_registrations(sql_executor)
-
-        # delete image if present
-        event_image = event_images.EventImage(int(event_id), b'')
-        event_image.delete_database(sql_executor)
 
         # finally delete event
         event.delete_database(sql_executor)

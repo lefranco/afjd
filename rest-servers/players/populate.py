@@ -17,7 +17,7 @@ import ratings2
 import ratings3
 import teasers
 import events
-import event_images
+import site_image
 import registrations
 import addresses
 import submissions
@@ -79,10 +79,10 @@ def populate_events(sql_executor: database.SqlExecutor) -> None:
     events.Event.create_table(sql_executor)
 
 
-def populate_image_events(sql_executor: database.SqlExecutor) -> None:
+def populate_site_image(sql_executor: database.SqlExecutor) -> None:
     """ inserts these items in database """
 
-    event_images.EventImage.create_table(sql_executor)
+    site_image.SiteImage.create_table(sql_executor)
 
 
 def populate_registrations(sql_executor: database.SqlExecutor) -> None:
@@ -123,7 +123,7 @@ def populate(sql_executor: database.SqlExecutor) -> None:
     populate_ratings3(sql_executor)
     populate_teasers(sql_executor)
     populate_events(sql_executor)
-    populate_image_events(sql_executor)
+    populate_site_image(sql_executor)
     populate_registrations(sql_executor)
     populate_addresses(sql_executor)
     populate_submissions(sql_executor)
