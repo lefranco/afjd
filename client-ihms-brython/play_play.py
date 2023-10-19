@@ -246,9 +246,15 @@ def submit_orders():
             # adjudication was done
             adjudicated = req_result['adjudicated']
             if adjudicated:
+
                 # seems to be things not updated if back to orders
                 alert("La position de la partie a changé !")
                 play_low.load_dynamic_stuff()
+
+                # warn if solo appeared
+                if play_low.POSITION_DATA.solo_detected():
+                    alert("Attention : solo sur cette partie !")
+
                 play_low.MY_SUB_PANEL.clear()
                 play.load_option(None, 'Consulter')
 

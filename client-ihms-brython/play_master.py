@@ -539,6 +539,11 @@ def game_master():
             # back to where we started
             play_low.MY_SUB_PANEL.clear()
             play_low.load_dynamic_stuff()
+
+            # warn if solo appeared
+            if play_low.POSITION_DATA.solo_detected():
+                alert("Attention : solo sur cette partie !")
+
             play_low.load_special_stuff()
             game_master()
 
