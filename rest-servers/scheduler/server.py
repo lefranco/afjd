@@ -323,6 +323,7 @@ def main() -> None:
 
     mylogger.start_logger(__name__)
     lowdata.load_servers_config()
+    load_credentials_config()
 
     # emergency
     #if not database.db_present():
