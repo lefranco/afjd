@@ -2923,12 +2923,8 @@ class GameForceAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                     flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
                 # declaration from system
-                payload = ""
-                if game.last_season():
-                    payload = "Attention, dernier automne !"
-                elif game.last_year():
+                if game.last_year():
                     payload = "Attention, dernière année !"
-                if payload:
                     notify_last_line(sql_executor, game_id, payload)  # noqa: F821
 
         sql_executor.commit()  # noqa: F821
@@ -3067,12 +3063,8 @@ class GameCommuteAgreeSolveRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
             # declaration from system
-            payload = ""
-            if game.last_season():
-                payload = "Attention, dernier automne ! !"
-            elif game.last_year():
+            if game.last_year():
                 payload = "Attention, dernière année !"
-            if payload:
                 notify_last_line(sql_executor, game_id, payload)  # noqa: F821
 
         sql_executor.commit()  # noqa: F821
@@ -3424,12 +3416,8 @@ class GameOrderRessource(flask_restful.Resource):  # type: ignore
                     flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
                 # declaration from system
-                payload = ""
-                if game.last_season():
-                    payload = "Attention, dernier automne ! !"
-                elif game.last_year():
+                if game.last_year():
                     payload = "Attention, dernière année !"
-                if payload:
                     notify_last_line(sql_executor, game_id, payload)  # noqa: F821
 
         else:
