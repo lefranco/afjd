@@ -72,7 +72,6 @@ extern int noligne;
 _DECISION DECISION_OFFICIELLE, CONJONCTURE_DE_TRAVAIL;
 
 static void decritunite(_UNITE *, char *);
-static BOOL contextevalidation(_PAYS *pays);
 static BOOL mouvementsidentiques(_MOUVEMENT *, _MOUVEMENT *);
 static BOOL retraitesidentiques(_RETRAITE *, _RETRAITE *);
 static BOOL ajustementsidentiques(_AJUSTEMENT *, _AJUSTEMENT *);
@@ -119,15 +118,6 @@ static void decritunite(_UNITE *unite, char *s) {
 			unite->pays->nom);
 }
 
-static BOOL contextevalidation(_PAYS *pays) {
-	char *p;
-
-	for (p = OPTIONx; *p; p++)
-		if (paysdinitiale(*p) == pays)
-			return TRUE;
-
-	return FALSE;
-}
 
 static BOOL mouvementsidentiques(_MOUVEMENT *mouv1, _MOUVEMENT*mouv2) {
 	if (mouv1->unite != mouv2->unite)
@@ -364,7 +354,7 @@ void verifmouvements(void) {
 	char buf2[TAILLEMOT * 4], buf3[TAILLEMOT * 4];
 	_MOUVEMENT *p, *q;
 	_UNITE *r, *t;
-	_PAYS *s, *pays;
+	_PAYS *pays;
 	char buf[TAILLEMESSAGE];
 	BOOL doublon;
 
@@ -424,10 +414,6 @@ void verifmouvements(void) {
 						decritunite(p->unite, buf2);
 						cherchechaine(__FILE__, 3, buf, 1, buf2); /*"L'unite %1 soutient offensivement une unite du meme pays qui n'effectue pas le deplacement (=> annule)"*/
 						avertir(buf);
-					} else if (contextevalidation(p->unitepass->pays)) {
-						decritunite(p->unite, buf2);
-						cherchechaine(__FILE__, 46, buf, 1, buf2); /*"L'unite %1 soutient offensivement une unite dont l'ordre est indetermine"*/
-						informer(buf);
 					}
 					break;
 				}
@@ -452,10 +438,6 @@ void verifmouvements(void) {
 						decritunite(p->unite, buf2);
 						cherchechaine(__FILE__, 4, buf, 1, buf2); /*"L'unite %1 convoie une unite du meme pays qui n'effectue pas le convoi (=> annule)"*/
 						avertir(buf);
-					} else if (contextevalidation(p->unitepass->pays)) {
-						decritunite(p->unite, buf2);
-						cherchechaine(__FILE__, 47, buf, 1, buf2); /*"L'unite %1 convoie une unite dont l'ordre est indetermine"*/
-						informer(buf);
 					}
 					break;
 				}
@@ -468,10 +450,6 @@ void verifmouvements(void) {
 						decritunite(p->unite, buf2);
 						cherchechaine(__FILE__, 5, buf, 1, buf2); /*"L'unite %1 soutient defensivement une unite du meme pays qui se deplace (=> annule)"*/
 						avertir(buf);
-					} else if (contextevalidation(p->unitepass->pays)) {
-						decritunite(p->unite, buf2);
-						cherchechaine(__FILE__, 48, buf, 1, buf2); /*"L'unite %1 soutient defensivement une unite dont l'ordre est indetermine"*/
-						informer(buf);
 					}
 					break;
 				}
@@ -520,20 +498,6 @@ void verifmouvements(void) {
 						cherchechaine(__FILE__, 6, buf, 2, buf2, buf3); /*"L'unite %1 soutient offensivement une unite qui requiert le convoi de l'unite compatriote  %2 (=> annule)"*/
 						avertir(buf);
 					}
-					for (s = PAYS.t; s < PAYS.t + PAYS.n; s++)
-						if (s != p->unite->pays) {
-							r = unitedupaysempechantconvoi(s,
-									p->unitepass->zone, p->zonedest);
-							if (r) {
-								if (contextevalidation(s)) {
-									decritunite(p->unite, buf2);
-									decritunite(r, buf3);
-									cherchechaine(__FILE__, 50, buf, 2, buf2,
-											buf3); /*"L'unite %1 soutient offensivement une unite qui n'a pas eu le convoi de l'unite %2 d'un autre pays donc dont l'ordre est indetermine"*/
-									informer(buf);
-								}
-							}
-						}
 					p->valable = FALSE;
 				}
 				break;
@@ -550,20 +514,6 @@ void verifmouvements(void) {
 						cherchechaine(__FILE__, 7, buf, 2, buf2, buf3); /*"L'unite %1 convoie une unite qui requiert le convoi de l'unite compartiote %2 (=> annule)"*/
 						avertir(buf);
 					}
-					for (s = PAYS.t; s < PAYS.t + PAYS.n; s++)
-						if (s != p->unite->pays) {
-							r = unitedupaysempechantconvoi(s,
-									p->unitepass->zone, p->zonedest);
-							if (r) {
-								if (contextevalidation(s)) {
-									decritunite(p->unite, buf2);
-									decritunite(r, buf3);
-									cherchechaine(__FILE__, 51, buf, 2, buf2,
-											buf3); /*"L'unite %1 convoie une unite qui n'a pas eu le convoi de l'unite %2 d'un autre pays donc dont l'ordre est indetermine"*/
-									informer(buf);
-								}
-							}
-						}
 					p->valable = FALSE;
 				}
 				break;
@@ -592,20 +542,6 @@ void verifmouvements(void) {
 						cherchechaine(__FILE__, 8, buf, 2, buf2, buf3); /*"L'unite %1 requiert pour son déplacement le convoi de l'unite compatriote %2 (=> annule)"*/
 						avertir(buf);
 					}
-					for (s = PAYS.t; s < PAYS.t + PAYS.n; s++)
-						if (s != p->unite->pays) {
-							r = unitedupaysempechantconvoi(s, p->unite->zone,
-									p->zonedest);
-							if (r) {
-								if (contextevalidation(s)) {
-									decritunite(p->unite, buf2);
-									decritunite(r, buf3);
-									cherchechaine(__FILE__, 49, buf, 2, buf2,
-											buf3); /*"L'unite %1 a besoin du convoi de l'unite %2 dont l'ordre est indetermine"*/
-									informer(buf);
-								}
-							}
-						}
 					p->valable = FALSE;
 				}
 				break;
