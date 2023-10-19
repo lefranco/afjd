@@ -275,8 +275,8 @@ class Game:
 
         if 'used_for_elo' in json_dict and json_dict['used_for_elo'] is not None and json_dict['used_for_elo'] != self._used_for_elo:
 
-            # safety : forced
-            if self._variant != 'standard':
+            # safety : forced (only standard and stardard_pds can be used for elo)
+            if not self._variant.startswith('standard'):
                 self._used_for_elo = False
             elif self._fog:
                 self._used_for_elo = False
