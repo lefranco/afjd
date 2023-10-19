@@ -11,6 +11,7 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import user_config
 import config
 import common
+import technical
 import faq
 import tips
 import mydatetime
@@ -230,6 +231,20 @@ def formatted_teaser(teasers):
 def show_news():
     """ show_home """
 
+    def show_variant_callback(ev, variant_name):  # pylint: disable=invalid-name
+        """ show_variant_callback """
+
+        ev.preventDefault()
+
+        arrival = 'variant'
+
+        # so that will go to proper page
+        technical.set_arrival(arrival, variant_name)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        technical.render(PANEL_MIDDLE)
+
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
     div_homepage = html.DIV(id='grid')
@@ -330,22 +345,22 @@ def show_news():
     div_homepage <= div_b3
 
     # ----
-    div_a1 = html.DIV(Class='tooltip')
+    div_a2 = html.DIV(Class='tooltip')
 
     title7 = html.H4("Les glorieux", Class='news3')
-    div_a1 <= title7
+    div_a2 <= title7
     hall_content_loaded = news_content_table_loaded['glory']
     hall_content = formatted_news(hall_content_loaded, False, 'glory_news')
-    div_a1 <= hall_content
-    div_a1_tip = html.SPAN("Plus de détail sur la page wikipedia https://fr.wikipedia.org/wiki/Palmar%C3%A8s_internationaux_de_Diplomatie", Class='tooltiptext')
-    div_a1 <= div_a1_tip
-    div_homepage <= div_a1
+    div_a2 <= hall_content
+    div_a2_tip = html.SPAN("Plus de détail sur la page wikipedia https://fr.wikipedia.org/wiki/Palmar%C3%A8s_internationaux_de_Diplomatie", Class='tooltiptext')
+    div_a2 <= div_a2_tip
+    div_homepage <= div_a2
 
     # ----
-    div_b1 = html.DIV(Class='tooltip')
+    div_b2 = html.DIV(Class='tooltip')
 
     title9 = html.H4("Liens très importants")
-    div_b1 <= title9
+    div_b2 <= title9
     note_bene_content = html.DIV(Class='note')
 
     note_bene_content_table = html.TABLE()
@@ -469,29 +484,58 @@ def show_news():
     # ======================
 
     note_bene_content <= note_bene_content_table
-    div_b1 <= note_bene_content
-    div_b1_tip = html.SPAN("Plus de détail dans le menu “Accueil“ sous menu “Brique sociale“", Class='tooltiptext')
+    div_b2 <= note_bene_content
+    div_b2_tip = html.SPAN("Plus de détail dans le menu “Accueil“ sous menu “Brique sociale“", Class='tooltiptext')
+    div_b2 <= div_b2_tip
+    div_homepage <= div_b2
+
+    # ----
+    div_a1 = html.DIV(Class='tooltip')
+
+    title10 = html.H4("Aperçu des variantes possibles")
+    div_a1 <= title10
+
+    variants_table = html.TABLE()
+    row = html.TR()
+    for num, variant_name in enumerate(config.VARIANT_NAMES_LIST):
+
+        col = html.TD()
+
+        form = html.FORM()
+        input_show_variant = html.INPUT(type="submit", value=variant_name)
+        input_show_variant.attrs['style'] = 'font-size: 10px'
+        input_show_variant.bind("click", lambda e, v=variant_name: show_variant_callback(e, v))
+        form <= input_show_variant
+        col <= form
+
+        row <= col
+        if (num + 1) % 4 == 0:
+            variants_table <= row
+            row = html.TR()
+
+    variants_table <= row
+    div_a1 <= variants_table
+
+    div_homepage <= div_a1
+
+    # ----
+    div_b1 = html.DIV(Class='tooltip')
+
+    title11 = html.H4("Statistiques")
+    div_b1 <= title11
+    ongoing_games = stats_content['ongoing_games']
+    active_game_masters = stats_content['active_game_masters']
+    active_players = stats_content['active_players']
+    div_b1 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
+    div_b1_tip = html.SPAN("Plus de détail dans le menu “Classement“ sous menu “Joueurs“", Class='tooltiptext')
     div_b1 <= div_b1_tip
     div_homepage <= div_b1
 
     # ----
     div_a0 = html.DIV(Class='tooltip')
 
-    title10 = html.H4("Statistiques")
-    div_a0 <= title10
-    ongoing_games = stats_content['ongoing_games']
-    active_game_masters = stats_content['active_game_masters']
-    active_players = stats_content['active_players']
-    div_a0 <= f"Il y a {ongoing_games} parties en cours. Il y a {active_game_masters} arbitres en activité. Il y a {active_players} joueurs en activité. (Un joueur ou un arbitre est en activité s'il participe à une partie en cours)"
-    div_a0_tip = html.SPAN("Plus de détail dans le menu “Classement“ sous menu “Joueurs“", Class='tooltiptext')
-    div_a0 <= div_a0_tip
-    div_homepage <= div_a0
-
-    # ----
-    div_b0 = html.DIV(Class='tooltip')
-
-    title8 = html.H4("Divers")
-    div_b0 <= title8
+    title8 = html.H4("Problèmes locaux d'horloge")
+    div_a0 <= title8
 
     # time shift
 
@@ -511,12 +555,12 @@ def show_news():
 
     # do not always display
     if abs(delta_time) > THRESHOLD_DRIFT_ALERT_SEC:
-        div_b0 <= html.DIV(f"Votre horloge locale est {status} de {abs_delta_time} {unit} sur celle du serveur", Class='note')
-        div_b0 <= html.BR()
+        div_a0 <= html.DIV(f"Votre horloge locale est {status} de {abs_delta_time} {unit} sur celle du serveur", Class='note')
+        div_a0 <= html.BR()
 
-    div_b0_tip = html.SPAN("Plus de détail dans le menu “Accueil” sous menu “Foire aux question”", Class='tooltiptext')
-    div_b0 <= div_b0_tip
-    div_homepage <= div_b0
+    div_a0_tip = html.SPAN("Plus de détail dans le menu “Accueil” sous menu “Foire aux question”", Class='tooltiptext')
+    div_a0 <= div_a0_tip
+    div_homepage <= div_a0
 
     # ----
 
