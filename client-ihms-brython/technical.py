@@ -102,11 +102,27 @@ def create_initial_position(starting_position):
     VARIANT_DATA = mapping.Variant(VARIANT_NAME, variant_content_loaded, parameters_read)
 
     if starting_position:
-        pass
-        # TODO if start fill in 'ownerships' and 'units'
+
+        # units
+        dict_made_units = {}
+        for role, role_start_units in VARIANT_DATA.start_units.items():
+            role_num = role.identifier
+            if role_num not in dict_made_units:
+                dict_made_units[role_num] = []
+            for (type_num, zone) in role_start_units:
+                zone_num = zone.identifier
+                dict_made_units[role_num].append([type_num, zone_num])
+
+        # ownerships
+        dict_made_ownerships = {}
+        for role in VARIANT_DATA.roles.values():
+            for start_center in role.start_centers:
+                center_num = start_center.identifier
+                role_num = role.identifier
+                dict_made_ownerships[center_num] = role_num
 
     # get the position
-    position_loaded = {'ownerships': {}, 'units': {}, 'forbiddens': {}, 'dislodged_ones': {}}
+    position_loaded = {'ownerships': dict_made_ownerships, 'units': dict_made_units, 'forbiddens': {}, 'dislodged_ones': {}}
 
     # digest the position
     POSITION_DATA = mapping.Position(position_loaded, VARIANT_DATA)

@@ -1059,6 +1059,11 @@ class Variant(Renderable):
         return self._roles
 
     @property
+    def start_units(self):
+        """ property """
+        return self._start_units
+
+    @property
     def year_zero(self) -> int:
         """ property """
         return self._year_zero
