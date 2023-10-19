@@ -683,15 +683,18 @@ class Variant(Renderable):
             self._zones[offset + number] = zone
 
         # load the start units
+        self._start_units = {}
         for num, role_start_units in enumerate(raw_variant_content['start_units']):
             number = num + 1
             role = self._roles[number]
+            self._start_units[role] = []
             for unit_type_code_str, role_start_units2 in role_start_units.items():
                 unit_type_code = int(unit_type_code_str)
                 unit_type = UnitTypeEnum.from_code(unit_type_code)
                 assert unit_type is not None
                 for zone_num in role_start_units2:
                     zone = self._zones[zone_num]
+                    self._start_units[role].append((unit_type, zone))
 
         # load the year zero and increment
         self._year_zero = int(raw_variant_content['year_zero'])

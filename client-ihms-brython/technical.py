@@ -20,16 +20,23 @@ import geometry
 LONG_DURATION_LIMIT_SEC = 1.0
 
 # sandbox must stay first
-OPTIONS = ['Bac à sable', 'Documents', 'Pourquoi yapa', 'Choix d\'interface', 'Tester un scorage']
+OPTIONS = ['Bac à sable', 'Documents', 'Variante', 'Pourquoi yapa', 'Choix d\'interface', 'Tester un scorage']
 
 
 ARRIVAL = None
+VARIANT_NAME = None
 
 
-def set_arrival(arrival):
+def set_arrival(arrival, variant_name=None):
     """ set_arrival """
+
     global ARRIVAL
+    global VARIANT_NAME
+
     ARRIVAL = arrival
+
+    if variant_name:
+        VARIANT_NAME = variant_name
 
 
 class AutomatonStateEnum:
@@ -53,15 +60,6 @@ ORDERS_DATA = None
 BACKUP_CANVAS = None
 
 
-def get_variant():
-    """ set_variant """
-
-    if 'GAME_VARIANT' in storage:
-        return storage['GAME_VARIANT']
-
-    return config.FORCED_VARIANT_NAME
-
-
 def save_context(ctx):
     """ save_context """
 
@@ -81,17 +79,13 @@ def restore_context(ctx):
     ctx.drawImage(BACKUP_CANVAS, 0, 0)
 
 
-def create_initial_position():
+def create_initial_position(starting_position):
     """ create_initial_position """
 
     global INTERFACE_CHOSEN
     global VARIANT_DATA
     global POSITION_DATA
     global ORDERS_DATA
-    global VARIANT_NAME
-
-    # get variant
-    VARIANT_NAME = get_variant()
 
     # from variant name get variant content
     variant_content_loaded = common.game_variant_content_reload(VARIANT_NAME)
@@ -106,6 +100,10 @@ def create_initial_position():
 
     # build variant data
     VARIANT_DATA = mapping.Variant(VARIANT_NAME, variant_content_loaded, parameters_read)
+
+    if starting_position:
+        pass
+        # TODO if start fill in 'ownerships' and 'units'
 
     # get the position
     position_loaded = {'ownerships': {}, 'units': {}, 'forbiddens': {}, 'dislodged_ones': {}}
@@ -127,8 +125,7 @@ def import_position(new_position_data):
     global ORDERS_DATA
 
     # make sure we are ready
-    # this will fill global 'VARIANT_NAME'
-    create_initial_position()
+    create_initial_position(False)
 
     # get loaded units
     loaded_units = new_position_data.save_json()
@@ -162,191 +159,10 @@ def import_position(new_position_data):
     ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA, False)
 
 
-def show_technical():
-    """ show_technical """
-
-    title = html.H3("Coin des documents technique")
-    MY_SUB_PANEL <= title
-
-    title1 = html.H4("Règles du jeu officielles")
-    MY_SUB_PANEL <= title1
-
-    link1 = html.A(href="https://media.wizards.com/2015/rules/diplomacy_rules.pdf", target="_blank")
-    MY_SUB_PANEL <= link1
-    link1 <= "Lien vers les règles officielles du jeu"
-
-    # --
-
-    title2 = html.H4("Algorithme de résolution (D.A.T.C.)")
-    MY_SUB_PANEL <= title2
-
-    link2 = html.A(href="./docs/DATC.html", target="_blank")
-    link2 <= "Lien vers une description technique de l'algorithme de résolution utilisé"
-    MY_SUB_PANEL <= link2
-
-    # --
-
-    title3 = html.H4("Choix d'implémentation")
-    MY_SUB_PANEL <= title3
-
-    link3 = html.A(href="./docs/Compl_en.pdf", target="_blank")
-    link3 <= "Lien vers les choix de comportement pour le moteur de résolution"
-    MY_SUB_PANEL <= link3
-
-    # --
-
-    title4 = html.H4("Le scorage (la marque sur un tournoi)")
-    MY_SUB_PANEL <= title4
-
-    scorings_table = html.TABLE()
-    row = html.TR()
-    for scoring_name, scoring1 in config.SCORING_CODE_TABLE.items():
-        link = html.A(href=f"./scorings/{scoring1}.pdf", target="_blank")
-        link <= f"{scoring_name}"
-        col = html.TD(link)
-        row <= col
-    scorings_table <= row
-    MY_SUB_PANEL <= scorings_table
-
-    # --
-
-    title5 = html.H4("Le calcul du ELO")
-    MY_SUB_PANEL <= title5
-
-    link51 = html.A(href="./docs/calcul_elo.pdf", target="_blank")
-    link51 <= "Lien vers les spécifications du calcul du ELO sur le site"
-    MY_SUB_PANEL <= link51
-    MY_SUB_PANEL <= html.BR()
-    MY_SUB_PANEL <= html.BR()
-
-    link52 = html.A(href="https://towardsdatascience.com/developing-a-generalized-elo-rating-system-for-multiplayer-games-b9b495e87802", target="_blank")
-    link52 <= "Lien vers la source d'inspiration pour le calcul du ELO sur le site"
-    MY_SUB_PANEL <= link52
-
-    # --
-
-    title61 = html.H4("Les variantes")
-    MY_SUB_PANEL <= title61
-
-    variants_table = html.TABLE()
-    row = html.TR()
-    for variant in config.VARIANT_NAMES_LIST:
-        link = html.A(href=f"./variants/{variant}/description.pdf", target="_blank")
-        link <= f"{variant}"
-        col = html.TD(link)
-        row <= col
-    variants_table <= row
-    MY_SUB_PANEL <= variants_table
-
-    MY_SUB_PANEL <= html.BR()
-
-    link62 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
-    link62 <= "Comment créer les fichiers nécessaire pour une variante"
-    MY_SUB_PANEL <= link62
-
-    # --
-
-    title7 = html.H4("Les options")
-    MY_SUB_PANEL <= title7
-
-    options_table = html.TABLE()
-    row = html.TR()
-    for option in ['brouillard']:
-        link = html.A(href=f"./options/{option}/description.pdf", target="_blank")
-        link <= f"{option}"
-        col = html.TD(link)
-        row <= col
-    options_table <= row
-    MY_SUB_PANEL <= options_table
-
-    MY_SUB_PANEL <= html.BR()
-
-    # --
-
-    title8 = html.H4("Règles simplifiées")
-    MY_SUB_PANEL <= title8
-
-    link8 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
-    link8 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
-    MY_SUB_PANEL <= link8
-
-    # --
-
-    title9 = html.H4("Création de fichier de tournoi")
-    MY_SUB_PANEL <= title9
-
-    link91 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
-    link91 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
-    MY_SUB_PANEL <= link91
-
-    MY_SUB_PANEL <= html.P()
-
-    link92 = html.A(href="./scripts/allocate.py", target="_blank")
-    link92 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
-    MY_SUB_PANEL <= link92
-
-    # --
-
-    title10 = html.H4("Document d'interface de l'API")
-    MY_SUB_PANEL <= title10
-
-    link101 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
-    link101 <= "Si vous voulez vous aussi développer votre front end..."
-    MY_SUB_PANEL <= link101
-
-    # --
-
-    title11 = html.H4("Remerciements")
-    MY_SUB_PANEL <= title11
-
-    link111 = html.A(href="https://brython.info/", target="_blank")
-    link111 <= "Outil utilisé pour ce site web"
-    MY_SUB_PANEL <= link111
-
-    MY_SUB_PANEL <= html.P()
-
-    link112 = html.A(href="https://www.flaticon.com/", target="_blank")
-    link112 <= "Icônes utilisées pour ce site web"
-    MY_SUB_PANEL <= link112
-
-
-WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
-WHYNOT_CONTENT = html.DIV("faq")
-
-
-def show_whynot():
-    """ show_whynot """
-
-    def reveal_callback(_, question):
-        """ reveal_callback """
-
-        WHYNOT_DISPLAYED_TABLE[question] = not WHYNOT_DISPLAYED_TABLE[question]
-        MY_SUB_PANEL.clear()
-        show_whynot()
-
-    title1 = html.H3("Pourquoi c'est pas comme ça ?")
-    MY_SUB_PANEL <= title1
-
-    WHYNOT_CONTENT.clear()
-
-    for question_txt, answer_txt in whynot.WHYNOT_CONTENT_TABLE.items():
-
-        reveal_button = html.INPUT(type="submit", value=question_txt)
-        reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
-        WHYNOT_CONTENT <= reveal_button
-
-        if WHYNOT_DISPLAYED_TABLE[question_txt]:
-
-            whynot_elt = html.DIV(answer_txt, Class='faq-info')
-            WHYNOT_CONTENT <= whynot_elt
-
-        WHYNOT_CONTENT <= html.P()
-
-    MY_SUB_PANEL <= WHYNOT_CONTENT
-
-
 def sandbox():
     """ sandbox """
+
+    global VARIANT_NAME
 
     selected_active_unit = None
     selected_passive_unit = None
@@ -358,7 +174,6 @@ def sandbox():
     down_click_time = None
     buttons_right = None
     report_window = None
-    displayed_zones = set()
 
     def rest_hold_callback(_):
         """ rest_hold_callback """
@@ -970,9 +785,6 @@ def sandbox():
         # put the orders
         ORDERS_DATA.render(ctx)
 
-        # because they get cleared on screen
-        displayed_zones.clear()
-
     def stack_orders(buttons_right):
         """ stack_orders """
 
@@ -1131,9 +943,15 @@ def sandbox():
 
     # starts here
 
+    # make sure we have a variant name
+    if not VARIANT_NAME:
+        if 'GAME_VARIANT' in storage:
+            VARIANT_NAME = storage['GAME_VARIANT']
+        else:
+            VARIANT_NAME = config.FORCED_VARIANT_NAME
+
     # make sure we are ready
-    # this will fill global 'VARIANT_NAME'
-    create_initial_position()
+    create_initial_position(False)
 
     # finds data about the dragged unit
     unit_info_table = {}
@@ -1275,6 +1093,253 @@ def sandbox():
 
     MY_SUB_PANEL <= html.H2(f"Le bac à sable (variante {VARIANT_NAME})")
     MY_SUB_PANEL <= my_sub_panel2
+
+
+def show_technical():
+    """ show_technical """
+
+    title = html.H3("Coin des documents technique")
+    MY_SUB_PANEL <= title
+
+    title1 = html.H4("Règles du jeu officielles")
+    MY_SUB_PANEL <= title1
+
+    link1 = html.A(href="https://media.wizards.com/2015/rules/diplomacy_rules.pdf", target="_blank")
+    MY_SUB_PANEL <= link1
+    link1 <= "Lien vers les règles officielles du jeu"
+
+    # --
+
+    title2 = html.H4("Algorithme de résolution (D.A.T.C.)")
+    MY_SUB_PANEL <= title2
+
+    link2 = html.A(href="./docs/DATC.html", target="_blank")
+    link2 <= "Lien vers une description technique de l'algorithme de résolution utilisé"
+    MY_SUB_PANEL <= link2
+
+    # --
+
+    title3 = html.H4("Choix d'implémentation")
+    MY_SUB_PANEL <= title3
+
+    link3 = html.A(href="./docs/Compl_en.pdf", target="_blank")
+    link3 <= "Lien vers les choix de comportement pour le moteur de résolution"
+    MY_SUB_PANEL <= link3
+
+    # --
+
+    title4 = html.H4("Le scorage (la marque sur un tournoi)")
+    MY_SUB_PANEL <= title4
+
+    scorings_table = html.TABLE()
+    row = html.TR()
+    for scoring_name, scoring1 in config.SCORING_CODE_TABLE.items():
+        link = html.A(href=f"./scorings/{scoring1}.pdf", target="_blank")
+        link <= f"{scoring_name}"
+        col = html.TD(link)
+        row <= col
+    scorings_table <= row
+    MY_SUB_PANEL <= scorings_table
+
+    # --
+
+    title5 = html.H4("Le calcul du ELO")
+    MY_SUB_PANEL <= title5
+
+    link51 = html.A(href="./docs/calcul_elo.pdf", target="_blank")
+    link51 <= "Lien vers les spécifications du calcul du ELO sur le site"
+    MY_SUB_PANEL <= link51
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= html.BR()
+
+    link52 = html.A(href="https://towardsdatascience.com/developing-a-generalized-elo-rating-system-for-multiplayer-games-b9b495e87802", target="_blank")
+    link52 <= "Lien vers la source d'inspiration pour le calcul du ELO sur le site"
+    MY_SUB_PANEL <= link52
+
+    # --
+
+    title61 = html.H4("Les variantes")
+    MY_SUB_PANEL <= title61
+
+    link62 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
+    link62 <= "Comment créer les fichiers nécessaire pour une variante"
+    MY_SUB_PANEL <= link62
+
+    # --
+
+    title7 = html.H4("Les options")
+    MY_SUB_PANEL <= title7
+
+    options_table = html.TABLE()
+    row = html.TR()
+    for option in ['brouillard']:
+        link = html.A(href=f"./options/{option}/description.pdf", target="_blank")
+        link <= f"{option}"
+        col = html.TD(link)
+        row <= col
+    options_table <= row
+    MY_SUB_PANEL <= options_table
+
+    MY_SUB_PANEL <= html.BR()
+
+    # --
+
+    title8 = html.H4("Règles simplifiées")
+    MY_SUB_PANEL <= title8
+
+    link8 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
+    link8 <= "Lien vers une version simplifiée des règles du jeu par Edi Birsan"
+    MY_SUB_PANEL <= link8
+
+    # --
+
+    title9 = html.H4("Création de fichier de tournoi")
+    MY_SUB_PANEL <= title9
+
+    link91 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
+    link91 <= "Comment allouer les joueurs dans les parties d'un tournoi (i.e. créer un CSV acceptable sur le site)"
+    MY_SUB_PANEL <= link91
+
+    MY_SUB_PANEL <= html.P()
+
+    link92 = html.A(href="./scripts/allocate.py", target="_blank")
+    link92 <= "Le script à utiliser pour réaliser cette allocation (lire le document au préalable)"
+    MY_SUB_PANEL <= link92
+
+    # --
+
+    title10 = html.H4("Document d'interface de l'API")
+    MY_SUB_PANEL <= title10
+
+    link101 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
+    link101 <= "Si vous voulez vous aussi développer votre front end..."
+    MY_SUB_PANEL <= link101
+
+    # --
+
+    title11 = html.H4("Remerciements")
+    MY_SUB_PANEL <= title11
+
+    link111 = html.A(href="https://brython.info/", target="_blank")
+    link111 <= "Outil utilisé pour ce site web"
+    MY_SUB_PANEL <= link111
+
+    MY_SUB_PANEL <= html.P()
+
+    link112 = html.A(href="https://www.flaticon.com/", target="_blank")
+    link112 <= "Icônes utilisées pour ce site web"
+    MY_SUB_PANEL <= link112
+
+
+def show_variant():
+    """ show_variant """
+
+    global VARIANT_NAME
+
+    def callback_render(refresh):
+        """ callback_render """
+
+        if refresh:
+
+            # put the background map first
+            ctx.drawImage(img, 0, 0)
+
+            # put the centers
+            VARIANT_DATA.render(ctx)
+
+            # put the position
+            POSITION_DATA.render(ctx)
+
+            # put the legends at the end
+            VARIANT_DATA.render_legends(ctx)
+
+            # save
+            save_context(ctx)
+
+        else:
+
+            # restore
+            restore_context(ctx)
+
+    # make sure we have a variant name
+    if not VARIANT_NAME:
+        if 'GAME_VARIANT' in storage:
+            VARIANT_NAME = storage['GAME_VARIANT']
+        else:
+            VARIANT_NAME = config.FORCED_VARIANT_NAME
+
+    # create position
+    create_initial_position(True)
+
+    map_size = VARIANT_DATA.map_size
+
+    # create canvas
+    canvas = html.CANVAS(id="map_canvas", width=map_size.x_pos, height=map_size.y_pos, alt="Map of the game")
+    ctx = canvas.getContext("2d")
+    if ctx is None:
+        alert("Il faudrait utiliser un navigateur plus récent !")
+        return
+
+    # put background (this will call the callback that display the whole map)
+    img = common.read_image(VARIANT_NAME, INTERFACE_CHOSEN)
+    img.bind('load', lambda _: callback_render(True))
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    helper = html.DIV(".")
+    display_left <= helper
+    display_left <= canvas
+
+    # overall
+    my_sub_panel2 = html.DIV()
+    my_sub_panel2.attrs['style'] = 'display:table-row'
+    my_sub_panel2 <= display_left
+
+    MY_SUB_PANEL <= html.H2(f"La variante {VARIANT_NAME} et sa position de départ")
+
+    link = html.A(href=f"./variants/{VARIANT_NAME}/description.pdf", target="_blank")
+    link <= f"Description technique de la variante {VARIANT_NAME}..."
+    MY_SUB_PANEL <= link
+    MY_SUB_PANEL <= html.BR()
+    MY_SUB_PANEL <= my_sub_panel2
+
+
+WHYNOT_DISPLAYED_TABLE = {k: False for k in whynot.WHYNOT_CONTENT_TABLE}
+WHYNOT_CONTENT = html.DIV("faq")
+
+
+def show_whynot():
+    """ show_whynot """
+
+    def reveal_callback(_, question):
+        """ reveal_callback """
+
+        WHYNOT_DISPLAYED_TABLE[question] = not WHYNOT_DISPLAYED_TABLE[question]
+        MY_SUB_PANEL.clear()
+        show_whynot()
+
+    title1 = html.H3("Pourquoi c'est pas comme ça ?")
+    MY_SUB_PANEL <= title1
+
+    WHYNOT_CONTENT.clear()
+
+    for question_txt, answer_txt in whynot.WHYNOT_CONTENT_TABLE.items():
+
+        reveal_button = html.INPUT(type="submit", value=question_txt)
+        reveal_button.bind("click", lambda e, q=question_txt: reveal_callback(e, q))
+        WHYNOT_CONTENT <= reveal_button
+
+        if WHYNOT_DISPLAYED_TABLE[question_txt]:
+
+            whynot_elt = html.DIV(answer_txt, Class='faq-info')
+            WHYNOT_CONTENT <= whynot_elt
+
+        WHYNOT_CONTENT <= html.P()
+
+    MY_SUB_PANEL <= WHYNOT_CONTENT
 
 
 def select_interface():
@@ -1473,6 +1538,8 @@ def load_option(_, item_name):
         sandbox()
     if item_name == 'Documents':
         show_technical()
+    if item_name == 'Variante':
+        show_variant()
     if item_name == 'Pourquoi yapa':
         show_whynot()
     if item_name == 'Choix d\'interface':
@@ -1510,6 +1577,10 @@ def render(panel_middle):
     # this means user wants to join game
     if ARRIVAL == 'sandbox':
         ITEM_NAME_SELECTED = 'Bac à sable'
+
+    # this means user wants to see variant
+    if ARRIVAL == 'variant':
+        ITEM_NAME_SELECTED = 'Variante'
 
     set_arrival(None)
 
