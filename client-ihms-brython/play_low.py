@@ -59,7 +59,7 @@ def make_rating_colours_window(variant_data, position_data, interface_, game_sco
     rating_table = html.TABLE()
 
     # flags
-    rolename2role_id = {VARIANT_DATA.role_name_table[v]: k for k, v in VARIANT_DATA.roles.items()}
+    rolename2role_id = {variant_data.role_name_table[v]: k for k, v in variant_data.roles.items()}
     variant_name = variant_data.name
     flags_row = html.TR()
     rating_table <= flags_row
