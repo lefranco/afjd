@@ -246,6 +246,8 @@ def countdown():
 def render(panel_middle):
     """ render """
 
+    global ARRIVAL
+
     # always back to top
     global ITEM_NAME_SELECTED
 
@@ -330,7 +332,7 @@ def render(panel_middle):
             # Admin
             ITEM_NAME_SELECTED = 'Retards'
 
-    set_arrival(None)
+    ARRIVAL = None
 
     load_option(None, ITEM_NAME_SELECTED)
 

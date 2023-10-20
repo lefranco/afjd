@@ -24,19 +24,30 @@ OPTIONS = ['Bac à sable', 'Documents', 'Variante', 'Pourquoi yapa', 'Choix d\'i
 
 
 ARRIVAL = None
+
+# from home
+VARIANT_REQUESTED_NAME = None
+
+# from game
 VARIANT_NAME = None
 
+# this will come from variant
+INTERFACE_CHOSEN = None
+VARIANT_DATA = None
+POSITION_DATA = None
+ORDERS_DATA = None
 
-def set_arrival(arrival, variant_name=None):
+
+def set_arrival(arrival, variant_requested_name=None):
     """ set_arrival """
 
     global ARRIVAL
-    global VARIANT_NAME
+    global VARIANT_REQUESTED_NAME
 
     ARRIVAL = arrival
 
-    if variant_name:
-        VARIANT_NAME = variant_name
+    if variant_requested_name:
+        VARIANT_REQUESTED_NAME = variant_requested_name
 
 
 class AutomatonStateEnum:
@@ -46,14 +57,6 @@ class AutomatonStateEnum:
     SELECT_ORDER_STATE = 2
     SELECT_PASSIVE_UNIT_STATE = 3
     SELECT_DESTINATION_STATE = 4
-
-
-# this will come from variant
-VARIANT_NAME = None
-INTERFACE_CHOSEN = None
-VARIANT_DATA = None
-POSITION_DATA = None
-ORDERS_DATA = None
 
 
 # canvas backup to optimize drawing map when only orders change
@@ -77,7 +80,6 @@ def restore_context(ctx):
     """ restore_context """
 
     ctx.drawImage(BACKUP_CANVAS, 0, 0)
-
 
 
 def make_rating_colours_window(variant_data, position_data, interface_):
@@ -148,7 +150,6 @@ def make_rating_colours_window(variant_data, position_data, interface_):
     return rating_table
 
 
-
 def create_initial_position(starting_position):
     """ create_initial_position """
 
@@ -171,10 +172,19 @@ def create_initial_position(starting_position):
     # build variant data
     VARIANT_DATA = mapping.Variant(VARIANT_NAME, variant_content_loaded, parameters_read)
 
+    dict_made_units = {}
+    dict_made_ownerships = {}
+
     if starting_position:
 
+        # ownerships
+        for role in VARIANT_DATA.roles.values():
+            for start_center in role.start_centers:
+                center_num = start_center.identifier
+                role_num = role.identifier
+                dict_made_ownerships[center_num] = role_num
+
         # units
-        dict_made_units = {}
         for role, role_start_units in VARIANT_DATA.start_units.items():
             role_num = role.identifier
             if role_num not in dict_made_units:
@@ -182,14 +192,6 @@ def create_initial_position(starting_position):
             for (type_num, zone) in role_start_units:
                 zone_num = zone.identifier
                 dict_made_units[role_num].append([type_num, zone_num])
-
-        # ownerships
-        dict_made_ownerships = {}
-        for role in VARIANT_DATA.roles.values():
-            for start_center in role.start_centers:
-                center_num = start_center.identifier
-                role_num = role.identifier
-                dict_made_ownerships[center_num] = role_num
 
     # get the position
     position_loaded = {'ownerships': dict_made_ownerships, 'units': dict_made_units, 'forbiddens': {}, 'dislodged_ones': {}}
@@ -204,17 +206,27 @@ def create_initial_position(starting_position):
     ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA, False)
 
 
-def import_position(new_position_data):
+def import_position(incoming_position):
     """ import position from play/position """
 
+    global VARIANT_NAME
     global POSITION_DATA
-    global ORDERS_DATA
+
+    VARIANT_NAME = incoming_position.variant.name
 
     # make sure we are ready
     create_initial_position(False)
 
+    # get loaded centers for convenience
+    loaded_ownerships = incoming_position.save_json2()
+    dict_loaded_ownerships = {}
+    for loaded_ownership in loaded_ownerships:
+        center_num = loaded_ownership['center_num']
+        role_num = loaded_ownership['role']
+        dict_loaded_ownerships[center_num] = role_num
+
     # get loaded units
-    loaded_units = new_position_data.save_json()
+    loaded_units = incoming_position.save_json()
     dict_loaded_units = {}
     for loaded_unit in loaded_units:
         type_num = loaded_unit['type_unit']
@@ -224,31 +236,18 @@ def import_position(new_position_data):
             dict_loaded_units[role_num] = []
         dict_loaded_units[role_num].append([type_num, zone_num])
 
-    # get loaded centers for convenience
-    loaded_ownerships = new_position_data.save_json2()
-    dict_loaded_ownerships = {}
-    for loaded_ownership in loaded_ownerships:
-        center_num = loaded_ownership['center_num']
-        role_num = loaded_ownership['role']
-        dict_loaded_ownerships[center_num] = role_num
-
     # get the position
-    position_imported = {'ownerships': dict_loaded_ownerships, 'units': dict_loaded_units, 'forbiddens': {}, 'dislodged_ones': {}}
+    position_loaded = {'ownerships': dict_loaded_ownerships, 'units': dict_loaded_units, 'forbiddens': {}, 'dislodged_ones': {}}
 
     # copy position
-    POSITION_DATA = mapping.Position(position_imported, VARIANT_DATA)
-
-    # get the orders from server (actually no)
-    orders_loaded = {'fake_units': {}, 'orders': {}}
-
-    # digest the orders
-    ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA, False)
+    POSITION_DATA = mapping.Position(position_loaded, VARIANT_DATA)
 
 
 def sandbox():
     """ sandbox """
 
     global VARIANT_NAME
+    global ARRIVAL
 
     selected_active_unit = None
     selected_passive_unit = None
@@ -1030,14 +1029,16 @@ def sandbox():
     # starts here
 
     # make sure we have a variant name
-    if not VARIANT_NAME:
-        if 'GAME_VARIANT' in storage:
-            VARIANT_NAME = storage['GAME_VARIANT']
-        else:
-            VARIANT_NAME = config.FORCED_VARIANT_NAME
+    if 'GAME_VARIANT' in storage:
+        VARIANT_NAME = storage['GAME_VARIANT']
+    else:
+        VARIANT_NAME = config.FORCED_VARIANT_NAME
 
     # make sure we are ready
-    create_initial_position(False)
+    if ARRIVAL == "sandbox":
+        ARRIVAL = None
+    else:
+        create_initial_position(False)
 
     # finds data about the dragged unit
     unit_info_table = {}
@@ -1321,6 +1322,7 @@ def show_variant():
     """ show_variant """
 
     global VARIANT_NAME
+    global VARIANT_REQUESTED_NAME
 
     def callback_render(refresh):
         """ callback_render """
@@ -1347,8 +1349,13 @@ def show_variant():
             # restore
             restore_context(ctx)
 
+    # you get variant from game except if coming from home page
+
     # make sure we have a variant name
-    if not VARIANT_NAME:
+    if VARIANT_REQUESTED_NAME:
+        VARIANT_NAME = VARIANT_REQUESTED_NAME
+        VARIANT_REQUESTED_NAME = None
+    else:
         if 'GAME_VARIANT' in storage:
             VARIANT_NAME = storage['GAME_VARIANT']
         else:
@@ -1660,6 +1667,8 @@ def load_option(_, item_name):
 def render(panel_middle):
     """ render """
 
+    global ARRIVAL
+
     # always back to top
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = OPTIONS[0]
@@ -1671,8 +1680,6 @@ def render(panel_middle):
     # this means user wants to see variant
     if ARRIVAL == 'variant':
         ITEM_NAME_SELECTED = 'Variante'
-
-    set_arrival(None)
 
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
