@@ -1667,8 +1667,6 @@ def load_option(_, item_name):
 def render(panel_middle):
     """ render """
 
-    global ARRIVAL
-
     # always back to top
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = OPTIONS[0]
