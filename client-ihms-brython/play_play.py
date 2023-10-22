@@ -887,6 +887,10 @@ def submit_orders():
                     put_submit(buttons_right)
 
                 automaton_state = AutomatonStateEnum.SELECT_ACTIVE_STATE
+
+                # orders status
+                stack_orders_status(buttons_right)
+
                 return
 
             if selected_order_type is mapping.OrderTypeEnum.OFF_SUPPORT_ORDER:
