@@ -24,7 +24,7 @@ OPTIONS = [
     # communication
     'Changer nouvelles', 'Préparer un publipostage', 'Envoyer un courriel', 'Résultats du tournoi', 'Annoncer dans toutes les parties', 'Annoncer dans la partie', 'Récupérer un courriel et téléphone',
     # surveillance
-    'Tous les ordres manquants', 'Toutes les parties d\'un joueur', 'Dernières soumissions d\'ordres', 'Vérification adresses IP', 'Vérification courriels', 'Courriels non confirmés', 'Codes de vérification',
+    'Tous les ordres manquants', 'Pires récidivistes retard et abandon', 'Toutes les parties d\'un joueur', 'Dernières soumissions d\'ordres', 'Vérification adresses IP', 'Vérification courriels', 'Courriels non confirmés', 'Codes de vérification',
     # management
     'Destituer arbitre partie', 'Changer responsable tournoi', 'Changer responsable événement']
 
@@ -90,6 +90,36 @@ def get_all_games_roles_missing_orders():
     ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
 
     return dict_missing_orders_data
+
+
+def get_current_worst_annoyers():
+    """ get_current_worst_annoyers : returns empty dict if problem """
+
+    dict_current_worst_annoyers_data = {}
+
+    def reply_callback(req):
+        nonlocal dict_current_worst_annoyers_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération des pires recidivistes du retard : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des pires recidivistes du retard : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        dict_current_worst_annoyers_data = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/current-worst-annoyers"
+
+    # get roles that submitted orders : need token
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return dict_current_worst_annoyers_data
 
 
 def get_tournament_players_data(tournament_id):
@@ -1406,6 +1436,122 @@ def all_missing_orders():
     MY_SUB_PANEL <= delays_table
 
 
+def current_worst_annoyers():
+    """ current_worst_annoyers """
+
+    MY_SUB_PANEL <= html.H3("Les pires récidivistes du retard ou de l'abandon dans les parties en cours")
+
+    pseudo = storage['PSEUDO']
+
+    if not check_modo(pseudo):
+        alert("Pas le bon compte (pas modo)")
+        return
+
+    games_dict = common.get_games_data(1)
+    if not games_dict:
+        alert("Erreur chargement dictionnaire parties")
+        return
+
+    players_dict = common.get_players_data()
+    if not players_dict:
+        return
+
+    # get the link (allocations) of players
+    allocations_data = common.get_allocations_data()
+    if not allocations_data:
+        alert("Erreur chargement allocations")
+        return
+
+    masters_alloc = allocations_data['game_masters_dict']
+
+    # gather game to master
+    game_master_dict = {}
+    for master_id, games_id in masters_alloc.items():
+        master = players_dict[str(master_id)]['pseudo']
+        for game_id in games_id:
+            if str(game_id) in games_dict:
+                game = games_dict[str(game_id)]['name']
+                game_master_dict[game] = master
+
+    players_dict2 = common.get_players()
+    if not players_dict2:
+        return
+
+    # pseudo from number
+    num2pseudo = {v: k for k, v in players_dict2.items()}
+
+    dict_worst_annoyers_data = get_current_worst_annoyers()
+    if not dict_worst_annoyers_data:
+        alert("Erreur chargement des pires recidivistes du retard et de l'abandon dans les parties en cours")
+        return
+
+    # reshape data
+    annoyers_dict = {}
+    for game_name, game_data in dict_worst_annoyers_data['games_dict'].items():
+
+        for player_id_str, num_delays in game_data['delays_number'].items():
+
+            if player_id_str not in annoyers_dict:
+                annoyers_dict[player_id_str] = {}
+                annoyers_dict[player_id_str]['delays'] = 0
+                annoyers_dict[player_id_str]['dropouts'] = 0
+            annoyers_dict[player_id_str]['delays'] += num_delays
+
+            if 'games' not in annoyers_dict[player_id_str]:
+                annoyers_dict[player_id_str]['games'] = set()
+            annoyers_dict[player_id_str]['games'].add(game_name)
+
+        for player_id_str, num_dropouts in game_data['dropouts_number'].items():
+
+            if player_id_str not in annoyers_dict:
+                annoyers_dict[player_id_str] = {}
+                annoyers_dict[player_id_str]['delays'] = 0
+                annoyers_dict[player_id_str]['dropouts'] = 0
+            annoyers_dict[player_id_str]['dropouts'] += num_dropouts
+
+            if 'games' not in annoyers_dict[player_id_str]:
+                annoyers_dict[player_id_str]['games'] = set()
+            annoyers_dict[player_id_str]['games'].add(game_name)
+
+    annoyers_table = html.TABLE()
+
+    # the display order
+    fields = ['pseudo', 'dropouts', 'delays', 'games']
+
+    # header
+    thead = html.THEAD()
+    for field in fields:
+        field_fr = {'pseudo': 'pseudo', 'dropouts': 'abandons', 'delays': 'retards', 'games': 'parties'}[field]
+        col = html.TD(field_fr)
+        thead <= col
+    annoyers_table <= thead
+
+    # force sort according to deadline (latest games first of course)
+    for player_id_str, data in sorted(annoyers_dict.items(), key=lambda p: (p[1]['dropouts'], p[1]['delays']), reverse=True):
+
+        if int(player_id_str) in num2pseudo:
+            pseudo = num2pseudo[int(player_id_str)]
+        else:
+            pseudo = "???"
+        data['pseudo'] = pseudo
+
+        row = html.TR()
+        for field in fields:
+
+            value = data[field]
+
+            if field == 'games':
+                value = ' '.join([str(n) for n in sorted(value)])
+
+            col = html.TD(value)
+
+            row <= col
+
+        annoyers_table <= row
+
+    MY_SUB_PANEL <= annoyers_table
+
+
 def show_player_games(pseudo_player, game_list):
     """ show_player_games """
 
@@ -2262,6 +2408,8 @@ def load_option(_, item_name):
     # surveillance
     if item_name == 'Tous les ordres manquants':
         all_missing_orders()
+    if item_name == 'Pires récidivistes retard et abandon':
+        current_worst_annoyers()
     if item_name == 'Toutes les parties d\'un joueur':
         show_player_games(None, [])
     if item_name == 'Dernières soumissions d\'ordres':
