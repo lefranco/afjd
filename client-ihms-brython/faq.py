@@ -57,6 +57,9 @@ FAQ_CONTENT_TABLE = {
     "Dans les paramètres des parties, la notion de messages publics et privés est dupliquée. Pourquoi  ?":
     "Ces deux paramètres ont une version 'partie' et une version 'en cours' La première est celle entrée par le créateur de la partie. La deuxième est celle qui va s'appliquer, elle est initialisée à la valeur de la première. A la fin de la partie, la deuxième est effacée. L'arbitre peut également jouer avec l'autorisation des messages publics et privés pendant la partie. Les exportations de partie (pour savoir comment elle a été jouée) se baseront sur la première.",
 
+    "Comment démarrer/arrêter une partie dont je suis l'arbitre ?":
+    "Se connecter et sélectionner la partie comme d'habitude. Utiliser le menu “Editer partie“ puis le sous menu “Changer état“ et enfin le bouton “Démarrer la partie“ (ou “Arrêter la partie“) puis confirmer. Il est également possible de passer par le menu “Mes parties“ en se mettant en mode “avec colonnes d'action“",
+
     "Comment remplacer un joueur ?":
     "C'est le rôle de l'arbitre. Il faut lui retirer le rôle dans la console d'arbitrage et attribuer le rôle à un autre joueur dans la partie, qu'il aura fallu faire venir au préalable cf. question suivante.",
 
