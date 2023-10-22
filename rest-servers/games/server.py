@@ -6703,6 +6703,59 @@ class StatisticsRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/current-worst-annoyers')
+class CurrentWorstAnnoyersRessource(flask_restful.Resource):  # type: ignore
+    """ CurrentWorstAnnoyersRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+        """
+        Get current worst annoyers (late or giving  up) in current games...
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/current-worst-annoyers - GET - getting current annoyers ")
+
+        sql_executor = database.SqlExecutor()
+
+        # concerned_games
+        games_list = games.Game.inventory(sql_executor)
+        concerned_games_list = [g.identifier for g in games_list if g.current_state == 1]
+
+        games_dict = {}
+        for game_id in concerned_games_list:
+
+            game_data: typing.Dict[str, typing.Any] = {}
+
+            # get game
+            game = games.Game.find_by_identifier(sql_executor, game_id)
+            assert game is not None
+
+            # get name
+            game_name = game.name
+
+            # get delays
+            game_incidents = incidents.Incident.list_by_game_id(sql_executor, game_id)
+            delayers = {d[3] for d in game_incidents}
+            delays_number = {d: len([dd for dd in game_incidents if dd[3] == d]) for d in delayers}
+            game_data['delays_number'] = delays_number
+
+            # get dropouts
+            game_dropouts = dropouts.Dropout.list_by_game_id(sql_executor, game_id)
+            quitters = {d[2] for d in game_dropouts}
+            dropouts_number = {q: len([qq for qq in game_dropouts if qq[2] == q]) for q in quitters}
+            game_data['dropouts_number'] = dropouts_number
+
+            if not (delays_number or dropouts_number):
+                continue
+
+            games_dict[game_name] = game_data
+
+        del sql_executor
+
+        data = {'games_dict': games_dict}
+        return data, 200
+
+
 @API.resource('/extract_elo_data')
 class ExtractEloDataRessource(flask_restful.Resource):  # type: ignore
     """ ExtractEloDataRessource """
