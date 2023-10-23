@@ -7129,7 +7129,7 @@ class AnnounceGamesRessource(flask_restful.Resource):  # type: ignore
 
             # take the game  with most isolated players
 
-            best_game = min(table, key=lambda g: max(nb_games[p] for p in table[g]))
+            best_game = min(table, key=lambda g: min(nb_games[p] for p in table[g]))
             useful_games.append(best_game)
 
             # reduce the problem
