@@ -70,6 +70,45 @@ SUPERVISE_REFRESH_PERIOD_SEC = 15
 def game_master():
     """ game_master """
 
+    def clear_vote_callback(ev, role_id):  # pylint: disable=invalid-name
+        """ clear_vote_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 201:
+                if 'message' in req_result:
+                    alert(f"Erreur à l'effacement de vote d'arrêt dans la partie : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à l'effacement de vote d'arrêt dans la partie : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+                return
+
+            messages = "<br>".join(req_result['msg'].split('\n'))
+            common.info_dialog(f"Le vote a été effacé ! {messages}", True)
+
+            # back to where we started
+            play_low.MY_SUB_PANEL.clear()
+            game_master()
+
+        ev.preventDefault()
+
+        json_dict = {
+            'role_id': role_id,
+            'value': False
+        }
+
+        host = config.SERVER_CONFIG['GAME']['HOST']
+        port = config.SERVER_CONFIG['GAME']['PORT']
+        url = f"{host}:{port}/game-votes/{play_low.GAME_ID}"
+
+        # adding a vote in a game : need token
+        ajax.post(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+        # back to where we started
+        play_low.MY_SUB_PANEL.clear()
+        game_master()
+
     def debrief_game_callback(ev):  # pylint: disable=invalid-name
 
         def reply_callback(req):
@@ -882,11 +921,21 @@ def game_master():
 
         flag = ""
         if role_id in vote_values_table:
+
             if vote_values_table[role_id]:
                 flag = html.IMG(src="./images/stop.png", title="Le joueur a voté pour arrêter la partie")
             else:
                 flag = html.IMG(src="./images/continue.jpg", title="Le joueur a voté pour continuer la partie")
-        col <= flag
+            col <= flag
+
+            # gm must be able to clear vote
+            form = html.FORM()
+            clear_vote = html.INPUT(type="submit", value="X")
+            clear_vote.bind("click", lambda ev, r=role_id: clear_vote_callback(ev, r))
+            form <= clear_vote
+            col <= html.BR()
+            col <= form
+
         row <= col
 
         # separator
