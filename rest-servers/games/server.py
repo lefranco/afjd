@@ -5201,26 +5201,31 @@ class GameVoteRessource(flask_restful.Resource):  # type: ignore
 
         # who is player for role ?
         assert game is not None
-        expected_id = game.get_role(sql_executor, role_id)
+        expected_player_id = game.get_role(sql_executor, role_id)
+        expected_master_id = game.get_role(sql_executor, 0)
 
-        # must be player
-        if user_id != expected_id:
+        # must be player or game master
+        if user_id not in [expected_player_id, expected_master_id]:
             del sql_executor
-            flask_restful.abort(403, msg="You do not seem to be the player who is in charge")
+            flask_restful.abort(403, msg="You do not seem to be the player who is in charge or the game master of the game")
 
         # game must be ongoing
         if game.current_state != 1:
             del sql_executor
             flask_restful.abort(403, msg="Game does not seem to be ongoing")
 
-        # create vote here
-        vote = votes.Vote(int(game_id), role_id, bool(value))
-        vote.update_database(sql_executor)
+        # create or delete vote here
+        if user_id == expected_player_id:
+            vote = votes.Vote(int(game_id), role_id, bool(value))
+            vote.update_database(sql_executor)
+        if user_id == expected_master_id:
+            vote = votes.Vote(int(game_id), role_id, bool(value))
+            vote.delete_database(sql_executor)
 
         sql_executor.commit()
         del sql_executor
 
-        data = {'msg': "Ok vote inserted"}
+        data = {'msg': "Ok vote inserted or deleted"}
         return data, 201
 
     def get(self, game_id: int) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
