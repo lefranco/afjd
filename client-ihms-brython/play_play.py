@@ -2807,6 +2807,12 @@ def vote():
     # button last moves
     play_low.stack_last_moves_button(play_low.MY_SUB_PANEL)
 
+    # reminder
+    reminder = html.DIV("ATTENTION : Pensez à prévenir l'arbitre qu'un vote est en cours (par un message par exemple)", Class='important')
+    special_legend = html.LEGEND(reminder)
+    play_low.MY_SUB_PANEL <= special_legend
+    play_low.MY_SUB_PANEL <= html.BR()
+
     # form
     play_low.MY_SUB_PANEL <= form
 
