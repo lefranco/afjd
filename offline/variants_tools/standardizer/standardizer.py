@@ -18,7 +18,7 @@ def main() -> None:
     args = parser.parse_args()
 
     json_input = args.input_file
-    json_output = f"{json_input}.compact"
+    json_output = json_input
 
     # load parameters from json data file
     with open(json_input, "r", encoding='utf-8') as read_file:
@@ -28,11 +28,9 @@ def main() -> None:
             print(f"Failed to load {json_input} : {exception}")
             sys.exit(-1)
 
-    output = json.dumps(json_data, ensure_ascii=False)
+    output = json.dumps(json_data, indent=4, ensure_ascii=False)
     with open(json_output, 'w', encoding='utf-8') as file_ptr:
         file_ptr.write(output)
-
-    print(f"Modified file copied to {json_output}")
 
 
 if __name__ == '__main__':
