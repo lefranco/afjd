@@ -15,6 +15,11 @@ import itertools
 import collections
 import math
 
+import cProfile
+import pstats
+
+PROFILE = False
+
 
 # two segment with middle further than this are not considered to be potentially intersected
 FAR_AWAY_OPTIMIZATION = 50.
@@ -105,7 +110,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
     """ find_neighbourhood """
 
     def compatible(unit_type: int, region_type: int) -> bool:
-        """ compatible : reject zone of weong region_type """
+        """ compatible : reject zone of wrong region_type """
         if unit_type == 1:
             return region_type in {1, 2}
         return region_type in {1, 3}
@@ -127,11 +132,11 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
             """ intersect_segments """
 
             def distance_point_point(point1: Point, point2: Point) -> float:
-                """ distance_point_poiont """
+                """ distance_point_point """
                 return math.sqrt((point2.x_pos - point1.x_pos)**2 + (point2.y_pos - point1.y_pos)**2)
 
             def middle_segment(segment: Segment) -> Point:
-                """ length_segment """
+                """ middle_segment """
                 return Point((segment.edge1.x_pos + segment.edge2.x_pos) // 2, (segment.edge1.y_pos + segment.edge2.y_pos) // 2)
 
             def length_segment(segment: Segment) -> float:
@@ -294,17 +299,24 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
     army_result_queue: multiprocessing.Queue[typing.Dict[str, typing.List[int]]] = multiprocessing.Queue()
     fleet_result_queue: multiprocessing.Queue[typing.Dict[str, typing.List[int]]] = multiprocessing.Queue()
 
-    # fork process for armies
-    army_running_process = multiprocessing.Process(target=processed_evaluate, args=(1, army_result_queue))
-    army_running_process.start()
+    if PROFILE:
 
-    # fork process for fleet
-    fleet_running_process = multiprocessing.Process(target=processed_evaluate, args=(2, fleet_result_queue))
-    fleet_running_process.start()
+        processed_evaluate(1, army_result_queue)
+        processed_evaluate(2, fleet_result_queue)
 
-    # join processes
-    army_running_process.join()
-    fleet_running_process.join()
+    else:
+
+        # fork process for armies
+        army_running_process = multiprocessing.Process(target=processed_evaluate, args=(1, army_result_queue))
+        army_running_process.start()
+
+        # fork process for fleet
+        fleet_running_process = multiprocessing.Process(target=processed_evaluate, args=(2, fleet_result_queue))
+        fleet_running_process.start()
+
+        # join processes
+        army_running_process.join()
+        fleet_running_process.join()
 
     # collect data
     new_neighbouring = []
@@ -334,7 +346,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
         zone1 = Zone.nomenclature[int(zone_num1)]
         if zone1.region_type != 1:  # coast
             continue
-        for zone_num2 in neighbours:
+        for zone_num2 in neighbours.copy():
             zone2 = Zone.nomenclature[int(zone_num2)]
             if zone2.region_type != 1:  # coast
                 continue
@@ -408,4 +420,18 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+
+    # this if script too slow and profile it
+    if PROFILE:
+        PR = cProfile.Profile()
+        PR.enable()
+
     main()
+
+    # stats
+    if PROFILE:
+        PR.disable()
+        PS = pstats.Stats(PR)
+        PS.strip_dirs()
+        PS.sort_stats('time')
+        PS.print_stats()  # uncomment to have profile stats
