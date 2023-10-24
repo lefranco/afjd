@@ -233,7 +233,15 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
 
     # create zone
     for num_zone_str, zone_data in json_parameters_data['zones'].items():
-        zone = Zone(int(num_zone_str), zone_data['full_name'])
+        if zone_data['full_name']:
+            zone = Zone(int(num_zone_str), zone_data['full_name'])
+        else:
+            for num, (num_zone2, num_coast) in enumerate(json_variant_data['coastal_zones']):
+                if num + 1 == int(num_zone_str) - len(json_variant_data['regions']):
+                    zone2 = Zone.nomenclature[num_zone2]
+                    coast_name = json_parameters_data['coasts'][str(num_coast)]['name']
+                    break
+            zone = Zone(int(num_zone_str), f"{str(zone2)} {coast_name}")
 
     # put type from variant
     for num, region_type in enumerate(json_variant_data['regions']):
