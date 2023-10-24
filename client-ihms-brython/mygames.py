@@ -1194,7 +1194,7 @@ def my_games(state_name):
 
             if field == 'votes':
                 value = ""
-                if str(game_id) in dict_voted_data['dict_voted']:
+                if str(game_id) in dict_voted_data['dict_voted'] and dict_voted_data['dict_voted'][str(game_id)]:
                     value = dict_voted_data['dict_voted'][str(game_id)]
 
             if field == 'new_declarations':
