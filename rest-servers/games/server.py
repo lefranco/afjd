@@ -4036,6 +4036,64 @@ class GameOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
         return data, 200
 
 
+@API.resource('/all-player-games-ongoing-votes')
+class AllPlayerGamesOngoingVotesRessource(flask_restful.Resource):  # type: ignore
+    """ AllPlayerGamesOngoingVotesRessource """
+
+    def get(self) -> typing.Tuple[typing.Dict[str, typing.Dict[int, int]], int]:
+        """
+        Gets list of games where a vote is ongoing
+        EXPOSED
+        """
+
+        mylogger.LOGGER.info("/all-player-games-ongoing-votes - GET - getting games where vote is ongoing for my games")
+
+        # check authentication from user server
+        host = lowdata.SERVER_CONFIG['USER']['HOST']
+        port = lowdata.SERVER_CONFIG['USER']['PORT']
+        url = f"{host}:{port}/verify"
+        jwt_token = flask.request.headers.get('AccessToken')
+        if not jwt_token:
+            flask_restful.abort(400, msg="Missing authentication!")
+        req_result = SESSION.get(url, headers={'Authorization': f"Bearer {jwt_token}"})
+        if req_result.status_code != 200:
+            mylogger.LOGGER.error("ERROR = %s", req_result.text)
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(401, msg=f"Bad authentication!:{message}")
+
+        pseudo = req_result.json()['logged_in_as']
+
+        # get player identifier
+        host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+        port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+        url = f"{host}:{port}/player-identifiers/{pseudo}"
+        req_result = SESSION.get(url)
+        if req_result.status_code != 200:
+            print(f"ERROR from server  : {req_result.text}")
+            message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+            flask_restful.abort(404, msg=f"Failed to get id from pseudo {message}")
+        player_id = req_result.json()
+
+        sql_executor = database.SqlExecutor()
+
+        # get list of games in which player is involved
+        allocations_list = allocations.Allocation.list_by_player_id(sql_executor, player_id)
+
+        dict_voted_list: typing.Dict[int, int] = {}
+        for game_id, _, _ in allocations_list:
+
+            # definitives_list : those who agreed to adjudicate with their orders now
+            votes_list = votes.Vote.list_by_game_id(sql_executor, game_id)
+
+            # just say there is or not some votes
+            dict_voted_list[game_id] = len(votes_list)
+
+        del sql_executor
+
+        data = {'dict_voted': dict_voted_list}
+        return data, 200
+
+
 @API.resource('/all-player-games-orders-submitted')
 class AllPlayerGamesOrdersSubmittedRessource(flask_restful.Resource):  # type: ignore
     """ AllPlayerGamesOrdersSubmittedRessource """
