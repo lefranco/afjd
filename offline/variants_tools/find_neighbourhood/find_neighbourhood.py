@@ -14,7 +14,7 @@ import itertools
 import math
 
 
-TOLERANCE = 14
+TOLERANCE = 20
 
 class Point(typing.NamedTuple):
     """ Point """
