@@ -514,6 +514,8 @@ def show_news():
             row = html.TR()
 
     variants_table <= row
+    div_a1_tip = html.SPAN("Plus de détail dans le menu “Bac à sable“ sous menu “Documents“", Class='tooltiptext')
+    div_a1 <= div_a1_tip
     div_a1 <= variants_table
 
     div_homepage <= div_a1
