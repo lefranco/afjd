@@ -295,7 +295,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
                 continue
             seas_of_zones[zone1].add(zone2)
 
-    # prune
+    # prune coasts for fleets
     for zone_num1, neighbours in new_neighbouring[1].items():
         zone1 = Zone.nomenclature[int(zone_num1)]
         if zone1.region_type != 1:  # coast
