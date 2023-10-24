@@ -281,7 +281,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
     dict_unit_type = fleet_result_queue.get()
     new_neighbouring.append(dict_unit_type)
 
-    # now we prune : two neighbouring coasts must see the same sea
+    # now we prune coasts for fleets : two neighbouring coasts must see the same sea
 
     # build 'seas_of_zones'
     seas_of_zones: typing.Dict[Zone, typing.Set[Zone]] = collections.defaultdict(set)
@@ -295,7 +295,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
                 continue
             seas_of_zones[zone1].add(zone2)
 
-    # prune coasts for fleets
+    # prune
     for zone_num1, neighbours in new_neighbouring[1].items():
         zone1 = Zone.nomenclature[int(zone_num1)]
         if zone1.region_type != 1:  # coast
