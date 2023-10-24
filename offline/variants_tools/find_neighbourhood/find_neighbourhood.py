@@ -111,30 +111,24 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
     def adjacent(polygon1: typing.List[Segment], polygon2: typing.List[Segment]) -> bool:
         """ adjacent """
 
-        #(maxsize=None)
         def intersect_segments(segment1: Segment, segment2: Segment) -> bool:
             """ intersect_segments """
 
-            #(maxsize=None)
             def distance_point_point(point1: Point, point2: Point) -> float:
                 """ distance_point_poiont """
                 return math.sqrt((point2.x_pos - point1.x_pos)**2 + (point2.y_pos - point1.y_pos)**2)
 
-            #(maxsize=None)
             def middle_segment(segment: Segment) -> Point:
                 """ length_segment """
                 return Point((segment.edge1.x_pos + segment.edge2.x_pos) // 2, (segment.edge1.y_pos + segment.edge2.y_pos) // 2)
 
-            #(maxsize=None)
             def length_segment(segment: Segment) -> float:
                 """ length_segment """
                 return distance_point_point(segment.edge1, segment.edge2)
 
-            #(maxsize=None)
             def point_in_segment(point: Point, segment: Segment) -> bool:
                 """ point_in_segment """
 
-                #(maxsize=None)
                 def distance_point_segment(point: Point, segment: Segment) -> float:
                     """ distance_point_segment """
 
