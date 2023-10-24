@@ -12,7 +12,6 @@ import os
 import sys
 import json
 import itertools
-import functools
 import collections
 import math
 
@@ -112,30 +111,30 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
     def adjacent(polygon1: typing.List[Segment], polygon2: typing.List[Segment]) -> bool:
         """ adjacent """
 
-        @functools.lru_cache(maxsize=None)
+        #(maxsize=None)
         def intersect_segments(segment1: Segment, segment2: Segment) -> bool:
             """ intersect_segments """
 
-            @functools.lru_cache(maxsize=None)
+            #(maxsize=None)
             def distance_point_point(point1: Point, point2: Point) -> float:
                 """ distance_point_poiont """
                 return math.sqrt((point2.x_pos - point1.x_pos)**2 + (point2.y_pos - point1.y_pos)**2)
 
-            @functools.lru_cache(maxsize=None)
+            #(maxsize=None)
             def middle_segment(segment: Segment) -> Point:
                 """ length_segment """
                 return Point((segment.edge1.x_pos + segment.edge2.x_pos) // 2, (segment.edge1.y_pos + segment.edge2.y_pos) // 2)
 
-            @functools.lru_cache(maxsize=None)
+            #(maxsize=None)
             def length_segment(segment: Segment) -> float:
                 """ length_segment """
                 return distance_point_point(segment.edge1, segment.edge2)
 
-            @functools.lru_cache(maxsize=None)
+            #(maxsize=None)
             def point_in_segment(point: Point, segment: Segment) -> bool:
                 """ point_in_segment """
 
-                @functools.lru_cache(maxsize=None)
+                #(maxsize=None)
                 def distance_point_segment(point: Point, segment: Segment) -> float:
                     """ distance_point_segment """
 
@@ -191,7 +190,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
 
         return any(intersect_segments(s1, s2) for s1, s2 in itertools.product(polygon1, polygon2))
 
-    def processed_evaluate(unit_type: int, result_queue: multiprocessing.Queue):
+    def processed_evaluate(unit_type: int, result_queue: multiprocessing.Queue) -> None:  # type: ignore
         """ processed_evaluate """
 
         dict_unit_type: typing.Dict[str, typing.List[int]] = {}
@@ -264,8 +263,8 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
         zone.put_polygon(polygon_enhanced)
 
     # create queus to collect result
-    army_result_queue = multiprocessing.Queue()
-    fleet_result_queue = multiprocessing.Queue()
+    army_result_queue: multiprocessing.Queue[typing.Dict[str, typing.List[int]]] = multiprocessing.Queue()
+    fleet_result_queue: multiprocessing.Queue[typing.Dict[str, typing.List[int]]] = multiprocessing.Queue()
 
     # fork process for armies
     army_running_process = multiprocessing.Process(target=processed_evaluate, args=(1, army_result_queue))
