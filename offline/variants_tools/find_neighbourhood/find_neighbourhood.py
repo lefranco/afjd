@@ -43,9 +43,11 @@ class Zone:
 
     nomenclature: typing.Dict[int, 'Zone'] = {}
 
-    def __init__(self, number: int, name: str):
+    def __init__(self, number: int, name: str, num_coast: typing.Optional[int] = None, zone_orig: 'Zone' = None):
         self._number = number
         self._name = name
+        self._num_coast = num_coast
+        self._zone_orig = zone_orig
         self._region_type: typing.Optional[int] = None
         self._polygon: typing.Optional[typing.List[Segment]] = None
         Zone.nomenclature[number] = self
@@ -63,6 +65,16 @@ class Zone:
     def number(self) -> int:
         """ number """
         return self._number
+
+    @property
+    def num_coast(self) -> int:
+        """ num_coast """
+        return self._num_coast
+
+    @property
+    def zone_orig(self) -> 'Zone':
+        """ zone_orig """
+        return self._zone_orig
 
     @property
     def region_type(self) -> typing.Optional[int]:
@@ -236,12 +248,12 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
         if zone_data['full_name']:
             zone = Zone(int(num_zone_str), zone_data['full_name'])
         else:
-            for num, (num_zone2, num_coast) in enumerate(json_variant_data['coastal_zones']):
+            for num, (num_zone_orig, num_coast) in enumerate(json_variant_data['coastal_zones']):
                 if num + 1 == int(num_zone_str) - len(json_variant_data['regions']):
-                    zone2 = Zone.nomenclature[num_zone2]
+                    zone2 = Zone.nomenclature[num_zone_orig]
                     coast_name = json_parameters_data['coasts'][str(num_coast)]['name']
                     break
-            zone = Zone(int(num_zone_str), f"{str(zone2)} {coast_name}")
+            zone = Zone(int(num_zone_str), f"{str(zone2)} {coast_name}", num_coast, zone2)
 
     # put type from variant
     for num, region_type in enumerate(json_variant_data['regions']):
@@ -257,11 +269,25 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
 
     # put poly from parameters
     for num_zone_str, zone_area_data in json_parameters_data['zone_areas'].items():
-        polygon = zone_area_data['area']
         num_zone = int(num_zone_str)
         zone = Zone.nomenclature[num_zone]
+        if zone.num_coast:
+            zone_area_data2 = json_parameters_data['zone_areas'][str(zone.zone_orig.number)]
+            polygon = zone_area_data2['area']
+        else:
+            polygon = zone_area_data['area']
         polygon_enhanced = polygon.copy()
         polygon_enhanced.append(polygon_enhanced[0])
+        if zone.num_coast:
+            middle = ((min(p[0] for p in polygon_enhanced) + max(p[0] for p in polygon_enhanced)) / 2, (min(p[1] for p in polygon_enhanced) + max(p[1] for p in polygon_enhanced)) / 2)
+            if zone.num_coast == 1:  # EC
+                polygon_enhanced = [p for p in polygon_enhanced if p[0] > middle[0]]
+            if zone.num_coast == 2:  # NC
+                polygon_enhanced = [p for p in polygon_enhanced if p[1] < middle[1]]
+            if zone.num_coast == 3:  # SC
+                polygon_enhanced = [p for p in polygon_enhanced if p[1] > middle[1]]
+            if zone.num_coast == 4:  # WC
+                polygon_enhanced = [p for p in polygon_enhanced if p[0] < middle[0]]
         zone.put_polygon(polygon_enhanced)
 
     # create queus to collect result
