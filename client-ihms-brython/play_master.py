@@ -919,23 +919,30 @@ def game_master():
         row <= col
         col = html.TD()
 
-        flag = ""
+        tab2 = html.TABLE()
+        row2 = html.TR()
         if role_id in vote_values_table:
 
+            # must show gm vote value
+            col2 = html.TD()
             if vote_values_table[role_id]:
                 flag = html.IMG(src="./images/stop.png", title="Le joueur a voté pour arrêter la partie")
             else:
                 flag = html.IMG(src="./images/continue.jpg", title="Le joueur a voté pour continuer la partie")
-            col <= flag
+            col2 <= flag
+            row2 <= col2
 
             # gm must be able to clear vote
+            col2 = html.TD()
             form = html.FORM()
             clear_vote = html.INPUT(type="submit", value="X")
             clear_vote.bind("click", lambda ev, r=role_id: clear_vote_callback(ev, r))
             form <= clear_vote
-            col <= html.BR()
-            col <= form
+            col2 <= form
+            row2 <= col2
 
+        tab2 <= row2
+        col <= tab2
         row <= col
 
         # separator

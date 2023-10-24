@@ -179,8 +179,38 @@ def date_last_messages():
     return dict_time_stamp
 
 
+def get_all_player_ongoing_votes():
+    """ get_all_player_ongoing_votes : returns empty dict if problem """
+
+    dict_voted_data = {}
+
+    def reply_callback(req):
+        nonlocal dict_voted_data
+        req_result = json.loads(req.text)
+        if req.status != 200:
+            if 'message' in req_result:
+                alert(f"Erreur à la récupération votes en cours pour toutes mes parties : {req_result['message']}")
+            elif 'msg' in req_result:
+                alert(f"Problème à la récupération des votes en cours pour toutes mes parties : {req_result['msg']}")
+            else:
+                alert("Réponse du serveur imprévue et non documentée")
+            return
+        dict_voted_data = req_result
+
+    json_dict = {}
+
+    host = config.SERVER_CONFIG['GAME']['HOST']
+    port = config.SERVER_CONFIG['GAME']['PORT']
+    url = f"{host}:{port}/all-player-games-ongoing-votes"
+
+    # get games with ongoing vote : need token (but may change)
+    ajax.get(url, blocking=True, headers={'content-type': 'application/json', 'AccessToken': storage['JWT_TOKEN']}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    return dict_voted_data
+
+
 def get_all_player_games_roles_submitted_orders():
-    """ get_all_player_games_roles_submitted_orders : retuens empty dict if problem """
+    """ get_all_player_games_roles_submitted_orders : returns empty dict if problem """
 
     dict_submitted_data = {}
 
@@ -758,6 +788,11 @@ def my_games(state_name):
         alert("Erreur chargement des soumissions dans les parties")
         return
 
+    dict_voted_data = get_all_player_ongoing_votes()
+    if not dict_voted_data:
+        alert("Erreur chargement des votes dans les parties")
+        return
+
     dict_time_stamp_last_declarations = date_last_declarations()
     # may be empty
 
@@ -854,7 +889,7 @@ def my_games(state_name):
     games_table = html.TABLE()
 
     # the display order
-    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
+    fields = ['name', 'go_game', 'deadline', 'current_advancement', 'role_played', 'all_orders_submitted', 'all_agreed', 'orders_submitted', 'agreed', 'votes', 'new_declarations', 'new_messages', 'variant', 'used_for_elo', 'nopress_game', 'nomessage_game']
 
     if storage['GAME_SHOW_MODE'] == 'reduced':
         fields.remove('all_orders_submitted')
@@ -870,7 +905,7 @@ def my_games(state_name):
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
+        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie', 'deadline': 'date limite', 'current_advancement': 'saison à jouer', 'role_played': 'rôle joué', 'orders_submitted': 'mes ordres', 'agreed': 'mon accord', 'all_orders_submitted': 'ordres de tous', 'all_agreed': 'accords de tous', 'votes': 'votes', 'new_declarations': 'déclarations', 'new_messages': 'messages', 'variant': 'variante', 'used_for_elo': 'elo', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)', 'edit': 'éditer', 'startstop': 'arrêter/démarrer'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -1001,6 +1036,7 @@ def my_games(state_name):
         data['agreed'] = None
         data['all_orders_submitted'] = None
         data['all_agreed'] = None
+        data['votes'] = None
         data['new_declarations'] = None
         data['new_messages'] = None
         data['edit'] = None
@@ -1155,6 +1191,11 @@ def my_games(state_name):
                             elif role_id in needed_roles_list:
                                 flag = html.IMG(src="./images/not_agreed.jpg", title="Pas d'accord pour résoudre")
                                 value = flag
+
+            if field == 'votes':
+                value = ""
+                if str(game_id) in dict_voted_data['dict_voted']:
+                    value = dict_voted_data['dict_voted'][str(game_id)]
 
             if field == 'new_declarations':
                 value = ""
