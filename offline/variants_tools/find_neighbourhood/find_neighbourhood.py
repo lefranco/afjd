@@ -6,6 +6,7 @@ Try to guess neighbourhood
 """
 
 import typing
+import multiprocessing
 import argparse
 import os
 import sys
@@ -190,36 +191,8 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
 
         return any(intersect_segments(s1, s2) for s1, s2 in itertools.product(polygon1, polygon2))
 
-    # create zone
-    for num_zone_str, zone_data in json_parameters_data['zones'].items():
-        zone = Zone(int(num_zone_str), zone_data['full_name'])
-
-    # put type from variant
-    for num, region_type in enumerate(json_variant_data['regions']):
-        num_zone = num + 1
-        zone = Zone.nomenclature[num_zone]
-        zone.put_region_type(region_type)
-
-    # put type for special zones
-    for num, _ in enumerate(json_variant_data['coastal_zones']):
-        num_zone = len(json_variant_data['regions']) + int(num) + 1
-        zone = Zone.nomenclature[num_zone]
-        zone.put_region_type(1)
-
-    # put poly from parameters
-    for num_zone_str, zone_area_data in json_parameters_data['zone_areas'].items():
-        polygon = zone_area_data['area']
-        num_zone = int(num_zone_str)
-        zone = Zone.nomenclature[num_zone]
-        polygon_enhanced = polygon.copy()
-        polygon_enhanced.append(polygon_enhanced[0])
-        zone.put_polygon(polygon_enhanced)
-
-    new_neighbouring = []
-
-    for unit_type in (1, 2):
-
-        print(f"By {'army' if unit_type == 1 else 'fleet'}")
+    def processed_evaluate(unit_type: int, result_queue: multiprocessing.Queue):
+        """ processed_evaluate """
 
         dict_unit_type: typing.Dict[str, typing.List[int]] = {}
 
@@ -235,7 +208,7 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
             if not acceptable(unit_type, zone1):
                 continue
 
-            print(f"  Finding neighbours of {zone1}({zone1.number}):")
+            print(f"  Finding neighbours by {'army' if unit_type == 1 else 'fleet'} of {zone1}({zone1.number}):")
 
             dict_unit_type[str(zone1.number)] = []
             assert zone1.polygon is not None
@@ -262,7 +235,58 @@ def find_neighbourhood(json_variant_data: typing.Dict[str, typing.Any], json_par
                 dict_unit_type[str(zone1.number)].append(zone2.number)
                 print(f"    {zone2}({zone2.number}) is adjacent")
 
-        new_neighbouring.append(dict_unit_type)
+        result_queue.put(dict_unit_type)
+        print(f"Done with {'army' if unit_type == 1 else 'fleet'}.")
+
+    # create zone
+    for num_zone_str, zone_data in json_parameters_data['zones'].items():
+        zone = Zone(int(num_zone_str), zone_data['full_name'])
+
+    # put type from variant
+    for num, region_type in enumerate(json_variant_data['regions']):
+        num_zone = num + 1
+        zone = Zone.nomenclature[num_zone]
+        zone.put_region_type(region_type)
+
+    # put type for special zones
+    for num, _ in enumerate(json_variant_data['coastal_zones']):
+        num_zone = len(json_variant_data['regions']) + int(num) + 1
+        zone = Zone.nomenclature[num_zone]
+        zone.put_region_type(1)
+
+    # put poly from parameters
+    for num_zone_str, zone_area_data in json_parameters_data['zone_areas'].items():
+        polygon = zone_area_data['area']
+        num_zone = int(num_zone_str)
+        zone = Zone.nomenclature[num_zone]
+        polygon_enhanced = polygon.copy()
+        polygon_enhanced.append(polygon_enhanced[0])
+        zone.put_polygon(polygon_enhanced)
+
+    # create queus to collect result
+    army_result_queue = multiprocessing.Queue()
+    fleet_result_queue = multiprocessing.Queue()
+
+    # fork process for armies
+    army_running_process = multiprocessing.Process(target=processed_evaluate, args=(1, army_result_queue))
+    army_running_process.start()
+
+    # fork process for fleet
+    fleet_running_process = multiprocessing.Process(target=processed_evaluate, args=(2, fleet_result_queue))
+    fleet_running_process.start()
+
+    # join processes
+    army_running_process.join()
+    fleet_running_process.join()
+
+    # collect data
+    new_neighbouring = []
+
+    dict_unit_type = army_result_queue.get()
+    new_neighbouring.append(dict_unit_type)
+
+    dict_unit_type = fleet_result_queue.get()
+    new_neighbouring.append(dict_unit_type)
 
     # now we prune : two neighbouring coasts must see the same sea
 
