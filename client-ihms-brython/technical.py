@@ -1669,6 +1669,8 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
+    global ARRIVAL
+
     ITEM_NAME_SELECTED = OPTIONS[0]
 
     # this means user wants to join game
@@ -1679,5 +1681,6 @@ def render(panel_middle):
     if ARRIVAL == 'variant':
         ITEM_NAME_SELECTED = 'Variante'
 
+    ARRIVAL = None
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL
