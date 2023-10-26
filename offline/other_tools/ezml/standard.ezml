@@ -7,7 +7,11 @@ Jérémie Lefrançois
 // une ligne vide
 
 _
-$ Cotes spéciales
+$ Contexte
+Le jeu Diplomatie standard classique.
+
+_
+$ Côtes spéciales
 
 (Espagne)
    Elle a 2 côtes, Nord et Sud.
@@ -23,7 +27,7 @@ Sans objet
 _
 $ Datation
 
-La partie commence en *1900*. 
+La partie commence en *1901*. 
 Chaque tour représente *1* années 
 "en temps réel".
 
