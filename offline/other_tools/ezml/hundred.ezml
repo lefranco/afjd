@@ -1,25 +1,40 @@
+// le titre
 Variante « Hundred »
+// l'auteur
 Jérémie Lefrançois
+// la date
 26/10/2023
+// une ligne vide
+
+_
+$ Cotes spéciales
+
+(Northumbria)
+   Elle a 2 côtes, Ouest et Est.
+(L'Aragon)
+   Elle a 2 côtes, Nord et Sud.
 
 _
 $ Particularités de la carte
 
-- Northumbria a 2 côtes, Ouest et Est.
-- L'Aragon a 2 côtes, Nord et Sud.
-- La Castille n'est pas divisée en côtes, de sorte que toute flotte entrant en Castille depuis la Biscaye peut ensuite se diriger vers la
-Méditerranée et vice versa.
-- Les unités (armées et flottes) peuvent se déplacer ou apporter leur soutien de Londres à Calais ou vice versa indépendamment de la présence d'une flotte dans le détroit de Douvres.
+(La Castille)
+  Elle n'est pas divisée en côtes, de sorte que toute flotte entrant en Castille depuis la Biscaye peut ensuite se diriger vers la Méditerranée et vice versa.
+(Le detroit)
+ Les unités (armées et flottes) peuvent se déplacer ou apporter leur soutien de Londres à Calais ou vice versa indépendamment de la présence d'une flotte dans le détroit de Douvres.
 
 _
 $ Datation
 
-La partie commence en 1425. Chaque tour représente 5 années "en temps réel".
+La partie commence en *1425*. 
+Chaque tour représente *5* années 
+"en temps réel".
 
 _
 $ Centres de ravitaillement
 
 Il y a *17* centres de ravitaillement sur le plateau.
+
+
 Le gagnant est la puissance qui détient *9* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
 _
@@ -28,11 +43,12 @@ $ Puissances en présence
 Il y a trois puissances dont les unités de départ sont les suivantes :
 
 
+
 = Unités de départ
-Pays | Armées | Flottes
-ANGLETERRE | Calais, Guyenne, Normandie | Londres, Manche, (« English channel » : hors centre)
-FRANCE | Dauphine, Orléanaise, Paris, Toulouse, (Provence : hors centre) |
-BOURGOGNE | Dijon, Luxembourg, Flandre | Hollande
+|Pays | Armées | Flottes|
+|ANGLETERRE | Calais, Guyenne, Normandie | Londres, Manche, (« English channel » : hors centre)|
+|FRANCE | Dauphine, Orléanaise, Paris, Toulouse, (Provence : hors centre) | |
+|BOURGOGNE | Dijon, Luxembourg, Flandre | Hollande|
 =
 
 _
@@ -45,7 +61,7 @@ Ainsi, l'armée en Provence est considérée comme une unité de mercenaires, et
 
 # Hormis cet aspect, l'unité en Provence est identique à toutes les autres unités françaises.
 
-# La Provence n'est *pas* un centre de ravitaillement et aucune unité ne peut y être construite
+# La Provence n'est pas un centre de ravitaillement et aucune unité ne peut y être construite
 
 _
 $ Expansionisme
@@ -55,3 +71,5 @@ Une puissance peut construire dans n'importe quel centre de ravitaillement vacan
 _
 $ Source 
 [[https://www.vdiplomacy.com/variants.php?variantID=8]]
+
+
