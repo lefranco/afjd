@@ -75,6 +75,7 @@ def parse_file(parsed_file: str) -> None:
         header = True
         within_code = False
         within_description = False
+        within_table_header = False
         prev_line_empty = False
         title = ""
         author = ""
@@ -298,7 +299,7 @@ def parse_file(parsed_file: str) -> None:
                     new_block.attributes['style'] = "\"caption-side: bottom;\""
                     new_block.childs.append(line)
                     cur_block.childs.append(new_block)
-                new_table = True
+                within_table_header = True
                 continue
 
             # table content
@@ -315,8 +316,8 @@ def parse_file(parsed_file: str) -> None:
                 stack.append(new_block)
                 cur_block = new_block
                 # create th/td
-                new_block = Block('<th>' if new_table else '<td>')
-                debug("create th/td")
+                new_block = Block('<th>' if within_table_header else '<td>')
+                debug(f"create {'<th>' if within_table_header else '<td>'}")
                 cur_block.childs.append(new_block)
                 stack.append(new_block)
                 cur_block = new_block
@@ -325,7 +326,6 @@ def parse_file(parsed_file: str) -> None:
                     fail("Line end with | but not in table")
                 # remove it
                 line = line.rstrip('|')
-                new_table = False
             if cur_table_level:
                 # now work with what is left
                 while True:
@@ -340,15 +340,15 @@ def parse_file(parsed_file: str) -> None:
                     # up
                     debug("end th/td")
                     # end td
-                    if stack[-1].name != '<td>' and stack[-1].name != '<th>':
+                    if stack[-1].name not in ('<td>' '<th>'):
                         fail("Issue with table: closing: expecting2 a td/th on top of stack!")
                     _ = stack.pop()
                     cur_block = stack[-1]
                     if stack[-1].name != '<tr>':
                         fail("Issue with table: closing: expecting3 a tr on top of stack!")
-                    # create td
-                    new_block = Block('<td>')
-                    debug("create td")
+                    # create td/th
+                    new_block = Block('<th>' if within_table_header else '<td>')
+                    debug(f"create {'<th>' if within_table_header else '<td>'}")
                     cur_block.childs.append(new_block)
                     stack.append(new_block)
                     cur_block = new_block
@@ -357,8 +357,8 @@ def parse_file(parsed_file: str) -> None:
             if line_orig.endswith('|'):
                 debug("end td")
                 # end td
-                if stack[-1].name != '<td>':
-                    fail("Issue with table: closing: expecting4 a td on top of stack!")
+                if stack[-1].name not in ('<td>', '<th>'):
+                    fail("Issue with table: closing: expecting4 a td/th on top of stack!")
                 _ = stack.pop()
                 debug("end tr")
                 # end tr
@@ -366,6 +366,7 @@ def parse_file(parsed_file: str) -> None:
                     fail("Issue with table: closing: expecting5 a tr on top of stack!")
                 _ = stack.pop()
                 cur_block = stack[-1]
+                within_table_header = False
             if cur_table_level:
                 continue
 
@@ -439,10 +440,11 @@ def parse_file(parsed_file: str) -> None:
                 new_block = Block('<a>' if item == '[[' else '<img>')
                 if item == '[[':
                     new_block.attributes['href'] = link
+                    new_block.attributes['target'] = "\"_blank\""
                     new_block.childs.append(text)
                 else:
-                    new_block.attributes['src'] = f"\"link\""
-                    new_block.attributes['alt'] = f"\"text\""
+                    new_block.attributes['src'] = f"\"{link}\""
+                    new_block.attributes['alt'] = f"\"{text}\""
                 before = line[:start]
                 after = line[end_text + len(item2):]
                 cur_block.childs.append(before)
