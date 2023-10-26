@@ -2,56 +2,55 @@ Variante « Hundred »
 Jérémie Lefrançois
 26/10/2023
 
++
 $ Particularités de la carte
+
 - Northumbria a 2 côtes, Ouest et Est.
 - L'Aragon a 2 côtes, Nord et Sud.
-- La Castille n'est pas divisée en côtes, de sorte que toute flotte
-entrant en Castille depuis la Biscaye peut ensuite se diriger vers la
+- La Castille n'est pas divisée en côtes, de sorte que toute flotte entrant en Castille depuis la Biscaye peut ensuite se diriger vers la
 Méditerranée et vice versa.
-- Les unités (armées et flottes) peuvent se déplacer ou apporter leur
-soutien de Londres à Calais ou vice versa indépendamment de la
-présence d'une flotte dans le détroit de Douvres.
+- Les unités (armées et flottes) peuvent se déplacer ou apporter leur soutien de Londres à Calais ou vice versa indépendamment de la présence d'une flotte dans le détroit de Douvres.
 
++
 $ Début de la partie
+
 La partie commence en 1425. Chaque tour représente 5 années "en temps réel".
 
++
 $ Centres de ravitaillement
-Il y a *17* centres de ravitaillement sur le plateau. Le gagnant est la
-puissance qui détient *9* centres de ravitaillement ou plus pendant une
-phase d'ajustement.
 
+Il y a *17* centres de ravitaillement sur le plateau.
+Le gagnant est la puissance qui détient *9* centres de ravitaillement ou plus pendant une phase d'ajustement.
+
++
 $ Puissances en présence
+
 Il y a trois puissances dont les unités de départ sont les suivantes :
 
 = Unités de départ
 Pays | Armées | Flottes
-ANGLETERRE | Calais Guyenne Normandie | Londres Manche (« English channel » : hors centre)
-FRANCE | Dauphine Orléanaise Paris Toulouse (Provence : hors centre) |
-BOURGOGNE | Dijon Luxembourg Flandre | Hollande
+ANGLETERRE | Calais, Guyenne, Normandie | Londres, Manche, (« English channel » : hors centre)
+FRANCE | Dauphine, Orléanaise, Paris, Toulouse, (Provence : hors centre) |
+BOURGOGNE | Dijon, Luxembourg, Flandre | Hollande
 =
+
++
 $ Mercenaires du français
-Pour représenter la dépendance vis-à-vis des unités de mercenaires
-sous-payées :
-# La France commence la partie avec plus d'unités qu'elle ne peut se
-permettre. Ainsi, l'armée en Provence est considérée comme une
-unité de mercenaires, et comme la Provence ne commence pas dans
-un centre de ravitaillement, la France doit capturer au moins un
-centre pour conserver ses 5 unités. Si elle ne parvient pas à le faire,
-elle sera forcée de retirer une unité, cependant, il n'est pas
-nécessaire que ce soit l'unité qui a réellement commencé en
-Provence.
-# Hormis cet aspect, l'unité en Provence est identique à toutes les
-autres unités françaises.
-# La Provence n'est 
-*pas* un centre de ravitaillement et aucune unité ne
-peut y être construite
 
+Pour représenter la dépendance vis-à-vis des unités de mercenaires sous-payées :
+
+# La France commence la partie avec plus d'unités qu'elle ne peut se permettre. 
+Ainsi, l'armée en Provence est considérée comme une unité de mercenaires, et comme la Provence ne commence pas dans un centre de ravitaillement, la France doit capturer au moins un centre pour conserver ses 5 unités. Si elle ne parvient pas à le faire, elle sera forcée de retirer une unité, cependant, il n'est pas nécessaire que ce soit l'unité qui a réellement commencé en Provence.
+
+# Hormis cet aspect, l'unité en Provence est identique à toutes les autres unités françaises.
+
+# La Provence n'est *pas* un centre de ravitaillement et aucune unité ne peut y être construite
+
++
 $ Expansionisme
-Une puissance peut construire dans n'importe quel centre de
-ravitaillement vacant qu'elle possède pendant une phase
-d'ajustement : il n'y a pas de "centres d'origine" permanents. Par
-exemple, la France peut construire à Londres si elle est vacante, et la
-France en est propriétaire et est éligible pour une construction
 
+Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. Par exemple, la France peut construire à Londres si elle est vacante, et la France en est propriétaire et est éligible pour une construction
+
++
 $ Source 
 [[https://www.vdiplomacy.com/variants.php?variantID=8]]
