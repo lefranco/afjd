@@ -61,6 +61,9 @@ class Block:
 def parse_file(parsed_file: str) -> None:
     """ parse_file """
 
+    cur_block = Block('<body>')
+    stack: typing.List[Block] = []
+
     def fail(mess: str) -> None:
         """ fail """
         print(f"ERROR: {mess} line {num_line}", file=sys.stderr)
@@ -70,22 +73,49 @@ def parse_file(parsed_file: str) -> None:
         """ debug """
         print(f"DEBUG: {mess} line {num_line}", file=sys.stderr)
 
-    with open(parsed_file, encoding='utf-8') as file_ptr:
+    def stack_pop() -> None:
+        """ stack_pop """
 
-        header = True
-        within_code = False
-        within_description = False
-        within_table_header = False
-        prev_line_empty = False
-        title = ""
-        author = ""
-        date_ = ""
-        stack = []
-        cur_list_level = 0
-        cur_chapter_level = 0
-        cur_table_level = 0
-        cur_block = Block('<body>')
-        stack.append(cur_block)
+        nonlocal cur_block
+
+        if not stack:
+            fail("poping from empty stack !")
+        _ = stack.pop()
+        cur_block = stack[-1]
+
+    def stack_push(name: str, child: typing.Optional[str], attributes: typing.Optional[typing.Dict[str, str]], must_push: bool, must_update: bool) -> None:
+        """ stack_pop """
+
+        nonlocal cur_block
+
+        new_block = Block(name)
+        if child:
+            new_block.childs.append(child)
+        if attributes:
+            new_block.attributes.update(attributes)
+
+        cur_block.childs.append(new_block)
+
+        if must_push:
+            stack.append(new_block)
+
+        if must_update:
+            cur_block = new_block
+
+    header = True
+    within_code = False
+    within_description = False
+    within_table_header = False
+    prev_line_empty = False
+    title = ""
+    author = ""
+    date_ = ""
+    cur_list_level = 0
+    cur_chapter_level = 0
+    cur_table_level = 0
+    stack.append(cur_block)
+
+    with open(parsed_file, encoding='utf-8') as file_ptr:
 
         for num, line in enumerate(file_ptr.readlines()):
 
@@ -109,8 +139,7 @@ def parse_file(parsed_file: str) -> None:
                 if cur_block.name == '<li>':
                     debug("closing list")
                     while cur_block.name in ('<li>', '<ol>', '<ul>'):
-                        _ = stack.pop()
-                        cur_block = stack[-1]
+                        stack_pop()
                     cur_list_level = 0
                     continue
 
@@ -118,15 +147,13 @@ def parse_file(parsed_file: str) -> None:
                 if cur_block.name == '<dd>':
                     debug("closing description list")
                     while cur_block.name in ('<dd>', '<dl>'):
-                        _ = stack.pop()
-                        cur_block = stack[-1]
+                        stack_pop()
                     within_description = False
                     continue
 
                 # actual empty line
                 if prev_line_empty:
-                    new_block = Block('<br>')
-                    cur_block.childs.append(new_block)
+                    stack_push('<br>', None, None, False, False)
                     continue
 
                 prev_line_empty = True
@@ -143,22 +170,16 @@ def parse_file(parsed_file: str) -> None:
             if header:
                 if not title:
                     title = line
-                    new_block = Block('<h2>')
-                    new_block.childs.append(f"{title}")
-                    cur_block.childs.append(new_block)
+                    stack_push('<h2>', f"{title}", None, False, False)
                     debug("Found title !")
                     continue
                 if not author:
                     author = line
-                    new_block = Block('<h3>')
-                    new_block.childs.append(f"Auteur : {author}")
-                    cur_block.childs.append(new_block)
+                    stack_push('<h3>', f"Auteur : {author}", None, False, False)
                     continue
                 if not date_:
                     date_ = line
-                    new_block = Block('<h3>')
-                    new_block.childs.append(f"Date : {date_}")
-                    cur_block.childs.append(new_block)
+                    stack_push('<h3>', f"Date : {date_}", None, False, False)
                     continue
 
             # special
@@ -177,15 +198,13 @@ def parse_file(parsed_file: str) -> None:
                 if abs(new_chapter_level - cur_chapter_level) > 1:
                     fail("Issue with chapter: level not same/incremented/decremented")
                 cur_chapter_level = new_chapter_level
-                new_block = Block(f"<h{new_chapter_level + 2}>")
-                new_block.childs.append(line)
-                cur_block.childs.append(new_block)
+                name = f"<h{new_chapter_level + 2}>"
+                stack_push(name, line, None, False, False)
                 continue
 
             # horizontal line
             if line == '_':
-                new_block = Block('<hr>')
-                cur_block.childs.append(new_block)
+                stack_push('<hr>', None, None, False, False)
                 continue
 
             # block
@@ -193,20 +212,14 @@ def parse_file(parsed_file: str) -> None:
                 if line in [f"<{b}>" for b in ('center', 'code', 'blockquote')]:
                     if line == '<code>':
                         within_code = True
-                    new_block = Block(line)
-                    cur_block.childs.append(new_block)
-                    stack.append(new_block)
-                    cur_block = new_block
+                    stack_push(line, None, None, True, True)
                     continue
                 if line in [f"</{b}>" for b in ('center', 'code', 'quotation')]:
                     if line == '</code>':
                         within_code = False
                     if not stack:
                         fail("Issue with block: end but no start")
-                    _ = stack.pop()
-                    if cur_block.name != line.replace('/', ''):
-                        fail("Issue with block: end does not match")
-                    cur_block = stack[-1]
+                    stack_pop()
                     continue
                 fail("Issue with block start: incorrect")
 
@@ -223,50 +236,28 @@ def parse_file(parsed_file: str) -> None:
                 # down
                 if new_list_level > cur_list_level:
                     # create implicit ol
-                    new_block = Block('<ol>' if start_line.startswith('#') else '<ul>')
-                    cur_block.childs.append(new_block)
-                    stack.append(new_block)
-                    cur_block = new_block
+                    name = '<ol>' if start_line.startswith('#') else '<ul>'
+                    stack_push(name, None, None, True, True)
                     cur_list_level = new_list_level
                     # create li
-                    new_block = Block('<li>')
-                    new_block.childs.append(line)
-                    cur_block.childs.append(new_block)
-                    stack.append(new_block)
-                    cur_block = new_block
+                    stack_push('<li>', line, None, True, True)
                     continue
                 # up
                 if new_list_level < cur_list_level:
                     # go up
-                    if not stack:
-                        fail("Issue with (un)ordered list: end but no start")
-                    _ = stack.pop()
+                    stack_pop()
                     # go up
-                    if not stack:
-                        fail("Issue with (un)ordered list: end but no start")
-                    _ = stack.pop()
-                    cur_block = stack[-1]
+                    stack_pop()
                     cur_list_level = new_list_level
                     # create li
-                    new_block = Block('<li>')
-                    new_block.childs.append(line)
-                    cur_block.childs.append(new_block)
-                    stack.append(new_block)
-                    cur_block = new_block
+                    stack_push('<li>', line, None, True, True)
                     continue
                 # same list continues
                 assert new_list_level == cur_list_level
                 # go up
-                if not stack:
-                    fail("Issue with (un)ordered list: end but no start")
-                _ = stack.pop()
-                cur_block = stack[-1]
+                stack_pop()
                 # create li
-                new_block = Block('<li>')
-                new_block.childs.append(line)
-                cur_block.childs.append(new_block)
-                stack.append(new_block)
-                cur_block = new_block
+                stack_push('<li>', line, None, True, True)
                 continue
 
             # table
@@ -275,12 +266,7 @@ def parse_file(parsed_file: str) -> None:
                 if line == '=':
                     debug("end table")
                     cur_table_level -= 1
-                    if not stack:
-                        fail("Issue with table: closing: end but no start")
-                    if stack[-1].name != '<table>':
-                        fail("Issue with table: closing: expecting1 a table on top of stack!")
-                    _ = stack.pop()
-                    cur_block = stack[-1]
+                    stack_pop()
                     continue
                 cur_table_level += 1
                 if line.find(' ') == -1:
@@ -288,17 +274,12 @@ def parse_file(parsed_file: str) -> None:
                 _, __, line = line.partition(' ')
                 # create table
                 debug("create table")
-                new_block = Block('<table>')
-                new_block.attributes['border'] = '1'
-                cur_block.childs.append(new_block)
-                stack.append(new_block)
-                cur_block = new_block
-                # create caption
+                attributes = {'border' :'1'}
+                stack_push('<table>', line, attributes, True, True)
+                 # create caption
                 if line:
-                    new_block = Block('<caption>')
-                    new_block.attributes['style'] = "\"caption-side: bottom;\""
-                    new_block.childs.append(line)
-                    cur_block.childs.append(new_block)
+                    attributes = {'style': "\"caption-side: bottom;\""}
+                    stack_push('<caption>', line, attributes, False, False)
                 within_table_header = True
                 continue
 
@@ -310,17 +291,10 @@ def parse_file(parsed_file: str) -> None:
                 # remove it
                 line = line.lstrip('|')
                 # create tr
-                new_block = Block('<tr>')
-                debug("create tr")
-                cur_block.childs.append(new_block)
-                stack.append(new_block)
-                cur_block = new_block
+                stack_push('<tr>', None, None, True, True)
                 # create th/td
-                new_block = Block('<th>' if within_table_header else '<td>')
-                debug(f"create {'<th>' if within_table_header else '<td>'}")
-                cur_block.childs.append(new_block)
-                stack.append(new_block)
-                cur_block = new_block
+                name = '<th>' if within_table_header else '<td>'
+                stack_push(name, None, None, True, True)
             if line.endswith('|'):
                 if not cur_table_level:
                     fail("Line end with | but not in table")
@@ -340,32 +314,20 @@ def parse_file(parsed_file: str) -> None:
                     # up
                     debug("end th/td")
                     # end td
-                    if stack[-1].name not in ('<td>' '<th>'):
-                        fail("Issue with table: closing: expecting2 a td/th on top of stack!")
-                    _ = stack.pop()
-                    cur_block = stack[-1]
+                    stack_pop()
                     if stack[-1].name != '<tr>':
                         fail("Issue with table: closing: expecting3 a tr on top of stack!")
                     # create td/th
-                    new_block = Block('<th>' if within_table_header else '<td>')
-                    debug(f"create {'<th>' if within_table_header else '<td>'}")
-                    cur_block.childs.append(new_block)
-                    stack.append(new_block)
-                    cur_block = new_block
+                    name = '<th>' if within_table_header else '<td>'
+                    stack_push(name, None, None, True, True)
                     # move forward
                     line = line[pipe_pos + len('|'):]
             if line_orig.endswith('|'):
                 debug("end td")
                 # end td
-                if stack[-1].name not in ('<td>', '<th>'):
-                    fail("Issue with table: closing: expecting4 a td/th on top of stack!")
-                _ = stack.pop()
-                debug("end tr")
+                stack_pop()
                 # end tr
-                if stack[-1].name != '<tr>':
-                    fail("Issue with table: closing: expecting5 a tr on top of stack!")
-                _ = stack.pop()
-                cur_block = stack[-1]
+                stack_pop()
                 within_table_header = False
             if cur_table_level:
                 continue
@@ -375,31 +337,17 @@ def parse_file(parsed_file: str) -> None:
                 line = line.lstrip('(').rstrip(')')
                 if not within_description:
                     # create dl
-                    new_block = Block('<dl>')
-                    debug("create dl")
-                    cur_block.childs.append(new_block)
-                    stack.append(new_block)
-                    cur_block = new_block
+                    stack_push('<dl>', None, None, True, True)
                     within_description = True
                 else:
                     # up
-                    if stack[-1].name != '<dd>':
-                        fail("Issue with description: closing: expecting5 a dd on top of stack!")
-                    _ = stack.pop()
-                    cur_block = stack[-1]
+                    stack_pop()
                     debug("pop dd")
                 # create dt
-                new_block = Block('<dt>')
-                new_block.attributes['style'] = "\"font-weight: bold;\""
-                debug("create dt")
-                new_block.childs.append(line)
-                cur_block.childs.append(new_block)
+                attributes = {'style': "\"font-weight: bold;\""}
+                stack_push('<dt>', line, attributes, False, False)
                 # create dd
-                new_block = Block('<dd>')
-                debug("create dd")
-                cur_block.childs.append(new_block)
-                stack.append(new_block)
-                cur_block = new_block
+                stack_push('<dd>', None, None, True, True)
                 continue
             if within_description:
                 cur_block.childs.append(line)
@@ -415,10 +363,9 @@ def parse_file(parsed_file: str) -> None:
                 text = line[start + len(inline):end_text]
                 before = line[:start]
                 after = line[end_text + len(inline):]
-                new_block = Block('<strong>' if inline == '*' else '<em>' if inline == '_' else '<q>' if inline == '"' else '<code>')
-                new_block.childs.append(text)
                 cur_block.childs.append(before)
-                cur_block.childs.append(new_block)
+                name = '<strong>' if inline == '*' else '<em>' if inline == '_' else '<q>' if inline == '"' else '<code>'
+                stack_push(name, text, None, False, False)
                 cur_block.childs.append(after)
                 continue
 
@@ -437,18 +384,15 @@ def parse_file(parsed_file: str) -> None:
                 text = line[end_link + len(item2):end_text]
                 if not text:
                     text = link
-                new_block = Block('<a>' if item == '[[' else '<img>')
-                if item == '[[':
-                    new_block.attributes['href'] = link
-                    new_block.attributes['target'] = "\"_blank\""
-                    new_block.childs.append(text)
-                else:
-                    new_block.attributes['src'] = f"\"{link}\""
-                    new_block.attributes['alt'] = f"\"{text}\""
                 before = line[:start]
                 after = line[end_text + len(item2):]
                 cur_block.childs.append(before)
-                cur_block.childs.append(new_block)
+                if item == '[[':
+                    attributes = {'href': link, 'target': "\"_blank\""}
+                    stack_push('<a>', text, attributes, False, False)
+                else:
+                    attributes = {'src': f"\"{link}\"", 'alt': f"\"{text}\""}
+                    stack_push('<img>', None, None, False, False)
                 cur_block.childs.append(after)
                 continue
 
