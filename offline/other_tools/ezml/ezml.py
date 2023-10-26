@@ -20,7 +20,7 @@ DEBUG = False
 EXTENSION_EXPECTED = ".ezml"
 
 # does not seem to be necessary for '<' and '>'
-SUBSTITUTION_TABLE = {}
+SUBSTITUTION_TABLE: typing.Dict[str, str] = {}
 
 
 class Block:
