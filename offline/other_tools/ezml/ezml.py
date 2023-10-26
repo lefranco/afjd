@@ -13,8 +13,14 @@ import pathlib
 import typing
 
 
+# DEBUG mode
+DEBUG = False
+
 # extension of files to scan
 EXTENSION_EXPECTED = ".ezml"
+
+# does not seem to be necessary for '<' and '>'
+SUBSTITUTION_TABLE = {}
 
 
 class Block:
@@ -26,10 +32,11 @@ class Block:
         return name.replace('<', '</')
 
     def __init__(self, name: str) -> None:
-        print(f"DEBUG: make {name}", file=sys.stderr)
+        if DEBUG:
+            print(f"DEBUG: make {name}", file=sys.stderr)
         self.name = name
         self.attributes: typing.Dict[str, str] = {}
-        self.childs:typing.List[typing.Union[str, 'Block']] = []
+        self.childs: typing.List[typing.Union[str, 'Block']] = []
 
     def html(self, level: int = 0) -> str:
         """ HTML output for checking """
@@ -64,6 +71,8 @@ def parse_file(parsed_file: str) -> None:
     with open(parsed_file, encoding='utf-8') as file_ptr:
 
         header = True
+        within_code = False
+        prev_empy = False
         title = ""
         author = ""
         date_ = ""
@@ -84,13 +93,14 @@ def parse_file(parsed_file: str) -> None:
             # empty line
             if not line:
 
+                # separator after header
                 if not title:
                     fail("Missing title!")
                 if header:
                     header = False
                     continue
 
-                # close ol/ul
+                # list terminator
                 if cur_block.name == '<li>':
                     while cur_block.name in ('<li>', '<ol>', '<ul>'):
                         _ = stack.pop()
@@ -98,34 +108,50 @@ def parse_file(parsed_file: str) -> None:
                     cur_list_level = 0
                     continue
 
-                new_block = Block('<br>')
-                cur_block.childs.append(new_block)
+                # actual empty line
+                if prev_empy:
+                    new_block = Block('<br>')
+                    cur_block.childs.append(new_block)
+                    continue
+
+                prev_empy = True
                 continue
+
+            # so line was not empty
+            prev_empy = False
 
             # comment
             if line.startswith('//'):
                 continue
 
             # preamble
-            if not title:
-                title = line
-                new_block = Block('<h2>')
-                new_block.childs.append(f"{title}")
-                cur_block.childs.append(new_block)
-                debug("Found title !")
-                continue
-            if not author:
-                author = line
-                new_block = Block('<h3>')
-                new_block.childs.append(f"Auteur : {author}")
-                cur_block.childs.append(new_block)
-                continue
-            if not date_:
-                date_ = line
-                new_block = Block('<h3>')
-                new_block.childs.append(f"Date : {date_}")
-                cur_block.childs.append(new_block)
-                continue
+            if header:
+                if not title:
+                    title = line
+                    new_block = Block('<h2>')
+                    new_block.childs.append(f"{title}")
+                    cur_block.childs.append(new_block)
+                    debug("Found title !")
+                    continue
+                if not author:
+                    author = line
+                    new_block = Block('<h3>')
+                    new_block.childs.append(f"Auteur : {author}")
+                    cur_block.childs.append(new_block)
+                    continue
+                if not date_:
+                    date_ = line
+                    new_block = Block('<h3>')
+                    new_block.childs.append(f"Date : {date_}")
+                    cur_block.childs.append(new_block)
+                    continue
+
+            # special
+            if within_code:
+                if not line.startswith('<'):
+                    # all is taken as raw
+                    cur_block.childs.append(line)
+                    continue
 
             # chapters
             if line.startswith('$'):
@@ -150,12 +176,16 @@ def parse_file(parsed_file: str) -> None:
             # block
             if line.startswith('<'):
                 if line in [f"<{b}>" for b in ('center', 'code', 'quotation')]:
+                    if line == '<code>':
+                        within_code = True
                     new_block = Block(line)
                     cur_block.childs.append(new_block)
                     stack.append(new_block)
                     cur_block = new_block
                     continue
                 if line in [f"</{b}>" for b in ('center', 'code', 'quotation')]:
+                    if line == '</code>':
+                        within_code = False
                     if not stack:
                         fail("Issue with block: end but no start")
                     _ = stack.pop()
@@ -300,6 +330,8 @@ def parse_file(parsed_file: str) -> None:
                     fail("Hyperlink : missing end of text")
                 link = line[start + len('[['):end_link]
                 text = line[end_link + len(']'):end_text]
+                if not text:
+                    text = link
                 new_block = Block('<a>')
                 new_block.childs.append(text)
                 new_block.attributes['href'] = link
@@ -309,6 +341,10 @@ def parse_file(parsed_file: str) -> None:
                 cur_block.childs.append(new_block)
                 cur_block.childs.append(after)
                 continue
+
+            # special characters
+            for pattern, patter_replace in SUBSTITUTION_TABLE.items():
+                line = line.replace(pattern, patter_replace)
 
             # rest
             cur_block.childs.append(line)
