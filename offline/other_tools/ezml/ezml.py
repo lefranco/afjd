@@ -168,7 +168,7 @@ def parse_file(parsed_file: str) -> None:
                 continue
 
             # horizontal line
-            if line == '+':
+            if line == '_':
                 new_block = Block('<hr>')
                 cur_block.childs.append(new_block)
                 continue
@@ -274,6 +274,7 @@ def parse_file(parsed_file: str) -> None:
                 cur_block = new_block
                 # create caption
                 new_block = Block('<caption>')
+                new_block.attributes['style'] = "\"caption-side: bottom;\""
                 new_block.childs.append(line2)
                 cur_block.childs.append(new_block)
                 new_table = True
