@@ -212,7 +212,7 @@ def parse_file(parsed_file: str) -> None:
                         within_code = True
                     stack_push(line, None, None, True, True)
                     continue
-                if line in [f"</{b}>" for b in ('center', 'code', 'quotation')]:
+                if line in [f"</{b}>" for b in ('center', 'code', 'blockquote')]:
                     if line == '</code>':
                         within_code = False
                     if not stack:
