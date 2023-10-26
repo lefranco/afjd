@@ -137,7 +137,6 @@ def parse_file(parsed_file: str) -> None:
 
                 # list terminator
                 if cur_block.name == '<li>':
-                    debug("closing list")
                     while cur_block.name in ('<li>', '<ol>', '<ul>'):
                         stack_pop()
                     cur_list_level = 0
@@ -145,7 +144,6 @@ def parse_file(parsed_file: str) -> None:
 
                 # description list terminator
                 if cur_block.name == '<dd>':
-                    debug("closing description list")
                     while cur_block.name in ('<dd>', '<dl>'):
                         stack_pop()
                     within_description = False
@@ -264,7 +262,6 @@ def parse_file(parsed_file: str) -> None:
             if line.startswith('='):
                 # close table
                 if line == '=':
-                    debug("end table")
                     cur_table_level -= 1
                     stack_pop()
                     continue
@@ -273,10 +270,9 @@ def parse_file(parsed_file: str) -> None:
                     fail("Issue with table: missing space")
                 _, __, line = line.partition(' ')
                 # create table
-                debug("create table")
-                attributes = {'border' :'1'}
-                stack_push('<table>', line, attributes, True, True)
-                 # create caption
+                attributes = {'border': '1'}
+                stack_push('<table>', None, attributes, True, True)
+                # create caption
                 if line:
                     attributes = {'style': "\"caption-side: bottom;\""}
                     stack_push('<caption>', line, attributes, False, False)
@@ -305,14 +301,11 @@ def parse_file(parsed_file: str) -> None:
                 while True:
                     pipe_pos = line.find('|')
                     if pipe_pos == -1:
-                        debug(f"put '{line}' in td")
                         cur_block.childs.append(line)
                         break
                     line2 = line[:pipe_pos]
-                    debug(f"put '{line2}' in td")
                     cur_block.childs.append(line2)
                     # up
-                    debug("end th/td")
                     # end td
                     stack_pop()
                     if stack[-1].name != '<tr>':
@@ -323,7 +316,6 @@ def parse_file(parsed_file: str) -> None:
                     # move forward
                     line = line[pipe_pos + len('|'):]
             if line_orig.endswith('|'):
-                debug("end td")
                 # end td
                 stack_pop()
                 # end tr
@@ -342,7 +334,6 @@ def parse_file(parsed_file: str) -> None:
                 else:
                     # up
                     stack_pop()
-                    debug("pop dd")
                 # create dt
                 attributes = {'style': "\"font-weight: bold;\""}
                 stack_push('<dt>', line, attributes, False, False)
