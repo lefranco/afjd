@@ -16,8 +16,8 @@ $ Début de la partie
 La partie commence en 1425. Chaque tour représente 5 années "en temps réel".
 
 $ Centres de ravitaillement
-Il y a 17 centres de ravitaillement sur le plateau. Le gagnant est la
-puissance qui détient 9 centres de ravitaillement ou plus pendant une
+Il y a *17* centres de ravitaillement sur le plateau. Le gagnant est la
+puissance qui détient *9* centres de ravitaillement ou plus pendant une
 phase d'ajustement.
 
 $ Puissances en présence
@@ -25,8 +25,8 @@ Il y a trois puissances dont les unités de départ sont les suivantes :
 
 = Unités de départ
 Pays | Armées | Flottes
-ANGLETERRE | Calais Guyenne Normandie | Londres Manche (« English channel ») (hors centre)
-FRANCE | Dauphine Orléanaise Paris Toulouse Provence (hors centre) |
+ANGLETERRE | Calais Guyenne Normandie | Londres Manche (« English channel » : hors centre)
+FRANCE | Dauphine Orléanaise Paris Toulouse (Provence : hors centre) |
 BOURGOGNE | Dijon Luxembourg Flandre | Hollande
 =
 $ Mercenaires du français
@@ -42,7 +42,8 @@ nécessaire que ce soit l'unité qui a réellement commencé en
 Provence.
 # Hormis cet aspect, l'unité en Provence est identique à toutes les
 autres unités françaises.
-# La Provence n'est PAS un centre de ravitaillement et aucune unité ne
+# La Provence n'est 
+*pas* un centre de ravitaillement et aucune unité ne
 peut y être construite
 
 $ Expansionisme
@@ -51,3 +52,6 @@ ravitaillement vacant qu'elle possède pendant une phase
 d'ajustement : il n'y a pas de "centres d'origine" permanents. Par
 exemple, la France peut construire à Londres si elle est vacante, et la
 France en est propriétaire et est éligible pour une construction
+
+$ Source 
+[[https://www.vdiplomacy.com/variants.php?variantID=8]]
