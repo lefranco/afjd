@@ -242,14 +242,14 @@ def countdown():
             'background-color': colour
         }
 
-
 def render(panel_middle):
     """ render """
 
-    global ARRIVAL
-
     # always back to top
     global ITEM_NAME_SELECTED
+    global ARRIVAL
+
+    play_low.PANEL_MIDDLE = panel_middle
 
     if 'GAME' not in storage:
         alert("Il faut choisir la partie au préalable")
