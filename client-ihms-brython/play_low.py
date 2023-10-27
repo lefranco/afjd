@@ -15,6 +15,7 @@ import interface
 import mapping
 import memoize
 import variants
+import scorings
 import moderate
 
 import play  # circular import
@@ -488,6 +489,20 @@ def get_game_status():
         PANEL_MIDDLE.clear()
         variants.render(PANEL_MIDDLE)
 
+    def show_scoring_callback(ev, scoring_name):  # pylint: disable=invalid-name
+        """ show_scoring_callback """
+
+        ev.preventDefault()
+
+        arrival = 'scoring'
+
+        # so that will go to proper page
+        scorings.set_arrival(arrival, scoring_name)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        scorings.render(PANEL_MIDDLE)
+
     game_name = GAME_PARAMETERS_LOADED['name']
     game_description = GAME_PARAMETERS_LOADED['description']
     game_variant = GAME_PARAMETERS_LOADED['variant']
@@ -557,11 +572,14 @@ def get_game_status():
     row <= col
 
     # scoring + link
-    # TODO : button + link towards page not PDF
-    scoring1 = GAME_PARAMETERS_LOADED['scoring']
-    link = html.A(href=f"./scorings/{scoring1}.pdf", target="_blank")
-    link <= f"Scorage {scoring1}"
-    col = html.TD(link)
+    game_scoring = GAME_PARAMETERS_LOADED['scoring']
+    game_scoring_name = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[game_scoring]
+    form = html.FORM()
+    input_show_scoring = html.INPUT(type="submit", value=game_scoring_name)
+    input_show_scoring.attrs['style'] = 'font-size: 10px'
+    input_show_scoring.bind("click", lambda e, v=game_scoring: show_scoring_callback(e, v))
+    form <= input_show_scoring
+    col = html.TD(form)
     row <= col
 
     # game master
