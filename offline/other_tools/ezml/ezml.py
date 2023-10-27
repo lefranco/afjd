@@ -19,9 +19,6 @@ DEBUG = False
 # extension of files to scan
 EXTENSION_EXPECTED = ".ezml"
 
-# does not seem to be necessary for '<' and '>'
-SUBSTITUTION_TABLE: typing.Dict[str, str] = {}
-
 
 class Block:
     """ Block """
@@ -101,6 +98,41 @@ def parse_file(parsed_file: str) -> None:
 
         if must_update:
             cur_block = new_block
+
+    # TODO : generalize calling this recusrive procedure !
+    def inline_stuff(current_block: Block, line: str) -> None:
+        """ inline_stuff """
+
+        # inlined item
+        if not (line.find('*') != -1 or line.find('_') != -1 or line.find('"') != -1 or line.find('+') != -1 or line.find('^') != -1):
+            if line:
+                current_block.childs.append(line)
+            return
+
+        inline = '*' if line.find('*') != -1 else '_' if line.find('_') != -1 else '"' if line.find('"') != -1 else '+' if line.find('+') != -1 else '^'
+        start = line.find(inline)
+        end_text = line.find(inline, start + len(inline))
+        if end_text == -1:
+            fail("Inline : missing end of text")
+        inlined_text = line[start + len(inline):end_text]
+
+        before = line[:start]
+        after = line[end_text + len(inline):]
+
+        # recurse on before
+        inline_stuff(current_block, before)
+
+        name = '<strong>' if inline == '*' else '<em>' if inline == '_' else '<q>' if inline == '"' else '<code>' if inline == '+' else '<sup>'
+        debug(f"inline name={name}")
+        inline_new_block = Block(name)
+
+        # recurse on inside
+        inline_stuff(inline_new_block, inlined_text)
+
+        current_block.childs.append(inline_new_block)
+
+        # recurse on after
+        inline_stuff(current_block, after)
 
     header = True
     within_code = False
@@ -301,10 +333,16 @@ def parse_file(parsed_file: str) -> None:
                 while True:
                     pipe_pos = line.find('|')
                     if pipe_pos == -1:
-                        cur_block.childs.append(line)
+
+                        inline_stuff(cur_block, line)
+                        #  cur_block.childs.append(line)
+
                         break
                     line2 = line[:pipe_pos]
-                    cur_block.childs.append(line2)
+
+                    inline_stuff(cur_block, line2)
+                    #  cur_block.childs.append(line2)
+
                     # up
                     # end td
                     stack_pop()
@@ -344,22 +382,6 @@ def parse_file(parsed_file: str) -> None:
                 cur_block.childs.append(line)
                 continue
 
-            # inlined item
-            if line.find('*') != -1 or line.find('_') != -1 or line.find('"') != -1 or line.find('+') != -1:
-                inline = '*' if line.find('*') != -1 else '_' if line.find('_') != -1 else '"' if line.find('"') != -1 else '+'
-                start = line.find(inline)
-                end_text = line.find(inline, start + len(inline))
-                if end_text == -1:
-                    fail("Inline : missing end of text")
-                text = line[start + len(inline):end_text]
-                before = line[:start]
-                after = line[end_text + len(inline):]
-                cur_block.childs.append(before)
-                name = '<strong>' if inline == '*' else '<em>' if inline == '_' else '<q>' if inline == '"' else '<code>'
-                stack_push(name, text, None, False, False)
-                cur_block.childs.append(after)
-                continue
-
             # hyperlink or image
             if line.find('[[') != -1 or line.find('{{') != -1:
                 item = '[[' if line.find('[[') != -1 else '{{'
@@ -386,10 +408,6 @@ def parse_file(parsed_file: str) -> None:
                     stack_push('<img>', None, None, False, False)
                 cur_block.childs.append(after)
                 continue
-
-            # special characters
-            for pattern, patter_replace in SUBSTITUTION_TABLE.items():
-                line = line.replace(pattern, patter_replace)
 
             # rest
             cur_block.childs.append(line)
