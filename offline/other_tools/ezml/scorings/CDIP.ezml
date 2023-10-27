@@ -1,0 +1,45 @@
+CDiplo
+Jérémie lefrançois
+26/10/2023
+
+$ Histoire
+
+C-Diplo est probablement le système de notation le plus couramment utilisé. Il a été développé par le 
+joueur français de Diplomacy Bruno-André Giraudon et rapidement adopté par de nombreux tournois 
+en Europe.
+
+$ Philosophie
+
+Il s'agit d'un système basé sur le classement, ce qui signifie que le classement au tableau est le 
+facteur clé. Les joueurs obtiennent un certain nombre de points en fonction de leur rang sur le tableau 
+à la fin du jeu, qu'il se termine par une victoire ou un match nul convenu ou forcé (c'est-à-dire que le 
+temps de jeu s'écoulé)
+
+$ Description
+
+$$ Cas général
+
+Chaque joueur marque :
+- un point de participation
+- un point par centre
+- des points de bonus selon la table ci-dessous.
+
+= Bonus de classement
+| Place | Bonus |
+| 1 ^ère^   | 38 |
+| 2 ^ème^  | 14 |
+| 3 ^ème^   | 7 |
+=
+
+
+En cas d'égalité les points sont partagés
+
+$$ Elimination
+
+Un joueur éliminé marque un point de participation
+
+$$ Solo
+
+Un joueur qui réalise un solo marque *73* points, et les autres zéro.
+
+
