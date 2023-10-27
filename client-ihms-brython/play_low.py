@@ -14,10 +14,13 @@ import scoring
 import interface
 import mapping
 import memoize
+import variants
 import moderate
 
 import play  # circular import
 
+
+PANEL_MIDDLE = None
 
 # global data below
 
@@ -471,6 +474,20 @@ COUNTDOWN_COL = None
 def get_game_status():
     """ get_game__status """
 
+    def show_variant_callback(ev, variant_name):  # pylint: disable=invalid-name
+        """ show_variant_callback """
+
+        ev.preventDefault()
+
+        arrival = 'variant'
+
+        # so that will go to proper page
+        variants.set_arrival(arrival, variant_name)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        variants.render(PANEL_MIDDLE)
+
     game_name = GAME_PARAMETERS_LOADED['name']
     game_description = GAME_PARAMETERS_LOADED['description']
     game_variant = GAME_PARAMETERS_LOADED['variant']
@@ -503,9 +520,12 @@ def get_game_status():
     row <= col
 
     # variant + link
-    link = html.A(href=f"./variants/{game_variant}/description.pdf", target="_blank")
-    link <= f"Variante {game_variant}"
-    col = html.TD(link)
+    form = html.FORM()
+    input_show_variant = html.INPUT(type="submit", value=game_variant)
+    input_show_variant.attrs['style'] = 'font-size: 10px'
+    input_show_variant.bind("click", lambda e, v=game_variant: show_variant_callback(e, v))
+    form <= input_show_variant
+    col = html.TD(form)
     row <= col
 
     # option + link
