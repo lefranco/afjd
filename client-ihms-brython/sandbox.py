@@ -1146,7 +1146,6 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
-    global ARRIVAL
 
     ITEM_NAME_SELECTED = OPTIONS[0]
 
