@@ -11,8 +11,8 @@ import common
 import mapping
 import interface
 
-# sandbox must stay first
-OPTIONS = ['Variante']
+# TODO : add options (and scorings ?)
+OPTIONS = config.VARIANT_NAMES_LIST
 
 
 ARRIVAL = None
@@ -294,11 +294,13 @@ MY_PANEL <= MY_SUB_PANEL
 def load_option(_, item_name):
     """ load_option """
 
+    global VARIANT_REQUESTED_NAME
+
     MY_SUB_PANEL.clear()
     window.scroll(0, 0)
 
-    if item_name == 'Variante':
-        show_variant()
+    VARIANT_REQUESTED_NAME = item_name
+    show_variant()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
@@ -331,7 +333,7 @@ def render(panel_middle):
 
     # this means user wants to see variant
     if ARRIVAL == 'variant':
-        ITEM_NAME_SELECTED = 'Variante'
+        ITEM_NAME_SELECTED = VARIANT_REQUESTED_NAME
 
     ARRIVAL = None
     load_option(None, ITEM_NAME_SELECTED)
