@@ -11,9 +11,9 @@ from browser.local_storage import storage  # pylint: disable=import-error
 import user_config
 import config
 import common
-import technical
 import faq
 import tips
+import variants
 import mydatetime
 
 
@@ -239,11 +239,11 @@ def show_news():
         arrival = 'variant'
 
         # so that will go to proper page
-        technical.set_arrival(arrival, variant_name)
+        variants.set_arrival(arrival, variant_name)
 
         # action of going to game page
         PANEL_MIDDLE.clear()
-        technical.render(PANEL_MIDDLE)
+        variants.render(PANEL_MIDDLE)
 
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title

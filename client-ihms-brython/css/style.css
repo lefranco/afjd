@@ -297,7 +297,15 @@ fieldset{
   background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
+#sandbox {
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
+}
+
 #technical {
+  background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
+}
+
+#variants {
   background-image: linear-gradient(180deg, #83B9CC, #EDE585 40%, #98E4ED);
 }
 
