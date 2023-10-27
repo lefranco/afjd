@@ -242,6 +242,7 @@ def countdown():
             'background-color': colour
         }
 
+
 def render(panel_middle):
     """ render """
 
