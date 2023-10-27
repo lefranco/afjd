@@ -519,24 +519,6 @@ def get_game_status():
     col = html.TD(f"id={GAME_ID}")
     row <= col
 
-    # variant + link
-    form = html.FORM()
-    input_show_variant = html.INPUT(type="submit", value=game_variant)
-    input_show_variant.attrs['style'] = 'font-size: 10px'
-    input_show_variant.bind("click", lambda e, v=game_variant: show_variant_callback(e, v))
-    form <= input_show_variant
-    col = html.TD(form)
-    row <= col
-
-    # option + link
-    col = ""
-    if game_fog:
-        game_option = "brouillard"
-        link = html.A(href=f"./options/{game_option}/description.pdf", target="_blank")
-        link <= f"Option {game_option} !"
-        col = html.TD(link)
-    row <= col
-
     col = html.TD(f"Etat {game_state_readable}")
     row <= col
     col = html.TD(f"Saison {game_season}")
@@ -555,7 +537,27 @@ def get_game_status():
     COUNTDOWN_COL = html.TD("")
     row <= COUNTDOWN_COL
 
+    # variant + link
+    form = html.FORM()
+    input_show_variant = html.INPUT(type="submit", value=game_variant)
+    input_show_variant.attrs['style'] = 'font-size: 10px'
+    input_show_variant.bind("click", lambda e, v=game_variant: show_variant_callback(e, v))
+    form <= input_show_variant
+    col = html.TD(form)
+    row <= col
+
+    # option + link
+    # TODO : button + link towards page not PDF
+    col = ""
+    if game_fog:
+        game_option = "brouillard"
+        link = html.A(href=f"./options/{game_option}/description.pdf", target="_blank")
+        link <= f"Option {game_option} !"
+        col = html.TD(link)
+    row <= col
+
     # scoring + link
+    # TODO : button + link towards page not PDF
     scoring1 = GAME_PARAMETERS_LOADED['scoring']
     link = html.A(href=f"./scorings/{scoring1}.pdf", target="_blank")
     link <= f"Scorage {scoring1}"
