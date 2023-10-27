@@ -11,7 +11,6 @@ import common
 import mapping
 import interface
 
-# TODO : add options (and scorings ?)
 OPTIONS = config.VARIANT_NAMES_LIST
 
 
