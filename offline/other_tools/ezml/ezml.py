@@ -78,13 +78,11 @@ def parse_file(parsed_file: str) -> None:
     def unescape(text: str) -> str:
         """ replaces 'ESCAPER'+ ascii code of char by 'ESCAPER' + char """
 
-        debug(f"unescape({text=})")
         result = ''
         while True:
             bpos = text.find(ESCAPER_CHAR)
             if bpos == -1:
                 result += text
-                debug(f"unescape() -> {result=}")
                 return result
             result += text[:bpos]
             text = text[bpos + len(ESCAPER_CHAR):]
@@ -101,13 +99,11 @@ def parse_file(parsed_file: str) -> None:
     def escape(text: str) -> str:
         """ replaces 'ESCAPER'+ char by 'ESCAPER' + ascii code of char """
 
-        debug(f"escape({text=})")
         result = ''
         while True:
             bpos = text.find(ESCAPER_CHAR)
             if bpos == -1:
                 result += text
-                debug(f"escape() -> {result=}")
                 return result
             result += text[:bpos]
             text = text[bpos + len(ESCAPER_CHAR):]
