@@ -19,6 +19,9 @@ DEBUG = False
 # extension of files to scan
 EXTENSION_EXPECTED = ".ezml"
 
+# character to escape
+ESCAPER_CHAR = '\\'
+
 
 class Block:
     """ Block """
@@ -60,6 +63,7 @@ def parse_file(parsed_file: str) -> None:
 
     cur_block = Block('<body>')
     stack: typing.List[Block] = []
+    num_line = 0
 
     def fail(mess: str) -> None:
         """ fail """
@@ -70,12 +74,56 @@ def parse_file(parsed_file: str) -> None:
         """ debug """
         print(f"DEBUG: {mess} line {num_line}", file=sys.stderr)
 
+    # slash means escape
+    def unescape(text: str) -> str:
+        """ replaces 'ESCAPER'+ ascii code of char by 'ESCAPER' + char """
+
+        debug(f"unescape({text=})")
+        result = ''
+        while True:
+            bpos = text.find(ESCAPER_CHAR)
+            if bpos == -1:
+                result += text
+                debug(f"unescape() -> {result=}")
+                return result
+            result += text[:bpos]
+            text = text[bpos + len(ESCAPER_CHAR):]
+            if not text:
+                fail("Escape no character unescape'ing")
+            escaped = 0
+            while text and text[0].isdigit():
+                escaped *= 10
+                escaped += int(text[0])
+                text = text[1:]
+            result += f"{chr(escaped)}"
+
+    # slash means escape
+    def escape(text: str) -> str:
+        """ replaces 'ESCAPER'+ char by 'ESCAPER' + ascii code of char """
+
+        debug(f"escape({text=})")
+        result = ''
+        while True:
+            bpos = text.find(ESCAPER_CHAR)
+            if bpos == -1:
+                result += text
+                debug(f"escape() -> {result=}")
+                return result
+            result += text[:bpos]
+            text = text[bpos + len(ESCAPER_CHAR):]
+            if not text:
+                fail("Escape no character escape'ing")
+            escaped = text[0]
+            result += f"{ESCAPER_CHAR}{ord(escaped)}"
+            text = text[len(escaped):]
+
     def inline_stuff(current_block: Block, line: str) -> None:
         """ inline_stuff """
 
         # inlined item
         if not (line.find('*') != -1 or line.find('_') != -1 or line.find('"') != -1 or line.find('+') != -1 or line.find('^') != -1):
             if line:
+                line = unescape(line)
                 current_block.childs.append(line)
             return
 
@@ -90,6 +138,7 @@ def parse_file(parsed_file: str) -> None:
         after = line[end_text + len(inline):]
 
         # add before
+        before = unescape(before)
         current_block.childs.append(before)
 
         name = '<strong>' if inline == '*' else '<em>' if inline == '_' else '<q>' if inline == '"' else '<code>' if inline == '+' else '<sup>'
@@ -134,7 +183,6 @@ def parse_file(parsed_file: str) -> None:
 
         if must_update:
             cur_block = new_block
-
 
     header = True
     within_code = False
@@ -197,6 +245,8 @@ def parse_file(parsed_file: str) -> None:
             # comment
             if line.startswith('//'):
                 continue
+
+            line = escape(line)
 
             # preamble
             if header:
@@ -335,16 +385,10 @@ def parse_file(parsed_file: str) -> None:
                 while True:
                     pipe_pos = line.find('|')
                     if pipe_pos == -1:
-
                         inline_stuff(cur_block, line)
-                        #  cur_block.childs.append(line)
-
                         break
                     line2 = line[:pipe_pos]
-
                     inline_stuff(cur_block, line2)
-                    #  cur_block.childs.append(line2)
-
                     # up
                     # end td
                     stack_pop()
@@ -381,7 +425,7 @@ def parse_file(parsed_file: str) -> None:
                 stack_push('<dd>', None, None, True, True)
                 continue
             if within_description:
-                cur_block.childs.append(line)
+                inline_stuff(cur_block, line)
                 continue
 
             # hyperlink or image
@@ -401,14 +445,14 @@ def parse_file(parsed_file: str) -> None:
                     text = link
                 before = line[:start]
                 after = line[end_text + len(item2):]
-                cur_block.childs.append(before)
+                inline_stuff(cur_block, before)
                 if item == '[[':
                     attributes = {'href': link, 'target': "\"_blank\""}
                     stack_push('<a>', text, attributes, False, False)
                 else:
                     attributes = {'src': f"\"{link}\"", 'alt': f"\"{text}\""}
                     stack_push('<img>', None, None, False, False)
-                cur_block.childs.append(after)
+                inline_stuff(cur_block, after)
                 continue
 
             # rest
