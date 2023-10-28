@@ -1,0 +1,35 @@
+Boucher
+Jérémie lefrançois
+26/10/2023
+
+$ Histoire
+
+SDU
+
+$ Philosophie
+
+Système d'une redoutable simplicité, il cherche à produire des parties avec le plus possible d'éliminations.
+
+$ Description
+
+$$ Cas général
+
+Chaque joueur marque :
+- *dix* point par joueur éliminé
+
+(Cas particulier)
+Si aucun joueur n’est éliminé chaque joueur marque *un* point (pour éviter une
+marque nulle pour pout le monde.)
+
+$$ Elimination
+
+Un joueur éliminé marque *zéro*
+
+$$ Solo
+
+Un joueur qui réalise un solo marque *60* points, et les autres *zéro*.
+
+$ Utilisé dans les tournois
+
+SDU
+

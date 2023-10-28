@@ -1,0 +1,59 @@
+WNAMUR
+Jérémie lefrançois
+26/10/2023
+
+$ Histoire
+
+SDU
+
+
+$ Philosophie
+
+SDU
+
+$ Description
+
+(Note)
+Cette version ne prend pas en compte les bonus de temps de survivance (0.1 point par année
+jouée pour les joueurs éliminés)
+
+$$ Cas général
+
+Chaque joueur marque :
+- des points de centres
+- des points de vague
+- des points victoire
+
+(points de centres)
+ selon la table ci-dessous :
+= Points de centres
+| Nombre de centres | Bonus |
+| 1 | 5 |
+| 2 | 9 |
+| 3 | 12 |
+| 4 | 14 |
+| 5 | 16 |
+| 6 | 18 |
+| 7 et \+| 18 \+ 1 par centre au dela du 6^ème^ |
+=
+
+
+(points de vague)
+18 points sont partagés entre tous les joueurs qui terminent à 2
+centres ou moins du ou des premiers. Le ou les premiers font partie de ce partage.
+
+(points de victoire)
+18 points sont partagés par les premiers. En cas de victoire
+unique, ces points sont attribués en totalité au vainqueur
+
+$$ Elimination
+
+Un joueur éliminé marque *zéro*.
+
+$$ Solo
+
+Un joueur qui réalise un solo marque *82* points, et les autres *zéro*.
+
+$ Utilisé dans les tournois
+
+SDU
