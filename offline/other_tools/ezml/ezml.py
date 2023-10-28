@@ -47,10 +47,10 @@ class Block:
             name += ' ' + ' '.join([f"{k}={v}" for k, v in self.attributes.items()])
         if self.childs:
             text = ' ' * level + f"<{name}>"
-            text += '\n'
-            childs_str = '\n'.join([c if isinstance(c, str) else c.html(level + 1) for c in self.childs])
+            text += ' '
+            childs_str = ' '.join([c if isinstance(c, str) else c.html(level + 1) for c in self.childs])
             text += childs_str
-            text += '\n'
+            text += ' '
             terminator_str = Block.terminator(self.name)
             text += ' ' * level + terminator_str
         else:
