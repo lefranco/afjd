@@ -70,36 +70,6 @@ def parse_file(parsed_file: str) -> None:
         """ debug """
         print(f"DEBUG: {mess} line {num_line}", file=sys.stderr)
 
-    def stack_pop() -> None:
-        """ stack_pop """
-
-        nonlocal cur_block
-
-        if not stack:
-            fail("poping from empty stack !")
-        _ = stack.pop()
-        cur_block = stack[-1]
-
-    def stack_push(name: str, child: typing.Optional[str], attributes: typing.Optional[typing.Dict[str, str]], must_push: bool, must_update: bool) -> None:
-        """ stack_pop """
-
-        nonlocal cur_block
-
-        new_block = Block(name)
-        if child:
-            new_block.childs.append(child)
-        if attributes:
-            new_block.attributes.update(attributes)
-
-        cur_block.childs.append(new_block)
-
-        if must_push:
-            stack.append(new_block)
-
-        if must_update:
-            cur_block = new_block
-
-    # TODO : generalize calling this recusrive procedure !
     def inline_stuff(current_block: Block, line: str) -> None:
         """ inline_stuff """
 
@@ -119,11 +89,10 @@ def parse_file(parsed_file: str) -> None:
         before = line[:start]
         after = line[end_text + len(inline):]
 
-        # recurse on before
-        inline_stuff(current_block, before)
+        # add before
+        current_block.childs.append(before)
 
         name = '<strong>' if inline == '*' else '<em>' if inline == '_' else '<q>' if inline == '"' else '<code>' if inline == '+' else '<sup>'
-        debug(f"inline name={name}")
         inline_new_block = Block(name)
 
         # recurse on inside
@@ -133,6 +102,39 @@ def parse_file(parsed_file: str) -> None:
 
         # recurse on after
         inline_stuff(current_block, after)
+
+    def stack_pop() -> None:
+        """ stack_pop """
+
+        nonlocal cur_block
+
+        if not stack:
+            fail("poping from empty stack !")
+        _ = stack.pop()
+        cur_block = stack[-1]
+
+    def stack_push(name: str, child: typing.Optional[str], attributes: typing.Optional[typing.Dict[str, str]], must_push: bool, must_update: bool) -> None:
+        """ stack_pop """
+
+        nonlocal cur_block
+
+        new_block = Block(name)
+        if child:
+            if isinstance(child, str):
+                inline_stuff(new_block, child)
+            else:
+                new_block.childs.append(child)
+        if attributes:
+            new_block.attributes.update(attributes)
+
+        cur_block.childs.append(new_block)
+
+        if must_push:
+            stack.append(new_block)
+
+        if must_update:
+            cur_block = new_block
+
 
     header = True
     within_code = False
@@ -410,7 +412,7 @@ def parse_file(parsed_file: str) -> None:
                 continue
 
             # rest
-            cur_block.childs.append(line)
+            inline_stuff(cur_block, line)
 
     if len(stack) != 1:
         fail("Issue with main: some blocks were never closed")
