@@ -22,8 +22,9 @@ $$ Cas général
 Chaque joueur marque :
 - un point de participation
 - un point par centre
-- des points de bonus selon la table ci-dessous.
+- des points de bonus de classement
 
+(Points de classement)
 = Bonus de classement
 | Place | Bonus |
 | 1 ^ère^   | 38 |
@@ -36,10 +37,13 @@ En cas d'égalité les points sont partagés
 
 $$ Elimination
 
-Un joueur éliminé marque un point de participation
+Un joueur éliminé marque *un* (point "de participation")
 
 $$ Solo
 
-Un joueur qui réalise un solo marque *73* points, et les autres zéro.
+Un joueur qui réalise un solo marque *73* points, et les autres *zéro*.
 
+$ Utilisé dans les tournois
+
+SDU
 
