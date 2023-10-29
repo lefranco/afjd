@@ -24,23 +24,23 @@ class MyEzml(ezml.Ezml):
     def __str__(self) -> str:
         """ HTML output for checking """
 
-        def html_block(block, level: int) -> str:
+        def html_block(block) -> str:
 
             # HTML
             name = block.name.rstrip('>').lstrip('<')
             if block.attributes:
                 name += ' ' + ' '.join([f"{k}={v}" for k, v in block.attributes.items()])
             if block.childs:
-                text = ' ' * level + f"<{name}>"
-                childs_str = ''.join([c if isinstance(c, str) else html_block(c, level) for c in block.childs])
+                text = f"<{name}>"
+                childs_str = ''.join([c if isinstance(c, str) else html_block(c) for c in block.childs])
                 text += childs_str
                 terminator_str = ezml.Block.terminator(block.name)
-                text += ' ' * level + terminator_str
+                text += terminator_str
             else:
-                text = ' ' * level + f"<{name} />"
+                text = f"<{name} />"
             return text
 
-        return html_block(self.block, 0)
+        return html_block(self.block)
 
 
 def main() -> None:
