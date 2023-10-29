@@ -22,10 +22,9 @@ OPTIONS = ['Documents', 'Pourquoi yapa', 'Choix d\'interface', 'Tester un scorag
 def show_technical():
     """ show_technical """
 
-    title = html.H3("Coin des documents technique")
-    MY_SUB_PANEL <= title
+    MY_SUB_PANEL <= html.H2("Recueil de documents techniques")
 
-    title1 = html.H4("Règles du jeu officielles")
+    title1 = html.H3("Règles du jeu officielles")
     MY_SUB_PANEL <= title1
 
     link1 = html.A(href="https://media.wizards.com/2015/rules/diplomacy_rules.pdf", target="_blank")
@@ -34,7 +33,7 @@ def show_technical():
 
     # --
 
-    title2 = html.H4("Algorithme de résolution (D.A.T.C.)")
+    title2 = html.H3("Algorithme de résolution (D.A.T.C.)")
     MY_SUB_PANEL <= title2
 
     link2 = html.A(href="./docs/DATC.html", target="_blank")
@@ -43,7 +42,7 @@ def show_technical():
 
     # --
 
-    title3 = html.H4("Choix d'implémentation")
+    title3 = html.H3("Choix d'implémentation")
     MY_SUB_PANEL <= title3
 
     link3 = html.A(href="./docs/Compl_en.pdf", target="_blank")
@@ -52,7 +51,7 @@ def show_technical():
 
     # --
 
-    title4 = html.H4("Le scorage (la marque sur un tournoi)")
+    title4 = html.H3("Le scorage (la marque sur un tournoi)")
     MY_SUB_PANEL <= title4
 
     scorings_table = html.TABLE()
@@ -67,7 +66,7 @@ def show_technical():
 
     # --
 
-    title5 = html.H4("Le calcul du ELO")
+    title5 = html.H3("Le calcul du ELO")
     MY_SUB_PANEL <= title5
 
     link51 = html.A(href="./docs/calcul_elo.pdf", target="_blank")
@@ -82,7 +81,7 @@ def show_technical():
 
     # --
 
-    title61 = html.H4("Les variantes")
+    title61 = html.H3("Les variantes")
     MY_SUB_PANEL <= title61
 
     link62 = html.A(href="./docs/Requis_Variantes.pdf", target="_blank")
@@ -91,7 +90,7 @@ def show_technical():
 
     # --
 
-    title7 = html.H4("Les options")
+    title7 = html.H3("Les options")
     MY_SUB_PANEL <= title7
 
     options_table = html.TABLE()
@@ -108,7 +107,7 @@ def show_technical():
 
     # --
 
-    title8 = html.H4("Règles simplifiées")
+    title8 = html.H3("Règles simplifiées")
     MY_SUB_PANEL <= title8
 
     link8 = html.A(href="./docs/Summary_rules_fr.pdf", target="_blank")
@@ -117,7 +116,7 @@ def show_technical():
 
     # --
 
-    title9 = html.H4("Création de fichier de tournoi")
+    title9 = html.H3("Création de fichier de tournoi")
     MY_SUB_PANEL <= title9
 
     link91 = html.A(href="./docs/Fichier_tournoi.pdf", target="_blank")
@@ -132,7 +131,7 @@ def show_technical():
 
     # --
 
-    title10 = html.H4("Document d'interface de l'API")
+    title10 = html.H3("Document d'interface de l'API")
     MY_SUB_PANEL <= title10
 
     link101 = html.A(href="https://afjdserveurressources.wordpress.com/", target="_blank")
@@ -141,7 +140,7 @@ def show_technical():
 
     # --
 
-    title11 = html.H4("Remerciements")
+    title11 = html.H3("Remerciements")
     MY_SUB_PANEL <= title11
 
     link111 = html.A(href="https://brython.info/", target="_blank")
@@ -324,7 +323,7 @@ def test_scoring():
 
     form = html.FORM()
 
-    title_enter_centers = html.H4("Entrer les nombre de centres")
+    title_enter_centers = html.H3("Entrer les nombre de centres")
     form <= title_enter_centers
 
     ratings_input = {}
