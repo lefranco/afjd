@@ -6,6 +6,7 @@ from browser import html, window  # pylint: disable=import-error
 
 
 import config
+import ezml_render
 
 # TODO : add options
 OPTIONS = list(config.SCORING_CODE_TABLE.keys())
@@ -36,22 +37,13 @@ def show_scoring():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    # overall
-    my_sub_panel2 = html.DIV()
-    my_sub_panel2.attrs['style'] = 'display:table-row'
-    my_sub_panel2 <= display_left
-
     scoring_name = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[SCORING_REQUESTED]
 
     MY_SUB_PANEL <= html.H2(f"Le scorage {scoring_name}")
 
-    link = html.A(href=f"./scorings/{SCORING_REQUESTED}.pdf", target="_blank")
-    link <= f"Description technique du scorage {scoring_name}..."
-    MY_SUB_PANEL <= link
-    MY_SUB_PANEL <= html.BR()
-
-    MY_SUB_PANEL <= my_sub_panel2
-    MY_SUB_PANEL <= html.BR()
+    ezml_file = f"./scorings/{SCORING_REQUESTED}.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
 
 
 MY_PANEL = html.DIV()
