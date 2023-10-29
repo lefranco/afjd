@@ -40,7 +40,7 @@ class Ezml:
     def __init__(self, parsed_file: str) -> None:
         """ parse_file """
 
-        cur_block = Block('<body>')
+        cur_block = None
         stack = []
         num_line = 0
 
@@ -150,7 +150,8 @@ class Ezml:
             if attributes:
                 new_block.attributes.update(attributes)
 
-            cur_block.childs.append(new_block)
+            if cur_block:
+                cur_block.childs.append(new_block)
 
             if must_push:
                 stack.append(new_block)
@@ -169,7 +170,9 @@ class Ezml:
         cur_list_level = 0
         cur_chapter_level = 0
         cur_table_level = 0
-        stack.append(cur_block)
+
+        stack_push('<html>', None, None, True, True)
+        stack_push('<body>', None, None, True, True)
 
         with open(parsed_file, encoding='utf-8') as file_ptr:
 
@@ -431,7 +434,7 @@ class Ezml:
                 # rest
                 inline_stuff(cur_block, line)
 
-        if len(stack) != 1:
+        if len(stack) != 2:
             fail("Issue with main: some blocks were never closed")
 
-        self.block = stack[-1]
+        self.block = stack[0]
