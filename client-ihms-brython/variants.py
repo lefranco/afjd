@@ -30,8 +30,6 @@ POSITION_DATA = None
 ORDERS_DATA = None
 
 
-
-
 def set_arrival(arrival, variant_requested_name=None):
     """ set_arrival """
 
