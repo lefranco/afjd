@@ -8,7 +8,6 @@ from browser import html, window  # pylint: disable=import-error
 import config
 import ezml_render
 
-# TODO : add options
 OPTIONS = list(config.SCORING_CODE_TABLE.keys())
 
 ARRIVAL = None

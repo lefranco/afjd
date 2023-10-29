@@ -12,11 +12,30 @@ import mapping
 import interface
 import scoring
 import whynot
+import ezml_render
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
 # sandbox must stay first
-OPTIONS = ['Documents', 'Pourquoi yapa', 'Choix d\'interface', 'Tester un scorage']
+OPTIONS = ['Documents', 'Pourquoi yapa', 'Choix d\'interface', 'Tester un scorage', 'brouillard']
+
+
+ARRIVAL = None
+
+# from home
+OPTION_REQUESTED = None
+
+
+def set_arrival(arrival, option_requested=None):
+    """ set_arrival """
+
+    global ARRIVAL
+    global OPTION_REQUESTED
+
+    ARRIVAL = arrival
+
+    if option_requested:
+        OPTION_REQUESTED = option_requested
 
 
 def show_technical():
@@ -357,6 +376,21 @@ def test_scoring():
     MY_SUB_PANEL <= form
 
 
+def show_fog_of_war():
+    """ show_fog """
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    MY_SUB_PANEL <= html.H2("Le brouillard de guerre")
+
+    ezml_file = "./options/brouillard/brouillard.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
+
+
 MY_PANEL = html.DIV()
 MY_PANEL.attrs['style'] = 'display: table-row'
 
@@ -389,6 +423,8 @@ def load_option(_, item_name):
         select_interface()
     if item_name == 'Tester un scorage':
         test_scoring()
+    if item_name == 'brouillard':
+        show_fog_of_war()
 
     global ITEM_NAME_SELECTED
     ITEM_NAME_SELECTED = item_name
@@ -415,8 +451,14 @@ def render(panel_middle):
 
     # always back to top
     global ITEM_NAME_SELECTED
+    global ARRIVAL
 
     ITEM_NAME_SELECTED = OPTIONS[0]
 
+    # this means user wants to see option
+    if ARRIVAL == 'option':
+        ITEM_NAME_SELECTED = OPTION_REQUESTED
+
+    ARRIVAL = None
     load_option(None, ITEM_NAME_SELECTED)
     panel_middle <= MY_PANEL

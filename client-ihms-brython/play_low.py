@@ -16,6 +16,7 @@ import mapping
 import memoize
 import variants
 import scorings
+import technical
 import moderate
 
 import play  # circular import
@@ -503,6 +504,20 @@ def get_game_status():
         PANEL_MIDDLE.clear()
         scorings.render(PANEL_MIDDLE)
 
+    def show_option_callback(ev, option_name):  # pylint: disable=invalid-name
+        """ show_option_callback """
+
+        ev.preventDefault()
+
+        arrival = 'option'
+
+        # so that will go to proper page
+        technical.set_arrival(arrival, option_name)
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        technical.render(PANEL_MIDDLE)
+
     game_name = GAME_PARAMETERS_LOADED['name']
     game_description = GAME_PARAMETERS_LOADED['description']
     game_variant = GAME_PARAMETERS_LOADED['variant']
@@ -562,13 +577,15 @@ def get_game_status():
     row <= col
 
     # option + link
-    # TODO : button + link towards page not PDF
     col = ""
     if game_fog:
-        game_option = "brouillard"
-        link = html.A(href=f"./options/{game_option}/description.pdf", target="_blank")
-        link <= f"Option {game_option} !"
-        col = html.TD(link)
+        game_option_name = "brouillard"
+        form = html.FORM()
+        input_show_option = html.INPUT(type="submit", value=game_option_name)
+        input_show_option.attrs['style'] = 'font-size: 10px'
+        input_show_option.bind("click", lambda e, o=game_option_name: show_option_callback(e, o))
+        form <= input_show_option
+        col = html.TD(form)
     row <= col
 
     # scoring + link
