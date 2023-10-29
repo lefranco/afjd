@@ -8,15 +8,6 @@ h1 {
 }
 
 
-h3{counter-reset: composite}
-
-
-h4:before{
-     counter-increment: composite;
-     content:  counter(composite) ". ";
-   }
-
-
 body{
     font-size: 12px;
     font-family: Arial;
