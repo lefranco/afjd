@@ -334,7 +334,7 @@ class Ezml:
                     stack_push('<table>', None, attributes, True, True)
                     # create caption
                     if line:
-                        attributes = {'style': "\"caption-side: bottom;\""}
+                        attributes = {'style': "caption-side: bottom;"}
                         stack_push('<caption>', line, attributes, False, False)
                     within_table_header = True
                     continue
@@ -395,7 +395,7 @@ class Ezml:
                         # up
                         stack_pop()
                     # create dt
-                    attributes = {'style': "\"font-weight: bold;\""}
+                    attributes = {'style': "font-weight: bold;"}
                     stack_push('<dt>', line, attributes, False, False)
                     # create dd
                     stack_push('<dd>', None, None, True, True)
@@ -423,11 +423,11 @@ class Ezml:
                     after = line[end_text + len(item2):]
                     inline_stuff(cur_block, before)
                     if item == '[[':
-                        attributes = {'href': link, 'target': "\"_blank\""}
+                        attributes = {'href': link, 'target': "_blank"}
                         stack_push('<a>', text, attributes, False, False)
                     else:
-                        attributes = {'src': f"\"{link}\"", 'alt': f"\"{text}\""}
-                        stack_push('<img>', None, None, False, False)
+                        attributes = {'src': f"{link}", 'alt': f"{text}"}
+                        stack_push('<img>', None, attributes, False, False)
                     inline_stuff(cur_block, after)
                     continue
 
