@@ -2,7 +2,8 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-import browser # pylint: disable=import-error
+
+import browser  # pylint: disable=import-error
 
 import ezml
 
