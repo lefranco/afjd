@@ -4,20 +4,15 @@
 """
 EZML parser
 
-"""
+Reads and EZML file and convertit into a tree of Block / str
+that matches the DOM
 
-import argparse
-import os
-import sys
-import pathlib
-import typing
+"""
 
 
 # DEBUG mode
 DEBUG = False
 
-# extension of files to scan
-EXTENSION_EXPECTED = ".ezml"
 
 # character to escape
 ESCAPER_CHAR = '\\'
@@ -33,29 +28,10 @@ class Block:
 
     def __init__(self, name: str) -> None:
         if DEBUG:
-            print(f"DEBUG: make {name}", file=sys.stderr)
+            print(f"DEBUG: make {name}")
         self.name = name
-        self.attributes: typing.Dict[str, str] = {}
-        self.childs: typing.List[typing.Union[str, 'Block']] = []
-
-    def html(self, level: int = 0) -> str:
-        """ HTML output for checking """
-
-        # HTML
-        name = self.name.rstrip('>').lstrip('<')
-        if self.attributes:
-            name += ' ' + ' '.join([f"{k}={v}" for k, v in self.attributes.items()])
-        if self.childs:
-            text = ' ' * level + f"<{name}>"
-            text += ' '
-            childs_str = ' '.join([c if isinstance(c, str) else c.html(level + 1) for c in self.childs])
-            text += childs_str
-            text += ' '
-            terminator_str = Block.terminator(self.name)
-            text += ' ' * level + terminator_str
-        else:
-            text = ' ' * level + f"<{name} />"
-        return text
+        self.attributes = {}
+        self.childs = []
 
 
 class Ezml:
@@ -65,17 +41,16 @@ class Ezml:
         """ parse_file """
 
         cur_block = Block('<body>')
-        stack: typing.List[Block] = []
+        stack = []
         num_line = 0
 
         def fail(mess: str) -> None:
             """ fail """
-            print(f"ERROR: {mess} line {num_line}", file=sys.stderr)
-            sys.exit(1)
+            print(f"ERROR: {mess} line {num_line}")
 
-        #def debug(mess: str) -> None:
-            #""" debug """
-            #print(f"DEBUG: {mess} line {num_line}", file=sys.stderr)
+        #  def debug(mess: str) -> None:
+            #  """ debug """
+            #  print(f"DEBUG: {mess} line {num_line}", file=sys.stderr)
 
         # slash means escape
         def unescape(text: str) -> str:
@@ -161,7 +136,7 @@ class Ezml:
             _ = stack.pop()
             cur_block = stack[-1]
 
-        def stack_push(name: str, child: typing.Optional[str], attributes: typing.Optional[typing.Dict[str, str]], must_push: bool, must_update: bool) -> None:
+        def stack_push(name: str, child, attributes, must_push: bool, must_update: bool) -> None:
             """ stack_pop """
 
             nonlocal cur_block
@@ -459,37 +434,4 @@ class Ezml:
         if len(stack) != 1:
             fail("Issue with main: some blocks were never closed")
 
-        self._block = stack[-1]
-
-    def __str__(self) -> str:
-        return self._block.html()
-
-
-def main() -> None:
-    """ main """
-
-    # parameters
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-i', '--input', required=True, help="EZML file")
-    args = parser.parse_args()
-    file_path = args.input
-
-    # must exist
-    if not os.path.isfile(file_path):
-        print("ERROR: Seems file {file_path} does not exist !", file=sys.stderr)
-        sys.exit(-1)
-
-    # must have extension
-    if pathlib.Path(file_path).suffix != EXTENSION_EXPECTED:
-        print(f"ERROR: Seems file {file_path} does not have the extension {EXTENSION_EXPECTED} !", file=sys.stderr)
-        sys.exit(-1)
-
-    print(f"Parsing file {file_path}...", file=sys.stderr)
-    ezml = Ezml(file_path)
-
-    print(ezml)
-
-
-if __name__ == '__main__':
-    main()
+        self.block = stack[-1]
