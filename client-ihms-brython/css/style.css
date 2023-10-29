@@ -251,6 +251,10 @@ thead{
     background-color: #83B9CC;
 }
 
+dt{
+    font-weight: bold;
+}
+
 fieldset{
     border: 0;
 }
