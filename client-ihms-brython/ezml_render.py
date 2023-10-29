@@ -33,7 +33,7 @@ class MyEzml(ezml.Ezml):
                     print("ERROR : html  for element name {name}")
 
                 # attributes
-                for key, value in block.attributes.items():
+                for key, value in child.attributes.items():
                     sub_panel.attrs[key] = value
 
                 render_block(sub_panel, child)

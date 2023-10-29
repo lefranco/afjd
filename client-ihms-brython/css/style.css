@@ -231,19 +231,11 @@ td{
     background-color: #83B9CC;
 }
 
-caption{
-    caption-side: bottom;
-}
-
 thead{
     font-weight:bold;
     border: 1px solid black;
     text-align: center;
     background-color: #83B9CC;
-}
-
-dt{
-    font-weight: bold;
 }
 
 fieldset{
