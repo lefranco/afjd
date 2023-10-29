@@ -1,0 +1,60 @@
+Brouillard de Guerre (option)
+
+Dans cette option, chaque joueur ne " voit " que :
+
+- les possessions de centres,
+- les unités (délogées y compris),
+- les régions bloquées
+
+qui sont "voisines" de :
+
+- un de ses centres possédés,
+- une de ses unités.
+
+Attention : le terme "voisin" s’entend au sens géographique.
+
+Quelques exemples :
+
+- une armée en Gascogne "voit" une flotte en Atlantique
+- une flotte à Trieste "voit" une armée à Budapest
+- une flotte en Espagne côte sud "voit" une armée en Gacogne
+
+De plus :
+
+- une tentative de construire (sur un de ses centres de départ) informe le joueur de son occupation éventuelle (sans préciser la nature de l’occupant).
+- une unité que le joueur ne voit pas, qu’il imagine et soutient offensivement ou convoie avec un ordre legal parce qu’elle était bien présente (même si l’unité réelle n’est pas du même type ou de la même nationalité que celle imaginée) est "vue".
+
+Enfin un ordre n’est "vu" que si, sont "vus" à la fois (dans la situation *initiale*) :
+
+- l’unité active (celle qui reçoit cet ordre),
+- l’unité passive (celle qui reçoit le soutien ou le convoi)
+- la zone destination (pour un mouvement, un soutien offensif ou un convoi)
+
+
+Bien sûr, on voit toujours les ordres de ses propres unités.
+
+
+
+Il est donc possible de "voir" une unité mais pas son ordre...
+
+
+
+Pour soutenir offensivement ou convoyer une unité que l’on ne voit pas, il faut d’abord l’imaginer (en utilisant l’interface) avant de passer l’ordre.
+
+
+<blockquote>
+*A la résolution, si l’ordre est illégal, il sera annulé.*
+</blockquote>
+
+
+Le système tentera de corriger si, dans un région avec des côtes spéciales, le type d’unité est incorrect, ce qui est illustré ci dessous par des exemples :
+
+
+= Corrections pour les côtes spéciales
+| Ordre | Situation réelle | Résultat | Commentaire |
+| VAR S STP - LVN  | flotte en STPcs | VAR S STPcs - LVN | |
+| VAR S STPcs - LVN  | armée en STP  | VAR S STP - LVN | |
+| BAR S LVN - STP  | flotte en LVN | BAR S LVN - STPcs | seule possible |
+| GAS S POR - ESP  | flotte en POR | GAS S POR - ESPcn | au hasard, l’autre est possible |
+| GAS S POR - ESPcn  | arméee en POR | GAS S POR - ESP | |
+=
