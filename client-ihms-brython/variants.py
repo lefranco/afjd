@@ -261,14 +261,12 @@ def show_variant():
     my_sub_panel2 <= display_left
 
     MY_SUB_PANEL <= html.H2(f"La variante {VARIANT_NAME}")
-    MY_SUB_PANEL <= html.H3("Sa position de départ")
     MY_SUB_PANEL <= my_sub_panel2
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= make_rating_colours_window(VARIANT_DATA, POSITION_DATA, INTERFACE_CHOSEN)
     MY_SUB_PANEL <= html.BR()
 
-    MY_SUB_PANEL <= html.H3("Sa description")
     ezml_file = f"./variants/{VARIANT_NAME}/{VARIANT_NAME}.ezml"
     my_ezml = ezml_render.MyEzml(ezml_file)
     my_ezml.render(MY_SUB_PANEL)

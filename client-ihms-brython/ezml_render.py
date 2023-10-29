@@ -2,7 +2,7 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
-from browser import html  # pylint: disable=import-error
+import browser # pylint: disable=import-error
 
 import ezml
 
@@ -14,12 +14,7 @@ class MyEzml(ezml.Ezml):
         """ render """
 
         def render_block(panel, block) -> None:
-
-            def make_panel(name):
-                if name == 'h2':
-                    return html.H2()
-                assert False, f"name ??? {name}"
-                return None
+            """ render_block """
 
             for child in block.childs:
 
@@ -30,16 +25,25 @@ class MyEzml(ezml.Ezml):
 
                 # now we have a block
                 name = child.name.rstrip('>').lstrip('<')
-                print(f"{name=}")
 
-                sub_panel = make_panel(name)
-                # TODO : attributes
+                try:
+                    # 'h2' --> browser.html.H2()
+                    sub_panel = getattr(browser.html, name.upper())()
+                except:  # noqa: E722 pylint: disable=bare-except
+                    print("ERROR : html  for element name {name}")
+
+                # attributes
+                for key, value in block.attributes.items():
+                    sub_panel.attrs[key] = value
+
                 render_block(sub_panel, child)
                 panel <= sub_panel
 
+        # skip html
         cur_block = self.block
         assert cur_block.name == '<html>'
 
+        # skip body
         cur_block = self.block.childs[0]
         assert cur_block.name == '<body>'
 
