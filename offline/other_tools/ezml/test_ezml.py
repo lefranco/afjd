@@ -32,10 +32,8 @@ class MyEzml(ezml.Ezml):
                 name += ' ' + ' '.join([f"{k}={v}" for k, v in block.attributes.items()])
             if block.childs:
                 text = ' ' * level + f"<{name}>"
-                text += ' '
-                childs_str = ' '.join([c if isinstance(c, str) else html_block(c, level + 1) for c in block.childs])
+                childs_str = ''.join([c if isinstance(c, str) else html_block(c, level) for c in block.childs])
                 text += childs_str
-                text += ' '
                 terminator_str = ezml.Block.terminator(block.name)
                 text += ' ' * level + terminator_str
             else:
