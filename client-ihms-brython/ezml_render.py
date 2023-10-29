@@ -2,6 +2,7 @@
 
 # pylint: disable=pointless-statement, expression-not-assigned
 
+from browser import html  # pylint: disable=import-error
 
 import ezml
 
@@ -12,28 +13,34 @@ class MyEzml(ezml.Ezml):
     def render(self, panel):
         """ render """
 
-        def render_block(block) -> None:
+        def render_block(panel, block) -> None:
 
-            # HTML
-            name = block.name.rstrip('>').lstrip('<')
+            def make_panel(name):
+                if name == 'h2':
+                    return html.H2()
+                assert False, f"name ??? {name}"
+                return None
 
-            if name == 'h2':
-                item = html.H2()
-            else:
-                assert False, f"Unhandled HTML item : {name}"
+            for child in block.childs:
 
+                # strs are just inserted
+                if isinstance(child, str):
+                    panel <= child
+                    continue
 
-            if block.attributes:
-                name += ' ' + ' '.join([f"{k}={v}" for k, v in block.attributes.items()])
-            if block.childs:
-                text = f"<{name}>"
-                childs_str = ''.join([c if isinstance(c, str) else render_block(c) for c in block.childs])
-                text += childs_str
-                terminator_str = ezml.Block.terminator(block.name)
-                text += terminator_str
-            else:
-                text = f"<{name} />"
-            return text
+                # now we have a block
+                name = child.name.rstrip('>').lstrip('<')
+                print(f"{name=}")
 
-        # return render_block(self.block)
+                sub_panel = make_panel(name)
+                # TODO : attributes
+                render_block(sub_panel, child)
+                panel <= sub_panel
 
+        cur_block = self.block
+        assert cur_block.name == '<html>'
+
+        cur_block = self.block.childs[0]
+        assert cur_block.name == '<body>'
+
+        render_block(panel, cur_block)
