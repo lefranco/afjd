@@ -229,15 +229,15 @@ class Ezml:
                 if header:
                     if not title:
                         title = line
-                        stack_push('<h3>', f"{title}", None, False, False)
+                        stack_push('<h2>', f"{title}", None, False, False)
                         continue
                     if not author:
                         author = line
-                        stack_push('<h4>', f"Auteur : {author}", None, False, False)
+                        stack_push('<h3>', f"Auteur : {author}", None, False, False)
                         continue
                     if not date_:
                         date_ = line
-                        stack_push('<h4>', f"Date : {date_}", None, False, False)
+                        stack_push('<h3>', f"Date : {date_}", None, False, False)
                         continue
 
                 # special
@@ -256,7 +256,7 @@ class Ezml:
                     if abs(new_chapter_level - cur_chapter_level) > 1:
                         fail("Issue with chapter: level not same/incremented/decremented")
                     cur_chapter_level = new_chapter_level
-                    name = f"<h{new_chapter_level + 3}>"
+                    name = f"<h{new_chapter_level + 2}>"
                     stack_push(name, line, None, False, False)
                     continue
 
