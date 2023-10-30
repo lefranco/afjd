@@ -13,6 +13,7 @@ import config
 import common
 import faq
 import tips
+import technical
 import variants
 import mydatetime
 
@@ -245,6 +246,18 @@ def show_news():
         PANEL_MIDDLE.clear()
         variants.render(PANEL_MIDDLE)
 
+    def show_chart_callback(ev):  # pylint: disable=invalid-name
+        """ show_chart_callback """
+
+        ev.preventDefault()
+
+        # so that will go to proper page
+        technical.set_arrival('charte', 'Charte du Diplomate')
+
+        # action of going to game page
+        PANEL_MIDDLE.clear()
+        technical.render(PANEL_MIDDLE)
+
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
     div_homepage = html.DIV(id='grid')
@@ -418,9 +431,13 @@ def show_news():
     row <= col
 
     col = html.TD()
-    link5 = html.A(href="./docs/charte.pdf", target="_blank")
-    link5 <= "La charte du bon diplomate - à lire absolument !"
-    col <= link5
+    form = html.FORM()
+    input_show_chart = html.INPUT(type="submit", value="La charte")
+    input_show_chart.attrs['style'] = 'font-size: 10px'
+    input_show_chart.bind("click", show_chart_callback)
+    form <= input_show_chart
+    col <= form
+    col <= "La charte du bon diplomate - à lire absolument !"
     row <= col
 
     # ======================
