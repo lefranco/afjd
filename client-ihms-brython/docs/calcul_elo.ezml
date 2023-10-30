@@ -1,3 +1,79 @@
-Le calcul du ELO
+Le calcul du ELO sur le site
 
-SDU
+$ Philosophie
+
+Wikipédia :
+
+<blockquote>
+Le classement Elo attribue au joueur, suivant ses performances passées, un nombre de points (« points Elo ») tel que deux joueurs supposés de même force aient le même nombre de points. Plus le joueur est performant et plus son nombre de points Elo est élevé. Si un joueur réalise une performance supérieure à son niveau estimé, il gagne des points Elo. Réciproquement, il en perd s'il réalise une contre-performance. L'ordre chronologique des classements est important.
+
+
+
+Par ailleurs, une même différence de points entre deux joueurs implique la même espérance de gain. Par exemple un joueur classé 2 850 Elo a autant de chance de battre un joueur classé 2 800 Elo, qu'un joueur classé 1 550 Elo a de chance de battre un joueur classé 1 500 Elo. 
+</blockquote>
+
+$ Procédure détaillée
+
+Voici ce qui appliqué sur le site :
+
+
+# Deux modes distincts sont considérés : parties _blitz_ et _classiques_. La distinction se fait sur le paramètre "no-message" des parties.
+# Un ELO distinct est géré pour chacun des rôles possibles sur la partie.
+# Pour être prise en compte, une partie doit :
+## avoir paramètre "used\_for\_elo" à vrai
+## être dans l’état "terminée" (et pas "distinguée")
+# L’ordre de prise en compte des parties est celui chronologique croissant de la première résolution (Printemps 1901).
+# La méthode de scorage attachée à la partie est appliquée pour déterminer le scorage sur la partie.
+# Le classement d’un joueur est égal à 1 \+ le nombre de joueurs qui ont strictement un meilleur score sur la partie.
+# La *performance obtenue* d’un joueur est :
+## s'il marque un nombre de points _strictement positif_ sur la partie est obtenue en ramenant le scorage dans l’intervalle [0, 1] de la manière suivante :
+### n = ALPHA \^ (nombre de joueurs \+ 1 – classement du joueur sur la partie) – 1
+### d = Somme [ALPHA \^ (nombre de joueurs \+ 1 – i) – 1] pour i allant de 1 à nombre de joueurs
+### performance = n / d
+### cette performance est partagée entre les ex aequos (si 1^er^ 2^ème^ et 3^ème^ sont ex-aequos chacun recoit la moyenne des points du 1^er^ 2^ème^ et 3^ème^)
+## s'il marque un nombre de points _négatif ou nul_ (éliminé ou victime de solo par exemple) : 
+### zéro.
+# La *performance attendue* d’un joueur sur la partie est déterminée par la formule suivante :
+## [Somme [1 / (1 \+ 10 \^ (ELO(autre joueur avec son rôle) – ELO(joueur avec son rôle) / D) ]] / [ nombre de joueurs sur la partie x (nombre de joueurs sur la partie – 1) / 2 ]
+## Un joueur qui n’a jamais joué le pays se voir attribuer par défaut un ELO de ELO\_DEF
+# Cas des perdants et des gagnants
+## Un perdant est un joueur qui a obtenu la marque _minimale_ sur la partie, il ne doit pas gagner de points (cela provoque un avertissement).
+## Un gagnant est un joueur qui a obtenu la marque _maximale_ sur la partie, il ne doit pas perdre de points (cela provoque un avertissement).
+# Une partie incomplète (dans laquelle au moins un des joueurs est inconnu) n'est pas prise en compte.
+# Le changement de ELO d’un joueur sur la partie est déterminé par la formule suivante :
+## k = max(KMAX/2, KMAX – nombre de parties jouées par (joueur avec son rôle) / K\_SLOPE)
+## ELO(joueur avec son rôle) \+= k x nombre de joueurs de la partie \* (nombre de joueurs de la partie – 1) / 2 x [performance réalisée(joueur avec son rôle) – performance attendue(joueur avec son rôle)]
+# Le ELO d’un joueur est minoré par ELO\_MIN (s’il est inférieur il est ramené à cette valeur).
+# Le *ELO global* d’un joueur est égal à la moyenne des ELO du joueur avec tous les rôles possibles (ou ELO\_DEF pour un rôle qui n’a pas été joué).
+
+
+(Attention)
+Seules les parties des variantes "standard" et "standard\_pds" sont éligibles pour le calcul du ELO.
+
+
+$ Valeur des constantes
+
+= Valeurs utilisées
+| ELO\_MIN | ELO\_DEF | D   | KMAX | K\_SLOPE | ALPHA |
+| 1000     |1500      | 600 | 40   | 2        | 1.5   |
+=
+
+$ Scorage équivalent
+
+A titre indicatif, le ELO revient approximativement à appliquer sur les parties un scorage qui ne prend en compte que le classement et qiu serait défini de la manière suivante :
+
+
+
+= Scorage correspondant au ELO
+| Place  | 1  | 2  | 3  | 4  | 5 | 6 | 7 |
+| Marque | 39 | 25 | 16 | 10 | 6 | 3 | 1 |
+=
+
+$ Sources
+
+[[https://fr.wikipedia.org/wiki/Classement_Elo#Principe]Wikipédia]
+
+
+
+[[https://towardsdatascience.com/developing-a-generalized-elo-rating-system-for-multiplayer-games-b9b495e87802]Developing a generalized ELO rating system for multiplayer games (poker)]
+

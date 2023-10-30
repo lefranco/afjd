@@ -17,6 +17,9 @@ DEBUG = False
 # character to escape
 ESCAPER_CHAR = '\\'
 
+# what to use for numbering
+NUMBERING = "1ai"
+
 
 class Block:
     """ Block """
@@ -94,18 +97,20 @@ class Ezml:
         def inline_stuff(current_block: Block, line: str) -> None:
             """ inline_stuff """
 
-            # inlined item
-            if not (line.find('*') != -1 or line.find('_') != -1 or line.find('"') != -1 or line.find('+') != -1 or line.find('^') != -1):
-                if line:
-                    line = unescape(line)
-                    current_block.childs.append(line)
+            # look for inlined item
+            found_pos = min((line.find(c) for c in "*_\"+^" if c in line), default=None)
+
+            # none where found
+            if found_pos is None:
+                line = unescape(line)
+                current_block.childs.append(line)
                 return
 
-            inline = '*' if line.find('*') != -1 else '_' if line.find('_') != -1 else '"' if line.find('"') != -1 else '+' if line.find('+') != -1 else '^'
+            inline = line[found_pos]
             start = line.find(inline)
             end_text = line.find(inline, start + len(inline))
             if end_text == -1:
-                fail("Inline : missing end of text")
+                fail(f"Inline : missing end of text for '{inline}' in line='{line}' start={start}")
             inlined_text = line[start + len(inline):end_text]
 
             before = line[:start]
@@ -124,7 +129,8 @@ class Ezml:
             current_block.childs.append(inline_new_block)
 
             # recurse on after
-            inline_stuff(current_block, after)
+            if after:
+                inline_stuff(current_block, after)
 
         def stack_pop() -> None:
             """ stack_pop """
@@ -289,30 +295,34 @@ class Ezml:
                     if not all(c == start_line[0] for c in start_line):
                         fail("Issue with (un)ordered list: not homogeneous")
                     new_list_level = len(start_line)
-                    if abs(new_list_level - cur_list_level) > 1:
-                        fail("Issue with (un)ordered list: level not same/incremented/decremented")
-                    # down
+                    if new_list_level > cur_list_level + 1:
+                        fail("Issue with (un)ordered list: going too deep too fast")
                     if new_list_level > cur_list_level:
+                        # going deeper
                         # create implicit ol
                         name = '<ol>' if start_line.startswith('#') else '<ul>'
-                        stack_push(name, None, None, True, True)
+                        attributes = {'type': NUMBERING[new_list_level - 1] if name == '<ol>' and new_list_level <= len(NUMBERING) else {}}
+                        stack_push(name, None, attributes, True, True)
                         cur_list_level = new_list_level
                         # create li
                         stack_push('<li>', line, None, True, True)
                         continue
-                    # up
                     if new_list_level < cur_list_level:
-                        # go up
+                        while cur_list_level != new_list_level:
+                            # going shallower
+                            # go up (quit li)
+                            stack_pop()
+                            # go up (quit current ul/ol)
+                            stack_pop()
+                            cur_list_level -= 1
+                        # go up (quit upper ul/ol)
                         stack_pop()
-                        # go up
-                        stack_pop()
-                        cur_list_level = new_list_level
                         # create li
                         stack_push('<li>', line, None, True, True)
                         continue
                     # same list continues
                     assert new_list_level == cur_list_level
-                    # go up
+                    # go up (quit li)
                     stack_pop()
                     # create li
                     stack_push('<li>', line, None, True, True)
