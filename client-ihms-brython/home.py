@@ -13,15 +13,15 @@ import config
 import common
 import faq
 import tips
-import technical
 import variants
+import ezml_render
 import mydatetime
 
 
 THRESHOLD_DRIFT_ALERT_SEC = 59
 
 
-OPTIONS = ['Vue d\'ensemble', 'Chatter en direct', 'Déclarer un incident', 'Foire aux questions', 'Les petits tuyaux', 'Evolution de la fréquentation', 'Brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Chatter en direct', 'Déclarer un incident', 'Foire aux questions', 'Les petits tuyaux', 'Charte du Diplomate', 'Evolution de la fréquentation', 'Brique sociale']
 
 
 # for safety
@@ -251,12 +251,7 @@ def show_news():
 
         ev.preventDefault()
 
-        # so that will go to proper page
-        technical.set_arrival('charte', 'Charte du Diplomate')
-
-        # action of going to game page
-        PANEL_MIDDLE.clear()
-        technical.render(PANEL_MIDDLE)
+        load_option(None, 'Charte du Diplomate')
 
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
@@ -1036,6 +1031,19 @@ def show_tips():
     MY_SUB_PANEL <= TIPS_CONTENT
 
 
+def show_diplomat_chart():
+    """ show_diplomat_chart """
+
+    # left side
+
+    display_left = html.DIV(id='display_left')
+    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
+
+    ezml_file = "./docs/charte.ezml"
+    my_ezml = ezml_render.MyEzml(ezml_file)
+    my_ezml.render(MY_SUB_PANEL)
+
+
 def frequentation_evolution():
     """ frequentation_evolution """
 
@@ -1094,6 +1102,8 @@ def load_option(_, item_name):
         show_faq()
     if item_name == 'Les petits tuyaux':
         show_tips()
+    if item_name == 'Charte du Diplomate':
+        show_diplomat_chart()
     if item_name == 'Evolution de la fréquentation':
         frequentation_evolution()
     if item_name == 'Brique sociale':

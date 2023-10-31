@@ -17,7 +17,7 @@ import ezml_render
 LONG_DURATION_LIMIT_SEC = 1.0
 
 # sandbox must stay first
-OPTIONS = ['Documents', 'Pourquoi yapa', 'Choix d\'interface', 'Tester un scorage', 'Charte du Diplomate', 'Calcul du ELO', 'brouillard']
+OPTIONS = ['Documents', 'Pourquoi yapa', 'Choix d\'interface', 'Tester un scorage', 'Calcul du ELO', 'brouillard']
 
 
 ARRIVAL = None
@@ -329,19 +329,6 @@ def test_scoring():
     MY_SUB_PANEL <= form
 
 
-def show_diplomat_chart():
-    """ show_diplomat_chart """
-
-    # left side
-
-    display_left = html.DIV(id='display_left')
-    display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
-
-    ezml_file = "./docs/charte.ezml"
-    my_ezml = ezml_render.MyEzml(ezml_file)
-    my_ezml.render(MY_SUB_PANEL)
-
-
 def show_elo_calculation():
     """ show_elo_calculation """
 
@@ -400,8 +387,6 @@ def load_option(_, item_name):
         select_interface()
     if item_name == 'Tester un scorage':
         test_scoring()
-    if item_name == 'Charte du Diplomate':
-        show_diplomat_chart()
     if item_name == 'Calcul du ELO':
         show_elo_calculation()
     if item_name == 'brouillard':
@@ -437,7 +422,7 @@ def render(panel_middle):
     ITEM_NAME_SELECTED = OPTIONS[0]
 
     # this means user wants to see option
-    if ARRIVAL in ['option', 'charte']:
+    if ARRIVAL in ['option']:
         ITEM_NAME_SELECTED = OPTION_REQUESTED
 
     ARRIVAL = None
