@@ -285,7 +285,7 @@ def my_opportunities():
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'join': 'rejoindre la partie', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
+        field_fr = {'name': 'nom', 'join': 'rejoindre la partie (pour jouer dedans)', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
