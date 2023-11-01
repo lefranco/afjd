@@ -6,11 +6,8 @@ from browser import html, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
 
 
-import config
 import common
-import mapping
 import interface
-import scoring
 import whynot
 import ezml_render
 

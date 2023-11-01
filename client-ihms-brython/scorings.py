@@ -68,8 +68,6 @@ def show_scoring():
     display_left = html.DIV(id='display_left')
     display_left.attrs['style'] = 'display: table-cell; width=500px; vertical-align: top; table-layout: fixed;'
 
-    scoring_name = {v: k for k, v in config.SCORING_CODE_TABLE.items()}[SCORING_REQUESTED]
-
     ezml_file = f"./scorings/{SCORING_REQUESTED}.ezml"
     my_ezml = ezml_render.MyEzml(ezml_file)
     my_ezml.render(MY_SUB_PANEL)
