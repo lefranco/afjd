@@ -1,4 +1,4 @@
-Hundred
+Hundred (Guerre de Cent Ans)
 
 _
 $ Contexte
@@ -42,11 +42,11 @@ Il y a trois puissances dont les unités de départ sont les suivantes :
 
 
 
-= Unités de départ
-|Pays | Armées | Flottes|
-|Angleterre | Calais, Guyenne, Normandie | Londres, Manche, (« English channel » : hors centre)|
-|France | Dauphine, Orléanaise, Paris, Toulouse, (Provence : hors centre) | |
-|Bourgogne | Dijon, Luxembourg, Flandre | Hollande |
+= Position de départ
+|Puissance | Centres | Armées | Flottes| Centres inoccupés|
+|Angleterre | 5 |Calais, Guyenne, Normandie | Londres, Manche (hors centre)| Devon|
+|France | 5 |Dauphiné, Orléanais, Paris, Toulouse | | Provence|
+|Bourgogne | 4 |Dijon, Luxembourg, Flandre | Hollande | |
 =
 
 _
@@ -61,7 +61,7 @@ Ainsi, l'armée en Provence est considérée comme une unité de mercenaires, et
 # La Provence n'est pas un centre de ravitaillement et aucune unité ne peut y être construite
 
 _
-$ Expansionisme
+$ Expansionnisme
 
 Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. Par exemple, la France peut construire à Londres si elle est vacante, et la France en est propriétaire et est éligible pour une construction
 
