@@ -21,7 +21,7 @@ import mydatetime
 THRESHOLD_DRIFT_ALERT_SEC = 59
 
 
-OPTIONS = ['Vue d\'ensemble', 'Chatter en direct', 'Déclarer un incident', 'Foire aux questions', 'Les petits tuyaux', 'Charte du Diplomate', 'Evolution de la fréquentation', 'Brique sociale']
+OPTIONS = ['Vue d\'ensemble', 'Chatter en direct', 'Déclarer un incident', 'Foire aux questions', 'Les petits tuyaux', 'Charte du bon diplomate', 'Evolution de la fréquentation', 'Brique sociale']
 
 
 # for safety
@@ -251,7 +251,7 @@ def show_news():
 
         ev.preventDefault()
 
-        load_option(None, 'Charte du Diplomate')
+        load_option(None, 'Charte du bon diplomate')
 
     title = html.H3("Accueil")
     MY_SUB_PANEL <= title
@@ -1102,7 +1102,7 @@ def load_option(_, item_name):
         show_faq()
     if item_name == 'Les petits tuyaux':
         show_tips()
-    if item_name == 'Charte du Diplomate':
+    if item_name == 'Charte du bon diplomate':
         show_diplomat_chart()
     if item_name == 'Evolution de la fréquentation':
         frequentation_evolution()
