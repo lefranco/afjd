@@ -169,7 +169,6 @@ class Ezml:
         within_code = False
         within_description = False
         within_table_header = False
-        prev_line_empty = False
         title = ""
         author = ""
         date_ = ""
@@ -214,16 +213,7 @@ class Ezml:
                         within_description = False
                         continue
 
-                    # actual empty line
-                    if prev_line_empty:
-                        stack_push('<br>', None, None, False, False)
-                        continue
-
-                    prev_line_empty = True
                     continue
-
-                # so line was not empty
-                prev_line_empty = False
 
                 # comment
                 if line.startswith('//'):
@@ -264,6 +254,11 @@ class Ezml:
                     cur_chapter_level = new_chapter_level
                     name = f"<h{new_chapter_level + 2}>"
                     stack_push(name, line, None, False, False)
+                    continue
+
+                # break line
+                if line == '.':
+                    stack_push('<br>', None, None, False, False)
                     continue
 
                 # horizontal line
