@@ -23,8 +23,7 @@ Une flotte stationnée à l'interieur d'un centre maritime
 peut convoyer. Une armee ne peut y stationer.
 (Iles)
 Lesbos, Chiros, Samos & Rhodes sont des zones insulaires (i.e. des zone cotière). Si les zones de Lesbos Chiros & Samos contiennent de la mer, c'est uniquement pour les possibilités de déplacements maritimes. Une flotte stationnée dans une zone insulaire ne peut convoyer. Une armee peut y stationner.
-
-
+(Chiros et Lesbos)
 Il n'est pas possible à une armée de passer de Chiros à Lesbos et réciproquement.
 
 
@@ -36,15 +35,16 @@ La partie commence en *-600 av J.C.*. Chaque tour représente *5* années "en te
 _
 $ Centres de ravitaillement
 
-Il y a *38* centres de ravitaillement sur le plateau. Le gagnant est la puissance qui détient *20* centres de ravitaillement ou plus pendant une phase d'ajustement.
+Il y a *38* centres de ravitaillement sur le plateau. 
+.
+Le gagnant est donc la puissance qui détient *20* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
 _
 $ Puissances en présence
 
 Il y a six puissances dont les unités de départ sont les suivantes :
-
-
-
+.
+.
 = Position de départ
 |Puissance | Centres | Armées | Flottes | Centres inoccupés|
 |Athènes | 4 |Marathon (MAR) | Athinai (ATH), Eretre (ERE) | Delos (aDEL) |

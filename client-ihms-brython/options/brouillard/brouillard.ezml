@@ -30,26 +30,21 @@ Enfin un ordre n’est "vu" que si, sont "vus" à la fois (dans la situation *in
 - l’unité passive (celle qui reçoit le soutien ou le convoi)
 - la zone destination (pour un mouvement, un soutien offensif ou un convoi)
 
-
 Bien sûr, on voit toujours les ordres de ses propres unités.
-
-
-
-Il est donc possible de "voir" une unité mais pas son ordre...
-
-
-
+.
+<blockquote>
+*Il est donc possible de "voir" une unité mais pas son ordre...*
+</blockquote>
+.
 Pour soutenir offensivement ou convoyer une unité que l’on ne voit pas, il faut d’abord l’imaginer (en utilisant l’interface) avant de passer l’ordre.
-
-
+.
 <blockquote>
 *A la résolution, si l’ordre est illégal, il sera annulé.*
 </blockquote>
 
-
 Le système tentera de corriger si, dans un région avec des côtes spéciales, le type d’unité est incorrect, ce qui est illustré ci dessous par des exemples :
-
-
+.
+.
 = Corrections pour les côtes spéciales
 | Ordre | Situation réelle | Résultat | Commentaire |
 | VAR S STP - LVN  | flotte en STPcs | VAR S STPcs - LVN | |

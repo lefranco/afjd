@@ -34,17 +34,15 @@ _
 $ Centres de ravitaillement
 
 Il y a *17* centres de ravitaillement sur le plateau.
-
-
-Le gagnant est la puissance qui détient *9* centres de ravitaillement ou plus pendant une phase d'ajustement.
+.
+Le gagnant donc est la puissance qui détient *9* centres de ravitaillement ou plus pendant une phase d'ajustement.
 
 _
 $ Puissances en présence
 
 Il y a trois puissances dont les unités de départ sont les suivantes :
-
-
-
+.
+.
 = Position de départ
 |Puissance | Centres | Armées | Flottes| Centres inoccupés|
 |Angleterre | 5 |Calais, Guyenne, Normandie | Londres, Manche (hors centre)| Devon|
@@ -66,8 +64,14 @@ Ainsi, l'armée en Provence est considérée comme une unité de mercenaires, et
 _
 $ Expansionnisme
 
-Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. Par exemple, la France peut construire à Londres si elle est vacante, et la France en est propriétaire et est éligible pour une construction
+Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. Par exemple, la France peut construire à Londres si ce centre est vacant et qu'elle en est propriétaire
 
 _
 $ Source 
+
+Avec une flotte anglaise en Manche au démarrage, comme ici :
 [[https://www.vdiplomacy.com/variants.php?variantID=8]]
+.
+.
+Avec le choix pour l'anglais de démarrer en Manche ou en Devon :
+[[http://www.dipwiki.com/index.php?title=Hundred]]
