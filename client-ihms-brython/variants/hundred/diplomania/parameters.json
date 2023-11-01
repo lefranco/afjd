@@ -184,7 +184,7 @@
         },
         "10": {
             "name": "Can",
-            "full_name": "Les Cantons",
+            "full_name": "Cantons",
             "x_pos": 472,
             "y_pos": 429,
             "x_legend_pos": 472,
@@ -209,7 +209,7 @@
         },
         "13": {
             "name": "Dau",
-            "full_name": "Dauphinois",
+            "full_name": "Dauphiné",
             "x_pos": 398,
             "y_pos": 474,
             "x_legend_pos": 398,
@@ -241,7 +241,7 @@
         },
         "17": {
             "name": "Fla",
-            "full_name": "Les Flandres",
+            "full_name": "Flandres",
             "x_pos": 385,
             "y_pos": 293,
             "x_legend_pos": 385,
@@ -324,7 +324,7 @@
         },
         "27": {
             "name": "Min",
-            "full_name": "Minchdu Nord",
+            "full_name": "Minch du Nord",
             "x_pos": 44,
             "y_pos": 95,
             "x_legend_pos": 44,
@@ -357,7 +357,7 @@
         },
         "31": {
             "name": "Orl",
-            "full_name": "Orleanais",
+            "full_name": "Orléanais",
             "x_pos": 319,
             "y_pos": 423,
             "x_legend_pos": 319,
