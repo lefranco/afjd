@@ -238,7 +238,7 @@ class Ezml:
 
                 # special
                 if within_code:
-                    if not line.startswith('<'):
+                    if line != '</code>':
                         # all is taken as raw
                         cur_block.childs.append(line)
                         continue
