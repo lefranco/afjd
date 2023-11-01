@@ -10,7 +10,6 @@ The server
 import typing
 
 import json
-import datetime
 import time
 import argparse
 import threading
@@ -24,9 +23,7 @@ import flask_restful.reqparse  # type: ignore
 import requests
 
 import mylogger
-import populate
 import lowdata
-import database
 import mapping
 
 
@@ -35,8 +32,6 @@ SESSION = requests.Session()
 APP = flask.Flask(__name__)
 flask_cors.CORS(APP)
 API = flask_restful.Api(APP)
-
-
 
 
 # read from parameter file
@@ -193,7 +188,7 @@ def check_all_games(jwt_token: str) -> None:
         game_dict = req_result.json()
         variant_name = game_dict['variant']
 
-        mylogger.LOGGER.info(f"Trying game {game_name}...")
+        mylogger.LOGGER.info("Trying game %s...", game_name)
 
         success = commute_game(jwt_token, game_id, variant_name, game_name)
 
@@ -244,51 +239,27 @@ def acting_threaded_procedure() -> None:
         req_result = json.loads(req_result.text)
         jwt_token = req_result['AccessToken']  # type: ignore
 
-        timestamp_now = time.time()
-        now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
-        now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
-
-        mylogger.LOGGER.info(f"Now {now_date_desc}. Waiting...")
-
-        ####  wait_time = time_to_wait()
-        ####  time.sleep(wait_time)
+        wait_time = time_to_wait()
+        mylogger.LOGGER.info("Before everything... waiting for %s secs...", wait_time)
+        time.sleep(wait_time)
 
         while True:
 
-            # get local time for display
-            timestamp_now = time.time()
-            now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
-            now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
-
-            mylogger.LOGGER.info(f"At {now_date_desc} trying all games...")
-            # TODO : insert into database
+            mylogger.LOGGER.info("Trying all games...")
 
             # try to commute all games
             check_all_games(jwt_token)
 
-            # get local time for display again
-            timestamp_now = time.time()
-            now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
-            now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
-
-            # go to sleep
-            mylogger.LOGGER.info(f"Done. Now {now_date_desc}...")
+            # log that adjudications are done
+            mylogger.LOGGER.info("Done for adjudications...")
 
             # TODO : insert here all scheduled tasks
-            ####  time.sleep(10)
-
-            # get local time for display again
-            timestamp_now = time.time()
-            now_date = datetime.datetime.fromtimestamp(timestamp_now, datetime.timezone.utc)
-            now_date_desc = now_date.strftime('%Y-%m-%d %H:%M:%S GMT')
+            time.sleep(10)
 
             # go to sleep
-            mylogger.LOGGER.info(f"Done. Now {now_date_desc}. Back to sleep...")
-
-            ####  wait_time = time_to_wait()
-            ####  time.sleep(wait_time)
-
-            break  ##### TODO REMOVE
+            wait_time = time_to_wait()
+            mylogger.LOGGER.info("Done for routine tasks. Back to sleep for %s secs...", wait_time)
+            time.sleep(wait_time)
 
 
 @API.resource('/access-logs')
@@ -303,7 +274,7 @@ class AccessLogsRessource(flask_restful.Resource):  # type: ignore
 
         mylogger.LOGGER.info("/access-logs - POST - accessing logs")
 
-        # TODO : extract from database
+        # TODO : extract from log file
 
         data = {'msg': 'NOT IMPLEMENTED'}
         return data, 200
@@ -325,18 +296,12 @@ def main() -> None:
     lowdata.load_servers_config()
     load_credentials_config()
 
-    # emergency
-    #if not database.db_present():
-
-        #mylogger.LOGGER.info("Emergency populate procedure")
-
-        #sql_executor = database.SqlExecutor()
-        #populate.populate(sql_executor)
-        #sql_executor.commit()
-        #del sql_executor
-
     # may specify host and port here
     port = lowdata.SERVER_CONFIG['SCHEDULER']['PORT']
+
+    mylogger.LOGGER.info("")
+    mylogger.LOGGER.info("=========== STARTING ================")
+    mylogger.LOGGER.info("")
 
     # use separate thread to do stuff
     acting_thread = threading.Thread(target=acting_threaded_procedure, daemon=True)
