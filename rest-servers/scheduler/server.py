@@ -129,7 +129,7 @@ def commute_game(jwt_token: str, game_id: int, variant_name_loaded: str, game_na
         mylogger.LOGGER.info("Failed to commute game %s : %s", game_name, message)
         return False
 
-    mylogger.LOGGER.info("Game %s was commuted !", game_name)
+    mylogger.LOGGER.info("=== Hurray, game '%s' was commuted !", game_name)
     return True
 
 
@@ -188,12 +188,9 @@ def check_all_games(jwt_token: str) -> None:
         game_dict = req_result.json()
         variant_name = game_dict['variant']
 
-        mylogger.LOGGER.info("Trying game %s...", game_name)
+        mylogger.LOGGER.info("Trying game '%s'...", game_name)
 
-        success = commute_game(jwt_token, game_id, variant_name, game_name)
-
-        if success:
-            mylogger.LOGGER.info("+++ commuted ! +++")
+        _ = commute_game(jwt_token, game_id, variant_name, game_name)
 
         # easy on the server !
         time.sleep(INTER_COMMUTATION_TIME_SEC)
