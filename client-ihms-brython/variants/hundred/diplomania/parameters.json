@@ -118,7 +118,7 @@
         },
         "2": {
             "name": "Ang",
-            "full_name": "Anglia",
+            "full_name": "Anglie",
             "x_pos": 229,
             "y_pos": 228,
             "x_legend_pos": 229,
@@ -144,7 +144,7 @@
         },
         "5": {
             "name": "Atl",
-            "full_name": "Atlantic",
+            "full_name": "Atlantique",
             "x_pos": 37,
             "y_pos": 581,
             "x_legend_pos": 37,
@@ -160,15 +160,15 @@
         },
         "7": {
             "name": "Brs",
-            "full_name": "Bristol Channel",
+            "full_name": "Canal de Bristol",
             "x_pos": 72,
             "y_pos": 299,
             "x_legend_pos": 72,
             "y_legend_pos": 285
         },
         "8": {
-            "name": "Bri",
-            "full_name": "Brittany",
+            "name": "Bre",
+            "full_name": "Bretagne",
             "x_pos": 199,
             "y_pos": 380,
             "x_legend_pos": 199,
@@ -184,7 +184,7 @@
         },
         "10": {
             "name": "Can",
-            "full_name": "Cantons",
+            "full_name": "Les Cantons",
             "x_pos": 472,
             "y_pos": 429,
             "x_legend_pos": 472,
@@ -192,7 +192,7 @@
         },
         "11": {
             "name": "Cas",
-            "full_name": "Castile",
+            "full_name": "Castille",
             "x_pos": 129,
             "y_pos": 658,
             "x_legend_pos": 129,
@@ -209,7 +209,7 @@
         },
         "13": {
             "name": "Dau",
-            "full_name": "Dauphina",
+            "full_name": "Dauphinois",
             "x_pos": 398,
             "y_pos": 474,
             "x_legend_pos": 398,
@@ -217,7 +217,7 @@
         },
         "14": {
             "name": "Dev",
-            "full_name": "Devon",
+            "full_name": "Comté du Devon",
             "x_pos": 195,
             "y_pos": 274,
             "x_legend_pos": 195,
@@ -232,8 +232,8 @@
             "y_legend_pos": 342
         },
         "16": {
-            "name": "Eng",
-            "full_name": "English Channel",
+            "name": "Man",
+            "full_name": "Manche",
             "x_pos": 169,
             "y_pos": 331,
             "x_legend_pos": 169,
@@ -241,7 +241,7 @@
         },
         "17": {
             "name": "Fla",
-            "full_name": "Flanders",
+            "full_name": "Les Flandres",
             "x_pos": 385,
             "y_pos": 293,
             "x_legend_pos": 385,
@@ -249,7 +249,7 @@
         },
         "18": {
             "name": "Fri",
-            "full_name": "Fridland",
+            "full_name": "Friedland",
             "x_pos": 439,
             "y_pos": 218,
             "x_legend_pos": 420,
@@ -266,15 +266,15 @@
         },
         "20": {
             "name": "Hol",
-            "full_name": "Holland",
+            "full_name": "Hollande",
             "x_pos": 415,
             "y_pos": 260,
             "x_legend_pos": 395,
             "y_legend_pos": 250
         },
         "21": {
-            "name": "Iri",
-            "full_name": "Irish Sea",
+            "name": "Irl",
+            "full_name": "Mer d'Irlande",
             "x_pos": 90,
             "y_pos": 216,
             "x_legend_pos": 90,
@@ -291,7 +291,7 @@
         },
         "23": {
             "name": "Lon",
-            "full_name": "London",
+            "full_name": "Londres",
             "x_pos": 239,
             "y_pos": 275,
             "x_legend_pos": 232,
@@ -308,7 +308,7 @@
         },
         "25": {
             "name": "Lux",
-            "full_name": "Luxemburg",
+            "full_name": "Luxembourg",
             "x_pos": 446,
             "y_pos": 303,
             "x_legend_pos": 446,
@@ -316,7 +316,7 @@
         },
         "26": {
             "name": "Med",
-            "full_name": "Mediterranean Sea",
+            "full_name": "Mer Méditerranée",
             "x_pos": 431,
             "y_pos": 660,
             "x_legend_pos": 431,
@@ -324,7 +324,7 @@
         },
         "27": {
             "name": "Min",
-            "full_name": "Minch",
+            "full_name": "Minchdu Nord",
             "x_pos": 44,
             "y_pos": 95,
             "x_legend_pos": 44,
@@ -332,7 +332,7 @@
         },
         "28": {
             "name": "Nom",
-            "full_name": "Normandy",
+            "full_name": "Normandie",
             "x_pos": 277,
             "y_pos": 357,
             "x_legend_pos": 243,
@@ -340,7 +340,7 @@
         },
         "29": {
             "name": "Nor",
-            "full_name": "North  Sea",
+            "full_name": "Mer du Nord",
             "x_pos": 274,
             "y_pos": 75,
             "x_legend_pos": 274,
@@ -348,7 +348,7 @@
         },
         "30": {
             "name": "Not",
-            "full_name": "Northumbria",
+            "full_name": "Northumbrie",
             "x_pos": 203,
             "y_pos": 182,
             "x_legend_pos": 175,
@@ -391,23 +391,23 @@
         },
         "35": {
             "name": "Sav",
-            "full_name": "Savoy",
+            "full_name": "Savoie",
             "x_pos": 502,
             "y_pos": 495,
             "x_legend_pos": 502,
             "y_legend_pos": 481
         },
         "36": {
-            "name": "Sco",
-            "full_name": "Scotland",
+            "name": "Eco",
+            "full_name": "Ecosse",
             "x_pos": 160,
             "y_pos": 84,
             "x_legend_pos": 160,
             "y_legend_pos": 70
         },
         "37": {
-            "name": "Str",
-            "full_name": "Straits of Dover",
+            "name": "Pas",
+            "full_name": "Pas de Calais",
             "x_pos": 322,
             "y_pos": 262,
             "x_legend_pos": 322,
@@ -415,7 +415,7 @@
         },
         "38": {
             "name": "Pal",
-            "full_name": "The Pale",
+            "full_name": "Pale",
             "x_pos": 30,
             "y_pos": 203,
             "x_legend_pos": 30,
@@ -423,7 +423,7 @@
         },
         "39": {
             "name": "Was",
-            "full_name": "The Wash",
+            "full_name": "Wash",
             "x_pos": 347,
             "y_pos": 181,
             "x_legend_pos": 347,
@@ -438,8 +438,8 @@
             "y_legend_pos": 535
         },
         "41": {
-            "name": "Wal",
-            "full_name": "Wales",
+            "name": "Gal",
+            "full_name": "Pays de Galles",
             "x_pos": 155,
             "y_pos": 246,
             "x_legend_pos": 155,
