@@ -280,12 +280,12 @@ def my_opportunities():
 
     games_table = html.TABLE()
 
-    fields = ['name', 'go_game', 'join', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_game', 'nomessage_game']
+    fields = ['name', 'join', 'go_game', 'deadline', 'current_state', 'current_advancement', 'allocated', 'variant', 'used_for_elo', 'master', 'description', 'nopress_game', 'nomessage_game']
 
     # header
     thead = html.THEAD()
     for field in fields:
-        field_fr = {'name': 'nom', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'join': 'rejoindre', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
+        field_fr = {'name': 'nom', 'join': 'rejoindre la partie', 'go_game': 'aller dans la partie (permet d\'en savoir plus)', 'deadline': 'date limite', 'current_state': 'état', 'current_advancement': 'saison à jouer', 'allocated': 'alloué (dont arbitre)', 'variant': 'variante', 'used_for_elo': 'elo', 'master': 'arbitre', 'description': 'description', 'nopress_game': 'publics (act.)', 'nomessage_game': 'privés (act.)'}[field]
         col = html.TD(field_fr)
         thead <= col
     games_table <= thead
@@ -409,35 +409,16 @@ def my_opportunities():
         data['join'] = None
         data['allocated'] = None
 
-        # highlite ongoing games (replacement)
-        field = 'current_state'
-        value = data[field]
-        if value == 1:
-            colour = config.NEED_REPLACEMENT
-        else:
-            colour = None
-
         row = html.TR()
         for field in fields:
+
+            colour = None
 
             value = data[field]
             game_name = data['name']
 
             if field == 'name':
                 value = game_name
-
-            if field == 'go_game':
-                if storage['GAME_ACCESS_MODE'] == 'button':
-                    form = html.FORM()
-                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
-                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
-                    form <= input_jump_game
-                    value = form
-                else:
-                    img = html.IMG(src="./images/play.png")
-                    link = html.A(href=f"?game={game_name}", target="_blank")
-                    link <= img
-                    value = link
 
             if field == 'join':
                 if player_id is None:
@@ -458,6 +439,21 @@ def my_opportunities():
                     input_join_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: join_and_select_game_callback(e, gn, gds))
                     form <= input_join_game
                     value = form
+                    # highlite free available position
+                    colour = config.NEED_PLAYERS
+
+            if field == 'go_game':
+                if storage['GAME_ACCESS_MODE'] == 'button':
+                    form = html.FORM()
+                    input_jump_game = html.INPUT(type="image", src="./images/play.png")
+                    input_jump_game.bind("click", lambda e, gn=game_name, gds=game_data_sel: select_game_callback(e, gn, gds))
+                    form <= input_jump_game
+                    value = form
+                else:
+                    img = html.IMG(src="./images/play.png")
+                    link = html.A(href=f"?game={game_name}", target="_blank")
+                    link <= img
+                    value = link
 
             if field == 'deadline':
 
@@ -482,6 +478,9 @@ def my_opportunities():
                         state_loaded = possible_state_code
                         break
                 value = state_loaded
+                # highlite ongoing games (replacement)
+                if value == 'en cours':
+                    colour = config.NEED_REPLACEMENT
 
             if field == 'current_advancement':
                 advancement_loaded = value
@@ -538,9 +537,9 @@ def my_opportunities():
     MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= html.DIV("Les icônes suivants sont cliquables pour aller dans ou agir sur les parties :", Class='note')
-    MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller dans la partie")
-    MY_SUB_PANEL <= " "
     MY_SUB_PANEL <= html.IMG(src="./images/join.png", title="Pour se mettre dans la partie")
+    MY_SUB_PANEL <= " "
+    MY_SUB_PANEL <= html.IMG(src="./images/play.png", title="Pour aller visiter la partie")
     MY_SUB_PANEL <= " "
     MY_SUB_PANEL <= html.IMG(src="./images/leave.png", title="Pour s'enlever de la partie")
     MY_SUB_PANEL <= html.BR()
