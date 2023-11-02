@@ -111,7 +111,7 @@ def create_empty_position():
     # digest the position
     POSITION_DATA = mapping.Position(position_loaded, VARIANT_DATA)
 
-    # get the orders from server (actually no)
+    # no orders
     orders_loaded = {'fake_units': {}, 'orders': {}}
 
     # digest the orders
@@ -123,6 +123,7 @@ def import_position(incoming_position):
 
     global VARIANT_NAME
     global POSITION_DATA
+    global ORDERS_DATA
 
     VARIANT_NAME = incoming_position.variant.name
 
@@ -153,6 +154,12 @@ def import_position(incoming_position):
 
     # copy position
     POSITION_DATA = mapping.Position(position_loaded, VARIANT_DATA)
+
+    # no orders
+    orders_loaded = {'fake_units': {}, 'orders': {}}
+
+    # digest the orders
+    ORDERS_DATA = mapping.Orders(orders_loaded, POSITION_DATA, False)
 
 
 def sandbox():
