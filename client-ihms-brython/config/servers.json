@@ -18,5 +18,9 @@
     "SOLVER": {
         "HOST": "https://solver.diplomania.fr",
         "PORT": 443
+    },
+    "SCHEDULER": {
+        "HOST": "https://scheduler.diplomania.fr",
+        "PORT": 443
     }
 }

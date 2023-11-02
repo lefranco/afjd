@@ -44,6 +44,12 @@ EPSILON_SEC = 5
 # to take it easy on server
 INTER_COMMUTATION_TIME_SEC = 2
 
+# where to get logs
+FILE = './logdir/scheduler.log'
+
+# how many lines to extract
+MAXLINES = 256
+
 # simplest is to hard code displays of variants here
 INTERFACE_TABLE = {
     'standard': ['diplomania', 'diplomania_daltoniens', 'hasbro'],
@@ -263,17 +269,25 @@ def acting_threaded_procedure() -> None:
 class AccessLogsRessource(flask_restful.Resource):  # type: ignore
     """ AccessLogsRessource """
 
-    def post(self) -> typing.Tuple[typing.Dict[str, typing.Any], int]:
+    def get(self) -> typing.Tuple[typing.List[str], int]:
         """
         Simply return logs content
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/access-logs - POST - accessing logs")
+        mylogger.LOGGER.info("/access-logs - GET - accessing logs")
 
-        # TODO : extract from log file
+        # extract from log file
+        with open(FILE, encoding='UTF-8') as file:
+            lines = file.readlines()
 
-        data = {'msg': 'NOT IMPLEMENTED'}
+        # remove trailing '\n'
+        lines = [l.rstrip('\n') for l in lines]
+
+        # take only last part
+        lines = lines[- MAXLINES:]
+
+        data = lines
         return data, 200
 
 
