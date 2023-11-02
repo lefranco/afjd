@@ -55,7 +55,6 @@ class Ezml:
             #  """ debug """
             #  print(f"DEBUG: {mess} line {num_line}", file=sys.stderr)
 
-        # slash means escape
         def unescape(text: str) -> str:
             """ replaces 'ESCAPER'+ ascii code of char by 'ESCAPER' + char """
 
@@ -76,7 +75,6 @@ class Ezml:
                     text = text[1:]
                 result += f"{chr(escaped)}"
 
-        # slash means escape
         def escape(text: str) -> str:
             """ replaces 'ESCAPER'+ char by 'ESCAPER' + ascii code of char """
 
@@ -176,6 +174,7 @@ class Ezml:
         cur_chapter_level = 0
         cur_table_level = 0
 
+        # containers
         stack_push('<html>', None, None, True, True)
         stack_push('<body>', None, None, True, True)
 
@@ -268,16 +267,14 @@ class Ezml:
 
                 # block
                 if line.startswith('<'):
-                    if line in [f"<{b}>" for b in ('center', 'code', 'blockquote')]:
+                    if line in [f"<{b}>" for b in ('code', 'center', 'blockquote')]:
                         if line == '<code>':
                             within_code = True
                         stack_push(line, None, None, True, True)
                         continue
-                    if line in [f"</{b}>" for b in ('center', 'code', 'blockquote')]:
+                    if line in [f"</{b}>" for b in ('code', 'center', 'blockquote')]:
                         if line == '</code>':
                             within_code = False
-                        if not stack:
-                            fail("Issue with block: end but no start")
                         stack_pop()
                         continue
                     fail("Issue with block start: incorrect")
@@ -325,16 +322,16 @@ class Ezml:
 
                 # table
                 if line.startswith('='):
-                    # close table
                     if line == '=':
+                        # close table
                         cur_table_level -= 1
                         stack_pop()
                         continue
-                    cur_table_level += 1
                     if line.find(' ') == -1:
                         fail("Issue with table: missing space")
                     _, __, line = line.partition(' ')
                     # create table
+                    cur_table_level += 1
                     attributes = {'border': '1'}
                     stack_push('<table>', None, attributes, True, True)
                     # create caption
@@ -356,11 +353,13 @@ class Ezml:
                     # create th/td
                     name = '<th>' if within_table_header else '<td>'
                     stack_push(name, None, None, True, True)
+                    # no continue
                 if line.endswith('|'):
                     if not cur_table_level:
                         fail("Line end with | but not in table")
                     # remove it
                     line = line.rstrip('|')
+                    # no continue
                 if cur_table_level:
                     # now work with what is left
                     while True:
@@ -373,19 +372,19 @@ class Ezml:
                         # up
                         # end td
                         stack_pop()
-                        if stack[-1].name != '<tr>':
-                            fail("Issue with table: closing: expecting3 a tr on top of stack!")
                         # create td/th
                         name = '<th>' if within_table_header else '<td>'
                         stack_push(name, None, None, True, True)
                         # move forward
                         line = line[pipe_pos + len('|'):]
+                    # no continue
                 if line_orig.endswith('|'):
                     # end td
                     stack_pop()
                     # end tr
                     stack_pop()
                     within_table_header = False
+                    # no continue
                 if cur_table_level:
                     continue
 
@@ -428,9 +427,11 @@ class Ezml:
                     after = line[end_text + len(item2):]
                     inline_stuff(cur_block, before)
                     if item == '[[':
+                        # link
                         attributes = {'href': link, 'target': "_blank"}
                         stack_push('<a>', text, attributes, False, False)
                     else:
+                        # image
                         attributes = {'src': f"{link}", 'alt': f"{text}"}
                         stack_push('<img>', None, attributes, False, False)
                     inline_stuff(cur_block, after)
@@ -441,5 +442,11 @@ class Ezml:
 
         if len(stack) != 2:
             fail("Issue with main: some blocks were never closed")
+
+        if stack[1].name != '<body>':
+            fail("Missing <body>")
+
+        if stack[0].name != '<html>':
+            fail("Missing <html>")
 
         self.block = stack[0]
