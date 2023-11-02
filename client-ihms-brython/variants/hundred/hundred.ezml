@@ -62,6 +62,54 @@ Ainsi, l'armée en Provence est considérée comme une unité de mercenaires, et
 # La Provence n'est pas un centre de ravitaillement et aucune unité ne peut y être construite
 
 _
+$ Nomenclature
+
+= Régions et abbréviations de la variante
+| Abbréviation | Nom complet |
+| Als | Alsace |
+| Ang | Anglie |
+| Anj | Anjou |
+| Ara | Aragon |
+| Atl | Atlantique |
+| Bis | Biscay |
+| Bre | Bretagne |
+| Brs | Canal de Bristol |
+| Cal | Calais |
+| Can | Cantons |
+| Cas | Castille |
+| Cha | Charolais |
+| Dau | Dauphiné |
+| Dev | Comté du Devon |
+| Dij | Dijon |
+| Eco | Ecosse |
+| Fla | Flandres |
+| Fri | Friedland |
+| Gal | Pays de Galles |
+| Guy | Guyenne |
+| Hol | Hollande |
+| Irl | Mer d'Irlande |
+| Lim | Limousin |
+| Lon | Londres |
+| Lor | Lorraine |
+| Lux | Luxembourg |
+| Man | Manche |
+| Med | Mer Méditerranée |
+| Min | Minch du Nord |
+| Nom | Normandie |
+| Nor | Mer du Nord |
+| Not | Northumbrie |
+| Orl | Orléanais |
+| Pal | Pale |
+| Par | Paris |
+| Pas | Pas de Calais |
+| Poi | Poitou |
+| Pro | Provence |
+| Sav | Savoie |
+| Tou | Toulouse |
+| Was | Wash |
+=
+
+_
 $ Expansionnisme
 
 Une puissance peut construire dans n'importe quel centre de ravitaillement vacant qu'elle possède pendant une phase d'ajustement : il n'y a pas de "centres d'origine" permanents. Par exemple, la France peut construire à Londres si ce centre est vacant et qu'elle en est propriétaire
