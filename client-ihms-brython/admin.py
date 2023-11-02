@@ -20,7 +20,7 @@ import geometry
 import elo
 
 
-OPTIONS = ['Changer nouvelles', 'Changer image', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Récupérations demandées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Effacement des anciens retard', 'Comptes oisifs', 'Maintenance']
+OPTIONS = ['Changer nouvelles', 'Changer image', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Récupérations demandées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Effacement des anciens retard', 'Comptes oisifs', 'Logs du scheduler', 'Maintenance']
 
 LONG_DURATION_LIMIT_SEC = 1.0
 
@@ -2332,6 +2332,65 @@ def show_idle_data():
     MY_SUB_PANEL <= html.P(f"Il y a {count} oisifs")
 
 
+def show_scheduler_logs():
+    """ show_scheduler_logs """
+
+    def get_logs_callback(ev):  # pylint: disable=invalid-name
+        """ get_logs_callback """
+
+        def reply_callback(req):
+            req_result = json.loads(req.text)
+            if req.status != 200:
+                if 'message' in req_result:
+                    alert(f"Erreur à la récupération des logs : {req_result['message']}")
+                elif 'msg' in req_result:
+                    alert(f"Problème à la récupération des logs : {req_result['msg']}")
+                else:
+                    alert("Réponse du serveur imprévue et non documentée")
+
+                # failed but refresh
+                MY_SUB_PANEL.clear()
+                show_scheduler_logs()
+
+                return
+
+            # TODO display correctly
+            logs = "<br>".join(req_result['msg'].split('\n'))
+            print(logs)
+
+            # back to where we started
+            MY_SUB_PANEL.clear()
+            show_scheduler_logs()
+
+        ev.preventDefault()
+
+        json_dict = {
+        }
+
+        host = config.SERVER_CONFIG['SCHEDULER']['HOST']
+        port = config.SERVER_CONFIG['SCHEDULER']['PORT']
+        url = f"{host}:{port}/access-logs"
+
+        # get logs : do not need token
+        ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
+
+    MY_SUB_PANEL <= html.H3("Logs scheduler")
+
+    if not common.check_admin():
+        alert("Pas le bon compte (pas admin)")
+        return
+
+    form = html.FORM()
+
+    # ---
+
+    input_get_logs = html.INPUT(type="submit", value="Récupérer")
+    input_get_logs.bind("click", get_logs_callback)
+    form <= input_get_logs.bind("click", get_logs_callback)
+
+    MY_SUB_PANEL <= form
+
+
 def maintain():
     """ maintain """
 
@@ -2450,6 +2509,8 @@ def load_option(_, item_name):
         clear_old_delays()
     if item_name == 'Comptes oisifs':
         show_idle_data()
+    if item_name == 'Logs du scheduler':
+        show_scheduler_logs()
     if item_name == 'Maintenance':
         maintain()
 
