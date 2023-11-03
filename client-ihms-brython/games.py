@@ -1986,7 +1986,7 @@ def render(panel_middle):
     global ITEM_NAME_SELECTED
 
     if 'GAME' in storage:
-        ITEM_NAME_SELECTED = 'Changer anonymat'
+        ITEM_NAME_SELECTED = 'Changer état'
     else:
         ITEM_NAME_SELECTED = OPTIONS[0]
 
