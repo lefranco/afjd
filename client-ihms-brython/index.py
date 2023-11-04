@@ -4,7 +4,6 @@
 
 import time
 import json
-import base64  # TODO hardcode function
 
 START_TIME = time.time()
 
@@ -282,10 +281,8 @@ def load_option(_, item_name):
     if ITEM_NAME_SELECTED == 'Accueil':
         if 'flag' not in storage or storage['flag'] == 'True':
 
-            # b64 decode from server
-            image_bytes = base64.standard_b64decode(SITE_IMAGE_CONTENT.encode())
-            image_b64 = base64.b64encode(image_bytes).decode()
-            site_img = html.IMG(src=f"data:image/jpeg;base64,{image_b64}", alt="Image du site")
+            # build site image
+            site_img = html.IMG(src=f"data:image/jpeg;base64,{SITE_IMAGE_CONTENT}", alt="Image du site")
 
             MENU_LEFT <= html.BR()
             MENU_LEFT <= site_img
