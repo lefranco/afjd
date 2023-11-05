@@ -46,16 +46,6 @@ def information_about_input():
     return information
 
 
-def information_about_playing():
-    """ information_about_playing """
-
-    information = html.DIV(Class='important')
-    information <= html.B("Vous voulez juste jouer ? ")
-    information <= html.BR()
-    information <= "Créez-la partie et démissionnez ensuite de l'arbitrage en utilisant le menu parties sous menu appariement. Un arbitre sera alloué automatiquement..."
-    return information
-
-
 def get_game_allocated_players(game_id):
     """ get_available_players returns a tuple game_master + players """
 
@@ -309,6 +299,11 @@ def create_game(json_dict):
             'current_state': state
         }
 
+        just_play = int(input_just_play_game.checked)
+        json_dict.update({
+            'just_play': just_play
+        })
+
         # start checking data
 
         if not name:
@@ -355,9 +350,6 @@ def create_game(json_dict):
         return
 
     pseudo = storage['PSEUDO']
-
-    MY_SUB_PANEL <= information_about_playing()
-    MY_SUB_PANEL <= html.BR()
 
     MY_SUB_PANEL <= information_about_input()
 
@@ -587,6 +579,16 @@ def create_game(json_dict):
     fieldset <= legend_nb_max_cycles_to_play
     input_nb_max_cycles_to_play = html.INPUT(type="number", value=nb_max_cycles_to_play if nb_max_cycles_to_play is not None else DEFAULT_NB_CYCLES)
     fieldset <= input_nb_max_cycles_to_play
+    form <= fieldset
+
+    title_access = html.H3("Spécial : rôle dans la partie")
+    form <= title_access
+
+    fieldset = html.FIELDSET()
+    legend_just_play_game = html.LEGEND("Je veux juste jouer la partie", title="L'administrateur du site sera mis arbitre")
+    fieldset <= legend_just_play_game
+    input_just_play_game = html.INPUT(type="checkbox", checked=False)
+    fieldset <= input_just_play_game
     form <= fieldset
 
     form <= html.BR()
