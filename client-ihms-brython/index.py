@@ -100,13 +100,18 @@ def check_event(event_name):
     return True
 
 
+SITE_IMAGE_DICT = None
+
+
 def get_site_image():
     """ get_site_image """
 
-    image_content = ""
+    global SITE_IMAGE_DICT
+
+    SITE_IMAGE_DICT = None
 
     def reply_callback(req):
-        nonlocal image_content
+        global SITE_IMAGE_DICT
         req_result = json.loads(req.text)
         if req.status != 200:
             if 'message' in req_result:
@@ -116,7 +121,7 @@ def get_site_image():
             else:
                 alert("Réponse du serveur imprévue et non documentée")
             return
-        image_content = req_result['image']
+        SITE_IMAGE_DICT = req_result
 
     json_dict = {}
 
@@ -126,8 +131,6 @@ def get_site_image():
 
     # get site image : do not need token
     ajax.get(url, blocking=True, headers={'content-type': 'application/json'}, timeout=config.TIMEOUT_SERVER, data=json.dumps(json_dict), oncomplete=reply_callback, ontimeout=common.noreply_callback)
-
-    return image_content
 
 
 def load_game(game_name):
@@ -161,12 +164,6 @@ def set_flag(_, value):
     """ set_flag """
     storage['flag'] = value
     load_option(_, ITEM_NAME_SELECTED)
-
-
-# site image
-SITE_IMAGE_CONTENT = None
-if SITE_IMAGE_CONTENT is None:
-    SITE_IMAGE_CONTENT = get_site_image()
 
 
 def load_option(_, item_name):
@@ -279,19 +276,26 @@ def load_option(_, item_name):
     document.unbind("keypress")
 
     if ITEM_NAME_SELECTED == 'Accueil':
-        if 'flag' not in storage or storage['flag'] == 'True':
+        if ('flag' not in storage or storage['flag'] == 'True') and SITE_IMAGE_DICT:
 
-            # build site image
-            site_img = html.IMG(src=f"data:image/jpeg;base64,{SITE_IMAGE_CONTENT}", alt="Image du site")
+            # build site image and legend
+            figure = html.FIGURE()
+            image = html.IMG(src=f"data:image/jpeg;base64,{SITE_IMAGE_DICT['image']}", alt="Image du site")
+            figure <= image
+            legend = html.FIGCAPTION(SITE_IMAGE_DICT['legend'])
+            figure <= legend
 
             MENU_LEFT <= html.BR()
-            MENU_LEFT <= site_img
+            MENU_LEFT <= figure
             MENU_LEFT <= html.BR()
             button = html.BUTTON("-", Class='btn-menu')
             button.bind("click", lambda e: set_flag(e, 'False'))
+
         else:
+
             button = html.BUTTON("+", Class='btn-menu')
             button.bind("click", lambda e: set_flag(e, 'True'))
+
         MENU_LEFT <= html.BR()
         MENU_LEFT <= button
 
@@ -303,6 +307,8 @@ if 'IPADDRESS' not in storage:
 # panel-middle
 PANEL_MIDDLE = html.DIV()
 OVERALL <= PANEL_MIDDLE
+
+get_site_image()
 
 # starts here
 if 'game' in document.query:
@@ -363,7 +369,6 @@ document <= html.BR()
 login.check_token()
 login.show_login()
 allgames.show_game_selected()
-get_site_image()
 
 document <= html.B("Contactez le support par courriel en cas de problème (cf. page d'accueil / onglet 'déclarer un incident'). Merci !")
 document <= html.BR()
