@@ -98,6 +98,7 @@ GAME_PARSER.add_argument('access_restriction_performance', type=int, required=Fa
 GAME_PARSER.add_argument('current_advancement', type=int, required=False)
 GAME_PARSER.add_argument('nb_max_cycles_to_play', type=int, required=False)
 GAME_PARSER.add_argument('current_state', type=int, required=False)
+GAME_PARSER.add_argument('just_play', type=int, required=False)
 
 # for game parameter alteration
 GAME_PARSER2 = flask_restful.reqparse.RequestParser()
@@ -204,6 +205,8 @@ IMAGINE_PARSER.add_argument('zone_num', type=int, required=True)
 IMAGINE_PARSER.add_argument('role_num', type=int, required=True)
 IMAGINE_PARSER.add_argument('delete', type=int, required=True)
 
+# admin id
+ADDRESS_ADMIN = 1
 
 # a little welcome message to new games
 WELCOME_TO_GAME = "Bienvenue sur cette partie gérée par le serveur de l'AFJD"
@@ -1041,6 +1044,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
         args = GAME_PARSER.parse_args(strict=True)
 
         name = args['name']
+        just_play = args['just_play']
 
         # check authentication from user server
         host = lowdata.SERVER_CONFIG['USER']['HOST']
@@ -1148,8 +1152,21 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
                 active = actives.Active(int(game_id), role_num)
                 active.update_database(sql_executor)
 
-            # allocate game master to game
-            game.put_role(sql_executor, user_id, 0)
+            # allocate game master to game (or admin)
+            if just_play:
+
+                # game creator goes in the game
+                dangling_role_id = -1
+                allocation = allocations.Allocation(game_id, user_id, dangling_role_id)
+                allocation.update_database(sql_executor)
+
+                # admin game master of the game
+                game.put_role(sql_executor, ADDRESS_ADMIN, 0)
+
+            else:
+
+                # game creator is game master of the game
+                game.put_role(sql_executor, user_id, 0)
 
         # if game has a passive role, fill it
 
