@@ -110,6 +110,7 @@ EVENT_PARSER.add_argument('description', type=str, required=False)
 EVENT_PARSER.add_argument('summary', type=str, required=False)
 
 SITE_IMAGE_PARSER = flask_restful.reqparse.RequestParser()
+SITE_IMAGE_PARSER.add_argument('legend', type=str, required=True)
 SITE_IMAGE_PARSER.add_argument('image', type=str, required=True)
 
 EVENT_PARSER2 = flask_restful.reqparse.RequestParser()
@@ -1869,16 +1870,20 @@ class SiteImageRessource(flask_restful.Resource):  # type: ignore
 
         args = SITE_IMAGE_PARSER.parse_args(strict=True)
 
+        legend = args['legend']
+
+        # protection from "surrogates not allowed"
+        legend_safe = legend.encode('utf-8', errors='ignore').decode()
+
         image_str = args['image']
         image_bytes = image_str.encode()
 
         if len(image_bytes) > MAX_SIZE_IMAGE:
             flask_restful.abort(404, msg="Too big an image this is, please try a smaller one !")
 
-        image = site_image.SiteImage(image_bytes)
-
         sql_executor = database.SqlExecutor()
 
+        image = site_image.SiteImage(legend_safe, image_bytes)
         image.update_database(sql_executor)
         sql_executor.commit()
 
@@ -1887,21 +1892,23 @@ class SiteImageRessource(flask_restful.Resource):  # type: ignore
 
     def get(self) -> typing.Tuple[typing.Any, int]:
         """
-        Provides the site image
+        Provides the site legend + image
         EXPOSED
         """
 
-        mylogger.LOGGER.info("/news - GET - get the site image")
+        mylogger.LOGGER.info("/site_image - GET - get the site legend + image")
 
         sql_executor = database.SqlExecutor()
 
         # find the site image
-        image_bytes = site_image.SiteImage.content(sql_executor)
+        image_data = site_image.SiteImage.content(sql_executor)
+        legend = image_data[0]
+        image_bytes = image_data[1]
         image_content = image_bytes.decode() if image_bytes else None
 
         del sql_executor
 
-        data = {'image': image_content}
+        data = {'legend': legend, 'image': image_content}
 
         return data, 200
 

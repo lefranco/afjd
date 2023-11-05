@@ -4,7 +4,7 @@
 
 import json
 import time
-import base64  # TODO hardcode function
+import base64
 
 from browser import document, html, ajax, alert, window  # pylint: disable=import-error
 from browser.local_storage import storage  # pylint: disable=import-error
@@ -19,6 +19,7 @@ import mapping
 import geometry
 import elo
 
+import index
 
 OPTIONS = ['Changer nouvelles', 'Changer image', 'Usurper', 'Rectifier les paramètres', 'Rectifier la position', 'Dernières connexions', 'Connexions manquées', 'Récupérations demandées', 'Editer les créateurs', 'Editer les modérateurs', 'Mise à jour du elo', 'Mise à jour de la fiabilité', 'Mise à jour de la régularité', 'Effacement des anciens retard', 'Comptes oisifs', 'Logs du scheduler', 'Maintenance']
 
@@ -333,7 +334,13 @@ def change_site_image():
                 alert("Problème à l'encodage pour le web... ")
                 return
 
+            legend_content = input_legend_content.value
+            if not legend_content:
+                alert("Contenu légende manquant")
+                return
+
             json_dict = {
+                'legend': legend_content,
                 'image': image_str
             }
 
@@ -389,7 +396,17 @@ def change_site_image():
 
     form <= html.BR()
 
-    input_put_picture = html.INPUT(type="submit", value="Mettre cette image")
+    legend_content_loaded = index.SITE_IMAGE_DICT['legend']
+
+    fieldset = html.FIELDSET()
+    legend_legend_content = html.LEGEND("nouvelles", title="Saisir la légende")
+    fieldset <= legend_legend_content
+    input_legend_content = html.TEXTAREA(type="text", rows=5, cols=100)
+    input_legend_content <= legend_content_loaded
+    fieldset <= input_legend_content
+    form <= fieldset
+
+    input_put_picture = html.INPUT(type="submit", value="Mettre cette image avec cette légende")
     input_put_picture.bind("click", put_site_picture_callback)
     form <= input_put_picture
 
