@@ -213,6 +213,16 @@ legend{
 }
 
 
+/* just the site image */
+figure {
+  width: 100%;
+  text-align: center;
+  font-style: italic;
+  font-size: smaller;
+  margin: 0.5em;
+  padding: 0.5em;
+}
+
 /* color of england in diplomania map 83B9CC */
 table{
     border: 1px solid black;

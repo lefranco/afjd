@@ -318,7 +318,7 @@ def change_site_image():
                     return
 
                 messages = "<br>".join(req_result['msg'].split('\n'))
-                common.info_dialog(f"L'image du site a été changée : {messages}")
+                common.info_dialog(f"L'image du site a été changée (recharger la page pour la voir) : {messages}")
 
             # get the image content
             image_bytes = bytes(window.Array["from"](window.Uint8Array.new(reader.result)))
@@ -383,7 +383,7 @@ def change_site_image():
     form = html.FORM()
 
     fieldset = html.FIELDSET()
-    legend_name = html.LEGEND("Ficher JPG uniquement ! (et rester inférieur en taille à 200x200 pixels)")
+    legend_name = html.LEGEND("Ficher JPG uniquement ! (et rester inférieur en taille à 100 pixels en largeur)")
     fieldset <= legend_name
     form <= fieldset
 
