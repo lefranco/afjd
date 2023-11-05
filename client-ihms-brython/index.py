@@ -285,9 +285,7 @@ def load_option(_, item_name):
             legend = html.FIGCAPTION(SITE_IMAGE_DICT['legend'])
             figure <= legend
 
-            MENU_LEFT <= html.BR()
             MENU_LEFT <= figure
-            MENU_LEFT <= html.BR()
             button = html.BUTTON("-", Class='btn-menu')
             button.bind("click", lambda e: set_flag(e, 'False'))
 
