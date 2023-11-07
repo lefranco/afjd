@@ -388,6 +388,13 @@ class Game:
             allocation = allocations.Allocation(game_id, player_id, role_id)
             allocation.delete_database(sql_executor)
 
+    def remove_role(self, sql_executor: database.SqlExecutor, user_id: int, role: int) -> None:
+        """ remove player/game master in game """
+
+        game_id = self.identifier
+        allocation = allocations.Allocation(game_id, user_id, role)
+        allocation.delete_database(sql_executor)
+
     def put_role(self, sql_executor: database.SqlExecutor, user_id: int, role: int) -> None:
         """ put player/game master in game """
 
@@ -505,8 +512,7 @@ class Game:
                 continue
             role_id = role_list[num]
             num += 1
-            allocation = allocations.Allocation(game_id, player_id, role_id)
-            allocation.update_database(sql_executor)
+            self.put_role(sql_executor, player_id, role_id)
 
     def advance(self) -> None:
         """ advance the game """

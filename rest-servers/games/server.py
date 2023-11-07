@@ -1157,8 +1157,7 @@ class GameListRessource(flask_restful.Resource):  # type: ignore
 
                 # game creator goes in the game
                 dangling_role_id = -1
-                allocation = allocations.Allocation(game_id, user_id, dangling_role_id)
-                allocation.update_database(sql_executor)
+                game.put_role(sql_executor, user_id, dangling_role_id)
 
                 # admin game master of the game
                 game.put_role(sql_executor, ADDRESS_ADMIN, 0)
@@ -1388,13 +1387,14 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         # find the game master
         assert game is not None
         game_master_id = game.get_role(sql_executor, 0)
-        if game_master_id is None:
-            del sql_executor
-            flask_restful.abort(404, msg="There does not seem to be a game master for this game. This should be addressed beforehand...")
-
-        if user_id not in [game_master_id, player_id]:
-            del sql_executor
-            flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the concerned player")
+        if game_master_id is not None:
+            if user_id not in [game_master_id, player_id]:
+                del sql_executor
+                flask_restful.abort(403, msg="You do not seem to be either the game master of the game or the concerned player")
+        else:
+            if user_id not in [player_id]:
+                del sql_executor
+                flask_restful.abort(403, msg="You do not seem to be the concerned player")
 
         # abort if has a role
         raw_allocations = allocations.Allocation.list_by_game_id(sql_executor, game_id)
@@ -1405,8 +1405,9 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
         dangling_role_id = -1
 
         if not delete:
-            allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
-            allocation.update_database(sql_executor)
+
+            # put in game
+            game.put_role(sql_executor, player_id, dangling_role_id)
 
             # is if full now ?
             allocations_list = allocations.Allocation.list_by_game_id(sql_executor, game_id)
@@ -1418,35 +1419,37 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
 
             assert game_capacity is not None
             if game.current_state == 0 and len(allocations_list) >= game_capacity:
-
                 # it is : send notification to game master
 
-                subject = f"La partie {game.name} est maintenant complète !"
-                addressees = [game_master_id]
-                body = "Bonjour !\n"
-                body += "\n"
-                body += "Vous pouvez donc démarrer cette partie !\n"
-                body += "\n"
-                body += "Pour se rendre directement sur la partie :\n"
-                body += f"https://diplomania-gen.fr?game={game.name}"
+                if game_master_id is not None:
+                    # if there actually is a game master of course !
 
-                json_dict = {
-                    'addressees': " ".join([str(a) for a in addressees]),
-                    'subject': subject,
-                    'body': body,
-                    'type': 'start_stop',
-                }
+                    subject = f"La partie {game.name} est maintenant complète !"
+                    addressees = [game_master_id]
+                    body = "Bonjour !\n"
+                    body += "\n"
+                    body += "Vous pouvez donc démarrer cette partie !\n"
+                    body += "\n"
+                    body += "Pour se rendre directement sur la partie :\n"
+                    body += f"https://diplomania-gen.fr?game={game.name}"
 
-                host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
-                port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
-                url = f"{host}:{port}/mail-players"
-                # for a rest API headers are presented differently
-                req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
-                if req_result.status_code != 200:
-                    print(f"ERROR from server  : {req_result.text}")
-                    message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
-                    del sql_executor
-                    flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
+                    json_dict = {
+                        'addressees': " ".join([str(a) for a in addressees]),
+                        'subject': subject,
+                        'body': body,
+                        'type': 'start_stop',
+                    }
+
+                    host = lowdata.SERVER_CONFIG['PLAYER']['HOST']
+                    port = lowdata.SERVER_CONFIG['PLAYER']['PORT']
+                    url = f"{host}:{port}/mail-players"
+                    # for a rest API headers are presented differently
+                    req_result = SESSION.post(url, headers={'AccessToken': f"{jwt_token}"}, data=json_dict)
+                    if req_result.status_code != 200:
+                        print(f"ERROR from server  : {req_result.text}")
+                        message = req_result.json()['msg'] if 'msg' in req_result.json() else "???"
+                        del sql_executor
+                        flask_restful.abort(400, msg=f"Failed sending notification emails {message}")
 
             sql_executor.commit()
             del sql_executor
@@ -1454,8 +1457,7 @@ class AllocationListRessource(flask_restful.Resource):  # type: ignore
             data = {'msg': 'Ok allocation updated or created'}
             return data, 201
 
-        allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
-        allocation.delete_database(sql_executor)
+        game.remove_role(sql_executor, player_id, dangling_role_id)
 
         sql_executor.commit()
         del sql_executor
@@ -1562,8 +1564,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                     flask_restful.abort(400, msg="You cannot take game mastership since you are a player in this game")
 
                 # put role
-                allocation = allocations.Allocation(game_id, player_id, role_id)
-                allocation.update_database(sql_executor)
+                game.put_role(sql_executor, player_id, role_id)
 
                 sql_executor.commit()
                 del sql_executor
@@ -1579,8 +1580,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
 
             # put dangling
             dangling_role_id = -1
-            allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
-            allocation.update_database(sql_executor)
+            game.put_role(sql_executor, player_id, dangling_role_id)
 
             sql_executor.commit()
             del sql_executor
@@ -1616,8 +1616,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
                 flask_restful.abort(403, msg="There is already a player who has this role in this game")
 
             # put role
-            allocation = allocations.Allocation(game_id, player_id, role_id)
-            allocation.update_database(sql_executor)
+            game.put_role(sql_executor, player_id, role_id)
 
             sql_executor.commit()
             del sql_executor
@@ -1638,8 +1637,7 @@ class RoleAllocationListRessource(flask_restful.Resource):  # type: ignore
 
         # put dangling
         dangling_role_id = -1
-        allocation = allocations.Allocation(game_id, player_id, dangling_role_id)
-        allocation.update_database(sql_executor)
+        game.put_role(sql_executor, player_id, dangling_role_id)
 
         # we have a quitter here
         dropout = dropouts.Dropout(game_id, role_id, player_id)
@@ -6551,8 +6549,7 @@ class RevokeRessource(flask_restful.Resource):  # type: ignore
         assert game_id is not None
         assert game_master_id is not None
         dangling_role_id = -1
-        allocation = allocations.Allocation(int(game_id), game_master_id, dangling_role_id)
-        allocation.update_database(sql_executor)
+        game.put_role(sql_executor, game_master_id, dangling_role_id)
 
         sql_executor.commit()
         del sql_executor
